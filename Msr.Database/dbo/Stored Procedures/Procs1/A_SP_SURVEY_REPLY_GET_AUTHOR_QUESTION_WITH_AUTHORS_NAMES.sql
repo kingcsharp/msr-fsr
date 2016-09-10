@@ -1,0 +1,20 @@
+﻿/*
+STORED PROCEDURE CALLED IN disucssion/viewSurveys.asp
+*/
+CREATE   PROCEDURE A_SP_SURVEY_REPLY_GET_AUTHOR_QUESTION_WITH_AUTHORS_NAMES
+@responseID varchar(50),
+@authorID varchar(50),
+@strNTLogin varchar(50)
+AS
+SELECT * FROM A_V_SURVEY_WITH_AUTHOR_NAMES
+WHERE PARENT=@responseID AND AUTHOR=@authorID
+
+
+
+
+
+
+
+
+
+

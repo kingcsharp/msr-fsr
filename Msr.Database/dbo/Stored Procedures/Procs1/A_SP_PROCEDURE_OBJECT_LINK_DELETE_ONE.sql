@@ -1,0 +1,11 @@
+﻿
+
+CREATE  procedure A_SP_PROCEDURE_OBJECT_LINK_DELETE_ONE
+@ID nvarchar(50),
+@strNTLogin nvarchar(50)
+AS
+DELETE FROM A_PROCEDURE_OBJECT_LINK WHERE ID = @ID
+
+
+
+

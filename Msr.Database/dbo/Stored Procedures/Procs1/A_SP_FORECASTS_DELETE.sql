@@ -1,0 +1,21 @@
+﻿
+
+
+
+
+
+
+
+
+CREATE   PROCEDURE A_SP_FORECASTS_DELETE
+@id nvarchar(50),
+@strNTLogin nvarchar(50)
+AS
+DELETE FROM A_FORECASTS_HISTORY WHERE ID = @ID
+
+
+
+
+
+
+

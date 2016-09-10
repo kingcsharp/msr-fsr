@@ -1,0 +1,15 @@
+﻿
+
+
+
+CREATE   procedure A_SP_MONITORS_WITH_REULTS_GET_FOR_TASK
+@TASK_ID nvarchar(50),
+@strNTLogin nvarchar(50)
+AS
+SELECT * FROM A_V_MONITOR_TEMPLATES_WITH_RESULTS WHERE TASK_ID = @TASK_ID
+
+
+
+
+
+

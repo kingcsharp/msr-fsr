@@ -1,0 +1,19 @@
+﻿
+
+
+
+
+CREATE VIEW dbo.A_V_WF_STARTED_WITH_DENIAL_INFO
+AS
+SELECT     wfs.ID AS WFS_ID, wfs.STARTED_BY AS WF_STARTED_BY, wfs.START_DATE AS WF_START_DATE, wfs.DENIAL_REASON, 
+                      wfs.FINISHED_DATE AS DENIAL_DATE, o.OBJ_DESC AS OBJ_NAME, p.FULL_NAME AS DENIER, o.ID AS OBJECT_ID, 
+                      p.OBJECT_ID AS DENIER_OBJ_ID
+FROM         dbo.A_WORKFLOWS_STARTED wfs INNER JOIN
+                      dbo.A_OBJECTS o ON wfs.ID = o.WFS_ID INNER JOIN
+                      dbo.A_WORKFLOW_GROUP_STARTED wfgs ON wfs.ID = wfgs.WFS_ID INNER JOIN
+                      dbo.A_APPROVED_PEOPLE p ON wfgs.DENIER = p.ID
+
+
+
+
+

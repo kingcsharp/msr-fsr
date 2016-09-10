@@ -1,0 +1,15 @@
+﻿
+
+
+
+
+
+CREATE    PROCEDURE A_SP_PEOPLE_DELETE
+@id nvarchar(50),
+@strNTLogin nvarchar(50)
+AS
+DELETE FROM A_PEOPLE_HISTORY WHERE ID = @id
+
+
+
+

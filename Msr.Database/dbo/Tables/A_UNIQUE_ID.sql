@@ -1,0 +1,5 @@
+﻿CREATE TABLE [dbo].[A_UNIQUE_ID] (
+    [ID]   NUMERIC (18) NULL,
+    [DRCM] DATETIME     NULL
+);
+

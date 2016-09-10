@@ -1,0 +1,31 @@
+﻿CREATE VIEW dbo.A_V_ENGINEER_SCREEN_DATA
+AS
+SELECT DISTINCT 
+                      purch.ID AS PURCHASE_ID, toi.PURCHASE_HIST_ID, toi.PURCHASE_ITEM_ID, customer.NAME AS CUSTOMER_NAME, purchItem.DUE_DATE, 
+                      purchItem.ORIG_DUE_DATE, t.PROCEDURE_ID AS PROC_ID, customer.ID AS CUST_ID, 
+                      dbo.A_FN_DATE_TIME_ADD_USING_UNITS(purchItem.PROD_TIME_UNIT, purchItem.DUE_DATE, - purchItem.PROD_TIME) AS START_DATE, t.STATUS, 
+                      t.REQUESTEE_ID, t.GROUP_REQUESTEE_ID, Product.NAME AS PRODUCT_NAME, t.ID, purch.CUST_PURCH_NUM, purchItem.ACCOUNT_ID, 
+                      Account.REFERENCE_PO, [PROC].NAME AS PROC_NAME, purchItem.QTY, dbo.A_V_ACTUAL_PARTS_QUICK.NICK_NAME, 
+                      dbo.A_V_ACTUAL_PARTS_QUICK.SERIAL, dbo.A_V_ACTUAL_PARTS_QUICK.ID AS ACTUAL_PART_ID, t.CUR_PLANNED_START_DATE AS ST_DATE, 
+                      t.ACTUAL_STOP_DATE, t.ACTUAL_START_DATE, purchItem.MT_NUM, toi.FILL_ITEM_ID, purch.DATE_CREATED, dbo.A_FILLS.BATCH_PARENT, 
+                      dbo.A_FILLS.BATCHED, dbo.A_FILLS.BATCH_FILL, dbo.A_FILLS.ID AS FILL_ID, dbo.A_FILLS.FILL_QTY, 
+                      dbo.A_TASK_COMPLETION_STATS.PERC_COMPLETE, dbo.A_TASK_COMPLETION_STATS.TIME_COMPLETE, 
+                      dbo.A_TASK_COMPLETION_STATS.TOTAL_TIME, dbo.A_TASK_COMPLETION_STATS.NUM_SUB_TASKS, 
+                      dbo.A_TASK_COMPLETION_STATS.MY_TOT_HOURS, dbo.A_TASK_COMPLETION_STATS.MY_COMP_HOURS, 
+                      dbo.A_TASK_COMPLETION_STATS.NUM_SUB_TASKS_COMPLETE, dbo.A_TASK_COMPLETION_STATS.CUR_STEP_TEXT, 
+                      dbo.A_V_ACTUAL_PARTS_QUICK.OBJECT_ID AS ACT_PART_OBJ_ID, t.HAS_FILE
+FROM         dbo.A_V_COMPANIES_APPROVED_DATA_QUICK customer INNER JOIN
+                      dbo.A_V_PURCHASES_APPROVED_DATA purch ON customer.ID = purch.CUSTOMER_CO RIGHT OUTER JOIN
+                      dbo.A_TASK_COMPLETION_STATS RIGHT OUTER JOIN
+                      dbo.A_TASK_OBJECT_LINK T_OBJ INNER JOIN
+                      dbo.A_V_PROCEDURES_DATA_QUICK [PROC] INNER JOIN
+                      dbo.A_TASK_ORDER_INFORMATION toi INNER JOIN
+                      dbo.A_TASKS t ON toi.TASK_ID = t.ID ON [PROC].ID = t.PROCEDURE_ID ON T_OBJ.TASK_ID = t.ID INNER JOIN
+                      dbo.A_FILLS ON toi.FILL_ITEM_ID = dbo.A_FILLS.ID INNER JOIN
+                      dbo.A_V_PRODUCTS_APPROVED_DATA Product INNER JOIN
+                      dbo.A_ORDER_ITEMS purchItem ON Product.ID = purchItem.PRODUCT_ID ON dbo.A_FILLS.PURCH_ITEM_ID = purchItem.ID ON 
+                      dbo.A_TASK_COMPLETION_STATS.TASK_ID = t.ID LEFT OUTER JOIN
+                      dbo.A_V_ACCOUNTS_APPROVED_DATA_QUICK Account ON purchItem.ACCOUNT_ID = Account.ID ON 
+                      purch.HISTORY_REF_ID = toi.PURCHASE_HIST_ID LEFT OUTER JOIN
+                      dbo.A_V_ACTUAL_PARTS_QUICK ON T_OBJ.OBJECT_ID = dbo.A_V_ACTUAL_PARTS_QUICK.ID
+WHERE     (t.STATUS IN ('REQUESTED', 'ACCEPTED', 'CLOSED', 'FINISHED')) AND (toi.PURCHASE_ITEM_ID IS NOT NULL)

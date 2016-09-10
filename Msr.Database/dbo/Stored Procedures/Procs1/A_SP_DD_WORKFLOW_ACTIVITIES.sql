@@ -1,0 +1,13 @@
+﻿
+
+
+
+CREATE  PROCEDURE A_SP_DD_WORKFLOW_ACTIVITIES
+@strNTLogin nvarchar(50)
+as
+SELECT * FROM A_WF_ACTIVITIES
+
+
+
+
+

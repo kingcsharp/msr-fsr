@@ -1,0 +1,13 @@
+﻿CREATE TABLE [dbo].[A_NOUN_HIERARCHY_CHILDREN_EDITING] (
+    [ID]              NVARCHAR (50) NOT NULL,
+    [ROOT_ID]         NVARCHAR (50) NULL,
+    [APPROVED_OBJ_ID] VARCHAR (50)  NULL,
+    [PARENT_ID]       NVARCHAR (50) NULL,
+    [HIERARCHY_ID]    NVARCHAR (50) NULL,
+    [DRCM]            NVARCHAR (50) NULL,
+    [MODBY]           NVARCHAR (50) NULL,
+    [BEEN_APPROVED]   NVARCHAR (50) NULL,
+    [HIDDEN]          NVARCHAR (20) NULL,
+    [MY_ID]           AS            (([HIERARCHY_ID]+'_')+[ID])
+);
+

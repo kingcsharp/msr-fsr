@@ -1,0 +1,31 @@
+﻿
+
+
+
+
+
+
+
+
+
+CREATE    PROCEDURE A_SP_FORECAST_ITEM_GET_DATA_BY_ID
+@ID varchar(50),
+@strNTLogin nvarchar(50)
+AS
+
+SELECT * FROM A_V_FORECAST_ITEM_EDIT_DATA WHERE ID = @ID
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

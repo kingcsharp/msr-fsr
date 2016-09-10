@@ -1,0 +1,7 @@
+﻿CREATE TABLE [dbo].[A_DISCUSSION_INV_ROLE] (
+    [DISCUSSION_ID] VARCHAR (50) NULL,
+    [ROLE_ID]       VARCHAR (50) NULL,
+    [MODBY]         VARCHAR (50) NULL,
+    [DRCM]          DATETIME     NULL
+);
+

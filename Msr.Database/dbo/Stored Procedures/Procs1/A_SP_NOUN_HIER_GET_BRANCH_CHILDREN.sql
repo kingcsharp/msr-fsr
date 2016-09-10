@@ -1,0 +1,23 @@
+﻿
+
+
+
+
+
+
+
+
+CREATE  PROCEDURE A_SP_NOUN_HIER_GET_BRANCH_CHILDREN
+	@strHier nvarchar(50),
+	@strID nvarchar(50),
+	@strNTLogin nvarchar(50)
+AS
+SELECT * FROM A_NOUN_HIERARCHY_CHILDREN_EDITING WHERE PARENT_ID = @strID AND HIERARCHY_ID = @strHier
+
+
+
+
+
+
+
+

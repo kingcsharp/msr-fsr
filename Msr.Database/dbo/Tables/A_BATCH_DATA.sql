@@ -1,0 +1,11 @@
+﻿CREATE TABLE [dbo].[A_BATCH_DATA] (
+    [ROOT_TASK_ID]         VARCHAR (50) NULL,
+    [MAIN_FILL_ID]         VARCHAR (50) NULL,
+    [MAIN_PART_ID]         VARCHAR (50) NULL,
+    [SUB_FILL_ID]          VARCHAR (50) NULL,
+    [SUB_PO_NUM]           VARCHAR (50) NULL,
+    [SUB_PURCHASE_ID]      VARCHAR (50) NULL,
+    [SUB_PURCHASE_ITEM_ID] VARCHAR (50) NULL,
+    [SUB_PART_ID]          VARCHAR (50) NULL
+);
+

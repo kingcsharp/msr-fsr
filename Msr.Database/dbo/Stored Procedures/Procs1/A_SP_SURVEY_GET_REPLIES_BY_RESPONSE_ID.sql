@@ -1,0 +1,9 @@
+﻿/*
+STORED PROCEDURE CALLED IN survey/listQuestions.asp
+*/
+CREATE    PROCEDURE A_SP_SURVEY_GET_REPLIES_BY_RESPONSE_ID
+@responseID nvarchar(50),
+@strNTLogin nvarchar(50)
+AS
+SELECT * FROM A_V_SURVEY_WITH_INITIAL_DATA 
+WHERE R_ID=@responseID

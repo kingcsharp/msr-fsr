@@ -1,0 +1,15 @@
+﻿
+
+
+
+
+CREATE    PROCEDURE A_SP_MENUS_SEARCH_ALL_MENU_ITEMS
+@f as nvarchar(100),
+@strNTLogin as nvarchar(50)
+as
+SELECT * FROM A_V_FAVORITE_MENU_ITEMS WHERE PERSON = @strNTLogin AND FAV_GROUP = @f ORDER BY NUM
+
+
+
+
+

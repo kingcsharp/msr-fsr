@@ -1,0 +1,11 @@
+﻿
+
+CREATE   PROCEDURE A_SP_TASK_GET_FILES_FOR_ONE_TASK
+@ID nvarchar(50),
+@strNTLogin varchar(50)
+AS
+print 'Getting Ref Proedures'
+SELECT p.ID AS [VALUE],p.NAME AS SHOW FROM A_DOCUMENTS p,A_TASK_REF_FILES r WHERE
+p.ID = r.FILE_ID AND r.TASK_ID = @ID
+
+

@@ -1,0 +1,12 @@
+﻿CREATE TABLE [dbo].[A_COMPANIES_NEW_PERSON_DATA] (
+    [ID]            VARCHAR (50)   NULL,
+    [CO_ID]         VARCHAR (50)   NULL,
+    [LOGIN_NAME]    NVARCHAR (50)  NULL,
+    [PASSWORD]      NVARCHAR (50)  NULL,
+    [DRCM]          DATETIME       NULL,
+    [MODBY]         VARCHAR (50)   NULL,
+    [EMAIL_ADDRESS] NVARCHAR (200) NULL,
+    [FIRST_NAME]    NVARCHAR (200) NULL,
+    [LAST_NAME]     NVARCHAR (200) NULL
+);
+

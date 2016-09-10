@@ -1,0 +1,22 @@
+﻿
+
+
+
+
+
+
+CREATE PROCEDURE dbo.A_SP_COMPANY_ADD_HOLIDAY
+@CO_OBJ_ID nvarchar(50),
+@strNTLogin nvarchar(50)
+AS
+declare @CO_ID as varchar(50)
+SELECT @CO_ID = ID FROM A_COMPANIES_HISTORY WHERE OBJECT_ID = @CO_OBJ_ID
+INSERT INTO A_COMPANY_HOLIDAYS (ID,CO_ID,DRCM,MODBY)
+VALUES (newID(),@CO_ID,getDate(),@strNTLogin)
+
+
+
+
+
+
+

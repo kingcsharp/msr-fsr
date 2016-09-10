@@ -1,0 +1,8 @@
+﻿CREATE TABLE [dbo].[A_COMPANIES_CHILD_LOOKUP_TABLE] (
+    [ID]            VARCHAR (50) NULL,
+    [COMPANY]       VARCHAR (50) NULL,
+    [CHILD_COMPANY] VARCHAR (50) NULL,
+    [DRCM]          DATETIME     NULL,
+    [MODBY]         VARCHAR (50) NULL
+);
+

@@ -1,0 +1,7 @@
+﻿CREATE TABLE [dbo].[CONTINUOUS_IMPROVEMENT] (
+    [NUM]            INT           NULL,
+    [STRING_CODE]    NVARCHAR (50) NULL,
+    [EMAIL]          NVARCHAR (50) NULL,
+    [MAIL_HELP_CODE] NVARCHAR (50) NULL
+);
+

@@ -1,0 +1,43 @@
+﻿CREATE TABLE [dbo].[A_LOCATIONS_OBJECT_LINK] (
+    [ID]            NVARCHAR (50)  NOT NULL,
+    [LOCATION_ID]   VARCHAR (50)   NULL,
+    [OBJECT_ID]     VARCHAR (50)   NOT NULL,
+    [LOCATION_TYPE] NVARCHAR (50)  NULL,
+    [MODBY]         NVARCHAR (50)  NULL,
+    [DRCM]          DATETIME       NULL,
+    [LOCATION_NAME] NVARCHAR (100) NULL,
+    CONSTRAINT [PK_A_LOCATIONS_OBJECT_LINKS] PRIMARY KEY CLUSTERED ([ID] ASC)
+);
+
+
+GO
+
+
+
+
+CREATE     TRIGGER A_LOCATIONS_OBJECT_LINK_INSERT_UPDATE
+ON dbo.A_LOCATIONS_OBJECT_LINK
+AFTER INSERT,UPDATE
+AS
+print ' IN A_LOCATIONS_OBJECT_LINK_INSERT_UPDATE TRIGGER'
+declare @LOCATION_ID as nvarchar(50)
+declare @ID as nvarchar(50)
+
+if update(LOCATION_ID)
+begin
+SELECT @ID = ID,@LOCATION_ID = LOCATION_ID FROM INSERTED
+print 'Location ID = ' + @LOCATION_ID
+declare @Location_NAME as nvarchar(50)
+SELECT @location_NAME = NAME FROM A_APPROVED_LOCATIONS WHERE ID = @LOCATION_ID
+print 'Location NAme = ' + @location_NAME
+declare @curName as nvarchar(100)
+SELECT @curName = LOCATION_NAME FROM A_LOCATIONS_OBJECT_LINK WHERE ID = @LOCATION_ID
+print 'Cur Name = ' + isNull(@curName,'NULL')
+if isNull(@curName,'') <> isNull(@location_NAME,'')
+	begin
+	UPDATE A_LOCATIONS_OBJECT_LINK SET LOCATION_NAME = @location_NAME where ID = @ID
+	end
+
+end
+
+

@@ -1,0 +1,21 @@
+﻿
+
+
+
+
+
+
+
+
+CREATE       PROCEDURE A_SP_COUNTERS_HISTORY_DELETE
+@id nvarchar(50),
+@strNTLogin nvarchar(50)
+AS
+DELETE FROM A_COUNTERS_HISTORY WHERE ID = @ID
+
+
+
+
+
+
+

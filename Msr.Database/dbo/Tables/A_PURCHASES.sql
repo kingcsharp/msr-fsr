@@ -1,0 +1,9 @@
+﻿CREATE TABLE [dbo].[A_PURCHASES] (
+    [ID]             VARCHAR (50) NOT NULL,
+    [HISTORY_REF_ID] VARCHAR (50) NULL,
+    [DRCM]           DATETIME     NULL,
+    [MODBY]          VARCHAR (50) NULL,
+    [STATUS]         VARCHAR (50) NULL,
+    CONSTRAINT [PK_A_PURCHASES] PRIMARY KEY CLUSTERED ([ID] ASC)
+);
+

@@ -1,0 +1,21 @@
+﻿
+
+/*
+STORED PROCEDURE CALLED IN
+MODULE: procedures/viewProcedure.asp
+*/
+CREATE   PROCEDURE A_SP_PROCEDURE_GET_OBJECT_ID_FROM_ID
+	@ID nvarchar(50),
+	@strNTLogin nvarchar(50)
+AS
+SELECT ph.OBJECT_ID FROM A_PROCEDURES_HISTORY ph, A_PROCEDURES p 
+WHERE p.HISTORY_REF_ID = ph.ID AND p.ID = @ID
+
+
+
+
+
+
+
+
+

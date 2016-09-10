@@ -1,0 +1,13 @@
+﻿
+
+
+
+CREATE      PROCEDURE A_SP_THEORY_GET_EDIT_INFORMATION
+	@strID nvarchar(50),
+	@strNTLogin nvarchar(50)
+as
+SELECT * FROM A_O_THEORY WHERE OBJECT_ID = @strID
+
+
+
+

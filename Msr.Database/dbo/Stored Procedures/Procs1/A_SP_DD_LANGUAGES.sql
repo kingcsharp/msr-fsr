@@ -1,0 +1,10 @@
+﻿
+
+
+CREATE  PROCEDURE A_SP_DD_LANGUAGES
+AS
+--find out my Company
+SELECT * FROM A_LANGUAGES
+
+
+

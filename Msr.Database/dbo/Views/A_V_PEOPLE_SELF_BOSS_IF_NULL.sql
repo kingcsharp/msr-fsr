@@ -1,0 +1,11 @@
+﻿
+
+
+CREATE VIEW dbo.A_V_PEOPLE_SELF_BOSS_IF_NULL
+AS
+SELECT     p.ID, ISNULL(ph.BOSS, p.ID) AS BOSS, ph.FULL_NAME
+FROM         dbo.A_PEOPLE p INNER JOIN
+                      dbo.A_PEOPLE_HISTORY ph ON p.HISTORY_REF_ID = ph.ID
+
+
+

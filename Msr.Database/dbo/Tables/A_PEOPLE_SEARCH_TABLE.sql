@@ -1,0 +1,28 @@
+﻿CREATE TABLE [dbo].[A_PEOPLE_SEARCH_TABLE] (
+    [OBJ_ID]                 NVARCHAR (50)  NOT NULL,
+    [ID]                     VARCHAR (50)   NOT NULL,
+    [NAME]                   NVARCHAR (100) NULL,
+    [LAST_NAME]              NVARCHAR (100) NULL,
+    [MIDDLE_NAME]            NVARCHAR (100) NULL,
+    [FULL_NAME]              NVARCHAR (300) NULL,
+    [TIME_ZONE]              NVARCHAR (50)  NULL,
+    [SYSTEM_STATUS]          CHAR (10)      NULL,
+    [BOSS_ID]                NVARCHAR (50)  NULL,
+    [BOSS_NAME]              NVARCHAR (50)  NULL,
+    [HIRE_DATE]              DATETIME       NULL,
+    [COMPANY_ID]             NVARCHAR (50)  NULL,
+    [COMPANY_NAME]           NVARCHAR (50)  NULL,
+    [POSITION_ID]            NVARCHAR (50)  NULL,
+    [POSITION_NAME]          NVARCHAR (50)  NULL,
+    [LOCATION_ID]            NVARCHAR (50)  NULL,
+    [LOCATION_NAME]          NVARCHAR (200) NULL,
+    [PRIMARY_PHONE_ID]       NVARCHAR (50)  NULL,
+    [PRIMARY_PHONE_NUMBER]   NVARCHAR (50)  NULL,
+    [SECONDARY_PHONE_ID]     NVARCHAR (50)  NULL,
+    [SECONDARY_PHONE_NUMBER] NVARCHAR (50)  NULL,
+    [WORK_EMAIL_ID]          NVARCHAR (50)  NULL,
+    [WORK_EMAIL_ADDRESS]     NVARCHAR (50)  NULL,
+    [IS_HEAD]                VARCHAR (50)   NULL,
+    CONSTRAINT [PK_A_PEOPLE_SEARCH_TABLE] PRIMARY KEY CLUSTERED ([OBJ_ID] ASC)
+);
+

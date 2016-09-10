@@ -1,0 +1,73 @@
+﻿CREATE TABLE [dbo].[A_PROCEDURES_HISTORY] (
+    [ID]             VARCHAR (50)   NOT NULL,
+    [OBJECT_ID]      VARCHAR (50)   NULL,
+    [VERB]           VARCHAR (50)   NULL,
+    [NAME]           VARCHAR (2000) NULL,
+    [COMMENTS]       VARCHAR (4000) NULL,
+    [SECURITY_LEVEL] VARCHAR (50)   NULL,
+    [STEPS_IN_AP]    NUMERIC (18)   NULL,
+    [WIP_MSG]        NUMERIC (18)   NULL,
+    [DRCM]           DATETIME       NULL,
+    [MODBY]          VARCHAR (50)   NULL,
+    [IS_SYSTEM]      SMALLINT       NULL,
+    [CREATING_DEPT]  VARCHAR (50)   NULL,
+    [SYSTEM_ID]      VARCHAR (50)   NULL,
+    [DURATION]       FLOAT (53)     NULL,
+    [DURATION_TYPE]  VARCHAR (50)   NULL,
+    CONSTRAINT [PK_A_PROCEDURES_HISTORY] PRIMARY KEY CLUSTERED ([ID] ASC)
+);
+
+
+GO
+
+
+
+
+CREATE           TRIGGER A_PROCEDURES_HISTORY_INSERT
+ON dbo.A_PROCEDURES_HISTORY
+AFTER INSERT
+AS
+declare @ID as nvarchar(50)
+declare @NAME as nvarchar(2000)
+declare @MODBY as nvarchar(50)
+SELECT @ID = ID,
+	@MODBY = MODBY,
+	@NAME = NAME FROM INSERTED
+print '-------CREATING A NEW PROCEDURE'
+exec A_SP_OBJECT_ADD 'A_PROCEDURES_HISTORY',@ID,@NAME,@MODBY,null,null,null
+Declare @cID varchar(50)
+SELECT @cID = COMPANY FROM A_V_PEOPLE_APPROVED_DATA WHERE ID = @MODBY
+print 'Creating Department = ' + @cID
+UPDATE A_PROCEDURES_HISTORY SET CREATING_DEPT = @cID WHERE ID = @ID
+
+
+
+
+
+GO
+
+CREATE              TRIGGER A_PROCEDURES_HISTORY_UPDATE
+ON dbo.A_PROCEDURES_HISTORY
+AFTER UPDATE
+AS
+
+declare @OBJ_ID as nvarchar(50)
+declare @ID as nvarchar(50)
+declare @NAME as nvarchar(2000)
+declare @MODBY as nvarchar(50)
+print 'In the Procedures History Update Trigger'
+SELECT
+@ID = ID,
+@OBJ_ID = OBJECT_ID,
+@NAME = NAME,
+@MODBY = MODBY 
+FROM INSERTED
+if update(NAME)
+	begin
+	UPDATE A_OBJECTS SET
+	OBJ_DESC = @NAME,
+	MODBY = @MODBY,
+	DRCM = getDATE()
+	WHERE ID = @OBJ_ID
+	end
+exec A_SP_PROCEDURE_ROLL_UP_DURATION @ID

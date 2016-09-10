@@ -1,0 +1,30 @@
+﻿
+
+
+
+
+
+
+
+
+/*
+STORED PROCEDURE CALLED IN description/searchDescription.asp
+*/
+
+CREATE  PROCEDURE A_SP_POP_FILL_DESCRIPTION_POSITION
+@ID nvarchar(50),
+@strNTLogin nvarchar(50)
+
+AS
+SELECT * FROM  A_V_DESCRIPTION_ROLES_WITH_LOGIN_ID 
+WHERE ID = @ID and POSITION_ID = ROLE_ID 
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,7 @@
+﻿CREATE TABLE [dbo].[HITS] (
+    [ID]        NVARCHAR (255) NOT NULL,
+    [LAST_USER] NVARCHAR (50)  NULL,
+    [DATETIME]  DATETIME       NULL,
+    [NUM]       NUMERIC (18)   NULL
+);
+

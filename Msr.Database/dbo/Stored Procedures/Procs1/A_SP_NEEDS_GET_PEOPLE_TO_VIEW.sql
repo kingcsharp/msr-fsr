@@ -1,0 +1,13 @@
+﻿
+
+
+CREATE     PROCEDURE A_SP_NEEDS_GET_PEOPLE_TO_VIEW
+@ID nvarchar(50),
+@strNTLogin varchar(50)
+AS
+print 'Getting People To View'
+SELECT p.ID AS [ID],p.FULL_NAME AS NAME FROM A_APPROVED_PEOPLE p,A_NEEDS_PEOPLE_ALLOWED r WHERE
+p.ID = r.PERSON_ID AND r.NEED_ID = @ID
+
+
+

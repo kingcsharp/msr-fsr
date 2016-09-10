@@ -1,0 +1,19 @@
+﻿
+
+
+
+
+CREATE       PROCEDURE A_SP_PROCEDURES_GET_EDIT_INFORMATION
+	@strID nvarchar(50),
+	@strNTLogin nvarchar(50)
+as
+
+declare @DNR_ID as varchar(50)
+SELECT @DNR_ID = DNR_ID FROM A_DNR_PROC_INFO WHERE PROC_OBJ_ID = @strID
+
+SELECT *,@DNR_ID AS DNR_ID FROM A_O_PROCEDURES WHERE OBJECT_ID = @strID
+
+
+
+
+

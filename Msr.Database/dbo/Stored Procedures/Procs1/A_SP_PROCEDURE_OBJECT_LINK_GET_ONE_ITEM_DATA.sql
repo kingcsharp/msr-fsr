@@ -1,0 +1,12 @@
+﻿
+
+
+CREATE  procedure A_SP_PROCEDURE_OBJECT_LINK_GET_ONE_ITEM_DATA
+@ID nvarchar(50),
+@strNTLogin nvarchar(50)
+AS
+SELECT * FROM A_V_PROCEDURE_OBJECT_LINK_DATA WHERE ID = @ID
+
+
+
+

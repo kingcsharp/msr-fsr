@@ -1,0 +1,8 @@
+﻿CREATE TABLE [dbo].[A_PROJECT_OBJECTS] (
+    [ID]         VARCHAR (50) NOT NULL,
+    [PROJECT_ID] VARCHAR (50) NULL,
+    [OBJECT_ID]  VARCHAR (50) NULL,
+    [DRCM]       DATETIME     NULL,
+    [MODBY]      VARCHAR (50) NULL
+);
+

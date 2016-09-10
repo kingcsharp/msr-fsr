@@ -1,0 +1,101 @@
+﻿
+
+
+CREATE        PROCEDURE A_SP_MONITOR_UPDATE_RESULT_AND_COMMENT
+@newID nvarchar(50) OUTPUT,
+@messages nvarchar(2000) OUTPUT,
+@ID nvarchar(50),
+@FAIL_ACTION varchar(50),
+@RESULT  varchar(50),
+@COMMENT varchar(1000),
+@TARGET varchar(50),
+@TOLERANCE varchar(50),
+@THESAURUS_ID varchar(50),
+@strNTLogin varchar(50)
+AS
+declare @PR as nvarchar(50)
+print 'Updating a Monitor Result'
+DELETE FROM A_MONITOR_RESULTS WHERE MONITOR_TEMPLATE_ID = @ID
+declare @myType as varchar(50),@rollUpID varchar(50)
+SELECT @myType = MONITOR_TYPE,@rollUpID = ROLL_UP_ID FROM A_MONITOR_TEMPLATES WHERE ID = @ID
+print @myType
+UPDATE A_MONITOR_TEMPLATES SET FAIL_ACTION = @FAIL_ACTION WHERE ID = @ID
+if @myType = 'USER_NUMBER'
+	begin
+		UPDATE A_MONITOR_TEMPLATES SET TARGET = convert(float,@TARGET),
+			TOLERANCE = convert(float,@TOLERANCE),
+			HIGHEST_THRESHOLD = (convert(float,@TARGET) + (convert(float,@TARGET) * (convert(float,@TOLERANCE)/100))),
+			LOWEST_THRESHOLD = (convert(float,@TARGET) - (convert(float,@TARGET) * (convert(float,@TOLERANCE)/100)))
+			WHERE ID = @ID
+		INSERT INTO A_MONITOR_RESULTS 
+			(ID,MONITOR_TEMPLATE_ID,NUM_VAL,PRINT_RESULT,DRCM,MODBY,COMMENT)
+		VALUES (newID(),@ID,@RESULT,@RESULT,getDate(),@strNTLogin,@COMMENT)
+		goto fin
+	end
+
+if @myType = 'NUMBER'
+	begin
+		INSERT INTO A_MONITOR_RESULTS (ID,MONITOR_TEMPLATE_ID,NUM_VAL,PRINT_RESULT,DRCM,MODBY,COMMENT)
+		VALUES (newID(),@ID,@RESULT,@RESULT,getDate(),@strNTLogin,@COMMENT)
+		goto fin
+	end
+if @myType = 'MULTIPLE'
+	begin
+		print 'Multiple'
+		SELECT @PR = TXT FROM A_MONITOR_TEMPLATES_MULT_CHOICE WHERE ID = @RESULT
+		INSERT INTO A_MONITOR_RESULTS (ID,MONITOR_TEMPLATE_ID,MULT_CHOICE_ANSWER,PRINT_RESULT,DRCM,MODBY,COMMENT)
+		VALUES (newID(),@ID,@RESULT,@PR,getDate(),@strNTLogin,@COMMENT)
+		goto fin
+	end
+if @myType = 'TEXT'
+	begin
+		INSERT INTO A_MONITOR_RESULTS (ID,MONITOR_TEMPLATE_ID,TEXT_VAL,PRINT_RESULT,DRCM,MODBY,COMMENT)
+		VALUES (newID(),@ID,isNull(@RESULT,''),isNull(@PR,''),getDate(),@strNTLogin,@COMMENT)
+		if @RESULT is not null
+			begin
+			if not(exists (SELECT * FROM A_MONITOR_TEXT_THESAURUS WHERE MON_ROLL_UP_ID = @rollUpID AND SIMILAR_TEXT = @RESULT))
+				begin
+				if @THESAURUS_ID is not null
+					begin
+					declare @myMainText varchar(1000)
+					SELECT @myMainText = MAIN_TEXT FROM A_MONITOR_TEXT_THESAURUS WHERE ID = @THESAURUS_ID
+					INSERT INTO A_MONITOR_TEXT_THESAURUS (ID,MON_ROLL_UP_ID,MAIN_TEXT,SIMILAR_TEXT)
+						VALUES (newID(),@rollUpID,@myMainText,@RESULT)
+					end
+				else
+					begin
+					INSERT INTO A_MONITOR_TEXT_THESAURUS (ID,MON_ROLL_UP_ID,MAIN_TEXT,SIMILAR_TEXT)
+						VALUES (newID(),@rollUpID,@RESULT,@RESULT)
+
+					end
+				end
+
+			end		
+
+		goto fin
+	end
+if @myType = 'OBJECT'
+	begin
+		print 'Object'
+		SELECT @PR = OBJ_DESC FROM A_V_APPROVED_OBJECTS WHERE ID = @RESULT
+		INSERT INTO A_MONITOR_RESULTS (ID,MONITOR_TEMPLATE_ID,TEXT_VAL,PRINT_RESULT,DRCM,MODBY,COMMENT)
+		VALUES (newID(),@ID,@RESULT,@PR,getDate(),@strNTLogin,@COMMENT)
+		goto fin
+	end
+
+
+INSERT INTO A_MONITOR_RESULTS (ID,MONITOR_TEMPLATE_ID,TEXT_VAL,PRINT_RESULT,DRCM,MODBY,COMMENT)
+VALUES (newID(),@ID,@RESULT,@RESULT,getDate(),@strNTLogin,@COMMENT)
+
+fin:
+
+
+
+
+
+
+
+
+
+
+

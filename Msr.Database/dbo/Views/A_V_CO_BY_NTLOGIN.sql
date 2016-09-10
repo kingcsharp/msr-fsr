@@ -1,0 +1,15 @@
+﻿
+
+
+
+CREATE  VIEW dbo.A_V_CO_BY_NTLOGIN
+AS
+SELECT     P.ID, C.ID AS CO_ID, CH.NAME AS CO_NAME
+FROM         dbo.A_COMPANIES C INNER JOIN
+                      dbo.A_COMPANIES_HISTORY CH ON C.HISTORY_REF_ID = CH.ID INNER JOIN
+                      dbo.A_PEOPLE_HISTORY PH ON C.ID = PH.COMPANY INNER JOIN
+                      dbo.A_PEOPLE P ON PH.ID = P.HISTORY_REF_ID
+
+
+
+

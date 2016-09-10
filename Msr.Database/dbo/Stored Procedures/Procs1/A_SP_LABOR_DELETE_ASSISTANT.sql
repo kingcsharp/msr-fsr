@@ -1,0 +1,13 @@
+﻿
+
+/*
+STORED PROCEDURE CALLED IN
+MODULE: labor/deleteAssistant.asp
+*/
+create PROCEDURE A_SP_LABOR_DELETE_ASSISTANT
+	@ID nvarchar(50),
+	@strNTLogin nvarchar(50)
+AS
+DELETE FROM A_PROCEDURE_LABOR WHERE ID = @ID
+
+

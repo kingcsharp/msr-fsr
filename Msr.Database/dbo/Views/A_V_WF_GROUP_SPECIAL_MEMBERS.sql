@@ -1,0 +1,16 @@
+﻿
+
+
+
+
+CREATE VIEW dbo.A_V_WF_GROUP_SPECIAL_MEMBERS
+AS
+SELECT     link.WF_GROUP_ID AS GROUP_ID, sm.NAME, link.SPECIAL_CODE AS SPECIAL_ID
+FROM         dbo.A_WF_GROUP_SPECIALS_LINK link INNER JOIN
+                      dbo.A_WF_GROUPS g ON link.WF_GROUP_ID = g.ID INNER JOIN
+                      dbo.A_WF_GROUP_SPECIAL_MEMBERS sm ON link.SPECIAL_CODE = sm.ID
+
+
+
+
+

@@ -1,0 +1,8 @@
+﻿CREATE TABLE [dbo].[A_COMPANY_EMPLOYEE_PRODUCT_LIST] (
+    [ID]         VARCHAR (50) NULL,
+    [CO_ID]      VARCHAR (50) NULL,
+    [PRODUCT_ID] VARCHAR (50) NULL,
+    [DRCM]       DATETIME     NULL,
+    [MODBY]      VARCHAR (50) NULL
+);
+

@@ -1,0 +1,18 @@
+﻿
+
+
+CREATE    PROCEDURE A_SP_THEORY_GET_OBJECT_ID_FROM_ID
+	@ID nvarchar(50),
+	@strNTLogin nvarchar(50)
+AS
+SELECT ph.OBJECT_ID FROM A_THEORY_HISTORY ph, A_THEORY p 
+WHERE p.HISTORY_REF_ID = ph.ID AND p.ID = @ID
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,26 @@
+﻿
+
+CREATE   PROCEDURE dbo.A_SP_ADMIN_FIND_ROLE_ASSIGNED_TO_JOB
+@JOB varchar(50),
+@strNTLogin nvarchar(50)
+AS
+declare @co as varchar(50),@rName varchar(500),@rID varchar(50)
+SELECT @co = h.COMPANY FROM A_PEOPLE a,A_PEOPLE_HISTORY h 
+WHERE a.ID = @strNTLogin AND a.HISTORY_REF_ID = h.ID
+
+SELECT @rName = ROLE_NAME, @rID = ROLE_ID
+	FROM A_V_ADMIN_ROLE_JOBS_WITH_CO_AND_ROLE
+	WHERE JOB = @JOB AND CO_ID = @co
+
+while @rID is null and @co is not null
+begin
+SELECT @co = PARENT FROM A_V_COMPANIES_APPROVED_DATA WHERE ID = @co
+SELECT @rName = ROLE_NAME, @rID = ROLE_ID
+	FROM A_V_ADMIN_ROLE_JOBS_WITH_CO_AND_ROLE
+	WHERE JOB = @JOB AND CO_ID = @co
+end
+
+SELECT @rID as ID,@rName as NAME
+
+
+

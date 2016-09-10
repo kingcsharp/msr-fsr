@@ -1,0 +1,23 @@
+﻿
+
+
+
+/*
+STORED PROCEDURE CALLED IN disucssion/editDiscussion.asp
+STORED PROCEDURE CALLED IN disucssion/replyDiscussion.asp
+*/
+
+CREATE        PROCEDURE A_SP_DISCUSSION_DELETE_FILE_LINKS 
+@ID nvarchar(50),
+@strNTLogin nvarchar(50)
+AS
+
+DELETE FROM A_DISCUSSION_ATTACHMENTS WHERE 
+RESPONSE_ID = @ID
+
+
+
+
+
+
+

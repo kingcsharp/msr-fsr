@@ -1,0 +1,19 @@
+﻿
+
+
+
+
+CREATE       PROCEDURE A_SP_THEORY_SHOW_MY_DEPARTMENT_DATA
+	@strID nvarchar(50),
+	@strNTLogin nvarchar(50)
+as
+declare @d as varchar(50)
+SELECT @d = CREATING_CO FROM A_OBJECTS WHERE OBJ_ID = @strID
+
+SELECT * FROM A_V_APPROVED_COMPANIES_WITH_LOGOS WHERE ID = @d
+
+
+
+
+
+

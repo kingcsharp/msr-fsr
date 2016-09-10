@@ -1,0 +1,41 @@
+﻿CREATE TABLE [dbo].[A_PARTS_SAFETY_STOCK_LEVELS] (
+    [ID]                VARCHAR (50) NOT NULL,
+    [PART_ID]           VARCHAR (50) NOT NULL,
+    [LOCATION_ID]       VARCHAR (50) NOT NULL,
+    [MIN_LEVEL]         FLOAT (53)   NULL,
+    [MAX_LEVEL]         FLOAT (53)   NULL,
+    [DRCM]              DATETIME     NULL,
+    [MODBY]             VARCHAR (50) NULL,
+    [CUR_LEVEL]         FLOAT (53)   NULL,
+    [MIN_WARNING_LEVEL] FLOAT (53)   NULL,
+    [MAX_WARNING_LEVEL] FLOAT (53)   NULL,
+    [PART_HIST_ID]      VARCHAR (50) NOT NULL,
+    [PART_OBJ_ID]       VARCHAR (50) NOT NULL,
+    [STATUS]            VARCHAR (50) NOT NULL,
+    [OLD_LEVEL]         FLOAT (53)   NULL,
+    CONSTRAINT [PK_A_PARTS_SAEFTY_SOTCK_LEVELS] PRIMARY KEY CLUSTERED ([ID] ASC)
+);
+
+
+GO
+
+
+
+
+
+
+CREATE   TRIGGER A_PARTS_SAFETY_STOCK_LEVELS_UPDATE
+ON dbo.A_PARTS_SAFETY_STOCK_LEVELS
+AFTER UPDATE
+AS
+declare @myID varchar(50),@myCurLev float,@myOldLev float
+SELECT @myID = ID,@myCurLev = CUR_LEVEL FROM INSERTED
+SELECT @myOldLev = CUR_LEVEL FROM DELETED
+if @myCurLev <> @myOldLev
+	exec A_SP_PART_SAFETY_LEVEL_CHECK_AND_EMAIL @myID,'Trigger'
+
+
+
+
+
+

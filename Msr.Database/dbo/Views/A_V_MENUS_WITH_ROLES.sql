@@ -1,0 +1,6 @@
+﻿CREATE VIEW dbo.A_V_MENUS_WITH_ROLES
+AS
+SELECT     dbo.A_MENUS.ID, dbo.A_MENUS.URL, dbo.A_MENUS.DRCM, dbo.A_MENUS.MODBY, dbo.A_MENUS.NUM, dbo.A_MENUS.NAME, dbo.A_MENUS.INFO, 
+                      dbo.A_MENUS.MENU_GROUP, dbo.A_MENU_ROLES.ROLE_ID
+FROM         dbo.A_MENUS LEFT OUTER JOIN
+                      dbo.A_MENU_ROLES ON dbo.A_MENUS.ID = dbo.A_MENU_ROLES.MENU_ID

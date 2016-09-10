@@ -1,0 +1,16 @@
+﻿
+
+CREATE   PROCEDURE dbo.A_SP_ACCONT_INVOICES_MOVE_ITEM_FROM_ONE_INVOICE_TO_ANOTHER 
+@itemID varchar(50),
+@invoiceID varchar(50),
+@strNTLogin varchar(50)
+AS
+declare @oldInvoice varchar(50)
+SELECT @oldInvoice = INVOICE_ID FROM A_ACCOUNT_INVOICE_ITEMS WHERE ID = @itemID
+UPDATE A_ACCOUNT_INVOICE_ITEMS SET INVOICE_ID = @invoiceID WHERE ID = @itemID
+exec A_SP_ACCOUNT_INVOICE_SET_TOTALS @oldInvoice,@strNTLogin
+exec A_SP_ACCOUNT_INVOICE_SET_TOTALS @invoiceID,@strNTLogin
+
+
+
+

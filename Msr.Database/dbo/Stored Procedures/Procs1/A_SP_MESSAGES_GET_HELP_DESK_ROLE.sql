@@ -1,0 +1,18 @@
+﻿
+
+
+
+
+/*
+STORED PROCEDURE CALLED IN messages/editMessage.asp
+
+*/
+
+create       PROCEDURE A_SP_MESSAGES_GET_HELP_DESK_ROLE
+@strNTLogin nvarchar(50)
+AS
+
+SELECT ID AS ROLE_ID, NAME AS ROLE_NAME
+FROM A_V_ROLES_APPROVED_DATA
+WHERE NAME = 'ANSWER Help Desk'
+

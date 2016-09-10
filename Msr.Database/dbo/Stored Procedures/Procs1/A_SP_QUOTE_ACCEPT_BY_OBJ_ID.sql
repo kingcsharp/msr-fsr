@@ -1,0 +1,28 @@
+﻿
+
+
+CREATE    PROCEDURE dbo.A_SP_QUOTE_ACCEPT_BY_OBJ_ID
+@newID varchar(50) OUTPUT,
+@msg nvarchar(4000) OUTPUT,
+@qObjID varchar(50),
+@strNTLogin varchar(50)
+AS
+declare @ordID as varchar(50),@qhID varchar(50)
+SELECT @qhID = OBJ_ID FROM A_OBJECTS WHERE ID = @qObjID 
+UPDATE A_QUOTES_HISTORY SET PROGRESS = 'ACCEPTED_BY_CUSTOMER' WHERE OBJECT_ID = @qObjID
+UPDATE A_QUOTE_ORDER_LINK SET STATUS = 'ACCEPTED_BY_CUST' WHERE QUOTE_ID = @qhID
+SELECT @ordID = ORDER_ID FROM A_QUOTES_HISTORY WHERE OBJECT_ID = @qObjID
+exec A_SP_ORDER_UPDATE_QUOTE_STATUS_FOR_ORDER @ordID,@strNTLogin
+
+declare @quoteAcceptTask varchar(50)
+SELECT @quoteAcceptTask = QA_TASK_ID FROM A_QUOTE_ORDER_LINK WHERE QUOTE_ID = @qhID
+declare @RET_STATUS varchar(50)
+declare @MSGS varchar(500)
+if @quoteAcceptTask is not null 
+	exec A_SP_TASK_QUICK_CLOSE @RET_STATUS OUTPUT,@MSGS OUTPUT, @quoteAcceptTask,@strNTLogin
+
+
+exec A_SP_QUOTE_UPDATE_FORECAST_FUNNEL_FOR_QUOTE_ITEMS @qhID,@strNTLogin
+
+
+

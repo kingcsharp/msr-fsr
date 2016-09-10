@@ -1,0 +1,7 @@
+﻿CREATE TABLE [dbo].[A_ORDER_UNITS] (
+    [ID]        VARCHAR (50) NULL,
+    [UNIT_NAME] VARCHAR (50) NULL,
+    [DRCM]      DATETIME     NULL,
+    [MODBY]     VARCHAR (50) NULL
+);
+

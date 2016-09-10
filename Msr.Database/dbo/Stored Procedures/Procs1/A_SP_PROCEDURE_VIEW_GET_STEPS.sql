@@ -1,0 +1,20 @@
+﻿
+
+
+
+
+--called from procedures/viewprocedure.asp
+
+
+CREATE    PROCEDURE A_SP_PROCEDURE_VIEW_GET_STEPS
+@PID nvarchar(50),
+@strNTLogin nvarchar(50)
+AS
+
+SELECT * FROM A_V_PROCEDURE_STEPS_WITH_OWNER_LABOR WHERE PROCEDURE_ID = @PID ORDER BY PRINT_ORDER
+
+
+
+
+
+

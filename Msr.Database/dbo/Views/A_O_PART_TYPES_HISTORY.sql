@@ -1,0 +1,13 @@
+﻿
+
+
+CREATE VIEW dbo.A_O_PART_TYPES_HISTORY
+AS
+SELECT     o.LOCKED_BY, o.UNLOCKED_BY, o.CREATED_BY, o.CREATE_DATE, o.ROOT, o.REV_INFO, o.CREATING_CO, o.STATUS, o.REV, o.WFS_ID, 
+                      o.LOCKED_BY_NAME, o.CREATING_CO_NAME, o.APPROVAL_ACTIVITY, o.ID AS OBJ_ID, pth.ID, pth.NAME, pth.DRCM, pth.MODBY, pth.OBJECT_ID, 
+                      pth.UNIT, pth.UNIT_SHIPPING_WEIGHT, pth.SPARE, pth.CONSUMABLE
+FROM         dbo.A_PART_TYPES_HISTORY pth INNER JOIN
+                      dbo.A_OBJECTS o ON pth.OBJECT_ID = o.ID
+
+
+

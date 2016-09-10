@@ -1,0 +1,8 @@
+﻿CREATE TABLE [dbo].[A_PROCEDURE_STEP_THEORY_LINK] (
+    [ID]           VARCHAR (50) NULL,
+    [PROC_STEP_ID] VARCHAR (50) NULL,
+    [THEORY_ID]    VARCHAR (50) NULL,
+    [DRCM]         DATETIME     NULL,
+    [MODBY]        VARCHAR (50) NULL
+);
+

@@ -1,0 +1,13 @@
+﻿
+CREATE  PROCEDURE dbo.A_SP_ZZ_EMAIL_ADD_ROLE
+@ID varchar(50),
+@ROLE_ID varchar(50),
+@PAGE tinyint,
+@strNTLogin varchar(50)
+AS
+INSERT INTO A_Z_EMAILS_TO_SEND_ROLES_TO_EMAIL 
+	(ID,EMAIL_ID,ROLE_ID,DRCM,MODBY,PAGE)
+	VALUES 
+	(newID(),@ID,@ROLE_ID,getDate(),@strNTLogin,@PAGE)
+
+

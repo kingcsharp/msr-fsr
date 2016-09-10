@@ -1,0 +1,22 @@
+﻿
+CREATE  PROCEDURE dbo.A_SP_ZZ_EMAIL_CREATE
+@ID varchar(50) OUTPUT,
+@HIGH_PRIORITY tinyint,
+@ALL_ADDIES tinyInt,
+@ADDY varchar(50)
+AS
+set @ID = newID()
+INSERT INTO A_Z_EMAILS_TO_SEND 
+	(
+	ID,STATUS,DRCM,
+	MODBY,HIGH_PRIORITY,
+	ALL_ADDIES,ADDY
+	) 
+	values
+	(
+	@ID,'CREATING',getdATE(),
+	'Create',isNull(@HIGH_PRIORITY,0),
+	isNull(@ALL_ADDIES,0),isNull(@ADDY,'SYS-EMAIL-1')
+	)
+
+

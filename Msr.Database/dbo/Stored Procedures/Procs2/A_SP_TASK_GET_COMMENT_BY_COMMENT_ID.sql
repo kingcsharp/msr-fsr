@@ -1,0 +1,9 @@
+﻿
+
+
+CREATE   PROCEDURE A_SP_TASK_GET_COMMENT_BY_COMMENT_ID
+@commentID nvarchar(50),
+@strNTLogin nvarchar(50)
+AS
+SELECT * FROM A_TASK_COMMENT WHERE ID = @commentID AND WRITER = @strNTLogin
+

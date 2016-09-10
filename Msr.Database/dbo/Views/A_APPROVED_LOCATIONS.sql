@@ -1,0 +1,19 @@
+﻿
+
+
+
+
+CREATE VIEW dbo.A_APPROVED_LOCATIONS
+AS
+SELECT     l.ID, lh.NAME, lh.PARENT_LOCATION, lh.PARENT_LOCATION_NAME, lh.ADDRESS_1, lh.ADDRESS_2, lh.FULL_ADDRESS, lh.CITY, lh.STATE, 
+                      lh.COUNTRY, lh.POSTAL_CODE, lh.REGION, lh.REGION_NAME, lh.INTERNAL_ADDRESS, lh.OBJECT_ID, lh.DRCM, lh.MODBY, lh.PARENT_PATH, 
+                      o.LOCKED_BY, o.UNLOCKED_BY, o.CREATED_BY, o.CREATE_DATE, o.ROOT, o.REV_INFO, o.CREATING_CO, o.STATUS, o.REV, o.WFS_ID, 
+                      o.LOCKED_BY_NAME, o.CREATING_CO_NAME, o.APPROVAL_ACTIVITY
+FROM         dbo.A_LOCATIONS_HISTORY lh INNER JOIN
+                      dbo.A_LOCATIONS l ON lh.ID = l.HISTORY_REF_ID INNER JOIN
+                      dbo.A_OBJECTS o ON lh.OBJECT_ID = o.ID
+
+
+
+
+

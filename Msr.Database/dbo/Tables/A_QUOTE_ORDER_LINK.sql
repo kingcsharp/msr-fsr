@@ -1,0 +1,57 @@
+﻿CREATE TABLE [dbo].[A_QUOTE_ORDER_LINK] (
+    [ID]         VARCHAR (50) NOT NULL,
+    [QUOTE_ID]   VARCHAR (50) NULL,
+    [ORDER_ID]   VARCHAR (50) NULL,
+    [DRCM]       DATETIME     NULL,
+    [MODBY]      VARCHAR (50) NULL,
+    [STATUS]     VARCHAR (50) NULL,
+    [CUSTOMER]   VARCHAR (50) NULL,
+    [SUPPLIER]   VARCHAR (50) NULL,
+    [TASK_ID]    VARCHAR (50) NULL,
+    [QA_TASK_ID] VARCHAR (50) NULL,
+    CONSTRAINT [PK_A_QUOTE_ORDER_LINK] PRIMARY KEY CLUSTERED ([ID] ASC),
+    CONSTRAINT [FK_A_QUOTE_ORDER_LINK_A_ORDERS] FOREIGN KEY ([ORDER_ID]) REFERENCES [dbo].[A_ORDERS] ([ID]) NOT FOR REPLICATION,
+    CONSTRAINT [FK_A_QUOTE_ORDER_LINK_A_TASKS] FOREIGN KEY ([TASK_ID]) REFERENCES [dbo].[A_TASKS] ([ID])
+);
+
+
+GO
+ALTER TABLE [dbo].[A_QUOTE_ORDER_LINK] NOCHECK CONSTRAINT [FK_A_QUOTE_ORDER_LINK_A_ORDERS];
+
+
+GO
+ALTER TABLE [dbo].[A_QUOTE_ORDER_LINK] NOCHECK CONSTRAINT [FK_A_QUOTE_ORDER_LINK_A_TASKS];
+
+
+GO
+
+
+CREATE  TRIGGER A_QUOTE_ORDER_LINK_INSERT_UPDATE
+ON dbo.A_QUOTE_ORDER_LINK
+AFTER INSERT,UPDATE
+AS
+
+if update(STATUS)
+
+begin
+	declare @oldStatus varchar(50),@newStatus varchar(50),@ID varchar(50), @MODBY as nvarchar(50)
+	declare @orderID varchar(50),@oStatus varchar(50)
+	SELECT @ID = ID, @MODBY = MODBY, @newStatus = STATUS,@orderID = ORDER_ID FROM INSERTED
+	SELECT @oldStatus = STATUS FROM DELETED
+	INSERT INTO A_QUOTE_ORDER_LINK_STAT_HISTORY (ID,QOL_ID,STATUS_CHANGED_TO,STATUS_CHANGED_FROM,DRCM,MODBY)
+	VALUES (newID(),@ID,@newStatus,@oldStatus,getDate(),@MODBY)
+	SELECT @oStatus = PROGRESS FROM A_V_ORDERS_APPROVED_DATA WHERE ID = @orderID
+	if @oStatus = 'ALL_QUOTED_WAIT_ACCEPTANCE'
+		begin
+		print 'We need to make sure we got a task made for the customer to accept this Quote'
+		declare @qaTask varchar(50)
+		SELECT @qaTask = QA_TASK_ID FROM A_QUOTE_ORDER_LINK WHERE ID = @ID
+		if @qaTask is null
+			begin
+			print 'This QOL item does not have an accpt task and it should'
+			exec A_SP_QUOTE_ORDER_LINK_CREATE_QA_TASK @ID,@MODBY
+			end
+		end
+end
+
+

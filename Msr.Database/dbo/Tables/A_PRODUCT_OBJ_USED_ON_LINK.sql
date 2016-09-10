@@ -1,0 +1,8 @@
+﻿CREATE TABLE [dbo].[A_PRODUCT_OBJ_USED_ON_LINK] (
+    [ID]         VARCHAR (50) NULL,
+    [PRODUCT_ID] VARCHAR (50) NULL,
+    [OBJECT_ID]  VARCHAR (50) NULL,
+    [DRCM]       DATETIME     NULL,
+    [MODBY]      VARCHAR (50) NULL
+);
+

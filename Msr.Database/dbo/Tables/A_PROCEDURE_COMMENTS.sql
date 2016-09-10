@@ -1,0 +1,11 @@
+﻿CREATE TABLE [dbo].[A_PROCEDURE_COMMENTS] (
+    [ID]           VARCHAR (50)    NOT NULL,
+    [DATA]         NVARCHAR (4000) NULL,
+    [LOC]          VARCHAR (50)    NULL,
+    [PROC_HIST_ID] VARCHAR (50)    NULL,
+    [DRCM]         DATETIME        NULL,
+    [MODBY]        VARCHAR (50)    NULL,
+    [PRINT_ORDER]  REAL            NULL,
+    CONSTRAINT [PK_A_PROCEDURE_COMMENTS] PRIMARY KEY CLUSTERED ([ID] ASC)
+);
+

@@ -1,0 +1,11 @@
+﻿CREATE TABLE [dbo].[A_ADMIN_EMAIL_QUE] (
+    [ID]            VARCHAR (50)    NOT NULL,
+    [EMAIL_ADDRESS] VARCHAR (50)    NOT NULL,
+    [BODY]          VARCHAR (6500)  NULL,
+    [DRCM]          DATETIME        NULL,
+    [MODBY]         VARCHAR (50)    NULL,
+    [PERSON_ID]     VARCHAR (50)    NULL,
+    [SUBJECT]       NVARCHAR (1000) NULL,
+    CONSTRAINT [PK_A_ADMIN_EMAIL_QUE] PRIMARY KEY CLUSTERED ([ID] ASC)
+);
+

@@ -1,0 +1,14 @@
+﻿
+
+
+CREATE  PROCEDURE A_SP_PROCEDURE_GET_REFERENCE_FILES
+	@procStepID nvarchar(50),
+	@strNTLogin nvarchar(50)
+AS
+
+SELECT * FROM A_V_PROCEDURE_STEP_DOCUMENT_DATA WHERE STEP_ID = @procStepID
+
+
+
+
+

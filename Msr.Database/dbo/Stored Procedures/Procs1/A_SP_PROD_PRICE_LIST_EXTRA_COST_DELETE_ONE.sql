@@ -1,0 +1,18 @@
+﻿CREATe PROCEDURE DBO.A_SP_PROD_PRICE_LIST_EXTRA_COST_DELETE_ONE
+@ID varchar(50),
+@strNTLogin varchar(50)
+AS
+if exists (
+			SELECT ec.ID FROM 
+			A_PROD_PRICE_LIST_EXTRA_COSTS ec,
+			A_PROD_PRICE_LIST_HISTORY h,
+			A_OBJECTS o
+			WHERE ec.ID = @ID AND
+			ec.PROD_PRICE_LIST = h.ID AND
+			h.OBJECT_ID = o.ID AND
+			o.LOCKED_BY = @strNTLogin
+			)
+	begin
+	DELETE FROM A_PROD_PRICE_LIST_EXTRA_COSTS WHERE ID = @ID
+	print 'Deleted it'
+	end

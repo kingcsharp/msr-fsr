@@ -1,0 +1,19 @@
+﻿
+
+
+
+
+
+
+
+CREATE   PROCEDURE A_SP_EQUIP_EXP_DELETE
+@id nvarchar(50),
+@strNTLogin nvarchar(50)
+AS
+DELETE FROM A_EQUIP_EXP_HISTORY WHERE ID = @ID
+
+
+
+
+
+

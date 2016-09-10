@@ -1,0 +1,41 @@
+﻿
+
+
+
+
+
+
+
+
+
+
+CREATE      PROCEDURE A_SP_LOCATIONS_UPDATE_WHERE_USED_NAME
+	@ID nvarchar(50)
+AS
+print 'INSIDE A_SP_LOCATIONS_UPDATE_WHERE_USED_NAME'
+declare @NAME as nvarchar(100)
+SELECT @NAME = NAME FROM A_APPROVED_LOCATIONS WHERE ID = @ID
+
+--Update the name in each place it is used
+UPDATE A_LOCATIONS_HISTORY SET PARENT_LOCATION_NAME = @NAME WHERE PARENT_LOCATION = @ID
+UPDATE A_PEOPLE_SEARCH_TABLE SET LOCATION_NAME = @NAME WHERE LOCATION_ID = @ID
+UPDATE A_COMPANIES_HISTORY SET LOCATION_NAME = @NAME WHERE LOCATION = @ID
+
+
+declare @curSteps Cursor
+Set @CurSteps = Cursor for SELECT ID from A_LOCATIONS_HISTORY WHERE PARENT_LOCATION = @ID 
+declare @CHILD_ID nvarchar(50)
+Open @curSteps
+Fetch Next from @curSteps Into @CHILD_ID
+while (@@fetch_status = 0)
+	Begin
+		exec A_SP_LOCATIONS_UPDATE_ALL_DATA_FOR_ONE @CHILD_ID
+		Fetch Next from @curSteps Into @CHILD_ID
+	End
+
+
+
+
+
+
+

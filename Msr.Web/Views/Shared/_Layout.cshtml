@@ -6,9 +6,10 @@
  
     @*@Styles.Render("~/Content/css")*@
     @*@Scripts.Render("~/bundles/modernizr")*@
+
     <title>@ViewBag.Title - My ASP.NET Application</title>
-    <base href="[[!++site_url]]"/>
-    <meta charset="[[++modx_charset]]"/>
+    <base href="[[!++site_url]]" />
+    <meta charset="[[++modx_charset]]" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Fonts -->
@@ -24,8 +25,13 @@
     <link rel="stylesheet" type="text/css" href="/assets/css/dataTables.bootstrap.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/select2.min.css">
     <!-- CSS App -->
-    <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/themes/flat-blue.css">
+    [[*id:is=`5`:or:is=`6`:or:is=`7`:or:is=`8`:then=`
+    <link rel="stylesheet" type="text/css" href="/assets/css/ui.jqgrid-bootstrap-ui.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/ui.jqgrid.css">
+    `]]
+    <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/hopscotch.css">
 </head>
 <body class="flat-blue">
     <div class="app-container">
@@ -37,8 +43,7 @@
 
         @Html.Partial("_Footer")
 
-        <!-- Javascript Libs -->
-        <script type="text/javascript" src="./assets/js/jquery.min.js"></script>
+        <script type="text/javascript" src="/assets/js/jquery.min.js"></script>
         <script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="/assets/js/Chart.min.js"></script>
         <script type="text/javascript" src="/assets/js/bootstrap-switch.min.js"></script>
@@ -51,11 +56,46 @@
         <script type="text/javascript" src="/assets/js/ace/theme-github.js"></script>
         <!-- Javascript -->
         <script type="text/javascript" src="/assets/js/app.js"></script>
-    <script type="text/javascript" src="/assets/js/index.js"></script>
+        <script type="text/javascript" src="/assets/js/help_form.js"></script>
+        <script type="text/javascript" src="/assets/js/hopscotch.js"></script>
+    
+        @RenderSection("scripts", required: false)
 
-        @*@Scripts.Render("~/bundles/jquery")
+        @*[[*id:is=`1`:then=`
+        <script type="text/javascript" src="/assets/js/dashboard.js"></script>
+        `]]
+        [[*id:is=`5`:or:is=`6`:or:is=`7`:or:is=`8`:then=`
+        <script type="text/javascript" src="/assets/js/i18n/grid.locale-en.js"></script>
+        <script type="text/javascript" src="/assets/js/jquery.jqGrid.min.js"></script>
+        <script type="text/javascript" src="/assets/js/jquery.mockjax.js"></script>
+        <script>
+        	//$.jgrid.defaults.responsive = true;
+		    $.jgrid.defaults.styleUI = 'Bootstrap';
+        </script>
+        `]]
+        [[*id:is=`5`:then=`
+        <script type="text/javascript" src="/assets/js/buyer.js"></script>
+        `]]
+        [[*id:is=`6`:then=`
+        <script type="text/javascript" src="/assets/js/engineer.js"></script>
+        `]]
+        [[*id:is=`7`:then=`
+        <script type="text/javascript" src="/assets/js/admin_users.js"></script>
+        <script type="text/javascript" src="/assets/js/master-user-tour.js"></script>
+        `]]
+        [[*id:is=`8`:then=`
+        <script type="text/javascript" src="/assets/js/client_users.js"></script>
+        `]]
+        <script src="https://cdn.smooch.io/smooch.min.js"></script>
+    <script>
+        Smooch.init({ appToken: '9wxoxi2wbcbymhjf1ex1a0dux' });
+    </script>*@
+
+    @*@Scripts.Render("~/bundles/jquery")
         @Scripts.Render("~/bundles/bootstrap")
-        @RenderSection("scripts", required: false)*@
+        )*@
+
+    
 </body>
 </html>
 

@@ -1,0 +1,14 @@
+﻿
+/*
+STORED PROCEDURE CALLED IN projects/editProjects.asp
+
+*/
+
+CREATE   PROCEDURE A_SP_POP_FILL_PROJECT_SPONSORS
+@projectID varchar(50),
+@strNTLogin nvarchar(50)
+AS
+SELECT * 
+FROM A_V_PROJECT_SPONSOR_DATA
+WHERE PROJECT_ID =@projectID
+

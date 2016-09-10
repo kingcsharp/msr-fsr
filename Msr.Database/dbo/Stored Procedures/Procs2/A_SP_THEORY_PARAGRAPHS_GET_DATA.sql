@@ -1,0 +1,36 @@
+﻿
+
+
+CREATE     PROCEDURE A_SP_THEORY_PARAGRAPHS_GET_DATA
+@TOID nvarchar(50),
+@strNTLogin nvarchar(50)
+AS
+declare @strID as nvarchar(50)
+SELECT @strID = ID FROM A_THEORY_HISTORY WHERE OBJECT_ID = @TOID
+
+
+SELECT * FROM A_THEORY_PARAGRAPHS 
+WHERE THEORY_ID=@strID
+ORDER BY PARAGRAPH_ORDER_NUMBER
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

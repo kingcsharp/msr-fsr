@@ -1,0 +1,18 @@
+﻿
+
+
+
+
+CREATE    PROCEDURE  A_SP_TIME_ZONES_LIST_ALL
+@strNTLogin nvarchar(50)
+AS
+SELECT ID, DESCRIPTION + '(' + cast(DATEADD(hh,G_DIFF,getDate()) AS nvarchar(50)) + ')' AS DESCRIPTION FROM A_TIME_ZONES ORDER BY NUM
+
+
+
+
+
+
+
+
+

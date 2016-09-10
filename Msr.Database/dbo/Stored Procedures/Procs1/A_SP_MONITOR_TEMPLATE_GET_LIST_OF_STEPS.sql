@@ -1,0 +1,15 @@
+﻿
+
+CREATE PROCEDURE A_SP_MONITOR_TEMPLATE_GET_LIST_OF_STEPS
+@poid nvarchar(50),
+@strNTLogin nvarchar(50)
+AS
+declare @pid as nvarchar(50)
+select @pid = ID FROM A_PROCEDURES_HISTORY WHERE OBJECT_ID = @poid
+SELECT * FROM A_PROCEDURE_STEPS WHERE PROCEDURE_ID = @pid
+
+
+
+
+
+

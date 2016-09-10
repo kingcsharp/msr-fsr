@@ -1,0 +1,22 @@
+﻿
+
+
+
+
+
+
+
+CREATE   PROCEDURE A_SP_PROD_PRICE_LIST_DELETE
+@id nvarchar(50),
+@strNTLogin nvarchar(50)
+AS
+DELETE FROM A_PROD_PRICE_LIST_HISTORY WHERE ID = @id
+
+
+
+
+
+
+
+
+

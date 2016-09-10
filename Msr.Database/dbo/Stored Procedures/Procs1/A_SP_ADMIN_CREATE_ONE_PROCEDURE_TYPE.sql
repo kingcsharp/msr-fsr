@@ -1,0 +1,13 @@
+﻿CREATE PROCEDURE DBO.A_SP_ADMIN_CREATE_ONE_PROCEDURE_TYPE
+@ID varchar(50),
+@NAME varchar(50)
+AS
+
+declare @tester as varchar(50)
+SELECT @tester = ID FROM A_ADMIN_PROCEDURE_TYPES WHERE ID = @ID
+if @tester is null
+	begin
+	INSERT INTO A_ADMIN_PROCEDURE_TYPES (ID,NAME,MODBY,DRCM)
+	VALUES (@ID,@NAME,'SYSTEM',getDate())
+	end
+

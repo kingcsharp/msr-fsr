@@ -1,0 +1,13 @@
+﻿
+/*
+STORED PROCEDURE CALLED IN disucssion/editDiscussion.asp
+*/
+CREATE    PROCEDURE A_SP_DISCUSSION_RESPONSE_GET_CHILDREN
+@responseID nvarchar(50),
+@strNTLogin nvarchar(50)
+
+AS
+SELECT * FROM A_DISCUSSION_RESPONSE 
+WHERE PARENT_ID=@responseID
+ORDER BY DRCM
+

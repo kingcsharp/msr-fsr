@@ -1,0 +1,15 @@
+﻿
+
+
+
+
+CREATE   PROCEDURE A_SP_DD_TT_VERBS_TYPES
+@strNTLogin nvarchar(50)
+as
+SELECT * FROM A_TT_VERBS_TYPE_LOOKUP
+
+
+
+
+
+

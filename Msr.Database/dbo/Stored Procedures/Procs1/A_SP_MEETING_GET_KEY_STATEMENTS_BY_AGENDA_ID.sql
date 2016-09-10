@@ -1,0 +1,38 @@
+﻿
+
+/*
+STORED PROCEDURE CALLED IN meeting/viewMeeting.asp
+STORED PROCEDURE CALLED IN meeting/editKeyStatements.asp
+*/
+CREATE  PROCEDURE A_SP_MEETING_GET_KEY_STATEMENTS_BY_AGENDA_ID
+@agendaID varchar(50),
+@strNTLogin varchar(50)
+AS
+
+SELECT *
+FROM A_MEETING_AGENDA_KEY_STATEMENTS 
+WHERE AGENDA_ID=@agendaID
+ORDER BY NUM
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

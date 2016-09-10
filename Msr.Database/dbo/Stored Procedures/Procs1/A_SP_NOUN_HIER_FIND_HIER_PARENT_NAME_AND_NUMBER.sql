@@ -1,0 +1,23 @@
+﻿
+
+
+
+CREATE  PROCEDURE A_SP_NOUN_HIER_FIND_HIER_PARENT_NAME_AND_NUMBER
+	@retNAME nvarchar(100) OUTPUT,
+	@retID nvarchar(50) OUTPUT,
+	@ID nvarchar(50),	
+	@PID nvarchar(50),
+	@HID nvarchar(50),
+	@strNTLogin nvarchar(50)
+AS
+
+if not(@ID is null)
+	SELECT @retID = PARENT_ID FROM A_NOUN_HIERARCHY_CHILDREN_EDITING WHERE ID = @ID AND HIERARCHY_ID = @HID
+if not(@PID is null)
+	SET @retID = @PID
+
+SELECT @retNAME = NAME FROM A_V_NOUN_HIER_CHILDREN_EDITING_DATA WHERE ID = @retID
+
+
+
+

@@ -1,0 +1,20 @@
+﻿
+
+
+
+
+
+CREATE    PROCEDURE A_SP_POPFILL_EDITROLE_CHILD_ROLES
+	@ID nvarchar(50),
+	@strNTLogin nvarchar(50)
+AS
+
+SELECT r.NAME as SHOW, r.ID AS VALUE FROM A_ROLE_ASSIGNEE ra,A_APPROVED_ROLES r 
+WHERE ra.ROLE = @ID AND ra.ROLE_ASSIGNED = r.ID 
+
+
+
+
+
+
+

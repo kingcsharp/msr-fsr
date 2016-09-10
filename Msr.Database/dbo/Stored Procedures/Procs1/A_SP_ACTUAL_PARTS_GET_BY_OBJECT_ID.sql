@@ -1,0 +1,16 @@
+﻿
+
+
+
+
+
+CREATE  PROCEDURE A_SP_ACTUAL_PARTS_GET_BY_OBJECT_ID
+	@objID nvarchar(50),
+	@strNTLogin nvarchar(50)
+AS
+SELECT * FROM A_O_ACTUAL_PARTS_HISTORY WHERE OBJECT_ID = @objID
+
+
+
+
+
