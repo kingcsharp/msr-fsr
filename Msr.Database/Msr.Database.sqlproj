@@ -68,6 +68,7 @@
     <Folder Include="dbo\Stored Procedures\Procs1\" />
     <Folder Include="dbo\Stored Procedures\Procs2\" />
     <Folder Include="Database Triggers\" />
+    <Folder Include="dbo\Views\Portal" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\A_PARTS_SUB_PARTS.sql" />
@@ -2720,5 +2721,6 @@
     </Build>
     <Build Include="dbo\Stored Procedures\Procs2\ZZ_OBSOLETE_A_SP_TASK_PROCEDURE_CREATE_CHILDREN_TASKS_STARTING_WITH_CERTAIN_STEP.sql" />
     <Build Include="Database Triggers\rds_deny_backups_trigger.sql" />
+    <Build Include="dbo\Views\Portal\Portal_WorkOrders.sql" />
   </ItemGroup>
 </Project>

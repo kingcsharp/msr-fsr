@@ -487,6 +487,16 @@
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Msr.Models\Msr.Models.csproj">
+      <Project>{2D976E8C-924C-4E73-A8FC-A8395B457C0E}</Project>
+      <Name>Msr.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Msr.Services\Msr.Services.csproj">
+      <Project>{905E5F0D-1620-483C-87C5-4DEDAAA1DC9A}</Project>
+      <Name>Msr.Services</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
