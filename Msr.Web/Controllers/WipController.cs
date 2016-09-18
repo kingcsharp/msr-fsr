@@ -88,7 +88,7 @@ namespace Msr.Web.Controllers
                 orderBy = param.sortColumn;
             }
 
-            if (param.sortColumn == "desc")
+            if (param.sortOrder == "desc")
             {
                 totalRows = totalRows.OrderByDescending(orderBy);
             }
