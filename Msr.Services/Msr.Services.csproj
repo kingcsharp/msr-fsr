@@ -53,6 +53,7 @@
     <Compile Include="jqGrid\JqGridParam.cs" />
     <Compile Include="jqGrid\DatatableParamConverter.cs" />
     <Compile Include="jqGrid\ExtendedMethods.cs" />
+    <Compile Include="Orders\PeopleService.cs" />
     <Compile Include="Orders\OrderService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

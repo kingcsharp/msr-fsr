@@ -8,6 +8,8 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using Msr.Infrastructure.Helpers;
+using Msr.Services.Orders;
 using Msr.Web.Models;
 
 namespace Msr.Web.Controllers
@@ -72,6 +74,10 @@ namespace Msr.Web.Controllers
             {
                 return View(model);
             }
+
+            var peopleService = new PeopleService();
+
+           var result1 =   peopleService.CheckUserExists(model.Email, AuthenticationHelper.PassWordEncrypt(model.Password));
 
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true

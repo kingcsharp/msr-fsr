@@ -14,9 +14,11 @@ namespace Msr.Repositories
         {
             modelBuilder.Entity<WorkOrderView>().ToTable("Portal_WorkOrders");
             modelBuilder.Entity<BuyerView>().ToTable("Portal_BuyerView");
+            modelBuilder.Entity<ApprovedPeopleView>().ToTable("Portal_ApprovedPeople");
         }
 
         public DbSet<WorkOrderView> WorkOrders { get; set; }
         public DbSet<BuyerView> BuyerViews { get; set; }
+        public DbSet<ApprovedPeopleView> ApprovedPeoples { get; set; }
     }
 }
