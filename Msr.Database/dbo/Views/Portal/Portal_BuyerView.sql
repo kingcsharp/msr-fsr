@@ -1,0 +1,59 @@
+﻿
+create VIEW [dbo].[Portal_BuyerView]
+AS
+
+SELECT DISTINCT 
+NEWID() AS Id,
+t.SUPPLIER_NAME AS SupplierName,
+t.SUPPLIER_ID AS SupplierId,
+t.HAS_FILE AS HasFile,
+t.ID AS TaskId,
+t.NUM_SUB_TASKS AS NumSubTasks,
+t.NUM_SUB_TASKS_COMPLETE AS NumSubTasksComplete,
+t.MY_TOT_HOURS AS MyTotHours,
+t.MY_COMP_HOURS AS MyCompHours,
+REPLACE(REPLACE(t.CUR_STEP_TEXT,'<<bb>>',''),'<</bb>>','')  AS CurStepText,
+t.TIME_COMPLETE AS TimeComplete,
+t.PERC_COMPLETE AS PercComplete,
+t.BATCH_PARENT AS BatchParent,
+t.BATCHED AS Batched,
+t.BATCH_FILL AS BatchEdFill,
+t.FILL_ITEM_ID AS FillItemId,
+t.NICK_NAME AS NickName,
+t.SERIAL AS Serial,
+t.PURCHASE_ID AS PurchaseId,
+t.PURCHASE_HIST_ID AS PurchaseHistId,
+t.PURCHASE_ITEM_ID PurchaseItemId,
+t.CUSTOMER_NAME AS CustomerName,
+t.DUE_DATE AS DueDate,
+t.ORIG_DUE_DATE AS OrigDueDate,
+t.ACTUAL_PART_ID AS ActualPartId,
+t.ACT_PART_OBJ_ID AS ActPartObjId,
+t.ST_DATE AS StDate,
+t.PROC_ID AS ProcId,
+t.CUST_ID AS CustId,
+t.START_DATE AS StartDate,
+t.REQUESTEE_ID AS RequesteeId,
+t.GROUP_REQUESTEE_ID AS GroupRequesteeId,
+t.PRODUCT_NAME AS ProductName,
+t.CUST_PURCH_NUM AS CustPurchNum,
+t.REFERENCE_PO AS ReferencePo,
+t.PROC_NAME AS ProcName,
+t.QTY AS Qty,
+t.FILL_QTY AS FillQty,
+t.STATUS AS Status,
+t.FILL_ID AS FillId,
+t.MT_NUM AS MtNum,
+t.ACTUAL_START_DATE AS ActualStartDate,
+t.ACTUAL_STOP_DATE AS ActualStopDate,
+invoice.NEW_ITEMS_AMT AS InvoiceAmount,
+invoice.INVOICE_DATE AS InvoiceDate,
+invoice.STATUS InvoiceStatus
+FROM A_V_ENGINEER_SCREEN_DATA_WIP_ONE_STEP_Simplified t with (noLock) 
+LEFT JOIN A_V_INVOICES_WITH_ACCT_INFORMATION invoice ON invoice.PURCHASE_ID = t.PURCHASE_ID
+--WHERE (CUST_ID = '2' OR (  GROUP_REQUESTEE_ID IN ('','1502','1490','1498','1506','1510','1494') 
+--OR  REQUESTEE_ID = '110332' OR  exists( 	  SELECT ID FROM A_TASKS ts 	
+--  WHERE ts.PARENT_ID = t.ID and       (ts.REQUESTEE_ID = '110332' or ts.GROUP_REQUESTEE_ID IN ('','1502','1490','1498','1506','1510','1494') )	  )  ) )
+--  AND (STATUS IN ('REQUESTED','ACCEPTED')) AND  (SERIAL LIKE '%%' OR SERIAL is NULL ) AND  (CUST_PURCH_NUM LIKE '%%' OR CUST_PURCH_NUM is NULL )
+--   AND  (PROC_ID LIKE '%%' OR PROC_ID is NULL ) AND  (PRODUCT_NAME LIKE '%%' OR PRODUCT_NAME is NULL ) AND  (PURCHASE_ITEM_ID LIKE '%%' OR PURCHASE_ITEM_ID is NULL ) 
+--   ORDER BY ST_DATE

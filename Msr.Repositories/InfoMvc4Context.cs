@@ -13,8 +13,10 @@ namespace Msr.Repositories
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<WorkOrderView>().ToTable("Portal_WorkOrders");
+            modelBuilder.Entity<BuyerView>().ToTable("Portal_BuyerView");
         }
 
         public DbSet<WorkOrderView> WorkOrders { get; set; }
+        public DbSet<BuyerView> BuyerViews { get; set; }
     }
 }

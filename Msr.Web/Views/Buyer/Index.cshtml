@@ -1,0 +1,49 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+
+<link rel="stylesheet" type="text/css" href="/assets/css/themes/flat-blue.css">
+
+<link rel="stylesheet" type="text/css" href="/assets/css/ui.jqgrid-bootstrap-ui.css">
+<link rel="stylesheet" type="text/css" href="/assets/css/ui.jqgrid.css">
+
+<link rel="stylesheet" type="text/css" href="/assets/css/style.css">
+<link rel="stylesheet" type="text/css" href="/assets/css/hopscotch.css">
+
+<div class="container-fluid">
+    <div class="side-body padding-top">
+        <div class="row">
+            <h2 class="page-header">Work Orders for [Client Name]<button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button></h2>
+            <div class="col-lg-12">
+                <table id="jqGrid"></table>
+                <div id="jqGridPager"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@Html.Partial("_ModalWipHelp")
+@Html.Partial("_ModalWipWindows")
+@Html.Partial("_SupportForm")*
+
+
+@section scripts
+{
+
+<script type="text/javascript" src="/assets/js/i18n/grid.locale-en.js"></script>
+<script type="text/javascript" src="/assets/js/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="/assets/js/jquery.mockjax.js"></script>
+<script type="text/javascript" src="/assets/js/buyer_grid.js"></script>
+
+<script src="https://cdn.smooch.io/smooch.min.js"></script>
+    <script>
+        //$.jgrid.defaults.responsive = true;
+        $.jgrid.defaults.styleUI = 'Bootstrap';
+
+        Smooch.init({ appToken: '9wxoxi2wbcbymhjf1ex1a0dux' });
+    </script>
+        
+}
+

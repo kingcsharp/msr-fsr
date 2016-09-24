@@ -2722,5 +2722,6 @@
     <Build Include="dbo\Stored Procedures\Procs2\ZZ_OBSOLETE_A_SP_TASK_PROCEDURE_CREATE_CHILDREN_TASKS_STARTING_WITH_CERTAIN_STEP.sql" />
     <Build Include="Database Triggers\rds_deny_backups_trigger.sql" />
     <Build Include="dbo\Views\Portal\Portal_WorkOrders.sql" />
+    <Build Include="dbo\Views\Portal\Portal_BuyerView.sql" />
   </ItemGroup>
 </Project>

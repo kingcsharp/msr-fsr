@@ -18,5 +18,10 @@ namespace Msr.Services.Orders
         {
             return _dbContext.WorkOrders;
         }
+
+        public IQueryable<BuyerView> GetBuyerWorkOrderQueryable()
+        {
+            return _dbContext.BuyerViews;
+        }
     }
 }
