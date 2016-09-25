@@ -2723,5 +2723,7 @@
     <Build Include="Database Triggers\rds_deny_backups_trigger.sql" />
     <Build Include="dbo\Views\Portal\Portal_WorkOrders.sql" />
     <Build Include="dbo\Views\Portal\Portal_BuyerView.sql" />
+    <Build Include="dbo\Views\Portal\Portal_ApprovedPeople.sql" />
+    <Build Include="dbo\Views\Portal\Portal_UserView.sql" />
   </ItemGroup>
 </Project>
