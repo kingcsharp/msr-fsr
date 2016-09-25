@@ -10,6 +10,8 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
+using Msr.Models.Users;
+using Msr.Repositories;
 using Msr.Web.Models;
 
 namespace Msr.Web

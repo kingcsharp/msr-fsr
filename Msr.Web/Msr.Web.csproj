@@ -170,6 +170,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BuyerController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\WipController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -323,6 +324,8 @@
     <Content Include="assets\js\dataTables.bootstrap.min.js" />
     <Content Include="assets\js\buyer_grid.js" />
     <Content Include="assets\js\engineer.js" />
+    <Content Include="assets\js\Grids\client-user.js" />
+    <Content Include="assets\js\Grids\master-user.js" />
     <Content Include="assets\js\help_form.js" />
     <Content Include="assets\js\hopscotch.js" />
     <Content Include="assets\js\hopscotch.min.js" />
@@ -476,13 +479,13 @@
     <Content Include="Views\Shared\_Footer.cshtml" />
     <Content Include="Views\Shared\_SideBar.cshtml" />
     <Content Include="Views\Wip\Engineering.cshtml" />
-    <Content Include="Views\Wip\_ModalWipHelp.cshtml" />
-    <Content Include="Views\Wip\_ModalWipWindows.cshtml" />
-    <Content Include="Views\Wip\_SupportForm.cshtml" />
-    <Content Include="Views\Buyer\_ModalWipHelp.cshtml" />
-    <Content Include="Views\Buyer\_ModalWipWindows.cshtml" />
-    <Content Include="Views\Buyer\_SupportForm.cshtml" />
+    <Content Include="Views\Shared\_ModalWipHelp.cshtml" />
+    <Content Include="Views\Shared\_ModalWipWindows.cshtml" />
+    <Content Include="Views\Shared\_SupportForm.cshtml" />
     <Content Include="Views\Buyer\Index.cshtml" />
+    <Content Include="Views\User\Master.cshtml" />
+    <Content Include="Views\Shared\_LoginLayout.cshtml" />
+    <Content Include="Views\User\Client.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -503,6 +506,10 @@
     <ProjectReference Include="..\Msr.Models\Msr.Models.csproj">
       <Project>{2D976E8C-924C-4E73-A8FC-A8395B457C0E}</Project>
       <Name>Msr.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Msr.Repositories\Msr.Repositories.csproj">
+      <Project>{E8A1A202-F0D8-495D-98E7-1F05F6057841}</Project>
+      <Name>Msr.Repositories</Name>
     </ProjectReference>
     <ProjectReference Include="..\Msr.Services\Msr.Services.csproj">
       <Project>{905E5F0D-1620-483C-87C5-4DEDAAA1DC9A}</Project>

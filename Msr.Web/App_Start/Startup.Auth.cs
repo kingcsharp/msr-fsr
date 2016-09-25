@@ -4,6 +4,8 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Google;
+using Msr.Models.Users;
+using Msr.Repositories;
 using Owin;
 using Msr.Web.Models;
 

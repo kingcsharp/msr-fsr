@@ -10,6 +10,7 @@ using Msr.Services.Orders;
 
 namespace Msr.Web.Controllers
 {
+    [Authorize]
     public class BuyerController : Controller
     {
         public ActionResult Index()

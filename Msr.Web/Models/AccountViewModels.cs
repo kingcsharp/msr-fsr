@@ -49,8 +49,7 @@ namespace Msr.Web.Models
     public class LoginViewModel
     {
         [Required]
-        [Display(Name = "Email")]
-        [EmailAddress]
+        [Display(Name = "User")]
         public string Email { get; set; }
 
         [Required]

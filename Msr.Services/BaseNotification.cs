@@ -1,0 +1,26 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Msr.Services
+{
+    public class BaseNotification
+    {
+        private readonly List<string> _errors = new List<string>();
+
+        public void AddError(string message)
+        {
+            _errors.Add(message);
+        }
+
+        public bool HasErrors()
+        {
+            return _errors.Any();
+        }
+
+        public string ErrorMessage()
+        {
+            return string.Join(",", _errors);
+        }
+    }
+}

@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Msr.Infrastructure.Helpers;
+using Msr.Models.Users;
 using Msr.Services.Orders;
 using Msr.Web.Models;
 

@@ -10,6 +10,7 @@ using Msr.Services.Orders;
 
 namespace Msr.Web.Controllers
 {
+    [Authorize]
     public class WipController : Controller
     {
         public ActionResult Engineering()
