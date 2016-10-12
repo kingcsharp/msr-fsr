@@ -1,0 +1,68 @@
+﻿@model Msr.Services.Orders.Messaging.NcrReportResponse
+<h4>Part Non Conformance Report - Work Order #@Model.Details.PurchItemId</h4>
+
+<table class="table table-bordered">
+    <tr>
+        <td>@Model.Details.SupName</td>
+        <td>@Model.Details.FillObjDesc</td>
+    </tr>
+</table>
+
+<table class="table table-bordered">
+    <tbody>
+        <tr>
+            <td class="theader">Date Report Prepared:</td>
+            <td>@DateTime.UtcNow</td>
+        </tr>
+        <tr>
+            <td class="theader">Work Order #:</td>
+            <td>@Model.Details.PurchItemId</td>
+        </tr>
+        <tr>
+            <td class="theader">Customer:</td>
+            <td>@Model.Details.CustName</td>
+        </tr>
+        <tr>
+            <td class="theader">Technician:</td>
+            <td>@Model.Details.Technician</td>
+        </tr>
+    </tbody>
+</table>
+
+<table class="table table-bordered ncr-report">
+    <thead>
+        <tr>
+            <th>GE # / Nanya #</th>
+            <th>Tool Description</th>
+            <th>Serial Number</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td></td>
+            <td>@Model.Details.PartDesc</td>
+            <td>@Model.Details.Serial</td>
+        </tr>
+    </tbody>
+</table>
+
+<table class="table table-bordered">
+    <tbody>
+        <tr>
+            <td class="theader">Tool Crated Date:</td>
+            <td>4/11/2015</td>
+        </tr>
+        <tr>
+            <td class="theader">Associated Documents:</td>
+            <td>110458</td>
+        </tr>
+        <tr>
+            <td class="theader">Associated Digital Pictures:</td>
+            <td>INTEL F24</td>
+        </tr>
+        <tr>
+            <td class="theader">Comments:</td>
+            <td>Here is where the comments from the technician go. Here is where the comments from the technician go. Here is where the comments from the technician go. Here is where the comments from the technician go. Here is where the comments from the technician go. Here is where the comments from the technician go.</td>
+        </tr>
+    </tbody>
+</table>

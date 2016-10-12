@@ -26,7 +26,7 @@ namespace Msr.Web.Controllers
             var totalRows = orderService.GetWorkOrderQueryable();
 
 
-            if (param.where !=null && param.where.rules.Any())
+            if (param.where != null && param.where.rules.Any())
             {
                 foreach (var rule    in param.where.rules)
                 {
@@ -59,7 +59,11 @@ namespace Msr.Web.Controllers
                         DateTime value;
                         if (DateTime.TryParse(rule.data, out value))
                         {
-                                totalRows = totalRows.Where(q => q.StartDate.HasValue && q.StartDate.Value.Day ==value.Day && q.StartDate.Value.Month == value.Month && q.StartDate.Value.Year == value.Year);
+                            totalRows =
+                                totalRows.Where(
+                                    q =>
+                                        q.StartDate.HasValue && q.StartDate.Value.Day == value.Day &&
+                                        q.StartDate.Value.Month == value.Month && q.StartDate.Value.Year == value.Year);
                         }
                     }
                     else if (rule.field == nameof(WorkOrderView.DueDate))
@@ -67,7 +71,11 @@ namespace Msr.Web.Controllers
                         DateTime value;
                         if (DateTime.TryParse(rule.data, out value))
                         {
-                            totalRows = totalRows.Where(q => q.DueDate.HasValue && q.DueDate.Value.Day == value.Day && q.DueDate.Value.Month == value.Month && q.DueDate.Value.Year == value.Year);
+                            totalRows =
+                                totalRows.Where(
+                                    q =>
+                                        q.DueDate.HasValue && q.DueDate.Value.Day == value.Day &&
+                                        q.DueDate.Value.Month == value.Month && q.DueDate.Value.Year == value.Year);
                         }
                     }
                     else if (rule.field == nameof(WorkOrderView.ProcName))
@@ -99,10 +107,10 @@ namespace Msr.Web.Controllers
             }
 
             var totalRecords = totalRows.Count();
-            totalRows = totalRows.Skip(param.pageIndex-1);
+            totalRows = totalRows.Skip(param.pageIndex - 1);
             totalRows = totalRows.Take(param.pageSize);
 
-            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)param.pageSize);
+            var totalPages = (int) Math.Ceiling((float) totalRecords/(float) param.pageSize);
 
 
             var results = totalRows.Select(x => new
@@ -122,7 +130,9 @@ namespace Msr.Web.Controllers
                 x.TimeComplete,
                 x.PercComplete,
                 x.HasFile,
-
+                x.HasMonitor,
+                x.HasNcr,
+                x.FillId
             }).ToList();
 
             var json = new
@@ -136,5 +146,25 @@ namespace Msr.Web.Controllers
             return Json(json, JsonRequestBehavior.AllowGet);
         }
 
+
+        public ActionResult GetNcrModel(string id)
+        {
+            var orderService = new OrderService();
+
+            var ncrDetails = orderService.GetNcrDetails(id);
+
+            return PartialView("_NcrModel", ncrDetails);
+        }
+
+        public ActionResult GetPhotsModel()
+        {
+            return PartialView("_Photos");
+        }
+
+        public ActionResult GetMonitorsModel()
+        {
+
+            return PartialView("_Monitors");
+        }
     }
 }

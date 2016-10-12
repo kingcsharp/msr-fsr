@@ -1,9 +1,13 @@
-using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+
 
 namespace Msr.Models.Users
 {
     public partial class AspNetUser
     {
+        [Key]
         public string Id { get; set; }
         public string UserName { get; set; }
         public string PasswordHash { get; set; }
@@ -12,10 +16,13 @@ using System.Collections.Generic;
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string PhoneNumber { get; set; }
+        public string Phone2 { get; set; }
         public string Email { get; set; }
+        public int TimeZone { get; set; }
+        public DateTime CreatedDate { get; set; }
 
         //public virtual ICollection<AspNetUserClaim> AspNetUserClaims { get; set; }
         //public virtual ICollection<AspNetUserLogin> AspNetUserLogins { get; set; }
-        //public virtual ICollection<AspNetRole> AspNetRoles { get; set; }
+        public virtual ICollection<AspNetRole> AspNetRoles { get; set; }
     }
 }

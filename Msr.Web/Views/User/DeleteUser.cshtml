@@ -1,0 +1,66 @@
+﻿@model Msr.Web.ViewModel.EditUserViewModel
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<link rel="stylesheet" type="text/css" href="/assets/css/themes/flat-blue.css">
+
+<link rel="stylesheet" type="text/css" href="/assets/css/style.css">
+<link rel="stylesheet" type="text/css" href="/assets/css/hopscotch.css">
+
+<div class="container-fluid">
+    <div class="side-body padding-top">
+        <div class="row">
+            <h2 class="page-header">Edit User
+                <div class=" pull-right" data-toggle="modal" data-target="#wipHelpModal">
+                    <!-- Split button -->
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-warning">Action</button>
+                        <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="caret"></span>
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a href="~/user/deleteuser/@Model.UserSummary.Id">Delete</a></li>
+                        </ul>
+                    </div>
+
+                </div></h2>
+            <div class="col-lg-10">
+                
+                @using (Html.BeginForm("DeleteUser", "User", FormMethod.Post, new {@class = "form form-horizontal", role = "form"}))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(x=>x.UserSummary.Id)
+
+                    <h2>Are you sure, you want to delete "@Model.UserSummary.UserName"</h2>
+
+
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"></label>
+                        <div class="col-md-8 inputGroupContainer">
+                            <div class="input-group">
+                                <button type="submit" class="btn btn-success">Submit<span class="fa sa-send"></span></button>
+                                <a href="~/user/master" class="btn btn-default">Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+@section scripts
+{
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+        
+}
+

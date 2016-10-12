@@ -2,6 +2,8 @@
 using System.Linq;
 using Msr.Models.Orders;
 using Msr.Repositories;
+using Msr.Services.Orders.Messaging;
+using System.Data.SqlClient;
 
 namespace Msr.Services.Orders
 {
@@ -23,5 +25,16 @@ namespace Msr.Services.Orders
         {
             return _dbContext.BuyerViews;
         }
+
+       public NcrReportResponse GetNcrDetails(string fileId)
+       {
+            var response = new NcrReportResponse();
+
+            var fileIdParm = new SqlParameter("@FileId", fileId);
+
+           response.Details = _dbContext.Database.SqlQuery<NcrDetails>("Portal_GetNcrReport @FileId", fileIdParm).Single();
+
+            return response;
+       }
     }
 }

@@ -62,6 +62,8 @@
     <Compile Include="jqGrid\JqGridParam.cs" />
     <Compile Include="jqGrid\DatatableParamConverter.cs" />
     <Compile Include="jqGrid\ExtendedMethods.cs" />
+    <Compile Include="Orders\Messaging\NcrDetails.cs" />
+    <Compile Include="Orders\Messaging\NcrReportResponse.cs" />
     <Compile Include="Orders\Messaging\AddUserMessageResponse.cs" />
     <Compile Include="Orders\PeopleService.cs" />
     <Compile Include="Orders\OrderService.cs" />

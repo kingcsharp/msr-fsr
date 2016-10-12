@@ -182,6 +182,8 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModel\EditUserViewModel.cs" />
+    <Compile Include="ViewModel\AddUserViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="assets\components\ace\ace\ace.min.js" />
@@ -323,9 +325,9 @@
     <Content Include="assets\js\dashboard.js" />
     <Content Include="assets\js\dataTables.bootstrap.min.js" />
     <Content Include="assets\js\buyer_grid.js" />
-    <Content Include="assets\js\engineer.js" />
-    <Content Include="assets\js\Grids\client-user.js" />
-    <Content Include="assets\js\Grids\master-user.js" />
+    <Content Include="assets\js\grids\engineer.js" />
+    <Content Include="assets\js\grids\client-user.js" />
+    <Content Include="assets\js\grids\master-user.js" />
     <Content Include="assets\js\help_form.js" />
     <Content Include="assets\js\hopscotch.js" />
     <Content Include="assets\js\hopscotch.min.js" />
@@ -378,6 +380,8 @@
     <Content Include="assets\js\list.js" />
     <Content Include="assets\js\master-user-tour.js" />
     <Content Include="assets\js\modal.js" />
+    <Content Include="assets\js\plugins\bootstrap3\bootstrap-dialog.min.css" />
+    <Content Include="assets\js\plugins\bootstrap3\bootstrap-dialog.min.js" />
     <Content Include="assets\js\plugins\grid.addons.js" />
     <Content Include="assets\js\plugins\grid.postext.js" />
     <Content Include="assets\js\plugins\grid.setcolumns.js" />
@@ -486,6 +490,12 @@
     <Content Include="Views\User\Master.cshtml" />
     <Content Include="Views\Shared\_LoginLayout.cshtml" />
     <Content Include="Views\User\Client.cshtml" />
+    <Content Include="Views\Wip\_NcrModel.cshtml" />
+    <Content Include="Views\Wip\_Photos.cshtml" />
+    <Content Include="Views\Wip\_Monitors.cshtml" />
+    <Content Include="Views\User\AddUser.cshtml" />
+    <Content Include="Views\User\EditUser.cshtml" />
+    <Content Include="Views\User\DeleteUser.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

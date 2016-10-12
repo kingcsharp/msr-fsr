@@ -14,6 +14,8 @@ namespace Msr.Repositories
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<AspNetUser>().ToTable("AspNetUsers");
+            modelBuilder.Entity<AspNetRole>().ToTable("AspNetRoles");           
+            modelBuilder.Entity<ClientUser>().ToTable("Portal_ClientUsers");
 
             modelBuilder.Entity<WorkOrderView>().ToTable("Portal_WorkOrders");
             modelBuilder.Entity<BuyerView>().ToTable("Portal_BuyerView");
@@ -22,6 +24,8 @@ namespace Msr.Repositories
         }
 
         public DbSet<AspNetUser> AspNetUsers { get; set; }
+        public DbSet<AspNetRole> AspNetRoles { get; set; }
+        public DbSet<ClientUser> ClientUsers { get; set; }
         public DbSet<UserView> UserViews { get; set; }
 
         public DbSet<WorkOrderView> WorkOrders { get; set; }

@@ -168,6 +168,64 @@ $(document).ready(function () {
                     '</div>'
                 );
             });
+
+
+            $('#ncrModal').on('show.bs.modal', function (event) {               
+                var button = $(event.relatedTarget) // Button that triggered the modal
+                var id = button.data('id') // Extract info from data-* attributes
+                var modal = $(this)
+
+                $.ajax({
+                    type: "GET",
+                    url: '/wip/getncrmodel?id='+id,
+                    dataType: 'html',
+                    success: function (data) {
+                        modal.find('.modal-body').html(data);
+                    },
+                    error: function () {
+                      
+                    }
+                });
+            })
+
+
+            $('#imageModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget) // Button that triggered the modal
+                var id = button.data('id') // Extract info from data-* attributes
+                var modal = $(this)
+
+                $.ajax({
+                    type: "GET",
+                    url: '/wip/GetPhotsModel?id=' + id,
+                    dataType: 'html',
+                    success: function (data) {
+                        modal.find('.modal-body').html(data);
+                    },
+                    error: function () {
+
+                    }
+                });
+            })
+
+            $('#monitorModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget) // Button that triggered the modal
+                var id = button.data('id') // Extract info from data-* attributes
+                var modal = $(this)
+
+                $.ajax({
+                    type: "GET",
+                    url: '/wip/GetMonitorsModel?id=' + id,
+                    dataType: 'html',
+                    success: function (data) {
+                        modal.find('.modal-body').html(data);
+                    },
+                    error: function () {
+
+                    }
+                });
+            })
+
+
         }
 	});
 	
@@ -214,16 +272,16 @@ $(document).ready(function () {
         return thisCellVal;
     }
     
-    function supportingInfoFormatter (cellvalue, options, rowObject) {
-        var NCRButton = (rowObject.HAS_NCR  == 1) ? '<button class="btn support-btn btn-xs btn-warning" data-toggle="modal" data-target="#ncrModal" title="View NCR"><i class="fa fa-clipboard"></i>NCR</button>':'';
-        var FileButton = (rowObject.HasFile  == 1) ? '<button class="btn support-btn btn-xs btn-info" href="#" data-toggle="modal" data-target="#imageModal" title="View Photos"><i class="fa fa-file-image-o"></i>Photos</button>':'';
-        var MonitorButton = (rowObject.HAS_MONITOR  == 1) ? '<button class="btn support-btn btn-xs btn-success" data-toggle="modal" data-target="#monitorModal"  title="View Monitors"><i class="fa fa-bar-chart "></i>Monitors</button>':'';
-        thisCellVal = NCRButton + FileButton + MonitorButton;
+	function supportingInfoFormatter(cellvalue, options, rowObject) {
+	    var NcrButton = (rowObject.HasNcr == 1) ? '<button class="btn support-btn btn-xs btn-warning" data-id="' + rowObject.FillId + '" data-toggle="modal"  data-target="#ncrModal" title="View NCR"><i class="fa fa-clipboard"></i>NCR</button>' : '';
+	    var FileButton = (rowObject.HasFile == 1) ? '<button class="btn support-btn btn-xs btn-info" data-id="' + rowObject.FillId + '" href="#" data-toggle="modal" data-target="#imageModal" title="View Photos"><i class="fa fa-file-image-o"></i>Photos</button>' : '';
+	    var MonitorButton = (rowObject.HasMonitor == 1) ? '<button class="btn support-btn btn-xs btn-success" data-id="' + rowObject.FillId + '" data-toggle="modal" data-target="#monitorModal"  title="View Monitors"><i class="fa fa-bar-chart "></i>Monitors</button>' : '';
+        thisCellVal = NcrButton + FileButton + MonitorButton;
         return thisCellVal;
     }
     function actionsFormatter (cellvalue, options, rowObject) {
         InstructionsCellVal = '<button id="add-button' + rowObject.ActualPartId + '" onclick="toggleInstructions(' + rowObject.ActualPartId + ')" class="btn support-btn btn-xs btn-danger show">Add Instructions</button><div id="instruction' + rowObject.ActualPartId + '" class="hidden" ><textarea style="width: 95%;" rows=4 placeholder="Add disposition Instructions"></textarea><button class="btn support-btn btn-xs btn-primary" onclick="toggleInstructions(' + rowObject.ActualPartId + ')">Save</button>';
-        thisCellVal = (rowObject.HAS_NCR  == 1) ? InstructionsCellVal:'N/A';
+        thisCellVal = (rowObject.HasNcr == 1) ? InstructionsCellVal : 'N/A';
         return thisCellVal;
     }
     

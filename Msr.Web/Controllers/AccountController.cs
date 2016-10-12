@@ -78,7 +78,7 @@ namespace Msr.Web.Controllers
 
             var peopleService = new PeopleService();
 
-           var result1 =   peopleService.CheckUserExists(model.Email, AuthenticationHelper.PassWordEncrypt(model.Password));
+          /// var result1 =   peopleService.CheckUserExists(model.Email, AuthenticationHelper.PassWordEncrypt(model.Password));
 
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true

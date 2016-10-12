@@ -22,6 +22,7 @@ SELECT
 ,u.[CreatedDate]
 ,u.[TimeZone]
 ,r.Id AS RoleId
+,r.Name AS RoleName
 FROM [AspNetUsers] u 
 LEFT JOIN AspNetUserRoles ur ON ur.UserId = u.Id
 LEFT JOIN AspNetRoles r ON r.Id = ur.RoleId

@@ -69,6 +69,7 @@
     <Folder Include="dbo\Stored Procedures\Procs2\" />
     <Folder Include="Database Triggers\" />
     <Folder Include="dbo\Views\Portal" />
+    <Folder Include="dbo\Stored Procedures\Portal" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\A_PARTS_SUB_PARTS.sql" />
@@ -2725,5 +2726,7 @@
     <Build Include="dbo\Views\Portal\Portal_BuyerView.sql" />
     <Build Include="dbo\Views\Portal\Portal_ApprovedPeople.sql" />
     <Build Include="dbo\Views\Portal\Portal_UserView.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_GetNcrReport.sql" />
+    <Build Include="dbo\Views\Portal\Portal_CompanyView.sql" />
   </ItemGroup>
 </Project>

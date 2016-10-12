@@ -1,7 +1,6 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "Master Users";
 }
-
 
 <link rel="stylesheet" type="text/css" href="/assets/css/themes/flat-blue.css">
 
@@ -14,13 +13,19 @@
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="row">
-            <h2 class="page-header">All Portal Users<button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button></h2>
+            <h2 class="page-header">
+                All Portal Users
+                <button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
+            </h2>
             <div class="col-lg-12">
                 <table id="jqGrid"></table>
                 <div id="jqGridPager"></div>
             </div>
         </div>
-    </div>
+        <div class="row">
+            <a href="~/user/addUser" class="btn btn-success help-btn">Add</a>
+        </div>
+        </div>
 </div>
 
 

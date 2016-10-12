@@ -15,10 +15,9 @@ $(document).ready(function () {
     });
 
     var roles =  [
-            { "ID": "310cfcae-e8e4-40a0-956b-ecedcc33263e", "TITLE": "Client Admin" },
-            { "ID": "2c4d1291-7bc4-45d5-a64a-221bc8a7baa8", "TITLE": "Client Buyer" },
-            { "ID": "8d571c3a-a54d-45c1-8436-f4d3ff57c8ec", "TITLE": "Client Engineer" },
-            { "ID": "a3d0e7a0-3e04-4d05-bbf0-6809fda46c10", "TITLE": "Super Admin" }
+            { "ID": "ClientAdmin", "TITLE": "Client Admin" },
+            { "ID": "ClientBuyer", "TITLE": "Client Buyer" },
+            { "ID": "ClientEngineer", "TITLE": "Client Engineer" },
     ]
 
     $("#jqGrid").jqGrid({
@@ -50,8 +49,8 @@ $(document).ready(function () {
                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] }, formatter: 'date', formatoptions: { srcformat: "m/d/Y H:i", newformat: "m/d/Y" }, width: 90, align: 'center'
            },
            {
-               name: 'RoleId', index: 'RoleId', editable: true, edittype: "select",
-               editoptions: { value: "310cfcae-e8e4-40a0-956b-ecedcc33263e:Client Admin;2c4d1291-7bc4-45d5-a64a-221bc8a7baa8:Client Buyer;8d571c3a-a54d-45c1-8436-f4d3ff57c8ec:Client Engineer" },
+               name: 'RoleName', index: 'RoleName', editable: true, edittype: "select",
+               editoptions: { value: "ClientAdmin:Client Admin;ClientBuyer:Client Buyer;ClientEngineer:Client Engineer" },
                formatter: roleFormatter,
                align: 'center'
            },

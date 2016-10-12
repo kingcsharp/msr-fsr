@@ -1,36 +1,54 @@
-﻿<div id="pwResetConfirmModal" class="modal fade" role="dialog">
+﻿<div id="ncrModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
+
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Password Reset Confirm</h4>
+                <h4 class="modal-title">MSR-FSR NCR Report</h4>
             </div>
-            <div class="modal-body">
-                <div id="warning" class="alert alert-warning"><strong>Note: </strong>The user will recieve and email with instructions to reset thier password if you click <em>Reset</em> at the bottom of this window.
-                </div>
-                <p id="notice">Are you sure you want to reset the user's password?</p>
-                <div id="confirm" class="alert alert-success" style="display: none;"><strong>Success: </strong>The user password has been reset and the will receive an email with further instructions.
-                </div>
-            </div>
+            <div class="modal-body"></div>
             <div class="modal-footer">
-                <button id="resetme" type="button" class="btn btn-info"><i class="fa a-check-circle"></i> Reset</button>
-                <button id="closeme" type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close-o"></i> Cancel</button>
+                <button type="button" class="btn btn-info" onclick="js:window.print()"><i class="fa fa-print"></i> Print Report</button>
+                <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close-o"></i> Close</button>
             </div>
         </div>
 
     </div>
 </div>
-
-
-<script>
-        $(document).ready(function () {
-            $('#resetme').click(function() {
-                $(this).hide();
-                $('#warning').hide();
-                $('#closeme').text('Close');
-                $('#notice').hide();
-                $('#confirm').show();
-            })
-        });
-</script>
+<div id="imageModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">MSR-FSR Work Order Photos</h4>
+            </div>
+            <div class="modal-body">
+               
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" onclick="js:window.print()"><i class="fa fa-print"></i> Print Image</button>
+                <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close-o"></i> Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="monitorModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Monitor History</h4>
+            </div>
+            <div class="modal-body">
+               
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" onclick="js:window.print()"><i class="fa fa-print"></i> Print Montitors</button>
+                <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close-o"></i> Close</button>
+            </div>
+        </div>
+    </div>
+</div>

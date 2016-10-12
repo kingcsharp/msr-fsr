@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Msr.Models.Users
 {
     public partial class AspNetUserClaim
