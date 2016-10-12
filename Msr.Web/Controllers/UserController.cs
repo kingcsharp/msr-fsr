@@ -153,7 +153,7 @@ namespace Msr.Web.Controllers
             var userService = new UserService();
 
             var viewModel = new AddUserViewModel();
-            viewModel.Setup(userService);
+            viewModel.Setup(userService, new CompanyService());
 
             return View(viewModel);
         }
@@ -176,7 +176,7 @@ namespace Msr.Web.Controllers
                 ModelState.AddModelError("", response.ErrorMessage());
             }
 
-            viewModel.Setup(userService);
+            viewModel.Setup(userService, new CompanyService());
 
             return View(viewModel);
         }
@@ -184,12 +184,13 @@ namespace Msr.Web.Controllers
         public ActionResult EditUser(string id)
         {
             var userService = new UserService();
+            var companyService = new CompanyService();
 
             var user = userService.GetUser(id);
 
             var viewModel = new EditUserViewModel { UserSummary = user };
 
-            viewModel.Setup(userService);
+            viewModel.Setup(userService, companyService);
 
             return View(viewModel);
         }
@@ -212,7 +213,7 @@ namespace Msr.Web.Controllers
                 ModelState.AddModelError("", response.ErrorMessage());
             }
 
-            viewModel.Setup(userService);
+            viewModel.Setup(userService, new CompanyService());
 
             return View(viewModel);
         }
@@ -225,7 +226,7 @@ namespace Msr.Web.Controllers
 
             var viewModel = new EditUserViewModel { UserSummary = user };
 
-            viewModel.Setup(userService);
+            viewModel.Setup(userService, new CompanyService());
 
             return View(viewModel);
         }

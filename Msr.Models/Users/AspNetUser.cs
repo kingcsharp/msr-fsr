@@ -20,6 +20,7 @@ using System;
         public string Email { get; set; }
         public int TimeZone { get; set; }
         public DateTime CreatedDate { get; set; }
+        public string CompanyId { get; set; }
 
         //public virtual ICollection<AspNetUserClaim> AspNetUserClaims { get; set; }
         //public virtual ICollection<AspNetUserLogin> AspNetUserLogins { get; set; }

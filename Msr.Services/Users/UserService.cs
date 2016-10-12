@@ -44,6 +44,7 @@ namespace Msr.Services.Users
                 UserName = s.UserName,
                 IsActive = s.IsActive,
                 TimeZone = s.TimeZone,
+                CompanyId = s.CompanyId,
                 CreatedDate = s.CreatedDate
             }).Single();
 
@@ -76,7 +77,7 @@ namespace Msr.Services.Users
                 var store = new UserStore<ApplicationUser>(aspContext);
                 var usermanager = new UserManager<ApplicationUser>(store);
 
-                var adminUser = new ApplicationUser
+                var newAspUser = new ApplicationUser
                 {
                     UserName = entity.UserName,
                     Id = userId,
@@ -89,9 +90,19 @@ namespace Msr.Services.Users
                     CreatedDate = DateTime.UtcNow
                 };
 
-                usermanager.Create(adminUser, entity.PasswordHash);
+                usermanager.Create(newAspUser, entity.PasswordHash);
                 usermanager.AddToRole(userId, entity.RoleName);
                 aspContext.SaveChanges();
+
+                var newUser = _dbContext.AspNetUsers.SingleOrDefault(x => x.Id.ToLower() == newAspUser.Id);
+
+                newUser.TimeZone = entity.TimeZone;
+                newUser.Phone2 = entity.Phone2;
+                newUser.IsActive = entity.IsActive;
+                newUser.CompanyId = entity.CompanyId;
+
+                _dbContext.SaveChanges();
+
             }
             catch (Exception ex)
             {
@@ -114,9 +125,30 @@ namespace Msr.Services.Users
                 existingUser.TimeZone = entity.TimeZone;
                 existingUser.PhoneNumber = entity.Phone;
                 existingUser.Phone2 = entity.Phone2;
+                existingUser.Email = entity.Email;
+                existingUser.UserName = entity.UserName;
+                existingUser.CompanyId = entity.CompanyId;
                 existingUser.IsActive = entity.IsActive;
 
+                var existingRole = existingUser.AspNetRoles.FirstOrDefault();
+
+                if (existingRole !=null && existingRole.Name != entity.RoleName)
+                {
+                    existingUser.AspNetRoles.Remove(existingRole);
+
+                 var newRole =  _dbContext.AspNetRoles.Single(x => x.Name == entity.RoleName);
+
+                    existingUser.AspNetRoles.Add(newRole);
+                }
+               else if (existingRole == null)
+               {
+                   var newRole = _dbContext.AspNetRoles.Single(x => x.Name == entity.RoleName);
+                   existingUser.AspNetRoles.Add(newRole);
+               }
+
                 _dbContext.SaveChanges();
+
+
             }
             catch (Exception ex)
             {

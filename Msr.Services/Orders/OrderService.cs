@@ -1,40 +1,21 @@
-﻿using System.ComponentModel;
-using System.Linq;
-using Msr.Models.Orders;
+﻿using System.Linq;
+using Msr.Models.Users;
 using Msr.Repositories;
-using Msr.Services.Orders.Messaging;
-using System.Data.SqlClient;
 
 namespace Msr.Services.Orders
 {
-   public class OrderService
+   public class CompanyService
     {
         private readonly MsrDbContext _dbContext;
 
-        public OrderService()
+        public CompanyService()
         {
             _dbContext = new MsrDbContext();
         }
 
-        public IQueryable<WorkOrderView> GetWorkOrderQueryable()
+        public IQueryable<CompanyView> GetCompanyQueryable()
         {
-            return _dbContext.WorkOrders;
+            return _dbContext.CompanyView;
         }
-
-        public IQueryable<BuyerView> GetBuyerWorkOrderQueryable()
-        {
-            return _dbContext.BuyerViews;
-        }
-
-       public NcrReportResponse GetNcrDetails(string fileId)
-       {
-            var response = new NcrReportResponse();
-
-            var fileIdParm = new SqlParameter("@FileId", fileId);
-
-           response.Details = _dbContext.Database.SqlQuery<NcrDetails>("Portal_GetNcrReport @FileId", fileIdParm).Single();
-
-            return response;
-       }
     }
 }

@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="ApplicationDbContext.cs" />
     <Compile Include="Configuration.cs" />
+    <Compile Include="Configurations\AspNetUserConfiguration.cs" />
     <Compile Include="MsrDbContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

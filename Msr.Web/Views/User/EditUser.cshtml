@@ -33,8 +33,6 @@
                     @Html.ValidationSummary()
                     @Html.AntiForgeryToken()
                     @Html.HiddenFor(x=>x.UserSummary.Id)
-                    @Html.HiddenFor(x => x.UserSummary.Email)
-                    @Html.HiddenFor(x => x.UserSummary.UserName)
 
                     <div class="form-group">
                         <label class="col-md-2 control-label">First Name</label>
@@ -76,6 +74,15 @@
                         </div>
                     </div>
 
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Company</label>
+                        <div class="col-md-4 inputGroupContainer">
+                            <div class="input-group">
+                                @Html.DropDownListFor(m => m.UserSummary.CompanyId, Model.Companies, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.UserSummary.CompanyId)
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="form-group">
                         <label class="col-md-2 control-label">Primary Phone</label>
@@ -86,6 +93,8 @@
                             </div>
                         </div>
                     </div>
+
+                 
 
                     <div class="form-group">
                         <label class="col-md-2 control-label">Phone2</label>
@@ -101,7 +110,8 @@
                         <label class="col-md-2 control-label">Email</label>
                         <div class="col-md-4 inputGroupContainer">
                             <div class="input-group">
-                                @Model.UserSummary.Email
+                                @Html.TextBoxFor(m => m.UserSummary.Email, new { @class = "form-control", placeholder = "Email" })
+                                @Html.ValidationMessageFor(m => m.UserSummary.Email)
                             </div>
                         </div>
                     </div>
@@ -110,7 +120,8 @@
                         <label class="col-md-2 control-label">User Name</label>
                         <div class="col-md-4 inputGroupContainer">
                             <div class="input-group">
-                                @Model.UserSummary.UserName
+                                @Html.TextBoxFor(m => m.UserSummary.UserName, new { @class = "form-control", placeholder = "User Name" })
+                                @Html.ValidationMessageFor(m => m.UserSummary.UserName)
                             </div>
                         </div>
                     </div>
