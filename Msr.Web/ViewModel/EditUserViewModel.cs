@@ -36,7 +36,8 @@ namespace Msr.Web.ViewModel
             Roles = userService.GetRoles().Select(x => new SelectListItem
             {
                 Text = x.Name,
-                Value = x.Name
+                Value = x.Name,
+                Selected = UserSummary.RoleName == x.Name
             }).ToList();
 
             Companies = companyService.GetCompanyQueryable().ToList().Select(x => new SelectListItem

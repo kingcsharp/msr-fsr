@@ -14,24 +14,27 @@ $(document).ready(function () {
         }
     });
 
-    var roles =  [
+    var roles = [
             { "ID": "ClientAdmin", "TITLE": "Client Admin" },
             { "ID": "ClientBuyer", "TITLE": "Client Buyer" },
             { "ID": "ClientEngineer", "TITLE": "Client Engineer" },
+            { "ID": "SuperAdmin", "TITLE": "Super Admin" }
     ]
 
     $("#jqGrid").jqGrid({
         url: '/user/ClientUserData',
         mtype: "GET",
         datatype: "json",
-        colNames: ['First Name', 'Last Name', 'Full Name', 'TimeZone', 'Created Date', 'Portal Role', 'Primary Phone', '2nd Phone', 'Email', 'User Name','Password', 'Status', 'Actions'],
+        colNames: ['First Name', 'Last Name', 'Full Name', 'TimeZone', 'Created Date', 'Portal Role', 'Primary Phone', '2nd Phone', 'Email', 'User Name', 'Password', 'Status', 'Actions'],
         colModel: [
            {
                name: 'FirstName', index: 'FirstName', colmenu: true, editable: true, edittype: "text", coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true },
+               editrules: { required: true },
                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] }, width: 90, align: 'center'
            },
            {
                name: 'LastName', index: 'LastName', editable: true, edittype: "text", colmenu: false, coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true, },
+               editrules: { required: true },
                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] }, width: 90, align: 'center'
            },
 
@@ -42,6 +45,7 @@ $(document).ready(function () {
 
            {
                name: 'TimeZone', index: 'TimeZone', editable: true, edittype: "select", editoptions: { value: "100:Mid-Atlantic;11436:International Date Line West;11437:Midway Island, Samoa" }, colmenu: false, formatter: timezoneFormatter, coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true },
+               editrules: { required: true },
                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] }, align: 'center'
            },
            {
@@ -51,10 +55,11 @@ $(document).ready(function () {
            {
                name: 'RoleName', index: 'RoleName', editable: true, edittype: "select",
                editoptions: { value: "ClientAdmin:Client Admin;ClientBuyer:Client Buyer;ClientEngineer:Client Engineer" },
-               formatter: roleFormatter,
+               editrules: { required: true },
+
                align: 'center'
            },
-           
+
            { name: 'Phone', index: 'Phone', editable: true, edittype: "text", colmenu: false, coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: true }, align: 'center' },
            {
                name: 'Phone2', index: 'SECONDARY_PHONE_NUMBER', editable: true, edittype: "text", colmenu: false, coloptions: { sorting: true, columns: false, filtering: true, seraching: true, grouping: false, freeze: true },
@@ -62,20 +67,23 @@ $(document).ready(function () {
            },
            {
                name: 'Email', index: 'Email', editable: true, edittype: "text", colmenu: false, coloptions: { sorting: true, columns: false, filtering: true, seraching: true, grouping: false, freeze: true },
+               editrules: { required: true },
                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] }, align: 'center'
            },
            {
                name: 'UserName', index: 'UserName', colmenu: false, editable: true, edittype: "text", coloptions: { sorting: true, columns: false, filtering: true, seraching: true, grouping: false, freeze: true },
+               editrules: { required: true },
                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] }, align: 'center'
            },
            {
-               name: 'PasswordHash', index: 'PasswordHash', hidden: true, colmenu: false, editable: true, edittype: "password", editrules: { edithidden: true }, hidedlg: true
+               name: 'PasswordHash', index: 'PasswordHash', hidden: true, colmenu: false, editable: true, edittype: "password", editrules: { edithidden: true, required: true }, hidedlg: true
+
            },
            {
                name: 'IsActive', index: 'IsActive', editable: true, edittype: "select", editoptions: { value: "1:Active;0:Inactive" }, colmenu: false, coloptions: { sorting: true, columns: false, filtering: true, seraching: true, grouping: false, freeze: true },
                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] }, width: 90, align: 'center'
            },
-           { name: 'ID', index: 'ID', key: true, hidden: false, colmenu: false, editable: false, formatter: pwResetFormatter, width: 100, align: 'center' },
+           { name: 'ID', index: 'ID', key: true, hidden: false, editable: false,  width: 100, align: 'center' },
 
         ],
         viewrecords: true, // show the current page, data rang and total records on the toolbar
@@ -84,46 +92,11 @@ $(document).ready(function () {
         pager: "#jqGridPager",
         height: 'auto',
         autowidth: true,
-        colMenu: true,
-        cellEdit: true,
-        cellsubmit: 'clientArray',
-        editurl: 'clientArray'
+        colMenu: false,
+        cellEdit: false,
+
     });
 
-    $('#jqGrid').navGrid("#jqGridPager", {
-        search: true, // show search button on the toolbar
-        add: true,
-        edit: true,
-        del: true,
-        refresh: true
-    },
-        {
-            editCaption: "The Edit Dialog",
-            recreateForm: true,
-            checkOnUpdate : true,
-            checkOnSubmit : true,
-            closeAfterEdit: true,
-            errorTextFormat: function (data) {
-                return 'Error: ' + data.responseText
-            }
-        },
-                // options for the Add Dialog
-                {
-                    closeAfterAdd: true,
-                    recreateForm: true,
-                    url: '/user/addUser',
-                    errorTextFormat: function (data) {
-                        return 'Error: ' + data.responseText
-                    }
-                },
-                // options for the Delete Dailog
-                {
-                    errorTextFormat: function (data) {
-                        return 'Error: ' + data.responseText
-                    }
-                },
-            { multipleSearch: true }
-    );
 
     $("#jqGrid").tooltip();
 
@@ -136,7 +109,7 @@ $(document).ready(function () {
     });
 
     function pwResetFormatter(cellvalue, options, rowObject) {
-        thisCellVal = '<button class="btn btn-xs btn-danger" style="margin:2px;font-size: .8em;" data-toggle="modal" data-target="#pwResetConfirmModal"><i class="fa fa-key"></i> Reset Password</button>';
+        thisCellVal = '<a href="/user/edituser/' + rowObject.Id + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i> Edit</a>';
         return thisCellVal;
     }
 
@@ -146,11 +119,11 @@ $(document).ready(function () {
     }
 
     function roleFormatter(cellvalue) {
-        
+
         var result = $.grep(roles, function (e) { return e.ID == cellvalue; });
-        return result[0]['TITLE'];
+        return result[0]['RoleName'];
     }
-    
+
 
     //ajax emulation
     $.mockjax({

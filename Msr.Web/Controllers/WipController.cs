@@ -4,26 +4,38 @@ using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
 using Msr.Models.Orders;
 using Msr.Services.jqGrid;
 using Msr.Services.Orders;
+using Msr.Services.Users;
 
 namespace Msr.Web.Controllers
 {
     [Authorize]
-    public class WipController : Controller
+    public class WipController : BaseController
     {
         public ActionResult Engineering()
         {
+            var loggedUser = User.Identity.GetUserId();
+
+            var userService = new UserService();
+
+            var company = userService.GetCompanyId(loggedUser);
+
+            ViewBag.ClientName = company.Name;
+
             return View();
         }
 
         public ActionResult EngineeringData(JqGridParam param)
         {
-
+            var loggedUser = User.Identity.GetUserId();
+            var userService = new UserService();
+           var company = userService.GetCompanyId(loggedUser);
             var orderService = new OrderService();
 
-            var totalRows = orderService.GetWorkOrderQueryable();
+            var totalRows = orderService.GetWorkOrderQueryable().Where(x => x.SupplierId == company.Id);
 
 
             if (param.where != null && param.where.rules.Any())

@@ -1,4 +1,5 @@
-﻿<div class="side-menu sidebar-inverse">
+﻿@using Msr.Models.Users
+<div class="side-menu sidebar-inverse">
     <nav class="navbar navbar-default" role="navigation">
         <div class="side-menu-container">
             <div class="navbar-header">
@@ -24,11 +25,11 @@
                     <div id="dropdown-element" class="panel-collapse collapse">
                         <div class="panel-body">
                             <ul class="nav navbar-nav">
-                                <li>
-                                    <a href="/user/master">
-                                        <span class="icon fa fa-user-secret"></span><span class="title">Master Users</span>
-                                    </a>
-                                </li>
+                                    <li>
+                                        <a href="/user/master">
+                                            <span class="icon fa fa-user-secret"></span><span class="title">Master Users</span>
+                                        </a>
+                                    </li>
                                 <li>
                                     <a href="/user/client">
                                         <span class="icon fa fa-users"></span><span class="title">Client Users</span>

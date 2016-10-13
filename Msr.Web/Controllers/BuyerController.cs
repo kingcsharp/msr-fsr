@@ -4,25 +4,41 @@ using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
 using Msr.Models.Orders;
 using Msr.Services.jqGrid;
 using Msr.Services.Orders;
+using Msr.Services.Users;
 
 namespace Msr.Web.Controllers
 {
     [Authorize]
-    public class BuyerController : Controller
+    public class BuyerController : BaseController
     {
         public ActionResult Index()
         {
+            var loggedUser = User.Identity.GetUserId();
+
+            var userService = new UserService();
+
+            var company = userService.GetCompanyId(loggedUser);
+
+            ViewBag.ClientName = company.Name;
+
             return View();
         }
 
         public ActionResult BuyerData(JqGridParam param)
         {
+            var loggedUser = User.Identity.GetUserId();
+
+            var userService = new UserService();
+
+            var company = userService.GetCompanyId(loggedUser);
+
             var orderService = new OrderService();
 
-            var totalRows = orderService.GetBuyerWorkOrderQueryable();
+            var totalRows = orderService.GetBuyerWorkOrderQueryable().Where(x => x.SupplierId == company.Id);
 
             if (param.where !=null && param.where.rules.Any())
             {

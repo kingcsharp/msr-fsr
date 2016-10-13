@@ -45,7 +45,8 @@ namespace Msr.Services.Users
                 IsActive = s.IsActive,
                 TimeZone = s.TimeZone,
                 CompanyId = s.CompanyId,
-                CreatedDate = s.CreatedDate
+                CreatedDate = s.CreatedDate,
+                RoleName = s.AspNetRoles.FirstOrDefault().Name
             }).Single();
 
             return user;
@@ -176,6 +177,43 @@ namespace Msr.Services.Users
             }
 
             return response;
+        }
+
+        public void AddClientToUser(string userId, List<string> usderIds, string createdBy)
+        {
+
+            foreach (var uId in usderIds)
+            {
+               var hasUser = _dbContext.ClientUsers.Any(x => x.UserId.ToLower() == userId.ToLower() && x.ClientId.ToLower() == uId.ToLower());
+
+                if (!hasUser)
+                {
+                    var newUser = new ClientUser
+                    {
+                        Id = Guid.NewGuid(),
+                        ClientId = uId,
+                        UserId = userId,
+                        CreatedBy = userId,
+                        CreatedDate = DateTime.UtcNow
+                    };
+
+                    _dbContext.ClientUsers.Add(newUser);
+                }
+            }
+
+            _dbContext.SaveChanges();
+        }
+
+        public List<string> GetClientUsers(string userId)
+        {
+            return _dbContext.ClientUsers.Where(x => x.UserId.ToLower() == userId.ToLower()).Select(x => x.ClientId).ToList();
+        }
+
+        public CompanyView GetCompanyId(string id)
+        {
+            var compannyId = _dbContext.AspNetUsers.Where(x => x.Id.ToLower() == id.ToLower()).Select(x => x.CompanyId).First();
+
+            return _dbContext.CompanyView.SingleOrDefault(x => x.Id == compannyId);
         }
     }
 }
