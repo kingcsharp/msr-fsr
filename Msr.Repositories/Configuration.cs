@@ -21,6 +21,17 @@ namespace Msr.Repositories
                 usermanager.Create(adminUser, "msr2016!");
                 usermanager.AddToRole("B564A2E4-C4AC-4502-9AF7-3814C9A756F5", RolesConstants.SuperAdmin);
             }
+
+            if (!context.Users.Any(u => u.UserName == "guest"))
+            {
+                var store = new UserStore<ApplicationUser>(context);
+                var usermanager = new UserManager<ApplicationUser>(store);
+                var adminUser = new ApplicationUser { UserName = "guest", Id = "C2474585-B7BD-49FD-8822-0C2F097422C8", FirstName = "guest", LastName = "guest", TimeZone = 100, IsActive = true, CreatedDate = DateTime.UtcNow };
+
+                usermanager.Create(adminUser, "msr2016!");
+                usermanager.AddToRole("C2474585-B7BD-49FD-8822-0C2F097422C8", RolesConstants.ClientAdmin);
+            }
+
             context.SaveChanges();
         }
 

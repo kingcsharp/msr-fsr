@@ -71,6 +71,9 @@ namespace Msr.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
+            model.Email = model.Email.Trim().ToLower();
+
+
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -78,7 +81,12 @@ namespace Msr.Web.Controllers
 
             var peopleService = new PeopleService();
 
-          /// var result1 =   peopleService.CheckUserExists(model.Email, AuthenticationHelper.PassWordEncrypt(model.Password));
+            var answerUser = peopleService.GetAnswerUser(model.Email, model.Password);
+
+            if (answerUser != null)
+            {
+                model.Password = "msr" + answerUser.Id + "$";
+            }
 
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true

@@ -1,12 +1,30 @@
 
 $.jgrid.defaults.responsive = true;
 
-function toggleInstructions (theID) {
+function toggleInstructions (theID,action) {
 	event.preventDefault();
     var addButton = '#add-button' + theID;
     var textareaDiv = '#instruction' + theID;
     $(addButton).toggleClass('hidden show');
     $(textareaDiv).toggleClass('hidden show');
+
+    if (action === 1) {
+
+        $.ajax({
+            type: "POST",
+            data: { message: $('#note-' + theID).val() },
+            url: '/wip/AddInstruction?id=' + theID,
+            dataType: 'json',
+            success: function (data) {
+                $('#note-' + theID).val('')
+                location.reload();
+            },
+            error: function () {
+
+            }
+        });
+    }
+
 }
 
 $(document).ready(function () {
@@ -280,7 +298,7 @@ $(document).ready(function () {
         return thisCellVal;
     }
     function actionsFormatter (cellvalue, options, rowObject) {
-        InstructionsCellVal = '<button id="add-button' + rowObject.ActualPartId + '" onclick="toggleInstructions(' + rowObject.ActualPartId + ')" class="btn support-btn btn-xs btn-danger show">Add Instructions</button><div id="instruction' + rowObject.ActualPartId + '" class="hidden" ><textarea style="width: 95%;" rows=4 placeholder="Add disposition Instructions"></textarea><button class="btn support-btn btn-xs btn-primary" onclick="toggleInstructions(' + rowObject.ActualPartId + ')">Save</button>';
+        InstructionsCellVal = rowObject.Notes + '<br/><button id="add-button' + rowObject.TaskId + '" onclick="toggleInstructions(' + rowObject.TaskId + ',0)" class="btn support-btn btn-xs btn-danger show">Add Instructions</button><div id="instruction' + rowObject.TaskId + '" class="hidden" ><textarea style="width: 95%;" rows=4 placeholder="Add disposition Instructions" id="note-' + rowObject.TaskId + '"></textarea><button class="btn support-btn btn-xs btn-primary" onclick="toggleInstructions(' + rowObject.TaskId + ',1)">Save</button>';
         thisCellVal = (rowObject.HasNcr == 1) ? InstructionsCellVal : 'N/A';
         return thisCellVal;
     }

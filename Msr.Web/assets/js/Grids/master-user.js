@@ -14,77 +14,46 @@ $(document).ready(function () {
         }
     });
 
-    var roles =  [
-            { "ID": "ClientAdmin", "TITLE": "Client Admin" },
-            { "ID": "ClientBuyer", "TITLE": "Client Buyer" },
-            { "ID": "ClientEngineer", "TITLE": "Client Engineer" },
-            { "ID": "SuperAdmin", "TITLE": "Super Admin" }
-    ]
+ 
 
     $("#jqGrid").jqGrid({
         url: '/user/MasterUserData', 
         mtype: "GET",
         datatype: "json",
-        colNames: ['First Name', 'Last Name', 'Full Name', 'TimeZone', 'Created Date', 'Portal Role', 'Primary Phone', '2nd Phone', 'Email', 'User Name','Password', 'Status', 'Actions'],
+        colNames: ['First Name', 'Last Name', 'TimeZone', 'CompanyName', 'RoleName', 'Title', 'Primary Phone', 'Email', 'User Name', 'Status'],
         colModel: [
            {
-               name: 'FirstName', index: 'FirstName', colmenu: true, editable: true, edittype: "text", coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true },
-               editrules : { required: true},
-               searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] }, width: 90, align: 'center'
+               name: 'FirstName', index: 'FirstName', colmenu: true, coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true },
            },
            {
-               name: 'LastName', index: 'LastName', editable: true, edittype: "text", colmenu: false, coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true, },
-               editrules: { required: true },
-               searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] }, width: 90, align: 'center'
+               name: 'LastName', index: 'LastName', colmenu: true, coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true },
            },
-
+             {
+                 name: 'TimeZone', index: 'TimeZone', colmenu: true, coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true },
+                 formatter: timezoneFormatter, coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true },
+             },
+             {
+                 name: 'CompanyName', index: 'CompanyName', colmenu: true, coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true },
+             },
               {
-                  name: 'FullName', index: 'FullName', editable: true, edittype: "text", colmenu: false, coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true, },
-                  searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] }, width: 90, align: 'center'
+                  name: 'RoleName', index: 'RoleName', colmenu: true, coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true },
               },
-
-           {
-               name: 'TimeZone', index: 'TimeZone', editable: true, edittype: "select", editoptions: { value: "100:Mid-Atlantic;11436:International Date Line West;11437:Midway Island, Samoa" }, colmenu: false, formatter: timezoneFormatter, coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true },
-               editrules: { required: true },
-               searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] }, align: 'center'
-           },
-           {
-               name: 'CreatedDate', index: 'CreatedDate', hidden: false, colmenu: false, sorttype: 'date', coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true },
-               searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] }, formatter: 'date', formatoptions: { srcformat: "m/d/Y H:i", newformat: "m/d/Y" }, width: 90, align: 'center'
-           },
-           {
-               name: 'RoleName', index: 'RoleName', editable: true, edittype: "select",
-               editoptions: { value: "ClientAdmin:Client Admin;ClientBuyer:Client Buyer;ClientEngineer:Client Engineer" },
-               editrules: { required: true },
-               
-               align: 'center'
-           },
-           
-           { name: 'Phone', index: 'Phone', editable: true, edittype: "text", colmenu: false, coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: true }, align: 'center' },
-           {
-               name: 'Phone2', index: 'SECONDARY_PHONE_NUMBER', editable: true, edittype: "text", colmenu: false, coloptions: { sorting: true, columns: false, filtering: true, seraching: true, grouping: false, freeze: true },
-               searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] }, align: 'center'
-           },
-           {
-               name: 'Email', index: 'Email', editable: true, edittype: "text", colmenu: false, coloptions: { sorting: true, columns: false, filtering: true, seraching: true, grouping: false, freeze: true },
-               editrules: { required: true },
-               searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] }, align: 'center'
-           },
-           {
-               name: 'UserName', index: 'UserName', colmenu: false, editable: true, edittype: "text", coloptions: { sorting: true, columns: false, filtering: true, seraching: true, grouping: false, freeze: true },
-               editrules: { required: true },
-               searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] }, align: 'center'
-           },
-           {
-               name: 'PasswordHash', index: 'PasswordHash', hidden: true, colmenu: false, editable: true, edittype: "password", editrules: { edithidden: true, required :true }, hidedlg: true
-
-           },
-           {
-               name: 'IsActive', index: 'IsActive', editable: true, edittype: "select", editoptions: { value: "1:Active;0:Inactive" }, colmenu: false, coloptions: { sorting: true, columns: false, filtering: true, seraching: true, grouping: false, freeze: true },
-               searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] }, width: 90, align: 'center'
-           },
-           { name: 'ID', index: 'ID', key: true, hidden: false,  editable: false, formatter: pwResetFormatter, width: 100, align: 'center' },
-
+               {
+                   name: 'Title', index: 'Title', colmenu: true, coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true },
+               },
+             {
+                 name: 'PrimaryPhone', index: 'PrimaryPhone', colmenu: true, coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true },
+             },
+             {
+                 name: 'Email', index: 'Email', colmenu: true, coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true },
+             },
+             {
+                 name: 'Login', index: 'Login', colmenu: true, coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true },
+             },
+             {
+                 name: 'Status', index: 'Status', colmenu: true, coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true },
+             },
+          
         ],
         viewrecords: true, // show the current page, data rang and total records on the toolbar
         rowNum: 15,
@@ -94,6 +63,14 @@ $(document).ready(function () {
         autowidth: true,
         colMenu: false,
         cellEdit: false,
+        grouping: true,
+        groupingView: {
+            groupField: ['CompanyName'],
+            groupColumnShow: [false],
+            groupText: ['<b>{0} - {1} Item(s)</b>'],
+            groupSummary: [false],
+            groupCollapse: false
+        },
        
     });
 
@@ -118,12 +95,7 @@ $(document).ready(function () {
         return result[0]['DESCRIPTION'];
     }
 
-    function roleFormatter(cellvalue) {
-        
-        var result = $.grep(roles, function (e) { return e.ID == cellvalue; });
-        return result[0]['RoleName'];
-    }
-    
+
 
     //ajax emulation
     $.mockjax({

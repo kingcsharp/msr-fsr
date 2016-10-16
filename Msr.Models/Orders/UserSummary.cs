@@ -19,5 +19,6 @@ namespace Msr.Models.Orders
         public DateTime CreatedDate { get; set; }
         public string Phone2 { get; set; }
         public string FullName { get; set; }
+        public string ParentId { get; set; }
     }
 }

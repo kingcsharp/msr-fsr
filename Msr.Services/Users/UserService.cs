@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Msr.Infrastructure.Helpers;
 using Msr.Models.Orders;
 using Msr.Models.Users;
 using Msr.Repositories;
@@ -23,6 +25,12 @@ namespace Msr.Services.Users
         {
             return _dbContext.UserViews;
         }
+
+        public IQueryable<PeopleView> GetPeoplesQueryable()
+        {
+            return _dbContext.Peoples;
+        }
+
 
         public List<AspNetRole> GetRoles()
         {
@@ -52,7 +60,7 @@ namespace Msr.Services.Users
             return user;
         }
 
-        public AddUserMessageResponse AddUser(UserSummary entity)
+        public AddUserMessageResponse AddUser(UserSummary entity, string loggedUserId)
         {
             var response = new AddUserMessageResponse();
 
@@ -101,6 +109,7 @@ namespace Msr.Services.Users
                 newUser.Phone2 = entity.Phone2;
                 newUser.IsActive = entity.IsActive;
                 newUser.CompanyId = entity.CompanyId;
+                newUser.ParentId = loggedUserId;
 
                 _dbContext.SaveChanges();
 
@@ -214,6 +223,16 @@ namespace Msr.Services.Users
             var compannyId = _dbContext.AspNetUsers.Where(x => x.Id.ToLower() == id.ToLower()).Select(x => x.CompanyId).First();
 
             return _dbContext.CompanyView.SingleOrDefault(x => x.Id == compannyId);
+        }
+
+        public CheckLoginResult CheckLogin(string login, string password)
+        {
+            var loginParm = new SqlParameter("@Login", login);
+            var passwordParm = new SqlParameter("@Password", AuthenticationHelper.PassWordEncrypt(password));
+
+            var result = _dbContext.Database.SqlQuery<CheckLoginResult>("Portal_Check_Login @Login, @Password", loginParm, passwordParm).Single();
+
+            return result;
         }
     }
 }

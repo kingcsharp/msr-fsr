@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Notes\Note.cs" />
     <Compile Include="Orders\UserSummary.cs" />
     <Compile Include="Orders\UserView.cs" />
     <Compile Include="Orders\ApprovedPeopleView.cs" />
@@ -61,6 +62,7 @@
     <Compile Include="Users\AspNetUserLogin.cs" />
     <Compile Include="Users\RolesConstants.cs" />
     <Compile Include="Users\CompanyView.cs" />
+    <Compile Include="Users\PeopleView.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

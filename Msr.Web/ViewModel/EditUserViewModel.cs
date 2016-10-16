@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Msr.Models.Orders;
+using Msr.Models.Users;
 using Msr.Services.Orders;
 using Msr.Services.Users;
 
@@ -33,18 +34,17 @@ namespace Msr.Web.ViewModel
                 new SelectListItem {Text = "Midway Island, Samoa", Value = "11437"},
             };
 
-            Roles = userService.GetRoles().Select(x => new SelectListItem
+            Roles = new List<SelectListItem>
             {
-                Text = x.Name,
-                Value = x.Name,
-                Selected = UserSummary.RoleName == x.Name
-            }).ToList();
+                new SelectListItem {Text = RolesConstants.ClientBuyer, Value = RolesConstants.ClientBuyer ,  Selected = UserSummary.RoleName == RolesConstants.ClientBuyer},
+                new SelectListItem {Text = RolesConstants.ClientEngineer, Value = RolesConstants.ClientEngineer,Selected = UserSummary.RoleName == RolesConstants.ClientEngineer},
+            };
 
             Companies = companyService.GetCompanyQueryable().ToList().Select(x => new SelectListItem
             {
                 Text = x.Name,
                 Value = x.Id.ToString()
-            }).ToList();
+            }).OrderBy(o => o.Text).ToList();
         }
     }
 }

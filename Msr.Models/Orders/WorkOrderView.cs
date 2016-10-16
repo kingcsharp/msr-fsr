@@ -50,5 +50,6 @@ namespace Msr.Models.Orders
         public string MtNum { get; set; }
         public DateTime? ActualStartDate { get; set; }
         public DateTime? ActualStopDate { get; set; }
+        public string Notes { get; set; }
     }
 }

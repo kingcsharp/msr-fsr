@@ -1,4 +1,5 @@
 ﻿using System.Data.Entity;
+using Msr.Models.Notes;
 using Msr.Models.Orders;
 using Msr.Models.Users;
 using Msr.Repositories.Configurations;
@@ -23,6 +24,8 @@ namespace Msr.Repositories
             modelBuilder.Entity<ApprovedPeopleView>().ToTable("Portal_ApprovedPeople");
             modelBuilder.Entity<UserView>().ToTable("Portal_UserView");
             modelBuilder.Entity<CompanyView>().ToTable("Portal_CompanyView");
+            modelBuilder.Entity<Note>().ToTable("Portal_Note");
+            modelBuilder.Entity<PeopleView>().ToTable("Portal_PeopleView");
         }
 
         public DbSet<AspNetUser> AspNetUsers { get; set; }
@@ -34,5 +37,7 @@ namespace Msr.Repositories
         public DbSet<WorkOrderView> WorkOrders { get; set; }
         public DbSet<BuyerView> BuyerViews { get; set; }
         public DbSet<ApprovedPeopleView> ApprovedPeoples { get; set; }
+        public DbSet<Note> Notes { get; set; }
+        public DbSet<PeopleView> Peoples { get; set; }
     }
 }

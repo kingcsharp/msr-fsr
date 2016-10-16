@@ -83,7 +83,7 @@ $(document).ready(function () {
                name: 'IsActive', index: 'IsActive', editable: true, edittype: "select", editoptions: { value: "1:Active;0:Inactive" }, colmenu: false, coloptions: { sorting: true, columns: false, filtering: true, seraching: true, grouping: false, freeze: true },
                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] }, width: 90, align: 'center'
            },
-           { name: 'ID', index: 'ID', key: true, hidden: false, editable: false,  width: 100, align: 'center' },
+         { name: 'ID', index: 'ID', key: true, hidden: false, editable: false, formatter: pwResetFormatter, width: 100, align: 'center' },
 
         ],
         viewrecords: true, // show the current page, data rang and total records on the toolbar

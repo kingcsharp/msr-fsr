@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Msr.Models.Orders;
 using Msr.Services.jqGrid;
+using Msr.Services.Notes;
 using Msr.Services.Orders;
 using Msr.Services.Users;
 
@@ -144,7 +145,9 @@ namespace Msr.Web.Controllers
                 x.HasFile,
                 x.HasMonitor,
                 x.HasNcr,
-                x.FillId
+                x.FillId,
+                x.TaskId,
+                x.Notes
             }).ToList();
 
             var json = new
@@ -177,6 +180,16 @@ namespace Msr.Web.Controllers
         {
 
             return PartialView("_Monitors");
+        }
+
+        [HttpPost]
+        public JsonResult AddInstruction(string id, string message)
+        {
+            var noteService = new NoteService();
+
+            noteService.AddNote(id, message, 1);
+
+            return Json("OK", JsonRequestBehavior.AllowGet);
         }
     }
 }

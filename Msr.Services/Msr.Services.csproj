@@ -62,6 +62,8 @@
     <Compile Include="jqGrid\JqGridParam.cs" />
     <Compile Include="jqGrid\DatatableParamConverter.cs" />
     <Compile Include="jqGrid\ExtendedMethods.cs" />
+    <Compile Include="Notes\UserService.cs" />
+    <Compile Include="Orders\Messaging\CheckLoginResult.cs" />
     <Compile Include="Orders\Messaging\NcrDetails.cs" />
     <Compile Include="Orders\Messaging\NcrReportResponse.cs" />
     <Compile Include="Orders\Messaging\AddUserMessageResponse.cs" />
@@ -72,6 +74,10 @@
     <Compile Include="Users\UserService.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Msr.Infrastructure\Msr.Infrastructure.csproj">
+      <Project>{9DD1FA43-9B92-4694-98A5-D75B672CFD67}</Project>
+      <Name>Msr.Infrastructure</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Msr.Models\Msr.Models.csproj">
       <Project>{2D976E8C-924C-4E73-A8FC-A8395B457C0E}</Project>
       <Name>Msr.Models</Name>

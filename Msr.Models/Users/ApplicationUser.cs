@@ -19,6 +19,8 @@ namespace Msr.Models.Users
 
         public int TimeZone { get; set; }
 
+        public string AnswerId { get; set; }
+
         public DateTime CreatedDate { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)

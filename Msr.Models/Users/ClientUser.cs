@@ -11,8 +11,6 @@ namespace Msr.Models.Users
         public virtual Guid Id { get; set; }
 
         public virtual string UserId { get; set; }
-        [ForeignKey("UserId")]
-        public virtual AspNetUser User { get; set; }
 
         public virtual string ClientId { get; set; }
         [ForeignKey("ClientId")]
@@ -20,7 +18,5 @@ namespace Msr.Models.Users
 
         public virtual DateTime CreatedDate { get; set; }
         public virtual string CreatedBy { get; set; }
-        [ForeignKey("CreatedBy")]
-        public virtual AspNetUser CreatedByUser { get; set; }
     }
 }

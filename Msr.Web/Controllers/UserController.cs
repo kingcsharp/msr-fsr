@@ -17,22 +17,24 @@ namespace Msr.Web.Controllers
     [Authorize]
     public class UserController : BaseController
     {
-        [Authorize(Roles = nameof(RolesConstants.SuperAdmin))]
+        [Authorize(Roles = nameof(RolesConstants.ClientAdmin))]
         public ActionResult Master()
         {
             return View();
         }
 
-        [Authorize(Roles = nameof(RolesConstants.SuperAdmin))]
+        [Authorize(Roles = nameof(RolesConstants.ClientAdmin))]
         public ActionResult MasterUserData(JqGridParam param)
         {
 
             var userService = new UserService();
 
-            var totalRows = userService.GetUserQueryable();
+            var totalRows = userService.GetPeoplesQueryable();
 
-            string orderBy = nameof(UserView.FirstName);
+            string orderBy = nameof(PeopleView.FirstName);
             string orderDirection = "asc";
+
+            param.sortColumn = param.sortColumn.Replace(" asc, ", "");
 
             if (!string.IsNullOrWhiteSpace(param.sortColumn))
             {
@@ -54,22 +56,20 @@ namespace Msr.Web.Controllers
 
             var totalPages = (int)Math.Ceiling((float)totalRecords / (float)param.pageSize);
 
-
             var results = totalRows.Select(x => new
             {
                 x.Id,
                 x.FirstName,
                 x.LastName,
-                x.FullName,
-                x.RoleName,
-                x.Phone,
-                x.Phone2,
-                x.UserName,
-                x.PasswordHash,
-                x.Email,
-                x.IsActive,
                 x.TimeZone,
-                x.CreatedDate
+                x.RoleName,
+                x.Title,
+                x.PrimaryPhone,
+                x.Login,
+                x.Email,
+                x.Status,
+                x.CreatedDate,
+                x.CompanyName
             }).ToList();
 
             var json = new
@@ -96,11 +96,9 @@ namespace Msr.Web.Controllers
 
             var userService = new UserService();
 
-            var clientUsers = userService.GetClientUsers(loggedUser);
-
             var totalRows = userService.GetUserQueryable();
 
-            totalRows = totalRows.Where(x => clientUsers.Contains(x.Id));
+            totalRows = totalRows.Where(x => x.ParentId !=null && x.ParentId.ToLower() == loggedUser.ToLower());
 
             string orderBy = nameof(UserView.FirstName);
             string orderDirection = "asc";
@@ -154,7 +152,7 @@ namespace Msr.Web.Controllers
             return Json(json, JsonRequestBehavior.AllowGet);
         }
 
-        [Authorize(Roles = nameof(RolesConstants.SuperAdmin))]
+        [Authorize(Roles = nameof(RolesConstants.ClientAdmin))]
         public ActionResult AddUser()
         {
             var userService = new UserService();
@@ -166,18 +164,20 @@ namespace Msr.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = nameof(RolesConstants.SuperAdmin))]
+        [Authorize(Roles = nameof(RolesConstants.ClientAdmin))]
         public ActionResult AddUser(AddUserViewModel viewModel)
         {
             var userService = new UserService();
 
             if (ModelState.IsValid)
             {
-                var response = userService.AddUser(viewModel.UserSummary);
+                var loggedUser = User.Identity.GetUserId();
+
+                var response = userService.AddUser(viewModel.UserSummary, loggedUser);
 
                 if (!response.HasErrors())
                 {
-                    return RedirectToAction("Master");
+                    return RedirectToAction("Client");
                 }
 
                 ModelState.AddModelError("", response.ErrorMessage());
@@ -188,7 +188,7 @@ namespace Msr.Web.Controllers
             return View(viewModel);
         }
 
-        [Authorize(Roles = nameof(RolesConstants.SuperAdmin))]
+        [Authorize(Roles = nameof(RolesConstants.ClientAdmin))]
         public ActionResult EditUser(string id)
         {
             var userService = new UserService();
@@ -204,7 +204,7 @@ namespace Msr.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = nameof(RolesConstants.SuperAdmin))]
+        [Authorize(Roles = nameof(RolesConstants.ClientAdmin))]
         public ActionResult EditUser(EditUserViewModel viewModel)
         {
             var userService = new UserService();
@@ -215,7 +215,7 @@ namespace Msr.Web.Controllers
 
                 if (!response.HasErrors())
                 {
-                    return RedirectToAction("Master");
+                    return RedirectToAction("Client");
                 }
 
                 ModelState.AddModelError("", response.ErrorMessage());
@@ -241,7 +241,7 @@ namespace Msr.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = nameof(RolesConstants.SuperAdmin))]
+        [Authorize(Roles = nameof(RolesConstants.ClientAdmin))]
         public ActionResult DeleteUser(EditUserViewModel viewModel)
         {
             var userService = new UserService();
@@ -250,13 +250,13 @@ namespace Msr.Web.Controllers
 
             if (!response.HasErrors())
             {
-                return RedirectToAction("Master");
+                return RedirectToAction("Client");
             }
 
             return RedirectToAction("DeleteUser", new { viewModel.UserSummary.Id });
         }
 
-        [Authorize(Roles = nameof(RolesConstants.SuperAdmin))]
+        [Authorize(Roles = nameof(RolesConstants.ClientAdmin))]
         public ActionResult AddClientUser(string id)
         {
             ViewBag.UserId = id;
@@ -268,7 +268,7 @@ namespace Msr.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = nameof(RolesConstants.SuperAdmin))]
+        [Authorize(Roles = nameof(RolesConstants.ClientAdmin))]
         public ActionResult AddClientUser(string userId, List<string> usderIds)
         {
             var userService = new UserService();
