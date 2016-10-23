@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualBasic;
+﻿using System;
+using Microsoft.VisualBasic;
 
 namespace Msr.Infrastructure.Helpers
 {
@@ -10,7 +11,8 @@ namespace Msr.Infrastructure.Helpers
 
             for (var i = 1; i <= password.Length; i++)
             {
-                encryptPassword = encryptPassword + Strings.Chr(77 + Strings.Asc(Strings.Mid(password, i, 1)) % 128);
+              var test =  Convert.ToChar(77 + Strings.Asc(Strings.Mid(password, i, 1))%128);
+               encryptPassword = encryptPassword + Strings.Chr(77 + Strings.Asc(Strings.Mid(password, i, 1)) % 128);
             }
 
             return encryptPassword;

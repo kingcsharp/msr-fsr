@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System.Data.SqlClient;
+using System.Linq;
 using Msr.Models.Tasks;
-using Msr.Models.Users;
 using Msr.Repositories;
+using Msr.Services.Orders.Messaging;
+using Msr.Services.Tasks.Messaging;
 
 namespace Msr.Services.Orders
 {
@@ -14,9 +16,36 @@ namespace Msr.Services.Orders
             _dbContext = new MsrDbContext();
         }
 
-        public IQueryable<MonitorResult> GetCompanyQueryable()
+        public IQueryable<MonitorResult> GetTaskWithMonitors()
         {
             return _dbContext.MonitorResults;
+        }
+
+        public MonitorHistoryResponse GetTaskWithMonitors(string fileId)
+        {
+            var response = new MonitorHistoryResponse();
+
+            var fileIdParm = new SqlParameter("@fillID", fileId);
+
+            var tasks = _dbContext.Database.SqlQuery<GetTaskWithMonitorsResult>("Portal_GetTaskWithMonitors @fillID", fileIdParm).ToList();
+
+            if (tasks.Any())
+            {
+                foreach (var task in tasks)
+                {
+                    var item = new MonitorItem();
+                    item.TaskId = task.TaskId;
+                    item.Description = task.Description;
+
+                    var monitors = _dbContext.MonitorResults.Where(x => x.TaskId == task.TaskId).ToList();
+
+                    item.MonitorResults.AddRange(monitors);
+
+                    response.MonitorItem.Add(item);
+                }
+            }
+
+            return response;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿CREATE VIEW [dbo].[Portal_UserView]
 AS
 
+
 SELECT
  u.[Id]
 ,u.[Email]
@@ -23,9 +24,15 @@ SELECT
 ,u.[TimeZone]
 ,r.Id AS RoleId
 ,r.Name AS RoleName
+,u.ParentId
+,c.NAME AS CompanyName
+,u.CompanyId
+,u.IsActive AS Status
 FROM [AspNetUsers] u 
 LEFT JOIN AspNetUserRoles ur ON ur.UserId = u.Id
 LEFT JOIN AspNetRoles r ON r.Id = ur.RoleId
+LEFT JOIN [dbo].[A_COMPANIES] c ON c.ID =u.CompanyId
+
 GO
 
 

@@ -201,12 +201,9 @@ namespace Msr.Web.Controllers
         {
             var taskService = new TaskService();
 
-            var monitoers = taskService.GetCompanyQueryable().Where(x => x.TaskId == id);
+            var response = taskService.GetTaskWithMonitors(id);
 
-
-
-
-            return PartialView("_Monitors");
+            return PartialView("_Monitors", response);
         }
 
         [HttpPost]

@@ -1,0 +1,13 @@
+﻿ALTER Procedure [dbo].[Portal_Check_Login]
+@LOGIN as nvarchar(50),
+@PASSWORD as nvarchar(50)
+AS
+		
+	SELECT ID,NAME,LAST_NAME AS LastName,LOGIN
+		FROM A_APPROVED_PEOPLE 
+		WHERE SYSTEM_STATUS = 'ACTIVE' AND LOGIN = @LOGIN and PASSWORD = @PASSWORD
+
+
+
+
+

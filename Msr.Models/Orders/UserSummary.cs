@@ -22,6 +22,7 @@ namespace Msr.Models.Orders
         public string FullName { get; set; }
         public string ParentId { get; set; }
         public string CompanyName { get; set; }
+        public string CompanyId { get; set; }
         public bool Status { get; set; }
     }
 }

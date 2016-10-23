@@ -34,7 +34,7 @@ namespace Msr.Web.Controllers
 
             var userService = new UserService();
 
-            var totalRows = userService.GetUserQueryable();
+            var totalRows = userService.GetUserQueryable().Where(x=> x.RoleName != RolesConstants.AnswerUser);
 
             string orderBy = nameof(PeopleView.FirstName);
             string orderDirection = "asc";
@@ -104,9 +104,11 @@ namespace Msr.Web.Controllers
 
             var userService = new UserService();
 
+           var user =  userService.GetUser(loggedUser);
+
             var totalRows = userService.GetUserQueryable();
 
-            totalRows = totalRows.Where(x => x.ParentId !=null && x.ParentId.ToLower() == loggedUser.ToLower());
+            totalRows = totalRows.Where(x => x.ParentId !=null && x.CompanyId == user.CompanyId);
 
             string orderBy = nameof(UserView.FirstName);
             string orderDirection = "asc";
@@ -185,7 +187,7 @@ namespace Msr.Web.Controllers
 
                 if (!response.HasErrors())
                 {
-                    return RedirectToAction("Client");
+                    return RedirectToAction("Master");
                 }
 
                 ModelState.AddModelError("", response.ErrorMessage());
@@ -196,7 +198,7 @@ namespace Msr.Web.Controllers
             return View(viewModel);
         }
 
-        [Authorize(Roles = nameof(RolesConstants.ClientAdmin))]
+        [Authorize(Roles = nameof(RolesConstants.AnswerUser))]
         public ActionResult EditUser(string id)
         {
             var userService = new UserService();
@@ -212,7 +214,7 @@ namespace Msr.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = nameof(RolesConstants.ClientAdmin))]
+        [Authorize(Roles = nameof(RolesConstants.AnswerUser))]
         public ActionResult EditUser(EditUserViewModel viewModel)
         {
             var userService = new UserService();
@@ -223,7 +225,7 @@ namespace Msr.Web.Controllers
 
                 if (!response.HasErrors())
                 {
-                    return RedirectToAction("Client");
+                    return RedirectToAction("Master");
                 }
 
                 ModelState.AddModelError("", response.ErrorMessage());
@@ -234,7 +236,7 @@ namespace Msr.Web.Controllers
             return View(viewModel);
         }
 
-        [Authorize(Roles = nameof(RolesConstants.ClientAdmin))]
+        [Authorize(Roles = nameof(RolesConstants.AnswerUser))]
         public ActionResult DeleteUser(string id)
         {
             var userService = new UserService();
@@ -249,7 +251,7 @@ namespace Msr.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = nameof(RolesConstants.ClientAdmin))]
+        [Authorize(Roles = nameof(RolesConstants.AnswerUser))]
         public ActionResult DeleteUser(EditUserViewModel viewModel)
         {
             var userService = new UserService();
@@ -258,7 +260,7 @@ namespace Msr.Web.Controllers
 
             if (!response.HasErrors())
             {
-                return RedirectToAction("Client");
+                return RedirectToAction("Master");
             }
 
             return RedirectToAction("DeleteUser", new { viewModel.UserSummary.Id });
