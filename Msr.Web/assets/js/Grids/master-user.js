@@ -20,7 +20,7 @@ $(document).ready(function () {
         url: '/user/MasterUserData', 
         mtype: "GET",
         datatype: "json",
-        colNames: ['First Name', 'Last Name', 'TimeZone', 'CompanyName', 'RoleName', 'Title', 'Primary Phone', 'Email', 'User Name', 'Status'],
+        colNames: ['First Name', 'Last Name', 'TimeZone', 'CompanyName', 'RoleName', 'Primary Phone', 'Email', 'User Name', 'Status',"Actions"],
         colModel: [
            {
                name: 'FirstName', index: 'FirstName', colmenu: true, coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true },
@@ -38,9 +38,7 @@ $(document).ready(function () {
               {
                   name: 'RoleName', index: 'RoleName', colmenu: true, coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true },
               },
-               {
-                   name: 'Title', index: 'Title', colmenu: true, coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true },
-               },
+            
              {
                  name: 'PrimaryPhone', index: 'PrimaryPhone', colmenu: true, coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true },
              },
@@ -48,11 +46,12 @@ $(document).ready(function () {
                  name: 'Email', index: 'Email', colmenu: true, coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true },
              },
              {
-                 name: 'Login', index: 'Login', colmenu: true, coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true },
+                 name: 'UserName', index: 'UserName', colmenu: true, coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true },
              },
              {
                  name: 'Status', index: 'Status', colmenu: true, coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true },
              },
+             { name: 'ID', index: 'ID', key: true, hidden: false, editable: false, formatter: pwResetFormatter, width: 100, align: 'center' }
           
         ],
         viewrecords: true, // show the current page, data rang and total records on the toolbar

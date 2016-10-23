@@ -9,8 +9,8 @@ namespace Msr.Models.Orders
         public string SupplierName { get; set; }
         public string SupplierId { get; set; }
         public byte? HasFile { get; set; }
-        public byte? HasMonitor { get; set; }
-        public byte? HasNcr { get; set; }
+        public int? HasMonitor { get; set; }
+        public int? HasNcr { get; set; }
         public string TaskId { get; set; }
         public int? NumSubTasks { get; set; }
         public int? NumSubTasksComplete { get; set; }

@@ -54,6 +54,7 @@
     <Compile Include="Orders\BuyerView.cs" />
     <Compile Include="Orders\WorkOrderView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tasks\MonitorResults.cs" />
     <Compile Include="Users\ClientUser.cs" />
     <Compile Include="Users\ApplicationUser.cs" />
     <Compile Include="Users\AspNetRole.cs" />

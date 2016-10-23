@@ -17,6 +17,8 @@ namespace Msr.Web.Controllers
     {
         public ActionResult Index()
         {
+            ViewBag.ActiveClass = "WIP";
+
             var loggedUser = User.Identity.GetUserId();
 
             var userService = new UserService();
@@ -38,7 +40,7 @@ namespace Msr.Web.Controllers
 
             var orderService = new OrderService();
 
-            var totalRows = orderService.GetBuyerWorkOrderQueryable().Where(x => x.SupplierId == company.Id);
+            var totalRows = orderService.GetBuyerWorkOrderQueryable().Where(x => x.CustId == company.Id);
 
             if (param.where !=null && param.where.rules.Any())
             {

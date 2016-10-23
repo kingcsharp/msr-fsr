@@ -292,7 +292,7 @@ $(document).ready(function () {
     
 	function supportingInfoFormatter(cellvalue, options, rowObject) {
 	    var NcrButton = (rowObject.HasNcr == 1) ? '<button class="btn support-btn btn-xs btn-warning" data-id="' + rowObject.FillId + '" data-toggle="modal"  data-target="#ncrModal" title="View NCR"><i class="fa fa-clipboard"></i>NCR</button>' : '';
-	    var FileButton = (rowObject.HasFile == 1) ? '<button class="btn support-btn btn-xs btn-info" data-id="' + rowObject.FillId + '" href="#" data-toggle="modal" data-target="#imageModal" title="View Photos"><i class="fa fa-file-image-o"></i>Photos</button>' : '';
+	    var FileButton = (rowObject.HasFile == 1) ? '<button class="btn support-btn btn-xs btn-info" data-id="' + rowObject.ActualPartId + '" href="#" data-toggle="modal" data-target="#imageModal" title="View Photos"><i class="fa fa-file-image-o"></i>Photos</button>' : '';
 	    var MonitorButton = (rowObject.HasMonitor == 1) ? '<button class="btn support-btn btn-xs btn-success" data-id="' + rowObject.FillId + '" data-toggle="modal" data-target="#monitorModal"  title="View Monitors"><i class="fa fa-bar-chart "></i>Monitors</button>' : '';
         thisCellVal = NcrButton + FileButton + MonitorButton;
         return thisCellVal;

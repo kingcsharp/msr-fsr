@@ -69,7 +69,7 @@ namespace Msr.Services.Orders
                    };
 
                    usermanager.Create(newUser, "msr" + result.Id + "$");
-                   usermanager.AddToRole(id, RolesConstants.ClientAdmin);
+                   usermanager.AddToRole(id, RolesConstants.AnswerUser);
                    context.SaveChanges();
                }
                else

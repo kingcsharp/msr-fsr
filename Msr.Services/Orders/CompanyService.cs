@@ -1,9 +1,11 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using Msr.Models.Orders;
 using Msr.Repositories;
 using Msr.Services.Orders.Messaging;
 using System.Data.SqlClient;
+using RestSharp;
 
 namespace Msr.Services.Orders
 {
@@ -38,5 +40,27 @@ namespace Msr.Services.Orders
            //SELECT * FROM A_TASK_COMMENT WHERE TASK_ID IN  (SELECT TASK_ID FROM A_TASK_ORDER_INFORMATION WHERE FILL_ITEM_ID = '109815')
             return response;
        }
+
+        public List<DocumentView> GetDocuments(string acctualPartId)
+        {
+            var fileIdParm = new SqlParameter("@ActualPartId", acctualPartId);
+
+            var result = _dbContext.Database.SqlQuery<DocumentView>("Portal_GetDocuments @ActualPartId", fileIdParm).ToList();
+
+            return result;
+        }
+
+        public string GetDocumentBase64(string filePath)
+        {
+            var client = new RestClient("http://localhost:61322/api/doc/getfilebyid?filePath=test-1.jpg");
+
+            var request = new RestRequest(Method.GET);
+
+            var response = client.Execute<DocResponse>(request);
+
+            var content = response.Data.DocData;
+
+            return content;
+        }
     }
 }

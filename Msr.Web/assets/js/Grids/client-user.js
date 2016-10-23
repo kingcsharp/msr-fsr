@@ -109,7 +109,7 @@ $(document).ready(function () {
     });
 
     function pwResetFormatter(cellvalue, options, rowObject) {
-        thisCellVal = '<a href="/user/edituser/' + rowObject.Id + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i> Edit</a>';
+        thisCellVal = '<a href="/user/editclientuser/' + rowObject.Id + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i> Edit</a>';
         return thisCellVal;
     }
 

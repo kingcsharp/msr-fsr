@@ -168,6 +168,50 @@ namespace Msr.Services.Users
             return response;
         }
 
+        public AddUserMessageResponse UpdateClientUser(UserSummary entity)
+        {
+            var response = new AddUserMessageResponse();
+
+            try
+            {
+                var existingUser = _dbContext.AspNetUsers.SingleOrDefault(x => x.Id.ToLower() == entity.Id.ToLower());
+
+                existingUser.FirstName = entity.FirstName;
+                existingUser.LastName = entity.LastName;
+                existingUser.TimeZone = entity.TimeZone;
+                existingUser.PhoneNumber = entity.Phone;
+                existingUser.Phone2 = entity.Phone2;
+                existingUser.Email = entity.Email;
+                existingUser.UserName = entity.UserName;
+                existingUser.IsActive = entity.IsActive;
+
+                var existingRole = existingUser.AspNetRoles.FirstOrDefault();
+
+                if (existingRole != null && existingRole.Name != entity.RoleName)
+                {
+                    existingUser.AspNetRoles.Remove(existingRole);
+
+                    var newRole = _dbContext.AspNetRoles.Single(x => x.Name == entity.RoleName);
+
+                    existingUser.AspNetRoles.Add(newRole);
+                }
+                else if (existingRole == null)
+                {
+                    var newRole = _dbContext.AspNetRoles.Single(x => x.Name == entity.RoleName);
+                    existingUser.AspNetRoles.Add(newRole);
+                }
+
+                _dbContext.SaveChanges();
+
+
+            }
+            catch (Exception ex)
+            {
+                response.AddError(ex.Message);
+            }
+
+            return response;
+        }
         public AddUserMessageResponse DeleteUser(string id)
         {
             var response = new AddUserMessageResponse();

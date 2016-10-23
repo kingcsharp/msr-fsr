@@ -464,6 +464,27 @@ namespace Msr.Web.Controllers
             {
                 return Redirect(returnUrl);
             }
+
+            if (User.IsInRole(RolesConstants.AnswerUser))
+            {
+                return RedirectToAction("Master", "User");
+            }
+
+            if (User.IsInRole(RolesConstants.ClientAdmin))
+            {
+                return RedirectToAction("Client", "User");
+            }
+
+            if (User.IsInRole(RolesConstants.ClientBuyer))
+            {
+                return RedirectToAction("Index", "Buyer");
+            }
+
+            if (User.IsInRole(RolesConstants.ClientEngineer))
+            {
+                return RedirectToAction("Engineering", "Wip");
+            }
+
             return RedirectToAction("Index", "Home");
         }
 

@@ -64,7 +64,12 @@ namespace Msr.Repositories
             {
                 context.Roles.Add(new IdentityRole(RolesConstants.ClientEngineer));
             }
+            var answerUser = context.Roles.SingleOrDefault(x => x.Name == RolesConstants.AnswerUser);
 
+            if (answerUser == null)
+            {
+                context.Roles.Add(new IdentityRole(RolesConstants.AnswerUser));
+            }
 
             context.SaveChanges();
         }

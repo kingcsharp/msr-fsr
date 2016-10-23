@@ -62,7 +62,16 @@
         </tr>
         <tr>
             <td class="theader">Comments:</td>
-            <td>Here is where the comments from the technician go. Here is where the comments from the technician go. Here is where the comments from the technician go. Here is where the comments from the technician go. Here is where the comments from the technician go. Here is where the comments from the technician go.</td>
+            <td>
+                @if (!string.IsNullOrWhiteSpace(Model.Details.Comments))
+                {
+                    foreach (var comment in Model.Details.Comments.Split('|'))
+                     {
+                         @comment
+                         <br/>
+                     }
+                }
+            </td>
         </tr>
     </tbody>
 </table>

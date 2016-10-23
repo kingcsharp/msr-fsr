@@ -1,6 +1,7 @@
 ﻿using System.Data.Entity;
 using Msr.Models.Notes;
 using Msr.Models.Orders;
+using Msr.Models.Tasks;
 using Msr.Models.Users;
 using Msr.Repositories.Configurations;
 
@@ -26,6 +27,7 @@ namespace Msr.Repositories
             modelBuilder.Entity<CompanyView>().ToTable("Portal_CompanyView");
             modelBuilder.Entity<Note>().ToTable("Portal_Note");
             modelBuilder.Entity<PeopleView>().ToTable("Portal_PeopleView");
+            modelBuilder.Entity<MonitorResult>().ToTable("Portal_MonitorResults");
         }
 
         public DbSet<AspNetUser> AspNetUsers { get; set; }
@@ -39,5 +41,6 @@ namespace Msr.Repositories
         public DbSet<ApprovedPeopleView> ApprovedPeoples { get; set; }
         public DbSet<Note> Notes { get; set; }
         public DbSet<PeopleView> Peoples { get; set; }
+        public DbSet<MonitorResult> MonitorResults { get; set; }
     }
 }

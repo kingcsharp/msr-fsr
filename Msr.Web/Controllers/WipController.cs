@@ -10,6 +10,7 @@ using Msr.Services.jqGrid;
 using Msr.Services.Notes;
 using Msr.Services.Orders;
 using Msr.Services.Users;
+using Msr.Web.ViewModel;
 
 namespace Msr.Web.Controllers
 {
@@ -18,6 +19,8 @@ namespace Msr.Web.Controllers
     {
         public ActionResult Engineering()
         {
+            ViewBag.ActiveClass = "WIP";
+
             var loggedUser = User.Identity.GetUserId();
 
             var userService = new UserService();
@@ -36,7 +39,7 @@ namespace Msr.Web.Controllers
            var company = userService.GetCompanyId(loggedUser);
             var orderService = new OrderService();
 
-            var totalRows = orderService.GetWorkOrderQueryable().Where(x => x.SupplierId == company.Id);
+            var totalRows = orderService.GetWorkOrderQueryable().Where(x => x.CustId == company.Id);
 
 
             if (param.where != null && param.where.rules.Any())
@@ -171,13 +174,37 @@ namespace Msr.Web.Controllers
             return PartialView("_NcrModel", ncrDetails);
         }
 
-        public ActionResult GetPhotsModel()
+        public ActionResult GetPhotsModel(string id)
         {
-            return PartialView("_Photos");
+            var orderService = new OrderService();
+
+            var docs = orderService.GetDocuments(id);
+
+            foreach (var doc in docs)
+            {
+                orderService.GetDocumentBase64(doc.ServerPath);
+            }
+
+            var test = orderService.GetDocumentBase64("2");
+
+            var photos = new List<DocViewModel>();
+
+            photos.Add(new DocViewModel
+            {
+                FileArray = test,
+                FileName = "test"
+            });
+            return PartialView("_Photos", photos);
         }
 
-        public ActionResult GetMonitorsModel()
+        public ActionResult GetMonitorsModel(string id)
         {
+            var taskService = new TaskService();
+
+            var monitoers = taskService.GetCompanyQueryable().Where(x => x.TaskId == id);
+
+
+
 
             return PartialView("_Monitors");
         }

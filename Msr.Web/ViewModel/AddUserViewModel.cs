@@ -37,6 +37,7 @@ namespace Msr.Web.ViewModel
             {
                 new SelectListItem {Text = RolesConstants.ClientBuyer, Value = RolesConstants.ClientBuyer},
                 new SelectListItem {Text = RolesConstants.ClientEngineer, Value = RolesConstants.ClientEngineer},
+                new SelectListItem {Text = RolesConstants.ClientAdmin, Value = RolesConstants.ClientAdmin},
             };
 
             Companies = companyService.GetCompanyQueryable().ToList().Select(x => new SelectListItem

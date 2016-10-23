@@ -19,15 +19,15 @@
                 </button>
             </div>
             <ul class="nav navbar-nav">
-                <li class="active">
+                <li>
                     <a href="index.html">
                         <span class="icon fa fa-tachometer"></span><span class="title">Dashboard</span>
                     </a>
                 </li>
 
-                @if (claimsIdentity.HasClaim("role", RolesConstants.ClientAdmin))
-                {
-                    <li class="panel panel-default dropdown">
+             @if (User.IsInRole(RolesConstants.AnswerUser) || User.IsInRole(RolesConstants.ClientAdmin))
+             {
+                    <li class="panel panel-default dropdown @(ViewBag.ActiveClass == "USER"? "active":"")">
                         <a data-toggle="collapse" href="#dropdown-element">
                             <span class="icon fa fa-desktop"></span><span class="title">User Admin</span>
                         </a>
@@ -37,51 +37,62 @@
                         <div id="dropdown-element" class="panel-collapse collapse">
                             <div class="panel-body">
                                 <ul class="nav navbar-nav">
-                                    <li>
-                                        <a href="/user/master">
-                                            <span class="icon fa fa-user-secret"></span><span class="title">Master Users</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="/user/client">
-                                            <span class="icon fa fa-users"></span><span class="title">Client Users</span>
-                                        </a>
-                                    </li>
+                                    @if (User.IsInRole(RolesConstants.AnswerUser))
+                                    {
+                                        <li>
+                                            <a href="/user/master">
+                                                <span class="icon fa fa-user-secret"></span><span class="title">Master Users</span>
+                                            </a>
+                                        </li>
+                                    }
+                                        @if (User.IsInRole(RolesConstants.ClientAdmin))
+                                        {
+                                            <li>
+                                                <a href="/user/client">
+                                                    <span class="icon fa fa-users"></span><span class="title">Client Users</span>
+                                                </a>
+                                            </li>
+                                        }
                                 </ul>
                             </div>
                         </div>
                     </li>
                 }
-                <li class="panel panel-default dropdown">
-                    <a data-toggle="collapse" href="#dropdown-element2">
-                        <span class="icon fa fa-desktop"></span><span class="title">WIP Views</span>
-                    </a>
-                    <!-- Dropdown level 1 -->
-                    <div id="dropdown-element2" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <ul class="nav navbar-nav">
 
-                                @if (claimsIdentity.HasClaim("role", RolesConstants.ClientEngineer))
-                                {
-                                    <li>
-                                        <a href="~/wip/engineering">
-                                            <span class="icon fa fa-gears"></span><span class="title">Engineering</span>
-                                        </a>
-                                    </li>
-                                }
 
-                                @if (User.IsInRole(RolesConstants.ClientBuyer))
-                                {
-                                    <li>
-                                        <a href="/buyer">
-                                            <span class="icon fa fa-dollar"></span><span class="title">Purchasing</span>
-                                        </a>
-                                    </li>
-                                }
-                            </ul>
-                        </div>
-                    </div>
-                </li>
+@if (User.IsInRole(RolesConstants.ClientBuyer) || User.IsInRole(RolesConstants.ClientEngineer))
+{
+    <li class="panel panel-default dropdown @(ViewBag.ActiveClass == "WIP" ? "active" : "")">
+        <a data-toggle="collapse" href="#dropdown-element2">
+            <span class="icon fa fa-desktop"></span><span class="title">WIP Views</span>
+        </a>
+        <!-- Dropdown level 1 -->
+        <div id="dropdown-element2" class="panel-collapse collapse">
+            <div class="panel-body">
+                <ul class="nav navbar-nav">
+
+                    @if (User.IsInRole(RolesConstants.ClientEngineer))
+                    {
+                        <li>
+                            <a href="~/wip/engineering">
+                                <span class="icon fa fa-gears"></span><span class="title">Engineering</span>
+                            </a>
+                        </li>
+                    }
+
+                    @if (User.IsInRole(RolesConstants.ClientBuyer))
+                    {
+                        <li>
+                            <a href="/buyer">
+                                <span class="icon fa fa-dollar"></span><span class="title">Purchasing</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </li>
+}
                 <li>
                     <a href="profile.html">
                         <span class="icon fa fa-user"></span><span class="title">Profile</span>

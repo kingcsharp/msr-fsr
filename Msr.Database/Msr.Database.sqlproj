@@ -2728,5 +2728,7 @@
     <Build Include="dbo\Views\Portal\Portal_UserView.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_GetNcrReport.sql" />
     <Build Include="dbo\Views\Portal\Portal_CompanyView.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_GetDocuments.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_HasMonitor.sql" />
   </ItemGroup>
 </Project>

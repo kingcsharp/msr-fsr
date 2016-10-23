@@ -41,6 +41,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
     </Reference>
+    <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.105.2.3\lib\net46\RestSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
@@ -64,10 +68,13 @@
     <Compile Include="jqGrid\ExtendedMethods.cs" />
     <Compile Include="Notes\UserService.cs" />
     <Compile Include="Orders\Messaging\CheckLoginResult.cs" />
+    <Compile Include="Orders\Messaging\DocResponse.cs" />
+    <Compile Include="Orders\Messaging\DocumentView.cs" />
     <Compile Include="Orders\Messaging\NcrDetails.cs" />
     <Compile Include="Orders\Messaging\NcrReportResponse.cs" />
     <Compile Include="Orders\Messaging\AddUserMessageResponse.cs" />
     <Compile Include="Orders\CompanyService.cs" />
+    <Compile Include="Orders\TaskService.cs" />
     <Compile Include="Orders\PeopleService.cs" />
     <Compile Include="Orders\OrderService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -86,6 +93,9 @@
       <Project>{E8A1A202-F0D8-495D-98E7-1F05F6057841}</Project>
       <Name>Msr.Repositories</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
