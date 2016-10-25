@@ -2,7 +2,7 @@
 $.jgrid.defaults.responsive = true;
 
 function toggleInstructions (theID,action) {
-	event.preventDefault();
+	
     var addButton = '#add-button' + theID;
     var textareaDiv = '#instruction' + theID;
     $(addButton).toggleClass('hidden show');
@@ -187,63 +187,6 @@ $(document).ready(function () {
                 );
             });
 
-
-            $('#ncrModal').on('show.bs.modal', function (event) {               
-                var button = $(event.relatedTarget) // Button that triggered the modal
-                var id = button.data('id') // Extract info from data-* attributes
-                var modal = $(this)
-
-                $.ajax({
-                    type: "GET",
-                    url: '/wip/getncrmodel?id='+id,
-                    dataType: 'html',
-                    success: function (data) {
-                        modal.find('.modal-body').html(data);
-                    },
-                    error: function () {
-                      
-                    }
-                });
-            })
-
-
-            $('#imageModal').on('show.bs.modal', function (event) {
-                var button = $(event.relatedTarget) // Button that triggered the modal
-                var id = button.data('id') // Extract info from data-* attributes
-                var modal = $(this)
-
-                $.ajax({
-                    type: "GET",
-                    url: '/wip/GetPhotsModel?id=' + id,
-                    dataType: 'html',
-                    success: function (data) {
-                        modal.find('.modal-body').html(data);
-                    },
-                    error: function () {
-
-                    }
-                });
-            })
-
-            $('#monitorModal').on('show.bs.modal', function (event) {
-                var button = $(event.relatedTarget) // Button that triggered the modal
-                var id = button.data('id'); // Extract info from data-* attributes
-                var modal = $(this);
-
-                $.ajax({
-                    type: "GET",
-                    url: '/wip/GetMonitorsModel?id=' + id,
-                    dataType: 'html',
-                    success: function (data) {
-                        modal.find('.modal-body').html(data);
-                    },
-                    error: function () {
-
-                    }
-                });
-            })
-
-
         }
 	});
 	
@@ -270,6 +213,64 @@ $(document).ready(function () {
 	
 	$("#jqGrid").tooltip();
     
+
+
+	$('#ncrModal').on('show.bs.modal', function (event) {
+	    var button = $(event.relatedTarget);
+	    var id = button.data('id');
+	    var modal = $(this);
+
+	    $.ajax({
+	        type: "GET",
+	        url: '/wip/getncrmodel?id=' + id,
+	        dataType: 'html',
+	        success: function (data) {
+	            modal.find('.modal-body').html(data);
+	        },
+	        error: function () {
+
+	        }
+	    });
+	})
+
+
+	$('#imageModal').on('show.bs.modal', function (event) {
+	    var button = $(event.relatedTarget) // Button that triggered the modal
+	    var id = button.data('id') // Extract info from data-* attributes
+	    var modal = $(this)
+
+	    $.ajax({
+	        type: "GET",
+	        url: '/wip/GetPhotsModel?id=' + id,
+	        dataType: 'html',
+	        success: function (data) {
+	            modal.find('.modal-body').html(data);
+	        },
+	        error: function () {
+
+	        }
+	    });
+	})
+
+	$('#monitorModal').on('show.bs.modal', function (event) {
+	    var button = $(event.relatedTarget) // Button that triggered the modal
+	    var id = button.data('id'); // Extract info from data-* attributes
+	    var modal = $(this);
+
+	    $.ajax({
+	        type: "GET",
+	        url: '/wip/GetMonitorsModel?id=' + id,
+	        dataType: 'html',
+	        success: function (data) {
+	            modal.find('.modal-body').html(data);
+	        },
+	        error: function () {
+
+	        }
+	    });
+	})
+
+
     $('a.colmenu').click(function( event ) {
       //event.stopPropagation();
       event.preventDefault();
@@ -298,7 +299,7 @@ $(document).ready(function () {
         return thisCellVal;
     }
     function actionsFormatter (cellvalue, options, rowObject) {
-        InstructionsCellVal = rowObject.Notes + '<br/><button id="add-button' + rowObject.TaskId + '" onclick="toggleInstructions(' + rowObject.TaskId + ',0)" class="btn support-btn btn-xs btn-danger show">Add Instructions</button><div id="instruction' + rowObject.TaskId + '" class="hidden" ><textarea style="width: 95%;" rows=4 placeholder="Add disposition Instructions" id="note-' + rowObject.TaskId + '"></textarea><button class="btn support-btn btn-xs btn-primary" onclick="toggleInstructions(' + rowObject.TaskId + ',1)">Save</button>';
+        InstructionsCellVal = rowObject.Notes + '<br/><button id="add-button' + rowObject.FillId + '" onclick="toggleInstructions(' + rowObject.FillId + ',0)" class="btn support-btn btn-xs btn-danger show">Add Instructions</button><div id="instruction' + rowObject.FillId + '" class="hidden" ><textarea style="width: 95%;" rows=4 placeholder="Add disposition Instructions" id="note-' + rowObject.FillId + '"></textarea><button class="btn support-btn btn-xs btn-primary" onclick="toggleInstructions(' + rowObject.FillId + ',1)">Save</button>';
         thisCellVal = (rowObject.HasNcr == 1) ? InstructionsCellVal : 'N/A';
         return thisCellVal;
     }

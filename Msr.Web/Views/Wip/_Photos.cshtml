@@ -20,17 +20,22 @@
     <div id="myCarousel" class="carousel slide" data-ride="carousel">
         <!-- Carousel indicators -->
         <ol class="carousel-indicators">
-            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-
+            @{ int index =0;
+            }
+            @foreach (var photo in Model)
+            {
+                <li data-target="#myCarousel" data-slide-to="@index++" class="@(index ==0 ?  "active":"")"></li>
+            }
         </ol>
         <!-- Wrapper for carousel items -->
         <div class="carousel-inner">
-
+            @{ index = 0;}
             @foreach (var photo in Model)
             {
-                <div class="item active">
-                    <img src="data:image/jpeg;base64,@photo.FileArray" />
+                <div class="item @(index == 0 ? "active" : "")">
+                    <img src="data:image/jpeg;base64,@photo.FileArray"/>
                 </div>
+                index = 1;
             }
          
         </div>

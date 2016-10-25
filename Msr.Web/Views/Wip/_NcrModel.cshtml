@@ -39,7 +39,7 @@
     </thead>
     <tbody>
         <tr>
-            <td></td>
+            <td>@Model.Details.NickName</td>
             <td>@Model.Details.PartDesc</td>
             <td>@Model.Details.Serial</td>
         </tr>
@@ -50,11 +50,20 @@
     <tbody>
         <tr>
             <td class="theader">Tool Crated Date:</td>
-            <td>4/11/2015</td>
+            <td>@Model.Details.DateComplete</td>
         </tr>
         <tr>
             <td class="theader">Associated Documents:</td>
-            <td>110458</td>
+            <td>
+                @foreach (var doc in Model.StepPics)
+                {
+                   
+                        <a href="~/doc/view?filePath=@doc.ServerPath&fileType=@doc.ContentType&fileName=@doc.Name">
+                            @(doc.Name + " - " + doc.Description )
+                        </a>
+                        <br />
+                }
+            </td>
         </tr>
         <tr>
             <td class="theader">Associated Digital Pictures:</td>

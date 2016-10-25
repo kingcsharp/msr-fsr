@@ -21,9 +21,29 @@ namespace Msr.Services.Orders
             return _dbContext.MonitorResults;
         }
 
-        public MonitorHistoryResponse GetTaskWithMonitors(string fileId)
+       public int? CheckHasMonitors(string fillId)
+       {
+            var fileIdParm = new SqlParameter("@fillID", fillId);
+
+            var tasks = _dbContext.Database.SqlQuery<GetTaskWithMonitorsResult>("Portal_GetTaskWithMonitors @fillID", fileIdParm).ToList();
+
+           if (tasks.Any())
+           {
+               return 1;
+           }
+
+           return null;
+       }
+
+       public MonitorHistoryResponse GetTaskWithMonitors(string fileId)
         {
             var response = new MonitorHistoryResponse();
+
+            var fileSearch = _dbContext.FileSearchView.Single(x => x.Id == fileId);
+
+            response.SupName = fileSearch.SupName;
+            response.FillObjDesc = fileSearch.FillObjDesc;
+            response.PurchItemId = fileSearch.PurchItemId;
 
             var fileIdParm = new SqlParameter("@fillID", fileId);
 

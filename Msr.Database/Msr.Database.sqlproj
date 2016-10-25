@@ -2732,5 +2732,7 @@
     <Build Include="dbo\Stored Procedures\Portal\Portal_GetTaskWithMonitors.sql" />
     <Build Include="dbo\Views\Portal\Portal_MonitorResults.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_Check_Login.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_GetStepPics.sql" />
+    <Build Include="dbo\Views\Portal\Portal_FileSearchView.sql" />
   </ItemGroup>
 </Project>

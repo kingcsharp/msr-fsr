@@ -13,5 +13,7 @@ namespace Msr.Services.Orders.Messaging
         public NcrDetails Details { get; set; }
 
         public List<string> Comments { get; set; }
+
+        public List<DocumentView> StepPics { get; set; }
     }
 }

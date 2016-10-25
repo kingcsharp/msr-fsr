@@ -39,7 +39,7 @@ namespace Msr.Web.Controllers
            var company = userService.GetCompanyId(loggedUser);
             var orderService = new OrderService();
 
-            var totalRows = orderService.GetWorkOrderQueryable().Where(x => x.CustId == company.Id);
+            var totalRows = orderService.GetWorkOrderQueryable();////.Where(x => x.CustId == company.Id);
 
 
             if (param.where != null && param.where.rules.Any())
@@ -128,30 +128,14 @@ namespace Msr.Web.Controllers
 
             var totalPages = (int) Math.Ceiling((float) totalRecords/(float) param.pageSize);
 
+            var taskService = new TaskService();
 
-            var results = totalRows.Select(x => new
+            var results = totalRows.ToList();
+
+            foreach (var r in results)
             {
-                x.PurchaseItemId,
-                x.SupplierName,
-                x.Serial,
-                x.CustPurchNum,
-                x.Qty,
-                x.StDate,
-                x.ActualStartDate,
-                x.ProductName,
-                x.ProcName,
-                x.CurStepText,
-                x.PurchaseId,
-                x.ActualPartId,
-                x.TimeComplete,
-                x.PercComplete,
-                x.HasFile,
-                x.HasMonitor,
-                x.HasNcr,
-                x.FillId,
-                x.TaskId,
-                x.Notes
-            }).ToList();
+                r.HasMonitor = taskService.CheckHasMonitors(r.FillId);
+            }
 
             var json = new
             {
@@ -180,20 +164,22 @@ namespace Msr.Web.Controllers
 
             var docs = orderService.GetDocuments(id);
 
-            foreach (var doc in docs)
-            {
-                orderService.GetDocumentBase64(doc.ServerPath);
-            }
-
-            var test = orderService.GetDocumentBase64("2");
-
             var photos = new List<DocViewModel>();
 
-            photos.Add(new DocViewModel
+            foreach (var doc in docs)
             {
-                FileArray = test,
-                FileName = "test"
-            });
+                if (doc.ContentType == "image/jpeg" || doc.ContentType == "image/gif")
+                {
+                    var photo = orderService.GetDocumentBase64(doc.ServerPath);
+
+                    photos.Add(new DocViewModel
+                    {
+                        FileArray = photo,
+                        FileName = "test"
+                    });
+                }
+            }
+                   
             return PartialView("_Photos", photos);
         }
 

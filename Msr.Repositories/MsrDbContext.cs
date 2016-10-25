@@ -28,6 +28,7 @@ namespace Msr.Repositories
             modelBuilder.Entity<Note>().ToTable("Portal_Note");
             modelBuilder.Entity<PeopleView>().ToTable("Portal_PeopleView");
             modelBuilder.Entity<MonitorResult>().ToTable("Portal_MonitorResults");
+            modelBuilder.Entity<FileSearchView>().ToTable("Portal_FileSearchView");
         }
 
         public DbSet<AspNetUser> AspNetUsers { get; set; }
@@ -42,5 +43,7 @@ namespace Msr.Repositories
         public DbSet<Note> Notes { get; set; }
         public DbSet<PeopleView> Peoples { get; set; }
         public DbSet<MonitorResult> MonitorResults { get; set; }
+        public DbSet<FileSearchView> FileSearchView { get; set; }
+        
     }
 }

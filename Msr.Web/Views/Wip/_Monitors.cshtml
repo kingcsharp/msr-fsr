@@ -1,10 +1,10 @@
 ﻿@model  Msr.Services.Tasks.Messaging.MonitorHistoryResponse
 
-<h4>Monitors - Work Order #110458</h4>
+<h4>Monitors - Work Order #@Model.PurchItemId</h4>
 <table class="table table-bordered">
     <tr>
-        <td>MSR-FSR IRE</td>
-        <td>Actual Part # 110465, s/n:Kit 12, CLND_CO_REX_SS_KIT (p/n:93491)</td>
+        <td>@Model.SupName</td>
+        <td>@Model.FillObjDesc</td>
     </tr>
 </table>
 
@@ -19,17 +19,27 @@
             <th colspan=3>@task.Description</th>
         </tr>
         <tr>
-        <th>Monitor 111771</th>
+        <th>Monitor @task.TaskId</th>
         <th>Result</th>
         <th>Pass/Fail</th>
         </thead>
     <tbody>
     @foreach (var monitor in task.MonitorResults)
     {
+        var cssClass = "";
+
+        if (monitor.IsPassing == "Pass")
+        {
+            cssClass = "success";
+        }else if (monitor.IsPassing == "Fail")
+        {
+            cssClass = "danger";
+        }
+
         <tr>
             <td>@monitor.Description</td>
-            <td>@monitor.UseResult</td>
-            <td>@monitor.YesNoAnswer</td>
+            <td>@monitor.PrintResult</td>
+            <td class="@cssClass">@monitor.IsPassing</td>
         </tr>
     }
     </tbody>

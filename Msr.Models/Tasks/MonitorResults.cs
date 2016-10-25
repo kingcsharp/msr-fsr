@@ -16,11 +16,12 @@ namespace Msr.Models.Tasks
         public short? YesNoAnswer { get; set; }
         public string TextVal { get; set; }
         public string Comment { get; set; }
-        public byte? IsPassing { get; set; }
+        public string IsPassing { get; set; }
         public string MyAnswer { get; set; }
         public string FailAction { get; set; }
         public double? PrintOrder { get; set; }
         public byte? CantChange { get; set; }
         public byte? AlwaysPass { get; set; }
+        public string PrintResult { get; set; }
     }
 }

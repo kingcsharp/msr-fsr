@@ -8,12 +8,10 @@ namespace Msr.Models.Orders
         public Guid Id { get; set; }
         public string SupplierName { get; set; }
         public string SupplierId { get; set; }
-        public byte? HasFile { get; set; }
+        public int? HasFile { get; set; }
         public int? HasMonitor { get; set; }
         public int? HasNcr { get; set; }
         public string TaskId { get; set; }
-        public int? NumSubTasks { get; set; }
-        public int? NumSubTasksComplete { get; set; }
         public double? MyTotHours { get; set; }
         public double? MyCompHours { get; set; }
         public string CurStepText { get; set; }

@@ -2,6 +2,7 @@
 
 AS
 SELECT DISTINCT
+NewId() AS Id,
 t.ID AS TaskId,
 supp.NAME AS SupplierName,
 purch.ID AS PurchaseId,
@@ -41,11 +42,23 @@ dbo.A_TASK_COMPLETION_STATS.MY_TOT_HOURS  AS MyTotHours,
 REPLACE(REPLACE((CASE WHEN CHARINDEX('<<nl/>>', A_TASK_COMPLETION_STATS.CUR_STEP_TEXT) > 0 THEN SUBSTRING(A_TASK_COMPLETION_STATS.CUR_STEP_TEXT, 0, CHARINDEX('<<nl/>>', A_TASK_COMPLETION_STATS.CUR_STEP_TEXT )) 
 ELSE A_TASK_COMPLETION_STATS.CUR_STEP_TEXT END),'<<bb>>',''),'<</bb>>','')  AS CurStepText,
 dbo.A_V_ACTUAL_PARTS_QUICK.OBJECT_ID AS ActPartObjId,
-t.HAS_FILE AS HasFile,
+(SELECT count(1)
+ FROM A_DOCUMENTS WHERE ID IN
+(
+SELECT file_id FROM A_V_ACTUAL_PARTS_RELATED_FILES
+WHERE 
+ACTUAL_PART_ID = dbo.A_V_ACTUAL_PARTS_QUICK.ID
+AND (FILE_NAME LIKE '%%' OR FILE_NAME is NULL ) 
+AND  (FILE_DESCRIPTION LIKE '%%' OR FILE_DESCRIPTION is NULL ) 
+AND STATUS = 'ACTIVE'
+)) AS HasFile,
 supp.ID as SupplierId,
-'' AS notes,
-1 AS HasMonitor,
-1 HasNcr
+isnull(STUFF((    SELECT ',' + message                   
+                        FROM [Portal_Note]
+                        WHERE EntityId=dbo.A_FILLS.ID
+                        FOR XML PATH('')), 1, 1, '' ),'') AS Notes
+,1 AS HasMonitor
+,1 AS HasNcr
 FROM         dbo.A_V_COMPANIES_APPROVED_DATA_QUICK AS customer INNER JOIN
                       dbo.A_V_PURCHASES_APPROVED_DATA AS purch ON customer.ID = purch.CUSTOMER_CO RIGHT OUTER JOIN
                       dbo.A_TASK_COMPLETION_STATS RIGHT OUTER JOIN
