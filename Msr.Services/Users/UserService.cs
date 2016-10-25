@@ -70,8 +70,7 @@ namespace Msr.Services.Users
                 var existingUser =
                     _dbContext.AspNetUsers.SingleOrDefault(
                         x =>
-                            x.UserName.ToLower() == entity.UserName.ToLower() ||
-                            x.Email.ToLower() == entity.Email.ToLower());
+                            x.UserName.ToLower() == entity.UserName.ToLower());
 
                 if (existingUser != null)
                 {
