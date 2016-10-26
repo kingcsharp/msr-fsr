@@ -11,11 +11,11 @@ namespace Msr.Infrastructure.Tests.Helpers
         [TestMethod]
         public void TestPassword()
         {
-            var answerPassowrd = "msr2015";
+            var answerPassowrd = "abc";
 
            var answerDecode = AuthenticationHelper.PassWordEncrypt(answerPassowrd);
 
-            NUnit.Framework.Assert.IsTrue(answerDecode == "´¼¼¯²¿");
+            NUnit.Framework.Assert.IsTrue(answerDecode == "");
         }
     }
 }
