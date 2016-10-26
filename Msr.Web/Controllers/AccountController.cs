@@ -73,7 +73,6 @@ namespace Msr.Web.Controllers
         {
             model.Email = model.Email.Trim().ToLower();
 
-
             if (!ModelState.IsValid)
             {
                 return View(model);

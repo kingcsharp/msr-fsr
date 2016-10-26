@@ -40,9 +40,10 @@ namespace Msr.Services.Orders
 
            var loginParm = new SqlParameter("@Login", login);
            var passwordParm = new SqlParameter("@Password", AuthenticationHelper.PassWordEncrypt(password));
+           var passwordNonEncParm = new SqlParameter("@PASSWORD_NON_ENCRYPT", password);
 
-           var result = _dbContext.Database.SqlQuery<CheckLoginResult>("Portal_Check_Login @Login, @Password", loginParm,
-               passwordParm).SingleOrDefault();
+           var result = _dbContext.Database.SqlQuery<CheckLoginResult>("Portal_Check_Login @Login, @Password,@PASSWORD_NON_ENCRYPT", loginParm,
+               passwordParm, passwordNonEncParm).SingleOrDefault();
 
            if (result != null)
            {
