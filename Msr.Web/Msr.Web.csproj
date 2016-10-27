@@ -185,6 +185,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModel\AddClientUserViewModel.cs" />
+    <Compile Include="ViewModel\EditUserProfileViewModel.cs" />
+    <Compile Include="ViewModel\UserProfileViewModel.cs" />
     <Compile Include="ViewModel\EditClientUserViewModel.cs" />
     <Compile Include="ViewModel\DocViewModel.cs" />
     <Compile Include="ViewModel\EditUserViewModel.cs" />
@@ -502,8 +504,9 @@
     <Content Include="Views\User\EditUser.cshtml" />
     <Content Include="Views\User\DeleteUser.cshtml" />
     <Content Include="Views\User\AddClientUser.cshtml" />
-    <Content Include="Views\User\AddUser - Copy.cshtml" />
+    <Content Include="Views\User\Profile.cshtml" />
     <Content Include="Views\User\EditClientUser.cshtml" />
+    <Content Include="Views\User\EditProfile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

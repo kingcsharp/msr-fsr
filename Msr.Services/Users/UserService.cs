@@ -277,5 +277,21 @@ namespace Msr.Services.Users
 
             return result;
         }
+
+        public BaseNotification UpdateUserProfile(UserSummary entity)
+        {
+            var response = new BaseNotification();
+
+            var existingUser = _dbContext.AspNetUsers.SingleOrDefault(x => x.Id.ToLower() == entity.Id.ToLower());
+
+            existingUser.FirstName = entity.FirstName;
+            existingUser.LastName = entity.LastName;
+            existingUser.PhoneNumber = entity.Phone;
+            existingUser.Phone2 = entity.Phone2;
+
+            _dbContext.SaveChanges();
+
+            return response;
+        }
     }
 }

@@ -1,0 +1,81 @@
+﻿@model Msr.Web.ViewModel.UserProfileViewModel
+@{
+    ViewBag.Title = "User Profile";
+}
+
+<div class="container-fluid">
+    <div class="side-body padding-top">
+        <div class="row">
+            <div class="col-lg-12">
+                <section class="panel">
+                    <header class="panel-heading tab-bg-info">
+                        <ul class="nav nav-tabs profile-tabs">
+                            <li class="active">
+                                <a data-toggle="tab" href="#profile">
+                                    <i class="icon-user"></i>
+                                    My Profile
+                                </a>
+                            </li>
+                            <li class="">
+                                <a href="~/user/editprofile">
+                                    <i class="icon-envelope"></i>
+                                    Edit Profile
+                                </a>
+                            </li>
+                        </ul>
+                    </header>
+                    <div class="panel-body">
+                        <div class="tab-content">
+                            <!-- profile -->
+                            <div id="profile" class="tab-pane profile-tab active animated fadeInDown">
+                                <section class="panel">
+                                    
+                                    <div class="panel-body bio-graph-info">
+                                        <h1> Profile Info</h1>
+                                        <div class="row">
+                                            <div class="bio-row">
+                                                <p><span>First Name </span>: @Model.UserSummary.FirstName </p>
+                                            </div>
+                                            <div class="bio-row">
+                                                <p><span>Last Name </span>: @Model.UserSummary.LastName</p>
+                                            </div>
+                                            <div class="bio-row">
+                                                <p><span>Company Name </span>: @Model.UserSummary.CompanyName</p>
+                                            </div>
+
+                                            <div class="bio-row">
+                                                <p><span>Phone </span>: @Model.UserSummary.Phone</p>
+                                            </div>
+
+                                            <div class="bio-row">
+                                                <p><span>Phone2 </span>: @Model.UserSummary.Phone2</p>
+                                            </div>
+
+                                            <div class="bio-row">
+                                                <p><span>Email </span>: @Model.UserSummary.Email</p>
+                                            </div>
+
+                                            <div class="bio-row">
+                                                <p><span>User </span>: @Model.UserSummary.UserName</p>
+                                            </div>
+
+                                          
+
+                                        </div>
+                                    </div>
+                                </section>
+                                <section>
+                                    <div class="row">
+                                    </div>
+                                </section>
+                            </div>
+                            <div id="edit-profile" class="tab-pane profile-tab animated fadeInDown">
+                                
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>

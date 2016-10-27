@@ -344,5 +344,67 @@ namespace Msr.Web.Controllers
 
             return View(viewModel);
         }
+
+        public ActionResult Profile()
+        {
+            ViewBag.ActiveClass = "PROF";
+
+            var viewModel = new UserProfileViewModel();
+
+            var userService = new UserService();
+
+            var loggedUserId = User.Identity.GetUserId();
+
+            viewModel.UserSummary = userService.GetUserQueryable().SingleOrDefault(x => x.Id == loggedUserId);
+
+            return View(viewModel);
+        }
+
+
+        public ActionResult EditProfile()
+        {
+            ViewBag.ActiveClass = "PROF";
+
+            var viewModel = new EditUserProfileViewModel();
+
+            var userService = new UserService();
+
+            var loggedUserId = User.Identity.GetUserId();
+
+            var user = userService.GetUserQueryable().SingleOrDefault(x => x.Id == loggedUserId);
+
+            viewModel.FirstName = user.FirstName;
+            viewModel.LastName = user.LastName;
+            viewModel.Phone = user.Phone;
+            viewModel.Phone2 = user.Phone2;
+
+            return View(viewModel);
+        }
+
+
+        [HttpPost]
+        public ActionResult EditProfile(EditUserProfileViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(viewModel);
+            }
+
+            var userService = new UserService();
+
+            var loggedUserId = User.Identity.GetUserId();
+
+            var userSummary = new UserSummary();
+
+            userSummary.Id = loggedUserId;
+            userSummary.FirstName = viewModel.FirstName;
+            userSummary.LastName = viewModel.LastName;
+            userSummary.Phone = viewModel.Phone;
+            userSummary.Phone2 = viewModel.Phone2;
+
+            userService.UpdateUserProfile(userSummary);
+
+            return RedirectToAction("Profile");
+        }
     }
 }

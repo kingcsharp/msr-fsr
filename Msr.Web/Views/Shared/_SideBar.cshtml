@@ -10,7 +10,7 @@
     <nav class="navbar navbar-default" role="navigation">
         <div class="side-menu-container">
             <div class="navbar-header">
-                <a class="navbar-brand" href="#">
+                <a class="navbar-brand" href="~/home">
                     <div class="icon fa fa-paper-plane"></div>
                     <div class="title">MSR-FSR Portal</div>
                 </a>
@@ -19,11 +19,6 @@
                 </button>
             </div>
             <ul class="nav navbar-nav">
-                <li>
-                    <a href="index.html">
-                        <span class="icon fa fa-tachometer"></span><span class="title">Dashboard</span>
-                    </a>
-                </li>
 
              @if (User.IsInRole(RolesConstants.AnswerUser) || User.IsInRole(RolesConstants.ClientAdmin))
              {
@@ -93,13 +88,12 @@
         </div>
     </li>
 }
-                <li>
-                    <a href="profile.html">
+                <li class="@(ViewBag.ActiveClass == "PROF" ? "active" : "")">
+                    <a href="~/user/profile">
                         <span class="icon fa fa-user"></span><span class="title">Profile</span>
                     </a>
                 </li>
             </ul>
         </div>
-        <!-- /.navbar-collapse -->
     </nav>
 </div>

@@ -28,6 +28,7 @@ SELECT
 ,c.NAME AS CompanyName
 ,u.CompanyId
 ,u.IsActive AS Status
+,'' AS Title
 FROM [AspNetUsers] u 
 LEFT JOIN AspNetUserRoles ur ON ur.UserId = u.Id
 LEFT JOIN AspNetRoles r ON r.Id = ur.RoleId

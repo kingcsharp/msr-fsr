@@ -26,5 +26,6 @@ namespace Msr.Models.Orders
         public string Phone2 { get; set; }
         public string FullName { get; set; }
         public string CompanyId { get; set; }
+        public string CompanyName { get; set; }
     }
 }
