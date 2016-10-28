@@ -9,6 +9,7 @@ using Msr.Models.Orders;
 using Msr.Models.Users;
 using Msr.Services.jqGrid;
 using Msr.Services.Orders;
+using Msr.Services.TimeZones;
 using Msr.Services.Users;
 using Msr.Web.ViewModel;
 
@@ -203,12 +204,13 @@ namespace Msr.Web.Controllers
         {
             var userService = new UserService();
             var companyService = new CompanyService();
+            var timeZoneService = new TimeZoneService();
 
             var user = userService.GetUser(id);
 
             var viewModel = new EditUserViewModel { UserSummary = user };
 
-            viewModel.Setup(userService, companyService);
+            viewModel.Setup(userService, companyService, timeZoneService);
 
             return View(viewModel);
         }
@@ -231,7 +233,7 @@ namespace Msr.Web.Controllers
                 ModelState.AddModelError("", response.ErrorMessage());
             }
 
-            viewModel.Setup(userService, new CompanyService());
+            viewModel.Setup(userService, new CompanyService(), new TimeZoneService());
 
             return View(viewModel);
         }
@@ -245,7 +247,7 @@ namespace Msr.Web.Controllers
 
             var viewModel = new EditUserViewModel { UserSummary = user };
 
-            viewModel.Setup(userService, new CompanyService());
+            viewModel.Setup(userService, new CompanyService(), new TimeZoneService());
 
             return View(viewModel);
         }
@@ -272,7 +274,7 @@ namespace Msr.Web.Controllers
             var userService = new UserService();
 
             var viewModel = new AddClientUserViewModel();
-            viewModel.Setup(userService, new CompanyService());
+            viewModel.Setup(userService, new CompanyService(), new TimeZoneService());
 
             return View(viewModel);
         }
@@ -301,7 +303,7 @@ namespace Msr.Web.Controllers
                 ModelState.AddModelError("", response.ErrorMessage());
             }
 
-            viewModel.Setup(userService, new CompanyService());
+            viewModel.Setup(userService, new CompanyService(), new TimeZoneService());
 
             return View(viewModel);
         }
@@ -377,6 +379,7 @@ namespace Msr.Web.Controllers
             viewModel.LastName = user.LastName;
             viewModel.Phone = user.Phone;
             viewModel.Phone2 = user.Phone2;
+            viewModel.Email = user.Email;
 
             return View(viewModel);
         }
@@ -401,6 +404,7 @@ namespace Msr.Web.Controllers
             userSummary.LastName = viewModel.LastName;
             userSummary.Phone = viewModel.Phone;
             userSummary.Phone2 = viewModel.Phone2;
+            userSummary.Email = viewModel.Email;
 
             userService.UpdateUserProfile(userSummary);
 

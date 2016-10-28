@@ -310,6 +310,7 @@ namespace Msr.Services.Users
             existingUser.LastName = entity.LastName;
             existingUser.PhoneNumber = entity.Phone;
             existingUser.Phone2 = entity.Phone2;
+            existingUser.Email = entity.Email;
 
             _dbContext.SaveChanges();
 

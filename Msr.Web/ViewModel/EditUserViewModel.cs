@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using Msr.Models.Orders;
 using Msr.Models.Users;
 using Msr.Services.Orders;
+using Msr.Services.TimeZones;
 using Msr.Services.Users;
 
 namespace Msr.Web.ViewModel
@@ -25,14 +26,14 @@ namespace Msr.Web.ViewModel
         public List<SelectListItem> Status { get; set; }
         public List<SelectListItem> Companies { get; set; }
 
-        public void Setup(UserService userService, CompanyService companyService)
+        public void Setup(UserService userService, CompanyService companyService, TimeZoneService timeZoneService)
         {
-            TimeZones = new List<SelectListItem>
+            TimeZones = timeZoneService.GetTimeZoneQueryable().Select(x => new SelectListItem
             {
-                new SelectListItem {Text = "Mid-Atlantic", Value = "100"},
-                new SelectListItem {Text = "International Date Line West", Value = "11436"},
-                new SelectListItem {Text = "Midway Island, Samoa", Value = "11437"},
-            };
+                Text = x.Description,
+                Value = x.Id,
+                Selected = UserSummary.TimeZone == x.Id
+            }).ToList();
 
             Roles = new List<SelectListItem>
             {

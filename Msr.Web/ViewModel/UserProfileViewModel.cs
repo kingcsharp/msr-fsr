@@ -15,5 +15,8 @@ namespace Msr.Web.ViewModel
 
         [Required]
         public string Phone2 { get; set; }
+
+        [Required]
+        public string Email { get; set; }
     }
 }

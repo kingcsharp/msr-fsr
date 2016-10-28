@@ -18,7 +18,7 @@ using System;
         public string PhoneNumber { get; set; }
         public string Phone2 { get; set; }
         public string Email { get; set; }
-        public int TimeZone { get; set; }
+        public string TimeZone { get; set; }
         public DateTime CreatedDate { get; set; }
         public string CompanyId { get; set; }
         public string AnswerId { get; set; }

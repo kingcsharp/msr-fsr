@@ -62,7 +62,7 @@ namespace Msr.Services.Orders
                        Id = id,
                        FirstName = result.Name,
                        LastName = result.LastName,
-                       TimeZone = 100,
+                       TimeZone = "10000", // dummy id for Answer Users
                        IsActive = true,
                        CreatedDate = DateTime.UtcNow,
                        AnswerId = result.Id
