@@ -11,6 +11,7 @@ using Microsoft.Owin.Security;
 using Msr.Infrastructure.Helpers;
 using Msr.Models.Users;
 using Msr.Services.Orders;
+using Msr.Services.Users;
 using Msr.Web.Models;
 
 namespace Msr.Web.Controllers
@@ -86,14 +87,41 @@ namespace Msr.Web.Controllers
             {
                 model.Password = "msr" + answerUser.Id + "$";
             }
-
-            // This doesn't count login failures towards account lockout
-            // To enable password failures to trigger account lockout, change to shouldLockout: true
+            
             var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+
             switch (result)
             {
                 case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
+
+                    if (!string.IsNullOrWhiteSpace(returnUrl) && returnUrl != "/")
+                    {
+                        return RedirectToLocal(returnUrl);
+                    }
+
+                    var userService = new UserService();
+                    var user = userService.GetByEmail(model.Email);
+
+                    if (user.RoleName == RolesConstants.AnswerUser)
+                    {
+                        return RedirectToAction("master","User");
+                    }
+                     if (user.RoleName == RolesConstants.ClientEngineer)
+                    {
+                        return RedirectToAction("Engineering", "Wip");
+                    }
+                     if (user.RoleName == RolesConstants.ClientAdmin)
+                    {
+                        return RedirectToAction("Client", "User");
+                    }
+
+                    if (user.RoleName == RolesConstants.ClientBuyer)
+                    {
+                        return RedirectToAction("Index", "Buyer");
+                    }
+
+                    return RedirectToAction("Index", "Home");
+                    
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:

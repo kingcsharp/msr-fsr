@@ -39,7 +39,7 @@ namespace Msr.Web.Controllers
            var company = userService.GetCompanyId(loggedUser);
             var orderService = new OrderService();
 
-            var totalRows = orderService.GetWorkOrderQueryable();////.Where(x => x.CustId == company.Id);
+            var totalRows = orderService.GetWorkOrderQueryable().Where(x => x.CustId == company.Id);
 
 
             if (param.where != null && param.where.rules.Any())
@@ -175,7 +175,7 @@ namespace Msr.Web.Controllers
                     photos.Add(new DocViewModel
                     {
                         FileArray = photo,
-                        FileName = "test"
+                        FileName = doc.Name
                     });
                 }
             }

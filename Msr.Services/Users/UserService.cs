@@ -60,6 +60,28 @@ namespace Msr.Services.Users
             return user;
         }
 
+        public UserSummary GetByEmail(string userId)
+        {
+            var user = _dbContext.AspNetUsers.Where(x => x.UserName == userId).Select(s => new UserSummary
+            {
+                Id = s.Id,
+                FirstName = s.FirstName,
+                LastName = s.LastName,
+                FullName = s.FirstName + " " + s.LastName,
+                Phone = s.PhoneNumber,
+                Phone2 = s.UserName,
+                Email = s.Email,
+                UserName = s.UserName,
+                IsActive = s.IsActive,
+                TimeZone = s.TimeZone,
+                CompanyId = s.CompanyId,
+                CreatedDate = s.CreatedDate,
+                RoleName = s.AspNetRoles.FirstOrDefault().Name
+            }).Single();
+
+            return user;
+        }
+
         public AddUserMessageResponse AddUser(UserSummary entity, string loggedUserId)
         {
             var response = new AddUserMessageResponse();
