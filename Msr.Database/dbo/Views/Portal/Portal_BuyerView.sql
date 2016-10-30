@@ -49,6 +49,7 @@ t.ACTUAL_STOP_DATE AS ActualStopDate,
 invoice.NEW_ITEMS_AMT AS InvoiceAmount,
 invoice.INVOICE_DATE AS InvoiceDate,
 invoice.STATUS InvoiceStatus
+invoice.INVOICE_ID AS InvoiceId
 FROM A_V_ENGINEER_SCREEN_DATA_WIP_ONE_STEP_Simplified t with (noLock) 
 LEFT JOIN A_V_INVOICES_WITH_ACCT_INFORMATION invoice ON invoice.PURCHASE_ID = t.PURCHASE_ID
 --WHERE (CUST_ID = '2' OR (  GROUP_REQUESTEE_ID IN ('','1502','1490','1498','1506','1510','1494') 

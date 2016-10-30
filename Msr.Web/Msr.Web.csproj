@@ -507,6 +507,7 @@
     <Content Include="Views\User\Profile.cshtml" />
     <Content Include="Views\User\EditClientUser.cshtml" />
     <Content Include="Views\User\EditProfile.cshtml" />
+    <Content Include="Views\Account\Login - Copy.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

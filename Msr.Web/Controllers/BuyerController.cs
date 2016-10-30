@@ -90,6 +90,10 @@ namespace Msr.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.ProcName.ToLower().Contains(rule.data.ToLower()));
                     }
+                    else if (rule.field == nameof(BuyerView.InvoiceId))
+                    {
+                        totalRows = totalRows.Where(x => x.InvoiceId.ToLower().Contains(rule.data.ToLower()));
+                    }
                     else if (rule.field == nameof(BuyerView.CurStepText))
                     {
                         totalRows = totalRows.Where(x => x.CurStepText.ToLower().Contains(rule.data.ToLower()));
@@ -160,7 +164,8 @@ namespace Msr.Web.Controllers
                 x.HasFile,
                 x.InvoiceAmount,
                 x.InvoiceDate,
-                x.InvoiceStatus
+                x.InvoiceStatus,
+                x.InvoiceId
 
             }).ToList();
 

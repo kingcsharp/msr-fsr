@@ -51,5 +51,6 @@ namespace Msr.Models.Orders
         public Decimal? InvoiceAmount { get; set; }
         public DateTime? InvoiceDate { get; set; }
         public string InvoiceStatus { get; set; }
+        public string InvoiceId { get; set; }
     }
 }

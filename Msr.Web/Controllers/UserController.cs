@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using System.Web.Security;
 using Microsoft.AspNet.Identity;
+using Msr.Infrastructure.Email;
 using Msr.Models.Orders;
 using Msr.Models.Users;
 using Msr.Services.jqGrid;
@@ -188,6 +190,12 @@ namespace Msr.Web.Controllers
 
                 if (!response.HasErrors())
                 {
+                    var loginUrl = Url.Action("Login", "Account");
+                    var from = ConfigurationManager.AppSettings["From"];
+                    var body = "Login Portal by clicking <a href=\"" + loginUrl + "\">here</a>";
+
+                    EmailService.SendEmail(from, viewModel.UserSummary.Email, "Portal Login", body, null, true);
+
                     return RedirectToAction("Master");
                 }
 
@@ -297,6 +305,15 @@ namespace Msr.Web.Controllers
 
                 if (!response.HasErrors())
                 {
+                    var loginUrl = Url.Action("Login", "Account");
+                    var from = ConfigurationManager.AppSettings["From"];
+                    var websiteUrl = ConfigurationManager.AppSettings["WebsiteUrl"];
+
+                    var body = $"Login Portal by clicking <a href=\"{websiteUrl + loginUrl}\">here</a>";
+
+                    EmailService.SendEmail(from, viewModel.UserSummary.Email, "Portal Login", body, new List<string> {clientAdmin.Email}, true);
+
+
                     return RedirectToAction("Client");
                 }
 

@@ -60,7 +60,7 @@ namespace Msr.Services.Users
             return user;
         }
 
-        public UserSummary GetByEmail(string userId)
+        public UserSummary GetByUserName(string userId)
         {
             var user = _dbContext.AspNetUsers.Where(x => x.UserName == userId).Select(s => new UserSummary
             {
@@ -77,7 +77,7 @@ namespace Msr.Services.Users
                 CompanyId = s.CompanyId,
                 CreatedDate = s.CreatedDate,
                 RoleName = s.AspNetRoles.FirstOrDefault().Name
-            }).Single();
+            }).SingleOrDefault();
 
             return user;
         }
