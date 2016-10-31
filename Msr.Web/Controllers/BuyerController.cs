@@ -35,6 +35,7 @@ namespace Msr.Web.Controllers
             var loggedUser = User.Identity.GetUserId();
 
             var userService = new UserService();
+            var taskService = new TaskService();
 
             var company = userService.GetCompanyId(loggedUser);
 
@@ -144,30 +145,12 @@ namespace Msr.Web.Controllers
 
             var totalPages = (int)Math.Ceiling((float)totalRecords / (float)param.pageSize);
 
+            var results = totalRows.ToList();
 
-            var results = totalRows.Select(x => new
+            foreach (var r in results)
             {
-                x.PurchaseItemId,
-                x.SupplierName,
-                x.Serial,
-                x.CustPurchNum,
-                x.Qty,
-                x.StDate,
-                x.ActualStartDate,
-                x.ProductName,
-                x.ProcName,
-                x.CurStepText,
-                x.PurchaseId,
-                x.ActualPartId,
-                x.TimeComplete,
-                x.PercComplete,
-                x.HasFile,
-                x.InvoiceAmount,
-                x.InvoiceDate,
-                x.InvoiceStatus,
-                x.InvoiceId
-
-            }).ToList();
+                r.HasMonitor = taskService.CheckHasMonitors(r.FillId);
+            }
 
             var json = new
             {
