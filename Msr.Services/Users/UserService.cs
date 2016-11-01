@@ -88,15 +88,17 @@ namespace Msr.Services.Users
 
             try
             {
+                if (HasAnswerUser(entity.UserName))
+                {
+                    response.AddError($"Answer User already exists with UserName : {entity.UserName} ");
+                    return response;
+                }
 
-                var existingUser =
-                    _dbContext.AspNetUsers.SingleOrDefault(
-                        x =>
-                            x.UserName.ToLower() == entity.UserName.ToLower());
+                var existingUser = _dbContext.AspNetUsers.SingleOrDefault(x => x.UserName.ToLower() == entity.UserName.ToLower());
 
                 if (existingUser != null)
                 {
-                    response.AddError($"User already exists with UserName : {entity.UserName} or email :{entity.Email}");
+                    response.AddError($"User already exists with UserName : {entity.UserName} ");
 
                     return response;
                 }
@@ -149,6 +151,12 @@ namespace Msr.Services.Users
 
             try
             {
+                if (HasAnswerUser(entity.UserName))
+                {
+                    response.AddError($"Answer User already exists with UserName : {entity.UserName} ");
+                    return response;
+                }
+
                 var existingUser = _dbContext.AspNetUsers.SingleOrDefault(x => x.Id.ToLower() == entity.Id.ToLower());
 
                 existingUser.FirstName = entity.FirstName;
@@ -253,31 +261,6 @@ namespace Msr.Services.Users
             return response;
         }
 
-        public void AddClientToUser(string userId, List<string> usderIds, string createdBy)
-        {
-
-            foreach (var uId in usderIds)
-            {
-               var hasUser = _dbContext.ClientUsers.Any(x => x.UserId.ToLower() == userId.ToLower() && x.ClientId.ToLower() == uId.ToLower());
-
-                if (!hasUser)
-                {
-                    var newUser = new ClientUser
-                    {
-                        Id = Guid.NewGuid(),
-                        ClientId = uId,
-                        UserId = userId,
-                        CreatedBy = userId,
-                        CreatedDate = DateTime.UtcNow
-                    };
-
-                    _dbContext.ClientUsers.Add(newUser);
-                }
-            }
-
-            _dbContext.SaveChanges();
-        }
-
         public List<string> GetClientUsers(string userId)
         {
             return _dbContext.ClientUsers.Where(x => x.UserId.ToLower() == userId.ToLower()).Select(x => x.ClientId).ToList();
@@ -315,6 +298,18 @@ namespace Msr.Services.Users
             _dbContext.SaveChanges();
 
             return response;
+        }
+
+        private bool HasAnswerUser(string userName)
+        {
+            var answerUser = _dbContext.Peoples.SingleOrDefault(x => String.Equals(x.Login, userName, StringComparison.CurrentCultureIgnoreCase));
+
+            if (answerUser != null)
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }
