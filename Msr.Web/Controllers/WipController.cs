@@ -135,6 +135,7 @@ namespace Msr.Web.Controllers
             foreach (var r in results)
             {
                 r.HasMonitor = taskService.CheckHasMonitors(r.FillId);
+                r.HasNcr = taskService.CheckHasNcr(r.ActualPartId);
             }
 
             var json = new

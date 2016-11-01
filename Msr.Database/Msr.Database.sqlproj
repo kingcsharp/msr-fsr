@@ -2735,5 +2735,6 @@
     <Build Include="dbo\Stored Procedures\Portal\Portal_GetStepPics.sql" />
     <Build Include="dbo\Views\Portal\Portal_FileSearchView.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_TimeZoneView.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\PortalHasNcr.sql" />
   </ItemGroup>
 </Project>

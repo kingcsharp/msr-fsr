@@ -35,7 +35,17 @@ namespace Msr.Services.Orders
            return null;
        }
 
-       public MonitorHistoryResponse GetTaskWithMonitors(string fileId)
+        public int CheckHasNcr(string partId)
+        {
+            var fileIdParm = new SqlParameter("@partId", partId);
+
+            var result = _dbContext.Database.SqlQuery<int>("PortalHasNcr @partId", fileIdParm).Single();
+
+            return result;
+        }
+
+
+        public MonitorHistoryResponse GetTaskWithMonitors(string fileId)
         {
             var response = new MonitorHistoryResponse();
 
