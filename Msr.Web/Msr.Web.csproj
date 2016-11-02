@@ -510,10 +510,10 @@
     <Content Include="Views\User\EditClientUser.cshtml" />
     <Content Include="Views\User\EditProfile.cshtml" />
     <Content Include="Views\Account\Login - Copy.cshtml" />
-    <Content Include="Views\Help\_Monitors.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Help\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

@@ -1,4 +1,5 @@
-﻿@model Msr.Web.ViewModel.UserProfileViewModel
+﻿@using Msr.Models.Users
+@model Msr.Web.ViewModel.UserProfileViewModel
 @{
     ViewBag.Title = "User Profile";
 }
@@ -16,12 +17,15 @@
                                     My Profile
                                 </a>
                             </li>
-                            <li class="">
-                                <a href="~/user/editprofile">
-                                    <i class="icon-envelope"></i>
-                                    Edit Profile
-                                </a>
-                            </li>
+                            @if (!User.IsInRole(RolesConstants.AnswerUser))
+                            {
+                                <li class="">
+                                    <a href="~/user/editprofile">
+                                        <i class="icon-envelope"></i>
+                                        Edit Profile
+                                    </a>
+                                </li>
+                            }
                         </ul>
                     </header>
                     <div class="panel-body">

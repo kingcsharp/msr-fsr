@@ -15,10 +15,10 @@ namespace Msr.Web.Controllers
     [Authorize]
     public class DocController : BaseController
     {
-        public ActionResult View(string filePath, string fileType, string fileName)
+        public ActionResult View(string filePath, string fileType, string fileName, int? height)
         {
             var orderService = new OrderService();
-            var img = orderService.GetDocumentBase64(filePath);
+            var img = orderService.GetDocumentBase64(filePath, height);
 
             var cd = new System.Net.Mime.ContentDisposition
             {

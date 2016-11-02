@@ -62,11 +62,11 @@ namespace Msr.Services.Orders
             return result;
         }
 
-        public string GetDocumentBase64(string filePath)
+        public string GetDocumentBase64(string filePath, int? height)
         {
-            var endPoint = WebConfigurationManager.AppSettings["DocApiEndPoint"] + "doc/getfilebyid?filePath=";
+            var endPoint = WebConfigurationManager.AppSettings["DocApiEndPoint"] + $"doc/getfilebyid?filePath={filePath}&height={height}";
 
-            var client = new RestClient(endPoint + filePath);
+            var client = new RestClient(endPoint);
 
             var request = new RestRequest(Method.GET);
 

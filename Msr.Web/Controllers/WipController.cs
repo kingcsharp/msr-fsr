@@ -169,9 +169,9 @@ namespace Msr.Web.Controllers
 
             foreach (var doc in docs)
             {
-                if (doc.ContentType == "image/jpeg" || doc.ContentType == "image/gif")
+                if (doc.ContentType == "image/jpeg" || doc.ContentType == "image/gif" || doc.ContentType == "image/png")
                 {
-                    var photo = orderService.GetDocumentBase64(doc.ServerPath);
+                    var photo = orderService.GetDocumentBase64(doc.ServerPath, 400);
 
                     photos.Add(new DocViewModel
                     {
