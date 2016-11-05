@@ -17,6 +17,7 @@
             <h2 class="page-header">Add User<button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
             </h2>
             <div class="col-lg-10">
+                @Html.Partial("Message")
 
                 @using (Html.BeginForm("AddUser", "User", FormMethod.Post, new {@class = "form form-horizontal", role = "form"}))
                 {
@@ -117,8 +118,8 @@
 
                     <div class="form-group">
                         <div class="col-lg-offset-2 col-lg-10">
-                            <button type="submit" class="btn btn-primary">Save</button>
-                            <a href="~/user/master" class="btn btn-danger">Cancel</a>
+                            <button type="submit" class="btn btn-success">Save</button>
+                            <a href="~/user/master" class="btn btn-warning">Cancel</a>
                         </div>
                     </div>
                 }

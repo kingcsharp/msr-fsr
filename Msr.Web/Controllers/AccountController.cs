@@ -12,6 +12,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Msr.Infrastructure.Email;
 using Msr.Infrastructure.Helpers;
+using Msr.Models.Orders;
 using Msr.Models.Users;
 using Msr.Repositories;
 using Msr.Services.Orders;
@@ -76,23 +77,33 @@ namespace Msr.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
-            model.Email = model.Email.Trim().ToLower();
+            model.User = model.User.Trim().ToLower();
 
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
+            var userService = new UserService();
             var peopleService = new PeopleService();
+            UserSummary user;
 
-            var answerUser = peopleService.GetAnswerUser(model.Email, model.Password);
+            var answerUser = peopleService.GetAnswerUser(model.User, model.Password);
 
             if (answerUser != null)
             {
                 model.Password = "msr" + answerUser.Id + "$";
             }
-            
-            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+
+            user = userService.GetByUserName(model.User);
+
+            if (!user.IsActive)
+            {
+                TempData["WarningMessage"] = "Account has been disabled";
+                return RedirectToAction("Login", "Account");
+            }
+
+            var result = await SignInManager.PasswordSignInAsync(model.User, model.Password, model.RememberMe, shouldLockout: false);
 
             switch (result)
             {
@@ -102,9 +113,6 @@ namespace Msr.Web.Controllers
                     {
                         return RedirectToLocal(returnUrl);
                     }
-
-                    var userService = new UserService();
-                    var user = userService.GetByUserName(model.Email);
 
                     if (user.RoleName == RolesConstants.AnswerUser)
                     {

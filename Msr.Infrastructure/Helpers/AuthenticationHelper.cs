@@ -7,11 +7,10 @@ namespace Msr.Infrastructure.Helpers
     {
         public static string PassWordEncrypt(string password)
         {
-            var encryptPassword = "";
+            var encryptPassword = string.Empty;
 
             for (var i = 1; i <= password.Length; i++)
             {
-              var test =  Convert.ToChar(77 + Strings.Asc(Strings.Mid(password, i, 1))%128);
                encryptPassword = encryptPassword + Strings.Chr(77 + Strings.Asc(Strings.Mid(password, i, 1)) % 128);
             }
 

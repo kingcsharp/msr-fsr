@@ -50,7 +50,7 @@ namespace Msr.Web.Models
     {
         [Required]
         [Display(Name = "User")]
-        public string Email { get; set; }
+        public string User { get; set; }
 
         [Required]
         [DataType(DataType.Password)]

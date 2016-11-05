@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Net;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 using Msr.Infrastructure.Email;
 using Msr.Models.Orders;
 using Msr.Models.Users;
@@ -13,6 +15,7 @@ using Msr.Services.jqGrid;
 using Msr.Services.Orders;
 using Msr.Services.TimeZones;
 using Msr.Services.Users;
+using Msr.Services.Users.ViewModels;
 using Msr.Web.ViewModel;
 
 namespace Msr.Web.Controllers
@@ -23,6 +26,20 @@ namespace Msr.Web.Controllers
         public UserController()
         {
             ViewBag.ActiveClass = "USER";
+        }
+
+        private ApplicationUserManager _userManager;
+
+        public ApplicationUserManager UserManager
+        {
+            get
+            {
+                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+            private set
+            {
+                _userManager = value;
+            }
         }
 
         [Authorize(Roles = nameof(RolesConstants.AnswerUser))]
@@ -190,16 +207,25 @@ namespace Msr.Web.Controllers
 
                 if (!response.HasErrors())
                 {
-                    var loginUrl = Url.Action("Login", "Account");
-                    var from = ConfigurationManager.AppSettings["From"];
-                    var body = "Login Portal by clicking <a href=\"" + loginUrl + "\">here</a>";
+                    string code = UserManager.GeneratePasswordResetToken(response.UserId);
 
-                    EmailService.SendEmail(from, viewModel.UserSummary.Email, "Portal Login", body, null, true);
+                    var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = response.UserId, code = code }, protocol: Request.Url.Scheme);
+
+                    var result = userService.SendEmailToUser(response.UserId, callbackUrl);
+
+                    if (!result)
+                    {
+                        TempData["ErrorMessage"] = "User has been created. There was an error with sending email";
+                    }
+                    else
+                    {
+                        TempData["SuccessMessage"] = "User has been created successfully.";
+                    }
 
                     return RedirectToAction("Master");
                 }
 
-                ModelState.AddModelError("", response.ErrorMessage());
+                TempData["ErrorMessage"] = response.ErrorMessage();
             }
 
             viewModel.Setup(userService, new CompanyService());
@@ -235,6 +261,8 @@ namespace Msr.Web.Controllers
 
                 if (!response.HasErrors())
                 {
+                    TempData["SuccessMessage"] = "User has been updated successfully.";
+
                     return RedirectToAction("Master");
                 }
 
@@ -270,6 +298,7 @@ namespace Msr.Web.Controllers
 
             if (!response.HasErrors())
             {
+                TempData["SuccessMessage"] = "User has been deleted successfully.";
                 return RedirectToAction("Master");
             }
 
@@ -305,14 +334,20 @@ namespace Msr.Web.Controllers
 
                 if (!response.HasErrors())
                 {
-                    var loginUrl = Url.Action("Login", "Account");
-                    var from = ConfigurationManager.AppSettings["From"];
-                    var websiteUrl = ConfigurationManager.AppSettings["WebsiteUrl"];
+                    string code = UserManager.GeneratePasswordResetToken(response.UserId);
 
-                    var body = $"Login Portal by clicking <a href=\"{websiteUrl + loginUrl}\">here</a>";
+                    var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = response.UserId, code = code }, protocol: Request.Url.Scheme);
 
-                    EmailService.SendEmail(from, viewModel.UserSummary.Email, "Portal Login", body, new List<string> {clientAdmin.Email}, true);
+                    var result = userService.SendEmailToUser(response.UserId, callbackUrl, clientAdmin.Email);
 
+                    if (!result)
+                    {
+                        TempData["ErrorMessage"] = "User has been created. There was an error with sending email";
+                    }
+                    else
+                    {
+                        TempData["SuccessMessage"] = "User has been created successfully.";
+                    }
 
                     return RedirectToAction("Client");
                 }
@@ -424,6 +459,8 @@ namespace Msr.Web.Controllers
             userSummary.Email = viewModel.Email;
 
             userService.UpdateUserProfile(userSummary);
+
+            TempData["SuccessMessage"] = "Profile has been updated successfully.";
 
             return RedirectToAction("Profile");
         }

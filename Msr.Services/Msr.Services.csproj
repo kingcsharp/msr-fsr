@@ -41,17 +41,26 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
     </Reference>
+    <Reference Include="RazorEngine, Version=3.9.1.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
+      <HintPath>..\packages\RazorEngine.3.9.1\lib\net45\RazorEngine.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\RestSharp.105.2.3\lib\net46\RestSharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.0.0\lib\net45\System.Web.Razor.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -83,6 +92,9 @@
     <Compile Include="Tasks\Messaging\MonitorHistoryResponse.cs" />
     <Compile Include="TimeZones\TimeZoneService.cs" />
     <Compile Include="Users\UserService.cs" />
+    <Compile Include="Users\ViewModels\ClientaAdminEmailTemplateViewModel.cs" />
+    <Compile Include="Users\ViewModels\ClientEngineerEmailTemplateViewModel.cs" />
+    <Compile Include="Users\ViewModels\ClientBuyerEmailTemplateViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Msr.Infrastructure\Msr.Infrastructure.csproj">
@@ -96,6 +108,10 @@
     <ProjectReference Include="..\Msr.Repositories\Msr.Repositories.csproj">
       <Project>{E8A1A202-F0D8-495D-98E7-1F05F6057841}</Project>
       <Name>Msr.Repositories</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Msr.Resources\Msr.Resources.csproj">
+      <Project>{3f8721e6-7768-4be7-864b-aa6c68f0d9e1}</Project>
+      <Name>Msr.Resources</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

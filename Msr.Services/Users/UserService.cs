@@ -1,14 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Msr.Infrastructure.Email;
 using Msr.Infrastructure.Helpers;
 using Msr.Models.Orders;
 using Msr.Models.Users;
 using Msr.Repositories;
+using Msr.Resources.Templates;
 using Msr.Services.Orders.Messaging;
+using Msr.Services.Users.ViewModels;
+using RazorEngine;
 
 namespace Msr.Services.Users
 {
@@ -135,6 +140,8 @@ namespace Msr.Services.Users
                 newUser.ParentId = loggedUserId;
 
                 _dbContext.SaveChanges();
+
+                response.UserId = newUser.Id;
 
             }
             catch (Exception ex)
@@ -300,9 +307,50 @@ namespace Msr.Services.Users
             return response;
         }
 
+        public bool SendEmailToUser(string userId, string callBackUrl, string cc=null)
+        {
+            var user = GetUserView(userId);
+
+            var from = ConfigurationManager.AppSettings["From"];
+            var supportEmail = ConfigurationManager.AppSettings["SupportEmail"];
+            var body = string.Empty;
+
+            if (user.RoleName == RolesConstants.ClientBuyer)
+            {
+                var clientBuyerEmailTemplate = new ClientBuyerEmailTemplateViewModel();
+                clientBuyerEmailTemplate.CompanyName = user.CompanyName;
+                clientBuyerEmailTemplate.SupportEmail = supportEmail;
+                clientBuyerEmailTemplate.ResetPasswordUrl = callBackUrl;
+                body = Razor.Parse(Emails.ClientBuyer, clientBuyerEmailTemplate);
+            }
+            else if (user.RoleName == RolesConstants.ClientEngineer)
+            {
+                var clientEngineerEmailTemplate = new ClientEngineerEmailTemplateViewModel();
+                clientEngineerEmailTemplate.CompanyName = user.CompanyName;
+                clientEngineerEmailTemplate.SupportEmail = supportEmail;
+                clientEngineerEmailTemplate.ResetPasswordUrl = callBackUrl;
+                body = Razor.Parse(Emails.ClientEngineer, clientEngineerEmailTemplate);
+            }
+            else if (user.RoleName == RolesConstants.ClientAdmin)
+            {
+                var clientEngineerEmailTemplate = new ClientaAdminEmailTemplateViewModel();
+                clientEngineerEmailTemplate.CompanyName = user.CompanyName;
+                clientEngineerEmailTemplate.SupportEmail = supportEmail;
+                clientEngineerEmailTemplate.ResetPasswordUrl = callBackUrl;
+                body = Razor.Parse(Emails.ClientAdmin, clientEngineerEmailTemplate);
+            }
+
+            return EmailService.SendEmail(from, user.Email, "Portal Login", body, new List<string> {cc}, true);
+        }
+
+        public UserView GetUserView(string id)
+        {
+            return _dbContext.UserViews.SingleOrDefault(x => x.Id == id);
+        }
+
         private bool HasAnswerUser(string userName)
         {
-            var answerUser = _dbContext.Peoples.SingleOrDefault(x => String.Equals(x.Login, userName, StringComparison.CurrentCultureIgnoreCase));
+            var answerUser = _dbContext.Peoples.SingleOrDefault(x => x.Login.ToLower() == userName.ToLower());
 
             if (answerUser != null)
             {
