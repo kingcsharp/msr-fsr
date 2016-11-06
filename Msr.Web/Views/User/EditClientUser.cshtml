@@ -12,20 +12,7 @@
     <div class="side-body padding-top">
         <div class="row">
             <h2 class="page-header">Edit User
-                <div class=" pull-right" data-toggle="modal" data-target="#wipHelpModal">
-                    <!-- Split button -->
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-warning">Action</button>
-                        <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="caret"></span>
-                            <span class="sr-only">Toggle Dropdown</span>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a href="~/user/deleteuser/@Model.UserSummary.Id">Delete</a></li>
-                        </ul>
-                    </div>
-
-                </div></h2>
+                </h2>
             <div class="col-lg-10">
                 
                 @using (Html.BeginForm("EditClientUser", "User", FormMethod.Post, new {@class = "form form-horizontal", role = "form"}))

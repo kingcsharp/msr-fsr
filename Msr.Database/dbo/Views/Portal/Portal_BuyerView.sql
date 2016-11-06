@@ -12,12 +12,13 @@ t.NUM_SUB_TASKS_COMPLETE AS NumSubTasksComplete,
 t.MY_TOT_HOURS AS MyTotHours,
 t.MY_COMP_HOURS AS MyCompHours,
 REPLACE(REPLACE(t.CUR_STEP_TEXT,'<<bb>>',''),'<</bb>>','')  AS CurStepText,
-t.TIME_COMPLETE AS TimeComplete,
+ISNULL(t.TIME_COMPLETE,0) AS TimeComplete,
 t.PERC_COMPLETE AS PercComplete,
 t.BATCH_PARENT AS BatchParent,
 t.BATCHED AS Batched,
 t.BATCH_FILL AS BatchEdFill,
 t.FILL_ITEM_ID AS FillItemId,
+
 t.NICK_NAME AS NickName,
 t.SERIAL AS Serial,
 t.PURCHASE_ID AS PurchaseId,
@@ -50,7 +51,19 @@ invoice.INVOICE_DATE AS InvoiceDate,
 invoice.STATUS InvoiceStatus,
 invoice.INVOICE_ID AS InvoiceId,
 ii.UNIT_PRICE AS Price,
-1 AS HasFile,
+CASE WHEN (          
+
+SELECT count(*)
+ FROM A_DOCUMENTS WHERE ID IN
+(
+SELECT file_id FROM A_V_ACTUAL_PARTS_RELATED_FILES
+WHERE 
+ACTUAL_PART_ID = t.ACTUAL_PART_ID
+AND (FILE_NAME LIKE '%%' OR FILE_NAME is NULL ) 
+AND  (FILE_DESCRIPTION LIKE '%%' OR FILE_DESCRIPTION is NULL ) 
+AND STATUS = 'ACTIVE'
+)) > 0THEN 1 ELSE 0 END 
+AS HasFile,
 0 AS HasMonitor,
 1 AS HasNcr
 FROM A_V_ENGINEER_SCREEN_DATA_WIP_ONE_STEP_Simplified t with (noLock) 

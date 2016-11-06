@@ -97,7 +97,7 @@ namespace Msr.Web.Controllers
 
             user = userService.GetByUserName(model.User);
 
-            if (!user.IsActive)
+            if (user !=null && !user.IsActive)
             {
                 TempData["WarningMessage"] = "Account has been disabled";
                 return RedirectToAction("Login", "Account");

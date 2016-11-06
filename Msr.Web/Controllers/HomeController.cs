@@ -30,11 +30,11 @@ namespace Msr.Web.Controllers
             return View();
         }
 
-        public string emailtest()
+        public string emailtest(string id)
         {
             var from = ConfigurationManager.AppSettings["From"];
 
-            var restlt = EmailService.SendEmail(from, "test", "Portal Login", "test", null, true);
+            var restlt = EmailService.SendEmail(from, id, "Portal Login", "test", null, true);
 
             return restlt.ToString();
         }

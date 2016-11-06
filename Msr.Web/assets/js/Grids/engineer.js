@@ -212,26 +212,27 @@ $(document).ready(function () {
 	$("#jqGrid").jqGrid().trigger('reloadGrid');
 	
 	$("#jqGrid").tooltip();
+
+
+    $('#ncrModal').on('show.bs.modal', function(event) {
+        var button = $(event.relatedTarget);
+        var id = button.data('id');
+        var modal = $(this);
+
+        $.ajax({
+            type: "GET",
+            url: '/wip/getncrmodel?id=' + id,
+            dataType: 'html',
+            success: function(data) {
+                modal.find('.modal-body').html(data);
+            },
+            error: function() {
+
+            }
+        });
+    });
+
     
-
-
-	$('#ncrModal').on('show.bs.modal', function (event) {
-	    var button = $(event.relatedTarget);
-	    var id = button.data('id');
-	    var modal = $(this);
-
-	    $.ajax({
-	        type: "GET",
-	        url: '/wip/getncrmodel?id=' + id,
-	        dataType: 'html',
-	        success: function (data) {
-	            modal.find('.modal-body').html(data);
-	        },
-	        error: function () {
-
-	        }
-	    });
-	})
 
 
 	$('#imageModal').on('show.bs.modal', function (event) {
@@ -270,6 +271,17 @@ $(document).ready(function () {
 	    });
 	})
 
+    $('#ncrModal').on('hidden.bs.modal', function(event) {
+        $(this).data('bs.modal', null);
+    });
+
+    $('#monitorModal').on('hidden.bs.modal', function (event) {
+        $(this).data('bs.modal', null);
+    });
+
+    $('#imageModal').on('hidden.bs.modal', function (event) {
+        $(this).data('bs.modal', null);
+	});
 
     $('a.colmenu').click(function( event ) {
       //event.stopPropagation();

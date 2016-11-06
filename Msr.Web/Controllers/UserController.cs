@@ -388,6 +388,8 @@ namespace Msr.Web.Controllers
 
                 if (!response.HasErrors())
                 {
+                    TempData["SuccessMessage"] = "User has been updated successfully.";
+
                     return RedirectToAction("Client");
                 }
 

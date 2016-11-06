@@ -119,6 +119,14 @@ namespace Msr.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.Status.ToLower().Contains(rule.data.ToLower()));
                     }
+                    else if (rule.field == nameof(BuyerView.Price))
+                    {
+                        Decimal value;
+                        if (Decimal.TryParse(rule.data, out value))
+                        {
+                            totalRows = totalRows.Where(x => x.Price == value);
+                        }
+                    }
                 }
             }
 
@@ -150,6 +158,7 @@ namespace Msr.Web.Controllers
             foreach (var r in results)
             {
                 r.HasMonitor = taskService.CheckHasMonitors(r.FillId);
+                r.HasNcr = taskService.CheckHasNcr(r.ActualPartId);
             }
 
             var json = new
