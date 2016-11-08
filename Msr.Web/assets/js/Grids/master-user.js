@@ -40,7 +40,7 @@ $(document).ready(function () {
               },
             
              {
-                 name: 'PrimaryPhone', index: 'PrimaryPhone', colmenu: true, coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true },
+                 name: 'Phone', index: 'Phone', colmenu: true, coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true },
              },
              {
                  name: 'Email', index: 'Email', colmenu: true, coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true },

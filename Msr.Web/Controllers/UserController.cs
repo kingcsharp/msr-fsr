@@ -266,7 +266,7 @@ namespace Msr.Web.Controllers
                     return RedirectToAction("Master");
                 }
 
-                ModelState.AddModelError("", response.ErrorMessage());
+                TempData["ErrorMessage"] = response.ErrorMessage();
             }
 
             viewModel.Setup(userService, new CompanyService(), new TimeZoneService());
@@ -322,6 +322,7 @@ namespace Msr.Web.Controllers
         {
             var userService = new UserService();
 
+
             if (ModelState.IsValid)
             {
                 var loggedUser = User.Identity.GetUserId();
@@ -352,7 +353,7 @@ namespace Msr.Web.Controllers
                     return RedirectToAction("Client");
                 }
 
-                ModelState.AddModelError("", response.ErrorMessage());
+                TempData["ErrorMessage"] = response.ErrorMessage();
             }
 
             viewModel.Setup(userService, new CompanyService(), new TimeZoneService());

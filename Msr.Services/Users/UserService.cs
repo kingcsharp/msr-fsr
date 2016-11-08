@@ -90,7 +90,7 @@ namespace Msr.Services.Users
         public AddUserMessageResponse AddUser(UserSummary entity, string loggedUserId)
         {
             var response = new AddUserMessageResponse();
-
+            
             try
             {
                 if (HasAnswerUser(entity.UserName))
@@ -113,6 +113,8 @@ namespace Msr.Services.Users
                 var userId = Guid.NewGuid().ToString();
                 var store = new UserStore<ApplicationUser>(aspContext);
                 var usermanager = new UserManager<ApplicationUser>(store);
+
+                entity.PasswordHash = "MSa123@"; //// This will be reset once user created
 
                 var newAspUser = new ApplicationUser
                 {

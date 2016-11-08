@@ -300,6 +300,34 @@
     <Content Include="assets\fonts\ElegantIcons.svg" />
     <Content Include="assets\fonts\fontawesome-webfont.svg" />
     <Content Include="assets\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="assets\help\buyer-1.jpg" />
+    <Content Include="assets\help\buyer-2.jpg" />
+    <Content Include="assets\help\buyer-3.jpg" />
+    <Content Include="assets\help\buyer-4.jpg" />
+    <Content Include="assets\help\buyer-5.jpg" />
+    <Content Include="assets\help\buyer-6.jpg" />
+    <Content Include="assets\help\buyer-7.jpg" />
+    <Content Include="assets\help\client-admin-1.jpg" />
+    <Content Include="assets\help\client-admin-2.jpg" />
+    <Content Include="assets\help\client-admin-3.jpg" />
+    <Content Include="assets\help\client-admin-4.jpg" />
+    <Content Include="assets\help\client-admin-5.jpg" />
+    <Content Include="assets\help\client-admin-6.jpg" />
+    <Content Include="assets\help\client-admin-7.jpg" />
+    <Content Include="assets\help\engineer-1.jpg" />
+    <Content Include="assets\help\engineer-2.jpg" />
+    <Content Include="assets\help\engineer-3.jpg" />
+    <Content Include="assets\help\engineer-4.jpg" />
+    <Content Include="assets\help\engineer-5.jpg" />
+    <Content Include="assets\help\engineer-6.jpg" />
+    <Content Include="assets\help\engineer-7.jpg" />
+    <Content Include="assets\help\master-admin-1.jpg" />
+    <Content Include="assets\help\master-admin-2.jpg" />
+    <Content Include="assets\help\master-admin-3.jpg" />
+    <Content Include="assets\help\master-admin-4.jpg" />
+    <Content Include="assets\help\master-admin-5.jpg" />
+    <Content Include="assets\help\master-admin-6.jpg" />
+    <Content Include="assets\help\master-admin-7.jpg" />
     <Content Include="assets\img\app-header-bg.jpg" />
     <Content Include="assets\img\background-network-electronics.jpg" />
     <Content Include="assets\img\bg.jpg" />
@@ -439,6 +467,7 @@
     <Content Include="assets\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="assets\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="assets\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="assets\help\Master User Admin Help Info.pdf" />
     <None Include="Properties\PublishProfiles\dev.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -514,6 +543,10 @@
     <Content Include="Views\Templates\ClientBuyerEmailTemplate.cshtml" />
     <Content Include="Views\Templates\ClientEngineerEmailTemplate.cshtml" />
     <Content Include="Views\Templates\ClientAdminEmailTemplate.cshtml" />
+    <Content Include="Views\Shared\Help\_MasterUserAdmin.cshtml" />
+    <Content Include="Views\Shared\Help\_ClientAdmin.cshtml" />
+    <Content Include="Views\Shared\Help\_Buyer.cshtml" />
+    <Content Include="Views\Shared\Help\_Engineer.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

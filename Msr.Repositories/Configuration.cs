@@ -12,16 +12,6 @@ namespace Msr.Repositories
         {
             SeedRoles(context);
 
-            if (!context.Users.Any(u => u.UserName == "dev"))
-            {
-                var store = new UserStore<ApplicationUser>(context);
-                var usermanager = new UserManager<ApplicationUser>(store);
-                var adminUser = new ApplicationUser { UserName = "dev", Id = "B564A2E4-C4AC-4502-9AF7-3814C9A756F5", FirstName = "dev", LastName = "user" , TimeZone = "100", IsActive = true, CreatedDate = DateTime.UtcNow};
-                
-                usermanager.Create(adminUser, "msr2016!");
-                usermanager.AddToRole("B564A2E4-C4AC-4502-9AF7-3814C9A756F5", RolesConstants.SuperAdmin);
-            }
-
             context.SaveChanges();
         }
 

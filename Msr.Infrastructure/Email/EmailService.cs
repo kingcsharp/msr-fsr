@@ -38,7 +38,10 @@ namespace Msr.Infrastructure.Email
                 {
                     foreach (var cc in ccList)
                     {
-                        message.CC.Add(new MailAddress(cc));
+                        if(!string.IsNullOrWhiteSpace(cc))
+                        {
+                            message.CC.Add(new MailAddress(cc));
+                        }
                     }
                 }
                 message.Subject = subject;
@@ -48,6 +51,7 @@ namespace Msr.Infrastructure.Email
                 message.BodyEncoding = System.Text.Encoding.GetEncoding("utf-8");
 
                 var smtp = new SmtpClient();
+                smtp.Port = int.Parse(ConfigurationManager.AppSettings["Port"]);
                 smtp.Host = ConfigurationManager.AppSettings["Host"].ToString(CultureInfo.InvariantCulture);
                 smtp.Credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["UserName"], ConfigurationManager.AppSettings["Password"]);
 
