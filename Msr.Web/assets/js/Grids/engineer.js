@@ -111,7 +111,8 @@ $(document).ready(function () {
 		         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
 		         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
 		         width: 250,
-		         align: 'left'
+		         align: 'left',
+                 hidedlg:true
 		     },
 		     {
 		         name: 'ProcName',

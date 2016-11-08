@@ -112,7 +112,8 @@ $(document).ready(function () {
                     coloptions: { sorting: false, columns: _true, filtering: false, seraching: false, grouping: false, freeze: false },
                     searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                     width: 250,
-                    align: 'left'
+                    align: 'left',
+                    hidedlg: true
                 },
 
                  {
@@ -196,7 +197,8 @@ $(document).ready(function () {
         cellsubmit : 'clientArray',
         editurl: 'clientArray',
 	    autowidth: _true,
-	    colMenu : _true,
+	    colMenu: _true,
+	    
 	    gridComplete: function() {
             $('div.meter').each(function(index) {
                 var progVal = parseFloat($(this).text()).toFixed(2);

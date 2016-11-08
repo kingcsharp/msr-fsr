@@ -361,7 +361,7 @@
     <Content Include="assets\js\client_users.js" />
     <Content Include="assets\js\dashboard.js" />
     <Content Include="assets\js\dataTables.bootstrap.min.js" />
-    <Content Include="assets\js\buyer_grid.js" />
+    <Content Include="assets\js\grids\buyer_grid.js" />
     <Content Include="assets\js\grids\engineer.js" />
     <Content Include="assets\js\grids\client-user.js" />
     <Content Include="assets\js\grids\master-user.js" />
