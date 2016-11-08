@@ -275,6 +275,9 @@
     <Content Include="assets\css\animate.min.css" />
     <Content Include="assets\css\bootstrap-editable.css" />
     <Content Include="assets\css\bootstrap-switch.min.css" />
+    <Content Include="assets\css\bootstrap-theme.css" />
+    <Content Include="assets\css\bootstrap-theme.min.css" />
+    <Content Include="assets\css\bootstrap.css" />
     <Content Include="assets\css\bootstrap.min.css" />
     <Content Include="assets\css\checkbox3.min.css" />
     <Content Include="assets\css\dataTables.bootstrap.css" />
@@ -351,6 +354,7 @@
     <Content Include="assets\js\app.js" />
     <Content Include="assets\js\bootstrap-editable.min.js" />
     <Content Include="assets\js\bootstrap-switch.min.js" />
+    <Content Include="assets\js\bootstrap.js" />
     <Content Include="assets\js\bootstrap.min.js" />
     <Content Include="assets\js\button.js" />
     <Content Include="assets\js\buyer.js" />
@@ -468,6 +472,10 @@
     <Content Include="assets\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="assets\fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="assets\help\Master User Admin Help Info.pdf" />
+    <Content Include="assets\css\bootstrap-theme.css.map" />
+    <Content Include="assets\css\bootstrap-theme.min.css.map" />
+    <Content Include="assets\css\bootstrap.css.map" />
+    <Content Include="assets\css\bootstrap.min.css.map" />
     <None Include="Properties\PublishProfiles\dev.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
