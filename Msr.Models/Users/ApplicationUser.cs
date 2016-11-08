@@ -17,7 +17,9 @@ namespace Msr.Models.Users
 
         public bool IsActive { get; set; }
 
-        public int TimeZone { get; set; }
+        public string TimeZone { get; set; }
+
+        public string AnswerId { get; set; }
 
         public DateTime CreatedDate { get; set; }
 

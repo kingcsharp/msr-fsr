@@ -47,12 +47,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Notes\Note.cs" />
     <Compile Include="Orders\UserSummary.cs" />
     <Compile Include="Orders\UserView.cs" />
     <Compile Include="Orders\ApprovedPeopleView.cs" />
     <Compile Include="Orders\BuyerView.cs" />
+    <Compile Include="Orders\FileSearchView.cs" />
     <Compile Include="Orders\WorkOrderView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tasks\MonitorResults.cs" />
+    <Compile Include="TimeZones\TimeZoneView.cs" />
     <Compile Include="Users\ClientUser.cs" />
     <Compile Include="Users\ApplicationUser.cs" />
     <Compile Include="Users\AspNetRole.cs" />
@@ -60,6 +64,8 @@
     <Compile Include="Users\AspNetUserClaim.cs" />
     <Compile Include="Users\AspNetUserLogin.cs" />
     <Compile Include="Users\RolesConstants.cs" />
+    <Compile Include="Users\CompanyView.cs" />
+    <Compile Include="Users\PeopleView.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

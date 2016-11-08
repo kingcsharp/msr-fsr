@@ -7,6 +7,7 @@ namespace Msr.Models.Orders
     {
         public string Id { get; set; }
         [Required]
+        [EmailAddress]
         public string Email { get; set; }
         [Required]
         public string UserName { get; set; }
@@ -21,9 +22,11 @@ namespace Msr.Models.Orders
         public string Phone { get; set; }
         public bool EmailConfirmed { get; set; }
         public bool IsActive { get; set; }
-        public int TimeZone { get; set; }
+        public string TimeZone { get; set; }
         public DateTime CreatedDate { get; set; }
         public string Phone2 { get; set; }
         public string FullName { get; set; }
+        public string CompanyId { get; set; }
+        public string CompanyName { get; set; }
     }
 }

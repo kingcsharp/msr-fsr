@@ -1,24 +1,38 @@
-﻿<div id="wipHelpModal" class="modal fade" role="dialog">
+﻿@using Msr.Models.Users
+<div id="wipHelpModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
 
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Work Order Screen Help</h4>
-            </div>
-            <div class="modal-body">
-                <h4>Help Information for Work Order Screens</h4>
+        @if (User.IsInRole(RolesConstants.ClientEngineer))
+        {
+            @Html.Partial("Help/_Engineer")
+        }
+        else if (User.IsInRole(RolesConstants.ClientBuyer))
+        {
+            @Html.Partial("Help/_Buyer")
+        }
+        else if (User.IsInRole(RolesConstants.ClientAdmin))
+        {
+            @Html.Partial("Help/_ClientAdmin")
+        }
+        else if (User.IsInRole(RolesConstants.AnswerUser))
+        {
+            @Html.Partial("Help/_MasterUserAdmin")
+        }
 
-                <div class="alert alert-info">Here is where the help information will go for this section. </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary pull-left" data-toggle="modal" data-target="#supportModal"><i class="fa fa-life-bouy"></i> Open Ticket</button>
-                <button type="button" class="btn btn-info" onclick="js:window.print()"><i class="fa fa-print"></i> Print Help</button>
-                <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close-o"></i> Close</button>
-            </div>
-        </div>
-
-    </div>
+  </div>
 </div>
+
+<style>
+   @@media screen and (min-width: 768px) {
+	 .modal-dialog  {width:800px;}
+}
+</style>
+
+
+
+
+
+
+
+
 

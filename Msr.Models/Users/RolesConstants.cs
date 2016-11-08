@@ -6,5 +6,6 @@
         public static readonly string ClientBuyer = "ClientBuyer";
         public static readonly string ClientAdmin = "ClientAdmin";
         public static readonly string ClientEngineer = "ClientEngineer";
+        public static readonly string AnswerUser = "AnswerUser";
     }
 }

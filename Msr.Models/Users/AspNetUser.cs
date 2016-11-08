@@ -18,8 +18,11 @@ using System;
         public string PhoneNumber { get; set; }
         public string Phone2 { get; set; }
         public string Email { get; set; }
-        public int TimeZone { get; set; }
+        public string TimeZone { get; set; }
         public DateTime CreatedDate { get; set; }
+        public string CompanyId { get; set; }
+        public string AnswerId { get; set; }
+        public string ParentId { get; set; }
 
         //public virtual ICollection<AspNetUserClaim> AspNetUserClaims { get; set; }
         //public virtual ICollection<AspNetUserLogin> AspNetUserLogins { get; set; }

@@ -4,25 +4,44 @@ using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
 using Msr.Models.Orders;
 using Msr.Services.jqGrid;
 using Msr.Services.Orders;
+using Msr.Services.Users;
 
 namespace Msr.Web.Controllers
 {
     [Authorize]
-    public class BuyerController : Controller
+    public class BuyerController : BaseController
     {
         public ActionResult Index()
         {
+            ViewBag.ActiveClass = "WIP";
+
+            var loggedUser = User.Identity.GetUserId();
+
+            var userService = new UserService();
+
+            var company = userService.GetCompanyId(loggedUser);
+
+            ViewBag.ClientName = company.Name;
+
             return View();
         }
 
         public ActionResult BuyerData(JqGridParam param)
         {
+            var loggedUser = User.Identity.GetUserId();
+
+            var userService = new UserService();
+            var taskService = new TaskService();
+
+            var company = userService.GetCompanyId(loggedUser);
+
             var orderService = new OrderService();
 
-            var totalRows = orderService.GetBuyerWorkOrderQueryable();
+            var totalRows = orderService.GetBuyerWorkOrderQueryable().Where(x => x.CustId == company.Id);
 
             if (param.where !=null && param.where.rules.Any())
             {
@@ -72,6 +91,10 @@ namespace Msr.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.ProcName.ToLower().Contains(rule.data.ToLower()));
                     }
+                    else if (rule.field == nameof(BuyerView.InvoiceId))
+                    {
+                        totalRows = totalRows.Where(x => x.InvoiceId.ToLower().Contains(rule.data.ToLower()));
+                    }
                     else if (rule.field == nameof(BuyerView.CurStepText))
                     {
                         totalRows = totalRows.Where(x => x.CurStepText.ToLower().Contains(rule.data.ToLower()));
@@ -95,6 +118,14 @@ namespace Msr.Web.Controllers
                     else if (rule.field == nameof(BuyerView.Status))
                     {
                         totalRows = totalRows.Where(x => x.Status.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(BuyerView.Price))
+                    {
+                        Decimal value;
+                        if (Decimal.TryParse(rule.data, out value))
+                        {
+                            totalRows = totalRows.Where(x => x.Price == value);
+                        }
                     }
                 }
             }
@@ -122,29 +153,13 @@ namespace Msr.Web.Controllers
 
             var totalPages = (int)Math.Ceiling((float)totalRecords / (float)param.pageSize);
 
+            var results = totalRows.ToList();
 
-            var results = totalRows.Select(x => new
+            foreach (var r in results)
             {
-                x.PurchaseItemId,
-                x.SupplierName,
-                x.Serial,
-                x.CustPurchNum,
-                x.Qty,
-                x.StDate,
-                x.ActualStartDate,
-                x.ProductName,
-                x.ProcName,
-                x.CurStepText,
-                x.PurchaseId,
-                x.ActualPartId,
-                x.TimeComplete,
-                x.PercComplete,
-                x.HasFile,
-                x.InvoiceAmount,
-                x.InvoiceDate,
-                x.InvoiceStatus
-
-            }).ToList();
+                r.HasMonitor = taskService.CheckHasMonitors(r.FillId);
+                r.HasNcr = taskService.CheckHasNcr(r.ActualPartId);
+            }
 
             var json = new
             {

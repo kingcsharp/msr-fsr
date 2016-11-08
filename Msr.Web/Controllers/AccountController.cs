@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
@@ -6,11 +7,16 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using Msr.Infrastructure.Email;
 using Msr.Infrastructure.Helpers;
+using Msr.Models.Orders;
 using Msr.Models.Users;
+using Msr.Repositories;
 using Msr.Services.Orders;
+using Msr.Services.Users;
 using Msr.Web.Models;
 
 namespace Msr.Web.Controllers
@@ -71,22 +77,63 @@ namespace Msr.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
+            model.User = model.User.Trim().ToLower();
+
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
+            var userService = new UserService();
             var peopleService = new PeopleService();
+            UserSummary user;
 
-          /// var result1 =   peopleService.CheckUserExists(model.Email, AuthenticationHelper.PassWordEncrypt(model.Password));
+            var answerUser = peopleService.GetAnswerUser(model.User, model.Password);
 
-            // This doesn't count login failures towards account lockout
-            // To enable password failures to trigger account lockout, change to shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+            if (answerUser != null)
+            {
+                model.Password = "msr" + answerUser.Id + "$";
+            }
+
+            user = userService.GetByUserName(model.User);
+
+            if (user !=null && !user.IsActive)
+            {
+                TempData["WarningMessage"] = "Account has been disabled";
+                return RedirectToAction("Login", "Account");
+            }
+
+            var result = await SignInManager.PasswordSignInAsync(model.User, model.Password, model.RememberMe, shouldLockout: false);
+
             switch (result)
             {
                 case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
+
+                    if (!string.IsNullOrWhiteSpace(returnUrl) && returnUrl != "/")
+                    {
+                        return RedirectToLocal(returnUrl);
+                    }
+
+                    if (user.RoleName == RolesConstants.AnswerUser)
+                    {
+                        return RedirectToAction("master","User");
+                    }
+                     if (user.RoleName == RolesConstants.ClientEngineer)
+                    {
+                        return RedirectToAction("Engineering", "Wip");
+                    }
+                     if (user.RoleName == RolesConstants.ClientAdmin)
+                    {
+                        return RedirectToAction("Client", "User");
+                    }
+
+                    if (user.RoleName == RolesConstants.ClientBuyer)
+                    {
+                        return RedirectToAction("Index", "Buyer");
+                    }
+
+                    return RedirectToAction("Index", "Home");
+                    
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
@@ -209,22 +256,26 @@ namespace Msr.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await UserManager.FindByNameAsync(model.Email);
-                if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
+                var userService = new UserService();
+
+                var user = userService.GetByUserName(model.UserName);
+
+                if (user == null)
                 {
-                    // Don't reveal that the user does not exist or is not confirmed
-                    return View("ForgotPasswordConfirmation");
+                    ModelState.AddModelError("", "User not found");
+                    return View();
                 }
 
-                // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
-                // Send an email with this link
-                // string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                // var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);		
-                // await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
-                // return RedirectToAction("ForgotPasswordConfirmation", "Account");
+                string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+                var callbackUrl = Url.Action("ResetPassword", "Account", new {userId = user.Id, code = code}, protocol: Request.Url.Scheme);
+                var from = ConfigurationManager.AppSettings["From"];
+                var body = "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>";
+
+                EmailService.SendEmail(from, user.Email, "Reset Password", body, null, true);
+
+                return RedirectToAction("ForgotPasswordConfirmation", "Account");
             }
 
-            // If we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -239,9 +290,12 @@ namespace Msr.Web.Controllers
         //
         // GET: /Account/ResetPassword
         [AllowAnonymous]
-        public ActionResult ResetPassword(string code)
+        public ActionResult ResetPassword(string code, string userId)
         {
-            return code == null ? View("Error") : View();
+            var viewModel =new ResetPasswordViewModel();
+            viewModel.UserId = userId;
+
+            return code == null ? View("Error") : View(viewModel);
         }
 
         //
@@ -255,13 +309,15 @@ namespace Msr.Web.Controllers
             {
                 return View(model);
             }
-            var user = await UserManager.FindByNameAsync(model.Email);
+            var user = await UserManager.FindByIdAsync(model.UserId.ToLower());
+
             if (user == null)
             {
                 // Don't reveal that the user does not exist
                 return RedirectToAction("ResetPasswordConfirmation", "Account");
             }
             var result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.Password);
+
             if (result.Succeeded)
             {
                 return RedirectToAction("ResetPasswordConfirmation", "Account");
@@ -456,6 +512,27 @@ namespace Msr.Web.Controllers
             {
                 return Redirect(returnUrl);
             }
+
+            if (User.IsInRole(RolesConstants.AnswerUser))
+            {
+                return RedirectToAction("Master", "User");
+            }
+
+            if (User.IsInRole(RolesConstants.ClientAdmin))
+            {
+                return RedirectToAction("Client", "User");
+            }
+
+            if (User.IsInRole(RolesConstants.ClientBuyer))
+            {
+                return RedirectToAction("Index", "Buyer");
+            }
+
+            if (User.IsInRole(RolesConstants.ClientEngineer))
+            {
+                return RedirectToAction("Engineering", "Wip");
+            }
+
             return RedirectToAction("Index", "Home");
         }
 

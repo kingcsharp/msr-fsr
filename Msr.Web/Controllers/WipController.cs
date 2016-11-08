@@ -4,26 +4,42 @@ using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
 using Msr.Models.Orders;
 using Msr.Services.jqGrid;
+using Msr.Services.Notes;
 using Msr.Services.Orders;
+using Msr.Services.Users;
+using Msr.Web.ViewModel;
 
 namespace Msr.Web.Controllers
 {
     [Authorize]
-    public class WipController : Controller
+    public class WipController : BaseController
     {
         public ActionResult Engineering()
         {
+            ViewBag.ActiveClass = "WIP";
+
+            var loggedUser = User.Identity.GetUserId();
+
+            var userService = new UserService();
+
+            var company = userService.GetCompanyId(loggedUser);
+
+            ViewBag.ClientName = company.Name;
+
             return View();
         }
 
         public ActionResult EngineeringData(JqGridParam param)
         {
-
+            var loggedUser = User.Identity.GetUserId();
+            var userService = new UserService();
+           var company = userService.GetCompanyId(loggedUser);
             var orderService = new OrderService();
 
-            var totalRows = orderService.GetWorkOrderQueryable();
+            var totalRows = orderService.GetWorkOrderQueryable().Where(x => x.CustId == company.Id);
 
 
             if (param.where != null && param.where.rules.Any())
@@ -112,28 +128,15 @@ namespace Msr.Web.Controllers
 
             var totalPages = (int) Math.Ceiling((float) totalRecords/(float) param.pageSize);
 
+            var taskService = new TaskService();
 
-            var results = totalRows.Select(x => new
+            var results = totalRows.ToList();
+
+            foreach (var r in results)
             {
-                x.PurchaseItemId,
-                x.SupplierName,
-                x.Serial,
-                x.CustPurchNum,
-                x.Qty,
-                x.StDate,
-                x.ActualStartDate,
-                x.ProductName,
-                x.ProcName,
-                x.CurStepText,
-                x.PurchaseId,
-                x.ActualPartId,
-                x.TimeComplete,
-                x.PercComplete,
-                x.HasFile,
-                x.HasMonitor,
-                x.HasNcr,
-                x.FillId
-            }).ToList();
+                r.HasMonitor = taskService.CheckHasMonitors(r.FillId);
+                r.HasNcr = taskService.CheckHasNcr(r.ActualPartId);
+            }
 
             var json = new
             {
@@ -156,15 +159,48 @@ namespace Msr.Web.Controllers
             return PartialView("_NcrModel", ncrDetails);
         }
 
-        public ActionResult GetPhotsModel()
+        public ActionResult GetPhotsModel(string id)
         {
-            return PartialView("_Photos");
+            var orderService = new OrderService();
+
+            var docs = orderService.GetDocuments(id);
+
+            var photos = new List<DocViewModel>();
+
+            foreach (var doc in docs)
+            {
+                if (doc.ContentType == "image/jpeg" || doc.ContentType == "image/gif" || doc.ContentType == "image/png")
+                {
+                    var photo = orderService.GetDocumentBase64(doc.ServerPath, 400);
+
+                    photos.Add(new DocViewModel
+                    {
+                        FileArray = photo,
+                        FileName = doc.Name
+                    });
+                }
+            }
+                   
+            return PartialView("_Photos", photos);
         }
 
-        public ActionResult GetMonitorsModel()
+        public ActionResult GetMonitorsModel(string id)
         {
+            var taskService = new TaskService();
 
-            return PartialView("_Monitors");
+            var response = taskService.GetTaskWithMonitors(id);
+
+            return PartialView("_Monitors", response);
+        }
+
+        [HttpPost]
+        public JsonResult AddInstruction(string id, string message)
+        {
+            var noteService = new NoteService();
+
+            noteService.AddNote(id, message, 1);
+
+            return Json("OK", JsonRequestBehavior.AllowGet);
         }
     }
 }

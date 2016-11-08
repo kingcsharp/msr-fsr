@@ -1,8 +1,16 @@
-﻿<div class="side-menu sidebar-inverse">
+﻿@using System.Security.Claims
+@using Msr.Models.Users
+
+@{
+    var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
+
+}
+
+<div class="side-menu sidebar-inverse">
     <nav class="navbar navbar-default" role="navigation">
         <div class="side-menu-container">
             <div class="navbar-header">
-                <a class="navbar-brand" href="#">
+                <a class="navbar-brand" href="~/home">
                     <div class="icon fa fa-paper-plane"></div>
                     <div class="title">MSR-FSR Portal</div>
                 </a>
@@ -11,62 +19,81 @@
                 </button>
             </div>
             <ul class="nav navbar-nav">
-                <li class="active">
-                    <a href="index.html">
-                        <span class="icon fa fa-tachometer"></span><span class="title">Dashboard</span>
-                    </a>
-                </li>
-                <li class="panel panel-default dropdown">
-                    <a data-toggle="collapse" href="#dropdown-element">
-                        <span class="icon fa fa-desktop"></span><span class="title">User Admin</span>
-                    </a>
-                    <!-- Dropdown level 1 -->
-                    <div id="dropdown-element" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <ul class="nav navbar-nav">
-                                <li>
-                                    <a href="/user/master">
-                                        <span class="icon fa fa-user-secret"></span><span class="title">Master Users</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="/user/client">
-                                        <span class="icon fa fa-users"></span><span class="title">Client Users</span>
-                                    </a>
-                                </li>
-                            </ul>
+
+             @if (User.IsInRole(RolesConstants.AnswerUser) || User.IsInRole(RolesConstants.ClientAdmin))
+             {
+                    <li class="panel panel-default dropdown @(ViewBag.ActiveClass == "USER"? "active":"")">
+                        <a data-toggle="collapse" href="#dropdown-element">
+                            <span class="icon fa fa-desktop"></span><span class="title">User Admin</span>
+                        </a>
+                        <!-- Dropdown level 1 -->
+
+
+                        <div id="dropdown-element" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <ul class="nav navbar-nav">
+                                    @if (User.IsInRole(RolesConstants.AnswerUser))
+                                    {
+                                        <li>
+                                            <a href="/user/master">
+                                                <span class="icon fa fa-user-secret"></span><span class="title">Master Users</span>
+                                            </a>
+                                        </li>
+                                    }
+                                        @if (User.IsInRole(RolesConstants.ClientAdmin))
+                                        {
+                                            <li>
+                                                <a href="/user/client">
+                                                    <span class="icon fa fa-users"></span><span class="title">Client Users</span>
+                                                </a>
+                                            </li>
+                                        }
+                                </ul>
+                            </div>
                         </div>
-                    </div>
-                </li>
-                <li class="panel panel-default dropdown">
-                    <a data-toggle="collapse" href="#dropdown-element2">
-                        <span class="icon fa fa-desktop"></span><span class="title">WIP Views</span>
-                    </a>
-                    <!-- Dropdown level 1 -->
-                    <div id="dropdown-element2" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <ul class="nav navbar-nav">
-                                <li>
-                                    <a href="~/wip/engineering">
-                                        <span class="icon fa fa-gears"></span><span class="title">Engineering</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="/buyer">
-                                        <span class="icon fa fa-dollar"></span><span class="title">Purchasing</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </li>
-                <li>
-                    <a href="profile.html">
+                    </li>
+                }
+
+
+@if (User.IsInRole(RolesConstants.ClientBuyer) || User.IsInRole(RolesConstants.ClientEngineer))
+{
+    <li class="panel panel-default dropdown @(ViewBag.ActiveClass == "WIP" ? "active" : "")">
+        <a data-toggle="collapse" href="#dropdown-element2">
+            <span class="icon fa fa-desktop"></span><span class="title">WIP Views</span>
+        </a>
+        <!-- Dropdown level 1 -->
+        <div id="dropdown-element2" class="panel-collapse collapse">
+            <div class="panel-body">
+                <ul class="nav navbar-nav">
+
+                    @if (User.IsInRole(RolesConstants.ClientEngineer))
+                    {
+                        <li>
+                            <a href="~/wip/engineering">
+                                <span class="icon fa fa-gears"></span><span class="title">Engineering</span>
+                            </a>
+                        </li>
+                    }
+
+                    @if (User.IsInRole(RolesConstants.ClientBuyer))
+                    {
+                        <li>
+                            <a href="/buyer">
+                                <span class="icon fa fa-dollar"></span><span class="title">Purchasing</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </li>
+}
+                <li class="@(ViewBag.ActiveClass == "PROF" ? "active" : "")">
+                    <a href="~/user/profile">
                         <span class="icon fa fa-user"></span><span class="title">Profile</span>
                     </a>
                 </li>
             </ul>
         </div>
-        <!-- /.navbar-collapse -->
     </nav>
 </div>

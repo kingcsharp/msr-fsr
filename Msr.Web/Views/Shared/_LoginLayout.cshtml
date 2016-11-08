@@ -1,9 +1,7 @@
-﻿
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>[[*pagetitle]] - [[++site_name]]</title>
-    <base href="[[!++site_url]]"/>
+    <title>@ViewBag.Title</title>
     <meta charset="[[++modx_charset]]"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -19,7 +17,6 @@
     @Html.Partial("_Footer")
 
 
-<!-- Javascript Libs -->
 <script type="text/javascript" src="/assets/js/jquery.min.js"></script>
 <script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
     @RenderSection("scripts", required: false)

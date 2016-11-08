@@ -1,4 +1,4 @@
-﻿CREATE VIEW [dbo].[Portal_WorkOrders]
+﻿CREATE VIEW [dbo].Portal_CompanyView
 AS
 
 SELECT 

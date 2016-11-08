@@ -8,7 +8,6 @@ namespace Msr.Models.Orders
         public Guid Id { get; set; }
         public string SupplierName { get; set; }
         public string SupplierId { get; set; }
-        public byte? HasFile { get; set; }
         public string TaskId { get; set; }
         public int? NumSubTasks { get; set; }
         public int? NumSubTasksComplete { get; set; }
@@ -51,5 +50,10 @@ namespace Msr.Models.Orders
         public Decimal? InvoiceAmount { get; set; }
         public DateTime? InvoiceDate { get; set; }
         public string InvoiceStatus { get; set; }
+        public string InvoiceId { get; set; }
+        public decimal? Price { get; set; }
+        public int? HasFile { get; set; }
+        public int? HasMonitor { get; set; }
+        public int? HasNcr { get; set; }
     }
 }

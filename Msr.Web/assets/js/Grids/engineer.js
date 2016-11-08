@@ -1,12 +1,30 @@
 
 $.jgrid.defaults.responsive = true;
 
-function toggleInstructions (theID) {
-	event.preventDefault();
+function toggleInstructions (theID,action) {
+	
     var addButton = '#add-button' + theID;
     var textareaDiv = '#instruction' + theID;
     $(addButton).toggleClass('hidden show');
     $(textareaDiv).toggleClass('hidden show');
+
+    if (action === 1) {
+
+        $.ajax({
+            type: "POST",
+            data: { message: $('#note-' + theID).val() },
+            url: '/wip/AddInstruction?id=' + theID,
+            dataType: 'json',
+            success: function (data) {
+                $('#note-' + theID).val('')
+                location.reload();
+            },
+            error: function () {
+
+            }
+        });
+    }
+
 }
 
 $(document).ready(function () {
@@ -93,7 +111,8 @@ $(document).ready(function () {
 		         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
 		         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
 		         width: 250,
-		         align: 'left'
+		         align: 'left',
+                 hidedlg:true
 		     },
 		     {
 		         name: 'ProcName',
@@ -169,63 +188,6 @@ $(document).ready(function () {
                 );
             });
 
-
-            $('#ncrModal').on('show.bs.modal', function (event) {               
-                var button = $(event.relatedTarget) // Button that triggered the modal
-                var id = button.data('id') // Extract info from data-* attributes
-                var modal = $(this)
-
-                $.ajax({
-                    type: "GET",
-                    url: '/wip/getncrmodel?id='+id,
-                    dataType: 'html',
-                    success: function (data) {
-                        modal.find('.modal-body').html(data);
-                    },
-                    error: function () {
-                      
-                    }
-                });
-            })
-
-
-            $('#imageModal').on('show.bs.modal', function (event) {
-                var button = $(event.relatedTarget) // Button that triggered the modal
-                var id = button.data('id') // Extract info from data-* attributes
-                var modal = $(this)
-
-                $.ajax({
-                    type: "GET",
-                    url: '/wip/GetPhotsModel?id=' + id,
-                    dataType: 'html',
-                    success: function (data) {
-                        modal.find('.modal-body').html(data);
-                    },
-                    error: function () {
-
-                    }
-                });
-            })
-
-            $('#monitorModal').on('show.bs.modal', function (event) {
-                var button = $(event.relatedTarget) // Button that triggered the modal
-                var id = button.data('id') // Extract info from data-* attributes
-                var modal = $(this)
-
-                $.ajax({
-                    type: "GET",
-                    url: '/wip/GetMonitorsModel?id=' + id,
-                    dataType: 'html',
-                    success: function (data) {
-                        modal.find('.modal-body').html(data);
-                    },
-                    error: function () {
-
-                    }
-                });
-            })
-
-
         }
 	});
 	
@@ -251,7 +213,77 @@ $(document).ready(function () {
 	$("#jqGrid").jqGrid().trigger('reloadGrid');
 	
 	$("#jqGrid").tooltip();
+
+
+    $('#ncrModal').on('show.bs.modal', function(event) {
+        var button = $(event.relatedTarget);
+        var id = button.data('id');
+        var modal = $(this);
+
+        $.ajax({
+            type: "GET",
+            url: '/wip/getncrmodel?id=' + id,
+            dataType: 'html',
+            success: function(data) {
+                modal.find('.modal-body').html(data);
+            },
+            error: function() {
+
+            }
+        });
+    });
+
     
+
+
+	$('#imageModal').on('show.bs.modal', function (event) {
+	    var button = $(event.relatedTarget) // Button that triggered the modal
+	    var id = button.data('id') // Extract info from data-* attributes
+	    var modal = $(this)
+
+	    $.ajax({
+	        type: "GET",
+	        url: '/wip/GetPhotsModel?id=' + id,
+	        dataType: 'html',
+	        success: function (data) {
+	            modal.find('.modal-body').html(data);
+	        },
+	        error: function () {
+
+	        }
+	    });
+	})
+
+	$('#monitorModal').on('show.bs.modal', function (event) {
+	    var button = $(event.relatedTarget) // Button that triggered the modal
+	    var id = button.data('id'); // Extract info from data-* attributes
+	    var modal = $(this);
+
+	    $.ajax({
+	        type: "GET",
+	        url: '/wip/GetMonitorsModel?id=' + id,
+	        dataType: 'html',
+	        success: function (data) {
+	            modal.find('.modal-body').html(data);
+	        },
+	        error: function () {
+
+	        }
+	    });
+	})
+
+    $('#ncrModal').on('hidden.bs.modal', function(event) {
+        $(this).data('bs.modal', null);
+    });
+
+    $('#monitorModal').on('hidden.bs.modal', function (event) {
+        $(this).data('bs.modal', null);
+    });
+
+    $('#imageModal').on('hidden.bs.modal', function (event) {
+        $(this).data('bs.modal', null);
+	});
+
     $('a.colmenu').click(function( event ) {
       //event.stopPropagation();
       event.preventDefault();
@@ -274,13 +306,13 @@ $(document).ready(function () {
     
 	function supportingInfoFormatter(cellvalue, options, rowObject) {
 	    var NcrButton = (rowObject.HasNcr == 1) ? '<button class="btn support-btn btn-xs btn-warning" data-id="' + rowObject.FillId + '" data-toggle="modal"  data-target="#ncrModal" title="View NCR"><i class="fa fa-clipboard"></i>NCR</button>' : '';
-	    var FileButton = (rowObject.HasFile == 1) ? '<button class="btn support-btn btn-xs btn-info" data-id="' + rowObject.FillId + '" href="#" data-toggle="modal" data-target="#imageModal" title="View Photos"><i class="fa fa-file-image-o"></i>Photos</button>' : '';
+	    var FileButton = (rowObject.HasFile == 1) ? '<button class="btn support-btn btn-xs btn-info" data-id="' + rowObject.ActualPartId + '" href="#" data-toggle="modal" data-target="#imageModal" title="View Photos"><i class="fa fa-file-image-o"></i>Photos</button>' : '';
 	    var MonitorButton = (rowObject.HasMonitor == 1) ? '<button class="btn support-btn btn-xs btn-success" data-id="' + rowObject.FillId + '" data-toggle="modal" data-target="#monitorModal"  title="View Monitors"><i class="fa fa-bar-chart "></i>Monitors</button>' : '';
         thisCellVal = NcrButton + FileButton + MonitorButton;
         return thisCellVal;
     }
     function actionsFormatter (cellvalue, options, rowObject) {
-        InstructionsCellVal = '<button id="add-button' + rowObject.ActualPartId + '" onclick="toggleInstructions(' + rowObject.ActualPartId + ')" class="btn support-btn btn-xs btn-danger show">Add Instructions</button><div id="instruction' + rowObject.ActualPartId + '" class="hidden" ><textarea style="width: 95%;" rows=4 placeholder="Add disposition Instructions"></textarea><button class="btn support-btn btn-xs btn-primary" onclick="toggleInstructions(' + rowObject.ActualPartId + ')">Save</button>';
+        InstructionsCellVal = rowObject.Notes + '<br/><button id="add-button' + rowObject.FillId + '" onclick="toggleInstructions(' + rowObject.FillId + ',0)" class="btn support-btn btn-xs btn-danger show">Add Instructions</button><div id="instruction' + rowObject.FillId + '" class="hidden" ><textarea style="width: 95%;" rows=4 placeholder="Add disposition Instructions" id="note-' + rowObject.FillId + '"></textarea><button class="btn support-btn btn-xs btn-primary" onclick="toggleInstructions(' + rowObject.FillId + ',1)">Save</button>';
         thisCellVal = (rowObject.HasNcr == 1) ? InstructionsCellVal : 'N/A';
         return thisCellVal;
     }

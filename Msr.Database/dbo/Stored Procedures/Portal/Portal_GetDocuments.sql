@@ -1,0 +1,21 @@
+﻿create PROCEDure [dbo].[Portal_GetDocuments]
+@ActualPartId nvarchar(128)
+
+AS
+
+SELECT
+ID AS Id
+,DOC_ID AS DocId
+,Name 
+,Server_Path AS ServerPath
+,ContentType
+ FROM A_DOCUMENTS WHERE ID IN
+(
+SELECT file_id FROM A_V_ACTUAL_PARTS_RELATED_FILES
+WHERE 
+ACTUAL_PART_ID = @ActualPartId
+AND (FILE_NAME LIKE '%%' OR FILE_NAME is NULL ) 
+AND  (FILE_DESCRIPTION LIKE '%%' OR FILE_DESCRIPTION is NULL ) 
+AND STATUS = 'ACTIVE'
+)
+GO

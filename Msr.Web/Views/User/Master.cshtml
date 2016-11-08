@@ -13,6 +13,7 @@
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="row">
+            @Html.Partial("Message")
             <h2 class="page-header">
                 All Portal Users
                 <button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
@@ -28,10 +29,6 @@
         </div>
 </div>
 
-
-@Html.Partial("_ModalWipHelp")
-@Html.Partial("_ModalWipWindows")
-@Html.Partial("_SupportForm")*
 
 
 @section scripts

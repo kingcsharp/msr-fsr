@@ -1,6 +1,6 @@
 ﻿@model Msr.Web.ViewModel.EditUserViewModel
 @{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "Edit User";
 }
 
 <link rel="stylesheet" type="text/css" href="/assets/css/themes/flat-blue.css">
@@ -12,7 +12,7 @@
     <div class="side-body padding-top">
         <div class="row">
             <h2 class="page-header">Edit User
-                <div class=" pull-right" data-toggle="modal" data-target="#wipHelpModal">
+                <div class=" pull-right" data-toggle="modal">
                     <!-- Split button -->
                     <div class="btn-group">
                         <button type="button" class="btn btn-warning">Action</button>
@@ -27,117 +27,121 @@
 
                 </div></h2>
             <div class="col-lg-10">
-                
-                @using (Html.BeginForm("EditUser", "User", FormMethod.Post, new {@class = "form form-horizontal", role = "form"}))
-                {
-                    @Html.ValidationSummary()
-                    @Html.AntiForgeryToken()
-                    @Html.HiddenFor(x=>x.UserSummary.Id)
-                    @Html.HiddenFor(x => x.UserSummary.Email)
-                    @Html.HiddenFor(x => x.UserSummary.UserName)
+                <section class="panel">
+                    <div class="panel-body bio-graph-info">
+                        @using (Html.BeginForm("EditUser", "User", FormMethod.Post, new { @class = "form form-horizontal", role = "form" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.HiddenFor(x => x.UserSummary.Id)
 
-                    <div class="form-group">
-                        <label class="col-md-2 control-label">First Name</label>
-                        <div class="col-md-4 inputGroupContainer">
-                            <div class="input-group">
-                                @Html.TextBoxFor(m => m.UserSummary.FirstName, new {@class = "form-control", placeholder = "First Name"})
-                                @Html.ValidationMessageFor(m => m.UserSummary.FirstName)
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">First Name</label>
+                                <div class="col-lg-6">
+                                    @Html.TextBoxFor(m => m.UserSummary.FirstName, new { @class = "form-control", placeholder = "First Name" })
+                                    @Html.ValidationMessageFor(m => m.UserSummary.FirstName)
+                                </div>
                             </div>
-                        </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label class="col-md-2 control-label">First Name</label>
-                        <div class="col-md-4 inputGroupContainer">
-                            <div class="input-group">
-                                @Html.TextBoxFor(m => m.UserSummary.LastName, new {@class = "form-control", placeholder = "Last Name"})
-                                @Html.ValidationMessageFor(m => m.UserSummary.LastName)
+
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">Last Name</label>
+                                <div class="col-lg-6">
+                                    @Html.TextBoxFor(m => m.UserSummary.LastName, new { @class = "form-control", placeholder = "Last Name" })
+                                    @Html.ValidationMessageFor(m => m.UserSummary.LastName)
+                                </div>
                             </div>
-                        </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label class="col-md-2 control-label">Time Zone</label>
-                        <div class="col-md-4 inputGroupContainer">
-                            <div class="input-group">
-                                @Html.DropDownListFor(m => m.UserSummary.TimeZone, Model.TimeZones, new { @class = "form-control" })
-                                @Html.ValidationMessageFor(m => m.UserSummary.TimeZone)
+
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">Time Zone</label>
+                                <div class="col-lg-6">
+                                    @Html.DropDownListFor(m => m.UserSummary.TimeZone, Model.TimeZones, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.UserSummary.TimeZone)
+                                </div>
                             </div>
-                        </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label class="col-md-2 control-label">Role</label>
-                        <div class="col-md-4 inputGroupContainer">
-                            <div class="input-group">
-                                @Html.DropDownListFor(m => m.UserSummary.RoleName, Model.Roles, new { @class = "form-control" })
-                                @Html.ValidationMessageFor(m => m.UserSummary.RoleName)
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">Role</label>
+                                <div class="col-lg-6">
+                                    @Html.DropDownListFor(m => m.UserSummary.RoleName, Model.Roles, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.UserSummary.RoleName)
+                                </div>
                             </div>
-                        </div>
-                    </div>
 
 
-                    <div class="form-group">
-                        <label class="col-md-2 control-label">Primary Phone</label>
-                        <div class="col-md-4 inputGroupContainer">
-                            <div class="input-group">
-                                @Html.TextBoxFor(m => m.UserSummary.Phone, new {@class = "form-control", placeholder = "Primary Phone"})
-                                @Html.ValidationMessageFor(m => m.UserSummary.Phone)
+
+
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">Company</label>
+                                <div class="col-lg-6">
+                                    @Html.DropDownListFor(m => m.UserSummary.CompanyId, Model.Companies, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.UserSummary.CompanyId)
+                                </div>
                             </div>
-                        </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label class="col-md-2 control-label">Phone2</label>
-                        <div class="col-md-4 inputGroupContainer">
-                            <div class="input-group">
-                                @Html.TextBoxFor(m => m.UserSummary.Phone2, new {@class = "form-control", placeholder = "Phone2"})
-                                @Html.ValidationMessageFor(m => m.UserSummary.Phone2)
+
+
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">Phone</label>
+                                <div class="col-lg-6">
+                                    @Html.TextBoxFor(m => m.UserSummary.Phone, new { @class = "form-control", placeholder = "Primary Phone" })
+                                    @Html.ValidationMessageFor(m => m.UserSummary.Phone)
+                                </div>
                             </div>
-                        </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label class="col-md-2 control-label">Email</label>
-                        <div class="col-md-4 inputGroupContainer">
-                            <div class="input-group">
-                                @Model.UserSummary.Email
+
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">Phone2</label>
+                                <div class="col-lg-6">
+                                    @Html.TextBoxFor(m => m.UserSummary.Phone2, new { @class = "form-control", placeholder = "Phone2" })
+                                    @Html.ValidationMessageFor(m => m.UserSummary.Phone2)
+                                </div>
                             </div>
-                        </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label class="col-md-2 control-label">User Name</label>
-                        <div class="col-md-4 inputGroupContainer">
-                            <div class="input-group">
-                                @Model.UserSummary.UserName
+
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">Email</label>
+                                <div class="col-lg-6">
+                                    @Html.TextBoxFor(m => m.UserSummary.Email, new { @class = "form-control", placeholder = "Email" })
+                                    @Html.ValidationMessageFor(m => m.UserSummary.Email)
+                                </div>
                             </div>
-                        </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label class="col-md-2 control-label">Is Active</label>
-                        <div class="col-md-4 inputGroupContainer">
-                            <div class="checkbox">
-                                @Html.CheckBoxFor(m => m.UserSummary.IsActive, new { @class = "checkbox", placeholder = "Password" })
+
+
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">User Name</label>
+                                <div class="col-lg-6">
+                                    @Html.TextBoxFor(m => m.UserSummary.UserName, new { @class = "form-control", placeholder = "User Name" })
+                                    @Html.ValidationMessageFor(m => m.UserSummary.UserName)
+                                </div>
                             </div>
-                        </div>
-                    </div>
 
 
-                    <div class="form-group">
-                        <label class="col-md-2 control-label"></label>
-                        <div class="col-md-8 inputGroupContainer">
-                            <div class="input-group">
-                                <button type="submit" class="btn btn-success">Submit<span class="fa sa-send"></span></button>
-                                <a href="~/user/master" class="btn btn-default">Cancel</a>
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">Is Active</label>
+                                <div class="col-lg-6">
+                                    @Html.CheckBoxFor(m => m.UserSummary.IsActive, new { @class = "checkbox", placeholder = "Password" })
+
+                                </div>
                             </div>
-                        </div>
-                    </div>
 
-                }
+                            <div class="form-group">
+                                <div class="col-lg-offset-2 col-lg-10">
+                                    
+                                    <button type="submit" class="btn btn-success">Submit</button>
+                                    <a href="~/user/master" class="btn btn-warning">Cancel</a>
+                                </div>
+                            </div>
+
+
+
+                        }
+                    </div>
+                </section>
+
+                    </div>
             </div>
-        </div>
     </div>
 </div>
 

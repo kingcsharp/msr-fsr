@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Msr.Models.Orders;
+using Msr.Models.Users;
+using Msr.Services.Orders;
 using Msr.Services.Users;
 
 namespace Msr.Web.ViewModel
@@ -20,8 +22,9 @@ namespace Msr.Web.ViewModel
         public List<SelectListItem> TimeZones { get; set; }
         public List<SelectListItem> Roles { get; set; }
         public List<SelectListItem> Status { get; set; }
+        public List<SelectListItem> Companies { get; set; }
 
-        public void Setup(UserService userService)
+        public void Setup(UserService userService, CompanyService companyService)
         {
             TimeZones = new List<SelectListItem>
             {
@@ -30,11 +33,18 @@ namespace Msr.Web.ViewModel
                 new SelectListItem {Text = "Midway Island, Samoa", Value = "11437"},
             };
 
-            Roles = userService.GetRoles().Select(x => new SelectListItem
+            Roles = new List<SelectListItem>
+            {
+                new SelectListItem {Text = RolesConstants.ClientBuyer, Value = RolesConstants.ClientBuyer},
+                new SelectListItem {Text = RolesConstants.ClientEngineer, Value = RolesConstants.ClientEngineer},
+                new SelectListItem {Text = RolesConstants.ClientAdmin, Value = RolesConstants.ClientAdmin},
+            };
+
+            Companies = companyService.GetCompanyQueryable().ToList().Select(x => new SelectListItem
             {
                 Text = x.Name,
-                Value = x.Name
-            }).ToList();
+                Value = x.Id.ToString()
+            }).OrderBy(o => o.Text).ToList();
         }
     }
 }
