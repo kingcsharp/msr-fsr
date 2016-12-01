@@ -148,3 +148,13 @@ input[type="checkbox"]:checked:after {
     text-align:center;
     font-family: 'Lato', serif;
 }
+
+.validation-summary-errors ul {
+    list-style: none;
+    font-family: "Lato", sans-serif;
+    color: #ff0000;
+    margin-left: ;
+    margin-left: -35px;
+    font-weight: 700;
+    font-size: 1.1em;
+}
