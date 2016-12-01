@@ -169,6 +169,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\PartsReportingController.cs" />
     <Compile Include="Controllers\HelpController.cs" />
     <Compile Include="Controllers\DocController.cs" />
     <Compile Include="Controllers\BuyerController.cs" />
@@ -188,6 +189,8 @@
     <Compile Include="ViewModel\AddClientUserViewModel.cs" />
     <Compile Include="ViewModel\EditUserProfileViewModel.cs" />
     <Compile Include="ViewModel\Help\SupportViewModel.cs" />
+    <Compile Include="ViewModel\PartsReportsViewModel.cs" />
+    <Compile Include="ViewModel\Reports\ReportItemData.cs" />
     <Compile Include="ViewModel\UserProfileViewModel.cs" />
     <Compile Include="ViewModel\EditClientUserViewModel.cs" />
     <Compile Include="ViewModel\DocViewModel.cs" />
@@ -421,6 +424,7 @@
     <Content Include="assets\js\list.js" />
     <Content Include="assets\js\master-user-tour.js" />
     <Content Include="assets\js\modal.js" />
+    <Content Include="assets\js\monitor_chart.js" />
     <Content Include="assets\js\plugins\bootstrap3\bootstrap-dialog.min.css" />
     <Content Include="assets\js\plugins\bootstrap3\bootstrap-dialog.min.js" />
     <Content Include="assets\js\plugins\grid.addons.js" />
@@ -555,6 +559,7 @@
     <Content Include="Views\Shared\Help\_ClientAdmin.cshtml" />
     <Content Include="Views\Shared\Help\_Buyer.cshtml" />
     <Content Include="Views\Shared\Help\_Engineer.cshtml" />
+    <Content Include="Views\PartsReporting\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
