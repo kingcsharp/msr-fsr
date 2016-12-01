@@ -16,7 +16,7 @@ namespace Msr.Services.Notes
             _dbContext = new MsrDbContext();
         }
 
-        public void AddNote(string entityId, string message, int entityTypeId)
+        public void AddNote(string entityId, string message, int entityTypeId, string loggedUserId)
         {
             var newNote = new Note
             {
@@ -24,7 +24,8 @@ namespace Msr.Services.Notes
                 EntityId = entityId,
                 Message = message,
                 EntityTypeId = entityTypeId,
-                CreatedDate = DateTime.UtcNow
+                CreatedDate = DateTime.UtcNow,
+                CreatedBy = loggedUserId
             };
 
             _dbContext.Notes.Add(newNote);

@@ -102,6 +102,11 @@ namespace Msr.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.CurStepText.ToLower().Contains(rule.data.ToLower()));
                     }
+                    else if (rule.field == nameof(WorkOrderView.Notes))
+                    {
+                        totalRows = totalRows.Where(x => x.Notes.ToLower().Contains(rule.data.ToLower()));
+
+                    }
                 }
             }
 
@@ -198,7 +203,9 @@ namespace Msr.Web.Controllers
         {
             var noteService = new NoteService();
 
-            noteService.AddNote(id, message, 1);
+            var loggedUserId = User.Identity.GetUserId();
+
+            noteService.AddNote(id, message, 1, loggedUserId);
 
             return Json("OK", JsonRequestBehavior.AllowGet);
         }

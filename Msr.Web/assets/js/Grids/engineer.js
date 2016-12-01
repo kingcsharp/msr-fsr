@@ -311,8 +311,25 @@ $(document).ready(function () {
         thisCellVal = NcrButton + FileButton + MonitorButton;
         return thisCellVal;
     }
-    function actionsFormatter (cellvalue, options, rowObject) {
-        InstructionsCellVal = rowObject.Notes + '<br/><button id="add-button' + rowObject.FillId + '" onclick="toggleInstructions(' + rowObject.FillId + ',0)" class="btn support-btn btn-xs btn-danger show">Add Instructions</button><div id="instruction' + rowObject.FillId + '" class="hidden" ><textarea style="width: 95%;" rows=4 placeholder="Add disposition Instructions" id="note-' + rowObject.FillId + '"></textarea><button class="btn support-btn btn-xs btn-primary" onclick="toggleInstructions(' + rowObject.FillId + ',1)">Save</button>';
+	function actionsFormatter(cellvalue, options, rowObject) {
+
+	    var notes = "";
+
+	    if (rowObject.Notes !== null && rowObject.Notes !== '') {
+
+	        var notesList = JSON.parse(rowObject.Notes);
+
+             
+             $(notesList).each(function (index, value) {
+                 notes = notes + '<div style="flot:left;font-size:10px;font-weight:700;">' + value.Date + ' ' + value.Name + '</div>';
+                 notes = notes + '<div style="flot:left;font-size:10px;color:#0e8461;padding-top:5px;">' + value.Message + '</div>';
+	        });
+	        
+	    }
+	   
+
+
+	    InstructionsCellVal = notes + '<br/><button id="add-button' + rowObject.FillId + '" onclick="toggleInstructions(' + rowObject.FillId + ',0)" class="btn support-btn btn-xs btn-danger show">Add Instructions</button><div id="instruction' + rowObject.FillId + '" class="hidden" ><textarea style="width: 95%;" rows=4 placeholder="Add disposition Instructions" id="note-' + rowObject.FillId + '"></textarea><button class="btn support-btn btn-xs btn-primary" onclick="toggleInstructions(' + rowObject.FillId + ',1)">Save</button>';
         thisCellVal = (rowObject.HasNcr == 1) ? InstructionsCellVal : 'N/A';
         return thisCellVal;
     }
