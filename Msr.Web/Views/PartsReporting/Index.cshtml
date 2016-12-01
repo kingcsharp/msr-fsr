@@ -1,0 +1,99 @@
+﻿@model Msr.Web.ViewModel.PartsReportsViewModel
+@{
+    ViewBag.Title = "Parts Monitor Trending";
+}
+
+<div class="container-fluid">
+    <div class="side-body padding-top">
+        <div class="row">
+            <h2 class="page-header">Parts Monitor Trending <button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button></h2>
+            <div class="col-md-3 col-sm-12">
+              @using (Html.BeginForm("Index", "PartsReporting", FormMethod.Post, new {@class = "form form-horizontal", role = "form"}))
+              {
+                    <fieldset>
+                        <legend>Monitor Criteria</legend>
+                        <div class="form-group">
+                            <label class="control-label col-md-4" for="search-type">Report by<span class="error"></span></label>
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(m => m.ReportById, Model.ReportByItems, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4" for="number">Number/Serial<span class="error"></span></label>
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(m => m.Number, new { @class = "form-control", placeholder = "Part/Serial" })
+                            </div>
+                        </div>
+                     <div class="form-group">
+                            <label class="control-label col-md-6" for="monitors" data-toggle="tooltip" data-placement="right" data-html="true" title="" data-original-title="Updated dynamically based on your selections above">Select Monitor</label>
+                            <div class="col-md-6">
+                                @Html.DropDownListFor(m => m.MonitorId, Model.Monitors, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-6" for="range">Date Range</label>
+                            <div class="col-md-6">
+                                @Html.DropDownListFor(m => m.DateRangeId, Model.DateRangeItems, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <input type="submit" name="orgeditsubmit" class="btn btn-primary pull-right" value="Submit">
+                            </div>
+                        </div>
+
+                    </fieldset>
+              }
+            </div>
+            <div class="col-md-9 col-sm-12">
+                @if (Model.MonitorId == "Tape & Densitometer Test")
+                {
+                    <div id="monitor-chart"></div>
+                }
+                else
+                {
+                    if (Model.MonitorsWithTaskAndResults != null)
+                    {
+                        <h2>Report for Non-Numerical Entries - @Model.MonitorId</h2>
+                         <table cellpadding="4" cellspacing="4" style="width:80%;">
+                             @foreach (var item in Model.MonitorsWithTaskAndResults)
+                             {
+                             <tr>
+                                 <td style="width: 15%">@item.TaskStopDate</td>
+                                 <td style="width: 80%">@item.PartDescription</td>
+                             </tr>
+                             }
+                         </table>
+                     }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section scripts
+{
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="~/assets/js/monitor_chart.js"></script>
+
+@if (!string.IsNullOrWhiteSpace(Model.DataSetsJson))
+{
+    <script type="text/javascript">
+
+            $(document).ready(function() {
+
+            var jsonData =@Html.Raw(Model.DataSetsJson.Replace("\"name\"","name").Replace("\"data\"", "data"))
+
+            SetupCharts('@Html.Raw(Model.MonitorId)',@Html.Raw(Json.Encode(Model.Categories)),jsonData);
+
+        });
+
+    </script>
+}
+    
+
+    
+}

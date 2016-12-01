@@ -31,6 +31,7 @@ namespace Msr.Repositories
             modelBuilder.Entity<MonitorResult>().ToTable("Portal_MonitorResults");
             modelBuilder.Entity<FileSearchView>().ToTable("Portal_FileSearchView");
             modelBuilder.Entity<TimeZoneView>().ToTable("Portal_TimeZoneView");
+            modelBuilder.Entity<MonitorsWithTaskAndResult>().ToTable("Portal_MonitorsWithTaskAndResults");
         }
 
         public DbSet<AspNetUser> AspNetUsers { get; set; }
@@ -47,6 +48,7 @@ namespace Msr.Repositories
         public DbSet<MonitorResult> MonitorResults { get; set; }
         public DbSet<FileSearchView> FileSearchView { get; set; }
         public DbSet<TimeZoneView> TimeZoneView { get; set; }
+        public DbSet<MonitorsWithTaskAndResult> MonitorsWithTaskAndResults { get; set; }
 
     }
 }
