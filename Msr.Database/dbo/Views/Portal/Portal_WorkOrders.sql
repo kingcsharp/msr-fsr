@@ -56,10 +56,13 @@ AND STATUS = 'ACTIVE'
 )) > 0THEN 1 ELSE 0 END 
 AS HasFile,
 supp.ID as SupplierId,
-isnull(STUFF((    SELECT ',' + message                   
-                        FROM [Portal_Note]
-                        WHERE EntityId=dbo.A_FILLS.ID
-                        FOR XML PATH('')), 1, 1, '' ),'') AS Notes
+isnull('['+STUFF((    SELECT ',' + '{"Date":"'+  FORMAT ( n.CreatedDate, 'MM/dd/yyyy hh:mm') +'","Name":"'+ u.FirstName + ' '+ u.LastName + '","Message":"' +n.message  +'"}'
+                        FROM [Portal_Note] n
+						INNER JOIN AspNetUsers u ON u.Id = n.CreatedBy
+                        WHERE n.EntityId=dbo.A_FILLS.ID
+                        FOR XML PATH('')), 1, 1, '' ) +']'
+
+						,'') AS Notes
 ,0 AS HasMonitor
 ,1 AS HasNcr
 FROM         dbo.A_V_COMPANIES_APPROVED_DATA_QUICK AS customer INNER JOIN
