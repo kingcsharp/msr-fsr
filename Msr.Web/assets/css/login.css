@@ -1,10 +1,8 @@
-
-
 h1{
-    margin:80px auto 5px;
-    padding:0;
-    text-align:center;
+    text-align: center;
     font-family: 'Lato', sans-serif;
+    font-size: 3.5em;
+    margin-bottom: 0px;
 }
 
 /*
@@ -138,6 +136,8 @@ input[type="checkbox"]:checked:after {
 #login {
     -vendor-animation-duration: 3s;
     -vendor-animation-delay: 2s;
+    display: block;
+    margin-top: 190px;
 }
 
 .login-footer {
@@ -148,7 +148,6 @@ input[type="checkbox"]:checked:after {
     text-align:center;
     font-family: 'Lato', serif;
 }
-
 .validation-summary-errors ul {
     list-style: none;
     font-family: "Lato", sans-serif;
@@ -158,3 +157,11 @@ input[type="checkbox"]:checked:after {
     font-weight: 700;
     font-size: 1.1em;
 }
+body  
+{       
+background-image: url('../img/msrbg-gray.png');        
+background-repeat: no-repeat;
+background-position: center center;
+background-attachment: fixed;
+background-size: cover;
+}   
