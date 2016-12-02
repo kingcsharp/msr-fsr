@@ -321,8 +321,8 @@ $(document).ready(function () {
 
              
              $(notesList).each(function (index, value) {
-                 notes = notes + '<div style="flot:left;font-size:10px;font-weight:700;">' + value.Date + ' ' + value.Name + '</div>';
-                 notes = notes + '<div style="flot:left;font-size:10px;color:#0e8461;padding-top:5px;">' + value.Message + '</div>';
+                  notes = notes + '<div class="disp-label">' + value.Date + ' ' + value.Name + '</div>';
+                  notes = notes + '<div class="disp-instruction"><div class="disp-text">' + value.Message + '</div></div>';
 	        });
 	        
 	    }
