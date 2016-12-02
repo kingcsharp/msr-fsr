@@ -270,14 +270,6 @@ $(document).ready(function () {
         return thisCellVal;
     }
 
-
-    //ajax emulation
-    $.mockjax({
-        url: '/post',
-        responseTime: 200
-    });
-
-
     $('#ncrModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);
         var id = button.data('id');
