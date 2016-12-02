@@ -1,4 +1,4 @@
-﻿@using System.Security.Claims
+@using System.Security.Claims
 @using Msr.Models.Users
 
 @{
@@ -87,13 +87,13 @@
             </div>
         </div>
     </li>
-}
-                <li class="@(ViewBag.ActiveClass == "PROF" ? "active" : "")">
-                    <a href="~/PartsReporting">
-                        <span class="icon fa fa-user"></span><span class="title">Part Reporting</span>
-                    </a>
-                </li>
 
+    <li class="@(ViewBag.ActiveClass == "PROF" ? "active" : "")">
+        <a href="~/PartsReporting">
+            <span class="icon fa fa-line-chart"></span><span class="title">Part Reporting</span>
+        </a>
+    </li>
+}
                 <li class="@(ViewBag.ActiveClass == "PROF" ? "active" : "")">
                     <a href="~/user/profile">
                         <span class="icon fa fa-user"></span><span class="title">Profile</span>
