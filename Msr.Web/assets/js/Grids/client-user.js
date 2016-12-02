@@ -125,12 +125,4 @@ $(document).ready(function () {
     }
 
 
-    //ajax emulation
-    $.mockjax({
-        url: '/post',
-        responseTime: 200
-    });
-
-
-
 });
