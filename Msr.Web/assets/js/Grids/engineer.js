@@ -334,10 +334,4 @@ $(document).ready(function () {
         return thisCellVal;
     }
     
-    //ajax emulation
-    $.mockjax({
-        url: '/post',
-        responseTime: 200
-    }); 
-    
 });
