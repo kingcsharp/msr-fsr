@@ -89,12 +89,4 @@ $(document).ready(function () {
         return result[0]['DESCRIPTION'];
     }
 
-    //ajax emulation
-    $.mockjax({
-        url: '/post',
-        responseTime: 200
-    }); 
-
-
-    
 });
