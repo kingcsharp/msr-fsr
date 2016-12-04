@@ -37,7 +37,7 @@ namespace Msr.Web.Controllers
 
             vm.MonitorsWithTaskAndResults = monitors;
 
-            if (vm.MonitorId == "Tape & Densitometer Test")
+            if (vm.MonitorId == MonitorTypeConstants.Densitometer || vm.MonitorId == MonitorTypeConstants.Voltage)
             {
                 GetGraphLineData(vm);
                 vm.DataSetsJson = JsonConvert.SerializeObject(vm.DataSets, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() });

@@ -37,9 +37,9 @@ namespace Msr.Web.ViewModel
         {
             return new List<SelectListItem>
             {
-                new SelectListItem {Text = "Tape & Densitometer Test", Value = "Tape & Densitometer Test"},
-                new SelectListItem {Text = "Parts Used" , Value = "Parts Used"},
-                new SelectListItem {Text = "Voltage Test" , Value = "Voltage Test"}
+                new SelectListItem {Text = MonitorTypeConstants.Densitometer, Value = MonitorTypeConstants.Densitometer},
+                new SelectListItem {Text = MonitorTypeConstants.PartsUsed , Value = MonitorTypeConstants.PartsUsed},
+                new SelectListItem {Text = MonitorTypeConstants.Voltage , Value = MonitorTypeConstants.Voltage}
             };
         }
 

@@ -1,4 +1,5 @@
-﻿@model Msr.Web.ViewModel.PartsReportsViewModel
+﻿@using Msr.Models.Tasks
+@model Msr.Web.ViewModel.PartsReportsViewModel
 @{
     ViewBag.Title = "Parts Monitor Trending";
 }
@@ -46,7 +47,7 @@
               }
             </div>
             <div class="col-md-9 col-sm-12">
-                @if (Model.MonitorId == "Tape & Densitometer Test")
+                @if (Model.MonitorId == MonitorTypeConstants.Densitometer || Model.MonitorId == MonitorTypeConstants.Voltage)
                 {
                     <div id="monitor-chart"></div>
                 }

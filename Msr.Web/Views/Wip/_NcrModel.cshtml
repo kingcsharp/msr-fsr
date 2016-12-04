@@ -57,7 +57,6 @@
             <td>
                 @foreach (var doc in Model.StepPics)
                 {
-                   
                         <a href="~/doc/view?filePath=@doc.ServerPath&fileType=@doc.ContentType&fileName=@doc.Name">
                             @(doc.Name + " - " + doc.Description )
                         </a>
@@ -67,7 +66,14 @@
         </tr>
         <tr>
             <td class="theader">Associated Digital Pictures:</td>
-            <td>INTEL F24</td>
+            <td colspan="2">
+                @foreach (var photo in Model.Photos)
+                {
+                    <a href="data:image/jpeg;base64,@photo.FileArray" data-featherlight="image">
+                        <img src="data:image/jpeg;base64,@photo.FileArray" width="30%" class="img-responsive img-rounded pull-left" alt="" style="margin-left: 10px; margin-bottom: 10px">
+                    </a>
+                }
+            </td>
         </tr>
         <tr>
             <td class="theader">Comments:</td>

@@ -128,7 +128,7 @@ namespace Msr.Services.Orders
             {
                var tasksWithMonitors = _dbContext.MonitorsWithTaskAndResults.Where(x => x.TaskId == monitor.TaskId && x.TaskStopDate >= fromDate && x.TaskStopDate <= toDate).ToList();
 
-                if (monitorType == "Tape & Densitometer Test")
+                if (monitorType == MonitorTypeConstants.Densitometer || monitorType == MonitorTypeConstants.Voltage)
                 {
                     return tasksWithMonitors.Where(x => x.MonitorType == "NUMBER").ToList();
                 }

@@ -1,5 +1,4 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Msr.Services.Orders.Messaging
 {
@@ -11,9 +10,9 @@ namespace Msr.Services.Orders.Messaging
         }
 
         public NcrDetails Details { get; set; }
-
         public List<string> Comments { get; set; }
-
         public List<DocumentView> StepPics { get; set; }
+        public List<DocumentView> Photos { get; set; }
+
     }
 }

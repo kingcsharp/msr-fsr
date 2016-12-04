@@ -60,6 +60,7 @@ isnull('['+STUFF((    SELECT ',' + '{"Date":"'+  FORMAT ( n.CreatedDate, 'MM/dd/
                         FROM [Portal_Note] n
 						INNER JOIN AspNetUsers u ON u.Id = n.CreatedBy
                         WHERE n.EntityId=dbo.A_FILLS.ID
+						ORDER BY n.CreatedDate DESC
                         FOR XML PATH('')), 1, 1, '' ) +']'
 
 						,'') AS Notes

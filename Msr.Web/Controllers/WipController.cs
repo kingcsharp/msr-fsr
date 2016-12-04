@@ -9,6 +9,7 @@ using Msr.Models.Orders;
 using Msr.Services.jqGrid;
 using Msr.Services.Notes;
 using Msr.Services.Orders;
+using Msr.Services.Orders.Messaging;
 using Msr.Services.Users;
 using Msr.Web.ViewModel;
 
@@ -161,6 +162,11 @@ namespace Msr.Web.Controllers
 
             var ncrDetails = orderService.GetNcrDetails(id);
 
+            var docs = orderService.GetDocuments(ncrDetails.Details.FillObjId);
+
+            var photos = GetDocViewModel(docs, orderService,400);
+            ncrDetails.Photos = photos;
+
             return PartialView("_NcrModel", ncrDetails);
         }
 
@@ -170,21 +176,7 @@ namespace Msr.Web.Controllers
 
             var docs = orderService.GetDocuments(id);
 
-            var photos = new List<DocViewModel>();
-
-            foreach (var doc in docs)
-            {
-                if (doc.ContentType == "image/jpeg" || doc.ContentType == "image/gif" || doc.ContentType == "image/png")
-                {
-                    var photo = orderService.GetDocumentBase64(doc.ServerPath, 400);
-
-                    photos.Add(new DocViewModel
-                    {
-                        FileArray = photo,
-                        FileName = doc.Name
-                    });
-                }
-            }
+            var photos = GetDocViewModel(docs, orderService,400);
                    
             return PartialView("_Photos", photos);
         }
@@ -208,6 +200,27 @@ namespace Msr.Web.Controllers
             noteService.AddNote(id, message, 1, loggedUserId);
 
             return Json("OK", JsonRequestBehavior.AllowGet);
+        }
+
+        private List<DocumentView> GetDocViewModel(List<DocumentView> docs, OrderService orderService, int width)
+        {
+            var photos = new List<DocumentView>();
+
+            foreach (var doc in docs)
+            {
+                if (doc.ContentType == "image/jpeg" || doc.ContentType == "image/gif" || doc.ContentType == "image/png")
+                {
+                    var photo = orderService.GetDocumentBase64(doc.ServerPath, width);
+
+                    photos.Add(new DocumentView
+                    {
+                        FileArray = photo,
+                        Name = doc.Name
+                    });
+                }
+            }
+
+            return photos;
         }
     }
 }
