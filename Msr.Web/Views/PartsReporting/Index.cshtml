@@ -88,9 +88,9 @@
 
             var jsonData =@Html.Raw(Model.DataSetsJson.Replace("\"name\"","name").Replace("\"data\"", "data"))
 
-            SetupCharts('@Html.Raw(Model.MonitorId)',@Html.Raw(Json.Encode(Model.Categories)),jsonData);
+                SetupCharts('@Html.Raw(Model.MonitorId)', @Html.Raw(Json.Encode(Model.Categories)), jsonData, '@Model.Ytext');
 
-        });
+            });
 
     </script>
 }

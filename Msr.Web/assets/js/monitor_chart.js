@@ -1,5 +1,5 @@
 
-function SetupCharts(moniterType, categoriesData, slotData) {
+function SetupCharts(moniterType, categoriesData, slotData, yText) {
 
         Highcharts.chart('monitor-chart', {
             title: {
@@ -15,7 +15,7 @@ function SetupCharts(moniterType, categoriesData, slotData) {
             },
             yAxis: {
                 title: {
-                    text: moniterType
+                    text: yText
                 },
                 plotLines: [{
                     value: 0,

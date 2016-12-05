@@ -15,6 +15,7 @@ namespace Msr.Web.ViewModel
             Monitors = GetMonitors();
             Categories = new List<string>();
             DataSets = new List<ReportItemData>();
+            MonitorsWithTaskAndResults = new List<MonitorsWithTaskAndResult>();
         }
 
         public List<SelectListItem> ReportByItems { get; set; }
@@ -31,6 +32,7 @@ namespace Msr.Web.ViewModel
         public List<ReportItemData> DataSets { get; set; }
         public string DataSetsJson { get; set; }
         public List<string> Categories { get; set; }
+        public string Ytext { get; set; }
 
 
         private List<SelectListItem> GetMonitors()

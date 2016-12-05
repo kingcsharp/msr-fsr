@@ -43,6 +43,15 @@ namespace Msr.Web.Controllers
                 vm.DataSetsJson = JsonConvert.SerializeObject(vm.DataSets, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() });
             }
 
+            if (vm.MonitorId == MonitorTypeConstants.Voltage)
+            {
+                vm.Ytext = "Volts";
+            }
+            else if (vm.MonitorId == MonitorTypeConstants.Densitometer)
+            {
+                vm.Ytext = "Degrees (C)";
+            }
+
             return View(vm);
         }
 
@@ -63,23 +72,36 @@ namespace Msr.Web.Controllers
 
             reportsViewModel.Categories = uniqueDateCount.OrderBy(x => x).Select(x => x.ToString()).ToList();
 
-            reportsViewModel.DataSets.Add(new ReportItemData
-                    {
-                        name = "1 Densitometer reading",
-                        data = GetData(reportsViewModel.MonitorsWithTaskAndResults,"#1", uniqueDateCount)
-                    });
-
-            reportsViewModel.DataSets.Add(new ReportItemData
+            if (reportsViewModel.MonitorId == MonitorTypeConstants.Densitometer)
             {
-                name = "2 Densitometer reading",
-                data = GetData(reportsViewModel.MonitorsWithTaskAndResults, "#2", uniqueDateCount)
-            });
+                reportsViewModel.DataSets.Add(new ReportItemData
+                {
+                    name = "1 Densitometer reading",
+                    data = GetData(reportsViewModel.MonitorsWithTaskAndResults, "#1", uniqueDateCount)
+                });
 
-            reportsViewModel.DataSets.Add(new ReportItemData
+                reportsViewModel.DataSets.Add(new ReportItemData
+                {
+                    name = "2 Densitometer reading",
+                    data = GetData(reportsViewModel.MonitorsWithTaskAndResults, "#2", uniqueDateCount)
+                });
+
+                reportsViewModel.DataSets.Add(new ReportItemData
+                {
+                    name = "3 Densitometer reading",
+                    data = GetData(reportsViewModel.MonitorsWithTaskAndResults, "#3", uniqueDateCount)
+                });
+            }
+            else if (reportsViewModel.MonitorId == MonitorTypeConstants.Voltage)
             {
-                name = "3 Densitometer reading",
-                data = GetData(reportsViewModel.MonitorsWithTaskAndResults, "#3", uniqueDateCount)
-            });
+                reportsViewModel.DataSets.Add(new ReportItemData
+                {
+                    name = "Input Current Value (mA)",
+                    data = GetData(reportsViewModel.MonitorsWithTaskAndResults, "Input Current Value", uniqueDateCount)
+                });
+            }
+
+         
         }
 
         private List<decimal> GetData(List<MonitorsWithTaskAndResult> monitorsWithTaskAndResults, string s, IEnumerable<DateTime?> uniqueDate)
@@ -88,8 +110,15 @@ namespace Msr.Web.Controllers
 
             foreach (var item in uniqueDate.OrderBy(x=>x))
             {
-                var printValue = monitorsWithTaskAndResults.Single(x => x.Description.Contains(s) && x.TaskStopDate == item.GetValueOrDefault());
-                slotData.Add(string.IsNullOrWhiteSpace(printValue.PrintResult)? decimal.Zero: decimal.Parse(printValue.PrintResult));
+                if (monitorsWithTaskAndResults != null && monitorsWithTaskAndResults.Any())
+                {
+                  var  printValue = monitorsWithTaskAndResults.FirstOrDefault(x => x.Description.Contains(s) && x.TaskStopDate == item.GetValueOrDefault());
+                    slotData.Add(string.IsNullOrWhiteSpace(printValue.PrintResult) ? decimal.Zero : decimal.Parse(printValue.PrintResult));
+                }
+                else
+                {
+                    slotData.Add(0);
+                }
             }
             
             return slotData;
