@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Web.Mvc;
 using Msr.Models.Tasks;
 using Msr.Repositories;
 using Msr.Services.Orders.Messaging;
@@ -79,38 +80,22 @@ namespace Msr.Services.Orders
             return response;
         }
 
-       public List<string> GetMonitors(string input, int type)
-       {
-           var qry = _dbContext.MonitorsWithTaskAndResults.AsQueryable();
-
-           if (type ==1)
-           {
-                qry = qry.Where(x => x.ActualPartId == input);
-           }
-
-            if (type == 2)
-            {
-                qry = _dbContext.MonitorsWithTaskAndResults.Where(x => x.Serial == input);
-            }
-
-          return qry.Select(x => x.Description).Distinct().ToList();
-       }
-
-        public List<MonitorsWithTaskAndResult> GetReports(string serial, DateTime fromDate, DateTime toDate, int reportTypeId, string monitorType)
+       public List<SelectListItem> GetMonitors(string input, int reportTypeId)
         {
             var fillId = "";
 
             if (reportTypeId == 1)
             {
-                var workItem = _dbContext.WorkOrders.FirstOrDefault(x => x.ActualPartId == serial && x.ActualStopDate.HasValue);
+                var workItem = _dbContext.WorkOrders.FirstOrDefault(x => x.ActualPartId == input && x.ActualStopDate.HasValue);
 
                 if (workItem != null)
                 {
                     fillId = workItem.FillId;
                 }
-            } else if (reportTypeId == 2)
+            }
+            else if (reportTypeId == 2)
             {
-                var workItem = _dbContext.WorkOrders.FirstOrDefault(x => x.Serial == serial );
+                var workItem = _dbContext.WorkOrders.FirstOrDefault(x => x.Serial == input);
 
                 if (workItem != null)
                 {
@@ -122,20 +107,31 @@ namespace Msr.Services.Orders
 
             var tasks = _dbContext.Database.SqlQuery<GetTaskWithMonitorsResult>("Portal_GetTaskWithMonitors @fillID", fileIdParm).ToList();
 
-            var monitor = tasks.SingleOrDefault(x => x.Description == monitorType);
+           var monitorList = tasks.Select(x => new SelectListItem
+           {
+               Text = x.Description,
+               Value = x.TaskId
+           }).ToList();
 
-            if (monitor != null)
+           return monitorList;
+        }
+
+        public List<MonitorsWithTaskAndResult> GetReports(string serial, DateTime fromDate, DateTime toDate, int reportTypeId, string taskId)
+        {
+            var query = _dbContext.MonitorsWithTaskAndResults.AsQueryable();
+
+            query = query.Where(x => x.TaskId == taskId && x.TaskStopDate >= fromDate && x.TaskStopDate <= toDate);
+
+            if (reportTypeId == ReportTypeConstants.Graph)
             {
-               var tasksWithMonitors = _dbContext.MonitorsWithTaskAndResults.Where(x => x.TaskId == monitor.TaskId && x.TaskStopDate >= fromDate && x.TaskStopDate <= toDate).ToList();
-
-                if (monitorType == MonitorTypeConstants.Densitometer || monitorType == MonitorTypeConstants.Voltage)
-                {
-                    return tasksWithMonitors.Where(x => x.MonitorType == "NUMBER").ToList();
-                }
-                return tasksWithMonitors;
+                query = query.Where(x => x.MonitorType == "NUMBER");                
+            }
+            else
+            {
+                query = query.Where(x => x.MonitorType != "NUMBER");
             }
 
-            return new List<MonitorsWithTaskAndResult>();
+            return query.ToList();
         }
     }
 }

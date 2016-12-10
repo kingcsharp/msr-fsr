@@ -55,6 +55,7 @@
     <Compile Include="Orders\FileSearchView.cs" />
     <Compile Include="Orders\WorkOrderView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tasks\ReportTypeConstants.cs" />
     <Compile Include="Tasks\MonitorTypeConstants.cs" />
     <Compile Include="Tasks\MonitorsWithTaskAndResult.cs" />
     <Compile Include="Tasks\MonitorResults.cs" />

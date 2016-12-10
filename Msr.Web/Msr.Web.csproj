@@ -560,6 +560,7 @@
     <Content Include="Views\Shared\Help\_Buyer.cshtml" />
     <Content Include="Views\Shared\Help\_Engineer.cshtml" />
     <Content Include="Views\PartsReporting\Index.cshtml" />
+    <Content Include="Views\PartsReporting\_Report.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,15 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
-using Msr.Models.Orders;
 using Msr.Models.Tasks;
-using Msr.Services.jqGrid;
 using Msr.Services.Orders;
-using Msr.Services.Users;
 using Msr.Web.ViewModel;
 using Msr.Web.ViewModel.Reports;
 using Newtonsoft.Json;
@@ -33,28 +27,31 @@ namespace Msr.Web.Controllers
 
             var taskService = new TaskService();
 
-            var monitors = taskService.GetReports(vm.Number, vm.FromDate, vm.ToDate, vm.ReportById, vm.MonitorId);
+            var monitors = taskService.GetReports(vm.Number, vm.FromDate, vm.ToDate, vm.ReportTypeId, vm.MonitorId);
 
-            vm.MonitorsWithTaskAndResults = monitors;
-
-            if (vm.MonitorId == MonitorTypeConstants.Densitometer || vm.MonitorId == MonitorTypeConstants.Voltage)
+            if (monitors.Any())
             {
-                GetGraphLineData(vm);
-                vm.DataSetsJson = JsonConvert.SerializeObject(vm.DataSets, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() });
+                vm.MonitorsWithTaskAndResults = monitors;
+                var monitor = monitors.FirstOrDefault();
+
+                if (vm.ReportTypeId == ReportTypeConstants.Graph)
+                {
+                    GetGraphLineData(vm, monitor);
+                    vm.DataSetsJson = JsonConvert.SerializeObject(vm.DataSets, Formatting.Indented, new JsonSerializerSettings {ContractResolver = new CamelCasePropertyNamesContractResolver()});
+
+                    if (monitor.Description.Contains("(mA)"))
+                    {
+                        vm.Ytext = "Volts";
+                    }
+                    if (monitor.Description.Contains("Densitometer"))
+                    {
+                        vm.Ytext = "Degrees (C)";
+                    }
+                }
             }
 
-            if (vm.MonitorId == MonitorTypeConstants.Voltage)
-            {
-                vm.Ytext = "Volts";
-            }
-            else if (vm.MonitorId == MonitorTypeConstants.Densitometer)
-            {
-                vm.Ytext = "Degrees (C)";
-            }
-
-            return View(vm);
+            return PartialView("_Report", vm);
         }
-
 
         [HttpPost]
         public JsonResult GetMonitors(string input, int type)
@@ -63,16 +60,22 @@ namespace Msr.Web.Controllers
 
             var monitors = taskService.GetMonitors(input, type);
 
-            return Json(monitors, JsonRequestBehavior.AllowGet);
+            var data = monitors.Select(x => new
+            {
+                id=x.Value,
+                text= x.Text
+            });
+
+            return Json(data, JsonRequestBehavior.AllowGet);
         }
 
-        private void GetGraphLineData(PartsReportsViewModel reportsViewModel)
+        private void GetGraphLineData(PartsReportsViewModel reportsViewModel, MonitorsWithTaskAndResult monitor)
         {
             var uniqueDateCount = reportsViewModel.MonitorsWithTaskAndResults.Select(x => x.TaskStopDate).Distinct();
 
             reportsViewModel.Categories = uniqueDateCount.OrderBy(x => x).Select(x => x.ToString()).ToList();
 
-            if (reportsViewModel.MonitorId == MonitorTypeConstants.Densitometer)
+            if (monitor.Description.Contains("Densitometer"))
             {
                 reportsViewModel.DataSets.Add(new ReportItemData
                 {
@@ -92,7 +95,7 @@ namespace Msr.Web.Controllers
                     data = GetData(reportsViewModel.MonitorsWithTaskAndResults, "#3", uniqueDateCount)
                 });
             }
-            else if (reportsViewModel.MonitorId == MonitorTypeConstants.Voltage)
+            else
             {
                 reportsViewModel.DataSets.Add(new ReportItemData
                 {
@@ -100,8 +103,6 @@ namespace Msr.Web.Controllers
                     data = GetData(reportsViewModel.MonitorsWithTaskAndResults, "Input Current Value", uniqueDateCount)
                 });
             }
-
-         
         }
 
         private List<decimal> GetData(List<MonitorsWithTaskAndResult> monitorsWithTaskAndResults, string s, IEnumerable<DateTime?> uniqueDate)
