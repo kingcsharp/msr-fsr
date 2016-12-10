@@ -102,6 +102,9 @@
             var input = $('#Number').val();
             var type = $('#SearchById').val();
 
+           var $monitor = $("#MonitorId");
+               $monitor.empty();
+
             if (input.length > 0) {
 
                 $.ajax({
@@ -112,7 +115,7 @@
 
                         if (response.length > 0) {
                             
-                            $("#MonitorId").select2({
+                            $monitor.select2({
                                 data: response
                             });
                         } 
