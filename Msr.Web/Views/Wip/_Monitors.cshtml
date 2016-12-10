@@ -8,20 +8,19 @@
     </tr>
 </table>
 
-
-
 <table class="table table-bordered monitor-tabel">
 
     @foreach (var task in Model.MonitorItem)
     {
         <thead>
         <tr>
-            <th colspan=3>@task.Description</th>
+            <th colspan=4>@task.Description</th>
         </tr>
         <tr>
         <th>Monitor @task.TaskId</th>
         <th>Result</th>
         <th>Pass/Fail</th>
+        <th>Comment</th>
         </thead>
     <tbody>
     @foreach (var monitor in task.MonitorResults)
@@ -40,6 +39,7 @@
             <td>@monitor.Description</td>
             <td>@monitor.PrintResult</td>
             <td class="@cssClass">@monitor.IsPassing</td>
+            <td>@monitor.Comment</td>
         </tr>
     }
     </tbody>
