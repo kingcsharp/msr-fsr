@@ -5,5 +5,6 @@ namespace Msr.Services.Orders.Messaging
     {
         public string TaskId { get; set; }
         public string Description { get; set; }
+        public string MonitorType { get; set; }
     }
 }

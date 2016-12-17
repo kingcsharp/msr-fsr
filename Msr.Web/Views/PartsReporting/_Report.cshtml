@@ -17,17 +17,25 @@ else
             @foreach (var item in Model.MonitorsWithTaskAndResults)
             {
                 <tr>
-                    <td style="width: 15%">@item.TaskStopDate</td>
-                    <td style="width: 80%">@item.PartDescription</td>
+                    <td style="width: 20%">@item.TaskStopDate</td>
+                    <td style="width: 20%">@item.PartDescription</td>
+                    <td style="width: 20%">@item.TaskStopDate</td>
+                    <td style="width: 20%">@item.PrintResult</td>
+                    <td style="width: 20%">@item.Comment</td>
                 </tr>
             }
         </table>
     }
 }
 
+@if (Model.MonitorsWithTaskAndResults == null || !Model.MonitorsWithTaskAndResults.Any())
+{
+    <div>No result found</div>
+}
 
 
-    <script type="text/javascript">
+
+<script type="text/javascript">
         $(document).ready(function() {
 
             @if (!string.IsNullOrWhiteSpace(Model.DataSetsJson))

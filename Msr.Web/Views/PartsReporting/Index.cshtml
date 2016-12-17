@@ -61,20 +61,37 @@
 
 @section scripts
 {
-   
-<script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="https://code.highcharts.com/modules/exporting.js"></script>
-<script src="~/assets/js/monitor_chart.js"></script>
+
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="~/assets/js/monitor_chart.js"></script>
 
     <script type="text/javascript">
-        
+
         $(document).ready(function() {
 
-            $('#Number').on('change', function () {
+            $('#submit-report').prop('disabled', true);
+
+            $('#Number').on('change', function() {
                 GetMonitors();
             });
 
-            $('#submit-report').on('click', function (e) {
+            $('#ReportTypeId').on('change', function () {
+                GetMonitors();
+            });
+
+            $(".js-programmatic-set-val").on("click", function() {
+                 $(this).val("CA").trigger("change");
+            });
+
+            $("#MonitorId").on('change', function () {
+                alert($(this).val());
+                if ($(this).val().length > 0) {
+                    $('#submit-report').prop('disabled', false);
+                }
+            });
+
+            $('#submit-report').on('click', function(e) {
 
                 e.preventDefault();
 
@@ -85,10 +102,10 @@
                     url: '/PartsReporting/Index',
                     data: form,
                     dataType: 'html',
-                    success: function (data) {
+                    success: function(data) {
                         $('#report-data').html(data);
                     },
-                    error: function () {
+                    error: function() {
 
                     }
                 });
@@ -101,24 +118,25 @@
 
             var input = $('#Number').val();
             var type = $('#SearchById').val();
+            var reportTypeId = $('#ReportTypeId').val();
 
-           var $monitor = $("#MonitorId");
-               $monitor.empty();
-
+            var $monitor = $("#MonitorId");
+            $monitor.empty();
+            $('#submit-report').prop('disabled', true);
             if (input.length > 0) {
 
                 $.ajax({
                     type: "POST",
-                    url: '/PartsReporting/GetMonitors?input=' + input + '&type=' + type,
+                    url: '/PartsReporting/GetMonitors?input=' + input + '&type=' + type + '&reportTypeId=' + reportTypeId,
                     dataType: 'json',
                     success: function(response) {
 
                         if (response.length > 0) {
-                            
+
                             $monitor.select2({
                                 data: response
                             });
-                        } 
+                        }
                     },
                     error: function() {
 

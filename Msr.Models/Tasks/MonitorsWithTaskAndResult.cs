@@ -16,6 +16,7 @@ namespace Msr.Models.Tasks
         public string TaskId { get; set; }
         public DateTime? TaskStopDate { get; set; }
         public string PrintResult { get; set; }
+        public string Comment { get; set; }
 
     }
 }

@@ -80,7 +80,7 @@ namespace Msr.Services.Orders
             return response;
         }
 
-       public List<SelectListItem> GetMonitors(string input, int reportTypeId)
+       public List<SelectListItem> GetMonitors(string input, int reportTypeId, int reportType)
         {
             var fillId = "";
 
@@ -107,7 +107,16 @@ namespace Msr.Services.Orders
 
             var tasks = _dbContext.Database.SqlQuery<GetTaskWithMonitorsResult>("Portal_GetTaskWithMonitors @fillID", fileIdParm).ToList();
 
-           var monitorList = tasks.Select(x => new SelectListItem
+           if (reportType == ReportTypeConstants.Graph)
+           {
+               tasks = tasks.Where(x => x.MonitorType == "NUMBER").ToList();
+           }
+           else
+           {
+               tasks = tasks.Where(x => x.MonitorType != "NUMBER").ToList();
+            }
+
+            var monitorList = tasks.Select(x => new SelectListItem
            {
                Text = x.Description,
                Value = x.TaskId

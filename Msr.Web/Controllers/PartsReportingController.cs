@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
 using Msr.Models.Tasks;
@@ -54,16 +55,21 @@ namespace Msr.Web.Controllers
         }
 
         [HttpPost]
-        public JsonResult GetMonitors(string input, int type)
+        public JsonResult GetMonitors(string input, int type, int reportTypeId)
         {
             var taskService = new TaskService();
 
-            var monitors = taskService.GetMonitors(input, type);
+            var monitors = taskService.GetMonitors(input, type, reportTypeId);
 
-            var data = monitors.Select(x => new
+            var monitorList = new List<SelectListItem>();
+
+            monitorList.Add(new SelectListItem {Text = "--Select--" , Value = ""});
+            monitorList.AddRange(monitors);
+
+            var data = monitorList.Select(x => new 
             {
-                id=x.Value,
-                text= x.Text
+                id = x.Value,
+                text = x.Text
             });
 
             return Json(data, JsonRequestBehavior.AllowGet);
@@ -73,7 +79,7 @@ namespace Msr.Web.Controllers
         {
             var uniqueDateCount = reportsViewModel.MonitorsWithTaskAndResults.Select(x => x.TaskStopDate).Distinct();
 
-            reportsViewModel.Categories = uniqueDateCount.OrderBy(x => x).Select(x => x.ToString()).ToList();
+            reportsViewModel.Categories = uniqueDateCount.OrderBy(x => x).Select(x => x.Value.ToString("MM/dd/yyyy")).ToList();
 
             if (monitor.Description.Contains("Densitometer"))
             {
