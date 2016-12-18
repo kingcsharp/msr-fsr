@@ -14,7 +14,13 @@ purchItem.ORIG_DUE_DATE AS OrigDueDate,
 t.PROCEDURE_ID AS ProcId,
 customer.ID AS CustId, 
 dbo.A_FN_DATE_TIME_ADD_USING_UNITS(purchItem.PROD_TIME_UNIT, purchItem.DUE_DATE, - purchItem.PROD_TIME) AS StartDate,
-t.STATUS AS Status, 
+CASE 
+	WHEN t.STATUS ='ACCEPTED' THEN 'In Progress'
+	WHEN t.STATUS ='REQUESTED' THEN 'Waiting to Start'
+	WHEN t.STATUS ='COMPLETED' THEN 'Completed'
+	WHEN t.STATUS ='FINISHED' THEN 'Finished'
+	ELSE t.STATUS
+END	AS Status, 
 t.REQUESTEE_ID AS RequesteeId,
 t.GROUP_REQUESTEE_ID AS GroupRequesteeId,
 Product.NAME AS ProductName,

@@ -146,6 +146,9 @@ $(document).ready(function() {
 		             grouping: false,
 		             freeze: false
 		         },
+		         stype: "select",
+		         //searchoptions: { value: ":In Progress;Waiting to Start;Completed;Finished" },
+		         searchoptions: { value: ":[All];In Progress:In Progress;Waiting to Start:Waiting to Start;Completed:Completed;Finished:Finished" },
 		         formatter: currentStepFormatter,
 		         align: 'center'
 		     },
@@ -313,7 +316,7 @@ $(document).ready(function() {
 	        thisCellVal = '<strong>' + thisVal + '</strong><br /> <div class="meter">' + rowObject.TimeComplete + '</div> <div class="meter">' + rowObject.PercComplete + '</div> ';
 	    }
         else {
-	        thisCellVal = 'Waiting to Start';
+	        thisCellVal = rowObject.Status;
 	    }
 
         return thisCellVal;
@@ -333,16 +336,13 @@ $(document).ready(function() {
 	    if (rowObject.Notes !== null && rowObject.Notes !== '') {
 
 	        var notesList = JSON.parse(rowObject.Notes);
-
-             
+            
              $(notesList).each(function (index, value) {
                   notes = notes + '<div class="disp-label">' + value.Date + ' ' + value.Name + '</div>';
                   notes = notes + '<div class="disp-instruction"><div class="disp-text">' + value.Message + '</div></div>';
 	        });
 	        
 	    }
-	   
-
 
 	    InstructionsCellVal = notes + '<br/><button id="add-button' + rowObject.FillId + '" onclick="toggleInstructions(' + rowObject.FillId + ',0)" class="btn support-btn btn-xs btn-danger show">Add Instructions</button><div id="instruction' + rowObject.FillId + '" class="hidden" ><textarea style="width: 95%;" rows=4 placeholder="Add disposition Instructions" id="note-' + rowObject.FillId + '"></textarea><button class="btn support-btn btn-xs btn-primary" onclick="toggleInstructions(' + rowObject.FillId + ',1)">Save</button>';
         thisCellVal = (rowObject.HasNcr == 1) ? InstructionsCellVal : 'N/A';

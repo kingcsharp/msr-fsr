@@ -86,10 +86,7 @@ namespace Msr.Web.Controllers
                         DateTime value;
                         if (DateTime.TryParse(rule.data, out value))
                         {
-                            totalRows =
-                                totalRows.Where(
-                                    q =>
-                                        q.StDate.HasValue && q.StDate.Value.Day == value.Day &&
+                            totalRows = totalRows.Where(q => q.StDate.HasValue && q.StDate.Value.Day == value.Day &&
                                         q.StDate.Value.Month == value.Month && q.StDate.Value.Year == value.Year);
                         }
                     }
@@ -98,10 +95,7 @@ namespace Msr.Web.Controllers
                         DateTime value;
                         if (DateTime.TryParse(rule.data, out value))
                         {
-                            totalRows =
-                                totalRows.Where(
-                                    q =>
-                                        q.DueDate.HasValue && q.DueDate.Value.Day == value.Day &&
+                            totalRows = totalRows.Where(q => q.DueDate.HasValue && q.DueDate.Value.Day == value.Day &&
                                         q.DueDate.Value.Month == value.Month && q.DueDate.Value.Year == value.Year);
                         }
                     }
@@ -111,12 +105,14 @@ namespace Msr.Web.Controllers
                     }
                     else if (rule.field == nameof(WorkOrderView.CurStepText))
                     {
-                        totalRows = totalRows.Where(x => x.CurStepText.ToLower().Contains(rule.data.ToLower()));
+                        if (rule.data!="ALL")
+                        {
+                            totalRows = totalRows.Where(x => x.Status.ToLower().Contains(rule.data.ToLower()));
+                        }
                     }
                     else if (rule.field == nameof(WorkOrderView.Notes))
                     {
                         totalRows = totalRows.Where(x => x.Notes.ToLower().Contains(rule.data.ToLower()));
-
                     }
                 }
             }
