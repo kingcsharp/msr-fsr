@@ -17,11 +17,14 @@ namespace Msr.Web.ViewModel
             DataSets = new List<ReportItemData>();
             MonitorsWithTaskAndResults = new List<MonitorsWithTaskAndResult>();
             ReportTypes = GetReportType();
+            PartNumbers = new List<SelectListItem>();
+            Serials = new List<SelectListItem>();
         }
 
         public List<SelectListItem> ReportByItems { get; set; }
         public int SearchById { get; set; }
         public string Number { get; set; }
+        public string Serial { get; set; }
         public int DateRangeId { get; set; }
         public string MonitorId { get; set; }
         public int ReportTypeId { get; set; }
@@ -30,6 +33,8 @@ namespace Msr.Web.ViewModel
         public List<SelectListItem> DateRangeItems { get; set; }
         public List<SelectListItem> Monitors { get; set; }
         public List<SelectListItem> ReportTypes { get; set; }
+        public List<SelectListItem> Serials { get; set; }
+        public List<SelectListItem> PartNumbers { get; set; }
         public List<MonitorsWithTaskAndResult> MonitorsWithTaskAndResults { get; set; }
         public List<ReportItemData> DataSets { get; set; }
         public string DataSetsJson { get; set; }
@@ -50,6 +55,7 @@ namespace Msr.Web.ViewModel
         {
             return new List<SelectListItem>
             {
+                new SelectListItem {Text = "-Select-", Value = ""},
                 new SelectListItem {Text = "Part Number", Value = "1"},
                 new SelectListItem {Text = "Serial Number" , Value = "2"}
             };

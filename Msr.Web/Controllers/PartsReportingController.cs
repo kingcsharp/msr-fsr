@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
 using Msr.Models.Tasks;
 using Msr.Services.Orders;
+using Msr.Services.Users;
 using Msr.Web.ViewModel;
 using Msr.Web.ViewModel.Reports;
 using Newtonsoft.Json;
@@ -18,6 +19,20 @@ namespace Msr.Web.Controllers
         public ActionResult Index()
         {
             var vm = new PartsReportsViewModel();
+
+            var loggedUser = User.Identity.GetUserId();
+            var userService = new UserService();
+            var company = userService.GetCompanyId(loggedUser);
+            var orderService = new OrderService();
+
+            var workOrders = orderService.GetWorkOrderQueryable()
+                .Where(x => x.CustId == company.Id)
+                .Select(x => new {x.Serial, x.ActualPartId})
+                .ToList();
+
+            vm.Serials = workOrders.Select(x => new SelectListItem {Text = x.Serial , Value = x.Serial}).ToList();
+            vm.PartNumbers = workOrders.Select(x => new SelectListItem { Text = x.ActualPartId, Value = x.ActualPartId }).ToList();
+
             return View(vm);
         }
 
