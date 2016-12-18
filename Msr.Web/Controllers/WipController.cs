@@ -33,8 +33,11 @@ namespace Msr.Web.Controllers
             return View();
         }
 
-        public ActionResult EngineeringData(JqGridParam param)
+        public ActionResult EngineeringData(JqGridParam param, DateTime? fromDate, DateTime? toDate)
         {
+            var _fromDate = DateTime.Now.AddDays(-30);
+            var _toDate = DateTime.Now;
+
             var loggedUser = User.Identity.GetUserId();
             var userService = new UserService();
            var company = userService.GetCompanyId(loggedUser);
@@ -42,6 +45,13 @@ namespace Msr.Web.Controllers
 
             var totalRows = orderService.GetWorkOrderQueryable().Where(x => x.CustId == company.Id);
 
+            if (fromDate.HasValue && toDate.HasValue)
+            {
+                _fromDate = fromDate.Value;
+                _toDate = toDate.Value;
+            }
+
+            totalRows = totalRows.Where(q => q.StDate.HasValue && q.StDate >= _fromDate && q.StDate <= _toDate);
 
             if (param.where != null && param.where.rules.Any())
             {
@@ -71,7 +81,7 @@ namespace Msr.Web.Controllers
                             totalRows = totalRows.Where(x => x.Qty == value);
                         }
                     }
-                    else if (rule.field == nameof(WorkOrderView.StartDate))
+                    else if (rule.field == nameof(WorkOrderView.StDate))
                     {
                         DateTime value;
                         if (DateTime.TryParse(rule.data, out value))
@@ -79,8 +89,8 @@ namespace Msr.Web.Controllers
                             totalRows =
                                 totalRows.Where(
                                     q =>
-                                        q.StartDate.HasValue && q.StartDate.Value.Day == value.Day &&
-                                        q.StartDate.Value.Month == value.Month && q.StartDate.Value.Year == value.Year);
+                                        q.StDate.HasValue && q.StDate.Value.Day == value.Day &&
+                                        q.StDate.Value.Month == value.Month && q.StDate.Value.Year == value.Year);
                         }
                     }
                     else if (rule.field == nameof(WorkOrderView.DueDate))

@@ -27,13 +27,26 @@ function toggleInstructions (theID,action) {
 
 }
 
-$(document).ready(function () {
+$(document).ready(function() {
 
+
+    $('#search').click(function () {
+
+        jQuery("#jqGrid").setGridParam({
+            page: 1
+        }).trigger("reloadGrid");
+
+    });
+    
 		$("#jqGrid").jqGrid({
 		    url: '/wip/EngineeringData',
 		    mtype: "GET",
 		    styleUI: 'Bootstrap',
-        datatype: "json",
+		    datatype: "json",
+		    postData: {
+		        FromDate: function () { return $('#from-date').val(); },
+		        ToDate: function () { return $('#to-date').val(); }
+		    },
 		    colNames:['WO Item #','Supplier','Serial #','PO #', 'Qty', 'Start Date','Due Date', 'Product Name', 'Procedure', 'Current Step/Status', 'Supporting Info', 'Disposition'],
 		 colModel: [
 		     {
@@ -81,8 +94,8 @@ $(document).ready(function () {
 		         align: 'center'
 		     },
 		     {
-		         name: 'St_Date',
-		         index: 'St_Date',
+		         name: 'StDate',
+		         index: 'StDate',
 		         colmenu: false,
 		         sorttype: 'date',
 		         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
@@ -156,7 +169,8 @@ $(document).ready(function () {
 		         formatter: actionsFormatter,
 		         align: 'center'
 		     },
-		],
+		 ],
+		
 		viewrecords: true, // show the current page, data rang and total records on the toolbar
 		rowNum: 10,
 		loadonce: false, // this is just for the demo
@@ -170,7 +184,8 @@ $(document).ready(function () {
         cellsubmit : 'clientArray',
         editurl: 'clientArray',
 	    autowidth: true,
-	    colMenu : true,
+	    colMenu: true,
+	   
 	    gridComplete: function() {
             $('div.meter').each(function(index) {
                 var progVal = parseFloat($(this).text()).toFixed(2);
