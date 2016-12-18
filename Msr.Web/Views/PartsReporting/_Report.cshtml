@@ -13,13 +13,22 @@ else
     if (Model.MonitorsWithTaskAndResults != null)
     {
         <h2>Report for Non-Numerical Entries - @Model.MonitorId</h2>
-        <table cellpadding="4" cellspacing="4" style="width:80%;">
+        <table cellpadding="4" cellspacing="4" style="width: 80%;">
+            <thead>
+                <tr>
+                    <th>Task Stop Date</th>
+                    <th>Part Description</th>
+                    <th>Description</th>
+                    <th>Print Result</th>
+                    <th>Comment</th>
+                </tr>
+            </thead>
             @foreach (var item in Model.MonitorsWithTaskAndResults)
             {
                 <tr>
                     <td style="width: 20%">@item.TaskStopDate</td>
                     <td style="width: 20%">@item.PartDescription</td>
-                    <td style="width: 20%">@item.TaskStopDate</td>
+                    <td style="width: 20%">@item.Description</td>
                     <td style="width: 20%">@item.PrintResult</td>
                     <td style="width: 20%">@item.Comment</td>
                 </tr>
