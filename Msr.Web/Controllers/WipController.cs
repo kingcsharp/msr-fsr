@@ -165,13 +165,17 @@ namespace Msr.Web.Controllers
         public ActionResult GetNcrModel(string id)
         {
             var orderService = new OrderService();
-
+            var taskService = new TaskService();
             var ncrDetails = orderService.GetNcrDetails(id);
 
             var docs = orderService.GetDocuments(ncrDetails.Details.FillObjId);
 
             var photos = GetDocViewModel(docs, orderService,400);
             ncrDetails.Photos = photos;
+
+            var response = taskService.GetTaskWithMonitors(id);
+
+            ncrDetails.MonitorItem = response.MonitorItem.Where(x=> x.Description.Contains("Nonconformity") || x.Description.Contains("NCR")).ToList();
 
             return PartialView("_NcrModel", ncrDetails);
         }

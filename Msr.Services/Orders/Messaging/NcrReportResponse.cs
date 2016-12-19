@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using Msr.Models.Tasks;
+using Msr.Services.Tasks.Messaging;
 
 namespace Msr.Services.Orders.Messaging
 {
@@ -13,6 +15,6 @@ namespace Msr.Services.Orders.Messaging
         public List<string> Comments { get; set; }
         public List<DocumentView> StepPics { get; set; }
         public List<DocumentView> Photos { get; set; }
-
+        public List<MonitorItem> MonitorItem { get; set; }
     }
 }
