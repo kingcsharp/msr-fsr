@@ -48,45 +48,83 @@
 
 <table class="table table-bordered">
     <tbody>
-        <tr>
-            <td class="theader">Tool Crated Date:</td>
-            <td>@Model.Details.DateComplete</td>
-        </tr>
-        <tr>
-            <td class="theader">Associated Documents:</td>
-            <td>
-                @foreach (var doc in Model.StepPics)
+    <tr>
+        <td class="theader">Tool Crated Date:</td>
+        <td>@Model.Details.DateComplete</td>
+    </tr>
+    <tr>
+        <td class="theader">Associated Documents:</td>
+        <td>
+            @foreach (var doc in Model.StepPics)
+            {
+                <a href="~/doc/view?filePath=@doc.ServerPath&fileType=@doc.ContentType&fileName=@doc.Name">
+                    @(doc.Name + " - " + doc.Description )
+                </a>
+                <br/>
+            }
+        </td>
+    </tr>
+    <tr>
+        <td class="theader">Associated Digital Pictures:</td>
+        <td colspan="2">
+            @foreach (var photo in Model.Photos)
+            {
+                <a href="data:image/jpeg;base64,@photo.FileArray" data-featherlight="image">
+                    <img src="data:image/jpeg;base64,@photo.FileArray" width="30%" class="img-responsive img-rounded pull-left" alt="" style="margin-left: 10px; margin-bottom: 10px">
+                </a>
+            }
+        </td>
+    </tr>
+    <tr>
+        <td class="theader">Comments:</td>
+        <td>
+            @if (!string.IsNullOrWhiteSpace(Model.Details.Comments))
+            {
+                foreach (var comment in Model.Details.Comments.Split('|'))
                 {
-                        <a href="~/doc/view?filePath=@doc.ServerPath&fileType=@doc.ContentType&fileName=@doc.Name">
-                            @(doc.Name + " - " + doc.Description )
-                        </a>
-                        <br />
+                    @comment
+                    <br/>
                 }
-            </td>
-        </tr>
-        <tr>
-            <td class="theader">Associated Digital Pictures:</td>
-            <td colspan="2">
-                @foreach (var photo in Model.Photos)
-                {
-                    <a href="data:image/jpeg;base64,@photo.FileArray" data-featherlight="image">
-                        <img src="data:image/jpeg;base64,@photo.FileArray" width="30%" class="img-responsive img-rounded pull-left" alt="" style="margin-left: 10px; margin-bottom: 10px">
-                    </a>
-                }
-            </td>
-        </tr>
-        <tr>
-            <td class="theader">Comments:</td>
-            <td>
-                @if (!string.IsNullOrWhiteSpace(Model.Details.Comments))
-                {
-                    foreach (var comment in Model.Details.Comments.Split('|'))
-                     {
-                         @comment
-                         <br/>
-                     }
-                }
-            </td>
-        </tr>
+            }
+        </td>
+    </tr>
     </tbody>
+</table>
+
+<table class="table table-bordered monitor-tabel">
+    @foreach (var task in Model.MonitorItem)
+    {
+        <thead>
+            <tr>
+                <th colspan=4>@task.Description</th>
+            </tr>
+            <tr>
+                <th>Monitor @task.TaskId</th>
+                <th>Result</th>
+                <th>Pass/Fail</th>
+                <th>Comment</th>
+        </thead>
+        <tbody>
+            @foreach (var monitor in task.MonitorResults)
+            {
+                var cssClass = "";
+
+                if (monitor.IsPassing == "Pass")
+                {
+                    cssClass = "success";
+                }
+                else if (monitor.IsPassing == "Fail")
+                {
+                    cssClass = "danger";
+                }
+
+                <tr>
+                    <td>@monitor.Description</td>
+                    <td>@monitor.PrintResult</td>
+                    <td class="@cssClass">@monitor.IsPassing</td>
+                    <td>@monitor.Comment</td>
+                </tr>
+            }
+        </tbody>
+    }
 </table>
