@@ -2,6 +2,7 @@
     ViewBag.Title = "Buyers";
 }
 
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.css" type="text/css" rel="stylesheet" />
 
 <div class="container-fluid">
     <div class="side-body padding-top">
@@ -10,6 +11,18 @@
                 Work Orders for <b>@ViewBag.ClientName </b>
                 <button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
             </h2>
+            <div class="col-md-10">
+                <table cellpadding="2" cellspacing="2">
+                    <tr>
+                        <td>From Date:</td>
+                        <td><input type="text" class="form-control" id="from-date" /></td>
+                        <td>To Date:</td>
+                        <td><input type="text" class="form-control" id="to-date" /></td>
+                        <td><input type="button" id="search" class="btn btn-success" value="Search" /></td>
+                    </tr>
+                </table>
+
+            </div>
             <div class="col-lg-12">
                 <table id="jqGrid"></table>
                 <div id="jqGridPager"></div>
@@ -24,7 +37,9 @@
 <script type="text/javascript" src="/assets/js/i18n/grid.locale-en.js"></script>
 <script type="text/javascript" src="/assets/js/jquery.jqGrid.min.js"></script>
 <script type="text/javascript" src="/assets/js/Grids/buyer_grid.js"></script>
-
+<script src="//cdn.rawgit.com/noelboss/featherlight/1.6.1/release/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://cdn.smooch.io/smooch.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js"></script>
 <script src="https://cdn.smooch.io/smooch.min.js"></script>
     <script>
         //$.jgrid.defaults.responsive = true;
@@ -32,9 +47,12 @@
 
         Smooch.init({ appToken: '9wxoxi2wbcbymhjf1ex1a0dux' });
 
+        $(document).ready(function () {
 
+            $('#from-date').datepicker();
+            $('#to-date').datepicker();
 
-
+        });
     </script>
         
 }

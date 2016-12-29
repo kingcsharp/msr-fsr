@@ -41,7 +41,13 @@ t.REFERENCE_PO AS ReferencePo,
 t.PROC_NAME AS ProcName,
 t.QTY AS Qty,
 t.FILL_QTY AS FillQty,
-t.STATUS AS Status,
+CASE 
+	WHEN t.STATUS ='ACCEPTED' THEN 'In Progress'
+	WHEN t.STATUS ='REQUESTED' THEN 'Waiting to Start'
+	WHEN t.STATUS ='COMPLETED' THEN 'Completed'
+	WHEN t.STATUS ='FINISHED' THEN 'Finished'
+	ELSE t.STATUS
+END	AS Status,
 t.FILL_ID AS FillId,
 t.MT_NUM AS MtNum,
 t.ACTUAL_START_DATE AS ActualStartDate,

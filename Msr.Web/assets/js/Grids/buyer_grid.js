@@ -10,13 +10,26 @@ function toggleInstructions (theID) {
 }
 
 $(document).ready(function () {
+
+    $('#search').click(function () {
+
+        jQuery("#jqGrid").setGridParam({
+            page: 1
+        }).trigger("reloadGrid");
+
+    });
+
     var _true = true;
 
     $("#jqGrid").jqGrid({
 		    url: '/buyer/BuyerData',
 		    mtype: "GET",
 		    styleUI: 'Bootstrap',
-        datatype: "json",
+		    datatype: "json",
+		    postData: {
+		        FromDate: function () { return $('#from-date').val(); },
+		        ToDate: function () { return $('#to-date').val(); }
+		    },
         colNames: ['WO Item #', 'Status', 'Supplier', 'Serial #', 'PO #', 'Qty', 'Start Date', 'Due Date', 'Product Name', 'Procedure', 'Current Step/Status', 'Supporting Info', 'Invoice', 'Price', 'Amount', 'Date'],
 		 colModel: [
 		     {
@@ -70,8 +83,8 @@ $(document).ready(function () {
 		         align: 'center'
 		     },
 		   {
-		       name: 'ActualStartDate',
-		       index: 'ActualStartDate',
+		       name: 'StDate',
+		       index: 'StDate',
 		       colmenu: false,
 		       sorttype: 'date',
 		       coloptions: { sorting: false, columns: _true, filtering: false, seraching: false, grouping: false, freeze: false },
@@ -129,6 +142,9 @@ $(document).ready(function () {
                          grouping: false,
                          freeze: false
                      },
+                     stype: "select",
+                     //searchoptions: { value: ":In Progress;Waiting to Start;Completed;Finished" },
+                     searchoptions: { value: ":[All];In Progress:In Progress;Waiting to Start:Waiting to Start;Completed:Completed;Finished:Finished" },
                      formatter: currentStepFormatter,
                      align: 'center',
                      hidden: true
@@ -255,7 +271,7 @@ $(document).ready(function () {
             thisCellVal = '<strong>' + thisVal + '</strong><br /> <div class="meter">' + rowObject.TimeComplete + '</div> <div class="meter">' + rowObject.PercComplete + '</div> ';
         }
         else {
-            thisCellVal = 'Waiting to Start';
+            thisCellVal = rowObject.Status;
         }
 
         return thisCellVal;

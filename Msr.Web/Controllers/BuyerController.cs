@@ -30,8 +30,11 @@ namespace Msr.Web.Controllers
             return View();
         }
 
-        public ActionResult BuyerData(JqGridParam param)
+        public ActionResult BuyerData(JqGridParam param, DateTime? fromDate, DateTime? toDate)
         {
+            var _fromDate = DateTime.Now.AddDays(-30);
+            var _toDate = DateTime.Now;
+
             var loggedUser = User.Identity.GetUserId();
 
             var userService = new UserService();
@@ -42,6 +45,14 @@ namespace Msr.Web.Controllers
             var orderService = new OrderService();
 
             var totalRows = orderService.GetBuyerWorkOrderQueryable().Where(x => x.CustId == company.Id);
+
+            if (fromDate.HasValue && toDate.HasValue)
+            {
+                _fromDate = fromDate.Value;
+                _toDate = toDate.Value;
+            }
+
+            totalRows = totalRows.Where(q => q.StDate.HasValue && q.StDate >= _fromDate && q.StDate <= _toDate);
 
             if (param.where !=null && param.where.rules.Any())
             {
@@ -71,12 +82,13 @@ namespace Msr.Web.Controllers
                             totalRows = totalRows.Where(x => x.Qty == value);
                         }
                     }
-                    else if (rule.field == nameof(BuyerView.StartDate))
+                    else if (rule.field == nameof(BuyerView.StDate))
                     {
                         DateTime value;
                         if (DateTime.TryParse(rule.data, out value))
                         {
-                                totalRows = totalRows.Where(q => q.StartDate.HasValue && q.StartDate.Value.Day ==value.Day && q.StartDate.Value.Month == value.Month && q.StartDate.Value.Year == value.Year);
+                            totalRows = totalRows.Where(q => q.StDate.HasValue && q.StDate.Value.Day == value.Day &&
+                                        q.StDate.Value.Month == value.Month && q.StDate.Value.Year == value.Year);
                         }
                     }
                     else if (rule.field == nameof(BuyerView.DueDate))
@@ -84,7 +96,8 @@ namespace Msr.Web.Controllers
                         DateTime value;
                         if (DateTime.TryParse(rule.data, out value))
                         {
-                            totalRows = totalRows.Where(q => q.DueDate.HasValue && q.DueDate.Value.Day == value.Day && q.DueDate.Value.Month == value.Month && q.DueDate.Value.Year == value.Year);
+                            totalRows = totalRows.Where(q => q.DueDate.HasValue && q.DueDate.Value.Day == value.Day &&
+                                        q.DueDate.Value.Month == value.Month && q.DueDate.Value.Year == value.Year);
                         }
                     }
                     else if (rule.field == nameof(BuyerView.ProcName))
@@ -97,7 +110,10 @@ namespace Msr.Web.Controllers
                     }
                     else if (rule.field == nameof(BuyerView.CurStepText))
                     {
-                        totalRows = totalRows.Where(x => x.CurStepText.ToLower().Contains(rule.data.ToLower()));
+                        if (rule.data != "ALL")
+                        {
+                            totalRows = totalRows.Where(x => x.Status.ToLower().Contains(rule.data.ToLower()));
+                        }
                     }
                     else if (rule.field == nameof(BuyerView.InvoiceAmount))
                     {
