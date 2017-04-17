@@ -133,9 +133,9 @@ namespace Msr.Web.Controllers
             {
                 totalRows = totalRows.OrderBy(orderBy);
             }
-
+             
             var totalRecords = totalRows.Count();
-            totalRows = totalRows.Skip(param.pageIndex - 1);
+            totalRows = totalRows.Skip(param.pageSize * (param.pageIndex - 1));
             totalRows = totalRows.Take(param.pageSize);
 
             var totalPages = (int) Math.Ceiling((float) totalRecords/(float) param.pageSize);
