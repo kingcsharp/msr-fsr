@@ -82,7 +82,9 @@ namespace Msr.Services.Orders
 
        public List<SelectListItem> GetMonitors(string input, int reportTypeId, int reportType)
         {
-            var fillId = "";
+            var fillIds = new List<string>();
+            var tasks = new List<GetTaskWithMonitorsResult>();
+            var monitorList = new List<SelectListItem>();
 
             if (reportTypeId == 1)
             {
@@ -90,46 +92,55 @@ namespace Msr.Services.Orders
 
                 if (workItem != null)
                 {
-                    fillId = workItem.FillId;
+                    fillIds.Add(workItem.FillId);
                 }
             }
             else if (reportTypeId == 2)
             {
-                var workItem = _dbContext.WorkOrders.FirstOrDefault(x => x.Serial == input);
+                var workItems = _dbContext.WorkOrders.Where(x => x.Serial == input).Distinct();
 
-                if (workItem != null)
+                if (workItems != null)
                 {
-                    fillId = workItem.FillId;
+                    fillIds = workItems.Select(x => x.FillId).ToList();
                 }
             }
 
-            var fileIdParm = new SqlParameter("@fillID", fillId);
-
-            var tasks = _dbContext.Database.SqlQuery<GetTaskWithMonitorsResult>("Portal_GetTaskWithMonitors @fillID", fileIdParm).ToList();
-
-           if (reportType == ReportTypeConstants.Graph)
+           foreach (var fillId in fillIds)
            {
-               tasks = tasks.Where(x => x.MonitorType == "NUMBER").ToList();
-           }
-           else
-           {
-               tasks = tasks.Where(x => x.MonitorType != "NUMBER").ToList();
+                var fileIdParm = new SqlParameter("@fillID", fillId);
+                var fillIdtasks = _dbContext.Database.SqlQuery<GetTaskWithMonitorsResult>("Portal_GetTaskWithMonitors @fillID", fileIdParm).ToList();
+
+                if (reportType == ReportTypeConstants.Graph)
+                {
+                    tasks.AddRange(fillIdtasks.Where(x => x.MonitorType == "NUMBER").ToList());
+                }
+                else
+                {
+                    tasks.AddRange(fillIdtasks.Where(x => x.MonitorType != "NUMBER").ToList());
+                }
             }
 
-            var monitorList = tasks.Select(x => new SelectListItem
+           var groupedTasks = tasks.GroupBy(x => x.Description).ToList();
+
+           foreach (var groupedTask in groupedTasks)
            {
-               Text = x.Description,
-               Value = x.TaskId
-           }).ToList();
+               monitorList.Add(new SelectListItem
+               {
+                   Text = groupedTask.Key,
+                   Value = String.Join(",", groupedTask.Select(t => t.TaskId))
+               });
+           }
 
            return monitorList;
         }
 
-        public List<MonitorsWithTaskAndResult> GetReports(string serial, DateTime fromDate, DateTime toDate, int reportTypeId, string taskId)
+        public List<MonitorsWithTaskAndResult> GetReports(string serial, DateTime fromDate, DateTime toDate, int reportTypeId, string taskIds)
         {
+            var taskList = taskIds.Split(',');
+
             var query = _dbContext.MonitorsWithTaskAndResults.AsQueryable();
 
-            query = query.Where(x => x.TaskId == taskId && x.TaskStopDate >= fromDate && x.TaskStopDate <= toDate);
+            query = query.Where(x => taskList.Contains(x.TaskId) && x.TaskStopDate >= fromDate && x.TaskStopDate <= toDate);
 
             if (reportTypeId == ReportTypeConstants.Graph)
             {
