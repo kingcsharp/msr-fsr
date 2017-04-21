@@ -12,6 +12,7 @@ using Msr.Services.Orders;
 using Msr.Services.Orders.Messaging;
 using Msr.Services.Users;
 using Msr.Web.ViewModel;
+using Msr.Web.ViewModel.Engineering;
 
 namespace Msr.Web.Controllers
 {
@@ -20,6 +21,8 @@ namespace Msr.Web.Controllers
     {
         public ActionResult Engineering()
         {
+            var viewModel = new EngineeringViewModel();
+
             ViewBag.ActiveClass = "WIP";
 
             var loggedUser = User.Identity.GetUserId();
@@ -28,9 +31,11 @@ namespace Msr.Web.Controllers
 
             var company = userService.GetCompanyId(loggedUser);
 
-            ViewBag.ClientName = company.Name;
+            viewModel.ClientName = company.Name;
+            viewModel.FromDate = DateTime.Now.AddDays(-30);
+            viewModel.ToDate = DateTime.Now;
 
-            return View();
+            return View(viewModel);
         }
 
         public ActionResult EngineeringData(JqGridParam param, DateTime? fromDate, DateTime? toDate)

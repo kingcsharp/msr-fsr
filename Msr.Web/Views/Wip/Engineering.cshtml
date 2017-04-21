@@ -1,4 +1,5 @@
-﻿@{
+﻿@model  Msr.Web.ViewModel.Engineering.EngineeringViewModel
+@{
     ViewBag.Title = "Engineering";
 }
 <link href="//cdn.rawgit.com/noelboss/featherlight/1.6.1/release/featherlight.min.css" type="text/css" rel="stylesheet" />
@@ -10,19 +11,19 @@
     <div class="side-body padding-top">
         <div class="row">
             <h2 class="page-header">
-                Work Orders for <b>@ViewBag.ClientName</b> <button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
+                Work Orders for <b>@Model.ClientName</b> <button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
             </h2>
             <div class="col-md-10">
                 <table cellpadding="2" cellspacing="2">
                     <tr>
                         <td>From Date:</td>
-                        <td><input type="text" class="form-control" id="from-date" /></td>
+                        <td><input type="text" class="form-control" id="from-date" value="@Model.FromDate.ToShortDateString()"/></td>
                         <td>To Date:</td>
-                        <td><input type="text" class="form-control" id="to-date" /></td>
-                        <td><input type="button" id="search" class="btn btn-success" value="Search" /></td>
+                        <td><input type="text" class="form-control" id="to-date" value="@Model.ToDate.ToShortDateString()"/></td>
+                        <td><input type="button" id="search" class="btn btn-success" value="Search"/></td>
                     </tr>
                 </table>
-                
+
             </div>
             <div class="col-lg-12">
                 <table id="jqGrid"></table>
@@ -31,6 +32,7 @@
         </div>
     </div>
 </div>
+
 @section scripts
 {
     <script src="~/assets/js/plugins/bootstrap3/bootstrap-dialog.min.js"></script>

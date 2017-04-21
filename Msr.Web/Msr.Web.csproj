@@ -188,6 +188,7 @@
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModel\AddClientUserViewModel.cs" />
     <Compile Include="ViewModel\EditUserProfileViewModel.cs" />
+    <Compile Include="ViewModel\Engineering\EngineeringViewModel.cs" />
     <Compile Include="ViewModel\Help\SupportViewModel.cs" />
     <Compile Include="ViewModel\PartsReportsViewModel.cs" />
     <Compile Include="ViewModel\Reports\ReportItemData.cs" />
@@ -273,6 +274,7 @@
     <Content Include="assets\components\ace\ace\worker-php.js" />
     <Content Include="assets\components\ace\emmet\emmet.js" />
     <Content Include="assets\components\ace\modx.texteditor.js" />
+    <Content Include="assets\css\ajax-loader.gif" />
     <Content Include="assets\css\animate.css\animate.css" />
     <Content Include="assets\css\animate.css\animate.min.css" />
     <Content Include="assets\css\animate.min.css" />
