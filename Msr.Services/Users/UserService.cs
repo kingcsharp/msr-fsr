@@ -95,7 +95,7 @@ namespace Msr.Services.Users
             {
                 if (HasAnswerUser(entity.UserName))
                 {
-                    response.AddError($"Answer User already exists with UserName : {entity.UserName} ");
+                    response.AddError("Answer User already exists with UserName :" + entity.UserName);
                     return response;
                 }
 
@@ -103,7 +103,7 @@ namespace Msr.Services.Users
 
                 if (existingUser != null)
                 {
-                    response.AddError($"User already exists with UserName : {entity.UserName} ");
+                    response.AddError("User already exists with UserName :" + entity.UserName);
 
                     return response;
                 }
@@ -162,7 +162,7 @@ namespace Msr.Services.Users
             {
                 if (HasAnswerUser(entity.UserName))
                 {
-                    response.AddError($"Answer User already exists with UserName : {entity.UserName} ");
+                    response.AddError("Answer User already exists with UserName :"+ entity.UserName);
                     return response;
                 }
 
