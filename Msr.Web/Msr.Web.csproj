@@ -536,7 +536,7 @@
     <Content Include="Views\Shared\_Header.cshtml" />
     <Content Include="Views\Shared\_Footer.cshtml" />
     <Content Include="Views\Shared\_SideBar.cshtml" />
-    <Content Include="Views\Wip\Engineering.cshtml" />
+    <Content Include="Views\Wip\Index.cshtml" />
     <Content Include="Views\Shared\_ModalWipHelp.cshtml" />
     <Content Include="Views\Shared\_ModalWipWindows.cshtml" />
     <Content Include="Views\Shared\_SupportForm.cshtml" />
@@ -565,6 +565,7 @@
     <Content Include="Views\Shared\Help\_Engineer.cshtml" />
     <Content Include="Views\PartsReporting\Index.cshtml" />
     <Content Include="Views\PartsReporting\_Report.cshtml" />
+    <Content Include="Views\Wip\Details.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

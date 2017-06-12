@@ -5,101 +5,347 @@
     var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
 
 }
-
 <div class="side-menu sidebar-inverse">
     <nav class="navbar navbar-default" role="navigation">
         <div class="side-menu-container">
             <div class="navbar-header">
-                <a class="navbar-brand" href="~/home">
+                <a class="navbar-brand" href="#">
                     <div class="icon fa fa-paper-plane"></div>
-                    <div class="title">MSR-FSR Portal</div>
+                    <div class="title">Answer 2.0</div>
                 </a>
                 <button type="button" class="navbar-expand-toggle pull-right visible-xs" data-intro="Toggle the sidebar usting this button" data-position="right">
                     <i class="fa fa-times icon"></i>
                 </button>
             </div>
             <ul class="nav navbar-nav">
-
-             @if (User.IsInRole(RolesConstants.AnswerUser) || User.IsInRole(RolesConstants.ClientAdmin))
-             {
-                    <li class="panel panel-default dropdown @(ViewBag.ActiveClass == "USER"? "active":"")">
-                        <a data-toggle="collapse" href="#dropdown-element">
-                            <span class="icon fa fa-desktop"></span><span class="title">User Admin</span>
-                        </a>
-                        <!-- Dropdown level 1 -->
-
-
-                        <div id="dropdown-element" class="panel-collapse collapse">
-                            <div class="panel-body">
-                                <ul class="nav navbar-nav">
-                                    @if (User.IsInRole(RolesConstants.AnswerUser))
-                                    {
-                                        <li>
-                                            <a href="/user/master">
-                                                <span class="icon fa fa-user-secret"></span><span class="title">Master Users</span>
-                                            </a>
-                                        </li>
-                                    }
-                                        @if (User.IsInRole(RolesConstants.ClientAdmin))
-                                        {
-                                            <li>
-                                                <a href="/user/client">
-                                                    <span class="icon fa fa-users"></span><span class="title">Client Users</span>
-                                                </a>
-                                            </li>
-                                        }
-                                </ul>
-                            </div>
-                        </div>
-                    </li>
-                }
-
-
-@if (User.IsInRole(RolesConstants.ClientBuyer) || User.IsInRole(RolesConstants.ClientEngineer))
-{
-    <li class="panel panel-default dropdown @(ViewBag.ActiveClass == "WIP" ? "active" : "")">
-        <a data-toggle="collapse" href="#dropdown-element2">
-            <span class="icon fa fa-desktop"></span><span class="title">WIP Views</span>
-        </a>
-        <!-- Dropdown level 1 -->
-        <div id="dropdown-element2" class="panel-collapse collapse">
-            <div class="panel-body">
-                <ul class="nav navbar-nav">
-
-                    @if (User.IsInRole(RolesConstants.ClientEngineer))
-                    {
-                        <li>
-                            <a href="~/wip/engineering">
-                                <span class="icon fa fa-gears"></span><span class="title">Engineering</span>
-                            </a>
-                        </li>
-                    }
-
-                    @if (User.IsInRole(RolesConstants.ClientBuyer))
-                    {
-                        <li>
-                            <a href="/buyer">
-                                <span class="icon fa fa-dollar"></span><span class="title">Purchasing</span>
-                            </a>
-                        </li>
-                    }
-                </ul>
-            </div>
-        </div>
-    </li>
-
-    <li class="@(ViewBag.ActiveClass == "PROF" ? "active" : "")">
-        <a href="~/PartsReporting">
-            <span class="icon fa fa-line-chart"></span><span class="title">Part Reporting</span>
-        </a>
-    </li>
-}
-                <li class="@(ViewBag.ActiveClass == "PROF" ? "active" : "")">
-                    <a href="~/user/profile">
-                        <span class="icon fa fa-user"></span><span class="title">Profile</span>
+                <li class="panel panel-default dropdown">
+                    <a data-toggle="collapse" href="#dropdown-element1">
+                        <span class="icon fa fa-list-alt"></span><span class="title">WIP </span>
                     </a>
+                    <!-- Dropdown level 1 -->
+                    <div id="dropdown-element1" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <ul class="nav navbar-nav">
+                                <li>
+                                    <a href="~/wip">
+                                        <span class="icon fa fa-list"></span><span class="title">WIP Menu</span>
+                                    </a>
+                                </li>
+
+                                @*<li>
+                                    <a href="[[~10]]">
+                                        <span class="icon fa fa-search"></span><span class="title">WIP Details</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <span class="icon fa fa-calendar"></span><span class="title">WIP History</span>
+                                    </a>
+                                </li>*@
+                            </ul>
+                        </div>
+                    </div>
                 </li>
+                <li class="panel panel-default dropdown">
+                    <a data-toggle="collapse" href="#dropdown-element2">
+                        <span class="icon fa fa-cogs"></span><span class="title">Parts </span>
+                    </a>
+                    <!-- Dropdown level 1 -->
+                    <div id="dropdown-element2" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <ul class="nav navbar-nav">
+                                <li>
+                                    <a href="#">
+                                        <span class="icon fa fa-cog"></span><span class="title">Parts</span>
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a href="#">
+                                        <span class="icon fa fa-list"></span><span class="title">Part Types</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <span class="icon fa fa-clone"></span><span class="title">Actual Parts/Assets</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="panel panel-default dropdown">
+                    <a data-toggle="collapse" href="#dropdown-element3">
+                        <span class="icon fa fa-puzzle-piece"></span><span class="title">Procedures </span>
+                    </a>
+                    <!-- Dropdown level 1 -->
+                    <div id="dropdown-element3" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <ul class="nav navbar-nav">
+                                <li>
+                                    <a href="[[~14]]">
+                                        <span class="icon fa fa-step-forward"></span><span class="title">Runnable Procedures</span>
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a href="#">
+                                        <span class="icon fa fa-list"></span><span class="title">Proecedure Types</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <span class="icon fa fa-file-text"></span><span class="title">Templates</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="panel panel-default dropdown">
+                    <a data-toggle="collapse" href="#dropdown-element4">
+                        <span class="icon fa fa-users"></span><span class="title">People </span>
+                    </a>
+                    <!-- Dropdown level 1 -->
+                    <div id="dropdown-element4" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <ul class="nav navbar-nav">
+                                <li>
+                                    <a href="[[~7]]">
+                                        <span class="icon fa fa-user"></span><span class="title">Users</span>
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a href="#">
+                                        <span class="icon fa fa-group"></span><span class="title">User Roles</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <span class="icon fa fa-building"></span><span class="title">Companies/Departments</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="panel panel-default dropdown">
+                    <a data-toggle="collapse" href="#dropdown-element5">
+                        <span class="icon fa fa-map-marker"></span><span class="title">Locations </span>
+                    </a>
+                    <!-- Dropdown level 1 -->
+                    <div id="dropdown-element5" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <ul class="nav navbar-nav">
+                                <li>
+                                    <a href="#">
+                                        <span class="icon fa fa-map"></span><span class="title">Locations</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <span class="icon fa fa-globe"></span><span class="title">Regions</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="panel panel-default dropdown">
+                    <a data-toggle="collapse" href="#dropdown-element6">
+                        <span class="icon fa fa-money "></span><span class="title">Pricing </span>
+                    </a>
+                    <!-- Dropdown level 1 -->
+                    <div id="dropdown-element6" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <ul class="nav navbar-nav">
+                                <li>
+                                    <a href="[[~12]]">
+                                        <span class="icon fa fa-paper-plane-o"></span><span class="title">Quotes</span>
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a href="[[~13]]">
+                                        <span class="icon fa fa-usd"></span><span class="title">Freeform Quote</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="[[~16]]">
+                                        <span class="icon fa fa-list-ul"></span><span class="title">Purchase Orders</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="panel panel-default dropdown">
+                    <a data-toggle="collapse" href="#dropdown-element7">
+                        <span class="icon fa fa-envelope-square"></span><span class="title">Billing </span>
+                    </a>
+                    <!-- Dropdown level 1 -->
+                    <div id="dropdown-element7" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <ul class="nav navbar-nav">
+                                <li>
+                                    <a href="[[~5]]">
+                                        <span class="icon fa fa-exchange"></span><span class="title">Invoices</span>
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a href="#">
+                                        <span class="icon fa fa-usd"></span><span class="title">Purchases</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <span class="icon fa fa-check-circle"></span><span class="title">Pending Approvals</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="panel panel-default dropdown">
+                    <a data-toggle="collapse" href="#dropdown-element12">
+                        <span class="icon fa fa-align-center"></span><span class="title">Workflow </span>
+                    </a>
+                    <!-- Dropdown level 1 -->
+                    <div id="dropdown-element12" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <ul class="nav navbar-nav">
+                                <li>
+                                    <a href="#">
+                                        <span class="icon fa fa-check-circle"></span><span class="title">Approval Workflows</span>
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a href="#">
+                                        <span class="icon fa fa-list-ol"></span><span class="title">Approval Stages</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <span class="icon fa fa-group"></span><span class="title">Approval Groups</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="panel panel-default dropdown">
+                    <a data-toggle="collapse" href="#dropdown-element8">
+                        <span class="icon fa fa-newspaper-o"></span><span class="title">Reporting </span>
+                    </a>
+                    <!-- Dropdown level 1 -->
+                    <div id="dropdown-element8" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <ul class="nav navbar-nav">
+                                <li>
+                                    <a href="#">
+                                        <span class="icon fa fa-file-excel-o"></span><span class="title">Excel Reports</span>
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a href="[[~9]]">
+                                        <span class="icon fa fa-bar-chart"></span><span class="title">Monitor Search</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <span class="icon fa fa-exclamation-triangle"></span><span class="title">NCR Search</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="panel panel-default dropdown">
+                    <a data-toggle="collapse" href="#dropdown-element9">
+                        <span class="icon fa fa-dashboard"></span><span class="title">Dashboards </span>
+                    </a>
+                    <!-- Dropdown level 1 -->
+                    <div id="dropdown-element9" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <ul class="nav navbar-nav">
+                                <li>
+                                    <a href="#">
+                                        <span class="icon fa fa-area-chart"></span><span class="title">Dashboard A</span>
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a href="#">
+                                        <span class="icon fa fa-line-chart"></span><span class="title">Dashboard B</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <span class="icon fa fa-pie-chart"></span><span class="title">Dashboard C</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="panel panel-default dropdown">
+                    <a data-toggle="collapse" href="#dropdown-element10">
+                        <span class="icon fa fa-newspaper-o"></span><span class="title">Utilities </span>
+                    </a>
+                    <!-- Dropdown level 1 -->
+                    <div id="dropdown-element10" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <ul class="nav navbar-nav">
+                                <li>
+                                    <a href="#">
+                                        <span class="icon fa fa-wrench"></span><span class="title">Answer Admin</span>
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a href="[[~15]]">
+                                        <span class="icon fa fa-plus-square"></span><span class="title">Equipment Maintenance</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <span class="icon fa fa-print"></span><span class="title">Print Delivery Tickets</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <span class="icon fa fa-truck"></span><span class="title">Parts Recieved by Cust</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="panel panel-default dropdown">
+                    <a data-toggle="collapse" href="#dropdown-element11">
+                        <span class="icon fa fa-life-bouy"></span><span class="title">Help </span>
+                    </a>
+                    <!-- Dropdown level 1 -->
+                    <div id="dropdown-element11" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <ul class="nav navbar-nav">
+                                <li>
+                                    <a href="#">
+                                        <span class="icon fa fa-question-circle"></span><span class="title">Open a Support Ticket</span>
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+
             </ul>
         </div>
+        <!-- /.navbar-collapse -->
     </nav>
 </div>

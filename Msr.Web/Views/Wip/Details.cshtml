@@ -1,0 +1,198 @@
+﻿@model  Msr.Web.ViewModel.Engineering.EngineeringViewModel
+@{
+    ViewBag.Title = "Work Order Details";
+}
+<div class="container-fluid">
+    <div class="side-body padding-top">
+        <div class="row wip-detail-header">
+            <div class="col-lg-6 col-md-6 col-sm-6 wip-detail-header-left">
+                <div class="form-group">
+                    <div style="display:inline-block; float:right;">
+                        <label>Hide Completed </label><div class="make-switch switch-small" data-on="success" data-off="warning" style="display:inline-block"><input id="showCompletedSwitch" type="checkbox" name="completed-switch" checked></div>
+                        <button type="button" data-toggle="modal" data-target="#wipListModal" class="btn btn-info cancel-btn pull-right wip-view-button"><i class="fa fa-list" aria-hidden="true"></i> WIP List</button>
+                    </div>
+
+                    <label>My WO Items</label>
+                    <select id="wip-item-select" class="selectpicker form-control" name="wo-item">
+                        <option data-content="<strong>Select an Item...</strong>">Select an Item</option>
+                        <optgroup label="Items Assigned to Me">
+                            <option data-content="<strong>Applied Materials-147051</strong><br>Proc: 03-AMT-014-00<br>Serial: 12-16d<span class='label label-success pull-right'>Complete</span>" data-status="Complete">Applied Materials-147051</option>
+                            <option data-content="<strong>INTEL F24-110675</strong><br>Proc: 05-INT-220-00 HME EC2 BAFF2 KIT-Copper<br>Serial: tool18<span class='label label-warning pull-right'>In Progress</span>" data-status="In Progress">INTEL F24-110675 s/n: tool 18</option>
+                            <option data-content="<strong>INTEL F24-110675</strong><br>Proc: 05-INT-220-00 HME EC2 BAFF2 KIT-Copper<br>Serial: tool17<span class='label label-default pull-right'>Waiting</span>" data-status="Waiting">INTEL F24-110675 s/n: tool 17</option>
+                            <option data-content="<strong>INTEL F24-111048</strong><br>Proc: 03-AMT-014-00<br>Serial: 12-16d<span class='label label-default pull-right'>Waiting</span>" data-status="Waiting">INTEL F24-111048</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <div class="wip-detail-item-controls">
+                    <button class="btn btn-danger btn-sm cancel-btn pull-right" data-toggle="modal" data-target="#widDetailCancelStepsModal"><i class="fa fa-close"></i> Cancel Remaining Steps</button>
+                    <button class="btn btn-warning btn-sm cancel-btn pull-right instruction-tooltip" data-toggle="modal" data-target="#widDetailTakeOver"
+                            data-toggle="tooltip" data-placement="top" data-html="true"
+                            title="This button only displays when the currently viewed item is not owened by current technician">
+                        <i class="fa fa-user"></i> Take Over this Task
+                    </button>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 ">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a data-toggle="tab" href="#parts">Parts Info:</a></li>
+                    <li><a data-toggle="tab" href="#purchase">Purchase Item Info:</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div id="parts" class="tab-pane fade in active">
+                        <div id="part-tab-controls" class="col-sm-12">
+                            <button class="btn btn-info btn-xs print-btn pull-right" data-toggle="modal" data-target="#wioDetailPrintOther"><i class="fa fa-print"></i> Print Other</button>
+                            <button class="btn btn-info btn-xs print-btn pull-right" data-toggle="modal" data-target="#wioDetailPrintTraveler"><i class="fa fa-print"></i> Print Traveler</button>
+                        </div>
+                        <div id="parts-table" class="col-sm-12">
+                            <table class="table table-responsive table-condensed table-bordered">
+                                <tbody>
+                                    <tr><td>Actual Part # 110694, s/n:tool18, CLND_HME_BAFF2_KIT (p/n:93511) qty:1</td></tr>
+                                    <tr><td>Actual Part # 110696,  _HME EC2 BAFFLE (Part of kit 633014634)  (p/n 93513)</td></tr>
+                                    <tr><td>Actual Part # 110698,  _HME EC2 BASE RING (Part of kit 633014634)  (p/n 93515)</td></tr>
+                                    <tr><td>Actual Part # 110694, s/n:tool18, CLND_HME_BAFF2_KIT (p/n:93511) qty:1</td></tr>
+                                    <tr><td>Actual Part # 110696,  _HME EC2 BAFFLE (Part of kit 633014634)  (p/n 93513)</td></tr>
+                                    <tr><td>Actual Part # 110698,  _HME EC2 BASE RING (Part of kit 633014634)  (p/n 93515)</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div id="purchase" class="tab-pane fade">
+                        <table class="table table-responsive table-condensed table-bordered">
+                            <tbody>
+                                <tr>
+                                    <th nowrap style="text-align: right">Customer:</th>
+                                    <td>INTEL F24</td>
+                                </tr>
+                                <tr>
+                                    <th nowrap style="text-align: right">Product:</th>
+                                    <td>CLND_HME_BAFF2_KIT (IPN 633014634)</td>
+                                </tr>
+                                <tr>
+                                    <th nowrap style="text-align: right">Procedure:</th>
+                                    <td>05-INT-220-00   HME EC2 BAFF2 KIT-Copper</td>
+                                </tr>
+                                <tr>
+                                    <th nowrap style="text-align: right">Purchase Item #:</th>
+                                    <td>110675</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="col-lg-2 col-md-2"><button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button></div> -->
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <!-- Step Navigation -->
+                <div id="carousel" class="flexslider">
+                    <ul class="slides">
+                        <li class="step step-complete">
+                            <div>Incoming Inspection</div>
+                        </li>
+                        <li class="step step-complete">
+                            <div>Serialize</div>
+                        </li>
+                        <li class="step step-inprogress active">
+                            <div>Soak - Room Temp DI</div>
+                        </li>
+                        <li class="step waiting">
+                            <div>Planar Polish</div>
+                        </li>
+                        <li class="step waiting">
+                            <div>Immersion</div>
+                        </li>
+                        <li class="step waiting">
+                            <div>Soak - Room Temp DI</div>
+                        </li>
+                        <li class="step waiting">
+                            <div>In Process Inspection</div>
+                        </li>
+                        <li class="step waiting">
+                            <div>Ultrasonic Soak - Room</div>
+                        </li>
+                        <li class="step waiting">
+                            <div>Wipe Down</div>
+                        </li>
+                        <li class="step waiting">
+                            <div>Blow Off - CDA</div>
+                        </li>
+                        <li class="step waiting">
+                            <div>Bake - Low Temp</div>
+                        </li>
+                        <li class="step waiting">
+                            <div>Final Inspection</div>
+                        </li>
+                        <li class="step waiting">
+                            <div>Primary Packaging</div>
+                        </li>
+                        <li class="step waiting">
+                            <div>Secondary Packaging</div>
+                        </li>
+                    </ul>
+                </div>
+                <div id="slider" class="flexslider step-container">
+                    <ul class="slides">
+                        <li>
+                            [[$InitialInspection?]]
+                        </li>
+                        <li>
+                            [[$Serialize?]]
+                        </li>
+                        <li>
+                            [[$SoakRoom?]]
+                        </li>
+                        <li>
+                            <h1>Step 4 Goes Here</h1>
+                        </li>
+                        <li>
+                            <h1>Step 5 Goes Here</h1>
+                        </li>
+                        <li>
+                            <h1>Step 6 Goes Here</h1>
+                        </li>
+                        <li>
+                            <h1>Step 7 Goes Here</h1>
+                        </li>
+                        <li>
+                            <h1>Step 8 Goes Here</h1>
+                        </li>
+                        <li>
+                            <h1>Step 9 Goes Here</h1>
+                        </li>
+                        <li>
+                            <h1>Step 10 Goes Here</h1>
+                        </li>
+                        <li>
+                            <h1>Step 11 Goes Here</h1>
+                        </li>
+                        <li>
+                            <h1>Step 12 Goes Here</h1>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script src="~/assets/js/plugins/bootstrap3/bootstrap-dialog.min.js"></script>
+    <script type="text/javascript" src="~/assets/js/i18n/grid.locale-en.js"></script>
+    <script type="text/javascript" src="~/assets/js/jquery.jqGrid.min.js"></script>
+    <script type="text/javascript" src="~/assets/js/jquery.mockjax.js"></script>
+    <script src="//cdn.rawgit.com/noelboss/featherlight/1.6.1/release/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://cdn.smooch.io/smooch.min.js"></script>
+
+    <script type="text/javascript" src="~/assets/js/grids/engineer.js"></script>
+
+    <script>
+        //$.jgrid.defaults.responsive = true;
+        $.jgrid.defaults.styleUI = 'Bootstrap';
+
+        Smooch.init({ appToken: '9wxoxi2wbcbymhjf1ex1a0dux' });
+
+    </script>
+
+}

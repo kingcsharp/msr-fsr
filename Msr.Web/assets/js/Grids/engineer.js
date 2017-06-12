@@ -57,7 +57,8 @@ $(document).ready(function() {
 		         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
 		         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
 		         width: 100,
-		         align: 'center'
+		         align: 'center',
+		         formatter: workItemFormatter
 		     },
 		     {
 		         name: 'SupplierName',
@@ -347,6 +348,13 @@ $(document).ready(function() {
 	    InstructionsCellVal = notes + '<br/><button id="add-button' + rowObject.FillId + '" onclick="toggleInstructions(' + rowObject.FillId + ',0)" class="btn support-btn btn-xs btn-danger show">Add Instructions</button><div id="instruction' + rowObject.FillId + '" class="hidden" ><textarea style="width: 95%;" rows=4 placeholder="Add disposition Instructions" id="note-' + rowObject.FillId + '"></textarea><button class="btn support-btn btn-xs btn-primary" onclick="toggleInstructions(' + rowObject.FillId + ',1)">Save</button>';
         thisCellVal = (rowObject.HasNcr == 1) ? InstructionsCellVal : 'N/A';
         return thisCellVal;
-    }
+	}
+
+	function workItemFormatter(cellvalue, options, rowObject) {
+
+	    var thisCellVal = '<a href="/wip/details/' + rowObject.FillId + '">'+ cellvalue +'</a>';
+	  
+	    return thisCellVal;
+	}
     
 });

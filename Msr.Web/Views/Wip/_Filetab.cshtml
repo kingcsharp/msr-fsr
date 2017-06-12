@@ -1,0 +1,48 @@
+﻿@model  Msr.Services.Tasks.Messaging.MonitorHistoryResponse
+
+<h4>Monitors - Work Order #@Model.PurchItemId</h4>
+<table class="table table-bordered">
+    <tr>
+        <td>@Model.SupName</td>
+        <td>@Model.FillObjDesc</td>
+    </tr>
+</table>
+
+<table class="table table-bordered monitor-tabel">
+
+    @foreach (var task in Model.MonitorItem)
+    {
+        <thead>
+        <tr>
+            <th colspan=4>@task.Description</th>
+        </tr>
+        <tr>
+        <th>Monitor @task.TaskId</th>
+        <th>Result</th>
+        <th>Pass/Fail</th>
+        <th>Comment</th>
+        </thead>
+    <tbody>
+    @foreach (var monitor in task.MonitorResults)
+    {
+        var cssClass = "";
+
+        if (monitor.IsPassing == "Pass")
+        {
+            cssClass = "success";
+        }else if (monitor.IsPassing == "Fail")
+        {
+            cssClass = "danger";
+        }
+
+        <tr>
+            <td>@monitor.Description</td>
+            <td>@monitor.PrintResult</td>
+            <td class="@cssClass">@monitor.IsPassing</td>
+            <td>@monitor.Comment</td>
+        </tr>
+    }
+    </tbody>
+    }
+
+</table>

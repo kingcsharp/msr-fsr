@@ -1,0 +1,39 @@
+﻿@model  Msr.Web.ViewModel.Engineering.EngineeringViewModel
+@{
+    ViewBag.Title = "WIP Menu";
+}
+
+<div class="container-fluid">
+    <div class="side-body padding-top">
+        <div class="row">
+            <h2 class="page-header">
+                Work Orders <button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
+            </h2>
+            <div class="col-lg-12">
+                <table id="jqGrid"></table>
+                <div id="jqGridPager"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script src="~/assets/js/plugins/bootstrap3/bootstrap-dialog.min.js"></script>
+    <script type="text/javascript" src="~/assets/js/i18n/grid.locale-en.js"></script>
+    <script type="text/javascript" src="~/assets/js/jquery.jqGrid.min.js"></script>
+    <script type="text/javascript" src="~/assets/js/jquery.mockjax.js"></script>
+    <script src="//cdn.rawgit.com/noelboss/featherlight/1.6.1/release/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://cdn.smooch.io/smooch.min.js"></script>
+
+    <script type="text/javascript" src="~/assets/js/grids/engineer.js"></script>
+
+    <script>
+        //$.jgrid.defaults.responsive = true;
+        $.jgrid.defaults.styleUI = 'Bootstrap';
+
+        Smooch.init({ appToken: '9wxoxi2wbcbymhjf1ex1a0dux' });
+
+    </script>
+
+}

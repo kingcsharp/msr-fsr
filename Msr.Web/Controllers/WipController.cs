@@ -19,44 +19,20 @@ namespace Msr.Web.Controllers
     [Authorize]
     public class WipController : BaseController
     {
-        public ActionResult Engineering()
+        public ActionResult Index()
         {
             var viewModel = new EngineeringViewModel();
 
             ViewBag.ActiveClass = "WIP";
 
-            var loggedUser = User.Identity.GetUserId();
-
-            var userService = new UserService();
-
-            var company = userService.GetCompanyId(loggedUser);
-
-            viewModel.ClientName = company.Name;
-            viewModel.FromDate = DateTime.Now.AddDays(-30);
-            viewModel.ToDate = DateTime.Now;
-
             return View(viewModel);
         }
 
-        public ActionResult EngineeringData(JqGridParam param, DateTime? fromDate, DateTime? toDate)
+        public ActionResult EngineeringData(JqGridParam param)
         {
-            var _fromDate = DateTime.Now.AddDays(-30);
-            var _toDate = DateTime.Now;
-
-            var loggedUser = User.Identity.GetUserId();
-            var userService = new UserService();
-           var company = userService.GetCompanyId(loggedUser);
             var orderService = new OrderService();
 
-            var totalRows = orderService.GetWorkOrderQueryable().Where(x => x.CustId == company.Id);
-
-            if (fromDate.HasValue && toDate.HasValue)
-            {
-                _fromDate = fromDate.Value;
-                _toDate = toDate.Value;
-            }
-
-            totalRows = totalRows.Where(q => q.StDate.HasValue && q.StDate >= _fromDate && q.StDate <= _toDate);
+            var totalRows = orderService.GetWorkOrderQueryable();
 
             if (param.where != null && param.where.rules.Any())
             {
@@ -166,7 +142,6 @@ namespace Msr.Web.Controllers
             return Json(json, JsonRequestBehavior.AllowGet);
         }
 
-
         public ActionResult GetNcrModel(string id)
         {
             var orderService = new OrderService();
@@ -215,6 +190,11 @@ namespace Msr.Web.Controllers
             noteService.AddNote(id, message, 1, loggedUserId);
 
             return Json("OK", JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult Details(int id)
+        {
+            return View();
         }
 
         private List<DocumentView> GetDocViewModel(List<DocumentView> docs, OrderService orderService, int width)
