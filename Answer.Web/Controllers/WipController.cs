@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Msr.Models.Orders;
@@ -10,11 +8,10 @@ using Msr.Services.jqGrid;
 using Msr.Services.Notes;
 using Msr.Services.Orders;
 using Msr.Services.Orders.Messaging;
-using Msr.Services.Users;
-using Msr.Web.ViewModel;
+using Msr.Web.Controllers;
 using Msr.Web.ViewModel.Engineering;
 
-namespace Msr.Web.Controllers
+namespace Answer.Web.Controllers
 {
     [Authorize]
     public class WipController : BaseController
@@ -192,8 +189,21 @@ namespace Msr.Web.Controllers
             return Json("OK", JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult Details(int id)
+        public ActionResult Details(string id)
         {
+            var orderService = new OrderService();
+            var taskService = new TaskService();
+            var ncrDetails = orderService.GetNcrDetails(id);
+
+            var docs = orderService.GetDocuments(ncrDetails.Details.FillObjId);
+
+            var photos = GetDocViewModel(docs, orderService, 400);
+            ncrDetails.Photos = photos;
+
+            var response = taskService.GetTaskWithMonitors(id);
+
+            ncrDetails.MonitorItem = response.MonitorItem.Where(x => x.Description.Contains("Nonconformity") || x.Description.Contains("NCR")).ToList();
+
             return View();
         }
 

@@ -1,0 +1,237 @@
+﻿#carousel .slides > li {
+    border: 1px #c0c0c0 solid;
+    padding: 10px 3px 10px 3px !important;
+    background-color: #f0f0f0;
+    height:60px;
+    line-height:18px;
+    display: table !important;
+}
+#carousel .slides > li.flex-active-slide {
+    border: 1px #202020 solid;
+    background-color: #fff;
+}
+#carousel .slides > li div {
+    font-size:18px;
+    margin: 0 auto;
+    display: table-cell;
+    vertical-align: middle;
+    text-align:center;
+}
+.select2 {
+    display:none !important;
+}
+.wip-detail-header {
+    min-height: 186px;
+    max-height:186px;
+    border-bottom: 1px solid #c0c0c0;
+}
+.wip-detail-header-left {
+    min-height: 186px;
+    position:relative;
+    margin-bottom: 5px !important;
+}
+.wip-detail-item-controls {
+    position: absolute;
+    bottom: 5px;
+    right: 0;
+    margin-right: 15px;
+    display:none;
+}
+.wip-detail-item-controls button {
+    margin-left: 5px;
+}
+.wip-view-button {
+    position: relative;
+    top: -5px;
+    margin-left: 10px;
+    display: inline-block;
+}
+
+
+#parts {
+   overflow:hidden;
+}
+#parts-table {
+    overflow-y: scroll;
+    position: relative;
+    max-height: 100px;
+    padding:0;
+}
+
+#parts-table > table {
+    font-size:12px !important;
+}
+
+.tab-content > div {
+    padding: 5px 0!important;
+}
+.print-btn {
+    margin-left: 3px;
+}
+#step-controls {
+    margin-bottom: 10px;
+}
+
+#step-tabs .nav-tabs > li, #step-tabs .nav-pills > li {
+    font-size:16px;
+        font-family: 'Lato', sans-serif;
+}
+.step-container {
+    min-height: 400px;
+    border: 1px solid;
+    border-color: rgb(221, 221, 221);
+    font-size:16px;
+}
+
+/* The wip-detail-sidebar navigation menu */
+.wip-detail-sidebar {
+    height: 100%; /* 100% Full-height */
+    width: 0; /* 0 width - change this with JavaScript */
+    position: fixed; /* Stay in place */
+    z-index: 200; /* Stay on top */
+    top: 0;
+    left: 30px;
+    background-color: #fff;
+    border: 1px solid #c0c0c0 !important;
+    overflow-x: hidden; /* Disable horizontal scroll */
+    padding-top: 60px; /* Place content 60px from the top */
+    transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+}
+
+/* The navigation menu links */
+.wip-detail-sidebar a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #bbb;
+    display: block;
+    transition: 0.3s
+}
+
+/* When you mouse over the navigation links, change their color */
+.wip-detail-sidebar a:hover, .offcanvas a:focus{
+    color: #ccc;
+}
+
+/* Position and style the close button (top right corner) */
+.wip-detail-sidebar .closebtn {
+    position: absolute;
+    top: 50px;
+    right: 2px;
+    font-size: 36px;
+    margin-left: 50px;
+    color: #d0d0d0;
+}
+
+/* Style page content - use this if you want to push the page content to the right when you open the side navigation 
+#main {
+    transition: margin-left .5s;
+    padding: 20px;
+}*/
+
+/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+@media screen and (max-height: 450px) {
+    .wip-detail-sidebar {padding-top: 15px;}
+    .wip-detail-sidebar a {font-size: 18px;}
+}
+.task-window {
+    overflow-y: scroll;
+    position: relative;
+    max-height: 400px;
+}
+.dropdown-header {
+    font-size: 16px;
+    color: #22A7F0;
+    font-weight: 700;
+}
+
+.btn-sq-lg {
+  width: 100px !important;
+  height: 100px !important;
+}
+
+.btn-sq {
+  width: 60px !important;
+  height: 60px !important;
+  font-size: 20px;
+}
+
+.btn-sq-sm {
+  width: 50px !important;
+  height: 50px !important;
+  font-size: 10px;
+}
+
+.btn-sq-xs {
+  width: 25px !important;
+  height: 25px !important;
+  padding:2px;
+}
+
+#tooltip
+{
+    text-align: center;
+    color: #fff;
+    background: #111;
+    position: absolute;
+    z-index: 100;
+    padding: 15px;
+}
+ 
+#tooltip:after /* triangle decoration */
+{
+width: 0;
+height: 0;
+border-left: 10px solid transparent;
+border-right: 10px solid transparent;
+border-top: 10px solid #111;
+content: '';
+position: absolute;
+left: 50%;
+bottom: -10px;
+margin-left: -10px;
+}
+
+#tooltip.top:after
+{
+    border-top-color: transparent;
+    border-bottom: 10px solid #111;
+    top: -20px;
+    bottom: auto;
+}
+
+#tooltip.left:after
+{
+    left: 10px;
+    margin: 0;
+}
+
+#tooltip.right:after
+{
+    right: 10px;
+    left: auto;
+    margin: 0;
+}
+.step-complete {
+    background-color: #ccffcc !important;
+}
+.step.waiting {
+    background-color: #ffffcc !important;
+}
+input.timer {
+    position: relative;
+    top: 5px;
+    left: 15px;
+    font-size: 30px;
+    background-color: #303030;
+    color: #fff;
+}
+#ncr-button {
+    position:relative;
+    right:15px;
+}
+
+.modal .modal-body {
+    max-height: 420px;
+    overflow-y: auto;
+}

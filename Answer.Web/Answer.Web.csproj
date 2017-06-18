@@ -171,6 +171,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\NotesController.cs" />
     <Compile Include="Controllers\PartsReportingController.cs" />
     <Compile Include="Controllers\HelpController.cs" />
     <Compile Include="Controllers\DocController.cs" />
@@ -192,6 +193,7 @@
     <Compile Include="ViewModel\EditUserProfileViewModel.cs" />
     <Compile Include="ViewModel\Engineering\EngineeringViewModel.cs" />
     <Compile Include="ViewModel\Help\SupportViewModel.cs" />
+    <Compile Include="ViewModel\Notes\AddNoteViewModel.cs" />
     <Compile Include="ViewModel\PartsReportsViewModel.cs" />
     <Compile Include="ViewModel\Reports\ReportItemData.cs" />
     <Compile Include="ViewModel\UserProfileViewModel.cs" />
@@ -199,6 +201,7 @@
     <Compile Include="ViewModel\DocViewModel.cs" />
     <Compile Include="ViewModel\EditUserViewModel.cs" />
     <Compile Include="ViewModel\AddUserViewModel.cs" />
+    <Compile Include="ViewModel\Wip\WipDetails.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="assets\components\ace\ace\ace.min.js" />
@@ -281,6 +284,7 @@
     <Content Include="assets\css\animate.css\animate.min.css" />
     <Content Include="assets\css\animate.min.css" />
     <Content Include="assets\css\bootstrap-editable.css" />
+    <Content Include="assets\css\bootstrap-select.css" />
     <Content Include="assets\css\bootstrap-switch.min.css" />
     <Content Include="assets\css\bootstrap-theme.css" />
     <Content Include="assets\css\bootstrap-theme.min.css" />
@@ -289,6 +293,7 @@
     <Content Include="assets\css\checkbox3.min.css" />
     <Content Include="assets\css\dataTables.bootstrap.css" />
     <Content Include="assets\css\elegant-icons-style.css" />
+    <Content Include="assets\css\flexslider.css" />
     <Content Include="assets\css\font-awesome.min.css" />
     <Content Include="assets\css\fonts\ElegantIcons.svg" />
     <Content Include="assets\css\fonts\fontawesome-webfont.svg" />
@@ -296,6 +301,9 @@
     <Content Include="assets\css\hopscotch.css" />
     <Content Include="assets\css\hopscotch.min.css" />
     <Content Include="assets\css\jquery.dataTables.min.css" />
+    <Content Include="assets\css\jquery.fileupload-noscript.css" />
+    <Content Include="assets\css\jquery.fileupload-ui.css" />
+    <Content Include="assets\css\jquery.fileupload.css" />
     <Content Include="assets\css\line-icons.css" />
     <Content Include="assets\css\login.css" />
     <Content Include="assets\css\profile.css" />
@@ -307,6 +315,7 @@
     <Content Include="assets\css\ui.jqgrid-bootstrap-ui.css" />
     <Content Include="assets\css\ui.jqgrid-bootstrap.css" />
     <Content Include="assets\css\ui.jqgrid.css" />
+    <Content Include="assets\css\wip-detail.css" />
     <Content Include="assets\fonts\ElegantIcons.svg" />
     <Content Include="assets\fonts\fontawesome-webfont.svg" />
     <Content Include="assets\fonts\glyphicons-halflings-regular.svg" />
@@ -360,6 +369,7 @@
     <Content Include="assets\js\alert.js" />
     <Content Include="assets\js\app.js" />
     <Content Include="assets\js\bootstrap-editable.min.js" />
+    <Content Include="assets\js\bootstrap-select.js" />
     <Content Include="assets\js\bootstrap-switch.min.js" />
     <Content Include="assets\js\bootstrap.js" />
     <Content Include="assets\js\bootstrap.min.js" />
@@ -372,6 +382,8 @@
     <Content Include="assets\js\client_users.js" />
     <Content Include="assets\js\dashboard.js" />
     <Content Include="assets\js\dataTables.bootstrap.min.js" />
+    <Content Include="assets\js\engineer.js" />
+    <Content Include="assets\js\finger.min.js" />
     <Content Include="assets\js\grids\buyer_grid.js" />
     <Content Include="assets\js\grids\engineer.js" />
     <Content Include="assets\js\grids\client-user.js" />
@@ -421,6 +433,7 @@
     <Content Include="assets\js\i18n\grid.locale-uk.js" />
     <Content Include="assets\js\i18n\grid.locale-vi.js" />
     <Content Include="assets\js\jquery.dataTables.min.js" />
+    <Content Include="assets\js\jquery.flexslider.js" />
     <Content Include="assets\js\jquery.jqGrid.min.js" />
     <Content Include="assets\js\jquery.matchHeight-min.js" />
     <Content Include="assets\js\jquery.min.js" />
@@ -442,6 +455,8 @@
     <Content Include="assets\js\plugins\ui.multiselect.js" />
     <Content Include="assets\js\select2.full.min.js" />
     <Content Include="assets\js\theming.js" />
+    <Content Include="assets\js\timer.jquery.min.js" />
+    <Content Include="assets\js\wip-detail.js" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="favicon.ico" />
@@ -566,6 +581,17 @@
     <Content Include="Views\PartsReporting\Index.cshtml" />
     <Content Include="Views\PartsReporting\_Report.cshtml" />
     <Content Include="Views\Wip\Details.cshtml" />
+    <Content Include="Views\Shared\_AddNote.cshtml" />
+    <Content Include="Views\Wip\_SoakRoom.cshtml" />
+    <Content Include="Views\Wip\_Serialize.cshtml" />
+    <Content Include="Views\Wip\_InitialInspection.cshtml" />
+    <Content Include="Views\Wip\_StepControls.cshtml" />
+    <Content Include="Views\Wip\_SoakRoomTempDI.cshtml" />
+    <Content Include="Views\Wip\_MonitorsTab.cshtml" />
+    <Content Include="Views\Wip\_FilesTab.cshtml" />
+    <Content Include="Views\Wip\_SerializeDetail.cshtml" />
+    <Content Include="Views\Wip\_InitialInspectionDetail.cshtml" />
+    <Content Include="Views\Wip\_WipListModal.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

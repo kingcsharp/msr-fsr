@@ -2,6 +2,9 @@
 @{
     ViewBag.Title = "Work Order Details";
 }
+
+<!-- [[$wip-detail-sidenav?]] -->
+
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="row wip-detail-header">
@@ -134,13 +137,13 @@
                 <div id="slider" class="flexslider step-container">
                     <ul class="slides">
                         <li>
-                            [[$InitialInspection?]]
+                            @Html.Partial("_InitialInspection")
                         </li>
                         <li>
-                            [[$Serialize?]]
+                            @Html.Partial("_SoakRoom")
                         </li>
                         <li>
-                            [[$SoakRoom?]]
+                          @Html.Partial("_SoakRoom")
                         </li>
                         <li>
                             <h1>Step 4 Goes Here</h1>
@@ -176,23 +179,21 @@
     </div>
 </div>
 
+
+@Html.Partial("_WipListModal")
+@*@Html.Partial("_NcrModel")*@
+   
+
 @section scripts
 {
-    <script src="~/assets/js/plugins/bootstrap3/bootstrap-dialog.min.js"></script>
-    <script type="text/javascript" src="~/assets/js/i18n/grid.locale-en.js"></script>
-    <script type="text/javascript" src="~/assets/js/jquery.jqGrid.min.js"></script>
-    <script type="text/javascript" src="~/assets/js/jquery.mockjax.js"></script>
-    <script src="//cdn.rawgit.com/noelboss/featherlight/1.6.1/release/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
-    <script src="https://cdn.smooch.io/smooch.min.js"></script>
+<script type="text/javascript" src="~/assets/js/jquery.flexslider.js"></script>
+<script type="text/javascript" src="~/assets/js/bootstrap-select.js"></script>
+<script type="text/javascript" src="~/assets/js/finger.min.js"></script>
+<script type="text/javascript" src="~/assets/js/timer.jquery.min.js"></script>
+<script type="text/javascript" src="~/assets/js/wip-detail.js"></script>
 
-    <script type="text/javascript" src="~/assets/js/grids/engineer.js"></script>
+<script src="~/assets/js/plugins/bootstrap3/bootstrap-dialog.min.js"></script>
+<script type="text/javascript" src="~/assets/js/jquery.mockjax.js"></script>
 
-    <script>
-        //$.jgrid.defaults.responsive = true;
-        $.jgrid.defaults.styleUI = 'Bootstrap';
-
-        Smooch.init({ appToken: '9wxoxi2wbcbymhjf1ex1a0dux' });
-
-    </script>
 
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Security.AccessControl;
 
 namespace Msr.Models.Orders
@@ -49,5 +50,7 @@ namespace Msr.Models.Orders
         public DateTime? ActualStartDate { get; set; }
         public DateTime? ActualStopDate { get; set; }
         public string Notes { get; set; }
+        [NotMapped]
+        public string Action { get; set; }
     }
 }

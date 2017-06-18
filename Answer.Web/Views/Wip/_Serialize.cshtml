@@ -1,0 +1,25 @@
+﻿@Html.Partial("_StepControls")
+
+<div id="step-tabs" class="col-sm-12">
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#description2">Task Description</a></li>
+        <li><a data-toggle="tab" href="#monitors2">Monitors</a></li>
+        <li><a data-toggle="tab" href="#files2">Files</a></li>
+    </ul>
+    <div class="tab-content">
+        <div id="description2" class="tab-pane task-window fade in active">
+            @Html.Partial("_SerializeDetail")
+        </div>
+        <div id="monitors2" class="tab-pane task-window fade">
+            @Html.Partial("_MonitorsTab")
+
+
+        </div>
+        <div id="files2" class="tab-pane task-window fade">
+            @Html.Partial("_FilesTab")
+
+
+        </div>
+    </div>
+</div>
+

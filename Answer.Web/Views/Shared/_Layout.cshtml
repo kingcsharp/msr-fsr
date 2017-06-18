@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
- 
+
     <title>@ViewBag.Title</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -17,34 +17,44 @@
     <link rel="stylesheet" type="text/css" href="~/assets/css/animate.min.css">
     <link rel="stylesheet" type="text/css" href="~/assets/css/bootstrap-switch.min.css">
     <link rel="stylesheet" type="text/css" href="~/assets/css/checkbox3.min.css">
-    
+
     <link rel="stylesheet" type="text/css" href="~/assets/css/dataTables.bootstrap.css">
     <link rel="stylesheet" type="text/css" href="~/assets/css/select2.min.css">
     <!-- CSS App -->
     <link rel="stylesheet" type="text/css" href="~/assets/css/themes/flat-blue.css">
-  
+
     <link rel="stylesheet" type="text/css" href="~/assets/css/ui.jqgrid-bootstrap-ui.css">
     <link rel="stylesheet" type="text/css" href="~/assets/css/ui.jqgrid.css">
-    <link rel="stylesheet" type="text/css" href="~/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/jquery.fileupload.css">
+    <link rel="stylesheet" href="/assets/css/jquery.fileupload-ui.css">
+    <!-- CSS adjustments for browsers with JavaScript disabled -->
+    <link rel="stylesheet" type="text/css" href="/assets/css/flexslider.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/bootstrap-select.css">
+    <noscript><link rel="stylesheet" href="/assets/css/jquery.fileupload-noscript.css"></noscript>
+    <noscript><link rel="stylesheet" href="/assets/css/jquery.fileupload-ui-noscript.css"></noscript>
+    <link rel="stylesheet" type="text/css" href="/assets/css/wip-detail.css">
     <link rel="stylesheet" type="text/css" href="~/assets/css/hopscotch.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/css/style.css">
+
 </head>
 <body class="flat-blue">
     <div class="app-container">
-    <div class="row content-container">
-        @Html.Partial("_Header")
-        @Html.Partial("_SideBar")
+        <div class="row content-container">
+            @Html.Partial("_Header")
+            @Html.Partial("_SideBar")
 
-        @RenderBody()
+            @RenderBody()
 
-        @Html.Partial("_ModalWipHelp")
-        @Html.Partial("_ModalWipWindows")
-        @Html.Partial("_SupportForm")
-    </div>
+            @Html.Partial("_ModalWipHelp")
+            @Html.Partial("_ModalWipWindows")
+            @Html.Partial("_SupportForm")
+        </div>
 
         @Html.Partial("_Footer")
         <script src="~/assets/js/jquery.min.js"></script>
         <script type="text/javascript" src="~/assets/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="~/assets/js/Chart.min.js"></script>
+
         <script type="text/javascript" src="~/assets/js/bootstrap-switch.min.js"></script>
         <script type="text/javascript" src="~/assets/js/jquery.matchHeight-min.js"></script>
         <script type="text/javascript" src="~/assets/js/jquery.dataTables.min.js"></script>
@@ -56,7 +66,7 @@
         <script type="text/javascript" src="~/assets/js/app.js"></script>
         <script type="text/javascript" src="~/assets/js/help_form.js"></script>
         <script type="text/javascript" src="~/assets/js/hopscotch.js"></script>
-    
+
         @RenderSection("scripts", required: false)
 
 

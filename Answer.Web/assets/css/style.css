@@ -659,16 +659,22 @@ body.login-page {
 .code-preview {
   width: 100%;
   min-height: 400px; }
+  
+.flat-blue .nav-tabs {
+    background-color: #f0f0f0;
+}
 
 .nav-tabs > li {
-  margin-bottom: -1px; }
+  margin-bottom: -1px; 
+  font-weight: 700;
+}
   .nav-tabs > li > a {
     border-radius: 0;
     border: 0; }
 
 .nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
   border-radius: 0;
-  border-top: 0; }
+  border-top: 1px solid #ddd; }
 
 .tab-content > div {
   padding: 20px; }
@@ -1377,8 +1383,8 @@ td.theader {
     bottom: 10px;
 }
 
-.ui-jqgrid {font-size:1.2em}
-.ui-jqgrid tr.jqgrow td, .ui-jqgrid tr.ui-jqgrid-labels th {font-size:1.2em; white-space: normal !important; margin-top:0;}
+.ui-jqgrid {font-size:.9em}
+.ui-jqgrid tr.jqgrow td, .ui-jqgrid tr.ui-jqgrid-labels th {font-size:.9em; white-space: normal !important; margin-top:0;}
 .progress {margin-bottom:1px; position: relative; border:1px solid #c0c0c0;}
 .progress-bar span {
 position: absolute;
@@ -1409,72 +1415,33 @@ color: black;
   background-color: #e2e2e2;
   color: #373a3c;
 }
-
-
-/* Styles for validation helpers
------------------------------------------------------------*/
-.field-validation-error
-{
-    color: #ff0000;
+.input-group-addon {
+    background-color: #e4efe2;
+    border-radius: 0px;
 }
 
-.field-validation-valid
-{
-    display: none;
-}
-
-.input-validation-error
-{
-    border: 1px solid #ff0000;
-    background-color: #ffeeee;
-}
-
-.validation-summary-errors
-{
-    font-weight: bold;
-    color: #ff0000;
-}
-.validation-summary-errors ul
-{
-   list-style: none;
-   font-family: "Lato", sans-serif;
-   color:#fff;
-}
-
-
-.validation-summary-valid
-{
-    display: none;
-}
-.help-img {
-  max-width:95%;
-   -webkit-box-shadow: 5px 5px 5px  #b0b0b0;
-box-shadow: 5px 5px 5px #b0b0b0;
-    margin-bottom: 40px;
-}
-.help-text {
-  font-size:1.2em;
-  font-weight:700;
-}
-.help-alert {
-   font-size:1.2em;
-  font-weight:700; 
-  font-family: 'Lato', sans-serif;
-}
-.disp-label {
-  font-size: 11px;
-  font-weight: 700;
-  font-family: "Arial Narrow", Sans-serif;
-  text-align: left;
-}
-.disp-instruction {
-    text-align: left;
-    font-size: 13px;
-    color: #ca0315;
-    margin: 3px 0px 5px 0;
-    border-bottom: 1px solid #d0d0d0;
-}
-.disp-text {
-  padding: 3px 0;
-}
-
+/* tooltip styles */
+.tooltip.top .tooltip-inner {
+    background-color:black;
+  }
+.tooltip.top .tooltip-arrow {
+          border-top-color: black;
+       }
+.tooltip.right .tooltip-inner {
+    background-color:black;
+  }
+.tooltip.right .tooltip-arrow {
+          border-right-color: black;
+       }
+.tooltip.bottom .tooltip-inner {
+    background-color:black;
+  }
+.tooltip.bottom .tooltip-arrow {
+          border-bottom-color: black;
+       }  
+.tooltip.left .tooltip-inner {
+    background-color:black;
+  }
+.tooltip.left .tooltip-arrow {
+          border-left-color: black;
+       }                    

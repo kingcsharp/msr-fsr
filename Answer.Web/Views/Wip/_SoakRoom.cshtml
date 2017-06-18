@@ -1,48 +1,20 @@
-﻿@model  Msr.Services.Tasks.Messaging.MonitorHistoryResponse
+﻿                         @Html.Partial("_StepControls")
 
-<h4>Monitors - Work Order #@Model.PurchItemId</h4>
-<table class="table table-bordered">
-    <tr>
-        <td>@Model.SupName</td>
-        <td>@Model.FillObjDesc</td>
-    </tr>
-</table>
-
-<table class="table table-bordered monitor-tabel">
-
-    @foreach (var task in Model.MonitorItem)
-    {
-        <thead>
-        <tr>
-            <th colspan=4>@task.Description</th>
-        </tr>
-        <tr>
-        <th>Monitor @task.TaskId</th>
-        <th>Result</th>
-        <th>Pass/Fail</th>
-        <th>Comment</th>
-        </thead>
-    <tbody>
-    @foreach (var monitor in task.MonitorResults)
-    {
-        var cssClass = "";
-
-        if (monitor.IsPassing == "Pass")
-        {
-            cssClass = "success";
-        }else if (monitor.IsPassing == "Fail")
-        {
-            cssClass = "danger";
-        }
-
-        <tr>
-            <td>@monitor.Description</td>
-            <td>@monitor.PrintResult</td>
-            <td class="@cssClass">@monitor.IsPassing</td>
-            <td>@monitor.Comment</td>
-        </tr>
-    }
-    </tbody>
-    }
-
-</table>
+<div id="step-tabs" class="col-sm-12">
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#description3">Task Description</a></li>
+        <li><a data-toggle="tab" href="#monitors3">Monitors</a></li>
+        <li><a data-toggle="tab" href="#files3">Files</a></li>
+    </ul>
+    <div class="tab-content">
+        <div id="description3" class="tab-pane task-window fade in active">
+            @Html.Partial("_SoakRoomTempDI")
+        </div>
+        <div id="monitors3" class="tab-pane task-window fade">
+            @Html.Partial("_MonitorsTab")
+        </div>
+        <div id="files3" class="tab-pane task-window fade">
+          @Html.Partial("_FilesTab")
+        </div>
+    </div>
+</div>
