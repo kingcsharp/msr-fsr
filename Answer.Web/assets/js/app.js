@@ -7,10 +7,11 @@ $(function() {
     $(".navbar-right").toggleClass("expanded");
     return $(".navbar-right-expand-toggle").toggleClass("fa-rotate-90");
   });
+  
 });
 
 $(function() {
-  return $('select').select2();
+   return $('select.select2').select2();
 });
 
 $(function() {
@@ -33,4 +34,7 @@ $(function() {
   return $(".side-menu .nav .dropdown").on('show.bs.collapse', function() {
     return $(".side-menu .nav .dropdown .collapse").collapse('hide');
   });
+});
+$(function() {
+    $("[data-toggle=tooltip]").tooltip();
 });

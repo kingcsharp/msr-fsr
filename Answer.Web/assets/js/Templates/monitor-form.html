@@ -1,0 +1,42 @@
+<script type="text/html" id="monitor-form">
+    <div class="tab-pane active" id="1a">
+        <table class="table no-border table-condensed">
+            <tr>
+                <th>Y/N:</th>
+                <td>
+                    <div class="make-switch switch-mini" data-on="primary" data-off="info"  data-on-label="Y" data-off-label="N">
+                        <input class="monitor-control" id="monitor1-switch" type="checkbox" checked>
+                    </div>
+                </td>
+            </tr>
+             <tr class='on-off-row'>
+                <th>Description:</th>
+                <td><input type='text' name='mon-desc0' class='form-control monitor-control pre-populated' placeholder='Enter Defects' /></td>
+            </tr>
+             <tr class='on-off-row'>
+                <th>Manual/Code/Sensor:</th>
+                <td>
+                    <select class='form-control monitor-control ' name='monitor-mcs-a1'>
+    		            <option >Manual</option>
+    		            <option >Code</option>
+    		            <option>Sensor</option>
+                    </select>
+                </td>
+            </tr>
+             <tr  class='on-off-row'>
+                <th>Desired:</th>
+                <td><input type='text' name='desired0' class='form-control monitor-control pre-populated' placeholder='Any' /></td>
+            </tr>
+             <tr class='on-off-row'>
+                <th>Fault Handling:</th>
+                <td>
+                    <select class='form-control monitor-control ' name='monitor-fault-a1'>
+    		            <option >Record and Continue</option>
+    		            <option >Must be Exact to Proceed</option>
+    		            <option>Must be In Range to Proceed</option>
+                    </select>    			                        
+                </td>
+            </tr> 
+        </table>
+    </div>
+</script>

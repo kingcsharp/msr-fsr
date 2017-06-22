@@ -98,7 +98,7 @@ $(document).ready(function () {
 	
 	$("#jqGrid").tooltip();
 	
-	$('body').chardinJs('start')
+	//$('body').chardinJs('start')
 	
 	$("#save").click(function(){
 		filter = $("#jqGrid").jqGrid('getGridParam', 'postData').filters;
