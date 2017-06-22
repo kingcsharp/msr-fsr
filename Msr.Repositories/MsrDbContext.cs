@@ -1,6 +1,7 @@
 ﻿using System.Data.Entity;
 using Msr.Models.Notes;
 using Msr.Models.Orders;
+using Msr.Models.Parts;
 using Msr.Models.Tasks;
 using Msr.Models.TimeZones;
 using Msr.Models.Users;
@@ -32,6 +33,7 @@ namespace Msr.Repositories
             modelBuilder.Entity<FileSearchView>().ToTable("Portal_FileSearchView");
             modelBuilder.Entity<TimeZoneView>().ToTable("Portal_TimeZoneView");
             modelBuilder.Entity<MonitorsWithTaskAndResult>().ToTable("Portal_MonitorsWithTaskAndResults");
+            modelBuilder.Entity<PartsView>().ToTable("Portal_PartsView");
         }
 
         public DbSet<AspNetUser> AspNetUsers { get; set; }
@@ -49,6 +51,7 @@ namespace Msr.Repositories
         public DbSet<FileSearchView> FileSearchView { get; set; }
         public DbSet<TimeZoneView> TimeZoneView { get; set; }
         public DbSet<MonitorsWithTaskAndResult> MonitorsWithTaskAndResults { get; set; }
+        public DbSet<PartsView> PartsViews { get; set; }
 
     }
 }

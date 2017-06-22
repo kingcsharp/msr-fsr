@@ -1,0 +1,144 @@
+﻿@model  Msr.Web.ViewModel.Engineering.EngineeringViewModel
+@{
+    ViewBag.Title = "WIP Menu";
+}
+<div class="container-fluid">
+    <div class="side-body padding-top">
+        <div class="row">
+            <h2 class="page-header">
+                Parts <button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
+            </h2>
+            <div class="col-lg-12">
+                <table id="jqGrid"></table>
+                <div id="jqGridPager"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script src="~/assets/js/plugins/bootstrap3/bootstrap-dialog.min.js"></script>
+    <script type="text/javascript" src="~/assets/js/i18n/grid.locale-en.js"></script>
+    <script type="text/javascript" src="~/assets/js/jquery.jqGrid.min.js"></script>
+    <script type="text/javascript" src="~/assets/js/jquery.mockjax.js"></script>
+    <script src="//cdn.rawgit.com/noelboss/featherlight/1.6.1/release/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://cdn.smooch.io/smooch.min.js"></script>
+    <script>
+        //$.jgrid.defaults.responsive = true;
+        $.jgrid.defaults.styleUI = 'Bootstrap';
+
+        Smooch.init({ appToken: '9wxoxi2wbcbymhjf1ex1a0dux' });
+
+    </script>
+    <script>
+        $("#jqGrid").jqGrid({
+            url: '/Parts/PartsData',
+            mtype: "GET",
+            styleUI: 'Bootstrap',
+            datatype: "json",
+            colModel: [
+                {
+                    label: 'Id',
+                    name: 'Id',
+                    index: 'Id',
+                    key: true,
+                    colmenu: false,
+                    coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                    searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                    width: 100,
+                    align: 'left'
+                },
+                {
+                    label: 'Current Owners Part Name',
+                    name: 'Name',
+                    index: 'Name',
+                    colmenu: true,
+                    coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                    searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                    width: 250,
+                    align: 'left'
+                },
+                {
+                    label: 'Current Owners Part #',
+                    name: 'CompanyPartNumber',
+                    index: 'CompanyPartNumber',
+                    colmenu: false,
+                    coloptions: { sorting: false, columns: true, filtering: false, seraching: true, grouping: false, freeze: false },
+                    searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                    align: 'left',
+                    width: 100,
+                    hidedlg: false
+                },
+                {
+                    label: 'Company #',
+                    name: 'CompanyName',
+                    index: 'CompanyName',
+                    colmenu: false,
+                    coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                    searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                    align: 'left'
+                },
+                {
+                    label: 'Revision',
+                    name: 'REV',
+                    index: 'REV',
+                    colmenu: false,
+                    coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                    searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                    align: 'left'
+                },
+                {
+                    label: 'Approved Status',
+                    name: 'Status',
+                    index: 'Status',
+                    colmenu: false,
+                    stype: "select",
+                    coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                    searchoptions: { value: ":[All];CREATING, DENIED, APPROVED, APPROVED_BUT_REVISING:Creating or Approved;CREATING, DENIED: Creating;IN_WORKFLOW:In Approval Workflow;APPROVED, APPROVED_BUT_REVISING, APPROVED_BUT_DELETING:Approved;DENIED:Denied;APPROVED_BUT_REVISING:Approved But Being Revised;APPROVED_BUT_DELETING:Approved But Being Deleted;DENIED:Denied;DELETED:Deleted;OLD:Obsolete" },
+                    align: 'center'
+                }
+            ],
+
+            viewrecords: true, // show the current page, data rang and total records on the toolbar
+            rowNum: 10,
+            loadonce: false, // this is just for the demo
+            pager: "#jqGridPager",
+            height: 'auto',
+            gridview: true,
+            sortname: 'CompanyPartNumber',
+            sortable: true,
+            sortorder: 'asc',
+            cellEdit: true,
+            cellsubmit: 'clientArray',
+            editurl: 'clientArray',
+            autowidth: true,
+            colMenu: true,
+
+        });
+        $('#jqGrid').navGrid("#jqGridPager", {
+            search: false, // show search button on the toolbar
+            add: false,
+            edit: false,
+            del: false,
+            refresh: true
+        },
+            {}, // edit options
+            {}, // add options
+            {}, // delete options
+            { multipleSearch: true }
+        );
+        $('#jqGrid').jqGrid('filterToolbar', {
+            stringResult: true,
+            searchOnEnter: true,
+            searchOperators: true
+        });
+        $('#search').click(function () {
+
+            jQuery("#jqGrid").setGridParam({
+                page: 1
+            }).trigger("reloadGrid");
+
+        });
+    </script>
+}

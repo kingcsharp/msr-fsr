@@ -2737,5 +2737,6 @@
     <Build Include="dbo\Stored Procedures\Portal\Portal_TimeZoneView.sql" />
     <Build Include="dbo\Stored Procedures\Portal\PortalHasNcr.sql" />
     <Build Include="dbo\Views\Portal\Portal_MonitorsWithTaskAndResults.sql" />
+    <Build Include="dbo\Views\Portal\Portal_PartsView.sql" />
   </ItemGroup>
 </Project>
