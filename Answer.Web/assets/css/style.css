@@ -1383,8 +1383,8 @@ td.theader {
     bottom: 10px;
 }
 
-.ui-jqgrid {font-size:.9em}
-.ui-jqgrid tr.jqgrow td, .ui-jqgrid tr.ui-jqgrid-labels th {font-size:.9em; white-space: normal !important; margin-top:0;}
+.ui-jqgrid {font-size:1.2em}
+.ui-jqgrid tr.jqgrow td, .ui-jqgrid tr.ui-jqgrid-labels th {font-size:1.2em; white-space: normal !important; margin-top:0;}
 .progress {margin-bottom:1px; position: relative; border:1px solid #c0c0c0;}
 .progress-bar span {
 position: absolute;

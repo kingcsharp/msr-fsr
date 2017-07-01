@@ -1,0 +1,7 @@
+﻿@model Msr.Services.Orders.Messaging.TsrDetailsResponse
+
+
+@foreach (var task in Model.TsrTaskResults.Where(x => x.Level == 2))
+{
+    @Html.Raw(task.Des)
+}

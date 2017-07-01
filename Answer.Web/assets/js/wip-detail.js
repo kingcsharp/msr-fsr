@@ -137,6 +137,30 @@ $(function() {
 	});
 	
     
+	$('#wioDetailPrintTraveler').on('hidden.bs.modal', function (event) {
+	    $(this).data('bs.modal', null);
+	});
+
+	$('#wioDetailPrintTraveler').on('show.bs.modal', function (event) {
+	    var button = $(event.relatedTarget);
+	    var id = button.data('id');
+	    var modal = $(this);
+
+	    $.ajax({
+	        type: "GET",
+	        url: '/wip/printTraveler?id=' + id,
+	        dataType: 'html',
+	        success: function (data) {
+	            modal.find('.modal-body').html(data);
+	        },
+	        error: function () {
+
+	        }
+	    });
+	});
+
+
+
 
 });
 function openNav() {

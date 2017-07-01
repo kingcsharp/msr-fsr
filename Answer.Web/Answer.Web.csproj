@@ -696,6 +696,10 @@
     <Content Include="Views\Wip\_InitialInspectionDetail.cshtml" />
     <Content Include="Views\Wip\_WipListModal.cshtml" />
     <Content Include="Views\Parts\Index.cshtml" />
+    <Content Include="Views\Wip\_ViewTsr.cshtml" />
+    <Content Include="Views\Parts\AddPartTypes.cshtml" />
+    <Content Include="Views\Parts\PartTypes.cshtml" />
+    <Content Include="Views\Parts\SavePartTypes.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

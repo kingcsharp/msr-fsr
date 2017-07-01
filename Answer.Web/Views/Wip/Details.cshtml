@@ -1,4 +1,4 @@
-﻿@model  Msr.Web.ViewModel.Engineering.EngineeringViewModel
+﻿@model  Msr.Services.Orders.Messaging.WorkOrderDetailsResponse
 @{
     ViewBag.Title = "Work Order Details";
 }
@@ -43,18 +43,18 @@
                 <div class="tab-content">
                     <div id="parts" class="tab-pane fade in active">
                         <div id="part-tab-controls" class="col-sm-12">
-                            <button class="btn btn-info btn-xs print-btn pull-right" data-toggle="modal" data-target="#wioDetailPrintOther"><i class="fa fa-print"></i> Print Other</button>
-                            <button class="btn btn-info btn-xs print-btn pull-right" data-toggle="modal" data-target="#wioDetailPrintTraveler"><i class="fa fa-print"></i> Print Traveler</button>
+                            <button class="btn btn-info btn-xs print-btn pull-right" data-toggle="modal"  data-id="@Model.FillId" data-target="#wioDetailPrintOther"><i class="fa fa-print"></i> Print Other</button>
+                            <button class="btn btn-info btn-xs print-btn pull-right" data-toggle="modal" data-id="@Model.FillId" data-target="#wioDetailPrintTraveler"><i class="fa fa-print"></i> Print Traveler</button>
                         </div>
                         <div id="parts-table" class="col-sm-12">
                             <table class="table table-responsive table-condensed table-bordered">
                                 <tbody>
-                                    <tr><td>Actual Part # 110694, s/n:tool18, CLND_HME_BAFF2_KIT (p/n:93511) qty:1</td></tr>
-                                    <tr><td>Actual Part # 110696,  _HME EC2 BAFFLE (Part of kit 633014634)  (p/n 93513)</td></tr>
-                                    <tr><td>Actual Part # 110698,  _HME EC2 BASE RING (Part of kit 633014634)  (p/n 93515)</td></tr>
-                                    <tr><td>Actual Part # 110694, s/n:tool18, CLND_HME_BAFF2_KIT (p/n:93511) qty:1</td></tr>
-                                    <tr><td>Actual Part # 110696,  _HME EC2 BAFFLE (Part of kit 633014634)  (p/n 93513)</td></tr>
-                                    <tr><td>Actual Part # 110698,  _HME EC2 BASE RING (Part of kit 633014634)  (p/n 93515)</td></tr>
+                                <tr><td>@Model.FileSearchResult.FillObjDesc qty:@Model.FileSearchResult.Qty </td></tr>
+
+                                    @foreach (var part in Model.Parts)
+                                    {
+                                        <tr><td>@part</td></tr>
+                                    }
                                 </tbody>
                             </table>
                         </div>
@@ -64,19 +64,19 @@
                             <tbody>
                                 <tr>
                                     <th nowrap style="text-align: right">Customer:</th>
-                                    <td>INTEL F24</td>
+                                    <td>@Model.FileSearchResult.CustomerName</td>
                                 </tr>
                                 <tr>
                                     <th nowrap style="text-align: right">Product:</th>
-                                    <td>CLND_HME_BAFF2_KIT (IPN 633014634)</td>
+                                    <td>@Model.FileSearchResult.ProductName</td>
                                 </tr>
                                 <tr>
                                     <th nowrap style="text-align: right">Procedure:</th>
-                                    <td>05-INT-220-00   HME EC2 BAFF2 KIT-Copper</td>
+                                    <td>@Model.FileSearchResult.ProcedureName</td>
                                 </tr>
                                 <tr>
                                     <th nowrap style="text-align: right">Purchase Item #:</th>
-                                    <td>110675</td>
+                                    <td>@Model.FileSearchResult.PurchItemId</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -90,53 +90,17 @@
                 <!-- Step Navigation -->
                 <div id="carousel" class="flexslider">
                     <ul class="slides">
-                        <li class="step step-complete">
-                            <div>Incoming Inspection</div>
-                        </li>
-                        <li class="step step-complete">
-                            <div>Serialize</div>
-                        </li>
-                        <li class="step step-inprogress active">
-                            <div>Soak - Room Temp DI</div>
-                        </li>
-                        <li class="step waiting">
-                            <div>Planar Polish</div>
-                        </li>
-                        <li class="step waiting">
-                            <div>Immersion</div>
-                        </li>
-                        <li class="step waiting">
-                            <div>Soak - Room Temp DI</div>
-                        </li>
-                        <li class="step waiting">
-                            <div>In Process Inspection</div>
-                        </li>
-                        <li class="step waiting">
-                            <div>Ultrasonic Soak - Room</div>
-                        </li>
-                        <li class="step waiting">
-                            <div>Wipe Down</div>
-                        </li>
-                        <li class="step waiting">
-                            <div>Blow Off - CDA</div>
-                        </li>
-                        <li class="step waiting">
-                            <div>Bake - Low Temp</div>
-                        </li>
-                        <li class="step waiting">
-                            <div>Final Inspection</div>
-                        </li>
-                        <li class="step waiting">
-                            <div>Primary Packaging</div>
-                        </li>
-                        <li class="step waiting">
-                            <div>Secondary Packaging</div>
-                        </li>
+                        @foreach (var step in Model.TaskStepResults)
+                        {
+                            <li class="step waiting">
+                                <div>@step.Description</div>
+                            </li>
+                        }
                     </ul>
                 </div>
                 <div id="slider" class="flexslider step-container">
                     <ul class="slides">
-                        <li>
+                        @*<li>
                             @Html.Partial("_InitialInspection")
                         </li>
                         <li>
@@ -144,34 +108,15 @@
                         </li>
                         <li>
                           @Html.Partial("_SoakRoom")
-                        </li>
-                        <li>
-                            <h1>Step 4 Goes Here</h1>
-                        </li>
-                        <li>
-                            <h1>Step 5 Goes Here</h1>
-                        </li>
-                        <li>
-                            <h1>Step 6 Goes Here</h1>
-                        </li>
-                        <li>
-                            <h1>Step 7 Goes Here</h1>
-                        </li>
-                        <li>
-                            <h1>Step 8 Goes Here</h1>
-                        </li>
-                        <li>
-                            <h1>Step 9 Goes Here</h1>
-                        </li>
-                        <li>
-                            <h1>Step 10 Goes Here</h1>
-                        </li>
-                        <li>
-                            <h1>Step 11 Goes Here</h1>
-                        </li>
-                        <li>
-                            <h1>Step 12 Goes Here</h1>
-                        </li>
+                        </li>*@
+
+                        @foreach (var step in Model.TaskStepResults)
+                        {
+                            <li>
+                                <h1>Step 4 Goes Here</h1>
+                            </li>
+                        }
+
                     </ul>
                 </div>
             </div>
@@ -181,8 +126,27 @@
 
 
 @Html.Partial("_WipListModal")
-@*@Html.Partial("_NcrModel")*@
-   
+
+
+<div id="wioDetailPrintTraveler" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Print Traveler Report</h4>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" onclick="js:window.print()"><i class="fa fa-print"></i> Print Report</button>
+                <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close-o"></i> Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
 
 @section scripts
 {

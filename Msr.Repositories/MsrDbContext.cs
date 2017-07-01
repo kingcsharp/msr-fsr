@@ -34,6 +34,8 @@ namespace Msr.Repositories
             modelBuilder.Entity<TimeZoneView>().ToTable("Portal_TimeZoneView");
             modelBuilder.Entity<MonitorsWithTaskAndResult>().ToTable("Portal_MonitorsWithTaskAndResults");
             modelBuilder.Entity<PartsView>().ToTable("Portal_PartsView");
+            modelBuilder.Entity<PartTypesView>().ToTable("Portal_PartTypesView");
+            modelBuilder.Entity<PartType>().ToTable("A_PART_TYPES_HISTORY");
         }
 
         public DbSet<AspNetUser> AspNetUsers { get; set; }
@@ -52,6 +54,8 @@ namespace Msr.Repositories
         public DbSet<TimeZoneView> TimeZoneView { get; set; }
         public DbSet<MonitorsWithTaskAndResult> MonitorsWithTaskAndResults { get; set; }
         public DbSet<PartsView> PartsViews { get; set; }
+        public DbSet<PartTypesView> PartTypesViews { get; set; }
+        public DbSet<PartType> PartTypes { get; set; }
 
     }
 }

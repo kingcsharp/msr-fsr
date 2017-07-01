@@ -1,12 +1,12 @@
 ﻿@model  Msr.Web.ViewModel.Engineering.EngineeringViewModel
 @{
-    ViewBag.Title = "Parts Menu";
+    ViewBag.Title = "Part Types Menu";
 }
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="row">
             <h2 class="page-header">
-                Parts <button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
+                Part Types <button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
             </h2>
             <div class="col-lg-12">
                 <table id="jqGrid"></table>
@@ -14,7 +14,7 @@
             </div>
         </div>
         <div class="row">
-            <a href="~/parts/AddPart" class="btn btn-success help-btn">Add</a>
+            <a href="~/parts/AddPartTypes" class="btn btn-success help-btn">Add</a>
         </div>
     </div>
 </div>
@@ -36,13 +36,14 @@
     </script>
     <script>
         $("#jqGrid").jqGrid({
-            url: '/Parts/PartsData',
+            url: '/Parts/PartTypesData',
             mtype: "GET",
             styleUI: 'Bootstrap',
+            emptyrecords: 'No records to display',
             datatype: "json",
             colModel: [
                 {
-                    label: 'Id',
+                    label: 'ID',
                     name: 'Id',
                     index: 'Id',
                     key: true,
@@ -53,66 +54,102 @@
                     align: 'left'
                 },
                 {
-                    label: 'Current Owners Part Name',
+                    label: 'Part Type Name',
                     name: 'Name',
                     index: 'Name',
                     colmenu: true,
+                    editable: true, // must set editable to true if you want to make the field editable
+                    editrules: { required: true },
                     coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                     searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                     width: 250,
                     align: 'left'
                 },
                 {
-                    label: 'Current Owners Part #',
-                    name: 'CompanyPartNumber',
-                    index: 'CompanyPartNumber',
+                    label: 'Typically Spare',
+                    name: 'Spare',
+                    index: 'Spare',
                     colmenu: false,
+                    editable: true,
+                    stype: "select",
                     coloptions: { sorting: false, columns: true, filtering: false, seraching: true, grouping: false, freeze: false },
-                    searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                    searchoptions: { value: ":[All];PTSPARE_NO:Not Typically a Spare Part;PTSPARE_1:L1 - Stock in location with 1 machine;PTSPARE_2:L2 - Stock in location with 10 machine;PTSPARE_3:L3 - Stock in location with 50 machine" },
                     align: 'left',
                     width: 100,
                     hidedlg: false
                 },
                 {
-                    label: 'Company #',
-                    name: 'CompanyName',
-                    index: 'CompanyName',
+                    label: 'Typically Consumable',
+                    name: 'Consumable',
+                    index: 'Consumable',
                     colmenu: false,
+                    editable: true,
+                    stype: "select",
+                    coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                    searchoptions: { value: ":[All];PTCON_NO:Not Consumable Part;PTCON_YES:Consumable Part" },
+                    align: 'left'
+                },
+                {
+                    label: 'Typically Ordering UNIT',
+                    name: 'Unit',
+                    index: 'Unit',
+                    colmenu: false,
+                    editable: true,
                     coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                     searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                     align: 'left'
                 },
                 {
                     label: 'Revision',
-                    name: 'Revision',
-                    index: 'Revision',
+                    name: 'Rev',
+                    index: 'Rev',
                     colmenu: false,
+                    editable: true,
                     coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                     searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                     align: 'left'
                 },
                 {
-                    label: 'Approved Status',
+                    label: 'Approval Status',
                     name: 'Status',
                     index: 'Status',
                     colmenu: false,
+                    editable: true,
                     stype: "select",
                     coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                     searchoptions: { value: ":[All];CREATING, DENIED, APPROVED, APPROVED_BUT_REVISING:Creating or Approved;CREATING, DENIED: Creating;IN_WORKFLOW:In Approval Workflow;APPROVED, APPROVED_BUT_REVISING, APPROVED_BUT_DELETING:Approved;DENIED:Denied;APPROVED_BUT_REVISING:Approved But Being Revised;APPROVED_BUT_DELETING:Approved But Being Deleted;DENIED:Denied;DELETED:Deleted;OLD:Obsolete" },
-                    align: 'center'
-                }
+                    align: 'left'
+                },
+                {
+                    label: 'Checked Out To',
+                    name: 'LockedByName',
+                    index: 'LockedByName',
+                    colmenu: false,
+                    editable: true,
+                    coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                    searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                    align: 'left'
+                },
+                { name: 'Actions', index: 'ID', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: PartTypesEditFormatter, width: 100, align: 'center' }
             ],
-
+            ajaxRowOptions: {
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json"
+            },
+            serializeRowData: function (postdata) {
+                return JSON.stringify(postdata);
+            },
             viewrecords: true, // show the current page, data rang and total records on the toolbar
             rowNum: 10,
             loadonce: false, // this is just for the demo
             pager: "#jqGridPager",
             height: 'auto',
             gridview: true,
-            sortname: 'CompanyPartNumber',
+            sortname: 'Id',
             sortable: true,
             sortorder: 'asc',
-            cellEdit: true,
+            cellEdit: false,
             cellsubmit: 'clientArray',
             editurl: 'clientArray',
             autowidth: true,
@@ -126,7 +163,7 @@
             del: false,
             refresh: true
         },
-            {}, // edit options
+            {},  // edit options
             {}, // add options
             {}, // delete options
             { multipleSearch: true }
@@ -136,6 +173,43 @@
             searchOnEnter: true,
             searchOperators: true
         });
+        var myEditOptions = {
+            keys: true,
+            oneditfunc: function (rowresponseid) {
+                console.log("row with rowid=" + rowresponseid + " is editing.")
+            },
+            aftersavefunc: function (rowid, response, options) {
+                console.log(options);
+                console.log("row with rowid=" + rowid + " is successfuly being modified.")
+                $.ajax({
+                    type: 'POST',
+                    url: '/Parts/Save',
+                    data: options,
+                    dataType: 'JSON',
+                    success: function (resultData) {
+                        //alert("Save Complete");
+                        console.log("row with rowid=" + rowid + " is successfuly modified.")
+                    }
+                });
+
+            }
+        };
+        $('#jqGrid').jqGrid('inlineNav', '#jqGridPager', {
+            add: false,
+            edit: false,
+            save: false,
+            cancel: false,
+            addParams: {
+                position: "afterSelected",
+                addRowParams: myEditOptions
+            },
+            addedrow: "last",
+            editParams: myEditOptions
+        });
+        function PartTypesEditFormatter(cellvalue, options, rowObject) {
+            thisCellVal = '<a href="/parts/SavePartTypes/' + rowObject.Id + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i> Edit</a>';
+            return thisCellVal;
+        }
         $('#search').click(function () {
 
             jQuery("#jqGrid").setGridParam({

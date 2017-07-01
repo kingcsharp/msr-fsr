@@ -16,6 +16,13 @@ namespace Answer.Web.Controllers
     [Authorize]
     public class WipController : BaseController
     {
+        private OrderService _orderService;
+
+        public WipController()
+        {
+            _orderService = new OrderService();
+        }
+
         public ActionResult Index()
         {
             var viewModel = new EngineeringViewModel();
@@ -176,7 +183,7 @@ namespace Answer.Web.Controllers
 
             return PartialView("_Monitors", response);
         }
-
+        
         [HttpPost]
         public JsonResult AddInstruction(string id, string message)
         {
@@ -189,24 +196,20 @@ namespace Answer.Web.Controllers
             return Json("OK", JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult Details(string id)
+        public ActionResult Details(int id)
         {
-            var orderService = new OrderService();
-            var taskService = new TaskService();
-            var ncrDetails = orderService.GetNcrDetails(id);
+            WorkOrderDetailsResponse response = _orderService.GetPurchaseItemDetails(id);
 
-            var docs = orderService.GetDocuments(ncrDetails.Details.FillObjId);
-
-            var photos = GetDocViewModel(docs, orderService, 400);
-            ncrDetails.Photos = photos;
-
-            var response = taskService.GetTaskWithMonitors(id);
-
-            ncrDetails.MonitorItem = response.MonitorItem.Where(x => x.Description.Contains("Nonconformity") || x.Description.Contains("NCR")).ToList();
-
-            return View();
+            return View(response);
         }
 
+        public ActionResult PrintTraveler(int id)
+        {
+            var response = _orderService.GetTsrDetails(id);
+
+            return PartialView("_ViewTsr", response);
+        }
+        
         private List<DocumentView> GetDocViewModel(List<DocumentView> docs, OrderService orderService, int width)
         {
             var photos = new List<DocumentView>();

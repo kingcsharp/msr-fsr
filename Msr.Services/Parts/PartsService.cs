@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using System.Data.Entity;
 
 namespace Msr.Services.Parts
 {
@@ -24,5 +25,6 @@ namespace Msr.Services.Parts
         {
             return _dbContext.PartsViews;
         }
+
     }
 }

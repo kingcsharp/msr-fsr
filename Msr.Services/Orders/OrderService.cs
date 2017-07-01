@@ -1,11 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
+using System.Data;
 using System.Linq;
 using Msr.Models.Orders;
 using Msr.Repositories;
 using Msr.Services.Orders.Messaging;
 using System.Data.SqlClient;
 using System.Web.Configuration;
+using Dapper;
+using Msr.Services.Orders.Procedures;
 using RestSharp;
 
 namespace Msr.Services.Orders
@@ -76,5 +81,65 @@ namespace Msr.Services.Orders
 
             return content;
         }
+
+       public WorkOrderDetailsResponse GetPurchaseItemDetails(int fillId)
+       {
+           var detailsResponse = new WorkOrderDetailsResponse();
+           detailsResponse.FillId = fillId;
+
+           using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
+           {
+               var p = new DynamicParameters();
+
+               p.Add("@fileId", fillId ,DbType.Int32 , ParameterDirection.Input);
+
+               using (var multi = conn.QueryMultiple("GetPurchaseItemDetails", p, commandType: CommandType.StoredProcedure))
+               {
+                   detailsResponse.FileSearchResult = multi.Read<FileSearchResult>().Single();
+
+                    detailsResponse.Parts = multi.Read<string>().ToList();
+
+                   detailsResponse.TaskStepResults = multi.Read<TaskStepResult>().ToList();
+               }
+           }
+
+           return detailsResponse;
+       }
+
+        public TsrDetailsResponse GetTsrDetails(int fillId)
+        {
+            try
+            {
+                var detailsResponse = new TsrDetailsResponse();
+
+                using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
+                {
+                    var p = new DynamicParameters();
+
+                    p.Add("@fileId", fillId, DbType.Int32, ParameterDirection.Input);
+
+                    using (var multi = conn.QueryMultiple("GetTsrDetails", p, commandType: CommandType.StoredProcedure))
+                    {
+                        detailsResponse.TsrTaskResults = multi.Read<TsrTaskResult>().ToList();
+                    }
+                }
+
+                FormatHtml(detailsResponse);
+
+                return detailsResponse;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+       private void FormatHtml(TsrDetailsResponse response)
+       {
+           foreach (var taskResult in response.TsrTaskResults)
+           {
+                taskResult.Des = taskResult.Des.Replace("<<bb>>", "<br/><h4>").Replace("<</bb>>", "</h4>").Replace("<<nl/>>", "<br/>");
+            }
+       }
     }
 }
