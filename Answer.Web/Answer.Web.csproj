@@ -183,6 +183,7 @@
     <Compile Include="Controllers\DocController.cs" />
     <Compile Include="Controllers\BuyerController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\PrintOtherController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\WipController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -700,6 +701,10 @@
     <Content Include="Views\Parts\AddPartTypes.cshtml" />
     <Content Include="Views\Parts\PartTypes.cshtml" />
     <Content Include="Views\Parts\SavePartTypes.cshtml" />
+    <Content Include="Views\PrintOther\_ViewDeliveryTsr.cshtml" />
+    <Content Include="Views\PrintOther\_ViewNcrTsr.cshtml" />
+    <Content Include="Views\PrintOther\_ViewPartLabelTsr.cshtml" />
+    <Content Include="Views\PrintOther\_ViewMonitorLabelTsr.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

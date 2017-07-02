@@ -1,0 +1,96 @@
+﻿@using System.Threading
+@model Msr.Services.Orders.Messaging.NcrTsrDetailsResponse
+
+<div class="printable_body">
+    <div class="printableReport">
+        <table>
+            <tbody>
+                <tr>
+                    <td>
+                        <div class="ncr_supplierName"></div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="ncr_report">
+            <tbody>
+                <tr>
+                    <td class="ncr_Label">Customer:</td>
+                    <td class="ncr_data">@Model.FillsSearchResult.CustomerName</td>
+                </tr>
+                <tr>
+                    <td class="ncr_Label">Product:</td>
+                    <td class="ncr_data">@Model.FillsSearchResult.ProductName</td>
+                </tr>
+                <tr>
+                    <td class="ncr_Label">Part Info:</td>
+                    <td class="ncr_data">@Model.FillsSearchResult.PartInfo</td>
+                </tr>
+                <tr>
+                    <td class="ncr_Label">Procedure:</td>
+                    <td class="ncr_data">@Model.FillsSearchResult.ProcedureName</td>
+                </tr>
+                <tr>
+                    <td class="ncr_Label">Customer PO#:</td>
+                    <td class="ncr_data">@Model.FillsSearchResult.CustomerPo</td>
+                </tr>
+                <tr>
+                    <td class="ncr_Label">Technician:</td>
+                    <td class="ncr_data"></td>
+                </tr>
+            </tbody>
+        </table>
+        <br>
+
+        @if (Model.AttachmentFileIds.Any())
+        {
+            <table class="ncrAttachments">
+                <tbody>
+                <tr>
+                    <td colspan="2">
+                        Attachments:<br>
+                        @foreach (var fileId in Model.AttachmentFileIds)
+                        {
+                            <table class="ncr_attachment">
+                                <tbody>
+                                <tr>
+                                    <td><img class="printable" src="../documents/viewDocument.asp?docID=@fileId" alt=""></td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: center;"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        }
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <br/>
+        }
+
+        <table>
+            <tbody>
+            <tr>
+                <td style="padding-left: 15px;">Procedure:</td>
+                <td class="normalTable">
+                    <step_text_html type="202">@Model.FillsSearchResult.ProcedureName</step_text_html>
+                </td>
+            </tr>
+                @foreach (var result in Model.TasksFindForFillIdResult)
+                {
+                    <tr>
+                        <td style="padding-left: 30px;">@result.Print_Order</td>
+                        <td class="normalTable">
+                            <step_text_html type="202"><span style="font-weight: bold">@Html.Raw(result.Step_Text_Html)</span></step_text_html>
+                            @foreach (var monitorDescription in result.MonitorsDescription)
+                            {
+                                <div class="monitor" style="padding-left: 20px; color: green">@monitorDescription<span style="color: black"></span></div>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

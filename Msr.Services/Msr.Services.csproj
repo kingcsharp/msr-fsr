@@ -112,6 +112,9 @@
     <Compile Include="Notes\NoteService.cs" />
     <Compile Include="Notes\Procedures\AddProcedure.cs" />
     <Compile Include="Orders\Messaging\CheckLoginResult.cs" />
+    <Compile Include="Orders\Messaging\MonitorLabelTsrDetailsResponse.cs" />
+    <Compile Include="Orders\Messaging\PartLabelTsrDetailsResponse.cs" />
+    <Compile Include="Orders\Messaging\NcrTsrDetailsResponse.cs" />
     <Compile Include="Orders\Messaging\DocResponse.cs" />
     <Compile Include="Orders\Messaging\NcrDetails.cs" />
     <Compile Include="Orders\Messaging\GetTaskWithMonitorsResult.cs" />
@@ -119,8 +122,17 @@
     <Compile Include="Orders\Messaging\NcrReportResponse.cs" />
     <Compile Include="Orders\Messaging\AddUserMessageResponse.cs" />
     <Compile Include="Orders\Messaging\TsrDetailsResponse.cs" />
+    <Compile Include="Orders\Messaging\DeliveryTsrDetailsResponse.cs" />
     <Compile Include="Orders\Messaging\WorkOrderDetailsResponse.cs" />
     <Compile Include="Orders\OrderService.cs" />
+    <Compile Include="Orders\Procedures\GetMonitorLabelTsrDetailsResult.cs" />
+    <Compile Include="Orders\Procedures\GetPartsAndKitsLabelsResult.cs" />
+    <Compile Include="Orders\Procedures\FillsSearchResult.cs" />
+    <Compile Include="Orders\Procedures\PurchaseItemInfoResult.cs" />
+    <Compile Include="Orders\Procedures\PurchaseWithSupplierQuotesResult.cs" />
+    <Compile Include="Orders\Procedures\FilesForFillTaskResult.cs" />
+    <Compile Include="Orders\Procedures\TasksFindForFillIdResult.cs" />
+    <Compile Include="Orders\Procedures\FillGetMonitorsForNcrResult.cs" />
     <Compile Include="Orders\Procedures\TsrTaskResult.cs" />
     <Compile Include="Orders\Procedures\TaskStepResult.cs" />
     <Compile Include="Orders\Procedures\FileSearchResult.cs" />

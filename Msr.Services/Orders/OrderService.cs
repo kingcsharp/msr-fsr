@@ -15,7 +15,7 @@ using RestSharp;
 
 namespace Msr.Services.Orders
 {
-   public class OrderService
+    public class OrderService
     {
         private readonly MsrDbContext _dbContext;
 
@@ -34,19 +34,19 @@ namespace Msr.Services.Orders
             return _dbContext.BuyerViews;
         }
 
-       public NcrReportResponse GetNcrDetails(string fileId)
-       {
+        public NcrReportResponse GetNcrDetails(string fileId)
+        {
             var response = new NcrReportResponse();
 
             var fileIdParm = new SqlParameter("@FileId", fileId);
 
-           response.Details = _dbContext.Database.SqlQuery<NcrDetails>("Portal_GetNcrReport @FileId", fileIdParm).Single();
+            response.Details = _dbContext.Database.SqlQuery<NcrDetails>("Portal_GetNcrReport @FileId", fileIdParm).Single();
 
-           response.StepPics = GetStepPics(fileId);
+            response.StepPics = GetStepPics(fileId);
 
-           //SELECT * FROM A_TASK_COMMENT WHERE TASK_ID IN  (SELECT TASK_ID FROM A_TASK_ORDER_INFORMATION WHERE FILL_ITEM_ID = '109815')
+            //SELECT * FROM A_TASK_COMMENT WHERE TASK_ID IN  (SELECT TASK_ID FROM A_TASK_ORDER_INFORMATION WHERE FILL_ITEM_ID = '109815')
             return response;
-       }
+        }
 
         public List<DocumentView> GetDocuments(string acctualPartId)
         {
@@ -69,7 +69,7 @@ namespace Msr.Services.Orders
 
         public string GetDocumentBase64(string filePath, int? height)
         {
-            var endPoint = WebConfigurationManager.AppSettings["DocApiEndPoint"] + string.Format("doc/getfilebyid?filePath={0}&height={1}",filePath, height);
+            var endPoint = WebConfigurationManager.AppSettings["DocApiEndPoint"] + string.Format("doc/getfilebyid?filePath={0}&height={1}", filePath, height);
 
             var client = new RestClient(endPoint);
 
@@ -82,29 +82,29 @@ namespace Msr.Services.Orders
             return content;
         }
 
-       public WorkOrderDetailsResponse GetPurchaseItemDetails(int fillId)
-       {
-           var detailsResponse = new WorkOrderDetailsResponse();
-           detailsResponse.FillId = fillId;
+        public WorkOrderDetailsResponse GetPurchaseItemDetails(int fillId)
+        {
+            var detailsResponse = new WorkOrderDetailsResponse();
+            detailsResponse.FillId = fillId;
 
-           using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
-           {
-               var p = new DynamicParameters();
+            using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
+            {
+                var p = new DynamicParameters();
 
-               p.Add("@fileId", fillId ,DbType.Int32 , ParameterDirection.Input);
+                p.Add("@fileId", fillId, DbType.Int32, ParameterDirection.Input);
 
-               using (var multi = conn.QueryMultiple("GetPurchaseItemDetails", p, commandType: CommandType.StoredProcedure))
-               {
-                   detailsResponse.FileSearchResult = multi.Read<FileSearchResult>().Single();
+                using (var multi = conn.QueryMultiple("GetPurchaseItemDetails", p, commandType: CommandType.StoredProcedure))
+                {
+                    detailsResponse.FileSearchResult = multi.Read<FileSearchResult>().Single();
 
                     detailsResponse.Parts = multi.Read<string>().ToList();
 
-                   detailsResponse.TaskStepResults = multi.Read<TaskStepResult>().ToList();
-               }
-           }
+                    detailsResponse.TaskStepResults = multi.Read<TaskStepResult>().ToList();
+                }
+            }
 
-           return detailsResponse;
-       }
+            return detailsResponse;
+        }
 
         public TsrDetailsResponse GetTsrDetails(int fillId)
         {
@@ -134,12 +134,121 @@ namespace Msr.Services.Orders
             }
         }
 
-       private void FormatHtml(TsrDetailsResponse response)
-       {
-           foreach (var taskResult in response.TsrTaskResults)
-           {
+        public DeliveryTsrDetailsResponse GetDeliveryTsrDetails(int fillId)
+        {
+            var detailsResponse = new DeliveryTsrDetailsResponse { FillId = fillId };
+
+            using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
+            {
+                var p = new DynamicParameters();
+
+                p.Add("@fillId", fillId.ToString(), DbType.String, ParameterDirection.Input);
+
+                using (var multi = conn.QueryMultiple("GetDeliveryTsrDetails", p, commandType: CommandType.StoredProcedure))
+                {
+                    detailsResponse.PurchaseWithSupplierQuotesResult = multi.Read<PurchaseWithSupplierQuotesResult>().Single();
+
+                    detailsResponse.PurchaseItemInfoResult = multi.Read<PurchaseItemInfoResult>().Single();
+                }
+            }
+
+            return detailsResponse;
+        }
+
+        public NcrTsrDetailsResponse GetNcrTsrDetails(int fillId)
+        {
+            var detailsResponse = new NcrTsrDetailsResponse { FillId = fillId };
+
+            using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
+            {
+                var p = new DynamicParameters();
+
+                p.Add("@fillId", fillId.ToString(), DbType.String, ParameterDirection.Input);
+                p.Add("@strNTLogin", string.Empty, DbType.String, ParameterDirection.Input);
+
+                detailsResponse.FillsSearchResult = conn.Query<FillsSearchResult>(
+                    @"SELECT CUST_NAME AS CustomerName, PROD_NAME AS ProductName, FILL_OBJ_DESC AS PartInfo, PROC_NAME AS ProcedureName, CUST_LINE_ITEM AS CustomerPo FROM A_V_FILLS_SEARCH with (noLock)  WHERE ID = @Id",
+                    new { Id = fillId.ToString() })
+                    .FirstOrDefault();
+
+                detailsResponse.TasksFindForFillIdResult =
+                    conn.Query<TasksFindForFillIdResult>("A_SP_TASKS_FIND_FOR_FILL_ID", p,
+                        commandType: CommandType.StoredProcedure).Where(x => x.Print_Order.HasValue).ToList();
+
+                var fillGetMonitorsForNcrResult =
+                    conn.Query<FillGetMonitorsForNcrResult>("A_SP_FILL_GET_MONITORS_FOR_NCR", p,
+                        commandType: CommandType.StoredProcedure).ToList();
+
+                detailsResponse.AttachmentFileIds =
+                    conn.Query<FilesForFillTaskResult>("A_SP_FILES_GET_FOR_FILL_TASKS", p,
+                        commandType: CommandType.StoredProcedure).Select(x=>x.File_Id).ToList();
+
+                foreach (var tasksForFill in detailsResponse.TasksFindForFillIdResult)
+                {
+                    tasksForFill.MonitorsDescription =
+                        fillGetMonitorsForNcrResult.Where(
+                            monitor => monitor.Stepper_Id == tasksForFill.Step_Id).Select(x => x.Description);
+                    tasksForFill.Step_Text_Html =
+                        tasksForFill.Step_Text_Html.Replace("<<bb>>", "<br/><h4>")
+                            .Replace("<</bb>>", "</h4>")
+                            .Replace("<<nl/>>", "<br/>");
+                }
+                
+            }
+
+            return detailsResponse;
+        }
+
+        public PartLabelTsrDetailsResponse GetPartLabelTsrDetails(int fillId)
+        {
+            var detailsResponse = new PartLabelTsrDetailsResponse { FillId = fillId };
+
+            using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
+            {
+                var p = new DynamicParameters();
+
+                p.Add("@fileId", fillId, DbType.Int32, ParameterDirection.Input);
+                
+                detailsResponse.GetPartsAndKitsLabelsResult =
+                    conn.Query<GetPartsAndKitsLabelsResult>("GetPartsAndKitsLabels", p,
+                        commandType: CommandType.StoredProcedure).ToList();
+            }
+
+            return detailsResponse;
+        }
+
+        public MonitorLabelTsrDetailsResponse GetMonitorLabelTsrDetails(int fillId)
+        {
+            var detailsResponse = new MonitorLabelTsrDetailsResponse { FillId = fillId };
+
+            using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
+            {
+                var p = new DynamicParameters();
+
+                p.Add("@fillId", fillId, DbType.Int32, ParameterDirection.Input);
+
+                detailsResponse.GetMonitorLabelTsrDetailsResult =
+                    conn.Query<GetMonitorLabelTsrDetailsResult>("GetMonitorLabelTsrDetails", p,
+                        commandType: CommandType.StoredProcedure).ToList();
+
+                detailsResponse.GetMonitorLabelTsrDetailsResult.ForEach(x =>
+                {
+                    x.Task_Description =
+                        x.Task_Description.Replace("<<bb>>", "<br/><h4>")
+                            .Replace("<</bb>>", "</h4>")
+                            .Replace("<<nl/>>", "<br/>");
+                });
+            }
+
+            return detailsResponse;
+        }
+
+        private void FormatHtml(TsrDetailsResponse response)
+        {
+            foreach (var taskResult in response.TsrTaskResults)
+            {
                 taskResult.Des = taskResult.Des.Replace("<<bb>>", "<br/><h4>").Replace("<</bb>>", "</h4>").Replace("<<nl/>>", "<br/>");
             }
-       }
+        }
     }
 }
