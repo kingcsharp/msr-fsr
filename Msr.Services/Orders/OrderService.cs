@@ -243,10 +243,46 @@ namespace Msr.Services.Orders
             return detailsResponse;
         }
 
+        public WipHistoryTsrResponse GetWipHistoryTsrDetail(int fillId)
+        {
+            var detailsResponse = new WipHistoryTsrResponse
+            {
+                FillId = fillId
+            };
+
+            using (
+                IDbConnection conn =
+                    new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
+            {
+                var p = new DynamicParameters();
+
+                p.Add("@fillID", fillId.ToString(), DbType.String, ParameterDirection.Input);
+
+                using (
+                    var multi = conn.QueryMultiple("Portal_GetTsrWipHistory", p, commandType: CommandType.StoredProcedure)
+                    )
+                {
+                    detailsResponse.WipHistoryDetailResult = multi.Read<WipHistoryDetailResult>().Single();
+
+                    detailsResponse.WipTaskResult = multi.Read<WipTaskResult>().ToList();
+
+                    detailsResponse.WipSubTaskResult = multi.Read<WipSubTaskResult>().ToList();
+
+                    foreach (var wipTask in detailsResponse.WipTaskResult)
+                    {
+                        wipTask.WipSubTasks =
+                            detailsResponse.WipSubTaskResult.Where(x => x.TaskId == wipTask.Id).ToList();
+                    }
+                }
+            }
+
+            return detailsResponse;
+        }
+
         private void FormatHtml(TsrDetailsResponse response)
         {
-            foreach (var taskResult in response.TsrTaskResults)
-            {
+  foreach (var taskResult in response.TsrTaskResults)
+           {
                 taskResult.Des = taskResult.Des.Replace("<<bb>>", "<br/><h4>").Replace("<</bb>>", "</h4>").Replace("<<nl/>>", "<br/>");
             }
         }
