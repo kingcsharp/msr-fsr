@@ -700,6 +700,7 @@
     <Content Include="Views\Parts\AddPartTypes.cshtml" />
     <Content Include="Views\Parts\PartTypes.cshtml" />
     <Content Include="Views\Parts\SavePartTypes.cshtml" />
+    <Content Include="Views\Wip\_ViewTsrWipHistory.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

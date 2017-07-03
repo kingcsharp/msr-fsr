@@ -209,7 +209,14 @@ namespace Answer.Web.Controllers
 
             return PartialView("_ViewTsr", response);
         }
-        
+
+        public ActionResult PrintOtherWipHistory(int id)
+        {
+            var response = _orderService.GetWipHistoryTsrDetail(id);
+
+            return PartialView("_ViewTsrWipHistory", response);
+        }
+
         private List<DocumentView> GetDocViewModel(List<DocumentView> docs, OrderService orderService, int width)
         {
             var photos = new List<DocumentView>();

@@ -2741,5 +2741,6 @@
     <Build Include="dbo\Stored Procedures\Portal\GetPurchaseItemDetails.sql" />
     <Build Include="dbo\Views\Portal\Portal_PartTypesView.sql" />
     <Build Include="dbo\Stored Procedures\Portal\GetTsrDetails.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_GetTsrWipHistory.sql" />
   </ItemGroup>
 </Project>
