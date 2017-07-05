@@ -12,6 +12,36 @@ namespace Answer.Web.Controllers
             _orderService = new OrderService();
         }
 
+        public ActionResult PrintReport(int id, string reportType)
+        {
+            if (reportType == "WORK_REPORT")
+            {
+                return DeliveryTsr(id);
+            }
+
+            if (reportType == "DELIVERY")
+            {
+                return DeliveryTsr(id);
+            }
+
+            if (reportType == "WIP_HIST")
+            {
+                return PrintOtherWipHistory(id);
+            }
+
+            if (reportType == "HISTORY_LABEL")
+            {
+                return NcrTsr(id);
+            }
+
+            if (reportType == "MONITOR_LABEL")
+            {
+                return MonitorLabelTsr(id);
+            }
+
+            return Content("Report Type not found");
+        }
+
         public ActionResult DeliveryTsr(int id)
         {
             var response = _orderService.GetDeliveryTsrDetails(id);
@@ -34,6 +64,13 @@ namespace Answer.Web.Controllers
         {
             var response = _orderService.GetMonitorLabelTsrDetails(id);
             return PartialView("_ViewMonitorLabelTsr", response);
+        }
+
+        public ActionResult PrintOtherWipHistory(int id)
+        {
+            var response = _orderService.GetWipHistoryTsrDetail(id);
+
+            return PartialView("_ViewTsrWipHistory", response);
         }
     }
 }

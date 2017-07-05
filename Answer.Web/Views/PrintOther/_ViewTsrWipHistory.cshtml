@@ -1,0 +1,31 @@
+﻿@model Msr.Services.Orders.Messaging.WipHistoryTsrResponse
+
+<div class="row">
+    
+</div>
+
+<div class="row">
+    <table class="table table-bordered">
+        <tr>
+            <th>Step</th>
+            <th>Description</th>
+            <th>Latest Requestee Name</th>
+            <th>Actual Start Date</th>
+            <th>Actual Stop Date</th>
+            <th>Location </th>
+            <th>Status</th>
+        </tr>
+        @foreach (var task in Model.WipTaskResult)
+        {
+            <tr>
+                <td>@task.Id</td>
+                <td>@task.Description </td>
+                <td>@task.LatestRequesteeName</td>
+                <td>@task.ActualStartDate</td>
+                <td>@task.ActualStopDate</td>
+                <td>@task.Location</td>
+                <td>@task.Status</td>
+            </tr>
+        }
+    </table>
+</div>

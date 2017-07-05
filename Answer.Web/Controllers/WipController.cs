@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using Answer.Web.ViewModel.Wip;
 using Microsoft.AspNet.Identity;
 using Msr.Models.Orders;
 using Msr.Services.jqGrid;
@@ -198,7 +199,11 @@ namespace Answer.Web.Controllers
 
         public ActionResult Details(int id)
         {
+            var orderService = new OrderService();
+
             WorkOrderDetailsResponse response = _orderService.GetPurchaseItemDetails(id);
+
+            response.WoItems = orderService.GetWorkOrderQueryable().Take(10).ToList();
 
             return View(response);
         }
@@ -210,12 +215,16 @@ namespace Answer.Web.Controllers
             return PartialView("_ViewTsr", response);
         }
 
-        public ActionResult PrintOtherWipHistory(int id)
+        public ActionResult PrintOther(int id)
         {
-            var response = _orderService.GetWipHistoryTsrDetail(id);
+            var vm = new PrintOtherViewModel();
+            vm.FillId = id;
 
-            return PartialView("_ViewTsrWipHistory", response);
+            vm.Setup();
+
+            return PartialView("_PrintOther", vm);
         }
+
 
         private List<DocumentView> GetDocViewModel(List<DocumentView> docs, OrderService orderService, int width)
         {

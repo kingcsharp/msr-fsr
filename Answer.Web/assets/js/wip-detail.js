@@ -159,8 +159,46 @@ $(function() {
 	    });
 	});
 
+	$('#wioDetailPrintOther').on('hidden.bs.modal', function (event) {
+	    $(this).data('bs.modal', null);
+	});
 
+	$('#wioDetailPrintOther').on('show.bs.modal', function (event) {
+	    var button = $(event.relatedTarget);
+	    var id = button.data('id');
+	    var modal = $(this);
 
+	    $.ajax({
+	        type: "GET",
+	        url: '/wip/printOther?id=' + id,
+	        dataType: 'html',
+	        success: function (data) {
+	            modal.find('.modal-body').html(data);
+	        },
+	        error: function () {
+
+	        }
+	    });
+	});
+
+    $('#display-report').on('click', function() {
+
+        var id = $('.print-other-fill-id').val();
+        var reportType = $('#PrintOtherId').val();
+
+        $.ajax({
+            type: "GET",
+            url: '/PrintOther/PrintReport?id=' + id +'&reportType='+reportType,
+            dataType: 'html',
+            success: function (data) {
+                $('#print-other-content').html(data);
+            },
+            error: function () {
+
+            }
+        });
+
+    });
 
 });
 function openNav() {

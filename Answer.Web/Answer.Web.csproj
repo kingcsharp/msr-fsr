@@ -208,6 +208,7 @@
     <Compile Include="ViewModel\DocViewModel.cs" />
     <Compile Include="ViewModel\EditUserViewModel.cs" />
     <Compile Include="ViewModel\AddUserViewModel.cs" />
+    <Compile Include="ViewModel\Wip\PrintViewModel.cs" />
     <Compile Include="ViewModel\Wip\WipDetails.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -701,11 +702,12 @@
     <Content Include="Views\Parts\AddPartTypes.cshtml" />
     <Content Include="Views\Parts\PartTypes.cshtml" />
     <Content Include="Views\Parts\SavePartTypes.cshtml" />
-    <Content Include="Views\Wip\_ViewTsrWipHistory.cshtml" />
+    <Content Include="Views\PrintOther\_ViewTsrWipHistory.cshtml" />
     <Content Include="Views\PrintOther\_ViewDeliveryTsr.cshtml" />
     <Content Include="Views\PrintOther\_ViewNcrTsr.cshtml" />
     <Content Include="Views\PrintOther\_ViewPartLabelTsr.cshtml" />
     <Content Include="Views\PrintOther\_ViewMonitorLabelTsr.cshtml" />
+    <Content Include="Views\Wip\_PrintOther.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -250,17 +250,13 @@ namespace Msr.Services.Orders
                 FillId = fillId
             };
 
-            using (
-                IDbConnection conn =
-                    new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
+            using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
             {
                 var p = new DynamicParameters();
 
                 p.Add("@fillID", fillId.ToString(), DbType.String, ParameterDirection.Input);
 
-                using (
-                    var multi = conn.QueryMultiple("Portal_GetTsrWipHistory", p, commandType: CommandType.StoredProcedure)
-                    )
+                using (var multi = conn.QueryMultiple("Portal_GetTsrWipHistory", p, commandType: CommandType.StoredProcedure))
                 {
                     detailsResponse.WipHistoryDetailResult = multi.Read<WipHistoryDetailResult>().Single();
 
@@ -270,8 +266,7 @@ namespace Msr.Services.Orders
 
                     foreach (var wipTask in detailsResponse.WipTaskResult)
                     {
-                        wipTask.WipSubTasks =
-                            detailsResponse.WipSubTaskResult.Where(x => x.TaskId == wipTask.Id).ToList();
+                        wipTask.WipSubTasks = detailsResponse.WipSubTaskResult.Where(x => x.TaskId == wipTask.Id).ToList();
                     }
                 }
             }

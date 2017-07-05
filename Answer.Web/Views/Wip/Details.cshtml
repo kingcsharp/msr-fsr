@@ -11,7 +11,9 @@
             <div class="col-lg-6 col-md-6 col-sm-6 wip-detail-header-left">
                 <div class="form-group">
                     <div style="display:inline-block; float:right;">
-                        <label>Hide Completed </label><div class="make-switch switch-small" data-on="success" data-off="warning" style="display:inline-block"><input id="showCompletedSwitch" type="checkbox" name="completed-switch" checked></div>
+                        <label>Hide Completed </label><div class="make-switch switch-small" data-on="success" data-off="warning" style="display:inline-block">
+                            <input id="showCompletedSwitch" type="checkbox" name="completed-switch" checked>
+                        </div>
                         <button type="button" data-toggle="modal" data-target="#wipListModal" class="btn btn-info cancel-btn pull-right wip-view-button"><i class="fa fa-list" aria-hidden="true"></i> WIP List</button>
                     </div>
 
@@ -19,10 +21,10 @@
                     <select id="wip-item-select" class="selectpicker form-control" name="wo-item">
                         <option data-content="<strong>Select an Item...</strong>">Select an Item</option>
                         <optgroup label="Items Assigned to Me">
-                            <option data-content="<strong>Applied Materials-147051</strong><br>Proc: 03-AMT-014-00<br>Serial: 12-16d<span class='label label-success pull-right'>Complete</span>" data-status="Complete">Applied Materials-147051</option>
-                            <option data-content="<strong>INTEL F24-110675</strong><br>Proc: 05-INT-220-00 HME EC2 BAFF2 KIT-Copper<br>Serial: tool18<span class='label label-warning pull-right'>In Progress</span>" data-status="In Progress">INTEL F24-110675 s/n: tool 18</option>
-                            <option data-content="<strong>INTEL F24-110675</strong><br>Proc: 05-INT-220-00 HME EC2 BAFF2 KIT-Copper<br>Serial: tool17<span class='label label-default pull-right'>Waiting</span>" data-status="Waiting">INTEL F24-110675 s/n: tool 17</option>
-                            <option data-content="<strong>INTEL F24-111048</strong><br>Proc: 03-AMT-014-00<br>Serial: 12-16d<span class='label label-default pull-right'>Waiting</span>" data-status="Waiting">INTEL F24-111048</option>
+                            @foreach (var item in Model.WoItems)
+                            {
+                                <option data-content="<strong>@item.PurchaseItemId</strong><br>Proc: @item.ProcName<br>Serial: @item.Serial<span class='label label-success pull-right'>@item.Status</span>" data-status="@item.Status">@item.PurchaseItemId</option>
+                            }
                         </optgroup>
                     </select>
                 </div>
@@ -43,13 +45,13 @@
                 <div class="tab-content">
                     <div id="parts" class="tab-pane fade in active">
                         <div id="part-tab-controls" class="col-sm-12">
-                            <button class="btn btn-info btn-xs print-btn pull-right" data-toggle="modal"  data-id="@Model.FillId" data-target="#wioDetailPrintOther"><i class="fa fa-print"></i> Print Other</button>
+                            <button class="btn btn-info btn-xs print-btn pull-right" data-toggle="modal" data-id="@Model.FillId" data-target="#wioDetailPrintOther"><i class="fa fa-print"></i> Print Other</button>
                             <button class="btn btn-info btn-xs print-btn pull-right" data-toggle="modal" data-id="@Model.FillId" data-target="#wioDetailPrintTraveler"><i class="fa fa-print"></i> Print Traveler</button>
                         </div>
                         <div id="parts-table" class="col-sm-12">
                             <table class="table table-responsive table-condensed table-bordered">
                                 <tbody>
-                                <tr><td>@Model.FileSearchResult.FillObjDesc qty:@Model.FileSearchResult.Qty </td></tr>
+                                    <tr><td>@Model.FileSearchResult.FillObjDesc qty:@Model.FileSearchResult.Qty </td></tr>
 
                                     @foreach (var part in Model.Parts)
                                     {
@@ -101,14 +103,14 @@
                 <div id="slider" class="flexslider step-container">
                     <ul class="slides">
                         @*<li>
-                            @Html.Partial("_InitialInspection")
-                        </li>
-                        <li>
-                            @Html.Partial("_SoakRoom")
-                        </li>
-                        <li>
-                          @Html.Partial("_SoakRoom")
-                        </li>*@
+                                @Html.Partial("_InitialInspection")
+                            </li>
+                            <li>
+                                @Html.Partial("_SoakRoom")
+                            </li>
+                            <li>
+                              @Html.Partial("_SoakRoom")
+                            </li>*@
 
                         @foreach (var step in Model.TaskStepResults)
                         {
@@ -124,9 +126,7 @@
     </div>
 </div>
 
-
 @Html.Partial("_WipListModal")
-
 
 <div id="wioDetailPrintTraveler" class="modal fade" role="dialog">
     <div class="modal-dialog">
@@ -147,17 +147,35 @@
     </div>
 </div>
 
+<div id="wioDetailPrintOther" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Print Other</h4>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" id="display-report"><i class="fa fa-print"></i> Display</button>
+                <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close-o"></i> Cancel</button>
+            </div>
+        </div>
+
+    </div>
+</div>
 
 @section scripts
 {
-<script type="text/javascript" src="~/assets/js/jquery.flexslider.js"></script>
-<script type="text/javascript" src="~/assets/js/bootstrap-select.js"></script>
-<script type="text/javascript" src="~/assets/js/finger.min.js"></script>
-<script type="text/javascript" src="~/assets/js/timer.jquery.min.js"></script>
-<script type="text/javascript" src="~/assets/js/wip-detail.js"></script>
+    <script type="text/javascript" src="~/assets/js/jquery.flexslider.js"></script>
+    <script type="text/javascript" src="~/assets/js/bootstrap-select.js"></script>
+    <script type="text/javascript" src="~/assets/js/finger.min.js"></script>
+    <script type="text/javascript" src="~/assets/js/timer.jquery.min.js"></script>
+    <script type="text/javascript" src="~/assets/js/wip-detail.js"></script>
 
-<script src="~/assets/js/plugins/bootstrap3/bootstrap-dialog.min.js"></script>
-<script type="text/javascript" src="~/assets/js/jquery.mockjax.js"></script>
+    <script src="~/assets/js/plugins/bootstrap3/bootstrap-dialog.min.js"></script>
+    <script type="text/javascript" src="~/assets/js/jquery.mockjax.js"></script>
 
 
 }

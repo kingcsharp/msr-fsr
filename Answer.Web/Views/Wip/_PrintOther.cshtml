@@ -1,0 +1,18 @@
+﻿@model Answer.Web.ViewModel.Wip.PrintOtherViewModel
+
+@using (Html.BeginForm("AddUser", "User", FormMethod.Post, new { @class = "form form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    
+    @Html.HiddenFor(x=>x.FillId, new { @class="print-other-fill-id" })
+
+    <div class="form-group">
+        <label class="col-lg-2 control-label">Report Type:</label>
+        <div class="col-lg-6">
+            @Html.DropDownListFor(m => m.PrintOtherId, Model.PrintOtherList, new {@class = "form-control"})
+            @Html.ValidationMessageFor(m => m.PrintOtherId)
+        </div>
+    </div>
+
+    <div id="print-other-content"></div>
+}
