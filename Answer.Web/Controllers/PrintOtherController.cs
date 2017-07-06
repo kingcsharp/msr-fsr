@@ -39,6 +39,11 @@ namespace Answer.Web.Controllers
                 return MonitorLabelTsr(id);
             }
 
+            if (reportType == "PART_LABEL")
+            {
+                return PartLabelTsr(id);
+            }
+
             return Content("Report Type not found");
         }
 

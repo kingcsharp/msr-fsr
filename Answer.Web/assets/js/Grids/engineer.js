@@ -1,8 +1,8 @@
 
 $.jgrid.defaults.responsive = true;
 
-function toggleInstructions (theID,action) {
-	
+function toggleInstructions(theID, action) {
+
     var addButton = '#add-button' + theID;
     var textareaDiv = '#instruction' + theID;
     $(addButton).toggleClass('hidden show');
@@ -48,6 +48,7 @@ $(document).ready(function () {
             ToDate: function () { return $('#to-date').val(); }
         },
         colModel: [
+            { name: 'PurchaseItemId', index: 'PurchaseItemId', width: 60, align: 'center', hidden: true, edittype: 'text', editable: true, editrules: { edithidden: true } },
             {
                 label: 'WO Item #',
                 name: 'PurchaseItemId',
@@ -84,6 +85,7 @@ $(document).ready(function () {
                 name: 'CustPurchNum',
                 index: 'CustPurchNum',
                 colmenu: false,
+                editable: true,
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 align: 'center'
@@ -94,6 +96,7 @@ $(document).ready(function () {
                 index: 'Qty',
                 width: 50,
                 colmenu: false,
+                editable: true,
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 align: 'center'
@@ -116,11 +119,13 @@ $(document).ready(function () {
                 name: 'DueDate',
                 index: 'DueDate',
                 colmenu: false,
+                editable: true,
                 sorttype: 'date',
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 formatter: 'date',
-                formatoptions: { srcformat: "m/d/Y H:i", newformat: "m/d/Y" },
+                formatoptions: { srcformat: "m/d/Y", newformat: "m/d/Y" },
+                editoptions: { dataInit: initDateEdit, readonly: 'readonly' },
                 width: 90,
                 align: 'center'
             },
@@ -184,20 +189,20 @@ $(document).ready(function () {
                 formatter: dispositionFormatter,
                 align: 'center'
             },
-              {
-                  label: 'Action',
-                  name: 'Action',
-                  index: 'Action',
-                  id: 'Action',
-                  colmenu: false,
-                  editable: false,
-                  width: 180,
-                  align: 'center',
-                  formatter: actionFormatter,
-                  align: 'center'
-              },
+            {
+                label: 'Action',
+                name: 'Action',
+                index: 'Action',
+                id: 'Action',
+                colmenu: false,
+                editable: false,
+                width: 180,
+                align: 'center',
+                formatter: actionFormatter,
+                search: false
+            },
+            
         ],
-
         viewrecords: true, // show the current page, data rang and total records on the toolbar
         rowNum: 10,
         loadonce: false, // this is just for the demo
@@ -212,7 +217,43 @@ $(document).ready(function () {
         editurl: 'clientArray',
         autowidth: true,
         colMenu: true,
+        key: true,
+        ajaxCellOptions: {},
+        beforeSaveCell: function (rowid, cellname, value, iRow, iCol) {
 
+            var PurchaseItemId = $('#jqGrid').jqGrid('getCell', rowid, 'PurchaseItemId');
+
+            if (cellname == 'CustPurchNum') {
+                var CustPurchNum = value //$('#jqGrid').jqGrid('getCell', rowid, 'CustPurchNum');
+            }
+            else if (cellname == 'Qty') {
+                var Qty = value //$('#jqGrid').jqGrid('getCell', rowid, 'Qty');
+            }
+            else if (cellname == 'DueDate') {
+                var DueDate = value //$('#jqGrid').jqGrid('getCell', rowid, 'DueDate');
+            }
+            var options = {
+                PurchaseItemId: PurchaseItemId,
+                CustPurchNum: CustPurchNum,
+                Qty: Qty,
+                DueDate: DueDate
+            }
+            $.ajax({
+                type: 'POST',
+                url: '/Wip/Edit',
+                data: options,
+                dataType: 'JSON',
+                success: function (resultData) {
+                    //alert("Save Complete");
+                    console.log("row with rowid=" + rowid + " is successfuly modified.")
+                }
+            });
+            //console.log('beforeSaveCell : ' + cellname);
+        },
+        afterSaveCell: function (rowid, cellname, value, iRow, iCol) {
+            $("#jqGrid").jqGrid().trigger('reloadGrid');
+            console.log('afterSaveCell : ' + cellname);
+        },
         gridComplete: function () {
             $('div.meter').each(function (index) {
                 var progVal = parseFloat($(this).text()).toFixed(2);
@@ -222,28 +263,28 @@ $(document).ready(function () {
                 if (progVal > 75) { statClass = 'success'; }
                 $(this).replaceWith(
                     '<div class = "progress">' +
-                        '<div class = "progress-bar progress-bar-' + statClass + '" role = "progressbar" aria-valuenow = "' + progVal + '" ' +
-                            'aria-valuemin = "0" aria-valuemax = "100" style = "width: ' + progVal + '%;"> ' +
-                            '<span>' + progVal + '%</span>' +
-                        '</div>' +
+                    '<div class = "progress-bar progress-bar-' + statClass + '" role = "progressbar" aria-valuenow = "' + progVal + '" ' +
+                    'aria-valuemin = "0" aria-valuemax = "100" style = "width: ' + progVal + '%;"> ' +
+                    '<span>' + progVal + '%</span>' +
+                    '</div>' +
                     '</div>'
                 );
             });
-
         }
     });
 
     $('#jqGrid').navGrid("#jqGridPager", {
+        refresh: true,
         search: false, // show search button on the toolbar
         add: false,
         edit: false,
         del: false,
-        refresh: true
+
     },
-            {}, // edit options
-            {}, // add options
-            {}, // delete options
-            { multipleSearch: true }
+        {}, // edit options
+        {}, // add options
+        {}, // delete options
+        { multipleSearch: true }
     );
     $('#jqGrid').jqGrid('filterToolbar', {
         stringResult: true,
@@ -255,6 +296,7 @@ $(document).ready(function () {
     $("#jqGrid").jqGrid().trigger('reloadGrid');
 
     $("#jqGrid").tooltip();
+
 
 
     $('#ncrModal').on('show.bs.modal', function (event) {
@@ -287,6 +329,7 @@ $(document).ready(function () {
             dataType: 'html',
             success: function (data) {
                 modal.find('.modal-body').html(data);
+
             },
             error: function () {
 
@@ -312,12 +355,47 @@ $(document).ready(function () {
         });
     });
 
+    $('#addImageModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var id = button.data('id');
+        var modal = $(this);
+
+        $("#FillID").val(id);
+
+        var imagesDiv = modal.find('#imageListDropzone');
+
+        $.ajax({
+            type: "GET",
+            url: '/Wip/GetImagesById?Id=' + id,
+            dataType: 'html',
+            success: function (data) {
+                var result = '<ul class="orderList list-inline">';
+
+                data = $.parseJSON(data);
+
+                $.each(data, function (i, item) {
+                    console.log(item);
+                    result += '<li class="wrapper"><img class="img-thumbnail" src="/Images/' + item.FILE_NAME + '" alt="' + item.NAME + '" style="width:100px;height:100px;"><div class="caption"><a class="label label-danger deleteImagelink" data-id="' + item.FILE_LINK_ID + '" onclick="DeleteImage(this)" href="#">delete</a></div></li>'
+                })
+                result += '</ul>';
+                imagesDiv.html(result);
+            },
+            error: function (error) {
+                alert(error);
+            }
+        });
+    });
+
 
     $('#ncrModal').on('hidden.bs.modal', function (event) {
         $(this).data('bs.modal', null);
     });
 
     $('#addNoteModal').on('hidden.bs.modal', function (event) {
+        $(this).data('bs.modal', null);
+    });
+
+    $('#addImageModal').on('hidden.bs.modal', function (event) {
         $(this).data('bs.modal', null);
     });
 
@@ -334,6 +412,31 @@ $(document).ready(function () {
         event.preventDefault();
         // Do something
     });
+
+    function initDateEdit(elem, options) {
+        //console.log(options);
+        var StartDate = $('#jqGrid').jqGrid('getCell', options.rowId, 'StDate');
+        console.log(StartDate);
+        $(elem).datepicker({
+            maxDate: "10/27/2015",
+            dateFormat: "mm/dd/yy",
+            autoSize: true,
+            changeYear: true,
+            changeMonth: true,
+            showButtonPanel: true,
+            showWeek: true
+        });
+
+    };
+    //function cancelEditing(myGrid) {
+    //    var lrid;
+    //    if (typeof lastSel !== "undefined") {
+    //        myGrid.jqGrid('restoreRow', lastSel);
+    //        lrid = $.jgrid.jqID(lastSel);
+    //        $("tr#" + lrid + " div.ui-inline-edit").show();
+    //        $("tr#" + lrid + " div.ui-inline-save, " + "tr#" + lrid + " div.ui-inline-cancel").hide();
+    //    }
+    //};
 
     function currentStepFormatter(cellvalue, options, rowObject) {
         var thisCellVal = '';
@@ -385,16 +488,44 @@ $(document).ready(function () {
 
     function actionFormatter(cellvalue, options, rowObject) {
 
-        var noteButton = '<button class="btn support-btn btn-xs btn-warning" data-id="' + rowObject.FillId + '" data-toggle="modal"  data-target="#addNoteModal" title="View Notes"><i class="fa fa-clipboard"></i>Notes</button>';
+        var noteButton = '<button class="" data-id="' + rowObject.FillId + '" data-toggle="modal"  data-target="#addNoteModal" title="View Notes"><i class="fa fa-clipboard"></i></button>';
+        var imageButton = '<button class="" data-id="' + rowObject.FillId + '" data-toggle="modal"  data-target="#addImageModal" title="View Images"><i class="fa fa-picture-o"></i></button>';
         var NcrButton = (rowObject.HasNcr == 1) ? '<button class="btn support-btn btn-xs btn-warning" data-id="' + rowObject.FillId + '" data-toggle="modal"  data-target="#ncrModal" title="View NCR"><i class="fa fa-clipboard"></i>NCR</button>' : '';
-        var FileButton = (rowObject.HasFile == 1) ? '<button class="btn support-btn btn-xs btn-info" data-id="' + rowObject.ActualPartId + '" href="#" data-toggle="modal" data-target="#imageModal" title="View Photos"><i class="fa fa-file-image-o"></i>Photos</button>' : '';
+        
         var MonitorButton = (rowObject.HasMonitor == 1) ? '<button class="btn support-btn btn-xs btn-success" data-id="' + rowObject.FillId + '" data-toggle="modal" data-target="#monitorModal"  title="View Monitors"><i class="fa fa-bar-chart "></i>Monitors</button>' : '';
 
-        thisCellVal = noteButton + NcrButton + FileButton + MonitorButton;
+        thisCellVal = noteButton + imageButton + NcrButton +  MonitorButton;
 
         return thisCellVal;
     }
 
 });
+function DeleteImage(event) {
+    var id = $(event).attr("data-id");
+    var fillid = $("#FillID").val();
+    var imagesDiv = $('#addImageModal').find('#imageListDropzone');
+    $.ajax({
+        type: "GET",
+        url: '/Wip/DeleteImageById?Id=' + id + '&FillId=' + fillid,
+        dataType: 'html',
+        success: function (data) {
+            data = $.parseJSON(data);
+            //console.log(data);
+            $('.message').addClass("alert alert-success").html(data.Message);
+            var result = '<ul class="orderList list-inline">';
 
+
+
+            $.each(data.OrderItemImages, function (i, item) {
+                console.log(item);
+                result += '<li class="wrapper"><img class="img-thumbnail" src="/Images/' + item.FILE_NAME + '" alt="' + item.NAME + '" style="width:100px;height:100px;"><div class="caption"><a class="label label-danger deleteImagelink" data-id="' + item.FILE_LINK_ID + '" onclick="DeleteImage(this)" href="#">delete</a></div></li>'
+            })
+            result += '</ul>';
+            imagesDiv.html(result);
+        },
+        error: function (error) {
+            alert(error);
+        }
+    });
+}
 

@@ -132,6 +132,10 @@
     <Compile Include="Orders\Procedures\PurchaseItemInfoResult.cs" />
     <Compile Include="Orders\Procedures\PurchaseWithSupplierQuotesResult.cs" />
     <Compile Include="Orders\Procedures\FilesForFillTaskResult.cs" />
+    <Compile Include="Orders\Procedures\SaveOrderItemPurchaseDueDateProcedure.cs" />
+    <Compile Include="Orders\Procedures\SaveWorkItemImagesProcedure.cs" />
+    <Compile Include="Orders\Procedures\SaveWorkOrderItemPunchNumProcedure.cs" />
+    <Compile Include="Orders\Procedures\SaveWorkOrderItemQtyProcedure.cs" />
     <Compile Include="Orders\Procedures\TasksFindForFillIdResult.cs" />
     <Compile Include="Orders\Procedures\FillGetMonitorsForNcrResult.cs" />
     <Compile Include="Orders\Procedures\WipHistoryDetailResult.cs" />
@@ -143,9 +147,12 @@
     <Compile Include="Orders\TaskService.cs" />
     <Compile Include="Orders\PeopleService.cs" />
     <Compile Include="Orders\CompanyService.cs" />
+    <Compile Include="Orders\ViewModels\SaveWorkItemImageViewModel.cs" />
+    <Compile Include="Orders\ViewModels\SaveWorkOrderViewModel.cs" />
     <Compile Include="Parts\Messages\AddPartTypesTaskRequest.cs" />
     <Compile Include="Parts\PartsService.cs" />
     <Compile Include="Parts\PartTypeService.cs" />
+    <Compile Include="Parts\Procedures\SavePartProcedure.cs" />
     <Compile Include="Parts\Procedures\SavePartTypeProcedure.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tasks\Messaging\MonitorItem.cs" />

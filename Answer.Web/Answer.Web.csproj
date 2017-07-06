@@ -708,6 +708,8 @@
     <Content Include="Views\PrintOther\_ViewPartLabelTsr.cshtml" />
     <Content Include="Views\PrintOther\_ViewMonitorLabelTsr.cshtml" />
     <Content Include="Views\Wip\_PrintOther.cshtml" />
+    <Content Include="Views\Parts\AddPart.cshtml" />
+    <Content Include="Views\Parts\SavePart.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -717,6 +719,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="assets\css\dropzone\" />
+    <Folder Include="assets\js\dropzone\" />
     <Folder Include="Views\Help\" />
   </ItemGroup>
   <ItemGroup>

@@ -9,6 +9,7 @@
                 Parts <button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
             </h2>
             <div class="col-lg-12">
+                @Html.Partial("Message")
                 <table id="jqGrid"></table>
                 <div id="jqGridPager"></div>
             </div>
@@ -100,7 +101,8 @@
                     coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                     searchoptions: { value: ":[All];CREATING, DENIED, APPROVED, APPROVED_BUT_REVISING:Creating or Approved;CREATING, DENIED: Creating;IN_WORKFLOW:In Approval Workflow;APPROVED, APPROVED_BUT_REVISING, APPROVED_BUT_DELETING:Approved;DENIED:Denied;APPROVED_BUT_REVISING:Approved But Being Revised;APPROVED_BUT_DELETING:Approved But Being Deleted;DENIED:Denied;DELETED:Deleted;OLD:Obsolete" },
                     align: 'center'
-                }
+                },
+                { name: 'Actions', index: 'ID', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: PartEditFormatter, width: 100, align: 'center' }
             ],
 
             viewrecords: true, // show the current page, data rang and total records on the toolbar
@@ -136,6 +138,10 @@
             searchOnEnter: true,
             searchOperators: true
         });
+        function PartEditFormatter(cellvalue, options, rowObject) {
+            thisCellVal = '<a href="/parts/SavePart/' + rowObject.Id + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i> Edit</a>';
+            return thisCellVal;
+        }
         $('#search').click(function () {
 
             jQuery("#jqGrid").setGridParam({

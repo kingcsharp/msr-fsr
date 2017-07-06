@@ -29,32 +29,39 @@ namespace Msr.Services.Parts
         {
             return _dbContext.PartTypes.Where(x => x.Id == Id).Single();
         }
-        public void Create(AddPartTypesViewModel model)
+        public bool Create(AddPartTypesViewModel model)
         {
             try
             {
                 var savePartTypeProcedure = new SavePartTypeProcedure { Name = model.Name, Spare = model.Spare, Consumable = model.Consumable, Unit = model.Unit, StrNTlogin = model.NTLogin, UnitShippingWeight = model.UnitShippingWeight };
 
-                var task = _dbContext.Database.ExecuteStoredProcedure<AddPartTypesTaskRequest>(savePartTypeProcedure);
+                var task = _dbContext.Database.ExecuteStoredProcedure<SavePartTypeProcedure>(savePartTypeProcedure);
+
+                return true;
             }
             catch (Exception ex)
             {
                 var message = "Error occured:" + ex.Message;
+
+                return false;
             }
         }
-        public void Edit(AddPartTypesViewModel model)
+        public bool Edit(AddPartTypesViewModel model)
         {
             try
             {
                 var savePartTypeProcedure = new SavePartTypeProcedure { ObjID = model.ObjId, Name = model.Name, Spare = model.Spare, Consumable = model.Consumable, Unit = model.Unit, UnitShippingWeight = model.UnitShippingWeight };
 
-               var task = _dbContext.Database.ExecuteStoredProcedure<AddPartTypesTaskRequest>(savePartTypeProcedure);
+                _dbContext.Database.ExecuteStoredProcedure(savePartTypeProcedure);
 
+                return true;
 
             }
             catch (Exception ex)
             {
                 var message = "Error occured:" + ex.Message;
+
+                return false;
             }
         }
     }

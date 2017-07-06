@@ -10,7 +10,9 @@ using Msr.Services.Orders.Messaging;
 using System.Data.SqlClient;
 using System.Web.Configuration;
 using Dapper;
+using EntityFrameworkExtras.EF6;
 using Msr.Services.Orders.Procedures;
+using Msr.Services.Orders.ViewModels;
 using RestSharp;
 
 namespace Msr.Services.Orders
@@ -262,16 +264,95 @@ namespace Msr.Services.Orders
 
                     detailsResponse.WipTaskResult = multi.Read<WipTaskResult>().ToList();
 
-                    detailsResponse.WipSubTaskResult = multi.Read<WipSubTaskResult>().ToList();
+                    //detailsResponse.WipSubTaskResult = multi.Read<WipSubTaskResult>().ToList();
 
-                    foreach (var wipTask in detailsResponse.WipTaskResult)
-                    {
-                        wipTask.WipSubTasks = detailsResponse.WipSubTaskResult.Where(x => x.TaskId == wipTask.Id).ToList();
-                    }
+                    //foreach (var wipTask in detailsResponse.WipTaskResult)
+                    //{
+                    //    wipTask.WipSubTasks = detailsResponse.WipSubTaskResult.Where(x => x.TaskId == wipTask.Id).ToList();
+                    //}
                 }
             }
 
             return detailsResponse;
+        }
+
+        public bool Edit(SaveWorkOrderViewModel model)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(model.CustPurchNum))
+                {
+                    var saveWorkItemPunchNumProcedure = new SaveWorkOrderItemPunchNumProcedure { ItemId = model.PurchaseItemId, CustPurchNum = model.CustPurchNum, NTLogin = model.NTLogin };
+
+                    //_dbContext.Database.ExecuteStoredProcedure(saveWorkItemPunchNumProcedure);
+                }
+                else if (!string.IsNullOrEmpty(model.Qty))
+                {
+                    var saveWorkItemQtyProcedure = new SaveWorkOrderItemQtyProcedure { ItemId = model.PurchaseItemId, Quanitiy = model.Qty, NTLogin = model.NTLogin };
+
+                    //_dbContext.Database.ExecuteStoredProcedure(saveWorkItemQtyProcedure);
+                }
+                else if (!string.IsNullOrEmpty(model.DueDate))
+                {
+                    var saveOrderItemPurchaseDueDateProcedure = new SaveOrderItemPurchaseDueDateProcedure { ItemId = model.PurchaseItemId, DueDate = model.DueDate, NTLogin = model.NTLogin };
+
+                    //_dbContext.Database.ExecuteStoredProcedure(saveOrderItemPurchaseDueDateProcedure);
+                }
+
+                return true;
+
+            }
+            catch (Exception ex)
+            {
+                var message = "Error occured:" + ex.Message;
+
+                return false;
+            }
+        }
+        public bool SaveOrderItemImages(SaveWorkItemImageViewModel model)
+        {
+            try
+            {
+                var saveWorkItemImagesProcedure = new SaveWorkItemImagesProcedure { DocId = model.DocId, OldDocId = model.OldDocId, Name = model.Name, Desc = model.Desc, Path = model.Path, ContentType = model.ContentType, SrcId = model.SrcId, SrcName = model.SrcName, SrcDesc = model.SrcDesc, SrcPath = model.SrcPath, SrcContentType = model.SrcContentType, SrcChanged = model.SrcChanged, DocChanged = model.DocChanged, DropSrc = model.DropSrc, NTLogin = model.NTLogin, FillID = model.FillID };
+
+                _dbContext.Database.ExecuteStoredProcedure(saveWorkItemImagesProcedure);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                var message = "Error occured:" + ex.Message;
+
+                return false;
+            }
+
+        }
+        public List<WorkOrderImageView> GetOrderItemImagesById(string Id)
+        {
+            var fillId = new SqlParameter("@fillId", Id);
+
+            var result = _dbContext.Database.SqlQuery<WorkOrderImageView>("Portal_WorkItemImagesById @fillId", fillId).ToList();
+
+            return result;
+        }
+        public bool DeleteOrderItemImageById(string Id)
+        {
+            try
+            {
+                var fileLinkId = new SqlParameter("@fileLinkId", Id);
+                //need to be dynamic
+                var NTLogin = new SqlParameter("@strNTLogin", "1618");
+
+                _dbContext.Database.ExecuteSqlCommand("exec Portal_DeleteWorkItemImagesById @fileLinkId, @strNTLogin", fileLinkId, NTLogin);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                var message = "Error occured:" + ex.Message;
+
+                return false;
+            }
         }
 
         private void FormatHtml(TsrDetailsResponse response)

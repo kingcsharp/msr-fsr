@@ -19,7 +19,8 @@ namespace Answer.Web.ViewModel.Wip
                 new SelectListItem {Text = "Delivery Ticket", Value = "DELIVERY"},
                 new SelectListItem {Text = "WIP History Report", Value = "WIP_HIST"},
                 new SelectListItem {Text = "NCR", Value = "HISTORY_LABEL"},
-                new SelectListItem {Text = "Technical Data Label", Value = "MONITOR_LABEL"}
+                new SelectListItem {Text = "Technical Data Label", Value = "MONITOR_LABEL"},
+                new SelectListItem {Text = "Part Label", Value = "PART_LABEL"}
             };
         }
     }

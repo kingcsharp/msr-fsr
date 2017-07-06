@@ -54,7 +54,7 @@ namespace Answer.Web.Controllers
                         var rev = Convert.ToInt32(rule.data);
                         totalRows = totalRows.Where(x => x.Revision == rev);
                     }
-                    else if (rule.field == nameof(PartsView.ToString))
+                    else if (rule.field == nameof(PartsView.Status))
                     {
                         totalRows = totalRows.Where(x => x.Status.ToLower().Contains(rule.data.ToLower()));
                     }
@@ -96,6 +96,98 @@ namespace Answer.Web.Controllers
 
             return Json(json, JsonRequestBehavior.AllowGet);
         }
+        public ActionResult AddPart()
+        {
+            var part = new AddPartViewModel();
+
+            part.Setup();
+
+            return View(part);
+        }
+        [AcceptVerbs(verbs: HttpVerbs.Post)]
+        public ActionResult AddPart(AddPartViewModel model)
+        {
+            var taskService = new PartsService();
+
+            if (ModelState.IsValid)
+            {
+                //Need to dynamic 
+                model.Company = "2";
+                //need to be from list 
+                model.ProductType = "SERVICE";
+                model.NTLogin = "1618";
+
+                var response = taskService.Create(model: model);
+
+                if (response)
+                {
+                    TempData["SuccessMessage"] = "Part has been created successfully.";
+
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Something went wrong.";
+
+                    model.Setup();
+
+                    return View(model);
+                }
+
+            }
+
+            model.Setup();
+
+            return View(model);
+
+        }
+        public ActionResult SavePart(string Id)
+        {
+            var taskService = new PartsService();
+
+            var model = taskService.GetById(Id: Id);
+
+            var part = new AddPartViewModel();
+
+            part = part.MapToDto(model);
+
+            part.Setup();
+
+            return View(part);
+        }
+        [AcceptVerbs(verbs: HttpVerbs.Post)]
+        public ActionResult SavePart(AddPartViewModel model)
+        {
+            var taskService = new PartsService();
+            if (ModelState.IsValid)
+            {
+                //Need to dynamic 
+                model.Company = "2";
+                //need to be from list 
+                model.ProductType = "SERVICE";
+                model.NTLogin = "1618";
+
+                var response = taskService.Edit(model: model);
+                if (response)
+                {
+                    TempData["SuccessMessage"] = "Part has been edited successfully.";
+
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Something went wrong.";
+
+                    model.Setup();
+
+                    return View(model);
+                }
+            }
+
+            model.Setup();
+
+            return View(model);
+        }
 
         public ActionResult PartTypes()
         {
@@ -131,6 +223,23 @@ namespace Answer.Web.Controllers
                     else if (rule.field == nameof(PartTypesView.Consumable))
                     {
                         totalRows = totalRows.Where(x => x.Consumable.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(PartTypesView.Unit))
+                    {
+                        totalRows = totalRows.Where(x => x.Unit.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(PartTypesView.Rev))
+                    {
+                        var rev = Convert.ToInt32(rule.data);
+                        totalRows = totalRows.Where(x => x.Rev == rev);
+                    }
+                    else if (rule.field == nameof(PartTypesView.Status))
+                    {
+                        totalRows = totalRows.Where(x => x.Status.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(PartTypesView.LockedByName))
+                    {
+                        totalRows = totalRows.Where(x => x.LockedByName.ToLower().Contains(rule.data.ToLower()));
                     }
                 }
             }
@@ -178,41 +287,78 @@ namespace Answer.Web.Controllers
 
             return View(addModel);
         }
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult AddPartTypes(AddPartTypesViewModel parttypes)
+        [AcceptVerbs(verbs: HttpVerbs.Post)]
+        public ActionResult AddPartTypes(AddPartTypesViewModel parttype)
         {
-            var partservice = new PartTypeService();
+            var partTypeservice = new PartTypeService();
+            if (ModelState.IsValid)
+            {
+                //need to de dynamic
+                parttype.NTLogin = "1618";
 
-            //need to de dynamic
-            parttypes.NTLogin = "1618";
+                var response = partTypeservice.Create(parttype);
 
-            partservice.Create(parttypes);
+                if (response)
+                {
+                    TempData["SuccessMessage"] = "PartType has been created successfully.";
 
-            return RedirectToAction("PartTypes");
+                    return RedirectToAction("PartTypes");
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Something went wrong.";
+
+                    parttype.Setup();
+
+                    return View(parttype);
+                }
+            }
+
+            parttype.Setup();
+
+            return View(parttype);
         }
         public ActionResult SavePartTypes(string Id)
         {
-            var partservice = new PartTypeService();
+            var partTypeservice = new PartTypeService();
 
-            var model = partservice.GetById(Id: Id);
+            var model = partTypeservice.GetById(Id: Id);
 
-            var partype = new AddPartTypesViewModel();
-            partype = partype.MapToDto(model);
-            partype.Setup();
+            var parttype = new AddPartTypesViewModel();
+            parttype = parttype.MapToDto(model);
+            parttype.Setup();
 
-            return View(partype);
+            return View(parttype);
         }
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult SavePartTypes(AddPartTypesViewModel parttypes)
+        public ActionResult SavePartTypes(AddPartTypesViewModel parttype)
         {
-            var partservice = new PartTypeService();
+            var partTypeservice = new PartTypeService();
+            if (ModelState.IsValid)
+            {
+                //need to de dynamic
+                parttype.NTLogin = "1618";
 
-            //need to de dynamic
-            parttypes.NTLogin = "1618";
+                var response = partTypeservice.Edit(parttype);
+                if (response)
+                {
+                    TempData["SuccessMessage"] = "PartType has been edited successfully.";
 
-            partservice.Edit(parttypes);
+                    return RedirectToAction("PartTypes");
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Something went wrong.";
 
-            return RedirectToAction("PartTypes");
+                    parttype.Setup();
+
+                    return View(parttype);
+                }
+            }
+
+            parttype.Setup();
+
+            return View(parttype);
         }
     }
 }

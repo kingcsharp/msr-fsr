@@ -11,16 +11,27 @@ namespace Msr.Models.Parts
     public class AddPartTypesViewModel
     {
         public string Id { get; set; }
-        [Display(Name ="Part Type Name")]
+
+        [Required]
+        [Display(Name = "Part Type Name :")]
         public string Name { get; set; }
-        [Display(Name = "Typically Spare")]
+
+        [Required]
+        [Display(Name = "Typically Spare :")]
         public string Spare { get; set; }
-        [Display(Name = "Typically Consumable?")]
+
+        [Required]
+        [Display(Name = "Typically Consumable? :")]
         public string Consumable { get; set; }
-        [Display(Name = "Typical Ordering Unit")]
+
+        [Required]
+        [Display(Name = "Typical Ordering Unit :")]
         public string Unit { get; set; }
+
         public string ObjId { get; set; }
+
         public string UnitShippingWeight { get; set; }
+
         public string NTLogin { get; set; }
 
         public List<SelectListItem> Spares { get; set; }

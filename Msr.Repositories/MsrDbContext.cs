@@ -36,6 +36,8 @@ namespace Msr.Repositories
             modelBuilder.Entity<PartsView>().ToTable("Portal_PartsView");
             modelBuilder.Entity<PartTypesView>().ToTable("Portal_PartTypesView");
             modelBuilder.Entity<PartType>().ToTable("A_PART_TYPES_HISTORY");
+            modelBuilder.Entity<Part>().ToTable("A_PARTS_HISTORY");
+
         }
 
         public DbSet<AspNetUser> AspNetUsers { get; set; }
@@ -56,6 +58,8 @@ namespace Msr.Repositories
         public DbSet<PartsView> PartsViews { get; set; }
         public DbSet<PartTypesView> PartTypesViews { get; set; }
         public DbSet<PartType> PartTypes { get; set; }
+        public DbSet<Part> Parts { get; set; }
+        public DbSet<Company> Companies { get; set; }
 
     }
 }

@@ -9,6 +9,7 @@ using Msr.Services.jqGrid;
 using Msr.Services.Notes;
 using Msr.Services.Orders;
 using Msr.Services.Orders.Messaging;
+using Msr.Services.Orders.ViewModels;
 using Msr.Web.Controllers;
 using Msr.Web.ViewModel.Engineering;
 
@@ -58,6 +59,18 @@ namespace Answer.Web.Controllers
                     else if (rule.field == nameof(WorkOrderView.CustPurchNum))
                     {
                         totalRows = totalRows.Where(x => x.CustPurchNum.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(WorkOrderView.ProductName))
+                    {
+                        totalRows = totalRows.Where(x => x.ProductName.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(WorkOrderView.SupplierName))
+                    {
+                        totalRows = totalRows.Where(x => x.SupplierName.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(WorkOrderView.ProductName))
+                    {
+                        totalRows = totalRows.Where(x => x.ProductName.ToLower().Contains(rule.data.ToLower()));
                     }
                     else if (rule.field == nameof(WorkOrderView.Qty))
                     {
@@ -225,6 +238,63 @@ namespace Answer.Web.Controllers
             return PartialView("_PrintOther", vm);
         }
 
+        public JsonResult GetImagesById(string Id)
+        {
+            var orderService = new OrderService();
+
+            var OrderItemImages = orderService.GetOrderItemImagesById(Id: Id);
+
+            return Json(OrderItemImages, JsonRequestBehavior.AllowGet);
+        }
+
+        [AcceptVerbs(verbs: HttpVerbs.Post)]
+        public ActionResult Edit(SaveWorkOrderViewModel model)
+        {
+            var orderService = new OrderService();
+            if (ModelState.IsValid)
+            {
+                model.NTLogin = "1618";
+
+                var response = orderService.Edit(model: model);
+
+                if (response)
+                {
+                    TempData["SuccessMessage"] = "Part has been created successfully.";
+
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Something went wrong.";
+
+
+                    return Json(new { success = false, responseText = "Something went wrong." }, JsonRequestBehavior.AllowGet);
+                }
+
+            }
+
+
+            return Json(new { success = false, responseText = "Something went wrong." }, JsonRequestBehavior.AllowGet);
+        }
+        [AcceptVerbs(HttpVerbs.Get)]
+        public ActionResult DeleteImageById(string id, string fillId)
+        {
+            var orderService = new OrderService();
+            if (!string.IsNullOrEmpty(id))
+            {
+                var response = orderService.DeleteOrderItemImageById(id);
+                if (response)
+                {
+                    var orderItemImages = orderService.GetOrderItemImagesById(Id: fillId);
+                    return Json(new { Message = "Image deleted successfully.", OrderItemImages = orderItemImages }, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(new { Message = "Image upload failed." }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            return Json(new { Message = "Something went wrong." }, JsonRequestBehavior.AllowGet);
+        }
 
         private List<DocumentView> GetDocViewModel(List<DocumentView> docs, OrderService orderService, int width)
         {

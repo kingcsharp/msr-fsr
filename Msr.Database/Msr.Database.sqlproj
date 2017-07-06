@@ -2744,5 +2744,8 @@
     <Build Include="dbo\Stored Procedures\Portal\Portal_GetTsrWipHistory.sql" />
     <Build Include="dbo\Stored Procedures\Portal\GetDeliveryTsrDetails.sql" />
     <Build Include="dbo\Stored Procedures\Portal\GetMonitorLabelTsrDetails.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_DeleteWorkItemImagesById.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_Save_FileUpload.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_WorkItemImagesById.sql" />
   </ItemGroup>
 </Project>

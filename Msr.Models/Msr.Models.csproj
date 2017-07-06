@@ -61,6 +61,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
       <Private>True</Private>
@@ -99,8 +100,11 @@
     <Compile Include="Orders\ApprovedPeopleView.cs" />
     <Compile Include="Orders\BuyerView.cs" />
     <Compile Include="Orders\FileSearchView.cs" />
+    <Compile Include="Orders\WorkOrderImageView.cs" />
     <Compile Include="Orders\WorkOrderView.cs" />
     <Compile Include="Parts\AddPartTypesViewModel.cs" />
+    <Compile Include="Parts\AddPartViewModel.cs" />
+    <Compile Include="Parts\Part.cs" />
     <Compile Include="Parts\PartsView.cs" />
     <Compile Include="Parts\PartsWithTaskAndResult.cs" />
     <Compile Include="Parts\PartType.cs" />
@@ -117,6 +121,7 @@
     <Compile Include="Users\AspNetUser.cs" />
     <Compile Include="Users\AspNetUserClaim.cs" />
     <Compile Include="Users\AspNetUserLogin.cs" />
+    <Compile Include="Users\Company.cs" />
     <Compile Include="Users\RolesConstants.cs" />
     <Compile Include="Users\CompanyView.cs" />
     <Compile Include="Users\PeopleView.cs" />
