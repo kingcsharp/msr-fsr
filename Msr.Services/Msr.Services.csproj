@@ -114,6 +114,7 @@
     <Compile Include="Orders\Messaging\CheckLoginResult.cs" />
     <Compile Include="Orders\Messaging\DeliveryTsrDetailsResponse.cs" />
     <Compile Include="Orders\Messaging\MonitorLabelTsrDetailsResponse.cs" />
+    <Compile Include="Orders\Messaging\TechnicalWorkReportTsrDetailsResponse.cs" />
     <Compile Include="Orders\Messaging\PartLabelTsrDetailsResponse.cs" />
     <Compile Include="Orders\Messaging\NcrTsrDetailsResponse.cs" />
     <Compile Include="Orders\Messaging\DocResponse.cs" />
@@ -126,6 +127,7 @@
     <Compile Include="Orders\Messaging\WipHistoryTsrResponse.cs" />
     <Compile Include="Orders\Messaging\WorkOrderDetailsResponse.cs" />
     <Compile Include="Orders\OrderService.cs" />
+    <Compile Include="Orders\Procedures\GetPurchaseWorkReportTsrDetailsResult.cs" />
     <Compile Include="Orders\Procedures\GetMonitorLabelTsrDetailsResult.cs" />
     <Compile Include="Orders\Procedures\GetPartsAndKitsLabelsResult.cs" />
     <Compile Include="Orders\Procedures\FillsSearchResult.cs" />

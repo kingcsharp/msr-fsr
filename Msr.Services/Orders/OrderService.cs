@@ -355,6 +355,77 @@ namespace Msr.Services.Orders
             }
         }
 
+        public string GetPurchaseItemIdByFillId(int fillId)
+        {
+            using (
+                IDbConnection conn =
+                    new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
+            {
+                var purchaseItemId = conn.Query<string>(
+                    @"SELECT PURCH_ITEM_ID FROM A_FILLS WHERE ID = @Id",
+                    new {Id = fillId.ToString()})
+                    .FirstOrDefault();
+
+                return purchaseItemId;
+            }
+        }
+
+        public GetPurchaseWorkReportTsrDetailsResult GetPurchaseWorkReportTsrDetails(int purchaseItemId)
+        {
+            using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
+            {
+                var p = new DynamicParameters();
+
+                p.Add("@purchaseItemId", purchaseItemId, DbType.String, ParameterDirection.Input);
+
+                var getPurchaseWorkReportTsrDetailsResult =
+                    conn.Query<GetPurchaseWorkReportTsrDetailsResult>("Portal_GetTsrPurchaseWorkReport", p,
+                        commandType: CommandType.StoredProcedure).Single();
+
+                return getPurchaseWorkReportTsrDetailsResult;
+            }
+        }
+
+        public TechnicalWorkReportTsrDetailsResponse GetTechnicalWorkReportTsrDetails(int fillId, int purchaseItemId)
+        {
+            var detailsResponse = new TechnicalWorkReportTsrDetailsResponse { FillId = fillId };
+
+            using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
+            {
+                var p = new DynamicParameters();
+
+                p.Add("@fillId", fillId.ToString(), DbType.String, ParameterDirection.Input);
+                p.Add("@strNTLogin", string.Empty, DbType.String, ParameterDirection.Input);
+
+                detailsResponse.WipHistoryDetailResult = conn.Query<WipHistoryDetailResult>(
+                    @"SELECT PURCH_ITEM_ID AS PurchaseItemId, SUP_NAME AS SupplierName, PROC_NAME AS ProcedureName, CUSTOMER_PERSON AS CustomerPerson, FILL_OBJ_DESC AS FillObjectDescription FROM A_V_FILLS_SEARCH with (noLock)  WHERE ID = @fillID",
+                    new { fillID = fillId.ToString() })
+                    .FirstOrDefault();
+
+                detailsResponse.TasksFindForFillIdResult =
+                    conn.Query<TasksFindForFillIdResult>("A_SP_TASKS_FIND_FOR_FILL_ID", p,
+                        commandType: CommandType.StoredProcedure).Where(x => x.Print_Order.HasValue).ToList();
+
+                var fillGetMonitorsForNcrResult =
+                    conn.Query<FillGetMonitorsForNcrResult>("A_SP_FILL_GET_MONITORS_FOR_NCR", p,
+                        commandType: CommandType.StoredProcedure).ToList();
+
+                foreach (var tasksForFill in detailsResponse.TasksFindForFillIdResult)
+                {
+                    tasksForFill.MonitorsDescription =
+                        fillGetMonitorsForNcrResult.Where(
+                            monitor => monitor.Stepper_Id == tasksForFill.Step_Id).Select(x => x.Description);
+
+                    tasksForFill.Step_Text_All_Html =
+                        tasksForFill.Step_Text_All_Html.Replace("<<bb>>", "<br/><h4>")
+                            .Replace("<</bb>>", "</h4>")
+                            .Replace("<<nl/>>", "<br/>");
+                }
+            }
+
+            return detailsResponse;
+        }
+
         private void FormatHtml(TsrDetailsResponse response)
         {
   foreach (var taskResult in response.TsrTaskResults)

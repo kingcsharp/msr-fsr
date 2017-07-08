@@ -7,11 +7,13 @@ namespace Answer.Web.ViewModel.Wip
     {
         public int FillId { get; set; }
         public string PrintOtherId { get; set; }
+        public string PurchaseItemId { get; set; }
 
         public List<SelectListItem> PrintOtherList { get; set; }
 
-        public void Setup()
+        public void Setup(string purchaseItemId)
         {
+            PurchaseItemId = purchaseItemId;
             PrintOtherList = new List<SelectListItem>
             {
                 new SelectListItem {Text = "-----Select-----", Value = ""},

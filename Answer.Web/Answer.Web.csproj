@@ -710,6 +710,8 @@
     <Content Include="Views\Wip\_PrintOther.cshtml" />
     <Content Include="Views\Parts\AddPart.cshtml" />
     <Content Include="Views\Parts\SavePart.cshtml" />
+    <Content Include="Views\PrintOther\_ViewWorkReportTechnicalSummaryTsr.cshtml" />
+    <Content Include="Views\PrintOther\_ViewWorkReportPurchaseSummaryTsr.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

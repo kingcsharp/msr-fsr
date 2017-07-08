@@ -230,10 +230,9 @@ namespace Answer.Web.Controllers
 
         public ActionResult PrintOther(int id)
         {
-            var vm = new PrintOtherViewModel();
-            vm.FillId = id;
-
-            vm.Setup();
+            var vm = new PrintOtherViewModel {FillId = id};
+            var purchaseItemId = _orderService.GetPurchaseItemIdByFillId(id);
+            vm.Setup(purchaseItemId);
 
             return PartialView("_PrintOther", vm);
         }

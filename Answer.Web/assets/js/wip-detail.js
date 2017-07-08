@@ -182,13 +182,23 @@ $(function() {
 	});
 
     $('#display-report').on('click', function() {
-
         var id = $('.print-other-fill-id').val();
         var reportType = $('#PrintOtherId').val();
-
+        
+        var url = '/PrintOther/';
+        if (reportType == "WORK_REPORT") {
+            var purchaseItemId = $('#PURCH_ITEM_ID').val();
+            var tsrType = $('#TSR_TYPE').val();
+            var showSteps = $('#SHOW_STEPS').val();
+            var showShipping = $('#SHOW_SHIPPING').val();
+            url += 'WorkReportTsr?id=' + id + '&purchaseItemId=' + purchaseItemId + '&tsrType=' + tsrType + '&showSteps=' + showSteps + '&showShipping=' + showShipping;
+        } else {
+            url += 'PrintReport?id=' + id + '&reportType=' + reportType;
+        }
+        
         $.ajax({
             type: "GET",
-            url: '/PrintOther/PrintReport?id=' + id +'&reportType='+reportType,
+            url: url,
             dataType: 'html',
             success: function (data) {
                 $('#print-other-content').html(data);
@@ -197,9 +207,7 @@ $(function() {
 
             }
         });
-
     });
-
 });
 function openNav() {
     document.getElementById("wip-side-nav").style.width = "250px";

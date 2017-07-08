@@ -14,11 +14,6 @@ namespace Answer.Web.Controllers
 
         public ActionResult PrintReport(int id, string reportType)
         {
-            if (reportType == "WORK_REPORT")
-            {
-                return DeliveryTsr(id);
-            }
-
             if (reportType == "DELIVERY")
             {
                 return DeliveryTsr(id);
@@ -45,6 +40,20 @@ namespace Answer.Web.Controllers
             }
 
             return Content("Report Type not found");
+        }
+
+        public ActionResult WorkReportTsr(int id, int purchaseItemId, string tsrType, string showSteps, string showShipping)
+        {
+            if (tsrType == "PURCHASE")
+            {
+                var response = _orderService.GetPurchaseWorkReportTsrDetails(purchaseItemId);
+                return PartialView("_ViewWorkReportPurchaseSummaryTsr", response);
+            }
+            else
+            {
+                var response = _orderService.GetTechnicalWorkReportTsrDetails(id, purchaseItemId);
+                return PartialView("_ViewWorkReportTechnicalSummaryTsr", response);
+            }
         }
 
         public ActionResult DeliveryTsr(int id)

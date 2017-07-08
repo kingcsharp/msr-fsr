@@ -2747,5 +2747,7 @@
     <Build Include="dbo\Stored Procedures\Portal\Portal_DeleteWorkItemImagesById.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_Save_FileUpload.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_WorkItemImagesById.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_GetTsrTechnicalWorkReport.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_GetTsrPurchaseWorkReport.sql" />
   </ItemGroup>
 </Project>

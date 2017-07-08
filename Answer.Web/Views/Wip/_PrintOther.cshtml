@@ -14,5 +14,70 @@
         </div>
     </div>
 
+    <div class="form-group" id="work-report-filters" style="display:none">
+        <div>
+            <table class="form">
+                <tbody>
+                    <tr>
+                        <td class="form">
+                            <div class="norm">Report Type:</div>
+                        </td>
+                        <td class="form">
+                            <select id="TSR_TYPE" class="tt" size="0">
+                                <option value="PURCHASE">Purchase Summary</option>
+                                <option value="SERVICE">Technical Summary</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form">
+                            <div class="norm">Purchase Items:</div>
+                        </td>
+                        <td class="form">
+                            <select id="PURCH_ITEM_ID" class="tt" size="0" selectindex="@Model.PurchaseItemId">
+                                <option value=""></option>
+                                <option selected="selected" value="@Model.PurchaseItemId">@Model.PurchaseItemId</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <input type="hidden" name="PRINTABLE" value="YES">
+                    <tr>
+                        <td class="form">
+                            <div class="norm">Show Procedure Steps?:</div>
+                        </td>
+                        <td class="form">
+                            <select id="SHOW_STEPS" class="tt" size="0">
+                                <option value="YES">Yes</option>
+                                <option value="NO">No</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form">
+
+                            <div class="norm">Show Shipping Procedure Purchase Items?:</div>
+                        </td>
+                        <td class="form">
+                            <select id="SHOW_SHIPPING" class="tt" size="0">
+                                <option value="YES">Yes</option>
+                                <option value="NO">No</option>
+                            </select>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
     <div id="print-other-content"></div>
 }
+
+<script>
+    $('#PrintOtherId').on('change', function () {
+        if (this.value == "WORK_REPORT") {
+            $("#work-report-filters").show();
+        } else {
+            $("#work-report-filters").hide();
+        }
+    });
+</script>
