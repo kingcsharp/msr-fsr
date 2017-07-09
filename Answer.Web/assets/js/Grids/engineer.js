@@ -488,13 +488,15 @@ $(document).ready(function () {
 
     function actionFormatter(cellvalue, options, rowObject) {
 
-        var noteButton = '<button class="" data-id="' + rowObject.FillId + '" data-toggle="modal"  data-target="#addNoteModal" title="View Notes"><i class="fa fa-clipboard"></i></button>';
-        var imageButton = '<button class="" data-id="' + rowObject.FillId + '" data-toggle="modal"  data-target="#addImageModal" title="View Images"><i class="fa fa-picture-o"></i></button>';
-        var NcrButton = (rowObject.HasNcr == 1) ? '<button class="btn support-btn btn-xs btn-warning" data-id="' + rowObject.FillId + '" data-toggle="modal"  data-target="#ncrModal" title="View NCR"><i class="fa fa-clipboard"></i>NCR</button>' : '';
+        var printTravlerButton = '<span style="margin:5px;" class="" data-id="' + rowObject.FillId + '" data-toggle="modal"  data-target="#wioDetailPrintTraveler" title="Print Traveler"><i class="fa fa-clipboard"></i></span>';
+        var printOtherButton = '<span style="margin:5px;" class="" data-id="' + rowObject.FillId + '" data-toggle="modal"  data-target="#wioDetailPrintOther" title="Print Other"><i class="fa fa-clipboard"></i></span>';
+        var noteButton = '<span style="margin:5px;" class="" data-id="' + rowObject.FillId + '" data-toggle="modal"  data-target="#addNoteModal" title="View Notes"><i class="fa fa-clipboard"></i></span>';
+        var imageButton = '<span style="margin:5px;" class="" data-id="' + rowObject.FillId + '" data-toggle="modal"  data-target="#addImageModal" title="View Images"><i class="fa fa-picture-o"></i></span>';
+        var NcrButton = (rowObject.HasNcr == 1) ? '<span style="margin:5px;"  class="btn support-btn btn-xs btn-warning" data-id="' +rowObject.FillId + '" data-toggle="modal"  data-target="#ncrModal" title="View NCR"><i class="fa fa-clipboard"></i>NCR</span>': '';
         
         var MonitorButton = (rowObject.HasMonitor == 1) ? '<button class="btn support-btn btn-xs btn-success" data-id="' + rowObject.FillId + '" data-toggle="modal" data-target="#monitorModal"  title="View Monitors"><i class="fa fa-bar-chart "></i>Monitors</button>' : '';
 
-        thisCellVal = noteButton + imageButton + NcrButton +  MonitorButton;
+        thisCellVal = printTravlerButton + printOtherButton + noteButton + imageButton +NcrButton +MonitorButton;
 
         return thisCellVal;
     }
