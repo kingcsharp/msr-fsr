@@ -79,6 +79,7 @@ $(function() {
     });
 
     $('[data-toggle="tooltip"]').tooltip();
+
     $( ".wip-button" ).on('doubletap', function() {
         console.log("closing modal and loading wip detail ");
         $('#wipListModal').modal("hide");
@@ -135,8 +136,30 @@ $(function() {
 			$('.resume-timer-btn').addClass('hidden');
 		}
 	});
-	
     
+    
+
+	$('#wipListModal').on('hidden.bs.modal', function (event) {
+        $(this).data('bs.modal', null);
+    });
+
+	$('#wipListModal').on('show.bs.modal', function (event) {
+        var modal = $(this);
+
+        $.ajax({
+            type: "GET",
+            url: '/wip/WipListModel',
+            dataType: 'html',
+            success: function (data) {
+                modal.find('.modal-body').html(data);
+            },
+            error: function () {
+
+            }
+        });
+    });
+
+
 	$('#wioDetailPrintTraveler').on('hidden.bs.modal', function (event) {
 	    $(this).data('bs.modal', null);
 	});
@@ -210,7 +233,6 @@ $(function() {
     });
 
     $('#carousel ul.slides li.step').on('click', function () {
-        debugger;
         var stepId = $(this).data("stepid");
         var phStepId = $(this).data("phStepid");
 
@@ -219,8 +241,7 @@ $(function() {
             url: "/wip/GetWipStepDetails?stepId=" + stepId + "&phStepId=" + phStepId,
             dataType: 'html',
             success: function (data) {
-                debugger;
-                $('#step-detail').html(data);
+                $('#step-' + stepId).html(data);
             },
             error: function () {
 

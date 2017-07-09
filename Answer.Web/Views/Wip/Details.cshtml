@@ -21,10 +21,18 @@
                     <select id="wip-item-select" class="selectpicker form-control" name="wo-item">
                         <option data-content="<strong>Select an Item...</strong>">Select an Item</option>
                         <optgroup label="Items Assigned to Me">
-                            @foreach (var item in Model.WoItems)
-                            {
-                                <option data-content="<strong>@item.PurchaseItemId</strong><br>Proc: @item.ProcName<br>Serial: @item.Serial<span class='label label-success pull-right'>@item.Status</span>" data-status="@item.Status">@item.PurchaseItemId</option>
-                            }
+                        @if (Model.WoItems.Any())
+                        {
+                            foreach (var item in Model.WoItems)
+                             {
+                                 <option data-content="<strong>@item.PurchaseItemId</strong><br>Proc: @item.ProcName<br>Serial: @item.Serial<span class='label label-success pull-right'>@item.Status</span>" data-status="@item.Status">@item.PurchaseItemId</option>
+                             }
+                        }
+                        else
+                        {
+                            <option>No Search Filter Defined</option>
+                        }
+                         
                         </optgroup>
                     </select>
                 </div>
@@ -117,15 +125,23 @@
                 </div>
                 <div id="slider" class="flexslider step-container">
                     <ul class="slides">
-                        <li>
-                            @Html.Partial("_InitialInspection")
+                        @*<li>
+                            @Html.Partial("_InitialInspection",Model.TaskStepResults)
                         </li>
                         <li>
                             @Html.Partial("_SoakRoom")
                         </li>
                         <li>
                             @Html.Partial("_SoakRoom")
-                        </li>
+                        </li>*@
+                        
+                        @foreach (var step in Model.TaskStepResults)
+                        {
+                            <li id="step-@step.StepId">
+                                <h1>@step.StepId</h1>
+                            </li>
+                        }
+
                     </ul>
                 </div>
             </div>
@@ -133,7 +149,23 @@
     </div>
 </div>
 
-@Html.Partial("_WipListModal")
+
+<div id="wipListModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">WIP List</h4>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-close-o"></i> Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
 
 <div id="wioDetailPrintTraveler" class="modal fade" role="dialog">
     <div class="modal-dialog">

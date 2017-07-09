@@ -11,6 +11,7 @@ namespace Msr.Services.Orders.Messaging
             FileSearchResult = new FileSearchResult();
             Parts = new List<string>();
             TaskStepResults = new List<TaskStepResult>();
+            WoItems = new List<WorkOrderView>();
         }
 
         public int FillId { get; set; }

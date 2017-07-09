@@ -157,6 +157,8 @@ namespace Answer.Web.Controllers
                 rows = results
             };
 
+            Session["WIP_Nav"] = string.Join(",", results.Select(x => x.FillId).ToList());
+
             return Json(json, JsonRequestBehavior.AllowGet);
         }
 
@@ -210,13 +212,34 @@ namespace Answer.Web.Controllers
             return Json("OK", JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult WipListModel()
+        {
+            var wipList = new List<WorkOrderView>();
+
+            if (Session["WIP_Nav"] != null)
+            {
+                var fillIds = Session["WIP_Nav"].ToString().Split(',').ToList();
+
+                var orderService = new OrderService();
+
+                wipList = orderService.GetWorkOrderQueryable().Where(x => fillIds.Contains(x.FillId)).ToList();
+            }
+
+            return PartialView("_WipListModal", wipList);
+        }
+
         public ActionResult Details(int id)
         {
             var orderService = new OrderService();
 
             WorkOrderDetailsResponse response = _orderService.GetPurchaseItemDetails(id);
 
-            response.WoItems = orderService.GetWorkOrderQueryable().Take(10).ToList();
+            if (Session["WIP_Nav"] != null)
+            {
+                var fillIds = Session["WIP_Nav"].ToString().Split(',').ToList();
+
+                response.WoItems = orderService.GetWorkOrderQueryable().Where(x => fillIds.Contains(x.FillId)).ToList();
+            }
 
             return View(response);
         }
@@ -298,6 +321,7 @@ namespace Answer.Web.Controllers
         public ActionResult GetWipStepDetails(int stepId, int? phStepId)
         {
             var response = _orderService.GetWipStepDetails(stepId, phStepId);
+
             return PartialView("_InitialInspection", response);
         }
 
