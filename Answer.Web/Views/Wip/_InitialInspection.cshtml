@@ -1,4 +1,5 @@
-﻿ @Html.Partial("_StepControls")
+﻿@model Msr.Services.Orders.Messaging.WipStepDetailsResponse
+@Html.Partial("_StepControls")
 <div id="step-tabs" class="col-sm-12">
     <ul class="nav nav-tabs">
         <li class="active"><a data-toggle="tab" href="#description1">Task Description</a></li>
@@ -7,10 +8,10 @@
     </ul>
     <div class="tab-content">
         <div id="description1" class="tab-pane fade task-window in active">
-            @Html.Partial("_InitialInspectionDetail")
+            @Html.Partial("_InitialInspectionDetail", Model.TaskEditDataResult)
         </div>
         <div id="monitors1" class="tab-pane fade task-window">
-            @Html.Partial("_MonitorsTab")
+            @Html.Partial("_MonitorsTab", Model.MonitorTemplateResult)
         </div>
         <div id="files1" class="tab-pane task-window fade">
             @Html.Partial("_FilesTab")

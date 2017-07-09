@@ -125,8 +125,11 @@
     <Compile Include="Orders\Messaging\AddUserMessageResponse.cs" />
     <Compile Include="Orders\Messaging\TsrDetailsResponse.cs" />
     <Compile Include="Orders\Messaging\WipHistoryTsrResponse.cs" />
+    <Compile Include="Orders\Messaging\WipStepDetailsResponse.cs" />
     <Compile Include="Orders\Messaging\WorkOrderDetailsResponse.cs" />
     <Compile Include="Orders\OrderService.cs" />
+    <Compile Include="Orders\Procedures\MonitorTemplateResult.cs" />
+    <Compile Include="Orders\Procedures\TaskEditDataResult.cs" />
     <Compile Include="Orders\Procedures\GetPurchaseWorkReportTsrDetailsResult.cs" />
     <Compile Include="Orders\Procedures\GetMonitorLabelTsrDetailsResult.cs" />
     <Compile Include="Orders\Procedures\GetPartsAndKitsLabelsResult.cs" />

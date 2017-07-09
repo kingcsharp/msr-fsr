@@ -4,14 +4,6 @@
         <tbody>
         <tr>
             <td class="tsrHeader">
-                <table>
-                    <tbody>
-                    <tr><td class="subTitle"></td></tr>
-                    <tr></tr>
-                    </tbody>
-                </table>
-            </td>
-            <td class="tsrHeader">
                 <div>
                     <table style="border: 1px solid #ccc;">
                         <tbody>
@@ -36,23 +28,26 @@
         @foreach (var task in Model.TasksFindForFillIdResult)
         {
             <tr>
-                <td style="padding-right: 5px;vertical-align: top">@task.Step_Id</td>
+                <td style="padding-right: 5px; vertical-align: top">@task.Step_Id</td>
                 <td style="vertical-align: top">
-                        @Html.Raw(task.Step_Text_All_Html)
-                @foreach (var monitor in task.MonitorsDescription)
-                {
-                    <table>
-                        <thead>
-                        <tr><th style="border: 1px solid #ccc">Desciption</th><th style="border: 1px solid #ccc">Result</th></tr>
-                        </thead>
-                        <tbody>
+                    @Html.Raw(task.Step_Text_All_Html)
+                    @foreach (var monitor in task.FillGetMonitorsForNcrResult)
+                    {
+                        <table>
+                            <thead>
                             <tr>
-                                <td style="border: 1px solid #ccc">@monitor</td>
-                            <td style="border: 1px solid #ccc"></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                }
+                                <th style="border: 1px solid #ccc">Desciption</th>
+                                <th style="border: 1px solid #ccc">Result</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td style="border: 1px solid #ccc">@monitor.Description</td>
+                                <td style="border: 1px solid #ccc">@monitor.Print_Result</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    }
                 </td>
             </tr>
         }

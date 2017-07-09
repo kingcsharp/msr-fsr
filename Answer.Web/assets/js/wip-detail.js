@@ -208,6 +208,23 @@ $(function() {
             }
         });
     });
+
+    $('#carousel ul.slides li.step').on('click', function () {
+        var stepId = $(this).data("stepId");
+        var phStepId = $(this).data("phStepId");
+
+        $.ajax({
+            type: "GET",
+            url: url,
+            dataType: 'html',
+            success: function (data) {
+                $('#print-other-content').html(data);
+            },
+            error: function () {
+
+            }
+        });
+    });
 });
 function openNav() {
     document.getElementById("wip-side-nav").style.width = "250px";

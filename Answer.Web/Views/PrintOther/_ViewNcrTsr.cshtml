@@ -83,9 +83,11 @@
                         <td style="padding-left: 30px;">@result.Print_Order</td>
                         <td class="normalTable">
                             <step_text_html type="202"><span style="font-weight: bold">@Html.Raw(result.Step_Text_Html)</span></step_text_html>
-                            @foreach (var monitorDescription in result.MonitorsDescription)
+                            @foreach (var monitorDescription in result.FillGetMonitorsForNcrResult)
                             {
-                                <div class="monitor" style="padding-left: 20px; color: green">@monitorDescription<span style="color: black"></span></div>
+                                <div class="monitor" style="padding-left: 20px; color: green">
+                                    @monitorDescription.Description
+                                </div>
                             }
                         </td>
                     </tr>

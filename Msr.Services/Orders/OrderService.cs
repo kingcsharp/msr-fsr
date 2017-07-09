@@ -187,9 +187,9 @@ namespace Msr.Services.Orders
 
                 foreach (var tasksForFill in detailsResponse.TasksFindForFillIdResult)
                 {
-                    tasksForFill.MonitorsDescription =
+                    tasksForFill.FillGetMonitorsForNcrResult =
                         fillGetMonitorsForNcrResult.Where(
-                            monitor => monitor.Stepper_Id == tasksForFill.Step_Id).Select(x => x.Description);
+                            monitor => monitor.Stepper_Id == tasksForFill.Step_Id).ToList();
                     tasksForFill.Step_Text_Html =
                         tasksForFill.Step_Text_Html.Replace("<<bb>>", "<br/><h4>")
                             .Replace("<</bb>>", "</h4>")
@@ -264,12 +264,12 @@ namespace Msr.Services.Orders
 
                     detailsResponse.WipTaskResult = multi.Read<WipTaskResult>().ToList();
 
-                    //detailsResponse.WipSubTaskResult = multi.Read<WipSubTaskResult>().ToList();
+                    var wipSubTaskResult = multi.Read<WipSubTaskResult>().ToList();
 
-                    //foreach (var wipTask in detailsResponse.WipTaskResult)
-                    //{
-                    //    wipTask.WipSubTasks = detailsResponse.WipSubTaskResult.Where(x => x.TaskId == wipTask.Id).ToList();
-                    //}
+                    foreach (var wipTask in detailsResponse.WipTaskResult)
+                    {
+                        wipTask.WipSubTasks = wipSubTaskResult.Where(x => x.TaskId == wipTask.Id).ToList();
+                    }
                 }
             }
 
@@ -412,14 +412,35 @@ namespace Msr.Services.Orders
 
                 foreach (var tasksForFill in detailsResponse.TasksFindForFillIdResult)
                 {
-                    tasksForFill.MonitorsDescription =
-                        fillGetMonitorsForNcrResult.Where(
-                            monitor => monitor.Stepper_Id == tasksForFill.Step_Id).Select(x => x.Description);
+                    tasksForFill.FillGetMonitorsForNcrResult = fillGetMonitorsForNcrResult.Where(
+                            monitor => monitor.Stepper_Id == tasksForFill.Step_Id).ToList();
 
                     tasksForFill.Step_Text_All_Html =
                         tasksForFill.Step_Text_All_Html.Replace("<<bb>>", "<br/><h4>")
                             .Replace("<</bb>>", "</h4>")
                             .Replace("<<nl/>>", "<br/>");
+                }
+            }
+
+            return detailsResponse;
+        }
+
+        public WipStepDetailsResponse GetWipStepDetails(int stepId, int phStepId)
+        {
+            var detailsResponse = new WipStepDetailsResponse { StepId = stepId};
+
+            using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
+            {
+                var p = new DynamicParameters();
+
+                p.Add("@stepId", stepId, DbType.String, ParameterDirection.Input);
+                p.Add("@phStepId", stepId, DbType.String, ParameterDirection.Input);
+
+                using (var multi = conn.QueryMultiple("Portal_GetStepDetails", p, commandType: CommandType.StoredProcedure))
+                {
+                    detailsResponse.TaskEditDataResult = multi.Read<TaskEditDataResult>().Single();
+
+                    detailsResponse.MonitorTemplateResult = multi.Read<MonitorTemplateResult>().Single();
                 }
             }
 

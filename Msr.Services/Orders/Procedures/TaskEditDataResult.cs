@@ -1,11 +1,12 @@
 ﻿
 namespace Msr.Services.Orders.Procedures
 {
-    public class TaskStepResult
+    public class TaskEditDataResult
     {
         public string Description { get; set; }
+
         public string Status { get; set; }
-        public string StepId { get; set; }
-        public string PhStepId { get; set; }
+
+        public string Assignee { get; set; }
     }
 }

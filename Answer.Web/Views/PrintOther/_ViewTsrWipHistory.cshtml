@@ -1,7 +1,29 @@
 ﻿@model Msr.Services.Orders.Messaging.WipHistoryTsrResponse
 
 <div class="row">
-    
+    <table class="tsrHeader">
+        <tbody>
+            <tr>
+                <td class="tsrHeader">
+                    <div>
+                        <table style="border: 1px solid #ccc;">
+                            <tbody>
+                                <tr>
+                                    <td rowspan="2" style="border: 1px solid #ccc">@Model.WipHistoryDetailResult.SupplierName</td>
+                                    <td> @Model.WipHistoryDetailResult.ProcedureName</td>
+                                    <td style="padding-left: 5px; padding-right: 5px;">Rev #:</td>
+                                    <td>@Model.WipHistoryDetailResult.CustomerPerson</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" style="border: 1px solid #ccc">@Model.WipHistoryDetailResult.FillObjectDescription</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 
 <div class="row">
@@ -15,10 +37,13 @@
             <th>Location </th>
             <th>Status</th>
         </tr>
+        @{
+            int i = 1;
+        }
         @foreach (var task in Model.WipTaskResult)
         {
             <tr>
-                <td>@task.Id</td>
+                <td>@i</td>
                 <td>@task.Description </td>
                 <td>@task.LatestRequesteeName</td>
                 <td>@task.ActualStartDate</td>
@@ -26,6 +51,30 @@
                 <td>@task.Location</td>
                 <td>@task.Status</td>
             </tr>
+            <tr>
+                <td></td>
+                <td colspan="6">
+                    @if (task.WipSubTasks.Any())
+                    {
+                        <table class="table-bordered">
+                            <tr>
+                                <th>Monitor @task.Id</th>
+                                <th>Result</th>
+                                <th>Pass/Fail</th>
+                            </tr>
+                            @foreach (var subTask in task.WipSubTasks)
+                            {
+                                <tr>
+                                    <td>@subTask.Description </td>
+                                    <td>@subTask.PrintResult</td>
+                                    <td>@subTask.IsPassing</td>
+                                </tr>
+                            }
+                        </table>
+                    }
+                </td>
+            </tr>
+            i++;
         }
     </table>
 </div>
