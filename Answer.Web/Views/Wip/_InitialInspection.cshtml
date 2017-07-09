@@ -10,9 +10,12 @@
         <div id="description1" class="tab-pane fade task-window in active">
             @Html.Partial("_InitialInspectionDetail", Model.TaskEditDataResult)
         </div>
-        <div id="monitors1" class="tab-pane fade task-window">
-            @Html.Partial("_MonitorsTab", Model.MonitorTemplateResult)
-        </div>
+        @if (Model.MonitorTemplateResult != null)
+        {
+            <div id="monitors1" class="tab-pane fade task-window">
+                @Html.Partial("_MonitorsTab", Model.MonitorTemplateResult)
+            </div>
+        }
         <div id="files1" class="tab-pane task-window fade">
             @Html.Partial("_FilesTab")
         </div>

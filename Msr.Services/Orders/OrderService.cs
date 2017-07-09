@@ -425,7 +425,7 @@ namespace Msr.Services.Orders
             return detailsResponse;
         }
 
-        public WipStepDetailsResponse GetWipStepDetails(int stepId, int phStepId)
+        public WipStepDetailsResponse GetWipStepDetails(int stepId, int? phStepId)
         {
             var detailsResponse = new WipStepDetailsResponse { StepId = stepId};
 
@@ -434,13 +434,13 @@ namespace Msr.Services.Orders
                 var p = new DynamicParameters();
 
                 p.Add("@stepId", stepId, DbType.String, ParameterDirection.Input);
-                p.Add("@phStepId", stepId, DbType.String, ParameterDirection.Input);
+                p.Add("@phStepId", phStepId, DbType.String, ParameterDirection.Input);
 
                 using (var multi = conn.QueryMultiple("Portal_GetStepDetails", p, commandType: CommandType.StoredProcedure))
                 {
                     detailsResponse.TaskEditDataResult = multi.Read<TaskEditDataResult>().Single();
 
-                    detailsResponse.MonitorTemplateResult = multi.Read<MonitorTemplateResult>().Single();
+                    detailsResponse.MonitorTemplateResult = multi.Read<MonitorTemplateResult>().SingleOrDefault();
                 }
             }
 

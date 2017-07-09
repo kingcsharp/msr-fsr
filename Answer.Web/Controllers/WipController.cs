@@ -295,7 +295,7 @@ namespace Answer.Web.Controllers
             return Json(new { Message = "Something went wrong." }, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult GetWipStepDetails(int stepId, int phStepId)
+        public ActionResult GetWipStepDetails(int stepId, int? phStepId)
         {
             var response = _orderService.GetWipStepDetails(stepId, phStepId);
             return PartialView("_InitialInspection", response);

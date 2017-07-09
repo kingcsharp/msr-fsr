@@ -1,1 +1,22 @@
 ﻿@model Msr.Services.Orders.Procedures.MonitorTemplateResult
+<div class="form-group">
+    <div class="">Monitor Description:</div>
+    <div class="form-control">@Model.Description</div>
+    <div class="">Target:</div>
+    <div class="form-control">@Model.Target ?? "Yes"</div>
+    <div class="">Result:</div>
+    <div class="form-control">@Model.PrintResult</div>
+    <div class="">Comment:</div>
+    <div class="form-control"> @Html.TextAreaFor(x => x.Description)</div>
+</div>
+
+<div class="form-group">
+    <div class="">Monitor #:</div>
+    <div class="form-control">1</div>
+    <div class="">Monitor Type:</div>
+    <div class="form-control">@Model.MonitorType.Replace("_", "/")</div>
+    <div class="">If fails:</div>
+    <div class="form-control">@Model.FailAction</div>
+    <div class="">Fault Handling:</div>
+    <div class="form-control">@Model.FailAction</div>
+</div>

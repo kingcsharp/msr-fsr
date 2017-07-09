@@ -210,15 +210,17 @@ $(function() {
     });
 
     $('#carousel ul.slides li.step').on('click', function () {
-        var stepId = $(this).data("stepId");
-        var phStepId = $(this).data("phStepId");
+        debugger;
+        var stepId = $(this).data("stepid");
+        var phStepId = $(this).data("phStepid");
 
         $.ajax({
             type: "GET",
-            url: url,
+            url: "/wip/GetWipStepDetails?stepId=" + stepId + "&phStepId=" + phStepId,
             dataType: 'html',
             success: function (data) {
-                $('#print-other-content').html(data);
+                debugger;
+                $('#step-detail').html(data);
             },
             error: function () {
 
