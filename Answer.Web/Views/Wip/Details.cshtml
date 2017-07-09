@@ -94,26 +94,6 @@
                     <ul class="slides">
                         @foreach (var step in Model.TaskStepResults)
                         {
-                            <li class="step waiting" data-stepId="@step.StepId" data-phStepId="@step.PhStepId">
-                                <div>@step.Description</div>
-                            </li>
-                        }
-                    </ul>
-                </div>
-                <div id="slider" class="flexslider step-container">
-                    <ul class="slides">
-                        <li id="step-detail">
-                           
-                        </li>
-                        <li>
-                            @*@Html.Partial("_SoakRoom")*@
-                        </li>
-                        <li>
-                            @*@Html.Partial("_SoakRoom")*@
-                        </li>
-
-                        @foreach (var step in Model.TaskStepResults)
-                        {
                             var stepCss = "";
 
                             if (step.Status == "CLOSED")
@@ -129,11 +109,23 @@
                                 stepCss = "waiting";
                             }
 
-                            <li class="step @stepCss">
+                            <li class="step @stepCss" data-stepId="@step.StepId" data-phStepId="@step.PhStepId">
                                 <div>@step.Description</div>
                             </li>
                         }
-
+                    </ul>
+                </div>
+                <div id="slider" class="flexslider step-container">
+                    <ul class="slides">
+                        <li>
+                            @Html.Partial("_InitialInspection")
+                        </li>
+                        <li>
+                            @Html.Partial("_SoakRoom")
+                        </li>
+                        <li>
+                            @Html.Partial("_SoakRoom")
+                        </li>
                     </ul>
                 </div>
             </div>
