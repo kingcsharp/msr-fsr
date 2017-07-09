@@ -19,6 +19,43 @@
     </div>
 </div>
 
+<div id="wioDetailPrintTraveler" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Print Traveler Report</h4>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" onclick="js:window.print()"><i class="fa fa-print"></i> Print Report</button>
+                <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close-o"></i> Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<div id="wioDetailPrintOther" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Print Other</h4>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" id="display-report"><i class="fa fa-print"></i> Display</button>
+                <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close-o"></i> Cancel</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
 @section scripts
 {
     <script src="~/assets/js/plugins/bootstrap3/bootstrap-dialog.min.js"></script>
@@ -29,6 +66,7 @@
     <script src="https://cdn.smooch.io/smooch.min.js"></script>
     <script src="~/assets/js/dropzone/dropzone.min.js"></script>
     <script type="text/javascript" src="~/assets/js/grids/engineer.js"></script>
+    <script src="~/assets/js/wip-detail-print-other.js"></script>
 
     <script>
         //$.jgrid.defaults.responsive = true;
