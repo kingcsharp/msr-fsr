@@ -14,3 +14,5 @@ AS
 	UPDATE A_ORDER_ITEMS SET SHIP_DATE = @getDate WHERE ID = @purchaseItemId;
 	SELECT ca.NAME AS CompanyName, CONCAT(dt.PROD_NAME, '-', dt.PROC_NAME) AS Description, dt.PURCHASE_QTY As Quantity, dt.PURCH_ITEM_ID AS CustomerWoItemNumber, dt.COMPANY_PART_NUMBER AS CompanyPartNumber, dt.SERIAL AS Serial FROM A_V_DELIVERY_TICKET_PURCH_ITEM_INFO dt JOIN A_V_COMPANIES_APPROVED_DATA_QUICK ca ON dt.ACCT_CUSTOMER = ca.ID WHERE dt.PURCHASE_HIST_ID = @purchaseHistoryId 
 	AND dt.PURCH_ITEM_ID = @purchaseItemId
+	
+	GO

@@ -1,4 +1,4 @@
-﻿ALTER procedure [dbo].[Portal_GetTaskWithMonitors]
+﻿CREATE procedure [dbo].[Portal_GetTaskWithMonitors]
 
 @fillID varchar(50)
 
@@ -24,10 +24,7 @@ FROM A_V_TASKS_WITH_PROCEDURE_STEP_DATA  with (noLock)
 
 --exec A_SP_TASKS_FIND_FOR_PURCHASE_ITEM_AND_ACT_PART '366965','351792'
 
-
-
-
-
+GO
 
 
 

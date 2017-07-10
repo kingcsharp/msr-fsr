@@ -11,3 +11,5 @@ BEGIN
     -- Insert statements for procedure here
 	UPDATE A_ACTUAL_PARTS_RELATED_FILES SET  STATUS = 'DELETED',  DRCM = getDate(),  DATE_DELETED = getDate(),  DELETED_BY = @strNTLogin, MODBY = @strNTLogin WHERE ID = @fileLinkId
 END
+
+GO

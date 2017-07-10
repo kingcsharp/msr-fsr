@@ -1,5 +1,4 @@
-﻿
-ALTER  VIEW [dbo].[Portal_MonitorsWithTaskAndResults]
+﻿CREATE  VIEW [dbo].[Portal_MonitorsWithTaskAndResults]
 AS
 SELECT     TOP 100 PERCENT 
 t.ID,

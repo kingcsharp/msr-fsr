@@ -1,4 +1,4 @@
-﻿ALTER Procedure [dbo].[Portal_Check_Login]
+﻿CREATE Procedure [dbo].[Portal_Check_Login]
 @LOGIN as nvarchar(50),
 @PASSWORD as nvarchar(50),
 @PASSWORD_NON_ENCRYPT as nvarchar(50)
@@ -20,6 +20,7 @@ else
 	end
 
 
+GO
 
 
 

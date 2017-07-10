@@ -1,4 +1,4 @@
-﻿alter procedure Portal_GetStepPics
+﻿CREATE procedure Portal_GetStepPics
 @FileId nvarchar(50)
 
 AS
@@ -11,3 +11,6 @@ FILE_ID AS Id,
 CONTENTTYPE as ContentType
 FROM A_V_TASK_REF_FILES WHERE (STATUS = 'ACTIVE' or STATUS IS NULL) AND TASK_ID IN
 (SELECT TASK_ID FROM A_TASK_ORDER_INFORMATION WHERE FILL_ITEM_ID = @FileId)  ORDER BY CONTENTTYPE 
+
+
+GO

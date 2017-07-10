@@ -1,4 +1,4 @@
-﻿alter    PROCEDURE [dbo].[PortalHasNcr]
+﻿CREATE PROCEDURE [dbo].[PortalHasNcr]
 @partID varchar(50)
 as
 
@@ -31,3 +31,5 @@ SELECT  COUNT(*)
 	 inner JOIN [A_TASK_OBJECT_LINK] ol on at.ID = ol.TASK_ID
 	  INNER JOIN A_V_ACTUAL_PARTS_APPROVED_DATA p on p.OBJECT_ID = ol.OBJECT_ID
 	  WHERE p.OBJECT_ID LIKE isnull(@partID,'%')
+
+	  Go

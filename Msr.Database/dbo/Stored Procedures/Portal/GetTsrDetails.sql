@@ -1,4 +1,4 @@
-﻿ALTER procedure [dbo].[GetTsrDetails]
+﻿CREATE procedure [dbo].[GetTsrDetails]
 @fileId int
 AS
 

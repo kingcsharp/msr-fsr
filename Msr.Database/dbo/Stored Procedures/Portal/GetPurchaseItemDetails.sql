@@ -1,4 +1,4 @@
-﻿alter procedure [dbo].[GetPurchaseItemDetails]
+﻿CREATE procedure [dbo].[GetPurchaseItemDetails]
 @fileId int
 AS
 
@@ -33,3 +33,5 @@ FROM A_V_TASKS_WITH_PROCEDURE_STEP_DATA  with (noLock)
 ORDER BY dbo.A_FN_TASK_MAKE_PARENT_LIST(STEP_ID) + STEP_ID, PRINT_ORDER
 
 -- leGetPurchaseItemDetails '110691'
+
+GO

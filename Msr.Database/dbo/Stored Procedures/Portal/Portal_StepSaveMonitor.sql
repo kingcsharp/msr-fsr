@@ -16,3 +16,5 @@ AS
 	exec A_SP_MONITOR_UPDATE_RESULT_AND_COMMENT @newId output, @messages output, @id, @failAction, @result, @comment, @target,
 	 @tolerance, @theSaurusId, @strNTLogin
 	SELECT @newId, @messages
+
+	GO

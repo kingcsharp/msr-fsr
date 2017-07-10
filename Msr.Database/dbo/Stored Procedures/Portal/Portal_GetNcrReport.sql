@@ -1,6 +1,6 @@
 ﻿--   exec Portal_GetNcrReport '109815'
 
-ALTER procedure [dbo].[Portal_GetNcrReport]
+CREATE procedure [dbo].[Portal_GetNcrReport]
 @FileId nvarchar(50)
 AS
 
@@ -49,3 +49,4 @@ SELECT @PurchItemId AS PurchItemId,
 ,@Comments AS Comments
 ,@DateComplete AS DateComplete
 
+GO
