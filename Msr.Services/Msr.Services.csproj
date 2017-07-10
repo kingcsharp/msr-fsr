@@ -124,6 +124,7 @@
     <Compile Include="Orders\Messaging\NcrReportResponse.cs" />
     <Compile Include="Orders\Messaging\AddUserMessageResponse.cs" />
     <Compile Include="Orders\Messaging\TsrDetailsResponse.cs" />
+    <Compile Include="Orders\Messaging\UpdateStepMonitorResponse.cs" />
     <Compile Include="Orders\Messaging\WipHistoryTsrResponse.cs" />
     <Compile Include="Orders\Messaging\WipStepDetailsResponse.cs" />
     <Compile Include="Orders\Messaging\WorkOrderDetailsResponse.cs" />

@@ -447,6 +447,25 @@ namespace Msr.Services.Orders
             return detailsResponse;
         }
 
+        public void UpdateStepMonitor(UpdateStepMonitorRequest request)
+        {
+            var p = new DynamicParameters();
+
+            p.Add("@id", request.Id, DbType.String, ParameterDirection.Input);
+            p.Add("@failAction", request.FailAction, DbType.String, ParameterDirection.Input);
+            p.Add("@result", request.Result, DbType.String, ParameterDirection.Input);
+            p.Add("@comment", request.Comment, DbType.String, ParameterDirection.Input);
+            p.Add("@target", request.Target, DbType.String, ParameterDirection.Input);
+            p.Add("@tolerance", request.Tolerance, DbType.String, ParameterDirection.Input);
+            p.Add("@theSaurusId", request.TheSaurusId, DbType.String, ParameterDirection.Input);
+            p.Add("@strNTLogin", request.StrNTLogin, DbType.String, ParameterDirection.Input);
+
+            using (IDbConnection conn =  new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
+            {
+                int i = conn.Execute("GetPurchaseItemDetails", p, commandType: CommandType.StoredProcedure);
+            }
+        }
+
         private void FormatHtml(TsrDetailsResponse response)
         {
   foreach (var taskResult in response.TsrTaskResults)

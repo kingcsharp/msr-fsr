@@ -2750,5 +2750,6 @@
     <Build Include="dbo\Stored Procedures\Portal\Portal_GetTsrTechnicalWorkReport.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_GetTsrPurchaseWorkReport.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_GetStepDetails.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_StepSaveMonitor.sql" />
   </ItemGroup>
 </Project>
