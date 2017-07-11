@@ -4,6 +4,7 @@ namespace Answer.Web.ViewModel.Images
 {
     public class ImageViewModel
     {
-        public int Id { get; set; }
+        public int FillId { get; set; }
+        public int TaskId { get; set; }
     }
 }

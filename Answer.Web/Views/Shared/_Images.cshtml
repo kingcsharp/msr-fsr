@@ -41,7 +41,8 @@
     </div>
     <!-- The table listing the files available for upload/download -->
     <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
-    <input id="FillID" name="FillID" type="hidden" />
+    <input id="FillId" name="FillId" type="hidden" value="@Model.FillId" />
+    <input id="TaskId" name="FillId" type="hidden" value="@Model.TaskId" />
 </form>
 <!-- The template to display files available for upload -->
 <script id="template-upload" type="text/x-tmpl">
@@ -120,11 +121,40 @@
                 </script>
 
 
+     
+@*<script src="~/assets/js/vendor/jquery.ui.widget.js"></script>
+<!-- The Templates plugin is included to render the upload/download listings -->
+<script src="//blueimp.github.io/JavaScript-Templates/js/tmpl.min.js"></script>
+<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
+<script src="//blueimp.github.io/JavaScript-Load-Image/js/load-image.all.min.js"></script>
+<!-- blueimp Gallery script -->
+<script src="//blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js"></script>
+<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+<script src="~/assets/js/jquery.iframe-transport.js"></script>
+<script src="~/assets/js/jquery.fileupload.js"></script>
+<script src="~/assets/js/jquery.fileupload-process.js"></script>
+<script src="~/assets/js/jquery.fileupload-image.js"></script>
+<script src="~/assets/js/jquery.fileupload-ui.js"></script>*@
+
 <script type="text/javascript">
 
     $(document).ready(function () {
 
-        LoadImages(@Model.Id);
+        $('#fileupload').fileupload({
+            // Uncomment the following to send cross-domain cookies:
+            //xhrFields: {withCredentials: true},
+            url: '/doc/FileUploader',
+            uploadTemplateId: "template-upload",
+            downloadTemplateId: "template-download",
+
+        });
+
+        $('#fileupload').bind('fileuploaddone', function (e, data) {
+            $("table tbody.files").empty();
+            LoadImages();
+        });
+
+        LoadImages(@Model.TaskId);
 
     });
 
@@ -133,14 +163,13 @@
         $.ajax({
             // Uncomment the following to send cross-domain cookies:
             //xhrFields: {withCredentials: true},
-            url: '/doc/GetImagesById?Id=' + id,
+            url: '/doc/GetImagesById?taskId=' + id,
             dataType: 'JSON',
             context: $('#fileupload')[0]
         }).always(function () {
             $(this).removeClass('fileupload-processing');
         }).done(function (result) {
-            //console.log(result);
-            //console.log(files);
+
             $(this).fileupload('option', 'done')
                 .call(this, $.Event('done'), { result: result });
         });

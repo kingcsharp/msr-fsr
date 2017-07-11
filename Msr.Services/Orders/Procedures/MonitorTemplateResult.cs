@@ -1,5 +1,6 @@
 ﻿
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Web.Mvc;
 
 namespace Msr.Services.Orders.Procedures
@@ -16,6 +17,7 @@ namespace Msr.Services.Orders.Procedures
 
         public string Target { get; set; }
 
+        [Column("MONITOR_TYPE")]
         public string MonitorType { get; set; }
 
         public string FailAction { get; set; }

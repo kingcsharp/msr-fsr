@@ -321,36 +321,31 @@ namespace Msr.Services.Orders
             }
             catch (Exception ex)
             {
-                var message = "Error occured:" + ex.Message;
-
                 return false;
             }
 
         }
-        public List<WorkOrderImageView> GetOrderItemImagesById(string Id)
+        public List<WorkOrderImageView> GetOrderItemImagesById(string taskId)
         {
-            var fillId = new SqlParameter("@fillId", Id);
+            var taskIdParm = new SqlParameter("@taskId", taskId);
 
-            var result = _dbContext.Database.SqlQuery<WorkOrderImageView>("Portal_WorkItemImagesById @fillId", fillId).ToList();
+            var result = _dbContext.Database.SqlQuery<WorkOrderImageView>("Portal_WorkItemImagesById @taskId", taskIdParm).ToList();
 
             return result;
         }
-        public bool DeleteOrderItemImageById(string Id)
+        public bool DeleteOrderItemImageById(string id, string loginId)
         {
             try
             {
-                var fileLinkId = new SqlParameter("@fileLinkId", Id);
-                //need to be dynamic
-                var NTLogin = new SqlParameter("@strNTLogin", "1618");
+                var fileLinkIdParam = new SqlParameter("@fileLinkId", id);
+                var loginIdParam = new SqlParameter("@strNTLogin", loginId);
 
-                _dbContext.Database.ExecuteSqlCommand("exec Portal_DeleteWorkItemImagesById @fileLinkId, @strNTLogin", fileLinkId, NTLogin);
+                _dbContext.Database.ExecuteSqlCommand("exec Portal_DeleteWorkItemImagesById @fileLinkId, @strNTLogin", fileLinkIdParam, loginIdParam);
 
                 return true;
             }
             catch (Exception ex)
-            {
-                var message = "Error occured:" + ex.Message;
-
+            {                
                 return false;
             }
         }
@@ -443,10 +438,7 @@ namespace Msr.Services.Orders
                     detailsResponse.TaskEditDataResult = multi.Read<TaskEditDataResult>().Single();
 
                     detailsResponse.TaskEditDataResult.Description = detailsResponse.TaskEditDataResult.Description.Replace("<<bb>>", "<br/><h4>").Replace("<</bb>>", "</h4>").Replace("<<nl/>>", "<br/>");
-
-                    detailsResponse.MonitorTemplateResult = multi.Read<MonitorTemplateResult>().SingleOrDefault();
                 }
-
 
                 var p1 = new DynamicParameters();
 
@@ -457,7 +449,27 @@ namespace Msr.Services.Orders
                     commandType: CommandType.StoredProcedure))
                 {
                     detailsResponse.TaskItemParts = multi.Read<TaskItemPart>().ToList();
+
+                    foreach (var taskResult in detailsResponse.TaskItemParts)
+                    {
+                        taskResult.Description = taskResult.Description.Replace("<<bb>>", "<br/><h4>").Replace("<</bb>>", "</h4>").Replace("<<nl/>>", "<br/>");
+                    }
                 }
+
+                var monitorParams = new DynamicParameters();
+
+                monitorParams.Add("@RELATED_OBJECT_ID", null, DbType.String, ParameterDirection.Input);
+                monitorParams.Add("@PROCEDURE_STEP_ID", null, DbType.String, ParameterDirection.Input);
+                monitorParams.Add("@TASK_ID", stepId, DbType.String, ParameterDirection.Input);
+                monitorParams.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input);
+
+                using (var multi = conn.QueryMultiple("A_SP_MONITOR_TEMPLATES_GET_DATA_FOR_OBJECT", monitorParams,
+                    commandType: CommandType.StoredProcedure))
+                {
+                    detailsResponse.MonitorTemplateResult = multi.Read<MonitorTemplateResult>().SingleOrDefault();
+                }
+
+
 
             }
 

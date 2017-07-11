@@ -38,12 +38,10 @@ namespace Msr.Models.Orders
             foreach (var item in orderItemImages)
             {
                 UploadedImageView image = new UploadedImageView();
-                image.Id = item.FILE_LINK_ID;
                 image.name = item.FILE_NAME;
-                image.size = item.Size;
                 image.url = Path + item.FILE_NAME;
                 image.thumbnailUrl = thumbPath + item.FILE_NAME;
-                image.deleteUrl = "/doc/DeleteImageById?Id=" + item.FILE_LINK_ID + "&FillId=" + item.ACTUAL_PART_ID;
+               // image.deleteUrl = "/doc/DeleteImageById?Id=" + item.FILE_LINK_ID + "&FillId=" + item.ACTUAL_PART_ID;
                 image.deleteType = "GET";
 
                 imagesList.Add(image);

@@ -125,20 +125,11 @@
                 </div>
                 <div id="slider" class="flexslider step-container">
                     <ul class="slides">
-                        @*<li>
-                            @Html.Partial("_InitialInspection",Model.TaskStepResults)
-                        </li>
-                        <li>
-                            @Html.Partial("_SoakRoom")
-                        </li>
-                        <li>
-                            @Html.Partial("_SoakRoom")
-                        </li>*@
-                        
+                  
                         @foreach (var step in Model.TaskStepResults)
                         {
                             <li id="step-@step.StepId">
-                                <h1>@step.StepId</h1>
+                               
                             </li>
                         }
 

@@ -7,6 +7,7 @@ using Answer.Web.ViewModel.Images;
 using Msr.Models.Orders;
 using Msr.Services.Orders;
 using Msr.Services.Orders.ViewModels;
+using Msr.Services.S3;
 using Msr.Web.Controllers;
 
 namespace Answer.Web.Controllers
@@ -36,69 +37,58 @@ namespace Answer.Web.Controllers
 
             foreach (HttpPostedFileBase file in files)
             {
-                var ImageModel = new SaveWorkItemImageViewModel();
+                var imageModel = new SaveWorkItemImageViewModel();
 
-                ImageModel.Name = DateTime.Now.Ticks.ToString() + file.FileName;
-                ImageModel.Desc = null;
+                imageModel.Name = file.FileName;
+                imageModel.Desc = null;
 
-                var destinationPath = Path.Combine("C:\\my", ImageModel.Name);
+                var _cloudUploader = new AWSFileHandler();
 
+                var keyName = string.Format("Answer2/{0}-{1}", Guid.NewGuid(), file.FileName);
 
-                file.SaveAs(destinationPath);
+                _cloudUploader.UploadToCloud(file, "msrfsr", keyName);
 
-                ImageModel.Path = "/Images/" + ImageModel.Name;
-                ImageModel.ContentType = file.ContentType;
-                ImageModel.SrcId = null;
-                ImageModel.SrcName = null;
-                ImageModel.SrcDesc = null;
-                ImageModel.SrcPath = null;
-                ImageModel.SrcContentType = null;
-                ImageModel.SrcChanged = null;
-                ImageModel.DocChanged = null;
-                ImageModel.DropSrc = "YES";
-                ImageModel.NTLogin = "1618";
-                ImageModel.FillID = fillId;
+                var cloudUrl = string.Format("msrfsr.s3.amazonaws.com/{0}", keyName);
 
-                orderService.SaveOrderItemImages(ImageModel);
+                imageModel.Path = cloudUrl;
+                imageModel.ContentType = file.ContentType;
+                imageModel.SrcId = null;
+                imageModel.SrcName = null;
+                imageModel.SrcDesc = null;
+                imageModel.SrcPath = null;
+                imageModel.SrcContentType = null;
+                imageModel.SrcChanged = null;
+                imageModel.DocChanged = null;
+                imageModel.DropSrc = "YES";
+                imageModel.NTLogin = "1618";
+                imageModel.FillID = fillId;
 
+                orderService.SaveOrderItemImages(imageModel);
             }
 
-            var OrderItemImages = orderService.GetOrderItemImagesById(Id: fillId);
+            var orderItemImages = orderService.GetOrderItemImagesById(fillId);
 
-            foreach (var item in OrderItemImages)
-            {
-                var destinationPath = Path.Combine("C:\\my", item.FILE_NAME);
-                item.Size = new FileInfo(destinationPath).Length;
-            }
+            var images = new UploadedImageView();
 
-            UploadedImageView Images = new UploadedImageView();
-            var imagesList = Images.MapToDto(OrderItemImages);
+            var imagesList = images.MapToDto(orderItemImages);
 
             return Json(new { files = imagesList.ToArray() }, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult GetImages(int id)
+        public ActionResult GetImages(int fillId, int taskId)
         {
             var viewModel = new ImageViewModel();
-            viewModel.Id = id;
+            viewModel.FillId = fillId;
+            viewModel.TaskId = taskId;
 
             return PartialView("_Images", viewModel);
         }
 
-        public JsonResult GetImagesById(string id)
+        public JsonResult GetImagesById(string taskId)
         {
             var orderService = new OrderService();
 
-            var images = orderService.GetOrderItemImagesById(id);
-
-            foreach (var item in images)
-            {
-                var destinationPath = Path.Combine("C:\\my\\", item.FILE_NAME);
-
-                var filInfo= new FileInfo(destinationPath);
-
-                item.Size = filInfo.Length;
-            }
+            var images = orderService.GetOrderItemImagesById(taskId);
 
             var imageView = new UploadedImageView();
 
@@ -108,23 +98,20 @@ namespace Answer.Web.Controllers
         }
 
         [AcceptVerbs(HttpVerbs.Get)]
-        public ActionResult DeleteImageById(string Id, string FillId)
+        public ActionResult DeleteImageById(string id, string fillId)
         {
             var orderService = new OrderService();
 
-            if (!string.IsNullOrEmpty(Id))
-            {
-                var response = orderService.DeleteOrderItemImageById(Id: Id);
+            var response = orderService.DeleteOrderItemImageById(id, "1618");
 
                 if (response)
                 {
-                    var OrderItemImages = orderService.GetOrderItemImagesById(Id: FillId);
-                    return Json(new { Message = "Image deleted successfully.", files = OrderItemImages.ToArray() }, JsonRequestBehavior.AllowGet);
+                    var orderItemImages = orderService.GetOrderItemImagesById(fillId);
+
+                    return Json(new {Message = "Image deleted successfully.", files = orderItemImages.ToArray()}, JsonRequestBehavior.AllowGet);
                 }
-                
-                return Json(new { Message = "Image upload failed." }, JsonRequestBehavior.AllowGet);
-            }
-            return Json(new { Message = "Something went wrong." }, JsonRequestBehavior.AllowGet);
+
+            return Json(new {Message = "Image upload failed."}, JsonRequestBehavior.AllowGet);
         }
 
     }
