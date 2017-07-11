@@ -261,25 +261,6 @@ namespace Answer.Web.Controllers
             return PartialView("_PrintOther", vm);
         }
 
-        public JsonResult GetImagesById(string Id)
-        {
-            var orderService = new OrderService();
-
-            var OrderItemImages = orderService.GetOrderItemImagesById(Id: Id);
-
-            foreach (var item in OrderItemImages)
-            {
-                var destinationPath = Path.Combine(Server.MapPath("~/Images/"), item.FILE_NAME);
-                item.Size = new FileInfo(destinationPath).Length;
-            }
-
-            UploadedImageView Images = new UploadedImageView();
-            var imagesList = Images.MapToDto(OrderItemImages);
-
-            return Json(new { files = imagesList.ToArray() }, JsonRequestBehavior.AllowGet);
-        }
-
-
         [AcceptVerbs(verbs: HttpVerbs.Post)]
         public ActionResult Edit(SaveWorkOrderViewModel model)
         {
@@ -311,25 +292,7 @@ namespace Answer.Web.Controllers
             return Json(new { success = false, responseText = "Something went wrong." }, JsonRequestBehavior.AllowGet);
         }
 
-        [AcceptVerbs(verbs: HttpVerbs.Get)]
-        public ActionResult DeleteImageById(string Id, string FillId)
-        {
-            var orderService = new OrderService();
-            if (!string.IsNullOrEmpty(Id))
-            {
-                var response = orderService.DeleteOrderItemImageById(Id: Id);
-                if (response)
-                {
-                    var OrderItemImages = orderService.GetOrderItemImagesById(Id: FillId);
-                    return Json(new { Message = "Image deleted successfully.", files = OrderItemImages.ToArray() }, JsonRequestBehavior.AllowGet);
-                }
-                else
-                {
-                    return Json(new { Message = "Image upload failed." }, JsonRequestBehavior.AllowGet);
-                }
-            }
-            return Json(new { Message = "Something went wrong." }, JsonRequestBehavior.AllowGet);
-        }
+      
 
         public ActionResult GetWipStepDetails(int stepId, string fillId, int? phStepId)
         {

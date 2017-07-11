@@ -374,15 +374,29 @@ $(document).ready(function () {
         var id = button.data('id');
         var modal = $(this);
 
-        $("#FillID").val(id);
 
-        var imagesDiv = modal.find('#imageListDropzone');
+        $.ajax({
+            type: "GET",
+            url: '/doc/GetImages?id=' + id,
+            dataType: 'html',
+            success: function (data) {
+                modal.find('.modal-body').html(data);
+            },
+            error: function () {
 
-        // Load existing files:
-        $('#fileupload').addClass('fileupload-processing');
+            }
+        });
 
-        //files = JSON.stringify(files);
-        LoadImages();
+
+        //$("#FillID").val(id);
+
+        //var imagesDiv = modal.find('#imageListDropzone');
+
+        //// Load existing files:
+        //$('#fileupload').addClass('fileupload-processing');
+
+        ////files = JSON.stringify(files);
+        //LoadImages();
 
     });
 
@@ -485,11 +499,11 @@ $(document).ready(function () {
         var printOtherButton = '<span style="margin:5px;" class="" data-id="' + rowObject.FillId + '" data-toggle="modal"  data-target="#wioDetailPrintOther" title="Print Other"><i class="fa fa-clipboard"></i></span>';
         var noteButton = '<span style="margin:5px;" class="" data-id="' + rowObject.FillId + '" data-toggle="modal"  data-target="#addNoteModal" title="View Notes"><i class="fa fa-clipboard"></i></span>';
         var imageButton = '<span style="margin:5px;" class="" data-id="' + rowObject.FillId + '" data-toggle="modal"  data-target="#addImageModal" title="View Images"><i class="fa fa-picture-o"></i></span>';
-        var NcrButton = (rowObject.HasNcr == 1) ? '<span style="margin:5px;"  class="btn support-btn btn-xs btn-warning" data-id="' +rowObject.FillId + '" data-toggle="modal"  data-target="#ncrModal" title="View NCR"><i class="fa fa-clipboard"></i>NCR</span>': '';
+        var ncrButton = (rowObject.HasNcr == 1) ? '<span style="margin:5px;"  class="btn support-btn btn-xs btn-warning" data-id="' +rowObject.FillId + '" data-toggle="modal"  data-target="#ncrModal" title="View NCR"><i class="fa fa-clipboard"></i>NCR</span>': '';
         
-        var MonitorButton = (rowObject.HasMonitor == 1) ? '<button class="btn support-btn btn-xs btn-success" data-id="' + rowObject.FillId + '" data-toggle="modal" data-target="#monitorModal"  title="View Monitors"><i class="fa fa-bar-chart "></i>Monitors</button>' : '';
+        var monitorButton = (rowObject.HasMonitor == 1) ? '<button class="btn support-btn btn-xs btn-success" data-id="' + rowObject.FillId + '" data-toggle="modal" data-target="#monitorModal"  title="View Monitors"><i class="fa fa-bar-chart "></i>Monitors</button>' : '';
 
-        thisCellVal = printTravlerButton + printOtherButton + noteButton + imageButton +NcrButton +MonitorButton;
+        thisCellVal = printTravlerButton + printOtherButton + noteButton + imageButton + ncrButton + monitorButton;
 
         return thisCellVal;
     }
@@ -526,22 +540,3 @@ function DeleteImage(event) {
 }
 
 
-function LoadImages() {
-
-    
-    var id = $("#FillID").val();
-    $.ajax({
-        // Uncomment the following to send cross-domain cookies:
-        //xhrFields: {withCredentials: true},
-        url: '/Wip/GetImagesById?Id=' + id,
-        dataType: 'JSON',
-        context: $('#fileupload')[0]
-    }).always(function () {
-        $(this).removeClass('fileupload-processing');
-    }).done(function (result) {
-        //console.log(result);
-        //console.log(files);
-        $(this).fileupload('option', 'done')
-            .call(this, $.Event('done'), { result: result });
-    });
-}

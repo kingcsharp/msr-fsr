@@ -141,11 +141,11 @@ namespace Answer.Web.Controllers
             return View(model);
 
         }
-        public ActionResult SavePart(string Id)
+        public ActionResult Edit(string id)
         {
             var taskService = new PartsService();
 
-            var model = taskService.GetById(Id: Id);
+            var model = taskService.GetById(id);
 
             var part = new AddPartViewModel();
 
@@ -155,10 +155,12 @@ namespace Answer.Web.Controllers
 
             return View(part);
         }
-        [AcceptVerbs(verbs: HttpVerbs.Post)]
-        public ActionResult SavePart(AddPartViewModel model)
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult Edit(AddPartViewModel model)
         {
             var taskService = new PartsService();
+
             if (ModelState.IsValid)
             {
                 //Need to dynamic 

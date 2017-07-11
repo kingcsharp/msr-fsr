@@ -2,8 +2,7 @@
 @{
     ViewBag.Title = "WIP Menu";
 }
-@*<link href="~/assets/css/dropzone/dropzone.min.css" rel="stylesheet" />*@
-<!-- blueimp Gallery styles -->
+
 <link rel="stylesheet" href="//blueimp.github.io/Gallery/css/blueimp-gallery.min.css">
 <div class="container-fluid">
     <div class="side-body padding-top">
@@ -19,7 +18,45 @@
         </div>
     </div>
 </div>
-<!-- The blueimp Gallery widget -->
+
+
+<div id="wioDetailPrintTraveler" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Print Traveler Report</h4>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" onclick="js:window.print()"><i class="fa fa-print"></i> Print Report</button>
+                <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close-o"></i> Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<div id="wioDetailPrintOther" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Print Other</h4>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" id="display-report"><i class="fa fa-print"></i> Display</button>
+                <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close-o"></i> Cancel</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
 <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls" data-filter=":even">
     <div class="slides"></div>
     <h3 class="title"></h3>
@@ -38,8 +75,9 @@
     <script type="text/javascript" src="~/assets/js/jquery.mockjax.js"></script>
     <script src="//cdn.rawgit.com/noelboss/featherlight/1.6.1/release/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="https://cdn.smooch.io/smooch.min.js"></script>
-    @*<script src="~/assets/js/dropzone/dropzone.min.js"></script>*@
+    <script src="~/assets/js/wip-detail-print-other.js"></script>
     <script type="text/javascript" src="~/assets/js/grids/engineer.js"></script>
+
     <script>
         //$.jgrid.defaults.responsive = true;
         $.jgrid.defaults.styleUI = 'Bootstrap';

@@ -34,7 +34,7 @@
             </h2>
             <div class="col-lg-10">
                 @Html.Partial("Message")
-                @using (Html.BeginForm("SavePart", "Parts", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                @using (Html.BeginForm("Edit", "Parts", FormMethod.Post, new { enctype = "multipart/form-data" }))
                 {
                     @Html.AntiForgeryToken()
 

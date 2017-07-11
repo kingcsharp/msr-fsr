@@ -19,6 +19,9 @@ namespace Msr.Repositories
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Configurations.Add(new AspNetUserConfiguration());
+            modelBuilder.Configurations.Add(new PartConfiguration());
+            modelBuilder.Configurations.Add(new PartTypesConfiguration());
+
             modelBuilder.Entity<AspNetRole>().ToTable("AspNetRoles");           
             modelBuilder.Entity<ClientUser>().ToTable("Portal_ClientUsers");
 

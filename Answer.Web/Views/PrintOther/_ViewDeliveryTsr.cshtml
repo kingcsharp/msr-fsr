@@ -1,114 +1,112 @@
 ﻿@model Msr.Services.Orders.Messaging.DeliveryTsrDetailsResponse
 
-<div class="printable_body">
-    <table width="100%" style="margin: 25px;">
-        <tbody>
-            <tr>
-                <td style="height: 500px; border-bottom: 1px dashed black;">
-                    <div>
-                        <table class="table table-bordered">
-                            <tbody>
+<table>
+    <tbody>
+    <tr>
+        <td style="border-bottom: 1px dashed black;">
+            <div>
+                <table class="table table-bordered">
+                    <tbody>
+                    <tr>
+                        <td>
+                            <table>
+                                <tbody>
                                 <tr>
-                                    <td>
-                                        <table>
-                                            <tbody>
-                                                <tr>
-                                                    <td class="subTitle">Ship From:</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>@Model.PurchaseWithSupplierQuotesResult.ShipFrom</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </td>
-                                    <td style="padding-left: 5px;">
-                                        <table>
-                                            <tbody>
-                                                <tr>
-                                                    <td class="subTitle">Ship To:</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>@Model.PurchaseItemInfoResult.CompanyName</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </td>
-                                    <td style="padding-left: 5px;">
-                                        <table>
-                                            <tbody>
-                                                <tr>
-                                                    <td >Ship Date:</td>
-                                                    <td >@Model.PurchaseWithSupplierQuotesResult.ShipDate</td>
-                                                </tr>
-                                                <tr>
-                                                    <td >Material Transfer #:</td>
-                                                    <td ></td>
-                                                </tr>
-                                                <tr>
-                                                    <td >Customer PO #:</td>
-                                                    <td >@Model.PurchaseWithSupplierQuotesResult.CustomerPo</td>
-                                                </tr>
-                                                <tr>
-                                                    <td >Order Qty:***</td>
-                                                    <td >@Model.PurchaseItemInfoResult.Quantity</td>
-                                                </tr>
-                                                <tr>
-                                                    <td >Purchase #:***</td>
-                                                    <td >@Model.PurchaseWithSupplierQuotesResult.PurchaseNumber</td>
-                                                </tr>
-                                                <tr>
-                                                    <td >Customer WO Item #</td>
-                                                    <td >@Model.PurchaseItemInfoResult.CustomerWoItemNumber</td>
-                                                </tr>
-                                                <tr>
-                                                    <td >Blanket PO Num:***</td>
-                                                    <td ></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </td>
+                                    <td class="subTitle">Ship From:</td>
                                 </tr>
-                            </tbody>
-                        </table>
-                        <table class="standard" style="width: 765px;">
-                            <tbody>
                                 <tr>
-                                    <th class="border" style="width: 15%;">Customer P/N</th>
-                                    <th class="border" style="width: 35%;">Description</th>
-                                    <th class="border" style="width: 15%;">Serial #***</th>
-                                    <th class="border" style="width: 35%;">Notes</th>
+                                    <td>@Model.PurchaseWithSupplierQuotesResult.ShipFrom</td>
                                 </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                        <table class="standard" style="width: 765px;">
-                            <tbody>
+                                </tbody>
+                            </table>
+                        </td>
+                        <td style="padding-left: 5px;">
+                            <table>
+                                <tbody>
                                 <tr>
-                                    <td class="border" style="width: 15%; border-top: 0px solid black;">@Model.PurchaseItemInfoResult.CompanyPartNumber</td>
-                                    <td class="border" style="width: 35%; border-top: 0px solid black;">@Model.PurchaseItemInfoResult.Description</td>
-                                    <td class="border" style="width: 15%; border-top: 0px solid black;">@Model.PurchaseItemInfoResult.Serial</td>
-                                    <td class="border" style="width: 35%; border-top: 0px solid black;"></td>
+                                    <td class="subTitle">Ship To:</td>
                                 </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <br><br><table style="width: 100%">
-                        <tbody>
-                            <tr>
-                                <td width="10%"><nobr>Recipient Signature***</nobr></td>
-                                <td style="border-bottom: thin solid black; width: 60%">: </td>
-                                <td width="5%"><nobr>Date</nobr></td>
-                                <td style="border-bottom: thin solid black; width: 25%">: </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+                                <tr>
+                                    <td>@Model.PurchaseItemInfoResult.CompanyName</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                        <td style="padding-left: 5px;">
+                            <table>
+                                <tbody>
+                                <tr>
+                                    <td >Ship Date:</td>
+                                    <td >@Model.PurchaseWithSupplierQuotesResult.ShipDate</td>
+                                </tr>
+                                <tr>
+                                    <td >Material Transfer #:</td>
+                                    <td ></td>
+                                </tr>
+                                <tr>
+                                    <td >Customer PO #:</td>
+                                    <td >@Model.PurchaseWithSupplierQuotesResult.CustomerPo</td>
+                                </tr>
+                                <tr>
+                                    <td >Order Qty:***</td>
+                                    <td >@Model.PurchaseItemInfoResult.Quantity</td>
+                                </tr>
+                                <tr>
+                                    <td >Purchase #:***</td>
+                                    <td >@Model.PurchaseWithSupplierQuotesResult.PurchaseNumber</td>
+                                </tr>
+                                <tr>
+                                    <td >Customer WO Item #</td>
+                                    <td >@Model.PurchaseItemInfoResult.CustomerWoItemNumber</td>
+                                </tr>
+                                <tr>
+                                    <td >Blanket PO Num:***</td>
+                                    <td ></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <table class="table-striped" style="width: 765px;">
+                    <tbody>
+                    <tr>
+                        <th class="border" style="width: 15%;">Customer P/N</th>
+                        <th class="border" style="width: 35%;">Description</th>
+                        <th class="border" style="width: 15%;">Serial #***</th>
+                        <th class="border" style="width: 35%;">Notes</th>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <table class="standard" style="width: 765px;">
+                    <tbody>
+                    <tr>
+                        <td class="border" style="width: 15%; border-top: 0px solid black;">@Model.PurchaseItemInfoResult.CompanyPartNumber</td>
+                        <td class="border" style="width: 35%; border-top: 0px solid black;">@Model.PurchaseItemInfoResult.Description</td>
+                        <td class="border" style="width: 15%; border-top: 0px solid black;">@Model.PurchaseItemInfoResult.Serial</td>
+                        <td class="border" style="width: 35%; border-top: 0px solid black;"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <br><br><table style="width: 100%">
+                <tbody>
+                <tr>
+                    <td width="10%"><nobr>Recipient Signature***</nobr></td>
+                    <td style="border-bottom: thin solid black; width: 60%">: </td>
+                    <td width="5%"><nobr>Date</nobr></td>
+                    <td style="border-bottom: thin solid black; width: 25%">: </td>
+                </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    </tbody>
+</table>

@@ -139,7 +139,7 @@
             searchOperators: true
         });
         function PartEditFormatter(cellvalue, options, rowObject) {
-            thisCellVal = '<a href="/parts/SavePart/' + rowObject.Id + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i> Edit</a>';
+            thisCellVal = '<a href="/parts/edit/' + rowObject.Id + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i> Edit</a>';
             return thisCellVal;
         }
         $('#search').click(function () {

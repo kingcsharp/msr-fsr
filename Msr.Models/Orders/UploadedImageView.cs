@@ -43,7 +43,7 @@ namespace Msr.Models.Orders
                 image.size = item.Size;
                 image.url = Path + item.FILE_NAME;
                 image.thumbnailUrl = thumbPath + item.FILE_NAME;
-                image.deleteUrl = "/Wip/DeleteImageById?Id=" + item.FILE_LINK_ID + "&FillId=" + item.ACTUAL_PART_ID;
+                image.deleteUrl = "/doc/DeleteImageById?Id=" + item.FILE_LINK_ID + "&FillId=" + item.ACTUAL_PART_ID;
                 image.deleteType = "GET";
 
                 imagesList.Add(image);

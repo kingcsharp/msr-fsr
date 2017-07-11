@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
+using System.IO;
 using System.Web;
 using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
+using Answer.Web.ViewModel.Images;
 using Msr.Models.Orders;
-using Msr.Services.jqGrid;
 using Msr.Services.Orders;
-using Msr.Services.Users;
 using Msr.Services.Orders.ViewModels;
-using System.IO;
-using System.Drawing;
+using Msr.Web.Controllers;
 
-namespace Msr.Web.Controllers
+namespace Answer.Web.Controllers
 {
     [Authorize]
     public class DocController : BaseController
@@ -32,6 +28,7 @@ namespace Msr.Web.Controllers
             Response.AppendHeader("Content-Disposition", cd.ToString());
             return File(Convert.FromBase64String(img), fileType);
         }
+
         [AcceptVerbs(HttpVerbs.Post)]
         public JsonResult FileUploader(List<HttpPostedFileBase> files, string fillId)
         {
@@ -44,7 +41,7 @@ namespace Msr.Web.Controllers
                 ImageModel.Name = DateTime.Now.Ticks.ToString() + file.FileName;
                 ImageModel.Desc = null;
 
-                var destinationPath = Path.Combine(Server.MapPath("~/Images/"), ImageModel.Name);
+                var destinationPath = Path.Combine("C:\\my", ImageModel.Name);
 
 
                 file.SaveAs(destinationPath);
@@ -70,7 +67,7 @@ namespace Msr.Web.Controllers
 
             foreach (var item in OrderItemImages)
             {
-                var destinationPath = Path.Combine(Server.MapPath("~/Images/"), item.FILE_NAME);
+                var destinationPath = Path.Combine("C:\\my", item.FILE_NAME);
                 item.Size = new FileInfo(destinationPath).Length;
             }
 
@@ -79,12 +76,56 @@ namespace Msr.Web.Controllers
 
             return Json(new { files = imagesList.ToArray() }, JsonRequestBehavior.AllowGet);
         }
-        private void GenerateThumbnail(string path, string name)
+
+        public ActionResult GetImages(int id)
         {
-            Image image = Image.FromFile(path);
-            Image thumb = image.GetThumbnailImage(80, 80, () => false, IntPtr.Zero);
-            var thumbPath = Path.Combine(Server.MapPath("~/Images/thumb/"), name);
-            thumb.Save(thumbPath);
+            var viewModel = new ImageViewModel();
+            viewModel.Id = id;
+
+            return PartialView("_Images", viewModel);
         }
+
+        public JsonResult GetImagesById(string id)
+        {
+            var orderService = new OrderService();
+
+            var images = orderService.GetOrderItemImagesById(id);
+
+            foreach (var item in images)
+            {
+                var destinationPath = Path.Combine("C:\\my\\", item.FILE_NAME);
+
+                var filInfo= new FileInfo(destinationPath);
+
+                item.Size = filInfo.Length;
+            }
+
+            var imageView = new UploadedImageView();
+
+            var imagesList = imageView.MapToDto(images);
+
+            return Json(new { files = imagesList.ToArray() }, JsonRequestBehavior.AllowGet);
+        }
+
+        [AcceptVerbs(HttpVerbs.Get)]
+        public ActionResult DeleteImageById(string Id, string FillId)
+        {
+            var orderService = new OrderService();
+
+            if (!string.IsNullOrEmpty(Id))
+            {
+                var response = orderService.DeleteOrderItemImageById(Id: Id);
+
+                if (response)
+                {
+                    var OrderItemImages = orderService.GetOrderItemImagesById(Id: FillId);
+                    return Json(new { Message = "Image deleted successfully.", files = OrderItemImages.ToArray() }, JsonRequestBehavior.AllowGet);
+                }
+                
+                return Json(new { Message = "Image upload failed." }, JsonRequestBehavior.AllowGet);
+            }
+            return Json(new { Message = "Something went wrong." }, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }
