@@ -97,7 +97,7 @@ namespace Msr.Services.Orders
 
                 using (var multi = conn.QueryMultiple("GetPurchaseItemDetails", p, commandType: CommandType.StoredProcedure))
                 {
-                    detailsResponse.FileSearchResult = multi.Read<FileSearchResult>().Single();
+                    detailsResponse.FileSearchResult = multi.Read<FileSearchResult>().SingleOrDefault();
 
                     detailsResponse.Parts = multi.Read<string>().ToList();
 
@@ -450,10 +450,10 @@ namespace Msr.Services.Orders
 
                 var p1 = new DynamicParameters();
 
-                p.Add("@fillID", fillId, DbType.String, ParameterDirection.Input);
-                p.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input);
+                p1.Add("@fillID", fillId, DbType.String, ParameterDirection.Input);
+                p1.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input);
 
-                using (var multi = conn.QueryMultiple("A_SP_TASKS_FIND_FOR_PURCHASE_ITEM_AND_ACT_PART", p,
+                using (var multi = conn.QueryMultiple("A_SP_TASKS_FIND_FOR_PURCHASE_ITEM_AND_ACT_PART", p1,
                     commandType: CommandType.StoredProcedure))
                 {
                     detailsResponse.TaskItemParts = multi.Read<TaskItemPart>().ToList();
@@ -464,22 +464,22 @@ namespace Msr.Services.Orders
             return detailsResponse;
         }
 
-        public void UpdateStepMonitor(UpdateStepMonitorRequest request)
+        public void UpdateStepMonitor(MonitorTemplateResult request)
         {
             var p = new DynamicParameters();
 
             p.Add("@id", request.Id, DbType.String, ParameterDirection.Input);
             p.Add("@failAction", request.FailAction, DbType.String, ParameterDirection.Input);
-            p.Add("@result", request.Result, DbType.String, ParameterDirection.Input);
-            p.Add("@comment", request.Comment, DbType.String, ParameterDirection.Input);
+            p.Add("@result", request.PrintResult, DbType.String, ParameterDirection.Input);
+            p.Add("@comment", request.Description, DbType.String, ParameterDirection.Input);
             p.Add("@target", request.Target, DbType.String, ParameterDirection.Input);
             p.Add("@tolerance", request.Tolerance, DbType.String, ParameterDirection.Input);
             p.Add("@theSaurusId", request.TheSaurusId, DbType.String, ParameterDirection.Input);
-            p.Add("@strNTLogin", request.StrNTLogin, DbType.String, ParameterDirection.Input);
+            p.Add("@strNTLogin", request.StrNtLogin, DbType.String, ParameterDirection.Input);
 
             using (IDbConnection conn =  new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
             {
-                int i = conn.Execute("GetPurchaseItemDetails", p, commandType: CommandType.StoredProcedure);
+                int i = conn.Execute("Portal_StepSaveMonitor", p, commandType: CommandType.StoredProcedure);
             }
         }
 
