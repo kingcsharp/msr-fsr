@@ -59,7 +59,7 @@
                         <div id="parts-table" class="col-sm-12">
                             <table class="table table-responsive table-condensed table-bordered">
                                 <tbody>
-                                    <tr><td>@Model.FileSearchResult.FillObjDesc qty:@Model.FileSearchResult.Qty </td></tr>
+                                    <tr><td>@Model.FileSearchResult?.FillObjDesc qty:@Model.FileSearchResult?.Qty </td></tr>
 
                                     @foreach (var part in Model.Parts)
                                     {
@@ -74,19 +74,19 @@
                             <tbody>
                                 <tr>
                                     <th nowrap style="text-align: right">Customer:</th>
-                                    <td>@Model.FileSearchResult.CustomerName</td>
+                                    <td>@Model.FileSearchResult?.CustomerName</td>
                                 </tr>
                                 <tr>
                                     <th nowrap style="text-align: right">Product:</th>
-                                    <td>@Model.FileSearchResult.ProductName</td>
+                                    <td>@Model.FileSearchResult?.ProductName</td>
                                 </tr>
                                 <tr>
                                     <th nowrap style="text-align: right">Procedure:</th>
-                                    <td>@Model.FileSearchResult.ProcedureName</td>
+                                    <td>@Model.FileSearchResult?.ProcedureName</td>
                                 </tr>
                                 <tr>
                                     <th nowrap style="text-align: right">Purchase Item #:</th>
-                                    <td>@Model.FileSearchResult.PurchItemId</td>
+                                    <td>@Model.FileSearchResult?.PurchItemId</td>
                                 </tr>
                             </tbody>
                         </table>

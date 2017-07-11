@@ -10,6 +10,7 @@ using Msr.Services.jqGrid;
 using Msr.Services.Notes;
 using Msr.Services.Orders;
 using Msr.Services.Orders.Messaging;
+using Msr.Services.Orders.Procedures;
 using Msr.Services.Orders.ViewModels;
 using Msr.Web.Controllers;
 using Msr.Web.ViewModel.Engineering;
@@ -334,8 +335,19 @@ namespace Answer.Web.Controllers
         public ActionResult GetWipStepDetails(int stepId, string fillId, int? phStepId)
         {
             var response = _orderService.GetWipStepDetails(stepId, fillId, "1618", phStepId);
+            response?.MonitorTemplateResult?.Setup();
 
             return PartialView("_InitialInspection", response);
+        }
+
+        public ActionResult UpdateStepMonitor(MonitorTemplateResult monitorTemplate)
+        {
+            if (ModelState.IsValid)
+            {
+                _orderService.UpdateStepMonitor(monitorTemplate);
+            }
+
+            return RedirectToAction("Details", new {id = 111597});
         }
 
         private List<DocumentView> GetDocViewModel(List<DocumentView> docs, OrderService orderService, int width)

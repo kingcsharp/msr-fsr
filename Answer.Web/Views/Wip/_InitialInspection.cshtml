@@ -1,24 +1,31 @@
 ﻿@model Msr.Services.Orders.Messaging.WipStepDetailsResponse
 
 @Html.Partial("_StepControls")
-
+@{
+    var descriptionId = "description" + Model.StepId;
+    var monitorsId = "monitors" + Model.StepId;
+    var filesId = "files" + Model.StepId;
+}
 <div id="step-tabs" class="col-sm-12">
     <ul class="nav nav-tabs">
-        <li class="active"><a data-toggle="tab" href="#description1">Task Description</a></li>
-        <li><a data-toggle="tab" href="#monitors1">Monitors</a></li>
-        <li><a data-toggle="tab" href="#files1">Files</a></li>
+        <li class="active"><a data-toggle="tab" href="#@descriptionId">Task Description</a></li>
+        <li><a data-toggle="tab" href="#@monitorsId">Monitors</a></li>
+        <li><a data-toggle="tab" href="#@filesId">Files</a></li>
     </ul>
     <div class="tab-content">
-        <div id="description1" class="tab-pane fade task-window in active">
+        <div id="@descriptionId" class="tab-pane fade task-window in active">
             @Html.Partial("_InitialInspectionDetail", Model.TaskItemParts)
         </div>
-        @if (Model.MonitorTemplateResult != null)
-        {
-            <div id="monitors1" class="tab-pane fade task-window">
+
+        <div id="@monitorsId" class="tab-pane fade task-window">
+            @if (Model.MonitorTemplateResult != null)
+            {
+
                 @Html.Partial("_MonitorsTab", Model.MonitorTemplateResult)
-            </div>
-        }
-        <div id="files1" class="tab-pane task-window fade">
+            }
+        </div>
+
+        <div id="@filesId" class="tab-pane task-window fade">
             @Html.Partial("_FilesTab")
         </div>
     </div>
