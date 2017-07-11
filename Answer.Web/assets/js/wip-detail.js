@@ -235,10 +235,11 @@ $(function() {
     $('#carousel ul.slides li.step').on('click', function () {
         var stepId = $(this).data("stepid");
         var phStepId = $(this).data("phStepid");
-
+        var fillId = $(this).data("fill-id");
+        
         $.ajax({
             type: "GET",
-            url: "/wip/GetWipStepDetails?stepId=" + stepId + "&phStepId=" + phStepId,
+            url: "/wip/GetWipStepDetails?stepId=" + stepId + "&phStepId=" + phStepId + "&fillId=" + fillId,
             dataType: 'html',
             success: function (data) {
                 $('#step-' + stepId).html(data);

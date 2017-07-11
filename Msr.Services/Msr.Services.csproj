@@ -130,6 +130,7 @@
     <Compile Include="Orders\Messaging\WorkOrderDetailsResponse.cs" />
     <Compile Include="Orders\OrderService.cs" />
     <Compile Include="Orders\Procedures\MonitorTemplateResult.cs" />
+    <Compile Include="Orders\Procedures\TaskItemPart.cs" />
     <Compile Include="Orders\Procedures\TaskEditDataResult.cs" />
     <Compile Include="Orders\Procedures\GetPurchaseWorkReportTsrDetailsResult.cs" />
     <Compile Include="Orders\Procedures\GetMonitorLabelTsrDetailsResult.cs" />

@@ -425,8 +425,10 @@ namespace Msr.Services.Orders
             return detailsResponse;
         }
 
-        public WipStepDetailsResponse GetWipStepDetails(int stepId, int? phStepId)
+        public WipStepDetailsResponse GetWipStepDetails(int stepId, string fillId, string login, int? phStepId)
         {
+            
+
             var detailsResponse = new WipStepDetailsResponse { StepId = stepId};
 
             using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
@@ -444,6 +446,19 @@ namespace Msr.Services.Orders
 
                     detailsResponse.MonitorTemplateResult = multi.Read<MonitorTemplateResult>().SingleOrDefault();
                 }
+
+
+                var p1 = new DynamicParameters();
+
+                p.Add("@fillID", fillId, DbType.String, ParameterDirection.Input);
+                p.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input);
+
+                using (var multi = conn.QueryMultiple("A_SP_TASKS_FIND_FOR_PURCHASE_ITEM_AND_ACT_PART", p,
+                    commandType: CommandType.StoredProcedure))
+                {
+                    detailsResponse.TaskItemParts = multi.Read<TaskItemPart>().ToList();
+                }
+
             }
 
             return detailsResponse;
