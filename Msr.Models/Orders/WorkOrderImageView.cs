@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,5 +27,8 @@ namespace Msr.Models.Orders
         public string FILE_DESCRIPTION { get; set; }
         public string DELETED_BY_NAME { get; set; }
         public string CREATOR_ID { get; set; }
+
+        [NotMapped]
+        public long Size { get; set; }
     }
 }

@@ -36,6 +36,8 @@
     <noscript><link rel="stylesheet" href="/assets/css/jquery.fileupload-ui-noscript.css"></noscript>
     <link rel="stylesheet" type="text/css" href="/assets/css/wip-detail.css">
     <link rel="stylesheet" type="text/css" href="~/assets/css/hopscotch.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.0/css/bootstrap-datepicker.css" integrity="sha256-hAJmzibna+yekGzrC0d2adi25IbGDXYE0erhJvZOcEg=" crossorigin="anonymous" />
+
 
 </head>
 <body class="flat-blue">
@@ -67,6 +69,25 @@
         <script type="text/javascript" src="~/assets/js/app.js"></script>
         <script type="text/javascript" src="~/assets/js/help_form.js"></script>
         <script type="text/javascript" src="~/assets/js/hopscotch.js"></script>
+        
+        
+        <script src="~/assets/js/vendor/jquery.ui.widget.js"></script>
+        <!-- The Templates plugin is included to render the upload/download listings -->
+        <script src="//blueimp.github.io/JavaScript-Templates/js/tmpl.min.js"></script>
+        <!-- The Load Image plugin is included for the preview images and image resizing functionality -->
+        <script src="//blueimp.github.io/JavaScript-Load-Image/js/load-image.all.min.js"></script>
+        <!-- blueimp Gallery script -->
+        <script src="//blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js"></script>
+        <!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+        <script src="~/assets/js/jquery.iframe-transport.js"></script>
+        <script src="~/assets/js/jquery.fileupload.js"></script>
+        <script src="~/assets/js/jquery.fileupload-process.js"></script>
+        <script src="~/assets/js/jquery.fileupload-image.js"></script>
+        <script src="~/assets/js/jquery.fileupload-ui.js"></script>
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.0/js/bootstrap-datepicker.js"></script>
+
 
         @RenderSection("scripts", required: false)
 

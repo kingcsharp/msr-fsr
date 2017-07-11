@@ -36,5 +36,3 @@ BEGIN
 
 	select @newID
 END
-
-GO

@@ -297,6 +297,20 @@ $(document).ready(function () {
 
     $("#jqGrid").tooltip();
 
+    $('#fileupload').fileupload({
+        // Uncomment the following to send cross-domain cookies:
+        //xhrFields: {withCredentials: true},
+        url: '/doc/FileUploader',
+        uploadTemplateId: "template-upload",
+        downloadTemplateId: "template-download",
+
+    });
+    $('#fileupload').bind('fileuploaddone', function (e, data) {
+        console.log(data);
+        console.log("finsih");
+        $("table tbody.files").empty();
+        LoadImages();
+    });
 
 
     $('#ncrModal').on('show.bs.modal', function (event) {
@@ -364,26 +378,12 @@ $(document).ready(function () {
 
         var imagesDiv = modal.find('#imageListDropzone');
 
-        $.ajax({
-            type: "GET",
-            url: '/Wip/GetImagesById?Id=' + id,
-            dataType: 'html',
-            success: function (data) {
-                var result = '<ul class="orderList list-inline">';
+        // Load existing files:
+        $('#fileupload').addClass('fileupload-processing');
 
-                data = $.parseJSON(data);
+        //files = JSON.stringify(files);
+        LoadImages();
 
-                $.each(data, function (i, item) {
-                    console.log(item);
-                    result += '<li class="wrapper"><img class="img-thumbnail" src="/Images/' + item.FILE_NAME + '" alt="' + item.NAME + '" style="width:100px;height:100px;"><div class="caption"><a class="label label-danger deleteImagelink" data-id="' + item.FILE_LINK_ID + '" onclick="DeleteImage(this)" href="#">delete</a></div></li>'
-                })
-                result += '</ul>';
-                imagesDiv.html(result);
-            },
-            error: function (error) {
-                alert(error);
-            }
-        });
     });
 
 
@@ -413,6 +413,7 @@ $(document).ready(function () {
         // Do something
     });
 
+
     function initDateEdit(elem, options) {
         //console.log(options);
         var StartDate = $('#jqGrid').jqGrid('getCell', options.rowId, 'StDate');
@@ -428,15 +429,7 @@ $(document).ready(function () {
         });
 
     };
-    //function cancelEditing(myGrid) {
-    //    var lrid;
-    //    if (typeof lastSel !== "undefined") {
-    //        myGrid.jqGrid('restoreRow', lastSel);
-    //        lrid = $.jgrid.jqID(lastSel);
-    //        $("tr#" + lrid + " div.ui-inline-edit").show();
-    //        $("tr#" + lrid + " div.ui-inline-save, " + "tr#" + lrid + " div.ui-inline-cancel").hide();
-    //    }
-    //};
+
 
     function currentStepFormatter(cellvalue, options, rowObject) {
         var thisCellVal = '';
@@ -502,6 +495,7 @@ $(document).ready(function () {
     }
 
 });
+
 function DeleteImage(event) {
     var id = $(event).attr("data-id");
     var fillid = $("#FillID").val();
@@ -531,3 +525,23 @@ function DeleteImage(event) {
     });
 }
 
+
+function LoadImages() {
+
+    
+    var id = $("#FillID").val();
+    $.ajax({
+        // Uncomment the following to send cross-domain cookies:
+        //xhrFields: {withCredentials: true},
+        url: '/Wip/GetImagesById?Id=' + id,
+        dataType: 'JSON',
+        context: $('#fileupload')[0]
+    }).always(function () {
+        $(this).removeClass('fileupload-processing');
+    }).done(function (result) {
+        //console.log(result);
+        //console.log(files);
+        $(this).fileupload('option', 'done')
+            .call(this, $.Event('done'), { result: result });
+    });
+}

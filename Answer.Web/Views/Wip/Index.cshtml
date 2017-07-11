@@ -2,8 +2,9 @@
 @{
     ViewBag.Title = "WIP Menu";
 }
-<link href="~/assets/css/dropzone/dropzone.min.css" rel="stylesheet" />
-
+@*<link href="~/assets/css/dropzone/dropzone.min.css" rel="stylesheet" />*@
+<!-- blueimp Gallery styles -->
+<link rel="stylesheet" href="//blueimp.github.io/Gallery/css/blueimp-gallery.min.css">
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="row">
@@ -18,42 +19,15 @@
         </div>
     </div>
 </div>
-
-<div id="wioDetailPrintTraveler" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Print Traveler Report</h4>
-            </div>
-            <div class="modal-body"></div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-info" onclick="js:window.print()"><i class="fa fa-print"></i> Print Report</button>
-                <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close-o"></i> Close</button>
-            </div>
-        </div>
-
-    </div>
-</div>
-
-
-<div id="wioDetailPrintOther" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Print Other</h4>
-            </div>
-            <div class="modal-body"></div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-info" id="display-report"><i class="fa fa-print"></i> Display</button>
-                <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close-o"></i> Cancel</button>
-            </div>
-        </div>
-
-    </div>
+<!-- The blueimp Gallery widget -->
+<div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls" data-filter=":even">
+    <div class="slides"></div>
+    <h3 class="title"></h3>
+    <a class="prev">‹</a>
+    <a class="next">›</a>
+    <a class="close">×</a>
+    <a class="play-pause"></a>
+    <ol class="indicator"></ol>
 </div>
 
 @section scripts
@@ -64,47 +38,14 @@
     <script type="text/javascript" src="~/assets/js/jquery.mockjax.js"></script>
     <script src="//cdn.rawgit.com/noelboss/featherlight/1.6.1/release/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="https://cdn.smooch.io/smooch.min.js"></script>
-    <script src="~/assets/js/dropzone/dropzone.min.js"></script>
+    @*<script src="~/assets/js/dropzone/dropzone.min.js"></script>*@
     <script type="text/javascript" src="~/assets/js/grids/engineer.js"></script>
-    <script src="~/assets/js/wip-detail-print-other.js"></script>
-
     <script>
         //$.jgrid.defaults.responsive = true;
         $.jgrid.defaults.styleUI = 'Bootstrap';
 
         Smooch.init({ appToken: '9wxoxi2wbcbymhjf1ex1a0dux' });
-        Dropzone.autoDiscover = false;
-        var myDropzone = new Dropzone(
-            ".dropzone",
-            {
-                url: "/doc/FileUploader", // Set the url
-                paramName: "files",
-                uploadMultiple: true,
-                autoProcessQueue: false,
-                parallelUploads: 10,
-                init: function () {
-                    this.on("success", function (file, response) {
-                        if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
-                            //alert("success");
-                            console.log(response);
-                        }
-                    });
-                    this.on("error", function (file, error) {
-                        if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
-                            console.log(error);
-                            alert(error);
-                        }
-                    });
-                }
-            }
-        );
-        myDropzone.on('sending', function (file, xhr, formData) {
-            var fillId = $("#FillID").val();
-            formData.append('fillId', fillId);
-        });
-        function SubmitImages() {
-            myDropzone.processQueue();
-        }
-    </script>
 
+        
+    </script>
 }

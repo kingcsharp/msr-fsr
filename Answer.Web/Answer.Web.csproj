@@ -552,6 +552,7 @@
     <Content Include="assets\js\Templates\monitor-form.html" />
     <Content Include="assets\js\theming.js" />
     <Content Include="assets\js\timer.jquery.min.js" />
+    <Content Include="assets\js\vendor\jquery.ui.widget.js" />
     <Content Include="assets\js\wip-detail-print-other.js" />
     <Content Include="assets\js\wip-detail.js" />
     <Content Include="Content\bootstrap.css" />

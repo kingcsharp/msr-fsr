@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -9,8 +8,10 @@ using Microsoft.AspNet.Identity;
 using Msr.Models.Orders;
 using Msr.Services.jqGrid;
 using Msr.Services.Orders;
-using Msr.Services.Orders.ViewModels;
 using Msr.Services.Users;
+using Msr.Services.Orders.ViewModels;
+using System.IO;
+using System.Drawing;
 
 namespace Msr.Web.Controllers
 {
@@ -31,7 +32,7 @@ namespace Msr.Web.Controllers
             Response.AppendHeader("Content-Disposition", cd.ToString());
             return File(Convert.FromBase64String(img), fileType);
         }
-
+        [AcceptVerbs(HttpVerbs.Post)]
         public JsonResult FileUploader(List<HttpPostedFileBase> files, string fillId)
         {
             var orderService = new OrderService();
@@ -40,7 +41,7 @@ namespace Msr.Web.Controllers
             {
                 var ImageModel = new SaveWorkItemImageViewModel();
 
-                ImageModel.Name = file.FileName;
+                ImageModel.Name = DateTime.Now.Ticks.ToString() + file.FileName;
                 ImageModel.Desc = null;
 
                 var destinationPath = Path.Combine(Server.MapPath("~/Images/"), ImageModel.Name);
@@ -63,12 +64,27 @@ namespace Msr.Web.Controllers
 
                 orderService.SaveOrderItemImages(ImageModel);
 
-                TempData["SuccessMessage"] = "Images Uploaded successfully.";
             }
 
-            TempData["ErrorMessage"] = "Something went wrong.";
+            var OrderItemImages = orderService.GetOrderItemImagesById(Id: fillId);
 
-            return Json(new { Success = "False" }, JsonRequestBehavior.AllowGet);
+            foreach (var item in OrderItemImages)
+            {
+                var destinationPath = Path.Combine(Server.MapPath("~/Images/"), item.FILE_NAME);
+                item.Size = new FileInfo(destinationPath).Length;
+            }
+
+            UploadedImageView Images = new UploadedImageView();
+            var imagesList = Images.MapToDto(OrderItemImages);
+
+            return Json(new { files = imagesList.ToArray() }, JsonRequestBehavior.AllowGet);
+        }
+        private void GenerateThumbnail(string path, string name)
+        {
+            Image image = Image.FromFile(path);
+            Image thumb = image.GetThumbnailImage(80, 80, () => false, IntPtr.Zero);
+            var thumbPath = Path.Combine(Server.MapPath("~/Images/thumb/"), name);
+            thumb.Save(thumbPath);
         }
     }
 }

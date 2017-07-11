@@ -95,6 +95,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Notes\Note.cs" />
+    <Compile Include="Orders\UploadedImageView.cs" />
     <Compile Include="Orders\UserSummary.cs" />
     <Compile Include="Orders\UserView.cs" />
     <Compile Include="Orders\ApprovedPeopleView.cs" />

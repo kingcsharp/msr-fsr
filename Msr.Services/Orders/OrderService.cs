@@ -440,6 +440,8 @@ namespace Msr.Services.Orders
                 {
                     detailsResponse.TaskEditDataResult = multi.Read<TaskEditDataResult>().Single();
 
+                    detailsResponse.TaskEditDataResult.Description = detailsResponse.TaskEditDataResult.Description.Replace("<<bb>>", "<br/><h4>").Replace("<</bb>>", "</h4>").Replace("<<nl/>>", "<br/>");
+
                     detailsResponse.MonitorTemplateResult = multi.Read<MonitorTemplateResult>().SingleOrDefault();
                 }
             }
