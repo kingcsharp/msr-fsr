@@ -468,9 +468,6 @@ namespace Msr.Services.Orders
                 {
                     detailsResponse.MonitorTemplateResult = multi.Read<MonitorTemplateResult>().SingleOrDefault();
                 }
-
-
-
             }
 
             return detailsResponse;
@@ -495,11 +492,29 @@ namespace Msr.Services.Orders
             }
         }
 
+        public void StepStartDone(int stepId, string login)
+        {
+            var p = new DynamicParameters();
+
+            p.Add("@stepId", stepId, DbType.String, ParameterDirection.Input);
+            p.Add("@login", login, DbType.String, ParameterDirection.Input);
+
+            using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
+            {
+                var stepStartDoneTaskResult =
+                    conn.Query<StepStartTaskResult>("Portal_StepStartTask", p,
+                        commandType: CommandType.StoredProcedure);
+            }
+        }
+
         private void FormatHtml(TsrDetailsResponse response)
         {
-  foreach (var taskResult in response.TsrTaskResults)
-           {
-                taskResult.Des = taskResult.Des.Replace("<<bb>>", "<br/><h4>").Replace("<</bb>>", "</h4>").Replace("<<nl/>>", "<br/>");
+            foreach (var taskResult in response.TsrTaskResults)
+            {
+                taskResult.Des =
+                    taskResult.Des.Replace("<<bb>>", "<br/><h4>")
+                        .Replace("<</bb>>", "</h4>")
+                        .Replace("<<nl/>>", "<br/>");
             }
         }
     }

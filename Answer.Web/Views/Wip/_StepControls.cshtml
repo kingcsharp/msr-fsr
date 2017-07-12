@@ -1,4 +1,6 @@
-﻿<div class="row">
+﻿@model string
+    
+<div class="row">
     <div id="timer-input" class="col-sm-4 timer-input">
         <input type="text" name="timer" class="form-control timer input-lg" placeholder="0 sec" width="120">
     </div>
@@ -12,4 +14,30 @@
         <button data-toggle="modal" data-target="#ncrModal" class="btn btn-danger btn-lg print-btn pull-right" id="ncr-button"><i class="fa fa-plus-square"></i> NCR</button>
     </div>
 </div>
+<script>
+    $('#start-step').on('click', function () {
 
+        StartDoneButtonClick();
+    });
+
+    $('#done-step').on('click', function () {
+
+        StartDoneButtonClick();
+    });
+
+    function StartDoneButtonClick() {
+        var stepId = @Model;
+
+        $.ajax({
+            type: "POST",
+            url: "/wip/StepStartDoneClick?stepId=" + stepId,
+            dataType: 'json',
+            success: function (data) {
+
+            },
+            error: function () {
+
+            }
+        });
+    }
+</script>

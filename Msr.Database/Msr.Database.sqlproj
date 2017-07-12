@@ -2755,5 +2755,6 @@
     <Build Include="dbo\Views\Portal\Portal_PartTypesView.sql" />
     <Build Include="dbo\Views\Portal\Portal_UserView.sql" />
     <Build Include="dbo\Views\Portal\Portal_WorkOrders.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_StepStartTask.sql" />
   </ItemGroup>
 </Project>

@@ -1,6 +1,6 @@
 ﻿@model Msr.Services.Orders.Messaging.WipStepDetailsResponse
 
-@Html.Partial("_StepControls")
+@Html.Partial("_StepControls", Model.StepId.ToString())
 @{
     var descriptionId = "description" + Model.StepId;
     var monitorsId = "monitors" + Model.StepId;

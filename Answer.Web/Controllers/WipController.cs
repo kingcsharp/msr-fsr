@@ -313,6 +313,14 @@ namespace Answer.Web.Controllers
             return RedirectToAction("Details", new {id = 111597});
         }
 
+        [HttpPost]
+        public ActionResult StepStartDoneClick(int stepId)
+        {
+            _orderService.StepStartDone(stepId, "1618");
+
+            return null;
+        }
+
         private List<DocumentView> GetDocViewModel(List<DocumentView> docs, OrderService orderService, int width)
         {
             var photos = new List<DocumentView>();
