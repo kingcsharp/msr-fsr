@@ -461,27 +461,28 @@ namespace Msr.Services.Orders
                     }
                 }
 
-                foreach (var task in detailsResponse.TaskItemParts)
+                if (detailsResponse.TaskEditDataResult.Status != "FINISHED")
                 {
-                    if ((task.Status == "REQUESTED" || task.Status == "ACCEPTED") && !string.IsNullOrWhiteSpace(task.Print_Order) && task.HAS_MONITOR == "1")
+                    foreach (var task in detailsResponse.TaskItemParts)
                     {
-                        var monitorParams = new DynamicParameters();
-
-                        monitorParams.Add("@RELATED_OBJECT_ID", null, DbType.String, ParameterDirection.Input);
-                        monitorParams.Add("@PROCEDURE_STEP_ID", null, DbType.String, ParameterDirection.Input);
-                        monitorParams.Add("@TASK_ID", task.STEP_ID, DbType.String, ParameterDirection.Input);
-                        monitorParams.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input);
-
-                        using (var multi = conn.QueryMultiple("A_SP_MONITOR_TEMPLATES_GET_DATA_FOR_OBJECT", monitorParams,
-                            commandType: CommandType.StoredProcedure))
+                        if ((task.Status == "REQUESTED" || task.Status == "ACCEPTED") && !string.IsNullOrWhiteSpace(task.Print_Order) && task.HAS_MONITOR == "1")
                         {
-                            detailsResponse.MonitorTemplateResult = multi.Read<MonitorTemplateResult>().SingleOrDefault();
+                            var monitorParams = new DynamicParameters();
+
+                            monitorParams.Add("@RELATED_OBJECT_ID", null, DbType.String, ParameterDirection.Input);
+                            monitorParams.Add("@PROCEDURE_STEP_ID", null, DbType.String, ParameterDirection.Input);
+                            monitorParams.Add("@TASK_ID", task.STEP_ID, DbType.String, ParameterDirection.Input);
+                            monitorParams.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input);
+
+                            using (var multi = conn.QueryMultiple("A_SP_MONITOR_TEMPLATES_GET_DATA_FOR_OBJECT", monitorParams,
+                                commandType: CommandType.StoredProcedure))
+                            {
+                                detailsResponse.MonitorTemplateResult = multi.Read<MonitorTemplateResult>().SingleOrDefault();
+                            }
+                            break;
                         }
-                        break;
                     }
                 }
-
-
 
             }
 

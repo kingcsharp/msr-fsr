@@ -107,7 +107,7 @@
                         {
                             var stepCss = "";
 
-                            if (step.Status == "CLOSED")
+                            if (step.Status == "CLOSED" || step.Status == "FINISHED")
                             {
                                 stepCss = "step-complete";
                             }
@@ -120,9 +120,18 @@
                                 stepCss = "waiting";
                             }
 
-                            <li class="step @stepCss" data-stepId="@step.StepId" data-phStepId="@step.PhStepId" data-fill-id="@Model.FillId">
-                                <div>@step.Description</div>
-                            </li>
+                            if (step.Status == "CLOSED" || step.Status == "FINISHED")
+                            {
+                                <li class="step @stepCss">
+                                    <div>@step.Description</div>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="step @stepCss" data-stepId="@step.StepId" data-phStepId="@step.PhStepId" data-fill-id="@Model.FillId">
+                                    <div>@step.Description</div>
+                                </li>
+                            }
                         }
                     </ul>
                 </div>
