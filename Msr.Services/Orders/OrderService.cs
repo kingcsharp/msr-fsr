@@ -313,7 +313,7 @@ namespace Msr.Services.Orders
         {
             try
             {
-                var saveWorkItemImagesProcedure = new SaveWorkItemImagesProcedure { DocId = model.DocId, OldDocId = model.OldDocId, Name = model.Name, Desc = model.Desc, Path = model.Path, ContentType = model.ContentType, SrcId = model.SrcId, SrcName = model.SrcName, SrcDesc = model.SrcDesc, SrcPath = model.SrcPath, SrcContentType = model.SrcContentType, SrcChanged = model.SrcChanged, DocChanged = model.DocChanged, DropSrc = model.DropSrc, NTLogin = model.NTLogin, FillID = model.FillID };
+                var saveWorkItemImagesProcedure = new SaveWorkItemImagesProcedure { DocId = model.DocId, OldDocId = model.OldDocId, Name = model.Name, Desc = model.Desc, Path = model.Path, ContentType = model.ContentType, SrcId = model.SrcId, SrcName = model.SrcName, SrcDesc = model.SrcDesc, SrcPath = model.SrcPath, SrcContentType = model.SrcContentType, SrcChanged = model.SrcChanged, DocChanged = model.DocChanged, DropSrc = model.DropSrc, NTLogin = model.NTLogin, TaskId = model.TaskId };
 
                 _dbContext.Database.ExecuteStoredProcedure(saveWorkItemImagesProcedure);
 
@@ -337,10 +337,15 @@ namespace Msr.Services.Orders
         {
             try
             {
-                var fileLinkIdParam = new SqlParameter("@fileLinkId", id);
-                var loginIdParam = new SqlParameter("@strNTLogin", loginId);
+                using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
+                {
+                    var p = new DynamicParameters();
 
-                _dbContext.Database.ExecuteSqlCommand("exec Portal_DeleteWorkItemImagesById @fileLinkId, @strNTLogin", fileLinkIdParam, loginIdParam);
+                    p.Add("@fileLinkId", id, DbType.String, ParameterDirection.Input);
+                    p.Add("@strNTLogin", loginId, DbType.String, ParameterDirection.Input);
+
+                    conn.Execute("Portal_DeleteWorkItemImagesById", p, commandType: CommandType.StoredProcedure);
+                }
 
                 return true;
             }
@@ -420,7 +425,7 @@ namespace Msr.Services.Orders
             return detailsResponse;
         }
 
-        public WipStepDetailsResponse GetWipStepDetails(int stepId, string fillId, string login, int? phStepId)
+        public WipStepDetailsResponse GetWipStepDetails(int stepId, int fillId, string login, int? phStepId)
         {
             
 
@@ -456,18 +461,28 @@ namespace Msr.Services.Orders
                     }
                 }
 
-                var monitorParams = new DynamicParameters();
-
-                monitorParams.Add("@RELATED_OBJECT_ID", null, DbType.String, ParameterDirection.Input);
-                monitorParams.Add("@PROCEDURE_STEP_ID", null, DbType.String, ParameterDirection.Input);
-                monitorParams.Add("@TASK_ID", stepId, DbType.String, ParameterDirection.Input);
-                monitorParams.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input);
-
-                using (var multi = conn.QueryMultiple("A_SP_MONITOR_TEMPLATES_GET_DATA_FOR_OBJECT", monitorParams,
-                    commandType: CommandType.StoredProcedure))
+                foreach (var task in detailsResponse.TaskItemParts)
                 {
-                    detailsResponse.MonitorTemplateResult = multi.Read<MonitorTemplateResult>().SingleOrDefault();
+                    if ((task.Status == "REQUESTED" || task.Status == "ACCEPTED") && !string.IsNullOrWhiteSpace(task.Print_Order) && task.HAS_MONITOR == "1")
+                    {
+                        var monitorParams = new DynamicParameters();
+
+                        monitorParams.Add("@RELATED_OBJECT_ID", null, DbType.String, ParameterDirection.Input);
+                        monitorParams.Add("@PROCEDURE_STEP_ID", null, DbType.String, ParameterDirection.Input);
+                        monitorParams.Add("@TASK_ID", task.STEP_ID, DbType.String, ParameterDirection.Input);
+                        monitorParams.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input);
+
+                        using (var multi = conn.QueryMultiple("A_SP_MONITOR_TEMPLATES_GET_DATA_FOR_OBJECT", monitorParams,
+                            commandType: CommandType.StoredProcedure))
+                        {
+                            detailsResponse.MonitorTemplateResult = multi.Read<MonitorTemplateResult>().SingleOrDefault();
+                        }
+                        break;
+                    }
                 }
+
+
+
             }
 
             return detailsResponse;
@@ -478,8 +493,8 @@ namespace Msr.Services.Orders
             var p = new DynamicParameters();
 
             p.Add("@id", request.Id, DbType.String, ParameterDirection.Input);
-            p.Add("@failAction", request.FailAction, DbType.String, ParameterDirection.Input);
-            p.Add("@result", request.PrintResult, DbType.String, ParameterDirection.Input);
+            p.Add("@failAction", request.Fail_Action, DbType.String, ParameterDirection.Input);
+            p.Add("@result", request.Print_Result, DbType.String, ParameterDirection.Input);
             p.Add("@comment", request.Description, DbType.String, ParameterDirection.Input);
             p.Add("@target", request.Target, DbType.String, ParameterDirection.Input);
             p.Add("@tolerance", request.Tolerance, DbType.String, ParameterDirection.Input);
@@ -492,18 +507,36 @@ namespace Msr.Services.Orders
             }
         }
 
-        public void StepStartDone(int stepId, string login)
+        public void StepStart(int stepId, string login)
         {
             var p = new DynamicParameters();
 
-            p.Add("@stepId", stepId, DbType.String, ParameterDirection.Input);
-            p.Add("@login", login, DbType.String, ParameterDirection.Input);
+            p.Add("@RET_STATUS", dbType : DbType.String, direction:ParameterDirection.Output,size:500);
+            p.Add("@MSGS", dbType :DbType.String, direction:ParameterDirection.Output, size: 50);
+            p.Add("@ID", stepId.ToString(), DbType.String, ParameterDirection.Input, size: 50);
+            p.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input, size: 50);
 
             using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
             {
-                var stepStartDoneTaskResult =
-                    conn.Query<StepStartTaskResult>("Portal_StepStartTask", p,
-                        commandType: CommandType.StoredProcedure);
+                var stepStartDoneTaskResult = conn.Query<StepStartTaskResult>("A_SP_TASK_ACCEPT", p, commandType: CommandType.StoredProcedure);
+
+                var status = p.Get<string>("RET_STATUS");
+            }
+        }
+        public void StepDone(int stepId, string login)
+        {
+            var p = new DynamicParameters();
+
+            p.Add("@RET_STATUS", dbType: DbType.String, direction: ParameterDirection.Output,size:500);
+            p.Add("@MSGS", dbType: DbType.String, direction: ParameterDirection.Output, size:50);
+            p.Add("@ID", stepId, DbType.String, ParameterDirection.Input, size: 50);
+            p.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input, size: 50);
+
+            using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
+            {
+                var stepStartDoneTaskResult = conn.Execute("A_SP_TASK_QUICK_CLOSE", p, commandType: CommandType.StoredProcedure);
+
+                var status = p.Get<string>("RET_STATUS");
             }
         }
 

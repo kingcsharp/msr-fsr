@@ -59,12 +59,15 @@
                         <div id="parts-table" class="col-sm-12">
                             <table class="table table-responsive table-condensed table-bordered">
                                 <tbody>
-                                    <tr><td>@Model.FileSearchResult?.FillObjDesc qty:@Model.FileSearchResult?.Qty </td></tr>
-
-                                    @foreach (var part in Model.Parts)
-                                    {
-                                        <tr><td>@part</td></tr>
-                                    }
+                                @if (Model.FileSearchResult != null)
+                                {
+                                    <tr><td>@Model.FileSearchResult.FillObjDesc qty:@Model.FileSearchResult.Qty </td></tr>
+                                }
+                                
+                                @foreach (var part in Model.Parts)
+                                {
+                                    <tr><td>@part</td></tr>
+                                }
                                 </tbody>
                             </table>
                         </div>

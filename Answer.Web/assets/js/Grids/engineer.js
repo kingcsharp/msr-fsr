@@ -298,6 +298,12 @@ $(document).ready(function () {
     $("#jqGrid").tooltip();
 
 
+
+    $('#ncrModal').on('hidden.bs.modal', function (event) {
+        $(this).data('bs.modal', null);
+    });
+
+
     $('#ncrModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);
         var id = button.data('id');
@@ -356,7 +362,7 @@ $(document).ready(function () {
 
     $('#addImageModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);
-        var id = button.data('id');
+        var id = button.data('task-id');
         var fillId = button.data('fill-id');
         var modal = $(this);
 
@@ -386,10 +392,6 @@ $(document).ready(function () {
 
     });
 
-
-    $('#ncrModal').on('hidden.bs.modal', function (event) {
-        $(this).data('bs.modal', null);
-    });
 
     $('#addNoteModal').on('hidden.bs.modal', function (event) {
         $(this).data('bs.modal', null);
@@ -484,7 +486,7 @@ $(document).ready(function () {
         var printTravlerButton = '<span style="margin:5px;" class="" data-id="' + rowObject.FillId + '" data-toggle="modal"  data-target="#wioDetailPrintTraveler" title="Print Traveler"><i class="fa fa-clipboard"></i></span>';
         var printOtherButton = '<span style="margin:5px;" class="" data-id="' + rowObject.FillId + '" data-toggle="modal"  data-target="#wioDetailPrintOther" title="Print Other"><i class="fa fa-clipboard"></i></span>';
         var noteButton = '<span style="margin:5px;" class="" data-id="' + rowObject.FillId + '" data-toggle="modal"  data-target="#addNoteModal" title="View Notes"><i class="fa fa-clipboard"></i></span>';
-        var imageButton = '<span style="margin:5px;" class="" data-id="' + rowObject.TaskId + '" data-fill-id="' + rowObject.FillId + '" data-toggle="modal"  data-target="#addImageModal" title="View Images"><i class="fa fa-picture-o"></i></span>';
+        var imageButton = '<span style="margin:5px;" class="" data-task-id="' + rowObject.TaskId + '" data-fill-id="' + rowObject.FillId + '" data-toggle="modal"  data-target="#addImageModal" title="View Images"><i class="fa fa-picture-o"></i></span>';
         var ncrButton = (rowObject.HasNcr == 1) ? '<span style="margin:5px;"  class="btn support-btn btn-xs btn-warning" data-id="' +rowObject.FillId + '" data-toggle="modal"  data-target="#ncrModal" title="View NCR"><i class="fa fa-clipboard"></i>NCR</span>': '';
         
         var monitorButton = (rowObject.HasMonitor == 1) ? '<button class="btn support-btn btn-xs btn-success" data-id="' + rowObject.FillId + '" data-toggle="modal" data-target="#monitorModal"  title="View Monitors"><i class="fa fa-bar-chart "></i>Monitors</button>' : '';

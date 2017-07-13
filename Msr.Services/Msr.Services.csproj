@@ -163,6 +163,7 @@
     <Compile Include="Orders\TaskService.cs" />
     <Compile Include="Orders\PeopleService.cs" />
     <Compile Include="Orders\CompanyService.cs" />
+    <Compile Include="Orders\ViewModels\ImageViewModel.cs" />
     <Compile Include="Orders\ViewModels\SaveWorkItemImageViewModel.cs" />
     <Compile Include="Orders\ViewModels\SaveWorkOrderViewModel.cs" />
     <Compile Include="Parts\Messages\AddPartTypesTaskRequest.cs" />

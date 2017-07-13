@@ -38,7 +38,7 @@ namespace Msr.Services.Parts
         }
         public Part GetById(string Id)
         {
-            return _dbContext.Parts.Where(x => x.ID == Id).SingleOrDefault();
+            return _dbContext.Parts.Where(x => x.ObjectID == Id).SingleOrDefault();
         }
         public bool Create(AddPartViewModel model)
         {
@@ -57,7 +57,7 @@ namespace Msr.Services.Parts
                 return false;
             }
         }
-        public bool Edit(AddPartViewModel model)
+        public bool Update(AddPartViewModel model)
         {
             try
             {

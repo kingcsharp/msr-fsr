@@ -233,9 +233,12 @@ $(function() {
     });
 
     $('#carousel ul.slides li.step').on('click', function () {
+
         var stepId = $(this).data("stepid");
         var phStepId = $(this).data("phStepid");
         var fillId = $(this).data("fill-id");
+
+        $('#step-' + stepId).html('<img src="/assets/img/loading.gif"  style="width:32px;height:32px;" />');
         
         $.ajax({
             type: "GET",

@@ -1,6 +1,10 @@
 ﻿@model Msr.Services.Orders.Messaging.WipStepDetailsResponse
 
-@Html.Partial("_StepControls", Model.StepId.ToString())
+@if (Model.TaskEditDataResult.Status != "CLOSED")
+{
+    @Html.Partial("_StepControls", Model)
+}
+
 @{
     var descriptionId = "description" + Model.StepId;
     var monitorsId = "monitors" + Model.StepId;
@@ -26,7 +30,7 @@
         </div>
 
         <div id="@filesId" class="tab-pane task-window fade">
-            @Html.Partial("_FilesTab")
+            @Html.Partial("_FilesTab",Model.Images)
         </div>
     </div>
 </div>

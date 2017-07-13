@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using Msr.Models.Orders;
 using Msr.Services.Orders.Procedures;
+using Msr.Services.Orders.ViewModels;
 
 namespace Msr.Services.Orders.Messaging
 {
@@ -17,5 +17,6 @@ namespace Msr.Services.Orders.Messaging
         public TaskEditDataResult TaskEditDataResult { get; set; }
         public MonitorTemplateResult MonitorTemplateResult { get; set; }
         public List<TaskItemPart> TaskItemParts { get; set; }
+        public ImageViewModel Images { get; set; }
     }
 }

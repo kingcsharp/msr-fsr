@@ -33,9 +33,9 @@ namespace Answer.Web.Controllers
             {
                 foreach (var rule in param.where.rules)
                 {
-                    if (rule.field == nameof(PartsView.Id))
+                    if (rule.field == nameof(PartsView.ObjId))
                     {
-                        totalRows = totalRows.Where(x => x.Id == rule.data.ToLower());
+                        totalRows = totalRows.Where(x => x.ObjId == rule.data.ToLower());
                     }
                     else if (rule.field == nameof(PartsView.Name))
                     {
@@ -56,7 +56,7 @@ namespace Answer.Web.Controllers
                     }
                     else if (rule.field == nameof(PartsView.Status))
                     {
-                        totalRows = totalRows.Where(x => x.Status.ToLower().Contains(rule.data.ToLower()));
+                        totalRows = totalRows.Where(x => x.Status.ToLower() == rule.data.ToLower());
                     }
                 }
             }
@@ -104,7 +104,7 @@ namespace Answer.Web.Controllers
 
             return View(part);
         }
-        [AcceptVerbs(verbs: HttpVerbs.Post)]
+        [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult AddPart(AddPartViewModel model)
         {
             var taskService = new PartsService();
@@ -169,10 +169,11 @@ namespace Answer.Web.Controllers
                 model.ProductType = "SERVICE";
                 model.NTLogin = "1618";
 
-                var response = taskService.Edit(model: model);
+                var response = taskService.Update(model: model);
+
                 if (response)
                 {
-                    TempData["SuccessMessage"] = "Part has been edited successfully.";
+                    TempData["SuccessMessage"] = "Part has been updated successfully.";
 
                     return RedirectToAction("Index");
                 }

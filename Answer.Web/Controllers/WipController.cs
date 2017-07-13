@@ -232,6 +232,7 @@ namespace Answer.Web.Controllers
 
         public ActionResult Details(int id)
         {
+          
             var orderService = new OrderService();
 
             WorkOrderDetailsResponse response = _orderService.GetPurchaseItemDetails(id);
@@ -295,10 +296,19 @@ namespace Answer.Web.Controllers
 
       
 
-        public ActionResult GetWipStepDetails(int stepId, string fillId, int? phStepId)
+        public ActionResult GetWipStepDetails(int stepId, int fillId, int? phStepId)
         {
+            ViewBag.FillId = fillId;
+
             var response = _orderService.GetWipStepDetails(stepId, fillId, "1618", phStepId);
+
             response?.MonitorTemplateResult?.Setup();
+
+            response.Images = new ImageViewModel
+            {
+                FillId = fillId,
+                TaskId = stepId
+            };
 
             return PartialView("_InitialInspection", response);
         }
@@ -314,12 +324,21 @@ namespace Answer.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult StepStartDoneClick(int stepId)
+        public ActionResult StepDoneClick(int stepId)
         {
-            _orderService.StepStartDone(stepId, "1618");
+            _orderService.StepDone(stepId, "1618");
 
-            return null;
+            return Json("OK", JsonRequestBehavior.AllowGet);
         }
+
+        [HttpPost]
+        public ActionResult StepStartClick(int stepId)
+        {
+            _orderService.StepStart(stepId, "1618");
+
+            return Json("OK", JsonRequestBehavior.AllowGet);
+        }
+
 
         private List<DocumentView> GetDocViewModel(List<DocumentView> docs, OrderService orderService, int width)
         {

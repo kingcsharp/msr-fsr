@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Web;
 using System.Web.Mvc;
-using Answer.Web.ViewModel.Images;
 using Msr.Models.Orders;
 using Msr.Services.Orders;
 using Msr.Services.Orders.ViewModels;
@@ -31,7 +30,7 @@ namespace Answer.Web.Controllers
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public JsonResult FileUploader(List<HttpPostedFileBase> files, string fillId)
+        public JsonResult FileUploader(List<HttpPostedFileBase> files, string taskId)
         {
             var orderService = new OrderService();
 
@@ -48,7 +47,7 @@ namespace Answer.Web.Controllers
 
                 _cloudUploader.UploadToCloud(file, "msrfsr", keyName);
 
-                var cloudUrl = string.Format("msrfsr.s3.amazonaws.com/{0}", keyName);
+                var cloudUrl = string.Format("http://msrfsr.s3.amazonaws.com/{0}", keyName);
 
                 imageModel.Path = cloudUrl;
                 imageModel.ContentType = file.ContentType;
@@ -61,12 +60,12 @@ namespace Answer.Web.Controllers
                 imageModel.DocChanged = null;
                 imageModel.DropSrc = "YES";
                 imageModel.NTLogin = "1618";
-                imageModel.FillID = fillId;
+                imageModel.TaskId = taskId;
 
                 orderService.SaveOrderItemImages(imageModel);
             }
 
-            var orderItemImages = orderService.GetOrderItemImagesById(fillId);
+            var orderItemImages = orderService.GetOrderItemImagesById(taskId);
 
             var images = new UploadedImageView();
 
@@ -98,7 +97,7 @@ namespace Answer.Web.Controllers
         }
 
         [AcceptVerbs(HttpVerbs.Get)]
-        public ActionResult DeleteImageById(string id, string fillId)
+        public ActionResult DeleteImageById(string id, string taskId)
         {
             var orderService = new OrderService();
 
@@ -106,7 +105,7 @@ namespace Answer.Web.Controllers
 
                 if (response)
                 {
-                    var orderItemImages = orderService.GetOrderItemImagesById(fillId);
+                    var orderItemImages = orderService.GetOrderItemImagesById(taskId);
 
                     return Json(new {Message = "Image deleted successfully.", files = orderItemImages.ToArray()}, JsonRequestBehavior.AllowGet);
                 }

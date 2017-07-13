@@ -1,39 +1,85 @@
-﻿@model string
+﻿@model Msr.Services.Orders.Messaging.WipStepDetailsResponse
     
 <div class="row">
     <div id="timer-input" class="col-sm-4 timer-input">
         <input type="text" name="timer" class="form-control timer input-lg" placeholder="0 sec" width="120">
     </div>
     <div class="col-sm-6">
-        <button class="btn btn-primary btn-lg print-btn pull-left start-timer-btn" id="start-step"><i class="glyphicon glyphicon-step-forward"></i> Start</button>
+        @if (Model.TaskEditDataResult.Status !="ACCEPTED")
+        {
+            <button class="btn btn-primary btn-lg print-btn pull-left start-timer-btn" id="start-step"><i class="glyphicon glyphicon-step-forward"></i> Start</button>
+        }
+
         <button class="btn btn-warning btn-lg print-btn pull-left pause-timer-btn hidden" id="pause-step"><i class="glyphicon glyphicon-pause"></i> Pause</button>
         <button class="btn btn-warning btn-lg print-btn pull-left resume-timer-btn hidden" id="resume-step"><i class="glyphicon glyphicon-step-forward"></i> Resume</button>
         <button class="btn btn-primary btn-lg print-btn pull-left " id="done-step"><i class="glyphicon glyphicon-stop"></i> Done</button>
     </div>
     <div class="col-sm-2">
-        <button data-toggle="modal" data-target="#ncrModal" class="btn btn-danger btn-lg print-btn pull-right" id="ncr-button"><i class="fa fa-plus-square"></i> NCR</button>
+        <button data-toggle="modal" data-id="@ViewBag.FillId" data-target="#ncrModal" class="btn btn-danger btn-lg print-btn pull-right" id="ncr-button"><i class="fa fa-plus-square"></i> NCR</button>
     </div>
 </div>
+
 <script>
-    $('#start-step').on('click', function () {
+    
+        $('#start-step').on('click', function () {
 
-        StartDoneButtonClick();
-    });
+            StepStartClick();
+        });
 
-    $('#done-step').on('click', function () {
+        $('#done-step').on('click', function () {
 
-        StartDoneButtonClick();
-    });
+            StepDoneClick();
+        });
 
-    function StartDoneButtonClick() {
-        var stepId = @Model;
+        $('#ncrModal').on('hidden.bs.modal', function (event) {
+            $(this).data('bs.modal', null);
+        });
+
+        $('#ncrModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var id = button.data('id');
+            var modal = $(this);
+
+            $.ajax({
+                type: "GET",
+                url: '/wip/getncrmodel?id=' + id,
+                dataType: 'html',
+                success: function (data) {
+                    modal.find('.modal-body').html(data);
+                },
+                error: function () {
+
+                }
+            });
+        });
+
+
+        function StepDoneClick() {
+        var stepId = @Model.StepId;
 
         $.ajax({
             type: "POST",
-            url: "/wip/StepStartDoneClick?stepId=" + stepId,
+            url: "/wip/StepDoneClick?stepId=" + stepId,
             dataType: 'json',
             success: function (data) {
+                location.reload();
+            },
+            error: function () {
 
+            }
+        });
+        }  
+    
+    function StepStartClick() {
+
+        var stepId = @Model.StepId;
+
+        $.ajax({
+            type: "POST",
+            url: "/wip/StepStartClick?stepId=" + stepId,
+            dataType: 'json',
+            success: function (data) {
+                location.reload();
             },
             error: function () {
 

@@ -27,23 +27,17 @@ namespace Msr.Models.Orders
 
         public string error { get; set; }
 
-        public static string Path = "/Images/";
-
-        public static string thumbPath = "/Images/";
-
         public List<UploadedImageView> MapToDto(List<WorkOrderImageView> orderItemImages)
         {
             List<UploadedImageView> imagesList = new List<UploadedImageView>();
 
             foreach (var item in orderItemImages)
             {
-                UploadedImageView image = new UploadedImageView();
+                var image = new UploadedImageView();
                 image.name = item.FILE_NAME;
-                image.url = Path + item.FILE_NAME;
-                image.thumbnailUrl = thumbPath + item.FILE_NAME;
-               // image.deleteUrl = "/doc/DeleteImageById?Id=" + item.FILE_LINK_ID + "&FillId=" + item.ACTUAL_PART_ID;
+                image.url = item.Path;
+                image.deleteUrl = "/doc/DeleteImageById?Id=" + item.Id + "&taskId=" + item.Task_Id;
                 image.deleteType = "GET";
-
                 imagesList.Add(image);
             }
             return imagesList;

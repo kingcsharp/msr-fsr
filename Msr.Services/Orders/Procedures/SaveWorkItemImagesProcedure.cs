@@ -62,7 +62,7 @@ namespace Msr.Services.Orders.Procedures
         [StoredProcedureParameter(SqlDbType.VarChar, Size = 50, ParameterName = "strNTLogin")]
         public string NTLogin { get; set; }
 
-        [StoredProcedureParameter(SqlDbType.VarChar, Size = 50, ParameterName = "fillId")]
-        public string FillID { get; set; }
+        [StoredProcedureParameter(SqlDbType.VarChar, Size = 50, ParameterName = "taskId")]
+        public string TaskId { get; set; }
     }
 }

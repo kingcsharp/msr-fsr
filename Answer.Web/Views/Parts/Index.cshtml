@@ -43,9 +43,9 @@
             datatype: "json",
             colModel: [
                 {
-                    label: 'Id',
-                    name: 'Id',
-                    index: 'Id',
+                    label: 'Database Id',
+                    name: 'ObjId',
+                    index: 'ObjId',
                     key: true,
                     colmenu: false,
                     coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
@@ -54,7 +54,7 @@
                     align: 'left'
                 },
                 {
-                    label: 'Current Owners Part Name',
+                    label: "Current Owner's Part Name",
                     name: 'Name',
                     index: 'Name',
                     colmenu: true,
@@ -64,7 +64,7 @@
                     align: 'left'
                 },
                 {
-                    label: 'Current Owners Part #',
+                    label: "Current Owner's Part #",
                     name: 'CompanyPartNumber',
                     index: 'CompanyPartNumber',
                     colmenu: false,
@@ -99,7 +99,7 @@
                     colmenu: false,
                     stype: "select",
                     coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                    searchoptions: { value: ":[All];CREATING, DENIED, APPROVED, APPROVED_BUT_REVISING:Creating or Approved;CREATING, DENIED: Creating;IN_WORKFLOW:In Approval Workflow;APPROVED, APPROVED_BUT_REVISING, APPROVED_BUT_DELETING:Approved;DENIED:Denied;APPROVED_BUT_REVISING:Approved But Being Revised;APPROVED_BUT_DELETING:Approved But Being Deleted;DENIED:Denied;DELETED:Deleted;OLD:Obsolete" },
+                    searchoptions: { value: ":[All];APPROVED:Approved;CREATING:Creating;APPROVED_BUT_REVISING:Approved But Revising" },
                     align: 'center'
                 },
                 { name: 'Actions', index: 'ID', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: PartEditFormatter, width: 100, align: 'center' }
@@ -139,7 +139,7 @@
             searchOperators: true
         });
         function PartEditFormatter(cellvalue, options, rowObject) {
-            thisCellVal = '<a href="/parts/edit/' + rowObject.Id + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i> Edit</a>';
+            thisCellVal = '<a href="/parts/edit/' + rowObject.ObjId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i> Edit</a>';
             return thisCellVal;
         }
         $('#search').click(function () {

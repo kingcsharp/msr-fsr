@@ -1,6 +1,6 @@
 ﻿
 
-namespace Answer.Web.ViewModel.Images
+namespace Msr.Services.Orders.ViewModels
 {
     public class ImageViewModel
     {

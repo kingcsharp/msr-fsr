@@ -200,7 +200,6 @@
     <Compile Include="ViewModel\EditUserProfileViewModel.cs" />
     <Compile Include="ViewModel\Engineering\EngineeringViewModel.cs" />
     <Compile Include="ViewModel\Help\SupportViewModel.cs" />
-    <Compile Include="ViewModel\Images\ImageViewModel.cs" />
     <Compile Include="ViewModel\Notes\AddNoteViewModel.cs" />
     <Compile Include="ViewModel\PartsReportsViewModel.cs" />
     <Compile Include="ViewModel\Reports\ReportItemData.cs" />
@@ -727,6 +726,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="assets\css\dropzone\" />
     <Folder Include="assets\js\dropzone\" />
+    <Folder Include="ViewModel\Images\" />
     <Folder Include="Views\Help\" />
   </ItemGroup>
   <ItemGroup>

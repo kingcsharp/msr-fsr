@@ -227,7 +227,7 @@ namespace Msr.Models.Parts
         {
             return new AddPartViewModel
             {
-                ObjID = model.ID,
+                ObjID = model.ObjectID,
                 Company = model.Company,
                 CompanyPartNumber = model.CompanyPartNumber,
                 Name = model.Name,

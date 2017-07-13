@@ -1,31 +1,74 @@
 ﻿@model Msr.Services.Orders.Procedures.MonitorTemplateResult
 
-@using (Html.BeginForm("UpdateStepMonitor", "Wip", FormMethod.Post))
+@using (Html.BeginForm("UpdateStepMonitor", "Wip", FormMethod.Post, new { @class = "form form-horizontal", role = "form" }))
 {
     @Html.HiddenFor(x => x.Id)
     @Html.HiddenFor(x => x.Tolerance)
     @Html.HiddenFor(x => x.TheSaurusId)
     @Html.HiddenFor(x => x.StrNtLogin)
-    <div class="row">
-        <div class="col-md-4">Monitor Description:</div>
-        <div class="col-md-8">@Model.Description</div>
-        <div class="col-md-4">Target:</div>
-        <div class="col-md-8">@(Model.Target ?? "Yes")</div>
-        <div class="col-md-4">Result:</div>
-        <div class="col-md-8">@Html.DropDownListFor(x=>x.PrintResult, Model.ResultList)</div>
-        <div class="col-md-4">Comment:</div>
-        <div class="col-md-8"> @Html.TextAreaFor(x => x.Description)</div>
+
+    <div class="form-group">
+        <label class="col-lg-2 control-label">Monitor Description:</label>
+        <div class="col-lg-2">
+            @Model.Description
+        </div>
     </div>
 
-    <div class="row">
-        <div class="col-md-4">Monitor #:</div>
-        <div class="col-md-8">1</div>
-        <div class="col-md-4">Monitor Type:</div>
-        <div class="col-md-8">&nbsp;@*@Model.MonitorType.Replace("_", "/")*@</div>
-        <div class="col-md-4">If fails:</div>
-        <div class="col-md-8">@Model.FailAction</div>
-        <div class="col-md-4">Fault Handling:</div>
-        <div class="col-md-8">@Html.DropDownListFor(x => x.FailAction, Model.FailActionList)</div>
+
+    <div class="form-group">
+        <label class="col-lg-2 control-label">Target:</label>
+        <div class="col-lg-2">
+            @(Model.Target ?? "Yes")
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-lg-2 control-label">Result:</label>
+        <div class="col-lg-2">
+            @Html.DropDownListFor(x=>x.Print_Result, Model.ResultList, new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-lg-2 control-label">Comment:</label>
+        <div class="col-lg-2">
+            @Html.TextAreaFor(x => x.Description, new { @class = "form-control" })
+        </div>
+    </div>
+
+    <hr/>
+
+    <div class="form-group">
+        <label class="col-lg-2 control-label">Monitor #:</label>
+        <div class="col-lg-2">
+           1
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-lg-2 control-label">Monitor Type:</label>
+        <div class="col-lg-2">
+            @Model.Monitor_Type
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-lg-2 control-label">
+            If fails:
+        </label>
+        <div class="col-lg-2">
+            @Model.Fail_Action
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <label class="col-lg-2 control-label">
+            Fault Handling
+        </label>
+        <div class="col-lg-2">
+            @Html.DropDownListFor(x => x.Fail_Action, Model.FailActionList, new { @class = "form-control" })
+        </div>
     </div>
 
     <div class="row">

@@ -18,6 +18,6 @@ namespace Msr.Services.Orders.ViewModels
         public string DocChanged { get; set; }
         public string DropSrc { get; set; }
         public string NTLogin { get; set; }
-        public string FillID { get; set; }
+        public string TaskId { get; set; }
     }
 }
