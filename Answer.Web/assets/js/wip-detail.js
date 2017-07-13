@@ -22,12 +22,18 @@ $(window).load(function() {
 
 });
 //document ready
-$(function() {
+$(function () {
+
+   
     $('.selectpicker').selectpicker();
     
     $('#wip-item-select').on('changed.bs.select', function (e) {
         currVal = $(this).children('option:selected').data('content');
-        console.log("fired select change" + currVal);
+
+        window.location.href = '/wip/details/' + $(this).val();
+        
+
+
         var term = /Complete/;
         var exists = term.test(currVal);
         if(!exists) {
@@ -68,6 +74,7 @@ $(function() {
     
     $('#showCompletedSwitch').on('switchChange.bootstrapSwitch', function (e, state) {
         e.preventDefault();
+
         if(state){
             $("#wip-item-select > optgroup > option[data-status='Complete']").hide();
             console.log('on');
@@ -232,25 +239,28 @@ $(function() {
         });
     });
 
-    $('#carousel ul.slides li.step').on('click', function () {
+    $('.step-task').on('click', function () {
 
         var stepId = $(this).data("stepid");
-        var phStepId = $(this).data("phStepid");
-        var fillId = $(this).data("fill-id");
 
-        $('#step-' + stepId).html('<img src="/assets/img/loading.gif"  style="width:32px;height:32px;" />');
+
+            var phStepId = $(this).data("phStepid");
+            var fillId = $(this).data("fill-id");
+
+            $('#step-' + stepId).html('<img src="/assets/img/loading.gif"  style="width:32px;height:32px;" />');
+
+            $.ajax({
+                type: "GET",
+                url: "/wip/GetWipStepDetails?stepId=" + stepId + "&phStepId=" + phStepId + "&fillId=" + fillId,
+                dataType: 'html',
+                success: function(data) {
+                    $('#step-' + stepId).html(data);
+                },
+                error: function() {
+
+                }
+            });
         
-        $.ajax({
-            type: "GET",
-            url: "/wip/GetWipStepDetails?stepId=" + stepId + "&phStepId=" + phStepId + "&fillId=" + fillId,
-            dataType: 'html',
-            success: function (data) {
-                $('#step-' + stepId).html(data);
-            },
-            error: function () {
-
-            }
-        });
     });
 });
 function openNav() {

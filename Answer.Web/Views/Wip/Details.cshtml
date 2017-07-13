@@ -25,7 +25,7 @@
                         {
                             foreach (var item in Model.WoItems)
                              {
-                                 <option data-content="<strong>@item.PurchaseItemId</strong><br>Proc: @item.ProcName<br>Serial: @item.Serial<span class='label label-success pull-right'>@item.Status</span>" data-status="@item.Status">@item.PurchaseItemId</option>
+                                 <option data-content="<strong>@item.PurchaseItemId</strong><br>Proc: @item.ProcName<br>Serial: @item.Serial<span class='label label-success pull-right'>@item.Status</span>" data-status="@item.Status" data-fill-id="@Model.FillId">@item.FillId</option>
                              }
                         }
                         else
@@ -77,19 +77,19 @@
                             <tbody>
                                 <tr>
                                     <th nowrap style="text-align: right">Customer:</th>
-                                    <td>@Model.FileSearchResult?.CustomerName</td>
+                                    <td>@Model.FileSearchResult.CustomerName</td>
                                 </tr>
                                 <tr>
                                     <th nowrap style="text-align: right">Product:</th>
-                                    <td>@Model.FileSearchResult?.ProductName</td>
+                                    <td>@Model.FileSearchResult.ProductName</td>
                                 </tr>
                                 <tr>
                                     <th nowrap style="text-align: right">Procedure:</th>
-                                    <td>@Model.FileSearchResult?.ProcedureName</td>
+                                    <td>@Model.FileSearchResult.ProcedureName</td>
                                 </tr>
                                 <tr>
                                     <th nowrap style="text-align: right">Purchase Item #:</th>
-                                    <td>@Model.FileSearchResult?.PurchItemId</td>
+                                    <td>@Model.FileSearchResult.PurchItemId</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -103,7 +103,7 @@
                 <!-- Step Navigation -->
                 <div id="carousel" class="flexslider">
                     <ul class="slides">
-                        @foreach (var step in Model.TaskStepResults)
+                        @foreach (var step in Model.TaskStepResults.Where(x=>x.Has_Child !="1"))
                         {
                             var stepCss = "";
 
@@ -128,7 +128,7 @@
                             }
                             else
                             {
-                                <li class="step @stepCss" data-stepId="@step.StepId" data-phStepId="@step.PhStepId" data-fill-id="@Model.FillId">
+                                <li class="step-task step @stepCss" data-stepId="@step.StepId" data-phStepId="@step.PhStepId" data-fill-id="@Model.FillId">
                                     <div>@step.Description</div>
                                 </li>
                             }
@@ -138,7 +138,7 @@
                 <div id="slider" class="flexslider step-container">
                     <ul class="slides">
                   
-                        @foreach (var step in Model.TaskStepResults)
+                        @foreach (var step in Model.TaskStepResults.Where(x=>x.Has_Child !="1"))
                         {
                             <li id="step-@step.StepId">
                                
@@ -209,6 +209,8 @@
 
 @section scripts
 {
+    
+
     <script type="text/javascript" src="~/assets/js/jquery.flexslider.js"></script>
     <script type="text/javascript" src="~/assets/js/bootstrap-select.js"></script>
     <script type="text/javascript" src="~/assets/js/finger.min.js"></script>

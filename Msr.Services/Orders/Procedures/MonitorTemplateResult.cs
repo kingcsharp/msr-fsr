@@ -7,6 +7,7 @@ namespace Msr.Services.Orders.Procedures
 {
     public class MonitorTemplateResult
     {
+        public int FillId { get; set; }
         public string Id { get; set; }
 
         public string Description { get; set; }

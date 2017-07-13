@@ -486,6 +486,8 @@ namespace Msr.Services.Orders
 
             }
 
+            detailsResponse.MonitorTemplateResult.FillId = fillId;
+
             return detailsResponse;
         }
 

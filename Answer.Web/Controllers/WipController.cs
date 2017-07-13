@@ -313,6 +313,7 @@ namespace Answer.Web.Controllers
             return PartialView("_InitialInspection", response);
         }
 
+        [HttpPost]
         public ActionResult UpdateStepMonitor(MonitorTemplateResult monitorTemplate)
         {
             if (ModelState.IsValid)
@@ -320,7 +321,7 @@ namespace Answer.Web.Controllers
                 _orderService.UpdateStepMonitor(monitorTemplate);
             }
 
-            return RedirectToAction("Details", new {id = 111597});
+            return RedirectToAction("Details", new {id = monitorTemplate.FillId});
         }
 
         [HttpPost]

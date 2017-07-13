@@ -167,15 +167,7 @@ $(document).ready(function () {
                 formatter: currentStepFormatter,
                 align: 'center'
             },
-            {
-                label: 'Supporting Info',
-                name: 'PurchaseId',
-                index: 'PurchaseId',
-                colmenu: false,
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                formatter: supportingInfoFormatter,
-                align: 'center'
-            },
+            
             {
                 label: 'Disposition',
                 name: 'ActualPartId',
@@ -189,18 +181,7 @@ $(document).ready(function () {
                 formatter: dispositionFormatter,
                 align: 'center'
             },
-            {
-                label: 'Action',
-                name: 'Action',
-                index: 'Action',
-                id: 'Action',
-                colmenu: false,
-                editable: false,
-                width: 180,
-                align: 'center',
-                formatter: actionFormatter,
-                search: false
-            },
+           
             
         ],
         viewrecords: true, // show the current page, data rang and total records on the toolbar
@@ -299,115 +280,7 @@ $(document).ready(function () {
 
 
 
-    $('#ncrModal').on('hidden.bs.modal', function (event) {
-        $(this).data('bs.modal', null);
-    });
 
-
-    $('#ncrModal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget);
-        var id = button.data('id');
-        var modal = $(this);
-
-        $.ajax({
-            type: "GET",
-            url: '/wip/getncrmodel?id=' + id,
-            dataType: 'html',
-            success: function (data) {
-                modal.find('.modal-body').html(data);
-            },
-            error: function () {
-
-            }
-        });
-    });
-
-
-    $('#imageModal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget); // Button that triggered the modal
-        var id = button.data('id'); // Extract info from data-* attributes
-        var modal = $(this);
-
-        $.ajax({
-            type: "GET",
-            url: '/wip/GetPhotsModel?id=' + id,
-            dataType: 'html',
-            success: function (data) {
-                modal.find('.modal-body').html(data);
-
-            },
-            error: function () {
-
-            }
-        });
-    });
-
-    $('#addNoteModal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget);
-        var id = button.data('id');
-        var modal = $(this);
-
-        $.ajax({
-            type: "GET",
-            url: '/notes/addNote?id=' + id,
-            dataType: 'html',
-            success: function (data) {
-                modal.find('.modal-body').html(data);
-            },
-            error: function () {
-
-            }
-        });
-    });
-
-    $('#addImageModal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget);
-        var id = button.data('task-id');
-        var fillId = button.data('fill-id');
-        var modal = $(this);
-
-
-        $.ajax({
-            type: "GET",
-            url: '/doc/GetImages?taskId=' + id +"&fillId=" + fillId,
-            dataType: 'html',
-            success: function (data) {
-                modal.find('.modal-body').html(data);
-            },
-            error: function () {
-
-            }
-        });
-
-
-        //$("#FillID").val(id);
-
-        //var imagesDiv = modal.find('#imageListDropzone');
-
-        //// Load existing files:
-        //$('#fileupload').addClass('fileupload-processing');
-
-        ////files = JSON.stringify(files);
-        //LoadImages();
-
-    });
-
-
-    $('#addNoteModal').on('hidden.bs.modal', function (event) {
-        $(this).data('bs.modal', null);
-    });
-
-    $('#addImageModal').on('hidden.bs.modal', function (event) {
-        $(this).data('bs.modal', null);
-    });
-
-    $('#monitorModal').on('hidden.bs.modal', function (event) {
-        $(this).data('bs.modal', null);
-    });
-
-    $('#imageModal').on('hidden.bs.modal', function (event) {
-        $(this).data('bs.modal', null);
-    });
 
     $('a.colmenu').click(function (event) {
         //event.stopPropagation();
@@ -447,13 +320,7 @@ $(document).ready(function () {
         return thisCellVal;
     }
 
-    function supportingInfoFormatter(cellvalue, options, rowObject) {
-        var NcrButton = (rowObject.HasNcr == 1) ? '<button class="btn support-btn btn-xs btn-warning" data-id="' + rowObject.FillId + '" data-toggle="modal"  data-target="#ncrModal" title="View NCR"><i class="fa fa-clipboard"></i>NCR</button>' : '';
-        var FileButton = (rowObject.HasFile == 1) ? '<button class="btn support-btn btn-xs btn-info" data-id="' + rowObject.ActualPartId + '" href="#" data-toggle="modal" data-target="#imageModal" title="View Photos"><i class="fa fa-file-image-o"></i>Photos</button>' : '';
-        var MonitorButton = (rowObject.HasMonitor == 1) ? '<button class="btn support-btn btn-xs btn-success" data-id="' + rowObject.FillId + '" data-toggle="modal" data-target="#monitorModal"  title="View Monitors"><i class="fa fa-bar-chart "></i>Monitors</button>' : '';
-        thisCellVal = NcrButton + FileButton + MonitorButton;
-        return thisCellVal;
-    }
+ 
     function dispositionFormatter(cellvalue, options, rowObject) {
 
         var notes = "";
@@ -481,50 +348,9 @@ $(document).ready(function () {
         return thisCellVal;
     }
 
-    function actionFormatter(cellvalue, options, rowObject) {
-
-        var printTravlerButton = '<span style="margin:5px;" class="" data-id="' + rowObject.FillId + '" data-toggle="modal"  data-target="#wioDetailPrintTraveler" title="Print Traveler"><i class="fa fa-clipboard"></i></span>';
-        var printOtherButton = '<span style="margin:5px;" class="" data-id="' + rowObject.FillId + '" data-toggle="modal"  data-target="#wioDetailPrintOther" title="Print Other"><i class="fa fa-clipboard"></i></span>';
-        var noteButton = '<span style="margin:5px;" class="" data-id="' + rowObject.FillId + '" data-toggle="modal"  data-target="#addNoteModal" title="View Notes"><i class="fa fa-clipboard"></i></span>';
-        var imageButton = '<span style="margin:5px;" class="" data-task-id="' + rowObject.TaskId + '" data-fill-id="' + rowObject.FillId + '" data-toggle="modal"  data-target="#addImageModal" title="View Images"><i class="fa fa-picture-o"></i></span>';
-        var ncrButton = (rowObject.HasNcr == 1) ? '<span style="margin:5px;"  class="btn support-btn btn-xs btn-warning" data-id="' +rowObject.FillId + '" data-toggle="modal"  data-target="#ncrModal" title="View NCR"><i class="fa fa-clipboard"></i>NCR</span>': '';
-        
-        var monitorButton = (rowObject.HasMonitor == 1) ? '<button class="btn support-btn btn-xs btn-success" data-id="' + rowObject.FillId + '" data-toggle="modal" data-target="#monitorModal"  title="View Monitors"><i class="fa fa-bar-chart "></i>Monitors</button>' : '';
-
-        thisCellVal = printTravlerButton + printOtherButton + noteButton + imageButton + ncrButton + monitorButton;
-
-        return thisCellVal;
-    }
+  
 
 });
 
-function DeleteImage(event) {
-    var id = $(event).attr("data-id");
-    var fillid = $("#FillID").val();
-    var imagesDiv = $('#addImageModal').find('#imageListDropzone');
-    $.ajax({
-        type: "GET",
-        url: '/Wip/DeleteImageById?Id=' + id + '&FillId=' + fillid,
-        dataType: 'html',
-        success: function (data) {
-            data = $.parseJSON(data);
-            //console.log(data);
-            $('.message').addClass("alert alert-success").html(data.Message);
-            var result = '<ul class="orderList list-inline">';
-
-
-
-            $.each(data.OrderItemImages, function (i, item) {
-                console.log(item);
-                result += '<li class="wrapper"><img class="img-thumbnail" src="/Images/' + item.FILE_NAME + '" alt="' + item.NAME + '" style="width:100px;height:100px;"><div class="caption"><a class="label label-danger deleteImagelink" data-id="' + item.FILE_LINK_ID + '" onclick="DeleteImage(this)" href="#">delete</a></div></li>'
-            })
-            result += '</ul>';
-            imagesDiv.html(result);
-        },
-        error: function (error) {
-            alert(error);
-        }
-    });
-}
 
 

@@ -1,5 +1,5 @@
 ﻿@model Msr.Services.Orders.Messaging.WipStepDetailsResponse
-    
+@*getButtons(myRS)*@
 <div class="row">
     <div id="timer-input" class="col-sm-4 timer-input">
         <input type="text" name="timer" class="form-control timer input-lg" placeholder="0 sec" width="120">
@@ -12,7 +12,9 @@
 
         <button class="btn btn-warning btn-lg print-btn pull-left pause-timer-btn hidden" id="pause-step"><i class="glyphicon glyphicon-pause"></i> Pause</button>
         <button class="btn btn-warning btn-lg print-btn pull-left resume-timer-btn hidden" id="resume-step"><i class="glyphicon glyphicon-step-forward"></i> Resume</button>
+   
         <button class="btn btn-primary btn-lg print-btn pull-left " id="done-step"><i class="glyphicon glyphicon-stop"></i> Done</button>
+        
     </div>
     <div class="col-sm-2">
         <button data-toggle="modal" data-id="@ViewBag.FillId" data-target="#ncrModal" class="btn btn-danger btn-lg print-btn pull-right" id="ncr-button"><i class="fa fa-plus-square"></i> NCR</button>

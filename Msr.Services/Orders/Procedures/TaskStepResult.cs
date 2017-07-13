@@ -8,5 +8,9 @@ namespace Msr.Services.Orders.Procedures
         public string Status { get; set; }
         public string StepId { get; set; }
         public string PhStepId { get; set; }
+
+        public string Has_Child { get; set; }
+
+        public string RawDescription { get; set; }
     }
 }
