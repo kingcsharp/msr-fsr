@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Msr.Services.Parts.ViewModels;
 
 namespace Answer.Web.Controllers
 {
@@ -117,7 +118,7 @@ namespace Answer.Web.Controllers
                 model.ProductType = "SERVICE";
                 model.NTLogin = "1618";
 
-                var response = taskService.Create(model: model);
+                var response = taskService.Save(model: model);
 
                 if (response)
                 {
@@ -169,7 +170,7 @@ namespace Answer.Web.Controllers
                 model.ProductType = "SERVICE";
                 model.NTLogin = "1618";
 
-                var response = taskService.Update(model: model);
+                var response = taskService.Save(model: model);
 
                 if (response)
                 {
@@ -177,14 +178,12 @@ namespace Answer.Web.Controllers
 
                     return RedirectToAction("Index");
                 }
-                else
-                {
-                    TempData["ErrorMessage"] = "Something went wrong.";
 
-                    model.Setup();
+                TempData["ErrorMessage"] = "Something went wrong.";
 
-                    return View(model);
-                }
+                model.Setup();
+
+                return View(model);
             }
 
             model.Setup();

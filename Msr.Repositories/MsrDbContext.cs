@@ -2,6 +2,7 @@
 using Msr.Models.Notes;
 using Msr.Models.Orders;
 using Msr.Models.Parts;
+using Msr.Models.Procedures;
 using Msr.Models.Tasks;
 using Msr.Models.TimeZones;
 using Msr.Models.Users;
@@ -21,6 +22,8 @@ namespace Msr.Repositories
             modelBuilder.Configurations.Add(new AspNetUserConfiguration());
             modelBuilder.Configurations.Add(new PartConfiguration());
             modelBuilder.Configurations.Add(new PartTypesConfiguration());
+            modelBuilder.Configurations.Add(new CompanyConfiguration());
+            modelBuilder.Configurations.Add(new VerbTypeConfiguration());
 
             modelBuilder.Entity<AspNetRole>().ToTable("AspNetRoles");           
             modelBuilder.Entity<ClientUser>().ToTable("Portal_ClientUsers");
@@ -40,6 +43,7 @@ namespace Msr.Repositories
             modelBuilder.Entity<PartTypesView>().ToTable("Portal_PartTypesView");
             modelBuilder.Entity<PartType>().ToTable("A_PART_TYPES_HISTORY");
             modelBuilder.Entity<Part>().ToTable("A_PARTS_HISTORY");
+            modelBuilder.Entity<ProceduresView>().ToTable("Portal_ProceduresView");
 
         }
 
@@ -63,6 +67,8 @@ namespace Msr.Repositories
         public DbSet<PartType> PartTypes { get; set; }
         public DbSet<Part> Parts { get; set; }
         public DbSet<Company> Companies { get; set; }
-
+        public DbSet<ProceduresView> Procedures { get; set; }
+        public DbSet<VerbType> VerbTypes { get; set; }
+        
     }
 }

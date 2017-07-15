@@ -284,19 +284,19 @@ namespace Msr.Services.Orders
                 {
                     var saveWorkItemPunchNumProcedure = new SaveWorkOrderItemPunchNumProcedure { ItemId = model.PurchaseItemId, CustPurchNum = model.CustPurchNum, NTLogin = model.NTLogin };
 
-                    //_dbContext.Database.ExecuteStoredProcedure(saveWorkItemPunchNumProcedure);
+                    _dbContext.Database.ExecuteStoredProcedure(saveWorkItemPunchNumProcedure);
                 }
                 else if (!string.IsNullOrEmpty(model.Qty))
                 {
                     var saveWorkItemQtyProcedure = new SaveWorkOrderItemQtyProcedure { ItemId = model.PurchaseItemId, Quanitiy = model.Qty, NTLogin = model.NTLogin };
 
-                    //_dbContext.Database.ExecuteStoredProcedure(saveWorkItemQtyProcedure);
+                    _dbContext.Database.ExecuteStoredProcedure(saveWorkItemQtyProcedure);
                 }
                 else if (!string.IsNullOrEmpty(model.DueDate))
                 {
                     var saveOrderItemPurchaseDueDateProcedure = new SaveOrderItemPurchaseDueDateProcedure { ItemId = model.PurchaseItemId, DueDate = model.DueDate, NTLogin = model.NTLogin };
 
-                    //_dbContext.Database.ExecuteStoredProcedure(saveOrderItemPurchaseDueDateProcedure);
+                    _dbContext.Database.ExecuteStoredProcedure(saveOrderItemPurchaseDueDateProcedure);
                 }
 
                 return true;

@@ -62,7 +62,7 @@ namespace Msr.Services.Parts.Procedures
         [StoredProcedureParameter(SqlDbType.VarChar, Size = 50, ParameterName = "WEIGHT_TYPE")]
         public string WeightType { get; set; }
 
-        [StoredProcedureParameter(SqlDbType.TinyInt, Size =1, ParameterName = "CREATE_PROD")]
+        [StoredProcedureParameter(SqlDbType.TinyInt, Size = 1, ParameterName = "CREATE_PROD")]
         public byte? CreateProd { get; set; }
 
         [StoredProcedureParameter(SqlDbType.VarChar, Size = 50, ParameterName = "SUPPLIER_CO")]

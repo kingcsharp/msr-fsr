@@ -11,6 +11,7 @@ using System.Web;
 using System.Data.Entity;
 using Msr.Services.Parts.Procedures;
 using EntityFrameworkExtras.EF6;
+using Msr.Services.Parts.ViewModels;
 
 namespace Msr.Services.Parts
 {
@@ -38,9 +39,9 @@ namespace Msr.Services.Parts
         }
         public Part GetById(string Id)
         {
-            return _dbContext.Parts.Where(x => x.ObjectID == Id).SingleOrDefault();
+            return _dbContext.Parts.Where(x => x.ID == Id).SingleOrDefault();
         }
-        public bool Create(AddPartViewModel model)
+        public bool Save(AddPartViewModel model)
         {
             try
             {
@@ -57,7 +58,7 @@ namespace Msr.Services.Parts
                 return false;
             }
         }
-        public bool Update(AddPartViewModel model)
+        public bool Edit(AddPartViewModel model)
         {
             try
             {

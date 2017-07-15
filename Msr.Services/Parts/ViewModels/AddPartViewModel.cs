@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using Msr.Models.Parts;
 
-namespace Msr.Models.Parts
+namespace Msr.Services.Parts.ViewModels
 {
     public class AddPartViewModel
     {
@@ -227,7 +225,7 @@ namespace Msr.Models.Parts
         {
             return new AddPartViewModel
             {
-                ObjID = model.ObjectID,
+                ObjID = model.ID,
                 Company = model.Company,
                 CompanyPartNumber = model.CompanyPartNumber,
                 Name = model.Name,

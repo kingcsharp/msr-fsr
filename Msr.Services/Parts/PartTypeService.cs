@@ -10,6 +10,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Msr.Services.Parts.ViewModels;
 
 namespace Msr.Services.Parts
 {

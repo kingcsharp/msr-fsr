@@ -1,16 +1,14 @@
-﻿
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Msr.Models.Orders;
 using Msr.Models.Users;
+using Msr.Services.Companies;
 using Msr.Services.Orders;
 using Msr.Services.TimeZones;
 using Msr.Services.Users;
 
-namespace Msr.Web.ViewModel
+namespace Answer.Web.ViewModel
 {
     public class EditUserViewModel
     {
@@ -42,7 +40,7 @@ namespace Msr.Web.ViewModel
                 new SelectListItem {Text = RolesConstants.ClientAdmin, Value = RolesConstants.ClientAdmin,Selected = UserSummary.RoleName == RolesConstants.ClientAdmin},
             };
 
-            Companies = companyService.GetCompanyQueryable().ToList().Select(x => new SelectListItem
+            Companies = companyService.GetCompaniesQueryable().ToList().Select(x => new SelectListItem
             {
                 Text = x.Name,
                 Value = x.Id.ToString()
