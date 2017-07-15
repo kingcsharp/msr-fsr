@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[GetMonitorLabelTsrDetails]
+﻿CREATE PROCEDURE [dbo].[Portal_GetMonitorLabelTsrDetails]
 	@fillId VARCHAR(50)
 AS
 	DECLARE 

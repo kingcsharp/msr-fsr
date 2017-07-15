@@ -39,7 +39,7 @@ namespace Msr.Services.Parts
         }
         public Part GetById(string Id)
         {
-            return _dbContext.Parts.Where(x => x.ID == Id).SingleOrDefault();
+            return _dbContext.Parts.Where(x => x.ObjectID == Id).SingleOrDefault();
         }
         public bool Save(AddPartViewModel model)
         {

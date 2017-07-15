@@ -1,4 +1,4 @@
-﻿CREATE procedure [dbo].[GetPurchaseItemDetails]
+﻿CREATE procedure [dbo].[Portal_GetPurchaseItemDetails]
 @fileId int
 AS
 

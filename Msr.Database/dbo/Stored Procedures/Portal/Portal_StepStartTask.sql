@@ -7,4 +7,3 @@ AS
 	declare @p2 varchar(500)
 	set @p2 = NULL
 	exec A_SP_TASK_ACCEPT @p1 output, @p2 output, @stepId, @login
-	Select @p1 AS RetStatus, @p2 AS Messages
