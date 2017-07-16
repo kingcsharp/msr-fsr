@@ -170,7 +170,7 @@ namespace Answer.Web.Controllers
                 model.ProductType = "SERVICE";
                 model.NTLogin = "1618";
 
-                var response = taskService.Save(model: model);
+                var response = taskService.Save(model);
 
                 if (response)
                 {

@@ -1,16 +1,10 @@
 ﻿@model Msr.Services.Parts.ViewModels.AddPartViewModel
 
 @{
-    ViewBag.Title = "Add Part";
+    ViewBag.Title = "Edit Part";
 }
 
-<link rel="stylesheet" type="text/css" href="/assets/css/themes/flat-blue.css">
 
-<link rel="stylesheet" type="text/css" href="/assets/css/ui.jqgrid-bootstrap-ui.css">
-<link rel="stylesheet" type="text/css" href="/assets/css/ui.jqgrid.css">
-
-<link rel="stylesheet" type="text/css" href="/assets/css/style.css">
-<link rel="stylesheet" type="text/css" href="/assets/css/hopscotch.css">
 
 <div class="container-fluid">
     <div class="side-body padding-top">
@@ -61,18 +55,19 @@
                             <div class="form-group">
                                 @Html.LabelFor(model => model.ReferenceFiles, htmlAttributes: new {@class = "control-label col-md-3"})
                                 <div class="col-md-5">
-                                    @Html.TextBoxFor(m => m.ReferenceFiles, new {type = "file", name = "Files", multiple = "multiple"})
-                                    @Html.ValidationMessageFor(model => model.ReferenceFiles, "", new {@class = "text-danger"})
+                                    <div style="width: 96%; float: left;">@Html.ListBoxFor(m => m.ReferenceFiles, new List<SelectListItem>(), new { @class = "form-control", multiple = "multiple" })
+                                        @Html.ValidationMessageFor(model => model.ReferenceFiles, "", new {@class = "text-danger"})</div>
+                                    <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceFiles" data-toggle="modal" data-target="#select-images" ><i class="icon fa fa-file"></i></span> </div>
+                                </div>  
+                            </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.PictureFiles, htmlAttributes: new {@class = "control-label col-md-3"})
+                            <div class="col-md-5">
+                                <div style="width: 96%; float: left;">@Html.ListBoxFor(m => m.PictureFiles, new List<SelectListItem>(), new { @class = "form-control", multiple = "multiple" })
+                                    <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="PictureFiles" data-toggle="modal" data-target="#select-images" ><i class="icon fa fa-file"></i></span> </div>
                                 </div>
                             </div>
-
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.PictureFiles, htmlAttributes: new {@class = "control-label col-md-3"})
-                                <div class="col-md-5">
-                                    @Html.TextBoxFor(m => m.PictureFiles, new {type = "file", name = "Files", multiple = "multiple"})
-                                    @Html.ValidationMessageFor(model => model.PictureFiles, "", new {@class = "text-danger"})
-                                </div>
-                            </div>
+                        </div>
                             <button type="button" class="btn btn-info collapsed" data-toggle="collapse" data-target="#AdvanceItems">Show Advance Items</button>
                             <div id="AdvanceItems" class="collapse">
                                 <div class="form-group">
@@ -118,12 +113,16 @@
                                 </div>
 
                                 <div class="form-group">
-                                    @Html.LabelFor(model => model.ReferenceTheories, htmlAttributes: new {@class = "control-label col-md-3"})
+                                    @Html.LabelFor(model => model.ReferenceTheories, htmlAttributes: new { @class = "control-label col-md-3" })
+
                                     <div class="col-md-5">
-                                        @Html.TextBoxFor(m => m.ReferenceTheories, new {type = "file", name = "Files", multiple = "multiple"})
-                                        @Html.ValidationMessageFor(model => model.ReferenceTheories, "", new {@class = "text-danger"})
+                                        <div style="width: 96%; float: left;">
+                                            @Html.ListBoxFor(m => m.ReferenceTheories, new List<SelectListItem>(), new { @class = "form-control", multiple = "multiple" })
+                                        <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceTheories" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span> </div>
                                     </div>
+
                                 </div>
+                            </div>
 
 
                                 <div class="form-group">
@@ -212,10 +211,72 @@
     </div>
 </div>
 
+
+<div id="select-images" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Files</h4>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" onclick="SelectIds()"> Select</button>
+                <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close-o"></i> Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section scripts
 {
 
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+
+    <script>
+
+        $('#select-images').on('show.bs.modal',
+            function(event) {
+
+                var button = $(event.relatedTarget);
+                var callBackId = button.data('call-back-id');
+                var modal = $(this);
+
+                $.ajax({
+                    type: "GET",
+                    url: '/Files/GetFiles?callBackId=' + callBackId,
+                    dataType: 'html',
+                    success: function(data) {
+                        modal.find('.modal-body').html(data);
+                    },
+                    error: function() {
+
+                    }
+                });
+
+            });
+
+
+        function SelectIds() {
+
+            $(".selected-file").each(function(index) {
+
+                if ($(this).is(":checked")) {
+
+                    var ids = $(this).val().split('|');
+
+                    var callBackId = $('#target-control-id').val();
+
+                    $('#' + callBackId + '').append($('<option></option>').val(ids[0]).html(ids[1]));
+                }
+
+            });
+
+
+        }
+
+    </script>
+
 
 }

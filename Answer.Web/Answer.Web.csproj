@@ -407,6 +407,7 @@
     <Content Include="assets\js\grids\buyer_grid.js" />
     <Content Include="assets\js\grids\engineer.js" />
     <Content Include="assets\js\grids\client-user.js" />
+    <Content Include="assets\js\grids\files-dialog.js" />
     <Content Include="assets\js\grids\files.js" />
     <Content Include="assets\js\grids\master-user.js" />
     <Content Include="assets\js\help_form.js" />
@@ -721,6 +722,10 @@
     <Content Include="Views\ProcedureTypes\Edit.cshtml" />
     <Content Include="Views\ProcedureTypes\Index.cshtml" />
     <Content Include="Views\Files\Index.cshtml" />
+    <Content Include="Views\Shared\_Files.cshtml" />
+    <Content Include="Views\Procedures\Create.cshtml" />
+    <Content Include="Views\Procedures\Edit.cshtml" />
+    <Content Include="Views\Procedures\Index.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

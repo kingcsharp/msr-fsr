@@ -18,6 +18,14 @@ namespace Answer.Web.Controllers
 
             return View(viewModel);
         }
+
+        public ActionResult GetFiles(string callBackId)
+        {
+            ViewBag.CallBackId = callBackId;
+
+            return PartialView("_Files");
+        }
+
         public ActionResult FilesData(JqGridParam param)
         {
             var fileService = new FileService();

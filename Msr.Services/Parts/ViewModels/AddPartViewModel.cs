@@ -78,13 +78,13 @@ namespace Msr.Services.Parts.ViewModels
         public string NTLogin { get; set; }
 
         [DisplayName("Reference Files :")]
-        public IEnumerable<HttpPostedFileBase> ReferenceFiles { get; set; }
+        public List<string> ReferenceFiles { get; set; }
 
         [DisplayName("Picture Files :")]
-        public IEnumerable<HttpPostedFileBase> PictureFiles { get; set; }
+        public List<string> PictureFiles { get; set; }
 
         [DisplayName("Reference Theories :")]
-        public IEnumerable<HttpPostedFileBase> ReferenceTheories { get; set; }
+        public List<string> ReferenceTheories { get; set; }
 
         public IEnumerable<SelectListItem> OrderingUnits { get; set; }
 

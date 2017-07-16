@@ -45,10 +45,24 @@ namespace Msr.Services.Parts
         {
             try
             {
+                foreach (var file in model.PictureFiles)
+                {
+                    //exec A_SP_FILES_CREATE_LINK '114434','10187',NULL,'1618'
+                }
+
+                foreach (var file in model.ReferenceFiles)
+                {
+                    //exec A_SP_FILES_CREATE_LINK '114434','10187',NULL,'1618'
+                }
+
+                foreach (var file in model.ReferenceTheories)
+                {
+                    //exec A_SP_FILES_CREATE_LINK '114434','10187',NULL,'1618'
+                }
                 var savePartProcedure = new SavePartProcedure() { Company = model.Company, CompanyPartNumber = model.CompanyPartNumber, Name = model.Name, PartType = model.PartType, Spare = model.Spare, Consumable = model.Consumable, Unit = model.Unit, UnitShippingWeight = model.UnitShippingWeight, SubParts = model.SubParts, CustomerSeeAvailability = model.CustomerSeeAvailability, SupplierSeeAvailability = model.SupplierSeeAvailability, SupplierSeeInstallBase = model.SupplierSeeInstallBase, InternalEqualParts = model.InternalEqualParts, WeightType = model.WeightType, CreateProd = model.CreateProd, SupplierCo = model.SupplierCo, ProductType = model.ProductType, ProcVerb = model.ProcVerb, SpecialCustomer = model.SpecialCustomer, CustomerExceptions = model.CustomerExceptions, Customers = model.Customers, Price = model.Price, NTLogin = model.NTLogin };
 
                 _dbContext.Database.ExecuteStoredProcedure(savePartProcedure);
-
+                
                 return true;
             }
             catch (Exception ex)
