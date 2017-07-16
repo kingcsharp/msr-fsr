@@ -2728,10 +2728,6 @@
     <Build Include="dbo\Tables\Portal_Note.sql" />
     <Build Include="dbo\Stored Procedures\Portal\PortalHasNcr.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_WorkItemImagesById.sql" />
-    <Build Include="dbo\Stored Procedures\Portal\GetDeliveryTsrDetails.sql" />
-    <Build Include="dbo\Stored Procedures\Portal\GetMonitorLabelTsrDetails.sql" />
-    <Build Include="dbo\Stored Procedures\Portal\GetPurchaseItemDetails.sql" />
-    <Build Include="dbo\Stored Procedures\Portal\GetTsrDetails.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_Check_Login.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_DeleteWorkItemImagesById.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_GetDocuments.sql" />
@@ -2759,5 +2755,7 @@
     <Build Include="dbo\Views\Portal\Portal_RolesView.sql" />
     <Build Include="dbo\Views\Portal\Portal_ProcedureTypesView.sql" />
     <Build Include="dbo\Views\Portal\Portal_FilesView.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_GetPurchaseItemDetails.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_GetDeliveryTsrDetails.sql" />
   </ItemGroup>
 </Project>

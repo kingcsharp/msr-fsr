@@ -400,7 +400,6 @@
     <Content Include="assets\js\client_users.js" />
     <Content Include="assets\js\dashboard.js" />
     <Content Include="assets\js\dataTables.bootstrap.min.js" />
-    <Content Include="assets\js\engineer.js" />
     <Content Include="assets\js\equipment_maint_form.js" />
     <Content Include="assets\js\finger.min.js" />
     <Content Include="assets\js\freeform-quote.js" />

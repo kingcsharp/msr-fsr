@@ -118,21 +118,15 @@ namespace Answer.Web.Controllers
                 }
             }
 
-            string orderBy = "DueDate";
             string orderDirection = "asc";
-
-            if (!string.IsNullOrWhiteSpace(param.sortColumn))
-            {
-                orderBy = param.sortColumn;
-            }
 
             if (param.sortOrder == "desc")
             {
-                totalRows = totalRows.OrderByDescending(orderBy);
+                totalRows = totalRows.OrderByDescending(param.sortColumn);
             }
             else
             {
-                totalRows = totalRows.OrderBy(orderBy);
+                totalRows = totalRows.OrderBy(param.sortColumn);
             }
 
             var totalRecords = totalRows.Count();

@@ -95,7 +95,7 @@ namespace Msr.Services.Orders
 
                 p.Add("@fileId", fillId, DbType.Int32, ParameterDirection.Input);
 
-                using (var multi = conn.QueryMultiple("GetPurchaseItemDetails", p, commandType: CommandType.StoredProcedure))
+                using (var multi = conn.QueryMultiple("Portal_GetPurchaseItemDetails", p, commandType: CommandType.StoredProcedure))
                 {
                     detailsResponse.FileSearchResult = multi.Read<FileSearchResult>().SingleOrDefault();
 

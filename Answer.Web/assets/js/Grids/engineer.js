@@ -190,7 +190,7 @@ $(document).ready(function () {
         pager: "#jqGridPager",
         height: 'auto',
         gridview: true,
-        sortname: 'PurchaseItemId',
+        sortname: 'DueDate',
         sortable: true,
         sortorder: 'asc',
         cellEdit: true,
