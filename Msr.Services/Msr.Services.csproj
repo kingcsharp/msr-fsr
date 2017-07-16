@@ -114,6 +114,7 @@
     <Compile Include="BaseNotification.cs" />
     <Compile Include="Companies\Procedures\AddCompanyProcedure.cs" />
     <Compile Include="Companies\ViewModels\AddCompanyViewModel.cs" />
+    <Compile Include="Files\FileService.cs" />
     <Compile Include="jqGrid\DatatableModelBindingContextHelper.cs" />
     <Compile Include="jqGrid\JqGridParam.cs" />
     <Compile Include="jqGrid\DatatableParamConverter.cs" />
@@ -213,6 +214,9 @@
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\AWSSDK.S3.3.3.8.2\analyzers\dotnet\cs\AWSSDK.S3.CodeAnalysis.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Files\Procedures\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

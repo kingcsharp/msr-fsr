@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Msr.Models.Procedures
 {
-    public class ProceduresView
-    {
+    public class ProcedureTypesView
+	{
         public string Id { get; set; }
         public string Name { get; set; }
         public string ObjectId { get; set; }

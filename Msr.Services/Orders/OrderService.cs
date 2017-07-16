@@ -95,7 +95,7 @@ namespace Msr.Services.Orders
 
                 p.Add("@fileId", fillId, DbType.Int32, ParameterDirection.Input);
 
-                using (var multi = conn.QueryMultiple("Portal_GetPurchaseItemDetails", p, commandType: CommandType.StoredProcedure))
+                using (var multi = conn.QueryMultiple("GetPurchaseItemDetails", p, commandType: CommandType.StoredProcedure))
                 {
                     detailsResponse.FileSearchResult = multi.Read<FileSearchResult>().SingleOrDefault();
 
@@ -120,7 +120,7 @@ namespace Msr.Services.Orders
 
                     p.Add("@fileId", fillId, DbType.Int32, ParameterDirection.Input);
 
-                    using (var multi = conn.QueryMultiple("Portal_GetTsrDetails", p, commandType: CommandType.StoredProcedure))
+                    using (var multi = conn.QueryMultiple("GetTsrDetails", p, commandType: CommandType.StoredProcedure))
                     {
                         detailsResponse.TsrTaskResults = multi.Read<TsrTaskResult>().ToList();
                     }
@@ -183,7 +183,7 @@ namespace Msr.Services.Orders
 
                 detailsResponse.AttachmentFileIds =
                     conn.Query<FilesForFillTaskResult>("A_SP_FILES_GET_FOR_FILL_TASKS", p,
-                        commandType: CommandType.StoredProcedure).Select(x=>x.File_Id).ToList();
+                        commandType: CommandType.StoredProcedure).Select(x => x.File_Id).ToList();
 
                 foreach (var tasksForFill in detailsResponse.TasksFindForFillIdResult)
                 {
@@ -195,7 +195,7 @@ namespace Msr.Services.Orders
                             .Replace("<</bb>>", "</h4>")
                             .Replace("<<nl/>>", "<br/>");
                 }
-                
+
             }
 
             return detailsResponse;
@@ -210,7 +210,7 @@ namespace Msr.Services.Orders
                 var p = new DynamicParameters();
 
                 p.Add("@fileId", fillId, DbType.Int32, ParameterDirection.Input);
-                
+
                 detailsResponse.GetPartsAndKitsLabelsResult =
                     conn.Query<GetPartsAndKitsLabelsResult>("GetPartsAndKitsLabels", p,
                         commandType: CommandType.StoredProcedure).ToList();
@@ -230,7 +230,7 @@ namespace Msr.Services.Orders
                 p.Add("@fillId", fillId, DbType.Int32, ParameterDirection.Input);
 
                 detailsResponse.GetMonitorLabelTsrDetailsResult =
-                    conn.Query<GetMonitorLabelTsrDetailsResult>("Portal_GetMonitorLabelTsrDetails", p,
+                    conn.Query<GetMonitorLabelTsrDetailsResult>("GetMonitorLabelTsrDetails", p,
                         commandType: CommandType.StoredProcedure).ToList();
 
                 detailsResponse.GetMonitorLabelTsrDetailsResult.ForEach(x =>
@@ -276,28 +276,48 @@ namespace Msr.Services.Orders
             return detailsResponse;
         }
 
-        public bool Edit(SaveWorkOrderViewModel model)
+        public bool SaveOrderItemQty(SaveWorkOrderViewModel model)
         {
             try
             {
-                if (!string.IsNullOrEmpty(model.CustPurchNum))
-                {
-                    var saveWorkItemPunchNumProcedure = new SaveWorkOrderItemPunchNumProcedure { ItemId = model.PurchaseItemId, CustPurchNum = model.CustPurchNum, NTLogin = model.NTLogin };
+                var saveWorkItemQtyProcedure = new SaveWorkOrderItemQtyProcedure { ItemId = model.FillId, Quanitiy = model.Value, NTLogin = model.NTLogin };
 
-                    _dbContext.Database.ExecuteStoredProcedure(saveWorkItemPunchNumProcedure);
-                }
-                else if (!string.IsNullOrEmpty(model.Qty))
-                {
-                    var saveWorkItemQtyProcedure = new SaveWorkOrderItemQtyProcedure { ItemId = model.PurchaseItemId, Quanitiy = model.Qty, NTLogin = model.NTLogin };
+                _dbContext.Database.ExecuteStoredProcedure(saveWorkItemQtyProcedure);
+                
+                return true;
 
-                    _dbContext.Database.ExecuteStoredProcedure(saveWorkItemQtyProcedure);
-                }
-                else if (!string.IsNullOrEmpty(model.DueDate))
-                {
-                    var saveOrderItemPurchaseDueDateProcedure = new SaveOrderItemPurchaseDueDateProcedure { ItemId = model.PurchaseItemId, DueDate = model.DueDate, NTLogin = model.NTLogin };
+            }
+            catch (Exception ex)
+            {
+                var message = "Error occured:" + ex.Message;
 
-                    _dbContext.Database.ExecuteStoredProcedure(saveOrderItemPurchaseDueDateProcedure);
-                }
+                return false;
+            }
+        }
+        public bool SaveOrderItemPunchNum(SaveWorkOrderViewModel model)
+        {
+            try
+            {
+                var saveWorkItemPunchNumProcedure = new SaveWorkOrderItemPunchNumProcedure { ItemId = model.FillId, CustPurchNum = model.Value, NTLogin = model.NTLogin };
+
+                _dbContext.Database.ExecuteStoredProcedure(saveWorkItemPunchNumProcedure);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                var message = "Error occured:" + ex.Message;
+
+                return false;
+            }
+        }
+        public bool SaveOrderItemDueDate(SaveWorkOrderViewModel model)
+        {
+            try
+            {
+                var saveOrderItemPurchaseDueDateProcedure = new SaveOrderItemPurchaseDueDateProcedure { purchItemID = model.PurchaseItemId, DueDate = model.Value, NTLogin = model.NTLogin };
+
+                _dbContext.Database.ExecuteStoredProcedure(saveOrderItemPurchaseDueDateProcedure);
 
                 return true;
 
@@ -350,7 +370,7 @@ namespace Msr.Services.Orders
                 return true;
             }
             catch (Exception ex)
-            {                
+            {
                 return false;
             }
         }
@@ -363,7 +383,7 @@ namespace Msr.Services.Orders
             {
                 var purchaseItemId = conn.Query<string>(
                     @"SELECT PURCH_ITEM_ID FROM A_FILLS WHERE ID = @Id",
-                    new {Id = fillId.ToString()})
+                    new { Id = fillId.ToString() })
                     .FirstOrDefault();
 
                 return purchaseItemId;
@@ -427,9 +447,9 @@ namespace Msr.Services.Orders
 
         public WipStepDetailsResponse GetWipStepDetails(int stepId, int fillId, string login, int? phStepId)
         {
-            
 
-            var detailsResponse = new WipStepDetailsResponse { StepId = stepId};
+
+            var detailsResponse = new WipStepDetailsResponse { StepId = stepId };
 
             using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
             {
@@ -504,7 +524,7 @@ namespace Msr.Services.Orders
             p.Add("@theSaurusId", request.TheSaurusId, DbType.String, ParameterDirection.Input);
             p.Add("@strNTLogin", request.StrNtLogin, DbType.String, ParameterDirection.Input);
 
-            using (IDbConnection conn =  new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
+            using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
             {
                 int i = conn.Execute("Portal_StepSaveMonitor", p, commandType: CommandType.StoredProcedure);
             }
@@ -514,8 +534,8 @@ namespace Msr.Services.Orders
         {
             var p = new DynamicParameters();
 
-            p.Add("@RET_STATUS", dbType : DbType.String, direction:ParameterDirection.Output,size:500);
-            p.Add("@MSGS", dbType :DbType.String, direction:ParameterDirection.Output, size: 50);
+            p.Add("@RET_STATUS", dbType: DbType.String, direction: ParameterDirection.Output, size: 500);
+            p.Add("@MSGS", dbType: DbType.String, direction: ParameterDirection.Output, size: 50);
             p.Add("@ID", stepId.ToString(), DbType.String, ParameterDirection.Input, size: 50);
             p.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input, size: 50);
 
@@ -530,8 +550,8 @@ namespace Msr.Services.Orders
         {
             var p = new DynamicParameters();
 
-            p.Add("@RET_STATUS", dbType: DbType.String, direction: ParameterDirection.Output,size:500);
-            p.Add("@MSGS", dbType: DbType.String, direction: ParameterDirection.Output, size:50);
+            p.Add("@RET_STATUS", dbType: DbType.String, direction: ParameterDirection.Output, size: 500);
+            p.Add("@MSGS", dbType: DbType.String, direction: ParameterDirection.Output, size: 50);
             p.Add("@ID", stepId, DbType.String, ParameterDirection.Input, size: 50);
             p.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input, size: 50);
 

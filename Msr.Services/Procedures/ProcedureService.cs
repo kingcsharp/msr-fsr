@@ -13,17 +13,17 @@ using System.Threading.Tasks;
 
 namespace Msr.Services.Procedures
 {
-    public class ProcedureService
+    public class ProcedureTypesService
     {
         private readonly MsrDbContext _dbContext;
 
-        public ProcedureService()
+        public ProcedureTypesService()
         {
             _dbContext = new MsrDbContext();
         }
-        public IQueryable<ProceduresView> GetProcedures()
+        public IQueryable<ProcedureTypesView> GetProcedures()
         {
-            return _dbContext.Procedures;
+            return _dbContext.ProcedureTypes;
         }
         public VerbType GetVerbTypeById(string Id)
         {

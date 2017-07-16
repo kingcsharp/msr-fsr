@@ -44,7 +44,7 @@ namespace Answer.Web.Controllers
 
             if (param.where != null && param.where.rules.Any())
             {
-                foreach (var rule    in param.where.rules)
+                foreach (var rule in param.where.rules)
                 {
                     if (rule.field == nameof(WorkOrderView.PurchaseItemId))
                     {
@@ -106,7 +106,7 @@ namespace Answer.Web.Controllers
                     }
                     else if (rule.field == nameof(WorkOrderView.CurStepText))
                     {
-                        if (rule.data!="ALL")
+                        if (rule.data != "ALL")
                         {
                             totalRows = totalRows.Where(x => x.Status.ToLower().Contains(rule.data.ToLower()));
                         }
@@ -118,7 +118,7 @@ namespace Answer.Web.Controllers
                 }
             }
 
-            string orderBy = "SupplierName";
+            string orderBy = "DueDate";
             string orderDirection = "asc";
 
             if (!string.IsNullOrWhiteSpace(param.sortColumn))
@@ -134,12 +134,12 @@ namespace Answer.Web.Controllers
             {
                 totalRows = totalRows.OrderBy(orderBy);
             }
-             
+
             var totalRecords = totalRows.Count();
             totalRows = totalRows.Skip(param.pageSize * (param.pageIndex - 1));
             totalRows = totalRows.Take(param.pageSize);
 
-            var totalPages = (int) Math.Ceiling((float) totalRecords/(float) param.pageSize);
+            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)param.pageSize);
 
             var taskService = new TaskService();
 
@@ -172,12 +172,12 @@ namespace Answer.Web.Controllers
 
             var docs = orderService.GetDocuments(ncrDetails.Details.FillObjId);
 
-            var photos = GetDocViewModel(docs, orderService,400);
+            var photos = GetDocViewModel(docs, orderService, 400);
             ncrDetails.Photos = photos;
 
             var response = taskService.GetTaskWithMonitors(id);
 
-            ncrDetails.MonitorItem = response.MonitorItem.Where(x=> x.Description.Contains("Nonconformity") || x.Description.Contains("NCR")).ToList();
+            ncrDetails.MonitorItem = response.MonitorItem.Where(x => x.Description.Contains("Nonconformity") || x.Description.Contains("NCR")).ToList();
 
             return PartialView("_NcrModel", ncrDetails);
         }
@@ -188,8 +188,8 @@ namespace Answer.Web.Controllers
 
             var docs = orderService.GetDocuments(id);
 
-            var photos = GetDocViewModel(docs, orderService,400);
-                   
+            var photos = GetDocViewModel(docs, orderService, 400);
+
             return PartialView("_Photos", photos);
         }
 
@@ -201,7 +201,7 @@ namespace Answer.Web.Controllers
 
             return PartialView("_Monitors", response);
         }
-        
+
         [HttpPost]
         public JsonResult AddInstruction(string id, string message)
         {
@@ -232,7 +232,7 @@ namespace Answer.Web.Controllers
 
         public ActionResult Details(int id)
         {
-          
+
             var orderService = new OrderService();
 
             WorkOrderDetailsResponse response = _orderService.GetPurchaseItemDetails(id);
@@ -256,7 +256,7 @@ namespace Answer.Web.Controllers
 
         public ActionResult PrintOther(int id)
         {
-            var vm = new PrintOtherViewModel {FillId = id};
+            var vm = new PrintOtherViewModel { FillId = id };
             var purchaseItemId = _orderService.GetPurchaseItemIdByFillId(id);
             vm.Setup(purchaseItemId);
 
@@ -264,15 +264,26 @@ namespace Answer.Web.Controllers
         }
 
         [AcceptVerbs(verbs: HttpVerbs.Post)]
-        public ActionResult Edit(SaveWorkOrderViewModel model)
+        public ActionResult EditOrderItemInline(SaveWorkOrderViewModel model)
         {
             var orderService = new OrderService();
             if (ModelState.IsValid)
             {
-                //Need to dynamic 
                 model.NTLogin = "1618";
+                var response = false;
 
-                var response = orderService.Edit(model: model);
+                if (model.ColumnName == "CustPurchNum")
+                {
+                    response = orderService.SaveOrderItemPunchNum(model: model);
+                }
+                else if (model.ColumnName == "FillQty")
+                {
+                    response = orderService.SaveOrderItemQty(model: model);
+                }
+                else if (model.ColumnName == "DueDate")
+                {
+                    response = orderService.SaveOrderItemDueDate(model: model);
+                }
 
                 if (response)
                 {
@@ -294,7 +305,7 @@ namespace Answer.Web.Controllers
             return Json(new { success = false, responseText = "Something went wrong." }, JsonRequestBehavior.AllowGet);
         }
 
-      
+
 
         public ActionResult GetWipStepDetails(int stepId, int fillId, int? phStepId)
         {
@@ -321,7 +332,7 @@ namespace Answer.Web.Controllers
                 _orderService.UpdateStepMonitor(monitorTemplate);
             }
 
-            return RedirectToAction("Details", new {id = monitorTemplate.FillId});
+            return RedirectToAction("Details", new { id = monitorTemplate.FillId });
         }
 
         [HttpPost]

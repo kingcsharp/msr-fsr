@@ -27,7 +27,7 @@ namespace Msr.Services.Procedures.ViewModels
 
         public List<SelectListItem> VerbTypes { get; set; }
 
-        public void Setup(ProcedureService procedureService,string Id)
+        public void Setup(ProcedureTypesService procedureService,string Id)
         {
             VerbTypes = procedureService.GetVerbTypes(Id).ToList().Select(x => new SelectListItem
             {

@@ -49,6 +49,7 @@ $(document).ready(function () {
         },
         colModel: [
             { name: 'PurchaseItemId', index: 'PurchaseItemId', width: 60, align: 'center', hidden: true, edittype: 'text', editable: true, editrules: { edithidden: true } },
+            { name: 'FillId', index: 'FillId', width: 60, align: 'center', hidden: true, edittype: 'text', editable: true, editrules: { edithidden: true } },
             {
                 label: 'WO Item #',
                 name: 'PurchaseItemId',
@@ -92,8 +93,8 @@ $(document).ready(function () {
             },
             {
                 label: 'Qty',
-                name: 'Qty',
-                index: 'Qty',
+                name: 'FillQty',
+                index: 'FillQty',
                 width: 50,
                 colmenu: false,
                 editable: true,
@@ -162,12 +163,11 @@ $(document).ready(function () {
                     freeze: false
                 },
                 stype: "select",
-                //searchoptions: { value: ":In Progress;Waiting to Start;Completed;Finished" },
                 searchoptions: { value: ":[All];In Progress:In Progress;Waiting to Start:Waiting to Start;Completed:Completed;Finished:Finished" },
                 formatter: currentStepFormatter,
                 align: 'center'
             },
-            
+
             {
                 label: 'Disposition',
                 name: 'ActualPartId',
@@ -181,8 +181,8 @@ $(document).ready(function () {
                 formatter: dispositionFormatter,
                 align: 'center'
             },
-           
-            
+
+
         ],
         viewrecords: true, // show the current page, data rang and total records on the toolbar
         rowNum: 10,
@@ -202,34 +202,26 @@ $(document).ready(function () {
         ajaxCellOptions: {},
         beforeSaveCell: function (rowid, cellname, value, iRow, iCol) {
 
-            var PurchaseItemId = $('#jqGrid').jqGrid('getCell', rowid, 'PurchaseItemId');
+            var fillId = $('#jqGrid').jqGrid('getCell', rowid, 'FillId');
 
-            if (cellname == 'CustPurchNum') {
-                var CustPurchNum = value //$('#jqGrid').jqGrid('getCell', rowid, 'CustPurchNum');
-            }
-            else if (cellname == 'Qty') {
-                var Qty = value //$('#jqGrid').jqGrid('getCell', rowid, 'Qty');
-            }
-            else if (cellname == 'DueDate') {
-                var DueDate = value //$('#jqGrid').jqGrid('getCell', rowid, 'DueDate');
-            }
+            var purchaseItemId = $('#jqGrid').jqGrid('getCell', rowid, 'PurchaseItemId');
+
             var options = {
-                PurchaseItemId: PurchaseItemId,
-                CustPurchNum: CustPurchNum,
-                Qty: Qty,
-                DueDate: DueDate
+                FillId: fillId,
+                PurchaseItemId: purchaseItemId,
+                ColumnName: cellname,
+                Value: value
             }
+
             $.ajax({
                 type: 'POST',
-                url: '/Wip/Edit',
+                url: '/Wip/EditOrderItemInline',
                 data: options,
                 dataType: 'JSON',
                 success: function (resultData) {
-                    //alert("Save Complete");
                     console.log("row with rowid=" + rowid + " is successfuly modified.")
                 }
             });
-            //console.log('beforeSaveCell : ' + cellname);
         },
         afterSaveCell: function (rowid, cellname, value, iRow, iCol) {
             $("#jqGrid").jqGrid().trigger('reloadGrid');
@@ -278,16 +270,11 @@ $(document).ready(function () {
 
     $("#jqGrid").tooltip();
 
-
-
-
-
     $('a.colmenu').click(function (event) {
         //event.stopPropagation();
         event.preventDefault();
         // Do something
     });
-
 
     function initDateEdit(elem, options) {
         //console.log(options);
@@ -305,7 +292,6 @@ $(document).ready(function () {
 
     };
 
-
     function currentStepFormatter(cellvalue, options, rowObject) {
         var thisCellVal = '';
 
@@ -320,7 +306,6 @@ $(document).ready(function () {
         return thisCellVal;
     }
 
- 
     function dispositionFormatter(cellvalue, options, rowObject) {
 
         var notes = "";
@@ -347,9 +332,6 @@ $(document).ready(function () {
 
         return thisCellVal;
     }
-
-  
-
 });
 
 

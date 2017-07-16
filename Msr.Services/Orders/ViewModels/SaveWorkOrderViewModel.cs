@@ -10,11 +10,10 @@ namespace Msr.Services.Orders.ViewModels
 {
     public class SaveWorkOrderViewModel
     {
+        public string FillId { get; set; }
         public string PurchaseItemId { get; set; }
-        public string CustPurchNum { get; set; }
-        [Required]
-        public string Qty { get; set; }
-        public string DueDate { get; set; }
+        public string ColumnName { get; set; }
+        public string Value { get; set; }
         public string NTLogin { get; set; }
     }
 }

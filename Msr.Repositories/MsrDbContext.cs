@@ -7,6 +7,7 @@ using Msr.Models.Tasks;
 using Msr.Models.TimeZones;
 using Msr.Models.Users;
 using Msr.Repositories.Configurations;
+using Msr.Models.Files;
 
 namespace Msr.Repositories
 {
@@ -43,7 +44,8 @@ namespace Msr.Repositories
             modelBuilder.Entity<PartTypesView>().ToTable("Portal_PartTypesView");
             modelBuilder.Entity<PartType>().ToTable("A_PART_TYPES_HISTORY");
             modelBuilder.Entity<Part>().ToTable("A_PARTS_HISTORY");
-            modelBuilder.Entity<ProceduresView>().ToTable("Portal_ProceduresView");
+            modelBuilder.Entity<ProcedureTypesView>().ToTable("Portal_ProcedureTypesView");
+            modelBuilder.Entity<FileView>().ToTable("Portal_FilesView");
 
         }
 
@@ -67,8 +69,9 @@ namespace Msr.Repositories
         public DbSet<PartType> PartTypes { get; set; }
         public DbSet<Part> Parts { get; set; }
         public DbSet<Company> Companies { get; set; }
-        public DbSet<ProceduresView> Procedures { get; set; }
+        public DbSet<ProcedureTypesView> ProcedureTypes { get; set; }
         public DbSet<VerbType> VerbTypes { get; set; }
-        
+        public DbSet<FileView> FIleViews { get; set; }
+
     }
 }

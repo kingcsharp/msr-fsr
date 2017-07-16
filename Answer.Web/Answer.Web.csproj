@@ -176,6 +176,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\FilesController.cs" />
     <Compile Include="Controllers\NotesController.cs" />
     <Compile Include="Controllers\PartsController.cs" />
     <Compile Include="Controllers\PartsReportingController.cs" />
@@ -184,7 +185,7 @@
     <Compile Include="Controllers\BuyerController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\PrintOtherController.cs" />
-    <Compile Include="Controllers\ProceduresController.cs" />
+    <Compile Include="Controllers\ProcedureTypesController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\WipController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -407,6 +408,7 @@
     <Content Include="assets\js\grids\buyer_grid.js" />
     <Content Include="assets\js\grids\engineer.js" />
     <Content Include="assets\js\grids\client-user.js" />
+    <Content Include="assets\js\grids\files.js" />
     <Content Include="assets\js\grids\master-user.js" />
     <Content Include="assets\js\help_form.js" />
     <Content Include="assets\js\hopscotch.js" />
@@ -716,9 +718,10 @@
     <Content Include="Views\PrintOther\_ViewWorkReportTechnicalSummaryTsr.cshtml" />
     <Content Include="Views\PrintOther\_ViewWorkReportPurchaseSummaryTsr.cshtml" />
     <Content Include="Views\Shared\_Images.cshtml" />
-    <Content Include="Views\Procedures\Create.cshtml" />
-    <Content Include="Views\Procedures\Edit.cshtml" />
-    <Content Include="Views\Procedures\Index.cshtml" />
+    <Content Include="Views\ProcedureTypes\Create.cshtml" />
+    <Content Include="Views\ProcedureTypes\Edit.cshtml" />
+    <Content Include="Views\ProcedureTypes\Index.cshtml" />
+    <Content Include="Views\Files\Index.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -728,6 +731,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="assets\css\dropzone\" />
+    <Folder Include="assets\js\dropzone\" />
     <Folder Include="ViewModel\Images\" />
     <Folder Include="Views\Help\" />
   </ItemGroup>
