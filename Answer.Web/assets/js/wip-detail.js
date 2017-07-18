@@ -85,7 +85,6 @@ $(function() {
         $('#wipListModal').modal("hide");
     });
     
-    
 	var hasTimer = false;
 	// Init timer start
 	$('.start-timer-btn').on('click', function() {
@@ -103,7 +102,6 @@ $(function() {
 		$(this).addClass('hidden');
 		$('.pause-timer-btn, .remove-timer-btn').removeClass('hidden');
 	});
-
 
 	// Init timer pause
 	$('.pause-timer-btn').on('click', function() {
@@ -137,8 +135,6 @@ $(function() {
 		}
 	});
     
-    
-
 	$('#wipListModal').on('hidden.bs.modal', function (event) {
         $(this).data('bs.modal', null);
     });
@@ -158,7 +154,6 @@ $(function() {
             }
         });
     });
-
 
 	$('#wioDetailPrintTraveler').on('hidden.bs.modal', function (event) {
 	    $(this).data('bs.modal', null);
@@ -233,25 +228,42 @@ $(function() {
     });
 
     $('#carousel ul.slides li.step').on('click', function () {
+        loadStep(this);
+    });
 
-        var stepId = $(this).data("stepid");
-        var phStepId = $(this).data("phStepid");
-        var fillId = $(this).data("fill-id");
+    $('#btn-take-over-task').on('click', function () {
+        var id = $(this).data('id');
 
-        $('#step-' + stepId).html('<img src="/assets/img/loading.gif"  style="width:32px;height:32px;" />');
-        
         $.ajax({
-            type: "GET",
-            url: "/wip/GetWipStepDetails?stepId=" + stepId + "&phStepId=" + phStepId + "&fillId=" + fillId,
-            dataType: 'html',
-            success: function (data) {
-                $('#step-' + stepId).html(data);
+            type: "POST",
+            url: "/wip/AssumeStepsClick?fillId=" + id,
+            dataType: 'json',
+            success: function(data) {
+                location.reload();
             },
-            error: function () {
+            error: function() {
 
             }
         });
     });
+
+    $('#btn-cancel-steps').on('click', function() {
+        var id = $(this).data('id');
+
+        $.ajax({
+            type: "POST",
+            url: "/wip/CancelUnfinishedSteps?fillId=" + id,
+            dataType: 'json',
+            success: function(data) {
+                location.reload();
+            },
+            error: function() {
+
+            }
+        });
+    });
+
+    loadStep($('#carousel ul.slides li.step').first());
 });
 function openNav() {
     document.getElementById("wip-side-nav").style.width = "250px";
@@ -262,3 +274,22 @@ function closeNav() {
     document.getElementById("wip-side-nav").style.width = "0";
 }
 
+function loadStep(step) {
+    var stepId = $(step).data("stepid");
+    var phStepId = $(step).data("phstepid");
+    var fillId = $(step).data("fill-id");
+
+    $('#step-' + stepId).html('<img src="/assets/img/loading.gif"  style="width:32px;height:32px;" />');
+
+    $.ajax({
+        type: "GET",
+        url: "/wip/GetWipStepDetails?stepId=" + stepId + "&phStepId=" + phStepId + "&fillId=" + fillId,
+        dataType: 'html',
+        success: function (data) {
+            $('#step-' + stepId).html(data);
+        },
+        error: function () {
+
+        }
+    });
+}

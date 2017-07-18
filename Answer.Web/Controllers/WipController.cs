@@ -339,6 +339,21 @@ namespace Answer.Web.Controllers
             return Json("OK", JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
+        public ActionResult AssumeStepsClick(int fillId)
+        {
+            _orderService.AssumeSteps(fillId, "1618");
+
+            return Json("OK", JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult CancelUnfinishedSteps(int fillId)
+        {
+            _orderService.CancelUnfinishedSteps(fillId, "1618");
+
+            return Json("OK", JsonRequestBehavior.AllowGet);
+        }
 
         private List<DocumentView> GetDocViewModel(List<DocumentView> docs, OrderService orderService, int width)
         {
