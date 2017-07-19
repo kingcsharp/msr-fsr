@@ -5,9 +5,17 @@
         <input type="text" name="timer" class="form-control timer input-lg" placeholder="0 sec" width="120">
     </div>
     <div class="col-sm-6">
-        @if (Model.TaskEditDataResult.Status !="ACCEPTED")
+        @if (Model.TaskEditDataResult.Status != "ACCEPTED")
         {
             <button class="btn btn-primary btn-lg print-btn pull-left start-timer-btn" id="start-step"><i class="glyphicon glyphicon-step-forward"></i> Start</button>
+        }
+        else
+        {
+            <button class="btn btn-primary btn-lg print-btn pull-left show-timer-btn" id="show-step"><i class="glyphicon glyphicon-step-forward"></i> Show</button>
+            if (string.IsNullOrEmpty(Model.TaskEditDataResult.Assignee) && Model.TaskEditDataResult.Assignee != "16008")
+            {
+                <button class="btn btn-primary btn-lg print-btn pull-left show-timer-btn" id="assume-step"><i class="glyphicon glyphicon-step-forward"></i> Assume</button>
+            }
         }
 
         <button class="btn btn-warning btn-lg print-btn pull-left pause-timer-btn hidden" id="pause-step"><i class="glyphicon glyphicon-pause"></i> Pause</button>
@@ -22,56 +30,56 @@
 </div>
 
 <script>
-    
-        $('#start-step').on('click', function () {
 
-            StepStartClick();
+    $('#start-step').on('click', function() {
+
+        StepStartClick();
+    });
+
+    $('#done-step').on('click', function() {
+
+        StepDoneClick();
+    });
+
+    $('#ncrModal').on('hidden.bs.modal', function(event) {
+        $(this).data('bs.modal', null);
+    });
+
+    $('#ncrModal').on('show.bs.modal', function(event) {
+        var button = $(event.relatedTarget);
+        var id = button.data('id');
+        var modal = $(this);
+
+        $.ajax({
+            type: "GET",
+            url: '/wip/getncrmodel?id=' + id,
+            dataType: 'html',
+            success: function(data) {
+                modal.find('.modal-body').html(data);
+            },
+            error: function() {
+
+            }
         });
-
-        $('#done-step').on('click', function () {
-
-            StepDoneClick();
-        });
-
-        $('#ncrModal').on('hidden.bs.modal', function (event) {
-            $(this).data('bs.modal', null);
-        });
-
-        $('#ncrModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget);
-            var id = button.data('id');
-            var modal = $(this);
-
-            $.ajax({
-                type: "GET",
-                url: '/wip/getncrmodel?id=' + id,
-                dataType: 'html',
-                success: function (data) {
-                    modal.find('.modal-body').html(data);
-                },
-                error: function () {
-
-                }
-            });
-        });
+    });
 
 
-        function StepDoneClick() {
+    function StepDoneClick() {
         var stepId = @Model.StepId;
 
         $.ajax({
             type: "POST",
             url: "/wip/StepDoneClick?stepId=" + stepId,
             dataType: 'json',
-            success: function (data) {
+            success: function(data) {
                 location.reload();
             },
-            error: function () {
+            error: function() {
 
             }
         });
-        }  
-    
+    }
+
     function StepStartClick() {
 
         var stepId = @Model.StepId;
@@ -88,4 +96,5 @@
             }
         });
     }
+
 </script>

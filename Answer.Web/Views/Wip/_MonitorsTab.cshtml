@@ -3,7 +3,7 @@
 @using (Html.BeginForm("UpdateStepMonitor", "Wip", FormMethod.Post, new { @class = "form form-horizontal", role = "form" }))
 {
     @Html.HiddenFor(x => x.Id)
-    @Html.HiddenFor(x => x.Tolerance)
+    
     @Html.HiddenFor(x => x.TheSaurusId)
     @Html.HiddenFor(x => x.StrNtLogin)
     @Html.HiddenFor(x => x.FillId)
@@ -16,20 +16,34 @@
         </div>
     </div>
 
-
-    <div class="form-group">
-        <label class="col-lg-2 control-label">Target:</label>
-        <div class="col-lg-2">
-            @(Model.Target ?? "Yes")
+    if (Model.Monitor_Type == "USER_NUMBER")
+    {
+        <div class="form-group">
+            <label class="col-lg-2 control-label">Target:</label>
+            <div class="col-lg-2">
+                @(Model.Target ?? "Yes")
+                @Html.HiddenFor(x => x.Target)
+            </div>
         </div>
-    </div>
-
-    <div class="form-group">
-        <label class="col-lg-2 control-label">Result:</label>
-        <div class="col-lg-2">
-            @Html.DropDownListFor(x=>x.Print_Result, Model.ResultList, new { @class = "form-control" })
+        <div class="form-group">
+            <label class="col-lg-2 control-label">Should Be:</label>
+            <div class="col-lg-2">
+                @Html.TextBoxFor(x => x.Should_Be)
+            </div>
         </div>
-    </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label">Tolerance:</label>
+            <div class="col-lg-2">
+                @Html.TextBoxFor(x => x.Tolerance)
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label">Result:</label>
+            <div class="col-lg-2">
+                @Html.DropDownListFor(x => x.Print_Result, Model.ResultList, new { @class = "form-control" })
+            </div>
+        </div>
+    }
 
     <div class="form-group">
         <label class="col-lg-2 control-label">Comment:</label>
@@ -46,7 +60,7 @@
            1
         </div>
     </div>
-
+    
     <div class="form-group">
         <label class="col-lg-2 control-label">Monitor Type:</label>
         <div class="col-lg-2">

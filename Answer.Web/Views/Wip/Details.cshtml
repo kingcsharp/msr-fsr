@@ -37,9 +37,9 @@
                     </select>
                 </div>
                 <div class="wip-detail-item-controls">
-                    <button class="btn btn-danger btn-sm cancel-btn pull-right" data-toggle="modal" data-target="#widDetailCancelStepsModal"><i class="fa fa-close"></i> Cancel Remaining Steps</button>
-                    <button class="btn btn-warning btn-sm cancel-btn pull-right instruction-tooltip" data-toggle="modal" data-target="#widDetailTakeOver"
-                            data-toggle="tooltip" data-placement="top" data-html="true"
+                    <button id="btn-cancel-steps" data-id="@Model.FillId" class="btn btn-danger btn-sm cancel-btn pull-right" data-toggle="modal" data-target="#widDetailCancelStepsModal"><i class="fa fa-close"></i> Cancel Remaining Steps</button>
+                    <button data-id="@Model.FillId" class="btn btn-warning btn-sm cancel-btn pull-right instruction-tooltip" data-toggle="modal" data-target="#widDetailTakeOver"
+                            data-toggle="tooltip" data-placement="top" data-html="true" id="btn-take-over-task"
                             title="This button only displays when the currently viewed item is not owened by current technician">
                         <i class="fa fa-user"></i> Take Over this Task
                     </button>
@@ -122,7 +122,7 @@
 
                             if (step.Status == "CLOSED" || step.Status == "FINISHED")
                             {
-                                <li class="step @stepCss">
+                                <li class="step @stepCss" data-stepId="@step.StepId" data-phStepId="@step.PhStepId" data-fill-id="@Model.FillId">
                                     <div>@step.Description</div>
                                 </li>
                             }

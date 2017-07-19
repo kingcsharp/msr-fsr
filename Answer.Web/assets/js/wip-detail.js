@@ -239,29 +239,14 @@ $(function () {
         });
     });
 
+   
     $('.step-task').on('click', function () {
 
-        var stepId = $(this).data("stepid");
-
-
-            var phStepId = $(this).data("phStepid");
-            var fillId = $(this).data("fill-id");
-
-            $('#step-' + stepId).html('<img src="/assets/img/loading.gif"  style="width:32px;height:32px;" />');
-
-            $.ajax({
-                type: "GET",
-                url: "/wip/GetWipStepDetails?stepId=" + stepId + "&phStepId=" + phStepId + "&fillId=" + fillId,
-                dataType: 'html',
-                success: function(data) {
-                    $('#step-' + stepId).html(data);
-                },
-                error: function() {
-
-                }
-            });
-        
+        loadStep(this);
     });
+
+
+    loadStep($('#carousel ul.slides li.step').first());
 });
 function openNav() {
     document.getElementById("wip-side-nav").style.width = "250px";
@@ -272,3 +257,55 @@ function closeNav() {
     document.getElementById("wip-side-nav").style.width = "0";
 }
 
+$('#btn-take-over-task').on('click', function () {
+    var id = $(this).data('id');
+
+    $.ajax({
+        type: "POST",
+        url: "/wip/AssumeStepsClick?fillId=" + id,
+        dataType: 'json',
+        success: function (data) {
+            location.reload();
+        },
+        error: function () {
+
+        }
+    });
+});
+
+
+$('#btn-cancel-steps').on('click', function () {
+    var id = $(this).data('id');
+
+    $.ajax({
+        type: "POST",
+        url: "/wip/CancelUnfinishedSteps?fillId=" + id,
+        dataType: 'json',
+        success: function (data) {
+            location.reload();
+        },
+        error: function () {
+
+        }
+    });
+});
+
+function loadStep(step) {
+    var stepId = $(step).data("stepid");
+    var phStepId = $(step).data("phstepid");
+    var fillId = $(step).data("fill-id");
+
+    $('#step-' + stepId).html('<img src="/assets/img/loading.gif"  style="width:32px;height:32px;" />');
+
+    $.ajax({
+        type: "GET",
+        url: "/wip/GetWipStepDetails?stepId=" + stepId + "&phStepId=" + phStepId + "&fillId=" + fillId,
+        dataType: 'html',
+        success: function (data) {
+            $('#step-' + stepId).html(data);
+        },
+        error: function () {
+
+        }
+    });
+}

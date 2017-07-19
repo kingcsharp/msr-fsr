@@ -563,6 +563,40 @@ namespace Msr.Services.Orders
             }
         }
 
+        public void AssumeSteps(int fillId, string login)
+        {
+            var p = new DynamicParameters();
+
+            p.Add("@RET_STATUS", dbType: DbType.String, direction: ParameterDirection.Output, size: 500);
+            p.Add("@MSGS", dbType: DbType.String, direction: ParameterDirection.Output, size: 50);
+            p.Add("@FILL_ID", fillId.ToString(), DbType.String, ParameterDirection.Input, size: 50);
+            p.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input, size: 50);
+
+            using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
+            {
+                var stepStartDoneTaskResult = conn.Query<StepStartTaskResult>("A_SP_FILL_CANCEL_UNFINISHED_STEPS", p, commandType: CommandType.StoredProcedure);
+
+                var status = p.Get<string>("RET_STATUS");
+            }
+        }
+
+        public void CancelUnfinishedSteps(int fillId, string login)
+        {
+            var p = new DynamicParameters();
+
+            p.Add("@RET_STATUS", dbType: DbType.String, direction: ParameterDirection.Output, size: 500);
+            p.Add("@MSGS", dbType: DbType.String, direction: ParameterDirection.Output, size: 50);
+            p.Add("@FILL_ID", fillId.ToString(), DbType.String, ParameterDirection.Input, size: 50);
+            p.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input, size: 50);
+
+            using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
+            {
+                var stepStartDoneTaskResult = conn.Query<StepStartTaskResult>("A_SP_FILL_CANCEL_UNFINISHED_STEPS", p, commandType: CommandType.StoredProcedure);
+
+                var status = p.Get<string>("RET_STATUS");
+            }
+        }
+
         private void FormatHtml(TsrDetailsResponse response)
         {
             foreach (var taskResult in response.TsrTaskResults)
