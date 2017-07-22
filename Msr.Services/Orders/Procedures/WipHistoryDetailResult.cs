@@ -1,4 +1,6 @@
-﻿namespace Msr.Services.Orders.Procedures
+﻿using System.Collections.Generic;
+
+namespace Msr.Services.Orders.Procedures
 {
     public class WipHistoryDetailResult
     {

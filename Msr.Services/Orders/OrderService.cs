@@ -9,6 +9,7 @@ using Msr.Repositories;
 using Msr.Services.Orders.Messaging;
 using System.Data.SqlClient;
 using System.Web.Configuration;
+using System.Web.Mvc;
 using Dapper;
 using EntityFrameworkExtras.EF6;
 using Msr.Services.Orders.Procedures;
@@ -112,7 +113,7 @@ namespace Msr.Services.Orders
         {
             try
             {
-                var detailsResponse = new TsrDetailsResponse();
+                var detailsResponse = new TsrDetailsResponse { FillId = fillId};
 
                 using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
                 {
@@ -499,6 +500,20 @@ namespace Msr.Services.Orders
                             {
                                 detailsResponse.MonitorTemplateResult = multi.Read<MonitorTemplateResult>().SingleOrDefault();
                             }
+
+                            if (detailsResponse.MonitorTemplateResult != null)
+                            {
+                                detailsResponse.MonitorTemplateResult.MonitorTemplateMultiChoices =
+                                    conn.Query<MonitorTemplateMultiChoiceResult>(
+                                        @"SELECT TXT AS Text, IS_ANSWER AS IsAnswer FROM A_MONITOR_TEMPLATES_MULT_CHOICE WHERE MONITOR_ID = @monitorId  ORDER BY ORD",
+                                        new {monitorId = detailsResponse.MonitorTemplateResult.Id})
+                                        .Select( x=> new SelectListItem
+                                        {
+                                            Value = x.Id,
+                                            Text = x.Text
+                                        }).ToList();
+                            }
+
                             break;
                         }
                     }

@@ -530,6 +530,7 @@
     <Content Include="assets\js\jquery.min.js" />
     <Content Include="assets\js\jquery.mockjax.js" />
     <Content Include="assets\js\jquery.mousewheel.js" />
+    <Content Include="assets\js\jquery.qrcode.js" />
     <Content Include="assets\js\list.js" />
     <Content Include="assets\js\main-menu.js" />
     <Content Include="assets\js\main.js" />
@@ -550,6 +551,7 @@
     <Content Include="assets\js\plugins\ui.multiselect.js" />
     <Content Include="assets\js\prod-planning.js" />
     <Content Include="assets\js\purchase_orders.js" />
+    <Content Include="assets\js\qrcode.js" />
     <Content Include="assets\js\runnable-procedures.js" />
     <Content Include="assets\js\select2.full.min.js" />
     <Content Include="assets\js\Templates\monitor-form.html" />

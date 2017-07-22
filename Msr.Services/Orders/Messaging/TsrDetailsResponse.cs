@@ -5,6 +5,7 @@ namespace Msr.Services.Orders.Messaging
 {
     public class TsrDetailsResponse
     {
+        public int FillId { get; set; }
         public List<TsrTaskResult> TsrTaskResults { get; set; }
 
         public TsrDetailsResponse()

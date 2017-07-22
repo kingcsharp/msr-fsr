@@ -211,7 +211,8 @@ $(function () {
 	    });
 	});
 
-    $('#display-report').on('click', function() {
+	$('#display-report').on('click', function () {
+	    $('#print-other-content').html('<img src="/assets/img/loading.gif"  style="width:32px;height:32px;" />');
         var id = $('.print-other-fill-id').val();
         var reportType = $('#PrintOtherId').val();
         
@@ -232,6 +233,8 @@ $(function () {
             dataType: 'html',
             success: function (data) {
                 $('#print-other-content').html(data);
+                $('#print-other-report').show();
+                $('#display-report').hide();
             },
             error: function () {
 

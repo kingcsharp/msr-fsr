@@ -1,15 +1,15 @@
 ﻿@model Answer.Web.ViewModel.Wip.PrintOtherViewModel
 
-@using (Html.BeginForm("AddUser", "User", FormMethod.Post, new {@class = "form form-horizontal", role = "form"}))
+@using (Html.BeginForm("AddUser", "User", FormMethod.Post, new { @class = "form form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
 
-    @Html.HiddenFor(x => x.FillId, new {@class = "print-other-fill-id"})
+    @Html.HiddenFor(x => x.FillId, new { @class = "print-other-fill-id" })
 
     <div class="form-group">
         <label class="col-lg-2 control-label">Report Type:</label>
         <div class="col-lg-6">
-            @Html.DropDownListFor(m => m.PrintOtherId, Model.PrintOtherList, new {@class = "form-control"})
+            @Html.DropDownListFor(m => m.PrintOtherId, Model.PrintOtherList, new { @class = "form-control" })
             @Html.ValidationMessageFor(m => m.PrintOtherId)
         </div>
     </div>
@@ -17,52 +17,52 @@
     <div class="form-group" id="work-report-filters" style="display: none">
         <table class="table">
             <tbody>
-            <tr>
-                <td>
-                    <div>Report Type:</div>
-                </td>
-                <td>
-                    <select id="TSR_TYPE" class="form-control" size="0">
-                        <option value="PURCHASE">Purchase Summary</option>
-                        <option value="SERVICE">Technical Summary</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div class="norm">Purchase Items:</div>
-                </td>
-                <td>
-                    <select id="PURCH_ITEM_ID" class="form-control" size="0" selectindex="@Model.PurchaseItemId">
-                        <option value=""></option>
-                        <option selected="selected" value="@Model.PurchaseItemId">@Model.PurchaseItemId</option>
-                    </select>
-                </td>
-            </tr>
-            <input type="hidden" name="PRINTABLE" value="YES">
-            <tr>
-                <td >
-                    <div class="norm">Show Procedure Steps?:</div>
-                </td>
-                <td >
-                    <select id="SHOW_STEPS" class="form-control" size="0">
-                        <option value="YES">Yes</option>
-                        <option value="NO">No</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>
+                <tr>
+                    <td>
+                        <div>Report Type:</div>
+                    </td>
+                    <td>
+                        <select id="TSR_TYPE" class="form-control" size="0">
+                            <option value="PURCHASE">Purchase Summary</option>
+                            <option value="SERVICE">Technical Summary</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="norm">Purchase Items:</div>
+                    </td>
+                    <td>
+                        <select id="PURCH_ITEM_ID" class="form-control" size="0" selectindex="@Model.PurchaseItemId">
+                            <option value=""></option>
+                            <option selected="selected" value="@Model.PurchaseItemId">@Model.PurchaseItemId</option>
+                        </select>
+                    </td>
+                </tr>
+                <input type="hidden" name="PRINTABLE" value="YES">
+                <tr>
+                    <td>
+                        <div class="norm">Show Procedure Steps?:</div>
+                    </td>
+                    <td>
+                        <select id="SHOW_STEPS" class="form-control" size="0">
+                            <option value="YES">Yes</option>
+                            <option value="NO">No</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
 
-                    <div class="norm">Show Shipping Procedure Purchase Items?:</div>
-                </td>
-                <td>
-                    <select id="SHOW_SHIPPING" class="form-control" size="0">
-                        <option value="YES">Yes</option>
-                        <option value="NO">No</option>
-                    </select>
-                </td>
-            </tr>
+                        <div class="norm">Show Shipping Procedure Purchase Items?:</div>
+                    </td>
+                    <td>
+                        <select id="SHOW_SHIPPING" class="form-control" size="0">
+                            <option value="YES">Yes</option>
+                            <option value="NO">No</option>
+                        </select>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>
@@ -76,17 +76,20 @@
     <div id="print-other-content"></div>
 }
 
-        <script>
-            $('#PrintOtherId').on('change', function () {
-                if (this.value == "WORK_REPORT") {
-                    $("#work-report-filters").show();
-                    $("#label-report-filters").hide();
-                } else if (this.value == "MONITOR_LABEL" || this.value == "PART_LABEL") {
-                    $("#work-report-filters").hide();
-                    $("#label-report-filters").show();
-                } else {
-                    $("#work-report-filters").hide();
-                    $("#label-report-filters").hide();
-                }
-            });
-        </script>
+<script>
+    $('#PrintOtherId').on('change', function () {
+        $("#print-other-content").html("");
+        $('#print-other-report').hide();
+        $('#display-report').show();
+        if (this.value == "WORK_REPORT") {
+            $("#work-report-filters").show();
+            $("#label-report-filters").hide();
+        } else if (this.value == "MONITOR_LABEL" || this.value == "PART_LABEL") {
+            $("#work-report-filters").hide();
+            $("#label-report-filters").show();
+        } else {
+            $("#work-report-filters").hide();
+            $("#label-report-filters").hide();
+        }
+    });
+</script>

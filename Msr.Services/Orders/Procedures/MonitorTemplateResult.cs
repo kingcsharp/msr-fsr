@@ -8,7 +8,12 @@ namespace Msr.Services.Orders.Procedures
     public class MonitorTemplateResult
     {
         public int FillId { get; set; }
+
         public string Id { get; set; }
+
+        public string Step_Id { get; set; }
+
+        public int Opinion { get; set; }
 
         public string Description { get; set; }
 
@@ -24,9 +29,9 @@ namespace Msr.Services.Orders.Procedures
 
         public string Releated_Object_Description { get; set; }
 
-        public string Hide_Target { get; set; }
+        public int Hide_Target { get; set; }
 
-        public string Use_Result { get; set; }
+        public int Use_Result { get; set; }
 
         public string Fail_Stop { get; set; }
 
@@ -62,9 +67,23 @@ namespace Msr.Services.Orders.Procedures
 
         public string StrNtLogin { get; set; }
 
+        public string Highest_Threshold { get; set; }
+
+        public string High_Threshold { get; set; }
+
+        public string Low_Threshold { get; set; }
+
+        public string Lowest_Threshold { get; set; }
+
+        public bool? Is_Passing { get; set; }
+
+        public string Mult_Choice_Answer { get; set; }
+
         public List<SelectListItem> ResultList { get; set; }
 
         public List<SelectListItem> FailActionList { get; set; }
+
+        public List<SelectListItem> MonitorTemplateMultiChoices { get; set; }
 
         public void Setup()
         {

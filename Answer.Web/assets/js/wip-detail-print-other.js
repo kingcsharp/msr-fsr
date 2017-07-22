@@ -65,6 +65,8 @@ $(function() {
             dataType: 'html',
             success: function (data) {
                 $('#print-other-content').html(data);
+                $('#print-other-report').show();
+                $('#display-report').hide();
             },
             error: function () {
 
