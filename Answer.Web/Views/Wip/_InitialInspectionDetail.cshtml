@@ -1,4 +1,4 @@
-﻿@model List<Msr.Services.Orders.Procedures.TaskItemPart>
+﻿@model Msr.Services.Orders.Messaging.WipStepDetailsResponse
 
 @{
     var cnt = 0;
@@ -7,32 +7,55 @@
 <table class="table table-responsive table-bordered">
 
     <tbody>
-    @{
-        int i = 0;
-    }
-    @foreach (var step in Model)
-    {
-
-        if ((step.Status == "REQUESTED" || step.Status == "ACCEPTED") && !string.IsNullOrWhiteSpace(step.Print_Order))
+        @{
+            int i = 0;
+        }
+        @foreach (var step in Model.TaskItemParts)
         {
-            <tr>
-                <th nowrap style="text-align: right; width: 180px;">Assignee: </th>
-                <td>@step.LATEST_REQUESTEE_NAME</td>
-            </tr>
-            <tr>
-                <td colspan=2>
-                    @Html.Raw(step.Description)
-                </td>
-            </tr>
-            <tr>
-                <th nowrap style="text-align: right">Related Documents:</th>
-                <td><a target="_blank" href="../theory/viewTheory.asp?objID=&amp;ID=95845&amp;printable=trueBro">500228219 REX - Non Cu Run-Card</a></td>
-            </tr>
-            if (i == 5) { return;}
+
+            if ((step.Status == "REQUESTED" || step.Status == "ACCEPTED") && !string.IsNullOrWhiteSpace(step.Print_Order))
+            {
+                <tr>
+                    <th nowrap style="text-align: right; width: 180px;">Assignee: </th>
+                    <td>@step.LATEST_REQUESTEE_NAME</td>
+                </tr>
+                <tr>
+                    <td colspan=2>
+                        @Html.Raw(step.Description)
+                    </td>
+                </tr>
+                if (i == 5)
+                {
+                    return;
+                }
 
                 i = i + 1;
             }
         }
-
     </tbody>
 </table>
+<div class="row">
+
+    @if (Model.ReferenceFiles.Any())
+    {
+        <div class="col-lg-12">
+            <label>Related Documents:</label>
+            @foreach (var file in Model.ReferenceFiles)
+            {
+                <a href="asp/documents/viewDocument.asp?docID=@file.Doc_Id">@file.Name</a><br />
+            }
+        </div>
+    }
+
+    @if (Model.ReferenceTheories.Any())
+    {
+        <div class="col-lg-12">
+            <label>Related Documents:</label>
+            @foreach (var file in Model.ReferenceTheories)
+            {
+                <a href="../theory/viewTheory.asp?objID=@file.TheoryId">@file.TheoryName</a>
+                <br />
+            }
+        </div>
+    }
+</div>

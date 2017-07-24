@@ -252,6 +252,25 @@
     </div>
 
     <div class="row">
-        <input class="btn-info" value="Save" type="submit" />
+        <input class="btn-info" value="Save" type="submit"/>
+        <input class="btn-info" id="monitor-save-close" value="Save & Close Task" type="button" />
     </div>
 }
+<script>
+    $("#monitor-save-close").on('click', function () {
+        debugger;
+        var form = $(this).parents('form:first');
+        $.ajax({
+            type: "POST",
+            url: "/wip/UpdateStepMonitorAndClose",
+            dataType: 'json',
+            data: form.serialize(),
+            success: function (data) {
+                location.reload();
+            },
+            error: function () {
+
+            }
+        });
+    });
+</script>

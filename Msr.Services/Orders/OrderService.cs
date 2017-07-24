@@ -482,6 +482,14 @@ namespace Msr.Services.Orders
                     }
                 }
 
+                var p2 = new DynamicParameters();
+                p2.Add("@procStepID", phStepId, DbType.String, ParameterDirection.Input);
+                p2.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input);
+
+                detailsResponse.ReferenceFiles = conn.Query<GetReferenceFiles>("A_SP_PROCEDURE_GET_REFERENCE_FILES", p2, commandType: CommandType.StoredProcedure).ToList();
+
+                detailsResponse.ReferenceTheories = conn.Query<GetReferenceTheories>("SELECT l.THEORY_ID AS TheoryId,t.NAME AS TheoryName FROM A_PROCEDURE_STEP_THEORY_LINK l, A_V_THEORY_APPROVED_DATA t WHERE l.THEORY_ID = t.ID AND l.PROC_STEP_ID = @stepId", new { stepId = phStepId }, commandType: CommandType.Text).ToList();
+
                 if (detailsResponse.TaskEditDataResult.Status != "FINISHED")
                 {
                     foreach (var task in detailsResponse.TaskItemParts)
@@ -542,6 +550,37 @@ namespace Msr.Services.Orders
             using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
             {
                 int i = conn.Execute("Portal_StepSaveMonitor", p, commandType: CommandType.StoredProcedure);
+            }
+        }
+
+        public string CloseTask(string taskId, string login)
+        {
+            var p = new DynamicParameters();
+
+            p.Add("@RET_STATUS", dbType: DbType.String, direction: ParameterDirection.Output, size: 500);
+            p.Add("@MSGS", dbType: DbType.String, direction: ParameterDirection.Output, size: 50);
+            p.Add("@ID", taskId, DbType.String, ParameterDirection.Input, size: 50);
+            p.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input, size: 50);
+
+            using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
+            {
+                var stepStartDoneTaskResult = conn.Query<StepStartTaskResult>("A_SP_TASK_QUICK_CLOSE", p, commandType: CommandType.StoredProcedure);
+
+                var status = p.Get<string>("RET_STATUS");
+
+                var p1 = new DynamicParameters();
+                p1.Add("@userId", login, DbType.String, ParameterDirection.Input, size: 50);
+                conn.Execute("Portal_DeleteNavHistoryForUser", p1, commandType: CommandType.StoredProcedure);
+
+                var p2 = new DynamicParameters();
+
+                p2.Add("@retVal", dbType: DbType.String, direction: ParameterDirection.Output, size: 500);
+                p2.Add("@retMSG", dbType: DbType.String, direction: ParameterDirection.Output, size: 50);
+                p2.Add("@TASK_ID", taskId, DbType.String, ParameterDirection.Input, size: 50);
+                p2.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input, size: 50);
+                var newTextMonitorResult = conn.Query<StepStartTaskResult>("A_SP_MONITORS_CHECK_TASK_FOR_NEW_TEXT_MONITOR_RESULTS", p2, commandType: CommandType.StoredProcedure);
+                string returnValue = p2.Get<string>("retVal");
+                return returnValue;
             }
         }
 
@@ -607,6 +646,23 @@ namespace Msr.Services.Orders
             using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
             {
                 var stepStartDoneTaskResult = conn.Query<StepStartTaskResult>("A_SP_FILL_CANCEL_UNFINISHED_STEPS", p, commandType: CommandType.StoredProcedure);
+
+                var status = p.Get<string>("RET_STATUS");
+            }
+        }
+
+        public void AssumeTask(int taskId, string login)
+        {
+            var p = new DynamicParameters();
+
+            p.Add("@RET_STATUS", dbType: DbType.String, direction: ParameterDirection.Output, size: 500);
+            p.Add("@MSGS", dbType: DbType.String, direction: ParameterDirection.Output, size: 50);
+            p.Add("@ID", taskId.ToString(), DbType.String, ParameterDirection.Input, size: 50);
+            p.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input, size: 50);
+
+            using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
+            {
+                var stepStartDoneTaskResult = conn.Query<StepStartTaskResult>("A_SP_TASK_ASSUME_CONTROL", p, commandType: CommandType.StoredProcedure);
 
                 var status = p.Get<string>("RET_STATUS");
             }

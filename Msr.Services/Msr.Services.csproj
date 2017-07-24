@@ -140,6 +140,8 @@
     <Compile Include="Orders\Messaging\WipStepDetailsResponse.cs" />
     <Compile Include="Orders\Messaging\WorkOrderDetailsResponse.cs" />
     <Compile Include="Orders\OrderService.cs" />
+    <Compile Include="Orders\Procedures\GetReferenceTheories.cs" />
+    <Compile Include="Orders\Procedures\GetReferenceFiles.cs" />
     <Compile Include="Orders\Procedures\MonitorTemplateMultiChoiceResult.cs" />
     <Compile Include="Orders\Procedures\StepStartTaskResult.cs" />
     <Compile Include="Orders\Procedures\MonitorTemplateResult.cs" />

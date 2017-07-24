@@ -263,7 +263,8 @@ namespace Answer.Web.Controllers
             var orderService = new OrderService();
             if (ModelState.IsValid)
             {
-                model.NTLogin = "1618";
+                var loggedUserId = User.Identity.GetUserId();
+                model.NTLogin = loggedUserId;
                 var response = false;
 
                 if (model.ColumnName == "CustPurchNum")
@@ -304,8 +305,8 @@ namespace Answer.Web.Controllers
         public ActionResult GetWipStepDetails(int stepId, int fillId, int? phStepId)
         {
             ViewBag.FillId = fillId;
-
-            var response = _orderService.GetWipStepDetails(stepId, fillId, "1618", phStepId);
+            var loggedUserId = User.Identity.GetUserId();
+            var response = _orderService.GetWipStepDetails(stepId, fillId, loggedUserId, phStepId);
 
             response?.MonitorTemplateResult?.Setup();
 
@@ -330,9 +331,25 @@ namespace Answer.Web.Controllers
         }
 
         [HttpPost]
+        public ActionResult UpdateStepMonitorAndClose(MonitorTemplateResult monitorTemplate)
+        {
+            if (ModelState.IsValid)
+            {
+                var loggedUserId = User.Identity.GetUserId();
+                _orderService.UpdateStepMonitor(monitorTemplate);
+                var returnValue = _orderService.CloseTask(monitorTemplate.TaskId, loggedUserId);
+                if(returnValue  == "NEW_TEXT")
+                    return RedirectToAction("Details", new { id = monitorTemplate.FillId });//"../monitors/addNewTextResults.asp?TASK_ID="
+            }
+
+            return RedirectToAction("Details", new { id = monitorTemplate.FillId });//"asp/workerScreen/refreshProgress.asp"
+        }
+
+        [HttpPost]
         public ActionResult StepDoneClick(int stepId)
         {
-            _orderService.StepDone(stepId, "1618");
+            var loggedUserId = User.Identity.GetUserId();
+            _orderService.StepDone(stepId, loggedUserId);
 
             return Json("OK", JsonRequestBehavior.AllowGet);
         }
@@ -340,15 +357,24 @@ namespace Answer.Web.Controllers
         [HttpPost]
         public ActionResult StepStartClick(int stepId)
         {
-            _orderService.StepStart(stepId, "1618");
+            var loggedUserId = User.Identity.GetUserId();
+            _orderService.StepStart(stepId, loggedUserId);
 
             return Json("OK", JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
-        public ActionResult AssumeStepsClick(int fillId)
+        public ActionResult AssumeTaskClick(int taskId)
         {
-            _orderService.AssumeSteps(fillId, "1618");
+            var loggedUserId = User.Identity.GetUserId();
+            _orderService.AssumeTask(taskId, loggedUserId);
+
+            return Json("OK", JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult TaskAssumeClick(int taskId)
+        {
 
             return Json("OK", JsonRequestBehavior.AllowGet);
         }
@@ -356,7 +382,8 @@ namespace Answer.Web.Controllers
         [HttpPost]
         public ActionResult CancelUnfinishedSteps(int fillId)
         {
-            _orderService.CancelUnfinishedSteps(fillId, "1618");
+            var loggedUserId = User.Identity.GetUserId();
+            _orderService.CancelUnfinishedSteps(fillId, loggedUserId);
 
             return Json("OK", JsonRequestBehavior.AllowGet);
         }
