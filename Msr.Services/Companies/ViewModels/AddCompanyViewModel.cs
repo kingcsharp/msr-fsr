@@ -75,7 +75,7 @@ namespace Msr.Services.Companies.ViewModels
         {
             CompanyTypes = new List<SelectListItem>
             {
-               new SelectListItem
+                new SelectListItem
                 {
                     Text = "Company",
                     Value = "COMPANY",

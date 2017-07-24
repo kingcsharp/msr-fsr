@@ -97,6 +97,7 @@
     <Compile Include="Companies\Company.cs" />
     <Compile Include="Companies\CompanyView.cs" />
     <Compile Include="Files\FileView.cs" />
+    <Compile Include="Files\ListFileView.cs" />
     <Compile Include="Locations\LocationView.cs" />
     <Compile Include="Notes\Note.cs" />
     <Compile Include="Orders\UploadedImageView.cs" />

@@ -1,4 +1,4 @@
-﻿@model Msr.Web.ViewModel.Engineering.EngineeringViewModel
+﻿@model  Msr.Web.ViewModel.Engineering.EngineeringViewModel
 @{
     ViewBag.Title = "Parts";
 }
@@ -60,7 +60,7 @@
                     colmenu: true,
                     coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                     searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                    width: 250,
+                    width: 300,
                     align: 'left'
                 },
                 {
@@ -71,7 +71,6 @@
                     coloptions: { sorting: false, columns: true, filtering: false, seraching: true, grouping: false, freeze: false },
                     searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                     align: 'left',
-                    width: 100,
                     hidedlg: false
                 },
                 {
@@ -79,6 +78,36 @@
                     name: 'CompanyName',
                     index: 'CompanyName',
                     colmenu: false,
+                    coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                    searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                    align: 'left'
+                },
+                {
+                    label: 'Consumable',
+                    name: 'Consumable',
+                    index: 'Consumable',
+                    colmenu: false,
+                    width: 50,
+                    coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                    searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                    align: 'left'
+                },
+                {
+                    label: 'Spare',
+                    name: 'Spare',
+                    index: 'Spare',
+                    colmenu: false,
+                    width: 50,
+                    coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                    searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                    align: 'left'
+                },
+                {
+                    label: 'Ordering Unit',
+                    name: 'Unit',
+                    index: 'Unit',
+                    colmenu: false,
+                    width: 50,
                     coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                     searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                     align: 'left'
@@ -140,6 +169,7 @@
         });
         function PartEditFormatter(cellvalue, options, rowObject) {
             thisCellVal = '<a href="/parts/edit/' + rowObject.ObjId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i> Edit</a>';
+            thisCellVal += '<a href="/parts/Details/' + rowObject.ObjId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-eye"></i> Details</a>';
             return thisCellVal;
         }
         $('#search').click(function () {

@@ -162,7 +162,7 @@ namespace Answer.Web.Controllers
                 //Need to dynamic 
                 model.NTLogin = "1618";
 
-                var response = locationService.Save(model: model);
+                var response = locationService.Save(model);
 
                 if (response)
                 {

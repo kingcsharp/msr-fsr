@@ -2,6 +2,7 @@
 using Msr.Repositories;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,7 +19,15 @@ namespace Msr.Services.Files
         }
         public IQueryable<FileView> GetFilesQueryable()
         {
-            return _dbContext.FIleViews;
+            return _dbContext.FIleViews.AsQueryable();
+        }
+        public IQueryable<ListFileView> SelectListedFiles(string id)
+        {
+            var ObjIdParm = new SqlParameter("@ObjId", id);
+
+            var fileListView = _dbContext.Database.SqlQuery<ListFileView>("Portal_SelectListedFiles @ObjId", ObjIdParm).AsQueryable();
+
+            return fileListView;
         }
     }
 }

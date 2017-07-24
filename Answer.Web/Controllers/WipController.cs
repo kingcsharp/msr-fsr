@@ -263,7 +263,8 @@ namespace Answer.Web.Controllers
             var orderService = new OrderService();
             if (ModelState.IsValid)
             {
-                model.NTLogin = "1618";
+                model.NTLogin = GetUserId();
+
                 var response = false;
 
                 if (model.ColumnName == "CustPurchNum")
@@ -305,7 +306,7 @@ namespace Answer.Web.Controllers
         {
             ViewBag.FillId = fillId;
 
-            var response = _orderService.GetWipStepDetails(stepId, fillId, "1618", phStepId);
+            var response = _orderService.GetWipStepDetails(stepId, fillId, GetUserId(), phStepId);
 
             response?.MonitorTemplateResult?.Setup();
 
@@ -332,7 +333,7 @@ namespace Answer.Web.Controllers
         [HttpPost]
         public ActionResult StepDoneClick(int stepId)
         {
-            _orderService.StepDone(stepId, "1618");
+            _orderService.StepDone(stepId, GetUserId());
 
             return Json("OK", JsonRequestBehavior.AllowGet);
         }
@@ -340,7 +341,7 @@ namespace Answer.Web.Controllers
         [HttpPost]
         public ActionResult StepStartClick(int stepId)
         {
-            _orderService.StepStart(stepId, "1618");
+            _orderService.StepStart(stepId, GetUserId());
 
             return Json("OK", JsonRequestBehavior.AllowGet);
         }
@@ -348,7 +349,7 @@ namespace Answer.Web.Controllers
         [HttpPost]
         public ActionResult AssumeStepsClick(int fillId)
         {
-            _orderService.AssumeSteps(fillId, "1618");
+            _orderService.AssumeSteps(fillId, GetUserId());
 
             return Json("OK", JsonRequestBehavior.AllowGet);
         }
@@ -356,7 +357,7 @@ namespace Answer.Web.Controllers
         [HttpPost]
         public ActionResult CancelUnfinishedSteps(int fillId)
         {
-            _orderService.CancelUnfinishedSteps(fillId, "1618");
+            _orderService.CancelUnfinishedSteps(fillId, GetUserId());
 
             return Json("OK", JsonRequestBehavior.AllowGet);
         }

@@ -112,6 +112,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseNotification.cs" />
+    <Compile Include="Companies\CompanyService.cs" />
     <Compile Include="Companies\Procedures\AddCompanyProcedure.cs" />
     <Compile Include="Companies\ViewModels\AddCompanyViewModel.cs" />
     <Compile Include="Files\FileService.cs" />
@@ -169,13 +170,13 @@
     <Compile Include="Orders\Procedures\FileSearchResult.cs" />
     <Compile Include="Orders\TaskService.cs" />
     <Compile Include="Orders\PeopleService.cs" />
-    <Compile Include="Orders\CompanyService.cs" />
     <Compile Include="Orders\ViewModels\ImageViewModel.cs" />
     <Compile Include="Orders\ViewModels\SaveWorkItemImageViewModel.cs" />
     <Compile Include="Orders\ViewModels\SaveWorkOrderViewModel.cs" />
     <Compile Include="Parts\Messages\AddPartTypesTaskRequest.cs" />
     <Compile Include="Parts\PartsService.cs" />
     <Compile Include="Parts\PartTypeService.cs" />
+    <Compile Include="Parts\Procedures\SaveFileProcedure.cs" />
     <Compile Include="Parts\Procedures\SavePartProcedure.cs" />
     <Compile Include="Parts\Procedures\SavePartTypeProcedure.cs" />
     <Compile Include="Parts\ViewModels\AddPartTypesViewModel.cs" />

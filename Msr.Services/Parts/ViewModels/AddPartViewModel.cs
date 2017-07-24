@@ -5,12 +5,21 @@ using System.ComponentModel.DataAnnotations;
 using System.Web;
 using System.Web.Mvc;
 using Msr.Models.Parts;
+using Msr.Services.Files;
+using System.Linq;
 
 namespace Msr.Services.Parts.ViewModels
 {
     public class AddPartViewModel
     {
-
+        public AddPartViewModel()
+        {
+            ListReferenceFiles = new List<SelectListItem>();
+            ListPictureFiles = new List<SelectListItem>();
+            ListReferenceTheories = new List<SelectListItem>();
+            PictureFiles = new List<string>();
+            ReferenceTheories = new List<string>();
+        }
         public string ObjID { get; set; }
 
         public string Company { get; set; }
@@ -86,6 +95,12 @@ namespace Msr.Services.Parts.ViewModels
         [DisplayName("Reference Theories :")]
         public List<string> ReferenceTheories { get; set; }
 
+        public IList<SelectListItem> ListReferenceFiles { get; set; }
+
+        public IList<SelectListItem> ListPictureFiles { get; set; }
+
+        public IList<SelectListItem> ListReferenceTheories { get; set; }
+
         public IEnumerable<SelectListItem> OrderingUnits { get; set; }
 
         public IEnumerable<SelectListItem> ShippingWeightTypes { get; set; }
@@ -98,8 +113,10 @@ namespace Msr.Services.Parts.ViewModels
 
         public IEnumerable<SelectListItem> Availabilities { get; set; }
 
+        public IEnumerable<SelectListItem> PartsTypes { get; set; }
 
-        public void Setup()
+
+        public void Setup(FileService fileService, PartsService partsService)
         {
             OrderingUnits = new List<SelectListItem>
             {
@@ -133,7 +150,7 @@ namespace Msr.Services.Parts.ViewModels
 
             ShippingWeightTypes = new List<SelectListItem>
             {
-               new SelectListItem
+                new SelectListItem
                 {
                     Text = "Ounces",
                     Value = "WT_OZ",
@@ -153,7 +170,7 @@ namespace Msr.Services.Parts.ViewModels
             };
             CreateProds = new List<SelectListItem>
             {
-               new SelectListItem
+                new SelectListItem
                 {
                     Text = "No Product",
                     Value = "0",
@@ -168,7 +185,7 @@ namespace Msr.Services.Parts.ViewModels
             };
             Spares = new List<SelectListItem>
             {
-               new SelectListItem
+                new SelectListItem
                 {
                     Text = "No",
                     Value = "SPARE_NO",
@@ -179,12 +196,12 @@ namespace Msr.Services.Parts.ViewModels
                     Text = "Level 1",
                     Value = "SPARE_1"
                 },
-                 new SelectListItem
+                new SelectListItem
                 {
                     Text = "Level 2",
                     Value = "SPARE_2"
                 },
-                  new SelectListItem
+                new SelectListItem
                 {
                     Text = "Level 3",
                     Value = "SPARE_3"
@@ -193,7 +210,7 @@ namespace Msr.Services.Parts.ViewModels
             };
             Consumables = new List<SelectListItem>
             {
-               new SelectListItem
+                new SelectListItem
                 {
                     Text = "No",
                     Value = "CON_NO",
@@ -219,6 +236,20 @@ namespace Msr.Services.Parts.ViewModels
                     Value="0",
                 }
             };
+            PartsTypes = partsService.GetPartsQueryable().ToList().Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.Id.ToString()
+            }).OrderBy(o => o.Text).ToList();
+
+            ////ListReferenceFiles = fileService.SelectListedFiles(ObjID).Select(x => new SelectListItem
+            ////{
+            ////    Text = x.Name,
+            ////    Value = x.LinkedDocId.ToString(),
+            ////    Selected = true
+            ////}).OrderBy(o => o.Text).ToList();
+
+            ////ReferenceTheories = fileService.SelectListedFiles(ObjID).Select(x => x.LinkedDocId).ToList();
         }
 
         public AddPartViewModel MapToDto(Part model)

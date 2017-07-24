@@ -28,87 +28,90 @@
             </h2>
             <div class="col-lg-10">
                 <section class="panel">
-                <div class="panel-body bio-graph-info">
-                    
-                    @Html.Partial("Message")
+                    <div class="panel-body bio-graph-info">
 
-                    @using (Html.BeginForm("Edit", "Parts", FormMethod.Post, new { @class = "form form-horizontal", role = "form", enctype = "multipart/form-data" }))
-                    {
-                        @Html.AntiForgeryToken()
-                        
-                           <div class="form-group">
-                                @Html.LabelFor(model => model.CompanyPartNumber, htmlAttributes: new {@class = "control-label col-md-3"})
+                        @Html.Partial("Message")
+
+                        @using (Html.BeginForm("Edit", "Parts", FormMethod.Post, new { @class = "form form-horizontal", role = "form", enctype = "multipart/form-data" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.HiddenFor(model => model.ObjID)
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.CompanyPartNumber, htmlAttributes: new { @class = "control-label col-md-3" })
                                 <div class="col-md-5">
-                                    @Html.EditorFor(model => model.CompanyPartNumber, new {htmlAttributes = new {@class = "form-control"}})
-                                    @Html.ValidationMessageFor(model => model.CompanyPartNumber, "", new {@class = "text-danger"})
+                                    @Html.EditorFor(model => model.CompanyPartNumber, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.CompanyPartNumber, "", new { @class = "text-danger" })
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                @Html.LabelFor(model => model.Name, htmlAttributes: new {@class = "control-label col-md-3"})
+                                @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-3" })
                                 <div class="col-md-5">
-                                    @Html.EditorFor(model => model.Name, new {htmlAttributes = new {@class = "form-control"}})
-                                    @Html.ValidationMessageFor(model => model.Name, "", new {@class = "text-danger"})
+                                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                @Html.LabelFor(model => model.ReferenceFiles, htmlAttributes: new {@class = "control-label col-md-3"})
+                                @Html.LabelFor(model => model.ReferenceFiles, htmlAttributes: new { @class = "control-label col-md-3" })
                                 <div class="col-md-5">
-                                    <div style="width: 96%; float: left;">@Html.ListBoxFor(m => m.ReferenceFiles, new List<SelectListItem>(), new { @class = "form-control", multiple = "multiple" })
-                                        @Html.ValidationMessageFor(model => model.ReferenceFiles, "", new {@class = "text-danger"})</div>
-                                    <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceFiles" data-toggle="modal" data-target="#select-images" ><i class="icon fa fa-file"></i></span> </div>
-                                </div>  
-                            </div>
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.PictureFiles, htmlAttributes: new {@class = "control-label col-md-3"})
-                            <div class="col-md-5">
-                                <div style="width: 96%; float: left;">@Html.ListBoxFor(m => m.PictureFiles, new List<SelectListItem>(), new { @class = "form-control", multiple = "multiple" })
-                                    <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="PictureFiles" data-toggle="modal" data-target="#select-images" ><i class="icon fa fa-file"></i></span> </div>
+                                    <div style="width: 96%; float: left;">
+                                        @Html.ListBoxFor(m => m.ReferenceFiles, Model.ListReferenceFiles, new { @class = "form-control", multiple = "multiple" })
+                                        @Html.ValidationMessageFor(model => model.ReferenceFiles, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceFiles" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span> </div>
                                 </div>
                             </div>
-                        </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.PictureFiles, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-5">
+                                    <div style="width: 96%; float: left;">
+                                        @Html.ListBoxFor(m => m.PictureFiles, new List<SelectListItem>(), new { @class = "form-control", multiple = "multiple" })
+                                        <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="PictureFiles" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span> </div>
+                                    </div>
+                                </div>
+                            </div>
                             <button type="button" class="btn btn-info collapsed" data-toggle="collapse" data-target="#AdvanceItems">Show Advance Items</button>
                             <div id="AdvanceItems" class="collapse">
                                 <div class="form-group">
-                                    @Html.LabelFor(model => model.Unit, htmlAttributes: new {@class = "control-label col-md-3"})
+                                    @Html.LabelFor(model => model.Unit, htmlAttributes: new { @class = "control-label col-md-3" })
                                     <div class="col-md-5">
-                                        @Html.DropDownListFor(model => model.Unit, Model.OrderingUnits, new {@class = "form-control"})
-                                        @Html.ValidationMessageFor(model => model.Unit, "", new {@class = "text-danger"})
+                                        @Html.DropDownListFor(model => model.Unit, Model.OrderingUnits, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.Unit, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
 
 
                                 <div class="form-group">
-                                    @Html.LabelFor(model => model.UnitShippingWeight, htmlAttributes: new {@class = "control-label col-md-3"})
+                                    @Html.LabelFor(model => model.UnitShippingWeight, htmlAttributes: new { @class = "control-label col-md-3" })
                                     <div class="col-md-5">
-                                        @Html.EditorFor(model => model.UnitShippingWeight, new {htmlAttributes = new {@class = "form-control"}})
-                                        @Html.ValidationMessageFor(model => model.UnitShippingWeight, "", new {@class = "text-danger"})
+                                        @Html.EditorFor(model => model.UnitShippingWeight, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.UnitShippingWeight, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
 
                                 <div class="form-group">
-                                    @Html.LabelFor(model => model.WeightType, htmlAttributes: new {@class = "control-label col-md-3"})
+                                    @Html.LabelFor(model => model.WeightType, htmlAttributes: new { @class = "control-label col-md-3" })
                                     <div class="col-md-5">
-                                        @Html.DropDownListFor(model => model.WeightType, Model.ShippingWeightTypes, new {@class = "form-control"})
-                                        @Html.ValidationMessageFor(model => model.WeightType, "", new {@class = "text-danger"})
+                                        @Html.DropDownListFor(model => model.WeightType, Model.ShippingWeightTypes, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.WeightType, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
 
 
                                 <div class="form-group">
-                                    @Html.LabelFor(model => model.CreateProd, htmlAttributes: new {@class = "control-label col-md-3"})
+                                    @Html.LabelFor(model => model.CreateProd, htmlAttributes: new { @class = "control-label col-md-3" })
                                     <div class="col-md-5">
-                                        @Html.DropDownListFor(model => model.CreateProd, Model.CreateProds, new {@class = "form-control"})
-                                        @Html.ValidationMessageFor(model => model.CreateProd, "", new {@class = "text-danger"})
+                                        @Html.DropDownListFor(model => model.CreateProd, Model.CreateProds, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.CreateProd, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
 
                                 <div class="form-group">
-                                    @Html.LabelFor(model => model.ProcVerb, htmlAttributes: new {@class = "control-label col-md-3"})
+                                    @Html.LabelFor(model => model.ProcVerb, htmlAttributes: new { @class = "control-label col-md-3" })
                                     <div class="col-md-5">
-                                        @Html.EditorFor(model => model.ProcVerb, new {htmlAttributes = new {@class = "form-control"}})
-                                        @Html.ValidationMessageFor(model => model.ProcVerb, "", new {@class = "text-danger"})
+                                        @Html.EditorFor(model => model.ProcVerb, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.ProcVerb, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
 
@@ -118,95 +121,95 @@
                                     <div class="col-md-5">
                                         <div style="width: 96%; float: left;">
                                             @Html.ListBoxFor(m => m.ReferenceTheories, new List<SelectListItem>(), new { @class = "form-control", multiple = "multiple" })
-                                        <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceTheories" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span> </div>
-                                    </div>
+                                            <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceTheories" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span> </div>
+                                        </div>
 
-                                </div>
-                            </div>
-
-
-                                <div class="form-group">
-                                    @Html.LabelFor(model => model.PartType, htmlAttributes: new {@class = "control-label col-md-3"})
-                                    <div class="col-md-5">
-                                        @Html.EditorFor(model => model.PartType, new {htmlAttributes = new {type = "file", name = "Files", multiple = "multiple"}})
-                                        @Html.ValidationMessageFor(model => model.PartType, "", new {@class = "text-danger"})
                                     </div>
                                 </div>
 
+
                                 <div class="form-group">
-                                    @Html.LabelFor(model => model.Spare, htmlAttributes: new {@class = "control-label col-md-3"})
+                                    @Html.LabelFor(model => model.PartType, htmlAttributes: new { @class = "control-label col-md-3" })
                                     <div class="col-md-5">
-                                        @Html.DropDownListFor(model => model.Spare, Model.Spares, new {@class = "form-control"})
-                                        @Html.ValidationMessageFor(model => model.Spare, "", new {@class = "text-danger"})
+                                        @Html.DropDownListFor(model => model.PartType, Model.PartsTypes, new { @class = "form-control selectparts" })
+                                        @Html.ValidationMessageFor(model => model.PartType, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
 
                                 <div class="form-group">
-                                    @Html.LabelFor(model => model.Consumable, htmlAttributes: new {@class = "control-label col-md-3"})
+                                    @Html.LabelFor(model => model.Spare, htmlAttributes: new { @class = "control-label col-md-3" })
                                     <div class="col-md-5">
-                                        @Html.DropDownListFor(model => model.Consumable, Model.Consumables, new {@class = "form-control"})
-                                        @Html.ValidationMessageFor(model => model.Consumable, "", new {@class = "text-danger"})
+                                        @Html.DropDownListFor(model => model.Spare, Model.Spares, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.Spare, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
 
                                 <div class="form-group">
-                                    @Html.LabelFor(model => model.CustomerSeeAvailability, htmlAttributes: new {@class = "control-label col-md-3"})
+                                    @Html.LabelFor(model => model.Consumable, htmlAttributes: new { @class = "control-label col-md-3" })
                                     <div class="col-md-5">
-                                        @Html.DropDownListFor(model => model.CustomerSeeAvailability, Model.Availabilities, new {@class = "form-control"})
-                                        @Html.ValidationMessageFor(model => model.CustomerSeeAvailability, "", new {@class = "text-danger"})
+                                        @Html.DropDownListFor(model => model.Consumable, Model.Consumables, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.Consumable, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
 
                                 <div class="form-group">
-                                    @Html.LabelFor(model => model.SupplierSeeAvailability, htmlAttributes: new {@class = "control-label col-md-3"})
+                                    @Html.LabelFor(model => model.CustomerSeeAvailability, htmlAttributes: new { @class = "control-label col-md-3" })
                                     <div class="col-md-5">
-                                        @Html.DropDownListFor(model => model.SupplierSeeAvailability, Model.Availabilities, new {@class = "form-control"})
-                                        @Html.ValidationMessageFor(model => model.SupplierSeeAvailability, "", new {@class = "text-danger"})
+                                        @Html.DropDownListFor(model => model.CustomerSeeAvailability, Model.Availabilities, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.CustomerSeeAvailability, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
 
                                 <div class="form-group">
-                                    @Html.LabelFor(model => model.SupplierSeeInstallBase, htmlAttributes: new {@class = "control-label col-md-3"})
+                                    @Html.LabelFor(model => model.SupplierSeeAvailability, htmlAttributes: new { @class = "control-label col-md-3" })
                                     <div class="col-md-5">
-                                        @Html.DropDownListFor(model => model.SupplierSeeInstallBase, Model.Availabilities, new {@class = "form-control"})
-                                        @Html.ValidationMessageFor(model => model.SupplierSeeInstallBase, "", new {@class = "text-danger"})
+                                        @Html.DropDownListFor(model => model.SupplierSeeAvailability, Model.Availabilities, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.SupplierSeeAvailability, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
 
                                 <div class="form-group">
-                                    @Html.LabelFor(model => model.InternalEqualParts, htmlAttributes: new {@class = "control-label col-md-3"})
+                                    @Html.LabelFor(model => model.SupplierSeeInstallBase, htmlAttributes: new { @class = "control-label col-md-3" })
                                     <div class="col-md-5">
-                                        @Html.EditorFor(model => model.InternalEqualParts, new {htmlAttributes = new {type = "file", name = "Files", multiple = "multiple"}})
-                                        @Html.ValidationMessageFor(model => model.InternalEqualParts, "", new {@class = "text-danger"})
+                                        @Html.DropDownListFor(model => model.SupplierSeeInstallBase, Model.Availabilities, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.SupplierSeeInstallBase, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.InternalEqualParts, htmlAttributes: new { @class = "control-label col-md-3" })
+                                    <div class="col-md-5">
+                                        @Html.EditorFor(model => model.InternalEqualParts, new { htmlAttributes = new { type = "file", name = "Files", multiple = "multiple" } })
+                                        @Html.ValidationMessageFor(model => model.InternalEqualParts, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    @Html.LabelFor(model => model.ExternalEqualParts, htmlAttributes: new {@class = "control-label col-md-3"})
+                                    @Html.LabelFor(model => model.ExternalEqualParts, htmlAttributes: new { @class = "control-label col-md-3" })
                                     <div class="col-md-5">
-                                        @Html.EditorFor(model => model.ExternalEqualParts, new {htmlAttributes = new {type = "file", name = "Files", multiple = "multiple"}})
-                                        @Html.ValidationMessageFor(model => model.ExternalEqualParts, "", new {@class = "text-danger"})
+                                        @Html.EditorFor(model => model.ExternalEqualParts, new { htmlAttributes = new { type = "file", name = "Files", multiple = "multiple" } })
+                                        @Html.ValidationMessageFor(model => model.ExternalEqualParts, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.LabelFor(model => model.SubParts, htmlAttributes: new {@class = "control-label col-md-3"})
+                                @Html.LabelFor(model => model.SubParts, htmlAttributes: new { @class = "control-label col-md-3" })
                                 <div class="col-md-5">
-                                    @Html.TextBoxFor(model => model.SubParts, new {@class = "form-control", @Value = "NONE", @readonly = "readonly"})
-                                    @Html.ValidationMessageFor(model => model.SubParts, "", new {@class = "text-danger"})
+                                    @Html.TextBoxFor(model => model.SubParts, new { @class = "form-control", @Value = "NONE", @readonly = "readonly" })
+                                    @Html.ValidationMessageFor(model => model.SubParts, "", new { @class = "text-danger" })
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <div class="col-md-offset-2 col-md-10">
-                                    <input type="submit" value="Submit" class="btn btn-success"/>
-                                    @Html.ActionLink("Cancel", "Index", null, new {@class = "btn btn-warning"})
+                                    <input type="submit" value="Submit" class="btn btn-success" />
+                                    @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-warning" })
                                 </div>
                             </div>
-                       
-                    }
+
+                        }
                     </div>
                 </section>
-                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -224,7 +227,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-info" onclick="SelectIds()"> Select</button>
-                <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close-o"></i> Close</button>
+                <button type="button" class="btn btn-warning closeClick" data-dismiss="modal"><i class="fa fa-close-o"></i> Close</button>
             </div>
         </div>
     </div>
@@ -233,11 +236,16 @@
 @section scripts
 {
 
-
     <script>
+        $(document).ready(function () {
+            $(".selectparts").select2({
+                placeholder: "Select Part Type",
+                allowClear: true
+            });
+        });
 
         $('#select-images').on('show.bs.modal',
-            function(event) {
+            function (event) {
 
                 var button = $(event.relatedTarget);
                 var callBackId = button.data('call-back-id');
@@ -247,10 +255,10 @@
                     type: "GET",
                     url: '/Files/GetFiles?callBackId=' + callBackId,
                     dataType: 'html',
-                    success: function(data) {
+                    success: function (data) {
                         modal.find('.modal-body').html(data);
                     },
-                    error: function() {
+                    error: function () {
 
                     }
                 });
@@ -260,19 +268,37 @@
 
         function SelectIds() {
 
-            $(".selected-file").each(function(index) {
+            $(".selected-file").each(function (index) {
 
                 if ($(this).is(":checked")) {
-
                     var ids = $(this).val().split('|');
 
                     var callBackId = $('#target-control-id').val();
+                    var options = $('#' + callBackId + '')[0].options;
 
-                    $('#' + callBackId + '').append($('<option></option>').val(ids[0]).html(ids[1]));
+                    var optionsArray = $.map(options, function (elem) {
+                        return (elem.value);
+                    });
+
+                    if (optionsArray.length > 0) {
+
+                        if ($.inArray(ids[0], optionsArray) != -1) {
+                            // found it
+                        }
+                        else {
+                            $('#' + callBackId + '').append($('<option></option>').val(ids[0]).html(ids[1]));
+                            $('#' + callBackId + ' option').prop('selected', true);
+                        }
+
+                    }
+                    else {
+                        $('#' + callBackId + '').append($('<option></option>').val(ids[0]).html(ids[1]));
+                        $('#' + callBackId + ' option').prop('selected', true);
+                    }
                 }
 
             });
-
+            $('.closeClick').click();
 
         }
 
