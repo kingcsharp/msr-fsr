@@ -1,19 +1,15 @@
 ﻿using Msr.Models.Procedures;
 using Msr.Services.jqGrid;
 using Msr.Services.Procedures;
-using Msr.Services.Procedures.ViewModels;
 using Msr.Web.ViewModel.Engineering;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace Answer.Web.Controllers
 {
     public class ProceduresController : Controller
     {
-        // GET: Procedure
         public ActionResult Index()
         {
             var viewModel = new EngineeringViewModel();
@@ -22,41 +18,47 @@ namespace Answer.Web.Controllers
 
             return View(viewModel);
         }
+
         public ActionResult ProceduresData(JqGridParam param)
         {
             var procedureService = new ProcedureService();
 
-            var totalRows = procedureService.GetProcedures();
+            var totalRows = procedureService.GetProceduresQueryable();
 
             if (param.where != null && param.where.rules.Any())
             {
                 foreach (var rule in param.where.rules)
                 {
-                    if (rule.field == nameof(ProceduresView.Id))
+                    if (rule.field == nameof(ProcedureView.Id))
                     {
                         totalRows = totalRows.Where(x => x.Id == rule.data.ToLower());
                     }
-                    else if (rule.field == nameof(ProceduresView.Name))
+                    else if (rule.field == nameof(ProcedureView.Name))
                     {
                         totalRows = totalRows.Where(x => x.Name.ToLower().Contains(rule.data.ToLower()));
                     }
-                    else if (rule.field == nameof(ProceduresView.VerbTypeName))
+                    else if (rule.field == nameof(ProcedureView.VerbTypeName))
                     {
                         totalRows = totalRows.Where(x => x.VerbTypeName.ToLower().Contains(rule.data.ToLower()));
                     }
-                    else if (rule.field == nameof(ProceduresView.Revision))
+                    else if (rule.field == nameof(ProcedureView.Revision))
                     {
                         var rev = Convert.ToInt32(rule.data);
                         totalRows = totalRows.Where(x => x.Revision == rev);
                     }
-                    else if (rule.field == nameof(ProceduresView.Status))
+                    else if (rule.field == nameof(ProcedureView.Status))
                     {
-                        totalRows = totalRows.Where(x => x.Status.ToLower().Contains(rule.data.ToLower()));
+                        var statusList = rule.data.Split(',').Select(x => x.Trim().ToLower());
+
+                        if (statusList.Any())
+                        {
+                            totalRows = totalRows.Where(x => statusList.Contains(x.Status.ToLower()));
+                        }
                     }
                 }
             }
 
-            var orderBy = nameof(ProceduresView.Id);
+            var orderBy = nameof(ProcedureView.Id);
             var orderDirection = "asc";
 
             if (!string.IsNullOrWhiteSpace(param.sortColumn))
@@ -91,93 +93,94 @@ namespace Answer.Web.Controllers
 
             return Json(json, JsonRequestBehavior.AllowGet);
         }
-        public ActionResult Create()
-        {
-            var saveProcedureViewModel = new SaveProcedureViewModel();
+        
+        ////public ActionResult Create()
+        ////{
+        ////    var saveProcedureViewModel = new SaveProcedureViewModel();
 
-            //need to be dynamic
-            var NTLogin = "1618";
-            saveProcedureViewModel.Setup(new ProcedureService(), NTLogin);
+        ////    //need to be dynamic
+        ////    var NTLogin = "1618";
+        ////    saveProcedureViewModel.Setup(new ProcedureService(), NTLogin);
 
-            return View(saveProcedureViewModel);
-        }
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Create(SaveProcedureViewModel model)
-        {
-            var procedureService = new ProcedureService();
+        ////    return View(saveProcedureViewModel);
+        ////}
+        ////[AcceptVerbs(HttpVerbs.Post)]
+        ////public ActionResult Create(SaveProcedureViewModel model)
+        ////{
+        ////    var procedureService = new ProcedureService();
 
-            //need to be dynamic
-            var NTLogin = "1618";
-            
-            if (ModelState.IsValid)
-            {
-                var response = procedureService.Save(model);
-                if (response)
-                {
-                    TempData["SuccessMessage"] = "Verb Type has been created successfully.";
+        ////    //need to be dynamic
+        ////    var NTLogin = "1618";
 
-                    return RedirectToAction("Index");
-                }
-                else
-                {
-                    TempData["ErrorMessage"] = "Something went wrong.";
-                    
-                    model.Setup(new ProcedureService(), NTLogin);
+        ////    if (ModelState.IsValid)
+        ////    {
+        ////        var response = procedureService.Save(model);
+        ////        if (response)
+        ////        {
+        ////            TempData["SuccessMessage"] = "Verb Type has been created successfully.";
 
-                    return View(model);
-                }
-            }
+        ////            return RedirectToAction("Index");
+        ////        }
+        ////        else
+        ////        {
+        ////            TempData["ErrorMessage"] = "Something went wrong.";
 
-            
-            model.Setup(new ProcedureService(), NTLogin);
+        ////            model.Setup(new ProcedureService(), NTLogin);
 
-            return View(model);
-        }
-        public ActionResult Edit(string Id)
-        {
-            var saveProcedureViewModel = new SaveProcedureViewModel();
-            var procedureService = new ProcedureService();
-
-            var model = procedureService.GetVerbTypeById(Id: Id);
-
-            //need to be dynamic
-            var NTLogin = "1618";
-            saveProcedureViewModel = saveProcedureViewModel.MapToDto(model);
-            saveProcedureViewModel.Setup(new ProcedureService(), NTLogin);
-            
-            return View(saveProcedureViewModel);
-        }
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Edit(SaveProcedureViewModel model)
-        {
-            var procedureService = new ProcedureService();
-
-            //need to be dynamic
-            var NTLogin = "1618";
-
-            if (ModelState.IsValid)
-            {
-                var response = procedureService.Edit(model);
-                if (response)
-                {
-                    TempData["SuccessMessage"] = "Verb Type has been created successfully.";
-
-                    return RedirectToAction("Index");
-                }
-                else
-                {
-                    TempData["ErrorMessage"] = "Something went wrong.";
-
-                    model.Setup(new ProcedureService(), NTLogin);
-
-                    return View(model);
-                }
-            }
+        ////            return View(model);
+        ////        }
+        ////    }
 
 
-            model.Setup(new ProcedureService(), NTLogin);
+        ////    model.Setup(new ProcedureService(), NTLogin);
 
-            return View(model);
-        }
+        ////    return View(model);
+        ////}
+        ////public ActionResult Edit(string Id)
+        ////{
+        ////    var saveProcedureViewModel = new SaveProcedureViewModel();
+        ////    var procedureService = new ProcedureService();
+
+        ////    var model = procedureService.GetVerbTypeById(Id: Id);
+
+        ////    //need to be dynamic
+        ////    var NTLogin = "1618";
+        ////    saveProcedureViewModel = saveProcedureViewModel.MapToDto(model);
+        ////    saveProcedureViewModel.Setup(new ProcedureService(), NTLogin);
+
+        ////    return View(saveProcedureViewModel);
+        ////}
+        ////[AcceptVerbs(HttpVerbs.Post)]
+        ////public ActionResult Edit(SaveProcedureViewModel model)
+        ////{
+        ////    var procedureService = new ProcedureService();
+
+        ////    //need to be dynamic
+        ////    var NTLogin = "1618";
+
+        ////    if (ModelState.IsValid)
+        ////    {
+        ////        var response = procedureService.Edit(model);
+        ////        if (response)
+        ////        {
+        ////            TempData["SuccessMessage"] = "Verb Type has been created successfully.";
+
+        ////            return RedirectToAction("Index");
+        ////        }
+        ////        else
+        ////        {
+        ////            TempData["ErrorMessage"] = "Something went wrong.";
+
+        ////            model.Setup(new ProcedureService(), NTLogin);
+
+        ////            return View(model);
+        ////        }
+        ////    }
+
+
+        ////    model.Setup(new ProcedureService(), NTLogin);
+
+        ////    return View(model);
+        ////}
     }
 }

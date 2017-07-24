@@ -8,6 +8,9 @@ using Msr.Models.TimeZones;
 using Msr.Models.Users;
 using Msr.Repositories.Configurations;
 using Msr.Models.Files;
+using Msr.Models.Locations;
+using Msr.Models.Procedure;
+using Msr.Models.Regions;
 
 namespace Msr.Repositories
 {
@@ -46,6 +49,8 @@ namespace Msr.Repositories
             modelBuilder.Entity<Part>().ToTable("A_PARTS_HISTORY");
             modelBuilder.Entity<ProcedureTypesView>().ToTable("Portal_ProcedureTypesView");
             modelBuilder.Entity<FileView>().ToTable("Portal_FilesView");
+            modelBuilder.Entity<RegionsView>().ToTable("Portal_RegionsView");
+            modelBuilder.Entity<LocationView>().ToTable("Portal_LocationsView");
 
         }
 
@@ -65,13 +70,17 @@ namespace Msr.Repositories
         public DbSet<TimeZoneView> TimeZoneView { get; set; }
         public DbSet<MonitorsWithTaskAndResult> MonitorsWithTaskAndResults { get; set; }
         public DbSet<PartsView> PartsViews { get; set; }
+        public DbSet<RegionsView> RegionsViews { get; set; }
         public DbSet<PartTypesView> PartTypesViews { get; set; }
         public DbSet<PartType> PartTypes { get; set; }
         public DbSet<Part> Parts { get; set; }
         public DbSet<Company> Companies { get; set; }
         public DbSet<ProcedureTypesView> ProcedureTypes { get; set; }
         public DbSet<VerbType> VerbTypes { get; set; }
+        public DbSet<ProcedureView> Procedurs { get; set; }
         public DbSet<FileView> FIleViews { get; set; }
+        public DbSet<LocationView> LocationViews { get; set; }
+
 
     }
 }
