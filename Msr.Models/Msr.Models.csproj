@@ -97,6 +97,7 @@
     <Compile Include="Companies\Company.cs" />
     <Compile Include="Companies\CompanyView.cs" />
     <Compile Include="Files\FileView.cs" />
+    <Compile Include="Locations\LocationView.cs" />
     <Compile Include="Notes\Note.cs" />
     <Compile Include="Orders\UploadedImageView.cs" />
     <Compile Include="Orders\UserSummary.cs" />
@@ -111,10 +112,12 @@
     <Compile Include="Parts\PartsWithTaskAndResult.cs" />
     <Compile Include="Parts\PartType.cs" />
     <Compile Include="Parts\PartTypesView.cs" />
-    <Compile Include="Procedures\ProceduresView.cs" />
-    <Compile Include="Procedures\VerbType.cs" />
-    <Compile Include="Procedures\VerbTypes.cs" />
+    <Compile Include="Procedures\ProcedureView.cs" />
+    <Compile Include="ProcedureTypes\ProcedureTypesView.cs" />
+    <Compile Include="ProcedureTypes\VerbType.cs" />
+    <Compile Include="ProcedureTypes\VerbTypes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Regions\RegionsView.cs" />
     <Compile Include="Tasks\ReportTypeConstants.cs" />
     <Compile Include="Tasks\MonitorTypeConstants.cs" />
     <Compile Include="Tasks\MonitorsWithTaskAndResult.cs" />

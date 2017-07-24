@@ -1,11 +1,11 @@
-﻿using Msr.Models.Procedures;
-using Msr.Services.jqGrid;
-using Msr.Services.Procedures;
-using Msr.Services.Procedures.ViewModels;
+﻿using Msr.Services.jqGrid;
+using Msr.Services.ProcedureTypes;
+using Msr.Services.ProcedureTypes.ViewModels;
 using Msr.Web.ViewModel.Engineering;
 using System;
 using System.Linq;
 using System.Web.Mvc;
+using Msr.Models.Procedure;
 
 namespace Answer.Web.Controllers
 {
@@ -19,11 +19,12 @@ namespace Answer.Web.Controllers
 
             return View(viewModel);
         }
+
         public ActionResult ProceduresData(JqGridParam param)
         {
             var procedureTypesService = new ProcedureTypesService();
 
-            var totalRows = procedureTypesService.GetProcedures();
+            var totalRows = procedureTypesService.GetProceduresTypesQueryable();
 
             if (param.where != null && param.where.rules.Any())
             {
@@ -88,22 +89,24 @@ namespace Answer.Web.Controllers
 
             return Json(json, JsonRequestBehavior.AllowGet);
         }
+
         public ActionResult Create()
         {
-            var saveProcedureViewModel = new SaveProcedureViewModel();
+            var saveProcedureViewModel = new SaveProcedureTypesViewModel();
 
             var NTLogin = "1618";
             saveProcedureViewModel.Setup(new ProcedureTypesService(), NTLogin);
 
             return View(saveProcedureViewModel);
         }
+
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Create(SaveProcedureViewModel model)
+        public ActionResult Create(SaveProcedureTypesViewModel model)
         {
             var procedureService = new ProcedureTypesService();
 
-            var NTLogin = "1618";
-            
+            var ntLogin = "1618";
+
             if (ModelState.IsValid)
             {
                 var response = procedureService.Save(model);
@@ -116,37 +119,40 @@ namespace Answer.Web.Controllers
                 else
                 {
                     TempData["ErrorMessage"] = "Something went wrong.";
-                    
-                    model.Setup(new ProcedureTypesService(), NTLogin);
+
+                    model.Setup(new ProcedureTypesService(), ntLogin);
 
                     return View(model);
                 }
             }
 
-            
-            model.Setup(new ProcedureTypesService(), NTLogin);
+
+            model.Setup(new ProcedureTypesService(), ntLogin);
 
             return View(model);
         }
-        public ActionResult Edit(string Id)
+
+        public ActionResult Edit(string id)
         {
-            var saveProcedureViewModel = new SaveProcedureViewModel();
+            var saveProcedureViewModel = new SaveProcedureTypesViewModel();
             var procedureService = new ProcedureTypesService();
 
-            var model = procedureService.GetVerbTypeById(Id: Id);
+            var model = procedureService.GetVerbTypeById(id);
 
             var NTLogin = "1618";
+
             saveProcedureViewModel = saveProcedureViewModel.MapToDto(model);
             saveProcedureViewModel.Setup(new ProcedureTypesService(), NTLogin);
-            
+
             return View(saveProcedureViewModel);
         }
+
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Edit(SaveProcedureViewModel model)
+        public ActionResult Edit(SaveProcedureTypesViewModel model)
         {
             var procedureService = new ProcedureTypesService();
 
-            var NTLogin = "1618";
+            var ntLogin = "1618";
 
             if (ModelState.IsValid)
             {
@@ -161,14 +167,14 @@ namespace Answer.Web.Controllers
                 {
                     TempData["ErrorMessage"] = "Something went wrong.";
 
-                    model.Setup(new ProcedureTypesService(), NTLogin);
+                    model.Setup(new ProcedureTypesService(), ntLogin);
 
                     return View(model);
                 }
             }
 
 
-            model.Setup(new ProcedureTypesService(), NTLogin);
+            model.Setup(new ProcedureTypesService(), ntLogin);
 
             return View(model);
         }

@@ -6,10 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Msr.Services.Procedures.Procedures
+namespace Msr.Services.ProcedureTypes.Procedures
 {
     [StoredProcedure("A_SP_TT_VERBS_UPDATE_ONE_VERB")]
-    public class SaveProcedureProcedure
+    public class SaveProcedureTypesProcedure
     {
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "newObjID", Direction = ParameterDirection.Output)]
         public string NewObjId { get; set; }

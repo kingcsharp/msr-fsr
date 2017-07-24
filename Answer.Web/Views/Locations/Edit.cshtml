@@ -1,0 +1,131 @@
+﻿@model Msr.Services.Locations.ViewModels.SaveLocationVM
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+
+<div class="container-fluid">
+    <div class="side-body padding-top">
+        <div class="row">
+            <h2 class="page-header">
+                Edit Location
+                <div class=" pull-right" data-toggle="modal">
+                    <!-- Split button -->
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-warning">Action</button>
+                        <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="caret"></span>
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a href="~/parts/deletePart/@Model.ObjectId">Delete</a></li>
+                        </ul>
+                    </div>
+
+                </div>
+            </h2>
+            <div class="col-lg-10">
+                <section class="panel">
+                    <div class="panel-body bio-graph-info">
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+                            <div class="form-horizontal addpart">
+
+                                @Html.HiddenFor(model => model.ObjectId)
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-5">
+                                        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Parent, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-5">
+                                        @Html.DropDownListFor(model => model.Parent, Model.Parents, "Select Parent", new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.Parent, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Address1, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-5">
+                                        @Html.EditorFor(model => model.Address1, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.Address1, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Address2, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-5">
+                                        @Html.EditorFor(model => model.Address2, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.Address2, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.City, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-5">
+                                        @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.State, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-5">
+                                        @Html.EditorFor(model => model.State, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.State, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Country, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-5">
+                                        @Html.DropDownListFor(model => model.Country, Model.Countries, "Select Country", new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.Country, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.PostalCode, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-5">
+                                        @Html.EditorFor(model => model.PostalCode, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.PostalCode, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Region, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-5">
+                                        @Html.DropDownListFor(model => model.Region, Model.Regions, "Select Region", new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.Region, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.InternalAddress, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-5">
+                                        @Html.EditorFor(model => model.InternalAddress, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.InternalAddress, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-md-offset-2 col-md-5">
+                                        <input type="submit" value="Submit" class="btn btn-success" />
+                                        @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-warning" })
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>

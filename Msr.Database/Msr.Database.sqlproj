@@ -2757,5 +2757,8 @@
     <Build Include="dbo\Views\Portal\Portal_FilesView.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_GetPurchaseItemDetails.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_GetDeliveryTsrDetails.sql" />
+    <Build Include="dbo\Views\Portal\Portal_LocationsView.sql" />
+    <Build Include="dbo\Views\Portal\Portal_RegionsView.sql" />
+    <Build Include="dbo\Views\Portal\Portal_ProceduresView.sql" />
   </ItemGroup>
 </Project>
