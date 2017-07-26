@@ -163,7 +163,7 @@ $(document).ready(function () {
                     freeze: false
                 },
                 stype: "select",
-                searchoptions: { value: ":[All];In Progress:In Progress;Waiting to Start:Waiting to Start;Completed:Completed;Finished:Finished" },
+                searchoptions: { value: ":[All];ACCEPTED:In Progress;PENDING_PARENT_ACCEPTANCE:Waiting to Start;CLOSED,FINISHED:Completed" },
                 formatter: currentStepFormatter,
                 align: 'center'
             },

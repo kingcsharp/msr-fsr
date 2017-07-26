@@ -108,7 +108,15 @@ namespace Answer.Web.Controllers
                     {
                         if (rule.data != "ALL")
                         {
-                            totalRows = totalRows.Where(x => x.Status.ToLower().Contains(rule.data.ToLower()));
+                            var statusList = rule.data.Split(',').Select(x => x.Trim().ToLower());
+
+                            if (statusList.Any())
+                            {
+                                totalRows = totalRows.Where(x => statusList.Contains(x.Status.ToLower()));
+
+                            }
+
+                            
                         }
                     }
                     else if (rule.field == nameof(WorkOrderView.Notes))
