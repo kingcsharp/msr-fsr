@@ -5,8 +5,8 @@ using System.Web;
 using System.Web.Mvc;
 using Msr.Models.Orders;
 using Msr.Models.Users;
-using Msr.Services.Orders;
 using Msr.Services.Users;
+using Msr.Services.Companies;
 
 namespace Msr.Web.ViewModel
 {

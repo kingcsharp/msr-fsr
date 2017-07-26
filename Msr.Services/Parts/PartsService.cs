@@ -1,14 +1,7 @@
 ﻿using Msr.Models.Parts;
 using Msr.Repositories;
-using Microsoft.AspNet.Identity;
 using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
-using System.Data.Entity;
 using Msr.Services.Parts.Procedures;
 using EntityFrameworkExtras.EF6;
 using Msr.Services.Parts.ViewModels;

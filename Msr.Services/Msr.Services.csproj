@@ -112,6 +112,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseNotification.cs" />
+    <Compile Include="Companies\CompanyService.cs" />
     <Compile Include="Companies\Procedures\AddCompanyProcedure.cs" />
     <Compile Include="Companies\ViewModels\AddCompanyViewModel.cs" />
     <Compile Include="Files\FileService.cs" />
@@ -119,6 +120,9 @@
     <Compile Include="jqGrid\JqGridParam.cs" />
     <Compile Include="jqGrid\DatatableParamConverter.cs" />
     <Compile Include="jqGrid\ExtendedMethods.cs" />
+    <Compile Include="Locations\LocationService.cs" />
+    <Compile Include="Locations\Procedures\SaveLocationProcedure.cs" />
+    <Compile Include="Locations\ViewModels\SaveLocationVM.cs" />
     <Compile Include="Notes\Messages\AddNoteToTaskRequest.cs" />
     <Compile Include="Notes\NoteService.cs" />
     <Compile Include="Notes\Procedures\AddProcedure.cs" />
@@ -174,21 +178,27 @@
     <Compile Include="Orders\Procedures\FileSearchResult.cs" />
     <Compile Include="Orders\TaskService.cs" />
     <Compile Include="Orders\PeopleService.cs" />
-    <Compile Include="Orders\CompanyService.cs" />
     <Compile Include="Orders\ViewModels\ImageViewModel.cs" />
     <Compile Include="Orders\ViewModels\SaveWorkItemImageViewModel.cs" />
     <Compile Include="Orders\ViewModels\SaveWorkOrderViewModel.cs" />
     <Compile Include="Parts\Messages\AddPartTypesTaskRequest.cs" />
     <Compile Include="Parts\PartsService.cs" />
     <Compile Include="Parts\PartTypeService.cs" />
+    <Compile Include="Parts\Procedures\SaveFileProcedure.cs" />
     <Compile Include="Parts\Procedures\SavePartProcedure.cs" />
     <Compile Include="Parts\Procedures\SavePartTypeProcedure.cs" />
     <Compile Include="Parts\ViewModels\AddPartTypesViewModel.cs" />
     <Compile Include="Parts\ViewModels\AddPartViewModel.cs" />
     <Compile Include="Procedures\ProcedureService.cs" />
-    <Compile Include="Procedures\Procedures\SaveProcedureProcedure.cs" />
     <Compile Include="Procedures\ViewModels\SaveProcedureViewModel.cs" />
+    <Compile Include="ProcedureTypes\Procedures\SaveProcedureTypesProcedure.cs" />
+    <Compile Include="ProcedureTypes\ProcedureTypeService.cs" />
+    <Compile Include="ProcedureTypes\ViewModels\SaveProcedureTypesViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Regions\Procedures\DeleteRegionProcedure.cs" />
+    <Compile Include="Regions\Procedures\SaveRegionProcedure.cs" />
+    <Compile Include="Regions\RegionService.cs" />
+    <Compile Include="Regions\ViewModels\SaveRegionViewModel.cs" />
     <Compile Include="S3\AWSUploader.cs" />
     <Compile Include="S3\IAWSUploader.cs" />
     <Compile Include="Tasks\Messaging\MonitorItem.cs" />

@@ -10,6 +10,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Msr.Services.Parts.ViewModels;
+using Msr.Services.Files;
 
 namespace Answer.Web.Controllers
 {
@@ -97,11 +98,32 @@ namespace Answer.Web.Controllers
 
             return Json(json, JsonRequestBehavior.AllowGet);
         }
+        public ActionResult Details(string id)
+        {
+            var taskService = new PartsService();
+
+            var model = taskService.GetById(id);
+
+            var part = new AddPartViewModel();
+
+            part = part.MapToDto(model);
+
+            part.Setup(new FileService(), new PartsService());
+
+            return View(part);
+        }
+        public ActionResult ViewFile(string callBackitem)
+        {
+            var callBackUrl = "http://docs.google.com/gview?url=" + "http://infolab.stanford.edu/pub/papers/google.pdf&embedded=true";//callBackitem url need to be dynamic
+            ViewBag.callBackitem = callBackUrl;
+
+            return PartialView("_ViewFile");
+        }
         public ActionResult AddPart()
         {
             var part = new AddPartViewModel();
 
-            part.Setup();
+            part.Setup(new FileService(), new PartsService());
 
             return View(part);
         }
@@ -130,14 +152,14 @@ namespace Answer.Web.Controllers
                 {
                     TempData["ErrorMessage"] = "Something went wrong.";
 
-                    model.Setup();
+                    model.Setup(new FileService(), new PartsService());
 
                     return View(model);
                 }
 
             }
 
-            model.Setup();
+            model.Setup(new FileService(), new PartsService());
 
             return View(model);
 
@@ -152,7 +174,7 @@ namespace Answer.Web.Controllers
 
             part = part.MapToDto(model);
 
-            part.Setup();
+            part.Setup(new FileService(), new PartsService());
 
             return View(part);
         }
@@ -181,12 +203,12 @@ namespace Answer.Web.Controllers
 
                 TempData["ErrorMessage"] = "Something went wrong.";
 
-                model.Setup();
+                model.Setup(new FileService(), new PartsService());
 
                 return View(model);
             }
 
-            model.Setup();
+            model.Setup(new FileService(), new PartsService());
 
             return View(model);
         }

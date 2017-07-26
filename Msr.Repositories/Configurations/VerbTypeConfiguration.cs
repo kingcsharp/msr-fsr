@@ -5,6 +5,7 @@ using System.Data.Entity.ModelConfiguration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Msr.Models.Procedure;
 
 namespace Msr.Repositories.Configurations
 {

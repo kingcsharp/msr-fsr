@@ -6,7 +6,7 @@ using Msr.Repositories;
 using Msr.Services.Companies.Procedures;
 using Msr.Services.Companies.ViewModels;
 
-namespace Msr.Services.Orders
+namespace Msr.Services.Companies
 {
     public class CompanyService
     {

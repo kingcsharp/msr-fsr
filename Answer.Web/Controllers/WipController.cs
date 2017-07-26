@@ -265,6 +265,8 @@ namespace Answer.Web.Controllers
             {
                 var loggedUserId = User.Identity.GetUserId();
                 model.NTLogin = loggedUserId;
+                model.NTLogin = GetUserId();
+
                 var response = false;
 
                 if (model.ColumnName == "CustPurchNum")
@@ -307,6 +309,8 @@ namespace Answer.Web.Controllers
             ViewBag.FillId = fillId;
             var loggedUserId = User.Identity.GetUserId();
             var response = _orderService.GetWipStepDetails(stepId, fillId, loggedUserId, phStepId);
+
+            var response = _orderService.GetWipStepDetails(stepId, fillId, GetUserId(), phStepId);
 
             response?.MonitorTemplateResult?.Setup();
 

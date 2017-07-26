@@ -2,78 +2,72 @@
 using Msr.Models.Procedures;
 using Msr.Repositories;
 using Msr.Services.Orders.Procedures;
-using Msr.Services.Procedures.Procedures;
-using Msr.Services.Procedures.ViewModels;
+using Msr.Services.ProcedureTypes.Procedures;
+using Msr.Services.ProcedureTypes.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Msr.Models.Procedure;
 
 namespace Msr.Services.Procedures
 {
-    public class ProcedureTypesService
+	public class ProcedureService
     {
-        private readonly MsrDbContext _dbContext;
+		private readonly MsrDbContext _dbContext;
 
-        public ProcedureTypesService()
-        {
-            _dbContext = new MsrDbContext();
-        }
-        public IQueryable<ProcedureTypesView> GetProcedures()
-        {
-            return _dbContext.ProcedureTypes;
-        }
-        public VerbType GetVerbTypeById(string Id)
-        {
-            return _dbContext.VerbTypes.Where(x=>x.ID == Id).SingleOrDefault();
-        }
-        public IQueryable<VerbTypes> GetVerbTypes(string Id)
-        {
-            
-            var NTLogin = new SqlParameter("@strNTLogin", Id);
+		public ProcedureService()
+		{
+			_dbContext = new MsrDbContext();
+		}
+		
+		public ProcedureView GetProcedureById(string Id)
+		{
+			return _dbContext.Procedurs.Where(x => x.Id == Id).SingleOrDefault();
+		}
+		public IQueryable<ProcedureView> GetProceduresQueryable()
+		{
 
-            var result = _dbContext.Database.SqlQuery<VerbTypes>("EXEC A_SP_DD_TT_VERBS_TYPES @strNTLogin", NTLogin).AsQueryable();
+			return _dbContext.Procedurs;					
+		}
 
-            return result;
-        }
+		public bool Save(ProcedureView model)
+		{
 
-        public bool Save(SaveProcedureViewModel model)
-        {
+			try
+			{
+				var saveProcedureProcedure = new SaveProcedureTypesProcedure {  };
 
-            try
-            {
-                var saveProcedureProcedure = new SaveProcedureProcedure { Name = model.Name,VerbType = model.VerbType,NTLogin = model.NTLogin };
+				_dbContext.Database.ExecuteStoredProcedure(saveProcedureProcedure);
 
-                _dbContext.Database.ExecuteStoredProcedure(saveProcedureProcedure);
+				return true;
+			}
+			catch (Exception ex)
+			{
+				var message = "Error occured:" + ex.Message;
 
-                return true;
-            }
-            catch (Exception ex)
-            {
-                var message = "Error occured:" + ex.Message;
+				return false;
+			}
+		}
+		public bool Edit(SaveProcedureTypesViewModel model)
+		{
 
-                return false;
-            }
-        }
-        public bool Edit(SaveProcedureViewModel model)
-        {
+			try
+			{
+				var saveProcedureProcedure = new SaveProcedureTypesProcedure { ObjId = model.ObjectId, Name = model.Name, VerbType = model.VerbType, NTLogin = model.NTLogin };
 
-            try
-            {
-                var saveProcedureProcedure = new SaveProcedureProcedure { ObjId = model.ObjectId, Name = model.Name, VerbType = model.VerbType, NTLogin = model.NTLogin };
+				_dbContext.Database.ExecuteStoredProcedure(saveProcedureProcedure);
 
-                _dbContext.Database.ExecuteStoredProcedure(saveProcedureProcedure);
+				return true;
+			}
+			catch (Exception ex)
+			{
+				var message = "Error occured:" + ex.Message;
 
-                return true;
-            }
-            catch (Exception ex)
-            {
-                var message = "Error occured:" + ex.Message;
-
-                return false;
-            }
-        }
-    }
+				return false;
+			}
+		}
+	}
 }

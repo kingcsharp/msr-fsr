@@ -1,15 +1,4 @@
 ﻿
-
-
-
-
-
-
-
-
-
-
-
 CREATE           PROCEDURE dbo.A_SP_PARTS_UPDATE_ONE_PART
 @newObjID nvarchar(50) OUTPUT,
 @messages nvarchar(500) OUTPUT,

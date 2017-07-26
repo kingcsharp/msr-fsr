@@ -7,6 +7,8 @@
         public string Name { get; set; }
         public string CompanyPartNumber { get; set; }
         public string CompanyName { get; set; }
+        public string Spare { get; set; }
+        public string Unit { get; set; }
         public int? Revision { get; set; }
         public string Status { get; set; }
     }

@@ -1,6 +1,6 @@
 ﻿@model  Msr.Services.Orders.Messaging.WorkOrderDetailsResponse
 @{
-    ViewBag.Title = "Work Order Details";
+    ViewBag.Title = "Work Order Details" + Model.FileSearchResult.FillObjDesc + " qty:" + Model.FileSearchResult.Qty;
 }
 
 <!-- [[$wip-detail-sidenav?]] -->

@@ -1,0 +1,229 @@
+﻿@model Msr.Services.Parts.ViewModels.AddPartViewModel
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<div class="container-fluid">
+    <div class="side-body padding-top">
+        <div class="row">
+            <h2 class="page-header">
+                View Part
+                <div class=" pull-right" data-toggle="modal">
+                    <!-- Split button -->
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-warning">Action</button>
+                        <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="caret"></span>
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a href="~/parts/deletePart/@Model.ObjID">Delete</a></li>
+                        </ul>
+                    </div>
+
+                </div>
+            </h2>
+
+            <div>
+                <dl class="dl-horizontal">
+                    <dt>
+                        @Html.DisplayNameFor(model => model.CompanyPartNumber)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.CompanyPartNumber)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Name)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Name)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.ObjID)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.ObjID)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.ReferenceFiles)
+                    </dt>
+                    @foreach (var item in Model.ListReferenceFiles)
+                    {
+                        <dd>
+                            @Html.DisplayFor(model => item.Text) <span class="data-toggle=" data-call-back-item="@item.Text" data-toggle="modal" data-target="#view-images" title="View File"><i class="icon fa fa-eye"></i></span>
+                        </dd>
+                    }
+                    <dt>
+                        @Html.DisplayNameFor(model => model.PictureFiles)
+                    </dt>
+                    @foreach (var item in Model.ListPictureFiles)
+                    {
+                        <dd>
+                            @Html.DisplayFor(model => item.Text) <span class="data-toggle=" data-call-back-item="@item.Text" data-toggle="modal" data-target="#view-images" title="View File"><i class="icon fa fa-eye"></i></span>
+                        </dd>
+                    }
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Unit)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Unit)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.UnitShippingWeight)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.UnitShippingWeight)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.WeightType)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.WeightType)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.CreateProd)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.CreateProd)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.ProcVerb)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.ProcVerb)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.ReferenceTheories)
+                    </dt>
+                    @foreach (var item in Model.ListReferenceTheories)
+                    {
+                        <dd>
+                            @Html.DisplayFor(model => item.Text) <span class="data-toggle=" data-call-back-item="@item.Text" data-toggle="modal" data-target="#view-images" title="View File"><i class="icon fa fa-eye"></i></span>
+                        </dd>
+                    }
+                    <dt>
+                        @Html.DisplayNameFor(model => model.PartType)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.PartType)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Spare)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Spare)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Consumable)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Consumable)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.CustomerSeeAvailability)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.CustomerSeeAvailability)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.SupplierSeeAvailability)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.SupplierSeeAvailability)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.SupplierSeeInstallBase)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.SupplierSeeInstallBase)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.InternalEqualParts)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.InternalEqualParts)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.ExternalEqualParts)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.ExternalEqualParts)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.SubParts)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.SubParts)
+                    </dd>
+                </dl>
+            </div>
+            <p>
+                @Html.ActionLink("Edit", "Edit", new { id = Model.ObjID }) |
+                @Html.ActionLink("Back to List", "Index")
+            </p>
+        </div>
+    </div>
+</div>
+<div id="view-images" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">View</h4>
+            </div>
+            <div class="modal-body">
+               
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning closeClick" data-dismiss="modal"><i class="fa fa-close-o"></i> Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script>
+
+        $('#view-images').on('show.bs.modal',
+            function (event) {
+
+                var button = $(event.relatedTarget);
+                var callBackitem = button.data('call-back-item');
+                var modal = $(this);
+
+                $.ajax({
+                    type: "GET",
+                    url: '/parts/ViewFile?callBackitem=' + callBackitem,
+                    dataType: 'html',
+                    success: function (data) {
+                        modal.find('.modal-body').html(data);
+                    },
+                    error: function () {
+
+                    }
+                });
+
+            });
+
+    </script>
+    }

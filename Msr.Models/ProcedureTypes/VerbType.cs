@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Msr.Models.Procedures
+namespace Msr.Models.Procedure
 {
     public class VerbType
     {

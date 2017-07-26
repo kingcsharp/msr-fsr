@@ -1,11 +1,27 @@
 ﻿CREATE VIEW [dbo].Portal_CompanyView
 AS
 
-SELECT 
- [ID] AS Id
-,[DRCM] AS Drcm
-,[STATUS] AS Status
-,[NAME] AS Name
-FROM [dbo].[A_COMPANIES]
+SELECT        
+ID AS Id, 
+EXTERNAL_ID AS ExternalId, 
+NAME AS Name, 
+CO_TYPE AS CoType, 
+OBJECT_ID AS ObjectId, 
+STATUS AS Status, 
+LOCKED_BY AS LockedBy, 
+UNLOCKED_BY AS UnlockedBy, 
+CREATED_BY AS CreatedBy, 
+CREATING_CO AS CreatingCo, 
+REV AS Rev, 
+WFS_ID AS WfsID, 
+LOCKED_BY_NAME AS LockedByName, 
+ROOT AS Root, 
+CHILDREN_COUNT AS ChildrenCount, 
+TOP_COMPANY AS TopCompany, 
+picRecord AS PicRecord, 
+ROOT_CO_NAME AS RootCoName, 
+PARENT_NAME AS ParentName
+
+FROM dbo.A_O_COMPANIES
 
 GO

@@ -176,7 +176,9 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\CompaniesController.cs" />
     <Compile Include="Controllers\FilesController.cs" />
+    <Compile Include="Controllers\LocationsController.cs" />
     <Compile Include="Controllers\NotesController.cs" />
     <Compile Include="Controllers\PartsController.cs" />
     <Compile Include="Controllers\PartsReportingController.cs" />
@@ -185,7 +187,9 @@
     <Compile Include="Controllers\BuyerController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\PrintOtherController.cs" />
+    <Compile Include="Controllers\ProceduresController.cs" />
     <Compile Include="Controllers\ProcedureTypesController.cs" />
+    <Compile Include="Controllers\RegionsController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\WipController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -405,11 +409,14 @@
     <Content Include="assets\js\freeform-quote.js" />
     <Content Include="assets\js\froogaloop.js" />
     <Content Include="assets\js\grids\buyer_grid.js" />
+    <Content Include="assets\js\grids\companies.js" />
     <Content Include="assets\js\grids\engineer.js" />
     <Content Include="assets\js\grids\client-user.js" />
     <Content Include="assets\js\grids\files-dialog.js" />
     <Content Include="assets\js\grids\files.js" />
+    <Content Include="assets\js\grids\locations.js" />
     <Content Include="assets\js\grids\master-user.js" />
+    <Content Include="assets\js\grids\regions.js" />
     <Content Include="assets\js\help_form.js" />
     <Content Include="assets\js\hopscotch.js" />
     <Content Include="assets\js\hopscotch.min.js" />
@@ -728,6 +735,16 @@
     <Content Include="Views\Procedures\Create.cshtml" />
     <Content Include="Views\Procedures\Edit.cshtml" />
     <Content Include="Views\Procedures\Index.cshtml" />
+    <Content Include="Views\Regions\Create.cshtml" />
+    <Content Include="Views\Regions\Edit.cshtml" />
+    <Content Include="Views\Regions\Index.cshtml" />
+    <Content Include="Views\Locations\Create.cshtml" />
+    <Content Include="Views\Locations\Edit.cshtml" />
+    <Content Include="Views\Locations\Index.cshtml" />
+    <Content Include="Views\Companies\Create.cshtml" />
+    <Content Include="Views\Companies\Index.cshtml" />
+    <Content Include="Views\Parts\Details.cshtml" />
+    <Content Include="Views\Parts\_ViewFile.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
