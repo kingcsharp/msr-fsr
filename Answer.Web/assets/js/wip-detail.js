@@ -250,7 +250,31 @@ $(function () {
 
 
     loadStep($('#carousel ul.slides li.step').first());
+
+    $('#relatedDocument').on('hidden.bs.modal', function (event) {
+        $(this).data('bs.modal', null);
+    });
+
+    $('#relatedDocument').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var id = button.data('id');
+        var modal = $(this);
+
+        $(this).find('h4.modal-title').html(button.data('name'));
+
+        $.ajax({
+            type: "GET",
+            url: '/wip/GetReferenceTheory?theoryId=' + id,
+            dataType: 'html',
+            success: function (data) {
+                modal.find('.modal-body').html(data);
+            },
+            error: function () {
+            }
+        });
+    });
 });
+
 function openNav() {
     document.getElementById("wip-side-nav").style.width = "250px";
 }

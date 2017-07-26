@@ -42,7 +42,7 @@
             <label>Related Documents:</label>
             @foreach (var file in Model.ReferenceFiles)
             {
-                <a href="asp/documents/viewDocument.asp?docID=@file.Doc_Id">@file.Name</a><br />
+                <a href="#" data-toggle="modal" data-id="@file.Doc_Id" data-name="@file.Name" data-target="#relatedDocument" >@file.Name</a><br />
             }
         </div>
     }
@@ -53,7 +53,7 @@
             <label>Related Documents:</label>
             @foreach (var file in Model.ReferenceTheories)
             {
-                <a href="../theory/viewTheory.asp?objID=@file.TheoryId">@file.TheoryName</a>
+                <a href="#" data-toggle="modal" data-id="@file.TheoryId" data-name="@file.TheoryName" data-target="#relatedDocument">@file.TheoryName</a>
                 <br />
             }
         </div>

@@ -388,6 +388,15 @@ namespace Answer.Web.Controllers
             return Json("OK", JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
+        public ActionResult GetReferenceTheory(int theoryId)
+        {
+            var loggedUserId = User.Identity.GetUserId();
+            
+
+            return Json("OK", JsonRequestBehavior.AllowGet);
+        }
+
         private List<DocumentView> GetDocViewModel(List<DocumentView> docs, OrderService orderService, int width)
         {
             var photos = new List<DocumentView>();
