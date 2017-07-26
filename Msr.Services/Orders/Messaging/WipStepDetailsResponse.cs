@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Amazon.Runtime.Internal;
 using Msr.Services.Orders.Procedures;
 using Msr.Services.Orders.ViewModels;
 
@@ -10,6 +11,8 @@ namespace Msr.Services.Orders.Messaging
         {
             TaskEditDataResult = new TaskEditDataResult();
             MonitorTemplateResult = new MonitorTemplateResult();
+            ReferenceFiles = new List<GetReferenceFiles>();
+            ReferenceTheories = new List<GetReferenceTheories>();
         }
 
         public int StepId { get; set; }
@@ -18,5 +21,7 @@ namespace Msr.Services.Orders.Messaging
         public MonitorTemplateResult MonitorTemplateResult { get; set; }
         public List<TaskItemPart> TaskItemParts { get; set; }
         public ImageViewModel Images { get; set; }
+        public List<GetReferenceFiles> ReferenceFiles { get; set; }
+        public List<GetReferenceTheories> ReferenceTheories { get; set; }
     }
 }

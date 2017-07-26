@@ -1,4 +1,5 @@
-﻿@model Msr.Services.Orders.Messaging.WipStepDetailsResponse
+﻿@using Microsoft.AspNet.Identity
+@model Msr.Services.Orders.Messaging.WipStepDetailsResponse
 @*getButtons(myRS)*@
 <div class="row">
     <div id="timer-input" class="col-sm-4 timer-input">
@@ -12,9 +13,9 @@
         else
         {
             <button class="btn btn-primary btn-lg print-btn pull-left show-timer-btn" id="show-step"><i class="glyphicon glyphicon-step-forward"></i> Show</button>
-            if (string.IsNullOrEmpty(Model.TaskEditDataResult.Assignee) && Model.TaskEditDataResult.Assignee != "16008")
+            if (Model.TaskEditDataResult.Assignee != User.Identity.GetUserId())
             {
-                <button class="btn btn-primary btn-lg print-btn pull-left show-timer-btn" id="assume-step"><i class="glyphicon glyphicon-step-forward"></i> Assume</button>
+                <button class="btn btn-primary btn-lg print-btn pull-left show-timer-btn" id="assume-step"><i class="glyphicon glyphicon-step-forward"></i> Take over this task</button>
             }
         }
 
@@ -39,6 +40,11 @@
     $('#done-step').on('click', function() {
 
         StepDoneClick();
+    });
+
+    $('#assume-step').on('click', function() {
+
+        StepAssumeClick();
     });
 
     $('#ncrModal').on('hidden.bs.modal', function(event) {
@@ -97,4 +103,20 @@
         });
     }
 
+    function StepAssumeClick() {
+
+        var taskId = @Model.MonitorTemplateResult.TaskId;
+
+        $.ajax({
+            type: "POST",
+            url: "/wip/AssumeTaskClick?taskId=" + taskId,
+            dataType: 'json',
+            success: function (data) {
+                location.reload();
+            },
+            error: function () {
+
+            }
+        });
+    }
 </script>

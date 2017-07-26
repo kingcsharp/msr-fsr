@@ -144,7 +144,15 @@
     <Compile Include="Orders\Messaging\WipStepDetailsResponse.cs" />
     <Compile Include="Orders\Messaging\WorkOrderDetailsResponse.cs" />
     <Compile Include="Orders\OrderService.cs" />
+    <Compile Include="Orders\Procedures\GetReferenceTheories.cs" />
+    <Compile Include="Orders\Procedures\GetReferenceFiles.cs" />
+    <Compile Include="Orders\Procedures\TheoryGetDepartmentResult.cs" />
     <Compile Include="Orders\Procedures\MonitorTemplateMultiChoiceResult.cs" />
+    <Compile Include="Orders\Procedures\ReferenceTheoryResult.cs" />
+    <Compile Include="Orders\Procedures\ObjectInfoResult.cs" />
+    <Compile Include="Orders\Procedures\GetTheoryReferenceFilesResult.cs" />
+    <Compile Include="Orders\Procedures\TheoryAdditionalCommentResult.cs" />
+    <Compile Include="Orders\Procedures\TheoryGetInfoResult.cs" />
     <Compile Include="Orders\Procedures\StepStartTaskResult.cs" />
     <Compile Include="Orders\Procedures\MonitorTemplateResult.cs" />
     <Compile Include="Orders\Procedures\TaskItemPart.cs" />

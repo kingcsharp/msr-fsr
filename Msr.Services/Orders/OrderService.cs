@@ -482,6 +482,14 @@ namespace Msr.Services.Orders
                     }
                 }
 
+                var p2 = new DynamicParameters();
+                p2.Add("@procStepID", phStepId, DbType.String, ParameterDirection.Input);
+                p2.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input);
+
+                detailsResponse.ReferenceFiles = conn.Query<GetReferenceFiles>("A_SP_PROCEDURE_GET_REFERENCE_FILES", p2, commandType: CommandType.StoredProcedure).ToList();
+
+                detailsResponse.ReferenceTheories = conn.Query<GetReferenceTheories>("SELECT l.THEORY_ID AS TheoryId,t.NAME AS TheoryName FROM A_PROCEDURE_STEP_THEORY_LINK l, A_V_THEORY_APPROVED_DATA t WHERE l.THEORY_ID = t.ID AND l.PROC_STEP_ID = @stepId", new { stepId = phStepId }, commandType: CommandType.Text).ToList();
+
                 if (detailsResponse.TaskEditDataResult.Status != "FINISHED")
                 {
                     foreach (var task in detailsResponse.TaskItemParts)
@@ -542,6 +550,37 @@ namespace Msr.Services.Orders
             using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
             {
                 int i = conn.Execute("Portal_StepSaveMonitor", p, commandType: CommandType.StoredProcedure);
+            }
+        }
+
+        public string CloseTask(string taskId, string login)
+        {
+            var p = new DynamicParameters();
+
+            p.Add("@RET_STATUS", dbType: DbType.String, direction: ParameterDirection.Output, size: 500);
+            p.Add("@MSGS", dbType: DbType.String, direction: ParameterDirection.Output, size: 50);
+            p.Add("@ID", taskId, DbType.String, ParameterDirection.Input, size: 50);
+            p.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input, size: 50);
+
+            using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
+            {
+                var stepStartDoneTaskResult = conn.Query<StepStartTaskResult>("A_SP_TASK_QUICK_CLOSE", p, commandType: CommandType.StoredProcedure);
+
+                var status = p.Get<string>("RET_STATUS");
+
+                var p1 = new DynamicParameters();
+                p1.Add("@userId", login, DbType.String, ParameterDirection.Input, size: 50);
+                conn.Execute("Portal_DeleteNavHistoryForUser", p1, commandType: CommandType.StoredProcedure);
+
+                var p2 = new DynamicParameters();
+
+                p2.Add("@retVal", dbType: DbType.String, direction: ParameterDirection.Output, size: 500);
+                p2.Add("@retMSG", dbType: DbType.String, direction: ParameterDirection.Output, size: 50);
+                p2.Add("@TASK_ID", taskId, DbType.String, ParameterDirection.Input, size: 50);
+                p2.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input, size: 50);
+                var newTextMonitorResult = conn.Query<StepStartTaskResult>("A_SP_MONITORS_CHECK_TASK_FOR_NEW_TEXT_MONITOR_RESULTS", p2, commandType: CommandType.StoredProcedure);
+                string returnValue = p2.Get<string>("retVal");
+                return returnValue;
             }
         }
 
@@ -609,6 +648,63 @@ namespace Msr.Services.Orders
                 var stepStartDoneTaskResult = conn.Query<StepStartTaskResult>("A_SP_FILL_CANCEL_UNFINISHED_STEPS", p, commandType: CommandType.StoredProcedure);
 
                 var status = p.Get<string>("RET_STATUS");
+            }
+        }
+
+        public void AssumeTask(int taskId, string login)
+        {
+            var p = new DynamicParameters();
+
+            p.Add("@RET_STATUS", dbType: DbType.String, direction: ParameterDirection.Output, size: 500);
+            p.Add("@MSGS", dbType: DbType.String, direction: ParameterDirection.Output, size: 50);
+            p.Add("@ID", taskId.ToString(), DbType.String, ParameterDirection.Input, size: 50);
+            p.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input, size: 50);
+
+            using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
+            {
+                var stepStartDoneTaskResult = conn.Query<StepStartTaskResult>("A_SP_TASK_ASSUME_CONTROL", p, commandType: CommandType.StoredProcedure);
+
+                var status = p.Get<string>("RET_STATUS");
+            }
+        }
+
+        public void GetTheoryData(int theoryId, string login)
+        {
+            var p = new DynamicParameters();
+            
+            p.Add("@ID", theoryId.ToString(), DbType.String, ParameterDirection.Input, size: 50);
+            p.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input, size: 50);
+
+            using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
+            {
+                var objectId = conn.Query<string>("A_SP_THEORY_GET_OBJECT_ID_FROM_ID", p, commandType: CommandType.StoredProcedure).SingleOrDefault();
+
+                var p1 = new DynamicParameters();
+                p1.Add("@ID", objectId, DbType.String, ParameterDirection.Input, size: 50);
+                p1.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input, size: 50);
+                var editInfo = conn.Query<TheoryGetInfoResult>("A_SP_THEORY_GET_EDIT_INFORMATION", p1, commandType: CommandType.StoredProcedure).FirstOrDefault();
+
+                
+                var objectInfo = conn.Query<ObjectInfoResult>("SELECT * FROM A_OBJECTS WHERE ID = @Id", new { Id = objectId}, commandType: CommandType.Text);
+
+                var approveData = conn.Query<ObjectInfoResult>("SELECT * FROM A_WORKFLOWS WHERE ID = (SELECT WF_ID FROM A_WORKFLOWS_STARTED WHERE ID = (SELECT WFS_ID FROM A_OBJECTS WHERE ID = @Id))", new { Id = objectId }, commandType: CommandType.Text);
+
+                var p2 = new DynamicParameters();
+                p2.Add("@TOID", objectId, DbType.String, ParameterDirection.Input, size: 50);
+                p2.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input, size: 50);
+                var theoryCommentData = conn.Query<TheoryAdditionalCommentResult>("A_SP_THEORY_COMMENTS_GET_DATA", p2, commandType: CommandType.StoredProcedure);
+
+                var p3 = new DynamicParameters();
+                p3.Add("@pOBJID", objectId, DbType.String, ParameterDirection.Input, size: 50);
+                p3.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input, size: 50);
+                var referenceFiles = conn.Query<GetTheoryReferenceFilesResult>("A_SP_THEORY_HEADER_GET_REFERENCE_FILES", p3, commandType: CommandType.StoredProcedure);
+
+                var refTheories = conn.Query<ReferenceTheoryResult>("SELECT * FROM A_V_THEORY_HEADER_REF_THEORIES WHERE OBJECT_ID = @Id", new { Id = objectId }, commandType: CommandType.Text);
+
+                var p4 = new DynamicParameters();
+                p4.Add("@strID", editInfo.Id, DbType.String, ParameterDirection.Input, size: 50);
+                p4.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input, size: 50);
+                var departmentData = conn.Query<TheoryGetDepartmentResult>("A_SP_THEORY_SHOW_MY_DEPARTMENT_DATA", p4, commandType: CommandType.StoredProcedure);
             }
         }
 
