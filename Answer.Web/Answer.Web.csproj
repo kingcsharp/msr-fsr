@@ -745,6 +745,7 @@
     <Content Include="Views\Companies\Index.cshtml" />
     <Content Include="Views\Parts\Details.cshtml" />
     <Content Include="Views\Parts\_ViewFile.cshtml" />
+    <Content Include="Views\Wip\_ViewReferenceTheory.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
