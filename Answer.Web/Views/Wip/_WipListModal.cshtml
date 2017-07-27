@@ -1,53 +1,49 @@
-﻿@model List<Msr.Models.Orders.WorkOrderView>
+﻿@model Answer.Web.ViewModel.Wip.WipListViewModel
 
 
-                    @foreach (var item in Model)
+                    @foreach (var item in Model.WoItemsInprogress)
                     {
                         <div class="row">
                             <div class="col-lg-5 col-md-5 col-sm-6">
                                 <strong>Proc: @item.ProductName <br>@item.ProcName</strong>
                             </div>
+                            
+                           
                             <div class="col-lg-7 col-md-7 col-sm-6">
-                                <button data-toggle="tooltip" data-placement="bottom" data-html="true"
-                                        title="<strong>Serial #:</strong>@item.Serial<br />
-                                       <strong>Status:</strong> @item.Status<br />
-                                       <strong>Assigned To:</strong> Jeff Tevonian"
-                                        class="btn btn-sq btn-success wip-button">
-                                    <i class="fa fa-cog fa-spin fa-2x"></i>
-                                </button>
-                                <button data-toggle="tooltip" data-placement="bottom" data-html="true"
-                                        title="<strong>Serial #:</strong> @item.Serial<br />
-                                       <strong>Status:</strong>@item.Status<br />
-                                       <strong>Assigned To:</strong> Emily Hary"
-                                        class="btn btn-sq btn-success  wip-button">
-                                    <i class="fa fa-cog fa-spin fa-2x"></i>
-                                </button>
-                                <button data-toggle="tooltip" data-placement="bottom" data-html="true"
-                                        title="<strong>Serial #:</strong> @item.Serial<br /><strong>Status:</strong> @item.Status <br /><strong>Assigned To:</strong> Unassigned"
-                                        class="btn btn-sq btn-info wip-button">
-                                    <i class="fa fa-hourglass fa-2x"></i>
-                                </button>
-                                <button data-toggle="tooltip" data-placement="bottom" data-html="true"
-                                        title="<strong>Serial #:</strong> @item.Serial<br /><strong>Status:</strong>@item.Status <br /><strong>Assigned To:</strong> Unassigned"
-                                        class="btn btn-sq btn-info wip-button">
-                                    <i class="fa fa-hourglass fa-2x"></i><br />
-                                </button>
-                                <button data-toggle="tooltip" data-placement="bottom" data-html="true"
-                                        title="<strong>Serial #:</strong> @item.Serial<br /><strong>Status:</strong>@item.Status<br /><strong>Assigned To:</strong> Unassigned"
-                                        class="btn btn-sq btn-info wip-button">
-                                    <i class="fa fa-hourglass fa-2x"></i>
-                                </button>
-                                <button data-toggle="tooltip" data-placement="bottom" data-html="true"
-                                        title="<strong>Serial #:</strong> @item.Serial<br /><strong>Status:</strong>@item.Status <br /><strong>Assigned To:</strong> Unassigned"
-                                        class="btn btn-sq btn-info wip-button">
-                                    <i class="fa fa-hourglass fa-2x"></i><br />
-                                </button>
-                                <button data-toggle="tooltip" data-placement="bottom" data-html="true"
-                                        title="<strong>Serial #:</strong> @item.Serial <br /><strong>Status:</strong>@item.Status <br /><strong>Assigned To:</strong> Unassigned"
-                                        class="btn btn-sq btn-info wip-button">
-                                    <i class="fa fa-hourglass fa-2x"></i>
-                                </button>
-                            </div>
+                                @foreach (var proItem in Model.WoItemsByProcedures.Where(x => x.ProcName == item.ProcName).OrderByDescending(o => o.DueDate))
+                                {
+
+                                    var statusText = "";
+                                    var cssIconButton = "";
+                                    var cssButton = "";
+
+                                    if (proItem.Status == "CLOSED" || proItem.Status == "FINISHED")
+                                    {
+                                        cssButton = "step-complete";
+                                    }
+                                    else if (proItem.Status == "ACCEPTED")
+                                    {
+                                        cssIconButton = "fa-cog";
+                                        cssButton = "btn-success";
+                                        statusText= "In Progress";
+                                    }
+                                    else if (proItem.Status == "PENDING_PARENT_ACCEPTANCE")
+                                    {
+                                        cssIconButton = "fa-cog";
+                                        cssButton = "btn-success";
+                                        statusText= "Waiting to Start";
+                                    }
+
+                                    <button data-toggle="tooltip" data-placement="bottom" data-html="true"
+                                            title="<strong>Serial #:</strong>@proItem.Serial<br />
+                                       <strong>Status:</strong> @statusText<br />
+                                       <strong>Assigned To:</strong> @proItem.ProcName"
+                                            class="btn btn-sq @cssButton wip-button">
+                                        <i class="fa @cssIconButton fa-spin fa-2x"></i>
+                                    </button>
+                                }       
+                                </div>
+                            
                         </div>
                     }
 

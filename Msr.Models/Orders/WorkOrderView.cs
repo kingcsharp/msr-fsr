@@ -7,6 +7,7 @@ namespace Msr.Models.Orders
     public class WorkOrderView
     {
         public Guid Id { get; set; }
+        public string RequesteeName { get; set; }
         public string SupplierName { get; set; }
         public string SupplierId { get; set; }
         public int? HasFile { get; set; }

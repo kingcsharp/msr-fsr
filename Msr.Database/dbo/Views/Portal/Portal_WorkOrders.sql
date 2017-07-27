@@ -3,6 +3,7 @@
 AS
 SELECT DISTINCT
 NewId() AS Id,
+t.LATEST_REQUESTEE_NAME AS RequesteeName,
 t.ID AS TaskId,
 supp.NAME AS SupplierName,
 purch.ID AS PurchaseId,

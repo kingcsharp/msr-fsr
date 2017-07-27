@@ -218,33 +218,33 @@ namespace Answer.Web.Controllers
 
         public ActionResult WipListModel()
         {
-            var wipList = new List<WorkOrderView>();
+            var viewModel = new WipListViewModel();
 
-            if (Session["WIP_Nav"] != null)
-            {
-                var fillIds = Session["WIP_Nav"].ToString().Split(',').ToList();
+            var orderService = new OrderService();
 
-                var orderService = new OrderService();
+            viewModel.WoItemsInprogress  = orderService.GetWorkOrderQueryable()
+                    .Where(x => x.Status == WorkItemStatusConstants.Accepted && x.SupplierId == "2") ////TODO GET SupplierId from session 
+                    .OrderByDescending(o => o.DueDate)
+                    .ToList();
 
-                wipList = orderService.GetWorkOrderQueryable().Where(x => fillIds.Contains(x.FillId)).ToList();
-            }
+            var procs = viewModel.WoItemsInprogress.Select(p => p.ProcName).ToList();
 
-            return PartialView("_WipListModal", wipList);
+            viewModel.WoItemsByProcedures = orderService.GetWorkOrderQueryable().Where(x=> procs.Contains(x.ProcName)).ToList();
+
+            
+            return PartialView("_WipListModal", viewModel);
         }
 
         public ActionResult Details(int id)
         {
-
             var orderService = new OrderService();
 
-            WorkOrderDetailsResponse response = _orderService.GetPurchaseItemDetails(id);
+            var response = _orderService.GetPurchaseItemDetails(id);
 
-            if (Session["WIP_Nav"] != null)
-            {
-                var fillIds = Session["WIP_Nav"].ToString().Split(',').ToList();
-
-                response.WoItems = orderService.GetWorkOrderQueryable().Where(x => fillIds.Contains(x.FillId)).ToList();
-            }
+            response.WoItems =  orderService.GetWorkOrderQueryable()
+                               .Where(x => x.Status == WorkItemStatusConstants.Accepted && x.SupplierId == "2") ////TODO GET SupplierId from session 
+                               .OrderByDescending(o => o.DueDate)
+                               .ToList();
 
             return View(response);
         }
@@ -316,7 +316,6 @@ namespace Answer.Web.Controllers
         {
             ViewBag.FillId = fillId;
             var loggedUserId = User.Identity.GetUserId();
-            var response = _orderService.GetWipStepDetails(stepId, fillId, loggedUserId, phStepId);
 
             var response = _orderService.GetWipStepDetails(stepId, fillId, GetUserId(), phStepId);
 

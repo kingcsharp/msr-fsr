@@ -100,6 +100,7 @@
     <Compile Include="Files\ListFileView.cs" />
     <Compile Include="Locations\LocationView.cs" />
     <Compile Include="Notes\Note.cs" />
+    <Compile Include="Orders\WorkItemStatusConstants.cs" />
     <Compile Include="Orders\UploadedImageView.cs" />
     <Compile Include="Orders\UserSummary.cs" />
     <Compile Include="Orders\UserView.cs" />

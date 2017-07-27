@@ -120,18 +120,11 @@
                                 stepCss = "waiting";
                             }
 
-                            if (step.Status == "CLOSED" || step.Status == "FINISHED")
-                            {
-                                <li class="step @stepCss" data-stepId="@step.StepId" data-phStepId="@step.PhStepId" data-fill-id="@Model.FillId">
-                                    <div>@step.Description</div>
-                                </li>
-                            }
-                            else
-                            {
+                      
                                 <li class="step-task step @stepCss" data-stepId="@step.StepId" data-phStepId="@step.PhStepId" data-fill-id="@Model.FillId">
                                     <div>@step.Description</div>
                                 </li>
-                            }
+                           
                         }
                     </ul>
                 </div>
