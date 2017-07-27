@@ -13,6 +13,7 @@
         public string Create_Date { get; set; }
         public string Status { get; set; }
         public string Rev { get; set; }
+        public string Root { get; set; }
         public string Security_Name { get; set; }
     }
 }

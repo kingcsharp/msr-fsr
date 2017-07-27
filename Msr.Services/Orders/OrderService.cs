@@ -448,8 +448,6 @@ namespace Msr.Services.Orders
 
         public WipStepDetailsResponse GetWipStepDetails(int stepId, int fillId, string login, int? phStepId)
         {
-
-
             var detailsResponse = new WipStepDetailsResponse { StepId = stepId };
 
             using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
@@ -668,10 +666,11 @@ namespace Msr.Services.Orders
             }
         }
 
-        public void GetTheoryData(int theoryId, string login)
+        public ReferenceTheoryResponse GetTheoryData(int theoryId, string login)
         {
+            var detailsResponse = new ReferenceTheoryResponse {TheoryId = theoryId};
+
             var p = new DynamicParameters();
-            
             p.Add("@ID", theoryId.ToString(), DbType.String, ParameterDirection.Input, size: 50);
             p.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input, size: 50);
 
@@ -680,32 +679,52 @@ namespace Msr.Services.Orders
                 var objectId = conn.Query<string>("A_SP_THEORY_GET_OBJECT_ID_FROM_ID", p, commandType: CommandType.StoredProcedure).SingleOrDefault();
 
                 var p1 = new DynamicParameters();
-                p1.Add("@ID", objectId, DbType.String, ParameterDirection.Input, size: 50);
+                p1.Add("@strID", objectId, DbType.String, ParameterDirection.Input, size: 50);
                 p1.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input, size: 50);
-                var editInfo = conn.Query<TheoryGetInfoResult>("A_SP_THEORY_GET_EDIT_INFORMATION", p1, commandType: CommandType.StoredProcedure).FirstOrDefault();
-
+                detailsResponse.TheoryGetInfoResult = conn.Query<TheoryGetInfoResult>("A_SP_THEORY_GET_EDIT_INFORMATION", p1, commandType: CommandType.StoredProcedure).FirstOrDefault();
                 
-                var objectInfo = conn.Query<ObjectInfoResult>("SELECT * FROM A_OBJECTS WHERE ID = @Id", new { Id = objectId}, commandType: CommandType.Text);
+                detailsResponse.ObjectInfoResult = conn.Query<ObjectInfoResult>("SELECT * FROM A_OBJECTS WHERE ID = @Id", new { Id = objectId}, commandType: CommandType.Text).FirstOrDefault();
 
-                var approveData = conn.Query<ObjectInfoResult>("SELECT * FROM A_WORKFLOWS WHERE ID = (SELECT WF_ID FROM A_WORKFLOWS_STARTED WHERE ID = (SELECT WFS_ID FROM A_OBJECTS WHERE ID = @Id))", new { Id = objectId }, commandType: CommandType.Text);
+                detailsResponse.WorkflowDataResult = conn.Query<WorkflowDataResult>("SELECT * FROM A_WORKFLOWS WHERE ID = (SELECT WF_ID FROM A_WORKFLOWS_STARTED WHERE ID = (SELECT WFS_ID FROM A_OBJECTS WHERE ID = @Id))", new { Id = objectId }, commandType: CommandType.Text).FirstOrDefault();
 
                 var p2 = new DynamicParameters();
                 p2.Add("@TOID", objectId, DbType.String, ParameterDirection.Input, size: 50);
                 p2.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input, size: 50);
-                var theoryCommentData = conn.Query<TheoryAdditionalCommentResult>("A_SP_THEORY_COMMENTS_GET_DATA", p2, commandType: CommandType.StoredProcedure);
+                detailsResponse.TheoryAdditionalCommentResults = conn.Query<TheoryAdditionalCommentResult>("A_SP_THEORY_COMMENTS_GET_DATA", p2, commandType: CommandType.StoredProcedure).ToList();
 
                 var p3 = new DynamicParameters();
                 p3.Add("@pOBJID", objectId, DbType.String, ParameterDirection.Input, size: 50);
                 p3.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input, size: 50);
-                var referenceFiles = conn.Query<GetTheoryReferenceFilesResult>("A_SP_THEORY_HEADER_GET_REFERENCE_FILES", p3, commandType: CommandType.StoredProcedure);
+                detailsResponse.GetTheoryReferenceFilesResults = conn.Query<GetTheoryReferenceFilesResult>("A_SP_THEORY_HEADER_GET_REFERENCE_FILES", p3, commandType: CommandType.StoredProcedure).ToList();
 
-                var refTheories = conn.Query<ReferenceTheoryResult>("SELECT * FROM A_V_THEORY_HEADER_REF_THEORIES WHERE OBJECT_ID = @Id", new { Id = objectId }, commandType: CommandType.Text);
+                detailsResponse.ReferenceTheoryResults = conn.Query<ReferenceTheoryResult>("SELECT * FROM A_V_THEORY_HEADER_REF_THEORIES WHERE OBJECT_ID = @Id", new { Id = objectId }, commandType: CommandType.Text).ToList();
 
                 var p4 = new DynamicParameters();
-                p4.Add("@strID", editInfo.Id, DbType.String, ParameterDirection.Input, size: 50);
+                p4.Add("@strID", detailsResponse.TheoryGetInfoResult.Id, DbType.String, ParameterDirection.Input, size: 50);
                 p4.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input, size: 50);
-                var departmentData = conn.Query<TheoryGetDepartmentResult>("A_SP_THEORY_SHOW_MY_DEPARTMENT_DATA", p4, commandType: CommandType.StoredProcedure);
+                detailsResponse.TheoryGetDepartmentResults = conn.Query<TheoryGetDepartmentResult>("A_SP_THEORY_SHOW_MY_DEPARTMENT_DATA", p4, commandType: CommandType.StoredProcedure).ToList();
+
+                detailsResponse.TheoryGetCompanyAddressResults = conn.Query<TheoryGetCompanyAddressResult>("SELECT * FROM A_V_LOCATIONS_APPROVED_DATA WHERE ID = (SELECT LOCATION FROM A_V_COMPANIES_APPROVED_DATA WHERE ID = (SELECT CREATING_CO FROM A_OBJECTS WHERE OBJ_ID = @Id))", new { Id = detailsResponse.TheoryGetInfoResult.Id }, commandType: CommandType.Text).ToList();
+
+                var p5 = new DynamicParameters();
+                p5.Add("@ID", detailsResponse.TheoryGetInfoResult.Security_Level, DbType.String, ParameterDirection.Input, size: 50);
+                p5.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input, size: 50);
+                detailsResponse.TheoryGetSecurityLevelResults = conn.Query<TheoryGetSecurityLevelResult>("A_SP_SECURITY_LEVEL_GET_DATA_BY_ID", p5, commandType: CommandType.StoredProcedure).ToList();
+
+                var p6 = new DynamicParameters();
+                p6.Add("@ID", detailsResponse.TheoryGetInfoResult.Id, DbType.String, ParameterDirection.Input, size: 50);
+                p6.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input, size: 50);
+                detailsResponse.TheoryGetRolesResults = conn.Query<TheoryGetRolesResult>("A_SP_THEORY_GET_ROLES_TO_VIEW", p6, commandType: CommandType.StoredProcedure).ToList();
+                
+                detailsResponse.TheoryGetParagraphDataResults = conn.Query<TheoryGetParagraphDataResult>("A_SP_THEORY_PARAGRAPHS_GET_DATA", p2, commandType: CommandType.StoredProcedure).ToList();
+
+                var p7 = new DynamicParameters();
+                p7.Add("@strID", objectId, DbType.String, ParameterDirection.Input, size: 50);
+                p7.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input, size: 50);
+                detailsResponse.TheoryGetRevisionDataResults = conn.Query<TheoryGetRevisionDataResult>("A_SP_OBJECT_GET_REV_DATA", p7, commandType: CommandType.StoredProcedure).ToList();
             }
+
+            return detailsResponse;
         }
 
         private void FormatHtml(TsrDetailsResponse response)

@@ -273,7 +273,6 @@ namespace Answer.Web.Controllers
             {
                 var loggedUserId = User.Identity.GetUserId();
                 model.NTLogin = loggedUserId;
-                model.NTLogin = GetUserId();
 
                 var response = false;
 
@@ -315,9 +314,8 @@ namespace Answer.Web.Controllers
         public ActionResult GetWipStepDetails(int stepId, int fillId, int? phStepId)
         {
             ViewBag.FillId = fillId;
-            var loggedUserId = User.Identity.GetUserId();
 
-            var response = _orderService.GetWipStepDetails(stepId, fillId, GetUserId(), phStepId);
+            var loggedUserId = User.Identity.GetUserId();
 
             response?.MonitorTemplateResult?.Setup();
 
@@ -399,13 +397,20 @@ namespace Answer.Web.Controllers
             return Json("OK", JsonRequestBehavior.AllowGet);
         }
 
-        [HttpPost]
         public ActionResult GetReferenceTheory(int theoryId)
         {
             var loggedUserId = User.Identity.GetUserId();
-            
+            var response = _orderService.GetTheoryData(theoryId, loggedUserId);
 
-            return Json("OK", JsonRequestBehavior.AllowGet);
+            return PartialView("_ViewReferenceTheory", response);
+        }
+
+        public ActionResult GetReferenceTheoryFile(int fileId)
+        {
+            var loggedUserId = User.Identity.GetUserId();
+            var response = _orderService.GetTheoryData(fileId, loggedUserId);
+
+            return PartialView("_ViewReferenceTheory", response);
         }
 
         private List<DocumentView> GetDocViewModel(List<DocumentView> docs, OrderService orderService, int width)
