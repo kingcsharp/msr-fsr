@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using Msr.Models.Parts;
 using Msr.Services.Files;
 using System.Linq;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Msr.Services.Parts.ViewModels
 {
@@ -17,9 +18,15 @@ namespace Msr.Services.Parts.ViewModels
             ListReferenceFiles = new List<SelectListItem>();
             ListPictureFiles = new List<SelectListItem>();
             ListReferenceTheories = new List<SelectListItem>();
+            ReferenceFiles = new List<string>();
             PictureFiles = new List<string>();
             ReferenceTheories = new List<string>();
+            ListExternalEqualParts = new List<SelectListItem>();
+            ListInternalEqualParts = new List<SelectListItem>();
         }
+
+        public string Id { get; set; }
+
         public string ObjID { get; set; }
 
         public string Company { get; set; }
@@ -35,8 +42,10 @@ namespace Msr.Services.Parts.ViewModels
         [DisplayName("Part Type :")]
         public string PartType { get; set; }
 
+        [DisplayName("Spare :")]
         public string Spare { get; set; }
 
+        [DisplayName("Consumable :")]
         public string Consumable { get; set; }
 
         [DisplayName("Ordering Unit :")]
@@ -57,10 +66,14 @@ namespace Msr.Services.Parts.ViewModels
         [DisplayName("Allow suppliers to see actual parts install base? :")]
         public Int16? SupplierSeeInstallBase { get; set; }
 
-        [DisplayName("InternalEqualParts :")]
+        [DisplayName("InternalEqualPart :")]
         public string InternalEqualParts { get; set; }
 
-        [DisplayName("ExternalEqualParts :")]
+        [NotMapped]
+        [DisplayName("Selected InternalEqualPart :")]
+        public string SelectedInternalEqualParts { get; set; }
+
+        [DisplayName("ExternalEqualPart :")]
         public string ExternalEqualParts { get; set; }
 
         [DisplayName("Shipping Weight Type :")]
@@ -101,6 +114,10 @@ namespace Msr.Services.Parts.ViewModels
 
         public IList<SelectListItem> ListReferenceTheories { get; set; }
 
+        public IList<SelectListItem> ListInternalEqualParts { get; set; }
+
+        public IList<SelectListItem> ListExternalEqualParts { get; set; }
+
         public IEnumerable<SelectListItem> OrderingUnits { get; set; }
 
         public IEnumerable<SelectListItem> ShippingWeightTypes { get; set; }
@@ -116,7 +133,7 @@ namespace Msr.Services.Parts.ViewModels
         public IEnumerable<SelectListItem> PartsTypes { get; set; }
 
 
-        public void Setup(FileService fileService, PartsService partsService)
+        public void Setup(FileService fileService, PartsService partsService, PartTypeService partTypeService)
         {
             OrderingUnits = new List<SelectListItem>
             {
@@ -236,28 +253,55 @@ namespace Msr.Services.Parts.ViewModels
                     Value="0",
                 }
             };
-            PartsTypes = partsService.GetPartsQueryable().ToList().Select(x => new SelectListItem
+            ListInternalEqualParts = partsService.GetPartsQueryable().ToList().Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.ObjectId.ToString()
+            }).OrderBy(o => o.Text).ToList();
+
+            PartsTypes = partTypeService.GetPartTypesQueryable().ToList().Select(x => new SelectListItem
             {
                 Text = x.Name,
                 Value = x.Id.ToString()
             }).OrderBy(o => o.Text).ToList();
 
-            ////ListReferenceFiles = fileService.SelectListedFiles(ObjID).Select(x => new SelectListItem
-            ////{
-            ////    Text = x.Name,
-            ////    Value = x.LinkedDocId.ToString(),
-            ////    Selected = true
-            ////}).OrderBy(o => o.Text).ToList();
+            ListReferenceFiles = partsService.GetSelectedFiles(id: Id, type: null).Select(x => new SelectListItem
+            {
+                Text = x.SHOW,
+                Value = x.VALUE.ToString(),
+                //Selected = true
+            }).OrderBy(o => o.Text).ToList();
 
-            ////ReferenceTheories = fileService.SelectListedFiles(ObjID).Select(x => x.LinkedDocId).ToList();
+            ListPictureFiles = partsService.GetSelectedFiles(id: Id, type: "PICTURE").Select(x => new SelectListItem
+            {
+                Text = x.SHOW,
+                Value = x.VALUE.ToString(),
+                //Selected = true
+            }).OrderBy(o => o.Text).ToList();
+
+            ListReferenceTheories = partsService.GetSelectedFiles(id: Id, type: "THEORY").Select(x => new SelectListItem
+            {
+                Text = x.SHOW,
+                Value = x.VALUE.ToString(),
+                //Selected = true
+            }).OrderBy(o => o.Text).ToList();
+
+            var result = partsService.GetInternalPart(id: Id);
+            if (result != null)
+            {
+                InternalEqualParts = partsService.GetInternalPart(id: Id).ID;
+                SelectedInternalEqualParts = partsService.GetInternalPart(id: Id).NAME;
+            }
+
         }
 
-        public AddPartViewModel MapToDto(Part model)
+        public AddPartViewModel MapToDto(PartsView model)
         {
             return new AddPartViewModel
             {
-                ObjID = model.ID,
-                Company = model.Company,
+                Id = model.Id,
+                ObjID = model.ObjectId,
+                Company = model.CompanyName,
                 CompanyPartNumber = model.CompanyPartNumber,
                 Name = model.Name,
                 PartType = model.PartType,

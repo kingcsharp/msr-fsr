@@ -408,6 +408,7 @@
     <Content Include="assets\js\finger.min.js" />
     <Content Include="assets\js\freeform-quote.js" />
     <Content Include="assets\js\froogaloop.js" />
+    <Content Include="assets\js\grids\parts.js" />
     <Content Include="assets\js\grids\buyer_grid.js" />
     <Content Include="assets\js\grids\companies.js" />
     <Content Include="assets\js\grids\engineer.js" />

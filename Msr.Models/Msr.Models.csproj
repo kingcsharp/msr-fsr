@@ -114,6 +114,8 @@
     <Compile Include="Parts\PartsWithTaskAndResult.cs" />
     <Compile Include="Parts\PartType.cs" />
     <Compile Include="Parts\PartTypesView.cs" />
+    <Compile Include="Parts\SelectPartsFile.cs" />
+    <Compile Include="Parts\SelectInternalPart.cs" />
     <Compile Include="Procedures\ProcedureView.cs" />
     <Compile Include="ProcedureTypes\ProcedureTypesView.cs" />
     <Compile Include="ProcedureTypes\VerbType.cs" />

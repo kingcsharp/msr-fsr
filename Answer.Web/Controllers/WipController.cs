@@ -235,16 +235,22 @@ namespace Answer.Web.Controllers
             return PartialView("_WipListModal", viewModel);
         }
 
-        public ActionResult Details(int id)
+        public ActionResult Details(int? id)
         {
             var orderService = new OrderService();
 
-            var response = _orderService.GetPurchaseItemDetails(id);
-
-            response.WoItems =  orderService.GetWorkOrderQueryable()
+            var workItems =  orderService.GetWorkOrderQueryable()
                                .Where(x => x.Status == WorkItemStatusConstants.Accepted && x.SupplierId == "2") ////TODO GET SupplierId from session 
                                .OrderByDescending(o => o.DueDate)
                                .ToList();
+
+            if (!id.HasValue)
+            {
+                id = int.Parse(workItems.First().FillId);
+            }
+
+            var response = _orderService.GetPurchaseItemDetails(id.Value);
+
 
             return View(response);
         }
@@ -316,6 +322,7 @@ namespace Answer.Web.Controllers
             ViewBag.FillId = fillId;
 
             var loggedUserId = User.Identity.GetUserId();
+            var response = _orderService.GetWipStepDetails(stepId, fillId, loggedUserId, phStepId);
 
             response?.MonitorTemplateResult?.Setup();
 
@@ -327,6 +334,7 @@ namespace Answer.Web.Controllers
 
             return PartialView("_InitialInspection", response);
         }
+
 
         [HttpPost]
         public ActionResult UpdateStepMonitor(MonitorTemplateResult monitorTemplate)

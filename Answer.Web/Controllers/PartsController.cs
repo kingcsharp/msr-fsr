@@ -35,9 +35,9 @@ namespace Answer.Web.Controllers
             {
                 foreach (var rule in param.where.rules)
                 {
-                    if (rule.field == nameof(PartsView.ObjId))
+                    if (rule.field == nameof(PartsView.ObjectId))
                     {
-                        totalRows = totalRows.Where(x => x.ObjId == rule.data.ToLower());
+                        totalRows = totalRows.Where(x => x.ObjectId == rule.data.ToLower());
                     }
                     else if (rule.field == nameof(PartsView.Name))
                     {
@@ -51,10 +51,10 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.CompanyName.ToLower().Contains(rule.data.ToLower()));
                     }
-                    else if (rule.field == nameof(PartsView.Revision))
+                    else if (rule.field == nameof(PartsView.Rev))
                     {
                         var rev = Convert.ToInt32(rule.data);
-                        totalRows = totalRows.Where(x => x.Revision == rev);
+                        totalRows = totalRows.Where(x => x.Rev == rev);
                     }
                     else if (rule.field == nameof(PartsView.Status))
                     {
@@ -108,7 +108,7 @@ namespace Answer.Web.Controllers
 
             part = part.MapToDto(model);
 
-            part.Setup(new FileService(), new PartsService());
+            part.Setup(new FileService(), new PartsService(), new PartTypeService());
 
             return View(part);
         }
@@ -123,7 +123,7 @@ namespace Answer.Web.Controllers
         {
             var part = new AddPartViewModel();
 
-            part.Setup(new FileService(), new PartsService());
+            part.Setup(new FileService(), new PartsService(), new PartTypeService());
 
             return View(part);
         }
@@ -152,14 +152,14 @@ namespace Answer.Web.Controllers
                 {
                     TempData["ErrorMessage"] = "Something went wrong.";
 
-                    model.Setup(new FileService(), new PartsService());
+                    model.Setup(new FileService(), new PartsService(), new PartTypeService());
 
                     return View(model);
                 }
 
             }
 
-            model.Setup(new FileService(), new PartsService());
+            model.Setup(new FileService(), new PartsService(), new PartTypeService());
 
             return View(model);
 
@@ -174,7 +174,7 @@ namespace Answer.Web.Controllers
 
             part = part.MapToDto(model);
 
-            part.Setup(new FileService(), new PartsService());
+            part.Setup(new FileService(), new PartsService(), new PartTypeService());
 
             return View(part);
         }
@@ -203,12 +203,12 @@ namespace Answer.Web.Controllers
 
                 TempData["ErrorMessage"] = "Something went wrong.";
 
-                model.Setup(new FileService(), new PartsService());
+                model.Setup(new FileService(), new PartsService(), new PartTypeService());
 
                 return View(model);
             }
 
-            model.Setup(new FileService(), new PartsService());
+            model.Setup(new FileService(), new PartsService(), new PartTypeService());
 
             return View(model);
         }

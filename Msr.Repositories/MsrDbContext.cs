@@ -46,7 +46,6 @@ namespace Msr.Repositories
             modelBuilder.Entity<PartsView>().ToTable("Portal_PartsView");
             modelBuilder.Entity<PartTypesView>().ToTable("Portal_PartTypesView");
             modelBuilder.Entity<PartType>().ToTable("A_PART_TYPES_HISTORY");
-            modelBuilder.Entity<Part>().ToTable("A_PARTS_HISTORY");
             modelBuilder.Entity<ProcedureTypesView>().ToTable("Portal_ProcedureTypesView");
             modelBuilder.Entity<FileView>().ToTable("Portal_FilesView");
             modelBuilder.Entity<RegionsView>().ToTable("Portal_RegionsView");
@@ -73,7 +72,6 @@ namespace Msr.Repositories
         public DbSet<RegionsView> RegionsViews { get; set; }
         public DbSet<PartTypesView> PartTypesViews { get; set; }
         public DbSet<PartType> PartTypes { get; set; }
-        public DbSet<Part> Parts { get; set; }
         public DbSet<Company> Companies { get; set; }
         public DbSet<ProcedureTypesView> ProcedureTypes { get; set; }
         public DbSet<VerbType> VerbTypes { get; set; }
