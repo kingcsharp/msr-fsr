@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Web.Mvc;
 using Msr.Models.Orders;
 using Msr.Services.Orders.Procedures;
 
@@ -19,5 +20,6 @@ namespace Msr.Services.Orders.Messaging
         public List<string> Parts { get; set; }
         public List<TaskStepResult> TaskStepResults { get; set; }
         public List<WorkOrderView> WoItems { get; set; }
+        public IEnumerable<SelectListItem> WorkItems { get; set; }
     }
 }

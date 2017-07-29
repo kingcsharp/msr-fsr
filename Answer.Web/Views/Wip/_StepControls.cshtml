@@ -33,17 +33,14 @@
 <script>
 
     $('#start-step').on('click', function() {
-
         StepStartClick();
     });
 
     $('#done-step').on('click', function() {
-
         StepDoneClick();
     });
 
     $('#assume-step').on('click', function() {
-
         StepAssumeClick();
     });
 
@@ -87,7 +84,6 @@
     }
 
     function StepStartClick() {
-
         var stepId = @Model.StepId;
 
         $.ajax({
@@ -105,7 +101,7 @@
 
     function StepAssumeClick() {
 
-        var taskId = @Model.MonitorTemplateResult.TaskId;
+        var taskId = '@Model.MonitorTemplateResult.TaskId';
 
         $.ajax({
             type: "POST",

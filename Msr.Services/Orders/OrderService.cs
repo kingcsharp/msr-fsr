@@ -12,6 +12,7 @@ using System.Web.Configuration;
 using System.Web.Mvc;
 using Dapper;
 using EntityFrameworkExtras.EF6;
+using Msr.Models.Tasks;
 using Msr.Services.Orders.Procedures;
 using Msr.Services.Orders.ViewModels;
 using RestSharp;
@@ -87,8 +88,7 @@ namespace Msr.Services.Orders
 
         public WorkOrderDetailsResponse GetPurchaseItemDetails(int fillId)
         {
-            var detailsResponse = new WorkOrderDetailsResponse();
-            detailsResponse.FillId = fillId;
+            var detailsResponse = new WorkOrderDetailsResponse {FillId = fillId};
 
             using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
             {
@@ -596,6 +596,14 @@ namespace Msr.Services.Orders
                 var stepStartDoneTaskResult = conn.Query<StepStartTaskResult>("A_SP_TASK_ACCEPT", p, commandType: CommandType.StoredProcedure);
 
                 var status = p.Get<string>("RET_STATUS");
+
+                _dbContext.TaskLogs.Add(new TaskLog()
+                {
+                    TaskId = stepId.ToString(),
+                    StartTime = DateTime.Now,
+                    UserId = login
+                });
+                _dbContext.SaveChanges();
             }
         }
         public void StepDone(int stepId, string login)
@@ -612,6 +620,17 @@ namespace Msr.Services.Orders
                 var stepStartDoneTaskResult = conn.Execute("A_SP_TASK_QUICK_CLOSE", p, commandType: CommandType.StoredProcedure);
 
                 var status = p.Get<string>("RET_STATUS");
+
+                var taskLog =
+                    _dbContext.TaskLogs.Where(x => x.TaskId == stepId.ToString() && x.EndTime == null)
+                        .OrderByDescending(x => x.Id)
+                        .FirstOrDefault();
+
+                if (taskLog != null)
+                {
+                    taskLog.EndTime = DateTime.Now;
+                    _dbContext.SaveChanges();
+                }
             }
         }
 
@@ -649,7 +668,7 @@ namespace Msr.Services.Orders
             }
         }
 
-        public void AssumeTask(int taskId, string login)
+        public string AssumeTask(int taskId, string login)
         {
             var p = new DynamicParameters();
 
@@ -662,7 +681,7 @@ namespace Msr.Services.Orders
             {
                 var stepStartDoneTaskResult = conn.Query<StepStartTaskResult>("A_SP_TASK_ASSUME_CONTROL", p, commandType: CommandType.StoredProcedure);
 
-                var status = p.Get<string>("RET_STATUS");
+                return p.Get<string>("RET_STATUS");
             }
         }
 

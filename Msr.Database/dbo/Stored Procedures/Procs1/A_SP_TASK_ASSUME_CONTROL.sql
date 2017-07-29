@@ -1,7 +1,7 @@
 ﻿
 CREATE               PROCEDURE dbo.A_SP_TASK_ASSUME_CONTROL 
-@RET_STATUS as varchar(50) OUTPUT,
-@MSGS as varchar(50) OUTPUT,
+@RET_STATUS as varchar(500) OUTPUT,
+@MSGS as varchar(500) OUTPUT,
 @ID as varchar(50),
 @strNTLogin as varchar(50)
 AS

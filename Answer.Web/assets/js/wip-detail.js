@@ -258,13 +258,21 @@ $(function () {
     $('#relatedDocument').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);
         var id = button.data('id');
+        var type = button.data('type');
+        var url = '';
+        if (type == "theory") {
+            url = '/wip/GetReferenceTheory?theoryId=' + id;
+        } else {
+            url = '/wip/GetReferenceDocument?documentId=' + id;
+        }
+
         var modal = $(this);
 
         $(this).find('h4.modal-title').html(button.data('name'));
 
         $.ajax({
             type: "GET",
-            url: '/wip/GetReferenceTheory?theoryId=' + id,
+            url: url,
             dataType: 'html',
             success: function (data) {
                 modal.find('.modal-body').html(data);

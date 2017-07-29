@@ -238,9 +238,10 @@ namespace Answer.Web.Controllers
         public ActionResult Details(int? id)
         {
             var orderService = new OrderService();
+            var loggedUserId = User.Identity.GetUserId();
 
             var workItems =  orderService.GetWorkOrderQueryable()
-                               .Where(x => x.Status == WorkItemStatusConstants.Accepted && x.SupplierId == "2") ////TODO GET SupplierId from session 
+                               .Where(x => x.Status == WorkItemStatusConstants.Accepted && x.RequesteeId == loggedUserId)
                                .OrderByDescending(o => o.DueDate)
                                .ToList();
 
@@ -250,7 +251,7 @@ namespace Answer.Web.Controllers
             }
 
             var response = _orderService.GetPurchaseItemDetails(id.Value);
-
+            response.WoItems = workItems;
 
             return View(response);
         }
@@ -416,9 +417,22 @@ namespace Answer.Web.Controllers
         public ActionResult GetReferenceTheoryFile(int fileId)
         {
             var loggedUserId = User.Identity.GetUserId();
-            var response = _orderService.GetTheoryData(fileId, loggedUserId);
+            //var response = _orderService.GetTheoryData(fileId, loggedUserId);
 
-            return PartialView("_ViewReferenceTheory", response);
+            //return PartialView("_ViewReferenceTheory", response);
+            return File(Stream.Null, "xml");
+        }
+
+        [HttpPost]
+        public ActionResult TakeTaskOwnersShip(int taskId)
+        {
+            var loggedUserId = User.Identity.GetUserId();
+            var statusMessage = _orderService.AssumeTask(taskId, loggedUserId);
+            // need to check response and then redirect from JQuery
+            var response = statusMessage.Contains("ERROR")
+                ? new {Code = "Error", Message = statusMessage}
+                : new {Code = "OK", Message = statusMessage};
+            return Json(response, JsonRequestBehavior.AllowGet);
         }
 
         private List<DocumentView> GetDocViewModel(List<DocumentView> docs, OrderService orderService, int width)

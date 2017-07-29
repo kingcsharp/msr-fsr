@@ -8,7 +8,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectVersion>4.1</ProjectVersion>
     <ProjectGuid>{e6e98f90-9138-4912-9631-6c853e2ba1a3}</ProjectGuid>
-    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql130DatabaseSchemaProvider</DSP>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql110DatabaseSchemaProvider</DSP>
     <OutputType>Database</OutputType>
     <RootPath>
     </RootPath>
@@ -2760,5 +2760,8 @@
     <Build Include="dbo\Views\Portal\Portal_LocationsView.sql" />
     <Build Include="dbo\Views\Portal\Portal_RegionsView.sql" />
     <Build Include="dbo\Views\Portal\Portal_ProceduresView.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Msr.Database.publish.xml" />
   </ItemGroup>
 </Project>

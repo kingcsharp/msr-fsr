@@ -50,6 +50,7 @@ namespace Msr.Repositories
             modelBuilder.Entity<FileView>().ToTable("Portal_FilesView");
             modelBuilder.Entity<RegionsView>().ToTable("Portal_RegionsView");
             modelBuilder.Entity<LocationView>().ToTable("Portal_LocationsView");
+            modelBuilder.Entity<TaskLog>().ToTable("A_Task_Logs");
 
         }
 
@@ -78,7 +79,6 @@ namespace Msr.Repositories
         public DbSet<ProcedureView> Procedurs { get; set; }
         public DbSet<FileView> FIleViews { get; set; }
         public DbSet<LocationView> LocationViews { get; set; }
-
-
+        public DbSet<TaskLog> TaskLogs { get; set; }
     }
 }

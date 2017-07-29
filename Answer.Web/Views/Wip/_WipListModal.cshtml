@@ -24,7 +24,7 @@
                                     else if (proItem.Status == "ACCEPTED")
                                     {
                                         cssIconButton = "fa-cog";
-                                        cssButton = "btn-success";
+                                        cssButton = "btn-success btn-accepted";
                                         statusText= "In Progress";
                                     }
                                     else if (proItem.Status == "PENDING_PARENT_ACCEPTANCE")
@@ -34,7 +34,7 @@
                                         statusText= "Waiting to Start";
                                     }
 
-                                    <button data-toggle="tooltip" data-placement="bottom" data-html="true"
+                                    <button data-toggle="tooltip" data-task-id="@proItem.TaskId" data-fill-id="@proItem.FillId" data-placement="bottom" data-html="true"
                                             title="<strong>Serial #:</strong>@proItem.Serial<br />
                                        <strong>Status:</strong> @statusText<br />
                                        <strong>Assigned To:</strong> @proItem.ProcName"
@@ -47,7 +47,28 @@
                         </div>
                     }
 
-               
+<script>
+    $('.btn-accepted').on('click', function () {
+        var id = $(this).data('task-id');
+        var fillId = $(this).data('fill-id');
+        $.ajax({
+            type: "POST",
+            url: "/wip/TakeTaskOwnersShip?taskId=" + id,
+            dataType: 'json',
+            success: function (data) {
+                debugger;
+                if (data.Code == "OK") {
+                    window.location.href = '/wip/Details/' + fillId;
+                } else {
+                    alert(data.Message);
+                }
+            },
+            error: function () {
+
+            }
+        });
+    });
+</script>               
                     @*<div class="row">
                         <div class="col-lg-5 col-md-5 col-sm-6">
                             <strong>Proc:Gate Valve IPN 503030200<br>INTEL 01-INT-453</strong>
