@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace Msr.Models.Parts
 {
-    public class SelectPartsFile
+    public class SelectPartCustomerExecptions
     {
-        public string Show { get; set; }
-        public string Value { get; set; }
+        public string Id { get; set; }
+
+        public string Name { get; set; }
     }
 }

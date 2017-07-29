@@ -1,4 +1,4 @@
-﻿$(document).ready(function () {
+﻿function LoadCompanyGrid() {
     //$.jgrid.defaults.responsive = true;
     $.jgrid.defaults.styleUI = 'Bootstrap';
 
@@ -114,12 +114,12 @@
 
     });
     $('#jqGrid').navGrid("#jqGridPager", {
-        search: false, // show search button on the toolbar
-        add: false,
-        edit: false,
-        del: false,
-        refresh: true
-    },
+            search: false, // show search button on the toolbar
+            add: false,
+            edit: false,
+            del: false,
+            refresh: true
+        },
         {},  // edit options
         {}, // add options
         {}, // delete options
@@ -141,4 +141,104 @@
         }).trigger("reloadGrid");
 
     });
-})
+}
+
+function LoadCompanDialogGrid() {
+    $.jgrid.defaults.styleUI = 'Bootstrap';
+
+    $("#jqGridCompanies").jqGrid({
+        url: '/Companies/CompaniesData',
+        mtype: "GET",
+        styleUI: 'Bootstrap',
+        datatype: "json",
+        colModel: [
+            {
+                label: ' #',
+                name: 'ObjectId',
+                index: 'ObjectId',
+                key: true,
+                colmenu: false,
+                search: false,
+                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                width: 30,
+                align: 'center',
+                formatter: selectFormatter
+            },
+            {
+                label: 'Id',
+                name: 'Id',
+                index: 'Id',
+                key: true,
+                colmenu: false,
+                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                width: 50,
+                align: 'left'
+            },
+            {
+                label: 'Name',
+                name: 'Name',
+                index: 'Name',
+                colmenu: true,
+                editable: true, // must set editable to true if you want to make the field editable
+                editrules: { required: true },
+                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                width: 200,
+                align: 'left'
+            },
+            {
+                label: 'Immediate Parent',
+                name: 'ParentName',
+                index: 'ParentName',
+                colmenu: false,
+                editable: true,
+                coloptions: { sorting: false, columns: true, filtering: false, seraching: true, grouping: false, freeze: false },
+                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                align: 'left',
+                width: 150,
+                hidedlg: false
+            }
+        ],
+        viewrecords: true, // show the current page, data rang and total records on the toolbar
+        rowNum: 10,
+        loadonce: false, // this is just for the demo
+        pager: "#jqGridPagerCompanies",
+        height: 'auto',
+        gridview: true,
+        sortname: 'Name',
+        sortable: true,
+        sortorder: 'asc',
+        cellEdit: false,
+        cellsubmit: 'clientArray',
+        editurl: 'clientArray',
+        autowidth: true,
+        colMenu: true,
+        key: true,
+        ajaxCellOptions: {}
+
+    });
+    $('#jqGridCompanies').navGrid("#jqGridPagerCompanies", {
+            refresh: true,
+            search: false, // show search button on the toolbar
+            add: false,
+            edit: false,
+            del: false,
+
+        },
+        {}, // edit options
+        {}, // add options
+        {}, // delete options
+        { multipleSearch: true }
+    );
+}
+
+function selectFormatter(cellvalue, options, rowObject) {
+
+    var html = "";
+
+    html = '<input class="selected-file" type="checkbox" value="' + cellvalue + '|' + rowObject.Name + '" />';
+
+    return html;
+}

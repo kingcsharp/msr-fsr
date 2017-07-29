@@ -43,16 +43,24 @@ namespace Answer.Web.Controllers
                     }
                     else if (rule.field == nameof(ProcedureView.Revision))
                     {
-                        var rev = Convert.ToInt32(rule.data);
-                        totalRows = totalRows.Where(x => x.Revision == rev);
+                        int value;
+
+                        if (int.TryParse(rule.data, out value))
+                        {
+                            totalRows = totalRows.Where(x => x.Revision == value);
+                        }
                     }
                     else if (rule.field == nameof(ProcedureView.Status))
                     {
-                        var statusList = rule.data.Split(',').Select(x => x.Trim().ToLower());
-
-                        if (statusList.Any())
+                        if (rule.data != "ALL")
                         {
-                            totalRows = totalRows.Where(x => statusList.Contains(x.Status.ToLower()));
+                            var statusList = rule.data.Split(',').Select(x => x.Trim().ToLower());
+
+                            if (statusList.Any())
+                            {
+                                totalRows = totalRows.Where(x => statusList.Contains(x.Status.ToLower()));
+
+                            }
                         }
                     }
                 }

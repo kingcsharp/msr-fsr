@@ -385,6 +385,7 @@
     <Content Include="assets\js\ace\ace.js" />
     <Content Include="assets\js\ace\mode-html.js" />
     <Content Include="assets\js\ace\theme-github.js" />
+    <Content Include="assets\js\eModal.min.js" />
     <Content Include="assets\js\admin_users.js" />
     <Content Include="assets\js\alert.js" />
     <Content Include="assets\js\app.js" />

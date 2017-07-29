@@ -102,7 +102,7 @@ namespace Answer.Web.Controllers
         {
             var location = new SaveLocationVM();
 
-            location.Setup(new RegionService());
+            location.Setup(new RegionService(), new LocationService());
 
             return View(location);
         }
@@ -147,7 +147,7 @@ namespace Answer.Web.Controllers
 
             location = location.MapToDto(model: model);
 
-            location.Setup(new RegionService());
+            location.Setup(new RegionService(), locationService);
 
             return View(location);
         }
@@ -176,7 +176,7 @@ namespace Answer.Web.Controllers
                 return View(model);
             }
 
-            model.Setup(new RegionService());
+            model.Setup(new RegionService(), locationService);
 
             return View(model);
         }

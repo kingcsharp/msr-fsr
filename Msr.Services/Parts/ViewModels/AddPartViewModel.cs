@@ -23,6 +23,8 @@ namespace Msr.Services.Parts.ViewModels
             ReferenceTheories = new List<string>();
             ListExternalEqualParts = new List<SelectListItem>();
             ListInternalEqualParts = new List<SelectListItem>();
+            ListSpecialCustomers = new List<SelectListItem>();
+            ListCustomerExceptions = new List<SelectListItem>();
         }
 
         public string Id { get; set; }
@@ -31,7 +33,6 @@ namespace Msr.Services.Parts.ViewModels
 
         public string Company { get; set; }
 
-        [Required]
         [DisplayName("Part Number ( PN / IPN ) :")]
         public string CompanyPartNumber { get; set; }
 
@@ -82,6 +83,7 @@ namespace Msr.Services.Parts.ViewModels
         [DisplayName("Create Product Too? :")]
         public byte? CreateProd { get; set; }
 
+        [DisplayName("Product Supplier :")]
         public string SupplierCo { get; set; }
 
         public string ProductType { get; set; }
@@ -89,13 +91,16 @@ namespace Msr.Services.Parts.ViewModels
         [DisplayName("Procedure Verb :")]
         public string ProcVerb { get; set; }
 
-        public string SpecialCustomer { get; set; }
+        [DisplayName("Special Customer List :")]
+        public List<string> SpecialCustomers { get; set; }
 
-        public string CustomerExceptions { get; set; }
+        [DisplayName("Customers to exclude from this list price :")]
+        public List<string> CustomerExceptions { get; set; }
 
         public string Customers { get; set; }
 
-        public decimal Price { get; set; }
+        [DisplayName("Unit Price :")]
+        public string Price { get; set; }
 
         public string NTLogin { get; set; }
 
@@ -131,6 +136,14 @@ namespace Msr.Services.Parts.ViewModels
         public IEnumerable<SelectListItem> Availabilities { get; set; }
 
         public IEnumerable<SelectListItem> PartsTypes { get; set; }
+
+        public IEnumerable<SelectListItem> ProductTypes { get; set; }
+
+        public IEnumerable<SelectListItem> ListSpecialCustomers { get; set; }
+
+        public IEnumerable<SelectListItem> ListCustomerExceptions { get; set; }
+
+        public IEnumerable<SelectListItem> ListSupplierCompany { get; set; }
 
 
         public void Setup(FileService fileService, PartsService partsService, PartTypeService partTypeService)
@@ -253,6 +266,50 @@ namespace Msr.Services.Parts.ViewModels
                     Value="0",
                 }
             };
+
+            ProductTypes = new List<SelectListItem>
+            {
+                new SelectListItem
+                {
+                    Text = "PROD_SERVICE",
+                    Value = "SERVICE",
+                    Selected = true
+                },
+                new SelectListItem
+                {
+                    Text = "PROD_GOOD",
+                    Value = "GOOD"
+                }
+
+            };
+            ListSpecialCustomers = new List<SelectListItem>
+            {
+                new SelectListItem
+                {
+                    Text = "",
+                    Value = ""
+                },
+                new SelectListItem
+                {
+                    Text = "All Insternal Customers Except My Dept",
+                    Value = "ALL_INTERNAL_BUT_ME"
+                },
+                new SelectListItem
+                {
+                    Text = "All External Customers",
+                    Value = "ALL_EXTERNAL"
+                }
+            };
+            //Need to be from session of loged in user Company
+            ListSupplierCompany = new List<SelectListItem>
+            {
+                new SelectListItem
+                {
+                    Text = "[MSR-FSR] MSR-FSR",
+                    Value = "2"
+                }
+            };
+
             ListInternalEqualParts = partsService.GetPartsQueryable().ToList().Select(x => new SelectListItem
             {
                 Text = x.Name,
@@ -267,31 +324,36 @@ namespace Msr.Services.Parts.ViewModels
 
             ListReferenceFiles = partsService.GetSelectedFiles(id: Id, type: null).Select(x => new SelectListItem
             {
-                Text = x.SHOW,
-                Value = x.VALUE.ToString(),
-                //Selected = true
+                Text = x.Show,
+                Value = x.Value.ToString(),
             }).OrderBy(o => o.Text).ToList();
 
             ListPictureFiles = partsService.GetSelectedFiles(id: Id, type: "PICTURE").Select(x => new SelectListItem
             {
-                Text = x.SHOW,
-                Value = x.VALUE.ToString(),
-                //Selected = true
+                Text = x.Show,
+                Value = x.Value.ToString(),
             }).OrderBy(o => o.Text).ToList();
 
             ListReferenceTheories = partsService.GetSelectedFiles(id: Id, type: "THEORY").Select(x => new SelectListItem
             {
-                Text = x.SHOW,
-                Value = x.VALUE.ToString(),
-                //Selected = true
+                Text = x.Show,
+                Value = x.Value.ToString(),
             }).OrderBy(o => o.Text).ToList();
 
             var result = partsService.GetInternalPart(id: Id);
             if (result != null)
             {
-                InternalEqualParts = partsService.GetInternalPart(id: Id).ID;
-                SelectedInternalEqualParts = partsService.GetInternalPart(id: Id).NAME;
+                InternalEqualParts = partsService.GetInternalPart(id: Id).Id;
+                SelectedInternalEqualParts = partsService.GetInternalPart(id: Id).Name;
             }
+
+            ListCustomerExceptions = partsService.GetPartCustomerExceptions(id: Id).Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.Id.ToString(),
+            }).OrderBy(o => o.Text).ToList();
+
+            SpecialCustomers = partsService.GetPartSpecialCustomers(id: Id).ToList();
 
         }
 

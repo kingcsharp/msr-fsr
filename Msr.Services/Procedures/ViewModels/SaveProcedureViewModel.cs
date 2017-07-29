@@ -10,8 +10,8 @@ namespace Msr.Models.Procedures
 	public class SaveProcedureViewModel
 	{
 		public string Id { get; set; }
-		public string ProcedureName { get; set; }
-		public string RootCompany { get; set; }
+		public string Name { get; set; }
+		public string Company { get; set; }
 		public string CreatingCompany { get; set; }
 		//public string ProcedureType { get; set; }
 		public string SecurityClearanceLevel { get; set; }

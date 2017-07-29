@@ -57,7 +57,7 @@ namespace Msr.Services.Locations.ViewModels
 
         public List<SelectListItem> Regions { get; set; }
 
-        public void Setup(RegionService regionService)
+        public void Setup(RegionService regionService, LocationService locationService)
         {
             Countries = new List<SelectListItem>
             {
@@ -1304,6 +1304,13 @@ namespace Msr.Services.Locations.ViewModels
                 Text = x.Name,
                 Value = x.ObjectId.ToString()
             }).OrderBy(o => o.Text).ToList();
+
+            Parents = locationService.GetLocationsQueryable().Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.ObjectId.ToString()
+            }).OrderBy(o => o.Text).ToList();
+
         }
         public SaveLocationVM MapToDto(LocationView model)
         {

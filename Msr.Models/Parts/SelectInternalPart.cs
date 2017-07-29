@@ -8,8 +8,8 @@ namespace Msr.Models.Parts
 {
     public class SelectInternalPart
     {
-        public string ID { get; set; }
+        public string Id { get; set; }
 
-        public string NAME { get; set; }
+        public string Name { get; set; }
     }
 }

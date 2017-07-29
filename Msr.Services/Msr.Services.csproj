@@ -191,6 +191,7 @@
     <Compile Include="Parts\Messages\AddPartTypesTaskRequest.cs" />
     <Compile Include="Parts\PartsService.cs" />
     <Compile Include="Parts\PartTypeService.cs" />
+    <Compile Include="Parts\Procedures\DeletePartProcedure.cs" />
     <Compile Include="Parts\Procedures\ShowListedFiles.cs" />
     <Compile Include="Parts\Procedures\DeleteFileProcedure.cs" />
     <Compile Include="Parts\Procedures\SaveFileProcedure.cs" />

@@ -25,12 +25,12 @@ namespace Msr.Services.Procedures
 		
 		public ProcedureView GetProcedureById(string Id)
 		{
-			return _dbContext.Procedurs.Where(x => x.Id == Id).SingleOrDefault();
+			return _dbContext.ProcedureViews.Where(x => x.Id == Id).SingleOrDefault();
 		}
 		public IQueryable<ProcedureView> GetProceduresQueryable()
 		{
 
-			return _dbContext.Procedurs;					
+			return _dbContext.ProcedureViews;					
 		}
 
 		public bool Save(ProcedureView model)

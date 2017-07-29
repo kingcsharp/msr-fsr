@@ -115,8 +115,6 @@ namespace Answer.Web.Controllers
                                 totalRows = totalRows.Where(x => statusList.Contains(x.Status.ToLower()));
 
                             }
-
-                            
                         }
                     }
                     else if (rule.field == nameof(WorkOrderView.Notes))

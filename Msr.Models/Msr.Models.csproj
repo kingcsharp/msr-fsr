@@ -109,6 +109,7 @@
     <Compile Include="Orders\FileSearchView.cs" />
     <Compile Include="Orders\WorkOrderImageView.cs" />
     <Compile Include="Orders\WorkOrderView.cs" />
+    <Compile Include="Parts\SelectPartCustomerExecptions.cs" />
     <Compile Include="Parts\Part.cs" />
     <Compile Include="Parts\PartsView.cs" />
     <Compile Include="Parts\PartsWithTaskAndResult.cs" />

@@ -53,8 +53,12 @@ namespace Answer.Web.Controllers
                     }
                     else if (rule.field == nameof(PartsView.Rev))
                     {
-                        var rev = Convert.ToInt32(rule.data);
-                        totalRows = totalRows.Where(x => x.Rev == rev);
+                        int value;
+
+                        if (int.TryParse(rule.data, out value))
+                        {
+                            totalRows = totalRows.Where(x => x.Rev == value);
+                        }
                     }
                     else if (rule.field == nameof(PartsView.Status))
                     {
@@ -135,12 +139,10 @@ namespace Answer.Web.Controllers
             if (ModelState.IsValid)
             {
                 //Need to dynamic 
-                model.Company = "2";
-                //need to be from list 
-                model.ProductType = "SERVICE";
                 model.NTLogin = "1618";
+                model.SubParts = null;
 
-                var response = taskService.Save(model: model);
+                var response = taskService.Create(model: model);
 
                 if (response)
                 {
@@ -187,10 +189,8 @@ namespace Answer.Web.Controllers
             if (ModelState.IsValid)
             {
                 //Need to dynamic 
-                model.Company = "2";
-                //need to be from list 
-                model.ProductType = "SERVICE";
                 model.NTLogin = "1618";
+                model.SubParts = null;
 
                 var response = taskService.Save(model);
 
@@ -212,7 +212,22 @@ namespace Answer.Web.Controllers
 
             return View(model);
         }
+        public ActionResult PartDelete(string id)
+        {
+            var taskService = new PartsService();
 
+            var response = taskService.Delete(id: id);
+
+            if (response)
+            {
+                TempData["SuccessMessage"] = "Part deleted successfully.";
+
+                return RedirectToAction("Index");
+            }
+
+            TempData["ErrorMessage"] = "Something went wrong.";
+            return RedirectToAction("Index");
+        }
         public ActionResult PartTypes()
         {
             var viewModel = new EngineeringViewModel();
@@ -254,8 +269,12 @@ namespace Answer.Web.Controllers
                     }
                     else if (rule.field == nameof(PartTypesView.Rev))
                     {
-                        var rev = Convert.ToInt32(rule.data);
-                        totalRows = totalRows.Where(x => x.Rev == rev);
+                        int value;
+                        if (Int32.TryParse(rule.data, out value))
+                        {
+                            totalRows = totalRows.Where(x => x.Rev == value);
+                        }
+
                     }
                     else if (rule.field == nameof(PartTypesView.Status))
                     {

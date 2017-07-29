@@ -22,6 +22,12 @@ namespace Answer.Web.Controllers
 
             return View(viewModel);
         }
+        public ActionResult GetCompanies(string callBackId)
+        {
+            ViewBag.CallBackId = callBackId;
+
+            return PartialView("_Companies");
+        }
         public ActionResult CompaniesData(JqGridParam param)
         {
             var companyService = new CompanyService();
