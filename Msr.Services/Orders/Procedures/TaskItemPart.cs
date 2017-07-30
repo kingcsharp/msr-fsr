@@ -1,4 +1,6 @@
 ﻿
+using System.Collections.Generic;
+
 namespace Msr.Services.Orders.Procedures
 {
     public class TaskItemPart
@@ -14,6 +16,11 @@ namespace Msr.Services.Orders.Procedures
         public string HAS_MONITOR { get; set; }
 
         public string SYSTEM_TASK { get; set; }
+
         public string STEP_ID { get; set; }
+
+        public bool IsEditable { get; set; }
+
+        public List<GetActualPartsShowHierarchy> GetActualPartsShowHierarchys { get; set; }
     }
 }

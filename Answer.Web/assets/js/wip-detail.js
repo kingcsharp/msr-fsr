@@ -74,15 +74,24 @@ $(function () {
 
     $('#showCompletedSwitch').on('switchChange.bootstrapSwitch', function (e, state) {
         e.preventDefault();
-
+        var containerUl = $('#wip-item-select').siblings('div.dropdown-menu').find('ul.dropdown-menu');
+        
         if (state) {
-            $("#wip-item-select > optgroup > option[data-status='Complete']").hide();
+            containerUl.find('li').each(function (index, value) {
+                if ($(this).find('a span.label').html() === "FINISHED") {
+                    $(this).show();
+                }
+            });
             console.log('on');
         } else {
-            $("#wip-item-select > optgroup > option[data-status='Complete']").show();
+            containerUl.find('li').each(function (index, value) {
+                if ($(this).find('a span.label').html() === "FINISHED") {
+                    $(this).hide();
+                }
+            });
             console.log('off');
         }
-        $('.selectpicker').selectpicker('refresh');
+        //$('.selectpicker').selectpicker('refresh');
     });
 
     $('[data-toggle="tooltip"]').tooltip();

@@ -22,9 +22,8 @@
         </div>
 
         <div id="@monitorsId" class="tab-pane fade task-window">
-            @if (!string.IsNullOrWhiteSpace(Model.MonitorTemplateResult.Id))
+            @if (Model.TaskEditDataResult.HasMonitor == true)
             {
-
                 @Html.Partial("_MonitorsTab", Model.MonitorTemplateResult)
             }
         </div>

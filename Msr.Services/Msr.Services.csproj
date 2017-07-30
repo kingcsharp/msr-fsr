@@ -126,6 +126,7 @@
     <Compile Include="Notes\Messages\AddNoteToTaskRequest.cs" />
     <Compile Include="Notes\NoteService.cs" />
     <Compile Include="Notes\Procedures\AddProcedure.cs" />
+    <Compile Include="Orders\Messaging\ActualPart.cs" />
     <Compile Include="Orders\Messaging\CheckLoginResult.cs" />
     <Compile Include="Orders\Messaging\DeliveryTsrDetailsResponse.cs" />
     <Compile Include="Orders\Messaging\MonitorLabelTsrDetailsResponse.cs" />
@@ -145,6 +146,9 @@
     <Compile Include="Orders\Messaging\WipStepDetailsResponse.cs" />
     <Compile Include="Orders\Messaging\WorkOrderDetailsResponse.cs" />
     <Compile Include="Orders\OrderService.cs" />
+    <Compile Include="Orders\Procedures\GetActualPartsShowHierarchy.cs" />
+    <Compile Include="Orders\Procedures\GetTaskObjectLinkResult.cs" />
+    <Compile Include="Orders\Procedures\GetTaskDetailResult.cs" />
     <Compile Include="Orders\Procedures\GetReferenceTheories.cs" />
     <Compile Include="Orders\Procedures\GetReferenceFiles.cs" />
     <Compile Include="Orders\Procedures\WorkflowDataResult.cs" />

@@ -239,7 +239,7 @@ namespace Answer.Web.Controllers
             var loggedUserId = User.Identity.GetUserId();
 
             var workItems =  orderService.GetWorkOrderQueryable()
-                               .Where(x => x.Status == WorkItemStatusConstants.Accepted && x.RequesteeId == loggedUserId)
+                               .Where(x => x.RequesteeId == "1618")
                                .OrderByDescending(o => o.DueDate)
                                .ToList();
 
@@ -431,6 +431,30 @@ namespace Answer.Web.Controllers
                 ? new {Code = "Error", Message = statusMessage}
                 : new {Code = "OK", Message = statusMessage};
             return Json(response, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult UpdateRootPart(int partId, string serialNumber, int taskId)
+        {
+            var loggedUserId = User.Identity.GetUserId();
+            loggedUserId = "1618";//to be removed
+            _orderService.UpdateRootPart(partId, serialNumber, taskId, loggedUserId);
+
+            return Json("OK", JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult UpdateRootParts(ActualPart[] actualParts)
+        {
+            var loggedUserId = User.Identity.GetUserId();
+            loggedUserId = "1618";//to be removed
+            foreach (var part in actualParts)
+            {
+                _orderService.UpdateRootPart(part.Id, part.Serial, 12, loggedUserId);
+            }
+            
+
+            return Json("OK", JsonRequestBehavior.AllowGet);
         }
 
         private List<DocumentView> GetDocViewModel(List<DocumentView> docs, OrderService orderService, int width)

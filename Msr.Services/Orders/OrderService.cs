@@ -522,9 +522,43 @@ namespace Msr.Services.Orders
 
                             break;
                         }
+
+                        var taskData =
+                            conn.Query<GetTaskDetailResult>(
+                                "SELECT * FROM A_TASKS WHERE ID = @stepId",
+                                new {stepId = task.STEP_ID}, commandType: CommandType.Text).SingleOrDefault();
+
+                        if (taskData != null)
+                        {
+                            task.IsEditable = false;
+                            if (taskData.Status == "ACCEPTED" && taskData.REQUESTEE_ID == login)
+                            {
+                                task.IsEditable = true;
+                            }
+                            else if (taskData.Status == "REQUESTED" && taskData.GROUP_REQUESTEE_ID == login)//Need to check this GroupRequesteeId in Roles from session
+                            {
+                                task.IsEditable = true;
+                            }
+                        }
+
+                        var taskObjectLink = conn.Query<GetTaskObjectLinkResult>("SELECT * FROM A_TASK_OBJECT_LINK WHERE TASK_ID = @stepId", new { stepId = task.STEP_ID }, commandType: CommandType.Text).SingleOrDefault();
+
+                        if (taskObjectLink != null)
+                        {
+                            var p3 = new DynamicParameters();
+                            p3.Add("@firstTime", null, DbType.String, ParameterDirection.Input);
+                            p3.Add("@strAPart", taskObjectLink.Object_Id, DbType.String, ParameterDirection.Input);
+                            p3.Add("@strListToexpand", taskObjectLink.Object_Id, DbType.String, ParameterDirection.Input);
+                            p3.Add("@strExpandAllList", taskObjectLink.Object_Id, DbType.String,
+                                ParameterDirection.Input);
+                            p3.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input);
+
+                            task.GetActualPartsShowHierarchys =
+                                conn.Query<GetActualPartsShowHierarchy>("A_SP_ACTUAL_PARTS_SHOW_HIERARCHY", p3,
+                                    commandType: CommandType.StoredProcedure).ToList();
+                        }
                     }
                 }
-
             }
 
             detailsResponse.MonitorTemplateResult.FillId = fillId;
@@ -744,6 +778,21 @@ namespace Msr.Services.Orders
             }
 
             return detailsResponse;
+        }
+
+        public void UpdateRootPart(int partId, string serialNumber, int taskId, string login)
+        {
+            var p = new DynamicParameters();
+
+            p.Add("@ID", partId, DbType.String, ParameterDirection.Input, size: 500);
+            p.Add("@taskID", taskId, DbType.String, ParameterDirection.Input, size: 50);
+            p.Add("@SN", serialNumber, DbType.String, ParameterDirection.Input, size: 50);
+            p.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input, size: 50);
+
+            using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
+            {
+                var stepStartDoneTaskResult = conn.Query<StepStartTaskResult>("A_SP_ACTUAL_PART_UPDATE_SERIAL_FROM_SERIALIZE_TASK", p, commandType: CommandType.StoredProcedure);
+            }
         }
 
         private void FormatHtml(TsrDetailsResponse response)

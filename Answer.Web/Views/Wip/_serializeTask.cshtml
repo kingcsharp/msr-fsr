@@ -1,0 +1,60 @@
+﻿@model Msr.Services.Orders.Procedures.TaskItemPart
+    @{
+        int i = 0;
+        string readOnly = "";//(!Model.IsEditable).ToString();
+    }
+@Html.BeginForm("UpdateRootParts", "Wip"){
+<input type="hidden" name="taskId" value="@Model.STEP_ID"/>
+<table class="table">
+    <tr>
+        <td>Part</td>
+        <td>Serial #</td>
+    </tr>
+    @foreach (var part in Model.GetActualPartsShowHierarchys)
+    {
+        <tr>
+            <td>@part.Part_Desc</td>
+            <td>
+                <input name="part[@i].Serial" type="text" value="@part.Serial" @readOnly/>
+                <input name="part[@i].Id" type="hidden" value="@part.Id"/>
+                @if (part.Tree_Level == 0)
+                {
+                    <button onclick="$('div#@part.Id').show()">Change</button>
+                    <div id="@part.Id" style="display: none">
+                        S/N: <input type="text" />
+                        <button id="submit-serial-number" data-part-id="@part.Id">Submit</button>
+                    </div>
+                }
+            </td>
+        </tr>
+        i++;
+    }
+    <tr>
+        <td colspan="2">
+            <button type="submit">Save</button>
+            <button type="submit">Save & complete task</button>
+        </td>
+    </tr>
+</table>
+}
+
+<script>
+    $('#submit-serial-number').on('click', function() {
+        var partId = $(this).data('part-id');
+        var serialNumber = $('div#' + partId).find('input').val();
+        var taskId = @Model.STEP_ID;
+        $.ajax({
+            type: "POST",
+            url: "/wip/UpdateRootPart?partId=" + partId + "&serialNumber=" + serialNumber + "&taskId=" + taskId,
+            dataType: 'html',
+            success: function(data) {
+                if (data === "OK") {
+                    $('div#' + partId).hide();
+                }
+            },
+            error: function() {
+
+            }
+        });
+    });
+</script>

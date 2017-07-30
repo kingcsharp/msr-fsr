@@ -24,6 +24,14 @@
                         @Html.Raw(step.Description)
                     </td>
                 </tr>
+                if (step.SYSTEM_TASK == "SYS_SERIALIZE")
+                {
+                    <tr>
+                        <td colspan=2>
+                            @Html.Partial("_SerializeTask", step)
+                        </td>
+                    </tr>
+                }
                 if (i == 5)
                 {
                     return;
