@@ -12,6 +12,7 @@ namespace Msr.Services.monitor
    public class MonitorService
     {
         private readonly MsrDbContext _dbContext;
+
         public MonitorService()
         {
             _dbContext = new MsrDbContext();

@@ -62,6 +62,5 @@ namespace Msr.Services.Notes
                 ////TODO add logging
             }
         }
-
     }
 }

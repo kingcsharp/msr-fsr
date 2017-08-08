@@ -86,7 +86,5 @@ namespace Msr.Services.Orders
 
            return result;
         }
-
-
     }
 }

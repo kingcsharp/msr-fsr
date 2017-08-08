@@ -121,7 +121,7 @@
                             }
 
                       
-                                <li class="step-task step @stepCss" data-stepId="@step.StepId" data-phStepId="@step.PhStepId" data-fill-id="@Model.FillId">
+                                <li class="step-task step @stepCss" data-stepId="@step.StepId" data-phStepId="@step.PhStepId" data-fill-id="@Model.FillId" title="@step.Description">
                                     <div>@step.Description</div>
                                 </li>
                            
@@ -133,8 +133,7 @@
                   
                         @foreach (var step in Model.TaskStepResults.Where(x=>x.Has_Child !="1"))
                         {
-                            <li id="step-@step.StepId">
-                               
+                            <li id="step-@step.StepId">                               
                             </li>
                         }
 

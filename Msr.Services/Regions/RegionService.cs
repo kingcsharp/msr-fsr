@@ -24,10 +24,12 @@ namespace Msr.Services.Regions
                 return _dbContext.RegionsViews;
             }
         }
+
         public RegionsView GetById(string Id)
         {
             return RegionsQueryable.Where(x => x.ObjectId == Id).SingleOrDefault();
         }
+
         public bool Save(SaveRegionViewModel model)
         {
             try
@@ -45,6 +47,7 @@ namespace Msr.Services.Regions
                 return false;
             }
         }
+
         public bool Create(SaveRegionViewModel model)
         {
             try
@@ -62,6 +65,7 @@ namespace Msr.Services.Regions
                 return false;
             }
         }
+
         public bool Delete(SaveRegionViewModel model)
         {
             try

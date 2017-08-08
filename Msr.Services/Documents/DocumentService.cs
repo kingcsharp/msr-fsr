@@ -22,14 +22,17 @@ namespace Msr.Services.Documents
         {
             _dbContext = new MsrDbContext();
         }
+
         public IQueryable<DocumentView> GetDocumentsQueryable()
         {
             return _dbContext.DocumentViews;
         }
+
         public DocumentView GetById(string id)
         {
             return GetDocumentsQueryable().Where(x => x.ObjectId == id).SingleOrDefault();
         }
+
         public List<SelectFile> GetSelectedObjects(string id)
         {
             var objID = new SqlParameter("@ID", id == null ? "0" : id);
@@ -41,6 +44,7 @@ namespace Msr.Services.Documents
 
             return result;
         }
+
         public List<SelectRole> GetSelectedRoles(string id)
         {
             var objID = new SqlParameter("@ID", id == null ? "0" : id);
@@ -52,6 +56,7 @@ namespace Msr.Services.Documents
 
             return result;
         }
+
         public List<SelectFile> GetSelectedTheories(string id)
         {
             var objID = new SqlParameter("@ID", id == null ? "0" : id);
@@ -63,6 +68,7 @@ namespace Msr.Services.Documents
 
             return result;
         }
+
         public bool Save(SaveDocumentViewModel model)
         {
             try
@@ -104,6 +110,7 @@ namespace Msr.Services.Documents
                 return false;
             }
         }
+
         public bool Create(SaveDocumentViewModel model)
         {
             try

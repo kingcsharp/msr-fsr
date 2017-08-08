@@ -2,20 +2,23 @@
     border: 1px #c0c0c0 solid;
     padding: 10px 3px 10px 3px !important;
     background-color: #f0f0f0;
-    height:60px;
-    line-height:18px;
-    display: table !important;
+    height: 60px;
+    line-height: 18px;
+    display: block;
+    overflow: hidden;
+    text-align:center;    
 }
 #carousel .slides > li.flex-active-slide {
     border: 1px #202020 solid;
     background-color: #fff;
 }
 #carousel .slides > li div {
-    font-size:16px;
+    font-size:14px;
     margin: 0 auto;
-    display: table-cell;
+    display: block;
     vertical-align: middle;
     text-align:center;
+
 }
 /*.select2 {
     display:none !important;

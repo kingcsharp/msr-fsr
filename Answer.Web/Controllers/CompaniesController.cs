@@ -14,7 +14,6 @@ namespace Answer.Web.Controllers
 {
     public class CompaniesController : Controller
     {
-        // GET: Companies
         public ActionResult Index()
         {
             var viewModel = new EngineeringViewModel();

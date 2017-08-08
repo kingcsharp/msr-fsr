@@ -183,6 +183,7 @@ namespace Answer.Web.Controllers
             TempData["ErrorMessage"] = "Something went wrong.";
             return RedirectToAction("Index");
         }
+
         public ActionResult Details(string id)
         {
             var taskService = new LocationService();

@@ -21,14 +21,17 @@ namespace Msr.Services.Companies
         {
             _dbContext = new MsrDbContext();
         }
+
         public IQueryable<CompanyView> GetCompaniesQueryable()
         {
             return _dbContext.CompanyViews;
         }
+
         public CompanyView GetCompanyById(string Id)
         {
             return _dbContext.CompanyViews.Where(x => x.ObjectId == Id).SingleOrDefault();
         }
+
         public EditCompanyViewModel GetCompanyByObjId(string Id)
         {
             EditCompanyViewModel editCompanyViewModel = new EditCompanyViewModel();
@@ -44,6 +47,7 @@ namespace Msr.Services.Companies
             editCompanyViewModel.LocationName = getComapny.LocationName;
             return editCompanyViewModel;
         }       
+
         public bool Create(AddCompanyViewModel model)
         {
             try
@@ -61,6 +65,7 @@ namespace Msr.Services.Companies
                 return false;
             }
         }
+
         public bool Edit(EditCompanyViewModel model)
         {
             try
@@ -97,18 +102,20 @@ namespace Msr.Services.Companies
                 return false;
             }
         }        
+
         public IEnumerable<DocumentFilesView> GetFilesByType(string type)
         {
             return _dbContext.DocumentFilesViews.Where(t => t.TYPE == type).ToList();
         }
+
         public IQueryable<Msr.Models.Companies.HeadPeopleView> GetHeadPeople()
         {
             return _dbContext.HeadPeopleViews;
         }
+
         public IQueryable<LocationView> GetLocationsQueryable()
         {            
                 return _dbContext.LocationViews;            
         }
-
     }
 }

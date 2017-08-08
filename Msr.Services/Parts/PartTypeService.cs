@@ -22,14 +22,17 @@ namespace Msr.Services.Parts
         {
             _dbContext = new MsrDbContext();
         }
+
         public IQueryable<PartTypesView> GetPartTypesQueryable()
         {
             return _dbContext.PartTypesViews;
         }
+
         public PartType GetById(string Id)
         {
             return _dbContext.PartTypes.Where(x => x.Id == Id).Single();
         }
+
         public bool Create(AddPartTypesViewModel model)
         {
             try
@@ -47,6 +50,7 @@ namespace Msr.Services.Parts
                 return false;
             }
         }
+
         public bool Edit(AddPartTypesViewModel model)
         {
             try

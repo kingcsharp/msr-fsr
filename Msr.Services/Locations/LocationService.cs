@@ -19,14 +19,17 @@ namespace Msr.Services.Locations
         {
             _dbContext = new MsrDbContext();
         }
+
         public IQueryable<LocationView> GetLocationsQueryable()
         {
             return _dbContext.LocationViews;
         }
+
         public LocationView GetById(string Id)
         {
             return GetLocationsQueryable().Where(x => x.ObjectId == Id).SingleOrDefault();
         }
+
         public bool Save(SaveLocationVM model)
         {
             try
@@ -58,6 +61,7 @@ namespace Msr.Services.Locations
                 return false;
             }
         }
+
         public bool Create(SaveLocationVM model)
         {
             try
@@ -88,7 +92,6 @@ namespace Msr.Services.Locations
                 return false;
             }
         }
-
 
         public bool Delete(string id)
         {

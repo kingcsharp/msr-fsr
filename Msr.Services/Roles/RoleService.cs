@@ -19,14 +19,17 @@ namespace Msr.Services.Roles
         {
             _dbContext = new MsrDbContext();
         }
+
         public IQueryable<RolesView> GetUserRolesQueryable()
         {
             return _dbContext.RolesViews;
         }
+
         public RolesView GetRoleByid(string Id)
         {
             return _dbContext.RolesViews.Where(x => x.Id == Id).SingleOrDefault();
         }
+
         public bool Create(SaveRoleViewModel model)
         {
             try
@@ -44,6 +47,7 @@ namespace Msr.Services.Roles
                 return false;
             }
         }
+
         public bool Edit(SaveRoleViewModel model)
         {
             try

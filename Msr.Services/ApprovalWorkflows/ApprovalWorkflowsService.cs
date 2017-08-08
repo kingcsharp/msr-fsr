@@ -21,6 +21,5 @@ namespace Msr.Services.ApprovalWorkflows
         {
             return _dbContext.ApprovalWorkflowsViews;
         }
-
     }
 }
