@@ -24,6 +24,10 @@ $(window).load(function () {
 //document ready
 $(function () {
 
+    if (parseInt($('#ncr-count').val()) > 0) {
+        var result = confirm('There are NCRs associated to this part. Would you like to view them?');
+        handleNCRButtonPush(result);
+    }
 
     $('.selectpicker').selectpicker();
 
@@ -75,7 +79,7 @@ $(function () {
     $('#showCompletedSwitch').on('switchChange.bootstrapSwitch', function (e, state) {
         e.preventDefault();
         var containerUl = $('#wip-item-select').siblings('div.dropdown-menu').find('ul.dropdown-menu');
-        
+
         if (state) {
             containerUl.find('li').each(function (index, value) {
                 if ($(this).find('a span.label').html() === "FINISHED") {
@@ -101,7 +105,6 @@ $(function () {
         $('#wipListModal').modal("hide");
     });
 
-
     var hasTimer = false;
     // Init timer start
     $('.start-timer-btn').on('click', function () {
@@ -119,7 +122,6 @@ $(function () {
         $(this).addClass('hidden');
         $('.pause-timer-btn, .remove-timer-btn').removeClass('hidden');
     });
-
 
     // Init timer pause
     $('.pause-timer-btn').on('click', function () {
@@ -153,8 +155,6 @@ $(function () {
         }
     });
 
-
-
     $('#wipListModal').on('hidden.bs.modal', function (event) {
         $(this).data('bs.modal', null);
     });
@@ -174,7 +174,6 @@ $(function () {
             }
         });
     });
-
 
     $('#wioDetailPrintTraveler').on('hidden.bs.modal', function (event) {
         $(this).data('bs.modal', null);
@@ -251,12 +250,10 @@ $(function () {
         });
     });
 
-
     $('.step-task').on('click', function () {
 
         loadStep(this);
     });
-
 
     loadStep($('#carousel ul.slides li.step').first());
 
@@ -333,7 +330,6 @@ $('#btn-cancel-steps').on('click', function () {
         }
     });
 
-    
 });
 
 function loadStep(step) {
@@ -354,4 +350,23 @@ function loadStep(step) {
 
         }
     });
+}
+
+function handleNCRButtonPush(v) {
+    if (v) {
+        var id = $('#fill-id').val();
+
+        $.ajax({
+            type: "GET",
+            url: '/wip/getncrmodel?id=' + id,
+            dataType: 'html',
+            success: function (data) {
+                $('#ncrModal').modal("show");
+                $('#ncrModal').find('.modal-body').html(data);
+            },
+            error: function () {
+
+            }
+        });        
+    }
 }

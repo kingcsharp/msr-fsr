@@ -126,6 +126,7 @@
     <Compile Include="Notes\Messages\AddNoteToTaskRequest.cs" />
     <Compile Include="Notes\NoteService.cs" />
     <Compile Include="Notes\Procedures\AddProcedure.cs" />
+    <Compile Include="Orders\Messaging\ActualParts.cs" />
     <Compile Include="Orders\Messaging\ActualPart.cs" />
     <Compile Include="Orders\Messaging\CheckLoginResult.cs" />
     <Compile Include="Orders\Messaging\DeliveryTsrDetailsResponse.cs" />
@@ -151,6 +152,7 @@
     <Compile Include="Orders\Procedures\GetTaskDetailResult.cs" />
     <Compile Include="Orders\Procedures\GetReferenceTheories.cs" />
     <Compile Include="Orders\Procedures\GetReferenceFiles.cs" />
+    <Compile Include="Orders\Procedures\NcrDataResult.cs" />
     <Compile Include="Orders\Procedures\WorkflowDataResult.cs" />
     <Compile Include="Orders\Procedures\TheoryGetRevisionDataResult.cs" />
     <Compile Include="Orders\Procedures\TheoryGetParagraphDataResult.cs" />

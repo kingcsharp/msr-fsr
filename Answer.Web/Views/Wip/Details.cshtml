@@ -1,6 +1,6 @@
 ﻿@model  Msr.Services.Orders.Messaging.WorkOrderDetailsResponse
 @{
-    ViewBag.Title = "Work Order Details " + Model.FileSearchResult.FillObjDesc + " qty:" + Model.FileSearchResult.Qty;
+    ViewBag.Title = "Work Order Details " + Model.FileSearchResult?.FillObjDesc + " qty:" + Model.FileSearchResult?.Qty;
 }
 
 <!-- [[$wip-detail-sidenav?]] -->
@@ -21,18 +21,18 @@
                     <select id="wip-item-select" class="selectpicker form-control" name="wo-item">
                         <option data-content="<strong>Select an Item...</strong>">Select an Item</option>
                         <optgroup label="Items Assigned to Me">
-                        @if (Model.WoItems.Any())
-                        {
-                            foreach (var item in Model.WoItems)
-                             {
-                                 <option data-content="<strong>@item.PurchaseItemId</strong><br>Proc: @item.ProcName<br>Serial: @item.Serial<span class='label label-success pull-right'>@item.Status</span>" data-status="@item.Status" data-fill-id="@Model.FillId">@item.FillId</option>
-                             }
-                        }
-                        else
-                        {
-                            <option>No Search Filter Defined</option>
-                        }
-                         
+                            @if (Model.WoItems.Any())
+                            {
+                                foreach (var item in Model.WoItems)
+                                {
+                                    <option data-content="<strong>@item.PurchaseItemId</strong><br>Proc: @item.ProcName<br>Serial: @item.Serial<span class='label label-success pull-right'>@item.Status</span>" data-status="@item.Status" data-fill-id="@Model.FillId">@item.FillId</option>
+                                }
+                            }
+                            else
+                            {
+                                <option>No Search Filter Defined</option>
+                            }
+
                         </optgroup>
                     </select>
                 </div>
@@ -59,41 +59,44 @@
                         <div id="parts-table" class="col-sm-12">
                             <table class="table table-responsive table-condensed table-bordered">
                                 <tbody>
-                                @if (Model.FileSearchResult != null)
-                                {
-                                    <tr><td>@Model.FileSearchResult.FillObjDesc qty:@Model.FileSearchResult.Qty </td></tr>
-                                }
-                                
-                                @foreach (var part in Model.Parts)
-                                {
-                                    <tr><td>@part</td></tr>
-                                }
+                                    @if (Model.FileSearchResult != null)
+                                    {
+                                        <tr><td>@Model.FileSearchResult.FillObjDesc qty:@Model.FileSearchResult.Qty </td></tr>
+                                    }
+
+                                    @foreach (var part in Model.Parts)
+                                    {
+                                        <tr><td>@part</td></tr>
+                                    }
                                 </tbody>
                             </table>
                         </div>
                     </div>
-                    <div id="purchase" class="tab-pane fade">
-                        <table class="table table-responsive table-condensed table-bordered">
-                            <tbody>
-                                <tr>
-                                    <th nowrap style="text-align: right">Customer:</th>
-                                    <td>@Model.FileSearchResult.CustomerName</td>
-                                </tr>
-                                <tr>
-                                    <th nowrap style="text-align: right">Product:</th>
-                                    <td>@Model.FileSearchResult.ProductName</td>
-                                </tr>
-                                <tr>
-                                    <th nowrap style="text-align: right">Procedure:</th>
-                                    <td>@Model.FileSearchResult.ProcedureName</td>
-                                </tr>
-                                <tr>
-                                    <th nowrap style="text-align: right">Purchase Item #:</th>
-                                    <td>@Model.FileSearchResult.PurchItemId</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                    @if (Model.FileSearchResult != null)
+                    {
+                        <div id="purchase" class="tab-pane fade">
+                            <table class="table table-responsive table-condensed table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <th nowrap style="text-align: right">Customer:</th>
+                                        <td>@Model.FileSearchResult.CustomerName</td>
+                                    </tr>
+                                    <tr>
+                                        <th nowrap style="text-align: right">Product:</th>
+                                        <td>@Model.FileSearchResult.ProductName</td>
+                                    </tr>
+                                    <tr>
+                                        <th nowrap style="text-align: right">Procedure:</th>
+                                        <td>@Model.FileSearchResult.ProcedureName</td>
+                                    </tr>
+                                    <tr>
+                                        <th nowrap style="text-align: right">Purchase Item #:</th>
+                                        <td>@Model.FileSearchResult.PurchItemId</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    }
                 </div>
             </div>
             <!-- <div class="col-lg-2 col-md-2"><button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button></div> -->
@@ -103,7 +106,7 @@
                 <!-- Step Navigation -->
                 <div id="carousel" class="flexslider">
                     <ul class="slides">
-                        @foreach (var step in Model.TaskStepResults.Where(x=>x.Has_Child !="1"))
+                        @foreach (var step in Model.TaskStepResults.Where(x => x.Has_Child != "1"))
                         {
                             var stepCss = "";
 
@@ -120,21 +123,21 @@
                                 stepCss = "waiting";
                             }
 
-                      
-                                <li class="step-task step @stepCss" data-stepId="@step.StepId" data-phStepId="@step.PhStepId" data-fill-id="@Model.FillId">
-                                    <div>@step.Description</div>
-                                </li>
-                           
+
+                            <li class="step-task step @stepCss" data-stepId="@step.StepId" data-phStepId="@step.PhStepId" data-fill-id="@Model.FillId">
+                                <div>@step.Description</div>
+                            </li>
+
                         }
                     </ul>
                 </div>
                 <div id="slider" class="flexslider step-container">
                     <ul class="slides">
-                  
-                        @foreach (var step in Model.TaskStepResults.Where(x=>x.Has_Child !="1"))
+
+                        @foreach (var step in Model.TaskStepResults.Where(x => x.Has_Child != "1"))
                         {
                             <li id="step-@step.StepId">
-                               
+
                             </li>
                         }
 
@@ -209,25 +212,24 @@
             </div>
             <div class="modal-body"></div>
             <div class="modal-footer">
-                
+
             </div>
         </div>
 
     </div>
 </div>
-
+<input type="hidden" value="@Model.NcrCount" id="ncr-count" />
+<input type="hidden" value="@Model.FileSearchResult.FillObjectId" id="fill-obj-id" />
+<input type="hidden" value="@Model.FillId" id="fill-id" />
 @section scripts
 {
-    
-
     <script type="text/javascript" src="~/assets/js/jquery.flexslider.js"></script>
     <script type="text/javascript" src="~/assets/js/bootstrap-select.js"></script>
     <script type="text/javascript" src="~/assets/js/finger.min.js"></script>
     <script type="text/javascript" src="~/assets/js/timer.jquery.min.js"></script>
-    <script type="text/javascript" src="~/assets/js/wip-detail.js"></script>
 
     <script src="~/assets/js/plugins/bootstrap3/bootstrap-dialog.min.js"></script>
     <script type="text/javascript" src="~/assets/js/jquery.mockjax.js"></script>
-
+    <script type="text/javascript" src="~/assets/js/wip-detail.js"></script>
 
 }

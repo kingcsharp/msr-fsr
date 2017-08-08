@@ -29,7 +29,7 @@ namespace Msr.Repositories
             modelBuilder.Configurations.Add(new CompanyConfiguration());
             modelBuilder.Configurations.Add(new VerbTypeConfiguration());
 
-            modelBuilder.Entity<AspNetRole>().ToTable("AspNetRoles");           
+            modelBuilder.Entity<AspNetRole>().ToTable("AspNetRoles");
             modelBuilder.Entity<ClientUser>().ToTable("Portal_ClientUsers");
 
             modelBuilder.Entity<WorkOrderView>().ToTable("Portal_WorkOrders");
@@ -51,8 +51,7 @@ namespace Msr.Repositories
             modelBuilder.Entity<FileView>().ToTable("Portal_FilesView");
             modelBuilder.Entity<RegionsView>().ToTable("Portal_RegionsView");
             modelBuilder.Entity<LocationView>().ToTable("Portal_LocationsView");
-            modelBuilder.Entity<TaskLog>().ToTable("A_Task_Logs");
-
+            modelBuilder.Entity<TaskLog>().ToTable("Portal_Task_Logs");
         }
 
         public DbSet<AspNetUser> AspNetUsers { get; set; }

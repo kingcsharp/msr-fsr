@@ -749,6 +749,7 @@
     <Content Include="Views\Parts\_ViewFile.cshtml" />
     <Content Include="Views\Wip\_ViewReferenceTheory.cshtml" />
     <Content Include="Views\Wip\_SerializeTask.cshtml" />
+    <Content Include="Views\Wip\SearchNcrs.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -1,41 +1,43 @@
 ﻿@model Msr.Services.Orders.Procedures.TaskItemPart
-    @{
-        int i = 0;
-        string readOnly = "";//(!Model.IsEditable).ToString();
-    }
-@Html.BeginForm("UpdateRootParts", "Wip"){
-<input type="hidden" name="taskId" value="@Model.STEP_ID"/>
-<table class="table">
-    <tr>
-        <td>Part</td>
-        <td>Serial #</td>
-    </tr>
-    @foreach (var part in Model.GetActualPartsShowHierarchys)
-    {
+@{
+    int i = 0;
+    string readOnly = "";//(!Model.IsEditable).ToString();
+}
+@using (Html.BeginForm("UpdateRootParts", "Wip", FormMethod.Post))
+{
+    <input type="hidden" name="taskId" value="@Model.STEP_ID" />
+    <table class="table">
         <tr>
-            <td>@part.Part_Desc</td>
-            <td>
-                <input name="part[@i].Serial" type="text" value="@part.Serial" @readOnly/>
-                <input name="part[@i].Id" type="hidden" value="@part.Id"/>
-                @if (part.Tree_Level == 0)
-                {
-                    <button onclick="$('div#@part.Id').show()">Change</button>
-                    <div id="@part.Id" style="display: none">
-                        S/N: <input type="text" />
-                        <button id="submit-serial-number" data-part-id="@part.Id">Submit</button>
-                    </div>
-                }
-            </td>
+            <td>Part</td>
+            <td>Serial #</td>
         </tr>
-        i++;
-    }
+        @foreach (var part in Model.GetActualPartsShowHierarchys)
+    {
     <tr>
-        <td colspan="2">
-            <button type="submit">Save</button>
-            <button type="submit">Save & complete task</button>
+        <td>@part.Part_Desc</td>
+        <td>
+            <input name="parts[@i].Serial" type="text" value="@part.Serial" @readOnly />
+            <input name="parts[@i].Id" type="hidden" value="@part.Id" />
+            <input name="parts[@i].TreeLevel" type="hidden" value="@part.Tree_Level" />
+            @if (part.Tree_Level == 0)
+                {
+                <button onclick="$('div#@part.Id').show()">Change</button>
+                <div id="@part.Id" style="display: none">
+                    S/N: <input type="text" />
+                    <button id="submit-serial-number" data-part-id="@part.Id">Submit</button>
+                </div>
+                }
         </td>
     </tr>
-</table>
+        i++;
+    }
+        <tr>
+            <td colspan="2">
+                <button type="submit" id="btn-save">Save</button>
+                <button type="submit">Save & complete task</button>
+            </td>
+        </tr>
+    </table>
 }
 
 <script>

@@ -14,5 +14,7 @@ namespace Msr.Services.Orders.Procedures
         public int Qty { get; set; }
 
         public string FillObjDesc { get; set; }
+
+        public int? FillObjectId { get; set; }
     }
 }
