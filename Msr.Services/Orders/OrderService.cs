@@ -121,7 +121,7 @@ namespace Msr.Services.Orders
 
                     p.Add("@fileId", fillId, DbType.Int32, ParameterDirection.Input);
 
-                    using (var multi = conn.QueryMultiple("GetTsrDetails", p, commandType: CommandType.StoredProcedure))
+                    using (var multi = conn.QueryMultiple("Portal_GetTsrDetails", p, commandType: CommandType.StoredProcedure))
                     {
                         detailsResponse.TsrTaskResults = multi.Read<TsrTaskResult>().ToList();
                     }
@@ -147,7 +147,7 @@ namespace Msr.Services.Orders
 
                 p.Add("@fillId", fillId.ToString(), DbType.String, ParameterDirection.Input);
 
-                using (var multi = conn.QueryMultiple("GetDeliveryTsrDetails", p, commandType: CommandType.StoredProcedure))
+                using (var multi = conn.QueryMultiple("Portal_GetDeliveryTsrDetails", p, commandType: CommandType.StoredProcedure))
                 {
                     detailsResponse.PurchaseWithSupplierQuotesResult = multi.Read<PurchaseWithSupplierQuotesResult>().Single();
 
@@ -231,7 +231,7 @@ namespace Msr.Services.Orders
                 p.Add("@fillId", fillId, DbType.Int32, ParameterDirection.Input);
 
                 detailsResponse.GetMonitorLabelTsrDetailsResult =
-                    conn.Query<GetMonitorLabelTsrDetailsResult>("GetMonitorLabelTsrDetails", p,
+                    conn.Query<GetMonitorLabelTsrDetailsResult>("Portal_GetMonitorLabelTsrDetails", p,
                         commandType: CommandType.StoredProcedure).ToList();
 
                 detailsResponse.GetMonitorLabelTsrDetailsResult.ForEach(x =>

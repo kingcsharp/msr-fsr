@@ -2777,5 +2777,9 @@
     <Build Include="dbo\Stored Procedures\Portal\Portal_WfGroupUpdateOne.sql" />
     <Build Include="dbo\Views\Portal\Portal_PeopleView.sql" />
     <Build Include="dbo\Tables\Portal_Task_Logs.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_DeleteNavHistoryForUser.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_GetMonitorLabelTsrDetails.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_GetTsrDetails.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_GetPartsAndKitsLabels.sql" />
   </ItemGroup>
 </Project>
