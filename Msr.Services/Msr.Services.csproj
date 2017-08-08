@@ -181,6 +181,7 @@
     <Compile Include="Orders\Procedures\GetTaskObjectLinkResult.cs" />
     <Compile Include="Orders\Procedures\GetTheoryReferenceFilesResult.cs" />
     <Compile Include="Orders\Procedures\MonitorTemplateMultiChoiceResult.cs" />
+    <Compile Include="Orders\Procedures\NcrDataResult.cs" />
     <Compile Include="Orders\Procedures\ObjectInfoResult.cs" />
     <Compile Include="Orders\Procedures\ReferenceTheoryResult.cs" />
     <Compile Include="Orders\Procedures\StepStartTaskResult.cs" />
