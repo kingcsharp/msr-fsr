@@ -31,18 +31,23 @@
                                         <span class="icon fa fa-list"></span><span class="title">WIP Menu</span>
                                     </a>
                                 </li>
-
-<li>
+                                <li>
                                     <a href="~/wip/details">
                                         <span class="icon fa fa-search"></span><span class="title">WIP Details</span>
                                     </a>
                                 </li>
-@*                                <li>
-        <a href="#">
+                                <li>
+                                    @*<li>
+            <a href="[[~10]]">
+            <span class="icon fa fa-search"></span><span class="title">WIP Details</span>
+            </a>
+            </li>
+            <li>
+            <a href="#">
             <span class="icon fa fa-calendar"></span><span class="title">WIP History</span>
-        </a>
-    </li>*@
-                            </ul>
+            </a>
+            </li>*@
+</ul>
                         </div>
                     </div>
                 </li>
@@ -88,7 +93,11 @@
                                         <span class="icon fa fa-step-forward"></span><span class="title">Runnable Procedures</span>
                                     </a>
                                 </li>
-
+                                <li>
+                                    <a href='@Url.Action("Index","Procedures")'>
+                                        <span class="icon fa fa-list"></span><span class="title">Proecedures</span>
+                                    </a>
+                                </li>
                                 <li>
                                     <a href='@Url.Action("Index","ProcedureTypes")'>
                                         <span class="icon fa fa-list"></span><span class="title">Proecedure Types</span>
@@ -112,13 +121,18 @@
                         <div class="panel-body">
                             <ul class="nav navbar-nav">
                                 <li>
+                                    <a href="@Url.Action("Index","Documents")">
+                                        <span class="icon fa fa-group"></span><span class="title">Documents</span>
+                                    </a>
+                                </li>
+                                <li>
                                     <a href="[[~7]]">
                                         <span class="icon fa fa-user"></span><span class="title">Users</span>
                                     </a>
                                 </li>
 
                                 <li>
-                                    <a href="#">
+                                    <a href="@Url.Action("Index","Roles")">
                                         <span class="icon fa fa-group"></span><span class="title">User Roles</span>
                                     </a>
                                 </li>
@@ -149,6 +163,26 @@
                                         <span class="icon fa fa-globe"></span><span class="title">Regions</span>
                                     </a>
                                 </li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+
+
+                <li class="panel panel-default dropdown">
+                    <a data-toggle="collapse" href="#dropdown-element13">
+                        <span class="icon fa fa-desktop"></span><span class="title">Monitors </span>
+                    </a>
+                    <!-- Dropdown level 1 -->
+                    <div id="dropdown-element13" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <ul class="nav navbar-nav">
+                                <li>
+                                    <a href="@Url.Action("Index","Monitors")">
+                                        <span class="icon fa fa-desktop"></span><span class="title">Monitors</span>
+                                    </a>
+                                </li>
+                              
                             </ul>
                         </div>
                     </div>
@@ -222,14 +256,13 @@
                                         <span class="icon fa fa-check-circle"></span><span class="title">Approval Workflows</span>
                                     </a>
                                 </li>
-
                                 <li>
-                                    <a href="#">
+                                    <a href="@Url.Action("Index","ApprovalStages")">
                                         <span class="icon fa fa-list-ol"></span><span class="title">Approval Stages</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#">
+                                    <a href="@Url.Action("Index","ApprovalGroups")">
                                         <span class="icon fa fa-group"></span><span class="title">Approval Groups</span>
                                     </a>
                                 </li>
@@ -250,6 +283,33 @@
                                         <span class="icon fa fa-file-excel-o"></span><span class="title">Excel Reports</span>
                                     </a>
                                 </li>
+								<li>
+									<a href="#">
+										<span class="icon fa fa-usd"></span><span class="title">Purchases</span>
+									</a>
+								</li>
+								<li>
+									<a href="#">
+										<span class="icon fa fa-check-circle"></span><span class="title">Pending Approvals</span>
+									</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</li>
+				<li class="panel panel-default dropdown">
+					<a data-toggle="collapse" href="#dropdown-element8">
+						<span class="icon fa fa-newspaper-o"></span><span class="title">Reporting </span>
+					</a>
+					<!-- Dropdown level 1 -->
+					<div id="dropdown-element8" class="panel-collapse collapse">
+						<div class="panel-body">
+							<ul class="nav navbar-nav">
+								<li>
+									<a href="#">
+										<span class="icon fa fa-file-excel-o"></span><span class="title">Excel Reports</span>
+									</a>
+								</li>
 
                                 <li>
                                     <a href="[[~9]]">

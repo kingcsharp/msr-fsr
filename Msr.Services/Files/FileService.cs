@@ -19,15 +19,16 @@ namespace Msr.Services.Files
         }
         public IQueryable<FileView> GetFilesQueryable()
         {
+           // _dbContext.FIleViews.AsQueryable().Where(x=>log).ToList();
             return _dbContext.FIleViews.AsQueryable();
         }
-        public IQueryable<ListFileView> SelectListedFiles(string id)
+        public List<ListFileView> SelectListedFiles(string id)
         {
             var ObjIdParm = new SqlParameter("@ObjId", id);
 
             var fileListView = _dbContext.Database.SqlQuery<ListFileView>("Portal_SelectListedFiles @ObjId", ObjIdParm).AsQueryable();
 
-            return fileListView;
+            return fileListView.ToList();
         }
     }
 }

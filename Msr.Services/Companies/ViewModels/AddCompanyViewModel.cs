@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using Msr.Models.Companies;
 
 namespace Msr.Services.Companies.ViewModels
 {
@@ -75,7 +76,7 @@ namespace Msr.Services.Companies.ViewModels
         {
             CompanyTypes = new List<SelectListItem>
             {
-                new SelectListItem
+               new SelectListItem
                 {
                     Text = "Company",
                     Value = "COMPANY",
@@ -89,5 +90,32 @@ namespace Msr.Services.Companies.ViewModels
 
             };
         }
+        public AddCompanyViewModel MapToDto(CompanyView model)
+        {
+            return new AddCompanyViewModel
+            {
+               ID = model.ObjectId
+               //ExternalId = model.ExternalId,
+               //Name = model.Name,
+               //CoType = model.CoType,
+               //ObjectId = model.ObjectId,
+               //Status = model.Status,
+               //LockedBy = model.LockedBy,
+               //UnlockedBy = model.UnlockedBy,
+               //CreatedBy = model.CreatedBy,
+               //CreatingCo = model.CreatingCo,
+               //Rev = model.Rev,
+               //WfsId = model.WfsId,
+               //LockedByName = model.LockedByName,
+               //Root = model.Root,
+               //ChildrenCount = model.ChildrenCount,
+               //TopCompany = model.TopCompany,
+               //PicRecord = model.PicRecord,
+               //RootCoName = model.RootCoName,
+               //ParentName = model.ParentName,
+               // ReferenceFiles
+            };
+        }
     }
 }
+

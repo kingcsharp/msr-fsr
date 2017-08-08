@@ -40,6 +40,14 @@ namespace Msr.Models.Companies
 
         public string RootCoName { get; set; }
 
+        public string Parent { get; set; }
+
         public string ParentName { get; set; }
+
+        public string Phone { get; set; }
+
+        public string Location { get; set; }
+
+        public string LocationName { get; set; }
     }
 }

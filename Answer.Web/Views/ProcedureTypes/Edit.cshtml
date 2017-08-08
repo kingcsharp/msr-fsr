@@ -1,4 +1,4 @@
-﻿@model Msr.Services.Procedures.ViewModels.SaveProcedureViewModel
+﻿@model Msr.Services.ProcedureTypes.ViewModels.SaveProcedureTypesViewModel
 
 @{
     ViewBag.Title = "Add";
@@ -48,7 +48,6 @@
                                 @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
                             </div>
                         </div>
-
                         <div class="form-group">
                             @Html.LabelFor(model => model.VerbType, htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-2">
@@ -60,7 +59,7 @@
                         <div class="form-group">
                             <div class="col-md-offset-2 col-md-10">
                                 <input type="submit" value="Save" class="btn btn-success" />
-                                <a href="~/Procedures" class="btn btn-warning">Cancel</a>
+                                <a href="~/ProcedureTypes" class="btn btn-warning">Cancel</a>
                             </div>
                         </div>
                     </div>

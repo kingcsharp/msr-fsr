@@ -39,7 +39,7 @@ namespace Msr.Web.ViewModel
                 new SelectListItem {Text = RolesConstants.ClientEngineer, Value = RolesConstants.ClientEngineer},
             };
 
-
+          
         }
     }
 }

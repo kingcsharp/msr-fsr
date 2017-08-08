@@ -1,0 +1,135 @@
+﻿@model Msr.Services.Documents.ViewModels.SaveDocumentViewModel
+@{
+    ViewBag.Title = "Create";
+}
+
+<div class="container-fluid">
+    <div class="side-body padding-top">
+        <div class="row">
+            <h2 class="page-header">
+                Add Document<button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
+            </h2>
+            <div class="col-lg-10">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-horizontal">
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Id, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-5">
+                                @Html.EditorFor(model => model.Id, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                @Html.ValidationMessageFor(model => model.Id, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Rev, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-5">
+                                @Html.EditorFor(model => model.Rev, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                @Html.ValidationMessageFor(model => model.Rev, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Company, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-5">
+                                @Html.EditorFor(model => model.Company, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                @Html.ValidationMessageFor(model => model.Company, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-5">
+                                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ReferenceTheory, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-5">
+                                <div style="width: 96%; float: left;">
+                                    @Html.ListBoxFor(m => m.ReferenceTheory, Model.ListReferenceTheories, new { @class = "form-control submitselect", multiple = "multiple" })
+                                    @Html.ValidationMessageFor(model => model.ReferenceTheory, "", new { @class = "text-danger" })
+                                </div>
+                                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceTheory" data-toggle="modal" data-target="#select-theory"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceFiles"><i class="icon fa fa-trash"></i></span> </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ReferenceObject, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-5">
+                                <div style="width: 96%; float: left;">
+                                    @Html.ListBoxFor(m => m.ReferenceObject, Model.ListReferenceObjects, new { @class = "form-control submitselect", multiple = "multiple" })
+                                    @Html.ValidationMessageFor(model => model.ReferenceObject, "", new { @class = "text-danger" })
+                                </div>
+                                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceObject" data-toggle="modal" data-target="#select-objects"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceFiles"><i class="icon fa fa-trash"></i></span> </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ReferenceFiles, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-5">
+                                <div style="width: 96%; float: left;">
+                                    @Html.ListBoxFor(m => m.ReferenceFiles, Model.ListReferenceFiles, new { @class = "form-control submitselect", multiple = "multiple" })
+                                    @Html.ValidationMessageFor(model => model.ReferenceFiles, "", new { @class = "text-danger" })
+                                </div>
+                                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceFiles" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceFiles"><i class="icon fa fa-trash"></i></span> </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Comments, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-5">
+                                @Html.TextAreaFor(model => model.Comments, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Comments, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ApprovalStatus, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-5">
+                                @Html.DropDownListFor(model => model.ApprovalStatus, Model.ApprovalStatusList, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.ApprovalStatus, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Roles, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-5">
+                                @Html.DropDownListFor(model => model.Roles, Model.ListRoles, new { @class = "form-control selectroles", multiple = "multiple" })
+                                @Html.ValidationMessageFor(model => model.Roles, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-5">
+                                <input type="submit" value="Create" class="btn btn-default" />
+                                @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-warning" })
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+    <script src="~/assets/js/grids/comman.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".selectroles").select2({
+                tags: true,
+                multiple: true
+            });
+        });
+    </script>
+
+}

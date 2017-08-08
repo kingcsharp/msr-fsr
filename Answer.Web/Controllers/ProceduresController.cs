@@ -21,7 +21,7 @@ namespace Answer.Web.Controllers
 
         public ActionResult ProceduresData(JqGridParam param)
         {
-            var procedureService = new ProcedureService();
+            var procedureService = new ProceduresService();
 
             var totalRows = procedureService.GetProceduresQueryable();
 
@@ -101,7 +101,7 @@ namespace Answer.Web.Controllers
 
             return Json(json, JsonRequestBehavior.AllowGet);
         }
-        
+
         ////public ActionResult Create()
         ////{
         ////    var saveProcedureViewModel = new SaveProcedureViewModel();

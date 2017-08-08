@@ -70,7 +70,6 @@
     <Compile Include="ApplicationDbContext.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="Configurations\AspNetUserConfiguration.cs" />
-    <Compile Include="Configurations\CompanyConfiguration.cs" />
     <Compile Include="Configurations\PartConfiguration.cs" />
     <Compile Include="Configurations\PartTypesConfiguration.cs" />
     <Compile Include="Configurations\VerbTypeConfiguration.cs" />

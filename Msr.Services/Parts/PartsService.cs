@@ -13,6 +13,7 @@ using Msr.Services.Parts.Procedures;
 using EntityFrameworkExtras.EF6;
 using Msr.Services.Parts.ViewModels;
 using System.Data;
+using Msr.Models.Common;
 
 namespace Msr.Services.Parts
 {
@@ -33,7 +34,7 @@ namespace Msr.Services.Parts
         {
             return GetPartsQueryable().Where(x => x.ObjectId == Id).SingleOrDefault();
         }
-        public List<SelectPartsFile> GetSelectedFiles(string id, string type)
+        public List<SelectFile> GetSelectedFiles(string id, string type)
         {
             var objID = new SqlParameter("@objID", id == null ? "0" : id);
             var selecttype = new SqlParameter();
@@ -48,7 +49,7 @@ namespace Msr.Services.Parts
             //need to be dynamic
             var NTLogin = new SqlParameter("@strNTLogin", "1618");
 
-            var result = _dbContext.Database.SqlQuery<SelectPartsFile>("EXEC A_SP_FILES_SHOW_FOR_OBJECT  @objID, @type, @strNTLogin", objID, selecttype, NTLogin).ToList();
+            var result = _dbContext.Database.SqlQuery<SelectFile>("EXEC A_SP_FILES_SHOW_FOR_OBJECT  @objID, @type, @strNTLogin", objID, selecttype, NTLogin).ToList();
 
             return result;
         }

@@ -8,6 +8,7 @@ using Msr.Models.Parts;
 using Msr.Services.Files;
 using System.Linq;
 using System.ComponentModel.DataAnnotations.Schema;
+using Msr.Infrastructure.Common;
 
 namespace Msr.Services.Parts.ViewModels
 {
@@ -146,7 +147,7 @@ namespace Msr.Services.Parts.ViewModels
         public IEnumerable<SelectListItem> ListSupplierCompany { get; set; }
 
 
-        public void Setup(FileService fileService, PartsService partsService, PartTypeService partTypeService)
+        public void Setup(DocumentFilesService documentFilesService, PartsService partsService, PartTypeService partTypeService)
         {
             OrderingUnits = new List<SelectListItem>
             {
@@ -180,7 +181,7 @@ namespace Msr.Services.Parts.ViewModels
 
             ShippingWeightTypes = new List<SelectListItem>
             {
-                new SelectListItem
+               new SelectListItem
                 {
                     Text = "Ounces",
                     Value = "WT_OZ",
@@ -200,7 +201,7 @@ namespace Msr.Services.Parts.ViewModels
             };
             CreateProds = new List<SelectListItem>
             {
-                new SelectListItem
+               new SelectListItem
                 {
                     Text = "No Product",
                     Value = "0",
@@ -215,7 +216,7 @@ namespace Msr.Services.Parts.ViewModels
             };
             Spares = new List<SelectListItem>
             {
-                new SelectListItem
+               new SelectListItem
                 {
                     Text = "No",
                     Value = "SPARE_NO",
@@ -226,12 +227,12 @@ namespace Msr.Services.Parts.ViewModels
                     Text = "Level 1",
                     Value = "SPARE_1"
                 },
-                new SelectListItem
+                 new SelectListItem
                 {
                     Text = "Level 2",
                     Value = "SPARE_2"
                 },
-                new SelectListItem
+                  new SelectListItem
                 {
                     Text = "Level 3",
                     Value = "SPARE_3"
@@ -240,7 +241,7 @@ namespace Msr.Services.Parts.ViewModels
             };
             Consumables = new List<SelectListItem>
             {
-                new SelectListItem
+               new SelectListItem
                 {
                     Text = "No",
                     Value = "CON_NO",
@@ -269,7 +270,7 @@ namespace Msr.Services.Parts.ViewModels
 
             ProductTypes = new List<SelectListItem>
             {
-                new SelectListItem
+               new SelectListItem
                 {
                     Text = "PROD_SERVICE",
                     Value = "SERVICE",
@@ -289,7 +290,7 @@ namespace Msr.Services.Parts.ViewModels
                     Text = "",
                     Value = ""
                 },
-                new SelectListItem
+               new SelectListItem
                 {
                     Text = "All Insternal Customers Except My Dept",
                     Value = "ALL_INTERNAL_BUT_ME"
@@ -322,19 +323,19 @@ namespace Msr.Services.Parts.ViewModels
                 Value = x.Id.ToString()
             }).OrderBy(o => o.Text).ToList();
 
-            ListReferenceFiles = partsService.GetSelectedFiles(id: Id, type: null).Select(x => new SelectListItem
+            ListReferenceFiles = documentFilesService.GetSelectedFiles(id: Id, type: null).Select(x => new SelectListItem
             {
                 Text = x.Show,
                 Value = x.Value.ToString(),
             }).OrderBy(o => o.Text).ToList();
 
-            ListPictureFiles = partsService.GetSelectedFiles(id: Id, type: "PICTURE").Select(x => new SelectListItem
+            ListPictureFiles = documentFilesService.GetSelectedFiles(id: Id, type: "PICTURE").Select(x => new SelectListItem
             {
                 Text = x.Show,
                 Value = x.Value.ToString(),
             }).OrderBy(o => o.Text).ToList();
 
-            ListReferenceTheories = partsService.GetSelectedFiles(id: Id, type: "THEORY").Select(x => new SelectListItem
+            ListReferenceTheories = documentFilesService.GetSelectedFiles(id: Id, type: "THEORY").Select(x => new SelectListItem
             {
                 Text = x.Show,
                 Value = x.Value.ToString(),

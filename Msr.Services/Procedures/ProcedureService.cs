@@ -14,23 +14,26 @@ using Msr.Models.Procedure;
 
 namespace Msr.Services.Procedures
 {
-	public class ProcedureService
-    {
+	public class ProceduresService
+	{
 		private readonly MsrDbContext _dbContext;
 
-		public ProcedureService()
+		public ProceduresService()
 		{
 			_dbContext = new MsrDbContext();
 		}
 		
 		public ProcedureView GetProcedureById(string Id)
 		{
-			return _dbContext.ProcedureViews.Where(x => x.Id == Id).SingleOrDefault();
+			return _dbContext.Procedurs.Where(x => x.Id == Id).SingleOrDefault();
 		}
 		public IQueryable<ProcedureView> GetProceduresQueryable()
 		{
 
-			return _dbContext.ProcedureViews;					
+			return _dbContext.Procedurs;
+
+					
+
 		}
 
 		public bool Save(ProcedureView model)

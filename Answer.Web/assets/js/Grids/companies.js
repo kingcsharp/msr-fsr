@@ -114,12 +114,12 @@
 
     });
     $('#jqGrid').navGrid("#jqGridPager", {
-            search: false, // show search button on the toolbar
-            add: false,
-            edit: false,
-            del: false,
-            refresh: true
-        },
+        search: false, // show search button on the toolbar
+        add: false,
+        edit: false,
+        del: false,
+        refresh: true
+    },
         {},  // edit options
         {}, // add options
         {}, // delete options
@@ -131,7 +131,7 @@
         searchOperators: true
     });
     function CompaniesEditFormatter(cellvalue, options, rowObject) {
-        thisCellVal = '<a href="/Companies/Edit/' + rowObject.Id + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i> Edit</a>';
+        thisCellVal = '<a href="/Companies/Edit/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i> Edit</a>';
         return thisCellVal;
     }
     $('#search').click(function () {
@@ -143,7 +143,7 @@
     });
 }
 
-function LoadCompanDialogGrid() {
+function LoadCompanyDialogGrid() {
     $.jgrid.defaults.styleUI = 'Bootstrap';
 
     $("#jqGridCompanies").jqGrid({
@@ -220,13 +220,13 @@ function LoadCompanDialogGrid() {
 
     });
     $('#jqGridCompanies').navGrid("#jqGridPagerCompanies", {
-            refresh: true,
-            search: false, // show search button on the toolbar
-            add: false,
-            edit: false,
-            del: false,
+        refresh: true,
+        search: false, // show search button on the toolbar
+        add: false,
+        edit: false,
+        del: false,
 
-        },
+    },
         {}, // edit options
         {}, // add options
         {}, // delete options

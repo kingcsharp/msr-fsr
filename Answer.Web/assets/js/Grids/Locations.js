@@ -72,7 +72,27 @@
         autowidth: true,
         colMenu: true,
         key: true,
-        ajaxCellOptions: {}
+        ajaxCellOptions: {},
+        gridComplete: function () {
+            $('.deletepart').on('click', function (e) {
+                e.preventDefault();
+
+                var callBackId = $(this).data('call-back-id');
+                var callBackName = $(this).data('call-back-name');
+
+                eModal.confirm('Do you really want to delete ' + callBackName + ' ?', 'Confirmation delete')
+                    .then(confirmCallback, optionalCancelCallback);
+
+                function confirmCallback() {
+                    console.log("ok")
+                    window.location.href = "/Locations/LocationDelete/" + callBackId
+                }
+                function optionalCancelCallback() {
+                    console.log("cancel")
+                }
+
+            })
+        },
 
     });
     $('#jqGrid').navGrid("#jqGridPager", {
@@ -94,7 +114,9 @@
         searchOperators: true
     });
     function LocationEditFormatter(cellvalue, options, rowObject) {
-        thisCellVal = '<a href="/Locations/edit/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i> Edit</a>';
+        thisCellVal = '<a href="/Locations/edit/' + rowObject.ObjectId + '" title="Edit" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i> Edit</a>'; 
+        thisCellVal = thisCellVal + '<a href="/Locations/Details/' + rowObject.ObjectId + '" title="Details" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-eye"></i> Details</a>';
+      thisCellVal += '<a href="/Locations/Delete/' + rowObject.ObjectId + '" data-call-back-name="' + rowObject.Name + '" data-call-back-id="' + rowObject.ObjectId + '" title="Delete" class="btn btn-xs btn-danger deletepart" style="margin:2px;font-size: .8em; "><i class="fa fa-trash"></i> Delete</a>';
         return thisCellVal;
     }
 })

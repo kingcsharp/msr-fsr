@@ -11,7 +11,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Msr.Models.Procedure;
-using Msr.Models.ProcedureTypes;
 
 namespace Msr.Services.ProcedureTypes
 {
@@ -23,7 +22,7 @@ namespace Msr.Services.ProcedureTypes
         {
             _dbContext = new MsrDbContext();
         }
-        public IQueryable<ProcedureTypesView> GetProceduresTypesQueryable()
+        public IQueryable<ProcedureTypesView> GetProceduresTypes()
         {
             return _dbContext.ProcedureTypes;
         }

@@ -17,16 +17,17 @@ namespace Msr.Services.Regions
             _dbContext = new MsrDbContext();
         }
 
-        public IQueryable<RegionsView> RegionsQueryable()
+        public IQueryable<RegionsView> RegionsQueryable
         {
-            return _dbContext.RegionsViews;
+            get
+            {
+                return _dbContext.RegionsViews;
+            }
         }
-
         public RegionsView GetById(string Id)
         {
-            return _dbContext.RegionsViews.SingleOrDefault(x => x.ObjectId == Id);
+            return RegionsQueryable.Where(x => x.ObjectId == Id).SingleOrDefault();
         }
-
         public bool Save(SaveRegionViewModel model)
         {
             try
@@ -44,14 +45,13 @@ namespace Msr.Services.Regions
                 return false;
             }
         }
-
         public bool Create(SaveRegionViewModel model)
         {
             try
             {
                 var saveRegionProcedure = new SaveRegionProcedure() { Name = model.Name, NTLogin = model.NTLogin };
 
-                _dbContext.Database.ExecuteStoredProcedure(saveRegionProcedure);
+                //_dbContext.Database.ExecuteStoredProcedure(saveRegionProcedure);
 
                 return true;
             }
@@ -62,14 +62,13 @@ namespace Msr.Services.Regions
                 return false;
             }
         }
-
         public bool Delete(SaveRegionViewModel model)
         {
             try
             {
                 var saveRegionProcedure = new SaveRegionProcedure() { Name = model.Name, NTLogin = model.NTLogin };
 
-                _dbContext.Database.ExecuteStoredProcedure(saveRegionProcedure);
+                //_dbContext.Database.ExecuteStoredProcedure(saveRegionProcedure);
 
                 return true;
             }

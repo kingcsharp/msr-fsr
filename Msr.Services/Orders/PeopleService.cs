@@ -34,7 +34,7 @@ namespace Msr.Services.Orders
 
        public CheckLoginResult GetAnswerUser(string login, string password)
         {
-            var user = _dbContext.Peoples.SingleOrDefault(x => x.Login == login);
+            var user = _dbContext.Peoples.SingleOrDefault(x => x.Login == login && x.Status.Contains("APPROVED"));
 
            if (user == null) return null;
 

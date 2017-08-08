@@ -7,6 +7,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Msr.Infrastructure.Email;
 using Msr.Infrastructure.Helpers;
+using Msr.Models.Companies;
 using Msr.Models.Orders;
 using Msr.Models.Users;
 using Msr.Repositories;
@@ -279,7 +280,7 @@ namespace Msr.Services.Users
         {
             var compannyId = _dbContext.AspNetUsers.Where(x => x.Id.ToLower() == id.ToLower()).Select(x => x.CompanyId).First();
 
-            return _dbContext.CompanyView.SingleOrDefault(x => x.Id == compannyId);
+            return _dbContext.CompanyViews.SingleOrDefault(x => x.Id == compannyId);
         }
 
         public CheckLoginResult CheckLogin(string login, string password)

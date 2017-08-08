@@ -24,7 +24,7 @@ namespace Answer.Web.Controllers
         {
             var procedureTypesService = new ProcedureTypesService();
 
-            var totalRows = procedureTypesService.GetProceduresTypesQueryable();
+            var totalRows = procedureTypesService.GetProceduresTypes();
 
             if (param.where != null && param.where.rules.Any())
             {

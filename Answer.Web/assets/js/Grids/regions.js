@@ -92,4 +92,4 @@
         thisCellVal += '<a href="/Regions/delete/' + rowObject.ObjectId + '" class="btn btn-xs btn-danger confirmation" style="margin:2px;font-size: .8em;"><i class="fa fa-trash"></i> delete</a>';
         return thisCellVal;
     }
-})
+});

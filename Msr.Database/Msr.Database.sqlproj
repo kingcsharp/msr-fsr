@@ -8,7 +8,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectVersion>4.1</ProjectVersion>
     <ProjectGuid>{e6e98f90-9138-4912-9631-6c853e2ba1a3}</ProjectGuid>
-    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql110DatabaseSchemaProvider</DSP>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql130DatabaseSchemaProvider</DSP>
     <OutputType>Database</OutputType>
     <RootPath>
     </RootPath>
@@ -2757,11 +2757,24 @@
     <Build Include="dbo\Views\Portal\Portal_FilesView.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_GetPurchaseItemDetails.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_GetDeliveryTsrDetails.sql" />
-    <Build Include="dbo\Views\Portal\Portal_LocationsView.sql" />
+    <Build Include="dbo\Views\Portal\Portal_ProcedureListView.sql" />
     <Build Include="dbo\Views\Portal\Portal_RegionsView.sql" />
+    <Build Include="dbo\Views\Portal\Portal_LocationsView.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_GetTheoryObjects.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_GetTheoryRoles.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_SelectListedFiles.sql" />
+    <Build Include="dbo\Views\Portal\Portal_HeadPeopleView.sql" />
+    <Build Include="dbo\Views\Portal\Portal_ApprovalWorkflowsView.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_SelectStageMemberGroups.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_WfStageUpdateOne.sql" />
+    <Build Include="dbo\Views\Portal\Portal_ApprovalStagesView.sql" />
+    <Build Include="dbo\Views\Portal\Portal_ApprovalGroupsView.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_SelectGroupsMembers.sql" />
+    <Build Include="dbo\Views\Portal\Portal_TheoryParagraphsView.sql" />
+    <Build Include="dbo\Views\Portal\Portal_DocumentsView.sql" />
     <Build Include="dbo\Views\Portal\Portal_ProceduresView.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Msr.Database.publish.xml" />
+    <Build Include="dbo\Views\Portal\Protal_ObjectsView.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_WfGroupUpdateOne.sql" />
+    <Build Include="dbo\Views\Portal\Portal_PeopleView.sql" />
   </ItemGroup>
 </Project>

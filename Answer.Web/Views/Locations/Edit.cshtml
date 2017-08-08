@@ -1,7 +1,7 @@
 ﻿@model Msr.Services.Locations.ViewModels.SaveLocationVM
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "View";
 }
 
 
@@ -46,11 +46,14 @@
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.Parent, htmlAttributes: new { @class = "control-label col-md-2" })
                                     <div class="col-md-5">
-                                        @Html.DropDownListFor(model => model.Parent, Model.Parents, "Select Parent", new { @class = "form-control" })
-                                        @Html.ValidationMessageFor(model => model.Parent, "", new { @class = "text-danger" })
-                                    </div>
+                                        <div style="width: 96%; float: left;">
+                                            @*@Html.DropDownListFor(model => model.Parent, Model.Parents, "Select Parent", new { @class = "form-control" })*@
+                                            @Html.ListBoxFor(m => m.Parent, Model.Parents, new { @class = "form-control submitselect" })
+                                            @Html.ValidationMessageFor(model => model.Parent, "", new { @class = "text-danger" })
+                                        </div>
+                                    <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="Parent" data-toggle="modal" data-target="#select-location"><i class="icon fa fa-file"></i></span><br /><span class="deletefiles" data-call-back-id="Parent"><i class="icon fa fa-trash"></i></span> </div>
                                 </div>
-
+                                    </div>
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.Address1, htmlAttributes: new { @class = "control-label col-md-2" })
                                     <div class="col-md-5">
@@ -129,3 +132,108 @@
         </div>
     </div>
 </div>
+
+
+@section scripts
+{
+
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+
+    <script>
+
+        $('#select-location').on('show.bs.modal',
+            function (event) {
+
+                var button = $(event.relatedTarget);
+                var callBackId = button.data('call-back-id');
+                var modal = $(this);
+
+                $.ajax({
+                    type: "GET",
+                    url: '/Locations/GetLocations?callBackId=' + callBackId,
+                    dataType: 'html',
+                    success: function (data) {
+                        modal.find('.modal-body').html(data);
+                    },
+                    error: function () {
+
+                    }
+                });
+
+            });
+
+
+
+        function removeOldFile(e) {
+
+            var control = $(e).closest(".modal-body").find('#target-control-id').val();
+            $('#' + control).empty();
+        };
+        function getRecord(e) {
+            removeOldFile(e);
+            SelectlocationID();
+            $('.closeClick').click();
+        }
+
+        function SelectlocationID() {
+
+            $(".selected-file").each(function (Index) {
+
+                if ($(this).is(":checked")) {
+
+                    var ids = $(this).val().split('|');
+
+                    var callBackId = $(this).closest(".modal-body").find('#target-control-id').val();
+                    var options = $('#' + callBackId + '')[0].options;
+
+                    var optionsArray = $.map(options, function (elem) {
+                        return (elem.value);
+                    });
+
+                    if (optionsArray.length > 0) {
+
+                        if ($.inArray(ids[0], optionsArray) != -1) {
+                            // found it
+                        }
+                        else {
+
+                            $('#' + callBackId + '').append($('<option></option>').val(ids[0]).html(ids[1]));
+                            $('#' + callBackId + ' option').prop('selected', true);
+
+                        }
+
+                    }
+                    else {
+                        $('#' + callBackId + '').append($('<option></option>').val(ids[0]).html(ids[1]));
+                        $('#' + callBackId + ' option').prop('selected', true);
+                    }
+                }
+
+            });
+            $('.closeClick').click();
+
+        } 
+
+        $('.deletefiles').click(function () {
+
+            var callBackId = $(this).data('call-back-id');
+
+            eModal.confirm('Do you really want to Remove ' + callBackId + ' ?', 'Confirmation delete')
+                .then(confirmCallback, optionalCancelCallback);
+
+            function confirmCallback() {
+                console.log("ok")
+                $('#' + callBackId + ' option:selected').remove();
+            }
+            function optionalCancelCallback() {
+                console.log("cancel")
+            }
+
+        })
+    </script>
+
+}
+
+
+

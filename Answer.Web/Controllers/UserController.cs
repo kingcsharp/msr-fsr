@@ -6,7 +6,6 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
-using Answer.Web.Controllers;
 using Answer.Web.ViewModel;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
@@ -20,6 +19,7 @@ using Msr.Services.Users;
 using Msr.Services.Users.ViewModels;
 using Msr.Web.ViewModel;
 using Msr.Services.Companies;
+using Answer.Web.Controllers;
 
 namespace Msr.Web.Controllers
 {
@@ -57,7 +57,7 @@ namespace Msr.Web.Controllers
 
             var userService = new UserService();
 
-            var totalRows = userService.GetUserQueryable().Where(x => x.RoleName != RolesConstants.AnswerUser);
+            var totalRows = userService.GetUserQueryable().Where(x=> x.RoleName != RolesConstants.AnswerUser);
 
             string orderBy = nameof(PeopleView.FirstName);
             string orderDirection = "asc";
@@ -127,11 +127,11 @@ namespace Msr.Web.Controllers
 
             var userService = new UserService();
 
-            var user = userService.GetUser(loggedUser);
+           var user =  userService.GetUser(loggedUser);
 
             var totalRows = userService.GetUserQueryable();
 
-            totalRows = totalRows.Where(x => x.ParentId != null && x.CompanyId == user.CompanyId);
+            totalRows = totalRows.Where(x => x.ParentId !=null && x.CompanyId == user.CompanyId);
 
             string orderBy = nameof(UserView.FirstName);
             string orderDirection = "asc";

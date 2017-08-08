@@ -21,6 +21,13 @@ namespace Answer.Web.Controllers
             return View(viewModel);
         }
 
+        public ActionResult GetLocations(string callBackId)
+        {
+            ViewBag.CallBackId = callBackId;
+
+            return PartialView("_Locations");
+        }
+             
         public ActionResult LocationsData(JqGridParam param)
         {
             var locationService = new LocationService();
@@ -38,27 +45,6 @@ namespace Answer.Web.Controllers
                     else if (rule.field == nameof(LocationView.Name))
                     {
                         totalRows = totalRows.Where(x => x.Name.ToLower().Contains(rule.data.ToLower()));
-                    }
-                    else if (rule.field == nameof(LocationView.Revision))
-                    {
-                        int value;
-
-                        if (int.TryParse(rule.data, out value))
-                        {
-                            totalRows = totalRows.Where(x => x.Revision == value);
-                        }
-
-                        totalRows = totalRows.Where(x => x.Revision == value);
-                    }
-                    else if (rule.field == nameof(LocationView.Status))
-                    {
-                        var statusList = rule.data.Split(',').Select(x => x.Trim().ToLower());
-
-                        if (statusList.Any())
-                        {
-                            totalRows = totalRows.Where(x => statusList.Contains(x.Status.ToLower()));
-
-                        }
                     }
                 }
             }
@@ -102,7 +88,7 @@ namespace Answer.Web.Controllers
         {
             var location = new SaveLocationVM();
 
-            location.Setup(new RegionService(), new LocationService());
+            location.Setup(new RegionService());
 
             return View(location);
         }
@@ -147,7 +133,7 @@ namespace Answer.Web.Controllers
 
             location = location.MapToDto(model: model);
 
-            location.Setup(new RegionService(), locationService);
+            location.Setup(new RegionService());
 
             return View(location);
         }
@@ -162,7 +148,7 @@ namespace Answer.Web.Controllers
                 //Need to dynamic 
                 model.NTLogin = "1618";
 
-                var response = locationService.Save(model);
+                var response = locationService.Save(model: model);
 
                 if (response)
                 {
@@ -176,9 +162,40 @@ namespace Answer.Web.Controllers
                 return View(model);
             }
 
-            model.Setup(new RegionService(), locationService);
+            model.Setup(new RegionService());
 
             return View(model);
+        }
+
+        public ActionResult LocationDelete(string id)
+        {
+            var taskService = new LocationService();
+
+            var response = taskService.Delete(id: id);
+
+            if (response)
+            {
+                TempData["SuccessMessage"] = "Location deleted successfully.";
+
+                return RedirectToAction("Index");
+            }
+
+            TempData["ErrorMessage"] = "Something went wrong.";
+            return RedirectToAction("Index");
+        }
+        public ActionResult Details(string id)
+        {
+            var taskService = new LocationService();
+
+            var model = taskService.GetById(id);
+
+            var location = new SaveLocationVM();
+
+            location = location.MapToDto(model);
+
+            //location.Setup(new DocumentFilesService(), new LocationService(), new LocationTypeService());
+
+            return View(location);
         }
     }
 }

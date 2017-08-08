@@ -19,16 +19,13 @@ namespace Msr.Services.Locations
         {
             _dbContext = new MsrDbContext();
         }
-
         public IQueryable<LocationView> GetLocationsQueryable()
         {
             return _dbContext.LocationViews;
-
         }
-
-        public LocationView GetById(string id)
+        public LocationView GetById(string Id)
         {
-            return _dbContext.LocationViews.SingleOrDefault(x => x.ObjectId == id);
+            return GetLocationsQueryable().Where(x => x.ObjectId == Id).SingleOrDefault();
         }
         public bool Save(SaveLocationVM model)
         {
@@ -81,6 +78,26 @@ namespace Msr.Services.Locations
                 };
 
                _dbContext.Database.ExecuteStoredProcedure(saveLocationProcedure);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                var message = "Error occured:" + ex.Message;
+
+                return false;
+            }
+        }
+
+
+        public bool Delete(string id)
+        {
+            try
+            {
+                var NTLogin = "1618";
+                var deletePartProcedure = new DeleteLocationProcedure() { ObjID = id, NTLogin = NTLogin };
+
+                _dbContext.Database.ExecuteStoredProcedure(deletePartProcedure);
 
                 return true;
             }

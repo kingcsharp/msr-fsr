@@ -20,8 +20,12 @@ CHILDREN_COUNT AS ChildrenCount,
 TOP_COMPANY AS TopCompany, 
 picRecord AS PicRecord, 
 ROOT_CO_NAME AS RootCoName, 
-PARENT_NAME AS ParentName
+PARENT_NAME AS ParentName,
+PARENT as Parent,
+PHONE AS Phone,
+LOCATION AS Location,
+LOCATION_NAME AS LocationName
 
-FROM dbo.A_O_COMPANIES
+FROM dbo.A_O_COMPANIES A_V_COMPANIES_APPROVED_DATA
 
 GO

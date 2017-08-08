@@ -29,7 +29,7 @@ namespace Msr.Services.Companies.Procedures
         [StoredProcedureParameter(SqlDbType.VarChar, Size = 50, ParameterName = "PARENT_COMPANY")]
         public string ParentType { get; set; }
 
-        [StoredProcedureParameter(SqlDbType.VarChar, Size = 50, ParameterName = "PHONE")]
+        [StoredProcedureParameter(SqlDbType.VarChar, Size = 50, ParameterName = "PHONE")]   
         public string Phone { get; set; }
 
         [StoredProcedureParameter(SqlDbType.VarChar, Size = 8000, ParameterName = "HEAD_PEOPLE")]

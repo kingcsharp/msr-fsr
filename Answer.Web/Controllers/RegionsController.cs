@@ -4,16 +4,13 @@ using Msr.Services.Regions;
 using Msr.Services.Regions.ViewModels;
 using Msr.Web.ViewModel.Engineering;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace Answer.Web.Controllers
 {
     public class RegionsController : Controller
     {
-        // GET: Regions
         public ActionResult Index()
         {
             var viewModel = new EngineeringViewModel();
@@ -22,11 +19,12 @@ namespace Answer.Web.Controllers
 
             return View(viewModel);
         }
+
         public ActionResult RegionsData(JqGridParam param)
         {
             var regionService = new RegionService();
 
-            var totalRows = regionService.RegionsQueryable();
+            var totalRows = regionService.RegionsQueryable;
 
             if (param.where != null && param.where.rules.Any())
             {
@@ -43,22 +41,9 @@ namespace Answer.Web.Controllers
                     else if (rule.field == nameof(RegionsView.Rev))
                     {
                         int value;
-
-                        if (int.TryParse(rule.data, out value))
+                        if (Int32.TryParse(rule.data, out value))
                         {
                             totalRows = totalRows.Where(x => x.Rev == value);
-                        }
-
-                        totalRows = totalRows.Where(x => x.Rev == value);
-                    }
-                    else if (rule.field == nameof(RegionsView.Status))
-                    {
-                        var statusList = rule.data.Split(',').Select(x=>x.Trim().ToLower());
-
-                        if (statusList.Any())
-                        {
-                            totalRows = totalRows.Where(x => statusList.Contains(x.Status.ToLower()));
-
                         }
                     }
                 }
@@ -98,12 +83,14 @@ namespace Answer.Web.Controllers
 
             return Json(json, JsonRequestBehavior.AllowGet);
         }
+
         public ActionResult Create()
         {
             var part = new SaveRegionViewModel();
 
             return View(part);
         }
+
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Create(SaveRegionViewModel model)
         {
@@ -133,6 +120,7 @@ namespace Answer.Web.Controllers
             return View(model);
 
         }
+
         public ActionResult Edit(string id)
         {
             var regionService = new RegionService();
@@ -172,6 +160,7 @@ namespace Answer.Web.Controllers
 
             return View(model);
         }
+
         public ActionResult Delete(string id)
         {
             var regionService = new RegionService();

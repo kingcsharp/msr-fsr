@@ -1,0 +1,90 @@
+﻿@model Msr.Services.ApprovalStages.VIewModels.EditApprovalStagesViewModel
+
+@{
+    ViewBag.Title = "Edit Approval Stage";
+}
+<div class="container-fluid">
+    <div class="side-body padding-top">
+        <div class="row">
+            <h2 class="page-header">
+                Edit Approval Stage
+                <div class=" pull-right" data-toggle="modal">
+                    <!-- Split button -->
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-warning">Action</button>
+                        <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="caret"></span>
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a href="~/parts/deletePart/@Model.Id">Delete</a></li>
+                        </ul>
+                    </div>
+
+                </div>
+            </h2>
+            <div class="col-lg-10">
+                <section class="panel">
+                    <div class="panel-body bio-graph-info">
+                        @Html.Partial("Message")
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="Id" value="@Model.Id" />
+                            <div class="form-horizontal">
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-4" })
+                                    <div class="col-md-5">
+                                        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Groups, htmlAttributes: new { @class = "control-label col-md-4" })
+                                    <div class="col-md-5">
+                                        @Html.DropDownListFor(model => model.Groups, Model.ListGroups, new { @class = "form-control select selectroles", multiple = "multiple" })
+                                        @Html.ValidationMessageFor(model => model.Groups, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-offset-4 col-md-10">
+                                        <input type="submit" value="Update" class="btn btn-default" />
+                                        @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-warning" })
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    @{
+        var MemberGroups = string.Join(",", Model.Groups);
+    }
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+    <script type="text/javascript">
+         $(document).ready(function () {
+            var selectRoles = $(".selectroles").select2({
+               tags: [],
+               tokenSeparators: [','],
+               multiple: true,
+               allowClear: true,
+               placeholder: "Select Roles",
+               formatNoMatches: function () {
+                   return '';
+               }
+            });
+            var values = '@MemberGroups';
+            var selectedRoles = values.split(",")
+            console.log(selectedRoles);
+            selectRoles.val(selectedRoles).trigger("change");
+        });
+    </script>
+}

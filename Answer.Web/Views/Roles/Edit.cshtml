@@ -1,0 +1,96 @@
+﻿@model Msr.Services.Roles.ViewModels.SaveRoleViewModel
+@{
+    ViewBag.Title = "Add User Role";
+}
+<link rel="stylesheet" type="text/css" href="/assets/css/themes/flat-blue.css">
+<link rel="stylesheet" type="text/css" href="/assets/css/ui.jqgrid-bootstrap-ui.css">
+<link rel="stylesheet" type="text/css" href="/assets/css/ui.jqgrid.css">
+<link rel="stylesheet" type="text/css" href="/assets/css/style.css">
+<link rel="stylesheet" type="text/css" href="/assets/css/hopscotch.css">
+<div class="container-fluid">
+    <div class="side-body padding-top">
+        <div class="row">
+            <h2 class="page-header">
+                Edit User Role
+                <div class=" pull-right" data-toggle="modal">
+                    <!-- Split button -->
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-warning">Action</button>
+                        <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="caret"></span>
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a href="~/user/deleteuser/@Model.Id">Delete</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </h2>
+            <div class="col-lg-10">
+                @Html.Partial("Message")
+                @using (Html.BeginForm("Edit", "Roles", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-horizontal addpart">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        @Html.HiddenFor(x => x.Id)
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ParentRoles, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-5">
+                                @Html.TextBoxFor(model => model.ParentRoles, null, new { @class = "form-control", @readonly = "readonly" })
+                                @Html.ValidationMessageFor(model => model.ParentRoles, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-5">
+                                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.SecurityLevel, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-5">
+                                @Html.DropDownListFor(model => model.SecurityLevel, Model.SecurityLevels, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.SecurityLevel, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.SubRoles, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-5">
+                                @Html.TextBoxFor(model => model.SubRoles, null, new { @class = "form-control", @readonly = "readonly" })
+                                @Html.ValidationMessageFor(model => model.SubRoles, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.PeopleAssigned, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-5">
+                                @Html.TextBoxFor(model => model.PeopleAssigned, null, new { @class = "form-control", @readonly = "readonly" })
+                                @Html.ValidationMessageFor(model => model.PeopleAssigned, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.PeoplePosAssigned, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-5">
+                                @Html.TextBoxFor(model => model.PeoplePosAssigned, null, new { @class = "form-control", @readonly = "readonly" })
+                                @Html.ValidationMessageFor(model => model.PeoplePosAssigned, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Save" class="btn btn-default" />
+                                @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-warning" })
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+}
