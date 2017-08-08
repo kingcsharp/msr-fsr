@@ -2782,6 +2782,5 @@
     <Build Include="dbo\Stored Procedures\Portal\Portal_GetTsrDetails.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_GetPartsAndKitsLabels.sql" />
     <Build Include="dbo\Views\Portal\Portal_MonitorsView.sql" />
-    <Build Include="dbo\Views\Portal\Portal_ProcedureView.sql" />
   </ItemGroup>
 </Project>

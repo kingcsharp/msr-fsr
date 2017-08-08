@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Amazon.Runtime.Internal;
+using Msr.Models.Tasks;
 using Msr.Services.Orders.Procedures;
 using Msr.Services.Orders.ViewModels;
 
@@ -23,5 +23,6 @@ namespace Msr.Services.Orders.Messaging
         public ImageViewModel Images { get; set; }
         public List<GetReferenceFiles> ReferenceFiles { get; set; }
         public List<GetReferenceTheories> ReferenceTheories { get; set; }
+        public TaskLog TaskRunningTimer { get; set; }
     }
 }

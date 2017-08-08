@@ -1,12 +1,32 @@
 ﻿@using Microsoft.AspNet.Identity
 @model Msr.Services.Orders.Messaging.WipStepDetailsResponse
 @*getButtons(myRS)*@
+@{
+    var timespan = "0 Hours";
+    if (Model.TaskRunningTimer != null)
+    {
+        var timer = DateTime.Now.Subtract(Model.TaskRunningTimer.StartTime);
+        var timerInSeconds = timer.TotalSeconds;
+        if (timerInSeconds <= 60)
+        {
+            timespan = timerInSeconds + " sec";
+        }
+        else if (timer.TotalMinutes <= 60)
+        {
+            timespan = timer.Minutes + " minutes " + timer.Seconds + " sec";
+        }
+        else
+        {
+            timespan = timer.Hours + " hours " + timer.Minutes + " minutes " + timer.Seconds + " sec";
+        }
+    }
+}
 <div class="row">
     <div id="timer-input" class="col-sm-4 timer-input">
-        <input type="text" name="timer" class="form-control timer input-lg" placeholder="0 sec" width="120">
+        <input type="text" name="timer" class="form-control timer input-lg" placeholder="@timespan" width="120">
     </div>
     <div class="col-sm-6">
-        @if (Model.TaskEditDataResult.Status != "ACCEPTED")
+        @if (Model.TaskEditDataResult.Status != "ACCEPTED" && Model.TaskRunningTimer == null)
         {
             <button class="btn btn-primary btn-lg print-btn pull-left start-timer-btn" id="start-step"><i class="glyphicon glyphicon-step-forward"></i> Start</button>
         }
