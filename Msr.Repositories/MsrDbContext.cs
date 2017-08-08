@@ -58,7 +58,7 @@ namespace Msr.Repositories
             modelBuilder.Entity<FileView>().ToTable("Portal_FilesView");
             modelBuilder.Entity<RegionsView>().ToTable("Portal_RegionsView");
             modelBuilder.Entity<LocationView>().ToTable("Portal_LocationsView");
-            modelBuilder.Entity<TaskLog>().ToTable("A_Task_Logs");
+            modelBuilder.Entity<TaskLog>().ToTable("Portal_Task_Logs");
             modelBuilder.Entity<RolesView>().ToTable("Portal_RolesView");
             modelBuilder.Entity<DocumentView>().ToTable("Portal_DocumentsView");
             modelBuilder.Entity<ObjectView>().ToTable("Protal_ObjectsView");
