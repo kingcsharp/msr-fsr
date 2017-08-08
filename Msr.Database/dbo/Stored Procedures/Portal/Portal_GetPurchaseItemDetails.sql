@@ -6,7 +6,7 @@ DECLARE @objectid VARCHAR(50);
 
 SELECT  @objectid = FILL_OBJ_ID FROM A_V_FILLS_SEARCH with (noLock)  WHERE ID = @fileId
 
-SELECT FILL_OBJ_DESC AS FillObjDesc, CUST_NAME AS CustomerName, PROD_NAME AS ProductName, PROC_NAME AS ProcedureName, PURCH_ITEM_ID AS PurchItemId, FILL_QTY AS Qty FROM A_V_FILLS_SEARCH with (noLock)  WHERE ID = @fileId
+SELECT FILL_OBJ_DESC AS FillObjDesc, CUST_NAME AS CustomerName, PROD_NAME AS ProductName, PROC_NAME AS ProcedureName, PURCH_ITEM_ID AS PurchItemId, FILL_QTY AS Qty, FILL_OBJ_ID AS FillObjectId FROM A_V_FILLS_SEARCH with (noLock)  WHERE ID = @fileId
 
 SELECT Name FROM A_V_ACTUAL_PARTS_APPROVED_DATA with (noLock)  WHERE PARENT_ID = @objectid
 

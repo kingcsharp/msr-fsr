@@ -106,6 +106,12 @@ namespace Msr.Services.Orders
                 }
             }
 
+            if (detailsResponse.FileSearchResult?.FillObjectId != null)
+            {
+                var ncrData = SearchNcrs(detailsResponse.FileSearchResult.FillObjectId, "1618");
+                detailsResponse.NcrCount = ncrData.Count();
+            }
+
             return detailsResponse;
         }
 
@@ -126,7 +132,7 @@ namespace Msr.Services.Orders
                         detailsResponse.TsrTaskResults = multi.Read<TsrTaskResult>().ToList();
                     }
                 }
-
+                SearchNcrs(fillId, "1618");
                 FormatHtml(detailsResponse);
 
                 return detailsResponse;
@@ -504,20 +510,23 @@ namespace Msr.Services.Orders
                             using (var multi = conn.QueryMultiple("A_SP_MONITOR_TEMPLATES_GET_DATA_FOR_OBJECT", monitorParams,
                                 commandType: CommandType.StoredProcedure))
                             {
-                                detailsResponse.MonitorTemplateResult = multi.Read<MonitorTemplateResult>().SingleOrDefault();
+                                detailsResponse.MonitorTemplateResult = multi.Read<MonitorTemplateResult>().ToList();
                             }
 
-                            if (detailsResponse.MonitorTemplateResult != null)
+                            if (detailsResponse.MonitorTemplateResult.Any())
                             {
-                                detailsResponse.MonitorTemplateResult.MonitorTemplateMultiChoices =
-                                    conn.Query<MonitorTemplateMultiChoiceResult>(
+                                foreach (var monitorTemplate in detailsResponse.MonitorTemplateResult)
+                                {
+                                    monitorTemplate.FillId = fillId;
+                                    monitorTemplate.MonitorTemplateMultiChoices = conn.Query<MonitorTemplateMultiChoiceResult>(
                                         @"SELECT TXT AS Text, IS_ANSWER AS IsAnswer FROM A_MONITOR_TEMPLATES_MULT_CHOICE WHERE MONITOR_ID = @monitorId  ORDER BY ORD",
-                                        new {monitorId = detailsResponse.MonitorTemplateResult.Id})
-                                        .Select( x=> new SelectListItem
+                                        new { monitorId = monitorTemplate.Id })
+                                        .Select(x => new SelectListItem
                                         {
                                             Value = x.Id,
                                             Text = x.Text
                                         }).ToList();
+                                }
                             }
 
                             break;
@@ -560,8 +569,6 @@ namespace Msr.Services.Orders
                     }
                 }
             }
-
-            detailsResponse.MonitorTemplateResult.FillId = fillId;
 
             return detailsResponse;
         }
@@ -792,6 +799,28 @@ namespace Msr.Services.Orders
             using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
             {
                 var stepStartDoneTaskResult = conn.Query<StepStartTaskResult>("A_SP_ACTUAL_PART_UPDATE_SERIAL_FROM_SERIALIZE_TASK", p, commandType: CommandType.StoredProcedure);
+            }
+        }
+
+        public IEnumerable<NcrDataResult> SearchNcrs(int? partId, string login)
+        {
+            var p = new DynamicParameters();
+            
+            p.Add("@fieldList", null, DbType.String, ParameterDirection.Input, size: 4000);
+            p.Add("@alias", "S", DbType.String, ParameterDirection.Input, size: 50);
+            p.Add("@strWHERE", @" PROCEDURE_ID in (SELECT DISTINCT p.ROOT FROM A_O_PROCEDURES p WHERE p.VERB_NAME = 'NCR') AND PROCEDURE_STEP_ID is null  ", DbType.String, ParameterDirection.Input, size: 4000);
+            p.Add("@strPurposes", null, DbType.String, ParameterDirection.Input, size: 4000);
+            p.Add("@strObjects", null, DbType.String, ParameterDirection.Input, size: 4000);
+            p.Add("@strProjects", null, DbType.String, ParameterDirection.Input, size: 4000);
+            p.Add("@strSort", " ORDER BY COLOR_CODE,SORT_ID DESC", DbType.String, ParameterDirection.Input, size: 500);
+            p.Add("@serialNumber", null, DbType.String, ParameterDirection.Input, size: 50);
+            p.Add("@partID", partId, DbType.String, ParameterDirection.Input, size: 50);
+            p.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input, size: 50);
+
+            using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
+            {
+                var ncrSearch = conn.Query<NcrDataResult>("A_SP_NCR_SEARCH", p, commandType: CommandType.StoredProcedure);
+                return ncrSearch;
             }
         }
 

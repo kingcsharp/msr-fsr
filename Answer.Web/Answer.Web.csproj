@@ -791,10 +791,11 @@
     <Content Include="Views\Monitors\Index.cshtml" />
     <Content Include="Views\Locations\Details.cshtml" />
     <Content Include="Views\Wip\_ViewReferenceTheory.cshtml" />
-    <Content Include="Views\Wip\_serializeTask.cshtml" />
     <Content Include="Views\Wip\_Filetab.cshtml" />
     <Content Include="Views\ApprovalWorkflows\Edit.cshtml" />
     <Content Include="Views\ApprovalWorkflows\Index.cshtml" />
+    <Content Include="Views\Wip\_SerializeTask.cshtml" />
+    <Content Include="Views\Wip\SearchNcrs.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

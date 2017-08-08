@@ -1,186 +1,190 @@
-﻿@model Msr.Services.Orders.Procedures.MonitorTemplateResult
+﻿@model List<Msr.Services.Orders.Procedures.MonitorTemplateResult>
 @{
-    var isPassing = Model.Is_Passing.HasValue && Model.Is_Passing.Value;
-    string failText = String.Empty;
+    int i = 1;
 }
-@using (Html.BeginForm("UpdateStepMonitor", "Wip", FormMethod.Post, new { @class = "form form-horizontal", role = "form" }))
+@foreach (var monitorTemplate in Model)
 {
-    @Html.HiddenFor(x => x.Id)
+    var isPassing = monitorTemplate.Is_Passing.HasValue && monitorTemplate.Is_Passing.Value;
+    string failText = String.Empty;
 
-    @Html.HiddenFor(x => x.TheSaurusId)
-    @Html.HiddenFor(x => x.StrNtLogin)
-    @Html.HiddenFor(x => x.FillId)
-
-
-    <div class="form-group">
-        <label class="col-lg-2 control-label">Monitor Description:</label>
-        <div class="col-lg-2">
-            @Model.Description
-        </div>
-    </div>
-
-    if (Model.Monitor_Type == "USER_NUMBER")
+    using (Html.BeginForm("UpdateStepMonitor", "Wip", FormMethod.Post, new { @class = "form form-horizontal", role = "form" }))
     {
+        @Html.HiddenFor(x => monitorTemplate.Id)
+
+        @Html.HiddenFor(x => monitorTemplate.TheSaurusId)
+        @Html.HiddenFor(x => monitorTemplate.StrNtLogin)
+        @Html.HiddenFor(x => monitorTemplate.FillId)
+
+
         <div class="form-group">
-            <label class="col-lg-2 control-label">Should Be:</label>
+            <label class="col-lg-2 control-label">Monitor Description:</label>
             <div class="col-lg-2">
-                @Model.Should_Be
-                @Html.HiddenFor(x => x.Should_Be)
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-lg-2 control-label">Target:</label>
-            <div class="col-lg-2">
-                @Html.TextBoxFor(x => x.Target)
+                @monitorTemplate.Description
             </div>
         </div>
 
-        <div class="form-group">
-            <label class="col-lg-2 control-label">Tolerance %:</label>
-            <div class="col-lg-2">
-                @Html.TextBoxFor(x => x.Tolerance)
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-lg-2 control-label">Result:</label>
-            <div class="col-lg-2">
-                @Html.TextBoxFor(x => x.Print_Result, new { @class = !isPassing ? "input-validation-error" : String.Empty })
-            </div>
-        </div>
-    }
-    else if (Model.Monitor_Type == "MULTIPLE")
-    {
-        <div class="form-group">
-            <label class="col-lg-2 control-label">Your Answer:</label>
-            <div class="col-lg-2">
-                @Html.DropDownListFor(x => x.Mult_Choice_Answer, Model.MonitorTemplateMultiChoices, new { @class = !isPassing ? "form-control input-validation-error" : "form-control" })
-            </div>
-        </div>
-    }
-    else if (Model.Monitor_Type == "YES_NO")
-    {
-        <div class="form-group">
-            <label class="col-lg-2 control-label">Correct Answer:</label>
-            <div class="col-lg-2" style="font-weight: bold;">
-                @Model.Yes_No_Answer
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-lg-2 control-label">Your Answer:</label>
-            <div class="col-lg-2">
-                @*@Html.DropDownListFor(x => string.IsNullOrWhiteSpace(x.Print_Result) ? "1" : x.Print_Result, Model.ResultList, new { @class = !isPassing ? "form-control input-validation-error" : "form-control" })*@
-            </div>
-        </div>
-    }
-    else if (Model.Monitor_Type == "NUMBER")
-    {
-        <div class="form-group">
-            <label class="col-lg-2 control-label">Should Be:</label>
-            <div class="col-lg-2">
-                @Model.Should_Be
-            </div>
-        </div>
-        if (!string.IsNullOrWhiteSpace(Model.Highest_Threshold))
+        if (monitorTemplate.Monitor_Type == "USER_NUMBER")
         {
             <div class="form-group">
-                <label class="col-lg-2 control-label">HIGHEST_THRESHOLD:</label>
+                <label class="col-lg-2 control-label">Should Be:</label>
                 <div class="col-lg-2">
-                    @Model.Highest_Threshold
+                    @monitorTemplate.Should_Be
+                    @Html.HiddenFor(x => monitorTemplate.Should_Be)
                 </div>
             </div>
-        }
-        if (!string.IsNullOrWhiteSpace(Model.High_Threshold))
-        {
-            <div class="form-group">
-                <label class="col-lg-2 control-label">HIGH_THRESHOLD:</label>
-                <div class="col-lg-2">
-                    @Model.High_Threshold
-                </div>
-            </div>
-        }
-        if (!string.IsNullOrWhiteSpace(Model.Target))
-        {
             <div class="form-group">
                 <label class="col-lg-2 control-label">Target:</label>
+                <div class="col-lg-2">
+                    @Html.TextBoxFor(x => monitorTemplate.Target)
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-lg-2 control-label">Tolerance %:</label>
+                <div class="col-lg-2">
+                    @Html.TextBoxFor(x => monitorTemplate.Tolerance)
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">Result:</label>
+                <div class="col-lg-2">
+                    @Html.TextBoxFor(x => monitorTemplate.Print_Result, new { @class = !isPassing ? "input-validation-error" : String.Empty })
+                </div>
+            </div>
+        }
+        else if (monitorTemplate.Monitor_Type == "MULTIPLE")
+        {
+            <div class="form-group">
+                <label class="col-lg-2 control-label">Your Answer:</label>
+                <div class="col-lg-2">
+                    @Html.DropDownListFor(x => monitorTemplate.Mult_Choice_Answer, monitorTemplate.MonitorTemplateMultiChoices, new { @class = !isPassing ? "form-control input-validation-error" : "form-control" })
+                </div>
+            </div>
+        }
+        else if (monitorTemplate.Monitor_Type == "YES_NO")
+        {
+            <div class="form-group">
+                <label class="col-lg-2 control-label">Correct Answer:</label>
                 <div class="col-lg-2" style="font-weight: bold;">
-                    @Model.Target
+                    @monitorTemplate.Yes_No_Answer
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">Your Answer:</label>
+                <div class="col-lg-2">
+                    @*@Html.DropDownListFor(x => string.IsNullOrWhiteSpace(x.Print_Result) ? "1" : x.Print_Result, monitorTemplate.ResultList, new { @class = !isPassing ? "form-control input-validation-error" : "form-control" })*@
                 </div>
             </div>
         }
-        if (!string.IsNullOrWhiteSpace(Model.Low_Threshold))
+        else if (monitorTemplate.Monitor_Type == "NUMBER")
         {
             <div class="form-group">
-                <label class="col-lg-2 control-label">LOW_THRESHOLD:</label>
+                <label class="col-lg-2 control-label">Should Be:</label>
                 <div class="col-lg-2">
-                    @Model.Low_Threshold
+                    @monitorTemplate.Should_Be
                 </div>
             </div>
-        }
-        if (!string.IsNullOrWhiteSpace(Model.Lowest_Threshold))
-        {
+            if (!string.IsNullOrWhiteSpace(monitorTemplate.Highest_Threshold))
+            {
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">HIGHEST_THRESHOLD:</label>
+                    <div class="col-lg-2">
+                        @monitorTemplate.Highest_Threshold
+                    </div>
+                </div>
+            }
+            if (!string.IsNullOrWhiteSpace(monitorTemplate.High_Threshold))
+            {
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">HIGH_THRESHOLD:</label>
+                    <div class="col-lg-2">
+                        @monitorTemplate.High_Threshold
+                    </div>
+                </div>
+            }
+            if (!string.IsNullOrWhiteSpace(monitorTemplate.Target))
+            {
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">Target:</label>
+                    <div class="col-lg-2" style="font-weight: bold;">
+                        @monitorTemplate.Target
+                    </div>
+                </div>
+            }
+            if (!string.IsNullOrWhiteSpace(monitorTemplate.Low_Threshold))
+            {
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">LOW_THRESHOLD:</label>
+                    <div class="col-lg-2">
+                        @monitorTemplate.Low_Threshold
+                    </div>
+                </div>
+            }
+            if (!string.IsNullOrWhiteSpace(monitorTemplate.Lowest_Threshold))
+            {
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">LOWEST_THRESHOLD:</label>
+                    <div class="col-lg-2">
+                        @monitorTemplate.Lowest_Threshold
+                    </div>
+                </div>
+            }
+
             <div class="form-group">
-                <label class="col-lg-2 control-label">LOWEST_THRESHOLD:</label>
+                <label class="col-lg-2 control-label">Result:</label>
                 <div class="col-lg-2">
-                    @Model.Lowest_Threshold
+                    @Html.TextBoxFor(x => monitorTemplate.Print_Result, new { @class = !isPassing ? "input-validation-error" : String.Empty })
                 </div>
             </div>
         }
+        else if (monitorTemplate.Monitor_Type == "TEXT")
+        {
+            if (!string.IsNullOrWhiteSpace(monitorTemplate.Target))
+            {
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">Target:</label>
+                    <div class="col-lg-2" style="font-weight: bold;">
+                        @monitorTemplate.Target
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">Target:</label>
+                    <div class="col-lg-2" style="font-weight: bold;">
+                        BLANK -- Should be entered as a blank
+                    </div>
+                </div>
+            }
+
+            <div class="form-group">
+                <label class="col-lg-2 control-label">Result:</label>
+                <div class="col-lg-2">
+                    @Html.TextBoxFor(x => monitorTemplate.Print_Result, new { @class = !isPassing ? "input-validation-error" : String.Empty })
+                </div>
+            </div>
+        }
+        <div class="form-group">
+            <label class="col-lg-2 control-label">Comments:</label>
+            <div class="col-lg-2">
+                @Html.TextAreaFor(x => monitorTemplate.Comment, new { @class = "form-control" })
+            </div>
+        </div>
+
+        <hr />
 
         <div class="form-group">
-            <label class="col-lg-2 control-label">Result:</label>
+            <label class="col-lg-2 control-label">Monitor #:</label>
             <div class="col-lg-2">
-                @Html.TextBoxFor(x => x.Print_Result, new { @class = !isPassing ? "input-validation-error" : String.Empty })
-            </div>
-        </div>
-    }
-    else if (Model.Monitor_Type == "TEXT")
-    {
-        if (!string.IsNullOrWhiteSpace(Model.Target))
-        {
-            <div class="form-group">
-                <label class="col-lg-2 control-label">Target:</label>
-                <div class="col-lg-2" style="font-weight: bold;">
-                    @Model.Target
-                </div>
-            </div>
-        }
-        else
-        {
-            <div class="form-group">
-                <label class="col-lg-2 control-label">Target:</label>
-                <div class="col-lg-2" style="font-weight: bold;">
-                    BLANK -- Should be entered as a blank
-                </div>
-            </div>
-        }
-
-        <div class="form-group">
-            <label class="col-lg-2 control-label">Result:</label>
-            <div class="col-lg-2">
-                @Html.TextBoxFor(x => x.Print_Result, new { @class = !isPassing ? "input-validation-error" : String.Empty })
-            </div>
-        </div>
-    }
-    <div class="form-group">
-        <label class="col-lg-2 control-label">Comments:</label>
-        <div class="col-lg-2">
-            @Html.TextAreaFor(x => x.Comment, new { @class = "form-control" })
-        </div>
-    </div>
-
-    <hr />
-
-    <div class="form-group">
-        <label class="col-lg-2 control-label">Monitor #:</label>
-        <div class="col-lg-2">
-            1
+                @i
         </div>
     </div>
 
     <div class="form-group">
         <label class="col-lg-2 control-label">Monitor Type:</label>
         <div class="col-lg-2">
-            @Model.Monitor_Type
+            @monitorTemplate.Monitor_Type
         </div>
     </div>
 
@@ -189,72 +193,74 @@
             If fails:
         </label>
         <div class="col-lg-2">
-            @if (!string.IsNullOrWhiteSpace(Model.Fail_Action))
+            @if (!string.IsNullOrWhiteSpace(monitorTemplate.Fail_Action))
             {
-                failText = Model.FailActionList.Single(x => x.Value == Model.Fail_Action).Text;
+                failText = monitorTemplate.FailActionList.Single(x => x.Value == monitorTemplate.Fail_Action).Text;
             }
             @failText
         </div>
     </div>
 
-    if (!string.IsNullOrWhiteSpace(Model.Step_Id))
-    {
-        <div class="form-group">
-            <label class="col-lg-2 control-label">
-                Proc Step Num
-            </label>
-            <div class="col-lg-2">
-                @Model.Step_Id
+        if (!string.IsNullOrWhiteSpace(monitorTemplate.Step_Id))
+        {
+            <div class="form-group">
+                <label class="col-lg-2 control-label">
+                    Proc Step Num
+                </label>
+                <div class="col-lg-2">
+                    @monitorTemplate.Step_Id
+                </div>
             </div>
-        </div>
-    }
+        }
 
-    if (Model.Opinion != 0)
-    {
+        if (monitorTemplate.Opinion != 0)
+        {
+            <div class="form-group">
+                <label class="col-lg-2 control-label">
+                </label>
+                <div class="col-lg-8">
+                    This Monitor is based on Opinion
+                </div>
+            </div>
+        }
+
+        if (monitorTemplate.Use_Result != 0)
+        {
+            <div class="form-group">
+                <label class="col-lg-2 control-label">
+                </label>
+                <div class="col-lg-8">
+                    This Monitor uses its result to match cases
+                </div>
+            </div>
+        }
+
+        if (monitorTemplate.Hide_Target != 0)
+        {
+            <div class="form-group">
+                <label class="col-lg-2 control-label">
+                </label>
+                <div class="col-lg-8">
+                    This Monitor will not show the user the target at entry time
+                </div>
+            </div>
+        }
+
         <div class="form-group">
             <label class="col-lg-2 control-label">
+                Fault Handling
             </label>
             <div class="col-lg-8">
-                This Monitor is based on Opinion
+                @Html.DropDownListFor(x => monitorTemplate.Fail_Action, monitorTemplate.FailActionList, new { @class = "form-control" })
             </div>
         </div>
-    }
 
-    if (Model.Use_Result != 0)
-    {
-        <div class="form-group">
-            <label class="col-lg-2 control-label">
-            </label>
-            <div class="col-lg-8">
-                This Monitor uses its result to match cases
-            </div>
+        <div class="row">
+            <input class="btn-info" value="Save" type="submit" />
+            <input class="btn-info" id="monitor-save-close" value="Save & Close Task" type="button" />
         </div>
     }
-
-    if (Model.Hide_Target != 0)
-    {
-        <div class="form-group">
-            <label class="col-lg-2 control-label">
-            </label>
-            <div class="col-lg-8">
-                This Monitor will not show the user the target at entry time
-            </div>
-        </div>
-    }
-
-    <div class="form-group">
-        <label class="col-lg-2 control-label">
-            Fault Handling
-        </label>
-        <div class="col-lg-8">
-            @Html.DropDownListFor(x => x.Fail_Action, Model.FailActionList, new { @class = "form-control" })
-        </div>
-    </div>
-
-    <div class="row">
-        <input class="btn-info" value="Save" type="submit"/>
-        <input class="btn-info" id="monitor-save-close" value="Save & Close Task" type="button" />
-    </div>
+    i++;
 }
 <script>
     $("#monitor-save-close").on('click', function () {

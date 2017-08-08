@@ -1,0 +1,36 @@
+﻿@model IEnumerable<Msr.Services.Orders.Procedures.NcrDataResult>
+<div class="container-fluid">
+    <div class="side-body padding-top">
+        <div class="row wip-detail-header">
+            <table class="table" width="100%" id="ncr-table">
+                <thead>
+                    <tr>
+                        <th>NCR ID</th>
+                        <th>Decription</th>
+                        <th>Serial No.</th>
+                        <th>Actual Start Date</th>
+                        <th>Actual Stop Date</th>
+                        <th>Customer</th>
+                        <th>WO - Work Order</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var ncr in Model)
+                    {
+                        <tr>
+                            <td>@ncr.Id</td>
+                            <td>@ncr.Description</td>
+                            <td>@ncr.Serial</td>
+                            <td>@ncr.Actual_Start_Date</td>
+                            <td>@ncr.Actual_Stop_Date</td>
+                            <td>@ncr.Customer_Name</td>
+                            <td>@ncr.Cust_Purch_Num</td>
+                            <td></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

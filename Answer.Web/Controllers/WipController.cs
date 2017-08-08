@@ -323,7 +323,10 @@ namespace Answer.Web.Controllers
             var loggedUserId = User.Identity.GetUserId();
             var response = _orderService.GetWipStepDetails(stepId, fillId, loggedUserId, phStepId);
 
-            response?.MonitorTemplateResult?.Setup();
+            foreach (var monitorTemplate in response.MonitorTemplateResult)
+            {
+                monitorTemplate.Setup();
+            }
 
             response.Images = new ImageViewModel
             {
@@ -444,17 +447,22 @@ namespace Answer.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult UpdateRootParts(ActualPart[] actualParts)
+        public ActionResult UpdateRootParts(List<ActualPart> parts, int taskId)
         {
-            var loggedUserId = User.Identity.GetUserId();
-            loggedUserId = "1618";//to be removed
-            foreach (var part in actualParts)
+            //var loggedUserId = User.Identity.GetUserId();
+            var loggedUserId = "1618";//to be removed
+            foreach (ActualPart part in parts.Where(x => x.TreeLevel > 0))
             {
-                _orderService.UpdateRootPart(part.Id, part.Serial, 12, loggedUserId);
+                _orderService.UpdateRootPart(part.Id, part.Serial, taskId, loggedUserId);
             }
-            
 
             return Json("OK", JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult SearchNcrs(int? partId, int? ncrId, string partSerialNumber, string taskStatus, string assignee)
+        {
+            var viewModel = _orderService.SearchNcrs(partId, "1618");
+            return View(viewModel);
         }
 
         private List<DocumentView> GetDocViewModel(List<DocumentView> docs, OrderService orderService, int width)

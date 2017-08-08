@@ -16,6 +16,7 @@ namespace Msr.Services.Orders.Messaging
         }
 
         public int FillId { get; set; }
+        public int NcrCount { get; set; }
         public FileSearchResult FileSearchResult { get; set; }
         public List<string> Parts { get; set; }
         public List<TaskStepResult> TaskStepResults { get; set; }
