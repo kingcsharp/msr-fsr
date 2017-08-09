@@ -72,12 +72,22 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config">
-      <SubType>Designer</SubType>
-    </None>
+    <ProjectReference Include="..\Msr.Models\Msr.Models.csproj">
+      <Project>{2D976E8C-924C-4E73-A8FC-A8395B457C0E}</Project>
+      <Name>Msr.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Msr.Repositories\Msr.Repositories.csproj">
+      <Project>{E8A1A202-F0D8-495D-98E7-1F05F6057841}</Project>
+      <Name>Msr.Repositories</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Common\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

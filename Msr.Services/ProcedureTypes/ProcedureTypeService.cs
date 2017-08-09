@@ -22,17 +22,14 @@ namespace Msr.Services.ProcedureTypes
         {
             _dbContext = new MsrDbContext();
         }
-
         public IQueryable<ProcedureTypesView> GetProceduresTypes()
         {
             return _dbContext.ProcedureTypes;
         }
-
         public VerbType GetVerbTypeById(string Id)
         {
             return _dbContext.VerbTypes.Where(x=>x.ID == Id).SingleOrDefault();
         }
-
         public IQueryable<VerbTypes> GetVerbTypes(string Id)
         {
             
@@ -62,7 +59,6 @@ namespace Msr.Services.ProcedureTypes
                 return false;
             }
         }
-
         public bool Edit(SaveProcedureTypesViewModel model)
         {
 

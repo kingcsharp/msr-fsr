@@ -435,6 +435,8 @@
     <Content Include="assets\js\grids\locations.js" />
     <Content Include="assets\js\grids\master-user.js" />
     <Content Include="assets\js\grids\Monitors.js" />
+    <Content Include="assets\js\grids\approval-workflows.js" />
+    <Content Include="assets\js\grids\objects.js" />
     <Content Include="assets\js\grids\parts.js" />
     <Content Include="assets\js\grids\regions.js" />
     <Content Include="assets\js\grids\theoryparagraph.js" />
@@ -594,8 +596,6 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="obj\Release\Package\PackageTmp\assets\js\grids\parts.js" />
-    <Content Include="obj\Release\Package\PackageTmp\assets\js\jquery.qrcode.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="assets\components\ace\completions.php" />
@@ -641,6 +641,9 @@
     <Content Include="assets\data\purchase_orders.json" />
     <Content Include="assets\js\Sample Refactoring Project.zip" />
     <Content Include="assets\js\wip-detail-tooltip.js.old" />
+    <Content Include="obj\Release\Package\PackageTmp\Views\Wip\_ViewReferenceTheory.cshtml" />
+    <Content Include="obj\Release\Package\PackageTmp\Views\Wip\SearchNcrs.cshtml" />
+    <Content Include="obj\Release\Package\PackageTmp\Views\Wip\_SerializeTask.cshtml" />
     <None Include="Properties\PublishProfiles\dev.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -753,8 +756,6 @@
     <Content Include="Views\ProcedureTypes\Create.cshtml" />
     <Content Include="Views\ProcedureTypes\Edit.cshtml" />
     <Content Include="Views\ProcedureTypes\Index.cshtml" />
-    <Content Include="Views\Procedures\Index.cshtml" />
-    <Content Include="Views\Procedures\Create.cshtml" />
     <Content Include="Views\Files\Index.cshtml" />
     <Content Include="Views\Shared\_Files.cshtml" />
     <Content Include="Views\Procedures\Create.cshtml" />
@@ -790,12 +791,13 @@
     <Content Include="Views\Shared\_Locations.cshtml" />
     <Content Include="Views\Monitors\Index.cshtml" />
     <Content Include="Views\Locations\Details.cshtml" />
-    <Content Include="Views\Wip\_ViewReferenceTheory.cshtml" />
-    <Content Include="Views\Wip\_Filetab.cshtml" />
     <Content Include="Views\ApprovalWorkflows\Edit.cshtml" />
     <Content Include="Views\ApprovalWorkflows\Index.cshtml" />
-    <Content Include="Views\Wip\_SerializeTask.cshtml" />
+    <Content Include="Views\ApprovalWorkflows\Add.cshtml" />
+    <Content Include="Views\Wip\_ViewReferenceTheory.cshtml" />
     <Content Include="Views\Wip\SearchNcrs.cshtml" />
+    <Content Include="Views\Wip\_serializeTask.cshtml" />
+    <Content Include="Views\Wip\_Filetab.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

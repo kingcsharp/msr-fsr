@@ -94,12 +94,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApprovalWorkflows\ActivitiesView.cs" />
+    <Compile Include="ApprovalWorkflows\ApprovalWorkflowStagesView.cs" />
+    <Compile Include="ApprovalWorkflows\ApprovalWorkflowsActivitiesView.cs" />
     <Compile Include="ApprovalGroups\ApprovalGroupsView.cs" />
     <Compile Include="ApprovalStages\ApprovalStagesView.cs" />
     <Compile Include="ApprovalStages\SelectMemberGroup.cs" />
+    <Compile Include="ApprovalWorkflows\WorkflowStagesView.cs" />
     <Compile Include="Comman\SelectFile.cs" />
     <Compile Include="ApprovalWorkflows\ApprovalWorkflowsView.cs" />
-    <Compile Include="Companies\Company.cs" />
     <Compile Include="Companies\CompanyView.cs" />
     <Compile Include="Companies\EditCompanyView.cs" />
     <Compile Include="Companies\HeadPeopleView.cs" />

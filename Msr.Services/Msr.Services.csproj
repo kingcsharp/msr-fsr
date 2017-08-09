@@ -125,6 +125,13 @@
     <Compile Include="ApprovalStages\Procedures\SaveStageGroupProcedure.cs" />
     <Compile Include="ApprovalStages\VIewModels\EditApprovalStagesViewModel.cs" />
     <Compile Include="ApprovalWorkflows\ApprovalWorkflowsService.cs" />
+    <Compile Include="ApprovalWorkflows\Procedures\DeleteDocumentProcedure.cs" />
+    <Compile Include="ApprovalWorkflows\Procedures\AddWorkFlowActivityProcedure.cs" />
+    <Compile Include="ApprovalWorkflows\Procedures\DeleteWorkFlowActivityProcedure.cs" />
+    <Compile Include="ApprovalWorkflows\Procedures\DeleteWorkFlowStageProcedure.cs" />
+    <Compile Include="ApprovalWorkflows\Procedures\AddWorkFlowStageProcedure.cs" />
+    <Compile Include="ApprovalWorkflows\Procedures\EditApprovalWorkflowsProcedure.cs" />
+    <Compile Include="ApprovalWorkflows\Procedures\HideApprovalWorkflowProcedure.cs" />
     <Compile Include="ApprovalWorkflows\ViewModels\ApprovalWorkflowsViewModel.cs" />
     <Compile Include="ApprovalWorkflows\ViewModels\EditApprovalStagesViewModel.cs" />
     <Compile Include="BaseNotification.cs" />
@@ -227,6 +234,7 @@
     <Compile Include="Parts\PartTypeService.cs" />
     <Compile Include="Parts\Procedures\DeleteFileProcedure.cs" />
     <Compile Include="Parts\Procedures\DeletePartProcedure.cs" />
+    <Compile Include="Parts\Procedures\DeletePartTypeProcedure.cs" />
     <Compile Include="Parts\Procedures\SaveFileProcedure.cs" />
     <Compile Include="Parts\Procedures\SavePartProcedure.cs" />
     <Compile Include="Parts\Procedures\SavePartTypeProcedure.cs" />
@@ -242,6 +250,7 @@
     <Compile Include="Regions\Procedures\SaveRegionProcedure.cs" />
     <Compile Include="Regions\RegionService.cs" />
     <Compile Include="Regions\ViewModels\SaveRegionViewModel.cs" />
+    <Compile Include="Roles\Procedures\DeleteRoleProcedure.cs" />
     <Compile Include="Roles\Procedures\SaveUserRoleProcedure.cs" />
     <Compile Include="Roles\RoleService.cs" />
     <Compile Include="Roles\ViewModels\SaveRoleViewModel.cs" />

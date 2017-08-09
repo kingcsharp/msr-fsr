@@ -27,7 +27,6 @@ namespace Msr.Services.Procedures
 		{
 			return _dbContext.Procedurs.Where(x => x.Id == Id).SingleOrDefault();
 		}
-
 		public IQueryable<ProcedureView> GetProceduresQueryable()
 		{
 
@@ -55,7 +54,6 @@ namespace Msr.Services.Procedures
 				return false;
 			}
 		}
-
 		public bool Edit(SaveProcedureTypesViewModel model)
 		{
 

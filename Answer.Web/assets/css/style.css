@@ -1444,4 +1444,8 @@ color: black;
   }
 .tooltip.left .tooltip-arrow {
           border-left-color: black;
-       }                    
+       }
+.activities {
+    height: 400px !important;
+}
+

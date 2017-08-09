@@ -60,7 +60,6 @@
         colMenu: true,
 
     });
-
     $('#jqGrid').navGrid("#jqGridPager", {
         search: false, // show search button on the toolbar
         add: false,
@@ -73,7 +72,6 @@
         {}, // delete options
         { multipleSearch: true }
     );
-
     $('#jqGrid').jqGrid('filterToolbar', {
         stringResult: true,
         searchOnEnter: true,

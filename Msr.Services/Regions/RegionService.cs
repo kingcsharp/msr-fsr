@@ -4,7 +4,10 @@ using Msr.Repositories;
 using Msr.Services.Regions.Procedures;
 using Msr.Services.Regions.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Msr.Services.Regions
 {
@@ -24,12 +27,10 @@ namespace Msr.Services.Regions
                 return _dbContext.RegionsViews;
             }
         }
-
         public RegionsView GetById(string Id)
         {
             return RegionsQueryable.Where(x => x.ObjectId == Id).SingleOrDefault();
         }
-
         public bool Save(SaveRegionViewModel model)
         {
             try
@@ -47,7 +48,6 @@ namespace Msr.Services.Regions
                 return false;
             }
         }
-
         public bool Create(SaveRegionViewModel model)
         {
             try
@@ -65,7 +65,6 @@ namespace Msr.Services.Regions
                 return false;
             }
         }
-
         public bool Delete(SaveRegionViewModel model)
         {
             try
@@ -73,7 +72,7 @@ namespace Msr.Services.Regions
                 var saveRegionProcedure = new SaveRegionProcedure() { Name = model.Name, NTLogin = model.NTLogin };
 
                 //_dbContext.Database.ExecuteStoredProcedure(saveRegionProcedure);
-
+               
                 return true;
             }
             catch (Exception ex)

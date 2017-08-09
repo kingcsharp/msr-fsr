@@ -1,17 +1,23 @@
 ﻿using Msr.Models.Parts;
+using Msr.Models.Tasks;
 using Msr.Services.jqGrid;
+using Msr.Services.Orders;
 using Msr.Services.Parts;
 using Msr.Web.ViewModel.Engineering;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using Msr.Services.Parts.ViewModels;
+using Msr.Services.Files;
 using Msr.Infrastructure.Common;
 
 namespace Answer.Web.Controllers
 {
     public class PartsController : Controller
     {
+        // GET: Parts
         public ActionResult Index()
         {
             var viewModel = new EngineeringViewModel();
@@ -20,7 +26,6 @@ namespace Answer.Web.Controllers
 
             return View(viewModel);
         }
-
         public ActionResult PartsData(JqGridParam param)
         {
             var taskService = new PartsService();
@@ -101,7 +106,6 @@ namespace Answer.Web.Controllers
 
             return Json(json, JsonRequestBehavior.AllowGet);
         }
-
         public ActionResult Details(string id)
         {
             var taskService = new PartsService();
@@ -116,7 +120,6 @@ namespace Answer.Web.Controllers
 
             return View(part);
         }
-
         public ActionResult ViewFile(string callBackitem)
         {
             var callBackUrl = "http://docs.google.com/gview?url=" + "http://infolab.stanford.edu/pub/papers/google.pdf&embedded=true";//callBackitem url need to be dynamic
@@ -124,7 +127,6 @@ namespace Answer.Web.Controllers
 
             return PartialView("_ViewFile");
         }
-
         public ActionResult AddPart()
         {
             var part = new AddPartViewModel();
@@ -133,7 +135,6 @@ namespace Answer.Web.Controllers
 
             return View(part);
         }
-
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult AddPart(AddPartViewModel model)
         {
@@ -325,7 +326,6 @@ namespace Answer.Web.Controllers
 
             return Json(json, JsonRequestBehavior.AllowGet);
         }
-
         public ActionResult AddPartTypes()
         {
             var addModel = new AddPartTypesViewModel();
@@ -334,7 +334,6 @@ namespace Answer.Web.Controllers
 
             return View(addModel);
         }
-
         [AcceptVerbs(verbs: HttpVerbs.Post)]
         public ActionResult AddPartTypes(AddPartTypesViewModel parttype)
         {
@@ -366,7 +365,6 @@ namespace Answer.Web.Controllers
 
             return View(parttype);
         }
-
         public ActionResult SavePartTypes(string Id)
         {
             var partTypeservice = new PartTypeService();
@@ -379,7 +377,6 @@ namespace Answer.Web.Controllers
 
             return View(parttype);
         }
-
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult SavePartTypes(AddPartTypesViewModel parttype)
         {
@@ -409,6 +406,24 @@ namespace Answer.Web.Controllers
             parttype.Setup();
 
             return View(parttype);
+        }
+
+
+        public ActionResult PartTypeDelete(string id)
+        {
+            var taskService = new PartTypeService();
+
+            var response = taskService.Delete(id: id);
+
+            if (response)
+            {
+                TempData["SuccessMessage"] = "Part Type deleted successfully.";
+
+                return RedirectToAction("PartTypes");
+            }
+
+            TempData["ErrorMessage"] = "Something went wrong.";
+            return RedirectToAction("PartTypes");
         }
     }
 }
