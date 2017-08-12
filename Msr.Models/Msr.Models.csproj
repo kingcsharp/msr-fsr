@@ -96,6 +96,7 @@
   <ItemGroup>
     <Compile Include="ActualParts\ActualPartsView.cs" />
     <Compile Include="ActualParts\RootCompanyTree.cs" />
+    <Compile Include="Administration\ViewCompanyUsage.cs" />
     <Compile Include="ApprovalWorkflows\ActivitiesView.cs" />
     <Compile Include="ApprovalWorkflows\ApprovalWorkflowStagesView.cs" />
     <Compile Include="ApprovalWorkflows\ApprovalWorkflowsActivitiesView.cs" />

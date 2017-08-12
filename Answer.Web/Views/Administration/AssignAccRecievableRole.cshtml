@@ -1,0 +1,62 @@
+﻿@model Answer.Web.ViewModel.Administration.AssignAccRecievableRoleViewModel
+
+@{
+    ViewBag.Title = "ASSIGN WSCR CLOSER & ROLE & CHECK MAIL LOCATION";
+}
+
+<div class="container-fluid">
+    <div class="side-body padding-top">
+        <div class="row">
+            <h2 class="page-header">
+                ASSIGN WSCR CLOSER & ROLE & CHECK MAIL LOCATION
+                <button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
+            </h2>
+        </div>
+
+        <div class="col-lg-12">
+            <div class="row">
+                @using (Html.BeginForm("AssignAccRecievableRole", "Administration", FormMethod.Post, new { id = "assign-form" }))
+                {
+                    <table class="table table-bordered" style="width: 600px;">
+                        <tr>
+                            <th>Company/Dept</th>
+                            <th>Role To Close Weekly Service Call Reports</th>
+                            <th>Location to Mail Checks</th>
+                        </tr>
+
+                        @for (int index = 0; index < Model.Companies.Count; index++)
+                        {
+                            <tr>
+                                <td>@Model.Companies[index].Co_Name</td>
+                                <td>
+                                    @Html.Hidden("companiesWithRoles[" + index + "].CoId", Model.Companies[index].Co_Id)
+                                    @Html.DropDownList("companiesWithRoles[" + index + "].RoleId", Model.Roles, new { @class = "form-control select" })
+                                </td>
+                                <td>
+                                    @Html.DropDownList("companiesWithRoles[" + index + "].LocationId", Model.Locations, new {@class = "form-control select"})
+                                </td>
+                            </tr>
+                        }
+
+                    </table>
+                    <input type="submit" value="Update" class="btn btn-default" />
+                }
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function() {
+
+            $('.select').select2();
+
+        });
+    </script>
+
+}
+
