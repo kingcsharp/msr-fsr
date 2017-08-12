@@ -263,5 +263,16 @@ namespace Answer.Web.Controllers
             return View(vm);
         }
 
+        public ActionResult EditglobalWordsII()
+        {
+            var vm = new ModuleAccessViewViewModel();
+
+            vm.CompaniesToView = _administrationService.GeModuleAccess();
+
+            vm.SetUp(new RoleService());
+
+            return View(vm);
+        }
+
     }
 }
