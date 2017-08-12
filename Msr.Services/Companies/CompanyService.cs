@@ -52,7 +52,22 @@ namespace Msr.Services.Companies
         {
             try
             {
-                var saveCompanyProcedure = new AddCompanyProcedure { Name = model.Name, Type = model.CoType, ParentType = model.Parent, Phone = model.Phone,/*HeadPeople=model.ReferenceFiles,LocationId=model.Location,CoSupProds=model.RootCoID,PicFiles=model.RootCoID, LogoFiles = model.RootCoID, ReferenceFiles = model.RootCoID,*/ NewPersonLogin = model.NewPersonLogin, NewPersonPassword = model.NewPersonPassword, NewPersonFirstName = model.NewPersonFirstName, NewPersonLastName = model.NewPersonLastName, NewPersonEmail = model.NewPersonEmail, StrNTlogin = model.NTLogin };
+                var saveCompanyProcedure = new AddCompanyProcedure
+                {
+                    Name = model.Name,
+                    Type = model.CoType,
+                    ParentType = model.Parent,
+                    Phone = model.Phone,
+                    PicFiles = model.PictureFiles != null ? string.Join(", ", model.PictureFiles) : "",
+                    LogoFiles = model.LogoFiles != null ? string.Join(", ", model.LogoFiles) : "",
+                    ReferenceFiles = model.ReferenceFiles != null ? string.Join(", ", model.ReferenceFiles) : "",
+                    NewPersonLogin = model.NewPersonLogin,
+                    NewPersonPassword = model.NewPersonPassword,
+                    NewPersonFirstName = model.NewPersonFirstName,
+                    NewPersonLastName = model.NewPersonLastName,
+                    NewPersonEmail = model.NewPersonEmail,
+                    StrNTlogin = model.NTLogin
+                };
 
                 var task = _dbContext.Database.ExecuteStoredProcedure<AddCompanyProcedure>(saveCompanyProcedure);
 
@@ -116,6 +131,28 @@ namespace Msr.Services.Companies
         public IQueryable<LocationView> GetLocationsQueryable()
         {            
                 return _dbContext.LocationViews;            
+        }
+        public bool Delete(string objectId, string loginId)
+        {
+            try
+            {
+                var deleteCompanyProcedure = new DeleteCompanyProcedure
+                {
+                    ObjID = objectId,                   
+                    StrNTlogin = loginId
+                };
+
+                _dbContext.Database.ExecuteStoredProcedure(deleteCompanyProcedure);
+
+                return true;
+
+            }
+            catch (Exception ex)
+            {
+                var message = "Error occured:" + ex.Message;
+
+                return false;
+            }
         }
     }
 }

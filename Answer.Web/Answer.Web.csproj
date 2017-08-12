@@ -176,6 +176,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ActualPartsController.cs" />
     <Compile Include="Controllers\ApprovalGroupsController.cs" />
     <Compile Include="Controllers\ApprovalStagesController.cs" />
     <Compile Include="Controllers\ApprovalWorkflowsController.cs" />
@@ -420,6 +421,7 @@
     <Content Include="assets\js\finger.min.js" />
     <Content Include="assets\js\freeform-quote.js" />
     <Content Include="assets\js\froogaloop.js" />
+    <Content Include="assets\js\grids\actualparts.js" />
     <Content Include="assets\js\grids\approvalgroups.js" />
     <Content Include="assets\js\grids\approvalstages.js" />
     <Content Include="assets\js\grids\buyer_grid.js" />
@@ -798,6 +800,10 @@
     <Content Include="Views\Wip\SearchNcrs.cshtml" />
     <Content Include="Views\Wip\_serializeTask.cshtml" />
     <Content Include="Views\Wip\_Filetab.cshtml" />
+    <Content Include="Views\Companies\Details.cshtml" />
+    <Content Include="Views\ActualParts\Index.cshtml" />
+    <Content Include="Views\ActualParts\Edit.cshtml" />
+    <Content Include="Views\ActualParts\Create.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

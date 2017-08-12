@@ -111,6 +111,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActualParts\ActualPartsService.cs" />
+    <Compile Include="ActualParts\Procedures\DeleteActualPartProcedure.cs" />
+    <Compile Include="ActualParts\Procedures\SaveActualPartsProcedure.cs" />
+    <Compile Include="ActualParts\ViewModels\SaveActualPartsViewModel.cs" />
     <Compile Include="ApprovalGroups\ApprovalGroupsService.cs" />
     <Compile Include="ApprovalGroups\Procedures\DeleteMembersProcedure.cs" />
     <Compile Include="ApprovalGroups\Procedures\RestartMyCurrentGroupsProcedure.cs" />
@@ -123,7 +127,7 @@
     <Compile Include="ApprovalStages\Procedures\DeleteApprovalGroupsProcedure.cs" />
     <Compile Include="ApprovalStages\Procedures\SaveApprovalStagesProcedure.cs" />
     <Compile Include="ApprovalStages\Procedures\SaveStageGroupProcedure.cs" />
-    <Compile Include="ApprovalStages\VIewModels\EditApprovalStagesViewModel.cs" />
+    <Compile Include="ApprovalStages\ViewModels\EditApprovalStagesViewModel.cs" />
     <Compile Include="ApprovalWorkflows\ApprovalWorkflowsService.cs" />
     <Compile Include="ApprovalWorkflows\Procedures\DeleteDocumentProcedure.cs" />
     <Compile Include="ApprovalWorkflows\Procedures\AddWorkFlowActivityProcedure.cs" />
@@ -135,6 +139,7 @@
     <Compile Include="ApprovalWorkflows\ViewModels\ApprovalWorkflowsViewModel.cs" />
     <Compile Include="ApprovalWorkflows\ViewModels\EditApprovalStagesViewModel.cs" />
     <Compile Include="BaseNotification.cs" />
+    <Compile Include="Companies\Procedures\DeleteCompanyProcedure.cs" />
     <Compile Include="Companies\Procedures\AddCompanyProcedure.cs" />
     <Compile Include="Companies\Procedures\GetCompanyFilesProcedure.cs" />
     <Compile Include="Companies\ViewModels\AddCompanyViewModel.cs" />
@@ -246,6 +251,7 @@
     <Compile Include="ProcedureTypes\ProcedureTypeService.cs" />
     <Compile Include="ProcedureTypes\Procedures\SaveProcedureTypesProcedure.cs" />
     <Compile Include="ProcedureTypes\ViewModels\SaveProcedureTypesViewModel.cs" />
+    <Compile Include="Products\ProductService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Regions\Procedures\SaveRegionProcedure.cs" />
     <Compile Include="Regions\RegionService.cs" />
@@ -294,6 +300,8 @@
     <Folder Include="Files\Procedures\" />
     <Folder Include="Objects\Procedures\" />
     <Folder Include="Objects\ViewModels\" />
+    <Folder Include="Products\Procedures\" />
+    <Folder Include="Products\ViewModels\" />
     <Folder Include="Roles\Messages\" />
     <Folder Include="TheoryParagraph\Procedures\" />
     <Folder Include="TheoryParagraph\ViewModels\" />

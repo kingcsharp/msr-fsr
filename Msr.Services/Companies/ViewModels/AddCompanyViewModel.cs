@@ -7,12 +7,23 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using Msr.Infrastructure.Common;
 using Msr.Models.Companies;
 
 namespace Msr.Services.Companies.ViewModels
 {
     public class AddCompanyViewModel
     {
+        public AddCompanyViewModel()
+        {
+            ListReferenceFiles = new List<SelectListItem>();
+            ListPictureFiles = new List<SelectListItem>();
+            ListLogoFiles = new List<SelectListItem>();
+            ReferenceFiles = new List<string>();
+            PictureFiles = new List<string>();
+            LogoFiles = new List<string>();
+            ListParents = new List<SelectListItem>();
+        }
         public string ID { get; set; }
 
         [Required]
@@ -62,17 +73,21 @@ namespace Msr.Services.Companies.ViewModels
         public string NTLogin { get; set; }
 
         [DisplayName("Reference Files :")]
-        public IEnumerable<HttpPostedFileBase> ReferenceFiles { get; set; }
+        public List<string> ReferenceFiles { get; set; }
 
         [DisplayName("Picture Files :")]
-        public IEnumerable<HttpPostedFileBase> PictureFiles { get; set; }
+        public List<string> PictureFiles { get; set; }
 
         [DisplayName("Logo Files :")]
-        public IEnumerable<HttpPostedFileBase> LogoFiles { get; set; }
+        public List<string> LogoFiles { get; set; }
 
+        public IList<SelectListItem> ListReferenceFiles { get; set; }
+        public IList<SelectListItem> ListPictureFiles { get; set; }
+        public IList<SelectListItem> ListLogoFiles { get; set; }
+        public IEnumerable<SelectListItem> ListParents { get; set; }
         public IEnumerable<SelectListItem> CompanyTypes { get; set; }
 
-        public void Setup()
+        public void Setup(DocumentFilesService documentFilesService, CompanyService companyService)
         {
             CompanyTypes = new List<SelectListItem>
             {
@@ -89,33 +104,12 @@ namespace Msr.Services.Companies.ViewModels
                 }
 
             };
-        }
-        public AddCompanyViewModel MapToDto(CompanyView model)
-        {
-            return new AddCompanyViewModel
+            ListParents = companyService.GetCompaniesQueryable().ToList().Select(x => new SelectListItem
             {
-               ID = model.ObjectId
-               //ExternalId = model.ExternalId,
-               //Name = model.Name,
-               //CoType = model.CoType,
-               //ObjectId = model.ObjectId,
-               //Status = model.Status,
-               //LockedBy = model.LockedBy,
-               //UnlockedBy = model.UnlockedBy,
-               //CreatedBy = model.CreatedBy,
-               //CreatingCo = model.CreatingCo,
-               //Rev = model.Rev,
-               //WfsId = model.WfsId,
-               //LockedByName = model.LockedByName,
-               //Root = model.Root,
-               //ChildrenCount = model.ChildrenCount,
-               //TopCompany = model.TopCompany,
-               //PicRecord = model.PicRecord,
-               //RootCoName = model.RootCoName,
-               //ParentName = model.ParentName,
-               // ReferenceFiles
-            };
-        }
+                Text = x.Name,
+                Value = x.Id
+            }).OrderBy(o => o.Text).ToList();
+        }      
     }
 }
 

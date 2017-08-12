@@ -138,8 +138,8 @@ namespace Msr.Services.Parts
                     SupplierCo = model.SupplierCo,
                     ProductType = model.ProductType,
                     ProcVerb = model.ProcVerb,
-                    SpecialCustomers = model.SpecialCustomers != null ? string.Join(", ", model.SpecialCustomers) : "",
-                    CustomerExceptions = model.CustomerExceptions != null ? string.Join(", ", model.CustomerExceptions) : "",
+                    SpecialCustomers = model.SpecialCustomers != null ? string.Join(", ", model.SpecialCustomers) : DBNull.Value.ToString(),
+                    CustomerExceptions = model.CustomerExceptions != null ? string.Join(", ", model.CustomerExceptions) : DBNull.Value.ToString(),
                     Customers = model.Customers,
                     Price = model.Price,
                     NTLogin = model.NTLogin
@@ -181,8 +181,8 @@ namespace Msr.Services.Parts
                     SupplierCo = model.SupplierCo,
                     ProductType = model.ProductType,
                     ProcVerb = model.ProcVerb,
-                    SpecialCustomers = model.SpecialCustomers != null ? string.Join(", ", model.SpecialCustomers) : "",
-                    CustomerExceptions = model.CustomerExceptions != null ? string.Join(", ", model.CustomerExceptions) : "",
+                    SpecialCustomers = model.SpecialCustomers != null ? string.Join(", ", model.SpecialCustomers) : DBNull.Value.ToString(),
+                    CustomerExceptions = model.CustomerExceptions != null ? string.Join(", ", model.CustomerExceptions) : DBNull.Value.ToString(),
                     Customers = model.Customers,
                     Price = model.Price,
                     NTLogin = model.NTLogin

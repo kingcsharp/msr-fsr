@@ -115,7 +115,7 @@ namespace Answer.Web.Controllers
         public ActionResult Create()
         {
             var company = new AddCompanyViewModel();
-            company.Setup();
+            company.Setup(new DocumentFilesService(), new CompanyService());
             return View(company);
         }
 
@@ -133,12 +133,12 @@ namespace Answer.Web.Controllers
                 if (response)
                 {
                     TempData["SuccessMessage"] = "Company has been created successfully.";
-                    return RedirectToAction("Companies");
+                    return RedirectToAction("Index");
                 }
                 else
                 {
                     TempData["ErrorMessage"] = "Something went wrong.";
-                    model.Setup();
+                    model.Setup(new DocumentFilesService(), new CompanyService());
                     return View(model);
                 }
             }
@@ -179,6 +179,30 @@ namespace Answer.Web.Controllers
                 return View(model);
             }
 
+            return View(model);
+        }
+        public ActionResult Delete(string id)
+        {
+            var taskService = new CompanyService();
+            //Need to dynamic 
+            string ntLogin = "1618";
+            var response = taskService.Delete(id, ntLogin);
+
+            if (response)
+            {
+                TempData["SuccessMessage"] = "Company deleted successfully.";
+
+                return RedirectToAction("Index");
+            }
+
+            TempData["ErrorMessage"] = "Something went wrong.";
+            return RedirectToAction("Index");
+        }
+        public ActionResult Details(string id)
+        {
+            var taskService = new CompanyService();
+            var model = taskService.GetCompanyByObjId(id);
+            model.Setup(new DocumentFilesService(), new CompanyService());
             return View(model);
         }
     }

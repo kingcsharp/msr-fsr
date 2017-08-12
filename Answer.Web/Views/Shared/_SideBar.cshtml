@@ -60,18 +60,18 @@
                         <div class="panel-body">
                             <ul class="nav navbar-nav">
                                 <li>
-                                    <a href="~/Parts">
+                                    <a href="@Url.Action("Index", "Parts")">
                                         <span class="icon fa fa-cog"></span><span class="title">Parts</span>
                                     </a>
                                 </li>
 
                                 <li>
-                                    <a href="~/Parts/PartTypes">
+                                    <a href="@Url.Action("Index","PartTypes")">
                                         <span class="icon fa fa-list"></span><span class="title">Part Types</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#">
+                                    <a href='@Url.Action("Index","ActualParts")'>
                                         <span class="icon fa fa-clone"></span><span class="title">Actual Parts/Assets</span>
                                     </a>
                                 </li>
@@ -283,7 +283,7 @@
                                         <span class="icon fa fa-file-excel-o"></span><span class="title">Excel Reports</span>
                                     </a>
                                 </li>
-								<li>
+                                								<li>
 									<a href="#">
 										<span class="icon fa fa-usd"></span><span class="title">Purchases</span>
 									</a>

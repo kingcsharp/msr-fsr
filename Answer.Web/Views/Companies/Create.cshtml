@@ -33,29 +33,45 @@
                         <div class="form-group">
                             @Html.LabelFor(model => model.Parent, htmlAttributes: new { @class = "control-label col-md-4" })
                             <div class="col-md-5">
-                                @Html.EditorFor(model => model.Parent, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.DropDownListFor(model => model.Parent, Model.ListParents, new { @class = "form-control select" })
                                 @Html.ValidationMessageFor(model => model.Parent, "", new { @class = "text-danger" })
                             </div>
                         </div>
+                        @*<div class="form-group">
+                            @Html.LabelFor(model => model.Parent, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-5">
+                                @Html.EditorFor(model => model.Parent, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Parent, "", new { @class = "text-danger" })
+                            </div>
+                        </div>*@                       
                         <div class="form-group">
                             @Html.LabelFor(model => model.ReferenceFiles, htmlAttributes: new { @class = "control-label col-md-4" })
                             <div class="col-md-5">
-                                @Html.TextBoxFor(m => m.ReferenceFiles, new { type = "file", name = "Files", multiple = "multiple" })
-                                @Html.ValidationMessageFor(model => model.ReferenceFiles, "", new { @class = "text-danger" })
+                                <div style="width: 96%; float: left;">
+                                    @Html.ListBoxFor(m => m.ReferenceFiles, Model.ListReferenceFiles, new { @class = "form-control selectitem", multiple = "multiple" })
+                                    @Html.ValidationMessageFor(model => model.ReferenceFiles, "", new { @class = "text-danger" })
+                                </div>
+                                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceFiles" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceFiles"><i class="icon fa fa-minus-circle"></i></span> </div>
                             </div>
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(model => model.PictureFiles, htmlAttributes: new { @class = "control-label col-md-4" })
                             <div class="col-md-5">
-                                @Html.TextBoxFor(m => m.PictureFiles, new { type = "file", name = "Files", multiple = "multiple" })
-                                @Html.ValidationMessageFor(model => model.PictureFiles, "", new { @class = "text-danger" })
+                                <div style="width: 96%; float: left;">
+                                    @Html.ListBoxFor(m => m.PictureFiles, Model.ListPictureFiles, new { @class = "form-control selectitem" })
+                                    @Html.ValidationMessageFor(model => model.PictureFiles, "", new { @class = "text-danger" })
+                                </div>
+                                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="PictureFiles" data-toggle="modal" data-target="#select-pic"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="PictureFiles"><i class="icon fa fa-minus-circle"></i></span> </div>
                             </div>
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(model => model.LogoFiles, htmlAttributes: new { @class = "control-label col-md-4" })
                             <div class="col-md-5">
-                                @Html.TextBoxFor(m => m.LogoFiles, new { type = "file", name = "Files", multiple = "multiple" })
-                                @Html.ValidationMessageFor(model => model.LogoFiles, "", new { @class = "text-danger" })
+                                <div style="width: 96%; float: left;">
+                                    @Html.ListBoxFor(m => m.LogoFiles, Model.ListLogoFiles, new { @class = "form-control selectitem", multiple = "multiple" })
+                                    @Html.ValidationMessageFor(model => model.LogoFiles, "", new { @class = "text-danger" })
+                                </div>
+                                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="LogoFiles" data-toggle="modal" data-target="#select-pic"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="LogoFiles"><i class="icon fa fa-minus-circle"></i></span> </div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -114,6 +130,16 @@
 </div>
 @section scripts
 {
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+    <script src="~/assets/js/common/documentFile.js"></script>
+    <script src="~/assets/js/common/documentFiles.js"></script>
+    <script src="~/assets/js/grids/files-dialog-single-selection.js"></script>
+<script src="//rawgit.com/saribe/eModal/master/dist/eModal.min.js"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+<script type="text/javascript">
+    $("form").submit(function (e) {
+        $('.selectitem option').prop('selected', true);
+
+    });
+</script>
 }

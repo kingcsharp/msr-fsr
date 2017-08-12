@@ -2774,6 +2774,11 @@
     <Build Include="dbo\Views\Portal\Portal_DocumentsView.sql" />
     <Build Include="dbo\Views\Portal\Portal_ProceduresView.sql" />
     <Build Include="dbo\Views\Portal\Protal_ObjectsView.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_ActualPartProductInstalled.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_PartShowInformationById.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_WfGroupUpdateOne.sql" />
+    <Build Include="dbo\Views\Portal\Portal_WorkflowStages.sql" />
+    <Build Include="dbo\Views\Portal\Portal_ActualPartsView.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_WfGroupUpdateOne.sql" />
     <Build Include="dbo\Views\Portal_ActivitiesView.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_DeleteDocLinkByObjId.sql" />
