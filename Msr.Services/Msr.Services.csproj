@@ -116,9 +116,11 @@
     <Compile Include="ActualParts\Procedures\SaveActualPartsProcedure.cs" />
     <Compile Include="ActualParts\ViewModels\SaveActualPartsViewModel.cs" />
     <Compile Include="Administration\AdministrationService.cs" />
+    <Compile Include="Administration\Messages\AssignCompaniesToViewResult.cs" />
     <Compile Include="Administration\Messages\AssignAccRecievableRoleResult.cs" />
     <Compile Include="Administration\Messages\RoleForJobItem.cs" />
     <Compile Include="Administration\Messages\UpdateAssignRoleToJobRequest.cs" />
+    <Compile Include="Administration\ViewModels\AssignCompaniesToViewItemViewModel.cs" />
     <Compile Include="Administration\ViewModels\AssignAccRecievableRoleViewModel.cs" />
     <Compile Include="ApprovalGroups\ApprovalGroupsService.cs" />
     <Compile Include="ApprovalGroups\Procedures\DeleteMembersProcedure.cs" />

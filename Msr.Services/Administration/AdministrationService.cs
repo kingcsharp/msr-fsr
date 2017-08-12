@@ -120,7 +120,6 @@ namespace Msr.Services.Administration
 
             return result;
         }
-
         public List<AssignAccRecievableRoleResult> GetAssignAccRecievableRole()
         {
             var sql = "exec A_SP_ADMIN_SERVICE_CALL_GET_ACCT_RECEIVED_ROLE_DATA 1618";
@@ -129,5 +128,38 @@ namespace Msr.Services.Administration
 
             return result;
         }
+
+        public List<AssignCompaniesToViewResult> GetAssignCompaniesToView()
+        {
+            var sql = "exec A_SP_ADMIN_GET_COMPANIES_TO_VIEW_MY_COMPANY '1618'";
+
+            var result = _dbContext.Database.SqlQuery<AssignCompaniesToViewResult>(sql).ToList();
+
+            return result;
+        }
+
+
+        public BaseNotification UpdateAssignCompaniesToView(List<AssignCompaniesToViewItemViewModel> items)
+        {
+            var result = new BaseNotification();
+
+            try
+            {
+                foreach (var job in items)
+                {
+                    var sql = $"exec A_SP_ADMIN_COMPANIES_CAN_VIEW_ME_UPDATE '{job.CoId}','{job.ViewCoId}','1618'";
+
+                    _dbContext.Database.ExecuteSqlCommand(sql);
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return result;
+        }
+
     }
 }

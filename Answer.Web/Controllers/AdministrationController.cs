@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Msr.Services.Administration;
 using Msr.Services.Administration.Messages;
 using Msr.Services.Administration.ViewModels;
+using Msr.Services.Companies;
 using Msr.Services.jqGrid;
 using Msr.Services.Locations;
 using Msr.Services.Roles;
@@ -194,5 +195,39 @@ namespace Answer.Web.Controllers
 
             return View();
         }
+
+        public ActionResult AssignCompaniesToView()
+        {
+            var vm = new AssignCompaniesToViewViewModel();
+
+            vm.CompaniesToView = _administrationService.GetAssignCompaniesToView();
+
+            vm.SetUp(new CompanyService());
+
+            return View(vm);
+        }
+
+        [HttpPost]
+        public ActionResult AssignCompaniesToView(List<AssignCompaniesToViewItemViewModel> recievableRoleItems)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = _administrationService.UpdateAssignCompaniesToView(recievableRoleItems);
+
+                if (!result.HasErrors())
+                {
+                    return RedirectToAction("AssignCompaniesToView");
+                }
+
+                TempData["ErrorMessage"] = result.ErrorMessage();
+            }
+
+            var vm = new AssignCompaniesToViewViewModel();
+
+            vm.SetUp(new CompanyService());
+
+            return View(vm);
+        }
+
     }
 }
