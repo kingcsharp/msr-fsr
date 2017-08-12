@@ -229,5 +229,39 @@ namespace Answer.Web.Controllers
             return View(vm);
         }
 
+        public ActionResult ModuleAccess()
+        {
+            var vm = new ModuleAccessViewViewModel();
+
+            vm.CompaniesToView = _administrationService.GeModuleAccess();
+
+            vm.SetUp(new RoleService());
+
+            return View(vm);
+        }
+
+        [HttpPost]
+        public ActionResult ModuleAccess(List<ModuleAccessViewModel> items)
+        {
+
+            if (ModelState.IsValid)
+            {
+                var result = _administrationService.UpdateModuleAccess(items);
+
+                if (!result.HasErrors())
+                {
+                    return RedirectToAction("AssignCompaniesToView");
+                }
+
+                TempData["ErrorMessage"] = result.ErrorMessage();
+            }
+
+            var vm = new ModuleAccessViewViewModel();
+
+            vm.SetUp(new RoleService());
+
+            return View(vm);
+        }
+
     }
 }

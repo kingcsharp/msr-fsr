@@ -30,11 +30,11 @@ namespace Answer.Web.ViewModel.Administration
         {
             Roles.Add(new SelectListItem {Value = "", Text = "--Select Role--"});
 
-            Roles.AddRange(roleService.GetUserRolesQueryable().Select(x => new SelectListItem
+            Roles.AddRange(roleService.GetActiveRoles().Select(x => new SelectListItem
             {
                 Value = x.Id,
-                Text = x.RoleName
-            }).Distinct().OrderBy(o => o.Text));
+                Text = x.Name
+            }).OrderBy(o => o.Text));
 
             Locations.Add(new SelectListItem { Value = "", Text = "--Select Location--" });
 

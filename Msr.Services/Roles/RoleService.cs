@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Msr.Services.Roles.Messages;
 
 namespace Msr.Services.Roles
 {
@@ -20,14 +21,17 @@ namespace Msr.Services.Roles
         {
             _dbContext = new MsrDbContext();
         }
+
         public IQueryable<RolesView> GetUserRolesQueryable()
         {
             return _dbContext.RolesViews;
         }
+
         public RolesView GetRoleByid(string Id)
         {
-            return _dbContext.RolesViews.Where(x => x.Id == Id).SingleOrDefault();
+            return _dbContext.RolesViews.SingleOrDefault(x => x.Id == Id);
         }
+
         public bool Create(SaveRoleViewModel model)
         {
             try
@@ -45,6 +49,7 @@ namespace Msr.Services.Roles
                 return false;
             }
         }
+
         public bool Edit(SaveRoleViewModel model)
         {
             try
@@ -63,7 +68,6 @@ namespace Msr.Services.Roles
                 return false;
             }
         }
-
 
         public bool Delete(string id)
         {
@@ -85,7 +89,14 @@ namespace Msr.Services.Roles
             }
         }
 
+        public List<RoleResult> GetActiveRoles()
+        {
+            var sql = "SELECT * FROM A_MENUS ORDER BY MENU_GROUP,ID,NAME";
 
-      
+            var result = _dbContext.Database.SqlQuery<RoleResult>(sql).ToList();
+
+            return result;
+        }
+
     }
 }

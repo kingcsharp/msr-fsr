@@ -138,7 +138,6 @@ namespace Msr.Services.Administration
             return result;
         }
 
-
         public BaseNotification UpdateAssignCompaniesToView(List<AssignCompaniesToViewItemViewModel> items)
         {
             var result = new BaseNotification();
@@ -156,6 +155,36 @@ namespace Msr.Services.Administration
             catch (Exception ex)
             {
 
+            }
+
+            return result;
+        }
+
+        public List<ModuleAccessResult> GeModuleAccess()
+        {
+            var sql = "SELECT * FROM A_MENUS ORDER BY MENU_GROUP,ID,NAME";
+
+            var result = _dbContext.Database.SqlQuery<ModuleAccessResult>(sql).ToList();
+
+            return result;
+        }
+
+        public BaseNotification UpdateModuleAccess(List<ModuleAccessViewModel> items)
+        {
+            var result = new BaseNotification();
+
+            try
+            {
+                foreach (var job in items)
+                {
+                    var sql = $"exec A_SP_ADMIN_MENU_ROLES_UPDATE '{job.Id}','{job.RoleId}','1618'";
+
+                    _dbContext.Database.ExecuteSqlCommand(sql);
+                }
+
+            }
+            catch (Exception ex)
+            {
             }
 
             return result;

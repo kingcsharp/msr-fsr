@@ -116,10 +116,12 @@
     <Compile Include="ActualParts\Procedures\SaveActualPartsProcedure.cs" />
     <Compile Include="ActualParts\ViewModels\SaveActualPartsViewModel.cs" />
     <Compile Include="Administration\AdministrationService.cs" />
+    <Compile Include="Administration\Messages\ModuleAccessResult.cs" />
     <Compile Include="Administration\Messages\AssignCompaniesToViewResult.cs" />
     <Compile Include="Administration\Messages\AssignAccRecievableRoleResult.cs" />
     <Compile Include="Administration\Messages\RoleForJobItem.cs" />
     <Compile Include="Administration\Messages\UpdateAssignRoleToJobRequest.cs" />
+    <Compile Include="Administration\ViewModels\ModuleAccessViewModel.cs" />
     <Compile Include="Administration\ViewModels\AssignCompaniesToViewItemViewModel.cs" />
     <Compile Include="Administration\ViewModels\AssignAccRecievableRoleViewModel.cs" />
     <Compile Include="ApprovalGroups\ApprovalGroupsService.cs" />
@@ -263,6 +265,7 @@
     <Compile Include="Regions\Procedures\SaveRegionProcedure.cs" />
     <Compile Include="Regions\RegionService.cs" />
     <Compile Include="Regions\ViewModels\SaveRegionViewModel.cs" />
+    <Compile Include="Roles\Messages\RoleResult.cs" />
     <Compile Include="Roles\Procedures\DeleteRoleProcedure.cs" />
     <Compile Include="Roles\Procedures\SaveUserRoleProcedure.cs" />
     <Compile Include="Roles\RoleService.cs" />
@@ -309,7 +312,6 @@
     <Folder Include="Objects\ViewModels\" />
     <Folder Include="Products\Procedures\" />
     <Folder Include="Products\ViewModels\" />
-    <Folder Include="Roles\Messages\" />
     <Folder Include="TheoryParagraph\Procedures\" />
     <Folder Include="TheoryParagraph\ViewModels\" />
   </ItemGroup>
