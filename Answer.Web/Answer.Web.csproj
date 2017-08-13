@@ -796,6 +796,7 @@
     <Content Include="Views\ApprovalWorkflows\Index.cshtml" />
     <Content Include="Views\Wip\_SerializeTask.cshtml" />
     <Content Include="Views\Wip\SearchNcrs.cshtml" />
+    <Content Include="Views\Wip\_AddMonitors.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -11,7 +11,7 @@ namespace Msr.Services.Orders.Procedures
 
         public string Id { get; set; }
 
-        public string Step_Id { get; set; }
+        public int Step_Id { get; set; }
 
         public int Opinion { get; set; }
 
@@ -58,7 +58,9 @@ namespace Msr.Services.Orders.Procedures
         public string Tolerance { get; set; }
 
         public string Fail_Action { get; set; }
+
         public string Print_Order { get; set; }
+
         public string Cant_Change { get; set; }
 
         public string Always_Pass { get; set; }
@@ -79,11 +81,19 @@ namespace Msr.Services.Orders.Procedures
 
         public string Mult_Choice_Answer { get; set; }
 
+        public string Target_Object_Type { get; set; }
+
         public List<SelectListItem> ResultList { get; set; }
 
         public List<SelectListItem> FailActionList { get; set; }
 
         public List<SelectListItem> MonitorTemplateMultiChoices { get; set; }
+
+        public IEnumerable<SelectListItem> MonitorTypes { get; set; }
+
+        public List<SelectListItem> ShouldBeItems { get; set; }
+
+        public List<SelectListItem> TargetObjectTypes { get; set; }
 
         public void Setup()
         {
@@ -124,6 +134,86 @@ namespace Msr.Services.Orders.Procedures
                 {
                     Text = "Skip all steps and end procedure.",
                     Value = "ENDPROCEDURE"
+                }
+            };
+
+            MonitorTypes = new List<SelectListItem>()
+            {
+                new SelectListItem
+                {
+                    Text = "User Number",
+                    Value = "USER_NUMBER"
+                },
+                new SelectListItem
+                {
+                    Text = "Multiple",
+                    Value = "MULTIPLE"
+                },
+                new SelectListItem
+                {
+                    Text = "Yes/No",
+                    Value = "YES_NO"
+                },new SelectListItem
+                {
+                    Text = "Number",
+                    Value = "NUMBER"
+                },new SelectListItem
+                {
+                    Text = "Text",
+                    Value = "TEXT"
+                }
+            };
+
+            ShouldBeItems = new List<SelectListItem>
+            {
+                new SelectListItem
+                {
+                    Text = "EQUAL",
+                    Value = "EQUAL"
+                },
+                new SelectListItem
+                {
+                    Text = "ABOVE",
+                    Value = "ABOVE"
+                },
+                new SelectListItem
+                {
+                    Text = "BELOW",
+                    Value = "BELOW"
+                },
+                new SelectListItem
+                {
+                    Text = "BETWEEN",
+                    Value = "BETWEEN"
+                }
+            };
+
+            TargetObjectTypes = new List<SelectListItem>
+            {
+                new SelectListItem
+                {
+                    Text = "Anything",
+                    Value = ""
+                },
+                new SelectListItem
+                {
+                    Text = "Person",
+                    Value = "A_PEOPLE_HISTORY"
+                },
+                new SelectListItem
+                {
+                    Text = "Company",
+                    Value = "A_COMPANIES_HISTORY"
+                },
+                new SelectListItem
+                {
+                    Text = "Part",
+                    Value = "A_PARTS_HISTORY"
+                },
+                new SelectListItem
+                {
+                    Text = "Actual Part",
+                    Value = "A_ACTUAL_PARTS_HISTORY"
                 }
             };
         }

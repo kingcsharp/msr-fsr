@@ -1,4 +1,5 @@
-﻿@model Msr.Services.Orders.Messaging.WipStepDetailsResponse
+﻿@using Msr.Services.Orders.Procedures
+@model Msr.Services.Orders.Messaging.WipStepDetailsResponse
 
 @if (Model.TaskEditDataResult.Status != "CLOSED")
 {
@@ -22,10 +23,7 @@
         </div>
 
         <div id="@monitorsId" class="tab-pane fade task-window">
-            @if (Model.TaskEditDataResult.HasMonitor == true)
-            {
-                @Html.Partial("_MonitorsTab", Model.MonitorTemplateResult)
-            }
+            @(Model.TaskEditDataResult.HasMonitor == true ? Html.Partial("_MonitorsTab", Model.MonitorTemplateResult) : Html.Partial("_AddMonitors", new MonitorTemplateResult { Step_Id = Model.StepId }))
         </div>
 
         <div id="@filesId" class="tab-pane task-window fade">

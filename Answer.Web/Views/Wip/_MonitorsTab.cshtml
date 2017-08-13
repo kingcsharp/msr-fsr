@@ -139,12 +139,12 @@
         }
         else if (monitorTemplate.Monitor_Type == "TEXT")
         {
-            if (!string.IsNullOrWhiteSpace(monitorTemplate.Target))
+            if (!string.IsNullOrWhiteSpace(monitorTemplate.Text_Target))
             {
                 <div class="form-group">
                     <label class="col-lg-2 control-label">Target:</label>
                     <div class="col-lg-2" style="font-weight: bold;">
-                        @monitorTemplate.Target
+                        @monitorTemplate.Text_Target
                     </div>
                 </div>
             }

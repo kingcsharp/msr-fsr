@@ -5,11 +5,11 @@
     var timespan = "0 Hours";
     if (Model.TaskRunningTimer != null)
     {
-        var timer = DateTime.Now.Subtract(Model.TaskRunningTimer.StartTime);
+        TimeSpan timer = Model.TaskRunningTimer.EndTime?.Subtract(Model.TaskRunningTimer.StartTime) ?? DateTime.Now.Subtract(Model.TaskRunningTimer.StartTime);
         var timerInSeconds = timer.TotalSeconds;
         if (timerInSeconds <= 60)
         {
-            timespan = timerInSeconds + " sec";
+            timespan = timer.Seconds + " sec";
         }
         else if (timer.TotalMinutes <= 60)
         {
@@ -41,8 +41,10 @@
 
         <button class="btn btn-warning btn-lg print-btn pull-left pause-timer-btn hidden" id="pause-step"><i class="glyphicon glyphicon-pause"></i> Pause</button>
         <button class="btn btn-warning btn-lg print-btn pull-left resume-timer-btn hidden" id="resume-step"><i class="glyphicon glyphicon-step-forward"></i> Resume</button>
-
-        <button class="btn btn-primary btn-lg print-btn pull-left " id="done-step"><i class="glyphicon glyphicon-stop"></i> Done</button>
+        @if (Model.TaskRunningTimer != null && Model.TaskRunningTimer.EndTime == null)
+        {
+            <button class="btn btn-primary btn-lg print-btn pull-left " id="done-step"><i class="glyphicon glyphicon-stop"></i> Done</button>
+        }
         @if (Model.TaskEditDataResult.Status == "ACCEPTED" && Model.TaskEditDataResult.Status == "REQUESTED")
         {
             <button class="btn btn-primary btn-lg print-btn pull-left" id="done-step">Add Procedure</button>
