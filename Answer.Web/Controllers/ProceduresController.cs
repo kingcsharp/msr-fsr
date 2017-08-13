@@ -4,9 +4,14 @@ using Msr.Services.Procedures;
 using Msr.Web.ViewModel.Engineering;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using System.Xml;
+using System.Xml.XPath;
+using System.Xml.Xsl;
 using Msr.Services.Procedures.ViewModels;
 using Msr.Services.ProcedureVerbs;
 using Msr.Services.Roles;
@@ -15,7 +20,9 @@ namespace Answer.Web.Controllers
 {
     public class ProceduresController : Controller
     {
-        // GET: Procedure
+        const string AppDataGlobalsettingsXml = @"/App_Data//procedureFolder/";
+        const string XSLTPath = @"/assets//styles//xslt//procedures.xsl";
+        
         public ActionResult Index()
         {
             var viewModel = new EngineeringViewModel();
@@ -103,6 +110,7 @@ namespace Answer.Web.Controllers
 
             return Json(json, JsonRequestBehavior.AllowGet);
         }
+
         public ActionResult Create()
         {
             var saveProcedureViewModel = new SaveProcedureViewModel();
@@ -111,6 +119,7 @@ namespace Answer.Web.Controllers
 
             return View(saveProcedureViewModel);
         }
+
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Create(SaveProcedureViewModel model)
         {
@@ -143,6 +152,7 @@ namespace Answer.Web.Controllers
 
             return View(model);
         }
+
         public ActionResult Edit(string id)
         {
             var saveProcedureViewModel = new SaveProcedureViewModel();
@@ -155,6 +165,7 @@ namespace Answer.Web.Controllers
 
             return View(saveProcedureViewModel);
         }
+
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Edit(SaveProcedureViewModel model)
         {
@@ -186,6 +197,35 @@ namespace Answer.Web.Controllers
             model.Setup(new ProceduresService(), new RoleService(), new ProcedureVerbsService());
 
             return View(model);
+        }
+
+        public ActionResult View(string id)
+        {
+            var saveProcedureViewModel = new ViewProcedureViewModel();
+
+            var procedureService = new ProceduresService();
+
+            var approvedData = procedureService.GetApprovedData(id);
+            string filePath = Server.MapPath(AppDataGlobalsettingsXml);
+
+            var doc = new XmlDocument();
+            doc.Load(filePath + approvedData.Object_Id + ".xml");
+
+           var html = GetHtml(Server.MapPath(XSLTPath), doc.InnerXml.ToString());
+
+            return View((object)html);
+        }
+
+
+        private string GetHtml(string xsltPath, string xml)
+        {
+            var stream = new MemoryStream(ASCIIEncoding.Default.GetBytes(xml));
+            var document = new XPathDocument(stream);
+            var writer = new StringWriter();
+            var transform = new XslCompiledTransform();
+            transform.Load(xsltPath);
+            transform.Transform(document, null, writer);
+            return writer.ToString();
         }
     }
 }

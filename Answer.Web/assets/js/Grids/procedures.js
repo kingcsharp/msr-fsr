@@ -90,9 +90,9 @@
             { name: 'Actions', index: 'Id', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: procedureEditFormatter, width: 100, align: 'center' }
         ],
 
-        viewrecords: true, // show the current page, data rang and total records on the toolbar
+        viewrecords: true, 
         rowNum: 10,
-        loadonce: false, // this is just for the demo
+        loadonce: false, 
         pager: "#jqGridPager",
         height: 'auto',
         gridview: true,
@@ -124,8 +124,12 @@
         searchOperators: true
     });
     function procedureEditFormatter(cellvalue, options, rowObject) {
+
         var thisCellVal = '<a href="/Procedures/Edit/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i> Edit</a>';
-        return thisCellVal;
+
+        var viewButton = '<a href="/Procedures/view/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i> View</a>';
+
+        return thisCellVal + viewButton;
     }
 
     $('#search').click(function () {

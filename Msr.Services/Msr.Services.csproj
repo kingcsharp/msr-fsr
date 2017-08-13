@@ -267,11 +267,13 @@
     <Compile Include="PrePro\Procedure\SaveTheoryProcedure.cs" />
     <Compile Include="PrePro\TheoryFileService.cs" />
     <Compile Include="PrePro\ViewModel\ProcedurePreProViewModel.cs" />
+    <Compile Include="Procedures\Messages\ProceduresApprovedDataResult.cs" />
     <Compile Include="Procedures\ProcedureService.cs" />
     <Compile Include="Procedures\Procedures\DeleteProcedureRolesProcedure.cs" />
     <Compile Include="Procedures\Procedures\SaveFileProcedure.cs" />
     <Compile Include="Procedures\Procedures\SaveProcedureProcedure.cs" />
     <Compile Include="Procedures\Procedures\SaveProcedureRoleProcedure.cs" />
+    <Compile Include="Procedures\ViewModels\ViewProcedureViewModel.cs" />
     <Compile Include="Procedures\ViewModels\SaveProcedureViewModel.cs" />
     <Compile Include="Procedures\Procedures\DeleteFileProcedure.cs" />
     <Compile Include="ProcedureTypes\Procedures\SaveProcedureTypesProcedure.cs" />

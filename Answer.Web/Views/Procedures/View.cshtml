@@ -1,0 +1,19 @@
+﻿@{
+    ViewBag.Title = "Procedures Menu";
+}
+<div class="container-fluid">
+    <div class="side-body padding-top">
+        <div class="row">
+            <h2 class="page-header">
+                Procedures <button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
+            </h2>
+            <div class="col-lg-12">
+                @(new HtmlString(Model))
+
+            </div>
+        </div>
+        <div class="row">
+        </div>
+    </div>
+</div>
+

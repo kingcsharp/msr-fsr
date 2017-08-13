@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Msr.Models.Common;
+using Msr.Services.Procedures.Messages;
 using Msr.Services.Procedures.Procedures;
 using Msr.Services.Procedures.ViewModels;
 
@@ -162,6 +163,15 @@ namespace Msr.Services.Procedures
 
                 return false;
             }
+        }
+
+        public ProceduresApprovedDataResult GetApprovedData(string id)
+        {
+            var sql = $"SELECT OBJECT_ID FROM A_V_PROCEDURES_APPROVED_DATA WHERE ID={id}";
+
+            var result = _dbContext.Database.SqlQuery<ProceduresApprovedDataResult>(sql).SingleOrDefault();
+
+            return result;
         }
     }
 }
