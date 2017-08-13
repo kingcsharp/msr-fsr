@@ -64,9 +64,24 @@
         key: true,
         ajaxCellOptions: {},
         gridComplete: function () {
-            $('.confirmation').on('click', function () {
-                return confirm('Are you sure?');
-            });
+            $('.deleteregion').on('click', function (e) {
+                e.preventDefault();
+
+                var callBackId = $(this).data('call-back-id');
+                var callBackName = $(this).data('call-back-name');
+
+                eModal.confirm('Do you really want to delete ' + callBackName + ' ?', 'Confirmation delete')
+                    .then(confirmCallback, optionalCancelCallback);
+
+                function confirmCallback() {
+                    console.log("ok")
+                    window.location.href = "/Resions/LDelete/" + callBackId
+                }
+                function optionalCancelCallback() {
+                    console.log("cancel")
+                }
+
+            })
         },
     });
     $('#jqGridRegions').navGrid("#jqGridPagerRegions", {
@@ -89,7 +104,7 @@
     });
     function RegionEditFormatter(cellvalue, options, rowObject) {
         thisCellVal = '<a href="/Regions/edit/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i> Edit</a>';
-        thisCellVal += '<a href="/Regions/delete/' + rowObject.ObjectId + '" class="btn btn-xs btn-danger confirmation" style="margin:2px;font-size: .8em;"><i class="fa fa-trash"></i> delete</a>';
+        thisCellVal += '<a href="/Regions/delete/' + rowObject.ObjectId + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-danger deleteregion" style="margin:2px;font-size: .8em;"><i class="fa fa-trash"></i> delete</a>';
         return thisCellVal;
     }
 });

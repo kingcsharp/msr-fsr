@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
+using Msr.Infrastructure.Common;
 using Msr.Models.ApprovalWorkflows;
 using Msr.Services.ApprovalWorkflows;
+using Msr.Services.ApprovalWorkflows.ViewModels;
 using Msr.Services.jqGrid;
 using Msr.Web.ViewModel.Engineering;
 
@@ -19,7 +23,6 @@ namespace Answer.Web.Controllers
 
             return View(viewModel);
         }
-
         public ActionResult ApprovalWorkflowsData(JqGridParam param)
         {
             var taskService = new ApprovalWorkflowsService();
@@ -43,7 +46,6 @@ namespace Answer.Web.Controllers
             }
 
             var orderBy = nameof(ApprovalWorkflowsView.Id);
-
             var orderDirection = "asc";
 
             if (!string.IsNullOrWhiteSpace(param.sortColumn))
@@ -61,7 +63,6 @@ namespace Answer.Web.Controllers
             }
 
             var totalRecords = totalRows.Count();
-
             totalRows = totalRows.Skip(param.pageSize * (param.pageIndex - 1));
             totalRows = totalRows.Take(param.pageSize);
 
@@ -79,10 +80,82 @@ namespace Answer.Web.Controllers
 
             return Json(json, JsonRequestBehavior.AllowGet);
         }
-
         public ActionResult Edit(string id)
         {
-            return null;
+            var taskService = new ApprovalWorkflowsService();
+            var model = taskService.GetApprovalWorkflowsById(id);
+            var Workflow = new ApprovalWorkflowsViewModel();
+            Workflow = Workflow.MapToDto(model);
+            Workflow.Setup(new DocumentFilesService(), new ApprovalWorkflowsService());           
+            return View(Workflow);
+        }
+        [AcceptVerbs(verbs: HttpVerbs.Post)]
+        public ActionResult Edit(ApprovalWorkflowsViewModel model)
+        {
+            var approvalWorkflowsService = new ApprovalWorkflowsService();
+            if (ModelState.IsValid)
+            {
+                //Need to dynamic 
+               model.NTLogin = "1618";
+                var response = approvalWorkflowsService.Edit(model: model);
+                if (response)
+                {
+                    TempData["SuccessMessage"] = "Approval Workflows has been updated successfully.";
+
+                    return RedirectToAction("Index");
+                }
+
+                TempData["ErrorMessage"] = "Something went wrong.";
+                return View(model);
+            }
+
+            return View(model);
+        }
+        public ActionResult Add()
+        {
+            var taskService = new ApprovalWorkflowsService();
+            var Workflow = new ApprovalWorkflowsViewModel();
+            Workflow.Setup(new DocumentFilesService(), new ApprovalWorkflowsService());
+            return View(Workflow);
+        }
+        [AcceptVerbs(verbs: HttpVerbs.Post)]
+        public ActionResult Add(ApprovalWorkflowsViewModel model)
+        {
+            var approvalWorkflowsService = new ApprovalWorkflowsService();
+            if (ModelState.IsValid)
+            {
+                //Need to dynamic 
+                model.NTLogin = "1618";
+                var response = approvalWorkflowsService.Add(model: model);
+                if (response)
+                {
+                    TempData["SuccessMessage"] = "Approval Workflow has been added successfully.";
+
+                    return RedirectToAction("Index");
+                }
+
+                TempData["ErrorMessage"] = "Something went wrong.";
+                return View(model);
+            }
+
+            return View(model);
+        }
+      
+        public ActionResult Hide(string id)
+        {
+            var taskService = new ApprovalWorkflowsService();  
+            
+            var response = taskService.HideApplrovalWorkflow(id);
+
+            if (response)
+            {
+                TempData["SuccessMessage"] = "Workflow Hid successfully.";
+
+                return RedirectToAction("Index");
+            }
+
+            TempData["ErrorMessage"] = "Something went wrong.";
+            return RedirectToAction("Index");
         }
     }
 }

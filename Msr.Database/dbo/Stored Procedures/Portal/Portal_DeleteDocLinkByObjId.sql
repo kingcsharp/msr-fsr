@@ -1,0 +1,4 @@
+﻿CREATE PROCEDURE [dbo].[Portal_DeleteDocLinkByObjId]
+@ObjId varchar(50)
+AS
+DELETE FROM A_DOCUMENT_LINK WHERE OBJECT_ID = @ObjId

@@ -111,6 +111,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActualParts\ActualPartsService.cs" />
+    <Compile Include="ActualParts\Procedures\DeleteActualPartProcedure.cs" />
+    <Compile Include="ActualParts\Procedures\SaveActualPartsProcedure.cs" />
+    <Compile Include="ActualParts\ViewModels\SaveActualPartsViewModel.cs" />
+    <Compile Include="Administration\AdministrationService.cs" />
+    <Compile Include="Administration\Messages\ModuleAccessResult.cs" />
+    <Compile Include="Administration\Messages\AssignCompaniesToViewResult.cs" />
+    <Compile Include="Administration\Messages\AssignAccRecievableRoleResult.cs" />
+    <Compile Include="Administration\Messages\RoleForJobItem.cs" />
+    <Compile Include="Administration\Messages\UpdateAssignRoleToJobRequest.cs" />
+    <Compile Include="Administration\ViewModels\ModuleAccessViewModel.cs" />
+    <Compile Include="Administration\ViewModels\AssignCompaniesToViewItemViewModel.cs" />
+    <Compile Include="Administration\ViewModels\AssignAccRecievableRoleViewModel.cs" />
     <Compile Include="ApprovalGroups\ApprovalGroupsService.cs" />
     <Compile Include="ApprovalGroups\Procedures\DeleteMembersProcedure.cs" />
     <Compile Include="ApprovalGroups\Procedures\RestartMyCurrentGroupsProcedure.cs" />
@@ -123,11 +136,19 @@
     <Compile Include="ApprovalStages\Procedures\DeleteApprovalGroupsProcedure.cs" />
     <Compile Include="ApprovalStages\Procedures\SaveApprovalStagesProcedure.cs" />
     <Compile Include="ApprovalStages\Procedures\SaveStageGroupProcedure.cs" />
-    <Compile Include="ApprovalStages\VIewModels\EditApprovalStagesViewModel.cs" />
+    <Compile Include="ApprovalStages\ViewModels\EditApprovalStagesViewModel.cs" />
     <Compile Include="ApprovalWorkflows\ApprovalWorkflowsService.cs" />
+    <Compile Include="ApprovalWorkflows\Procedures\DeleteDocumentProcedure.cs" />
+    <Compile Include="ApprovalWorkflows\Procedures\AddWorkFlowActivityProcedure.cs" />
+    <Compile Include="ApprovalWorkflows\Procedures\DeleteWorkFlowActivityProcedure.cs" />
+    <Compile Include="ApprovalWorkflows\Procedures\DeleteWorkFlowStageProcedure.cs" />
+    <Compile Include="ApprovalWorkflows\Procedures\AddWorkFlowStageProcedure.cs" />
+    <Compile Include="ApprovalWorkflows\Procedures\EditApprovalWorkflowsProcedure.cs" />
+    <Compile Include="ApprovalWorkflows\Procedures\HideApprovalWorkflowProcedure.cs" />
     <Compile Include="ApprovalWorkflows\ViewModels\ApprovalWorkflowsViewModel.cs" />
     <Compile Include="ApprovalWorkflows\ViewModels\EditApprovalStagesViewModel.cs" />
     <Compile Include="BaseNotification.cs" />
+    <Compile Include="Companies\Procedures\DeleteCompanyProcedure.cs" />
     <Compile Include="Companies\Procedures\AddCompanyProcedure.cs" />
     <Compile Include="Companies\Procedures\GetCompanyFilesProcedure.cs" />
     <Compile Include="Companies\ViewModels\AddCompanyViewModel.cs" />
@@ -227,6 +248,7 @@
     <Compile Include="Parts\PartTypeService.cs" />
     <Compile Include="Parts\Procedures\DeleteFileProcedure.cs" />
     <Compile Include="Parts\Procedures\DeletePartProcedure.cs" />
+    <Compile Include="Parts\Procedures\DeletePartTypeProcedure.cs" />
     <Compile Include="Parts\Procedures\SaveFileProcedure.cs" />
     <Compile Include="Parts\Procedures\SavePartProcedure.cs" />
     <Compile Include="Parts\Procedures\SavePartTypeProcedure.cs" />
@@ -238,10 +260,13 @@
     <Compile Include="ProcedureTypes\ProcedureTypeService.cs" />
     <Compile Include="ProcedureTypes\Procedures\SaveProcedureTypesProcedure.cs" />
     <Compile Include="ProcedureTypes\ViewModels\SaveProcedureTypesViewModel.cs" />
+    <Compile Include="Products\ProductService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Regions\Procedures\SaveRegionProcedure.cs" />
     <Compile Include="Regions\RegionService.cs" />
     <Compile Include="Regions\ViewModels\SaveRegionViewModel.cs" />
+    <Compile Include="Roles\Messages\RoleResult.cs" />
+    <Compile Include="Roles\Procedures\DeleteRoleProcedure.cs" />
     <Compile Include="Roles\Procedures\SaveUserRoleProcedure.cs" />
     <Compile Include="Roles\RoleService.cs" />
     <Compile Include="Roles\ViewModels\SaveRoleViewModel.cs" />
@@ -285,7 +310,8 @@
     <Folder Include="Files\Procedures\" />
     <Folder Include="Objects\Procedures\" />
     <Folder Include="Objects\ViewModels\" />
-    <Folder Include="Roles\Messages\" />
+    <Folder Include="Products\Procedures\" />
+    <Folder Include="Products\ViewModels\" />
     <Folder Include="TheoryParagraph\Procedures\" />
     <Folder Include="TheoryParagraph\ViewModels\" />
   </ItemGroup>

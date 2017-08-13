@@ -22,17 +22,14 @@ namespace Msr.Services.Parts
         {
             _dbContext = new MsrDbContext();
         }
-
         public IQueryable<PartTypesView> GetPartTypesQueryable()
         {
             return _dbContext.PartTypesViews;
         }
-
         public PartType GetById(string Id)
         {
             return _dbContext.PartTypes.Where(x => x.Id == Id).Single();
         }
-
         public bool Create(AddPartTypesViewModel model)
         {
             try
@@ -50,7 +47,6 @@ namespace Msr.Services.Parts
                 return false;
             }
         }
-
         public bool Edit(AddPartTypesViewModel model)
         {
             try
@@ -61,6 +57,26 @@ namespace Msr.Services.Parts
 
                 return true;
 
+            }
+            catch (Exception ex)
+            {
+                var message = "Error occured:" + ex.Message;
+
+                return false;
+            }
+        }
+
+        public bool Delete(string id)
+        {
+            try
+            {
+                //need to be dynamic
+                var NTLogin = "1618";
+                var deletePartTypeProcedure = new DeletePartTypeProcedure() { ObjID = id, NTLogin = NTLogin };
+
+                _dbContext.Database.ExecuteStoredProcedure(deletePartTypeProcedure);
+
+                return true;
             }
             catch (Exception ex)
             {

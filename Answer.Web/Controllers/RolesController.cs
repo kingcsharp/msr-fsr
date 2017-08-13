@@ -188,5 +188,24 @@ namespace Answer.Web.Controllers
 
             return View(model);
         }
+
+
+        public ActionResult RoleDelete(string id)
+        {
+            var taskService = new RoleService();
+
+            var response = taskService.Delete(id: id);
+
+            if (response)
+            {
+                TempData["SuccessMessage"] = "Location deleted successfully.";
+
+                return RedirectToAction("Index");
+            }
+
+            TempData["ErrorMessage"] = "Something went wrong.";
+            return RedirectToAction("Index");
+        }
+
     }
 }

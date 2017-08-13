@@ -1,0 +1,84 @@
+﻿@model Answer.Web.ViewModel.Administration.AssignNewsProcedureViewModel 
+ 
+@{
+    ViewBag.Title = "Assign New Procedure";
+}
+<div class="container-fluid">
+    <div class="side-body padding-top">
+        <div class="row">
+            <h2 class="page-header">
+                Assign New Procedure
+            </h2>
+            <div class="col-lg-10">
+                <section class="panel">
+                    <div class="panel-body bio-graph-info">
+                        @Html.Partial("Message")
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+                            <div class="form-horizontal">
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Proc, htmlAttributes: new { @class = "control-label col-md-3" })
+                                    <div class="col-md-5">
+                                        <div style="width: 96%; float: left;">
+                                            @Html.ListBoxFor(m => m.Proc, new List<SelectListItem>(), new { @class = "form-control submitselect", multiple = "multiple" })
+                                            @Html.ValidationMessageFor(model => model.Proc, "", new { @class = "text-danger" })
+                                        </div>
+                                        <div style="width: 3%; float: right;">
+                                            <span class="data-toggle=" data-call-back-id="pro-files" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span>
+                                            <span class="deletefiles" data-call-back-id="pro-files"><i class="icon fa fa-trash"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                             
+                                <div class="form-group">
+                                    <div class="col-md-offset-4 col-md-10">
+                                        <input type="submit" value="Update" class="btn btn-default" />
+                                        @Html.ActionLink("Cancel", "adminsetup", null, new { @class = "btn btn-warning" })
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts
+{
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+    <script src="~/assets/js/grids/theoryparagraph-model.js"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+
+            $('.deletefiles').click(function() {
+
+                var callBackId = $(this).data('call-back-id');
+
+                eModal.confirm('Do you really want to delete ' + callBackId + ' ?', 'Confirmation delete')
+                    .then(confirmCallback, optionalCancelCallback);
+
+                function confirmCallback() {
+                    console.log("ok")
+                    $('#' + callBackId + ' option:selected').remove();
+                }
+
+                function optionalCancelCallback() {
+                    console.log("cancel")
+                }
+            });
+
+        });
+   
+
+    </script>
+
+}

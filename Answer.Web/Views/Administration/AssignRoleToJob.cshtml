@@ -1,0 +1,77 @@
+﻿@model Answer.Web.ViewModel.Administration.AssignRoleToJobViewModel 
+ 
+@{
+    ViewBag.Title = "Job Assignment";
+}
+
+<div class="container-fluid">
+    <div class="side-body padding-top">
+        <div class="row">
+            <h2 class="page-header">
+                Jobs Assignment
+                <button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
+            </h2>
+            <div class="col-md-10">
+                <div class="row">
+                    @using (Html.BeginForm("AssignRoleToJob", "Administration", FormMethod.Get, new {id = "assign-form"}))
+                    {
+                        <table cellpadding="2" cellspacing="2">
+                            <tr>
+                                <td>Select Job </td>
+                                <td>@Html.DropDownListFor(model => model.SelectedJobId, Model.Jobs, new {@class = "form-control select"})</td>
+                            </tr>
+                        </table>
+                    }
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-12">
+            <div class="row">
+                @using (Html.BeginForm("UpdateAssignRoleToJob", "Administration", FormMethod.Post, new {id = "assign-form"}))
+                {
+                    <table class="table table-bordered" style="width: 600px;">
+                        <tr>
+                            <th>Company/Dept</th>
+                            <th>Role</th>
+                        </tr>
+                      
+                        @for (int index = 0; index < Model.Companies.Count; index++)
+                        {
+                            <tr>
+                                <td>@Model.Companies[index].Company_Name</td>
+                                <td>
+                                    @Html.Hidden("SelectedJobId", Model.SelectedJobId)
+                                    @Html.Hidden("companiesWithRoles[" + index + "].CoId", Model.Companies[index].Id)
+                                    @Html.DropDownList("companiesWithRoles[" + index + "].RoleId", Model.Roles, new {@class = "form-control select" })
+
+                                </td>
+                            </tr>
+                        }
+
+                    </table>
+                    <input type="submit" value="Update" class="btn btn-default" />
+                }
+            </div>
+            
+        </div>
+
+    </div>
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function() {
+
+            $('.select').select2();
+
+            $('#SelectedJobId').on('change',function() {
+                $('#assign-form').submit();
+            });
+
+        });
+    </script>
+
+}
+

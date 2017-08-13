@@ -156,6 +156,27 @@
             autowidth: true,
             colMenu: true,
 
+            gridComplete: function () {
+                $('.deleteparttype').on('click', function (e) {
+                    e.preventDefault();
+
+                    var callBackId = $(this).data('call-back-id');
+                    var callBackName = $(this).data('call-back-name');
+
+                    eModal.confirm('Do you really want to delete ' + callBackName + ' ?', 'Confirmation delete')
+                        .then(confirmCallback, optionalCancelCallback);
+
+                    function confirmCallback() {
+                        console.log("ok")
+                        window.location.href = "/Parts/PartTypeDelete/" + callBackId
+                    }
+                    function optionalCancelCallback() {
+                        console.log("cancel")
+                    }
+
+                })
+            },
+
         });
         $('#jqGrid').navGrid("#jqGridPager", {
             search: false, // show search button on the toolbar
@@ -209,6 +230,7 @@
         });
         function PartTypesEditFormatter(cellvalue, options, rowObject) {
             thisCellVal = '<a href="/parts/SavePartTypes/' + rowObject.Id + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i> Edit</a>';
+            thisCellVal += '<a href="/parts/Delete/' + rowObject.ObjectId + '" data-call-back-name="' + rowObject.Name + '" data-call-back-id="' + rowObject.ObjectId + '" title="Delete" class="btn btn-xs btn-danger deleteparttype" style="margin:2px;font-size: .8em; "><i class="fa fa-trash"></i> Delete</a>';
             return thisCellVal;
         }
         $('#search').click(function () {

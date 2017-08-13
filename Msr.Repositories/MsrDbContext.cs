@@ -19,7 +19,11 @@ using Msr.Models.Objects;
 using Msr.Models.TheoryParagraphs;
 using Msr.Models.ApprovalStages;
 using Msr.Models.ApprovalGroups;
+using Msr.Models.ActualParts;
+using System.Linq;
+using Msr.Models.Products;
 using Msr.Models.Monitor;
+using Msr.Models.ApprovalWorkflows;
 
 namespace Msr.Repositories
 {
@@ -66,9 +70,15 @@ namespace Msr.Repositories
             modelBuilder.Entity<DocumentFilesView>().ToTable("A_V_DOCUMENTS_LINKED");
             modelBuilder.Entity<HeadPeopleView>().ToTable("Portal_HeadPeopleView");
             modelBuilder.Entity<ApprovalWorkflowsView>().ToTable("Portal_ApprovalWorkflowsView");
+            modelBuilder.Entity<ApprovalWorkflowsActivitiesView>().ToTable("A_V_WORKFLOWS_FOR_ACTIVITIES");
+            modelBuilder.Entity<ApprovalWorkflowStagesView>().ToTable("A_V_WORKFLOWS_WITH_STAGES");
             modelBuilder.Entity<ApprovalStagesView>().ToTable("Portal_ApprovalStagesView");
             modelBuilder.Entity<ApprovalGroupsView>().ToTable("Portal_ApprovalGroupsView");
+            modelBuilder.Entity<ActivitiesView>().ToTable("Portal_ActivitiesView");
+            modelBuilder.Entity<WorkflowStagesView>().ToTable("Portal_WorkflowStages");
             modelBuilder.Entity<MonitorView>().ToTable("A_V_MONITORS_WITH_TASK_AND_RESULT");
+            modelBuilder.Entity<ActualPartsView>().ToTable("Portal_ActualPartsView");
+            modelBuilder.Entity<ProductsView>().ToTable("Portal_ProductsView");
         }
 
         public DbSet<AspNetUser> AspNetUsers { get; set; }
@@ -100,13 +110,18 @@ namespace Msr.Repositories
         public DbSet<DocumentFilesView> DocumentFilesViews { get; set; }
         public DbSet<HeadPeopleView> HeadPeopleViews { get; set; }
         public DbSet<ApprovalWorkflowsView> ApprovalWorkflowsViews { get; set; }
-
-
+        
         public DbSet<ObjectView> ObjectViews { get; set; }
         public DbSet<TheoryParagraphView> TheoryParagraphViews { get; set; }
         public DbSet<ApprovalStagesView> ApprovalStagesViews { get; set; }
         public DbSet<ApprovalGroupsView> ApprovalGroupsViews { get; set; }
+        public DbSet<ActualPartsView> ActualPartsViews { get; set; }
+        public DbSet<ProductsView> ProductsViews { get; set; }
         public DbSet<MonitorView> MonitorViews { get; set; }
 
+        public DbSet<ApprovalWorkflowsActivitiesView> ApprovalWorkflowsActivitiesViews { get; set; }
+        public DbSet<ApprovalWorkflowStagesView> ApprovalWorkflowStagesViews { get; set; }
+        public DbSet<ActivitiesView> ActivitiesViews { get; set; }
+        public DbSet<WorkflowStagesView> WorkflowStagesViews { get; set; }
     }
 }

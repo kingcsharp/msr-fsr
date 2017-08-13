@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Mvc;
+using Msr.Services.Roles.Messages;
 
 namespace Msr.Services.Roles
 {
@@ -27,7 +29,7 @@ namespace Msr.Services.Roles
 
         public RolesView GetRoleByid(string Id)
         {
-            return _dbContext.RolesViews.Where(x => x.Id == Id).SingleOrDefault();
+            return _dbContext.RolesViews.SingleOrDefault(x => x.Id == Id);
         }
 
         public bool Create(SaveRoleViewModel model)
@@ -66,5 +68,35 @@ namespace Msr.Services.Roles
                 return false;
             }
         }
+
+        public bool Delete(string id)
+        {
+            try
+            {
+                //need to be dynamic
+                var NTLogin = "1618";
+                var deleteRoleProcedure = new DeleteRoleProcedure() { ObjID = id, NTLogin = NTLogin };
+
+                _dbContext.Database.ExecuteStoredProcedure(deleteRoleProcedure);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                var message = "Error occured:" + ex.Message;
+
+                return false;
+            }
+        }
+
+        public List<RoleResult> GetActiveRoles()
+        {
+            var sql = "SELECT * FROM A_MENUS ORDER BY MENU_GROUP,ID,NAME";
+
+            var result = _dbContext.Database.SqlQuery<RoleResult>(sql).ToList();
+
+            return result;
+        }
+
     }
 }

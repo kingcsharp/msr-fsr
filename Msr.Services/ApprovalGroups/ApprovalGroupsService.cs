@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Msr.Services.ApprovalGroups
 {
@@ -19,17 +21,14 @@ namespace Msr.Services.ApprovalGroups
         {
             _dbContext = new MsrDbContext();
         }
-
         public IQueryable<ApprovalGroupsView> GetApprovalGroupsQueryable()
         {
             return _dbContext.ApprovalGroupsViews;
         }
-
         public ApprovalGroupsView GetApprovalGroupById(string id)
         {
             return GetApprovalGroupsQueryable().Where(x => x.Id == id).SingleOrDefault();
         }
-
         public List<string> GetGroupMembers(string id)
         {
             var strID = new SqlParameter("@ID", id == null ? "0" : id);
@@ -40,7 +39,6 @@ namespace Msr.Services.ApprovalGroups
 
             return result;
         }
-
         public List<SelectFile> GetGroupRoles(string id)
         {
             var strID = new SqlParameter("@ID", id == null ? "0" : id);
@@ -49,7 +47,6 @@ namespace Msr.Services.ApprovalGroups
 
             return result;
         }
-
         public List<SelectFile> GetGroupSpecialMembers(string id)
         {
             var strID = new SqlParameter("@ID", id == null ? "0" : id);
@@ -58,7 +55,6 @@ namespace Msr.Services.ApprovalGroups
 
             return result;
         }
-
         public bool Edit(EditApprovalGroupsViewModel model)
         {
             try
@@ -108,7 +104,6 @@ namespace Msr.Services.ApprovalGroups
                 return false;
             }
         }
-
         public bool Create(EditApprovalGroupsViewModel model)
         {
             try

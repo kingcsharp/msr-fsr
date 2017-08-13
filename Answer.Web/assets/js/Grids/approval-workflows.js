@@ -27,7 +27,7 @@
             width: 200,
             align: 'left'
         },
-        { name: 'Actions', index: 'Id', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: PartEditFormatter, width: 200, align: 'center' }
+        { name: 'Actions', index: 'Id', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: WFEditFormatter, width: 200, align: 'center' }
     ],
 
     viewrecords: true, // show the current page, data rang and total records on the toolbar
@@ -82,8 +82,9 @@ $('#jqGrid').jqGrid('filterToolbar', {
     searchOnEnter: true,
     searchOperators: true
 });
-function PartEditFormatter(cellvalue, options, rowObject) {
-    thisCellVal = '<a href="/ApprovalWorkflows/edit/' + rowObject.ObjectId + '" title="Edit" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i> Edit</a>';
+function WFEditFormatter(cellvalue, options, rowObject) {
+    thisCellVal = '<a href="/ApprovalWorkflows/edit/' + rowObject.Id + '" title="Edit" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i> Edit</a>';
+    thisCellVal = thisCellVal + '<a href="/ApprovalWorkflows/Hide/' + rowObject.Id + '" title="Hide Workflow" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i> Hide</a>';
     return thisCellVal;
 }
 $('#search').click(function () {
