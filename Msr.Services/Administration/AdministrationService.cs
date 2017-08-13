@@ -16,6 +16,7 @@ namespace Msr.Services.Administration
     public class AdministrationService
     {
         private const string AppDataGlobalsettingsXml = @"../App_Data/GlobalSettings.xml";
+        private const string AppDataEmailWordsXml = @"../App_Data/Emailer.xml";
         private readonly MsrDbContext _dbContext;
 
         public AdministrationService()
@@ -195,31 +196,53 @@ namespace Msr.Services.Administration
             return result;
         }
 
-        public List<GlobalSettingsViewModel> ReadGlobalSettings()
+        public IEnumerable<XmlContentViewModel> ReadGlobalSettings()
+        {
+            return ReadXmlAndParse(AppDataGlobalsettingsXml);
+        }
+        
+        public void UpdateGlobalSettings(List<XmlContentViewModel> globalSettings)
+        {
+            string filePath = HttpContext.Current.Server.MapPath(AppDataGlobalsettingsXml);
+            WriteXmlFile(globalSettings, filePath);
+        }
+
+        public IEnumerable<XmlContentViewModel> ReadEmailWords()
+        {
+            return ReadXmlAndParse(AppDataEmailWordsXml);
+        }
+
+        public void UpdateEmailWords(List<XmlContentViewModel> emailWords)
+        {
+            string filePath = HttpContext.Current.Server.MapPath(AppDataEmailWordsXml);
+            WriteXmlFile(emailWords, filePath);
+        }
+
+        private IEnumerable<XmlContentViewModel> ReadXmlAndParse(string filePath)
         {
             XmlDocument doc = new XmlDocument();
-            doc.Load(HttpContext.Current.Server.MapPath(AppDataGlobalsettingsXml));
+            doc.Load(HttpContext.Current.Server.MapPath(filePath));
             XmlNode rootNode = doc.DocumentElement?.SelectSingleNode("/txt");
-            List<GlobalSettingsViewModel> globalSettings = new List<GlobalSettingsViewModel>();
+            List<XmlContentViewModel> globalSettings = new List<XmlContentViewModel>();
             if (rootNode?.ChildNodes != null)
             {
                 globalSettings.AddRange(from XmlNode node in rootNode.ChildNodes
-                    select new GlobalSettingsViewModel
-                    {
-                        Id = node.Attributes["id"]?.InnerText, Value = node.Attributes["value"]?.InnerText
-                    });
+                                        select new XmlContentViewModel
+                                        {
+                                            Id = node.Attributes["id"]?.InnerText,
+                                            Value = node.Attributes["value"]?.InnerText
+                                        });
             }
-            return globalSettings;
+            return globalSettings.OrderBy(x => x.Id);
         }
 
-        public void UpdateGlobalSettings(List<GlobalSettingsViewModel> globalSettings)
+        private void WriteXmlFile(List<XmlContentViewModel> globalSettings, string filePath)
         {
-            string filePath = HttpContext.Current.Server.MapPath(AppDataGlobalsettingsXml);
             XmlDocument xmlDoc = new XmlDocument();
             XmlNode rootNode = xmlDoc.CreateElement("txt");
             xmlDoc.AppendChild(rootNode);
 
-            foreach (var globalSetting in globalSettings)
+            foreach (var globalSetting in globalSettings.Where(x => !string.IsNullOrWhiteSpace(x.Id)))
             {
                 XmlNode userNode = xmlDoc.CreateElement("textString");
                 XmlAttribute idAttribute = xmlDoc.CreateAttribute("id");

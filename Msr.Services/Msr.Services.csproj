@@ -121,7 +121,8 @@
     <Compile Include="Administration\Messages\AssignAccRecievableRoleResult.cs" />
     <Compile Include="Administration\Messages\RoleForJobItem.cs" />
     <Compile Include="Administration\Messages\UpdateAssignRoleToJobRequest.cs" />
-    <Compile Include="Administration\ViewModels\GlobalSettingsViewModel.cs" />
+    <Compile Include="Administration\ViewModels\EmailWordsViewModel.cs" />
+    <Compile Include="Administration\ViewModels\XmlContentViewModel.cs" />
     <Compile Include="Administration\ViewModels\ModuleAccessViewModel.cs" />
     <Compile Include="Administration\ViewModels\AssignCompaniesToViewItemViewModel.cs" />
     <Compile Include="Administration\ViewModels\AssignAccRecievableRoleViewModel.cs" />
