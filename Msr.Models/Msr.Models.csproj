@@ -95,6 +95,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActualParts\ActualPartsView.cs" />
+    <Compile Include="ActualParts\ActualPartViewHistoryView.cs" />
     <Compile Include="ActualParts\RootCompanyTree.cs" />
     <Compile Include="Administration\ViewCompanyUsage.cs" />
     <Compile Include="ApprovalWorkflows\ActivitiesView.cs" />
@@ -130,17 +131,19 @@
     <Compile Include="Parts\Part.cs" />
     <Compile Include="Parts\PartsView.cs" />
     <Compile Include="Parts\PartsWithTaskAndResult.cs" />
-    <Compile Include="Parts\PartType.cs" />
-    <Compile Include="Parts\PartTypesView.cs" />
+    <Compile Include="PartTypes\PartTypesView.cs" />
     <Compile Include="Parts\SelectInternalPart.cs" />
     <Compile Include="Parts\SelectPartCustomerExecptions.cs" />
     <Compile Include="Common\SelectFile.cs" />
     <Compile Include="Parts\SelectPartsFile.cs" />
+    <Compile Include="People\PeopleObjectView.cs" />
+    <Compile Include="PrePro\TheoryFile.cs" />
+    <Compile Include="PrePro\PrePropSearchView.cs" />
     <Compile Include="Procedures\ProcedureView.cs" />
-    <Compile Include="ProcedureTypes\ProceduresView.cs" />
-    <Compile Include="ProcedureTypes\ProcedureTypesView.cs" />
-    <Compile Include="ProcedureTypes\VerbType.cs" />
-    <Compile Include="ProcedureTypes\VerbTypes.cs" />
+    <Compile Include="ProcedureVerbs\ProcedureVerbsView.cs" />
+    <Compile Include="ProcedureVerbs\VerbType.cs" />
+    <Compile Include="ProcedureVerbs\VerbTypes.cs" />
+    <Compile Include="ProductsActualPart\ProductsActualPartView.cs" />
     <Compile Include="Products\ProductsView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Regions\RegionsView.cs" />

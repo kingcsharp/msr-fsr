@@ -8,7 +8,8 @@ using Msr.Models.Parts;
 using Msr.Services.Files;
 using System.Linq;
 using System.ComponentModel.DataAnnotations.Schema;
-using Msr.Infrastructure.Common;
+using Msr.Services.Documents;
+using Msr.Services.PartTypes;
 
 namespace Msr.Services.Parts.ViewModels
 {

@@ -48,7 +48,7 @@ namespace Msr.Models.ActualParts
         public DateTime? Drcm { get; set; }
         public string ModBy { get; set; }
         public string ApprovalActivity { get; set; }
-        public string ApprovalDate { get; set; }
+        public DateTime? ApprovalDate { get; set; }
         public string CurrentOwnerName { get; set; }
         public int? HasChild { get; set; }
         public string ResponsibleName { get; set; }

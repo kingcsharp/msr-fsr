@@ -29,7 +29,7 @@
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 width: 30,
-                align: 'left',
+                align: 'left'
             },
             {
                 label: 'Name',

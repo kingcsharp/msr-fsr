@@ -38,6 +38,8 @@
                 }
             });
         });
+
+   
     $('#select-theory').on('show.bs.modal',
         function (event) {
 

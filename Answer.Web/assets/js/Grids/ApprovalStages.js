@@ -34,7 +34,7 @@
                 width: 200,
                 align: 'left'
             },
-            { name: 'Actions', index: 'Id', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: CompaniesEditFormatter, width: 100, align: 'center' }
+            { name: 'Actions', index: 'Id', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: approvalGroupEditFormatter, width: 100, align: 'center' }
         ],
         ajaxRowOptions: {
             type: "POST",
@@ -77,10 +77,11 @@
         searchOnEnter: true,
         searchOperators: true
     });
-    function CompaniesEditFormatter(cellvalue, options, rowObject) {
-        thisCellVal = '<a href="/ApprovalStages/Edit/' + rowObject.Id + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i> Edit</a>';
+    function approvalGroupEditFormatter(cellvalue, options, rowObject) {
+        var thisCellVal = '<a href="/ApprovalStages/Edit/' + rowObject.Id + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i> Edit</a>';
         return thisCellVal;
     }
+
     $('#search').click(function () {
 
         jQuery("#jqGrid").setGridParam({

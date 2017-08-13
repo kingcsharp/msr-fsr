@@ -24,7 +24,7 @@
                 {
                     @Html.AntiForgeryToken()
 
-                    <div class="form-horizontal addpart">
+                    <div class="form-horizontal addpart part">
 
                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
@@ -63,7 +63,7 @@
                                 <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="PictureFiles" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="PictureFiles"><i class="icon fa fa-trash"></i></span>  </div>
                             </div>
                         </div>
-                        <button type="button" class="btn btn-info collapsed" data-toggle="collapse" data-target="#AdvanceItems">Show Advance Items</button>
+                        <button type="button" class="btn btn-info collapsed" data-toggle="collapse" data-target="#AdvanceItems"></button>
                         <div id="AdvanceItems" class="collapse">
                             <div class="form-group">
                                 @Html.LabelFor(model => model.Unit, htmlAttributes: new { @class = "control-label col-md-3" })
@@ -349,7 +349,8 @@
             $('.closeClick').click();
 
         }
-        $('.deletefiles').click(function () {
+
+        $('.deletefiles').click(function() {
 
             var callBackId = $(this).data('call-back-id');
 
@@ -357,13 +358,14 @@
                 .then(confirmCallback, optionalCancelCallback);
 
             function confirmCallback() {
-                console.log("ok")
+                console.log("ok");
                 $('#' + callBackId + ' option:selected').remove();
             }
+
             function optionalCancelCallback() {
-                console.log("cancel")
+                console.log("cancel");
             }
 
-        })
+        });
     </script>
 }

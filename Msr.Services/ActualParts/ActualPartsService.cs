@@ -10,9 +10,6 @@ using Msr.Services.ActualParts.ViewModels;
 using EntityFrameworkExtras.EF6;
 using Msr.Services.ActualParts.Procedures;
 using Msr.Models.Comman;
-using Dapper;
-using System.Data;
-using System.Configuration;
 
 namespace Msr.Services.ActualParts
 {
@@ -28,9 +25,14 @@ namespace Msr.Services.ActualParts
         {
             return _dbContext.ActualPartsViews;
         }
+
+        public IQueryable<ActualPartViewHistoryView> GetActualPartViewHistoryQueryable()
+        {
+            return _dbContext.ActualPartViewHistoryViews;
+        }
         public ActualPartsView GetActualPartById(string id)
         {
-            return GetActualPartsQueryable().Where(x => x.ObjectId == id).SingleOrDefault();
+            return GetActualPartsQueryable().SingleOrDefault(x => x.ObjectId == id);
         }
         public List<SelectFile> GetActualParts(string status)
         {
@@ -53,24 +55,13 @@ namespace Msr.Services.ActualParts
 
         public List<RootCompanyTree> GetActualPartCompanies()
         {
-            try
-            {
-                var p = new DynamicParameters();
+            var strID = new SqlParameter("@PERSON_ID", "1618");
+            //need to be dynamic
+            var NTLogin = new SqlParameter("@strNTLogin", "1618");
 
-                p.Add("@PERSON_ID", "1618", DbType.String, ParameterDirection.Input, size: 50);
-                p.Add("@strNTLogin", "1618", DbType.String, ParameterDirection.Input, size: 50);
+            var result = _dbContext.Database.SqlQuery<RootCompanyTree>("Exec A_SP_COMPANIES_SHOW_PERSONS_ROOT_COMPANY_TREE @PERSON_ID, @strNTLogin", strID, NTLogin).ToList();
 
-                using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
-                {
-                    var result = conn.Query<RootCompanyTree>("A_SP_COMPANIES_SHOW_PERSONS_ROOT_COMPANY_TREE", p, commandType: CommandType.StoredProcedure);
-
-                    return result.ToList();
-                }
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            return result;
         }
         public bool Edit(SaveActualPartsViewModel model)
         {
@@ -129,6 +120,26 @@ namespace Msr.Services.ActualParts
 
                 return true;
 
+            }
+            catch (Exception ex)
+            {
+                var message = "Error occured:" + ex.Message;
+
+                return false;
+            }
+        }
+
+        public bool Close(string id)
+        {
+            try
+            {
+                //need to be dynamic
+                var NTLogin = "1618";
+                var closeViewHistoryTaskProcedure = new CloseViewHistoryTaskProcedure() { Id = id, NTLogin = NTLogin };
+
+                _dbContext.Database.ExecuteStoredProcedure(closeViewHistoryTaskProcedure);
+
+                return true;
             }
             catch (Exception ex)
             {

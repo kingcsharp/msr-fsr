@@ -1,0 +1,177 @@
+﻿@model Msr.Services.PrePro.ViewModel.ProcedurePreProViewModel
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+
+<div class="container-fluid">
+    <div class="side-body padding-top">
+        <div class="row">
+            <h2 class="page-header">
+                View Part
+                <div class=" pull-right" data-toggle="modal">
+                    <!-- Split button -->
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-warning">Action</button>
+                        <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="caret"></span>
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a href="~/parts/deletePart/@Model.ID">Delete</a></li>
+                        </ul>
+                    </div>
+
+                </div>
+            </h2>
+
+            <div>
+                <dl class="dl-horizontal">
+                    <dt>
+                        @Html.DisplayNameFor(model => model.START_ON_COUNTER)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.START_ON_COUNTER)
+                    </dd>
+                    
+                    <dt>
+                        @Html.DisplayNameFor(model => model.DURATION)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.DURATION)
+                    </dd>
+                    
+                    
+                    <dt>
+                        @Html.DisplayNameFor(model => model.DURATION_TYPE)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.DURATION_TYPE)
+                    </dd>
+                    
+                    <dt>
+                        @Html.DisplayNameFor(model => model.REFERENCE_OBJECT)
+                    </dt>
+                    @foreach (var item in Model.REFERENCE_OBJECTS)
+                    {
+                        <dd>
+                            @Html.DisplayFor(model => item.Text) <span class="data-toggle=" data-call-back-item="@item.Text" data-toggle="modal" data-target="#view-images" title="View File"><i class="icon fa fa-eye"></i></span>
+                        </dd>
+                    }
+                    
+                    <dt>
+                        @Html.DisplayNameFor(model => model.PictureFiles)
+                    </dt>
+                    @foreach (var item in Model.ListPictureRefFiles)
+                    {
+                        <dd>
+                            @Html.DisplayFor(model => item.Text) <span class="data-toggle=" data-call-back-item="@item.Text" data-toggle="modal" data-target="#view-images" title="View File"><i class="icon fa fa-eye"></i></span>
+                        </dd>
+                    }
+                    
+                    <dt>
+                        @Html.DisplayNameFor(model => model.REFERENCE_THEORIES)
+                    </dt>
+                    @foreach (var item in Model.ListReferenceTheories)
+                    {
+                        <dd>
+                            @Html.DisplayFor(model => item.Text) <span class="data-toggle=" data-call-back-item="@item.Text" data-toggle="modal" data-target="#view-images" title="View File"><i class="icon fa fa-eye"></i></span>
+                        </dd>
+                    }
+                    
+                    <dt>
+                        @Html.DisplayNameFor(model => model.ReferenceProcs)
+                    </dt>
+                    @foreach (var item in Model.ListProcFiles)
+                    {
+                        <dd>
+                            @Html.DisplayFor(model => item.Text) <span class="data-toggle=" data-call-back-item="@item.Text" data-toggle="modal" data-target="#view-images" title="View File"><i class="icon fa fa-eye"></i></span>
+                        </dd>
+                    }
+                    
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.STEP_TEXT)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.STEP_TEXT)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.SYSTEM_TASK)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.SYSTEM_TASK)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.COMMENTS)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.COMMENTS)
+                    </dd>
+                    
+                   
+                
+
+                    <dd>
+                        @Html.DisplayFor(model => model.ID)
+                    </dd>
+                   
+                </dl>
+            </div>
+            <p>
+                @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+                @Html.ActionLink("Back to List", "Index")
+            </p>
+        </div>
+    </div>
+</div>
+<div id="view-images" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">View</h4>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning closeClick" data-dismiss="modal"><i class="fa fa-close-o"></i> Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script>
+
+        $('#view-images').on('show.bs.modal',
+            function (event) {
+
+                var button = $(event.relatedTarget);
+                var callBackitem = button.data('call-back-item');
+                var modal = $(this);
+
+                $.ajax({
+                    type: "GET",
+                    url: '/parts/ViewFile?callBackitem=' + callBackitem,
+                    dataType: 'html',
+                    success: function (data) {
+                        modal.find('.modal-body').html(data);
+                    },
+                    error: function () {
+
+                    }
+                });
+
+            });
+
+    </script>
+}
+

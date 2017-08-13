@@ -2,75 +2,176 @@
 using Msr.Models.Procedures;
 using Msr.Repositories;
 using Msr.Services.Orders.Procedures;
-using Msr.Services.ProcedureTypes.Procedures;
-using Msr.Services.ProcedureTypes.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Msr.Models.Procedure;
+using Msr.Models.Common;
+using Msr.Services.Procedures.Messages;
+using Msr.Services.Procedures.Procedures;
+using Msr.Services.Procedures.ViewModels;
 
 namespace Msr.Services.Procedures
 {
-	public class ProceduresService
-	{
-		private readonly MsrDbContext _dbContext;
+    public class ProceduresService
+    {
+        private readonly MsrDbContext _dbContext;
 
-		public ProceduresService()
-		{
-			_dbContext = new MsrDbContext();
-		}
-		
-		public ProcedureView GetProcedureById(string Id)
-		{
-			return _dbContext.Procedurs.Where(x => x.Id == Id).SingleOrDefault();
-		}
-		public IQueryable<ProcedureView> GetProceduresQueryable()
-		{
+        public ProceduresService()
+        {
+            _dbContext = new MsrDbContext();
+        }
+        public IQueryable<ProcedureView> GetProceduresQueryable()
+        {
+            return _dbContext.Procedures;
+        }
+        public ProcedureView GetProcedureById(string id)
+        {
+            return GetProceduresQueryable().SingleOrDefault(x => x.ObjectId == id);
+        }
+        public List<SelectFile> GetSelectedFiles(string id, string type)
+        {
+            var objId = new SqlParameter("@objID", id ?? "0");
 
-			return _dbContext.Procedurs;
+            var selecttype = type == null ? new SqlParameter("@type", DBNull.Value) : new SqlParameter("@type", type);
 
-					
+            //need to be dynamic
+            var NTLogin = new SqlParameter("@strNTLogin", "1618");
 
-		}
+            var result = _dbContext.Database.SqlQuery<SelectFile>("EXEC A_SP_FILES_SHOW_FOR_OBJECT  @objID, @type, @strNTLogin", objId, selecttype, NTLogin).ToList();
 
-		public bool Save(ProcedureView model)
-		{
+            return result;
+        }
+        public List<string> GetSelectedRoles(string id)
+        {
+            var objId = new SqlParameter("@strID", id ?? "0");
 
-			try
-			{
-				var saveProcedureProcedure = new SaveProcedureTypesProcedure {  };
+            //need to be dynamic
+            var NTLogin = new SqlParameter("@strNTLogin", "1618");
 
-				_dbContext.Database.ExecuteStoredProcedure(saveProcedureProcedure);
+            var result = _dbContext.Database.SqlQuery<string>("EXEC Portal_GetProcedureRoles  @strID, @strNTLogin", objId, NTLogin).ToList();
 
-				return true;
-			}
-			catch (Exception ex)
-			{
-				var message = "Error occured:" + ex.Message;
+            return result;
+        }
+        public bool Create(SaveProcedureViewModel model)
+        {
 
-				return false;
-			}
-		}
-		public bool Edit(SaveProcedureTypesViewModel model)
-		{
+            try
+            {
+                var saveProcedureProcedure = new SaveProcedureProcedure
+                {
+                    Company = model.Company,
+                    Verb = model.Verb,
+                    Name = model.Name,
+                    Comments = model.Comments,
+                    StepInAp = model.StepInAp,
+                    WipMsg = model.WipMsg,
+                    SecurityLevel = model.SecurityLevel,
+                    SystemId = model.SystemId,
+                    Duration = model.Duration,
+                    DurationType = model.DurationType,
+                    NTLogin = model.NTLogin
+                };
 
-			try
-			{
-				var saveProcedureProcedure = new SaveProcedureTypesProcedure { ObjId = model.ObjectId, Name = model.Name, VerbType = model.VerbType, NTLogin = model.NTLogin };
+                _dbContext.Database.ExecuteStoredProcedure(saveProcedureProcedure);
 
-				_dbContext.Database.ExecuteStoredProcedure(saveProcedureProcedure);
 
-				return true;
-			}
-			catch (Exception ex)
-			{
-				var message = "Error occured:" + ex.Message;
 
-				return false;
-			}
-		}
-	}
+                var deleteReferenceFileProcedure = new DeleteFileProcedure() { ObjID = saveProcedureProcedure.NewObjId, Type = DBNull.Value.ToString(CultureInfo.InvariantCulture), NTLogin = model.NTLogin };
+
+                _dbContext.Database.ExecuteStoredProcedure(deleteReferenceFileProcedure);
+
+                foreach (var file in model.ReferenceFiles)
+                {
+                    var saveFileProcedure = new SaveFileProcedure() { ObjId = saveProcedureProcedure.NewObjId, DocId = file, Type = DBNull.Value.ToString(CultureInfo.InvariantCulture), NTLogin = model.NTLogin };
+
+                    _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
+                }
+
+                var deleteProcedureRolesProcedure = new DeleteProcedureRolesProcedure() { ObjId = saveProcedureProcedure.NewObjId, NTLogin = model.NTLogin };
+
+                _dbContext.Database.ExecuteStoredProcedure(deleteProcedureRolesProcedure);
+
+                foreach (var file in model.Roles)
+                {
+                    var saveProcedureRoleProcedure = new SaveProcedureRoleProcedure() { ObjId = saveProcedureProcedure.NewObjId, RoleId = file, NTLogin = model.NTLogin };
+
+                    _dbContext.Database.ExecuteStoredProcedure(saveProcedureRoleProcedure);
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                var message = "Error occured:" + ex.Message;
+
+                return false;
+            }
+        }
+        public bool Save(SaveProcedureViewModel model)
+        {
+
+            try
+            {
+                var deleteReferenceFileProcedure = new DeleteFileProcedure() { ObjID = model.ObjectId, Type = DBNull.Value.ToString(CultureInfo.InvariantCulture), NTLogin = model.NTLogin };
+
+                _dbContext.Database.ExecuteStoredProcedure(deleteReferenceFileProcedure);
+
+                foreach (var file in model.ReferenceFiles)
+                {
+                    var saveFileProcedure = new SaveFileProcedure() { ObjId = model.ObjectId, DocId = file, Type = DBNull.Value.ToString(CultureInfo.InvariantCulture), NTLogin = model.NTLogin };
+
+                    _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
+                }
+
+                var deleteProcedureRolesProcedure = new DeleteProcedureRolesProcedure() { ObjId = model.ObjectId, NTLogin = model.NTLogin };
+
+                _dbContext.Database.ExecuteStoredProcedure(deleteProcedureRolesProcedure);
+
+                foreach (var file in model.Roles)
+                {
+                    var saveProcedureRoleProcedure = new SaveProcedureRoleProcedure() { ObjId = model.ObjectId, RoleId = file, NTLogin = model.NTLogin };
+
+                    _dbContext.Database.ExecuteStoredProcedure(saveProcedureRoleProcedure);
+                }
+
+                var saveProcedureProcedure = new SaveProcedureProcedure
+                {
+                    ObjId = model.ObjectId,
+                    Company = model.Company,
+                    Verb = model.Verb,
+                    Name = model.Name,
+                    Comments = model.Comments,
+                    StepInAp = model.StepInAp,
+                    WipMsg = model.WipMsg,
+                    SecurityLevel = model.SecurityLevel,
+                    SystemId = model.SystemId,
+                    Duration = model.Duration,
+                    DurationType = model.DurationType,
+                    NTLogin = model.NTLogin
+                };
+
+                _dbContext.Database.ExecuteStoredProcedure(saveProcedureProcedure);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                var message = "Error occured:" + ex.Message;
+
+                return false;
+            }
+        }
+
+        public ProceduresApprovedDataResult GetApprovedData(string id)
+        {
+            var sql = $"SELECT OBJECT_ID FROM A_V_PROCEDURES_APPROVED_DATA WHERE ID={id}";
+
+            var result = _dbContext.Database.SqlQuery<ProceduresApprovedDataResult>(sql).SingleOrDefault();
+
+            return result;
+        }
+    }
 }

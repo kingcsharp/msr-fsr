@@ -7,3 +7,4 @@ FROM            dbo.A_O_PART_TYPES_HISTORY
 GO
 
 GO
+

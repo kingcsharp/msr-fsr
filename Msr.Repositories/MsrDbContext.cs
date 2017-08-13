@@ -2,7 +2,6 @@
 using Msr.Models.Notes;
 using Msr.Models.Orders;
 using Msr.Models.Parts;
-using Msr.Models.Procedure;
 using Msr.Models.Procedures;
 using Msr.Models.Tasks;
 using Msr.Models.TimeZones;
@@ -23,7 +22,12 @@ using Msr.Models.ActualParts;
 using System.Linq;
 using Msr.Models.Products;
 using Msr.Models.Monitor;
-using Msr.Models.ApprovalWorkflows;
+using Msr.Models.ProcedureVerbs;
+using Msr.Models.People;
+using Msr.Models.ProductsActualPart;
+using Msr.Models;
+using Msr.Models.PrePro;
+
 
 namespace Msr.Repositories
 {
@@ -37,9 +41,6 @@ namespace Msr.Repositories
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Configurations.Add(new AspNetUserConfiguration());
-            modelBuilder.Configurations.Add(new PartConfiguration());
-            modelBuilder.Configurations.Add(new PartTypesConfiguration());
-            modelBuilder.Configurations.Add(new VerbTypeConfiguration());
 
             modelBuilder.Entity<AspNetRole>().ToTable("AspNetRoles");
             modelBuilder.Entity<ClientUser>().ToTable("Portal_ClientUsers");
@@ -56,9 +57,8 @@ namespace Msr.Repositories
             modelBuilder.Entity<MonitorsWithTaskAndResult>().ToTable("Portal_MonitorsWithTaskAndResults");
             modelBuilder.Entity<PartsView>().ToTable("Portal_PartsView");
             modelBuilder.Entity<PartTypesView>().ToTable("Portal_PartTypesView");
-            modelBuilder.Entity<PartType>().ToTable("A_PART_TYPES_HISTORY");
-            modelBuilder.Entity<ProcedureTypesView>().ToTable("Portal_ProcedureTypesView");
-            modelBuilder.Entity<ProcedureView>().ToTable("Portal_ProcedureListView");
+            modelBuilder.Entity<ProcedureVerbsView>().ToTable("Portal_ProceduresVerbsView");
+            modelBuilder.Entity<ProcedureView>().ToTable("Portal_ProceduresView");
             modelBuilder.Entity<FileView>().ToTable("Portal_FilesView");
             modelBuilder.Entity<RegionsView>().ToTable("Portal_RegionsView");
             modelBuilder.Entity<LocationView>().ToTable("Portal_LocationsView");
@@ -79,6 +79,11 @@ namespace Msr.Repositories
             modelBuilder.Entity<MonitorView>().ToTable("A_V_MONITORS_WITH_TASK_AND_RESULT");
             modelBuilder.Entity<ActualPartsView>().ToTable("Portal_ActualPartsView");
             modelBuilder.Entity<ProductsView>().ToTable("Portal_ProductsView");
+            modelBuilder.Entity<PeopleObjectView>().ToTable("Portal_PeopleObjectSearchView");
+            modelBuilder.Entity<ActualPartViewHistoryView>().ToTable("Portal_ActualPartsViewHistory");
+            modelBuilder.Entity<ProductsActualPartView>().ToTable("Portal_ProductsActualPart");
+            modelBuilder.Entity<PrePropSearchView>().ToTable("Portal_PREPOP_View");
+           // modelBuilder.Entity<PreProEditView>().ToTable("Portal_PREPOP_View");
         }
 
         public DbSet<AspNetUser> AspNetUsers { get; set; }
@@ -98,10 +103,8 @@ namespace Msr.Repositories
         public DbSet<PartsView> PartsViews { get; set; }
         public DbSet<RegionsView> RegionsViews { get; set; }
         public DbSet<PartTypesView> PartTypesViews { get; set; }
-        public DbSet<PartType> PartTypes { get; set; }
-        public DbSet<ProcedureTypesView> ProcedureTypes { get; set; }
-        public DbSet<VerbType> VerbTypes { get; set; }
-        public DbSet<ProcedureView> Procedurs { get; set; }
+        public DbSet<ProcedureVerbsView> ProcedureVerbs { get; set; }
+        public DbSet<ProcedureView> Procedures { get; set; }
         public DbSet<FileView> FIleViews { get; set; }
         public DbSet<LocationView> LocationViews { get; set; }
         public DbSet<TaskLog> TaskLogs { get; set; }
@@ -110,7 +113,6 @@ namespace Msr.Repositories
         public DbSet<DocumentFilesView> DocumentFilesViews { get; set; }
         public DbSet<HeadPeopleView> HeadPeopleViews { get; set; }
         public DbSet<ApprovalWorkflowsView> ApprovalWorkflowsViews { get; set; }
-        
         public DbSet<ObjectView> ObjectViews { get; set; }
         public DbSet<TheoryParagraphView> TheoryParagraphViews { get; set; }
         public DbSet<ApprovalStagesView> ApprovalStagesViews { get; set; }
@@ -118,10 +120,15 @@ namespace Msr.Repositories
         public DbSet<ActualPartsView> ActualPartsViews { get; set; }
         public DbSet<ProductsView> ProductsViews { get; set; }
         public DbSet<MonitorView> MonitorViews { get; set; }
-
         public DbSet<ApprovalWorkflowsActivitiesView> ApprovalWorkflowsActivitiesViews { get; set; }
         public DbSet<ApprovalWorkflowStagesView> ApprovalWorkflowStagesViews { get; set; }
         public DbSet<ActivitiesView> ActivitiesViews { get; set; }
         public DbSet<WorkflowStagesView> WorkflowStagesViews { get; set; }
+        public DbSet<PeopleObjectView> PeopleObjectViews { get; set; }
+        public DbSet<ActualPartViewHistoryView> ActualPartViewHistoryViews { get; set; }
+        public DbSet<ProductsActualPartView> ProductsActualPartViews { get; set; }
+        public DbSet<PrePropSearchView> PrePropSearchView { get; set; }
+       // public DbSet<PreProEditView> PreProEditView { get; set; }
+
     }
 }

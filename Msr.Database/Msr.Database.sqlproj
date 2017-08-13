@@ -2757,7 +2757,6 @@
     <Build Include="dbo\Views\Portal\Portal_FilesView.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_GetPurchaseItemDetails.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_GetDeliveryTsrDetails.sql" />
-    <Build Include="dbo\Views\Portal\Portal_ProcedureListView.sql" />
     <Build Include="dbo\Views\Portal\Portal_RegionsView.sql" />
     <Build Include="dbo\Views\Portal\Portal_LocationsView.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_GetTheoryObjects.sql" />
@@ -2780,9 +2779,12 @@
     <Build Include="dbo\Views\Portal\Portal_WorkflowStages.sql" />
     <Build Include="dbo\Views\Portal\Portal_ActualPartsView.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_WfGroupUpdateOne.sql" />
-    <Build Include="dbo\Views\Portal_ActivitiesView.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_DeleteDocLinkByObjId.sql" />
     <Build Include="dbo\Views\Portal\Portal_WorkflowStages.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_HideApprovalWorkflow.sql" />
+    <Build Include="dbo\Views\Portal\Portal_PeopleObjectSearchView.sql" />
+    <Build Include="dbo\Views\Portal\Portal_ProceduresVerbsView.sql" />
+    <Build Include="dbo\Views\Portal\Portal_ActivitiesView.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_GetProcedureRoles.sql" />
   </ItemGroup>
 </Project>

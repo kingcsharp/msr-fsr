@@ -28,25 +28,91 @@
                     <div class="form-horizontal">
                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                         <div class="form-group">
-                            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-2">
+                            @Html.LabelFor(model => model.Verb, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-5">
+                                @Html.DropDownListFor(model => model.Verb, Model.VerbList, new { @class = "form-control select" })
+                                @Html.ValidationMessageFor(model => model.Verb, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.SystemId, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-5">
+                                @Html.DropDownListFor(model => model.SystemId, Model.SystemList, new { @class = "form-control select" })
+                                @Html.ValidationMessageFor(model => model.SystemId, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-5">
+
                                 @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
                             </div>
                         </div>
 
                         <div class="form-group">
-                            @Html.LabelFor(model => model.VerbType, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-2">
-                                @Html.DropDownListFor(model => model.VerbType, Model.VerbTypes, "-- Select Verb Type --", new { @class = "form-control" })
-                                @Html.ValidationMessageFor(model => model.VerbType, "", new { @class = "text-danger" })
+                            @Html.LabelFor(model => model.ReferenceFiles, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-5">
+                                <div style="width: 96%; float: left;">
+                                    @Html.ListBoxFor(m => m.ReferenceFiles, Model.ReferenceFilesList, new { @class = "form-control submitselect", multiple = "multiple" })
+                                    @Html.ValidationMessageFor(model => model.ReferenceFiles, "", new { @class = "text-danger" })
+                                </div>
+                                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceFiles" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceFiles"><i class="icon fa fa-trash"></i></span> </div>
                             </div>
                         </div>
-
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Comments, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-5">
+                                @Html.TextAreaFor(model => model.Comments, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Comments, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.SecurityLevel, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-5">
+                                @Html.DropDownListFor(model => model.SecurityLevel, Model.SecurityLevelList, new { @class = "form-control select" })
+                                @Html.ValidationMessageFor(model => model.SecurityLevel, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Roles, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-5">
+                                @Html.DropDownListFor(model => model.Roles, Model.RolesList, new { @class = "form-control select selectroles" })
+                                @Html.ValidationMessageFor(model => model.Roles, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.StepInAp, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-5">
+                                @Html.DropDownListFor(model => model.StepInAp, Model.SetpInApList, new { @class = "form-control select" })
+                                @Html.ValidationMessageFor(model => model.StepInAp, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Duration, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-5">
+                                @Html.EditorFor(model => model.Duration, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Duration, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.DurationType, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-5">
+                                @Html.DropDownListFor(model => model.DurationType, Model.DurationTypeList, new { @class = "form-control select" })
+                                @Html.ValidationMessageFor(model => model.DurationType, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.WipMsg, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-5">
+                                @Html.DropDownListFor(model => model.WipMsg, Model.WipMsgList, new { @class = "form-control select" })
+                                @Html.ValidationMessageFor(model => model.WipMsg, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
                         <div class="form-group">
                             <div class="col-md-offset-2 col-md-10">
                                 <input type="submit" value="Submit" class="btn btn-success" />
-                                <a href="~/Procedures" class="btn btn-warning">Cancel</a>
+                                <a href="@Url.Action("Index","Procedures")" class="btn btn-warning">Cancel</a>
                             </div>
                         </div>
                     </div>
@@ -61,5 +127,40 @@
 
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+    <script src="~/assets/js/grids/comman.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".select").select2();
+            $(".selectroles").select2({
+                tags: [],
+                tokenSeparators: [','],
+                multiple: true,
+                allowClear: true,
+                placeholder: "Select Roles",
+                formatNoMatches: function () {
+                    return '';
+                }
+            });
+            $('#select-images').on('show.bs.modal',
+                function (event) {
 
+                    var button = $(event.relatedTarget);
+                    var callBackId = button.data('call-back-id');
+                    var modal = $(this);
+
+                    $.ajax({
+                        type: "GET",
+                        url: '/Files/GetFiles?callBackId=' + callBackId,
+                        dataType: 'html',
+                        success: function (data) {
+                            modal.find('.modal-body').html(data);
+                        },
+                        error: function () {
+
+                        }
+                    });
+
+                });
+        });
+    </script>
 }

@@ -28,7 +28,7 @@
             </h2>
             <div class="col-lg-10">
                 <section class="panel">
-                    <div class="panel-body bio-graph-info">
+                    <div class="panel-body bio-graph-info part">
 
                         @Html.Partial("Message")
 
@@ -72,7 +72,7 @@
                                     <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="PictureFiles" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="PictureFiles"><i class="icon fa fa-trash"></i></span>  </div>
                                 </div>
                             </div>
-                            <button type="button" class="btn btn-info collapsed" data-toggle="collapse" data-target="#AdvanceItems">Show Advance Items</button>
+                            <button type="button" class="btn btn-info collapsed" data-toggle="collapse" data-target="#AdvanceItems"></button>
                             <div id="AdvanceItems" class="collapse">
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.Unit, htmlAttributes: new { @class = "control-label col-md-3" })
