@@ -1,34 +1,34 @@
-﻿@model Answer.Web.ViewModel.Administration.ModuleAccessViewViewModel
+﻿@model Msr.Services.Administration.ViewModels.EmailWordsViewModel
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="row">
-            @using (Html.BeginForm("UpdateGlobalSettings", "Administration", FormMethod.Post, new { @class = "form form-horizontal", role = "form" }))
+            @using (Html.BeginForm("UpdateEmailWords", "Administration", FormMethod.Post, new { @class = "form form-horizontal", role = "form" }))
             {
                 <div class="form-group">
                     <label class="col-lg-6">
-                        Codded:
+                        New ID***
                     </label>
                     <label class="col-lg-6">
-                        Displayed:
+                        Value:
                     </label>
                 </div>
                 <div class="form-group">
                     <label class="col-lg-6">
-                        <input type="text" name="GlobalSettings[@Model.GlobalSettings.Count].Id" />
+                        <input type="text" name="EmailWords[@Model.EmailWords.Count].Id" />
                     </label>
                     <div class="col-lg-6">
-                        <input type="text" name="GlobalSettings[@Model.GlobalSettings.Count].Value" />
+                        <textarea name="EmailWords[@Model.EmailWords.Count].Value"></textarea>
                     </div>
                 </div>
-                for (int i = 0; i < Model.GlobalSettings.Count; i++)
+                for (int i = 0; i < Model.EmailWords.Count; i++)
                 {
                     <div class="form-group">
                         <label class="col-lg-6">
-                            @Model.GlobalSettings[i].Id
-                            @Html.HiddenFor(x => Model.GlobalSettings[i].Id)
+                            @Model.EmailWords[i].Id
+                            @Html.HiddenFor(x => Model.EmailWords[i].Id)
                         </label>
                         <div class="col-lg-6">
-                            @Html.TextBoxFor(x => Model.GlobalSettings[i].Value)
+                            @Html.TextAreaFor(x => Model.EmailWords[i].Value)
                         </div>
                     </div>
                 }

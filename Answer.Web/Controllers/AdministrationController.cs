@@ -268,7 +268,7 @@ namespace Answer.Web.Controllers
             var vm = new ModuleAccessViewViewModel();
 
             vm.CompaniesToView = _administrationService.GeModuleAccess();
-            vm.GlobalSettings = _administrationService.ReadGlobalSettings();
+            vm.GlobalSettings = _administrationService.ReadGlobalSettings().ToList();
 
             vm.SetUp(new RoleService());
 
@@ -276,7 +276,7 @@ namespace Answer.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult UpdateGlobalSettings(List<GlobalSettingsViewModel> globalSettings)
+        public ActionResult UpdateGlobalSettings(List<XmlContentViewModel> globalSettings)
         {
             if (globalSettings.Any())
             {
@@ -284,6 +284,26 @@ namespace Answer.Web.Controllers
             }
 
             return RedirectToAction("EditglobalWordsII");
+        }
+
+        public ActionResult EditEmailWords()
+        {
+            var vm = new EmailWordsViewModel();
+            
+            vm.EmailWords = _administrationService.ReadEmailWords().ToList();
+            
+            return View(vm);
+        }
+
+        [HttpPost]
+        public ActionResult UpdateEmailWords(List<XmlContentViewModel> emailWords)
+        {
+            if (emailWords.Any())
+            {
+                _administrationService.UpdateEmailWords(emailWords);
+            }
+
+            return RedirectToAction("EditEmailWords");
         }
     }
 }

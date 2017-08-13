@@ -235,6 +235,7 @@
     <Compile Include="ViewModel\Wip\WipListViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\Emailer.xml" />
     <Content Include="App_Data\GlobalSettings.xml" />
     <Content Include="assets\components\ace\ace\ace.min.js" />
     <Content Include="assets\components\ace\ace\ext-beautify.js" />
@@ -823,6 +824,7 @@
     <Content Include="Views\Administration\ModuleAccess.cshtml" />
     <Content Include="Views\Administration\EditglobalWordsII.cshtml" />
     <Content Include="Views\Wip\_AddMonitors.cshtml" />
+    <Content Include="Views\Administration\EditEmailWords.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
