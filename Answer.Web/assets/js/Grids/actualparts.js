@@ -213,6 +213,8 @@
 
     function actualPartsEditFormatter(cellvalue, options, rowObject) {
         var thisCellVal = '<a href="/ActualParts/Edit/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" title="Edit" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i> Edit</a>';
+        thisCellVal = thisCellVal + '<a href="/ProductsActualParts/Index/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" title="Show me Products for this part" style="margin:2px;font-size: .8em;"><i class="fa fa-money" aria-hidden="true"></i> Parts</a>';
+        thisCellVal = thisCellVal + '<a href="/ActualParts/ViewHistory/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" title="Edit" style="margin:2px;font-size: .8em;"><i class="fa fa-history" aria-hidden="true"></i> History</a>';
         thisCellVal = thisCellVal + '<a href="/ActualParts/ActualPartDelete/' + rowObject.ObjectId + '" data-call-back-name="' + rowObject.Serial + '" data-call-back-id="' + rowObject.ObjectId + '" title="Delete" class="btn btn-xs btn-danger deleteactualPart" style="margin:2px;font-size: .8em;"><i class="fa fa-trash"></i> Delete</a>';
         return thisCellVal;
     }

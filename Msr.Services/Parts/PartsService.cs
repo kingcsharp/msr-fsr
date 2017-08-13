@@ -68,7 +68,7 @@ namespace Msr.Services.Parts
             var partId = new SqlParameter("@PartId", id == null ? "0" : id);
 
             var result = _dbContext.Database.SqlQuery<SelectPartCustomerExecptions>("SELECT c.ID AS ID, c.NAME AS NAME FROM A_PARTS_FUTURE_EXCEPTIONS f,A_V_COMPANIES_APPROVED_DATA c WHERE c.ID = f.CUST_ID AND f.PART_ID = @PartId", partId).ToList();
-
+          
             return result;
         }
         public List<string> GetPartSpecialCustomers(string id)

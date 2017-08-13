@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using Msr.Infrastructure.Common;
 using Msr.Models.ApprovalWorkflows;
 using Msr.Models.Files;
+using Msr.Services.Documents;
 
 namespace Msr.Services.ApprovalWorkflows.ViewModels
 {

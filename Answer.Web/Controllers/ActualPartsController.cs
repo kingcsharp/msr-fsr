@@ -206,5 +206,105 @@ namespace Answer.Web.Controllers
             TempData["ErrorMessage"] = "Something went wrong.";
             return RedirectToAction("Index");
         }
+
+        public ActionResult ViewHistory(string id)
+        {
+            var viewModel = new EngineeringViewModel();
+
+            ViewBag.ActiveClass = "Actual Parts";
+            ViewBag.ActualPartId = id;
+
+            return View(viewModel);
+        }
+
+        public ActionResult ActualPartsViewHistoryData(JqGridParam param, string id)
+        {
+            var actualPartsService = new ActualPartsService();
+
+            var totalRows = actualPartsService.GetActualPartViewHistoryQueryable().Where(x => x.ActualPartId == id & x.TaskStetTitle != "PENDING_PARENT_ACCEPTANCE").OrderBy(x => x.ColourCode).ThenBy(x => x.ActualStopDate).ThenBy(x => x.ActualStartDate).ThenBy(x => x.CurPlannedStopDate).ThenBy(x => x.CurPlannerStartDate).AsQueryable();
+
+            if (param.where != null && param.where.rules.Any())
+            {
+                foreach (var rule in param.where.rules)
+                {
+                    if (rule.field == nameof(ActualPartViewHistoryView.RequesteeId))
+                    {
+                        totalRows = totalRows.Where(x => x.RequesteeId == rule.data.ToLower());
+                    }
+                    else if (rule.field == nameof(ActualPartViewHistoryView.Description))
+                    {
+                        totalRows = totalRows.Where(x => x.Description.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(ActualPartViewHistoryView.OriginalRequestor))
+                    {
+                        totalRows = totalRows.Where(x => x.OriginalRequestor.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(ActualPartViewHistoryView.LatestRequestee))
+                    {
+                        totalRows = totalRows.Where(x => x.LatestRequestee.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(ActualPartViewHistoryView.CompanyName))
+                    {
+                        totalRows = totalRows.Where(x => x.CompanyName.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(ActualPartViewHistoryView.TaskType))
+                    {
+                        totalRows = totalRows.Where(x => x.TaskType.ToLower().Contains(rule.data.ToLower()));
+                    }
+                }
+            }
+
+            var orderBy = nameof(ActualPartsView.PartDesc);
+
+            if (!string.IsNullOrWhiteSpace(param.sortColumn))
+            {
+                orderBy = param.sortColumn;
+            }
+
+            if (param.sortOrder == "desc")
+            {
+                totalRows = totalRows.OrderByDescending(orderBy);
+            }
+            else
+            {
+                totalRows = totalRows.OrderBy(orderBy);
+            }
+
+            var totalRecords = totalRows.Count();
+
+            totalRows = totalRows.Skip(param.pageSize * (param.pageIndex - 1));
+
+            totalRows = totalRows.Take(param.pageSize);
+
+            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)param.pageSize);
+
+            var results = totalRows.ToList();
+
+            var json = new
+            {
+                total = totalPages,
+                page = param.pageIndex,
+                records = totalRecords,
+                rows = results
+            };
+
+            return Json(json, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult ViewHistoryClose(string id)
+        {
+            var taskService = new ActualPartsService();
+
+            var response = taskService.Close(id: id);
+
+            if (response)
+            {
+                TempData["SuccessMessage"] = "Successfully Closed Task.";
+                return RedirectToAction("ViewHistory");
+            }
+
+            TempData["ErrorMessage"] = "Something went wrong.";
+            return RedirectToAction("ViewHistory");
+        }
     }
 }

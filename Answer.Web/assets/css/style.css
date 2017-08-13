@@ -1449,3 +1449,18 @@ color: black;
     height: 400px !important;
 }
 
+.part button.btn.collapsed:before {
+    content: 'Show Advance Items';
+    display: block;
+    width: 100%;
+}
+
+.part button.btn:before {
+    content: 'Hide Advance Items';
+    display: block;
+    width: 100%;
+}
+
+.ui-jqgrid .ui-jqgrid-htable .ui-th-div {
+    height: 67px;
+}

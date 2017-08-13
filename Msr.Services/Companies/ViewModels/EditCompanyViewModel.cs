@@ -7,9 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using Msr.Infrastructure.Common;
 using Msr.Models.Companies;
 using Msr.Models.Documents;
+using Msr.Services.Documents;
 
 namespace Msr.Services.Companies.ViewModels
 {

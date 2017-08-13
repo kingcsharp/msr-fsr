@@ -17,7 +17,6 @@ namespace Msr.Services.ActualParts.ViewModels
     {
         public SaveActualPartsViewModel()
         {
-            Products = new List<string>();
             ListParts = new List<SelectListItem>();
             ListParents = new List<SelectListItem>();
             ListLocations = new List<SelectListItem>();
@@ -120,27 +119,27 @@ namespace Msr.Services.ActualParts.ViewModels
             }).OrderBy(o => o.Text).ToList();
             ListLocations.Insert(0, new SelectListItem { Text = @"Select Location", Value = "" });
 
-            ////ListCurOwners = actualPartsService.GetActualPartCompanies().Select(x => new SelectListItem
-            ////{
-            ////    Text = x.Name,
-            ////    Value = x.Id.ToString()
-            ////}).OrderBy(o => o.Text).ToList();
+            ListCurOwners = actualPartsService.GetActualPartCompanies().Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.Id.ToString()
+            }).OrderBy(o => o.Text).ToList();
             ListCurOwners.Insert(0, new SelectListItem { Text = @"Select Owner", Value = "" });
 
-            ////ListPersons = userService.GetPeoplesQueryable().ToList().Select(x => new SelectListItem
-            ////{
-            ////    Text = x.FullName,
-            ////    Value = x.ObjectId.ToString()
-            ////}).OrderBy(o => o.Text).ToList();
+            ListPersons = userService.GetPeoplesQueryable().ToList().Select(x => new SelectListItem
+            {
+                Text = x.FullName,
+                Value = x.ObjectId.ToString()
+            }).OrderBy(o => o.Text).ToList();
             ListPersons.Insert(0, new SelectListItem { Text = @"Select Responsible Person", Value = "" });
 
-            ////ListProducts = productService.GetProductsQueryable().ToList().Select(x => new SelectListItem
-            ////{
-            ////    Text = x.Name,
-            ////    Value = x.ObjectId.ToString()
-            ////}).OrderBy(o => o.Text).ToList();
+            ListProducts = productService.GetProductsQueryable().ToList().Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.ObjectId.ToString()
+            }).OrderBy(o => o.Text).ToList();
 
-            ////Products = actualPartsService.GetActualpartProductsInstalled(id: Id).ToList();
+            Products = actualPartsService.GetActualpartProductsInstalled(id: Id).ToList();
 
             ListAPStatus = new List<SelectListItem>
             {

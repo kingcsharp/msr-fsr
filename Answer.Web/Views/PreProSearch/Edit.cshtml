@@ -1,0 +1,230 @@
+﻿@model Msr.Services.PrePro.ViewModel.ProcedurePreProViewModel
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+@using (Html.BeginForm("Create", "PreProSearch", FormMethod.Post, new { @class = "form form-horizontal partCreate" }))
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>SavePrePro</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            <label class="control-label col-md-2" for="Title">Base Start on Counter</label>
+            <div class="col-md-5">
+                @Html.DropDownListFor(model => model.START_ON_COUNTER, Model.Base_Start_on_Counter, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.START_ON_COUNTER, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2" for="Title">Estimated Step Duration</label>
+            <div class="col-md-5">
+                @Html.EditorFor(model => model.DURATION, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.DURATION, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2" for="Title">Step Duration Type</label>
+            <div class="col-md-5">
+                @Html.DropDownListFor(model => model.DURATION_TYPE, Model.Step_Duration_Type, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.DURATION_TYPE, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+     
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.STEP_TEXT, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-5">
+                @Html.TextAreaFor(model => model.STEP_TEXT, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.STEP_TEXT, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2" for="Title">SYSTEM TASK</label>
+            <div class="col-md-5">
+                @Html.DropDownListFor(model => model.SYSTEM_TASK, Model.SYSTEM_TASKS, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.SYSTEM_TASK, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ReferenceProcs, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-5">
+                <div style="width: 96%; float: left;">
+                    @Html.ListBoxFor(m => m.ReferenceProcs, Model.ListProcFiles, new { @class = "form-control submitselect", multiple = "multiple" })
+                    @Html.ValidationMessageFor(model => model.ReferenceProcs, "", new { @class = "text-danger" })
+                </div>
+                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceProcs" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceProcs"><i class="icon fa fa-trash"></i></span> </div>
+            </div>
+        </div>
+
+
+        @*<div class="form-group">
+            <label class="control-label col-md-2" for="Title">Refrence Verbs</label>
+            <div class="col-md-5">
+                @Html.DropDownListFor(model => model.REFERENCE_VERB, Model.Reference_Verb, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.REFERENCE_VERB, "", new { @class = "text-danger" })
+            </div>
+        </div>*@
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.REFERENCE_OBJECT, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-5">
+                <div style="width: 96%; float: left;">
+                    @Html.ListBoxFor(m => m.REFERENCE_OBJECT,Model.REFERENCE_OBJECTS,  new { @class = "form-control submitselect" })
+                    @Html.ValidationMessageFor(model => model.REFERENCE_OBJECT, "", new { @class = "text-danger" })
+                </div>
+                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="REFERENCE_OBJECT" data-toggle="modal" data-target="#select-objects"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="REFERENCE_OBJECT"><i class="icon fa fa-trash"></i></span> </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PictureFiles, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-5">
+                <div style="width: 96%; float: left;">
+                    @Html.ListBoxFor(m => m.PictureFiles, Model.ListPictureRefFiles, new { @class = "form-control submitselect", multiple = "multiple" })
+                </div>
+                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="PictureFiles" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="PictureFiles"><i class="icon fa fa-trash"></i></span>  </div>
+            </div>
+        </div>
+
+       
+    
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.REFERENCE_THEORIES, htmlAttributes: new { @class = "control-label col-md-2" })
+
+            <div class="col-md-5">
+                <div style="width: 96%; float: left;">
+                    @Html.ListBoxFor(m => m.REFERENCE_THEORIES, Model.ListReferenceTheories, new { @class = "form-control submitselect", multiple = "multiple" })
+                </div>
+                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="REFERENCE_THEORIES" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="REFERENCE_THEORIES"><i class="icon fa fa-trash"></i></span>  </div>
+            </div>
+        </div>
+        
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.COMMENTS, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-5">
+                @Html.EditorFor(model => model.COMMENTS, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.COMMENTS, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div style="margin-left:5%;">
+    @Html.ActionLink("Back to List", "Index")
+</div>
+@section scripts
+{
+
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+    <script src="~/assets/js/grids/comman.js"></script>
+    <script>
+
+   
+
+        //function selectFormatter(cellvalue, options, rowObject) {
+
+        //    var html = "";
+
+        //    html = '<input class="selected-file" type="checkbox" onclick="getRecord(this)" value="' + cellvalue + '|' + rowObject.Name + '" />';
+
+        //    return html;
+        //}
+        function removeOldFile(e) {
+
+            var control = $(e).closest(".modal-body").find('#target-control-id').val();
+            $('#' + control).empty();
+        };
+        function getRecord(e) {
+            removeOldFile(e);
+            SelectlocationID();
+            $('.closeClick').click();
+        }
+
+        function SelectlocationID() {
+
+            $(".selected-file").each(function (Index) {
+
+                if ($(this).is(":checked")) {
+
+                    var ids = $(this).val().split('|');
+
+                    var callBackId = $(this).closest(".modal-body").find('#target-control-id').val();
+                    var options = $('#' + callBackId + '')[0].options;
+
+                    var optionsArray = $.map(options, function (elem) {
+                        return (elem.value);
+                    });
+
+                    if (optionsArray.length > 0) {
+
+                        if ($.inArray(ids[0], optionsArray) != -1) {
+                            // found it
+                        }
+                        else {
+
+                            $('#' + callBackId + '').append($('<option></option>').val(ids[0]).html(ids[1]));
+                            $('#' + callBackId + ' option').prop('selected', true);
+
+                        }
+
+                    }
+                    else {
+                        $('#' + callBackId + '').append($('<option></option>').val(ids[0]).html(ids[1]));
+                        $('#' + callBackId + ' option').prop('selected', true);
+                    }
+                }
+
+            });
+            $('.closeClick').click();
+
+        }
+
+
+
+
+
+
+        $('.deletefiles').click(function () {
+
+            var callBackId = $(this).data('call-back-id');
+
+            eModal.confirm('Do you really want to Remove ' + callBackId + ' ?', 'Confirmation delete')
+                .then(confirmCallback, optionalCancelCallback);
+
+            function confirmCallback() {
+                console.log("ok")
+                $('#' + callBackId + ' option:selected').remove();
+            }
+            function optionalCancelCallback() {
+                console.log("cancel")
+            }
+
+        })
+    </script>
+
+
+}
+
+

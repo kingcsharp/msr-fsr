@@ -1,8 +1,10 @@
 ﻿CREATE VIEW dbo.Portal_DocumentsView
 AS
 SELECT DISTINCT 
-                         SPECIAL_ROOT AS SpecialRoot, SPECIAL_ID AS SpecialID, ID AS Id, OBJECT_ID AS ObjectId, SECURITY_LEVEL AS SecurityLevel, CREATING_DEPT AS CreatingDept, OBJ_ID AS ObjId, LOCKED_BY AS LockedBy, 
-                         CREATED_BY AS CreatedBy, ROOT AS Root, CREATING_CO AS CreatingCo, NAME AS Name, CREATING_CO_NAME AS CreatingCoName, DEPT_NAME AS DeptName, REV AS Rev, STATUS AS Status, 
-                         LOCKED_BY_NAME AS LockedByName, SECURITY_NAME AS SecurityName, APPROVAL_DATE AS ApprovalDate,
-						 '' AS Comments
-FROM            dbo.A_O_THEORY_WITH_PARAGRAPHS
+                         tp.SPECIAL_ROOT AS SpecialRoot, tp.SPECIAL_ID AS SpecialID, tp.ID, tp.OBJECT_ID AS ObjectId, tp.SECURITY_LEVEL AS SecurityLevel, tp.CREATING_DEPT AS CreatingDept, tp.OBJ_ID AS ObjId, tp.LOCKED_BY AS LockedBy, 
+                         tp.CREATED_BY AS CreatedBy, tp.ROOT, tp.CREATING_CO AS CreatingCo, tp.NAME, tp.CREATING_CO_NAME AS CreatingCoName, tp.DEPT_NAME AS DeptName, tp.REV, tp.STATUS, tp.LOCKED_BY_NAME AS LockedByName, 
+                         tp.SECURITY_NAME AS SecurityName, tp.APPROVAL_DATE AS ApprovalDate, t.COMMENTS
+FROM            dbo.A_O_THEORY_WITH_PARAGRAPHS AS tp INNER JOIN
+                         dbo.A_O_THEORY AS t ON tp.OBJ_ID = t.OBJ_ID
+
+GO

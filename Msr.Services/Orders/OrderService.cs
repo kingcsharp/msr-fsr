@@ -470,7 +470,7 @@ namespace Msr.Services.Orders
                     detailsResponse.TaskEditDataResult.Description = detailsResponse.TaskEditDataResult.Description.Replace("<<bb>>", "<br/><h4>").Replace("<</bb>>", "</h4>").Replace("<<nl/>>", "<br/>");
                 }
 
-                detailsResponse.TaskRunningTimer = _dbContext.TaskLogs.SingleOrDefault(x => x.TaskId == stepId.ToString());
+                detailsResponse.TaskRunningTimer = _dbContext.TaskLogs.SingleOrDefault(x => x.TaskId == stepId.ToString() && x.EndTime == null);
 
                 var p1 = new DynamicParameters();
 

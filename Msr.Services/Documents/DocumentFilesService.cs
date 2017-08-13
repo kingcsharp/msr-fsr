@@ -2,14 +2,10 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Msr.Models.Common;
 using Msr.Repositories;
-using System.Data.Entity;
 
-
-namespace Msr.Infrastructure.Common
+namespace Msr.Services.Documents
 {
     public class DocumentFilesService
     {
@@ -21,7 +17,7 @@ namespace Msr.Infrastructure.Common
         }
         public List<SelectFile> GetSelectedFiles(string id, string type)
         {
-            var objID = new SqlParameter("@objID", id);
+            var objID = new SqlParameter("@objID", id == null ? "0" : id);
             var selecttype = new SqlParameter();
             if (type == null)
             {

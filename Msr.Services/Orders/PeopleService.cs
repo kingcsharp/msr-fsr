@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Msr.Infrastructure.Helpers;
+using Msr.Models.People;
 using Msr.Models.Users;
 using Msr.Repositories;
 using Msr.Services.Orders.Messaging;
@@ -85,6 +86,10 @@ namespace Msr.Services.Orders
            }
 
            return result;
+        }
+        public IQueryable<PeopleObjectView> GetPeople()
+        {
+            return _dbContext.PeopleObjectViews;
         }
     }
 }
