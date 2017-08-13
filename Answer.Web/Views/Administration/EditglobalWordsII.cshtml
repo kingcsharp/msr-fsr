@@ -1,18 +1,29 @@
 ﻿@model Answer.Web.ViewModel.Administration.ModuleAccessViewViewModel
+<div class="container-fluid">
+    <div class="side-body padding-top">
+        <div class="row">
+            @using (Html.BeginForm("UpdateGlobalSettings", "Administration", FormMethod.Post, new { @class = "form form-horizontal", role = "form" }))
+            {
+                for (int i = 0; i < Model.GlobalSettings.Count; i++)
+                {
+                    <div class="form-group">
+                        <label class="col-lg-6 control-label">
+                            @Model.GlobalSettings[i].Id
+                            @Html.HiddenFor(x => Model.GlobalSettings[i].Id)
+                        </label>
+                        <div class="col-lg-6">
+                            @Html.TextBoxFor(x => Model.GlobalSettings[i].Value)
+                        </div>
+                    </div>
+                }
 
-@{
-    Layout = null;
-}
-
-<!DOCTYPE html>
-
-<html>
-<head>
-    <title>title</title>
-</head>
-<body>
-<div>
-      
+                <div class="form-group">
+                    <label class="col-lg-6 control-label"></label>
+                    <div class="col-lg-6">
+                        <button type="submit" class="btn-success">Save</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
 </div>
-</body>
-</html>

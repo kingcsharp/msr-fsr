@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Security.Permissions;
+using System.Web;
 using System.Web.Mvc;
+using System.Xml;
 using Msr.Models.Administration;
 using Msr.Repositories;
 using Msr.Services.Administration.Messages;
@@ -11,6 +15,7 @@ namespace Msr.Services.Administration
 {
     public class AdministrationService
     {
+        private const string AppDataGlobalsettingsXml = @"../App_Data/GlobalSettings.xml";
         private readonly MsrDbContext _dbContext;
 
         public AdministrationService()
@@ -190,5 +195,43 @@ namespace Msr.Services.Administration
             return result;
         }
 
+        public List<GlobalSettingsViewModel> ReadGlobalSettings()
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.Load(HttpContext.Current.Server.MapPath(AppDataGlobalsettingsXml));
+            XmlNode rootNode = doc.DocumentElement?.SelectSingleNode("/txt");
+            List<GlobalSettingsViewModel> globalSettings = new List<GlobalSettingsViewModel>();
+            if (rootNode?.ChildNodes != null)
+            {
+                globalSettings.AddRange(from XmlNode node in rootNode.ChildNodes
+                    select new GlobalSettingsViewModel
+                    {
+                        Id = node.Attributes["id"]?.InnerText, Value = node.Attributes["value"]?.InnerText
+                    });
+            }
+            return globalSettings;
+        }
+
+        public void UpdateGlobalSettings(List<GlobalSettingsViewModel> globalSettings)
+        {
+            string filePath = HttpContext.Current.Server.MapPath(AppDataGlobalsettingsXml);
+            XmlDocument xmlDoc = new XmlDocument();
+            XmlNode rootNode = xmlDoc.CreateElement("txt");
+            xmlDoc.AppendChild(rootNode);
+
+            foreach (var globalSetting in globalSettings)
+            {
+                XmlNode userNode = xmlDoc.CreateElement("textString");
+                XmlAttribute idAttribute = xmlDoc.CreateAttribute("id");
+                idAttribute.Value = globalSetting.Id;
+                userNode.Attributes.Append(idAttribute);
+                XmlAttribute valueAttribute = xmlDoc.CreateAttribute("value");
+                valueAttribute.Value = globalSetting.Value;
+                userNode.Attributes.Append(valueAttribute);
+                rootNode.AppendChild(userNode);
+            }
+
+            xmlDoc.Save(filePath);
+        }
     }
 }

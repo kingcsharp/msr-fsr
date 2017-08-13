@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using Msr.Services.Administration.Messages;
+using Msr.Services.Administration.ViewModels;
 using Msr.Services.Companies;
 using Msr.Services.Roles;
 
@@ -16,6 +17,8 @@ namespace Answer.Web.ViewModel.Administration
         }
 
         public List<ModuleAccessResult> CompaniesToView { get; set; }
+
+        public List<GlobalSettingsViewModel> GlobalSettings { get; set; }
 
         public List<SelectListItem> Roles { get; set; }
 

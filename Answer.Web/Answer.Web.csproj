@@ -235,6 +235,7 @@
     <Compile Include="ViewModel\Wip\WipListViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\GlobalSettings.xml" />
     <Content Include="assets\components\ace\ace\ace.min.js" />
     <Content Include="assets\components\ace\ace\ext-beautify.js" />
     <Content Include="assets\components\ace\ace\ext-chromevox.js" />
@@ -830,7 +831,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
     <Folder Include="assets\css\dropzone\" />
     <Folder Include="assets\js\dropzone\" />
     <Folder Include="ViewModel\Images\" />

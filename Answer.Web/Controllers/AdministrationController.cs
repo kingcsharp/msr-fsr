@@ -268,11 +268,22 @@ namespace Answer.Web.Controllers
             var vm = new ModuleAccessViewViewModel();
 
             vm.CompaniesToView = _administrationService.GeModuleAccess();
+            vm.GlobalSettings = _administrationService.ReadGlobalSettings();
 
             vm.SetUp(new RoleService());
 
             return View(vm);
         }
 
+        [HttpPost]
+        public ActionResult UpdateGlobalSettings(List<GlobalSettingsViewModel> globalSettings)
+        {
+            if (globalSettings.Any())
+            {
+                _administrationService.UpdateGlobalSettings(globalSettings);
+            }
+
+            return RedirectToAction("EditglobalWordsII");
+        }
     }
 }
