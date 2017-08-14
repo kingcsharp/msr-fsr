@@ -28,6 +28,10 @@ namespace Answer.Web.Controllers
 
             var totalRows = taskService.GetPartsQueryable();
 
+            var defaultStatusList = new[] {"CREATING", "DENIED", "APPROVED", "APPROVED_BUT_REVISING", "APPROVED_BUT_DELETING"};
+
+            totalRows = totalRows.Where(x => defaultStatusList.Contains(x.Status) && x.CompanyPartNumber != null);
+
             if (param.where != null && param.where.rules.Any())
             {
                 foreach (var rule in param.where.rules)

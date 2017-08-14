@@ -9,8 +9,15 @@ using System.Web.Mvc;
 
 namespace Answer.Web.Controllers
 {
-    public class RegionsController : Controller
+    public class RegionsController : BaseController
     {
+        private readonly RegionService _regionService;
+
+        public RegionsController()
+        {
+            _regionService = new RegionService();
+        }
+
         public ActionResult Index()
         {
             var viewModel = new EngineeringViewModel();
@@ -99,7 +106,7 @@ namespace Answer.Web.Controllers
             if (ModelState.IsValid)
             {
                 //Need to dynamic 
-                model.NTLogin = "1618";
+                model.LogId = GetCurrentUser().Id;
 
                 var response = regionService.Create(model: model);
 
@@ -137,14 +144,11 @@ namespace Answer.Web.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Edit(SaveRegionViewModel model)
         {
-            var regionService = new RegionService();
-
             if (ModelState.IsValid)
             {
-                //Need to dynamic 
-                model.NTLogin = "1618";
+                model.LogId = GetCurrentUser().Id;
 
-                var response = regionService.Save(model);
+                var response = _regionService.Save(model);
 
                 if (response)
                 {
@@ -165,15 +169,39 @@ namespace Answer.Web.Controllers
         {
             var regionService = new RegionService();
 
-            if (!string.IsNullOrWhiteSpace(id))
+            var model = regionService.GetById(id);
+
+            var vm = new DeleteRegionViewModel();
+
+            vm.MapFromDto(model);
+
+            vm.SetUp();
+
+            return View(vm);
+        }
+
+        [HttpPost]
+        public ActionResult Delete(DeleteRegionViewModel model)
+        {
+            if (ModelState.IsValid)
             {
+                model.LoginId = GetCurrentUser().Id;
 
+                var response = _regionService.Delete(model);
 
-                return RedirectToAction("Index");
+                if (response)
+                {
+                    TempData["SuccessMessage"] = "Region has been updated successfully.";
+
+                    return RedirectToAction("Index");
+                }
+
+                TempData["ErrorMessage"] = "Something went wrong.";
+
+                return View(model);
             }
 
-            return RedirectToAction("Index");
-
+            return View(model);
         }
     }
 }

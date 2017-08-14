@@ -20,9 +20,6 @@ namespace Msr.Services.Locations.ViewModels
             ListReferenceFiles = new List<SelectListItem>();
             ListPictureFiles = new List<SelectListItem>();
             ListReferenceTheories = new List<SelectListItem>();
-            //ReferenceFiles = new List<string>();
-            //PictureFiles = new List<string>();
-            //ReferenceTheories = new List<string>();
             ListExternalEqualParts = new List<SelectListItem>();
             ListInternalEqualParts = new List<SelectListItem>();
             ListSpecialCustomers = new List<SelectListItem>();

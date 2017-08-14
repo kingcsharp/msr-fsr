@@ -1,15 +1,18 @@
 ﻿using System.Web.Mvc;
+using Msr.Services.Users;
+using Msr.Services.Users.Messages;
 
 namespace Answer.Web.Controllers
 {
     public class BaseController : Controller
     {
-
-        public string GetUserId()
+        public LoggedUserIdResult GetCurrentUser()
         {
-            ////todo  exec A_SP_PEOPLE_GET_DATA_BY_ID  1618,1618
-            Session["UserId"] = 1618;
-            return Session["UserId"].ToString();
-        }  
+            var userService = new UserService();
+
+            var userId = HttpContext.User.Identity.Name;
+
+            return userService.GetUserId(userId);
+        }
     }
 }

@@ -1,7 +1,7 @@
-﻿@model Msr.Services.Locations.ViewModels.SaveLocationVM
+﻿@model Msr.Services.Locations.ViewModels.SaveLocationViewModel
 
 @{
-    ViewBag.Title = "View";
+    ViewBag.Title = "Edit Location";
 }
 
 
@@ -219,11 +219,10 @@
 
             var callBackId = $(this).data('call-back-id');
 
-            eModal.confirm('Do you really want to Remove ' + callBackId + ' ?', 'Confirmation delete')
+            eModal.confirm('Do you really want to Remove ' + callBackId + '?', 'Confirmation delete')
                 .then(confirmCallback, optionalCancelCallback);
 
             function confirmCallback() {
-                console.log("ok")
                 $('#' + callBackId + ' option:selected').remove();
             }
             function optionalCancelCallback() {

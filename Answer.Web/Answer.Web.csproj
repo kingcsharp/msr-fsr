@@ -1040,6 +1040,7 @@
     <Content Include="Views\Administration\EditEmailWords.cshtml" />
     <Content Include="Views\Procedures\View.cshtml" />
     <Content Include="Views\Procedures\AssignProcedure.cshtml" />
+    <Content Include="Views\Regions\Delete.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

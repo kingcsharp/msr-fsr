@@ -2788,5 +2788,6 @@
     <Build Include="dbo\Stored Procedures\Portal\Portal_GetProcedureRoles.sql" />
     <Build Include="dbo\Views\Portal\Portal_ActualPartsViewHistory.sql" />
     <Build Include="dbo\Tables\Portal_Task_Logs.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_GetCurrentUser.sql" />
   </ItemGroup>
 </Project>

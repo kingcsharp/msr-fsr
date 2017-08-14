@@ -1,13 +1,14 @@
-﻿@model Msr.Services.Regions.ViewModels.SaveRegionViewModel
+﻿@model Msr.Services.Regions.ViewModels.DeleteRegionViewModel
+
 @{
-    ViewBag.Title = "Edit Region";
+    ViewBag.Title = "Delete Region";
 }
 
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="row">
             <h2 class="page-header">
-                Edit Region
+                Delete Region
                 <div class=" pull-right" data-toggle="modal">
                     <!-- Split button -->
                     <div class="btn-group">
@@ -27,19 +28,44 @@
                 <section class="panel">
                     <div class="panel-body bio-graph-info">
                         @Html.Partial("Message")
+
                         @using (Html.BeginForm("Edit", "Regions", FormMethod.Post, new { @class = "form form-horizontal" }))
                         {
                             @Html.AntiForgeryToken()
                             @Html.HiddenFor(model => model.ObjectId)
 
                             <div class="form-group">
-                                @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-3" })
+                                @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-4" })
                                 <div class="col-md-5">
                                     @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
                                     @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
                                 </div>
                             </div>
-                            
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Comment, htmlAttributes: new { @class = "control-label col-md-4" })
+                                <div class="col-md-5">
+                                    @Html.TextAreaFor(model => model.Comment, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Comment, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ApprovalWorflow, htmlAttributes: new { @class = "control-label col-md-4" })
+                                <div class="col-md-5">
+                                    @Html.DropDownListFor(model => model.ApprovalWorflow, Model.WorkflowsList, new { @class = "form-control select" })
+                                    @Html.ValidationMessageFor(model => model.ApprovalWorflow, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.DeleteAllRevisions, htmlAttributes: new { @class = "control-label col-md-4" })
+                                <div class="col-md-5">
+                                    @Html.DropDownListFor(model => model.DeleteAllRevisions, Model.DeleteAllRevisionsList, new { @class = "form-control select" })
+                                    @Html.ValidationMessageFor(model => model.DeleteAllRevisions, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
                             <div class="form-group">
                                 <div class="col-md-offset-2 col-md-10">
                                     <input type="submit" value="Submit" class="btn btn-success" />

@@ -70,8 +70,6 @@ namespace Answer.Web.Controllers
 
         public ActionResult ViewCompanyUsage()
         {
-            var data = _administrationService.ViewCompanyUsage();
-
             return View();
         }
 
@@ -148,6 +146,8 @@ namespace Answer.Web.Controllers
 
                 if (!result.HasErrors())
                 {
+                    TempData["SuccessMessage"] = "Job Assignment has been updated successfully.";
+
                     return RedirectToAction("AssignRoleToJob", new {selectedJobId});
                 }
 
@@ -183,6 +183,8 @@ namespace Answer.Web.Controllers
 
                 if (!result.HasErrors())
                 {
+                    TempData["SuccessMessage"] = "Assign Wscr Closer has been updated successfully.";
+
                     return RedirectToAction("AssignAccRecievableRole");
                 }
 
@@ -216,6 +218,8 @@ namespace Answer.Web.Controllers
 
                 if (!result.HasErrors())
                 {
+                    TempData["SuccessMessage"] = "Assign Companies has been updated successfully.";
+
                     return RedirectToAction("AssignCompaniesToView");
                 }
 
@@ -250,6 +254,8 @@ namespace Answer.Web.Controllers
 
                 if (!result.HasErrors())
                 {
+                    TempData["SuccessMessage"] = "Module Access has been updated successfully.";
+
                     return RedirectToAction("AssignCompaniesToView");
                 }
 
@@ -281,6 +287,8 @@ namespace Answer.Web.Controllers
             if (globalSettings.Any())
             {
                 _administrationService.UpdateGlobalSettings(globalSettings);
+
+                TempData["SuccessMessage"] = "Global words has been updated successfully.";
             }
 
             return RedirectToAction("EditglobalWordsII");
@@ -301,6 +309,7 @@ namespace Answer.Web.Controllers
             if (emailWords.Any())
             {
                 _administrationService.UpdateEmailWords(emailWords);
+                 TempData["SuccessMessage"] = "Email words has been updated successfully.";
             }
 
             return RedirectToAction("EditEmailWords");

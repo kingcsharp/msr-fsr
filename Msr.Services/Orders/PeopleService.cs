@@ -59,8 +59,8 @@ namespace Msr.Services.Orders
                    var id = Guid.NewGuid().ToString();
                    var newUser = new ApplicationUser
                    {
-                       UserName = login,
-                       Id = id,
+                       UserName = user.Login,
+                       Id = user.ObjectId,
                        FirstName = result.Name,
                        LastName = result.LastName,
                        TimeZone = "10000", // dummy id for Answer Users

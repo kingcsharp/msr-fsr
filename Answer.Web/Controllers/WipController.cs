@@ -235,11 +235,11 @@ namespace Answer.Web.Controllers
 
         public ActionResult Details(int? id)
         {
+            var currentUser = GetCurrentUser();
             var orderService = new OrderService();
-            var loggedUserId = User.Identity.GetUserId();
 
             var workItems =  orderService.GetWorkOrderQueryable()
-                               .Where(x => x.RequesteeId == "1618")
+                               .Where(x => x.RequesteeId == currentUser.Id)
                                .OrderByDescending(o => o.DueDate)
                                .ToList();
 

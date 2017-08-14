@@ -177,9 +177,9 @@ namespace Msr.Services.Procedures
 
         public string GetProcedureName(string id)
         {
-            var sql = $"SELECT* FROM A_V_PROCEDURES_APPROVED_DATA WHERE ID ={id}";
+            var sql = $"SELECT NAME FROM A_V_PROCEDURES_APPROVED_DATA WHERE ID ={id}";
 
-            var result = _dbContext.Database.SqlQuery<string>(sql).SingleOrDefault();
+            var result = _dbContext.Database.SqlQuery<string>(sql).FirstOrDefault();
 
             return result;
         }

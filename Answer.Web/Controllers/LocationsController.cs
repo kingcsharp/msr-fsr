@@ -86,7 +86,7 @@ namespace Answer.Web.Controllers
 
         public ActionResult Create()
         {
-            var location = new SaveLocationVM();
+            var location = new SaveLocationViewModel();
 
             location.Setup(new RegionService());
 
@@ -94,7 +94,7 @@ namespace Answer.Web.Controllers
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Create(SaveLocationVM model)
+        public ActionResult Create(SaveLocationViewModel model)
         {
             var locationService = new LocationService();
 
@@ -129,7 +129,7 @@ namespace Answer.Web.Controllers
 
             var model = locationService.GetById(id);
 
-            var location = new SaveLocationVM();
+            var location = new SaveLocationViewModel();
 
             location = location.MapToDto(model: model);
 
@@ -139,7 +139,7 @@ namespace Answer.Web.Controllers
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Edit(SaveLocationVM model)
+        public ActionResult Edit(SaveLocationViewModel model)
         {
             var locationService = new LocationService();
 
@@ -190,7 +190,7 @@ namespace Answer.Web.Controllers
 
             var model = taskService.GetById(id);
 
-            var location = new SaveLocationVM();
+            var location = new SaveLocationViewModel();
 
             location = location.MapToDto(model);
 

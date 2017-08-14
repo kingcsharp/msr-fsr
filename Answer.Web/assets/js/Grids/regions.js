@@ -45,6 +45,15 @@
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                 align: 'center'
             },
+            {
+                label: 'LockedByName',
+                name: 'LockedByName',
+                index: 'LockedByName',
+                colmenu: false,
+                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                align: 'center'
+            },
             { name: 'Actions', index: 'ID', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: RegionEditFormatter, width: 100, align: 'center' }
         ],
         viewrecords: true, // show the current page, data rang and total records on the toolbar
@@ -64,24 +73,7 @@
         key: true,
         ajaxCellOptions: {},
         gridComplete: function () {
-            $('.deleteregion').on('click', function (e) {
-                e.preventDefault();
-
-                var callBackId = $(this).data('call-back-id');
-                var callBackName = $(this).data('call-back-name');
-
-                eModal.confirm('Do you really want to delete ' + callBackName + ' ?', 'Confirmation delete')
-                    .then(confirmCallback, optionalCancelCallback);
-
-                function confirmCallback() {
-                    console.log("ok")
-                    window.location.href = "/Resions/LDelete/" + callBackId
-                }
-                function optionalCancelCallback() {
-                    console.log("cancel")
-                }
-
-            })
+           
         },
     });
     $('#jqGridRegions').navGrid("#jqGridPagerRegions", {

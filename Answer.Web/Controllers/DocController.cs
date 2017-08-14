@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Web;
 using System.Web.Mvc;
@@ -44,10 +45,13 @@ namespace Answer.Web.Controllers
                 var _cloudUploader = new AWSFileHandler();
 
                 var keyName = string.Format("Answer2/{0}-{1}", Guid.NewGuid(), file.FileName);
+                var buketName = ConfigurationManager.AppSettings.Get("AWSBuketName");
 
-                _cloudUploader.UploadToCloud(file, "msrfsr", keyName);
+                _cloudUploader.UploadToCloud(file, buketName, keyName);
 
-                var cloudUrl = string.Format("http://msrfsr.s3.amazonaws.com/{0}", keyName);
+                var baseUrl = ConfigurationManager.AppSettings.Get("AWSURL");
+
+                var cloudUrl = $"{baseUrl}/{keyName}";
 
                 imageModel.Path = cloudUrl;
                 imageModel.ContentType = file.ContentType;

@@ -1,12 +1,1075 @@
 <txt>
-  <textString id="_editForecast" value="EDIT FORECAST2" />
-  <textString id="_MainMenu" value="MAIN MENU3" />
-  <textString id="1" value="Qty 1 - L1 Stock level4" />
-  <textString id="2-Footer" value="2-Footer2225" />
-  <textString id="A_ACCOUNTS_HISTORY" value="ACCOUNTS HISTORY6" />
-  <textString id="A_COMPANIES_HISTORY" value="A Company History Change7" />
-  <textString id="A_MAIN_MENU" value="Main Menu123" />
-  <textString id="A_PROCEDURES_HISTORY" value="PROCEDURES HISTORY8" />
-  <textString id="A_SERVICE_CALL_SEARCH_#FFD3BE_TEXT" value="Boss19" />
-  <textString id="_Abc" value="DEF" />
+  <textString id="#" value="ID" />
+  <textString id="_editForecast" value="EDIT FORECAST" />
+  <textString id="_MainMenu" value="MAIN MENU" />
+  <textString id="1" value="Qty 1 - L1 Stock level" />
+  <textString id="2-Footer" value="2-Footer" />
+  <textString id="A_ACCOUNTS_HISTORY" value="ACCOUNTS HISTORY" />
+  <textString id="A_COMPANIES_HISTORY" value="A Company History Change" />
+  <textString id="A_MAIN_MENU" value="Main Menu" />
+  <textString id="A_PROCEDURES_HISTORY" value="PROCEDURES HISTORY" />
+  <textString id="A_SERVICE_CALL_SEARCH_#FFD3BE_TEXT" value="Boss" />
+  <textString id="A_SERVICE_CALL_SEARCH_RGB(192,192,192)_TEXT" value="Approved By Customer Review Group" />
+  <textString id="A_SERVICE_CALL_SEARCH_RGB(204,204,255)_TEXT" value="Customer Review Group" />
+  <textString id="A_SERVICE_CALL_SEARCH_RGB(204,255,204)_TEXT" value="Contractor Accounts Receivable" />
+  <textString id="A_SERVICE_CALL_SEARCH_RGB(204,255,255)_TEXT" value="Customer Accounts Payable Group" />
+  <textString id="A_SERVICE_CALL_SEARCH_RGB(255,255,204)_TEXT" value="Worker" />
+  <textString id="A_TASK_SEARCH_#FFD3BE_TEXT" value="Created By Originator (not requested yet)" />
+  <textString id="A_TASK_SEARCH_#FFFFFF_TEXT" value="Accepted By Requestee (Work In Progress)" />
+  <textString id="A_TASK_SEARCH_RGB(192,192,192)_TEXT" value="Closed By Originator" />
+  <textString id="A_TASK_SEARCH_RGB(204,255,204)_TEXT" value="Work Completed (not reviewed by originator yet)" />
+  <textString id="A_TASK_SEARCH_RGB(204,255,255)_TEXT" value="Requested (not accepted yet)" />
+  <textString id="ABOVE" value="ABOVE Spec --&gt;" />
+  <textString id="Accept" value="Accept" />
+  <textString id="Accept this task" value="Accept this task." />
+  <textString id="ACCEPTED" value="Accepted" />
+  <textString id="ACCEPTED_BY_CUSTOMER" value="ACCEPTED BY CUSTOMER" />
+  <textString id="Account ID:" value="Account #:" />
+  <textString id="Account Invoice List" value="ACCOUNTINVOICELIST" />
+  <textString id="Account Invoice View" value="INVOICE" />
+  <textString id="Account Name:" value="Account Name (MTTN) :" />
+  <textString id="Account Supplying Department:" value="Supplier on Purchasing Account:" />
+  <textString id="Account Type:" value="Account Type:" />
+  <textString id="Accounts" value="Purchase Orders (Accounts)" />
+  <textString id="Act Inv Item Type" value="Item Type" />
+  <textString id="Action Plan" value="TASKS" />
+  <textString id="actionPlanPreSearchNoteTitle" value="Note/s:" />
+  <textString id="actionPlanPreSearchPageNote1" value="You’re allowed to see tasks: 1) assigned to you, 2) assigned by you, 3) your company &amp; security clearance level are allowed to see, and 4) requestor specified you personally to see." />
+  <textString id="actionPlanPreSearchPageNote2" value="If the task is brown, it is due in &lt; 1 Week. If the task is red, it is past due." />
+  <textString id="actionPlanPreSearchPageNote3" value="Email notifications are automatically sent when a task is: submitted or taken back (to requestee &amp; people specified to see); forwarded or deleted (to requestor, requestee, &amp; people specified to see); accepted, rejected, reassigned, or completed (to requestor)." />
+  <textString id="actionPlanPreSearchPageNote4" value="-" />
+  <textString id="Actions" value="NCR Actions" />
+  <textString id="ACTIVE" value="Active" />
+  <textString id="Actual Part" value="Actual Part" />
+  <textString id="Actual Part Name" value="Actual Part Name" />
+  <textString id="Actual Parts" value="Actual Part - Physical Asset / Part / Tools (S/N / Designator)" />
+  <textString id="Actual Parts Task Page" value="ACTUAL PARTS TASK PAGE" />
+  <textString id="Actual Start Date" value="Actual Start Date" />
+  <textString id="Actual Stop Date" value="Actual Stop Date" />
+  <textString id="ACTUAL_PART FILES" value="REFENCE FILES ATTACHED TO ACTUAL PART" />
+  <textString id="actualPartFindMyCall.asp_Standard Search Filter" value="Actual Part Find My Call" />
+  <textString id="add" value="Add." />
+  <textString id="Add Date" value="Add Date" />
+  <textString id="Add Labor to Step" value="View / Add Step Labor (Role)" />
+  <textString id="Add Monitor to Step" value="View / Add Step Monitor" />
+  <textString id="Add New" value="Add New Meeting" />
+  <textString id="Add New Favorites Group" value="Add New Favorites Group" />
+  <textString id="Add New Task" value="Add New Task" />
+  <textString id="Add to List" value="Add to List" />
+  <textString id="addChildLocationButton" value="Add Child Location" />
+  <textString id="AddDocumentsFromYourPC" value="Upload a file from your PC" />
+  <textString id="Added By" value="Add Date" />
+  <textString id="Add-Edit Applicable objects" value="Add Applicable Objects" />
+  <textString id="AddNewNote" value="Create Note:" />
+  <textString id="AddProcedure" value="NCR" />
+  <textString id="Admin Screen" value="Admin" />
+  <textString id="ADMIN_SCREEN_MainMenu" value="ADMIN" />
+  <textString id="Administration" value="ANSWER Administration" />
+  <textString id="advanced Filter Options" value=" Advanced Filter Options" />
+  <textString id="ADVERSTISE_PUBLICLY" value="Advertise Publicly" />
+  <textString id="Advertise Publicly On System Home Page:" value="Advertise Publicly On System Home Page:" />
+  <textString id="Advertising Start Date:" value="Advertising Start Date:" />
+  <textString id="Advertising Stop Date:" value="Advertising Stop Date:" />
+  <textString id="ADVERTISING_START_DATE" value="Advertising Start Date" />
+  <textString id="ADVERTISING_STOP_DATE" value="Advertisement Stop Date" />
+  <textString id="ago" value=" Days ago" />
+  <textString id="ago, to the day" value=" Days ago, to...  " />
+  <textString id="AII Item ID" value="Puchase Item #" />
+  <textString id="AII Purchase Number" value="Purchase #" />
+  <textString id="All" value="All" />
+  <textString id="ALL" value="All" />
+  <textString id="ALL_DATA" value="Resume:" />
+  <textString id="ALL_FILLED" value="Purchase Filled" />
+  <textString id="ALL_ITEMS_FILLED" value="All Items Filled" />
+  <textString id="ALL_PRIORITIES" value="ALL Priorities" />
+  <textString id="ALL_PROGRESS_STATUSES" value="All" />
+  <textString id="ALL_PURCHASE_ITEMS" value="All Line Items On Purchase Debited" />
+  <textString id="ALL_QUOTED_WAIT_ACCEPTANCE" value="Waiting customer acceptance of supplier response/s." />
+  <textString id="ALL_QUOTES_ACCEPTED" value="Ready to purchase." />
+  <textString id="ALL_TASKS_ANY_DUE_DATE" value="ALL TASKS ANY DUE DATE" />
+  <textString id="Allow Responses" value="Allow Responses" />
+  <textString id="ALLOWED" value="Response Allowed" />
+  <textString id="Already Held" value=" Already Held" />
+  <textString id="AMT Invoiced" value="Amt. Invoiced" />
+  <textString id="Amt of Inv Items" value="Amount" />
+  <textString id="Ancestor ID:" value="Ancestor ID:" />
+  <textString id="ANSWER Administration" value="ANSWER ADMINISTRATION" />
+  <textString id="ANSWER_NOTE" value="ANSWER NOTE" />
+  <textString id="ANY LEVEL" value="All" />
+  <textString id="Any Status" value="Either" />
+  <textString id="ANY_STATUS" value="All" />
+  <textString id="Anything" value="Anything" />
+  <textString id="ap_available" value="Available" />
+  <textString id="ap_DNR" value="Diagnose &amp; Repair Filter" />
+  <textString id="ap_in_fill" value="In Call" />
+  <textString id="Applicable Object Original Location" value="Applicable Object Original Location" />
+  <textString id="Approval Date" value="Approval Date" />
+  <textString id="Approval Groups" value="APPROVAL GROUPS" />
+  <textString id="Approval Stages" value="APPROVAL STAGES" />
+  <textString id="Approval Status" value="Approval Status" />
+  <textString id="Approval WorkFlows" value="APPROVAL WORKFLOWS" />
+  <textString id="approval_A_ACCOUNTS_HISTORY" value=" ACCOUNT HISTORY" />
+  <textString id="approval_A_COMPANIES_HISTORY" value="A Company History Change" />
+  <textString id="approval_A_PROCEDURES_HISTORY" value="Procedure " />
+  <textString id="APPROVED" value="Approved" />
+  <textString id="Approved but being deleted" value="Approved But Being Deleted" />
+  <textString id="Approved but being revised" value="Approved But Being Revised" />
+  <textString id="Approved By:" value="Approved By:" />
+  <textString id="APPROVED_BUT_REVISING" value="Approved But Being Revised" />
+  <textString id="APPROVED_BY_CUSTOMER" value="Waiting response from supplier/s." />
+  <textString id="Are You Sure You WANT TO ACCEPT THIS TASK?" value="Are You Sure You WANT TO ACCEPT THIS TASK?" />
+  <textString id="Are you sure you want to close this task?" value="Are you sure you want to complete this task &amp; notify requestor?" />
+  <textString id="Are You Sure you want to delete it?" value="Are You Sure you want to delete it?" />
+  <textString id="Are You Sure You WANT TO Reject THIS TASK?" value="Are You Sure You WANT TO Reject THIS TASK?" />
+  <textString id="Are You Sure you want to take it back" value="Are You Sure you want to take it back?" />
+  <textString id="Are you sure?" value="Are you sure?  Locking prevents others from editing.  Checking out creates the next revision for you to edit." />
+  <textString id="AREA" value="Process Area:" />
+  <textString id="Assign Accounts receivable roles" value="Assign accounts receivable Role" />
+  <textString id="Assign Now" value="Assign Now" />
+  <textString id="Assign Role To Job" value="Assign roles to jobs" />
+  <textString id="Assign to people:" value="Assign to people:" />
+  <textString id="assignCompaniesToViewMe" value="ASSIGN COMPANIES TO VIEW ME" />
+  <textString id="assignCompaniesToViewMe_Save and Close" value="Save and Close" />
+  <textString id="assignCompaniesToViewMe_Save and Submit" value="Save and Submit to WF" />
+  <textString id="assignCompaniesToViewMe_Save_Changes" value="Save Changes" />
+  <textString id="Assignee" value="Asignee" />
+  <textString id="Assignee Name" value="Assignee:" />
+  <textString id="Assignee Status" value="Assigned User Status:" />
+  <textString id="Assignee:" value="Assignee:" />
+  <textString id="assignNewsProcedure" value="ASSIGN NEW PRODCEDURE" />
+  <textString id="assignNewsProcedure_Save and Submit" value="Save and Submit" />
+  <textString id="assignRoleToJob" value="ASSIGN ROLES TO JOBS" />
+  <textString id="AttachFile" value="Files" />
+  <textString id="Attaching File Directions" value="Files must be &lt; 10MB.  There are 3 upload areas so you can move on to the next file without waiting for a large file to finish uploading." />
+  <textString id="Attention:" value="Atttention:" />
+  <textString id="AUTHOR" value="Author" />
+  <textString id="Bark LOGO Bark" value="Return to main menu." />
+  <textString id="Base Start on Counter" value="Base Start On Counter?:" />
+  <textString id="Batcher" value="BATCHER" />
+  <textString id="BELOW" value="BELOW Spec --&gt; " />
+  <textString id="BETWEEN" value="BETWEEN Spec --&gt;" />
+  <textString id="Bill To:" value="Billing To:" />
+  <textString id="Blanket PO" value="Blanket PO" />
+  <textString id="blue" value="Blue" />
+  <textString id="bold" value="Bold" />
+  <textString id="BOSS" value="BOSS" />
+  <textString id="BUDGETARY_ONLY" value="Budgetary only" />
+  <textString id="bullet" value="Bullet" />
+  <textString id="Business Purposes:" value="Business Purposes:" />
+  <textString id="calculate" value="Calculate" />
+  <textString id="CALL 911 FOR HELP" value="For assistance using this application, call +1 (703) 840-3040 or click here to send us a message." />
+  <textString id="CALL FOR HELP" value="For assistance using this application, call +1 (703) 840-3040 or click here to send a message." />
+  <textString id="Can not forward to a group and a person" value="Cannot forward to a group and a person" />
+  <textString id="Cancel" value="Cancel" />
+  <textString id="Cancel and roll back" value="Cancel and Rollback procedure" />
+  <textString id="CancelUnfinishedSteps" value="Cancel Remaining Steps" />
+  <textString id="Change" value="Change" />
+  <textString id="Change Screen..." value="Change Screen..." />
+  <textString id="Check All" value="Check All" />
+  <textString id="Check out This" value="Lock &amp; check out to me for edit." />
+  <textString id="Checked out to" value="Checked Out To" />
+  <textString id="Choose a file, enter a description and hit upload." value="Select a file from your hard drive &amp; click Upload button.  Enter Description if desired." />
+  <textString id="Choose Quick Add" value="Quick Add..." />
+  <textString id="chooseTypes" value="CHOOSE FORECAST TYPE" />
+  <textString id="Clear All" value="Clear All" />
+  <textString id="ClearDate" value="Remove." />
+  <textString id="Click to add to favorites" value="Add to new or existing favorites group." />
+  <textString id="Click to close all tasks on this purchase item" value="Delete all steps &amp; close this purchase item.  Upgrade is planned to make this more sophisticated. " />
+  <textString id="Click to split this item out and process seperately" value="Click to split this item out and process separately" />
+  <textString id="Click to view and upload files to this part" value="View, add, delete reference files (e.g., digital photos) to the actual part." />
+  <textString id="Click to view and upload files to this task" value="View, add, delete reference files (e.g., traveler) to the overall &quot;procedure&quot; task done to this actual part." />
+  <textString id="Close" value="Close Task" />
+  <textString id="Close The Favorites Window" value="Close This Window" />
+  <textString id="CLOSE_DATE" value="PO Close Date" />
+  <textString id="Closed" value="Closed" />
+  <textString id="CLOSED" value="CLOSED" />
+  <textString id="CO-Department" value="Company / Department" />
+  <textString id="collapse" value="Collapse" />
+  <textString id="Collapse the column" value="Hide column." />
+  <textString id="Color Code By:" value="Color Code:" />
+  <textString id="COLOR_HEADING_A_SERVICE_CALL_SEARCH" value="Color Code:" />
+  <textString id="COLOR_HEADING_A_TASK_SEARCH" value="Color Key" />
+  <textString id="COLOR_HEADING_searchMeetings" value="COLOR HEADING" />
+  <textString id="COLOR_HEADING_searchProjects" value="Key" />
+  <textString id="COLOR_HEADING_theoryColorCodeTable" value="Color Code:" />
+  <textString id="COLOR_HEADING_viewOrgChartColorCodeTitle" value="Legend" />
+  <textString id="Combine and export selected Searches" value="Combine &amp; export selected searches to Excel." />
+  <textString id="Comments" value="Comments:" />
+  <textString id="Companies" value="Companies" />
+  <textString id="COMPANIES ALLOWED TO VIEW" value="Companies Allowed to View" />
+  <textString id="Companies Specified to View" value="Companies Specified to View	" />
+  <textString id="Companies to View" value="Companies to View:" />
+  <textString id="CompaniesHierarchy" value="COMPANIES HIERARCHY" />
+  <textString id="CompaniesMenu" value="COMPANIES" />
+  <textString id="companiesSelect.asp_Standard Search Filter" value="Filter Companies" />
+  <textString id="Company" value="Company" />
+  <textString id="Company department:" value="Company Department:" />
+  <textString id="Company Part Name" value="Part Name :" />
+  <textString id="Company Part Number:" value="Customer Part Number :" />
+  <textString id="Company to View" value="Company to View:" />
+  <textString id="companySelectForecast:" value="Company for Sub Forecast:" />
+  <textString id="Complete" value="Complete" />
+  <textString id="Complete Selected" value="Complete Selected (move to Recieve step)" />
+  <textString id="Completed" value="Completed" />
+  <textString id="Completed " value="Completed" />
+  <textString id="Completed Tasks" value="COMPLETED TASKS" />
+  <textString id="COMPLETED_7_DAYS_AGO" value="Completed 7 Days Ago" />
+  <textString id="Contact Email:" value="Contact Email:	" />
+  <textString id="Contact Name:" value="Contact Name:	" />
+  <textString id="Contact Phone:" value="Contact Phone:	" />
+  <textString id="CONTINUE" value="Continue to next step." />
+  <textString id="Copy Project" value="Copy Project" />
+  <textString id="Copy Search Now" value="Copy Search Now" />
+  <textString id="Copy This" value="Make copy for me to edit." />
+  <textString id="Corrective Action" value="Corrective Action" />
+  <textString id="Create New Excel Report" value="Create New Excel Report" />
+  <textString id="Create New Region" value="Create New Region" />
+  <textString id="Created a new part to fill this." value="Created a new actual part to fill this." />
+  <textString id="Creating" value="Creating (Invoice Opened), Creating, Creating" />
+  <textString id="CREATING" value="Creating" />
+  <textString id="Creating Company:" value="Creating Company" />
+  <textString id="Creating_default" value=", , , , , , , , , , ," />
+  <textString id="CREATION_DATE" value="Creation Date" />
+  <textString id="Cur Location" value="Current Location:" />
+  <textString id="Cur Plan Start Date" value="Current Planned Start Date" />
+  <textString id="Cur Plan Stop Date" value="Current Planned Stop Date" />
+  <textString id="Cur Status" value="Current Physical Status:" />
+  <textString id="Cur Time" value="Local Time:" />
+  <textString id="CURRENT" value="Creating or Approved" />
+  <textString id="Current Leader:" value="Current Leader:" />
+  <textString id="CURRENT LOCATION" value="Current Location" />
+  <textString id="Cust Line Item" value="Line Item" />
+  <textString id="Cust Purchase Number" value="Customer Puchase #:" />
+  <textString id="CUST_NAME" value="Customer" />
+  <textString id="custno" value="Cust Number:" />
+  <textString id="Customer Complaint" value="Customer Complaint" />
+  <textString id="Customer Info" value="Customer Information:" />
+  <textString id="Customer P/N" value="Customer P/N" />
+  <textString id="Customer Part Name" value="Customer Part Number:" />
+  <textString id="Customer Part Number" value="Customer Part Name:" />
+  <textString id="Customer PO" value="Customer PO #" />
+  <textString id="Customer PO number:" value="Customer PO #:" />
+  <textString id="Customer Purch Num" value="Customer Line Item #:" />
+  <textString id="CUSTOMER_AP_GROUP" value="CUSTOMER AP GROUP" />
+  <textString id="Customer_Co" value="Customer Company" />
+  <textString id="CUSTOMER_CO_NAME" value="Customer Company/Dept" />
+  <textString id="CUSTOMER_NAME" value="Customer Name" />
+  <textString id="CUSTOMER_REVIEW_GROUP" value="CUSTOMER REVIEW GROUP" />
+  <textString id="CUSTOMER_ROOT_CO_NAME" value="Customer Root Company" />
+  <textString id="Customer-Item" value="Customer WO Item #" />
+  <textString id="Date" value="Date" />
+  <textString id="Date and Time to start this:" value="Date and Time to start:" />
+  <textString id="Date POSTED" value="Date Posted:" />
+  <textString id="Date Sent" value="Date Sent" />
+  <textString id="DateErrMsg" value="Error with date format" />
+  <textString id="Day" value="Day:" />
+  <textString id="Dear" value="Dear" />
+  <textString id="Decide when step assigned" value="Decide when step assigned" />
+  <textString id="Default Role For Final Inspection (QA Role):" value="Default Role For Final Inspection (QA Role):" />
+  <textString id="Defined at test time" value="Target Defined at test time" />
+  <textString id="Delete file from this actual part" value="Remove obsolete file from this actual part." />
+  <textString id="Delete This" value="Lock &amp; start deletion workflow." />
+  <textString id="delete This Fav Group" value="Delete Fav" />
+  <textString id="Delete this Invoice" value="Delete this invoice" />
+  <textString id="DELETED" value="Obsolete" />
+  <textString id="DeleteProjectCopy" value="Delete Project Copy" />
+  <textString id="Delivary Screen" value="Mark Received By Customer" />
+  <textString id="Delivery Screen" value="Mark Received By Customer" />
+  <textString id="DELIVERY SCREEN" value="DELIVERY SCREEN" />
+  <textString id="Delivery Screen_default" value=", , , , , , , , , , , ," />
+  <textString id="Delivery Ticket" value="Delivery Ticket" />
+  <textString id="DELIVERY_SCREEN_MainMenu" value="MARK RECEIVED BY CUSTOMER" />
+  <textString id="Denial Explanation" value="View denial reason." />
+  <textString id="DENIED" value="Denied" />
+  <textString id="Description" value="Description" />
+  <textString id="DESCRIPTION" value="Description" />
+  <textString id="DESIRED_JOB_STATUS" value="Desired Job Status:" />
+  <textString id="Destination" value="Destination:" />
+  <textString id="Destination_default" value=", , , , , , , , , , , ," />
+  <textString id="DiscussionHierarchy" value="DISCUSSION HIERARCHY" />
+  <textString id="Displaying" value="Displaying record" />
+  <textString id="Distribute Evenly" value="Distribute Evenly" />
+  <textString id="DNR" value="DIAGNOSE &amp; REPAIR" />
+  <textString id="DNR Procedure Select" value="D&amp;R PROCEDURE SELECT" />
+  <textString id="DNR View Similar Cases" value="MATCHING CASES" />
+  <textString id="DO NOT CLOSE" value="Stay at this step until passing result is entered." />
+  <textString id="Do not notify me" value="Do not notify me" />
+  <textString id="Done" value="Done" />
+  <textString id="Download Request Form" value="Download Request Form" />
+  <textString id="DUE_SOON" value="Due Soon" />
+  <textString id="DurATion Type" value="DURATION TYPE:" />
+  <textString id="Earliest Actual Start Date" value="Earliest Actual Start Date:" />
+  <textString id="Earliest Actual Stop Date" value="Earliest Actual Stop Date:" />
+  <textString id="Edit Email Words" value="EDIT EMAIL WORDS" />
+  <textString id="edit files" value="Edit Note" />
+  <textString id="Edit Fill" value="Edit Fill" />
+  <textString id="Edit Forecast Item" value="EDIT FORECAST ITEM" />
+  <textString id="Edit Global Words" value="Edit global words" />
+  <textString id="Edit Permissions" value="Edit Page Access" />
+  <textString id="Edit Prepop Step" value="EDIT PREPOP STEP" />
+  <textString id="Edit Steps" value="EDIT STEPS" />
+  <textString id="Edit Strings" value="Edit Words" />
+  <textString id="Edit This" value="Continue to edit." />
+  <textString id="Edit this Item" value="Edit" />
+  <textString id="Edit Time Sheet" value="TIME CARD" />
+  <textString id="editAccount" value="ACCOUNT" />
+  <textString id="editAccount_Save and Submit" value="Save &amp; Submit to Approval Workflow" />
+  <textString id="editAccountPayment" value="EDIT ACCOUNT PAYMENT" />
+  <textString id="editActualParts" value="EDIT ACTUAL PARTS" />
+  <textString id="editEquipExp" value="EDIT EQUIPMENT EXPERIENCE" />
+  <textString id="editEquipExp_Save and Submit" value="Save &amp; Submit to Workflow" />
+  <textString id="editGroup" value="EDIT GROUP" />
+  <textString id="editLocation" value="EDIT LOCATION" />
+  <textString id="editNeeds" value="EDIT NEEDS" />
+  <textString id="editNeeds_Finished_Viewing" value="Finished Viewing" />
+  <textString id="editNeeds_Save and Close" value="Save &amp; Close" />
+  <textString id="editNeeds_Save and Submit" value="Save &amp; Submit" />
+  <textString id="editNeeds_Save_Changes" value="Save Changes" />
+  <textString id="editNote" value="EDIT NOTE" />
+  <textString id="editParts" value="EDIT PARTS" />
+  <textString id="editPartType" value="EDIT PART TYE" />
+  <textString id="editPartType_Save and Submit" value="Save and Submit" />
+  <textString id="editPerson" value="EDIT PERSON" />
+  <textString id="editProcedure" value="PROCEDURE" />
+  <textString id="editProducts" value="EDIT PRODUCT" />
+  <textString id="editProposal" value="PROPOSAL" />
+  <textString id="EditQuestionsStatementsSurvey" value="Add / Edit Questions" />
+  <textString id="editRegion" value="Edit Region" />
+  <textString id="editRegion_Save and Close" value="Save and Close" />
+  <textString id="editRegion_Save and Submit" value="Save and Submit to Workflow" />
+  <textString id="editRegion_Save_Changes" value="Save" />
+  <textString id="editRole" value="ROLE" />
+  <textString id="editTheory" value="EDIT HEADER" />
+  <textString id="editVolumnDiscounts" value="EDIT VOLUME DISCOUNTS" />
+  <textString id="editVolumnDiscounts_Save and Submit" value="Save &amp; Submit" />
+  <textString id="editWorkFlow" value="EDIT WORKFLOW" />
+  <textString id="EDUCATION_SHORT" value="Education:" />
+  <textString id="EMAIL" value="Email:" />
+  <textString id="Employees" value="Employees" />
+  <textString id="END PROCEDURE" value="Skip all steps and end procedure." />
+  <textString id="ENDPROCEDURE" value="Skip all steps and end procedure." />
+  <textString id="Engineer Report Link PAge" value="ENGINEER REPORT LINK PAGE" />
+  <textString id="Engineer Screen" value="Engineer" />
+  <textString id="ENGINEER_SCREEN_MainMenu" value="ENGINEER MAIN MENU" />
+  <textString id="Enter a closing for your proposal" value="Thank you for providing us the opportunity to provide you with a proposal.  If given the opportunity, we will endeavor to support you and your corporation in whatever capacity we can.  Feel free to contact me for any additional information." />
+  <textString id="Enter a name for this search:" value="Enter a name for this search." />
+  <textString id="Enter an Opening Statement for your proposal" value="I am pleased to submit the following for your consideration.  Price and lead-times proposed will remain valid until expiration date.  Our goal is to be “The Agent of Change for Cost of Ownership Reduction” for our clients." />
+  <textString id="Enter any additional notes for your proposal" value="Payment terms are 100% Net 30 days.  This proposal is subject to the credit approval and our standard Terms and Conditions." />
+  <textString id="Enter part of the persons name to the left and hit tab." value="Enter keyword/s on left, press TAB, and select from pulldown on right." />
+  <textString id="Enter Reason For Moving" value="Enter Transfer Note:" />
+  <textString id="Enter search phrase above and customers will show here." value="Enter keyword/s on left, press TAB, and select from pulldown on right." />
+  <textString id="Enter search phrase above and parts will show here." value="Enter keyword/s on left, press TAB, &amp; select from pulldown on right." />
+  <textString id="Enter search phrase above and procedures will show here." value="Enter keyword/s on left, press TAB, &amp; select from pulldown on right." />
+  <textString id="Enter search phrase left and roles show here." value="Enter search phrase left and roles show here." />
+  <textString id="EnterADescription" value="Enter a Description" />
+  <textString id="enterASurveySubject" value="Enter a survey subject" />
+  <textString id="enterOrgChartKeywordsToSearchForOnThisPage" value="Enter Org Location Keyword" />
+  <textString id="EQUAL" value="Equal:" />
+  <textString id="ERROR - MONITOR NOT COMPLETED" value="ERROR - MONITOR NOT COMPLETED!" />
+  <textString id="Estimated Step Duration:" value="Estimated Step Duration:" />
+  <textString id="Excel Reports" value="EXCEL REPORTS" />
+  <textString id="expand" value="Expand" />
+  <textString id="Expand the column" value="Show column." />
+  <textString id="EXPIRATION_DATE" value="EXPIRATION DATE" />
+  <textString id="Extra Data for the report:" value="Data for the report:" />
+  <textString id="EXTRA_NOTE1, EXTRA_NOTE2, EXTRA_NOTE3, EXTRA_NOTE4, EXTRA_NOTE5 = Extra information to go in the step text." value="EXTRA_NOTE1, EXTRA_NOTE2, EXTRA_NOTE3, EXTRA_NOTE4, EXTRA_NOTE5 = Extra information to go in the step text." />
+  <textString id="Fail Action" value="Fault Handling:" />
+  <textString id="Fail Action***" value="Fault Handling:" />
+  <textString id="Failed Monitors" value="Failed Monitors" />
+  <textString id="Failing Roles" value="Stock Level FAIL Notify Group" />
+  <textString id="Favorites" value="Favorites" />
+  <textString id="Feet" value="Feet" />
+  <textString id="File" value="File" />
+  <textString id="File Description" value="File Description" />
+  <textString id="File Description:" value="File Description" />
+  <textString id="File Name:" value="File Name:" />
+  <textString id="File to Upload:" value="File to Upload:" />
+  <textString id="FILE_NAME" value="File Name" />
+  <textString id="FILES" value="FILES" />
+  <textString id="Files - Edit A File" value="EDIT FILE" />
+  <textString id="Files:" value="Files:" />
+  <textString id="FILL ID" value="Fill ID" />
+  <textString id="Fill in the Monitors" value="Enter the monitor results." />
+  <textString id="FILL OBJECT" value="Fill Object" />
+  <textString id="FILLED WITH" value="Filled With" />
+  <textString id="Final Inspection Role - Leave blank for no final inspection" value="Final Inspection Role - Leave blank for no final inspection" />
+  <textString id="FINISHED" value="Closed" />
+  <textString id="Finished - Close Task" value="Save &amp; Complete Task" />
+  <textString id="FlowChartViewOfWorkFlow" value="FLOW CHART VIEW OF WORKFLOW" />
+  <textString id="FM__1" value="FM 1" />
+  <textString id="Forecast Item Purchased Items" value="FORECAST ITEM PURCHASED ITEMS" />
+  <textString id="FORECAST_ID:" value="Sub Forecast ID:" />
+  <textString id="FORECAST_NAME:" value="Sub Forecast Name:" />
+  <textString id="formalMeeting" value="Formal Meeting" />
+  <textString id="Found a part to fill this" value="Found this existing actual part to fill this." />
+  <textString id="from the day" value="  From " />
+  <textString id="FSOT MFER" value="ANSWER 1.0" />
+  <textString id="FUNNEL_PROGRESS_9" value="Funnell Progress Step 9" />
+  <textString id="Ge Num then Nanya Num" value="Part SN#" />
+  <textString id="Get complete results in Excel" value="Export all data to Excel." />
+  <textString id="Go to Diag and Repair Screen" value="Goto D&amp;R Screen" />
+  <textString id="Go to DNR" value="Go to DNR" />
+  <textString id="green" value="Green" />
+  <textString id="Group" value="Group" />
+  <textString id="Has DECREASED" value="has DECREASED to" />
+  <textString id="Has INCREASED" value="has INCREASED to" />
+  <textString id="Hide" value="Hide monitor." />
+  <textString id="Hide Advanced Items" value="Hide Advanced Items" />
+  <textString id="Hide Color Code Help" value="Hide color key." />
+  <textString id="Hide Help" value="Hide help." />
+  <textString id="Hide Sdvanced Task Options" value="Hide advanced task options." />
+  <textString id="Hide Search Form" value="Hide Advanced Filter Options" />
+  <textString id="Hide the tools" value="Hide tools." />
+  <textString id="History Ticket" value="Part Label" />
+  <textString id="Hits" value="Page Hits:" />
+  <textString id="ID" value="ID" />
+  <textString id="Image" value="Thumbnail" />
+  <textString id="import actual parts" value="IMPORT ACTUAL PARTS" />
+  <textString id="import parts" value="IMPORT PARTS" />
+  <textString id="Import Parts" value="Import Parts From Tab Delimited Text File" />
+  <textString id="import products" value="IMPORT PROCEDURE" />
+  <textString id="IMPORTANCE" value="Importance " />
+  <textString id="Importance:" value="Importance:" />
+  <textString id="Improvement Requests" value="Improvement Request" />
+  <textString id="In Progress" value="Work In Progress" />
+  <textString id="IN_WF" value="In Approval Workflow" />
+  <textString id="IN_WORKFLOW" value="IN WORKFLOW" />
+  <textString id="INACTIVE" value="Inactive" />
+  <textString id="Include Approval Columns:" value="Include Approval Columns?:" />
+  <textString id="Incomplete Tasks" value="Incomplete Tasks" />
+  <textString id="INDENT_2" value="2 tabs" />
+  <textString id="INDENT_3" value="3 tabs" />
+  <textString id="INDENT_4" value="4 tabs" />
+  <textString id="Info_About_Administration" value="Use this to setup a few things in the ANSWER application." />
+  <textString id="Input Monitor Results" value="INPUT MONITOR RESULTS" />
+  <textString id="Inv Item Description" value="Invoice Item Description" />
+  <textString id="INV_ITEM_CREDIT" value="Credit" />
+  <textString id="INV_ITEM_DEBIT" value="Inv. Item DEBIT" />
+  <textString id="INV_STAT_CREATING" value="Creating (Invoice Opened)" />
+  <textString id="INV_STAT_INVOICED" value="Invoiced (Invoice Closed/Cut)" />
+  <textString id="invdate" value="Invoice Date:" />
+  <textString id="InviteeRequriedOrOptionalMeeting" value="Invitee Required or Optional Meeting" />
+  <textString id="invno" value="Invoice Number:" />
+  <textString id="Invoice Date:" value="Invoice Date:" />
+  <textString id="Invoice ID:" value="Invoice #:" />
+  <textString id="Invoice Item Num:" value="Item #:" />
+  <textString id="Invoice Search" value="INVOICES" />
+  <textString id="Invoice Status" value="Invoice Status:" />
+  <textString id="Invoice Type" value="Invoice Close/Cut Trigger" />
+  <textString id="INVOICE_STAT_CREATING" value="Creating (Invoice Opened)" />
+  <textString id="INVOICE_STAT_INVOICED" value="Invoiced (Invoice Closed/Cut)" />
+  <textString id="INVOICE_STAT_SENT_TO_CUSTOMER" value="Sent to Customer" />
+  <textString id="Invoiced" value="Invoiced (Invoice Closed/Cut)" />
+  <textString id="It must have these columns in any order: PROCEDURE_ID,PROCEDURE_NAME,STEP_TEXT,PRINT_ORDER,REF_DOC_ID,COMMENT,STEP_TIME,EXTRA_NOTE1,EXTRA_NOTE2,EXTRA_NOTE3,EXTRA_NOTE4,EXTRA_NOTE5,ANS_ID,SERIALIZE,PROC_TYPE" value="It must have these columns in any order: PROCEDURE_ID,PROCEDURE_NAME,STEP_TEXT,PRINT_ORDER,REF_DOC_ID,COMMENT,STEP_TIME,EXTRA_NOTE1,EXTRA_NOTE2,EXTRA_NOTE3,EXTRA_NOTE4,EXTRA_NOTE5,ANS_ID,SERIALIZE,PROC_TYPE" />
+  <textString id="italics" value="Italics" />
+  <textString id="ITEM_NEEDS_ACCOUNT" value="ITEM NEEDS ACCOUNT" />
+  <textString id="Labor" value="Labor" />
+  <textString id="Labor Type" value="LABOR TYPE:" />
+  <textString id="LABOR_OWNER" value="Labor Owner" />
+  <textString id="LABOR_ROLE_LABOR_OWNER" value="Owner Role:" />
+  <textString id="Last Comment" value="Last Open Comment (open = all task viewers can see)" />
+  <textString id="Latest Actual Start Date" value="Latest Actual Start Date:" />
+  <textString id="Latest Actual Stop Date" value="Latest Actual Stop Date:" />
+  <textString id="Latest Requestee" value="Latest Requestee" />
+  <textString id="Line" value="Customer Line Item #" />
+  <textString id="link" value="link" />
+  <textString id="Link reports to the engineer page" value="Link reports to the engineer page" />
+  <textString id="LocationName" value="Location Name" />
+  <textString id="LocationTree" value="LOCATION TREE" />
+  <textString id="Locked By" value="Locked By" />
+  <textString id="Locked By:" value="Locked By:" />
+  <textString id="LOGIN" value="User ID:" />
+  <textString id="Login And Auto Login from now on" value="Login &amp; Auto-Login in Future" />
+  <textString id="login.aspHelp" value="For assistance logging in, call +1 (703) 840-3040" />
+  <textString id="login.aspTitle" value="LOGIN" />
+  <textString id="LoginButton" value="Login" />
+  <textString id="LoginError" value="Error.  Please try again." />
+  <textString id="Logout" value="Logout" />
+  <textString id="Looking up data...." value="Looking up data...." />
+  <textString id="mainMenu" value="MAIN MENU, MAIN MENU" />
+  <textString id="MANUAL" value="MANUAL" />
+  <textString id="Manually Change" value="Manually Change" />
+  <textString id="Manually Send Emails" value="Manually Send Emails" />
+  <textString id="match exactly" value="Match Exactly." />
+  <textString id="Meeting #:" value="Meeting #" />
+  <textString id="Meeting Name:" value="Meeting Name:" />
+  <textString id="Minutes Spen on this Call:" value="Minutes Spent on this Call:" />
+  <textString id="Mo Preceding Step" value="No Preceding Step" />
+  <textString id="MODEL" value="Tool Model:" />
+  <textString id="moduleAccess" value="MODULE ACCESS" />
+  <textString id="Monitor Description" value="Monitor Description:" />
+  <textString id="Monitor Main ID" value="Monitor ID" />
+  <textString id="Monitor Search" value="MONITOR SEARCH" />
+  <textString id="Monitor Ticket" value="Technical Data Label" />
+  <textString id="Monitor Type" value="Monitor Type" />
+  <textString id="Monitors" value="Monitors:" />
+  <textString id="Monitors:" value="Monitors:" />
+  <textString id="move selected option down" value="Move Down" />
+  <textString id="move selected options up" value="Move Up" />
+  <textString id="MTREF#" value="Material Transfer #:" />
+  <textString id="My Favorite Items" value="MY FAVORITE ITEMS" />
+  <textString id="My Favorites" value="MY FAVORITES" />
+  <textString id="My Preferences" value="Preferences (password, etc.)" />
+  <textString id="My Tasks" value="My tasks" />
+  <textString id="Name" value="Inovice Description:" />
+  <textString id="NAME" value="NAME:" />
+  <textString id="navAddRemExisting" value="ADD / REMOVE EXISTING ITEM" />
+  <textString id="navHistEditMeeting" value="NAV HISTORY EDIT MEETING" />
+  <textString id="navHistPartTypeSearchPage" value="PART TYPE SEARCH" />
+  <textString id="navHistProject" value="PROJECT HISTORY" />
+  <textString id="navHistSearchMeeting" value="NAV HISTORY SEARCH MEETING" />
+  <textString id="navHistSearchProject" value="PROJECT HISTORY SEARCH" />
+  <textString id="navHistViewAgendaItems" value="NAV HISTORY VIEW AGENDA ITEMS" />
+  <textString id="NCR" value="NCR" />
+  <textString id="NCR Search" value="NCR Search" />
+  <textString id="NCR SEARCH" value="NCR SEARCH" />
+  <textString id="NCR_SEARCH_MainMenu" value="NCR SEARCH HOME" />
+  <textString id="Need Description:" value="Need Description:	" />
+  <textString id="NEED_CRITICAL" value="Critical Need" />
+  <textString id="NEED_IMP_MEDIUM" value="Medium Need" />
+  <textString id="NEED_JUST_CURIOUS" value="Evaluation Need" />
+  <textString id="NEED_LARGE" value="NEED LARGE" />
+  <textString id="NEED_LESS_1_YEAR" value="Within next 12 months" />
+  <textString id="NEED_LESS_2_YEARS" value="Within next 24 months" />
+  <textString id="NEED_LESS_6_MONTHS" value="Within 6 months" />
+  <textString id="NEED_MEDIUM" value="NEED MEDIUM" />
+  <textString id="NEED_MORE_2_YEARS" value="Need 24+ months" />
+  <textString id="NEED_NO" value="NO" />
+  <textString id="NEED_NOW" value="Need Immediate" />
+  <textString id="NEED_SIZE" value="Need Size" />
+  <textString id="NEED_SMALL" value="NEED SMALL" />
+  <textString id="NEED_YES" value="YES" />
+  <textString id="needsCompanySpecified" value="Needs by Company" />
+  <textString id="needsCreating" value="Needs Creating" />
+  <textString id="New Debits:" value="New Debits:" />
+  <textString id="New Late Fees:" value="New Late Fees:" />
+  <textString id="New Line" value="New Line" />
+  <textString id="New Note:" value="New Note:" />
+  <textString id="New Payments and Credits:" value="New Payments &amp; Credits:" />
+  <textString id="NextArrow" value="...  Next 5 Pages" />
+  <textString id="No" value="No" />
+  <textString id="NO" value="Not Based on Counter(s)" />
+  <textString id="no matching cases" value="NO MATCHING CASES" />
+  <textString id="No Matching Data Please Change Search Criteria" value="No matching data." />
+  <textString id="No Reason Given" value="No Reason Given" />
+  <textString id="No Requestor" value="No Requestor" />
+  <textString id="No Results since it is first time.  Please enter filter data" value="No data is shown until you filter. This is because: 1) it's not likely that the item you're looking for will be on the 1st page, 2) you're probably looking for something in particular (not just browsing), and 3) there could be so much data in this module that the server will time out before it can retreive all/most of it.  If you need to browse, click &quot;Filter&quot; without entering keywords.  There is a chance the server will time out &amp; then you will have to limit your browsing in some way." />
+  <textString id="No_default" value=", , , , , , , , , , , ," />
+  <textString id="NORMAL_SCREEN_MainMenu" value="MAIN MENU" />
+  <textString id="NOT_ALLOWED" value="Response not allowed" />
+  <textString id="NOT_LATE" value="Not Late" />
+  <textString id="NotAssignedToYou" value="ROLE NOT Authorized for step." />
+  <textString id="NOTE" value="NOTE" />
+  <textString id="Note or Topic" value="Note or Topic:" />
+  <textString id="NOTE TEXT" value="Note Text" />
+  <textString id="Note Text:" value="Note Text:" />
+  <textString id="NOTE TYPE" value="Note Type" />
+  <textString id="Notes" value="Notes" />
+  <textString id="Notes To Show:" value="Notes to Show:" />
+  <textString id="Notes:" value="Notes:" />
+  <textString id="NoteSearch" value="NOTE SEARCH" />
+  <textString id="Notify me" value="Notify me" />
+  <textString id="Notify When People Read" value="Notify When People Read" />
+  <textString id="Num" value="#" />
+  <textString id="Number of Questions to use:" value="Number of Questions to use:" />
+  <textString id="OBJECT" value="Object" />
+  <textString id="Objects Project Applies To:" value="Objects Project Applies To:" />
+  <textString id="Objects Survey Applies To" value="Objects Survey Applies To:" />
+  <textString id="OBSOLETE" value="Obsolete" />
+  <textString id="OEM" value="Tool OEM:" />
+  <textString id="OLD" value="OUTDATED" />
+  <textString id="Open" value="Open" />
+  <textString id="OpenDocInNewWindow" value="Open Doc in New Window" />
+  <textString id="orange" value="Orange" />
+  <textString id="Order Desc:" value="Quote Description:" />
+  <textString id="Order Entry Screen" value="Order Entry" />
+  <textString id="Order Num:" value="Quote #:" />
+  <textString id="ORDER NUMBER" value="Quote #" />
+  <textString id="Order Progress:" value="Stage:" />
+  <textString id="ORDER_ENTRY_SCREEN_MainMenu" value="ORDER ENTRY" />
+  <textString id="Orders" value="Quotes" />
+  <textString id="Orders - View Quotes PAge" value="ORDERS - VIEW QUOTES" />
+  <textString id="Orders Search Page" value="QUOTES SEARCH" />
+  <textString id="Orig Req Name" value="Original Requestor Name:" />
+  <textString id="Original Requestor" value="Original Requestor" />
+  <textString id="Ounce" value="Ounce" />
+  <textString id="out of" value="out of" />
+  <textString id="Owner Role" value="Owner Role:" />
+  <textString id="Pair" value="Pair" />
+  <textString id="Parent Notes and Topics" value="Parent Notes and Topics" />
+  <textString id="Parents" value="Parents" />
+  <textString id="Part" value="Part" />
+  <textString id="Part No" value="Part #" />
+  <textString id="PART NUMBER" value="Part #" />
+  <textString id="PART_NAME" value="Part Description" />
+  <textString id="Parts on this case" value="Parts on this case:" />
+  <textString id="Parts with Recent Tasks" value="Parts with Recent Tasks" />
+  <textString id="PartTypes_IMCreating" value="I'm Creating" />
+  <textString id="Passing" value="Passing" />
+  <textString id="Password" value="Password, Password:, Password, Password:" />
+  <textString id="PASSWORD" value="PASSWORD:" />
+  <textString id="Password_default" value=", , , , , , , , , , , , ," />
+  <textString id="PAST_DUE" value="Past Due" />
+  <textString id="Payment Due Date:" value="Payment Due Date:" />
+  <textString id="PENDING_PARENT_ACCEPTANCE" value="Pending Parent Task Acceptance" />
+  <textString id="People" value="PEOPLE" />
+  <textString id="People Specified to View" value="People Specified to View" />
+  <textString id="People To View" value="People To View:" />
+  <textString id="peopleSearchPageNote2" value="Only you, your supervisor, &amp; those with “People Administrator” role are allowed to add people as your subordinates.  Your supervisor approves all additions." />
+  <textString id="peopleSearchPageNote3" value="The company that owns the system should include themselves in the approval workflow for all people additions (even by other companies) because an “active” status requires a system license." />
+  <textString id="peopleSearchPageNote4" value="Inactive people cannot be assigned new action items, use the software, etc.  It is used for people who no longer work for the company, never received a user license, or stopped receiving a user license.  Their name remains wherever it was used while an active user." />
+  <textString id="peopleSearchPageNote5" value="If adding a customer or supplier as a contact, set &quot;ASWER-User?&quot; to &quot;No&quot;.  They won't get a user ID &amp; password and people won't be able to assign them tasks.  Their company LOCATION, COMPANY, &amp; ROLE (official position) should be made first (in that order).  Their company should be a child of ISR Customers or ISR Suppliers, which are children of ISR.  Their official position should be a child of Customer/Supplier Roles.  It's faster to copy an existing person that already has phone numbers &amp; email entered and then modify (rather then add from scratch).  By the way, you can say a person works at &quot;The Parent Site&quot; (for instance), &amp; the local location will be linked (e.g., 2400 Grove…).  You can also add a specific location &amp; attach it to that person like M/S-350.  M/S-350 would be added as a child location of the local location.  You don’t need to put anything about the street address or zip code because the parent location supplies that data." />
+  <textString id="Per Page" value="per page." />
+  <textString id="PERCENT DONE" value="Percent Done" />
+  <textString id="PERIODIC" value="Periodically" />
+  <textString id="Person" value="Person" />
+  <textString id="Person to view" value="Person to view:" />
+  <textString id="PHONE" value="Phone:" />
+  <textString id="Pick hundred:" value="Pick hundred:" />
+  <textString id="Pick WSCR Date" value="SELECT START DATE" />
+  <textString id="Please Select An Item to preview first" value="Please select an item to preview first" />
+  <textString id="Please Wait Building Report" value="Please wait for report to build." />
+  <textString id="PleaseChooseSomethingToView" value="You must click something in the box before you can view it." />
+  <textString id="PO" value="PO" />
+  <textString id="PO#" value="Customer PO #:" />
+  <textString id="PONAME" value="PO Name" />
+  <textString id="PONUM" value="PO Number" />
+  <textString id="Pres Show next to a task at the left and it will show here" value="Click &quot;Display Details&quot; button and the details will display here." />
+  <textString id="Press Button" value="Pressing button/s will place formatting tag/s around the highlighted text in the text box." />
+  <textString id="Pressing button will place a newline" value="Pressing button will place a new line tag at the cursor in the text box." />
+  <textString id="Pressing OK will delete this revision" value="Pressing OK will delete this revision" />
+  <textString id="Pressing these buttons will put these characters" value="Pressing button will place a symbol at the cursor in the text box." />
+  <textString id="PrevArrow" value="Previous 5 page." />
+  <textString id="Print Purchase Summary" value="Print Work Report" />
+  <textString id="Print Shipping Label" value="Print Shipping Label" />
+  <textString id="Print Tech Summary" value="Print Traveler" />
+  <textString id="Printing Ops" value="Print - Other" />
+  <textString id="Priority:" value="Priority:" />
+  <textString id="PRIORITY_1" value="PRIORITY 1" />
+  <textString id="PRIORITY_1_AND_2" value="Priority 1" />
+  <textString id="PRIORITY_1_AND_3" value="Priority 3" />
+  <textString id="PRIORITY_2" value="Priority 2" />
+  <textString id="PRIORITY_2_AND_4" value="Priority 5" />
+  <textString id="PRIORITY_3" value="Priority 3" />
+  <textString id="PRIORITY_3_AND_4" value="Priority 6" />
+  <textString id="PRIORITY_4" value="Priority 4" />
+  <textString id="PRIVATE" value="PRIVATE" />
+  <textString id="PROC_TYPE = The name of the procedure type you want the procedure to have" value="ROC_TYPE = The name of the procedure type you want the procedure to have" />
+  <textString id="Procedure Identity" value="Procedure" />
+  <textString id="Procedure Labor:" value="Procedure Labor:" />
+  <textString id="Procedure Name:" value="Procedure Name" />
+  <textString id="procedure number" value="document #" />
+  <textString id="Procedure Number:" value="Procedure Number" />
+  <textString id="Procedure Task Search" value="PROCEDURE TASK SEARCH" />
+  <textString id="Procedure Type" value="Procedure Type" />
+  <textString id="Procedure:" value="Procedure:" />
+  <textString id="PROCEDURE_NAME" value="Procedure Name" />
+  <textString id="Procedure_View_APPROVED" value="Approved" />
+  <textString id="Procedures" value="&quot;Runnable&quot; Procedures (Integrated SPECS)" />
+  <textString id="ProcTheory_IMCreating" value="Procedure Theory I'm Creating" />
+  <textString id="ProcTypes_IMCreating" value="Procedure Types I'm Creating" />
+  <textString id="Product Name" value="Product Name" />
+  <textString id="Product No" value="Product #" />
+  <textString id="PRODUCT_NAME" value="Product Name" />
+  <textString id="productOppurtunityViewer" value="PRODUCT OPPORTUNITY VIEWER" />
+  <textString id="Products" value="Quotes (Products)" />
+  <textString id="PROGRESS" value="Stage" />
+  <textString id="Project #:" value="Project #:" />
+  <textString id="Project Name:" value="Project Name:" />
+  <textString id="PTCON_NO" value="Not Consumable Part" />
+  <textString id="PTCON_YES" value="Consumable Part" />
+  <textString id="PTSPARE_1" value="L1 - Stock in location with 1 machine" />
+  <textString id="PTSPARE_2" value="L2 - Stock in location with 10 machine" />
+  <textString id="PTSPARE_3" value="L3 - Stock in location with 50 machine" />
+  <textString id="PTSPARE_NO" value="Not Typically a Spare Part" />
+  <textString id="Purchase Item #:" value="Customer WO Item #" />
+  <textString id="Purchase Item Info:" value=" Purchase Item Info:" />
+  <textString id="Purchase Multi Item Fill Page" value="PURCHASE MULTI ITEM FILL" />
+  <textString id="Purchase Now" value="Purchase Now" />
+  <textString id="Purchase Number" value="Purchase" />
+  <textString id="Purchase Status Page" value="PURCHASE STATUS PAGE" />
+  <textString id="Purchase Status:" value="Purchase Status:" />
+  <textString id="PURCHASE_ITEM_ID" value="Purchase Line Item #" />
+  <textString id="Purchaser Address" value="Purchaser Address" />
+  <textString id="Purchases" value="Purchases (History)" />
+  <textString id="Purchases Search Page" value="PURCHASES" />
+  <textString id="Purchases set up for an actual part" value="APPLICABLE PRODUCTS WITH PURCHASE AGREEMENT SETUP" />
+  <textString id="Purple" value="Purple" />
+  <textString id="Purposes:" value="Purposes:" />
+  <textString id="Put files on the engineer page" value="Put files on the engineer page" />
+  <textString id="Qty" value="Qty" />
+  <textString id="QTY" value="QTY" />
+  <textString id="QTY in Group" value="Qty in Group" />
+  <textString id="QTY to Fill" value="Qty to Fill" />
+  <textString id="Quantity" value="Qty" />
+  <textString id="QUED" value="Qued (will assign in future)" />
+  <textString id="Quick Add Discussion" value="Discussion" />
+  <textString id="Quick Add Meeting" value="Meeting" />
+  <textString id="Quick Add Message" value="Message" />
+  <textString id="Quick Add Task" value="Task" />
+  <textString id="Quick Close" value="Quick complete (accept, pass monitors, &amp; complete now)." />
+  <textString id="Quick Close this task" value="Quick close this task." />
+  <textString id="Quick Links" value="Quick Links" />
+  <textString id="Quotation" value="Proposal" />
+  <textString id="Quotation Date:" value="Proposal Date:" />
+  <textString id="Quotation Valid till:" value="Proposal Expiration Date:" />
+  <textString id="QUOTE NUMBER" value="Quote ID" />
+  <textString id="Quotes" value="Orders" />
+  <textString id="Quotes Search Page" value="ORDERS SEARCH PAGE" />
+  <textString id="Reassign" value="Reassign" />
+  <textString id="Reassign Boss" value="Reassign Boss" />
+  <textString id="Reassign boss info" value="Reassign boss info" />
+  <textString id="reAssign Task" value="REASSIGN TASK" />
+  <textString id="Recipient Signiture" value="Recipient Signiture" />
+  <textString id="Recursion Number" value="Recursion Number:" />
+  <textString id="red" value="Red" />
+  <textString id="REF_FILES" value="Ref Files" />
+  <textString id="Reference Document:" value="Reference Document  :" />
+  <textString id="Reference Files:" value="Reference Files:" />
+  <textString id="Reference Object" value="Reference Object:" />
+  <textString id="Reference Procedures" value="Reference Procedure:" />
+  <textString id="Reference Theories" value="Reference Document:" />
+  <textString id="Reference Verb" value="Reference Procedure Type:" />
+  <textString id="Refresh to View newly saved Searches" value="Refresh to view newly save searches." />
+  <textString id="Region #:" value="Region:" />
+  <textString id="Region Name:" value="Region Name:" />
+  <textString id="Region_IMCreating" value="Region I'm Creating" />
+  <textString id="RegionsNoteTitle" value="Region Note Title:" />
+  <textString id="RegionsPageNote1" value="Region Page-note 1:" />
+  <textString id="RegionsPageNote2" value="Region Page-note2:" />
+  <textString id="Related Procedures:" value="Related Procedures:" />
+  <textString id="Related Theories" value="Related Documents" />
+  <textString id="Related Theories:" value="Related Documents:" />
+  <textString id="RELOCATE" value="Relocate:" />
+  <textString id="remove" value="Remove." />
+  <textString id="Remove" value="Remove" />
+  <textString id="Remove Date" value="Remove Date" />
+  <textString id="Repairs on Similar Cases" value="Repairs on Similar Cases" />
+  <textString id="Report Name" value="Report Name" />
+  <textString id="Report Name:" value="Report Name:" />
+  <textString id="Request Date" value="Date Rec'd By Latest Requestee" />
+  <textString id="Request For Quote Pre Page" value="REQUEST FOR QUOTE" />
+  <textString id="REQUESTED" value="Requested" />
+  <textString id="REQUESTED,ACCEPTED" value="Request Accepted" />
+  <textString id="Requestee" value="Requestee" />
+  <textString id="RESPONSES ALLOWED" value="Responses Allowed" />
+  <textString id="Responsible Person:" value="Responsible Person:" />
+  <textString id="Result" value="Result" />
+  <textString id="Result:" value="Result:" />
+  <textString id="ResumesNoteTitle" value="Note Title" />
+  <textString id="ResumesPageNote1" value="Page 1 Notes" />
+  <textString id="ResumesPageNote2" value="Page 2 Notes" />
+  <textString id="Return to Main Menu" value="Return to Main Menu" />
+  <textString id="Return To Message List" value="Return to Message List" />
+  <textString id="Return To View Message" value="Return" />
+  <textString id="rev number" value="revision #" />
+  <textString id="Reviser" value="Reviser" />
+  <textString id="Revision" value="Revision" />
+  <textString id="REVISION" value="Reision" />
+  <textString id="revisionErrorMsg" value="Revision error message" />
+  <textString id="Role Name" value="Role Name" />
+  <textString id="Role To View" value="Role To View:" />
+  <textString id="Roles" value="ROLES" />
+  <textString id="Roles Allowed EACCESS" value="Roles Allowed E Access" />
+  <textString id="Roles To View Note" value="Roles To View Note:" />
+  <textString id="ROLES_SECURITY_LEVEL_CONFIDENTIAL" value="3 View What Directors &amp; Below Are Allowed to View" />
+  <textString id="ROLES_SECURITY_LEVEL_EXTREMELY_CONFIDENTIAL" value="4 View What VP's &amp; Below Are Allowed to View" />
+  <textString id="ROLES_SECURITY_LEVEL_PUBLIC" value="1 View What All Users Are Allowed to View" />
+  <textString id="ROLES_SECURITY_LEVEL_SOME_WHAT_CONFIDENTIAL" value="2 View What Managers &amp; Below Are Allowed to View" />
+  <textString id="Root Company Name:" value="Root Company Name:" />
+  <textString id="SALARY" value="Desired Salary (hourly)" />
+  <textString id="Save" value="Save" />
+  <textString id="Save add children" value="Save add children" />
+  <textString id="Save add similar" value="Save add similar" />
+  <textString id="Save and close" value="Save and close" />
+  <textString id="Save and Close" value="Save and Close" />
+  <textString id="Save and Schedule Meeting" value="Save and Schedule Meeting" />
+  <textString id="Save and submit to workflow" value="Save &amp; Submit to Workflow" />
+  <textString id="Save and View Children" value="Save and View Children" />
+  <textString id="Save Note" value="Save Note" />
+  <textString id="SaveAndCloseEditStep" value="Save &amp; Return to Step List" />
+  <textString id="SaveEditStep" value="Save" />
+  <textString id="saveSearch" value="Save Search" />
+  <textString id="Saving Item with serial/kit #" value="Saving item with serial/kit #:" />
+  <textString id="Screen for Engineers" value="WIP" />
+  <textString id="Search Actual Parts" value="ACTUAL PARTS" />
+  <textString id="Search Approvals" value="SEARCH APPROVALS" />
+  <textString id="Search for PO Part etc" value="PO, Part, etc:" />
+  <textString id="Search Form:" value="Search:" />
+  <textString id="Search Last Comment" value="Last Open Comment:" />
+  <textString id="Search Parts" value="PARTS" />
+  <textString id="Search People" value="SEARCH PEOPLE" />
+  <textString id="Search PrePop Text" value="PROCEDURE STEP TEMPLATES" />
+  <textString id="Search Price Lists" value="PRICES/LEAD-TIMES" />
+  <textString id="Search Procedures" value="PROCEDURES" />
+  <textString id="Search Products" value="PRODUCTS" />
+  <textString id="Search Proposals" value="PROPOSALS" />
+  <textString id="Search Resumes" value="SEARCH RESUMES" />
+  <textString id="Search Roles" value="ROLES (GROUPS)" />
+  <textString id="Search Shop Products" value=" SEARCH SHOP PRODUCTS" />
+  <textString id="Search Theory" value="DOCUMENTS" />
+  <textString id="search.asp_Standard Search Filter" value="Filter" />
+  <textString id="searchDISCUSSION.asp_Standard Search Filter" value="Filter" />
+  <textString id="SearchFiles.asp_Standard Search Filter" value="Search Files" />
+  <textString id="SearchForecasts" value="SEARCH FORECAST" />
+  <textString id="searchLocations" value="SEARCH LOCATION" />
+  <textString id="searchMeetings_#6DFFFF_TEXT" value="Future" />
+  <textString id="searchMeetings_#CCCCCC_TEXT" value="Past" />
+  <textString id="searchMeetings_#FFFFFF_TEXT" value="Now" />
+  <textString id="searchMonitors.asp_Standard Search Filter" value="Filter" />
+  <textString id="searchNeeds" value="SEARCH NEEDS" />
+  <textString id="SearchOrgChartTextButton" value="Search For Location" />
+  <textString id="searchPrepop.asp_Standard Search Filter" value="Search Step Templates" />
+  <textString id="searchproject.asp_Standard Search Filter" value="Filter" />
+  <textString id="searchProjects_#CCCCCC_TEXT" value="CLOSED Projects" />
+  <textString id="searchProjects_#FFFFFF_TEXT" value="OPEN Projects" />
+  <textString id="searchTheory.asp_Standard Search Filter" value="Filter" />
+  <textString id="Security Clearance Level" value="Security Clearance Level:" />
+  <textString id="Security Level" value="Security Clearance Level" />
+  <textString id="SECURITY LEVEL" value="Security Level" />
+  <textString id="Security Type" value="Security Type:" />
+  <textString id="SECURITY TYPE" value="Security Type" />
+  <textString id="SECURITY_LEVEL_CONFIDENTIAL" value="3 Only Directors &amp; Above Allowed To View" />
+  <textString id="SECURITY_LEVEL_EXTREMELY_CONFIDENTIAL" value="4 View What VP's &amp; Above Are Allowed to View" />
+  <textString id="SECURITY_LEVEL_PUBLIC" value="1 View What All Users Are Allowed to View" />
+  <textString id="SECURITY_LEVEL_SOME_WHAT_CONFIDENTIAL" value="2 View What Managers &amp; Above Are Allowed to View" />
+  <textString id="SELECT" value="Select" />
+  <textString id="Select Favorites Group" value="Select favorites group below..." />
+  <textString id="select.asp_Standard Search Filter" value="Filter" />
+  <textString id="selectActualParts.asp_Standard Search Filter" value="Filter Results" />
+  <textString id="Selected Customers:" value="&gt;&gt;&gt;&gt;&gt;&gt;&gt;Selected Customers:" />
+  <textString id="selectfiles.asp_Standard Search Filter" value="Filter" />
+  <textString id="selectMeeting.asp_Standard Search Filter" value="Filter" />
+  <textString id="selectProceduresForProcedureStep.asp_Standard Search Filter" value="Search" />
+  <textString id="selectProject.asp_Standard Search Filter" value="Search" />
+  <textString id="selectRegions.asp_Standard Search Filter" value="Filter Region/s" />
+  <textString id="selectTask.asp_Standard Search Filter" value="Filter" />
+  <textString id="Send Emails" value="Send Emails" />
+  <textString id="Send to reciever box" value="Send to Receiver Box" />
+  <textString id="SEND/RECEIVE Destination" value="SEND / RECEIVE Destination" />
+  <textString id="SENT" value="SENT" />
+  <textString id="Serial" value="Serial #" />
+  <textString id="Serial #:" value="Serial #:" />
+  <textString id="Serial Num:" value="S/N:" />
+  <textString id="Serial Num:***" value="S/N:" />
+  <textString id="Set Qty" value="Set Qty" />
+  <textString id="setAllTasks" value="Set All Tasks:" />
+  <textString id="SettingPurpose" value="Setting Purpose" />
+  <textString id="SHARED" value="SHARED" />
+  <textString id="Ship From" value="Ship From:" />
+  <textString id="Ship From Location:" value="Ship From Location:" />
+  <textString id="Ship To Location:" value="Ship To Location:" />
+  <textString id="Ship to:" value="Ship To:" />
+  <textString id="shipcost" value="Shipping Cost:" />
+  <textString id="ShipDate" value="Ship Date:" />
+  <textString id="Shipper Screen" value="Print Delivery Tickets" />
+  <textString id="shortMenuGroupTitle_Administration" value="Administration" />
+  <textString id="shortMenuGroupTitle_objects" value="Objects" />
+  <textString id="shortMenuGroupTitle_tasks" value="Tasks" />
+  <textString id="SHOT_GUN" value="SHOT GUN" />
+  <textString id="Show" value="Show monitor." />
+  <textString id="Show Advanced Items" value="Show Advanced Items" />
+  <textString id="Show Advanced Search for this page" value="Show Advanced Filter" />
+  <textString id="Show Advanced Task Options" value="Show advanced task options." />
+  <textString id="Show Color Code Help for this page" value="Show color key." />
+  <textString id="Show Help for this page" value="Show help." />
+  <textString id="show Oppurtunities for this Product" value="Show Oppurtunities for this Product" />
+  <textString id="Show Procedure Progress Report" value="View procedure progress report." />
+  <textString id="Show Purchase Status" value="View purchase status." />
+  <textString id="Show the admin tools" value="Show the Admin Tools" />
+  <textString id="Show the tools" value="Show tools." />
+  <textString id="Show TSR" value="Show TSR (Not Working)" />
+  <textString id="ShowCalendar" value="Show calendar." />
+  <textString id="ShowTextAdder" value="Special Formatting" />
+  <textString id="Since no match show yout tests you have not done but were suggested before" value="Since there is no match show... tests you have not done but were suggested before" />
+  <textString id="Size:" value="Size:" />
+  <textString id="Specified Location" value="Specified Location" />
+  <textString id="Standard Screen" value="Main Menu" />
+  <textString id="Start" value="Begin" />
+  <textString id="Start Date and Time" value="Start Date and Time" />
+  <textString id="START DNR" value="Start Diagnose &amp; Repair Tool." />
+  <textString id="Start New Diagnose and Reair" value="Start New Diagnose and Reair" />
+  <textString id="Status" value="Approval Status:, Status" />
+  <textString id="Status Results Summary:" value="Status Results Summary:" />
+  <textString id="Status:" value="Status:" />
+  <textString id="Status_default" value=", , , , , , , , , , ," />
+  <textString id="STATUS_UNDETERMINED" value="Undetermined" />
+  <textString id="Step Duration Type:" value="Duration Type:" />
+  <textString id="Stop Date and Time" value="Stop Date and Time" />
+  <textString id="STREET" value="Street" />
+  <textString id="STYLE_INDENT_FIRST_LINE" value="Indent First Line" />
+  <textString id="SubForeCasts" value="Sub Forecasts:" />
+  <textString id="submit This" value="Proceed to approval workflow for release." />
+  <textString id="SubmitIt" value="Submit" />
+  <textString id="submitItem" value="SUBMIT ITEM" />
+  <textString id="Submitting This Task Will Close It" value="Submitting This Task Will Close It" />
+  <textString id="subtotal" value="Subtotal:" />
+  <textString id="SummaryReport" value="SUMMARY REPORT" />
+  <textString id="Supplier" value="Supplier" />
+  <textString id="Supplier Address" value="Supplier Address" />
+  <textString id="SUPPLIER_NAME" value="Supplier" />
+  <textString id="Switch" value="Switch" />
+  <textString id="SYS_COMP_TEST" value="System Comp Test" />
+  <textString id="SYS_CONSUME" value="Consume" />
+  <textString id="SYS_CREATE" value="Create" />
+  <textString id="SYS_DAYS" value="Days" />
+  <textString id="SYS_DNR" value="Diagnose and Repair" />
+  <textString id="SYS_E_ACCESS" value="E-Access" />
+  <textString id="SYS_HOURS" value="Hours" />
+  <textString id="SYS_INSTALL" value="Install" />
+  <textString id="SYS_MINUTES" value="Minutes" />
+  <textString id="SYS_PROVIDE_AND_CONSUMED" value="Provide &amp; Consumed" />
+  <textString id="SYS_PROVIDE_AND_STAY" value="Provide &amp; Stay" />
+  <textString id="SYS_PROVIDE_TAKE_BACK" value="Provide &amp; Taken Back" />
+  <textString id="SYS_RECEIVE" value="Receive" />
+  <textString id="SYS_REMOVE" value="Remove" />
+  <textString id="SYS_SECONDS" value="Seconds" />
+  <textString id="SYS_SEND" value="Send" />
+  <textString id="SYS_SERIALIZE" value="Serialize" />
+  <textString id="SYS_SHIPPING" value="Shipping" />
+  <textString id="SYS_WEEKS" value="Weeks" />
+  <textString id="SYS-FILL" value="Sys-Fill" />
+  <textString id="SYSTEM" value="System" />
+  <textString id="System searching and creating" value="System Searching and Creating" />
+  <textString id="System Task" value="System Task:" />
+  <textString id="Target Object" value="Target of Object" />
+  <textString id="TARGET_LOCATIONS" value="Desired Locations" />
+  <textString id="Task Completed" value="Task Completed" />
+  <textString id="Task Description" value="Task Description:" />
+  <textString id="Task Description:" value="Task Description:" />
+  <textString id="Task Due Date" value="Task Due Date:" />
+  <textString id="Task FILES" value="TASK FILES" />
+  <textString id="Task Num" value="Task Number:" />
+  <textString id="Task Priority" value="Task Priority" />
+  <textString id="Task Set Priority" value="Task Priority:" />
+  <textString id="Task Status" value="Task Status:" />
+  <textString id="TASK_ID" value="Task #:" />
+  <textString id="TASK_STAT_TITLE" value="Task Status" />
+  <textString id="TaskHierarchy" value="TASK HIERARCHY" />
+  <textString id="Tasks for my roles" value="Tasks for my Roles" />
+  <textString id="Tasks you can act on for this part:" value="TASKS YOU'RE ALLOWED TO PERFORM ON THIS PART:" />
+  <textString id="TaskScreen" value="WIP DETAIL" />
+  <textString id="taskSearchCompanyName" value="Task Search by Company Name:" />
+  <textString id="Tax" value="Tax" />
+  <textString id="Tax:" value="Taxes:" />
+  <textString id="Tests on Similar Cases" value="Tests on Similar Cases" />
+  <textString id="Text" value="Step Text:" />
+  <textString id="Text Search:" value="Text Search in Procedure " />
+  <textString id="The Account Search Page" value="PURCHASE ORDERS (ACCOUNTS)" />
+  <textString id="theoryColorCodeTable_#FF9999_TEXT" value="Not Approved" />
+  <textString id="theoryColorCodeTable_#FFFFFF_TEXT" value="Approved" />
+  <textString id="There are no more tasks for you to do related to this part at this time." value="There are no tasks you're allowed to perform on this part at this time." />
+  <textString id="This item was already filled" value="This item was already filled." />
+  <textString id="Time" value="Time" />
+  <textString id="Time Cards" value="Time Cards" />
+  <textString id="Time Frame" value="Time Frame " />
+  <textString id="TIME_SYS_DAYS" value="Days" />
+  <textString id="TIME_SYS_HOURS" value="Hours" />
+  <textString id="TIME_SYS_MINUTES" value="Minutes" />
+  <textString id="TIME_SYS_SECONDS" value="Seconds" />
+  <textString id="TIME_SYS_WEEKS" value="Weeks" />
+  <textString id="TIMEFRAME" value="Timeframe" />
+  <textString id="Timeframe:" value="Timeframe:" />
+  <textString id="title" value="ANSWER" />
+  <textString id="to" value="to" />
+  <textString id="TO:" value="To:" />
+  <textString id="Todays Date" value="Use todays date." />
+  <textString id="Tolerance %" value="Target Tolerance %" />
+  <textString id="Tolerance Defined at test time" value="Tolerance Defined at test time" />
+  <textString id="TOO_LOW" value="Too Low" />
+  <textString id="TOOL HISTORY" value="TOOL HISTORY" />
+  <textString id="Tool Report" value="Part Non Conformance Report" />
+  <textString id="TOPIC" value="TOPIC" />
+  <textString id="Total Amount:" value="Total Amount:" />
+  <textString id="Total Due:" value="Total Due:" />
+  <textString id="Total Tasks" value="Total Tasks:" />
+  <textString id="Trying to make a part with a qty less than 1 qty = NULL" value="Won't do anything with this row because qty is 0." />
+  <textString id="Type" value="Type" />
+  <textString id="Type of Object" value="Type of Object" />
+  <textString id="underline" value="Underline" />
+  <textString id="Unit Price" value="Unit Price" />
+  <textString id="unlock and delete this copy." value="Cancel creation.  Edits will be lost." />
+  <textString id="Upcoming" value="Upcoming" />
+  <textString id="Update Root" value="Submit" />
+  <textString id="Use Prev List" value="Use Prev List" />
+  <textString id="user:" value="User:" />
+  <textString id="USER_NUMBER" value="User Input Number" />
+  <textString id="Vie a Service Report for this Task" value="View work report." />
+  <textString id="view All Fill Items for this purchase" value="View all fill items for this purchase." />
+  <textString id="view details" value="View Details" />
+  <textString id="view Details" value="View task details." />
+  <textString id="View File" value="View file." />
+  <textString id="view Hierarchy" value="View Hierarchy" />
+  <textString id="View Invoice Data" value="View Invoice Data" />
+  <textString id="view item" value="View selected item" />
+  <textString id="view Location" value="View Location" />
+  <textString id="view Monitors" value="View monitors." />
+  <textString id="View Proc" value="View Procedure" />
+  <textString id="View Purchase" value="VIEW PURCHASE" />
+  <textString id="View Purchase-Quote Items" value="VIEW PURCHASE-QUOTE ITEMS" />
+  <textString id="View Quotes" value="View Quotes" />
+  <textString id="View Readers" value="View Who's Read" />
+  <textString id="View Resume Person" value="RESUME" />
+  <textString id="View row." value="View Row" />
+  <textString id="View Selected Item" value="View highlighted." />
+  <textString id="View Service Report" value="View Work Report (wait at least 20 seconds)" />
+  <textString id="View the Items on this quote" value="View the Items on this quote" />
+  <textString id="View with Stylesheet" value="View With Stylesheet" />
+  <textString id="View_Forecast_Items" value="VIEW FORECAST ITEMS" />
+  <textString id="View_ORDER_Items" value="VIEW ORDER ITEMS" />
+  <textString id="viewActualPartFiles.asp_Standard Search Filter" value="Filter" />
+  <textString id="viewInvoicedItems.asp_Standard Search Filter" value="View Invoice Search" />
+  <textString id="viewOrgChartColorCodeTitle_#FFFFFF;#000000_TEXT" value="1st Level" />
+  <textString id="viewOrgChartColorCodeTitle_#FFFFFF;#1705F9_TEXT" value="5th Level" />
+  <textString id="viewOrgChartColorCodeTitle_#FFFFFF;#399700_TEXT" value="6th Level" />
+  <textString id="viewOrgChartColorCodeTitle_#FFFFFF;#804000_TEXT" value="2nd Level" />
+  <textString id="viewOrgChartColorCodeTitle_#FFFFFF;#C500EA_TEXT" value="4th Level" />
+  <textString id="viewOrgChartColorCodeTitle_#FFFFFF;#EF000C_TEXT" value="3rd Level" />
+  <textString id="viewOrgChartColorCodeTitle_#FFFFFF;#FF9931_TEXT" value="7th Level" />
+  <textString id="viewProcTasks.asp_Standard Search Filter" value="Filter" />
+  <textString id="ViewPurchaseTasks" value="VIEW PURCHASE TASKS" />
+  <textString id="viewPurchProdDetails" value="VIEW PURCHASE PRODUCT DETAILS" />
+  <textString id="ViewTask" value="VIEW TASK" />
+  <textString id="ViewTaskTSR" value="WORK REPORT OPTIONS" />
+  <textString id="Warning Roles" value="Stock Level WARNING Notify Group" />
+  <textString id="WARRANTY_ACCOUNT" value="Warranty / Internal Maintenance Account" />
+  <textString id="Weekly Service Calls" value="TIME CARDS" />
+  <textString id="What you enter here will be added as a column" value="What you enter here will be added as a column" />
+  <textString id="When we roll back the test " value="When we roll back the test, " />
+  <textString id="When we roll back the test " value="When we roll back the test, " />
+  <textString id="WILLING_TO_TRAVEL" value="Wiling to Travel:" />
+  <textString id="WIP History Report" value="WIP History Report" />
+  <textString id="Work Report" value="Work Report" />
+  <textString id="Work Screen" value="WIP" />
+  <textString id="Work Type" value="Work Type" />
+  <textString id="WORK_SCREEN_MainMenu" value="WIP" />
+  <textString id="Worker" value="WORKER" />
+  <textString id="Worker Name" value="Worker Name" />
+  <textString id="Worker Name:" value="Worker Name:" />
+  <textString id="Worker Screen" value="WIP" />
+  <textString id="WorkFlow" value="WorkFlow" />
+  <textString id="Wrn_Parts_3_ActualParts_ICanWorkOn" value="Parts w/Tasks I Requested to my Role in Last 30 Minutes:" />
+  <textString id="Wrn_Quotes_4_2_myExecutingPurchases" value="Purchases Performed By My Role:" />
+  <textString id="WSCR_AR GROUP" value="Customer AR Group" />
+  <textString id="WSCR_BOSS" value="Boss" />
+  <textString id="WSCR_CLOSED" value="Approved By Customer Review Group" />
+  <textString id="WSCR_CUSTOMER AP GROUP" value="Customer AP Group" />
+  <textString id="WSCR_CUSTOMER REVIEW GROUP" value="Customer Review Group" />
+  <textString id="WSCR_CUSTOMER_AP_GROUP" value="Customer AP Group" />
+  <textString id="WSCR_CUSTOMER_REVIEW_GROUP" value="Customer Supervisor Review Group" />
+  <textString id="WSCR_WORKER" value="Worker" />
+  <textString id="wscrMassSubmitMoveBackward" value="Send All Selected Backward To Worker" />
+  <textString id="wscrMassSubmitMoveForward" value="Send All Selected Forward To Next Stage" />
+  <textString id="wtax" value="Cost With Tax:" />
+  <textString id="Year to Date" value="Year To Date (YTD)" />
+  <textString id="yellow" value="Yellow" />
+  <textString id="Yes" value="Yes" />
+  <textString id="YES" value="Yes Based on Counter(s)" />
+  <textString id="Yes_default" value=", , , , , , , , , , , ," />
+  <textString id="You must change your password to continue." value="You must change your password to continue." />
+  <textString id="You need to pick a Role or Person to forward to." value="You need to pick a Role or Person to forward to." />
+  <textString id="You will be marking this task Closed" value="This will mark task closed" />
+  <textString id="YouCanNotAssignBothAPersonAndARole" value="You cannot assign both a Person and a Role" />
+  <textString id="Your Saved Searches" value="Your Saved Searches" />
+  <textString id="Your stop date must be greater than your start date." value="Your stop date must be greater than your start date.	" />
 </txt>

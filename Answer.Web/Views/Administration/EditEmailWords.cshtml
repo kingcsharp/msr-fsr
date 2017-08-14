@@ -1,8 +1,16 @@
 ﻿@model Msr.Services.Administration.ViewModels.EmailWordsViewModel
+    
+@{
+    ViewBag.Title = "Edit Email words";
+}
+
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="row">
-            @using (Html.BeginForm("UpdateEmailWords", "Administration", FormMethod.Post, new { @class = "form form-horizontal", role = "form" }))
+            @Html.Partial("Message")
+
+            
+            @using (Html.BeginForm("UpdateEmailWords", "Administration", FormMethod.Post, new {@class = "form form-horizontal", role = "form"}))
             {
                 <div class="form-group">
                     <label class="col-lg-6">
@@ -14,10 +22,10 @@
                 </div>
                 <div class="form-group">
                     <label class="col-lg-6">
-                        <input type="text" name="EmailWords[@Model.EmailWords.Count].Id" />
+                        <input type="text" name="EmailWords[@Model.EmailWords.Count].Id" class="form-control"/>
                     </label>
                     <div class="col-lg-6">
-                        <textarea name="EmailWords[@Model.EmailWords.Count].Value"></textarea>
+                        <textarea name="EmailWords[@Model.EmailWords.Count].Value" class="form-control"></textarea>
                     </div>
                 </div>
                 for (int i = 0; i < Model.EmailWords.Count; i++)
@@ -25,10 +33,10 @@
                     <div class="form-group">
                         <label class="col-lg-6">
                             @Model.EmailWords[i].Id
-                            @Html.HiddenFor(x => Model.EmailWords[i].Id)
+                            @Html.HiddenFor(x => Model.EmailWords[i].Id, new {@class = "form-control"})
                         </label>
                         <div class="col-lg-6">
-                            @Html.TextAreaFor(x => Model.EmailWords[i].Value)
+                            @Html.TextAreaFor(x => Model.EmailWords[i].Value, new {@class = "form-control"})
                         </div>
                     </div>
                 }
@@ -36,7 +44,7 @@
                 <div class="form-group">
                     <label class="col-lg-6 control-label"></label>
                     <div class="col-lg-6">
-                        <button type="submit" class="btn-success">Save</button>
+                        <button type="submit" class="btn btn-success">Save</button>
                     </div>
                 </div>
             }

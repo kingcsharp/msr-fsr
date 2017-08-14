@@ -35,7 +35,7 @@ namespace Msr.Services.Regions
         {
             try
             {
-                var saveRegionProcedure = new SaveRegionProcedure() { ObjID = model.ObjectId, Name = model.Name, NTLogin = model.NTLogin };
+                var saveRegionProcedure = new SaveRegionProcedure() { ObjID = model.ObjectId, Name = model.Name, NTLogin = model.LogId };
 
                 _dbContext.Database.ExecuteStoredProcedure(saveRegionProcedure);
 
@@ -52,9 +52,9 @@ namespace Msr.Services.Regions
         {
             try
             {
-                var saveRegionProcedure = new SaveRegionProcedure() { Name = model.Name, NTLogin = model.NTLogin };
+                var saveRegionProcedure = new SaveRegionProcedure() { Name = model.Name, NTLogin = model.LogId };
 
-                //_dbContext.Database.ExecuteStoredProcedure(saveRegionProcedure);
+                _dbContext.Database.ExecuteStoredProcedure(saveRegionProcedure);
 
                 return true;
             }
@@ -65,13 +65,13 @@ namespace Msr.Services.Regions
                 return false;
             }
         }
-        public bool Delete(SaveRegionViewModel model)
+        public bool Delete(DeleteRegionViewModel model)
         {
             try
             {
-                var saveRegionProcedure = new SaveRegionProcedure() { Name = model.Name, NTLogin = model.NTLogin };
+                ////var saveRegionProcedure = new SaveRegionProcedure() { Name = model.Name, NTLogin = model.NTLogin };
 
-                //_dbContext.Database.ExecuteStoredProcedure(saveRegionProcedure);
+                ////_dbContext.Database.ExecuteStoredProcedure(saveRegionProcedure);
                
                 return true;
             }

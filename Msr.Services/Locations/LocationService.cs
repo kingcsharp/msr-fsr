@@ -30,7 +30,7 @@ namespace Msr.Services.Locations
             return GetLocationsQueryable().Where(x => x.ObjectId == Id).SingleOrDefault();
         }
 
-        public bool Save(SaveLocationVM model)
+        public bool Save(SaveLocationViewModel model)
         {
             try
             {
@@ -62,7 +62,7 @@ namespace Msr.Services.Locations
             }
         }
 
-        public bool Create(SaveLocationVM model)
+        public bool Create(SaveLocationViewModel model)
         {
             try
             {

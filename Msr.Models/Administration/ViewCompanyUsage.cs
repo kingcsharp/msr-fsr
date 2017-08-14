@@ -10,11 +10,10 @@ namespace Msr.Models.Administration
     {
         public string Full_Name { get; set; }
         public string Co_Name { get; set; }
-        public string Dept_Name { get; set; }
-        public string Page { get; set; }
-        public string Mo { get; set; }
-        public string Da { get; set; }
-        public string Yr { get; set; }
-        public string Num_Hits { get; set; }
+        ////public string Dept_Name { get; set; }
+        ////public string Page { get; set; }
+        ////public string Mo { get; set; }
+        ////public int Yr { get; set; }
+        ////public string Num_Hits { get; set; }
     }
 }

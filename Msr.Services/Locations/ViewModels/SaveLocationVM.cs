@@ -10,9 +10,9 @@ using System.Web.Mvc;
 
 namespace Msr.Services.Locations.ViewModels
 {
-    public class SaveLocationVM
+    public class SaveLocationViewModel
     {
-        public SaveLocationVM()
+        public SaveLocationViewModel()
         {
             Parents = new List<SelectListItem>();
         }
@@ -1305,9 +1305,9 @@ namespace Msr.Services.Locations.ViewModels
                 Value = x.ObjectId.ToString()
             }).OrderBy(o => o.Text).ToList();
         }
-        public SaveLocationVM MapToDto(LocationView model)
+        public SaveLocationViewModel MapToDto(LocationView model)
         {
-            return new SaveLocationVM
+            return new SaveLocationViewModel
             {
                 ObjectId = model.ObjectId,
                 Name = model.Name,
