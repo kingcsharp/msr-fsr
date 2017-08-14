@@ -151,7 +151,8 @@ namespace Msr.Services.Procedures
                     SystemId = model.SystemId,
                     Duration = model.Duration,
                     DurationType = model.DurationType,
-                    NTLogin = model.NTLogin
+                    NTLogin = model.NTLogin,
+                    Threshold = model.Threshold
                 };
 
                 _dbContext.Database.ExecuteStoredProcedure(saveProcedureProcedure);

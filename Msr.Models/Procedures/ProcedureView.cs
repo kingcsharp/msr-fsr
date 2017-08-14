@@ -36,6 +36,6 @@ namespace Msr.Models.Procedures
         public double? Duration { get; set; }
         public string DurationType { get; set; }
         public string SystemId { get; set; }
-
+        public int? Threshold { get; set; }
     }
 }
