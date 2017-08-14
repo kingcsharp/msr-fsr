@@ -240,6 +240,7 @@
     <Compile Include="ViewModel\Wip\WipListViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\Emailer.xml" />
     <Content Include="App_Data\GlobalSettings.xml" />
     <Content Include="App_Data\procedureFolder\101.xml" />
     <Content Include="App_Data\procedureFolder\11365.xml" />
@@ -1036,6 +1037,7 @@
     <Content Include="Views\Administration\ModuleAccess.cshtml" />
     <Content Include="Views\Administration\ViewCompanyUsage.cshtml" />
     <Content Include="Views\Wip\_AddMonitors.cshtml" />
+    <Content Include="Views\Administration\EditEmailWords.cshtml" />
     <Content Include="Views\Procedures\View.cshtml" />
     <Content Include="Views\Procedures\AssignProcedure.cshtml" />
     <None Include="Web.Dev.config">

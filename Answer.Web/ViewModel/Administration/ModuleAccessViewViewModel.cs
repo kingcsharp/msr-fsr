@@ -18,7 +18,7 @@ namespace Answer.Web.ViewModel.Administration
 
         public List<ModuleAccessResult> CompaniesToView { get; set; }
 
-        public List<GlobalSettingsViewModel> GlobalSettings { get; set; }
+        public List<XmlContentViewModel> GlobalSettings { get; set; }
 
         public List<SelectListItem> Roles { get; set; }
 
