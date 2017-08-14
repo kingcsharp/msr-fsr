@@ -24,7 +24,16 @@
         </div>
 
         <div id="@monitorsId" class="tab-pane fade task-window">
-            @(Model.TaskEditDataResult.HasMonitor == true ? Html.Partial("_MonitorsTab", Model.MonitorTemplateResult) : Html.Partial("_AddMonitors", new MonitorTemplateResult { Step_Id = Model.StepId.ToString() }))
+            
+            @if (Model.TaskEditDataResult.HasMonitor == true)
+            {
+                Html.Partial("_MonitorsTab", Model.MonitorTemplateResult);
+            }
+            else
+            {
+                Html.Partial("_AddMonitors", new MonitorTemplateResult {Step_Id = Model.StepId.ToString()});
+            }
+            
         </div>
 
         <div id="@filesId" class="tab-pane task-window fade">

@@ -216,12 +216,13 @@ namespace Answer.Web.Controllers
 
         public ActionResult WipListModel()
         {
-            var viewModel = new WipListViewModel();
+            var currentUser = GetCurrentUser();
 
+            var viewModel = new WipListViewModel();
             var orderService = new OrderService();
 
             viewModel.WoItemsInprogress  = orderService.GetWorkOrderQueryable()
-                    .Where(x => x.Status == WorkItemStatusConstants.Accepted && x.SupplierId == "2") ////TODO GET SupplierId from session 
+                    .Where(x => x.Status == WorkItemStatusConstants.Accepted && x.SupplierId == currentUser.Root_Company) 
                     .OrderByDescending(o => o.DueDate)
                     .ToList();
 

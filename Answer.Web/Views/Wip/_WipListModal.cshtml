@@ -48,6 +48,9 @@
                     }
 
 <script>
+
+    $('[data-toggle="tooltip"]').tooltip();
+
     $('.btn-accepted').on('click', function () {
         if (confirm('Do you want to take ownership of this WO Item?')) {
             var id = $(this).data('task-id');
