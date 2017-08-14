@@ -5,6 +5,10 @@ using System.Linq;
 using System.Web.Mvc;
 using Msr.Models.People;
 using Msr.Services.Orders;
+using Msr.Services.People.ViewModels;
+using Msr.Services.Companies;
+using Msr.Infrastructure.Helpers;
+using Msr.Services.Documents;
 
 namespace Answer.Web.Controllers
 {
@@ -77,10 +81,10 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.WorkEmailAddress.ToLower().Contains(rule.data.ToLower()));
                     }
-                    else if (rule.field == nameof(PeopleObjectView.DateHired))
-                    {
-                        totalRows = totalRows.Where(x => x.DateHired.ToLower().Contains(rule.data.ToLower()));
-                    }
+                    //else if (rule.field == nameof(PeopleObjectView.DateHired))
+                    //{
+                    //    totalRows = totalRows.Where(x => x.DateHired.ToString().Contains(rule.data.ToLower()));
+                    //}
                     else if (rule.field == nameof(PeopleObjectView.SystemStatus))
                     {
                         totalRows = totalRows.Where(x => x.SystemStatus.ToLower().Contains(rule.data.ToLower()));
@@ -138,8 +142,86 @@ namespace Answer.Web.Controllers
         }
         public ActionResult Add()
         {
+            var people = new AddPeopleViewModel();
+            people.Setup(new DocumentFilesService(), new PeopleService(), new CompanyService());
+            return View(people);
+        }
+        [AcceptVerbs(verbs: HttpVerbs.Post)]
+        public ActionResult Add(AddPeopleViewModel model)
+        {
+            var peopleService = new PeopleService();
+
+            if (ModelState.IsValid)
+            {
+                model.NTLogin = "1618"; // need to dynamic
+                model.Password = AuthenticationHelper.PassWordEncrypt("test"); //pending to find password creation
+                
+                var response = peopleService.Create(model: model);
+
+                if (response)
+                {
+                    TempData["SuccessMessage"] = "People has been added successfully.";
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Something went wrong.";
+                    model.Setup(new DocumentFilesService(), new PeopleService(), new CompanyService());
+
+                    return View(model);
+                }
+            }
+
             return View();
         }
-       
+        public ActionResult Edit(string id)
+        {
+            var taskService = new PeopleService();
+            var model = taskService.GetPeopleById(id);
+            var phoneInfo = taskService.GetPhoneInfoByObjId(id);
+            var emailInfo = taskService.GetEmailInfoByObjId(id);
+            var locationInfo = taskService.GetLocationInfoByObjId(id);
+            var people = new EditPeopleViewModel();
+            people = people.MapToDto(model);
+            people.Setup(new DocumentFilesService(), new PeopleService(), new CompanyService());
+            people.PrimaryPhoneNumber = phoneInfo.PrimaryPhoneNumber;
+            people.TypePrimaryPhoneNumber = phoneInfo.TypePrimaryPhoneNumber;
+            people.ExtPrimaryPhoneNumber = phoneInfo.ExtPrimaryPhoneNumber;
+            people.PinPrimaryPhoneNumber = phoneInfo.PinPrimaryPhoneNumber;
+            people.EmailPrimary = emailInfo.EmailPrimary;
+            people.EmailTypePrimary = emailInfo.EmailTypePrimary;
+            people.EmailTextTypePrimary = emailInfo.EmailTextTypePrimary;
+            //people.AddressLocation = locationInfo.AddressLocation;
+///            people.AddressType = locationInfo.AddressType;
+            return View(people);
+        }
+        [AcceptVerbs(verbs: HttpVerbs.Post)]
+        public ActionResult Edit(EditPeopleViewModel model)
+        {
+            var peopleService = new PeopleService();
+           
+            if (ModelState.IsValid)
+            {
+                model.NTLogin = "1618"; // need to dynamic
+                model.Password = AuthenticationHelper.PassWordEncrypt("test"); //pending to find password creation
+
+                var response = peopleService.Edit(model);
+
+                if (response)
+                {
+                    TempData["SuccessMessage"] = "People has been updated successfully.";
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Something went wrong.";
+                    model.Setup(new DocumentFilesService(), new PeopleService(), new CompanyService());
+
+                    return View(model);
+                }
+            }
+
+            return View();
+        }
     }
 }

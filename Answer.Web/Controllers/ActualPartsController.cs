@@ -254,7 +254,7 @@ namespace Answer.Web.Controllers
                 }
             }
 
-            var orderBy = nameof(ActualPartsView.PartDesc);
+            var orderBy = nameof(ActualPartViewHistoryView.Description);
 
             if (!string.IsNullOrWhiteSpace(param.sortColumn))
             {

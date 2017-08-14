@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Msr.Models
+namespace Msr.Models.PrePro
 {
    public class PrePropSearchView
     {
@@ -30,7 +26,7 @@ namespace Msr.Models
         public string StepText { get; set; }
         public string Comments { get; set; }
 
-        public Double? Duration { get; set; }
+        public double? Duration { get; set; }
         public string DurationType { get; set; }
         public string ReferenceObject { get; set; }
         public string ReferenceVerb { get; set; }

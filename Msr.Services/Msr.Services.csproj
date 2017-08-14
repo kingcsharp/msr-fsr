@@ -163,6 +163,8 @@
     <Compile Include="Documents\Procedures\SaveDocumentProcedure.cs" />
     <Compile Include="Documents\ViewModels\SaveDocumentViewModel.cs" />
     <Compile Include="Files\FileService.cs" />
+    <Compile Include="Files\Procedures\SaveFileUploadProcedure.cs" />
+    <Compile Include="Files\ViewModels\SaveFileUploadViewModel.cs" />
     <Compile Include="jqGrid\DatatableModelBindingContextHelper.cs" />
     <Compile Include="jqGrid\JqGridParam.cs" />
     <Compile Include="jqGrid\DatatableParamConverter.cs" />
@@ -269,6 +271,11 @@
     <Compile Include="PrePro\TheoryFileService.cs" />
     <Compile Include="PrePro\ViewModel\ProcedurePreProViewModel.cs" />
     <Compile Include="Procedures\Messages\ProceduresApprovedDataResult.cs" />
+    <Compile Include="People\Procedures\SavePasswrodProcedure.cs" />
+    <Compile Include="People\Procedures\EditPeopleProcedure.cs" />
+    <Compile Include="People\Procedures\SavePeopleProcedure.cs" />
+    <Compile Include="People\ViewModels\EditPeopleViewModel.cs" />
+    <Compile Include="People\ViewModels\AddPeopleViewModel.cs" />
     <Compile Include="Procedures\ProcedureService.cs" />
     <Compile Include="Procedures\Procedures\DeleteProcedureRolesProcedure.cs" />
     <Compile Include="Procedures\Procedures\SaveFileProcedure.cs" />
@@ -297,6 +304,7 @@
     <Compile Include="Roles\ViewModels\SaveRoleViewModel.cs" />
     <Compile Include="S3\AWSUploader.cs" />
     <Compile Include="S3\IAWSUploader.cs" />
+    <Compile Include="ShowPurchaseStatus\ShowPurchaseStatusService.cs" />
     <Compile Include="Tasks\Messaging\MonitorItem.cs" />
     <Compile Include="Tasks\Messaging\MonitorHistoryResponse.cs" />
     <Compile Include="TheoryParagraph\TheoryParagraphService.cs" />
@@ -334,10 +342,8 @@
     <Analyzer Include="..\packages\AWSSDK.S3.3.3.8.2\analyzers\dotnet\cs\AWSSDK.S3.CodeAnalysis.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Files\Procedures\" />
     <Folder Include="Objects\Procedures\" />
     <Folder Include="Objects\ViewModels\" />
-    <Folder Include="People\" />
     <Folder Include="ProcedureTypes\ViewModels\" />
     <Folder Include="ProductsActualParts\Procedures\" />
     <Folder Include="ProductsActualParts\VIewModels\" />

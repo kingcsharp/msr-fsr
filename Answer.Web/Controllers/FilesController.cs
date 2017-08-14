@@ -3,8 +3,14 @@ using Msr.Services.Files;
 using Msr.Services.jqGrid;
 using Msr.Web.ViewModel.Engineering;
 using System;
+using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
+using Msr.Models.Orders;
+using Msr.Services.Files.ViewModels;
+using Msr.Services.S3;
 
 namespace Answer.Web.Controllers
 {
@@ -91,6 +97,58 @@ namespace Answer.Web.Controllers
             };
 
             return Json(json, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult Add()
+        {
+            return View();
+        }
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult Add(List<HttpPostedFileBase> files, string taskId)
+        {
+            var fileService = new FileService();
+
+            foreach (HttpPostedFileBase file in files)
+            {
+                var imageModel = new SaveFileUploadViewModel();
+
+                imageModel.Name = file.FileName;
+                imageModel.Desc = null;
+
+                var cloudUploader = new AWSFileHandler();
+
+                var keyName = $"Answer2/{Guid.NewGuid()}-{file.FileName}";
+
+                var buketName = ConfigurationManager.AppSettings.Get("AWSBuketName");
+
+                cloudUploader.UploadToCloud(file, buketName, keyName);
+
+                var baseUrl = ConfigurationManager.AppSettings.Get("AWSURL");
+
+                var cloudUrl = $"{baseUrl}{keyName}";
+
+                imageModel.Path = cloudUrl;
+                imageModel.ContentType = file.ContentType;
+                imageModel.SrcId = null;
+                imageModel.SrcName = null;
+                imageModel.SrcDesc = null;
+                imageModel.SrcPath = null;
+                imageModel.SrcContentType = null;
+                imageModel.SrcChanged = null;
+                imageModel.DocChanged = null;
+                imageModel.DropSrc = "YES";
+                imageModel.NTLogin = "1618";
+
+                fileService.SaveFileUpload(imageModel);
+            }
+            return Json("Ok", JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult ViewFile(string callBackitem)
+        {
+            var callBackUrl = "http://docs.google.com/gview?url=" + callBackitem + "&embedded=true";//callBackitem url need to be dynamic
+            ViewBag.callBackitem = callBackUrl;
+
+            return PartialView("_ViewFile");
         }
     }
 }

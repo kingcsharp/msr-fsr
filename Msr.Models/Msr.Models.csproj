@@ -136,6 +136,11 @@
     <Compile Include="Parts\SelectPartCustomerExecptions.cs" />
     <Compile Include="Common\SelectFile.cs" />
     <Compile Include="Parts\SelectPartsFile.cs" />
+    <Compile Include="People\BossInfoView.cs" />
+    <Compile Include="People\CompanyEditPersonView.cs" />
+    <Compile Include="People\OfficialPositionView.cs" />
+    <Compile Include="People\TimeZonesView.cs" />
+    <Compile Include="People\LanguagesView.cs" />
     <Compile Include="People\PeopleObjectView.cs" />
     <Compile Include="PrePro\TheoryFile.cs" />
     <Compile Include="PrePro\PrePropSearchView.cs" />
@@ -148,6 +153,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Regions\RegionsView.cs" />
     <Compile Include="Roles\RolesView.cs" />
+    <Compile Include="ShowPurchaseStatus\PurchaseItem.cs" />
+    <Compile Include="ShowPurchaseStatus\ShowPurchaseStatusView.cs" />
     <Compile Include="Tasks\ReportTypeConstants.cs" />
     <Compile Include="Tasks\MonitorTypeConstants.cs" />
     <Compile Include="Tasks\MonitorsWithTaskAndResult.cs" />

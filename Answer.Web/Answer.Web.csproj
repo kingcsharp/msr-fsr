@@ -204,6 +204,7 @@
     <Compile Include="Controllers\ProductsActualPartsController.cs" />
     <Compile Include="Controllers\RegionsController.cs" />
     <Compile Include="Controllers\RolesController.cs" />
+    <Compile Include="Controllers\ShowPurchaseStatusController.cs" />
     <Compile Include="Controllers\TheoryParagraphController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\WipController.cs" />
@@ -609,6 +610,7 @@
     <Content Include="assets\js\grids\PrePro.js" />
     <Content Include="assets\js\grids\PreProTheoryDiolag.js" />
     <Content Include="assets\js\grids\regions.js" />
+    <Content Include="assets\js\grids\showpruchasestatus.js" />
     <Content Include="assets\js\grids\theoryparagraph-model.js" />
     <Content Include="assets\js\grids\theoryparagraph.js" />
     <Content Include="assets\js\grids\user-roles.js" />
@@ -849,10 +851,6 @@
     <Content Include="assets\data\purchase_orders.json" />
     <Content Include="assets\js\Sample Refactoring Project.zip" />
     <Content Include="assets\js\wip-detail-tooltip.js.old" />
-    <Content Include="obj\Release\Package\PackageTmp\Views\Wip\_ViewReferenceTheory.cshtml" />
-    <Content Include="obj\Release\Package\PackageTmp\Views\Wip\SearchNcrs.cshtml" />
-    <Content Include="obj\Release\Package\PackageTmp\Views\Wip\_SerializeTask.cshtml" />
-    <Content Include="assets\styles\xslt\Functions\standardPage.xsl_old" />
     <None Include="Properties\PublishProfiles\dev.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -1040,7 +1038,9 @@
     <Content Include="Views\Administration\EditEmailWords.cshtml" />
     <Content Include="Views\Procedures\View.cshtml" />
     <Content Include="Views\Procedures\AssignProcedure.cshtml" />
-    <Content Include="Views\Regions\Delete.cshtml" />
+    <Content Include="Views\Files\Add.cshtml" />
+    <Content Include="Views\Files\_ViewFile.cshtml" />
+    <Content Include="Views\People\Edit.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1051,6 +1051,7 @@
   <ItemGroup>
     <Folder Include="assets\css\dropzone\" />
     <Folder Include="assets\js\dropzone\" />
+    <Folder Include="obj\" />
     <Folder Include="ViewModel\Images\" />
     <Folder Include="Views\Help\" />
     <Folder Include="Views\Objects\" />

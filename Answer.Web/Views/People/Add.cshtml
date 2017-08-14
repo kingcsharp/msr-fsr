@@ -1,7 +1,8 @@
-﻿
+﻿@model Msr.Services.People.ViewModels.AddPeopleViewModel
 @{
     ViewBag.Title = "Add People";
 }
+
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="row">
@@ -10,405 +11,255 @@
             </h2>
             <div class="col-lg-10">
                 @Html.Partial("Message")
-                <table width="100%" class="tight">
-                    <tr>
-                        <td class="tight" style="text-align:center">
-                            <div class="alumBG titleBar">
-                                <table class="tight" width="100%" style="margin:0">
-                                    <tr>
-                                        <td width="1px" rowspan="2"><div onmouseover="toggle('shortMenu');"><img border="0" src="../../../AnswerLibrary/images/viewShortMenu.gif" /></div></td>
-                                        <td class="new_body" style="text-align: left;font-size: x-small;">
-                                            <table width="100%">
-                                                <tr>
-                                                    <td width="1%"><a class="title" style="color: black;" tabindex="-1" href="../../asp/Settings/"><nobr><span>FSOT MFER***</span></nobr></a></td>
-                                                    <td style="text-align:center" class="breadCrum">
-                                                        For assistance using this application, call +1 (703) 840-3040 or <a href="mailto:support@cmhworks.com">Email Support</a>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                        <td class="new_body" style="text-align: right;width:2;" rowspan="2"><a tabindex="-1" href="../../asp/standardPage.asp"><img border="0" width="103" height="36" title="Bark LOGO Bark***" src="../../../AnswerLibrary/images/sriLogo.gif" /></a></td>
-                                    </tr>
-                                    <tr><td class="new_body" style="text-align: right;"><div class="cookieCrum"><a tabindex="-1" class="black" href="/AnswerAlpha/asp/menus/mainMenu.asp?">NORMAL_SCREEN_MainMenu***</a> &gt; <a tabindex="-1" class="black" href="/AnswerAlpha/asp/People/searchPeople.asp?FULL_NAME=&amp;FULL_NAME_default=&amp;searchMethod=&amp;OBJ_ROOT=&amp;OBJ_ROOT_default=&amp;POSITION_NAME=&amp;POSITION_NAME_default=&amp;BOSS_NAME=&amp;BOSS_NAME_default=&amp;COMPANY_NAME=&amp;COMPANY_NAME_default=&amp;LOCATION_NAME=&amp;LOCATION_NAME_default=&amp;USER_STATUS=BOTH&amp;SYSTEM_STATUS=&amp;ROOT_CO_ID=2&amp;STATUS=CREATING%2C+DENIED%2C+APPROVED%2C+APPROVED_BUT_REVISING%2C+APPROVED_BUT_DELETING&amp;dontShowApprovalColumns=Yes&amp;stdSearchSubmitButton=searchPeople.asp_Standard+Search+Filter***">Search People***</a> &gt; <a tabindex="-1" class="black" href="/AnswerAlpha/asp/People/editPerson.asp?pageID=editPerson">editPerson***</a></div></td></tr>
-                                </table>
-                            </div><div class="dataBody">
-                                <div class="default_body">
-                                    <table class="tight" style="">
-                                        <tr class="" style="">
-                                            <td style="text-align: center;">
-                                                <div>
-                                                    <table class="form" style="text-align: center;">
-                                                        <script language="JavaScript" type="text/javascript">
-                                            arrForms = arrForms.concat(new Array("editForm"));
-//				arrForms.push("editForm");
-                                                        </script>
-                                                        <form method="post" onSubmit="escapeAllSelects();;" name="editForm" target="" action="">
-                                                            <input type="hidden" name="sessionID" value="698416103" /><input type="hidden" name="action" value="" /><input type="hidden" name="isSaving" value="true" /><input type="hidden" name="redirectTo" value="http://rhino.ans/AnswerAlpha/asp/People/searchPeople.asp?FULL_NAME=&amp;FULL_NAME_default=&amp;searchMethod=&amp;OBJ_ROOT=&amp;OBJ_ROOT_default=&amp;POSITION_NAME=&amp;POSITION_NAME_default=&amp;BOSS_NAME=&amp;BOSS_NAME_default=&amp;COMPANY_NAME=&amp;COMPANY_NAME_default=&amp;LOCATION_NAME=&amp;LOCATION_NAME_default=&amp;USER_STATUS=BOTH&amp;SYSTEM_STATUS=&amp;ROOT_CO_ID=2&amp;STATUS=CREATING%2C+DENIED%2C+APPROVED%2C+APPROVED_BUT_REVISING%2C+APPROVED_BUT_DELETING&amp;dontShowApprovalColumns=Yes&amp;stdSearchSubmitButton=searchPeople.asp_Standard+Search+Filter***" /><input type="hidden" name="objID" value="" /><input type="hidden" name="gotoRedirect" value="No" /><tr>
-                                                                <td class="form" colspan="" style="">
-                                                                    <table class="tight" style="">
-                                                                        <input type="hidden" name="isNew" value="1" />
-                                                                        <input type="hidden" name="isBoss" value="false" />
-                                                                        <input type="hidden" name="isNew" value="0" />
-                                                                        <span class="tight" ID="document_editForm_resetPassWordMessage"><input type="hidden" name="resetPassWordMessage" value="resetPassWordMessage***" /></span>
-                                                                        <span class="tight" ID="document_editForm_firstNameMissing"><input type="hidden" name="firstNameMissing" value="firstNameMissing***" /></span>
-                                                                        <span class="tight" ID="document_editForm_lastNameMissing"><input type="hidden" name="lastNameMissing" value="lastNameMissing***" /></span>
-                                                                        <span class="tight" ID="document_editForm_loginDuplicateError"><input type="hidden" name="loginDuplicateError" value="login duplicate error***" /></span>
-                                                                        <span class="tight" ID="document_editForm_emailMissingError"><input type="hidden" name="emailMissingError" value="Email Missing Error***" /></span>
-                                                                        <tr><td class="form" colspan="" style=""><div class="label"><nobr><nobr>IS A REAL USER:***</nobr></nobr></div></td><td class="form" colspan="" style=""><select onChange="if(this.value=='NON_ANSWER_USER'){this.form.LOGIN.value='';this.form.LOGIN.readOnly=true;if(this.form.PASSWORD){this.form.PASSWORD.value='';this.form.PASSWORD.readOnly=true;}}else{this.form.LOGIN.readOnly=false;}" name="ANS_TYPE" class="tt" size="" selectIndex=""><option value="ANSWER_USER">ANSWER User***</option><option value="NON_ANSWER_USER">Answer Contact***</option></select></td></tr>
-                                                                        <tr>
-                                                                            <td class="form" colspan="" style=""><div class="label"><nobr><nobr>Login ID:***</nobr></nobr></div></td>
-                                                                            <td class="form" colspan="" style="">
-                                                                                <table class="tight">
-                                                                                    <tr>
-                                                                                        <td class="tight">
-                                                                                            <span class="tight" ID="document_editForm_LOGIN">
-                                                                                                <input type="text" class="tt" onfocus="
-						select();
-					" onBlur="" onChange="disableOtherForms(&quot;editForm&quot;);if(this.form.PASSWORD){if(this.value!=''){this.form.PASSWORD.readOnly=false;}else{this.form.PASSWORD.value='';this.form.PASSWORD.readOnly=true;}};" style="" name="LOGIN" value="" />
-                                                                                            </span>
-                                                                                        </td>
-                                                                                        <td class="tight" />
-                                                                                    </tr>
-                                                                                </table><input type="hidden" name="LOGIN_default" value="" />
-                                                                            </td>
-                                                                        </tr>
-                                                                        <input type="hidden" name="PASSWORD" value="" />
-                                                                        <tr>
-                                                                            <td class="form" colspan="" style=""><div class="label"><nobr><nobr>First Name:***</nobr></nobr></div></td>
-                                                                            <td class="form" colspan="" style="">
-                                                                                <table class="tight">
-                                                                                    <tr>
-                                                                                        <td class="tight">
-                                                                                            <span class="tight" ID="document_editForm_NAME">
-                                                                                                <input type="text" class="tt" onfocus="if(this.form.ANS_TYPE.value=='NON_ANSWER_USER'){this.form.LOGIN.readOnly=true;if(this.form.PASSWORD){this.form.PASSWORD.readOnly=true}};
+                @using (Html.BeginForm())
+                {
+                @Html.AntiForgeryToken()
 
-						select();
-					" onBlur="" onChange="disableOtherForms(&quot;editForm&quot;);" style="" name="NAME" value="" />
-                                                                                            </span>
-                                                                                        </td>
-                                                                                        <td class="tight" />
-                                                                                    </tr>
-                                                                                </table><input type="hidden" name="NAME_default" value="" />
-                                                                                <script language="javascript">
-                                                                        objFocusOn = document.editForm.NAME;
-                                                                                </script>
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td class="form" colspan="" style=""><div class="label"><nobr><nobr>Last Name:***</nobr></nobr></div></td>
-                                                                            <td class="form" colspan="" style="">
-                                                                                <table class="tight">
-                                                                                    <tr>
-                                                                                        <td class="tight">
-                                                                                            <span class="tight" ID="document_editForm_LAST_NAME">
-                                                                                                <input type="text" class="tt" onfocus="
-						select();
-					" onBlur="" onChange="disableOtherForms(&quot;editForm&quot;);if(this.form.ANS_TYPE.value=='ANSWER_USER'){if(document.editForm.LOGIN.value == document.editForm.LOGIN_default.value){document.editForm.LOGIN.value = String(document.editForm.NAME.value).charAt(0).toLowerCase()+String(document.editForm.LAST_NAME.value).toLowerCase();}};" style="" name="LAST_NAME" value="" />
-                                                                                            </span>
-                                                                                        </td>
-                                                                                        <td class="tight" />
-                                                                                    </tr>
-                                                                                </table><input type="hidden" name="LAST_NAME_default" value="" />
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr><td class="form" colspan="" style=""><div class="label"><nobr><nobr>Screen Type:***</nobr></nobr></div></td><td class="form" colspan="" style=""><select onChange="disableOtherForms(&quot;editForm&quot;);" name="SCREEN_TYPE" class="tt" size="" selectIndex=""><option value="NORMAL_SCREEN">Normal***</option><option value="WORK_SCREEN">Work Screen***</option><option value="SHIP_SCREEN">Shipper Screen***</option><option value="DELIVERY_SCREEN">Delivary Screen***</option><option value="ORDER_ENTRY_SCREEN">Order Entry Screen***</option><option value="ADMIN_SCREEN">Admin Screen***</option></select></td></tr>
-                                                                        <tr><td class="form" colspan="" style=""><div class="label"><nobr><nobr>Language:***</nobr></nobr></div></td><td class="form" colspan="" style=""><select onChange="disableOtherForms(&quot;editForm&quot;);" name="LANG" class="tt" size="" selectIndex=""><option value="en">English***</option><option value="ja">Japanese***</option></select></td></tr>
-                                                                        <tr>
-                                                                            <td class="form" colspan="" style=""><div class="label"><nobr><nobr>CompanyEditPerson:***</nobr></nobr></div></td>
-                                                                            <td class="form" colspan="" style="">
-                                                                                <script>
-                                                                    var boolHideCOMPANY = true;
-                                                                                </script><div class="tight" id="mainDiv____COMPANY"><table class="tight"><tr><td class=""><input type="text" onkeypress="return noenter()" name="COMPANY____SearchText" class="ttsearchDrop" style="" onChange="searchDropDownII(this,this.form.COMPANY,'table=A_V_COMPANIES_DROP_SEARCH&amp;addFields=&amp;sfj=&amp;sf=&amp;showField=NAME&amp;valField=ID&amp;sort=NAME&amp;pre1=' + escape('(') + '&amp;field1=' + escape('ROOT_CO_ID') + '&amp;sign1=' + escape('=') + '&amp;val1=' + escape('2') + '&amp;post1=' + escape(')') + '&amp;pre2=' + escape('AND') + '&amp;field2=' + escape('NAME') + '&amp;searchString2=' + escape(this.value) + '&amp;','../../');"></input></td><td class="" style="padding-top:2px;"><select class="ttsearchDrop" name="COMPANY" size="1"><option value="2">[MSR-FSR] MSR-FSR</option></select></td></tr></table></div>
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr><td class="form" colspan="" style=""><div class="label"><nobr><nobr>Is Dept Head:***</nobr></nobr></div></td><td class="form" colspan="" style=""><select onChange="disableOtherForms(&quot;editForm&quot;);" name="IS_HEAD" class="tt" size="" selectIndex=""><option value="0">JUST_A_WORKER***</option><option value="1">IS_DEPARTMENT_HEAD***</option></select></td></tr>
-                                                                        <tr>
-                                                                            <td class="form" colspan="" style=""><div class="label"><nobr><nobr>Official Position:***</nobr></nobr></div></td>
-                                                                            <td class="form" colspan="" style="">
-                                                                                <script>
-                                                                    var boolHidePOSITION = true;
-                                                                                </script><div class="tight" id="mainDiv____POSITION"><table class="tight"><tr><td class=""><input type="text" onkeypress="return noenter()" name="POSITION____SearchText" class="ttSearchDrop" style="" onChange="searchDropDownII(this,this.form.POSITION,'table=A_V_ROLES_APPROVED_DATA_QUICK&amp;addFields=&amp;sfj=&amp;sf=&amp;showField=NAME&amp;valField=ID&amp;sort=NAME&amp;pre1=' + escape('(') + '&amp;field1=' + escape('CREATING_CO') + '&amp;sign1=' + escape('=') + '&amp;val1=' + escape('2') + '&amp;post1=' + escape(')') + '&amp;pre2=' + escape('AND') + '&amp;field2=' + escape('NAME') + '&amp;searchString2=' + escape(this.value) + '&amp;','../../');"></input></td><td class="" style="padding-top:2px;"><select class="ttSearchDrop" name="POSITION" size="1"><option value="">Enter search phrase above and roles show here.***</option></select></td></tr></table></div>
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td class="form" colspan="" style=""><div class="label"><nobr><nobr>Reference Files:***</nobr></nobr></div></td>
-                                                                            <td class="form" colspan="" style="">
-                                                                                <table class="tight">
-                                                                                    <tr>
-                                                                                        <td class="tight"><select class="tt" size="1" multiple="multiple" name="REFERENCE_FILES"><option value="">None***</option></select></td>
-                                                                                        <td class="tight">
-                                                                                            <table class="tight">
-                                                                                                <tr>
-                                                                                                    <td class="tight"><a class="prodButton" href="javascript:PopWindow('../../asp/files/selectfiles.asp?showToolBox=true&amp;firstTime=TRUE&amp;link=yes&amp;recsPerPage=&amp;RECEIVER_FORM=editForm&amp;RECEIVER_FIELD=REFERENCE_FILES&amp;PopUp_ID=files&amp;multiple=multiple&amp;pageID=files&amp;doWhenAdding=&amp;',1000,800,'editForm_REFERENCE_FILES');"><img border="0" src="../../../AnswerLibrary/images/plus.gif" title="add***" /></a></td>
-                                                                                                    <td class="tight">
-                                                                                                        <a class="prodButton" target="PopUpWindow" onclick="PopWindow('',1000,400)" href="../../asp/Files/editFiles.asp?pageID=AddDocument&amp;SOURCE_TABLE=A_PEOPLE&amp;SOURCE_ID=&amp;
-		RECEIVER_FORM=editForm&amp;
-		RECEIVER_FIELD=REFERENCE_FILES&amp;
-		MULTIPLE=multiple"><img border="0" src="../../../AnswerLibrary/images/upload_paperclip.gif" title="AddDocumentsFromYourPC***" /></a>
-                                                                                                    </td>
-                                                                                                    <td><a tabindex="-1" class="prodButton" href="javascript:disableOtherForms(&quot;editForm&quot;);delOptions(document.editForm.REFERENCE_FILES);"><img border="0" src="../../../AnswerLibrary/images/minus.gif" title="remove***" /></a></td>
-                                                                                                    <td><a tabindex="-1" class="prodButton" href="javascript:if(getSelectedValue(document.editForm.REFERENCE_FILES) != &quot;NOTHING&quot; &amp;&amp; getSelectedValue(document.editForm.REFERENCE_FILES) != &quot;&quot;){PopWindow('../../asp/documents/viewDocument.asp?dl=true&amp;docID=' + getSelectedValue(document.editForm.REFERENCE_FILES),400,400,'previewWindow')}else{alert('Please Select An Item to preview first***')};"><img border="0" class="smallIcon" src="../../../AnswerLibrary/images/view.gif" title="View Selected Item***" /></a></td>
-                                                                                                </tr>
-                                                                                            </table>
-                                                                                        </td>
-                                                                                    </tr>
-                                                                                </table>
-                                                                                <script language="javascript">
-                                                                        pushSelectBox('document.editForm.REFERENCE_FILES');
-		//arrSelects.push('document.editForm.REFERENCE_FILES');
-                                                                                </script>
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td class="form" colspan="" style=""><div class="label"><nobr><nobr>Picture Files:***</nobr></nobr></div></td>
-                                                                            <td class="form" colspan="" style="">
-                                                                                <table class="tight">
-                                                                                    <tr>
-                                                                                        <td class="tight"><select class="tt" size="1" multiple="" name="PICTURE_FILE"><option value="">None***</option></select></td>
-                                                                                        <td class="tight">
-                                                                                            <table class="tight">
-                                                                                                <tr>
-                                                                                                    <td class="tight"><a class="prodButton" href="javascript:PopWindow('../../asp/files/selectfiles.asp?showToolBox=true&amp;firstTime=TRUE&amp;link=yes&amp;recsPerPage=&amp;RECEIVER_FORM=editForm&amp;RECEIVER_FIELD=PICTURE_FILE&amp;PopUp_ID=files&amp;multiple=&amp;pageID=files&amp;doWhenAdding=&amp;',1000,800,'editForm_PICTURE_FILE');"><img border="0" src="../../../AnswerLibrary/images/plus.gif" title="add***" /></a></td>
-                                                                                                    <td class="tight">
-                                                                                                        <a class="prodButton" target="PopUpWindow" onclick="PopWindow('',1000,400)" href="../../asp/Files/editFiles.asp?pageID=AddDocument&amp;SOURCE_TABLE=A_PEOPLE&amp;SOURCE_ID=&amp;
-		RECEIVER_FORM=editForm&amp;
-		RECEIVER_FIELD=PICTURE_FILE&amp;
-		MULTIPLE="><img border="0" src="../../../AnswerLibrary/images/upload_paperclip.gif" title="AddDocumentsFromYourPC***" /></a>
-                                                                                                    </td>
-                                                                                                    <td><a tabindex="-1" class="prodButton" href="javascript:disableOtherForms(&quot;editForm&quot;);delOptions(document.editForm.PICTURE_FILE);"><img border="0" src="../../../AnswerLibrary/images/minus.gif" title="remove***" /></a></td>
-                                                                                                    <td><a tabindex="-1" class="prodButton" href="javascript:if(getSelectedValue(document.editForm.PICTURE_FILE) != &quot;NOTHING&quot; &amp;&amp; getSelectedValue(document.editForm.PICTURE_FILE) != &quot;&quot;){PopWindow('../../asp/documents/viewDocument.asp?dl=true&amp;docID=' + getSelectedValue(document.editForm.PICTURE_FILE),400,400,'previewWindow')}else{alert('Please Select An Item to preview first***')};"><img border="0" class="smallIcon" src="../../../AnswerLibrary/images/view.gif" title="View Selected Item***" /></a></td>
-                                                                                                </tr>
-                                                                                            </table>
-                                                                                        </td>
-                                                                                    </tr>
-                                                                                </table>
-                                                                                <script language="javascript">
-                                                                        pushSelectBox('document.editForm.PICTURE_FILE');
-		//arrSelects.push('document.editForm.PICTURE_FILE');
-                                                                                </script>
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td class="form" colspan="" style=""><div class="label"><nobr><nobr>Boss:***</nobr></nobr></div></td>
-                                                                            <td class="form" colspan="" style="">
-                                                                                <script>
-                                                                        var boolHideBOSS = true;
-                                                                                </script><div class="tight" id="mainDiv____BOSS"><table class="tight"><tr><td class=""><input type="text" onkeypress="return noenter()" name="BOSS____SearchText" class="ttSearchDrop" style="" onChange="searchDropDownII(this,this.form.BOSS,'table=A_V_PEOPLE_DATA_QUICK&amp;addFields=LAST_NAME,NAME&amp;sfj=&amp;sf=&amp;showField=FULL_NAME&amp;valField=ID&amp;sort=LAST_NAME,NAME&amp;pre1=' + escape('(') + '&amp;field1=' + escape('ROOT_COMPANY') + '&amp;sign1=' + escape('=') + '&amp;val1=' + escape('2') + '&amp;post1=' + escape(')') + '&amp;pre2=' + escape('AND') + '&amp;field2=' + escape('FULL_NAME') + '&amp;searchString2=' + escape(this.value) + '&amp;','../../');"></input></td><td class="" style="padding-top:2px;"><select class="ttSearchDrop" name="BOSS" size="1"><option value="">Enter search phrase above and People show here.***</option></select></td></tr></table></div>
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr><td class="form" colspan="" style=""><div class="label"><nobr><nobr>Time Zone:***</nobr></nobr></div></td><td class="form" colspan="" style=""><select onChange="disableOtherForms(&quot;editForm&quot;);" name="TIME_ZONE" class="tt" size="1" selectIndex=""><option value="11436">International Date Line West(Aug 10 2017 10:06PM)</option><option value="11437">Midway Island, Samoa(Aug 10 2017 11:06PM)</option><option value="11438">Hawaii(Aug 11 2017 12:06AM)</option><option value="80">ALASKA(Aug 11 2017  2:06AM)</option><option value="81">Pacific Time (US &amp; Canada);Tijuana(Aug 11 2017  3:06AM)</option><option value="82">Arizona(Aug 11 2017  3:06AM)</option><option value="83">Chihuahua, La Paz, Mazatlan(Aug 11 2017  4:06AM)</option><option value="84">Mountain Time (US &amp; Canada)(Aug 11 2017  4:06AM)</option><option value="85">Central America(Aug 11 2017  4:06AM)</option><option value="86">Central Time (US &amp; Canada)(Aug 11 2017  5:06AM)</option><option value="87">Guadalajara, Mexico City, Monterey(Aug 11 2017  5:06AM)</option><option value="88">Saskatchewan(Aug 11 2017  4:06AM)</option><option value="89">Bogota, Lima, Quito(Aug 11 2017  5:06AM)</option><option value="90">Eastern Time (US &amp; Canada)(Aug 11 2017  6:06AM)</option><option value="91">Indiana (East)(Aug 11 2017  5:06AM)</option><option value="92">Atlantic Time (Canada)(Aug 11 2017  7:06AM)</option><option value="93">Caracas, La Paz(Aug 11 2017  6:06AM)</option><option value="95">Santiago(Aug 11 2017  7:06AM)</option><option value="96">Newfoundland(Aug 11 2017  8:06AM)</option><option value="97">Brasilia(Aug 11 2017  8:06AM)</option><option value="98">Buenos Aires, Georgetown(Aug 11 2017  7:06AM)</option><option value="99">Greenland(Aug 11 2017  8:06AM)</option><option value="100">Mid-Atlantic(Aug 11 2017  9:06AM)</option><option value="11439">Azores(Aug 11 2017 10:06AM)</option><option value="11440">Cape Verde Is.(Aug 11 2017  9:06AM)</option><option value="11441">Casablanca(Aug 11 2017 10:06AM)</option><option value="11442">Greenwich Mean Time : Dublin, Edinburgh, Lisbon, L(Aug 11 2017 11:06AM)</option><option value="11443">Amsterdam, Berlin, Bern, Rome, Stockholm(Aug 11 2017 12:06PM)</option><option value="11444">Belgrade, Bratislava, Budapest, Ljubljana, Prague(Aug 11 2017 12:06PM)</option><option value="11445">Brussels, Copenhagen, Madrid, Paris(Aug 11 2017 12:06PM)</option><option value="11446">Sarajevo, Skopje, Warsaw, Zagreb(Aug 11 2017 12:06PM)</option><option value="11447">West Central Africa(Aug 11 2017 11:06AM)</option><option value="11448">Athens, Beirut, Istanbul, Minsk(Aug 11 2017  1:06PM)</option><option value="11449">Bucharest(Aug 11 2017  1:06PM)</option><option value="11450">Cairo(Aug 11 2017  1:06PM)</option><option value="11451">Harare, Pretoria(Aug 11 2017 12:06PM)</option><option value="11452">Helsinki, Kyiv, Riga, Sofia, Tallinn(Aug 11 2017  1:06PM)</option><option value="11453">Jerusalem(Aug 11 2017 12:06PM)</option><option value="11454">Baghdad(Aug 11 2017  2:06PM)</option><option value="11455">Kuwait, Riyadh(Aug 11 2017  1:06PM)</option><option value="11456">Moscow, St. Petersburgh, Volgograd(Aug 11 2017  2:06PM)</option><option value="11457">Nairobi(Aug 11 2017  1:06PM)</option><option value="11458">Tehran(Aug 11 2017  2:06PM)</option><option value="11459">Abu Dhabi, Muscat(Aug 11 2017  2:06PM)</option><option value="11460">Baku, Tbilisi, Yerevan(Aug 11 2017  3:06PM)</option><option value="11461">Kabul(Aug 11 2017  2:06PM)</option><option value="11462">Ekaterinburg(Aug 11 2017  4:06PM)</option><option value="11463">Islamabad, Karachi, Tashkent(Aug 11 2017  3:06PM)</option><option value="11464">Chennai, Kolkata, Mumbai, New Delhi(Aug 11 2017  3:06PM)</option><option value="11465">Kathmandu(Aug 11 2017  3:06PM)</option><option value="11466">Almaty, Novosibirsk(Aug 11 2017  5:06PM)</option><option value="11467">Astana, Dhaka(Aug 11 2017  4:06PM)</option><option value="11468">Sri Jayawardenepura(Aug 11 2017  4:06PM)</option><option value="11469">Rangoon(Aug 11 2017  4:06PM)</option><option value="11470">Bagkok, Hanoi, Jakarta(Aug 11 2017  5:06PM)</option><option value="11471">Krasnoyarsk(Aug 11 2017  6:06PM)</option><option value="11472">Beijing, Chongqing, Hong Kong, Urumqi(Aug 11 2017  6:06PM)</option><option value="11473">Irkutsk, Ulaan Bataar(Aug 11 2017  7:06PM)</option><option value="11474">Kuala Lumpur, Singapore(Aug 11 2017  6:06PM)</option><option value="11475">Perth(Aug 11 2017  6:06PM)</option><option value="11476">Taipei(Aug 11 2017  6:06PM)</option><option value="11477">Osaka, Sapporo, Tokyo(Aug 11 2017  6:06PM)</option><option value="11478">Seoul(Aug 11 2017  7:06PM)</option><option value="11479">Yakutsk(Aug 11 2017  8:06PM)</option><option value="11480">Adelaide(Aug 11 2017  8:06PM)</option><option value="11481">Darwin(Aug 11 2017  7:06PM)</option><option value="11482">Brisbane(Aug 11 2017  8:06PM)</option><option value="11483">Canberra, Melbourne, Sydney(Aug 11 2017  9:06PM)</option><option value="11484">Guam, Port Moresbby(Aug 11 2017  8:06PM)</option><option value="11485">Hobart(Aug 11 2017  9:06PM)</option><option value="11486">Vladivostok(Aug 11 2017  9:06PM)</option><option value="11487">Magadan, Soloman Is., New Caledoria(Aug 11 2017  9:06PM)</option><option value="11488">Auckland, Wellington(Aug 11 2017 11:06PM)</option><option value="11489">Fiji, Kamchatka, Marshall Is.(Aug 11 2017 10:06PM)</option><option value="11490">Nuku'alofa(Aug 11 2017 11:06PM)</option></select></td></tr>
-                                                                        <tr>
-                                                                            <td class="form" colspan="" style=""><div class="label"><nobr><nobr>Hire Date:***</nobr></nobr></div></td>
-                                                                            <td class="form" colspan="" style="">
-                                                                                <table class="tight">
-                                                                                    <tr>
-                                                                                        <td class="tight">
-                                                                                            <input type="text" onkeypress="return noenter()" class="tt" onBlur="if(!(validateDate(document.editForm.HIRE_DATE))){alert('DateErrMsg***');
-				document.editForm.HIRE_DATE.focus()}" name="HIRE_DATE" value="" />
-                                                                                        </td>
-                                                                                        <td class="tight">
-                                                                                            <a class="prodButton" tabindex="-1" href="javascript:insertCurDate(document.editForm.HIRE_DATE,'');
-		"><img border="0" src="../../../AnswerLibrary/images/nowCalendar.gif" title="Todays Date***" /></a>
-                                                                                        </td>
-                                                                                        <td class="tight"><a class="prodButton" tabindex="-1" href="javascript:PopWindow('../../asp/calendar/calendar.asp?date=&amp;field=HIRE_DATE&amp;form=editForm',700,450,'CalendarWindow')"><img border="0" class="smallIcon" src="../../../AnswerLibrary/images/calendar.gif" title="ShowCalendar***" /></a></td>
-                                                                                    </tr>
-                                                                                </table>
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr><td class="form" colspan="" style=""><div class="label"><nobr><nobr>StatusEditPerson:***</nobr></nobr></div></td><td class="form" colspan="" style=""><select onChange="disableOtherForms(&quot;editForm&quot;);" name="STATUS" class="tt" size="" selectIndex=""><option value="ACTIVE">Active</option><option value="INACTIVE">Inactive</option></select></td></tr>
-                                                                        <tr>
-                                                                            <td class="form" colspan="" style=""><div class="label"><nobr><nobr>Phones:***</nobr></nobr></div></td>
-                                                                            <td class="form" colspan="" style="">
-                                                                                <div style="" class="" id="" onClick="" onMouseOver="">
-                                                                                    <span style="display:none"></span><table class="tight" style="">
-                                                                                        <tr class="" style="">
-                                                                                            <td style=""><select onChange="disableOtherForms(&quot;editForm&quot;);" name="PHONE_TYPE___NEW_ENTRY" class="norm" style="width:150px;" size="" selectIndex=""><option value="" selected="selected">Choose Type***</option><option value="SYS-PHONE-1">SYS-PHONE-1***</option><option value="SYS-PHONE-2">SYS-PHONE-2***</option><option value="SYS-PHONE-3">SYS-PHONE-3***</option><option value="SYS-PHONE-4">SYS-PHONE-4***</option><option value="SYS-PHONE-5">SYS-PHONE-5***</option><option value="SYS-PHONE-6">SYS-PHONE-6***</option><option value="SYS-PHONE-7">SYS-PHONE-7***</option><option value="SYS-PHONE-8">SYS-PHONE-8***</option><option value="SYS-PHONE-9">SYS-PHONE-9***</option><option value="SYS-PHONE-10">SYS-PHONE-10***</option><option value="SYS-PHONE-11">SYS-PHONE-11***</option><option value="SYS-PHONE-12">SYS-PHONE-12***</option><option value="SYS-PHONE-13">SYS-PHONE-13***</option><option value="SYS-PHONE-14">SYS-PHONE-14***</option><option value="SYS-PHONE-15">SYS-PHONE-15***</option></select></td>
-                                                                                            <td style="">
-                                                                                                <table class="tight">
-                                                                                                    <tr>
-                                                                                                        <td class="tight">
-                                                                                                            <span class="tight" ID="document_editForm_A_PHONE_NUMBERS___NEW_ENTRY">
-                                                                                                                <input type="text" class="norm" onfocus="
-						select();
-					" onBlur="" onChange="disableOtherForms(&quot;editForm&quot;);" style="width: 150px;" name="A_PHONE_NUMBERS___NEW_ENTRY" value="" />
-                                                                                                            </span>
-                                                                                                        </td>
-                                                                                                        <td class="tight" />
-                                                                                                    </tr>
-                                                                                                </table><input type="hidden" name="A_PHONE_NUMBERS___NEW_ENTRY_default" value="" />
-                                                                                                <span class="norm">ext:*** </span><table class="tight">
-                                                                                                    <tr>
-                                                                                                        <td class="tight">
-                                                                                                            <span class="tight" ID="document_editForm_PHONE_EXTENSION___NEW_ENTRY">
-                                                                                                                <input type="text" class="norm" onfocus="
-						select();
-					" onBlur="" onChange="disableOtherForms(&quot;editForm&quot;);" style="width: 40px;" name="PHONE_EXTENSION___NEW_ENTRY" value="" />
-                                                                                                            </span>
-                                                                                                        </td>
-                                                                                                        <td class="tight" />
-                                                                                                    </tr>
-                                                                                                </table><input type="hidden" name="PHONE_EXTENSION___NEW_ENTRY_default" value="" />
-                                                                                                <span class="norm">PIN*** </span><table class="tight">
-                                                                                                    <tr>
-                                                                                                        <td class="tight">
-                                                                                                            <span class="tight" ID="document_editForm_PHONE_PIN___NEW_ENTRY">
-                                                                                                                <input type="text" class="norm" onfocus="
-						select();
-					" onBlur="" onChange="disableOtherForms(&quot;editForm&quot;);" style="width: 40px;" name="PHONE_PIN___NEW_ENTRY" value="" />
-                                                                                                            </span>
-                                                                                                        </td>
-                                                                                                        <td class="tight" />
-                                                                                                    </tr>
-                                                                                                </table><input type="hidden" name="PHONE_PIN___NEW_ENTRY_default" value="" />
-                                                                                            </td>
-                                                                                        </tr>
-                                                                                    </table>
-                                                                                </div>
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td class="form" colspan="" style=""><div class="label"><nobr><nobr>Emails:***</nobr></nobr></div></td>
-                                                                            <td class="form" colspan="" style="">
-                                                                                <div style="" class="" id="" onClick="" onMouseOver="">
-                                                                                    <span style="display:none"></span><table class="tight" style="">
-                                                                                        <tr class="" style="">
-                                                                                            <td style=""><select onChange="disableOtherForms(&quot;editForm&quot;);" name="EMAIL_TYPE___NEW_ENTRY" class="norm" style="width:150px;" size="" selectIndex=""><option value="" selected="selected">Choose Type***</option><option value="SYS-EMAIL-1">SYS-EMAIL-1***</option><option value="SYS-EMAIL-2">SYS-EMAIL-2***</option><option value="SYS-EMAIL-3">SYS-EMAIL-3***</option><option value="SYS-EMAIL-4">SYS-EMAIL-4***</option><option value="SYS-EMAIL-5">SYS-EMAIL-5***</option><option value="SYS-EMAIL-6">SYS-EMAIL-6***</option><option value="SYS-EMAIL-7">SYS-EMAIL-7***</option><option value="SYS-EMAIL-8">SYS-EMAIL-8***</option><option value="SYS-EMAIL-9">SYS-EMAIL-9***</option><option value="SYS-EMAIL-10">SYS-EMAIL-10***</option><option value="SYS-EMAIL-11">SYS-EMAIL-11***</option><option value="SYS-EMAIL-12">SYS-EMAIL-12***</option><option value="SYS-EMAIL-13">SYS-EMAIL-13***</option><option value="SYS-EMAIL-14">SYS-EMAIL-14***</option><option value="SYS-EMAIL-15">SYS-EMAIL-15***</option></select></td>
-                                                                                            <td style=""><select onChange="disableOtherForms(&quot;editForm&quot;);" name="EMAIL_BODY_TYPE___NEW_ENTRY" class="dontCare" size="" selectIndex=""><option value="" selected="selected">Choose Type***</option><option value="HTML">HTML***</option><option value="TXT">Text***</option></select></td>
-                                                                                            <td style="">
-                                                                                                <table class="tight">
-                                                                                                    <tr>
-                                                                                                        <td class="tight">
-                                                                                                            <span class="tight" ID="document_editForm_A_EMAILS___NEW_ENTRY">
-                                                                                                                <input type="text" class="norm" onfocus="
-						select();
-					" onBlur="" onChange="disableOtherForms(&quot;editForm&quot;);" style="width: 300px;" name="A_EMAILS___NEW_ENTRY" value="" />
-                                                                                                            </span>
-                                                                                                        </td>
-                                                                                                        <td class="tight" />
-                                                                                                    </tr>
-                                                                                                </table><input type="hidden" name="A_EMAILS___NEW_ENTRY_default" value="" />
-                                                                                            </td>
-                                                                                        </tr>
-                                                                                    </table>
-                                                                                </div>
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td class="form" colspan="" style=""><div class="label"><nobr><nobr>Address:***</nobr></nobr></div></td>
-                                                                            <td class="form" colspan="" style="">
-                                                                                <div style="" class="" id="" onClick="" onMouseOver="">
-                                                                                    <span style="display:none"></span><table class="tight" style="">
-                                                                                        <tr class="" style="">
-                                                                                            <td style=""><select onChange="disableOtherForms(&quot;editForm&quot;);" name="LOCATION_TYPE___NEW_ENTRY" class="norm" style="width:150px;" size="" selectIndex=""><option value="" selected="selected">Choose Type***</option><option value="SYS-LOCATION-1">SYS-LOCATION-1***</option><option value="SYS-LOCATION-2">SYS-LOCATION-2***</option><option value="SYS-LOCATION-3">SYS-LOCATION-3***</option><option value="SYS-LOCATION-4">SYS-LOCATION-4***</option><option value="SYS-LOCATION-5">SYS-LOCATION-5***</option><option value="SYS-LOCATION-6">SYS-LOCATION-6***</option><option value="SYS-LOCATION-7">SYS-LOCATION-7***</option><option value="SYS-LOCATION-8">SYS-LOCATION-8***</option><option value="SYS-LOCATION-9">SYS-LOCATION-9***</option><option value="SYS-LOCATION-10">SYS-LOCATION-10***</option><option value="SYS-LOCATION-11">SYS-LOCATION-11***</option><option value="SYS-LOCATION-12">SYS-LOCATION-12***</option><option value="SYS-LOCATION-13">SYS-LOCATION-13***</option><option value="SYS-LOCATION-14">SYS-LOCATION-14***</option><option value="SYS-LOCATION-15">SYS-LOCATION-15***</option></select></td>
-                                                                                            <td style="">
-                                                                                                <div class="tight" id="A_LOCATIONS_OBJECT_LINK___NEW_ENTRY">
-                                                                                                    <table class="tight">
-                                                                                                        <tr>
-                                                                                                            <td class="tight" rowspan="2" style="padding-top : 1px;padding-bottom:1px;">
-                                                                                                                <span ID="document_editForm_A_LOCATIONS_OBJECT_LINK___NEW_ENTRY">
-                                                                                                                    <select class="norm" onChange="disableOtherForms('editForm');" style="width:300px;" size="1" name="A_LOCATIONS_OBJECT_LINK___NEW_ENTRY" multiple="multiple">
-                                                                                                                        <option value=""></option>
-                                                                                                                    </select>
-                                                                                                                </span>
-                                                                                                            </td>
-                                                                                                            <td class="tight"><div class="tight" id="editForm_A_LOCATIONS_OBJECT_LINK___NEW_ENTRY_Add"><a class="prodButton" href="javascript:PopWindow('../../asp/locations/selectLocations.asp?showToolBox=true&amp;firstTime=TRUE&amp;link=yes&amp;recsPerPage=20&amp;RECEIVER_FORM=editForm&amp;RECEIVER_FIELD=A_LOCATIONS_OBJECT_LINK___NEW_ENTRY&amp;PopUp_ID=&amp;multiple=&amp;pageID=&amp;doWhenAdding=&amp;',1000,800,'editForm_A_LOCATIONS_OBJECT_LINK___NEW_ENTRY');"><img border="0" src="../../../AnswerLibrary/images/plus.gif" title="add***" /></a></div></td>
-                                                                                                            <td class="tight"><div class="tight" id="editForm_A_LOCATIONS_OBJECT_LINK___NEW_ENTRY_Remove"><a tabindex="-1" class="prodButton" href="javascript:disableOtherForms(&quot;editForm&quot;);delOptions(document.editForm.A_LOCATIONS_OBJECT_LINK___NEW_ENTRY);"><img border="0" src="../../../AnswerLibrary/images/minus.gif" title="remove***" /></a></div></td>
-                                                                                                            <td class="tight">
-                                                                                                                <a class="prodButton" href="javascript:if(getSelectedValue(document.editForm.A_LOCATIONS_OBJECT_LINK___NEW_ENTRY) != 'NOTHING' &amp;&amp; getSelectedValue(document.editForm.A_LOCATIONS_OBJECT_LINK___NEW_ENTRY) != ''){document.location='../../asp/objects/viewApprovedObject.asp?ID='+
-			document.editForm.A_LOCATIONS_OBJECT_LINK___NEW_ENTRY.value}else{alert('PleaseChooseSomethingToView***')}"><img border="0" class="smallIcon" src="../../../AnswerLibrary/images/view.gif" title="view item***" /></a>
-                                                                                                            </td>
-                                                                                                        </tr>
-                                                                                                        <tr />
-                                                                                                    </table>
-                                                                                                    <script language="javascript">
-                                                                                            pushSelectBox('document.editForm.A_LOCATIONS_OBJECT_LINK___NEW_ENTRY');
-		//arrSelects.push('document.editForm.A_LOCATIONS_OBJECT_LINK___NEW_ENTRY');
-                                                                                                    </script>
-                                                                                                </div>
-                                                                                            </td>
-                                                                                        </tr>
-                                                                                    </table>
-                                                                                </div>
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td class="form" colspan="2" style="">
-                                                                                <table class="tight" style="">
-                                                                                    <tr class="" style="">
-                                                                                        <td class="tight" style="">
-                                                                                            <input type="submit" name="BSUBMIT" style="" class="" value="editPerson_Save_Changes***" onClick="
-					this.disabled=true;escapeAllSelects();selectAllSelects();
-				var o;o = this.form;if(o.NAME.value==''){this.disabled=false;alert(o.firstNameMissing.value);o.NAME.focus();return(false)}if(o.LAST_NAME.value==''){this.disabled=false;alert(o.lastNameMissing.value);o.LAST_NAME.focus();return(false)}if(!(checkPersonValidity(document.editForm))){return(false)};;disableAllLinks(this);;
-
-					this.form.submit();
-				" onMouseOver=";
-			" />
-                                                                                        </td>
-                                                                                        <td class="tight" style="">
-                                                                                            <input type="submit" name="BCLOSE" style="" class="" value="editPerson_Save and Close***" onClick="
-					this.disabled=true;escapeAllSelects();selectAllSelects();
-				document.editForm.gotoRedirect.value='YES';document.editForm.action.value='close';var o;o = this.form;if(o.NAME.value==''){this.disabled=false;alert(o.firstNameMissing.value);o.NAME.focus();return(false)}if(o.LAST_NAME.value==''){this.disabled=false;alert(o.lastNameMissing.value);o.LAST_NAME.focus();return(false)}if(!(checkPersonValidity(document.editForm))){return(false)};;disableAllLinks(this);;
-
-					this.form.submit();
-				" onMouseOver=";
-			" />
-                                                                                        </td>
-                                                                                        <td class="tight" style="">
-                                                                                            <input type="submit" name="BSaveSubmit" style="" class="" value="editPerson_Save and Submit***" onClick="
-					this.disabled=true;escapeAllSelects();selectAllSelects();
-				this.form.action.value='submitToWorkflow';var o;o = this.form;if(o.NAME.value==''){this.disabled=false;alert(o.firstNameMissing.value);o.NAME.focus();return(false)}if(o.LAST_NAME.value==''){this.disabled=false;alert(o.lastNameMissing.value);o.LAST_NAME.focus();return(false)}if(!(checkPersonValidity(document.editForm))){return(false)};;disableAllLinks(this);;
-
-					this.form.submit();
-				" onMouseOver=";
-			" />
-                                                                                        </td>
-                                                                                    </tr>
-                                                                                </table>
-                                                                            </td>
-                                                                        </tr>
-                                                                    </table>
-                                                                </td>
-                                                                <td class="form" colspan="" style=""><table class="tight" style=""><tr class="" style=""><td style=""><td class="peopleLeftColumn" style="text-align:center"></td></td>
-                                                            </tr>
-                                                    </table>
-                                            </td>
-                                        </tr></form>
-                                    </table>
-                                </div>
-                        </td>
-                    </tr>
-                </table>
+                <div class="form-horizontal">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(model => model.RealUser, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-5">
+                        @Html.DropDownListFor(model => model.RealUser, Model.ListRealUserTypes, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.RealUser, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.LoginId, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-5">
+                        @Html.EditorFor(model => model.LoginId, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.LoginId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-5">
+                            @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-5">
+                            @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ScreenType, htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-5">
+                            @Html.DropDownListFor(model => model.ScreenType, Model.ListScreenTypes, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.ScreenType, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.LanguageCode, htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-5">
+                            @Html.DropDownListFor(model => model.LanguageCode, Model.ListLanguages, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.LanguageCode, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                   
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.CompanyEditPerson, htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-5">
+                            @Html.DropDownListFor(model => model.CompanyEditPerson, Model.ListCompanyEditPerson, new { @class = "form-control select" })
+                            @Html.ValidationMessageFor(model => model.CompanyEditPerson, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.IsDepartmentHead, htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-5">
+                            @Html.DropDownListFor(model => model.IsDepartmentHead, Model.ListIsDepartmentHead, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.IsDepartmentHead, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.OfficialPosition, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-5">
+                        @Html.DropDownListFor(model => model.OfficialPosition, Model.ListOfficialPosition, new { @class = "form-control select" })
+                        @Html.ValidationMessageFor(model => model.OfficialPosition, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ReferenceFiles, htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-5">
+                            <div style="width: 96%; float: left;">
+                                @Html.ListBoxFor(m => m.ReferenceFiles, Model.ListReferenceFiles, new { @class = "form-control selectitem", multiple = "multiple" })
+                                @Html.ValidationMessageFor(model => model.ReferenceFiles, "", new { @class = "text-danger" })
+                            </div>
+                            <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceFiles" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceFiles"><i class="icon fa fa-minus-circle"></i></span> </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.PictureFiles, htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-5">
+                            <div style="width: 96%; float: left;">
+                                @Html.ListBoxFor(m => m.PictureFiles, Model.ListPictureFiles, new { @class = "form-control selectitem" })
+                                @Html.ValidationMessageFor(model => model.PictureFiles, "", new { @class = "text-danger" })
+                            </div>
+                            <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="PictureFiles" data-toggle="modal" data-target="#select-pic"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="PictureFiles"><i class="icon fa fa-minus-circle"></i></span> </div>
+                        </div>
+                    </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.BossName, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-5">
+                        @Html.DropDownListFor(model => model.BossName, Model.ListBossInfo, new { @class = "form-control select" })
+                        @Html.ValidationMessageFor(model => model.BossName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.TimeZone, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-5">
+                        @Html.DropDownListFor(model => model.TimeZone, Model.ListTimeZones, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.TimeZone, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.HireDate, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-5">
+                        @Html.EditorFor(model => model.HireDate, new { htmlAttributes = new { @class = "form-control datepicker" } })
+                        @Html.ValidationMessageFor(model => model.HireDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.StatusEditPerson, htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-5">
+                            @Html.DropDownListFor(model => model.StatusEditPerson, Model.ListStatusEditPerson, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.StatusEditPerson, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+               <div class="form-group">
+        @Html.LabelFor(model => model.PrimaryPhoneNumber, htmlAttributes: new { @class = "control-label col-md-4" })
+        <div class="col-md-5">
+            <div style="width: 96%; float: left; display: flex">
+                @Html.DropDownListFor(model => model.TypePrimaryPhoneNumber, Model.ListPhoneTypes, new {@class = "form-control"})
+                @Html.ValidationMessageFor(model => model.PrimaryPhoneNumber, "", new {@class = "text-danger"})
+                @Html.EditorFor(model => model.PrimaryPhoneNumber, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.ValidationMessageFor(model => model.PrimaryPhoneNumber, "", new {@class = "text-danger"})
             </div>
-        </div><div class="bottomRow">
-            <div class="alumBG footer">
-                <table style="width:100%">
-                    <tr>
-                        <td class="bottomRowCol">
-                            <table class="tight topRow">
-                                <tr>
-                                    <td class="bottomRowCol"><nobr>user:***</nobr></td>
-                                    <td class="bottomRowCol">
-                                        <nobr>
-                                            Jeff Tevonian
-                                            (
-                                            <a href="../../asp/utilities/switchUsers.asp">Switch***</a>
-                                            )
-                                        </nobr>
-                                    </td>
-                                    <td class="bottomRowCol" style="padding-right:5px;"><nobr>(MSR-FSR)</nobr></td>
-                                    <td class="bottomRowCol" style="padding-right:5px;"><nobr>Hits***5</nobr></td>
-                                    <td class="bottomRowCol"><nobr>Cur Time*** 8/11/2017 00:06</nobr></td>
-                                </tr>
-                            </table>
-                        </td>
-                        <td class="topRow bottomRow" style="text-align:right;"><table class="tight"><tr><td class="cottomRowCol"><select onChange="document.location='../../asp/utilities/setScreen.asp?screen=' + this.value"><option value="">Change Screen...***</option><option value="WORK_SCREEN">Worker Screen***</option><option value="SHIP_SCREEN">Shipper Screen***</option><option value="DELIVERY_SCREEN">Delivery Screen***</option><option value="NCR_SEARCH">NCR Search***</option><option value="NORMAL_SCREEN">Standard Screen***</option><option value="ORDER_ENTRY_SCREEN">Order Entry Screen***</option><option value="ADMIN_SCREEN">Admin Screen***</option></select></td><td class="bottomRowCol"><select onChange="if(String(this.value).length != 0){document.location=this.value}"><option value="">Choose Quick Add***</option><option value="../../asp/ActualTasks/editTask.asp?pageID=editTask&amp;assignToJobRole=true&amp;JOB=CUSTOMER_COMPLAINTS">Customer Complaint***</option><option value="../../asp/ActualTasks/editTask.asp?pageID=editTask&amp;assignToJobRole=true&amp;JOB=IMPROVEMENT_REQ_HANDLER">Improvement Requests***</option><option value="../../asp/ActualTasks/editTask.asp?pageID=editTask">Quick Add Task***</option><option value="../../asp/meetings/editMeeting.asp?pageID=editMeeting">Quick Add Meeting***</option><option value="../../asp/discussions/editDiscussion.asp?pageID=editDiscussion">Quick Add Discussion***</option><option value="../../asp/messages/editMessages.asp?pageID=editMessages">Quick Add Message***</option></select></td><td class="bottomRowCol"></td><td class="bottomRowCol"><input class="extraSmall" type="button" onClick="document.location = '../../asp/people/editMyAccount.asp?inside=true'" value="My Preferences***" /></td><td class="bottomRowCol"><input class="extrasmall" type="Button" style="font-size:xx-small" onclick="document.location = '../../logout.asp'" value="Logout***" /></td></tr></table></td>
-                    </tr>
-                </table>
-            </div>
-        </div></td></tr></table><div id="AjaxSaveData" style="font-size: x-small;color:silver;"></div><div id="tip_popUp" class="tip_popUp" style="display:none;position:absolute;"></div><div id="openAdminImage" onClick="toggle('openAdminImage');toggle('closeAdminImage');toggle('adminSettings');"><a href="javascript:"><img border="0" src="../../../AnswerLibrary/images/openAdminSettings.gif" title="Show the admin tools***" /></a></div><div id="closeAdminImage" style="display:none" onClick="toggle('openAdminImage');toggle('closeAdminImage');toggle('adminSettings');"><a href="javascript:"><img border="0" src="../../../AnswerLibrary/images/closeAdminSettings.gif" title="Hide the tools***" /></a></div><div id="adminSettings" style="display:none"><table class="tight"><tr><form method="post" name="editStringForm" action="../../../../AnswerAlpha/asp/People/editPerson.asp?pageID=editPerson&amp;stringEdit=true"><td class="tight"><input class="extraSmall" type="submit" value="Edit Strings***" /></td></form></tr></table><table class="tight"><tr><form method="post" name="editPagePermissions" action="editPerson.asp?pageID=editPerson&amp;editPermissions=true"><td class="tight"><input class="extraSmall" type="submit" style="padding:0" value="Edit Permissions***" /></td></form></tr></table><form method="post" action="../../asp/settings/set_sessions.asp"><table class="settings"><tr><th class="settings">Debug</th><td class="settings"><select onChange="this.form.submit();" name="boolDebug"><option value="true">true</option><option value="false">false</option></select></td></tr></table></form></div><form name="timerForm"><input type="hidden" size="2" name="timerBox" style="background-color:gray;color:silver;border:0;" /></form>
-
-
+        </div>
     </div>
+    <div class="form-group">
+        <div class="col-md-4"></div>
+        <div class="col-md-5">
+            <div style="width: 96%; float: left; display: flex">
+                @Html.LabelFor(model => model.ExtPrimaryPhoneNumber, htmlAttributes: new {@class = "control-label col-md-5"})
+                @Html.EditorFor(model => model.ExtPrimaryPhoneNumber, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.ValidationMessageFor(model => model.ExtPrimaryPhoneNumber, "", new {@class = "text-danger"})
+
+                @Html.LabelFor(model => model.PinPrimaryPhoneNumber, htmlAttributes: new {@class = "control-label col-md-4"})
+
+                @Html.EditorFor(model => model.PinPrimaryPhoneNumber, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.ValidationMessageFor(model => model.PinPrimaryPhoneNumber, "", new {@class = "text-danger"})
             </div>
+        </div>
+    </div>
+    @*<div class="form-group">
+        <div class="col-md-4"></div>
+        <div class="col-md-5">
+            <div style="width: 96%; float: left; display: flex">
+            @Html.DropDownListFor(model => model.TypeSecondaryPhoneNumber, Model.ListPhoneTypes, new {@class = "form-control"})
+            @Html.ValidationMessageFor(model => model.SecondaryPhoneNumber, "", new {@class = "text-danger"})
+            @Html.EditorFor(model => model.SecondaryPhoneNumber, new {htmlAttributes = new {@class = "form-control"}})
+            @Html.ValidationMessageFor(model => model.SecondaryPhoneNumber, "", new {@class = "text-danger"})
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-4"></div>
+        <div class="col-md-5">
+            <div style="width: 96%; float: left; display: flex">
+                @Html.LabelFor(model => model.ExtSecondaryPhoneNumber, htmlAttributes: new { @class = "control-label col-md-5" })
+                @Html.EditorFor(model => model.ExtSecondaryPhoneNumber, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ExtSecondaryPhoneNumber, "", new { @class = "text-danger" })
+
+                @Html.LabelFor(model => model.PinSecondaryPhoneNumber, htmlAttributes: new { @class = "control-label col-md-4" })
+
+                @Html.EditorFor(model => model.PinSecondaryPhoneNumber, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.PinSecondaryPhoneNumber, "", new { @class = "text-danger" })
+            </div>
+            </div>
+        </div>*@
+   <div class="form-group">
+        @Html.LabelFor(model => model.EmailPrimary, htmlAttributes: new { @class = "control-label col-md-4" })
+        <div class="col-md-5">
+            <div style="width: 96%; float: left; display: flex">
+                @Html.DropDownListFor(model => model.EmailTypePrimary, Model.ListEmailTypes, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.EmailTypePrimary, "", new { @class = "text-danger" })
+                @Html.DropDownListFor(model => model.EmailTextTypePrimary, Model.ListEmailTextTypes, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.EmailTextTypePrimary, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.EmailPrimary, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.EmailPrimary, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>@*
+    <div class="form-group">
+        <div class="col-md-4"></div>
+        <div class="col-md-5">
+            <div style="width: 96%; float: left; display: flex">
+                @Html.DropDownListFor(model => model.EmailPrimary, Model.ListEmailTypes, new { @class = "form-control" })
+                @Html.DropDownListFor(model => model.EmailPrimary, Model.ListEmailTextTypes, new { @class = "form-control" })
+                @Html.EditorFor(model => model.PinSecondaryPhoneNumber, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.PinSecondaryPhoneNumber, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>*@
+    <div class="form-group">
+        @Html.LabelFor(model => model.AddressType, htmlAttributes: new { @class = "control-label col-md-4" })
+        <div class="col-md-5">
+            <div style="width: 96%; float: left; display: flex">
+                @Html.DropDownListFor(model => model.AddressType, Model.ListAddressTypes, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.AddressType, "", new { @class = "text-danger" })
+                @Html.DropDownListFor(model => model.AddressLocation, Model.Locations, new { @class = "form-control select" })
+            </div>
+        </div>
+    </div>
+                        @*<div class="form-group">
+                            <div class="col-md-4"></div>
+                            <div class="col-md-5">
+                                <div style="width: 96%; float: left; display: flex">
+                                    @Html.DropDownListFor(model => model.AddressType, Model.ListAddressTypes, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.AddressType, "", new { @class = "text-danger" })
+                                    @Html.DropDownListFor(model => model.AddressLocation, Model.Locations, new { @class = "form-control select" })
+                                </div>
+                            </div>
+                        </div>*@
+                        <div class="form-group">
+                            <div class="col-md-offset-4 col-md-10">
+                                <input type="submit" value="Create" class="btn btn-default" />
+                                @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-warning" })
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
     </div>
 </div>
+@section scripts
+{
+    <script src="~/assets/js/common/documentFile.js"></script>
+    <script src="~/assets/js/common/documentFiles.js"></script>
+    <script src="~/assets/js/grids/files-dialog-single-selection.js"></script>
+    <script src="//rawgit.com/saribe/eModal/master/dist/eModal.min.js"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+    <script type="text/javascript">
+        $(function () { // will trigger when the document is ready
+            $('.datepicker').datepicker('setDate', 'now'); //Initialise any date pickers
+            
+        });
+        $("form").submit(function (e) {
+            $('.selectitem option').prop('selected', true);
+
+        });
+    </script>
+}
+<style>
+    .Address {
+       
+        width: 50% !important;
+       
+    }
+</style>

@@ -84,6 +84,9 @@ namespace Msr.Repositories
             modelBuilder.Entity<ProductsActualPartView>().ToTable("Portal_ProductsActualPart");
             modelBuilder.Entity<PrePropSearchView>().ToTable("Portal_PREPOP_View");
            // modelBuilder.Entity<PreProEditView>().ToTable("Portal_PREPOP_View");
+            modelBuilder.Entity<LanguagesView>().ToTable("Portal_Languages");
+            modelBuilder.Entity<TimeZonesView>().ToTable("Portal_TimeZones");
+            modelBuilder.Entity<OfficialPositionView>().ToTable("Portal_RolesApprovedDataQuick");
         }
 
         public DbSet<AspNetUser> AspNetUsers { get; set; }
@@ -130,5 +133,9 @@ namespace Msr.Repositories
         public DbSet<PrePropSearchView> PrePropSearchView { get; set; }
        // public DbSet<PreProEditView> PreProEditView { get; set; }
 
+        public DbSet<LanguagesView> LanguagesViews { get; set; }
+        public DbSet<TimeZonesView> TimeZonesViews { get; set; }
+        public DbSet<OfficialPositionView> OfficialPositionViews { get; set; }
+        
     }
 }

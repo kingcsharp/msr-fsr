@@ -98,6 +98,7 @@ namespace Msr.Services.Companies.ViewModels
         public IEnumerable<SelectListItem> HeadPeoples { get; set; }
         public IEnumerable<SelectListItem> Locations { get; set; }
         public IEnumerable<SelectListItem> ListParents { get; set; }
+
         [DisplayName("Head People :")]
         public string HeadPeople { get; set; }
 

@@ -9,6 +9,7 @@ namespace Msr.Models.People
     public class PeopleObjectView
     {
         public string Id { get; set; }
+        public string ObjectId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string PositionName { get; set; }
@@ -24,5 +25,9 @@ namespace Msr.Models.People
         public int? Rev { get; set; }
         public string PicRecord { get; set; }
         public string RootCoName { get; set; }
+        public string ScreenType { get; set; }
+        public string LanguageId { get; set; }
+        public Int16? IsHead { get; set; }
+        public string TimeZone { get; set; }
     }
 }

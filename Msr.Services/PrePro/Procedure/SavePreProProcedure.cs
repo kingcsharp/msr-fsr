@@ -13,85 +13,85 @@ namespace Msr.Services.PrePro.Procedure
     {
 
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "newID ", Direction = ParameterDirection.Output)]
-        public string newID { get; set; }
+        public string NewId { get; set; }
 
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 500, ParameterName = "messages", Direction = ParameterDirection.Output)]
-        public string messages { get; set; }
+        public string Messages { get; set; }
 
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "ID")]
-        public string ID { get; set; }
+        public string Id { get; set; }
 
         [StoredProcedureParameter(SqlDbType.VarChar, Size = 50, ParameterName = "STEP_TEXT")]
-        public string STEP_TEXT { get; set; }
+        public string StepText { get; set; }
 
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "PROC_OBJ_ID")]
-        public string PROC_OBJ_ID { get; set; }
+        public string ProcObjId { get; set; }
 
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 100, ParameterName = "COMMENTS")]
-        public string COMMENTS { get; set; }
+        public string Comments { get; set; }
 
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 100, ParameterName = "START_ON_COUNTER")]
-        public string START_ON_COUNTER { get; set; }
+        public string StartOnCounter { get; set; }
 
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "COUNTER_VALUE")]
-        public string COUNTER_VALUE { get; set; }
+        public string CounterValue { get; set; }
 
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "COUNTER_UNIT")]
-        public string COUNTER_UNIT { get; set; }
+        public string CounterUnit { get; set; }
 
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "FROM_START_OR_STOP")]
-        public string FROM_START_OR_STOP { get; set; }
+        public string FromStartOrStop { get; set; }
 
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "REL_OR_ABS")]
-        public string REL_OR_ABS { get; set; }
+        public string RelOrAbs { get; set; }
 
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "SYSTEM_TASK")]
-        public string SYSTEM_TASK { get; set; }
+        public string SystemTask { get; set; }
 
         [StoredProcedureParameter(SqlDbType.VarChar, Size = 8000, ParameterName = "DESTINATION")]
-        public string DESTINATION { get; set; }
+        public string Destination { get; set; }
 
         [StoredProcedureParameter(SqlDbType.VarChar, Size = 50, ParameterName = "SPECIFIC_LOCATION")]
-        public string SPECIFIC_LOCATION { get; set; }
+        public string SpecificLocation { get; set; }
 
         [StoredProcedureParameter(SqlDbType.VarChar, Size = 50, ParameterName = "REFERENCE_VERB")]
-        public string REFERENCE_VERB { get; set; }
+        public string ReferenceVerb { get; set; }
 
         [StoredProcedureParameter(SqlDbType.VarChar, Size = 50, ParameterName = "REFERENCE_OBJECT")]
-        public string REFERENCE_OBJECT { get; set; }
+        public string ReferenceObject { get; set; }
 
         [StoredProcedureParameter(SqlDbType.VarChar, Size = 8000, ParameterName = "REFERENCE_THEORIES")]
-        public string REFERENCE_THEORIES { get; set; }
+        public string ReferenceTheories { get; set; }
 
         [StoredProcedureParameter(SqlDbType.VarChar, Size = 50, ParameterName = "GOTO_STEP")]
-        public string GOTO_STEP { get; set; }
+        public string GotoStep { get; set; }
 
         [StoredProcedureParameter(SqlDbType.TinyInt, ParameterName = "GOTO_STEP_ID")]
-        public string GOTO_STEP_ID { get; set; }
+        public string GotoStepId { get; set; }
 
         [StoredProcedureParameter(SqlDbType.VarChar, Size = 50, ParameterName = "CYCLES")]
-        public string CYCLES { get; set; }
+        public string Cycles { get; set; }
 
         [StoredProcedureParameter(SqlDbType.VarChar, Size = 50, ParameterName = "CYCLE_ON_COUNTER")]
-        public string CYCLE_ON_COUNTER { get; set; }
+        public string CycleOnCounter { get; set; }
 
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 100, ParameterName = "CYCLE_COUNT")]
-        public string CYCLE_COUNT { get; set; }
+        public string CycleCount { get; set; }
 
         [StoredProcedureParameter(SqlDbType.VarChar, Size = 8000, ParameterName = "CYCLE_UNIT")]
-        public string CYCLE_UNIT { get; set; }
+        public string CycleUnit { get; set; }
 
         [StoredProcedureParameter(SqlDbType.VarChar, Size = 8000, ParameterName = "ReferenceProcs")]
         public string ReferenceProcs { get; set; }
 
         [StoredProcedureParameter(SqlDbType.VarChar, Size = 8000, ParameterName = "precedingSteps")]
-        public string precedingSteps { get; set; }
+        public string PrecedingSteps { get; set; }
      
         [StoredProcedureParameter(SqlDbType.VarChar, Size = 50, ParameterName = "DURATION ")]
-        public float? DURATION { get; set; }
+        public float? Duration { get; set; }
        
         [StoredProcedureParameter(SqlDbType.VarChar, Size = 50, ParameterName = "DURATION_TYPE  ")]
-        public string DURATION_TYPE { get; set; }
+        public string DurationType { get; set; }
         
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "strNTLogin")]
         public string NTLogin { get; set; }

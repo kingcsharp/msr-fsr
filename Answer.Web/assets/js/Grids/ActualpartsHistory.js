@@ -269,7 +269,7 @@
         thisCellVal = thisCellVal + '<a href="#/' + rowObject.Id + '" class="btn btn-xs btn-success" title="View Procedure" style="margin:2px;font-size: .8em;"><i class="fa fa-book" aria-hidden="true"></i></a>';
         thisCellVal = thisCellVal + '<a href="#/' + rowObject.Id + '" class="btn btn-xs btn-danger" title="Delete" style="margin:2px;font-size: .8em;"><i class="fa fa-trash" aria-hidden="true"></i></a>';
         thisCellVal = thisCellVal + '<a href="#/' + rowObject.Id + '" class="btn btn-xs btn-success" title="View Hierarchy" style="margin:2px;font-size: .8em;"><i class="fa fa-chain-broken" aria-hidden="true"></i></a>';
-        thisCellVal = thisCellVal + '<a href="#/' + rowObject.Id + '" class="btn btn-xs btn-success" title="show Purchase Status" style="margin:2px;font-size: .8em;"><i class="fa fa-money" aria-hidden="true"></i></a>';
+        thisCellVal = thisCellVal + '<a href="/ShowPurchaseStatus/Index/' + rowObject.Id + '" class="btn btn-xs btn-success" title="show Purchase Status" style="margin:2px;font-size: .8em;"><i class="fa fa-money" aria-hidden="true"></i></a>';
         thisCellVal = thisCellVal + '<a href="#/' + rowObject.Id + '" class="btn btn-xs btn-success" title="View Details" style="margin:2px;font-size: .8em;"><i class="fa fa-eye" aria-hidden="true"></i></a>';
         thisCellVal = thisCellVal + '<a href="#/' + rowObject.Id + '" class="btn btn-xs btn-success" title="Vie a Service Report for this Task" style="margin:2px;font-size: .8em;"><i class="fa fa-flag" aria-hidden="true"></i></a>';
 

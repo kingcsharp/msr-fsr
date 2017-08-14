@@ -1,137 +1,127 @@
 ﻿@model Msr.Services.PrePro.ViewModel.ProcedurePreProViewModel
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Add Procedure Step";
 }
+<div class="container-fluid">
+    <div class="side-body padding-top">
+        <div class="row">
+            <h2 class="page-header">
+                Add Procedure Step<button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
+            </h2>
+            <div class="col-lg-10">
+                @using (Html.BeginForm("Create", "PreProSearch", FormMethod.Post, new { @class = "form form-horizontal" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="form-horizontal">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="form-group">
+                            <label class="control-label col-md-2" for="START_ON_COUNTER">Base Start on Counter</label>
+                            <div class="col-md-5">
+                                @Html.DropDownListFor(model => model.START_ON_COUNTER, Model.Base_Start_on_Counter, new { @class = "form-control select" })
+                                @Html.ValidationMessageFor(model => model.START_ON_COUNTER, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
 
-@using (Html.BeginForm("Create", "PreProSearch", FormMethod.Post, new { @class = "form form-horizontal partCreate" }))
-{
-    @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>SavePrePro</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            <label class="control-label col-md-2" for="Title">Base Start on Counter</label>
-            <div class="col-md-5">
-                @Html.DropDownListFor(model => model.START_ON_COUNTER, Model.Base_Start_on_Counter, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.START_ON_COUNTER, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2" for="DURATION">Estimated Step Duration</label>
+                            <div class="col-md-5">
+                                @Html.EditorFor(model => model.DURATION, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.DURATION, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
 
-        <div class="form-group">
-            <label class="control-label col-md-2" for="Title">Estimated Step Duration</label>
-            <div class="col-md-5">
-                @Html.EditorFor(model => model.DURATION, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.DURATION, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2" for="DURATION_TYPE">Step Duration Type</label>
+                            <div class="col-md-5">
+                                @Html.DropDownListFor(model => model.DURATION_TYPE, Model.Step_Duration_Type, new { @class = "form-control select" })
+                                @Html.ValidationMessageFor(model => model.DURATION_TYPE, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.STEP_TEXT, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-5">
+                                @Html.TextAreaFor(model => model.STEP_TEXT, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.STEP_TEXT, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
 
-        <div class="form-group">
-            <label class="control-label col-md-2" for="Title">Step Duration Type</label>
-            <div class="col-md-5">
-                @Html.DropDownListFor(model => model.DURATION_TYPE, Model.Step_Duration_Type, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.DURATION_TYPE, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2" for="SYSTEM_TASK">SYSTEM TASK</label>
+                            <div class="col-md-5">
+                                @Html.DropDownListFor(model => model.SYSTEM_TASK, Model.SYSTEM_TASKS, new { @class = "form-control select" })
+                                @Html.ValidationMessageFor(model => model.SYSTEM_TASK, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
 
-     
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ReferenceProcs, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-5">
+                                <div style="width: 96%; float: left;">
+                                    @Html.ListBoxFor(m => m.ReferenceProcs, Model.ListProcFiles, new { @class = "form-control submitselect", multiple = "multiple" })
+                                    @Html.ValidationMessageFor(model => model.ReferenceProcs, "", new { @class = "text-danger" })
+                                </div>
+                                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceProcs" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceProcs"><i class="icon fa fa-trash"></i></span> </div>
+                            </div>
+                        </div>
+                        @*<div class="form-group">
+                                <label class="control-label col-md-2" for="Title">Refrence Verbs</label>
+                                <div class="col-md-5">
+                                    @Html.DropDownListFor(model => model.REFERENCE_VERB, Model.Reference_Verb, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.REFERENCE_VERB, "", new { @class = "text-danger" })
+                                </div>
+                            </div>*@
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ReferenceObject, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-5">
+                                <div style="width: 96%; float: left;">
+                                    @Html.ListBoxFor(m => m.ReferenceObject, Model.REFERENCE_OBJECTS, new { @class = "form-control submitselect" })
+                                    @Html.ValidationMessageFor(model => model.ReferenceObject, "", new { @class = "text-danger" })
+                                </div>
+                                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="REFERENCE_OBJECT" data-toggle="modal" data-target="#select-objects"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="REFERENCE_OBJECT"><i class="icon fa fa-trash"></i></span> </div>
+                            </div>
+                        </div>
 
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.PictureFiles, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-5">
+                                <div style="width: 96%; float: left;">
+                                    @Html.ListBoxFor(m => m.PictureFiles, Model.ListPictureRefFiles, new { @class = "form-control submitselect", multiple = "multiple" })
+                                </div>
+                                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="PictureFiles" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="PictureFiles"><i class="icon fa fa-trash"></i></span>  </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ReferenceTheories, htmlAttributes: new { @class = "control-label col-md-2" })
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.STEP_TEXT, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-5">
-                @Html.TextAreaFor(model => model.STEP_TEXT, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.STEP_TEXT, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="control-label col-md-2" for="Title">SYSTEM TASK</label>
-            <div class="col-md-5">
-                @Html.DropDownListFor(model => model.SYSTEM_TASK, Model.SYSTEM_TASKS, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.SYSTEM_TASK, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ReferenceProcs, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-5">
-                <div style="width: 96%; float: left;">
-                    @Html.ListBoxFor(m => m.ReferenceProcs, Model.ListProcFiles, new { @class = "form-control submitselect", multiple = "multiple" })
-                    @Html.ValidationMessageFor(model => model.ReferenceProcs, "", new { @class = "text-danger" })
-                </div>
-                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceProcs" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceProcs"><i class="icon fa fa-trash"></i></span> </div>
-            </div>
-        </div>
-
-
-        @*<div class="form-group">
-            <label class="control-label col-md-2" for="Title">Refrence Verbs</label>
-            <div class="col-md-5">
-                @Html.DropDownListFor(model => model.REFERENCE_VERB, Model.Reference_Verb, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.REFERENCE_VERB, "", new { @class = "text-danger" })
-            </div>
-        </div>*@
-
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.REFERENCE_OBJECT, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-5">
-                <div style="width: 96%; float: left;">
-                    @Html.ListBoxFor(m => m.REFERENCE_OBJECT,Model.REFERENCE_OBJECTS,  new { @class = "form-control submitselect" })
-                    @Html.ValidationMessageFor(model => model.REFERENCE_OBJECT, "", new { @class = "text-danger" })
-                </div>
-                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="REFERENCE_OBJECT" data-toggle="modal" data-target="#select-objects"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="REFERENCE_OBJECT"><i class="icon fa fa-trash"></i></span> </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.PictureFiles, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-5">
-                <div style="width: 96%; float: left;">
-                    @Html.ListBoxFor(m => m.PictureFiles, Model.ListPictureRefFiles, new { @class = "form-control submitselect", multiple = "multiple" })
-                </div>
-                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="PictureFiles" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="PictureFiles"><i class="icon fa fa-trash"></i></span>  </div>
-            </div>
-        </div>
-
-       
-    
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.REFERENCE_THEORIES, htmlAttributes: new { @class = "control-label col-md-2" })
-
-            <div class="col-md-5">
-                <div style="width: 96%; float: left;">
-                    @Html.ListBoxFor(m => m.REFERENCE_THEORIES, Model.ListReferenceTheories, new { @class = "form-control submitselect", multiple = "multiple" })
-                </div>
-                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="REFERENCE_THEORIES" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="REFERENCE_THEORIES"><i class="icon fa fa-trash"></i></span>  </div>
-            </div>
-        </div>
-        
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.COMMENTS, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-5">
-                @Html.EditorFor(model => model.COMMENTS, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.COMMENTS, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                            <div class="col-md-5">
+                                <div style="width: 96%; float: left;">
+                                    @Html.ListBoxFor(m => m.ReferenceTheories, Model.ListReferenceTheories, new { @class = "form-control submitselect", multiple = "multiple" })
+                                </div>
+                                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="REFERENCE_THEORIES" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="REFERENCE_THEORIES"><i class="icon fa fa-trash"></i></span>  </div>
+                            </div>
+                        </div>
 
 
-        
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.COMMENTS, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-5">
+                                @Html.TextAreaFor(model => model.COMMENTS, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.COMMENTS, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-5">
+                                <input type="submit" value="Create" class="btn btn-default" />
+                                @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-warning" })
+                            </div>
+                        </div>
+                    </div>
+                }
             </div>
         </div>
     </div>
-}
-
-<div style="margin-left:5%;">
-    @Html.ActionLink("Back to List", "Index")
 </div>
 @section scripts
 {
@@ -139,9 +129,11 @@
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
     <script src="~/assets/js/grids/comman.js"></script>
-<script src="~/assets/js/grids/PreProTheoryDiolag.js"></script>
+    <script src="~/assets/js/grids/PreProTheoryDiolag.js"></script>
     <script>
-
+        $(document).ready(function () {
+            $(".select").select2();
+        });
         $('#select-PreProTheory').on('show.bs.modal',
             function (event) {
 
@@ -163,68 +155,55 @@
 
             });
 
-        //function selectFormatter(cellvalue, options, rowObject) {
+        function removeOldFile(e) {
 
-        //    var html = "";
+            var control = $(e).closest(".modal-body").find('#target-control-id').val();
+            $('#' + control).empty();
+        };
+        function getRecord(e) {
+            removeOldFile(e);
+            SelectlocationID();
+            $('.closeClick').click();
+        }
 
-        //    html = '<input class="selected-file" type="checkbox" onclick="getRecord(this)" value="' + cellvalue + '|' + rowObject.Name + '" />';
+        function SelectlocationID() {
 
-        //    return html;
-        //}
-    function removeOldFile(e) {
+            $(".selected-file").each(function (Index) {
 
-        var control = $(e).closest(".modal-body").find('#target-control-id').val();
-        $('#' + control).empty();
-    };
-    function getRecord(e) {
-        removeOldFile(e);
-        SelectlocationID();
-        $('.closeClick').click();
-    }
+                if ($(this).is(":checked")) {
 
-    function SelectlocationID() {
+                    var ids = $(this).val().split('|');
 
-        $(".selected-file").each(function (Index) {
+                    var callBackId = $(this).closest(".modal-body").find('#target-control-id').val();
+                    var options = $('#' + callBackId + '')[0].options;
 
-            if ($(this).is(":checked")) {
+                    var optionsArray = $.map(options, function (elem) {
+                        return (elem.value);
+                    });
 
-                var ids = $(this).val().split('|');
+                    if (optionsArray.length > 0) {
 
-                var callBackId = $(this).closest(".modal-body").find('#target-control-id').val();
-                var options = $('#' + callBackId + '')[0].options;
+                        if ($.inArray(ids[0], optionsArray) != -1) {
+                            // found it
+                        }
+                        else {
 
-                var optionsArray = $.map(options, function (elem) {
-                    return (elem.value);
-                });
+                            $('#' + callBackId + '').append($('<option></option>').val(ids[0]).html(ids[1]));
+                            $('#' + callBackId + ' option').prop('selected', true);
 
-                if (optionsArray.length > 0) {
+                        }
 
-                    if ($.inArray(ids[0], optionsArray) != -1) {
-                        // found it
                     }
                     else {
-
                         $('#' + callBackId + '').append($('<option></option>').val(ids[0]).html(ids[1]));
                         $('#' + callBackId + ' option').prop('selected', true);
-
                     }
-
                 }
-                else {
-                    $('#' + callBackId + '').append($('<option></option>').val(ids[0]).html(ids[1]));
-                    $('#' + callBackId + ' option').prop('selected', true);
-                }
-            }
 
-        });
-        $('.closeClick').click();
+            });
+            $('.closeClick').click();
 
-    }
-
-
-
-
-
+        }
 
         $('.deletefiles').click(function () {
 

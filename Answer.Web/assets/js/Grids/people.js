@@ -19,7 +19,7 @@
                 colmenu: false,
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                width: 50,
+                width: 100,
                 align: 'left'
             },
             {
@@ -178,7 +178,7 @@
                 searchoptions: { value: ":[All];CREATING, DENIED, APPROVED, APPROVED_BUT_REVISING:Creating or Approved;CREATING, DENIED: Creating;IN_WORKFLOW:In Approval Workflow;APPROVED, APPROVED_BUT_REVISING, APPROVED_BUT_DELETING:Approved;DENIED:Denied;APPROVED_BUT_REVISING:Approved But Being Revised;APPROVED_BUT_DELETING:Approved But Being Deleted;DENIED:Denied;DELETED:Deleted;OLD:Obsolete" },
                 align: 'left'
             },
-            { name: 'Actions', index: 'Id', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: peopleEditFormatter, width: 200, align: 'center' }
+            { name: 'Actions', index: 'ObjectId', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: peopleEditFormatter, width: 200, align: 'center' }
         ],
         ajaxRowOptions: {
             type: "POST",

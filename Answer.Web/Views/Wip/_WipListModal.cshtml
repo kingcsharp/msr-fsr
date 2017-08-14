@@ -23,23 +23,35 @@
                                     }
                                     else if (proItem.Status == "ACCEPTED")
                                     {
-                                        cssIconButton = "fa-cog";
+                                        cssIconButton = "fa fa-cog fa-spin fa-2x";
                                         cssButton = "btn-success btn-accepted";
                                         statusText= "In Progress";
                                     }
                                     else if (proItem.Status == "PENDING_PARENT_ACCEPTANCE")
                                     {
                                         cssIconButton = "fa-cog";
-                                        cssButton = "btn-success";
+                                        cssButton = "btn btn-sq btn-success wip-button";
                                         statusText= "Waiting to Start";
+                                    }
+
+                                    if (DateTime.Now > proItem.DueDate)
+                                    {
+                                        cssIconButton = "fa fa-exclamation-circle fa-2x";
+                                        cssButton = "btn-danger";
+                                    }
+
+                                    if (string.IsNullOrWhiteSpace(proItem.RequesteeName))
+                                    {
+                                        cssIconButton = "fa fa-ban fa-stack-2x";
+                                        cssButton = "btn-success";
                                     }
 
                                     <button data-toggle="tooltip" data-task-id="@proItem.TaskId" data-fill-id="@proItem.FillId" data-placement="bottom" data-html="true"
                                             title="<strong>Serial #:</strong>@proItem.Serial<br />
                                        <strong>Status:</strong> @statusText<br />
-                                       <strong>Assigned To:</strong> @proItem.ProcName"
+                                       <strong>Assigned To:</strong> @proItem.RequesteeName"
                                             class="btn btn-sq @cssButton wip-button">
-                                        <i class="fa @cssIconButton fa-spin fa-2x"></i>
+                                        <i class="@cssIconButton"></i>
                                     </button>
                                 }       
                                 </div>

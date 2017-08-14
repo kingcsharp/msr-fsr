@@ -15,7 +15,7 @@ using Msr.Models.PrePro;
 
 namespace Msr.Services.PrePro
 {
-  
+
     public class PreProServices
     {
         private readonly MsrDbContext _dbContext;
@@ -28,10 +28,10 @@ namespace Msr.Services.PrePro
         {
             return _dbContext.PrePropSearchView;
         }
-       
+
         public PrePropSearchView GetById(string id)
         {
-            return GetPreProQueryable().Where(x => x.ObjectId == id).SingleOrDefault();
+            return GetPreProQueryable().SingleOrDefault(x => x.ObjectId == id);
         }
 
         public List<SelectFile> GetSelectedTheory(string id)
@@ -64,7 +64,7 @@ namespace Msr.Services.PrePro
             var partId = new SqlParameter("@ID", id == null ? "0" : id);
             var NTLogin = new SqlParameter("@strNTLogin", "1618");
 
-            var result = _dbContext.Database.SqlQuery<TheoryFile>("EXEC A_SP_PROCEDURE_STEP_GET_REF_PROCEDURES @ID,@strNTLogin",partId,NTLogin).ToList();
+            var result = _dbContext.Database.SqlQuery<TheoryFile>("EXEC A_SP_PROCEDURE_STEP_GET_REF_PROCEDURES @ID,@strNTLogin", partId, NTLogin).ToList();
 
             return result;
         }
@@ -93,73 +93,75 @@ namespace Msr.Services.PrePro
         {
             try
             {
-                 foreach (var file in model.PictureFiles)
+                foreach (var file in model.PictureFiles)
                 {
-                    var saveFileProcedure = new SaveFileProcedure() { ObjID = model.ID, DocID = file, Type = "PICTURE", NTLogin = model.strNTLogin };
+                    var saveFileProcedure = new SaveFileProcedure() { ObjID = model.Id, DocID = file, Type = "PICTURE", NTLogin = model.NTLogin };
 
                     _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
                 }
 
-                foreach (var file in model.REFERENCE_OBJECT)
+                foreach (var file in model.ReferenceObject)
                 {
-                    var saveFileProcedure = new SaveFileProcedure() { ObjID = model.ID, DocID = file, Type = null, NTLogin = model.strNTLogin };
+                    var saveFileProcedure = new SaveFileProcedure() { ObjID = model.Id, DocID = file, Type = null, NTLogin = model.NTLogin };
 
                     _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
                 }
                 foreach (var file in model.ReferenceProcs)
                 {
-                    var saveFileProcedure = new SaveFileProcedure() { ObjID = model.ID, DocID = file, Type = null, NTLogin = model.strNTLogin };
+                    var saveFileProcedure = new SaveFileProcedure() { ObjID = model.Id, DocID = file, Type = null, NTLogin = model.NTLogin };
 
                     _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
                 }
-                foreach (var file in model.REFERENCE_THEORIES)
+                foreach (var file in model.ReferenceTheories)
                 {
-                    var saveFileProcedure = new SaveTheoryProcedure() { ObjID = model.ID, NTLogin = model.strNTLogin };
+                    var saveFileProcedure = new SaveTheoryProcedure() { ObjID = model.Id, NTLogin = model.NTLogin };
 
                     _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
                 }
 
-                
+
                 var savePartProcedure = new SavePreProProcedure()
                 {
-                    ID = model.ID,
-                     STEP_TEXT=model.STEP_TEXT,
-                    COMMENTS = model.COMMENTS,
-                    START_ON_COUNTER = model.START_ON_COUNTER,
-                    COUNTER_VALUE = model.COUNTER_VALUE,
-                    COUNTER_UNIT = model.COUNTER_UNIT,
-                    FROM_START_OR_STOP = model.FROM_START_OR_STOP,
-                    REL_OR_ABS = model.REL_OR_ABS,
-                    SYSTEM_TASK = model.SYSTEM_TASK != null ? string.Join(", ", model.SYSTEM_TASK) : "",
-                    DESTINATION = model.DESTINATION,
-                    SPECIFIC_LOCATION = model.SPECIFIC_LOCATION,
-                 //  REFERENCE_VERB = model.Reference_Verb != null ? string.Join(", ", model.Reference_Verb) : "",
-                    REFERENCE_OBJECT = model.REFERENCE_OBJECT != null ? string.Join(", ", model.REFERENCE_OBJECT) : "",
-                    REFERENCE_THEORIES = model.REFERENCE_THEORIES != null ? string.Join(", ", model.REFERENCE_OBJECT) : "",
-                    GOTO_STEP = model.GOTO_STEP,
-                    GOTO_STEP_ID = model.GOTO_STEP_ID,
-                    CYCLES = model.CYCLES,
-                    CYCLE_ON_COUNTER = model.CYCLE_ON_COUNTER,
-                    CYCLE_COUNT = model.CYCLE_COUNT,
-                    CYCLE_UNIT = model.CYCLE_UNIT,
+                    Id = model.Id,
+                    StepText = model.StepText,
+                    Comments = model.Comments,
+                    StartOnCounter = model.StartOnCounter,
+                    CounterValue = model.CounterValue,
+                    CounterUnit = model.CounterUnit,
+                    FromStartOrStop = model.FromStartOrStop,
+                    RelOrAbs = model.RelOrAbs,
+                    SystemTask = model.SystemTask,
+                    Destination = model.Destination,
+                    SpecificLocation = model.SpecificLocation,
+                    ReferenceVerb = model.ReferenceVerb != null ? string.Join(", ", model.ReferenceVerb) : "",
+                    ReferenceObject = model.ReferenceObject != null ? string.Join(", ", model.ReferenceObject) : "",
+                    ReferenceTheories = model.ReferenceTheories != null ? string.Join(", ", model.ReferenceTheories) : "",
+                    GotoStep = model.GotoStep,
+                    GotoStepId = model.GotoStepId,
+                    Cycles = model.Cycles,
+                    CycleOnCounter = model.CycleOnCounter,
+                    CycleCount = model.CycleCount,
+                    CycleUnit = model.CycleUnit,
                     ReferenceProcs = model.ReferenceProcs != null ? string.Join(", ", model.ReferenceProcs) : "",
-                    precedingSteps = model.precedingSteps,
-                    DURATION = model.DURATION,
-                    DURATION_TYPE = model.DURATION_TYPE,
-                    NTLogin = model.strNTLogin
+                    PrecedingSteps = model.PrecedingSteps,
+                    Duration = model.Duration,
+                    DurationType = model.DurationType,
+                    NTLogin = model.NTLogin
                 };
 
                 _dbContext.Database.ExecuteStoredProcedure(savePartProcedure);
+
                 var preproselectprocedure = new PreProSelectProcedure()
                 {
-                    objID = savePartProcedure.PROC_OBJ_ID,
-                    procStepID = savePartProcedure.newID,
-                    strNTLogin = model.strNTLogin
+                    objID = savePartProcedure.ProcObjId,
+                    procStepID = savePartProcedure.NewId,
+                    strNTLogin = model.NTLogin
 
                 };
+
                 _dbContext.Database.ExecuteStoredProcedure(preproselectprocedure);
 
-                var deletePictureFileProcedure = new DeletePreProProcedure() { id = savePartProcedure.newID, NTLogin = model.strNTLogin };
+                var deletePictureFileProcedure = new DeletePreProProcedure() { id = savePartProcedure.NewId, NTLogin = model.NTLogin };
 
                 _dbContext.Database.ExecuteStoredProcedure(deletePictureFileProcedure);
                 return true;
@@ -175,71 +177,68 @@ namespace Msr.Services.PrePro
 
         public bool Create(ProcedurePreProViewModel model)
         {
-           
+
             try
             {
 
                 var savePartProcedure = new SavePreProProcedure()
                 {
-                  
 
-                    ID = model.ID,
-                 
-                   PROC_OBJ_ID = model.PROC_OBJ_ID,
-                    STEP_TEXT=model.STEP_TEXT,
-                    COMMENTS=model.COMMENTS,
-                    START_ON_COUNTER=model.START_ON_COUNTER,
-                    COUNTER_VALUE=model.COUNTER_VALUE,
-                    COUNTER_UNIT=model.COUNTER_UNIT,
-                    FROM_START_OR_STOP=model.FROM_START_OR_STOP,
-                    REL_OR_ABS=model.REL_OR_ABS,
-                    SYSTEM_TASK= model.SYSTEM_TASK != null ? string.Join(", ", model.SYSTEM_TASK) : "",
-                    DESTINATION=model.DESTINATION,
-                    SPECIFIC_LOCATION=model.SPECIFIC_LOCATION,
-                  //  REFERENCE_VERB= model.Reference_Verb != null ? string.Join(", ", model.Reference_Verb) : "",
-                    REFERENCE_OBJECT= model.REFERENCE_OBJECT != null ? string.Join(", ", model.REFERENCE_OBJECT) : "",
-                    REFERENCE_THEORIES =model.REFERENCE_THEORIES != null ? string.Join(", ", model.REFERENCE_THEORIES) :"",
-                    GOTO_STEP=model.GOTO_STEP,
-                    GOTO_STEP_ID=model.GOTO_STEP_ID,
-                    CYCLES=model.CYCLES,
-                    CYCLE_ON_COUNTER=model.CYCLE_ON_COUNTER,
-                    CYCLE_COUNT=model.CYCLE_COUNT,
-                    CYCLE_UNIT=model.CYCLE_UNIT,
+
+                    Id = model.Id,
+                    StepText = model.StepText,
+                    Comments = model.Comments,
+                    StartOnCounter = model.StartOnCounter,
+                    CounterValue = model.CounterValue,
+                    CounterUnit = model.CounterUnit,
+                    FromStartOrStop = model.FromStartOrStop,
+                    RelOrAbs = model.RelOrAbs,
+                    SystemTask = model.SystemTask,
+                    Destination = model.Destination,
+                    SpecificLocation = model.SpecificLocation,
+                    ReferenceVerb = model.ReferenceVerb != null ? string.Join(", ", model.ReferenceVerb) : "",
+                    ReferenceObject = model.ReferenceObject != null ? string.Join(", ", model.ReferenceObject) : "",
+                    ReferenceTheories = model.ReferenceTheories != null ? string.Join(", ", model.ReferenceTheories) : "",
+                    GotoStep = model.GotoStep,
+                    GotoStepId = model.GotoStepId,
+                    Cycles = model.Cycles,
+                    CycleOnCounter = model.CycleOnCounter,
+                    CycleCount = model.CycleCount,
+                    CycleUnit = model.CycleUnit,
                     ReferenceProcs = model.ReferenceProcs != null ? string.Join(", ", model.ReferenceProcs) : "",
-                    precedingSteps =model.precedingSteps,
-                    DURATION=model.DURATION,
-                    DURATION_TYPE=model.DURATION_TYPE,
-                      NTLogin = model.strNTLogin
-
-                  
+                    PrecedingSteps = model.PrecedingSteps,
+                    Duration = model.Duration,
+                    DurationType = model.DurationType,
+                    NTLogin = model.NTLogin
                 };
 
                 _dbContext.Database.ExecuteStoredProcedure(savePartProcedure);
 
                 var preproselectprocedure = new PreProSelectProcedure()
                 {
-                    objID = savePartProcedure.PROC_OBJ_ID,
-                    procStepID = savePartProcedure.newID,
-                    strNTLogin = model.strNTLogin
-
+                    objID = savePartProcedure.ProcObjId,
+                    procStepID = savePartProcedure.NewId,
+                    strNTLogin = model.NTLogin
                 };
+
                 _dbContext.Database.ExecuteStoredProcedure(preproselectprocedure);
-                var deletePictureFileProcedure = new DeletePreProProcedure() { id = savePartProcedure.newID, NTLogin = model.strNTLogin };
+
+                var deletePictureFileProcedure = new DeletePreProProcedure() { id = savePartProcedure.NewId, NTLogin = model.NTLogin };
 
                 _dbContext.Database.ExecuteStoredProcedure(deletePictureFileProcedure);
 
 
                 foreach (var file in model.PictureFiles)
                 {
-                 
-                    var saveFileProcedure = new SaveProcedurePreProFileProcedure() { ObjID = savePartProcedure.newID, DocID =file, NTLogin = model.strNTLogin };
+
+                    var saveFileProcedure = new SaveProcedurePreProFileProcedure() { ObjID = savePartProcedure.NewId, DocID = file, NTLogin = model.NTLogin };
 
                     _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
                 }
-               
+
                 //foreach (var file in model.ReferenceFiles)
                 //{
-                //    var saveFileProcedure = new SaveFileProcedure() { ObjID = singlePart.Id, DocID = file, Type = null, NTLogin = model.NTLogin };
+                //    var saveFileProcedure = new SaveFileProcedure() { ObjID = savePartProcedure.Id, DocID = file, Type = null, NTLogin = model.NTLogin };
 
                 //    _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
                 //}

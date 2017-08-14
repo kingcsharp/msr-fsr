@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Msr.Models.PrePro;
 using Msr.Services.ProcedureVerbs;
 
 namespace Answer.Web.Controllers
@@ -116,7 +117,7 @@ namespace Answer.Web.Controllers
             if (ModelState.IsValid)
             {
                 //Need to dynamic 
-                model.strNTLogin = "1618";
+                model.NTLogin = "1618";
               //  model.SubParts = null;
 
                 var response = taskService.Create(model: model);

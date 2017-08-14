@@ -11,127 +11,115 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Msr.Models;
+using Msr.Models.PrePro;
 using Msr.Services.ProcedureVerbs;
 using Msr.Services.TheoryParagraph;
 
 namespace Msr.Services.PrePro.ViewModel
 {
-   public class ProcedurePreProViewModel
+    public class ProcedurePreProViewModel
     {
         public ProcedurePreProViewModel()
         {
-            ListProcFiles = new List<SelectListItem>();
-            ListPictureRefFiles = new List<SelectListItem>();
-           //1Reference_Verb = new List<SelectListItem>();
-            REFERENCE_OBJECTS = new List<SelectListItem>();
+            ProcFilesList = new List<SelectListItem>();
+            PictureRefFilesList = new List<SelectListItem>();
+            //1Reference_Verb = new List<SelectListItem>();
+            ReferenceObjectsList = new List<SelectListItem>();
             ListReferenceTheories = new List<SelectListItem>();
-            PictureFiles=new List<string>();
+            PictureFiles = new List<string>();
         }
-     
-        public string ID { get; set; }
 
-        [DisplayName("Step Text:")]
-        public string STEP_TEXT { get; set; }
+        public string Id { get; set; }
 
-        // [Required]
-        [DisplayName("Proc ObjId:")]
-        public string PROC_OBJ_ID { get; set; }
+        [DisplayName("Text :")]
+        public string StepText { get; set; }
 
-        [DisplayName("COMMENTS:")]
-        public string COMMENTS { get; set; }
+        public string ProcObjId { get; set; }
 
-        [DisplayName("START_ON_COUNTER:")]
-        public string START_ON_COUNTER { get; set; }
-        
+        [DisplayName("Comments :")]
+        public string Comments { get; set; }
 
-        [DisplayName("COUNTER VALUE :")]
-        public string COUNTER_VALUE { get; set; }
+        [DisplayName("Base Start on Counter :")]
+        public string StartOnCounter { get; set; }
 
-        [DisplayName("COUNTER UNIT :")]
-        public string COUNTER_UNIT { get; set; }
+        public string CounterValue { get; set; }
 
-        [DisplayName("FROM_START_OR_STOP:")]
-        public string FROM_START_OR_STOP { get; set; }
+        public string CounterUnit { get; set; }
 
-        [DisplayName("REL_OR_ABS :")]
-        public string REL_OR_ABS { get; set; }
+        public string FromStartOrStop { get; set; }
 
-        [DisplayName("SYSTEM_TASK:")]
-        public string SYSTEM_TASK { get; set; }
+        public string RelOrAbs { get; set; }
+
+        [DisplayName("System Task :")]
+        public string SystemTask { get; set; }
 
         [DisplayName("DESTINATION :")]
-        public string DESTINATION { get; set; }
+        public string Destination { get; set; }
 
-        [DisplayName("SPECIFIC_LOCATION :")]
-        public string SPECIFIC_LOCATION { get; set; }
+        public string SpecificLocation { get; set; }
 
-        [DisplayName("REFERENCE_VERB :")]
-        public List<string> REFERENCE_VERB { get; set; }
+        public List<string> ReferenceVerb { get; set; }
 
-        [DisplayName("REFERENCE OBJECT :")] 
-        public List<string> REFERENCE_OBJECT { get; set; }
+        public List<string> ReferenceObject { get; set; }
 
-        [DisplayName("REFERENCE_THEORIES :")]
-        public List<string> REFERENCE_THEORIES { get; set; }
+        public List<string> ReferenceTheories { get; set; }
 
-        [DisplayName("GOTO_STEP :")]
-        public string GOTO_STEP { get; set; }
+        public string GotoStep { get; set; }
 
-        [DisplayName("GOTO_STEP_ID :")]
-        public string GOTO_STEP_ID { get; set; }
+        public string GotoStepId { get; set; }
 
-        [DisplayName("CYCLES:")]
-        public string CYCLES { get; set; }
+        public string Cycles { get; set; }
 
-        [DisplayName("CYCLE_ON_COUNTER:")]
-        public string CYCLE_ON_COUNTER { get; set; }
+        public string CycleOnCounter { get; set; }
 
-        [DisplayName("CYCLE_COUNT :")]
-        public string CYCLE_COUNT { get; set; }
+        public string CycleCount { get; set; }
 
-        [DisplayName("CYCLE_UNIT :")]
-        public string CYCLE_UNIT { get; set; }
+        public string CycleUnit { get; set; }
 
         [DisplayName("ReferenceProcs :")]
         public List<string> ReferenceProcs { get; set; }
 
         [DisplayName("precedingSteps :")]
-        public string precedingSteps { get; set; }
+        public string PrecedingSteps { get; set; }
 
-        [DisplayName("DURATION :")]
-        public float? DURATION { get; set; }
+        [DisplayName("Estimated Step Duration :")]
+        public float? Duration { get; set; }
 
-        [DisplayName("DURATION_TYPE :")]
-        public string DURATION_TYPE { get; set; }
+        [DisplayName("Step Duration Type :")]
+        public string DurationType { get; set; }
+
+        [DisplayName("Step Duration Type :")]
+        public string Labor { get; set; }
+
+        [DisplayName("Number Of Questions to use :")]
+        public string NumTestQuestion { get; set; }
 
         [DisplayName("Picture Files :")]
         public List<string> PictureFiles { get; set; }
 
-        public string strNTLogin { get; set; }
-        public List<SelectListItem> Base_Start_on_Counter { get; set; }
+        public string NTLogin { get; set; }
 
-        public List<SelectListItem> Step_Duration_Type { get; set; }
+        public List<SelectListItem> BaseStartOnCounterList { get; set; }
 
-      public List<SelectListItem> SYSTEM_TASKS { get; set; }
+        public List<SelectListItem> StepDurationTypeList { get; set; }
 
-
+        public List<SelectListItem> SystemTaskList { get; set; }
 
         //public IList<SelectListItem> Reference_Verb { get; set; }
 
-
-        public List<SelectListItem> REFERENCE_OBJECTS { get; set; }
-
-
-        public IList<SelectListItem> ListProcFiles { get; set; }
-
-        public IList<SelectListItem> ListPictureRefFiles { get; set; }
+        public List<SelectListItem> ReferenceObjectsList { get; set; }
 
 
-          public IList<SelectListItem> ListReferenceTheories { get; set; }
+        public IList<SelectListItem> ProcFilesList { get; set; }
 
-        public void Setup(PreProServices PreProServices, ProcedureVerbsService ProcedureTypesService, DocumentService documentService, DocumentFilesService documentFilesService, TheoryParagraphService TheoryParagraphService)
+        public IList<SelectListItem> PictureRefFilesList { get; set; }
+
+
+        public IList<SelectListItem> ListReferenceTheories { get; set; }
+
+        public void Setup(PreProServices preProServices, ProcedureVerbsService procedureVerbsService, DocumentService documentService, DocumentFilesService documentFilesService, TheoryParagraphService TheoryParagraphService)
         {
-            Base_Start_on_Counter = new List<SelectListItem>
+            BaseStartOnCounterList = new List<SelectListItem>
             {
                     new SelectListItem
                     { Text = "NO",
@@ -142,12 +130,12 @@ namespace Msr.Services.PrePro.ViewModel
                 {
                     Text = "YES",
                     Value = "1"
-                    
+
                 }
-               
+
             };
 
-            Step_Duration_Type = new List<SelectListItem>
+            StepDurationTypeList = new List<SelectListItem>
             {
                 new SelectListItem
                 {
@@ -169,18 +157,18 @@ namespace Msr.Services.PrePro.ViewModel
                 {
                     Text = "SYS_DAYS",
                     Value = "TIME_SYS_DAYS",
-               
+
                 },
                 new SelectListItem
                 {
                     Text = "SYS_WEEKS",
                     Value = "TIME_SYS_WEEKS",
-                   
+
                 }
 
             };
 
-            SYSTEM_TASKS = new List<SelectListItem>
+            SystemTaskList = new List<SelectListItem>
             {
                 new SelectListItem
                 {
@@ -277,24 +265,24 @@ namespace Msr.Services.PrePro.ViewModel
             //    Value = x.Id
             //}).OrderBy(o => o.Text).ToList();
 
-            REFERENCE_OBJECTS = documentService.GetSelectedObjects(id: ID).Select(x => new SelectListItem
+            ReferenceObjectsList = documentService.GetSelectedObjects(id: Id).Select(x => new SelectListItem
             {
                 Text = x.Name,
                 Value = x.Id.ToString(),
             }).OrderBy(o => o.Text).ToList();
 
-            ListProcFiles = documentFilesService.GetSelectedFiles(id: ID, type: null).Select(x => new SelectListItem
+            ProcFilesList = documentFilesService.GetSelectedFiles(id: Id, type: null).Select(x => new SelectListItem
             {
                 Text = x.Show,
                 Value = x.Value.ToString(),
             }).OrderBy(o => o.Text).ToList();
 
-            ListPictureRefFiles = documentFilesService.GetSelectedFiles(id: ID, type: "PICTURE").Select(x => new SelectListItem
+            ProcFilesList = documentFilesService.GetSelectedFiles(id: Id, type: "PICTURE").Select(x => new SelectListItem
             {
                 Text = x.Show,
                 Value = x.Value.ToString(),
             }).OrderBy(o => o.Text).ToList();
-            ListReferenceTheories = PreProServices.GetPreProTheoryExceptions(id:ID).Select(x => new SelectListItem
+            ListReferenceTheories = preProServices.GetPreProTheoryExceptions(id: Id).Select(x => new SelectListItem
             {
                 Text = x.NAME,
                 Value = x.ID.ToString(),
@@ -310,12 +298,12 @@ namespace Msr.Services.PrePro.ViewModel
             {
                 //ID = model.Id,
                 //PROC_OBJ_ID = model.OBJ_ID,
-                STEP_TEXT = model.StepText,
-                COMMENTS = model.Comments,
-               // DURATION = model.Duration.ToString(),
-                DURATION_TYPE = model.DurationType,
-                START_ON_COUNTER = model.StartOnCounter.ToString(),
-             SYSTEM_TASK = model.SystemTask
+                //STEP_TEXT = model.StepText,
+                //COMMENTS = model.Comments,
+                // DURATION = model.Duration.ToString(),
+                //   DURATION_TYPE = model.DurationType,
+                //   START_ON_COUNTER = model.StartOnCounter.ToString(),
+                //SYSTEM_TASK = model.SystemTask
                 // = model.CompanyPartNumber,
                 //Name = model.Name,
                 //PartType = model.PartType,
