@@ -13,8 +13,8 @@ CREATE      PROCEDURE A_SP_PROCEDURES_UPDATE_ONE_PROCEDURE
 @SYSTEM_ID nvarchar(50),
 @DURATION float,
 @DURATION_TYPE nvarchar(50),
-@strNTLogin nvarchar(50)
-
+@strNTLogin nvarchar(50),
+@threshold int
 
 AS
 
@@ -38,6 +38,7 @@ begin
 			SYSTEM_ID = @SYSTEM_ID,
 			DURATION = @DURATION,
 			DURATION_TYPE = @DURATION_TYPE,
+			Threshold = @threshold,
 			DRCM = getDate(), MODBY = @strNTLogin
 			WHERE OBJECT_ID = @objID
 		end

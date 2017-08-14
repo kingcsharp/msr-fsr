@@ -34,6 +34,12 @@
                                         statusText= "Waiting to Start";
                                     }
 
+                                    if (proItem.DueDate?.Subtract(DateTime.Now).Days <= proItem.Threshold)
+                                    {
+                                        cssIconButton = "fa-clock-o";
+                                        cssButton = "btn-warning";
+                                    }
+
                                     <button data-toggle="tooltip" data-task-id="@proItem.TaskId" data-fill-id="@proItem.FillId" data-placement="bottom" data-html="true"
                                             title="<strong>Serial #:</strong>@proItem.Serial<br />
                                        <strong>Status:</strong> @statusText<br />

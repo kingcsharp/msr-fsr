@@ -51,6 +51,7 @@ namespace Msr.Models.Orders
         public DateTime? ActualStartDate { get; set; }
         public DateTime? ActualStopDate { get; set; }
         public string Notes { get; set; }
+        public int? Threshold { get; set; }
         [NotMapped]
         public string Action { get; set; }
     }

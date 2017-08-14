@@ -52,5 +52,8 @@ namespace Msr.Services.Procedures.Procedures
 
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "strNTLogin")]
         public string NTLogin { get; set; }
+
+        [StoredProcedureParameter(SqlDbType.Int, ParameterName = "threshold")]
+        public int? Threshold { get; set; }
     }
 }

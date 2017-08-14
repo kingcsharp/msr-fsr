@@ -67,6 +67,8 @@ isnull('['+STUFF((    SELECT ',' + '{"Date":"'+  FORMAT ( n.CreatedDate, 'MM/dd/
 						,'') AS Notes
 ,0 AS HasMonitor
 ,1 AS HasNcr
+,[PROC].Threshold
+
 FROM         dbo.A_V_COMPANIES_APPROVED_DATA_QUICK AS customer INNER JOIN
                       dbo.A_V_PURCHASES_APPROVED_DATA AS purch ON customer.ID = purch.CUSTOMER_CO RIGHT OUTER JOIN
                       dbo.A_TASK_COMPLETION_STATS RIGHT OUTER JOIN

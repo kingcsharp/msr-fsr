@@ -66,6 +66,8 @@ namespace Msr.Services.Procedures.ViewModels
 
         public string NTLogin { get; set; }
 
+        public int? Threshold { get; set; }
+
         public List<string> ReferenceFiles { get; set; }
 
         public List<SelectListItem> VerbList { get; set; }
@@ -290,7 +292,8 @@ namespace Msr.Services.Procedures.ViewModels
                 StepInAp = model.StepInAp,
                 Duration = model.Duration,
                 DurationType = model.DurationType,
-                WipMsg = model.WipMsg
+                WipMsg = model.WipMsg,
+                Threshold = model.Threshold
             };
         }
     }

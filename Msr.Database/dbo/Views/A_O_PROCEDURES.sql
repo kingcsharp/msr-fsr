@@ -7,7 +7,7 @@ SELECT     dbo.leadingSpaces(o.ROOT, 30) AS SPECIAL_ROOT, dbo.leadingSpaces(ph.I
                       o.REV_INFO, o.CREATING_CO, o.STATUS, o.REV, o.WFS_ID, o.LOCKED_BY_NAME, o.CREATING_CO_NAME, o.APPROVAL_ACTIVITY, 
                       dbo.A_APPROVED_VERBS.NAME AS VERB_NAME, dbo.A_APPROVED_VERBS.ID AS VERB_ID, o.ID AS OBJ_ID, ph.CREATING_DEPT, 
                       dbo.A_V_COMPANIES_APPROVED_DATA.NAME AS DEPT_NAME, dbo.A_SECURITY_LEVELS.NAME AS SECURITY_NAME, ph.IS_SYSTEM, 
-                      ph.SYSTEM_ID, ph.DURATION_TYPE, ph.DURATION
+                      ph.SYSTEM_ID, ph.DURATION_TYPE, ph.DURATION, ph.Threshold
 FROM         dbo.A_PROCEDURES_HISTORY ph INNER JOIN
                       dbo.A_OBJECTS o ON ph.OBJECT_ID = o.ID INNER JOIN
                       dbo.A_V_COMPANIES_APPROVED_DATA ON ph.CREATING_DEPT = dbo.A_V_COMPANIES_APPROVED_DATA.ID INNER JOIN
