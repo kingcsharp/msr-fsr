@@ -15,13 +15,24 @@ using System.Xml.Xsl;
 using Msr.Services.Procedures.ViewModels;
 using Msr.Services.ProcedureVerbs;
 using Msr.Services.Roles;
+using Msr.Services.Users;
 
 namespace Answer.Web.Controllers
 {
     public class ProceduresController : Controller
     {
+        private readonly ProceduresService _proceduresService;
+        private readonly UserService _userService;
+
         const string AppDataGlobalsettingsXml = @"/App_Data//procedureFolder/";
         const string XSLTPath = @"/assets//styles//xslt//procedures.xsl";
+
+        public ProceduresController()
+        {
+            _proceduresService = new ProceduresService();
+            _userService = new UserService();
+        }
+
         
         public ActionResult Index()
         {
@@ -215,8 +226,7 @@ namespace Answer.Web.Controllers
 
             return View((object)html);
         }
-
-
+        
         private string GetHtml(string xsltPath, string xml)
         {
             var stream = new MemoryStream(ASCIIEncoding.Default.GetBytes(xml));
@@ -226,6 +236,45 @@ namespace Answer.Web.Controllers
             transform.Load(xsltPath);
             transform.Transform(document, null, writer);
             return writer.ToString();
+        }
+
+        public ActionResult AssignProcedure(string id)
+        {
+            var vm = new AssignProcedureViewModel();
+
+            vm.Setup(new UserService());
+
+            var procedureName = _proceduresService.GetProcedureName(id);
+
+            vm.ProcedureName = procedureName;
+
+            return View(vm);
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult AssignProcedure(AssignProcedureViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var response = _proceduresService.SaveAssignProcedure(model);
+
+                if (!response.HasErrors())
+                {
+                    TempData["SuccessMessage"] = "Procedure has been created successfully.";
+
+                    return RedirectToAction("Index");
+                }
+
+                TempData["ErrorMessage"] = "Something went wrong.";
+
+                model.Setup(_userService);
+
+                return View(model);
+            }
+
+            model.Setup(_userService);
+
+            return View(model);
         }
     }
 }

@@ -273,6 +273,7 @@
     <Compile Include="Procedures\Procedures\SaveFileProcedure.cs" />
     <Compile Include="Procedures\Procedures\SaveProcedureProcedure.cs" />
     <Compile Include="Procedures\Procedures\SaveProcedureRoleProcedure.cs" />
+    <Compile Include="Procedures\ViewModels\AssignProcedureViewModel.cs" />
     <Compile Include="Procedures\ViewModels\ViewProcedureViewModel.cs" />
     <Compile Include="Procedures\ViewModels\SaveProcedureViewModel.cs" />
     <Compile Include="Procedures\Procedures\DeleteFileProcedure.cs" />
@@ -298,6 +299,7 @@
     <Compile Include="Tasks\Messaging\MonitorHistoryResponse.cs" />
     <Compile Include="TheoryParagraph\TheoryParagraphService.cs" />
     <Compile Include="TimeZones\TimeZoneService.cs" />
+    <Compile Include="Users\Messages\SearchPeopleResult.cs" />
     <Compile Include="Users\UserService.cs" />
     <Compile Include="Users\ViewModels\ClientaAdminEmailTemplateViewModel.cs" />
     <Compile Include="Users\ViewModels\ClientEngineerEmailTemplateViewModel.cs" />

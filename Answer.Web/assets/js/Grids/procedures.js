@@ -129,7 +129,9 @@
 
         var viewButton = '<a href="/Procedures/view/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i> View</a>';
 
-        return thisCellVal + viewButton;
+        var assignProcedureButton = '<a href="/Procedures/assignProcedure/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i> Assign</a>';
+
+        return thisCellVal + viewButton + assignProcedureButton;
     }
 
     $('#search').click(function () {

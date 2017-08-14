@@ -2786,5 +2786,6 @@
     <Build Include="dbo\Views\Portal\Portal_ProceduresVerbsView.sql" />
     <Build Include="dbo\Views\Portal\Portal_ActivitiesView.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_GetProcedureRoles.sql" />
+    <Build Include="dbo\Views\Portal\Portal_ActualPartsViewHistory.sql" />
   </ItemGroup>
 </Project>

@@ -13,6 +13,7 @@ using Msr.Models.Users;
 using Msr.Repositories;
 using Msr.Resources.Templates;
 using Msr.Services.Orders.Messaging;
+using Msr.Services.Users.Messages;
 using Msr.Services.Users.ViewModels;
 using RazorEngine;
 
@@ -349,6 +350,19 @@ namespace Msr.Services.Users
         public UserView GetUserView(string id)
         {
             return _dbContext.UserViews.SingleOrDefault(x => x.Id == id);
+        }
+
+        public List<SearchPeopleResult> GetSearchUser()
+        {
+            var sql = @"exec A_SP_PEOPLE_SEARCH ' (FULL_NAME LIKE ''%%'' OR FULL_NAME is NULL ) 
+            AND(ROOT LIKE '' %% '' OR ROOT is NULL) AND(POSITION_NAME LIKE '' %% '' OR POSITION_NAME is NULL)
+            AND(BOSS_NAME LIKE '' %% '' OR BOSS_NAME is NULL) AND
+                (COMPANY_NAME LIKE '' %% '' OR COMPANY_NAME is NULL) AND((ROOT_CO_ID LIKE '' % 2 % '') ) AND
+                STATUS LIKE ''APPROVED % '' AND(LOGIN IS NOT NULL) AND(LOCATION_NAME LIKE '' %% '' OR LOCATION_NAME is NULL)',' ORDER BY LAST_NAME,NAME',NULL,NULL,'1618'";
+
+            var result = _dbContext.Database.SqlQuery<SearchPeopleResult>(sql).ToList();
+
+            return result;
         }
 
         private bool HasAnswerUser(string userName)

@@ -1037,6 +1037,7 @@
     <Content Include="Views\Administration\ViewCompanyUsage.cshtml" />
     <Content Include="Views\Wip\_AddMonitors.cshtml" />
     <Content Include="Views\Procedures\View.cshtml" />
+    <Content Include="Views\Procedures\AssignProcedure.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

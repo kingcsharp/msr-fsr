@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
 using Msr.Models.Common;
@@ -172,6 +173,31 @@ namespace Msr.Services.Procedures
             var result = _dbContext.Database.SqlQuery<ProceduresApprovedDataResult>(sql).SingleOrDefault();
 
             return result;
+        }
+
+        public string GetProcedureName(string id)
+        {
+            var sql = $"SELECT* FROM A_V_PROCEDURES_APPROVED_DATA WHERE ID ={id}";
+
+            var result = _dbContext.Database.SqlQuery<string>(sql).SingleOrDefault();
+
+            return result;
+        }
+
+        public BaseNotification SaveAssignProcedure(AssignProcedureViewModel model)
+        {
+            foreach (var people in model.AssignToPeople)
+            {
+                var sql = $"EXEC A_SP_PROCEDURE_ASSIGN_TO_PEOPLE {model.Id}, {people}, null, {model.DatetimeToStart}";
+
+                _dbContext.Database.SqlQuery<string>(sql).SingleOrDefault();
+
+                sql = $"EXEC A_SP_ADMIN_SQL_TO_RUN_QUE_UP {people}, {model.LoginId}";
+
+                _dbContext.Database.SqlQuery<string>(sql).SingleOrDefault();
+            }
+
+            return new BaseNotification();
         }
     }
 }
