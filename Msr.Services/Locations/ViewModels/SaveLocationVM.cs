@@ -10,11 +10,11 @@ using System.Web.Mvc;
 
 namespace Msr.Services.Locations.ViewModels
 {
-    public class SaveLocationViewModel
+    public class SaveLocationViewModel : BaseNotificationRequest
     {
         public SaveLocationViewModel()
         {
-            Parents = new List<SelectListItem>();
+            ParentsLocations = new List<SelectListItem>();
         }
         public string ObjectId { get; set; }
 
@@ -49,19 +49,52 @@ namespace Msr.Services.Locations.ViewModels
         [Display(Name = "Internal Address")]
         public string InternalAddress { get; set; }
 
-        public string NTLogin { get; set; }
-
         public List<SelectListItem> Countries { get; set; }
 
-        public List<SelectListItem> Parents { get; set; }
+        public List<SelectListItem> ParentsLocations { get; set; }
 
         public List<SelectListItem> Regions { get; set; }
 
-        public void Setup(RegionService regionService)
+        public void Setup(RegionService regionService, LocationService locationService)
         {
-            Countries = new List<SelectListItem>
+            Regions = regionService.RegionsQueryable.ToList().Select(x => new SelectListItem
             {
-                 new SelectListItem
+                Text = x.Name,
+                Value = x.ObjectId.ToString()
+            }).OrderBy(o => o.Text).ToList();
+
+            ParentsLocations = locationService.GetActiveLocations().Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.ObJect_Id
+            }).OrderBy(o => o.Text).ToList();
+
+            Countries = GetCountries();
+
+        }
+        public SaveLocationViewModel MapToDto(LocationView model)
+        {
+            return new SaveLocationViewModel
+            {
+                ObjectId = model.ObjectId,
+                Name = model.Name,
+                Parent = model.ParentLocation,
+                Address1 = model.Address1,
+                Address2 = model.Address2,
+                City = model.City,
+                State = model.State,
+                Country = model.Country,
+                PostalCode = model.PostalCode,
+                Region = model.Region,
+                InternalAddress = model.InternalAddress
+            };
+        }
+
+        private List<SelectListItem> GetCountries()
+        {
+            return new List<SelectListItem>
+            {
+                new SelectListItem
                 {
                     Text = "United States of America",
                     Value = "United States of America",
@@ -1298,28 +1331,6 @@ namespace Msr.Services.Locations.ViewModels
                     Value = "Zimbabwe"
                 }
 
-            };
-            Regions = regionService.RegionsQueryable.ToList().Select(x => new SelectListItem
-            {
-                Text = x.Name,
-                Value = x.ObjectId.ToString()
-            }).OrderBy(o => o.Text).ToList();
-        }
-        public SaveLocationViewModel MapToDto(LocationView model)
-        {
-            return new SaveLocationViewModel
-            {
-                ObjectId = model.ObjectId,
-                Name = model.Name,
-                Parent = model.ParentLocation,
-                Address1 = model.Address1,
-                Address2 = model.Address2,
-                City = model.City,
-                State = model.State,
-                Country = model.Country,
-                PostalCode = model.PostalCode,
-                Region = model.Region,
-                InternalAddress = model.InternalAddress
             };
         }
     }

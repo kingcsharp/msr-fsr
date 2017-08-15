@@ -10,7 +10,7 @@ using System.Web.Mvc;
 
 namespace Answer.Web.Controllers
 {
-    public class LocationsController : Controller
+    public class LocationsController : BaseController
     {
         public ActionResult Index()
         {
@@ -33,6 +33,10 @@ namespace Answer.Web.Controllers
             var locationService = new LocationService();
 
             var totalRows = locationService.GetLocationsQueryable();
+
+            var defaultStatusList = "CREATING,DENIED,APPROVED,APPROVED_BUT_REVISING,APPROVED_BUT_DELETING".Split(',');
+
+            totalRows = totalRows.Where(x => defaultStatusList.Contains(x.Status));
 
             if (param.where != null && param.where.rules.Any())
             {
@@ -88,7 +92,7 @@ namespace Answer.Web.Controllers
         {
             var location = new SaveLocationViewModel();
 
-            location.Setup(new RegionService());
+            location.Setup(new RegionService(), new LocationService());
 
             return View(location);
         }
@@ -100,8 +104,7 @@ namespace Answer.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                //Need to dynamic 
-                model.NTLogin = "1618";
+                model.LoggedUserIdResult = GetCurrentUser();
 
                 var response = locationService.Create(model: model);
 
@@ -133,7 +136,7 @@ namespace Answer.Web.Controllers
 
             location = location.MapToDto(model: model);
 
-            location.Setup(new RegionService());
+            location.Setup(new RegionService(), locationService);
 
             return View(location);
         }
@@ -145,8 +148,7 @@ namespace Answer.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                //Need to dynamic 
-                model.NTLogin = "1618";
+                model.LoggedUserIdResult = GetCurrentUser();
 
                 var response = locationService.Save(model: model);
 
@@ -162,7 +164,7 @@ namespace Answer.Web.Controllers
                 return View(model);
             }
 
-            model.Setup(new RegionService());
+            model.Setup(new RegionService(), locationService);
 
             return View(model);
         }

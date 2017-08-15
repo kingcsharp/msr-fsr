@@ -32,7 +32,7 @@
                             <div class="col-md-5">
                                 <div style="width: 96%; float: left;">
                                     @*@Html.DropDownListFor(model => model.Parent, Model.Parents, "Select Parent", new { @class = "form-control submitselect"})*@
-                                    @Html.ListBoxFor(m => m.Parent, Model.Parents, new { @class = "form-control submitselect"})
+                                    @Html.ListBoxFor(m => m.Parent, Model.ParentsLocations, new { @class = "form-control submitselect"})
                                     @Html.ValidationMessageFor(model => model.Parent, "", new { @class = "text-danger" })
                                     
                                 </div>

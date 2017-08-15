@@ -173,6 +173,7 @@
     <Compile Include="Locations\LocationService.cs" />
     <Compile Include="Locations\LocationTypeService.cs" />
     <Compile Include="Locations\Procedures\DeleteLocationProcedure.cs" />
+    <Compile Include="Locations\Procedures\LocationResult.cs" />
     <Compile Include="Locations\Procedures\SaveLocationProcedure.cs" />
     <Compile Include="Locations\ViewModels\AddLocationViewModel.cs" />
     <Compile Include="Locations\ViewModels\SaveLocationVM.cs" />

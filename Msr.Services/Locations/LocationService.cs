@@ -47,7 +47,7 @@ namespace Msr.Services.Locations
                     PostalCode = model.PostalCode,
                     Region = model.Region,
                     InternalAddress = model.InternalAddress,
-                    NTLogin = model.NTLogin
+                    NTLogin = model.LoggedUserIdResult.Id
                 };
 
                 _dbContext.Database.ExecuteStoredProcedure(saveLocationProcedure);
@@ -78,7 +78,7 @@ namespace Msr.Services.Locations
                     PostalCode = model.PostalCode,
                     Region = model.Region,
                     InternalAddress = model.InternalAddress,
-                    NTLogin = model.NTLogin
+                    NTLogin = model.LoggedUserIdResult.Id
                 };
 
                _dbContext.Database.ExecuteStoredProcedure(saveLocationProcedure);
@@ -110,6 +110,15 @@ namespace Msr.Services.Locations
 
                 return false;
             }
+        }
+
+        public List<LocationResult> GetActiveLocations()
+        {
+            var sql = @"EXEC A_SP_LOCATIONS_SELECT ' (NAME LIKE ''%%'' OR NAME is NULL ) AND  (OBJECT_ID LIKE ''%%'' OR OBJECT_ID is NULL ) AND  (FULL_ADDRESS LIKE ''%%'' OR FULL_ADDRESS is NULL ) AND  (REGION_NAME LIKE ''%%'' OR REGION_NAME is NULL )',' ORDER BY NAME','1618'";
+
+            var result = _dbContext.Database.SqlQuery<LocationResult>(sql).ToList();
+
+            return result;
         }
     }
 }
