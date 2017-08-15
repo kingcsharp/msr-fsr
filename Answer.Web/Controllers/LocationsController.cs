@@ -50,6 +50,15 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.Name.ToLower().Contains(rule.data.ToLower()));
                     }
+                    else if (rule.field == nameof(LocationView.Status))
+                    {
+                        var statusList = rule.data.Split(',').Select(x => x.Trim().ToLower());
+
+                        if (statusList.Any())
+                        {
+                            totalRows = totalRows.Where(x => statusList.Contains(x.Status.ToLower()));
+                        }
+                    }
                 }
             }
 

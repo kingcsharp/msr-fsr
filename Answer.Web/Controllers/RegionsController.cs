@@ -57,6 +57,15 @@ namespace Answer.Web.Controllers
                             totalRows = totalRows.Where(x => x.Rev == value);
                         }
                     }
+                    else if (rule.field == nameof(RegionsView.Status))
+                    {
+                        var statusList = rule.data.Split(',').Select(x => x.Trim().ToLower());
+
+                        if (statusList.Any())
+                        {
+                            totalRows = totalRows.Where(x => statusList.Contains(x.Status.ToLower()));
+                        }
+                    }
                 }
             }
 

@@ -59,7 +59,7 @@
                     align: 'center'
                 },
                 {
-                    label: 'LockedByName',
+                    label: 'Locked By',
                     name: 'LockedByName',
                     index: 'LockedByName',
                     colmenu: false,

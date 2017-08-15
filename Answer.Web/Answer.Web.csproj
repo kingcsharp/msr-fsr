@@ -495,7 +495,6 @@
     <Content Include="assets\css\line-icons.css" />
     <Content Include="assets\css\login.css" />
     <Content Include="assets\css\main-menu.css" />
-    <Content Include="assets\css\people.css" />
     <Content Include="assets\css\profile.css" />
     <Content Include="assets\css\select2.min.css" />
     <Content Include="assets\css\style.css" />
