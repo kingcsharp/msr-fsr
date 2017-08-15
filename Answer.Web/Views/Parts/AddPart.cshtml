@@ -1,7 +1,7 @@
 ﻿@model Msr.Services.Parts.ViewModels.AddPartViewModel
 
 @{
-    ViewBag.Title = "Add Part";
+    ViewBag.Title = "Create Part";
 }
 
 <link rel="stylesheet" type="text/css" href="/assets/css/themes/flat-blue.css">
@@ -16,7 +16,7 @@
     <div class="side-body padding-top">
         <div class="row">
             <h2 class="page-header">
-                Add Part<button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
+                Create Part<button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
             </h2>
             <div class="col-lg-10">
                 @Html.Partial("Message")
@@ -237,8 +237,8 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="col-md-offset-2 col-md-10">
-                                <input type="submit" value="Create" class="btn btn-default" />
+                            <div class="col-md-offset-2 col-md-5">
+                                <input type="submit" value="Create" class="btn btn-success" />
                                 @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-warning" })
                             </div>
                         </div>

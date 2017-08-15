@@ -34,6 +34,12 @@
         $.jgrid.defaults.styleUI = 'Bootstrap';
 
         Smooch.init({ appToken: '9wxoxi2wbcbymhjf1ex1a0dux' });
-        
+
+        $(document).ready(function() {
+
+            SetUpGrid('@Request.Url.OriginalString');
+
+        });
+
     </script>
 }
