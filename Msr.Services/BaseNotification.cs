@@ -8,6 +8,8 @@ namespace Msr.Services
     {
         private readonly List<string> _errors = new List<string>();
 
+        public string SuccessMessage { get; set; }
+
         public void AddError(string message)
         {
             _errors.Add(message);

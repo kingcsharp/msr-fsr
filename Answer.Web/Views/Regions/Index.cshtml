@@ -2,6 +2,7 @@
 @{
     ViewBag.Title = "Regions";
 }
+
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="row">
@@ -19,6 +20,7 @@
         </div>
     </div>
 </div>
+
 @section scripts
 {
     <script src="~/assets/js/plugins/bootstrap3/bootstrap-dialog.min.js"></script>
@@ -27,6 +29,16 @@
     <script type="text/javascript" src="~/assets/js/jquery.mockjax.js"></script>
     <script src="//cdn.rawgit.com/noelboss/featherlight/1.6.1/release/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="https://cdn.smooch.io/smooch.min.js"></script>
+
     <script type="text/javascript" src="~/assets/js/grids/regions.js"></script>
-   
-}
+
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+
+            SetUpGrid('@Request.Url.OriginalString');
+
+        });
+        </script>
+
+    }

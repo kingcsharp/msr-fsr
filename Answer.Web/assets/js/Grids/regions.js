@@ -1,4 +1,6 @@
-﻿$(document).ready(function () {
+﻿
+function SetUpGrid(returnUrl) {
+
     $("#jqGridRegions").jqGrid({
         url: '/Regions/RegionsData',
         mtype: "GET",
@@ -46,7 +48,7 @@
                 align: 'center'
             },
             {
-                label: 'LockedByName',
+                label: 'Checkout Out To',
                 name: 'LockedByName',
                 index: 'LockedByName',
                 colmenu: false,
@@ -54,7 +56,7 @@
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 align: 'center'
             },
-            { name: 'Actions', index: 'ID', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: RegionEditFormatter, width: 100, align: 'center' }
+            { name: 'Actions', index: 'ID', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: RegionEditFormatter, width: 80, align: 'center' }
         ],
         viewrecords: true, // show the current page, data rang and total records on the toolbar
         rowNum: 10,
@@ -73,30 +75,74 @@
         key: true,
         ajaxCellOptions: {},
         gridComplete: function () {
-           
-        },
-    });
-    $('#jqGridRegions').navGrid("#jqGridPagerRegions", {
-        refresh: true,
-        search: false, // show search button on the toolbar
-        add: false,
-        edit: false,
-        del: false,
 
-    },
+            $('.unlock').on('click',
+                function (e) {
+                    e.preventDefault();
+
+                    var callBackId = $(this).data('call-back-id');
+                    var callBackName = $(this).data('call-back-name');
+
+                    eModal.confirm('Pressing OK will delete revision "' + callBackName + '"', 'Confirmation delete')
+                        .then(confirmCallback, optionalCancelCallback);
+
+                    function confirmCallback() {
+                        window.location.href = "/workflow/UnlockAndDelete?objId=" + callBackId + '&returnUrl=' + returnUrl;
+                    }
+
+                    function optionalCancelCallback() {
+                        
+                    }
+
+                });
+        }
+    });
+
+    $('#jqGridRegions').navGrid("#jqGridPagerRegions", {
+            refresh: true,
+            search: false, // show search button on the toolbar
+            add: false,
+            edit: false,
+            del: false,
+
+        },
         {}, // edit options
         {}, // add options
         {}, // delete options
         { multipleSearch: true }
     );
+
     $('#jqGridRegions').jqGrid('filterToolbar', {
         stringResult: true,
         searchOnEnter: true,
         searchOperators: true
     });
+
     function RegionEditFormatter(cellvalue, options, rowObject) {
-        thisCellVal = '<a href="/Regions/edit/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i> Edit</a>';
-        thisCellVal += '<a href="/Regions/delete/' + rowObject.ObjectId + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-danger deleteregion" style="margin:2px;font-size: .8em;"><i class="fa fa-trash"></i> delete</a>';
-        return thisCellVal;
+
+        var editButton = '<a  title="Edit" href="/Regions/edit/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
+
+        var deleteButton = '';
+        var buttonWorkflowLeft = '';
+        var buttonWorkflowRight = '';
+        var url = '';
+
+        if (rowObject.Status === 'CREATING') {
+
+            url = '/workflow/submit?objId=' + rowObject.ObjectId + '&returnUrl=' + returnUrl;
+            buttonWorkflowLeft = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '"  data-call-back-id="' + rowObject.ObjectId + '" class="btn btn-xs btn-success unlock" title="Cancel Creation. Edit will be lost" style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-left"></i></a>';
+
+            buttonWorkflowRight = '<a href="#" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-success" title="Proceed to approval workflow for release." style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-right"></i></a>';
+        } else {
+            url = '/workflow/delete?objId=' + rowObject.ObjectId + '&returnUrl=' + returnUrl;
+            deleteButton = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-danger" title="Proceed to approval workflow for release." style="margin:2px;font-size: .8em;"><i class="fa fa fa-trash"></i></a>';
+        }
+
+
+        return editButton + deleteButton + buttonWorkflowLeft + buttonWorkflowRight;
     }
-});
+
+
+}
+
+

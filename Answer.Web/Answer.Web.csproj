@@ -210,6 +210,7 @@
     <Compile Include="Controllers\WipController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\WorkflowController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -1041,6 +1042,8 @@
     <Content Include="Views\Files\Add.cshtml" />
     <Content Include="Views\Files\_ViewFile.cshtml" />
     <Content Include="Views\People\Edit.cshtml" />
+    <Content Include="Views\Workflow\Submit.cshtml" />
+    <Content Include="Views\Workflow\Delete.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

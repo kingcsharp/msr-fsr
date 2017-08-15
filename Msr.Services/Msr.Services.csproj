@@ -150,6 +150,7 @@
     <Compile Include="ApprovalWorkflows\Procedures\HideApprovalWorkflowProcedure.cs" />
     <Compile Include="ApprovalWorkflows\ViewModels\ApprovalWorkflowsViewModel.cs" />
     <Compile Include="ApprovalWorkflows\ViewModels\EditApprovalStagesViewModel.cs" />
+    <Compile Include="BaseNotificationRequest.cs" />
     <Compile Include="BaseNotification.cs" />
     <Compile Include="Companies\Procedures\DeleteCompanyProcedure.cs" />
     <Compile Include="Companies\Procedures\AddCompanyProcedure.cs" />
@@ -296,6 +297,8 @@
     <Compile Include="Regions\Procedures\SaveRegionProcedure.cs" />
     <Compile Include="Regions\RegionService.cs" />
     <Compile Include="Regions\ViewModels\DeleteRegionViewModel.cs" />
+    <Compile Include="Workflows\Messages\ObjectDataResult.cs" />
+    <Compile Include="Workflows\Messages\ShowApplicableWorkflowsResult.cs" />
     <Compile Include="Regions\ViewModels\SaveRegionViewModel.cs" />
     <Compile Include="Roles\Messages\RoleResult.cs" />
     <Compile Include="Roles\Procedures\DeleteRoleProcedure.cs" />
@@ -315,6 +318,8 @@
     <Compile Include="Users\ViewModels\ClientaAdminEmailTemplateViewModel.cs" />
     <Compile Include="Users\ViewModels\ClientEngineerEmailTemplateViewModel.cs" />
     <Compile Include="Users\ViewModels\ClientBuyerEmailTemplateViewModel.cs" />
+    <Compile Include="Workflows\ViewModels\SubmitWorkflowViewModel.cs" />
+    <Compile Include="Workflows\WorkflowService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Msr.Infrastructure\Msr.Infrastructure.csproj">
