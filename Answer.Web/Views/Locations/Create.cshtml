@@ -31,12 +31,10 @@
                             @Html.LabelFor(model => model.Parent, htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-5">
                                 <div style="width: 96%; float: left;">
-                                    @*@Html.DropDownListFor(model => model.Parent, Model.Parents, "Select Parent", new { @class = "form-control submitselect"})*@
-                                    @Html.ListBoxFor(m => m.Parent, Model.ParentsLocations, new { @class = "form-control submitselect"})
+                                    @Html.DropDownListFor(model => model.Parent, Model.ParentsLocations, "Select Parent", new { @class = "form-control" })
                                     @Html.ValidationMessageFor(model => model.Parent, "", new { @class = "text-danger" })
-                                    
                                 </div>
-                            <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="Parent" data-toggle="modal" data-target="#select-location"><i class="icon fa fa-file"></i></span><br /><span class="deletefiles" data-call-back-id="Parent"><i class="icon fa fa-trash"></i></span> </div>
+                            
                         </div>
                             </div>
                         <div class="form-group">

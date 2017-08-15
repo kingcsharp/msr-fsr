@@ -63,10 +63,10 @@ namespace Msr.Services.Locations.ViewModels
                 Value = x.ObjectId.ToString()
             }).OrderBy(o => o.Text).ToList();
 
-            ParentsLocations = locationService.GetActiveLocations().Select(x => new SelectListItem
+            ParentsLocations = locationService.GetLocationsQueryable().Where(x=> x.Status !="DELETED").Select(x => new SelectListItem
             {
                 Text = x.Name,
-                Value = x.ObJect_Id
+                Value = x.ObjId
             }).OrderBy(o => o.Text).ToList();
 
             Countries = GetCountries();
