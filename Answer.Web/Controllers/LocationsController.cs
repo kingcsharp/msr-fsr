@@ -10,6 +10,7 @@ using System.Web.Mvc;
 
 namespace Answer.Web.Controllers
 {
+    [Authorize]
     public class LocationsController : BaseController
     {
         public ActionResult Index()

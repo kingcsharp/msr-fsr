@@ -12,7 +12,8 @@ using Msr.Services.Documents;
 
 namespace Answer.Web.Controllers
 {
-    public class PeopleController : Controller
+    [Authorize]
+    public class PeopleController : BaseController
     {
         public ActionResult Index()
         {
