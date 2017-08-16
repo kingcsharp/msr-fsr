@@ -70,24 +70,19 @@ namespace Msr.Services.PartTypes.ViewModels
                     Value = "PTCON_YES",
                     Selected = true
                 }
-
             };
         }
-        public AddPartTypesViewModel MapToDto(PartTypesView parttype)
+
+        public void MapToDto(PartTypesView parttype)
         {
-            return new AddPartTypesViewModel
-            {
-                Id = parttype.Id,
-                Name = parttype.Name,
-                Spare = parttype.Spare,
-                Consumable = parttype.Consumable,
-                Unit = parttype.Unit,
-                UnitShippingWeight = parttype.UnitShippingWeight,
-                ObjId = parttype.ObjectId
-            };
-
+            Id = parttype.Id;
+            Name = parttype.Name;
+            Spare = parttype.Spare;
+            Consumable = parttype.Consumable;
+            Unit = parttype.Unit;
+            UnitShippingWeight = parttype.UnitShippingWeight;
+            ObjId = parttype.ObjectId;
         }
-
 
     }
 }

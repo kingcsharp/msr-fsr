@@ -86,24 +86,7 @@
             key: true,
             ajaxCellOptions: {},
             gridComplete: function () {
-                $('.deletepart').on('click', function (e) {
-                    e.preventDefault();
-
-                    var callBackId = $(this).data('call-back-id');
-                    var callBackName = $(this).data('call-back-name');
-
-                    eModal.confirm('Do you really want to delete ' + callBackName + ' ?', 'Confirmation delete')
-                        .then(confirmCallback, optionalCancelCallback);
-
-                    function confirmCallback() {
-                        console.log("ok")
-                        window.location.href = "/Locations/LocationDelete/" + callBackId
-                    }
-                    function optionalCancelCallback() {
-                        console.log("cancel")
-                    }
-
-                })
+                
             },
 
         });

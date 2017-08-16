@@ -57,13 +57,13 @@ namespace Msr.Services.Locations.ViewModels
 
         public void Setup(RegionService regionService, LocationService locationService)
         {
-            Regions = regionService.RegionsQueryable.ToList().Select(x => new SelectListItem
+            Regions = regionService.RegionsQueryable.Where(x=>x.Status == "APPROVED").Select(x => new SelectListItem
             {
                 Text = x.Name,
                 Value = x.ObjectId.ToString()
             }).OrderBy(o => o.Text).ToList();
 
-            ParentsLocations = locationService.GetLocationsQueryable().Where(x=> x.Status !="DELETED").Select(x => new SelectListItem
+            ParentsLocations = locationService.GetLocationsQueryable().Where(x=> x.Status == "APPROVED").Select(x => new SelectListItem
             {
                 Text = x.Name,
                 Value = x.ObjId
