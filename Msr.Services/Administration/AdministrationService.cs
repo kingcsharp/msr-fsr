@@ -74,9 +74,9 @@ namespace Msr.Services.Administration
             return result;
         }
 
-        public IList<RoleForJobItem> GetRolesForJob(string jobId)
+        public IList<RoleForJobItem> GetRolesForJob(string jobId, string logId)
         {
-            var sql = "exec A_SP_ADMIN_GET_ROLE_FOR_JOB '" + jobId + "','1618'";
+            var sql = $"exec A_SP_ADMIN_GET_ROLE_FOR_JOB '{jobId}',{logId}";
 
             var result = _dbContext.Database.SqlQuery<RoleForJobItem>(sql).ToList();
 
@@ -255,6 +255,24 @@ namespace Msr.Services.Administration
             }
 
             xmlDoc.Save(filePath);
+        }
+
+        public IQueryable<SelectListItem> GetBossListByLoginId(string id)
+        {
+            var sql =
+                "SELECT DISTINCT TOP 500 FULL_NAME as Text,ID as Value,LAST_NAME,NAME FROM A_V_PEOPLE_APPROVED_DATA where (ID IN (SELECT SUBORDINATE FROM A_PEOPLE_SUB_LOOKUP_TABLE WHERE BOSS = '" + id + "') OR ID = '" + id + "') ORDER BY LAST_NAME,NAME";
+
+            var result = _dbContext.Database.SqlQuery<SelectListItem>(sql).ToList().AsQueryable();
+
+            return result;
+        }
+        public IList<ReAssignBossView> ReassignBoss(ReAssignBossView model)
+        {
+            var sql = "exec A_SP_PEOPLE_REASSIGN_BOSS " + null +"," + null + ",'" + model.Id + "','" + model.ToBossId + "','" + model.NTLogin + "'";
+
+            var result = _dbContext.Database.SqlQuery<ReAssignBossView>(sql).ToList();
+
+            return result;
         }
     }
 }

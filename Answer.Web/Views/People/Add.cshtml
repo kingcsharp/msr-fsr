@@ -247,8 +247,13 @@
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
     <script type="text/javascript">
         $(function () { // will trigger when the document is ready
-            $('.datepicker').datepicker('setDate', 'now'); //Initialise any date pickers
-            
+          
+            $('.datepicker').datepicker({
+                format: 'mm/dd/yyyy',
+                todayHighlight: 'TRUE',
+                autoclose: true
+            });
+            $('.datepicker').val('');
         });
         $("form").submit(function (e) {
             $('.selectitem option').prop('selected', true);

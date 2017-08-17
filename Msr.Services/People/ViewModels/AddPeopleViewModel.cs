@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Web.Mvc;
@@ -40,9 +41,11 @@ namespace Msr.Services.People.ViewModels
         [DisplayName("Login ID :")]
         public string LoginId { get; set; }
 
+        [Required]
         [DisplayName("First Name :")]
         public string FirstName { get; set; }
 
+        [Required]
         [DisplayName("Last Name :")]
         public string LastName { get; set; }
 
@@ -92,6 +95,7 @@ namespace Msr.Services.People.ViewModels
         [DisplayName("Pin :")]
         public string PinSecondaryPhoneNumber { get; set; }
 
+        [Required]
         [DisplayName("Emails :")]
         public string EmailPrimary { get; set; }
 
@@ -120,15 +124,7 @@ namespace Msr.Services.People.ViewModels
         public List<string> PictureFiles { get; set; }
 
         public IList<SelectListItem> ListReferenceFiles { get; set; }
-
         public IList<SelectListItem> ListPictureFiles { get; set; }
-
-        //public string SystemStatus { get; set; }
-        //public string DateHired { get; set; }
-        //public string Status { get; set; }
-        //public int? Rev { get; set; }
-        //public string PicRecord { get; set; }
-        //public string RootCoName { get; set; }
         public IEnumerable<SelectListItem> ListRealUserTypes { get; set; }
         public IEnumerable<SelectListItem> ListScreenTypes { get; set; }
         public IEnumerable<SelectListItem> ListLanguages { get; set; }

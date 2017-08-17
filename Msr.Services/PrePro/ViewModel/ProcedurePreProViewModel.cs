@@ -21,15 +21,18 @@ namespace Msr.Services.PrePro.ViewModel
     {
         public ProcedurePreProViewModel()
         {
-            ProcFilesList = new List<SelectListItem>();
-            PictureRefFilesList = new List<SelectListItem>();
-            //1Reference_Verb = new List<SelectListItem>();
+            ReferenceProceduresList = new List<SelectListItem>();
+            ReferenceFilesList = new List<SelectListItem>();
+            ApplicationObjectsList = new List<SelectListItem>();
             ReferenceObjectsList = new List<SelectListItem>();
-            ListReferenceTheories = new List<SelectListItem>();
-            PictureFiles = new List<string>();
+            ReferenceTheoriesList = new List<SelectListItem>();
+            ReferenceVerbList = new List<SelectListItem>();
+            ReferenceFiles = new List<string>();
         }
 
         public string Id { get; set; }
+
+        public string ObjectId { get; set; }
 
         [DisplayName("Text :")]
         public string StepText { get; set; }
@@ -40,62 +43,42 @@ namespace Msr.Services.PrePro.ViewModel
         public string Comments { get; set; }
 
         [DisplayName("Base Start on Counter :")]
-        public string StartOnCounter { get; set; }
-
-        public string CounterValue { get; set; }
-
-        public string CounterUnit { get; set; }
-
-        public string FromStartOrStop { get; set; }
-
-        public string RelOrAbs { get; set; }
+        public int? StartOnCounter { get; set; }
 
         [DisplayName("System Task :")]
         public string SystemTask { get; set; }
 
         [DisplayName("DESTINATION :")]
         public string Destination { get; set; }
+        public string ReferenceVerb { get; set; }
 
-        public string SpecificLocation { get; set; }
+        public string ApplicationObjects { get; set; }
 
-        public List<string> ReferenceVerb { get; set; }
-
-        public List<string> ReferenceObject { get; set; }
+        public string ReferenceObject { get; set; }
 
         public List<string> ReferenceTheories { get; set; }
 
-        public string GotoStep { get; set; }
-
-        public string GotoStepId { get; set; }
-
-        public string Cycles { get; set; }
-
-        public string CycleOnCounter { get; set; }
-
-        public string CycleCount { get; set; }
-
-        public string CycleUnit { get; set; }
-
         [DisplayName("ReferenceProcs :")]
-        public List<string> ReferenceProcs { get; set; }
+        public List<string> ReferenceProcedures { get; set; }
 
         [DisplayName("precedingSteps :")]
         public string PrecedingSteps { get; set; }
 
         [DisplayName("Estimated Step Duration :")]
-        public float? Duration { get; set; }
+        public double? Duration { get; set; }
+
 
         [DisplayName("Step Duration Type :")]
         public string DurationType { get; set; }
 
-        [DisplayName("Step Duration Type :")]
+        [DisplayName("Labor :")]
         public string Labor { get; set; }
 
         [DisplayName("Number Of Questions to use :")]
         public string NumTestQuestion { get; set; }
 
-        [DisplayName("Picture Files :")]
-        public List<string> PictureFiles { get; set; }
+        [DisplayName("Reference Files :")]
+        public List<string> ReferenceFiles { get; set; }
 
         public string NTLogin { get; set; }
 
@@ -105,19 +88,20 @@ namespace Msr.Services.PrePro.ViewModel
 
         public List<SelectListItem> SystemTaskList { get; set; }
 
-        //public IList<SelectListItem> Reference_Verb { get; set; }
+        public IList<SelectListItem> ReferenceVerbList { get; set; }
 
         public List<SelectListItem> ReferenceObjectsList { get; set; }
 
+        public List<SelectListItem> ApplicationObjectsList { get; set; }
 
-        public IList<SelectListItem> ProcFilesList { get; set; }
+        public IList<SelectListItem> ReferenceProceduresList { get; set; }
 
-        public IList<SelectListItem> PictureRefFilesList { get; set; }
+        public IList<SelectListItem> ReferenceFilesList { get; set; }
 
 
-        public IList<SelectListItem> ListReferenceTheories { get; set; }
+        public IList<SelectListItem> ReferenceTheoriesList { get; set; }
 
-        public void Setup(PreProServices preProServices, ProcedureVerbsService procedureVerbsService, DocumentService documentService, DocumentFilesService documentFilesService, TheoryParagraphService TheoryParagraphService)
+        public void Setup(PreProServices preProServices)
         {
             BaseStartOnCounterList = new List<SelectListItem>
             {
@@ -258,68 +242,45 @@ namespace Msr.Services.PrePro.ViewModel
 
             };
 
+            ReferenceProceduresList = preProServices.GetSelectedRefProcedures(id: Id).Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.Id.ToString()
+            }).OrderBy(o => o.Text).ToList();
 
-            //Reference_Verb = ProcedureTypesService.GetProceduresTypes().ToList().Select(x => new SelectListItem
-            //{
-            //    Text = x.Name,
-            //    Value = x.Id
-            //}).OrderBy(o => o.Text).ToList();
 
-            ReferenceObjectsList = documentService.GetSelectedObjects(id: Id).Select(x => new SelectListItem
+            ReferenceFilesList = preProServices.GetSelectedRefFiles(id: Id).Select(x => new SelectListItem
             {
                 Text = x.Name,
                 Value = x.Id.ToString(),
             }).OrderBy(o => o.Text).ToList();
 
-            ProcFilesList = documentFilesService.GetSelectedFiles(id: Id, type: null).Select(x => new SelectListItem
+
+            ReferenceTheoriesList = preProServices.GetSelectedRefTheories(id: Id).Select(x => new SelectListItem
             {
-                Text = x.Show,
-                Value = x.Value.ToString(),
+                Text = x.Name,
+                Value = x.Id.ToString(),
             }).OrderBy(o => o.Text).ToList();
-
-            ProcFilesList = documentFilesService.GetSelectedFiles(id: Id, type: "PICTURE").Select(x => new SelectListItem
-            {
-                Text = x.Show,
-                Value = x.Value.ToString(),
-            }).OrderBy(o => o.Text).ToList();
-            ListReferenceTheories = preProServices.GetPreProTheoryExceptions(id: Id).Select(x => new SelectListItem
-            {
-                Text = x.NAME,
-                Value = x.ID.ToString(),
-            }).OrderBy(o => o.Text).ToList();
-
-
-
 
         }
         public ProcedurePreProViewModel MapToDto(PrePropSearchView model)
         {
             return new ProcedurePreProViewModel
             {
-                //ID = model.Id,
-                //PROC_OBJ_ID = model.OBJ_ID,
-                //STEP_TEXT = model.StepText,
-                //COMMENTS = model.Comments,
-                // DURATION = model.Duration.ToString(),
-                //   DURATION_TYPE = model.DurationType,
-                //   START_ON_COUNTER = model.StartOnCounter.ToString(),
-                //SYSTEM_TASK = model.SystemTask
-                // = model.CompanyPartNumber,
-                //Name = model.Name,
-                //PartType = model.PartType,
-                //Spare = model.Spare,
-                //Consumable = model.Consumable,
-                //Unit = model.Unit,
-                //UnitShippingWeight = model.UnitShippingWeight,
-                //CustomerSeeAvailability = model.CustomerSeeAvailability,
-                //SupplierSeeAvailability = model.SupplierSeeAvailability,
-                //SupplierSeeInstallBase = model.SupplierSeeInstallBase,
-                //WeightType = model.WeightType,
-                //CreateProd = model.CreateProd,
-                //SupplierCo = model.SupplierCo,
-                //ProductType = model.ProductType,
-                //ProcVerb = model.ProcVerb
-
+                Id = model.Id,
+                ObjectId = model.ObjectId,
+                ProcObjId = model.ProcStepId,
+                StartOnCounter = model.StartOnCounter,
+                Duration = model.Duration,
+                DurationType = model.DurationType,
+                //Labor = model,
+                StepText = model.StepText,
+                SystemTask = model.SystemTask,
+                //NumTestQuestion = model,
+                //ApplicationObjects = model,
+                ////ReferenceVerb = model.ReferenceVerb,
+                ////ReferenceObject = model.ReferenceObject
+                Comments = model.Comments
             };
         }
     }

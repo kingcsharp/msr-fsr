@@ -8,6 +8,7 @@ using Msr.Services.PrePro.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,44 +32,40 @@ namespace Msr.Services.PrePro
 
         public PrePropSearchView GetById(string id)
         {
-            return GetPreProQueryable().SingleOrDefault(x => x.ObjectId == id);
+            return GetPreProQueryable().SingleOrDefault(x => x.Id == id);
         }
 
-        public List<SelectFile> GetSelectedTheory(string id)
+        public List<SelectFile> GetSelectedRefProcedures(string id)
         {
-            var objID = new SqlParameter("@ID", id == null ? "0" : id);
+            var objId = new SqlParameter("@ID", id ?? "0");
 
             //need to be dynamic
             var NTLogin = new SqlParameter("@strNTLogin", "1618");
 
-            var result = _dbContext.Database.SqlQuery<SelectFile>("EXEC Portal_GetTheoryObjects  @ID, @strNTLogin", objID, NTLogin).ToList();
+            var result = _dbContext.Database.SqlQuery<SelectFile>("EXEC Portal_ProcedureStepGetRefProcedures @ID, @strNTLogin", objId, NTLogin).ToList();
 
             return result;
         }
-
-
-        public List<SelectFile> GetSelectedPicRefFile(string id)
+        public List<SelectFile> GetSelectedRefFiles(string id)
         {
-            var objID = new SqlParameter("@procStepID", id == null ? "0" : id);
+            var objId = new SqlParameter("@procStepID", id ?? "0");
 
             //need to be dynamic
             var NTLogin = new SqlParameter("@strNTLogin", "1618");
 
-            var result = _dbContext.Database.SqlQuery<SelectFile>("EXEC A_SP_PROCEDURE_STEP_GET_REFERENCE_FILES  @procStepID, @strNTLogin", objID, NTLogin).ToList();
+            var result = _dbContext.Database.SqlQuery<SelectFile>("EXEC Portal_ProcedureStepGetRefFiles @procStepID, @strNTLogin", objId, NTLogin).ToList();
 
             return result;
         }
 
-        public List<TheoryFile> GetPreProTheoryExceptions(string id)
+        public List<SelectFile> GetSelectedRefTheories(string id)
         {
-            var partId = new SqlParameter("@ID", id == null ? "0" : id);
-            var NTLogin = new SqlParameter("@strNTLogin", "1618");
+            if (id == null) return new List<SelectFile>();
 
-            var result = _dbContext.Database.SqlQuery<TheoryFile>("EXEC A_SP_PROCEDURE_STEP_GET_REF_PROCEDURES @ID,@strNTLogin", partId, NTLogin).ToList();
+            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT t.NAME AS Name,t.ID AS Id FROM A_PROCEDURE_STEP_THEORY_LINK l, A_V_THEORY_APPROVED_DATA t  where l.PROC_STEP_ID = " + id + " and t.ID = l.THEORY_ID").ToList();
 
             return result;
         }
-
 
         public bool Delete(string id)
         {
@@ -76,7 +73,7 @@ namespace Msr.Services.PrePro
             {
                 //need to be dynamic
                 var NTLogin = "1618";
-                var deletePreproProcedure = new DeletePreProItemProcedure() { objid = id, NTLogin = NTLogin };
+                var deletePreproProcedure = new DeleteProcedureStepProcedure() { Objid = id, NTLogin = NTLogin };
 
                 _dbContext.Database.ExecuteStoredProcedure(deletePreproProcedure);
 
@@ -93,77 +90,53 @@ namespace Msr.Services.PrePro
         {
             try
             {
-                foreach (var file in model.PictureFiles)
-                {
-                    var saveFileProcedure = new SaveFileProcedure() { ObjID = model.Id, DocID = file, Type = "PICTURE", NTLogin = model.NTLogin };
-
-                    _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
-                }
-
-                foreach (var file in model.ReferenceObject)
-                {
-                    var saveFileProcedure = new SaveFileProcedure() { ObjID = model.Id, DocID = file, Type = null, NTLogin = model.NTLogin };
-
-                    _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
-                }
-                foreach (var file in model.ReferenceProcs)
-                {
-                    var saveFileProcedure = new SaveFileProcedure() { ObjID = model.Id, DocID = file, Type = null, NTLogin = model.NTLogin };
-
-                    _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
-                }
-                foreach (var file in model.ReferenceTheories)
-                {
-                    var saveFileProcedure = new SaveTheoryProcedure() { ObjID = model.Id, NTLogin = model.NTLogin };
-
-                    _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
-                }
-
-
-                var savePartProcedure = new SavePreProProcedure()
+                var savePartProcedure = new SaveProcedureStepProcedure()
                 {
                     Id = model.Id,
                     StepText = model.StepText,
+                    ProcObjId = model.ProcObjId,
                     Comments = model.Comments,
-                    StartOnCounter = model.StartOnCounter,
-                    CounterValue = model.CounterValue,
-                    CounterUnit = model.CounterUnit,
-                    FromStartOrStop = model.FromStartOrStop,
-                    RelOrAbs = model.RelOrAbs,
+                    StartOnCounter = model.StartOnCounter.ToString(),
+                    CounterValue = null,
+                    CounterUnit = null,
+                    FromStartOrStop = null,
+                    RelOrAbs = null,
                     SystemTask = model.SystemTask,
                     Destination = model.Destination,
-                    SpecificLocation = model.SpecificLocation,
-                    ReferenceVerb = model.ReferenceVerb != null ? string.Join(", ", model.ReferenceVerb) : "",
-                    ReferenceObject = model.ReferenceObject != null ? string.Join(", ", model.ReferenceObject) : "",
-                    ReferenceTheories = model.ReferenceTheories != null ? string.Join(", ", model.ReferenceTheories) : "",
-                    GotoStep = model.GotoStep,
-                    GotoStepId = model.GotoStepId,
-                    Cycles = model.Cycles,
-                    CycleOnCounter = model.CycleOnCounter,
-                    CycleCount = model.CycleCount,
-                    CycleUnit = model.CycleUnit,
-                    ReferenceProcs = model.ReferenceProcs != null ? string.Join(", ", model.ReferenceProcs) : "",
-                    PrecedingSteps = model.PrecedingSteps,
-                    Duration = model.Duration,
+                    SpecificLocation = null,
+                    ReferenceVerb = model.ReferenceVerb,
+                    ReferenceObject = model.ReferenceObject,
+                    ReferenceTheories = model.ReferenceTheories != null ? string.Join(", ", model.ReferenceTheories) : DBNull.Value.ToString(CultureInfo.InvariantCulture),
+                    GotoStep = null,
+                    GotoStepId = null,
+                    Cycles = null,
+                    CycleOnCounter = null,
+                    CycleCount = null,
+                    CycleUnit = null,
+                    ReferenceProcs = model.ReferenceProcedures != null ? string.Join(", ", model.ReferenceProcedures) : DBNull.Value.ToString(CultureInfo.InvariantCulture),
+                    PrecedingSteps = null,
+                    Duration = model.Duration.ToString(),
                     DurationType = model.DurationType,
                     NTLogin = model.NTLogin
                 };
 
                 _dbContext.Database.ExecuteStoredProcedure(savePartProcedure);
 
-                var preproselectprocedure = new PreProSelectProcedure()
-                {
-                    objID = savePartProcedure.ProcObjId,
-                    procStepID = savePartProcedure.NewId,
-                    strNTLogin = model.NTLogin
+                var savePrePopProcedure = new SavePrePopProcedure() { ObjId = model.ObjectId , ProcStepId = model.Id, NTLogin = model.NTLogin };
 
-                };
+                _dbContext.Database.ExecuteStoredProcedure(savePrePopProcedure);
 
-                _dbContext.Database.ExecuteStoredProcedure(preproselectprocedure);
-
-                var deletePictureFileProcedure = new DeletePreProProcedure() { id = savePartProcedure.NewId, NTLogin = model.NTLogin };
+                var deletePictureFileProcedure = new DeleteProcedureStepFileLinkProcedure() { id = model.Id, NTLogin = model.NTLogin };
 
                 _dbContext.Database.ExecuteStoredProcedure(deletePictureFileProcedure);
+
+                foreach (var file in model.ReferenceFiles)
+                {
+                    var saveFileProcedure = new SaveProcedureStepFileLinkProcedure() { ObjId = model.Id, DocId = file, NTLogin = model.NTLogin };
+
+                    _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
+                }
+
                 return true;
             }
             catch (Exception ex)
@@ -181,68 +154,51 @@ namespace Msr.Services.PrePro
             try
             {
 
-                var savePartProcedure = new SavePreProProcedure()
+                var savePartProcedure = new SaveProcedureStepProcedure()
                 {
-
-
-                    Id = model.Id,
                     StepText = model.StepText,
+                    ProcObjId = model.ProcObjId,
                     Comments = model.Comments,
-                    StartOnCounter = model.StartOnCounter,
-                    CounterValue = model.CounterValue,
-                    CounterUnit = model.CounterUnit,
-                    FromStartOrStop = model.FromStartOrStop,
-                    RelOrAbs = model.RelOrAbs,
+                    StartOnCounter = model.StartOnCounter.ToString(),
+                    CounterValue = null,
+                    CounterUnit = null,
+                    FromStartOrStop = null,
+                    RelOrAbs = null,
                     SystemTask = model.SystemTask,
                     Destination = model.Destination,
-                    SpecificLocation = model.SpecificLocation,
-                    ReferenceVerb = model.ReferenceVerb != null ? string.Join(", ", model.ReferenceVerb) : "",
-                    ReferenceObject = model.ReferenceObject != null ? string.Join(", ", model.ReferenceObject) : "",
-                    ReferenceTheories = model.ReferenceTheories != null ? string.Join(", ", model.ReferenceTheories) : "",
-                    GotoStep = model.GotoStep,
-                    GotoStepId = model.GotoStepId,
-                    Cycles = model.Cycles,
-                    CycleOnCounter = model.CycleOnCounter,
-                    CycleCount = model.CycleCount,
-                    CycleUnit = model.CycleUnit,
-                    ReferenceProcs = model.ReferenceProcs != null ? string.Join(", ", model.ReferenceProcs) : "",
-                    PrecedingSteps = model.PrecedingSteps,
-                    Duration = model.Duration,
+                    SpecificLocation = null,
+                    ReferenceVerb = model.ReferenceVerb,
+                    ReferenceObject = model.ReferenceObject,
+                    ReferenceTheories = model.ReferenceTheories != null ? string.Join(", ", model.ReferenceTheories) : DBNull.Value.ToString(CultureInfo.InvariantCulture),
+                    GotoStep = null,
+                    GotoStepId = null,
+                    Cycles = null,
+                    CycleOnCounter = null,
+                    CycleCount = null,
+                    CycleUnit = null,
+                    ReferenceProcs = model.ReferenceProcedures != null ? string.Join(", ", model.ReferenceProcedures) : DBNull.Value.ToString(CultureInfo.InvariantCulture),
+                    PrecedingSteps = null,
+                    Duration = model.Duration.ToString(),
                     DurationType = model.DurationType,
                     NTLogin = model.NTLogin
                 };
 
                 _dbContext.Database.ExecuteStoredProcedure(savePartProcedure);
 
-                var preproselectprocedure = new PreProSelectProcedure()
-                {
-                    objID = savePartProcedure.ProcObjId,
-                    procStepID = savePartProcedure.NewId,
-                    strNTLogin = model.NTLogin
-                };
+                var savePrePopProcedure = new SavePrePopProcedure() { ObjId = null, ProcStepId = savePartProcedure.NewId, NTLogin = model.NTLogin };
 
-                _dbContext.Database.ExecuteStoredProcedure(preproselectprocedure);
+                _dbContext.Database.ExecuteStoredProcedure(savePrePopProcedure);
 
-                var deletePictureFileProcedure = new DeletePreProProcedure() { id = savePartProcedure.NewId, NTLogin = model.NTLogin };
+                var deletePictureFileProcedure = new DeleteProcedureStepFileLinkProcedure() { id = savePartProcedure.NewId, NTLogin = model.NTLogin };
 
                 _dbContext.Database.ExecuteStoredProcedure(deletePictureFileProcedure);
 
-
-                foreach (var file in model.PictureFiles)
+                foreach (var file in model.ReferenceFiles)
                 {
-
-                    var saveFileProcedure = new SaveProcedurePreProFileProcedure() { ObjID = savePartProcedure.NewId, DocID = file, NTLogin = model.NTLogin };
+                    var saveFileProcedure = new SaveProcedureStepFileLinkProcedure() { ObjId = savePartProcedure.NewId, DocId = file, NTLogin = model.NTLogin };
 
                     _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
                 }
-
-                //foreach (var file in model.ReferenceFiles)
-                //{
-                //    var saveFileProcedure = new SaveFileProcedure() { ObjID = savePartProcedure.Id, DocID = file, Type = null, NTLogin = model.NTLogin };
-
-                //    _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
-                //}
-
 
                 return true;
             }

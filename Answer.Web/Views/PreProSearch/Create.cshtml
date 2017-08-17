@@ -16,79 +16,109 @@
                     <div class="form-horizontal">
                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                         <div class="form-group">
-                            <label class="control-label col-md-2" for="START_ON_COUNTER">Base Start on Counter</label>
+                            @Html.LabelFor(model => model.StartOnCounter, htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-5">
-                                @Html.DropDownListFor(model => model.START_ON_COUNTER, Model.Base_Start_on_Counter, new { @class = "form-control select" })
-                                @Html.ValidationMessageFor(model => model.START_ON_COUNTER, "", new { @class = "text-danger" })
+                                @Html.DropDownListFor(model => model.StartOnCounter, Model.BaseStartOnCounterList, new { @class = "form-control select" })
+                                @Html.ValidationMessageFor(model => model.StartOnCounter, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Duration, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-5">
+                                @Html.EditorFor(model => model.Duration, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Duration, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.DurationType, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-5">
+                                @Html.DropDownListFor(model => model.DurationType, Model.StepDurationTypeList, new { @class = "form-control select" })
+                                @Html.ValidationMessageFor(model => model.DurationType, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Labor, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-5">
+                                @Html.TextBoxFor(model => model.Labor, new { @class = "form-control", @readonly = "readonly" })
+                                @Html.ValidationMessageFor(model => model.Labor, "", new { @class = "text-danger" })
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label col-md-2" for="DURATION">Estimated Step Duration</label>
+                            @Html.LabelFor(model => model.StepText, htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-5">
-                                @Html.EditorFor(model => model.DURATION, new { htmlAttributes = new { @class = "form-control" } })
-                                @Html.ValidationMessageFor(model => model.DURATION, "", new { @class = "text-danger" })
+                                @Html.TextAreaFor(model => model.StepText, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.StepText, "", new { @class = "text-danger" })
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label col-md-2" for="DURATION_TYPE">Step Duration Type</label>
+                            @Html.LabelFor(model => model.SystemTask, htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-5">
-                                @Html.DropDownListFor(model => model.DURATION_TYPE, Model.Step_Duration_Type, new { @class = "form-control select" })
-                                @Html.ValidationMessageFor(model => model.DURATION_TYPE, "", new { @class = "text-danger" })
+                                @Html.DropDownListFor(model => model.SystemTask, Model.SystemTaskList, new { @class = "form-control select" })
+                                @Html.ValidationMessageFor(model => model.SystemTask, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="systemcomptest">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.NumTestQuestion, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-5">
+                                    @Html.EditorFor(model => model.NumTestQuestion, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.NumTestQuestion, "", new { @class = "text-danger" })
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(model => model.STEP_TEXT, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-5">
-                                @Html.TextAreaFor(model => model.STEP_TEXT, new { @class = "form-control" })
-                                @Html.ValidationMessageFor(model => model.STEP_TEXT, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="control-label col-md-2" for="SYSTEM_TASK">SYSTEM TASK</label>
-                            <div class="col-md-5">
-                                @Html.DropDownListFor(model => model.SYSTEM_TASK, Model.SYSTEM_TASKS, new { @class = "form-control select" })
-                                @Html.ValidationMessageFor(model => model.SYSTEM_TASK, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.ReferenceProcs, htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.LabelFor(model => model.ApplicationObjects, htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-5">
                                 <div style="width: 96%; float: left;">
-                                    @Html.ListBoxFor(m => m.ReferenceProcs, Model.ListProcFiles, new { @class = "form-control submitselect", multiple = "multiple" })
-                                    @Html.ValidationMessageFor(model => model.ReferenceProcs, "", new { @class = "text-danger" })
+                                    @Html.TextBoxFor(m => m.ApplicationObjects, new { @class = "form-control submitselect", @readonly = "readonly" })
+                                    @Html.ValidationMessageFor(model => model.ApplicationObjects, "", new { @class = "text-danger" })
                                 </div>
-                                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceProcs" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceProcs"><i class="icon fa fa-trash"></i></span> </div>
+                                @*<div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="REFERENCE_OBJECT" data-toggle="modal" data-target="#select-objects"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="REFERENCE_OBJECT"><i class="icon fa fa-trash"></i></span> </div>*@
                             </div>
                         </div>
-                        @*<div class="form-group">
-                                <label class="control-label col-md-2" for="Title">Refrence Verbs</label>
-                                <div class="col-md-5">
-                                    @Html.DropDownListFor(model => model.REFERENCE_VERB, Model.Reference_Verb, new { @class = "form-control" })
-                                    @Html.ValidationMessageFor(model => model.REFERENCE_VERB, "", new { @class = "text-danger" })
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ReferenceProcedures, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-5">
+                                <div style="width: 96%; float: left;">
+                                    @Html.ListBoxFor(m => m.ReferenceProcedures, Model.ReferenceProceduresList, new { @class = "form-control  submitselect" })
+                                    @Html.ValidationMessageFor(model => model.ReferenceProcedures, "", new { @class = "text-danger" })
                                 </div>
-                            </div>*@
+                                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceProcedures" data-toggle="modal" data-target="#select-referenceprocedures"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceProcedures"><i class="icon fa fa-trash"></i></span> </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ReferenceVerb, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-5">
+                                <div>
+                                    @Html.DropDownListFor(m => m.ReferenceVerb, Model.ReferenceVerbList, new { @class = "form-control select" })
+                                    @Html.ValidationMessageFor(model => model.ReferenceVerb, "", new { @class = "text-danger" })
+                                </div>
+                                @*<div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="REFERENCE_OBJECT" data-toggle="modal" data-target="#select-objects"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="REFERENCE_OBJECT"><i class="icon fa fa-trash"></i></span> </div>*@
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             @Html.LabelFor(model => model.ReferenceObject, htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-5">
-                                <div style="width: 96%; float: left;">
-                                    @Html.ListBoxFor(m => m.ReferenceObject, Model.REFERENCE_OBJECTS, new { @class = "form-control submitselect" })
+                                <div>
+                                    @Html.DropDownListFor(m => m.ReferenceObject, Model.ReferenceObjectsList, new { @class = "form-control  select" })
                                     @Html.ValidationMessageFor(model => model.ReferenceObject, "", new { @class = "text-danger" })
                                 </div>
-                                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="REFERENCE_OBJECT" data-toggle="modal" data-target="#select-objects"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="REFERENCE_OBJECT"><i class="icon fa fa-trash"></i></span> </div>
+                                @*<div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="REFERENCE_OBJECT" data-toggle="modal" data-target="#select-objects"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="REFERENCE_OBJECT"><i class="icon fa fa-trash"></i></span> </div>*@
                             </div>
                         </div>
 
                         <div class="form-group">
-                            @Html.LabelFor(model => model.PictureFiles, htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.LabelFor(model => model.ReferenceFiles, htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-5">
                                 <div style="width: 96%; float: left;">
-                                    @Html.ListBoxFor(m => m.PictureFiles, Model.ListPictureRefFiles, new { @class = "form-control submitselect", multiple = "multiple" })
+                                    @Html.ListBoxFor(m => m.ReferenceFiles, Model.ReferenceFilesList, new { @class = "form-control submitselect", multiple = "multiple" })
                                 </div>
-                                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="PictureFiles" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="PictureFiles"><i class="icon fa fa-trash"></i></span>  </div>
+                                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceFiles" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceFiles"><i class="icon fa fa-trash"></i></span>  </div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -96,23 +126,25 @@
 
                             <div class="col-md-5">
                                 <div style="width: 96%; float: left;">
-                                    @Html.ListBoxFor(m => m.ReferenceTheories, Model.ListReferenceTheories, new { @class = "form-control submitselect", multiple = "multiple" })
+                                    @Html.ListBoxFor(m => m.ReferenceTheories, Model.ReferenceTheoriesList, new { @class = "form-control submitselect", multiple = "multiple" })
                                 </div>
-                                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="REFERENCE_THEORIES" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="REFERENCE_THEORIES"><i class="icon fa fa-trash"></i></span>  </div>
+                                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceTheories" data-toggle="modal" data-target="#select-theory"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceTheories"><i class="icon fa fa-trash"></i></span>  </div>
                             </div>
                         </div>
 
 
                         <div class="form-group">
-                            @Html.LabelFor(model => model.COMMENTS, htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.LabelFor(model => model.Comments, htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-5">
-                                @Html.TextAreaFor(model => model.COMMENTS, new { @class = "form-control" })
-                                @Html.ValidationMessageFor(model => model.COMMENTS, "", new { @class = "text-danger" })
+                                @Html.TextAreaFor(model => model.Comments, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Comments, "", new { @class = "text-danger" })
                             </div>
                         </div>
 
+
+
                         <div class="form-group">
-                            <div class="col-md-offset-2 col-md-5">
+                            <div class="col-md-offset-4 col-md-10">
                                 <input type="submit" value="Create" class="btn btn-default" />
                                 @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-warning" })
                             </div>
@@ -129,32 +161,10 @@
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
     <script src="~/assets/js/grids/comman.js"></script>
-    <script src="~/assets/js/grids/PreProTheoryDiolag.js"></script>
     <script>
         $(document).ready(function () {
             $(".select").select2();
         });
-        $('#select-PreProTheory').on('show.bs.modal',
-            function (event) {
-
-                var button = $(event.relatedTarget);
-                var callBackId = button.data('call-back-id');
-                var modal = $(this);
-
-                $.ajax({
-                    type: "GET",
-                    url: '/PreProSearch/GetPreProTheory?callBackId=' + callBackId,
-                    dataType: 'html',
-                    success: function (data) {
-                        modal.find('.modal-body').html(data);
-                    },
-                    error: function () {
-
-                    }
-                });
-
-            });
-
         function removeOldFile(e) {
 
             var control = $(e).closest(".modal-body").find('#target-control-id').val();

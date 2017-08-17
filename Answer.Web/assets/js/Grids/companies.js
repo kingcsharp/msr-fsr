@@ -67,6 +67,16 @@
                 align: 'left'
             },
             {
+                label: 'Type',
+                name: 'CoType',
+                index: 'CoType',
+                colmenu: false,
+                editable: true,
+                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                align: 'center'
+            },
+            {
                 label: 'Revision',
                 name: 'Rev',
                 index: 'Rev',
@@ -87,8 +97,20 @@
                 searchoptions: { value: ":[All];CREATING, DENIED, APPROVED, APPROVED_BUT_REVISING:Creating or Approved;CREATING, DENIED: Creating;IN_WORKFLOW:In Approval Workflow;APPROVED, APPROVED_BUT_REVISING, APPROVED_BUT_DELETING:Approved;DENIED:Denied;APPROVED_BUT_REVISING:Approved But Being Revised;APPROVED_BUT_DELETING:Approved But Being Deleted;DENIED:Denied;DELETED:Deleted;OLD:Obsolete" },
                 align: 'left'
             },
+            {
+                label: 'Checked Out To',
+                name: 'LockedByName',
+                index: 'LockedByName',
+                colmenu: false,
+                editable: true,
+                stype: "select",
+                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                searchoptions: { value: ":[All];CREATING, DENIED, APPROVED, APPROVED_BUT_REVISING:Creating or Approved;CREATING, DENIED: Creating;IN_WORKFLOW:In Approval Workflow;APPROVED, APPROVED_BUT_REVISING, APPROVED_BUT_DELETING:Approved;DENIED:Denied;APPROVED_BUT_REVISING:Approved But Being Revised;APPROVED_BUT_DELETING:Approved But Being Deleted;DENIED:Denied;DELETED:Deleted;OLD:Obsolete" },
+                align: 'center'
+            },
             { name: 'Actions', index: 'ID', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: CompaniesEditFormatter, width: 200, align: 'center' }
         ],
+       
         ajaxRowOptions: {
             type: "POST",
             contentType: "application/json; charset=utf-8",
@@ -111,6 +133,29 @@
         editurl: 'clientArray',
         autowidth: true,
         colMenu: true,
+        gridComplete: function () {
+            $('.deletecompny').on('click',
+                function (e) {
+                    e.preventDefault();
+
+                    var callBackId = $(this).data('call-back-id');
+                    var callBackName = $(this).data('call-back-name');
+
+                    eModal.confirm('Do you really want to delete ' + callBackName + ' ?', 'Confirmation delete')
+                        .then(confirmCallback, optionalCancelCallback);
+
+                    function confirmCallback() {
+                        console.log("ok")
+                        window.location.href = "/Companies/Delete/" + callBackId
+                       
+                    }
+
+                    function optionalCancelCallback() {
+                        console.log("cancel")
+                    }
+
+                });
+        }
 
     });
     $('#jqGrid').navGrid("#jqGridPager", {
@@ -133,7 +178,7 @@
     function CompaniesEditFormatter(cellvalue, options, rowObject) {
         thisCellVal = '<a href="/Companies/Edit/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i> Edit</a>';
         thisCellVal = thisCellVal + '<a href="/Companies/Details/' + rowObject.ObjectId + '" title="View Company" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-eye"></i> Details</a>';
-        thisCellVal = thisCellVal + '<a href="/Companies/Delete/' + rowObject.ObjectId + '" data-call-back-name="' + rowObject.Name + '" data-call-back-id="' + rowObject.ObjectId + '" title="Delete" class="btn btn-xs btn-danger deletepart" style="margin:2px;font-size: .8em;"><i class="fa fa-trash"></i> Delete</a>';
+        thisCellVal = thisCellVal + '<a href="/Companies/Delete/' + rowObject.ObjectId + '" data-call-back-name="' + rowObject.Name + '" data-call-back-id="' + rowObject.ObjectId + '" title="Delete" class="btn btn-xs btn-danger deletecompny" style="margin:2px;font-size: .8em;"><i class="fa fa-trash"></i> Delete</a>';
         return thisCellVal;
     }
     $('#search').click(function () {

@@ -136,7 +136,8 @@ namespace Msr.Services.Orders
                     TimeZone = model.TimeZone,
                     HireDate = model.HireDate,
                     Status = model.StatusEditPerson,
-                    StrNTlogin = model.NTLogin
+                    StrNTlogin = model.NTLogin,
+                    Company = model.CompanyEditPerson
                 };
                 var result = _dbContext.Database.ExecuteStoredProcedure<SavePeopleProcedure>(savePeopleProcedure);
 
@@ -198,15 +199,15 @@ namespace Msr.Services.Orders
             var result = _dbContext.Database
                 .SqlQuery<EditPeopleViewModel>(
                     "SELECT PHONE_NUMBER as PrimaryPhoneNumber,PHONE_TYPE as TypePrimaryPhoneNumber,PHONE_PIN as PinPrimaryPhoneNumber,PHONE_EXTENSION as ExtPrimaryPhoneNumber FROM dbo.A_PHONE_NUMBERS WHERE OBJECT_ID = '" + id + "'")
-                .SingleOrDefault();
+                .FirstOrDefault();
             return result;
         }
         public EditPeopleViewModel GetEmailInfoByObjId(string id)
         {
             var result = _dbContext.Database
                 .SqlQuery<EditPeopleViewModel>(
-                    "SELECT ADDY as EmailPrimary,TYPE as EmailTypePrimary,EMAIL_TYPE as EmailTextTypePrimary FROM dbo.A_EMAILS WHERE OBJECT_ID = '" + id + "'")
-                .SingleOrDefault();
+                    "SELECT ID as EmailIdPrimary, ADDY as EmailPrimary,TYPE as EmailTypePrimary,EMAIL_TYPE as EmailTextTypePrimary FROM dbo.A_EMAILS WHERE OBJECT_ID = '" + id + "'")
+                .FirstOrDefault();
             return result;
         }
         public EditPeopleViewModel GetLocationInfoByObjId(string id)
@@ -214,7 +215,7 @@ namespace Msr.Services.Orders
             var result = _dbContext.Database
                 .SqlQuery<EditPeopleViewModel>(
                     "SELECT LOCATION_ID as AddressLocation,LOCATION_TYPE as AddressType FROM A_LOCATIONS_OBJECT_LINK WHERE OBJECT_ID = '" + id + "'")
-                .SingleOrDefault();
+                .FirstOrDefault();
             return result;
         }
         public bool Edit(EditPeopleViewModel model)
@@ -235,7 +236,8 @@ namespace Msr.Services.Orders
                     TimeZone = model.TimeZone,
                     HireDate = model.HireDate,
                     Status = model.StatusEditPerson,
-                    StrNTlogin = model.NTLogin
+                    StrNTlogin = model.NTLogin,
+                    Company = model.CompanyEditPerson
                 };
                 var result = _dbContext.Database.ExecuteStoredProcedure<EditPeopleProcedure>(savePeopleProcedure);
 
@@ -265,21 +267,41 @@ namespace Msr.Services.Orders
 
                     _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
                 }
-                //_dbContext.Database.SqlQuery<AddPeopleViewModel>(
-                //    "INSERT INTO A_PHONE_NUMBERS(ID, PHONE_NUMBER, PHONE_TYPE, PHONE_PIN, PHONE_EXTENSION, MODBY, DRCM, OBJECT_ID)VALUES(newID(), '" +
-                //    model.PrimaryPhoneNumber + "', '" + model.TypePrimaryPhoneNumber + "', '" +
-                //    model.ExtPrimaryPhoneNumber + "', '" + model.PinPrimaryPhoneNumber + "', '" + model.NTLogin +
-                //    "', getDate(), '" + savePeopleProcedure.NewObjId + "')").SingleOrDefault();
-                //_dbContext.Database.SqlQuery<AddPeopleViewModel>(
-                //    "INSERT INTO A_EMAILS (ID,ADDY,[TYPE],EMAIL_TYPE,MODBY,DRCM,OBJECT_ID)VALUES (newID(), '" +
-                //    model.EmailPrimary + "', '" + model.EmailTypePrimary + "', '" +
-                //    model.EmailTextTypePrimary + "', '" + model.NTLogin +
-                //    "', getDate(), '" + savePeopleProcedure.NewObjId + "')").SingleOrDefault();
-                //_dbContext.Database.SqlQuery<AddPeopleViewModel>(
-                //    "INSERT INTO A_LOCATIONS_OBJECT_LINK (ID,LOCATION_ID,[LOCATION_TYPE],MODBY,DRCM,OBJECT_ID)VALUES (newID(), '" +
-                //    model.AddressLocation + "', '" + model.AddressType + "', '" + model.NTLogin +
-                //    "', getDate(), '" + savePeopleProcedure.NewObjId + "')").SingleOrDefault();
+                _dbContext.Database.SqlQuery<EditPeopleViewModel>(
+                    "INSERT INTO A_PHONE_NUMBERS(ID, PHONE_NUMBER, PHONE_TYPE, PHONE_PIN, PHONE_EXTENSION, MODBY, DRCM, OBJECT_ID)VALUES(newID(), '" +
+                    model.PrimaryPhoneNumber + "', '" + model.TypePrimaryPhoneNumber + "', '" +
+                    model.ExtPrimaryPhoneNumber + "', '" + model.PinPrimaryPhoneNumber + "', '" + model.NTLogin +
+                    "', getDate(), '" + savePeopleProcedure.NewObjId + "')").SingleOrDefault();
+                _dbContext.Database.SqlQuery<EditPeopleViewModel>(
+                    "UPDATE A_EMAILS SET ADDY = '"+ model.EmailPrimary + "',[TYPE] = '" + model.EmailTypePrimary + "',EMAIL_TYPE = '" + model.EmailTextTypePrimary + "',MODBY = '" + model.NTLogin + "',DRCM = getDate() WHERE ID = '" + model.EmailIdPrimary + "'").SingleOrDefault();
+                _dbContext.Database.SqlQuery<EditPeopleViewModel>(
+                    "INSERT INTO A_LOCATIONS_OBJECT_LINK (ID,LOCATION_ID,[LOCATION_TYPE],MODBY,DRCM,OBJECT_ID)VALUES (newID(), '" +
+                    model.AddressLocation + "', '" + model.AddressType + "', '" + model.NTLogin +
+                    "', getDate(), '" + savePeopleProcedure.NewObjId + "')").SingleOrDefault();
                 return true;
+            }
+            catch (Exception ex)
+            {
+                var message = "Error occured:" + ex.Message;
+
+                return false;
+            }
+
+        }
+        public bool Delete(string objectId, string loginId)
+        {
+            try
+            {
+                var deletePeopleProcedure = new DeletePeopleProcedure
+                {
+                    ObjID = objectId,
+                    StrNTlogin = loginId
+                };
+
+                _dbContext.Database.ExecuteStoredProcedure(deletePeopleProcedure);
+
+                return true;
+
             }
             catch (Exception ex)
             {

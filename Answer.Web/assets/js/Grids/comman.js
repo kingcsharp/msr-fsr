@@ -1,4 +1,24 @@
 ﻿$(document).ready(function () {
+    $('#select-referenceprocedures').on('show.bs.modal',
+        function (event) {
+
+            var button = $(event.relatedTarget);
+            var callBackId = button.data('call-back-id');
+            var modal = $(this);
+
+            $.ajax({
+                type: "GET",
+                url: '/Procedures/GetProcedures?callBackId=' + callBackId,
+                dataType: 'html',
+                success: function (data) {
+                    modal.find('.modal-body').html(data);
+                },
+                error: function () {
+
+                }
+            });
+
+        });
     $('#select-images').on('show.bs.modal',
         function (event) {
 
@@ -72,7 +92,7 @@ function SelectIds() {
 
             var callBackId = $(this).closest(".modal-body").find('#target-control-id').val();
             var options = $('#' + callBackId + '')[0].options;
-
+            console.log(callBackId);
             var optionsArray = $.map(options, function (elem) {
                 return (elem.value);
             });
@@ -93,7 +113,7 @@ function SelectIds() {
                 $('#' + callBackId + ' option').prop('selected', true);
             }
         }
-
+        
     });
     $('.closeClick').click();
 

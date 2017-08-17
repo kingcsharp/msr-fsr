@@ -29,5 +29,7 @@ namespace Msr.Models.People
         public string LanguageId { get; set; }
         public Int16? IsHead { get; set; }
         public string TimeZone { get; set; }
+        public string LoginId { get; set; }
+        public string Company { get; set; }
     }
 }

@@ -19,7 +19,7 @@ namespace Msr.Services.Administration.Messages
     public class UpdateAssignRoleToJobItem
     {
         public int? RoleId { get; set; }
-        public int CoId { get; set; }
+        public int? CoId { get; set; }
         public string Job { get; set; }
     }
 }

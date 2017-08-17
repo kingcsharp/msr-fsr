@@ -226,6 +226,7 @@
     <Compile Include="ViewModel\Administration\AssignRoleToJobViewModel.cs" />
     <Compile Include="ViewModel\Administration\EditglobalWordsIIViewModel.cs" />
     <Compile Include="ViewModel\Administration\ModuleAccessViewViewModel.cs" />
+    <Compile Include="ViewModel\Administration\ReAssignBossViewModel.cs" />
     <Compile Include="ViewModel\EditUserProfileViewModel.cs" />
     <Compile Include="ViewModel\Engineering\EngineeringViewModel.cs" />
     <Compile Include="ViewModel\Help\SupportViewModel.cs" />
@@ -495,6 +496,7 @@
     <Content Include="assets\css\line-icons.css" />
     <Content Include="assets\css\login.css" />
     <Content Include="assets\css\main-menu.css" />
+    <Content Include="assets\css\people.css" />
     <Content Include="assets\css\profile.css" />
     <Content Include="assets\css\select2.min.css" />
     <Content Include="assets\css\style.css" />
@@ -588,6 +590,9 @@
     <Content Include="assets\js\grids\approvalstages.js" />
     <Content Include="assets\js\grids\buyer_grid.js" />
     <Content Include="assets\js\grids\comman.js" />
+    <Content Include="assets\js\grids\PrePro.js" />
+    <Content Include="assets\js\grids\PreProTheoryDiolag.js" />
+    <Content Include="assets\js\grids\procedures-dialog.js" />
     <Content Include="assets\js\grids\productsactualpart.js" />
     <Content Include="assets\js\grids\people.js" />
     <Content Include="assets\js\grids\companies.js" />
@@ -607,8 +612,7 @@
     <Content Include="assets\js\grids\parttype.js" />
     <Content Include="assets\js\grids\procedures.js" />
     <Content Include="assets\js\grids\procedureverbs.js" />
-    <Content Include="assets\js\grids\PrePro.js" />
-    <Content Include="assets\js\grids\PreProTheoryDiolag.js" />
+    <Content Include="assets\js\grids\procedurestep.js" />
     <Content Include="assets\js\grids\regions.js" />
     <Content Include="assets\js\grids\showpruchasestatus.js" />
     <Content Include="assets\js\grids\theoryparagraph-model.js" />
@@ -1018,7 +1022,6 @@
     <Content Include="Views\PreProSearch\Create.cshtml" />
     <Content Include="Views\PreProSearch\Details.cshtml" />
     <Content Include="Views\PreProSearch\Edit.cshtml" />
-    <Content Include="Views\Shared\_PreProTheories.cshtml" />
     <Content Include="Views\Parts\AddPartTypes.cshtml" />
     <Content Include="Views\Parts\PartTypes.cshtml" />
     <Content Include="Views\Parts\SavePartTypes.cshtml" />
@@ -1040,9 +1043,11 @@
     <Content Include="Views\Procedures\AssignProcedure.cshtml" />
     <Content Include="Views\Files\Add.cshtml" />
     <Content Include="Views\Files\_ViewFile.cshtml" />
+    <Content Include="Views\Procedures\_Procedures.cshtml" />
     <Content Include="Views\People\Edit.cshtml" />
-    <Content Include="Views\Workflow\Submit.cshtml" />
+    <Content Include="Views\Administration\ReAssignBoss.cshtml" />
     <Content Include="Views\Workflow\Delete.cshtml" />
+    <Content Include="Views\Workflow\Submit.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

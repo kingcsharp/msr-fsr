@@ -106,10 +106,10 @@ namespace Msr.Services.Documents.ViewModels
                 Value = x.Id.ToString(),
             }).OrderBy(o => o.Text).ToList();
 
-            ListReferenceTheories = documentService.GetSelectedTheories(id: Id).Select(x => new SelectListItem
+            ListReferenceTheories = documentService.GetSelectedTheories(id:Id).Select(x => new SelectListItem
             {
                 Text = x.Name,
-                Value = x.Id.ToString(),
+                Value =x.Id.ToString(),
             }).OrderBy(o => o.Text).ToList();
 
             Roles = documentService.GetSelectedRoles(id: Id).Select(x => x.RoleId).ToList();

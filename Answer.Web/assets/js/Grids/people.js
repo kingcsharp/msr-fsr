@@ -202,6 +202,28 @@
         editurl: 'clientArray',
         autowidth: true,
         colMenu: true,
+        gridComplete: function () {
+            $('.deletepeople').on('click',
+                function(e) {
+                    e.preventDefault();
+
+                    var callBackId = $(this).data('call-back-id');
+                    var callBackName = $(this).data('call-back-name');
+
+                    eModal.confirm('Do you really want to delete ' + callBackName + ' ?', 'Confirmation delete')
+                        .then(confirmCallback, optionalCancelCallback);
+
+                    function confirmCallback() {
+                        console.log("ok");
+                        window.location.href = "/People/Delete/" + callBackId
+                    }
+
+                    function optionalCancelCallback() {
+                        console.log("cancel");
+                    }
+
+                });
+        }
 
     });
     $('#jqGrid').navGrid("#jqGridPager", {
@@ -223,6 +245,7 @@
     });
     function peopleEditFormatter(cellvalue, options, rowObject) {
         var thisCellVal = '<a href="/People/Edit/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i> Edit</a>';
+        thisCellVal = thisCellVal + '<a href="/People/Delete/' + rowObject.ObjectId + '" data-call-back-name="' + rowObject.Name + '" data-call-back-id="' + rowObject.ObjectId + '" title="Delete" class="btn btn-xs btn-danger deletepeople" style="margin:2px;font-size: .8em;"><i class="fa fa-trash"></i> Delete</a>';
         return thisCellVal;
     }
 

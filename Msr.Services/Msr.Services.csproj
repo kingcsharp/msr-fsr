@@ -125,6 +125,7 @@
     <Compile Include="Administration\ViewModels\AssignAccRecievableRoleViewModel.cs" />
     <Compile Include="Administration\ViewModels\AssignCompaniesToViewItemViewModel.cs" />
     <Compile Include="Administration\ViewModels\EmailWordsViewModel.cs" />
+    <Compile Include="Administration\ViewModels\ReAssignBossView.cs" />
     <Compile Include="Administration\ViewModels\XmlContentViewModel.cs" />
     <Compile Include="Administration\ViewModels\ModuleAccessViewModel.cs" />
     <Compile Include="ApprovalGroups\ApprovalGroupsService.cs" />
@@ -263,12 +264,18 @@
     <Compile Include="PartTypes\Procedures\DeletePartTypeProcedure.cs" />
     <Compile Include="PartTypes\Procedures\SavePartTypeProcedure.cs" />
     <Compile Include="PartTypes\ViewModels\AddPartTypesViewModel.cs" />
+    <Compile Include="People\Procedures\DeletePeopleProcedure.cs" />
     <Compile Include="PrePro\PreProServices.cs" />
     <Compile Include="PrePro\Procedure\DeletePreProItemProcedure.cs" />
     <Compile Include="PrePro\Procedure\DeletePreProProcedure.cs" />
+    <Compile Include="PrePro\Procedure\DeleteProcedureStepFileLinkProcedure.cs" />
+    <Compile Include="PrePro\Procedure\DeleteProcedureStepProcedure.cs" />
     <Compile Include="PrePro\Procedure\PreProSelectProcedure.cs" />
+    <Compile Include="PrePro\Procedure\SavePrePopProcedure.cs" />
     <Compile Include="PrePro\Procedure\SaveProcedurePreProFileProcedure.cs" />
     <Compile Include="PrePro\Procedure\SavePreProProcedure.cs" />
+    <Compile Include="PrePro\Procedure\SaveProcedureStepFileLinkProcedure.cs" />
+    <Compile Include="PrePro\Procedure\SaveProcedureStepProcedure.cs" />
     <Compile Include="PrePro\Procedure\SaveTheoryProcedure.cs" />
     <Compile Include="PrePro\TheoryFileService.cs" />
     <Compile Include="PrePro\ViewModel\ProcedurePreProViewModel.cs" />
