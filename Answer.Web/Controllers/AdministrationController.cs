@@ -140,11 +140,9 @@ namespace Answer.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult UpdateAssignRoleToJob(List<UpdateAssignRoleToJobItem> companiesWithRoles,
-            string selectedJobId)
+        public ActionResult UpdateAssignRoleToJob(List<UpdateAssignRoleToJobItem> companiesWithRoles, string selectedJobId)
         {
-
-            var result = _administrationService.UpdateAssignRoleToJob(new UpdateAssignRoleToJobRequest {RoleToJobItems = companiesWithRoles});
+            var result = _administrationService.UpdateAssignRoleToJob(new UpdateAssignRoleToJobRequest { RoleToJobItems = companiesWithRoles, SelectedJobId = selectedJobId });
 
             if (!result.HasErrors())
             {
@@ -156,14 +154,14 @@ namespace Answer.Web.Controllers
                 TempData["ErrorMessage"] = result.ErrorMessage();
             }
 
-            return RedirectToAction("AssignRoleToJob", new {selectedJobId});
+            return RedirectToAction("AssignRoleToJob", new { selectedJobId });
         }
 
         public ActionResult AssignAccRecievableRole()
         {
             var vm = new AssignAccRecievableRoleViewModel();
 
-            vm.Companies = _administrationService.GetAssignAccRecievableRole();
+            vm.Companies = _administrationService.GetAssignAccRecievableRole(GetCurrentUser().Id);
 
             vm.SetUp(_roleService, _locationService);
 
@@ -320,6 +318,43 @@ namespace Answer.Web.Controllers
 
             return View(vm);
         }
-        
+        [HttpPost]
+        public ActionResult ReAssignBoss(ReAssignBossViewModel items)
+        {
+            items.NTLogin = "1618"; // Need to change
+            if (ModelState.IsValid)
+            {
+                var model = new ReAssignBossView();
+                model = MapToDto(items);
+                var result = _administrationService.ReassignBoss(model);
+
+                if (!result.HasErrors())
+                {
+                    TempData["SuccessMessage"] = result.SuccessMessage;
+
+                    return RedirectToAction("ReAssignBoss");
+                }
+
+                TempData["ErrorMessage"] = result.ErrorMessage();
+            }
+
+            var vm = new ReAssignBossViewModel();
+
+            vm.NTLogin = "1618"; // Need to change
+
+            vm.SetUp(_administrationService);
+
+            return View(vm);
+        }
+        public ReAssignBossView MapToDto(ReAssignBossViewModel model)
+        {
+            return new ReAssignBossView
+            {
+                Id = model.Id,
+                FullName = model.FullName,
+                ToBossId = model.ToBossId,
+                NTLogin = model.NTLogin
+            };
+        }
     }
 }

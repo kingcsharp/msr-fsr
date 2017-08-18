@@ -32,7 +32,7 @@ namespace Answer.Web.Controllers
         {
             var preproService = new PreProServices();
 
-            var totalRows = preproService.GetPreProQueryable();
+            var totalRows = preproService.GetPreProQueryable().Where(x=>x.Status!="DELETED");
 
             if (param.where != null && param.where.rules.Any())
             {

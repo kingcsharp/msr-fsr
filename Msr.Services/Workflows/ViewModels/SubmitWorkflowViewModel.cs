@@ -23,7 +23,6 @@ namespace Msr.Services.Workflows.ViewModels
         public string Comment { get; set; }
 
         [Display(Name = "Approval Workflow")]
-        [Required]
         public string ApprovalWorflowId { get; set; }
 
         public IList<SelectListItem> WorkflowsList { get; set; }

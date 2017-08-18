@@ -73,7 +73,6 @@ namespace Msr.Services.Administration
 
             return result;
         }
-
         public IList<RoleForJobItem> GetRolesForJob(string jobId, string logId)
         {
             var sql = $"exec A_SP_ADMIN_GET_ROLE_FOR_JOB '{jobId}',{logId}";
@@ -91,7 +90,7 @@ namespace Msr.Services.Administration
             {
                 foreach (var job in jobRequest.RoleToJobItems)
                 {
-                    var sql = $"exec A_SP_ADMIN_JOB_ROLE_UPDATE '{job.CoId}','{job.RoleId}','1618'";
+                    var sql = $"exec A_SP_ADMIN_JOB_ROLE_UPDATE '{jobRequest.SelectedJobId}', '{job.CoId}','{job.RoleId}','1618'";
 
                     _dbContext.Database.ExecuteSqlCommand(sql);
                 }
@@ -126,9 +125,9 @@ namespace Msr.Services.Administration
 
             return result;
         }
-        public List<AssignAccRecievableRoleResult> GetAssignAccRecievableRole()
+        public List<AssignAccRecievableRoleResult> GetAssignAccRecievableRole(string userId)
         {
-            var sql = "exec A_SP_ADMIN_SERVICE_CALL_GET_ACCT_RECEIVED_ROLE_DATA 1618";
+            var sql = $"exec A_SP_ADMIN_SERVICE_CALL_GET_ACCT_RECEIVED_ROLE_DATA {userId}";
 
             var result = _dbContext.Database.SqlQuery<AssignAccRecievableRoleResult>(sql).ToList();
 
@@ -266,11 +265,36 @@ namespace Msr.Services.Administration
 
             return result;
         }
-        public IList<ReAssignBossView> ReassignBoss(ReAssignBossView model)
+        public BaseNotification ReassignBoss(ReAssignBossView model)
         {
-            var sql = "exec A_SP_PEOPLE_REASSIGN_BOSS " + null +"," + null + ",'" + model.Id + "','" + model.ToBossId + "','" + model.NTLogin + "'";
+            
 
-            var result = _dbContext.Database.SqlQuery<ReAssignBossView>(sql).ToList();
+            var result = new BaseNotification();
+
+            try
+            {
+                var sql = "exec Portal_PeopleReassignBoss '" + null + "','" + null + "','" + model.Id + "','" + model.ToBossId + "','" + model.NTLogin + "'";
+
+                IList<ReAssignBossView> getResult = _dbContext.Database.SqlQuery<ReAssignBossView>(sql).ToList();
+
+                if (getResult.Count > 0)
+                {
+                    int count = getResult.Count;
+
+                    result.SuccessMessage = "Reassigned the " + count + " people that worked for " + model.Id + " to " +
+                                            model.ToBossId;
+                }
+                else
+                {
+                    result.SuccessMessage = "Reassigned the 0 people that worked for " + model.Id + " to " +
+                                            model.ToBossId;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                result.AddError(ex.ToString());
+            }
 
             return result;
         }

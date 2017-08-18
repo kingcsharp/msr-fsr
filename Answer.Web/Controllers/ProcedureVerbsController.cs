@@ -26,6 +26,10 @@ namespace Answer.Web.Controllers
 
             var totalRows = procedureTypesService.GetProceduresVerbs();
 
+            var defaultStatusList = new[] { "CREATING", "DENIED", "APPROVED", "APPROVED_BUT_REVISING", "APPROVED_BUT_DELETING" };
+
+            totalRows = totalRows.Where(x => defaultStatusList.Contains(x.Status));
+
             if (param.where != null && param.where.rules.Any())
             {
                 foreach (var rule in param.where.rules)
@@ -49,7 +53,12 @@ namespace Answer.Web.Controllers
                     }
                     else if (rule.field == nameof(ProcedureVerbsView.Status))
                     {
-                        totalRows = totalRows.Where(x => x.Status.ToLower().Contains(rule.data.ToLower()));
+                        var statusList = rule.data.Split(',').Select(x => x.Trim().ToLower());
+
+                        if (statusList.Any())
+                        {
+                            totalRows = totalRows.Where(x => x.Status.ToLower().Contains(rule.data.ToLower()));
+                        }
                     }
                 }
             }

@@ -147,16 +147,18 @@
     }
     <script src="~/assets/js/grids/comman.js"></script>
     <script type="text/javascript">
+        
         $(document).ready(function () {
+
             var selectRoles = $(".selectroles").select2({
-               tags: [],
-               tokenSeparators: [','],
-               multiple: true,
-               allowClear: true,
-               placeholder: "Select Roles",
-               formatNoMatches: function () {
-                   return '';
-               }
+                tags: [],
+                tokenSeparators: [','],
+                multiple: true,
+                allowClear: true,
+                placeholder: "Select Roles",
+                formatNoMatches: function () {
+                    return '';
+                }
             });
             var values = '@roles';
 

@@ -24,11 +24,12 @@ namespace Answer.Web.Controllers
         {
             var roleService = new RoleService();
 
-            var defaultStatusList = new [] { "CREATING", "DENIED", "APPROVED", "APPROVED_BUT_REVISING", "APPROVED_BUT_DELETING" };
-
+          
             var totalRows = roleService.GetUserRolesQueryable();
 
-            totalRows = totalRows.Where(x => defaultStatusList.Contains(x.Status) && x.Id.Length > 0);
+            var defaultStatusList = "CREATING,DENIED,APPROVED,APPROVED_BUT_REVISING,APPROVED_BUT_DELETING".Split(',');
+
+            totalRows = totalRows.Where(x => defaultStatusList.Contains(x.Status));
 
             if (param.where != null && param.where.rules.Any())
             {
@@ -205,6 +206,21 @@ namespace Answer.Web.Controllers
 
             TempData["ErrorMessage"] = "Something went wrong.";
             return RedirectToAction("Index");
+        }
+
+
+        public ActionResult Detail(string id)
+        {
+            var roleService = new RoleService();
+
+            var model = roleService.GetRoleByid(Id: id);
+
+            var saveRoleViewModel = new SaveRoleViewModel();
+
+            saveRoleViewModel = saveRoleViewModel.MapToDto(model);
+            saveRoleViewModel.Setup();
+
+            return View(saveRoleViewModel);
         }
 
     }

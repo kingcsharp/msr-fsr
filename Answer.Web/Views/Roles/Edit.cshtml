@@ -1,6 +1,6 @@
 ﻿@model Msr.Services.Roles.ViewModels.SaveRoleViewModel
 @{
-    ViewBag.Title = "Add User Role";
+    ViewBag.Title = "Edit Role";
 }
 <link rel="stylesheet" type="text/css" href="/assets/css/themes/flat-blue.css">
 <link rel="stylesheet" type="text/css" href="/assets/css/ui.jqgrid-bootstrap-ui.css">
@@ -11,20 +11,8 @@
     <div class="side-body padding-top">
         <div class="row">
             <h2 class="page-header">
-                Edit User Role
-                <div class=" pull-right" data-toggle="modal">
-                    <!-- Split button -->
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-warning">Action</button>
-                        <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="caret"></span>
-                            <span class="sr-only">Toggle Dropdown</span>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a href="~/user/deleteuser/@Model.Id">Delete</a></li>
-                        </ul>
-                    </div>
-                </div>
+                Edit Role
+                
             </h2>
             <div class="col-lg-10">
                 @Html.Partial("Message")
@@ -78,8 +66,8 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="col-md-offset-2 col-md-10">
-                                <input type="submit" value="Save" class="btn btn-default" />
+                            <div class="col-md-offset-2 col-md-5">
+                                <input type="submit" value="Save" class="btn btn-success" />
                                 @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-warning" })
                             </div>
                         </div>

@@ -145,7 +145,7 @@
                 width: 200,
                 align: 'left'
             },
-            { name: 'Actions', index: 'Id', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: actualPartsEditFormatter, width: 200, align: 'center' }
+            { name: 'Actions', index: 'Id', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: actualPartsEditFormatter, width: 250, align: 'center' }
         ],
         ajaxRowOptions: {
             type: "POST",

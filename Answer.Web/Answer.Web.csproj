@@ -496,7 +496,6 @@
     <Content Include="assets\css\line-icons.css" />
     <Content Include="assets\css\login.css" />
     <Content Include="assets\css\main-menu.css" />
-    <Content Include="assets\css\people.css" />
     <Content Include="assets\css\profile.css" />
     <Content Include="assets\css\select2.min.css" />
     <Content Include="assets\css\style.css" />
@@ -1048,6 +1047,10 @@
     <Content Include="Views\Administration\ReAssignBoss.cshtml" />
     <Content Include="Views\Workflow\Delete.cshtml" />
     <Content Include="Views\Workflow\Submit.cshtml" />
+    <Content Include="Views\Roles\Detail.cshtml" />
+    <Content Include="Views\ShowPurchaseStatus\Index.cshtml" />
+    <Content Include="Views\ShowPurchaseStatus\_Purchase.cshtml" />
+    <Content Include="Views\Shared\_PreProTheories.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

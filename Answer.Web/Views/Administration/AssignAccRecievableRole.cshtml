@@ -15,7 +15,8 @@
 
         <div class="col-lg-12">
             <div class="row">
-                @using (Html.BeginForm("AssignAccRecievableRole", "Administration", FormMethod.Post, new { id = "assign-form" }))
+                @Html.Partial("Message")
+                @using (Html.BeginForm("AssignAccRecievableRole", "Administration", FormMethod.Post, new {id = "assign-form"}))
                 {
                     <table class="table table-bordered" style="width: 600px;">
                         <tr>
@@ -29,17 +30,17 @@
                             <tr>
                                 <td>@Model.Companies[index].Co_Name</td>
                                 <td>
-                                    @Html.Hidden("companiesWithRoles[" + index + "].CoId", Model.Companies[index].Co_Id)
-                                    @Html.DropDownList("companiesWithRoles[" + index + "].RoleId", Model.Roles, new { @class = "form-control select" })
+                                    @Html.Hidden("recievableRoleItems[" + index + "].CoId", Model.Companies[index].Co_Id)
+                                    @Html.DropDownList("recievableRoleItems[" + index + "].RoleId", new SelectList(Model.Roles, "Value", "Text", Model.Companies[index].Role_Id), new {@class = "form-control select"})
                                 </td>
                                 <td>
-                                    @Html.DropDownList("companiesWithRoles[" + index + "].LocationId", Model.Locations, new {@class = "form-control select"})
+                                    @Html.DropDownList("recievableRoleItems[" + index + "].LocationId", new SelectList(Model.Locations, "Value", "Text", Model.Companies[index].Location_Id), new {@class = "form-control select"})
                                 </td>
                             </tr>
                         }
 
                     </table>
-                    <input type="submit" value="Update" class="btn btn-success" />
+                    <input type="submit" value="Update" class="btn btn-success"/>
                 }
             </div>
 

@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Web.Mvc;
 using Msr.Services.Administration;
+using Msr.Services.Administration.ViewModels;
 
 namespace Answer.Web.ViewModel.Administration
 {
@@ -40,5 +41,15 @@ namespace Answer.Web.ViewModel.Administration
                 Text = x.Text
             }).Distinct().OrderBy(o => o.Text));
         }
+        //public ReAssignBossViewModel MapToDto(ReAssignBossView model)
+        //{
+        //    return new ReAssignBossViewModel
+        //    {
+        //        Id = model.Id,
+        //        FullName = model.FullName,
+        //        ToBossId = model.ToBossId,
+        //        NTLogin = model.NTLogin
+        //    };
+        //}
     }
 }

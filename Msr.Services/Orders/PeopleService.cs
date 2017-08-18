@@ -139,7 +139,7 @@ namespace Msr.Services.Orders
                     StrNTlogin = model.NTLogin,
                     Company = model.CompanyEditPerson
                 };
-                var result = _dbContext.Database.ExecuteStoredProcedure<SavePeopleProcedure>(savePeopleProcedure);
+              _dbContext.Database.ExecuteStoredProcedure(savePeopleProcedure);
 
                 var savePasswrodProcedure = new SavePasswrodProcedure
                 {

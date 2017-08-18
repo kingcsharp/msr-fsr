@@ -57,7 +57,7 @@
                     <dt>
                         @Html.DisplayNameFor(model => model.ReferenceObject)
                     </dt>
-                    @foreach (var item in Model.ReferenceObject)
+                    @foreach (var item in Model.ReferenceObjectsList)
                     {
                         <dd>
                             @Html.DisplayFor(model => item.Text) <span class="data-toggle=" data-call-back-item="@item.Text" data-toggle="modal" data-target="#view-images" title="View File"><i class="icon fa fa-eye"></i></span>
@@ -67,7 +67,7 @@
                     <dt>
                         @Html.DisplayNameFor(model => model.ReferenceFiles)
                     </dt>
-                    @foreach (var item in Model.ListPictureRefFiles)
+                    @foreach (var item in Model.ReferenceFilesList)
                     {
                         <dd>
                             @Html.DisplayFor(model => item.Text) <span class="data-toggle=" data-call-back-item="@item.Text" data-toggle="modal" data-target="#view-images" title="View File"><i class="icon fa fa-eye"></i></span>
@@ -87,7 +87,7 @@
                     <dt>
                         @Html.DisplayNameFor(model => model.ReferenceProcedures)
                     </dt>
-                    @foreach (var item in Model.ListProcFiles)
+                    @foreach (var item in Model.ReferenceProceduresList)
                     {
                         <dd>
                             @Html.DisplayFor(model => item.Text) <span class="data-toggle=" data-call-back-item="@item.Text" data-toggle="modal" data-target="#view-images" title="View File"><i class="icon fa fa-eye"></i></span>
@@ -126,7 +126,7 @@
                 </dl>
             </div>
             <p>
-                @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+                @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
                 @Html.ActionLink("Back to List", "Index")
             </p>
         </div>

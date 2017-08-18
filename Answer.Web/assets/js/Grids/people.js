@@ -1,11 +1,11 @@
-﻿function LoadPeopleGrid() {
+﻿function LoadPeopleGrid(url, returnUrl) {
     //$.jgrid.defaults.responsive = true;
     $.jgrid.defaults.styleUI = 'Bootstrap';
 
     Smooch.init({ appToken: '9wxoxi2wbcbymhjf1ex1a0dux' });
 
     $("#jqGrid").jqGrid({
-        url: '/People/PeopleData',
+        url: url,
         mtype: "GET",
         styleUI: 'Bootstrap',
         emptyrecords: 'No records to display',
@@ -202,28 +202,7 @@
         editurl: 'clientArray',
         autowidth: true,
         colMenu: true,
-        gridComplete: function () {
-            $('.deletepeople').on('click',
-                function(e) {
-                    e.preventDefault();
-
-                    var callBackId = $(this).data('call-back-id');
-                    var callBackName = $(this).data('call-back-name');
-
-                    eModal.confirm('Do you really want to delete ' + callBackName + ' ?', 'Confirmation delete')
-                        .then(confirmCallback, optionalCancelCallback);
-
-                    function confirmCallback() {
-                        console.log("ok");
-                        window.location.href = "/People/Delete/" + callBackId
-                    }
-
-                    function optionalCancelCallback() {
-                        console.log("cancel");
-                    }
-
-                });
-        }
+        gridComplete: function () {}
 
     });
     $('#jqGrid').navGrid("#jqGridPager", {
@@ -243,12 +222,30 @@
         searchOnEnter: true,
         searchOperators: true
     });
+   
     function peopleEditFormatter(cellvalue, options, rowObject) {
-        var thisCellVal = '<a href="/People/Edit/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i> Edit</a>';
-        thisCellVal = thisCellVal + '<a href="/People/Delete/' + rowObject.ObjectId + '" data-call-back-name="' + rowObject.Name + '" data-call-back-id="' + rowObject.ObjectId + '" title="Delete" class="btn btn-xs btn-danger deletepeople" style="margin:2px;font-size: .8em;"><i class="fa fa-trash"></i> Delete</a>';
-        return thisCellVal;
-    }
 
+        var editButton = '<a  title="Edit" href="/People/Edit/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
+
+        var deleteButton = '';
+        var buttonWorkflowLeft = '';
+        var buttonWorkflowRight = '';
+        var url = '';
+
+        if (rowObject.Status === 'CREATING') {
+
+            url = '/workflow/submit?objId=' + rowObject.ObjectId + '&returnUrl=' + returnUrl;
+            buttonWorkflowLeft = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '"  data-call-back-id="' + rowObject.ObjectId + '" class="btn btn-xs btn-success unlock" title="Cancel Creation. Edit will be lost" style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-left"></i></a>';
+
+            buttonWorkflowRight = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-success" title="Proceed to approval workflow for release." style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-right"></i></a>';
+        } else {
+            url = '/workflow/delete?objId=' + rowObject.ObjectId + '&returnUrl=' + returnUrl;
+            deleteButton = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-danger" title="Proceed to delete." style="margin:2px;font-size: .8em;"><i class="fa fa fa-trash"></i></a>';
+        }
+
+        return editButton + deleteButton + buttonWorkflowLeft + buttonWorkflowRight;
+
+    }
     $('#search').click(function () {
 
         jQuery("#jqGrid").setGridParam({

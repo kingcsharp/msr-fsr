@@ -16,5 +16,7 @@ namespace Msr.Services.Administration.ViewModels
 
         public string NTLogin { get; set; }
 
+        
+
     }
 }

@@ -66,7 +66,7 @@ namespace Msr.Services.PrePro
 
             return result;
         }
-
+       
         public bool Delete(string id)
         {
             try
@@ -105,7 +105,7 @@ namespace Msr.Services.PrePro
                     Destination = model.Destination,
                     SpecificLocation = null,
                     ReferenceVerb = model.ReferenceVerb,
-                    ReferenceObject = model.ReferenceObject,
+                    ReferenceObject = model.ReferenceObject != null ? string.Join(", ", model.ReferenceObject) : DBNull.Value.ToString(CultureInfo.InvariantCulture),
                     ReferenceTheories = model.ReferenceTheories != null ? string.Join(", ", model.ReferenceTheories) : DBNull.Value.ToString(CultureInfo.InvariantCulture),
                     GotoStep = null,
                     GotoStepId = null,
@@ -168,7 +168,7 @@ namespace Msr.Services.PrePro
                     Destination = model.Destination,
                     SpecificLocation = null,
                     ReferenceVerb = model.ReferenceVerb,
-                    ReferenceObject = model.ReferenceObject,
+                    ReferenceObject = model.ReferenceObject != null ? string.Join(", ", model.ReferenceObject) : DBNull.Value.ToString(CultureInfo.InvariantCulture),
                     ReferenceTheories = model.ReferenceTheories != null ? string.Join(", ", model.ReferenceTheories) : DBNull.Value.ToString(CultureInfo.InvariantCulture),
                     GotoStep = null,
                     GotoStepId = null,

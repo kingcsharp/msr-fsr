@@ -30,7 +30,7 @@
     <script src="~/assets/js/grids/companies.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            LoadCompanyGrid();
+            LoadCompanyGrid('@Url.Action("PartTypesData", "PartTypes")','@Request.Url.OriginalString');
         });
 
     </script>

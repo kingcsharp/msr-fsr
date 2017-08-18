@@ -54,7 +54,7 @@ namespace Msr.Services.PrePro.ViewModel
 
         public string ApplicationObjects { get; set; }
 
-        public string ReferenceObject { get; set; }
+        public List<string> ReferenceObject { get; set; }
 
         public List<string> ReferenceTheories { get; set; }
 
@@ -263,6 +263,7 @@ namespace Msr.Services.PrePro.ViewModel
             }).OrderBy(o => o.Text).ToList();
 
         }
+     
         public ProcedurePreProViewModel MapToDto(PrePropSearchView model)
         {
             return new ProcedurePreProViewModel

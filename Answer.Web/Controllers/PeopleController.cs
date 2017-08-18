@@ -12,7 +12,7 @@ using Msr.Services.Documents;
 
 namespace Answer.Web.Controllers
 {
-    public class PeopleController : Controller
+    public class PeopleController : BaseController
     {
         public ActionResult Index()
         {
@@ -27,7 +27,7 @@ namespace Answer.Web.Controllers
         {
             var peopleService = new PeopleService();
 
-            var totalRows = peopleService.GetPeople();
+            var totalRows = peopleService.GetPeople().Where(x=> x.Status != "DELETED");
 
             if (param.where != null && param.where.rules.Any())
             {
@@ -153,7 +153,7 @@ namespace Answer.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                model.NTLogin = "1618"; // need to dynamic
+                model.NTLogin = GetCurrentUser().Id;
                 model.Password = AuthenticationHelper.PassWordEncrypt("test"); //pending to find password creation
                 
                 var response = peopleService.Create(model: model);
@@ -215,7 +215,7 @@ namespace Answer.Web.Controllers
            
             if (ModelState.IsValid)
             {
-                model.NTLogin = "1618"; // need to dynamic
+                model.NTLogin = GetCurrentUser().Id;
                 model.Password = AuthenticationHelper.PassWordEncrypt("test"); //pending to find password creation
 
                 var response = peopleService.Edit(model);
@@ -239,8 +239,8 @@ namespace Answer.Web.Controllers
         public ActionResult Delete(string id)
         {
             var taskService = new PeopleService();
-            //Need to dynamic 
-            string ntLogin = "1618";
+
+            string ntLogin = GetCurrentUser().Id;
             var response = taskService.Delete(id, ntLogin);
 
             if (response)

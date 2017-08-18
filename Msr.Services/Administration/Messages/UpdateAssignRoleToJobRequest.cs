@@ -14,6 +14,7 @@ namespace Msr.Services.Administration.Messages
         }
 
         public List<UpdateAssignRoleToJobItem> RoleToJobItems { get; set; }
+        public string SelectedJobId { get; set; }
     }
 
     public class UpdateAssignRoleToJobItem

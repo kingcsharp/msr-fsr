@@ -12,7 +12,8 @@ using Msr.Web.ViewModel.Engineering;
 
 namespace Answer.Web.Controllers
 {
-    public class ApprovalWorkflowsController : Controller
+    [Authorize]
+    public class ApprovalWorkflowsController : BaseController
     {
         
         public ActionResult Index()
@@ -23,6 +24,7 @@ namespace Answer.Web.Controllers
 
             return View(viewModel);
         }
+
         public ActionResult ApprovalWorkflowsData(JqGridParam param)
         {
             var taskService = new ApprovalWorkflowsService();
@@ -80,22 +82,26 @@ namespace Answer.Web.Controllers
 
             return Json(json, JsonRequestBehavior.AllowGet);
         }
+
         public ActionResult Edit(string id)
         {
             var taskService = new ApprovalWorkflowsService();
             var model = taskService.GetApprovalWorkflowsById(id);
             var Workflow = new ApprovalWorkflowsViewModel();
+
             Workflow = Workflow.MapToDto(model);
             Workflow.Setup(new DocumentFilesService(), new ApprovalWorkflowsService());           
+
             return View(Workflow);
         }
+
         [AcceptVerbs(verbs: HttpVerbs.Post)]
         public ActionResult Edit(ApprovalWorkflowsViewModel model)
         {
             var approvalWorkflowsService = new ApprovalWorkflowsService();
+
             if (ModelState.IsValid)
             {
-                //Need to dynamic 
                model.NTLogin = "1618";
                 var response = approvalWorkflowsService.Edit(model: model);
                 if (response)
@@ -111,6 +117,7 @@ namespace Answer.Web.Controllers
 
             return View(model);
         }
+
         public ActionResult Add()
         {
             var taskService = new ApprovalWorkflowsService();
@@ -118,6 +125,7 @@ namespace Answer.Web.Controllers
             Workflow.Setup(new DocumentFilesService(), new ApprovalWorkflowsService());
             return View(Workflow);
         }
+
         [AcceptVerbs(verbs: HttpVerbs.Post)]
         public ActionResult Add(ApprovalWorkflowsViewModel model)
         {
