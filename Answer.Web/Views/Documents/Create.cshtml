@@ -55,7 +55,7 @@
                                     @Html.ListBoxFor(m => m.ReferenceTheory, Model.ListReferenceTheories, new { @class = "form-control submitselect", multiple = "multiple" })
                                     @Html.ValidationMessageFor(model => model.ReferenceTheory, "", new { @class = "text-danger" })
                                 </div>
-                                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceTheory" data-toggle="modal" data-target="#select-theory"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceFiles"><i class="icon fa fa-trash"></i></span> </div>
+                                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceTheory" data-toggle="modal" data-target="#select-theory"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceTheory"><i class="icon fa fa-trash"></i></span> </div>
                             </div>
                         </div>
 
@@ -66,7 +66,7 @@
                                     @Html.ListBoxFor(m => m.ReferenceObject, Model.ListReferenceObjects, new { @class = "form-control submitselect", multiple = "multiple" })
                                     @Html.ValidationMessageFor(model => model.ReferenceObject, "", new { @class = "text-danger" })
                                 </div>
-                                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceObject" data-toggle="modal" data-target="#select-objects"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceFiles"><i class="icon fa fa-trash"></i></span> </div>
+                                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceObject" data-toggle="modal" data-target="#select-objects"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceObject"><i class="icon fa fa-trash"></i></span> </div>
                             </div>
                         </div>
 
@@ -100,7 +100,7 @@
                         <div class="form-group">
                             @Html.LabelFor(model => model.Roles, htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-5">
-                                @Html.DropDownListFor(model => model.Roles, Model.ListRoles, new { @class = "form-control selectroles", multiple = "multiple" })
+                                @Html.DropDownListFor(model => model.Roles, Model.ListRoles, new { @class = "form-control", multiple = "multiple" })
                                 @Html.ValidationMessageFor(model => model.Roles, "", new { @class = "text-danger" })
                             </div>
                         </div>
@@ -129,6 +129,25 @@
                 tags: true,
                 multiple: true
             });
+        });
+    </script>
+    <script>
+        $('.deletefiles').click(function() {
+
+            var callBackId = $(this).data('call-back-id');
+
+            eModal.confirm('Do you really want to Remove ' + callBackId + ' ?', 'Confirmation delete')
+                .then(confirmCallback, optionalCancelCallback);
+
+            function confirmCallback() {
+                console.log("ok");
+                $('#' + callBackId + ' option:selected').remove();
+            }
+
+            function optionalCancelCallback() {
+                console.log("cancel");
+            }
+
         });
     </script>
 

@@ -62,7 +62,7 @@
                        
                         <div class="form-group">
                             <div class="col-md-offset-4 col-md-10">
-                                <input type="submit" value="Update" class="btn btn-default" />
+                                <input type="submit" value="Update" class="btn btn-success" />
                                 @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-warning" })
                             </div>
                         </div>
@@ -97,39 +97,32 @@
         ar += activities[i] + ",";
     }
 }
-    <script src="~/assets/js/grids/comman.js"></script>
-
-    <script type="text/javascript">
-        
-        $(document).ready(function () {
-
-            $('#actv').addClass("form-control activities");
-
-            var selectRoles = $(".selectroles").select2({
-                tags: [],
-                tokenSeparators: [','],
-                multiple: true,
-                allowClear: true,
-                placeholder: "Select Wf_Stages",
-                formatNoMatches: function () {
-                    return '';
-                }
-            });
-
-            var values = '@wf_Stages';
-            var selectedWf_Stages = values.split(",");
-            console.log(selectedWf_Stages);
-            selectRoles.val(selectedWf_Stages).trigger("change");
-            var activities = '@ar'; // comma separated value
-            var array = activities.split(',');
-            for (var i = 0; i < array.length; i++) {
-                if (array[i].length > 0) {
-                    $('#actv option[value=' + array[i] + ']').attr("selected", true);           
-                }
+<script src="~/assets/js/grids/comman.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var selectRoles = $(".selectroles").select2({
+            tags: [],
+            tokenSeparators: [','],
+            multiple: true,
+            allowClear: true,
+            placeholder: "Select Wf_Stages",
+            formatNoMatches: function () {
+                return '';
             }
         });
 
-        
-
-    </script>
+        var values = '@wf_Stages';
+        var selectedWf_Stages = values.split(",");
+            console.log(selectedWf_Stages);
+            selectRoles.val(selectedWf_Stages).trigger("change");
+            var activities = '@ar'; // comma separated value
+           var array = activities.split(',');
+    for (var i = 0; i < array.length; i++) {
+        if (array[i].length > 0) {
+            $('#actv option[value=' + array[i] + ']').attr("selected", true);           
+        }
+    }
+    });
+    $('#actv').addClass("form-control activities");
+</script>
 }

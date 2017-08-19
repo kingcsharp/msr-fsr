@@ -29,8 +29,6 @@ namespace Answer.Web.ViewModel.Administration
 
         public List<SelectListItem> BossList { get; set; }
 
-
-
         public void SetUp(AdministrationService administrationService)
         {
             BossList.Add(new SelectListItem { Value = "", Text = "--Select Boss--" });
@@ -41,15 +39,5 @@ namespace Answer.Web.ViewModel.Administration
                 Text = x.Text
             }).Distinct().OrderBy(o => o.Text));
         }
-        //public ReAssignBossViewModel MapToDto(ReAssignBossView model)
-        //{
-        //    return new ReAssignBossViewModel
-        //    {
-        //        Id = model.Id,
-        //        FullName = model.FullName,
-        //        ToBossId = model.ToBossId,
-        //        NTLogin = model.NTLogin
-        //    };
-        //}
     }
 }

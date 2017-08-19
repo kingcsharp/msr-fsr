@@ -1,4 +1,4 @@
-﻿function LoadActualPartsGrid(url, search) {
+﻿function LoadActualPartsGrid(url, search, returnUrl) {
     //$.jgrid.defaults.responsive = true;
     $.jgrid.defaults.styleUI = 'Bootstrap';
 
@@ -176,26 +176,6 @@
                 searchOnEnter: true,
                 searchOperators: true
             });
-            $('.deleteactualPart').on('click',
-                function (e) {
-                    e.preventDefault();
-
-                    var callBackId = $(this).data('call-back-id');
-                    var callBackName = $(this).data('call-back-name');
-
-                    eModal.confirm('Do you really want to delete ' + callBackName + ' ?', 'Confirmation delete')
-                        .then(confirmCallback, optionalCancelCallback);
-
-                    function confirmCallback() {
-                        console.log("ok");
-                        window.location.href = "/ActualParts/ActualPartDelete/" + callBackId;
-                    }
-
-                    function optionalCancelCallback() {
-                        console.log("cancel");
-                    }
-
-                });
         }
     });
     $('#jqGrid').navGrid("#jqGridPager", {
@@ -212,11 +192,26 @@
     );
 
     function actualPartsEditFormatter(cellvalue, options, rowObject) {
-        var thisCellVal = '<a href="/ActualParts/Edit/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" title="Edit" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i> Edit</a>';
-        thisCellVal = thisCellVal + '<a href="/ProductsActualParts/Index/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" title="Show me Products for this part" style="margin:2px;font-size: .8em;"><i class="fa fa-money" aria-hidden="true"></i> Parts</a>';
-        thisCellVal = thisCellVal + '<a href="/ActualParts/ViewHistory/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" title="Edit" style="margin:2px;font-size: .8em;"><i class="fa fa-history" aria-hidden="true"></i> History</a>';
-        thisCellVal = thisCellVal + '<a href="/ActualParts/ActualPartDelete/' + rowObject.ObjectId + '" data-call-back-name="' + rowObject.Serial + '" data-call-back-id="' + rowObject.ObjectId + '" title="Delete" class="btn btn-xs btn-danger deleteactualPart" style="margin:2px;font-size: .8em;"><i class="fa fa-trash"></i> Delete</a>';
-        return thisCellVal;
+
+        var editButton = '<a  title="Edit" href="/Actualparts/edit/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
+
+        var deleteButton = '';
+        var buttonWorkflowLeft = '';
+        var buttonWorkflowRight = '';
+        var url = '';
+
+        if (rowObject.Status === 'CREATING') {
+
+            url = '/workflow/submit?objId=' + rowObject.ObjectId + '&returnUrl=' + returnUrl;
+            buttonWorkflowLeft = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '"  data-call-back-id="' + rowObject.ObjectId + '" class="btn btn-xs btn-success unlock" title="Cancel Creation. Edit will be lost" style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-left"></i></a>';
+
+            buttonWorkflowRight = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-success" title="Proceed to approval workflow for release." style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-right"></i></a>';
+        } else {
+            url = '/workflow/delete?objId=' + rowObject.ObjectId + '&returnUrl=' + returnUrl;
+            deleteButton = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-danger" title="Proceed to delete." style="margin:2px;font-size: .8em;"><i class="fa fa fa-trash"></i></a>';
+        }
+
+        return editButton + deleteButton + buttonWorkflowLeft + buttonWorkflowRight;
     }
     function serialFormatter(cellvalue, options, rowObject) {
 

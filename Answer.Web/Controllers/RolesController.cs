@@ -1,4 +1,5 @@
-﻿using Msr.Models.Roles;
+﻿
+using Msr.Models.Roles;
 using Msr.Services.jqGrid;
 using Msr.Services.Roles;
 using Msr.Services.Roles.ViewModels;
@@ -24,12 +25,11 @@ namespace Answer.Web.Controllers
         {
             var roleService = new RoleService();
 
-          
+            var defaultStatusList = new [] { "CREATING", "DENIED", "APPROVED", "APPROVED_BUT_REVISING", "APPROVED_BUT_DELETING" };
+
             var totalRows = roleService.GetUserRolesQueryable();
 
-            var defaultStatusList = "CREATING,DENIED,APPROVED,APPROVED_BUT_REVISING,APPROVED_BUT_DELETING".Split(',');
-
-            totalRows = totalRows.Where(x => defaultStatusList.Contains(x.Status));
+            totalRows = totalRows.Where(x => defaultStatusList.Contains(x.Status) && x.Id.Length > 0);
 
             if (param.where != null && param.where.rules.Any())
             {

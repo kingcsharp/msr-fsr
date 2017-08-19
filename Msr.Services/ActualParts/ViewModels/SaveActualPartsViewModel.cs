@@ -105,11 +105,11 @@ namespace Msr.Services.ActualParts.ViewModels
             }).OrderBy(o => o.Text).ToList();
             ListParents.Insert(0, new SelectListItem { Text = @"Select Actual Part", Value = "" });
 
-            ListParts = partsService.GetPartsQueryable().Where(x => x.Status.StartsWith("APPROVED")).Select(x => new SelectListItem
-            {
-                Text = x.Name,
-                Value = x.PartId.ToString()
-            }).OrderBy(o => o.Text).ToList();
+            //ListParts = partsService.GetPartsQueryable().Where(x => x.Status.StartsWith("APPROVED")).Select(x => new SelectListItem
+            //{
+            //    Text = x.Name,
+            //    Value = x.PartId.ToString()
+            //}).OrderBy(o => o.Text).ToList();
             ListParts.Insert(0, new SelectListItem { Text = @"Select Part", Value = "" });
 
             ListLocations = locationService.GetLocationsQueryable().Select(x => new SelectListItem

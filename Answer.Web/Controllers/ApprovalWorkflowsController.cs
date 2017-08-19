@@ -12,7 +12,6 @@ using Msr.Web.ViewModel.Engineering;
 
 namespace Answer.Web.Controllers
 {
-    [Authorize]
     public class ApprovalWorkflowsController : BaseController
     {
         
@@ -24,7 +23,6 @@ namespace Answer.Web.Controllers
 
             return View(viewModel);
         }
-
         public ActionResult ApprovalWorkflowsData(JqGridParam param)
         {
             var taskService = new ApprovalWorkflowsService();
@@ -37,7 +35,7 @@ namespace Answer.Web.Controllers
                 {
                     if (rule.field == nameof(ApprovalWorkflowsView.Id))
                     {
-                        totalRows = totalRows.Where(x => x.Id == rule.data.ToLower());
+                        totalRows = totalRows.Where(x => x.Id == rule.data);
                     }
                     else if (rule.field == nameof(ApprovalWorkflowsView.Name))
                     {
@@ -82,27 +80,22 @@ namespace Answer.Web.Controllers
 
             return Json(json, JsonRequestBehavior.AllowGet);
         }
-
         public ActionResult Edit(string id)
         {
             var taskService = new ApprovalWorkflowsService();
             var model = taskService.GetApprovalWorkflowsById(id);
             var Workflow = new ApprovalWorkflowsViewModel();
-
             Workflow = Workflow.MapToDto(model);
             Workflow.Setup(new DocumentFilesService(), new ApprovalWorkflowsService());           
-
             return View(Workflow);
         }
-
         [AcceptVerbs(verbs: HttpVerbs.Post)]
         public ActionResult Edit(ApprovalWorkflowsViewModel model)
         {
             var approvalWorkflowsService = new ApprovalWorkflowsService();
-
             if (ModelState.IsValid)
             {
-               model.NTLogin = "1618";
+                model.NTLogin = GetCurrentUser().Id;
                 var response = approvalWorkflowsService.Edit(model: model);
                 if (response)
                 {
@@ -117,7 +110,6 @@ namespace Answer.Web.Controllers
 
             return View(model);
         }
-
         public ActionResult Add()
         {
             var taskService = new ApprovalWorkflowsService();
@@ -125,15 +117,13 @@ namespace Answer.Web.Controllers
             Workflow.Setup(new DocumentFilesService(), new ApprovalWorkflowsService());
             return View(Workflow);
         }
-
         [AcceptVerbs(verbs: HttpVerbs.Post)]
         public ActionResult Add(ApprovalWorkflowsViewModel model)
         {
             var approvalWorkflowsService = new ApprovalWorkflowsService();
             if (ModelState.IsValid)
             {
-                //Need to dynamic 
-                model.NTLogin = "1618";
+                model.NTLogin = GetCurrentUser().Id;
                 var response = approvalWorkflowsService.Add(model: model);
                 if (response)
                 {

@@ -261,9 +261,10 @@
             else {
                 $('.hiddenpart').show();
             }
-            $('#CreateProd').on('change', function () {
-                $('.hiddenpart').toggle();
-            })
+            $('#CreateProd').on('change',
+                function () {
+                    $('.hiddenpart').toggle();
+                });
             $(".select").select2({
                 placeholder: "Select",
                 allowClear: true

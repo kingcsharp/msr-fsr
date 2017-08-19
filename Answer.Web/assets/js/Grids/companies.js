@@ -5,7 +5,7 @@
     Smooch.init({ appToken: '9wxoxi2wbcbymhjf1ex1a0dux' });
 
     $("#jqGrid").jqGrid({
-        url: '/Companies/CompaniesData',
+        url: url,
         mtype: "GET",
         styleUI: 'Bootstrap',
         emptyrecords: 'No records to display',
@@ -23,7 +23,7 @@
                 align: 'left'
             },
             {
-                label: 'Name',
+                label: 'Company Name',
                 name: 'Name',
                 index: 'Name',
                 colmenu: true,
@@ -35,7 +35,7 @@
                 align: 'left'
             },
             {
-                label: 'Immediate Parent',
+                label: 'Parent Name',
                 name: 'ParentName',
                 index: 'ParentName',
                 colmenu: false,
@@ -47,7 +47,7 @@
                 hidedlg: false
             },
             {
-                label: 'Logo',
+                label: 'Company Logo',
                 name: 'PicRecord',
                 index: 'PicRecord',
                 colmenu: false,
@@ -57,7 +57,7 @@
                 align: 'left'
             },
             {
-                label: 'Root',
+                label: 'Root Company Name',
                 name: 'Root',
                 index: 'Root',
                 colmenu: false,
@@ -98,7 +98,7 @@
                 searchoptions: { value: ":[All];CREATING, DENIED, APPROVED, APPROVED_BUT_REVISING:Creating or Approved;CREATING, DENIED: Creating;IN_WORKFLOW:In Approval Workflow;APPROVED, APPROVED_BUT_REVISING, APPROVED_BUT_DELETING:Approved;DENIED:Denied;APPROVED_BUT_REVISING:Approved But Being Revised;APPROVED_BUT_DELETING:Approved But Being Deleted;DENIED:Denied;DELETED:Deleted;OLD:Obsolete" },
                 align: 'left'
             },
-            {   label: 'Checked out to',
+            {   label: 'Checked Out To',
             name: 'LockedByName',
             index: 'LockedByName',
             colmenu: false,

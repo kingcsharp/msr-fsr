@@ -126,6 +126,7 @@
     <Compile Include="Administration\ViewModels\AssignCompaniesToViewItemViewModel.cs" />
     <Compile Include="Administration\ViewModels\EmailWordsViewModel.cs" />
     <Compile Include="Administration\ViewModels\ReAssignBossView.cs" />
+    <Compile Include="Administration\ViewModels\Workers.cs" />
     <Compile Include="Administration\ViewModels\XmlContentViewModel.cs" />
     <Compile Include="Administration\ViewModels\ModuleAccessViewModel.cs" />
     <Compile Include="ApprovalGroups\ApprovalGroupsService.cs" />

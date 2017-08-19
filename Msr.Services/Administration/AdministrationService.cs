@@ -199,7 +199,7 @@ namespace Msr.Services.Administration
         {
             return ReadXmlAndParse(AppDataGlobalsettingsXml);
         }
-        
+
         public void UpdateGlobalSettings(List<XmlContentViewModel> globalSettings)
         {
             string filePath = HttpContext.Current.Server.MapPath(AppDataGlobalsettingsXml);
@@ -226,11 +226,11 @@ namespace Msr.Services.Administration
             if (rootNode?.ChildNodes != null)
             {
                 globalSettings.AddRange(from XmlNode node in rootNode.ChildNodes
-                                        select new XmlContentViewModel
-                                        {
-                                            Id = node.Attributes["id"]?.InnerText,
-                                            Value = node.Attributes["value"]?.InnerText
-                                        });
+                    select new XmlContentViewModel
+                    {
+                        Id = node.Attributes["id"]?.InnerText,
+                        Value = node.Attributes["value"]?.InnerText
+                    });
             }
             return globalSettings.OrderBy(x => x.Id);
         }
@@ -267,15 +267,15 @@ namespace Msr.Services.Administration
         }
         public BaseNotification ReassignBoss(ReAssignBossView model)
         {
-            
+
 
             var result = new BaseNotification();
 
             try
             {
-                var sql = "exec Portal_PeopleReassignBoss '" + null + "','" + null + "','" + model.Id + "','" + model.ToBossId + "','" + model.NTLogin + "'";
+                var sql = "exec A_SP_PEOPLE_REASSIGN_BOSS '" + null + "','" + null + "','" + model.Id + "','" + model.ToBossId + "','" + model.NTLogin + "'";
 
-                IList<ReAssignBossView> getResult = _dbContext.Database.SqlQuery<ReAssignBossView>(sql).ToList();
+                IList<Workers> getResult = _dbContext.Database.SqlQuery<Workers>(sql).ToList();
 
                 if (getResult.Count > 0)
                 {

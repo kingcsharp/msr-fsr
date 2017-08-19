@@ -79,6 +79,7 @@
     });
     function approvalGroupEditFormatter(cellvalue, options, rowObject) {
         var thisCellVal = '<a href="/ApprovalStages/Edit/' + rowObject.Id + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i> Edit</a>';
+        thisCellVal = thisCellVal + '<a href="/ApprovalStages/Hide/' + rowObject.Id + '" title="Hide Workflow" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-eye-slash"></i> Hide</a>';
         return thisCellVal;
     }
 

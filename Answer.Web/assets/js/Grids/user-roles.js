@@ -52,6 +52,16 @@
                 align: 'center'
             },
             {
+                label: 'Locked By',
+                name: 'LockedBy',
+                index: 'LockedBy',
+                colmenu: false,
+                editable: true,
+                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                align: 'center'
+            },
+            {
                 label: 'Revision',
                 name: 'Rev',
                 index: 'Rev',
@@ -71,6 +81,16 @@
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                 searchoptions: { value: ":[All];CREATING, DENIED, APPROVED, APPROVED_BUT_REVISING:Creating or Approved;CREATING, DENIED: Creating;IN_WORKFLOW:In Approval Workflow;APPROVED, APPROVED_BUT_REVISING, APPROVED_BUT_DELETING:Approved;DENIED:Denied;APPROVED_BUT_REVISING:Approved But Being Revised;APPROVED_BUT_DELETING:Approved But Being Deleted;DENIED:Denied;DELETED:Deleted;OLD:Obsolete" },
                 align: 'left'
+            },
+            {
+                label: 'Checked Out To',
+                name: 'LockedByName',
+                index: 'LockedByName',
+                colmenu: false,
+                editable: true,
+                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                align: 'center'
             },
             { name: 'Actions', index: 'ID', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: RolesEditFormatter, width: 150, align: 'center' }
         ],
@@ -136,7 +156,7 @@
         searchOperators: true
     });
     function RolesEditFormatter(cellvalue, options, rowObject) {
-        var editButton = '<a  title="Edit" href="/Roles/Edit/' + rowObject.Id + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
+        var editButton = '<a  title="Edit" href="/Roles/Edit/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
         var detailbutton = '<a title="Detail" href="/Roles/Detail/' + rowObject.Id + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-eye"></i></a>';
         var deleteButton = '';
         var buttonWorkflowLeft = '';

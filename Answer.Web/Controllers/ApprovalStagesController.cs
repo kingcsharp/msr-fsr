@@ -23,9 +23,10 @@ namespace Answer.Web.Controllers
 
         public ActionResult ApprovalStagesData(JqGridParam param)
         {
+           
             var approvalStagesService = new ApprovalStagesService();
 
-            var totalRows = approvalStagesService.GetApprovalStagesQueryable();
+            var totalRows = approvalStagesService.GetApprovalStagesQueryable().Where(x=>x.Hide!=true);
 
             if (param.where != null && param.where.rules.Any())
             {
@@ -144,6 +145,24 @@ namespace Answer.Web.Controllers
             }
 
             return View(model);
+        }
+
+        public ActionResult Hide(string id)
+        {
+            var taskService = new ApprovalStagesService();
+
+            var response = taskService.HideStageWorkFlow(id);
+
+            if (response != null)
+            {
+                TempData["SuccessMessage"] = "Workflow Hide successfully.";
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Something went wrong.";
+                return RedirectToAction("Index");
+            }
         }
     }
 }

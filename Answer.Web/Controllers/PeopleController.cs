@@ -9,6 +9,7 @@ using Msr.Services.People.ViewModels;
 using Msr.Services.Companies;
 using Msr.Infrastructure.Helpers;
 using Msr.Services.Documents;
+using Msr.Models.ApprovalStages;
 
 namespace Answer.Web.Controllers
 {
@@ -26,7 +27,7 @@ namespace Answer.Web.Controllers
         public ActionResult PeopleData(JqGridParam param)
         {
             var peopleService = new PeopleService();
-
+          
             var totalRows = peopleService.GetPeople().Where(x=> x.Status != "DELETED");
 
             if (param.where != null && param.where.rules.Any())
@@ -88,6 +89,10 @@ namespace Answer.Web.Controllers
                     else if (rule.field == nameof(PeopleObjectView.SystemStatus))
                     {
                         totalRows = totalRows.Where(x => x.SystemStatus.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(PeopleObjectView.LockedByName))
+                    {
+                        totalRows = totalRows.Where(x => x.LockedByName.ToLower().Contains(rule.data.ToLower()));
                     }
                     else if (rule.field == nameof(PeopleObjectView.Rev))
                     {

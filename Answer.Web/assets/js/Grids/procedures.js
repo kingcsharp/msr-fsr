@@ -27,7 +27,7 @@
                 align: 'left'
             },
             {
-                label: 'Root Company',
+                label: 'Creator Co',
                 name: 'CreatingCoName',
                 index: 'CreatingCoName',
                 colmenu: false,
@@ -38,7 +38,7 @@
                 hidedlg: false
             },
             {
-                label: 'Creating Company/Dept',
+                label: 'Create Dept Name',
                 name: 'DeptName',
                 index: 'DeptName',
                 colmenu: false,

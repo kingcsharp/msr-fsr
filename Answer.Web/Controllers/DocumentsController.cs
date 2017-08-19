@@ -13,7 +13,7 @@ using System.Web.Mvc;
 
 namespace Answer.Web.Controllers
 {
-    public class DocumentsController : Controller
+    public class DocumentsController : BaseController
     {
         public ActionResult Index()
         {
@@ -123,7 +123,7 @@ namespace Answer.Web.Controllers
             location.Setup(new RoleService(), new PartsService(),new DocumentService());
 
             location.Id = "NEW";
-            location.Rev = 1;
+            location.Rev = 1; 
             
             return View(location);
         }
@@ -135,10 +135,9 @@ namespace Answer.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                //Need to dynamic 
-                model.NTLogin = "1618";
-                //need to be from logedin user company id
-                model.Company = "2";
+                model.NTLogin = GetCurrentUser().Id;
+               
+                model.Company = GetCurrentUser().Company;
 
                 var response = documentService.Create(model: model);
 
@@ -182,10 +181,9 @@ namespace Answer.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                //Need to dynamic 
-                model.NTLogin = "1618";
-                //need to be from logedin user company id
-                model.Company = "2";
+                model.NTLogin = GetCurrentUser().Id;
+               
+                model.Company = GetCurrentUser().Company;
 
                 var response = documentService.Save(model: model);
 

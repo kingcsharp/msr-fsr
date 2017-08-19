@@ -38,13 +38,37 @@ namespace Answer.Web.Controllers
             {
                 foreach (var rule in param.where.rules)
                 {
-                    if (rule.field == nameof(PrePropSearchView.ObjId))
+                    if (rule.field == nameof(PrePropSearchView.Id))
                     {
                         totalRows = totalRows.Where(x => x.Id == rule.data);
                     }
                     else if (rule.field == nameof(PrePropSearchView.ObjId))
                     {
                         totalRows = totalRows.Where(x => x.ObjId.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(PrePropSearchView.StepText))
+                    {
+                        totalRows = totalRows.Where(x => x.StepText.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(PrePropSearchView.Rev))
+                    {
+                        int value;
+                        if (Int32.TryParse(rule.data, out value))
+                        {
+                            totalRows = totalRows.Where(x => x.Rev == value);
+                        }
+                    }
+                    else if (rule.field == nameof(PrePropSearchView.Status))
+                    {
+                        var statusList = rule.data.Split(',').Select(x => x.Trim().ToLower());
+                        if (statusList.Any())
+                        {
+                            totalRows = totalRows.Where(x => statusList.Contains(x.Status.ToLower()));
+                        }
+                    }
+                    else if (rule.field == nameof(PrePropSearchView.LockedByName))
+                    {
+                        totalRows = totalRows.Where(x => x.LockedByName.ToLower().Contains(rule.data.ToLower()));
                     }
                 }
             }

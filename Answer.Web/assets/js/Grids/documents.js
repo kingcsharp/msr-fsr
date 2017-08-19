@@ -1,12 +1,12 @@
-﻿$(document).ready(function () {
+﻿function LoadDocumentsGrid (url, returnUrl) {
     $("#jqGrid").jqGrid({
-        url: '/Documents/DocumentsData',
+        url: url,
         mtype: "GET",
         styleUI: 'Bootstrap',
         datatype: "json",
         colModel: [
             {
-                label: ' #',
+                label: 'Id',
                 name: 'Id',
                 index: 'Id',
                 key: true,
@@ -16,7 +16,7 @@
                 align: 'center',
             },
             {
-                label: 'Name',
+                label: 'Theory Name',
                 name: 'Name',
                 index: 'Name',
                 colmenu: false,
@@ -26,7 +26,7 @@
                 align: 'center'
             },
             {
-                label: 'Root Company',
+                label: 'Creating Co',
                 name: 'CreatingCoName',
                 index: 'CreatingCoName',
                 colmenu: false,
@@ -35,7 +35,7 @@
                 align: 'center'
             },
             {
-                label: 'Creating Company/Dept',
+                label: 'Creating Dept Name',
                 name: 'DeptName',
                 index: 'DeptName',
                 colmenu: false,
@@ -44,7 +44,7 @@
                 align: 'center'
             },
             {
-                label: 'Security Clearance Level',
+                label: 'Security Level',
                 name: 'SecurityLevel',
                 index: 'SecurityLevel',
                 colmenu: false,
@@ -92,7 +92,7 @@
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 align: 'center'
             },
-            { name: 'Actions', index: 'ID', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: DocumentEditFormatter, width: 100, align: 'center' }
+            { name: 'Actions', index: 'ID', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: documentEditFormatter, width: 100, align: 'center' }
         ],
         viewrecords: true, // show the current page, data rang and total records on the toolbar
         rowNum: 10,
@@ -130,8 +130,30 @@
         searchOnEnter: true,
         searchOperators: true
     });
-    function DocumentEditFormatter(cellvalue, options, rowObject) {
-        thisCellVal = '<a href="/Documents/edit/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i> Edit</a>';
-        return thisCellVal;
-    }
-})
+   
+    function documentEditFormatter(cellvalue, options, rowObject) {
+
+        var editButton = '<a  title="Edit" href="/Documents/Edit/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
+        
+        var deleteButton = '';
+        var buttonWorkflowLeft = '';
+        var buttonWorkflowRight = '';
+        var url = '';
+
+        if (rowObject.Status === 'CREATING') {
+
+            url = '/workflow/submit?objId=' + rowObject.ObjectId + '&returnUrl=' + returnUrl;
+            buttonWorkflowLeft = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '"  data-call-back-id="' + rowObject.ObjectId + '" class="btn btn-xs btn-success unlock" title="Cancel Creation. Edit will be lost" style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-left"></i></a>';
+
+            buttonWorkflowRight = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-success" title="Proceed to approval workflow for release." style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-right"></i></a>';
+        } else {
+            url = '/workflow/delete?objId=' + rowObject.ObjectId + '&returnUrl=' + returnUrl;
+            deleteButton = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-danger" title="Proceed to delete." style="margin:2px;font-size: .8em;"><i class="fa fa fa-trash"></i></a>';
+        }
+       
+        return editButton + deleteButton + buttonWorkflowLeft + buttonWorkflowRight;
+
+    };
+
+   
+}

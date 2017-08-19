@@ -12,7 +12,7 @@
         datatype: "json",
         colModel: [
             {
-                label: 'ID',
+                label: 'Id',
                 name: 'Id',
                 index: 'Id',
                 key: true,
@@ -87,19 +87,9 @@
                 align: 'left'
             },
             {
-                label: 'Company - Department',
+                label: 'Company Department',
                 name: 'CompanyName',
                 index: 'CompanyName',
-                colmenu: false,
-                editable: true,
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                align: 'left'
-            },
-            {
-                label: 'Location Name',
-                name: 'LocationName',
-                index: 'LocationName',
                 colmenu: false,
                 editable: true,
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
@@ -110,16 +100,6 @@
                 label: 'Primary Work Phone',
                 name: 'PrimaryPhoneNumber',
                 index: 'PrimaryPhoneNumber',
-                colmenu: false,
-                editable: true,
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                align: 'left'
-            },
-            {
-                label: 'Secondary Work Phone',
-                name: 'SecondaryPhoneNumber',
-                index: 'SecondaryPhoneNumber',
                 colmenu: false,
                 editable: true,
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
@@ -176,6 +156,18 @@
                 stype: "select",
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                 searchoptions: { value: ":[All];CREATING, DENIED, APPROVED, APPROVED_BUT_REVISING:Creating or Approved;CREATING, DENIED: Creating;IN_WORKFLOW:In Approval Workflow;APPROVED, APPROVED_BUT_REVISING, APPROVED_BUT_DELETING:Approved;DENIED:Denied;APPROVED_BUT_REVISING:Approved But Being Revised;APPROVED_BUT_DELETING:Approved But Being Deleted;DENIED:Denied;DELETED:Deleted;OLD:Obsolete" },
+                align: 'left'
+            },
+            {
+                label: 'Checked Out To',
+                name: 'LockedByName',
+                index: 'LockedByName',
+                colmenu: false,
+                editable: true, // must set editable to true if you want to make the field editable
+                editrules: { required: true },
+                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                width: 200,
                 align: 'left'
             },
             { name: 'Actions', index: 'ObjectId', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: peopleEditFormatter, width: 200, align: 'center' }

@@ -16,7 +16,7 @@
             align: 'left'
         },        
         {
-            label: 'ApprovalWorkflows Name',
+            label: 'Approval Workflow Name',
             name: 'Name',
             index: 'Name',
             colmenu: true,

@@ -164,8 +164,9 @@
                 //xhrFields: {withCredentials: true},
                 url: '/Files/Add',
                 uploadTemplateId: "template-upload",
-                downloadTemplateId: "template-download",
-
+                downloadTemplateId: "template-download"
+            }).bind('fileuploaddone', function (e, data) {
+                window.location.href = '@Url.Action("Index", "Files")';
             });
         });
     </script>

@@ -31,5 +31,6 @@ namespace Msr.Models.People
         public string TimeZone { get; set; }
         public string LoginId { get; set; }
         public string Company { get; set; }
+        public string LockedByName { get; set; }
     }
 }
