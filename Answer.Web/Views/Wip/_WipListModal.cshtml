@@ -12,7 +12,6 @@
                             <div class="col-lg-7 col-md-7 col-sm-6">
                                 @foreach (var proItem in Model.WoItemsByProcedures.Where(x => x.ProcName == item.ProcName).OrderByDescending(o => o.DueDate))
                                 {
-
                                     var statusText = "";
                                     var cssIconButton = "";
                                     var cssButton = "";
@@ -46,9 +45,10 @@
                                         cssButton = "btn-success";
                                     }
 
-                                    if (proItem.DueDate?.Subtract(DateTime.Now).Days <= proItem.Threshold)
+                                    var daysTillDueDate = proItem.DueDate?.Subtract(DateTime.Now).Days;
+                                    if (daysTillDueDate <= proItem.Threshold)
                                     {
-                                        cssIconButton = "fa-clock-o";
+                                        cssIconButton = "fa fa-clock-o fa-2x";
                                         cssButton = "btn-warning";
                                     }
 
