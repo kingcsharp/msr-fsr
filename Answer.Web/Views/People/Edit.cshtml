@@ -248,6 +248,16 @@
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
     <script type="text/javascript">
+        $('#RealUser').on('change', EnableDisableLogin);
+        function EnableDisableLogin() {
+            var SelectedValue = $('#RealUser').val();
+            if (SelectedValue == "ANSWER_USER") {
+                $('#LoginId').prop('disabled', false);
+            } else {
+                $('#LoginId').val('');
+                $('#LoginId').prop('disabled', true);
+            }
+        };
         $(function () { // will trigger when the document is ready
             $('.datepicker').datepicker({
                 format: 'mm/dd/yyyy',

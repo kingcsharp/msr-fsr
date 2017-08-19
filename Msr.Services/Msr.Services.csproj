@@ -306,8 +306,11 @@
     <Compile Include="Regions\Procedures\SaveRegionProcedure.cs" />
     <Compile Include="Regions\RegionService.cs" />
     <Compile Include="Regions\ViewModels\DeleteRegionViewModel.cs" />
+    <Compile Include="Roles\Procedures\DeleteRoleAssignedProcedure.cs" />
+    <Compile Include="Roles\Procedures\SaveRoleAssignPersonRoleProcedure.cs" />
+    <Compile Include="Roles\Procedures\SaveRoleToRoleProcedure.cs" />
     <Compile Include="Roles\Procedures\SaveRoleProcedure.cs" />
-    <Compile Include="Roles\Procedures\DeleteRoleSaveProcedure.cs" />
+    <Compile Include="Roles\Procedures\DeleteRoleParentProcedure.cs" />
     <Compile Include="Roles\Procedures\FetchRoleProcedure.cs" />
     <Compile Include="Workflows\Messages\ObjectDataResult.cs" />
     <Compile Include="Workflows\Messages\ShowApplicableWorkflowsResult.cs" />

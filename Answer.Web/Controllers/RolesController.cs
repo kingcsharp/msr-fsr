@@ -7,6 +7,8 @@ using Msr.Web.ViewModel.Engineering;
 using System;
 using System.Linq;
 using System.Web.Mvc;
+using Msr.Services.Orders;
+using Msr.Services.Users;
 
 namespace Answer.Web.Controllers
 {
@@ -25,7 +27,7 @@ namespace Answer.Web.Controllers
         {
             var roleService = new RoleService();
 
-            var defaultStatusList = new [] { "CREATING", "DENIED", "APPROVED", "APPROVED_BUT_REVISING", "APPROVED_BUT_DELETING" };
+            var defaultStatusList = new[] { "CREATING", "DENIED", "APPROVED", "APPROVED_BUT_REVISING", "APPROVED_BUT_DELETING" };
 
             var totalRows = roleService.GetUserRolesQueryable();
 
@@ -105,7 +107,7 @@ namespace Answer.Web.Controllers
         public ActionResult Create()
         {
             var saveRoleViewModel = new SaveRoleViewModel();
-            saveRoleViewModel.Setup();
+            saveRoleViewModel.Setup(new RoleService(), new UserService());
 
             return View(saveRoleViewModel);
         }
@@ -132,13 +134,13 @@ namespace Answer.Web.Controllers
                 {
                     TempData["ErrorMessage"] = "Something went wrong.";
 
-                    model.Setup();
+                    model.Setup(new RoleService(), new UserService());
 
                     return View(model);
                 }
             }
 
-            model.Setup();
+            model.Setup(new RoleService(), new UserService());
 
             return View(model);
         }
@@ -147,12 +149,12 @@ namespace Answer.Web.Controllers
         {
             var roleService = new RoleService();
 
-            var model = roleService.GetRoleByid(Id: id);
+            var model = roleService.GetRoleByid(id: id);
 
             var saveRoleViewModel = new SaveRoleViewModel();
 
             saveRoleViewModel = saveRoleViewModel.MapToDto(model);
-            saveRoleViewModel.Setup();
+            saveRoleViewModel.Setup(new RoleService(), new UserService());
 
             return View(saveRoleViewModel);
         }
@@ -179,13 +181,13 @@ namespace Answer.Web.Controllers
                 {
                     TempData["ErrorMessage"] = "Something went wrong.";
 
-                    model.Setup();
+                    model.Setup(new RoleService(), new UserService());
 
                     return View(model);
                 }
             }
 
-            model.Setup();
+            model.Setup(new RoleService(), new UserService());
 
             return View(model);
         }
@@ -213,12 +215,12 @@ namespace Answer.Web.Controllers
         {
             var roleService = new RoleService();
 
-            var model = roleService.GetRoleByid(Id: id);
+            var model = roleService.GetRoleByid(id: id);
 
             var saveRoleViewModel = new SaveRoleViewModel();
 
             saveRoleViewModel = saveRoleViewModel.MapToDto(model);
-            saveRoleViewModel.Setup();
+            saveRoleViewModel.Setup(new RoleService(), new UserService());
 
             return View(saveRoleViewModel);
         }

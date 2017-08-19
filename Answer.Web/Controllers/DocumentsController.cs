@@ -28,7 +28,7 @@ namespace Answer.Web.Controllers
         {
             var documentService = new DocumentService();
 
-            var totalRows = documentService.GetDocumentsQueryable();
+            var totalRows = documentService.GetDocumentsQueryable().Where(x => x.Status != "DELETED");
 
             if (param.where != null && param.where.rules.Any())
             {
