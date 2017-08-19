@@ -2795,5 +2795,10 @@
     <Build Include="dbo\Views\Portal\Portal_ProductsActualPart.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_ProcedureStepGetRefFiles.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_ProcedureStepGetRefProcedures.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_GetCurrentUser.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_GetMonitorLabelTsrDetails.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_GetTsrDetails.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_GetPartsAndKitsLabels.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_DeleteNavHistoryForUser.sql" />
   </ItemGroup>
 </Project>

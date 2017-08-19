@@ -12,7 +12,6 @@
         <div class="row">
             <h2 class="page-header">
                 Edit Role
-                
             </h2>
             <div class="col-lg-10">
                 @Html.Partial("Message")
@@ -22,7 +21,8 @@
 
                     <div class="form-horizontal addpart">
                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                        @Html.HiddenFor(x => x.Id)
+                        <input type="hidden" name="Id" value="@Model.Id" />
+                        <input type="hidden" name="ObjectId" value="@Model.ObjectId" />
                         <div class="form-group">
                             @Html.LabelFor(model => model.ParentRoles, htmlAttributes: new { @class = "control-label col-md-4" })
                             <div class="col-md-5">
@@ -40,21 +40,21 @@
                         <div class="form-group">
                             @Html.LabelFor(model => model.SecurityLevel, htmlAttributes: new { @class = "control-label col-md-4" })
                             <div class="col-md-5">
-                                @Html.DropDownListFor(model => model.SecurityLevel, Model.SecurityLevels, new { @class = "form-control" })
+                                @Html.DropDownListFor(model => model.SecurityLevel, Model.SecurityLevels, new { @class = "form-control select" })
                                 @Html.ValidationMessageFor(model => model.SecurityLevel, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(model => model.SubRoles, htmlAttributes: new { @class = "control-label col-md-4" })
+                            @Html.LabelFor(model => model.ChildRoles, htmlAttributes: new { @class = "control-label col-md-4" })
                             <div class="col-md-5">
-                                @Html.TextBoxFor(model => model.SubRoles, null, new { @class = "form-control", @readonly = "readonly" })
-                                @Html.ValidationMessageFor(model => model.SubRoles, "", new { @class = "text-danger" })
+                                @Html.DropDownListFor(model => model.ChildRoles, Model.ListChildRoles, new { @class = "form-control select selectchildRoles", multiple = "multiple" })
+                                @Html.ValidationMessageFor(model => model.ChildRoles, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(model => model.PeopleAssigned, htmlAttributes: new { @class = "control-label col-md-4" })
                             <div class="col-md-5">
-                                @Html.TextBoxFor(model => model.PeopleAssigned, null, new { @class = "form-control", @readonly = "readonly" })
+                                @Html.DropDownListFor(model => model.PeopleAssigned, Model.ListPeopleAssigned, new { @class = "form-control select", multiple = "multiple" })
                                 @Html.ValidationMessageFor(model => model.PeopleAssigned, "", new { @class = "text-danger" })
                             </div>
                         </div>
@@ -79,6 +79,29 @@
 </div>
 @section scripts
 {
+    @{
+        var childRoles = string.Join(",", Model.ChildRoles);
+    }
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+    <script type="text/javascript">
+        $(document).ready(function (parameters) {
+            $('.select').select2();
+
+            var selectPeoples = $(".selectchildRoles").select2({
+                tags: [],
+                tokenSeparators: [','],
+                multiple: true,
+                allowClear: true,
+                placeholder: "Select People",
+                formatNoMatches: function () {
+                    return '';
+                }
+            });
+            var values = '@childRoles';
+            var selectedPeoples = values.split(",");
+            console.log(selectedPeoples);
+            selectPeoples.val(selectedPeoples).trigger("change");
+        });
+    </script>
 }

@@ -307,7 +307,7 @@ namespace Msr.Services.Parts.ViewModels
             {
                 new SelectListItem
                 {
-                    Text = "[MSR-FSR] MSR-FSR",
+                    Text = @"[MSR-FSR] MSR-FSR",
                     Value = "2"
                 }
             };

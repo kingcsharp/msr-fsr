@@ -97,6 +97,10 @@ namespace Msr.Services.Orders
         {
             return _dbContext.PeopleObjectViews;
         }
+        public IQueryable<PeopleObjectView> GetApprovedPeople()
+        {
+            return _dbContext.PeopleObjectViews.Where(x=>x.Status =="APPROVED").AsQueryable();
+        }
         public IQueryable<LanguagesView> GetLanguages()
         {
             return _dbContext.LanguagesViews;
@@ -139,7 +143,8 @@ namespace Msr.Services.Orders
                     StrNTlogin = model.NTLogin,
                     Company = model.CompanyEditPerson
                 };
-              _dbContext.Database.ExecuteStoredProcedure(savePeopleProcedure);
+               
+                var result = _dbContext.Database.ExecuteStoredProcedure<SavePeopleProcedure>(savePeopleProcedure);
 
                 var savePasswrodProcedure = new SavePasswrodProcedure
                 {
@@ -238,7 +243,7 @@ namespace Msr.Services.Orders
                     Status = model.StatusEditPerson,
                     StrNTlogin = model.NTLogin,
                     Company = model.CompanyEditPerson
-                };
+                }; 
                 var result = _dbContext.Database.ExecuteStoredProcedure<EditPeopleProcedure>(savePeopleProcedure);
 
                 var savePasswrodProcedure = new SavePasswrodProcedure
