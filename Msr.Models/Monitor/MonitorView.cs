@@ -8,7 +8,7 @@ namespace Msr.Models.Monitor
 {
    public class MonitorView
     {
-        public string ID { get; set; }
+        public string Id { get; set; }
         public string MonitorType { get; set; }
         public string Description { get; set; }
         public string StartSystemTask { get; set; }
@@ -70,13 +70,13 @@ namespace Msr.Models.Monitor
        
         public string FailAction { get; set; }
 
-        public string TASK_STATUS { get; set; }
-        public DateTime? TASK_STOP_DATE { get; set; }
-        public string TASK_PROCEDURE_ID { get; set; }
+        public string taskStatus { get; set; }
+        public DateTime? TaskStopDate { get; set; }
+        public string TaskProcedureId { get; set; }
 
 
-        public string WORKER_NAME { get; set; }
-        public string TASK_PARENT { get; set; }
+        public string WorkerName { get; set; }
+        public string TaskParent { get; set; }
         public Double? PrintOrder { get; set; }
         public string TargetObjectType { get; set; }
 

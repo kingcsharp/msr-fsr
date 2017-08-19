@@ -10,6 +10,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 
 namespace Msr.Services.ApprovalGroups
 {
@@ -150,6 +151,16 @@ namespace Msr.Services.ApprovalGroups
 
                 return false;
             }
+        }
+
+        public IQueryable<SelectListItem> HideGroupWorkFlow(string id)
+        {
+            var sql =
+                "UPDATE A_WF_GROUPS SET HIDE = 1 WHERE ID ='" + id + "'";
+
+            var result = _dbContext.Database.SqlQuery<SelectListItem>(sql).ToList().AsQueryable();
+
+            return result;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Msr.Models.Roles;
+﻿
+using Msr.Models.Roles;
 using Msr.Services.jqGrid;
 using Msr.Services.Roles;
 using Msr.Services.Roles.ViewModels;
@@ -205,6 +206,21 @@ namespace Answer.Web.Controllers
 
             TempData["ErrorMessage"] = "Something went wrong.";
             return RedirectToAction("Index");
+        }
+
+
+        public ActionResult Detail(string id)
+        {
+            var roleService = new RoleService();
+
+            var model = roleService.GetRoleByid(Id: id);
+
+            var saveRoleViewModel = new SaveRoleViewModel();
+
+            saveRoleViewModel = saveRoleViewModel.MapToDto(model);
+            saveRoleViewModel.Setup();
+
+            return View(saveRoleViewModel);
         }
 
     }

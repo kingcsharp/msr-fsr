@@ -1,12 +1,12 @@
 ﻿@model  Msr.Web.ViewModel.Engineering.EngineeringViewModel
 @{
-    ViewBag.Title = "Procedures Verbs Menu";
+    ViewBag.Title = "Procedures Types";
 }
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="row">
             <h2 class="page-header">
-                Procedures Verbs <button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
+                Procedures Types<button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
             </h2>
             <div class="col-lg-12">
                 @Html.Partial("Message")
@@ -30,9 +30,9 @@
     <script src="https://cdn.smooch.io/smooch.min.js"></script>
     <script src="~/assets/js/grids/procedureverbs.js"></script>
     <script>
-      
-        $(document).ready(function() {
-            loadProcedureVerbsGrid('@Url.Action("ProcedureVerbsData", "ProcedureVerbs")');
+
+        $(document).ready(function () {
+            loadProcedureVerbsGrid('@Url.Action("ProcedureVerbsData", "ProcedureVerbs")','@Request.Url.OriginalString');
         });
     </script>
 

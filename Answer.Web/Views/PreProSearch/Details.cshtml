@@ -20,7 +20,7 @@
                             <span class="sr-only">Toggle Dropdown</span>
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a href="~/parts/deletePart/@Model.ID">Delete</a></li>
+                            <li><a href="~/parts/deletePart/@Model.Id">Delete</a></li>
                         </ul>
                     </div>
 
@@ -30,34 +30,34 @@
             <div>
                 <dl class="dl-horizontal">
                     <dt>
-                        @Html.DisplayNameFor(model => model.START_ON_COUNTER)
+                        @Html.DisplayNameFor(model => model.StartOnCounter)
                     </dt>
 
                     <dd>
-                        @Html.DisplayFor(model => model.START_ON_COUNTER)
+                        @Html.DisplayFor(model => model.StartOnCounter)
                     </dd>
                     
                     <dt>
-                        @Html.DisplayNameFor(model => model.DURATION)
+                        @Html.DisplayNameFor(model => model.Duration)
                     </dt>
 
                     <dd>
-                        @Html.DisplayFor(model => model.DURATION)
+                        @Html.DisplayFor(model => model.Duration)
                     </dd>
                     
                     
                     <dt>
-                        @Html.DisplayNameFor(model => model.DURATION_TYPE)
+                        @Html.DisplayNameFor(model => model.DurationType)
                     </dt>
 
                     <dd>
-                        @Html.DisplayFor(model => model.DURATION_TYPE)
+                        @Html.DisplayFor(model => model.DurationType)
                     </dd>
                     
                     <dt>
                         @Html.DisplayNameFor(model => model.ReferenceObject)
                     </dt>
-                    @foreach (var item in Model.REFERENCE_OBJECTS)
+                    @foreach (var item in Model.ReferenceObjectsList)
                     {
                         <dd>
                             @Html.DisplayFor(model => item.Text) <span class="data-toggle=" data-call-back-item="@item.Text" data-toggle="modal" data-target="#view-images" title="View File"><i class="icon fa fa-eye"></i></span>
@@ -65,9 +65,9 @@
                     }
                     
                     <dt>
-                        @Html.DisplayNameFor(model => model.PictureFiles)
+                        @Html.DisplayNameFor(model => model.ReferenceFiles)
                     </dt>
-                    @foreach (var item in Model.ListPictureRefFiles)
+                    @foreach (var item in Model.ReferenceFilesList)
                     {
                         <dd>
                             @Html.DisplayFor(model => item.Text) <span class="data-toggle=" data-call-back-item="@item.Text" data-toggle="modal" data-target="#view-images" title="View File"><i class="icon fa fa-eye"></i></span>
@@ -77,7 +77,7 @@
                     <dt>
                         @Html.DisplayNameFor(model => model.ReferenceTheories)
                     </dt>
-                    @foreach (var item in Model.ListReferenceTheories)
+                    @foreach (var item in Model.ReferenceTheoriesList)
                     {
                         <dd>
                             @Html.DisplayFor(model => item.Text) <span class="data-toggle=" data-call-back-item="@item.Text" data-toggle="modal" data-target="#view-images" title="View File"><i class="icon fa fa-eye"></i></span>
@@ -85,9 +85,9 @@
                     }
                     
                     <dt>
-                        @Html.DisplayNameFor(model => model.ReferenceProcs)
+                        @Html.DisplayNameFor(model => model.ReferenceProcedures)
                     </dt>
-                    @foreach (var item in Model.ListProcFiles)
+                    @foreach (var item in Model.ReferenceProceduresList)
                     {
                         <dd>
                             @Html.DisplayFor(model => item.Text) <span class="data-toggle=" data-call-back-item="@item.Text" data-toggle="modal" data-target="#view-images" title="View File"><i class="icon fa fa-eye"></i></span>
@@ -96,37 +96,37 @@
                     
 
                     <dt>
-                        @Html.DisplayNameFor(model => model.STEP_TEXT)
+                        @Html.DisplayNameFor(model => model.StepText)
                     </dt>
 
                     <dd>
-                        @Html.DisplayFor(model => model.STEP_TEXT)
+                        @Html.DisplayFor(model => model.StepText)
                     </dd>
                     <dt>
-                        @Html.DisplayNameFor(model => model.SYSTEM_TASK)
+                        @Html.DisplayNameFor(model => model.SystemTask)
                     </dt>
 
                     <dd>
-                        @Html.DisplayFor(model => model.SYSTEM_TASK)
+                        @Html.DisplayFor(model => model.SystemTask)
                     </dd>
                     <dt>
-                        @Html.DisplayNameFor(model => model.COMMENTS)
+                        @Html.DisplayNameFor(model => model.Comments)
                     </dt>
                     <dd>
-                        @Html.DisplayFor(model => model.COMMENTS)
+                        @Html.DisplayFor(model => model.Comments)
                     </dd>
                     
                    
                 
 
                     <dd>
-                        @Html.DisplayFor(model => model.ID)
+                        @Html.DisplayFor(model => model.Id)
                     </dd>
                    
                 </dl>
             </div>
             <p>
-                @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+                @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
                 @Html.ActionLink("Back to List", "Index")
             </p>
         </div>

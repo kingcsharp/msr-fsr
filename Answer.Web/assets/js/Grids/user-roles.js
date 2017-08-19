@@ -1,10 +1,6 @@
-﻿$(document).ready(function () {
-    //$.jgrid.defaults.responsive = true;
-    $.jgrid.defaults.styleUI = 'Bootstrap';
-
-    Smooch.init({ appToken: '9wxoxi2wbcbymhjf1ex1a0dux' });
+﻿function LoadRolesTypesGrid(url, returnUrl) {
     $("#jqGrid").jqGrid({
-        url: '/Roles/UserRolesData',
+        url: url,
         mtype: "GET",
         styleUI: 'Bootstrap',
         emptyrecords: 'No records to display',
@@ -56,6 +52,16 @@
                 align: 'center'
             },
             {
+                label: 'Locked By',
+                name: 'LockedBy',
+                index: 'LockedBy',
+                colmenu: false,
+                editable: true,
+                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                align: 'center'
+            },
+            {
                 label: 'Revision',
                 name: 'Rev',
                 index: 'Rev',
@@ -75,6 +81,16 @@
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                 searchoptions: { value: ":[All];CREATING, DENIED, APPROVED, APPROVED_BUT_REVISING:Creating or Approved;CREATING, DENIED: Creating;IN_WORKFLOW:In Approval Workflow;APPROVED, APPROVED_BUT_REVISING, APPROVED_BUT_DELETING:Approved;DENIED:Denied;APPROVED_BUT_REVISING:Approved But Being Revised;APPROVED_BUT_DELETING:Approved But Being Deleted;DENIED:Denied;DELETED:Deleted;OLD:Obsolete" },
                 align: 'left'
+            },
+            {
+                label: 'Checked Out To',
+                name: 'LockedByName',
+                index: 'LockedByName',
+                colmenu: false,
+                editable: true,
+                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                align: 'center'
             },
             { name: 'Actions', index: 'ID', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: RolesEditFormatter, width: 150, align: 'center' }
         ],
@@ -140,10 +156,25 @@
         searchOperators: true
     });
     function RolesEditFormatter(cellvalue, options, rowObject) {
-        thisCellVal = '<a href="/Roles/Edit/' + rowObject.Id + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i> Edit</a>';
-        thisCellVal += '<a href="/Roles/Edit/' + rowObject.Id + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i> Detail</a>';
-        thisCellVal += '<a href="/Roles/Delete/' + rowObject.ObjectId + '" data-call-back-name="' + rowObject.Name + '" title="Delete" class="btn btn-xs btn-danger deleterole" style="margin:2px;font-size: .8em; "><i class="fa fa-trash"></i> Delete</a>';
-        return thisCellVal;
+        var editButton = '<a  title="Edit" href="/Roles/Edit/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
+        var detailbutton = '<a title="Detail" href="/Roles/Detail/' + rowObject.Id + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-eye"></i></a>';
+        var deleteButton = '';
+        var buttonWorkflowLeft = '';
+        var buttonWorkflowRight = '';
+        var url = '';
+
+        if (rowObject.Status === 'CREATING') {
+
+            url = '/workflow/submit?objId=' + rowObject.ObjectId + '&returnUrl=' + returnUrl;
+            buttonWorkflowLeft = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '"  data-call-back-id="' + rowObject.ObjectId + '" class="btn btn-xs btn-success unlock" title="Cancel Creation. Edit will be lost" style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-left"></i></a>';
+
+            buttonWorkflowRight  = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-success" title="Proceed to approval workflow for release." style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-right"></i></a>';
+        } else {
+            url = '/workflow/delete?objId=' + rowObject.ObjectId + '&returnUrl=' + returnUrl;
+            deleteButton = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-danger" title="Proceed to delete." style="margin:2px;font-size: .8em;"><i class="fa fa fa-trash"></i></a>';
+        }
+
+        return editButton + deleteButton + buttonWorkflowLeft + buttonWorkflowRight + detailbutton;
     }
     $('#search').click(function () {
 
@@ -152,4 +183,4 @@
         }).trigger("reloadGrid");
 
     });
-})
+}

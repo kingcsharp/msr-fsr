@@ -121,33 +121,39 @@ namespace Msr.Services.Companies.ViewModels
                 }
 
             };
+
             ListReferenceFiles = documentFilesService.GetSelectedFiles(id: ObjectId, type: null).Select(x => new SelectListItem
             {
                 Text = x.Show,
                 Value = x.Value.ToString()
                 //Selected = true
             }).OrderBy(o => o.Text).ToList();
+
             ListPictureFiles = documentFilesService.GetSelectedFiles(id: ObjectId, type: "PICTURE").Select(x => new SelectListItem
             {
                 Text = x.Show,
                 Value = x.Value.ToString()
             }).OrderBy(o => o.Text).ToList();
+
             ListLogoFiles = documentFilesService.GetSelectedFiles(id: ObjectId, type: "LOGO").Select(x => new SelectListItem
             {
                 Text = x.Show,
                 Value = x.Value.ToString()               
             }).OrderBy(o => o.Text).ToList();
+
             HeadPeoples = companyService.GetHeadPeople().ToList().Select(x => new SelectListItem
             {
                 Text = x.FullName,
                 Value = x.Id
             }).OrderBy(o => o.Text).ToList();
-            Locations = companyService.GetLocationsQueryable().ToList().Select(x => new SelectListItem
+
+            Locations = companyService.GetLocationsQueryable().Where(x => x.Status == "APPROVED").ToList().Select(x => new SelectListItem
             {
                 Text = x.Name,
                 Value = x.Id
             }).OrderBy(o => o.Text).ToList();
-            ListParents = companyService.GetCompaniesQueryable().ToList().Select(x => new SelectListItem
+
+            ListParents = companyService.GetCompaniesQueryable().Where(x=>x.Status =="APPROVED").Select(x => new SelectListItem
             {
                 Text = x.Name,
                 Value = x.Id

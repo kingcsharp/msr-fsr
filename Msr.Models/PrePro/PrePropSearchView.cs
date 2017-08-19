@@ -9,11 +9,10 @@ namespace Msr.Models.PrePro
         public string LockedBy { get; set; }
         public string UnlockedBy { get; set; }
         public string CreatedBy { get; set; }
-        public DateTime? CreateDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
         public string Root { get; set; }
         public string RevInfo { get; set; }
         public string CreatingCo { get; set; }
-
         public string Status { get; set; }
         public int? Rev { get; set; }
         public string WfsId { get; set; }

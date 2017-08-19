@@ -26,7 +26,7 @@ namespace Answer.Web.Controllers
         {
             var approvalGroupsService = new ApprovalGroupsService();
 
-            var totalRows = approvalGroupsService.GetApprovalGroupsQueryable();
+            var totalRows = approvalGroupsService.GetApprovalGroupsQueryable().Where(x=>x.Hide!=true);
 
             if (param.where != null && param.where.rules.Any())
             {
@@ -151,6 +151,25 @@ namespace Answer.Web.Controllers
             }
 
             return View(model);
+        }
+
+        public ActionResult Hide(string id)
+        {
+            var taskService = new ApprovalGroupsService();
+
+            var response = taskService.HideGroupWorkFlow(id);
+
+            if (response != null)
+            {
+                TempData["SuccessMessage"] = "Workflow Hide successfully.";
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Something went wrong.";
+                return RedirectToAction("Index");
+            }
+
         }
     }
 }

@@ -26,14 +26,14 @@
                         <div class="form-group">
                             @Html.LabelFor(model => model.Groups, htmlAttributes: new { @class = "control-label col-md-4" })
                             <div class="col-md-5">
-                                @Html.DropDownListFor(model => model.Groups, Model.ListGroups, new { @class = "form-control select selectroles", multiple = "multiple" })
+                                @Html.DropDownListFor(model => model.Groups, Model.ListGroups, new { @class = "form-control", multiple = "multiple" })
                                 @Html.ValidationMessageFor(model => model.Groups, "", new { @class = "text-danger" })
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <div class="col-md-offset-2 col-md-5">
-                                <input type="submit" value="Create" class="btn btn-default" />
+                            <div class="col-md-offset-4 col-md-10">
+                                <input type="submit" value="Create" class="btn btn-success" />
                                 @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-warning" })
                             </div>
                         </div>

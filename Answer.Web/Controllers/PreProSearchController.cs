@@ -21,30 +21,54 @@ namespace Answer.Web.Controllers
         // GET: PreProSearch
         public ActionResult Index()
         {
-            var viewModel = new EngineeringViewModel(); 
+            var viewModel = new EngineeringViewModel();
 
             ViewBag.ActiveClass = "PreProSearch";
 
             return View(viewModel);
         }
-       
+
         public ActionResult PreProData(JqGridParam param)
         {
             var preproService = new PreProServices();
 
-            var totalRows = preproService.GetPreProQueryable();
+            var totalRows = preproService.GetPreProQueryable().Where(x=>x.Status!="DELETED");
 
             if (param.where != null && param.where.rules.Any())
             {
                 foreach (var rule in param.where.rules)
                 {
-                    if (rule.field == nameof(PrePropSearchView.ObjId))
+                    if (rule.field == nameof(PrePropSearchView.Id))
                     {
                         totalRows = totalRows.Where(x => x.Id == rule.data);
                     }
                     else if (rule.field == nameof(PrePropSearchView.ObjId))
                     {
                         totalRows = totalRows.Where(x => x.ObjId.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(PrePropSearchView.StepText))
+                    {
+                        totalRows = totalRows.Where(x => x.StepText.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(PrePropSearchView.Rev))
+                    {
+                        int value;
+                        if (Int32.TryParse(rule.data, out value))
+                        {
+                            totalRows = totalRows.Where(x => x.Rev == value);
+                        }
+                    }
+                    else if (rule.field == nameof(PrePropSearchView.Status))
+                    {
+                        var statusList = rule.data.Split(',').Select(x => x.Trim().ToLower());
+                        if (statusList.Any())
+                        {
+                            totalRows = totalRows.Where(x => statusList.Contains(x.Status.ToLower()));
+                        }
+                    }
+                    else if (rule.field == nameof(PrePropSearchView.LockedByName))
+                    {
+                        totalRows = totalRows.Where(x => x.LockedByName.ToLower().Contains(rule.data.ToLower()));
                     }
                 }
             }
@@ -105,7 +129,7 @@ namespace Answer.Web.Controllers
         {
             var part = new ProcedurePreProViewModel();
 
-            part.Setup(new PreProServices(),new ProcedureVerbsService(),new DocumentService(),new DocumentFilesService(),new TheoryParagraphService());
+            part.Setup(new PreProServices());
 
             return View(part);
         }
@@ -118,13 +142,13 @@ namespace Answer.Web.Controllers
             {
                 //Need to dynamic 
                 model.NTLogin = "1618";
-              //  model.SubParts = null;
+                //  model.SubParts = null;
 
                 var response = taskService.Create(model: model);
 
                 if (response)
                 {
-                    TempData["SuccessMessage"] = "Part has been created successfully.";
+                    TempData["SuccessMessage"] = "Procedure Step has been created successfully.";
 
                     return RedirectToAction("Index");
                 }
@@ -132,14 +156,14 @@ namespace Answer.Web.Controllers
                 {
                     TempData["ErrorMessage"] = "Something went wrong.";
 
-                   model.Setup(new PreProServices(), new ProcedureVerbsService(), new DocumentService(), new DocumentFilesService(), new TheoryParagraphService());
+                    model.Setup(new PreProServices());
 
                     return View(model);
                 }
 
             }
 
-         //   model.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService());
+            model.Setup(new PreProServices());
 
             return View(model);
         }
@@ -155,25 +179,60 @@ namespace Answer.Web.Controllers
 
             part = part.MapToDto(model);
 
-            part.Setup(new PreProServices(), new ProcedureVerbsService(), new DocumentService(), new DocumentFilesService(), new TheoryParagraphService());
+            part.Setup(new PreProServices());
 
             return View(part);
         }
 
         public ActionResult Edit(string id)
         {
-            var taskService = new PreProServices();
+            var preProServices = new PreProServices();
 
-            var model = taskService.GetById(id);
+            var model = preProServices.GetById(id);
 
-            var part = new ProcedurePreProViewModel();
+            var procedurePreProView = new ProcedurePreProViewModel();
 
-            part = part.MapToDto(model);
+            procedurePreProView = procedurePreProView.MapToDto(model);
 
-            part.Setup(new PreProServices(), new ProcedureVerbsService(), new DocumentService(), new DocumentFilesService(), new TheoryParagraphService());
+            procedurePreProView.Setup(new PreProServices());
 
+            procedurePreProView.Labor = "No Labour Assigned";
+            procedurePreProView.ApplicationObjects = "Object Description";
 
-            return View(part);
+            return View(procedurePreProView);
+        }
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult Edit(ProcedurePreProViewModel model)
+        {
+            var preProServices = new PreProServices();
+
+            if (ModelState.IsValid)
+            {
+                //Need to dynamic 
+                model.NTLogin = "1618";
+
+                var response = preProServices.Save(model: model);
+
+                if (response)
+                {
+                    TempData["SuccessMessage"] = "Procedure Step has been Updated successfully.";
+
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Something went wrong.";
+
+                    model.Setup(new PreProServices());
+
+                    return View(model);
+                }
+
+            }
+
+            model.Setup(new PreProServices());
+
+            return View(model);
         }
     }
 }

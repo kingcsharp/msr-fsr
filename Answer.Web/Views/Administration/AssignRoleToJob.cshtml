@@ -13,6 +13,7 @@
             </h2>
             <div class="col-md-10">
                 <div class="row">
+                    @Html.Partial("Message")
                     @using (Html.BeginForm("AssignRoleToJob", "Administration", FormMethod.Get, new {id = "assign-form"}))
                     {
                         <table cellpadding="2" cellspacing="2">
@@ -43,7 +44,7 @@
                                 <td>
                                     @Html.Hidden("SelectedJobId", Model.SelectedJobId)
                                     @Html.Hidden("companiesWithRoles[" + index + "].CoId", Model.Companies[index].Id)
-                                    @Html.DropDownList("companiesWithRoles[" + index + "].RoleId", Model.Roles, new {@class = "form-control select" })
+                                    @Html.DropDownList("companiesWithRoles[" + index + "].RoleId", new SelectList(Model.Roles.OrderBy(x=>x.Value), "Value", "Text", Model.Companies[index].Role_Id), new {@class = "form-control select" })
 
                                 </td>
                             </tr>

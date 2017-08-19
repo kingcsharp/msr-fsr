@@ -59,14 +59,17 @@ namespace Msr.Services.Documents
 
         public List<SelectFile> GetSelectedTheories(string id)
         {
+          
             var objID = new SqlParameter("@ID", id == null ? "0" : id);
 
             //need to be dynamic
             var NTLogin = new SqlParameter("@strNTLogin", "1618");
 
-            var result = _dbContext.Database.SqlQuery<SelectFile>("EXEC A_SP_THEORY_GET_REF_THEORY  @ID, @strNTLogin", objID, NTLogin).ToList();
+           var result = _dbContext.Database.SqlQuery<SelectFile>("EXEC A_SP_THEORY_GET_REF_THEORY  @ID, @strNTLogin", objID, NTLogin).ToList();
 
             return result;
+
+
         }
 
         public bool Save(SaveDocumentViewModel model)

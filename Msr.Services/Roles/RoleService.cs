@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Msr.Services.PrePro.Procedure;
 using Msr.Services.Roles.Messages;
 
 namespace Msr.Services.Roles
@@ -29,16 +30,19 @@ namespace Msr.Services.Roles
 
         public RolesView GetRoleByid(string Id)
         {
-            return _dbContext.RolesViews.SingleOrDefault(x => x.Id == Id);
+            return _dbContext.RolesViews.SingleOrDefault(x => x.ObjectId == Id);
         }
 
         public bool Create(SaveRoleViewModel model)
         {
             try
             {
-                var saveUserRoleProcedure = new SaveUserRoleProcedure { Name = model.Name, SecurityLevel = model.SecurityLevel, NTLogin = model.NTLogin };
+             
+   var saveUserRoleProcedure = new SaveUserRoleProcedure { Name = model.Name,SecurityLevel = model.SecurityLevel, NTLogin = model.NTLogin };
 
                 _dbContext.Database.ExecuteStoredProcedure(saveUserRoleProcedure);
+
+               
 
                 return true;
             }
@@ -57,9 +61,9 @@ namespace Msr.Services.Roles
                 var saveUserRoleProcedure = new SaveUserRoleProcedure { Id = model.Id , Name = model.Name, SecurityLevel = model.SecurityLevel, NTLogin = model.NTLogin };
 
                 _dbContext.Database.ExecuteStoredProcedure(saveUserRoleProcedure);
-
+            
                 return true;
-
+               
             }
             catch (Exception ex)
             {
@@ -91,9 +95,12 @@ namespace Msr.Services.Roles
 
         public List<RoleResult> GetActiveRoles()
         {
-            var sql = "SELECT * FROM A_MENUS ORDER BY MENU_GROUP,ID,NAME";
-
-            var result = _dbContext.Database.SqlQuery<RoleResult>(sql).ToList();
+            var result = _dbContext.RolesViews.Where(x => x.Status == "APPROVED").Select(s => new RoleResult
+            {
+                Id = s.Root,
+                Name = s.RoleName,
+                ObJect_Id = s.ObjectId
+            }).ToList();
 
             return result;
         }

@@ -1,12 +1,15 @@
 ﻿$(document).ready(function () {
+
     $(".select").select2({
         placeholder: "Select",
         allowClear: true
     });
+
     $("form").submit(function (e) {
         $('.submitselect option').prop('selected', true);
         
     });
+
     $('#select-pic').on('show.bs.modal',
         function (event) {
             var button = $(event.relatedTarget);
@@ -27,6 +30,7 @@
             });
 
         });
+
     $('.deletefiles').click(function () {
 
         var callBackId = $(this).data('call-back-id');

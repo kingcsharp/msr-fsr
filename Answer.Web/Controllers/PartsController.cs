@@ -11,7 +11,8 @@ using Msr.Services.PartTypes;
 
 namespace Answer.Web.Controllers
 {
-    public class PartsController : Controller
+    [Authorize]
+    public class PartsController : BaseController
     {
         // GET: Parts
         public ActionResult Index()
@@ -141,8 +142,7 @@ namespace Answer.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                //Need to dynamic 
-                model.NTLogin = "1618";
+                model.NTLogin = GetCurrentUser().Id;
                 model.SubParts = null;
 
                 var response = taskService.Create(model: model);
@@ -191,8 +191,7 @@ namespace Answer.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                //Need to dynamic 
-                model.NTLogin = "1618";
+                model.NTLogin = GetCurrentUser().Id;
                 model.SubParts = null;
 
                 var response = taskService.Save(model);

@@ -1,37 +1,16 @@
 ﻿@model Msr.Services.ProcedureVerbs.ViewModels.SaveProcedureVerbsViewModel
 
 @{
-    ViewBag.Title = "Add";
-
+    ViewBag.Title = "Edit Procedure Type";
 }
 
-<link rel="stylesheet" type="text/css" href="/assets/css/themes/flat-blue.css">
-
-<link rel="stylesheet" type="text/css" href="/assets/css/ui.jqgrid-bootstrap-ui.css">
-<link rel="stylesheet" type="text/css" href="/assets/css/ui.jqgrid.css">
-
-<link rel="stylesheet" type="text/css" href="/assets/css/style.css">
-<link rel="stylesheet" type="text/css" href="/assets/css/hopscotch.css">
 
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="row">
             <h2 class="page-header">
-                Edit Procedure Verb 
-                <div class=" pull-right" data-toggle="modal">
-                    <!-- Split button -->
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-warning">Action</button>
-                        <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="caret"></span>
-                            <span class="sr-only">Toggle Dropdown</span>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a href="~/ProcedureVerbs/delete/@Model.ObjectId">Delete</a></li>
-                        </ul>
-                    </div>
-
-                </div>
+                Edit Procedure Type
+               
             </h2>
             <div class="col-lg-10">
                 @Html.Partial("Message")

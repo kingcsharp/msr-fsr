@@ -10,5 +10,6 @@ namespace Msr.Services.Administration.Messages
     {
         public string Company_Name { get; set; }
         public string Id { get; set; }
+        public string Role_Id { get; set; }
     }
 }

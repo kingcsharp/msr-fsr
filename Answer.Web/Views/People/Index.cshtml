@@ -31,7 +31,7 @@
 <script src="~/assets/js/grids/people.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            LoadPeopleGrid();
+            LoadPeopleGrid('@Url.Action("PeopleData", "People")','@Request.Url.OriginalString');
         });
 
     </script>

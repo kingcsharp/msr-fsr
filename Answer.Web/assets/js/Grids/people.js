@@ -1,18 +1,18 @@
-﻿function LoadPeopleGrid() {
+﻿function LoadPeopleGrid(url, returnUrl) {
     //$.jgrid.defaults.responsive = true;
     $.jgrid.defaults.styleUI = 'Bootstrap';
 
     Smooch.init({ appToken: '9wxoxi2wbcbymhjf1ex1a0dux' });
 
     $("#jqGrid").jqGrid({
-        url: '/People/PeopleData',
+        url: url,
         mtype: "GET",
         styleUI: 'Bootstrap',
         emptyrecords: 'No records to display',
         datatype: "json",
         colModel: [
             {
-                label: 'ID',
+                label: 'Id',
                 name: 'Id',
                 index: 'Id',
                 key: true,
@@ -87,19 +87,9 @@
                 align: 'left'
             },
             {
-                label: 'Company - Department',
+                label: 'Company Department',
                 name: 'CompanyName',
                 index: 'CompanyName',
-                colmenu: false,
-                editable: true,
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                align: 'left'
-            },
-            {
-                label: 'Location Name',
-                name: 'LocationName',
-                index: 'LocationName',
                 colmenu: false,
                 editable: true,
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
@@ -110,16 +100,6 @@
                 label: 'Primary Work Phone',
                 name: 'PrimaryPhoneNumber',
                 index: 'PrimaryPhoneNumber',
-                colmenu: false,
-                editable: true,
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                align: 'left'
-            },
-            {
-                label: 'Secondary Work Phone',
-                name: 'SecondaryPhoneNumber',
-                index: 'SecondaryPhoneNumber',
                 colmenu: false,
                 editable: true,
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
@@ -178,6 +158,18 @@
                 searchoptions: { value: ":[All];CREATING, DENIED, APPROVED, APPROVED_BUT_REVISING:Creating or Approved;CREATING, DENIED: Creating;IN_WORKFLOW:In Approval Workflow;APPROVED, APPROVED_BUT_REVISING, APPROVED_BUT_DELETING:Approved;DENIED:Denied;APPROVED_BUT_REVISING:Approved But Being Revised;APPROVED_BUT_DELETING:Approved But Being Deleted;DENIED:Denied;DELETED:Deleted;OLD:Obsolete" },
                 align: 'left'
             },
+            {
+                label: 'Checked Out To',
+                name: 'LockedByName',
+                index: 'LockedByName',
+                colmenu: false,
+                editable: true, // must set editable to true if you want to make the field editable
+                editrules: { required: true },
+                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                width: 200,
+                align: 'left'
+            },
             { name: 'Actions', index: 'ObjectId', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: peopleEditFormatter, width: 200, align: 'center' }
         ],
         ajaxRowOptions: {
@@ -202,6 +194,7 @@
         editurl: 'clientArray',
         autowidth: true,
         colMenu: true,
+        gridComplete: function () {}
 
     });
     $('#jqGrid').navGrid("#jqGridPager", {
@@ -221,11 +214,30 @@
         searchOnEnter: true,
         searchOperators: true
     });
+   
     function peopleEditFormatter(cellvalue, options, rowObject) {
-        var thisCellVal = '<a href="/People/Edit/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i> Edit</a>';
-        return thisCellVal;
-    }
 
+        var editButton = '<a  title="Edit" href="/People/Edit/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
+
+        var deleteButton = '';
+        var buttonWorkflowLeft = '';
+        var buttonWorkflowRight = '';
+        var url = '';
+
+        if (rowObject.Status === 'CREATING') {
+
+            url = '/workflow/submit?objId=' + rowObject.ObjectId + '&returnUrl=' + returnUrl;
+            buttonWorkflowLeft = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '"  data-call-back-id="' + rowObject.ObjectId + '" class="btn btn-xs btn-success unlock" title="Cancel Creation. Edit will be lost" style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-left"></i></a>';
+
+            buttonWorkflowRight = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-success" title="Proceed to approval workflow for release." style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-right"></i></a>';
+        } else {
+            url = '/workflow/delete?objId=' + rowObject.ObjectId + '&returnUrl=' + returnUrl;
+            deleteButton = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-danger" title="Proceed to delete." style="margin:2px;font-size: .8em;"><i class="fa fa fa-trash"></i></a>';
+        }
+
+        return editButton + deleteButton + buttonWorkflowLeft + buttonWorkflowRight;
+
+    }
     $('#search').click(function () {
 
         jQuery("#jqGrid").setGridParam({

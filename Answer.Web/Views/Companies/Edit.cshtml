@@ -1,7 +1,7 @@
 ﻿@model Msr.Services.Companies.ViewModels.EditCompanyViewModel
  
 @{
-    ViewBag.Title = "EditCompany";
+    ViewBag.Title = "Edit Company";
 }
 <div class="container-fluid">
     <div class="side-body padding-top">
@@ -93,7 +93,7 @@
                         </div>
                         <div class="form-group">
                             <div class="col-md-offset-4 col-md-10">
-                                <input type="submit" value="Update" class="btn btn-default" />
+                                <input type="submit" value="Update" class="btn btn-success" />
                                 @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-warning" })
                             </div>
                         </div>
@@ -103,6 +103,7 @@
         </div>
     </div>
 </div>
+
 @section scripts
 {
  <script src="~/assets/js/common/documentFile.js"></script>
@@ -110,9 +111,11 @@
 
 <script src="~/assets/js/grids/files-dialog-single-selection.js"></script>
 <script src="//rawgit.com/saribe/eModal/master/dist/eModal.min.js"></script>
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+
     <script type="text/javascript">
+        
         $("form").submit(function (e) {
             $('.selectitem option').prop('selected', true);
 

@@ -9,15 +9,17 @@ namespace Msr.Models.ApprovalWorkflows
     public class ApprovalWorkflowsView
     {
         public string Id { get; set; }
-        public string Name { get; set; }
-        public string Object_Id { get; set; }
-        public string Stamp_Id { get; set; }
-        public string Stamp_Name { get; set; }
-        public string Creating_Co { get; set; }
-        public Nullable<bool> Hide { get; set; }
-        //public string Wf_Stage_Id { get; set; }
-        //public string Wf_Stage_Name { get; set; }
-        //public string StampPictureFile { get; set; }
 
+        public string Name { get; set; }
+
+        public string Object_Id { get; set; }
+
+        public string Stamp_Id { get; set; }
+
+        public string Stamp_Name { get; set; }
+
+        public string Creating_Co { get; set; }
+
+        public bool? Hide { get; set; }
     }
 }

@@ -31,13 +31,42 @@ namespace Answer.Web.Controllers
             {
                 foreach (var rule in param.where.rules)
                 {
-                    if (rule.field == nameof(MonitorView.ID))
+                    if (rule.field == nameof(MonitorView.RollUpId))
                     {
-                        totalRows = totalRows.Where(x => x.ID == rule.data);
+                        totalRows = totalRows.Where(x => x.RollUpId == rule.data);
                     }
-                    else if (rule.field == nameof(MonitorView.WORKER_NAME))
+                    else if (rule.field == nameof(MonitorView.Description))
                     {
-                        totalRows = totalRows.Where(x => x.WORKER_NAME.ToLower().Contains(rule.data.ToLower()));
+                        totalRows = totalRows.Where(x => x.Description.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(MonitorView.MonitorType))
+                    {
+                        totalRows = totalRows.Where(x => x.MonitorType.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(MonitorView.PrintResult))
+                    {
+                        totalRows = totalRows.Where(x => x.PrintResult.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(MonitorView.IsPassing))
+                    {
+                        int value;
+                        if (Int32.TryParse(rule.data, out value))
+                        {
+                            totalRows = totalRows.Where(x => x.IsPassing == value);
+                        }
+                    }
+                    else if (rule.field == nameof(MonitorView.WorkerName))
+                    {
+                        totalRows = totalRows.Where(x => x.WorkerName.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(MonitorView.TaskStopDate))
+                    {
+                        DateTime value;
+                        if (DateTime.TryParse(rule.data, out value))
+                        {
+                            totalRows = totalRows.Where(q => q.TaskStopDate.HasValue && q.TaskStopDate.Value.Day == value.Day &&
+                                                             q.TaskStopDate.Value.Month == value.Month && q.TaskStopDate.Value.Year == value.Year);
+                        }
                     }
                 }
             }

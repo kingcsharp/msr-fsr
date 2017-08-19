@@ -1,5 +1,5 @@
 ﻿
-function SetUpGrid(returnUrl) {
+function SetUpRegionGrid(returnUrl) {
 
     $("#jqGridRegions").jqGrid({
         url: '/Regions/RegionsData',

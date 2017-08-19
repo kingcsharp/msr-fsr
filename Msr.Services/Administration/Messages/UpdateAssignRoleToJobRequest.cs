@@ -14,12 +14,13 @@ namespace Msr.Services.Administration.Messages
         }
 
         public List<UpdateAssignRoleToJobItem> RoleToJobItems { get; set; }
+        public string SelectedJobId { get; set; }
     }
 
     public class UpdateAssignRoleToJobItem
     {
         public int? RoleId { get; set; }
-        public int CoId { get; set; }
+        public int? CoId { get; set; }
         public string Job { get; set; }
     }
 }

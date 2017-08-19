@@ -9,6 +9,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 
 namespace Msr.Services.ApprovalStages
 {
@@ -109,6 +110,16 @@ namespace Msr.Services.ApprovalStages
 
                 return false;
             }
+        }
+
+        public IQueryable<SelectListItem> HideStageWorkFlow(string id)
+        {
+            var sql =
+                "UPDATE A_WF_STAGES SET HIDE = 1 WHERE ID  = '" + id + "'";
+
+            var result = _dbContext.Database.SqlQuery<SelectListItem>(sql).ToList().AsQueryable();
+
+            return result;
         }
     }
 }

@@ -12,7 +12,7 @@ using Msr.Services.Documents;
 
 namespace Answer.Web.Controllers
 {
-    public class CompaniesController : Controller
+    public class CompaniesController : BaseController
     {
         public ActionResult Index()
         {
@@ -35,6 +35,10 @@ namespace Answer.Web.Controllers
             var companyService = new CompanyService();
 
             var totalRows = companyService.GetCompaniesQueryable();
+
+            var defaultStatusList = new[] { "CREATING", "DENIED", "APPROVED", "APPROVED_BUT_REVISING", "APPROVED_BUT_DELETING" };
+
+            totalRows = totalRows.Where(x => defaultStatusList.Contains(x.Status) && x.Id.Length > 0);
 
             if (param.where != null && param.where.rules.Any())
             {
@@ -60,6 +64,14 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.Root.ToLower().Contains(rule.data.ToLower()));
                     }
+                    else if (rule.field == nameof(CompanyView.CoType))
+                    {
+                        totalRows = totalRows.Where(x => x.CoType.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(CompanyView.LockedByName))
+                    {
+                        totalRows = totalRows.Where(x => x.LockedByName.ToLower().Contains(rule.data.ToLower()));
+                    }
                     else if (rule.field == nameof(CompanyView.Rev))
                     {
                         int value;
@@ -81,6 +93,7 @@ namespace Answer.Web.Controllers
             }
             var orderBy = nameof(CompanyView.Name);
             var orderDirection = "asc";
+
             if (!string.IsNullOrWhiteSpace(param.sortColumn))
             {
                 orderBy = param.sortColumn;
@@ -115,7 +128,9 @@ namespace Answer.Web.Controllers
         public ActionResult Create()
         {
             var company = new AddCompanyViewModel();
+
             company.Setup(new DocumentFilesService(), new CompanyService());
+
             return View(company);
         }
 
@@ -126,7 +141,7 @@ namespace Answer.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                model.NTLogin = "1618";
+                model.NTLogin = GetCurrentUser().Id;
 
                 var response = userService.Create(model: model);
 
@@ -163,7 +178,7 @@ namespace Answer.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                model.NTLogin = "1618";
+                model.NTLogin = GetCurrentUser().Id;
 
                 var response = companyService.Edit(model: model);
 
@@ -184,8 +199,9 @@ namespace Answer.Web.Controllers
         public ActionResult Delete(string id)
         {
             var taskService = new CompanyService();
-            //Need to dynamic 
-            string ntLogin = "1618";
+           
+            string ntLogin = GetCurrentUser().Id;
+
             var response = taskService.Delete(id, ntLogin);
 
             if (response)
@@ -196,13 +212,17 @@ namespace Answer.Web.Controllers
             }
 
             TempData["ErrorMessage"] = "Something went wrong.";
+
             return RedirectToAction("Index");
         }
         public ActionResult Details(string id)
         {
             var taskService = new CompanyService();
+
             var model = taskService.GetCompanyByObjId(id);
+
             model.Setup(new DocumentFilesService(), new CompanyService());
+
             return View(model);
         }
     }

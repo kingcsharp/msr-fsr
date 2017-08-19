@@ -30,7 +30,8 @@
     <script type="text/javascript" src="~/assets/js/grids/actualparts.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            LoadActualPartsGrid('@Url.Action("ActualPartsData", "ActualParts")','@ViewBag.Serial');
+            LoadActualPartsGrid('@Url.Action("ActualPartsData", "ActualParts")', '@ViewBag.Serial','@Request.Url.OriginalString');
+
         });
     </script>
 }

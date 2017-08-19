@@ -23,7 +23,7 @@ namespace Msr.Services.PartTypes
         }
         public PartTypesView GetById(string id)
         {
-            return GetPartTypesQueryable().Where(x => x.Id == id).SingleOrDefault();
+            return GetPartTypesQueryable().SingleOrDefault(x => x.ObjectId == id);
         }
         public bool Create(AddPartTypesViewModel model)
         {

@@ -95,6 +95,16 @@ function SetUpGrid(returnUrl) {
                 searchoptions: { value: ":[All];APPROVED:Approved;CREATING:Creating;APPROVED_BUT_REVISING:Approved But Revising" },
                 align: 'center'
             },
+            {
+                label: 'Checked Out To',
+                name: 'LockedByName',
+                index: 'LockedByName',
+                colmenu: false,
+                stype: "select",
+                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                searchoptions: { value: ":[All];APPROVED:Approved;CREATING:Creating;APPROVED_BUT_REVISING:Approved But Revising" },
+                align: 'center'
+            },
             { name: 'Actions', index: 'ID', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: PartEditFormatter, width: 200, align: 'center' }
         ],
 
@@ -113,26 +123,7 @@ function SetUpGrid(returnUrl) {
         autowidth: true,
         colMenu: true,
         gridComplete: function () {
-            $('.deletepart').on('click',
-                function (e) {
-                    e.preventDefault();
-
-                    var callBackId = $(this).data('call-back-id');
-                    var callBackName = $(this).data('call-back-name');
-
-                    eModal.confirm('Do you really want to delete ' + callBackName + ' ?', 'Confirmation delete')
-                        .then(confirmCallback, optionalCancelCallback);
-
-                    function confirmCallback() {
-                        console.log("ok");
-                        window.location.href = "/parts/PartDelete/" + callBackId;
-                    }
-
-                    function optionalCancelCallback() {
-                        console.log("cancel");
-                    }
-
-                });
+          
         }
     });
     $('#jqGrid').navGrid("#jqGridPager", {
@@ -154,6 +145,7 @@ function SetUpGrid(returnUrl) {
     });
 
     function PartEditFormatter(cellvalue, options, rowObject) {
+
         var editButton = '<a  title="Edit" href="/parts/edit/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
 
         var deleteButton = '';

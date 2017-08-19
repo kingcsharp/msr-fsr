@@ -13,7 +13,7 @@ using Msr.Services.Roles;
 
 namespace Answer.Web.Controllers
 {
-    public class AdministrationController : Controller
+    public class AdministrationController : BaseController
     {
         private AdministrationService _administrationService;
         private readonly RoleService _roleService;
@@ -70,6 +70,8 @@ namespace Answer.Web.Controllers
 
         public ActionResult ViewCompanyUsage()
         {
+            var data = _administrationService.ViewCompanyUsage();
+
             return View();
         }
 
@@ -129,7 +131,7 @@ namespace Answer.Web.Controllers
 
             if (!string.IsNullOrWhiteSpace(selectedJobId))
             {
-                vm.Companies = _administrationService.GetRolesForJob(selectedJobId);
+                vm.Companies = _administrationService.GetRolesForJob(selectedJobId, GetCurrentUser().Id);
             }
 
             vm.SetUp(_roleService);
@@ -140,34 +142,26 @@ namespace Answer.Web.Controllers
         [HttpPost]
         public ActionResult UpdateAssignRoleToJob(List<UpdateAssignRoleToJobItem> companiesWithRoles, string selectedJobId)
         {
-            if (ModelState.IsValid)
+            var result = _administrationService.UpdateAssignRoleToJob(new UpdateAssignRoleToJobRequest { RoleToJobItems = companiesWithRoles, SelectedJobId = selectedJobId });
+
+            if (!result.HasErrors())
             {
-                var result = _administrationService.UpdateAssignRoleToJob(new UpdateAssignRoleToJobRequest { RoleToJobItems = companiesWithRoles });
+                TempData["SuccessMessage"] = "Job Assignment has been updated successfully.";
 
-                if (!result.HasErrors())
-                {
-                    TempData["SuccessMessage"] = "Job Assignment has been updated successfully.";
-
-                    return RedirectToAction("AssignRoleToJob", new {selectedJobId});
-                }
-
+            }
+            else
+            {
                 TempData["ErrorMessage"] = result.ErrorMessage();
             }
 
-            var vm = new AssignRoleToJobViewModel();
-
-            vm.Companies = _administrationService.GetRolesForJob(selectedJobId);
-
-            vm.SetUp(_roleService);
-
-            return View("AssignRoleToJob", vm);
+            return RedirectToAction("AssignRoleToJob", new { selectedJobId });
         }
 
         public ActionResult AssignAccRecievableRole()
         {
             var vm = new AssignAccRecievableRoleViewModel();
 
-            vm.Companies = _administrationService.GetAssignAccRecievableRole();
+            vm.Companies = _administrationService.GetAssignAccRecievableRole(GetCurrentUser().Id);
 
             vm.SetUp(_roleService, _locationService);
 
@@ -218,8 +212,6 @@ namespace Answer.Web.Controllers
 
                 if (!result.HasErrors())
                 {
-                    TempData["SuccessMessage"] = "Assign Companies has been updated successfully.";
-
                     return RedirectToAction("AssignCompaniesToView");
                 }
 
@@ -287,8 +279,8 @@ namespace Answer.Web.Controllers
             if (globalSettings.Any())
             {
                 _administrationService.UpdateGlobalSettings(globalSettings);
-
                 TempData["SuccessMessage"] = "Global words has been updated successfully.";
+
             }
 
             return RedirectToAction("EditglobalWordsII");
@@ -309,10 +301,60 @@ namespace Answer.Web.Controllers
             if (emailWords.Any())
             {
                 _administrationService.UpdateEmailWords(emailWords);
-                 TempData["SuccessMessage"] = "Email words has been updated successfully.";
+                TempData["SuccessMessage"] = "Email words has been updated successfully.";
+
             }
 
             return RedirectToAction("EditEmailWords");
+        }
+
+        public ActionResult ReAssignBoss()
+        {
+            var vm = new ReAssignBossViewModel();
+
+            vm.NTLogin = "1618"; // Need to change
+
+            vm.SetUp(_administrationService);
+
+            return View(vm);
+        }
+        [HttpPost]
+        public ActionResult ReAssignBoss(ReAssignBossViewModel items)
+        {
+            items.NTLogin = "1618"; // Need to change
+            if (ModelState.IsValid)
+            {
+                var model = new ReAssignBossView();
+                model = MapToDto(items);
+                var result = _administrationService.ReassignBoss(model);
+
+                if (!result.HasErrors())
+                {
+                    TempData["SuccessMessage"] = result.SuccessMessage;
+
+                    return RedirectToAction("ReAssignBoss");
+                }
+
+                TempData["ErrorMessage"] = result.ErrorMessage();
+            }
+
+            var vm = new ReAssignBossViewModel();
+
+            vm.NTLogin = "1618"; // Need to change
+
+            vm.SetUp(_administrationService);
+
+            return View(vm);
+        }
+        public ReAssignBossView MapToDto(ReAssignBossViewModel model)
+        {
+            return new ReAssignBossView
+            {
+                Id = model.Id,
+                FullName = model.FullName,
+                ToBossId = model.ToBossId,
+                NTLogin = model.NTLogin
+            };
         }
     }
 }

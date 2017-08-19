@@ -8,7 +8,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectVersion>4.1</ProjectVersion>
     <ProjectGuid>{e6e98f90-9138-4912-9631-6c853e2ba1a3}</ProjectGuid>
-    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql120DatabaseSchemaProvider</DSP>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql130DatabaseSchemaProvider</DSP>
     <OutputType>Database</OutputType>
     <RootPath>
     </RootPath>
@@ -2791,5 +2791,9 @@
     <Build Include="dbo\Views\Portal\Portal_Languages.sql" />
     <Build Include="dbo\Views\Portal\Portal_TimeZones.sql" />
     <Build Include="dbo\Views\Portal\Portal_RolesApprovedDataQuick.sql" />
+    <Build Include="dbo\Views\Portal\Portal_ProcedureStepPrePop.sql" />
+    <Build Include="dbo\Views\Portal\Portal_ProductsActualPart.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_ProcedureStepGetRefFiles.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_ProcedureStepGetRefProcedures.sql" />
   </ItemGroup>
 </Project>

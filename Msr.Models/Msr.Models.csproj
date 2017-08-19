@@ -142,7 +142,6 @@
     <Compile Include="People\TimeZonesView.cs" />
     <Compile Include="People\LanguagesView.cs" />
     <Compile Include="People\PeopleObjectView.cs" />
-    <Compile Include="PrePro\TheoryFile.cs" />
     <Compile Include="PrePro\PrePropSearchView.cs" />
     <Compile Include="Procedures\ProcedureView.cs" />
     <Compile Include="ProcedureVerbs\ProcedureVerbsView.cs" />

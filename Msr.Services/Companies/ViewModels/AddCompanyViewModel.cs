@@ -33,9 +33,11 @@ namespace Msr.Services.Companies.ViewModels
         [DisplayName("Type :")]
         public string CoType { get; set; }
 
+        [DisplayName("Parent :")]
         public string Parent { get; set; }
 
         [Required]
+        [DisplayName("Phone :")]
         public string Phone { get; set; }
 
         [Required]

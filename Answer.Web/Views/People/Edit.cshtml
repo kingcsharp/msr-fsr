@@ -16,6 +16,7 @@
     @Html.AntiForgeryToken()
     <input type="hidden" name="Id" value="@Model.Id" />
     <input type="hidden" name="ObjectId" value="@Model.ObjectId" />
+    <input type="hidden" name="EmailIdPrimary" value="@Model.EmailIdPrimary" />
     <div class="form-horizontal">
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     <div class="form-group">
@@ -228,7 +229,7 @@
                         </div>*@
     <div class="form-group">
         <div class="col-md-offset-4 col-md-10">
-            <input type="submit" value="Update" class="btn btn-default" />
+            <input type="submit" value="Update" class="btn btn-success" />
             @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-warning" })
         </div>
     </div>
@@ -248,8 +249,13 @@
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
     <script type="text/javascript">
         $(function () { // will trigger when the document is ready
-            $('.datepicker').datepicker(); //Initialise any date pickers
-           
+            $('.datepicker').datepicker({
+                format: 'mm/dd/yyyy',
+                autoclose: true
+            });
+            $('.datepicker').datepicker('setDate', 'now');
+            $('.datepicker').datepicker().val('@(Model.HireDate == null ? "" : Convert.ToDateTime(Model.HireDate).ToString("MM/dd/yyyy"))');
+
         });
         $("form").submit(function (e) {
             $('.selectitem option').prop('selected', true);

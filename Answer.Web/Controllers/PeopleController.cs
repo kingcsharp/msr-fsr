@@ -9,10 +9,11 @@ using Msr.Services.People.ViewModels;
 using Msr.Services.Companies;
 using Msr.Infrastructure.Helpers;
 using Msr.Services.Documents;
+using Msr.Models.ApprovalStages;
 
 namespace Answer.Web.Controllers
 {
-    public class PeopleController : Controller
+    public class PeopleController : BaseController
     {
         public ActionResult Index()
         {
@@ -26,8 +27,8 @@ namespace Answer.Web.Controllers
         public ActionResult PeopleData(JqGridParam param)
         {
             var peopleService = new PeopleService();
-
-            var totalRows = peopleService.GetPeople();
+          
+            var totalRows = peopleService.GetPeople().Where(x=> x.Status != "DELETED");
 
             if (param.where != null && param.where.rules.Any())
             {
@@ -81,13 +82,17 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.WorkEmailAddress.ToLower().Contains(rule.data.ToLower()));
                     }
-                    //else if (rule.field == nameof(PeopleObjectView.DateHired))
-                    //{
-                    //    totalRows = totalRows.Where(x => x.DateHired.ToString().Contains(rule.data.ToLower()));
-                    //}
+                    else if (rule.field == nameof(PeopleObjectView.DateHired))
+                    {
+                        totalRows = totalRows.Where(x => x.DateHired.ToString().Contains(rule.data.ToLower()));
+                    }
                     else if (rule.field == nameof(PeopleObjectView.SystemStatus))
                     {
                         totalRows = totalRows.Where(x => x.SystemStatus.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(PeopleObjectView.LockedByName))
+                    {
+                        totalRows = totalRows.Where(x => x.LockedByName.ToLower().Contains(rule.data.ToLower()));
                     }
                     else if (rule.field == nameof(PeopleObjectView.Rev))
                     {
@@ -153,7 +158,7 @@ namespace Answer.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                model.NTLogin = "1618"; // need to dynamic
+                model.NTLogin = GetCurrentUser().Id;
                 model.Password = AuthenticationHelper.PassWordEncrypt("test"); //pending to find password creation
                 
                 var response = peopleService.Create(model: model);
@@ -174,6 +179,7 @@ namespace Answer.Web.Controllers
 
             return View();
         }
+
         public ActionResult Edit(string id)
         {
             var taskService = new PeopleService();
@@ -184,17 +190,29 @@ namespace Answer.Web.Controllers
             var people = new EditPeopleViewModel();
             people = people.MapToDto(model);
             people.Setup(new DocumentFilesService(), new PeopleService(), new CompanyService());
-            people.PrimaryPhoneNumber = phoneInfo.PrimaryPhoneNumber;
-            people.TypePrimaryPhoneNumber = phoneInfo.TypePrimaryPhoneNumber;
-            people.ExtPrimaryPhoneNumber = phoneInfo.ExtPrimaryPhoneNumber;
-            people.PinPrimaryPhoneNumber = phoneInfo.PinPrimaryPhoneNumber;
-            people.EmailPrimary = emailInfo.EmailPrimary;
-            people.EmailTypePrimary = emailInfo.EmailTypePrimary;
-            people.EmailTextTypePrimary = emailInfo.EmailTextTypePrimary;
-            //people.AddressLocation = locationInfo.AddressLocation;
-///            people.AddressType = locationInfo.AddressType;
+            if (phoneInfo != null)
+            {
+                people.PrimaryPhoneNumber = phoneInfo.PrimaryPhoneNumber;
+                people.TypePrimaryPhoneNumber = phoneInfo.TypePrimaryPhoneNumber;
+                people.ExtPrimaryPhoneNumber = phoneInfo.ExtPrimaryPhoneNumber;
+                people.PinPrimaryPhoneNumber = phoneInfo.PinPrimaryPhoneNumber;
+            }
+            if (emailInfo != null)
+            {
+                people.EmailPrimary = emailInfo.EmailPrimary;
+                people.EmailTypePrimary = emailInfo.EmailTypePrimary;
+                people.EmailTextTypePrimary = emailInfo.EmailTextTypePrimary;
+                people.EmailIdPrimary = emailInfo.EmailIdPrimary;
+            }
+            if (locationInfo != null)
+            {
+                people.AddressLocation = locationInfo.AddressLocation;
+                people.AddressType = locationInfo.AddressType;
+
+            }
             return View(people);
         }
+
         [AcceptVerbs(verbs: HttpVerbs.Post)]
         public ActionResult Edit(EditPeopleViewModel model)
         {
@@ -202,7 +220,7 @@ namespace Answer.Web.Controllers
            
             if (ModelState.IsValid)
             {
-                model.NTLogin = "1618"; // need to dynamic
+                model.NTLogin = GetCurrentUser().Id;
                 model.Password = AuthenticationHelper.PassWordEncrypt("test"); //pending to find password creation
 
                 var response = peopleService.Edit(model);
@@ -222,6 +240,23 @@ namespace Answer.Web.Controllers
             }
 
             return View();
+        }
+        public ActionResult Delete(string id)
+        {
+            var taskService = new PeopleService();
+
+            string ntLogin = GetCurrentUser().Id;
+            var response = taskService.Delete(id, ntLogin);
+
+            if (response)
+            {
+                TempData["SuccessMessage"] = "People deleted successfully.";
+
+                return RedirectToAction("Index");
+            }
+
+            TempData["ErrorMessage"] = "Something went wrong.";
+            return RedirectToAction("Index");
         }
     }
 }

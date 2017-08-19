@@ -1,5 +1,4 @@
-﻿function loadProcedureVerbsGrid(url) {
-    //$.jgrid.defaults.responsive = true;
+﻿function loadProcedureVerbsGrid(url, returnUrl) {
     $.jgrid.defaults.styleUI = 'Bootstrap';
 
     Smooch.init({ appToken: '9wxoxi2wbcbymhjf1ex1a0dux' });
@@ -83,19 +82,19 @@
                 function (e) {
                     e.preventDefault();
 
+
                     var callBackId = $(this).data('call-back-id');
                     var callBackName = $(this).data('call-back-name');
 
-                    eModal.confirm('Do you really want to delete ' + callBackName + ' ?', 'Confirmation delete')
+                    eModal.confirm('Pressing OK will delete revision "' + callBackName + '"', 'Confirmation delete')
                         .then(confirmCallback, optionalCancelCallback);
 
                     function confirmCallback() {
-                        console.log("ok");
-                        window.location.href = "/ProcedureVerbs/Delete/" + callBackId;
+                        window.location.href = "/workflow/UnlockAndDelete?objId=" + callBackId + '&returnUrl=' + returnUrl;
                     }
 
                     function optionalCancelCallback() {
-                        console.log("cancel");
+
                     }
 
                 });
@@ -119,9 +118,27 @@
         searchOperators: true
     });
     function prodecureVerbsEditFormatter(cellvalue, options, rowObject) {
-        var thisCellVal = '<a href="/ProcedureVerbs/Edit/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i> Edit</a>';
-        thisCellVal = thisCellVal + '<a href="/ProcedureVerbs/Delete/' + rowObject.ObjectId + '" data-call-back-name="' + rowObject.Name + '" data-call-back-id="' + rowObject.ObjectId + '" title="Delete" class="btn btn-xs btn-danger deleteobject" style="margin:2px;font-size: .8em;"><i class="fa fa-trash"></i> Delete</a>';
-        return thisCellVal;
+
+        var editButton = '<a  title="Edit" href="/ProcedureVerbs/edit/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
+
+        var deleteButton = '';
+        var buttonWorkflowLeft = '';
+        var buttonWorkflowRight = '';
+        var url = '';
+
+        if (rowObject.Status === 'CREATING') {
+
+            url = '/workflow/submit?objId=' + rowObject.ObjectId + '&returnUrl=' + returnUrl;
+            buttonWorkflowLeft = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '"  data-call-back-id="' + rowObject.ObjectId + '" class="btn btn-xs btn-success unlock" title="Cancel Creation. Edit will be lost" style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-left"></i></a>';
+
+            buttonWorkflowRight = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-success" title="Proceed to approval workflow for release." style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-right"></i></a>';
+        } else {
+            url = '/workflow/delete?objId=' + rowObject.ObjectId + '&returnUrl=' + returnUrl;
+            deleteButton = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-danger" title="Proceed to Delete." style="margin:2px;font-size: .8em;"><i class="fa fa fa-trash"></i></a>';
+        }
+
+
+        return editButton + deleteButton + buttonWorkflowLeft + buttonWorkflowRight;
     }
 
     $('#search').click(function () {

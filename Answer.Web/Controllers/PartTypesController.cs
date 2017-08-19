@@ -11,7 +11,8 @@ using Msr.Web.ViewModel.Engineering;
 
 namespace Answer.Web.Controllers
 {
-    public class PartTypesController : Controller
+    [Authorize]
+    public class PartTypesController : BaseController
     {
         public ActionResult Index()
         {
@@ -28,6 +29,10 @@ namespace Answer.Web.Controllers
 
             var totalRows = taskService.GetPartTypesQueryable();
 
+            var defaultStatusList = "CREATING,DENIED,APPROVED,APPROVED_BUT_REVISING,APPROVED_BUT_DELETING".Split(',');
+
+            totalRows = totalRows.Where(x => defaultStatusList.Contains(x.Status));
+            
             if (param.where != null && param.where.rules.Any())
             {
                 foreach (var rule in param.where.rules)
@@ -153,7 +158,8 @@ namespace Answer.Web.Controllers
             var model = partTypeservice.GetById(id: id);
 
             var parttype = new AddPartTypesViewModel();
-            parttype = parttype.MapToDto(model);
+            parttype.MapToDto(model);
+
             parttype.Setup();
 
             return View(parttype);

@@ -55,7 +55,7 @@ namespace Msr.Services.ApprovalWorkflows
                     Id = model.Id,
                     AP_STAMP = model.Stamp_Name,
                     AP_STAMP_PIC = model.PictureFiles != null ? string.Join(", ", model.PictureFiles) : "",
-                    NTLogin = "1618"
+                    NTLogin =model.NTLogin
                 };
                 _dbContext.Database.ExecuteStoredProcedure(editApprovalWorkflowsProcedure);
                                
@@ -123,7 +123,7 @@ namespace Msr.Services.ApprovalWorkflows
                     Id = model.Id,
                     AP_STAMP = model.Stamp_Name,
                     AP_STAMP_PIC = model.PictureFiles != null ? string.Join(", ", model.PictureFiles) : "",
-                    NTLogin = "1618"
+                    NTLogin = model.NTLogin
                 };
                 _dbContext.Database.ExecuteStoredProcedure(editApprovalWorkflowsProcedure);
                 model.Id = editApprovalWorkflowsProcedure.newID;

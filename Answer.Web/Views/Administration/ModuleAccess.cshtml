@@ -15,7 +15,8 @@
 
         <div class="col-lg-12">
             <div class="row">
-                @using (Html.BeginForm("AssignAccRecievableRole", "Administration", FormMethod.Post, new { id = "assign-form" }))
+                @Html.Partial("Message")
+                @using (Html.BeginForm("AssignAccRecievableRole", "Administration", FormMethod.Post, new {id = "assign-form"}))
                 {
                     <table class="table table-bordered" style="width: 600px;">
                         <tr>
@@ -29,13 +30,13 @@
                                 <td>@Model.CompaniesToView[index].Name</td>
                                 <td>
                                     @Html.Hidden("items[" + index + "].CoId", Model.CompaniesToView[index].Id)
-                                    @Html.DropDownList("items[" + index + "].RoleId", Model.Roles, new { @class = "form-control select" })
+                                    @Html.DropDownList("items[" + index + "].RoleId", Model.Roles, new {@class = "form-control select"})
                                 </td>
                             </tr>
                         }
 
                     </table>
-                    <input type="submit" value="Update" class="btn btn-success" />
+                    <input type="submit" value="Update" class="btn btn-success"/>
                 }
             </div>
 

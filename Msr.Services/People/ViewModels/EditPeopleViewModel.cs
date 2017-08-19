@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Web.Mvc;
@@ -41,9 +42,11 @@ namespace Msr.Services.People.ViewModels
         [DisplayName("Login ID :")]
         public string LoginId { get; set; }
 
+        [Required]
         [DisplayName("First Name :")]
         public string FirstName { get; set; }
 
+        [Required]
         [DisplayName("Last Name :")]
         public string LastName { get; set; }
 
@@ -93,11 +96,13 @@ namespace Msr.Services.People.ViewModels
         [DisplayName("Pin :")]
         public string PinSecondaryPhoneNumber { get; set; }
 
+        [Required]
         [DisplayName("Emails :")]
         public string EmailPrimary { get; set; }
 
         public string EmailTypePrimary { get; set; }
         public string EmailTextTypePrimary { get; set; }
+        public string EmailIdPrimary { get; set; }
 
         [DisplayName("Name :")]
         public string EmailSecondary { get; set; }
@@ -116,20 +121,10 @@ namespace Msr.Services.People.ViewModels
         public string newID { get; set; }
         [DisplayName("Reference Files :")]
         public List<string> ReferenceFiles { get; set; }
-
         [DisplayName("Picture Files :")]
         public List<string> PictureFiles { get; set; }
-
         public IList<SelectListItem> ListReferenceFiles { get; set; }
-
         public IList<SelectListItem> ListPictureFiles { get; set; }
-
-        //public string SystemStatus { get; set; }
-        //public string DateHired { get; set; }
-        //public string Status { get; set; }
-        //public int? Rev { get; set; }
-        //public string PicRecord { get; set; }
-        //public string RootCoName { get; set; }
         public IEnumerable<SelectListItem> ListRealUserTypes { get; set; }
         public IEnumerable<SelectListItem> ListScreenTypes { get; set; }
         public IEnumerable<SelectListItem> ListLanguages { get; set; }
@@ -339,7 +334,6 @@ namespace Msr.Services.People.ViewModels
             {
                 Text = x.Show,
                 Value = x.Value.ToString()
-                //Selected = true
             }).OrderBy(o => o.Text).ToList();
             ListPictureFiles = documentFilesService.GetSelectedFiles(id: ObjectId, type: "PICTURE").Select(x => new SelectListItem
             {
@@ -357,19 +351,14 @@ namespace Msr.Services.People.ViewModels
                 LastName = model.LastName,
                 OfficialPosition = model.PositionName,
                 BossName = model.BossName,
-                CompanyEditPerson = model.CompanyName,
-                //AddressLocation = model.LocationName,
-                //PrimaryPhoneNumber = model.PrimaryPhoneNumber,
-                //SecondaryPhoneNumber = model.SecondaryPhoneNumber,
-                //EmailPrimary = model.WorkEmailAddress,
+                CompanyEditPerson = model.Company,
                 HireDate = model.DateHired,
                 StatusEditPerson = model.SystemStatus.Trim(),
                 ScreenType = model.ScreenType,
                 LanguageCode = model.LanguageId,
                 IsDepartmentHead = model.IsHead,
-                TimeZone = model.TimeZone
-
-                //= model.RootCoName
+                TimeZone = model.TimeZone,
+                LoginId = model.LoginId
             };
         }
     }

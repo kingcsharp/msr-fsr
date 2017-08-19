@@ -1,12 +1,12 @@
 ﻿@model Msr.Services.Companies.ViewModels.AddCompanyViewModel
 @{
-    ViewBag.Title = "AddCompany";
+    ViewBag.Title = "Create Company";
 }
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="row">
             <h2 class="page-header">
-                Add Company<button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
+                Create Company<button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
             </h2>
             <div class="col-lg-10">
                 @Html.Partial("Message")
@@ -117,8 +117,8 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="col-md-offset-2 col-md-10">
-                                <input type="submit" value="Create" class="btn btn-default" />
+                            <div class="col-md-offset-4 col-md-10">
+                                <input type="submit" value="Create" class="btn btn-success" />
                                 @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-warning" })
                             </div>
                         </div>

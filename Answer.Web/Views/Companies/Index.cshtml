@@ -1,6 +1,6 @@
 ﻿@model  Msr.Web.ViewModel.Engineering.EngineeringViewModel
 @{
-    ViewBag.Title = "Companies Menu";
+    ViewBag.Title = "Companies";
 }
 <div class="container-fluid">
     <div class="side-body padding-top">
@@ -30,7 +30,7 @@
     <script src="~/assets/js/grids/companies.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            LoadCompanyGrid();
+            LoadCompanyGrid('@Url.Action("CompaniesData", "Companies")','@Request.Url.OriginalString');
         });
 
     </script>

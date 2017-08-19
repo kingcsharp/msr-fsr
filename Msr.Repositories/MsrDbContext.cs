@@ -76,17 +76,18 @@ namespace Msr.Repositories
             modelBuilder.Entity<ApprovalGroupsView>().ToTable("Portal_ApprovalGroupsView");
             modelBuilder.Entity<ActivitiesView>().ToTable("Portal_ActivitiesView");
             modelBuilder.Entity<WorkflowStagesView>().ToTable("Portal_WorkflowStages");
-            modelBuilder.Entity<MonitorView>().ToTable("A_V_MONITORS_WITH_TASK_AND_RESULT");
+            //modelBuilder.Entity<MonitorView>().ToTable("A_V_MONITORS_WITH_TASK_AND_RESULT");
             modelBuilder.Entity<ActualPartsView>().ToTable("Portal_ActualPartsView");
             modelBuilder.Entity<ProductsView>().ToTable("Portal_ProductsView");
             modelBuilder.Entity<PeopleObjectView>().ToTable("Portal_PeopleObjectSearchView");
             modelBuilder.Entity<ActualPartViewHistoryView>().ToTable("Portal_ActualPartsViewHistory");
             modelBuilder.Entity<ProductsActualPartView>().ToTable("Portal_ProductsActualPart");
             modelBuilder.Entity<PrePropSearchView>().ToTable("Portal_PREPOP_View");
-           // modelBuilder.Entity<PreProEditView>().ToTable("Portal_PREPOP_View");
+            modelBuilder.Entity<MonitorView>().ToTable("Portal_MonitorView");
             modelBuilder.Entity<LanguagesView>().ToTable("Portal_Languages");
             modelBuilder.Entity<TimeZonesView>().ToTable("Portal_TimeZones");
             modelBuilder.Entity<OfficialPositionView>().ToTable("Portal_RolesApprovedDataQuick");
+            modelBuilder.Entity<PrePropSearchView>().ToTable("Portal_ProcedureStepPrePop");
         }
 
         public DbSet<AspNetUser> AspNetUsers { get; set; }
@@ -131,7 +132,6 @@ namespace Msr.Repositories
         public DbSet<ActualPartViewHistoryView> ActualPartViewHistoryViews { get; set; }
         public DbSet<ProductsActualPartView> ProductsActualPartViews { get; set; }
         public DbSet<PrePropSearchView> PrePropSearchView { get; set; }
-       // public DbSet<PreProEditView> PreProEditView { get; set; }
 
         public DbSet<LanguagesView> LanguagesViews { get; set; }
         public DbSet<TimeZonesView> TimeZonesViews { get; set; }

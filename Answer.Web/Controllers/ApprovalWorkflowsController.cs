@@ -12,7 +12,7 @@ using Msr.Web.ViewModel.Engineering;
 
 namespace Answer.Web.Controllers
 {
-    public class ApprovalWorkflowsController : Controller
+    public class ApprovalWorkflowsController : BaseController
     {
         
         public ActionResult Index()
@@ -35,7 +35,7 @@ namespace Answer.Web.Controllers
                 {
                     if (rule.field == nameof(ApprovalWorkflowsView.Id))
                     {
-                        totalRows = totalRows.Where(x => x.Id == rule.data.ToLower());
+                        totalRows = totalRows.Where(x => x.Id == rule.data);
                     }
                     else if (rule.field == nameof(ApprovalWorkflowsView.Name))
                     {
@@ -95,8 +95,7 @@ namespace Answer.Web.Controllers
             var approvalWorkflowsService = new ApprovalWorkflowsService();
             if (ModelState.IsValid)
             {
-                //Need to dynamic 
-               model.NTLogin = "1618";
+                model.NTLogin = GetCurrentUser().Id;
                 var response = approvalWorkflowsService.Edit(model: model);
                 if (response)
                 {
@@ -124,8 +123,7 @@ namespace Answer.Web.Controllers
             var approvalWorkflowsService = new ApprovalWorkflowsService();
             if (ModelState.IsValid)
             {
-                //Need to dynamic 
-                model.NTLogin = "1618";
+                model.NTLogin = GetCurrentUser().Id;
                 var response = approvalWorkflowsService.Add(model: model);
                 if (response)
                 {

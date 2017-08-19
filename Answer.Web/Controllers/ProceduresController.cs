@@ -33,7 +33,7 @@ namespace Answer.Web.Controllers
             _userService = new UserService();
         }
 
-        
+
         public ActionResult Index()
         {
             var viewModel = new EngineeringViewModel();
@@ -42,6 +42,13 @@ namespace Answer.Web.Controllers
 
             return View(viewModel);
         }
+        public ActionResult GetProcedures(string callBackId)
+        {
+            ViewBag.CallBackId = callBackId;
+
+            return PartialView("_Procedures");
+        }
+
         public ActionResult ProceduresData(JqGridParam param)
         {
             var procedureService = new ProceduresService();
@@ -125,7 +132,7 @@ namespace Answer.Web.Controllers
         public ActionResult Create()
         {
             var saveProcedureViewModel = new SaveProcedureViewModel();
-            
+
             saveProcedureViewModel.Setup(new ProceduresService(), new RoleService(), new ProcedureVerbsService());
 
             return View(saveProcedureViewModel);
@@ -170,7 +177,7 @@ namespace Answer.Web.Controllers
             var procedureService = new ProceduresService();
 
             var model = procedureService.GetProcedureById(id: id);
-            
+
             saveProcedureViewModel = saveProcedureViewModel.MapToDto(model);
             saveProcedureViewModel.Setup(new ProceduresService(), new RoleService(), new ProcedureVerbsService());
 
@@ -222,11 +229,11 @@ namespace Answer.Web.Controllers
             var doc = new XmlDocument();
             doc.Load(filePath + approvedData.Object_Id + ".xml");
 
-           var html = GetHtml(Server.MapPath(XSLTPath), doc.InnerXml.ToString());
+            var html = GetHtml(Server.MapPath(XSLTPath), doc.InnerXml.ToString());
 
             return View((object)html);
         }
-        
+
         private string GetHtml(string xsltPath, string xml)
         {
             var stream = new MemoryStream(ASCIIEncoding.Default.GetBytes(xml));

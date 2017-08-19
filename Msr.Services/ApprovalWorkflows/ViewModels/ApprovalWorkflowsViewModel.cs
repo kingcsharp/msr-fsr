@@ -47,6 +47,7 @@ namespace Msr.Services.ApprovalWorkflows.ViewModels
         public IList<SelectListItem> ListActivities { get; set; }
         [DisplayName("Stamp Picture File :")]
         public IList<SelectListItem> ListPictureFiles { get; set; }        
+
         public void Setup(DocumentFilesService documentFilesService, ApprovalWorkflowsService approvalWorkflowsService )
         {
             ListWf_Stages = approvalWorkflowsService.GetWorkflowStages().Select(x => new SelectListItem
@@ -65,8 +66,10 @@ namespace Msr.Services.ApprovalWorkflows.ViewModels
                 Text = x.Name,
                 Value = x.Id.ToString(),
                 Selected = true
-            }).OrderBy(o => o.Text).ToList();            
-            Wf_Stages = approvalWorkflowsService.GetApprovalWorkflowStagesByWF_Id(id: Id).Select(x => x.WF_Stage_Id).ToList();          
+            }).OrderBy(o => o.Text).ToList();
+
+            Wf_Stages = approvalWorkflowsService.GetApprovalWorkflowStagesByWF_Id(id: Id).Select(x => x.WF_Stage_Id).ToList(); 
+            
             Activities = approvalWorkflowsService.GetApprovalWorkflowsActivitiesByWF_Id(id: Id).Select(x => x.Act_Id).ToList();
 
         }
