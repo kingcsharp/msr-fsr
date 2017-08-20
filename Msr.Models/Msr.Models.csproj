@@ -131,6 +131,7 @@
     <Compile Include="Parts\Part.cs" />
     <Compile Include="Parts\PartsView.cs" />
     <Compile Include="Parts\PartsWithTaskAndResult.cs" />
+    <Compile Include="Parts\PartsSafetyStock.cs" />
     <Compile Include="PartTypes\PartTypesView.cs" />
     <Compile Include="Parts\SelectInternalPart.cs" />
     <Compile Include="Parts\SelectPartCustomerExecptions.cs" />

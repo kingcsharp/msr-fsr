@@ -3,17 +3,33 @@ using Msr.Services.jqGrid;
 using Msr.Services.Parts;
 using Msr.Web.ViewModel.Engineering;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using Answer.Web.ViewModel;
 using Msr.Services.Documents;
 using Msr.Services.Parts.ViewModels;
 using Msr.Services.PartTypes;
+using Msr.Services.Locations;
+using Msr.Services.Roles;
+using Msr.Services.Roles.Messages;
 
 namespace Answer.Web.Controllers
 {
     [Authorize]
     public class PartsController : BaseController
     {
+        private readonly LocationService _locationService;
+        private readonly PartsService _partsService;
+        private readonly RoleService _roleService;
+
+        public PartsController()
+        {
+            _locationService = new LocationService();
+            _partsService = new PartsService();
+            _roleService = new RoleService();
+        }
+
         // GET: Parts
         public ActionResult Index()
         {
@@ -230,6 +246,52 @@ namespace Answer.Web.Controllers
             TempData["ErrorMessage"] = "Something went wrong.";
             return RedirectToAction("Index");
         }
-      
+
+        public ActionResult EditSafetyStock(string id)
+        {
+            EditSafetyStockViewModel viewModel = new EditSafetyStockViewModel()
+            {
+                PartObjectId = id
+            };
+            var currentUser = GetCurrentUser();
+            var locations = _locationService.GetLocationsForSafetyStock(currentUser.Root_Company);
+            List<PartsSafetyStock> partSafetyStocks = _partsService.GetPartSafetyStocksByLocation(locations.Select(x => x.Id), id);
+            List<RoleResult> roles = _roleService.GetActiveRoles();
+            viewModel.Roles.Add(new SelectListItem { Value = "", Text = "--Select Role--" });
+
+            viewModel.Roles.AddRange(roles.Select(x => new SelectListItem
+            {
+                Value = x.Id,
+                Text = x.Name
+            }).OrderBy(o => o.Text));
+
+            foreach (var location in locations)
+            {
+                var part = partSafetyStocks.SingleOrDefault(x => x.LocationId == location.Id) ?? new PartsSafetyStock();
+                
+                if (!string.IsNullOrEmpty(part.Id))
+                {
+                    part.RolesAssignedToWarn = _partsService.GetSafetyStockRoles(part.Id, "WARN");
+                    part.RolesAssignedToFail = _partsService.GetSafetyStockRoles(part.Id, "FAIL");
+                }
+
+                part.LocationName = location.CompleteName;
+                part.LocationId = location.Id;
+                viewModel.PartsSafetyStocks.Add(part);
+            }
+
+            return View(viewModel);
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult EditSafetyStock(string partObjectId, List<PartsSafetyStock> partsSafetyStocks)
+        {
+            foreach (var safetyStock in partsSafetyStocks)
+            {
+                _partsService.UpdatePartsSafetyStocks(safetyStock, partObjectId, "1618");
+            }
+
+            return RedirectToAction("EditSafetyStock");
+        }
     }
 }

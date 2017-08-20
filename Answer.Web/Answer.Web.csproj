@@ -227,6 +227,7 @@
     <Compile Include="ViewModel\Administration\EditglobalWordsIIViewModel.cs" />
     <Compile Include="ViewModel\Administration\ModuleAccessViewViewModel.cs" />
     <Compile Include="ViewModel\Administration\ReAssignBossViewModel.cs" />
+    <Compile Include="ViewModel\EditSafetyStockViewModel.cs" />
     <Compile Include="ViewModel\EditUserProfileViewModel.cs" />
     <Compile Include="ViewModel\Engineering\EngineeringViewModel.cs" />
     <Compile Include="ViewModel\Help\SupportViewModel.cs" />
@@ -1048,6 +1049,7 @@
     <Content Include="Views\ShowPurchaseStatus\Index.cshtml" />
     <Content Include="Views\ShowPurchaseStatus\_Purchase.cshtml" />
     <Content Include="Views\Shared\_PreProTheories.cshtml" />
+    <Content Include="Views\Parts\EditSafetyStock.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
