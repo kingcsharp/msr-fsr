@@ -254,6 +254,7 @@
     <Compile Include="Orders\ViewModels\SaveWorkOrderViewModel.cs" />
     <Compile Include="Parts\Messages\AddPartTypesTaskRequest.cs" />
     <Compile Include="Parts\PartsService.cs" />
+    <Compile Include="Parts\Procedures\PartSaveSafetyLevelSettingProcedure.cs" />
     <Compile Include="Parts\ViewModels\AddPartTypesViewModel.cs" />
     <Compile Include="Parts\Procedures\DeleteFileProcedure.cs" />
     <Compile Include="Parts\Procedures\DeletePartProcedure.cs" />
@@ -287,6 +288,7 @@
     <Compile Include="People\ViewModels\EditPeopleViewModel.cs" />
     <Compile Include="People\ViewModels\AddPeopleViewModel.cs" />
     <Compile Include="Procedures\ProcedureService.cs" />
+    <Compile Include="Procedures\Procedures\AdminSqlToRunQueUpProcedure.cs" />
     <Compile Include="Procedures\Procedures\DeleteProcedureRolesProcedure.cs" />
     <Compile Include="Procedures\Procedures\SaveFileProcedure.cs" />
     <Compile Include="Procedures\Procedures\SaveProcedureProcedure.cs" />

@@ -5,10 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
-using System.Data.Entity;
 using Msr.Services.Parts.Procedures;
 using EntityFrameworkExtras.EF6;
 using Msr.Services.Parts.ViewModels;
@@ -254,6 +250,99 @@ namespace Msr.Services.Parts
 
                 return false;
             }
+        }
+
+        public List<PartsSafetyStock> GetPartSafetyStocksByLocation(IEnumerable<string> locationIds, string partObjectId)
+        {
+            var locationIdsParam = new SqlParameter("@locationIdsParam", String.Join("','", locationIds));
+            var partObjectIdParam = new SqlParameter("@partObjectIdParam", partObjectId);
+            string sql =
+                string.Format(
+                    @"SELECT Id, LOCATION_ID AS LocationId, MIN_LEVEL AS MinLevel, MIN_WARNING_LEVEL AS MinWarningLevel, MAX_WARNING_LEVEL AS MaxWarningLevel, " +
+                    "MAX_LEVEL AS MaxLevel FROM A_PARTS_SAFETY_STOCK_LEVELS WHERE LOCATION_ID IN ('{0}') AND PART_OBJ_ID = '{1}'",
+                    String.Join("','", locationIds), partObjectId);
+            var result =
+                _dbContext.Database.SqlQuery<PartsSafetyStock>(sql).ToList();
+
+            return result;
+        }
+
+        public List<string> GetSafetyStockRoles(string safetyStockId, string emailType)
+        {
+            var safetyStockIdParam = new SqlParameter("@safetyStockIdParam", safetyStockId);
+            var emailTypeParam = new SqlParameter("@emailTypeParam", emailType);
+
+            var safetyStockRoles = _dbContext.Database.SqlQuery<string>("SELECT ROLE_ID FROM A_V_PARTS_SAFETY_STOCK_ROLES WHERE SAFETY_STOCK_ID = @safetyStockIdParam AND EMAIL_TYPE = @emailTypeParam ORDER BY ROLE_NAME",
+                safetyStockIdParam, emailTypeParam);
+            return safetyStockRoles.ToList();
+        }
+
+        public void UpdatePartsSafetyStocks(PartsSafetyStock partsSafetyStock, string partObjectId, string loginId)
+        {
+            var partSaveSafetyLevelSettingProcedure = new PartSaveSafetyLevelSettingProcedure()
+            {
+                LocId = partsSafetyStock.LocationId,
+                StrNTLogin = "1618",
+                MinLevel = partsSafetyStock.MinLevel,
+                MaxWarningLevel = partsSafetyStock.MaxWarningLevel,
+                MaxLevel = partsSafetyStock.MaxLevel,
+                MinWarningLevel = partsSafetyStock.MinWarningLevel,
+                PartObjId = partObjectId
+            };
+
+            _dbContext.Database.ExecuteStoredProcedure(partSaveSafetyLevelSettingProcedure);
+
+            string safetyStockId =
+                GetSinglePartSafetyStockIdByLocation(partsSafetyStock.LocationId, partObjectId);
+
+            if (!string.IsNullOrEmpty(safetyStockId))
+            {
+                var safetyStockIdParam = new SqlParameter("@safetyStockIdParam", safetyStockId);
+
+                var deleteSafetyStockRoles =
+                    _dbContext.Database.ExecuteSqlCommand(
+                        "DELETE FROM A_PARTS_SAFETY_STOCK_ROLES WHERE SAFETY_STOCK_ID = @safetyStockIdParam",
+                        safetyStockIdParam);
+
+                if (partsSafetyStock.RolesAssignedToFail != null)
+                {
+                    foreach (var role in partsSafetyStock.RolesAssignedToFail)
+                    {
+                        InsertSafetyStock(role, safetyStockId, loginId, "FAIL");
+                    }
+                }
+
+                if (partsSafetyStock.RolesAssignedToWarn != null)
+                {
+                    foreach (var role in partsSafetyStock.RolesAssignedToWarn)
+                    {
+                        InsertSafetyStock(role, safetyStockId, loginId, "WARN");
+                    }
+                }
+            }
+        }
+
+        private void InsertSafetyStock(string role, string safetyStockId, string loginId, string emailType)
+        {
+            var safetyStockIdParam = new SqlParameter("@safetyStockIdParam", safetyStockId);
+            var roleParam = new SqlParameter("@roleParam", role);
+            var loginIdParam = new SqlParameter("@loginIdParam", loginId);
+            var emailTypeParam = new SqlParameter("@emailTypeParam", emailType);
+            var safetyStockRole = _dbContext.Database.ExecuteSqlCommand("INSERT INTO A_PARTS_SAFETY_STOCK_ROLES (ID,SAFETY_STOCK_ID,ROLE_ID,EMAIL_TYPE,DRCM,MODBY) " +
+                                                                    "VALUES (newID(), @safetyStockIdParam, @roleParam, @emailTypeParam, getDate(), @loginIdParam)",
+            safetyStockIdParam, roleParam, emailTypeParam, loginIdParam);
+        }
+
+        public string GetSinglePartSafetyStockIdByLocation(string locationId, string partObjectId)
+        {
+            var locationIdsParam = new SqlParameter("@locationIdsParam", locationId);
+            var partObjectIdParam = new SqlParameter("@partObjectIdParam", partObjectId);
+            var result =
+                _dbContext.Database.SqlQuery<string>(
+                    "SELECT Id FROM A_PARTS_SAFETY_STOCK_LEVELS WHERE LOCATION_ID = @locationIdsParam AND PART_OBJ_ID = @partObjectIdParam",
+                    locationIdsParam, partObjectIdParam).SingleOrDefault();
+
+            return result;
         }
     }
 }

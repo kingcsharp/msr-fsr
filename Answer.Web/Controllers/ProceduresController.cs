@@ -263,6 +263,7 @@ namespace Answer.Web.Controllers
             var procedureName = _proceduresService.GetProcedureName(id);
 
             vm.ProcedureName = procedureName;
+            vm.Id = id;
 
             return View(vm);
         }
@@ -272,11 +273,12 @@ namespace Answer.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                model.LoginId = "1618";
                 var response = _proceduresService.SaveAssignProcedure(model);
 
                 if (!response.HasErrors())
                 {
-                    TempData["SuccessMessage"] = "Procedure has been created successfully.";
+                    TempData["SuccessMessage"] = "Procedure has been assigned successfully.";
 
                     return RedirectToAction("Index");
                 }

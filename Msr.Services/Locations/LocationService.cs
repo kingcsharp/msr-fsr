@@ -120,5 +120,15 @@ namespace Msr.Services.Locations
 
             return result;
         }
+
+        public List<LocationView> GetLocationsForSafetyStock(string rootCompany)
+        {
+            return GetLocationsQueryable()
+                .Where(
+                    x =>
+                        x.Status.StartsWith("APPROVED") && x.CreatingCo == rootCompany &&
+                        x.Root != null && x.CompleteName != null)
+                .OrderBy(x => x.CompleteName).ToList();
+        }
     }
 }

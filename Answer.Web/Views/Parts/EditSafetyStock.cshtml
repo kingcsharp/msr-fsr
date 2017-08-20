@@ -1,0 +1,81 @@
+﻿@model Answer.Web.ViewModel.EditSafetyStockViewModel
+@{
+    ViewBag.Title = "Edt Safety Stock";
+}
+
+<div class="container-fluid">
+    <div class="side-body padding-top">
+        <div class="row">
+            <h2 class="page-header">
+                View Part
+            </h2>
+            <div class="col-lg-10">
+                <section class="panel">
+                    <div class="panel-body bio-graph-info">
+                        @using (Html.BeginForm())
+                        {
+                            @Html.HiddenFor(x => x.PartObjectId)
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Location</th>
+                                        <th>Min Stock</th>
+                                        <th>Min Warn Stock</th>
+                                        <th>Max Warn Stock</th>
+                                        <th>Max Stock</th>
+                                        <th>Warning Roles</th>
+                                        <th>Failing Roles</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int index = 0; index < Model.PartsSafetyStocks.Count; index++)
+                                    {
+                                        var roleListWarn = new List<SelectListItem>();
+                                        var roleListFail = new List<SelectListItem>();
+
+                                        Model.Roles.ForEach(x =>
+                                        {
+                                            roleListWarn.Add(new SelectListItem()
+                                            {
+                                                Value = x.Value,
+                                                Text = x.Text,
+                                                Selected = Model.PartsSafetyStocks[index].RolesAssignedToWarn.Contains(x.Value)
+                                            });
+
+                                            roleListFail.Add(new SelectListItem()
+                                            {
+                                                Value = x.Value,
+                                                Text = x.Text,
+                                                Selected = Model.PartsSafetyStocks[index].RolesAssignedToFail.Contains(x.Value)
+                                            });
+                                        });
+
+                                        <tr>
+                                            <td>
+                                                @Model.PartsSafetyStocks[index].LocationName
+                                                @Html.HiddenFor(x => x.PartsSafetyStocks[index].LocationName)
+                                                @Html.HiddenFor(x => x.PartsSafetyStocks[index].LocationId)
+                                            </td>
+                                            <td>@Html.TextBoxFor(x => Model.PartsSafetyStocks[index].MinLevel)</td>
+                                            <td>@Html.TextBoxFor(x => Model.PartsSafetyStocks[index].MinWarningLevel)</td>
+                                            <td>@Html.TextBoxFor(x => Model.PartsSafetyStocks[index].MaxWarningLevel)</td>
+                                            <td>@Html.TextBoxFor(x => Model.PartsSafetyStocks[index].MaxLevel)</td>
+                                            <td>@Html.DropDownListFor(model => Model.PartsSafetyStocks[index].RolesAssignedToWarn, roleListWarn, new { @class = "form-control select selectpeoples", multiple = "multiple" })</td>
+                                            <td>@Html.DropDownListFor(model => Model.PartsSafetyStocks[index].RolesAssignedToFail, roleListFail, new { @class = "form-control select selectpeoples", multiple = "multiple" })</td>
+                                        </tr>
+                                    }
+                                    <tr>
+                                        <td colspan="7">
+                                            <button type="submit">Finished</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+                        }
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
