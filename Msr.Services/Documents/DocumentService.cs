@@ -59,13 +59,13 @@ namespace Msr.Services.Documents
 
         public List<SelectFile> GetSelectedTheories(string id)
         {
-          
+
             var objID = new SqlParameter("@ID", id == null ? "0" : id);
 
             //need to be dynamic
             var NTLogin = new SqlParameter("@strNTLogin", "1618");
 
-           var result = _dbContext.Database.SqlQuery<SelectFile>("EXEC A_SP_THEORY_GET_REF_THEORY  @ID, @strNTLogin", objID, NTLogin).ToList();
+            var result = _dbContext.Database.SqlQuery<SelectFile>("EXEC A_SP_THEORY_GET_REF_THEORY  @ID, @strNTLogin", objID, NTLogin).ToList();
 
             return result;
 
@@ -95,9 +95,9 @@ namespace Msr.Services.Documents
                     Name = model.Name,
                     Comments = model.Comments,
                     SecurityLevel = model.ApprovalStatus,
-                    RolesToView = model.Roles != null ? string.Join(", ", model.Roles) : "",
-                    ReferenceObjects = model.ReferenceObject != null ? string.Join(", ", model.ReferenceObject) : "",
-                    ReferenceTheory = model.ReferenceTheory != null ? string.Join(", ", model.ReferenceTheory) : "",
+                    RolesToView = model.Roles != null ? string.Join(", ", model.Roles) : null,
+                    ReferenceObjects = model.ReferenceObject != null ? string.Join(", ", model.ReferenceObject) : null,
+                    ReferenceTheory = model.ReferenceTheory != null ? string.Join(", ", model.ReferenceTheory) : null,
                     NTLogin = model.NTLogin
 
                 };
@@ -126,9 +126,9 @@ namespace Msr.Services.Documents
                     Name = model.Name,
                     Comments = model.Comments,
                     SecurityLevel = model.ApprovalStatus,
-                    RolesToView = model.Roles != null ? string.Join(", ", model.Roles) : DBNull.Value.ToString(),
-                    ReferenceObjects = model.ReferenceObject != null ? string.Join(", ", model.ReferenceObject) : DBNull.Value.ToString(),
-                    ReferenceTheory = model.ReferenceTheory != null ? string.Join(", ", model.ReferenceTheory) : DBNull.Value.ToString(),
+                    RolesToView = model.Roles != null ? string.Join(", ", model.Roles) : null,
+                    ReferenceObjects = model.ReferenceObject != null ? string.Join(", ", model.ReferenceObject) : null,
+                    ReferenceTheory = model.ReferenceTheory != null ? string.Join(", ", model.ReferenceTheory) : null,
                     NTLogin = model.NTLogin
 
                 };

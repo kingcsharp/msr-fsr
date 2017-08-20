@@ -9,7 +9,6 @@ using Msr.Services.People.ViewModels;
 using Msr.Services.Companies;
 using Msr.Infrastructure.Helpers;
 using Msr.Services.Documents;
-using Msr.Models.ApprovalStages;
 
 namespace Answer.Web.Controllers
 {
@@ -27,8 +26,10 @@ namespace Answer.Web.Controllers
         public ActionResult PeopleData(JqGridParam param)
         {
             var peopleService = new PeopleService();
-          
-            var totalRows = peopleService.GetPeople().Where(x=> x.Status != "DELETED");
+
+            var defaultStatusList = "CREATING,DENIED,APPROVED,APPROVED_BUT_REVISING,APPROVED_BUT_DELETING".Split(',');
+
+            var totalRows = peopleService.GetPeople().Where(x => defaultStatusList.Contains(x.Status));
 
             if (param.where != null && param.where.rules.Any())
             {

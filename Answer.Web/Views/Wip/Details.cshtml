@@ -59,15 +59,15 @@
                         <div id="parts-table" class="col-sm-12">
                             <table class="table table-responsive table-condensed table-bordered">
                                 <tbody>
-                                    @if (Model.FileSearchResult != null)
-                                    {
-                                        <tr><td>@Model.FileSearchResult.FillObjDesc qty:@Model.FileSearchResult.Qty </td></tr>
-                                    }
+                                @if (Model.FileSearchResult != null)
+                                {
+                                    <tr><td>@Model.FileSearchResult.FillObjDesc qty:@Model.FileSearchResult.Qty </td></tr>
+                                }
 
-                                    @foreach (var part in Model.Parts)
-                                    {
-                                        <tr><td>@part</td></tr>
-                                    }
+                                @foreach (var part in Model.Parts)
+                                {
+                                    <tr><td>@part</td></tr>
+                                }
                                 </tbody>
                             </table>
                         </div>
@@ -77,22 +77,22 @@
                         <div id="purchase" class="tab-pane fade">
                             <table class="table table-responsive table-condensed table-bordered">
                                 <tbody>
-                                    <tr>
-                                        <th nowrap style="text-align: right">Customer:</th>
-                                        <td>@Model.FileSearchResult.CustomerName</td>
-                                    </tr>
-                                    <tr>
-                                        <th nowrap style="text-align: right">Product:</th>
-                                        <td>@Model.FileSearchResult.ProductName</td>
-                                    </tr>
-                                    <tr>
-                                        <th nowrap style="text-align: right">Procedure:</th>
-                                        <td>@Model.FileSearchResult.ProcedureName</td>
-                                    </tr>
-                                    <tr>
-                                        <th nowrap style="text-align: right">Purchase Item #:</th>
-                                        <td>@Model.FileSearchResult.PurchItemId</td>
-                                    </tr>
+                                <tr>
+                                    <th nowrap style="text-align: right">Customer:</th>
+                                    <td>@Model.FileSearchResult.CustomerName</td>
+                                </tr>
+                                <tr>
+                                    <th nowrap style="text-align: right">Product:</th>
+                                    <td>@Model.FileSearchResult.ProductName</td>
+                                </tr>
+                                <tr>
+                                    <th nowrap style="text-align: right">Procedure:</th>
+                                    <td>@Model.FileSearchResult.ProcedureName</td>
+                                </tr>
+                                <tr>
+                                    <th nowrap style="text-align: right">Purchase Item #:</th>
+                                    <td>@Model.FileSearchResult.PurchItemId</td>
+                                </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -124,9 +124,9 @@
                             }
 
                       
-                                <li class="step-task step @stepCss" data-stepId="@step.StepId" data-phStepId="@step.PhStepId" data-fill-id="@Model.FillId" title="@step.Description">
-                                    <div>@step.Description</div>
-                                </li>
+                            <li class="step-task step @stepCss" data-stepId="@step.StepId" data-phStepId="@step.PhStepId" data-fill-id="@Model.FillId" title="@step.Description">
+                                <div>@step.Description</div>
+                            </li>
                            
                         }
                     </ul>
@@ -174,9 +174,9 @@
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">Print Traveler Report</h4>
             </div>
-            <div class="modal-body"></div>
+            <div class="modal-body" id="print-traveler-container"></div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-info" onclick="js:window.print()"><i class="fa fa-print"></i> Print Report</button>
+                <button type="button" class="btn btn-info" onclick="PrintReport('print-traveler-container')"><i class="fa fa-print"></i> Print Report</button>
                 <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close-o"></i> Close</button>
             </div>
         </div>
@@ -191,10 +191,10 @@
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">Print Other</h4>
             </div>
-            <div class="modal-body"></div>
+            <div class="modal-body" id="print-other-container"></div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-info" id="display-report"><i class="fa fa-print"></i> Display</button>
-                <button type="button" class="btn btn-info" id="print-other-report" onclick="js:window.print()" style="display: none"><i class="fa fa-print"></i> Print Report</button>
+                <button type="button" class="btn btn-info" id="print-other-report" onclick="PrintReport('print-other-content')" style="display: none"><i class="fa fa-print"></i> Print Report</button>
                 <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close-o"></i> Cancel</button>
             </div>
         </div>
@@ -220,6 +220,7 @@
 <input type="hidden" value="@Model.NcrCount" id="ncr-count" />
 <input type="hidden" value="@Model.FileSearchResult.FillObjectId" id="fill-obj-id" />
 <input type="hidden" value="@Model.FillId" id="fill-id" />
+
 @section scripts
 {
     <script type="text/javascript" src="~/assets/js/jquery.flexslider.js"></script>
@@ -230,5 +231,32 @@
     <script src="~/assets/js/plugins/bootstrap3/bootstrap-dialog.min.js"></script>
     <script type="text/javascript" src="~/assets/js/jquery.mockjax.js"></script>
     <script type="text/javascript" src="~/assets/js/wip-detail.js"></script>
+    
+    <script type="text/javascript">
+        
+        function PrintReport(id) {
+            
+            var contents = document.getElementById(id).innerHTML;
+            var frame1 = document.createElement('iframe');
 
+            frame1.name = "frame1";
+            frame1.style.position = "absolute";
+            document.body.appendChild(frame1);
+            var frameDoc = frame1.contentWindow ? frame1.contentWindow : frame1.contentDocument.document ? frame1.contentDocument.document : frame1.contentDocument;
+            frameDoc.document.open();
+            frameDoc.document.write('<html><head><title></title>');
+            frameDoc.document.write('</head><body>');
+            frameDoc.document.write(contents);
+            frameDoc.document.write('</body></html>');
+            document.close();
+
+            setTimeout(function () {
+                window.frames["frame1"].focus();
+                window.frames["frame1"].print();
+                document.body.removeChild(frame1);
+            }, 500);
+
+            return false;
+        }
+    </script>
 }

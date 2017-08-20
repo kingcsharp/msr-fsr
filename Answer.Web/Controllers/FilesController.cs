@@ -14,7 +14,7 @@ using Msr.Services.S3;
 
 namespace Answer.Web.Controllers
 {
-    public class FilesController : Controller
+    public class FilesController : BaseController
     {
         public ActionResult Index()
         {
@@ -137,11 +137,11 @@ namespace Answer.Web.Controllers
                 imageModel.SrcChanged = null;
                 imageModel.DocChanged = null;
                 imageModel.DropSrc = "YES";
-                imageModel.NTLogin = "1618";
+                imageModel.NTLogin = GetCurrentUser().Id;
 
                 fileService.SaveFileUpload(imageModel);
             }
-            return Json("Ok", JsonRequestBehavior.AllowGet);
+            return Json(new UploadedImageView(), JsonRequestBehavior.AllowGet);
         }
         public ActionResult ViewFile(string callBackitem)
         {

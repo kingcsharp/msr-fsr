@@ -11,7 +11,7 @@ using System.Web.Mvc;
 
 namespace Answer.Web.Controllers
 {
-    public class ApprovalGroupsController : Controller
+    public class ApprovalGroupsController : BaseController
     {
         public ActionResult Index()
         {

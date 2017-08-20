@@ -11,7 +11,7 @@ using Msr.Services.ProductsActualParts;
 
 namespace Answer.Web.Controllers
 {
-    public class ProductsActualPartsController : Controller
+    public class ProductsActualPartsController : BaseController
     {
         // GET: ProductsActualParts
         public ActionResult Index(string id)

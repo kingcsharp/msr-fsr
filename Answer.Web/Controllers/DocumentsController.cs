@@ -72,7 +72,12 @@ namespace Answer.Web.Controllers
                     }
                     else if (rule.field == nameof(DocumentView.ApprovalDate))
                     {
-                        totalRows = totalRows.Where(x => x.ApprovalDate.ToString().Contains(rule.data));
+                        DateTime value;
+                        if (DateTime.TryParse(rule.data, out value))
+                        {
+                            totalRows = totalRows.Where(q => q.ApprovalDate.HasValue && q.ApprovalDate.Value.Day == value.Day &&
+                                                             q.ApprovalDate.Value.Month == value.Month && q.ApprovalDate.Value.Year == value.Year);
+                        }
                     }
                     else if (rule.field == nameof(DocumentView.LockedByName))
                     {

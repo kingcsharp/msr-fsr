@@ -12,7 +12,7 @@ using Msr.Services.Users;
 
 namespace Answer.Web.Controllers
 {
-    public class RolesController : Controller
+    public class RolesController : BaseController
     {
         public ActionResult Index()
         {
@@ -60,6 +60,14 @@ namespace Answer.Web.Controllers
                         {
                             totalRows = totalRows.Where(x => x.Revision == value);
                         }
+                    }
+                    else if (rule.field == nameof(RolesView.LockedBy))
+                    {
+                        totalRows = totalRows.Where(x => x.LockedBy.ToLower() == rule.data.ToLower());
+                    }
+                    else if (rule.field == nameof(RolesView.LockedByName))
+                    {
+                        totalRows = totalRows.Where(x => x.LockedByName.ToLower() == rule.data.ToLower());
                     }
                     else if (rule.field == nameof(RolesView.Status))
                     {
@@ -120,7 +128,7 @@ namespace Answer.Web.Controllers
             if (ModelState.IsValid)
             {
                 //Need to dynamic 
-                model.NTLogin = "1618";
+                model.NTLogin = GetCurrentUser().Id;
 
                 var response = roleService.Create(model: model);
 
@@ -166,10 +174,9 @@ namespace Answer.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                //Need to dynamic 
-                model.NTLogin = "1618";
+                model.NTLogin = GetCurrentUser().Id;
 
-                var response = roleService.Edit(model: model);
+                var response = roleService.Save(model: model);
 
                 if (response)
                 {

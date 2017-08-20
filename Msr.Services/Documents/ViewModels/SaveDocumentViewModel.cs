@@ -19,6 +19,10 @@ namespace Msr.Services.Documents.ViewModels
             ListReferenceObjects = new List<SelectListItem>();
             ListReferenceTheories = new List<SelectListItem>();
             ListRoles = new List<SelectListItem>();
+            Roles = new List<string>();
+            ReferenceFiles = new List<string>();
+            ReferenceObject = new List<string>();
+            ReferenceTheory = new List<string>();
         }
         [Display(Name = "Document #:")]
         public string Id { get; set; }

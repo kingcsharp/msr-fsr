@@ -9,17 +9,6 @@
             <h2 class="page-header">
                 Edit Actual Part
                 <div class=" pull-right" data-toggle="modal">
-                    <!-- Split button -->
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-warning">Action</button>
-                        <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="caret"></span>
-                            <span class="sr-only">Toggle Dropdown</span>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a href="~/parts/deletePart/@Model.Id">Delete</a></li>
-                        </ul>
-                    </div>
 
                 </div>
             </h2>
@@ -106,7 +95,7 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-offset-4 col-md-10">
-                                        <input type="submit" value="Update" class="btn btn-default" />
+                                        <input type="submit" value="Submit" class="btn btn-success" />
                                         @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-warning" })
                                     </div>
                                 </div>

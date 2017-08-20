@@ -229,7 +229,7 @@
                         </div>*@
     <div class="form-group">
         <div class="col-md-offset-4 col-md-10">
-            <input type="submit" value="Update" class="btn btn-success" />
+            <input type="submit" value="Submit" class="btn btn-success" />
             @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-warning" })
         </div>
     </div>
@@ -247,8 +247,11 @@
     <script src="//rawgit.com/saribe/eModal/master/dist/eModal.min.js"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+
     <script type="text/javascript">
+        
         $('#RealUser').on('change', EnableDisableLogin);
+
         function EnableDisableLogin() {
             var SelectedValue = $('#RealUser').val();
             if (SelectedValue == "ANSWER_USER") {
@@ -258,7 +261,9 @@
                 $('#LoginId').prop('disabled', true);
             }
         };
+
         $(function () { // will trigger when the document is ready
+
             $('.datepicker').datepicker({
                 format: 'mm/dd/yyyy',
                 autoclose: true

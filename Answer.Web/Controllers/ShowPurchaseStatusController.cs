@@ -11,7 +11,7 @@ using Msr.Services.ShowPurchaseStatus;
 
 namespace Answer.Web.Controllers
 {
-    public class ShowPurchaseStatusController : Controller
+    public class ShowPurchaseStatusController : BaseController
     {
         // GET: ShowPurchaseStatus
         public ActionResult Index(string id)

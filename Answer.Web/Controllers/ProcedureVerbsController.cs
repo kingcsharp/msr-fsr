@@ -9,7 +9,7 @@ using Msr.Services.ProcedureVerbs.ViewModels;
 
 namespace Answer.Web.Controllers
 {
-    public class ProcedureVerbsController : Controller
+    public class ProcedureVerbsController : BaseController
     {
         public ActionResult Index()
         {

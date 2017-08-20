@@ -44,7 +44,7 @@ namespace Msr.Models.Orders
         public string ReferencePo { get; set; }
         public string ProcName { get; set; }
         public double? Qty { get; set; }
-        public Single FillQty { get; set; }
+        public Single? FillQty { get; set; }
         public string Status { get; set; }
         public string FillId { get; set; }
         public string MtNum { get; set; }

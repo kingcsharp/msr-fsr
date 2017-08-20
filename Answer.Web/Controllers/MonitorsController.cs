@@ -10,7 +10,7 @@ using System.Web.Mvc;
 
 namespace Answer.Web.Controllers
 {
-    public class MonitorsController : Controller
+    public class MonitorsController : BaseController
     {
         public ActionResult Index()
         {

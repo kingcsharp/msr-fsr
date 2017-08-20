@@ -342,12 +342,12 @@ namespace Msr.Services.Parts.ViewModels
                 Value = x.Value.ToString(),
             }).OrderBy(o => o.Text).ToList();
 
-            var result = partsService.GetInternalPart(id: Id);
-            if (result != null)
-            {
-                InternalEqualParts = partsService.GetInternalPart(id: Id).Id;
-                SelectedInternalEqualParts = partsService.GetInternalPart(id: Id).Name;
-            }
+            ////var result = partsService.GetInternalPart(id: Id);
+            ////if (result != null)
+            ////{
+            ////    InternalEqualParts = partsService.GetInternalPart(id: Id).Id;
+            ////    SelectedInternalEqualParts = partsService.GetInternalPart(id: Id).Name;
+            ////}
 
             ListCustomerExceptions = partsService.GetPartCustomerExceptions(id: Id).Select(x => new SelectListItem
             {

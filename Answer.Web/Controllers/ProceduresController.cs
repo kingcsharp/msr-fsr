@@ -19,7 +19,7 @@ using Msr.Services.Users;
 
 namespace Answer.Web.Controllers
 {
-    public class ProceduresController : Controller
+    public class ProceduresController : BaseController
     {
         private readonly ProceduresService _proceduresService;
         private readonly UserService _userService;
@@ -90,6 +90,14 @@ namespace Answer.Web.Controllers
                         {
                             totalRows = totalRows.Where(x => statusList.Contains(x.Status.ToLower()));
                         }
+                    }
+                    else if (rule.field == nameof(ProcedureView.CreatingCoName))
+                    {
+                        totalRows = totalRows.Where(x => x.CreatingCoName.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(ProcedureView.DeptName))
+                    {
+                        totalRows = totalRows.Where(x => x.DeptName.ToLower().Contains(rule.data.ToLower()));
                     }
                 }
             }
@@ -185,6 +193,7 @@ namespace Answer.Web.Controllers
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
+        [ValidateInput(false)]
         public ActionResult Edit(SaveProcedureViewModel model)
         {
             var procedureService = new ProceduresService();

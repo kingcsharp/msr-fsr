@@ -51,7 +51,7 @@ namespace Answer.Web.Controllers
 
                 var baseUrl = ConfigurationManager.AppSettings.Get("AWSURL");
 
-                var cloudUrl = $"{baseUrl}/{keyName}";
+                var cloudUrl = $"{baseUrl}{keyName}";
 
                 imageModel.Path = cloudUrl;
                 imageModel.ContentType = file.ContentType;

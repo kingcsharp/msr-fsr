@@ -134,9 +134,9 @@ namespace Msr.Services.Administration
             return result;
         }
 
-        public List<AssignCompaniesToViewResult> GetAssignCompaniesToView()
+        public List<AssignCompaniesToViewResult> GetAssignCompaniesToView(string id)
         {
-            var sql = "exec A_SP_ADMIN_GET_COMPANIES_TO_VIEW_MY_COMPANY '1618'";
+            var sql = $"exec A_SP_ADMIN_GET_COMPANIES_TO_VIEW_MY_COMPANY {id}";
 
             var result = _dbContext.Database.SqlQuery<AssignCompaniesToViewResult>(sql).ToList();
 
@@ -174,7 +174,7 @@ namespace Msr.Services.Administration
             return result;
         }
 
-        public BaseNotification UpdateModuleAccess(List<ModuleAccessViewModel> items)
+        public BaseNotification UpdateModuleAccess(List<ModuleAccessViewModel> items, string loginId)
         {
             var result = new BaseNotification();
 
@@ -182,7 +182,7 @@ namespace Msr.Services.Administration
             {
                 foreach (var job in items)
                 {
-                    var sql = $"exec A_SP_ADMIN_MENU_ROLES_UPDATE '{job.Id}','{job.RoleId}','1618'";
+                    var sql = $"exec A_SP_ADMIN_MENU_ROLES_UPDATE '{job.Id}','{string.Join(",", job.RoleId)}','{loginId}'";
 
                     _dbContext.Database.ExecuteSqlCommand(sql);
                 }

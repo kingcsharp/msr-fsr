@@ -29,7 +29,7 @@ namespace Msr.Services.ApprovalStages
 
         public ApprovalStagesView GetApprovalStageById(string id)
         {
-            return GetApprovalStagesQueryable().Where(x => x.Id == id).SingleOrDefault();
+            return GetApprovalStagesQueryable().Where(x => x.Id == id).FirstOrDefault();
         }
 
         public List<SelectMemberGroup> GetStageMemberGroups(string id)

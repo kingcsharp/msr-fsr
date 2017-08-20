@@ -8,7 +8,7 @@ using EntityFrameworkExtras.EF6;
 
 namespace Msr.Services.People.Procedures
 {
-    [StoredProcedure("Portal_PEOPLE_UPDATE_ONE_PERSON")]
+    [StoredProcedure("A_SP_PEOPLE_UPDATE_ONE_PERSON")]
     public class EditPeopleProcedure
     {
             [StoredProcedureParameter(SqlDbType.VarChar, Size = 50, ParameterName = "newObjID", Direction = ParameterDirection.Output)]

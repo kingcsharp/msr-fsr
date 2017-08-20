@@ -7,10 +7,11 @@ using Msr.Web.ViewModel.Engineering;
 using System;
 using System.Linq;
 using System.Web.Mvc;
+using Microsoft.Ajax.Utilities;
 
 namespace Answer.Web.Controllers
 {
-    public class ApprovalStagesController : Controller
+    public class ApprovalStagesController : BaseController
     {
         public ActionResult Index()
         {
@@ -23,10 +24,14 @@ namespace Answer.Web.Controllers
 
         public ActionResult ApprovalStagesData(JqGridParam param)
         {
-           
+            var user = GetCurrentUser();
+
             var approvalStagesService = new ApprovalStagesService();
 
-            var totalRows = approvalStagesService.GetApprovalStagesQueryable().Where(x=>x.Hide!=true);
+            var totalStages = approvalStagesService.GetApprovalStagesQueryable()
+                .Where(x => (x.Hide != true && x.Hide == null) && x.CreatingCo == user.Company);
+
+          var  totalRows = totalStages.DistinctBy(x=> new{ x.Id, x.StageName}).ToList().AsQueryable();
 
             if (param.where != null && param.where.rules.Any())
             {

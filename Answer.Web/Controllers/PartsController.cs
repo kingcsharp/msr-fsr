@@ -29,7 +29,7 @@ namespace Answer.Web.Controllers
 
             var totalRows = taskService.GetPartsQueryable();
 
-            var defaultStatusList = new[] {"CREATING", "DENIED", "APPROVED", "APPROVED_BUT_REVISING", "APPROVED_BUT_DELETING"};
+            var defaultStatusList = new[] { "CREATING", "DENIED", "APPROVED", "APPROVED_BUT_REVISING", "APPROVED_BUT_DELETING" };
 
             totalRows = totalRows.Where(x => defaultStatusList.Contains(x.Status) && x.CompanyPartNumber != null);
 
@@ -45,6 +45,14 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.Name.ToLower().Contains(rule.data.ToLower()));
                     }
+                    else if (rule.field == nameof(PartsView.Spare))
+                    {
+                        totalRows = totalRows.Where(x => x.Spare.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(PartsView.Unit))
+                    {
+                        totalRows = totalRows.Where(x => x.Unit.ToLower().Contains(rule.data.ToLower()));
+                    }
                     else if (rule.field == nameof(PartsView.CompanyPartNumber))
                     {
                         totalRows = totalRows.Where(x => x.CompanyPartNumber.ToLower().Contains(rule.data.ToLower()));
@@ -59,7 +67,7 @@ namespace Answer.Web.Controllers
                         if (Int32.TryParse(rule.data, out value))
                         {
                             totalRows = totalRows.Where(x => x.Rev == value);
-                        }                        
+                        }
                     }
                     else if (rule.field == nameof(PartsView.Status))
                     {
@@ -230,6 +238,6 @@ namespace Answer.Web.Controllers
             TempData["ErrorMessage"] = "Something went wrong.";
             return RedirectToAction("Index");
         }
-      
+
     }
 }

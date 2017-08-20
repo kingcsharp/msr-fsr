@@ -3,7 +3,7 @@ using Msr.Services.Orders;
 
 namespace Answer.Web.Controllers
 {
-    public class PrintOtherController : Controller
+    public class PrintOtherController : BaseController
     {
         private readonly OrderService _orderService;
 

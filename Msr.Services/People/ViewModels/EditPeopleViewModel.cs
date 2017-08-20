@@ -34,7 +34,7 @@ namespace Msr.Services.People.ViewModels
             ListEmailTextTypes = new List<SelectListItem>();
         }
 
-        [DisplayName("Is A Real User :")]
+        [DisplayName("ANSWER-User?:")]
         public string RealUser { get; set; }
 
         public string Id { get; set; }
@@ -50,21 +50,21 @@ namespace Msr.Services.People.ViewModels
         [DisplayName("Last Name :")]
         public string LastName { get; set; }
 
-        [DisplayName("Screen Type :")]
+        [DisplayName("Default Screen Type:")]
         public string ScreenType { get; set; }
         [DisplayName("Language :")]
         public string LanguageCode { get; set; }
 
-        [DisplayName("Company Edit Person :")]
+        [DisplayName("Immediate Dept/Company:")]
         public string CompanyEditPerson { get; set; }
 
-        [DisplayName("Is Department Head :")]
+        [DisplayName("Head of Immediate Dept/Comany?")]
         public Int16? IsDepartmentHead { get; set; }
 
         [DisplayName("Official Position :")]
         public string OfficialPosition { get; set; }
 
-        [DisplayName("Boss :")]
+        [DisplayName("Supervisor :")]
         public string BossName { get; set; }
 
         [DisplayName("Time Zone :")]
@@ -136,7 +136,7 @@ namespace Msr.Services.People.ViewModels
         public IEnumerable<SelectListItem> ListEmailTextTypes { get; set; }
         public IEnumerable<SelectListItem> ListAddressTypes { get; set; }
         public IEnumerable<SelectListItem> Locations { get; set; }
-        public IEnumerable<SelectListItem> ListCompanyEditPerson { get; set; }
+        public List<SelectListItem> ListCompanyEditPerson { get; set; }
         public IEnumerable<SelectListItem> ListOfficialPosition { get; set; }
         public IEnumerable<SelectListItem> ListBossInfo { get; set; }
         public void Setup(DocumentFilesService documentFilesService, PeopleService peopleService, CompanyService companyService)
@@ -180,12 +180,12 @@ namespace Msr.Services.People.ViewModels
             {
                 new SelectListItem
                 {
-                    Text = "Just A Worker",
+                    Text = "No",
                     Value = "0"
                 },
                 new SelectListItem
                 {
-                    Text = "Is Department Head",
+                    Text = "Yes",
                     Value = "1"
                 }
 
@@ -194,13 +194,13 @@ namespace Msr.Services.People.ViewModels
             {
                 new SelectListItem
                 {
-                    Text = "Answer User",
+                    Text = "Yes",
                     Value = "ANSWER_USER",
                     Selected = true
                 },
                 new SelectListItem
                 {
-                    Text = "Answer Contact",
+                    Text = "No",
                     Value = "NON_ANSWER_USER"
                 }
 
@@ -318,12 +318,15 @@ namespace Msr.Services.People.ViewModels
                 Value = x.Id
             }).OrderBy(o => o.Text).ToList();
             //ListCompanyEditPerson = peopleService.GetCompanyEditPersons().Where(x => x.RootCoId == RootCoId)
-            ListCompanyEditPerson = peopleService.GetCompanyEditPersons()
+
+            ListCompanyEditPerson.Add(new SelectListItem { Text = "--Select--", Value = ""});
+
+            ListCompanyEditPerson.AddRange(peopleService.GetCompanyEditPersons()
                 .Select(x => new SelectListItem
                 {
                     Text = x.Name,
                     Value = x.Id
-                }).ToList();
+                }));
             //ListBossInfo = peopleService.GetBossInfo().Where(x => x.RootCompany == RootCoId).Select(x => new SelectListItem
             ListBossInfo = peopleService.GetBossInfo().Select(x => new SelectListItem
             {
