@@ -261,10 +261,13 @@ namespace Answer.Web.Controllers
             {
                 PartObjectId = id
             };
+
             var currentUser = GetCurrentUser();
             var locations = _locationService.GetLocationsForSafetyStock(currentUser.Root_Company);
+
             List<PartsSafetyStock> partSafetyStocks = _partsService.GetPartSafetyStocksByLocation(locations.Select(x => x.Id), id);
             List<RoleResult> roles = _roleService.GetActiveRoles();
+
             viewModel.Roles.Add(new SelectListItem { Value = "", Text = "--Select Role--" });
 
             viewModel.Roles.AddRange(roles.Select(x => new SelectListItem
@@ -294,10 +297,14 @@ namespace Answer.Web.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult EditSafetyStock(string partObjectId, List<PartsSafetyStock> partsSafetyStocks)
         {
+            var user = GetCurrentUser();
+
             foreach (var safetyStock in partsSafetyStocks)
             {
-                _partsService.UpdatePartsSafetyStocks(safetyStock, partObjectId, "1618");
+                _partsService.UpdatePartsSafetyStocks(safetyStock, partObjectId, user.Id);
             }
+
+            TempData["SuccessMessage"] = "Edit Safety Stock updated successfully.";
 
             return RedirectToAction("EditSafetyStock");
         }
