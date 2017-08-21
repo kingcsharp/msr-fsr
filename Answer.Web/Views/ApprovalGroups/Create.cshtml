@@ -1,13 +1,13 @@
 ﻿@model Msr.Services.ApprovalGroups.ViewModels.EditApprovalGroupsViewModel
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Create Approval Group";
 }
 
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="row">
             <h2 class="page-header">
-                Add Approval Group<button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
+                Create Approval Group<button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
             </h2>
             <div class="col-lg-10">
                 @using (Html.BeginForm())
@@ -26,21 +26,21 @@
                         <div class="form-group">
                             @Html.LabelFor(model => model.MemberPeoples, htmlAttributes: new { @class = "control-label col-md-4" })
                             <div class="col-md-5">
-                                @Html.DropDownListFor(model => model.MemberPeoples, Model.ListMemberPeoples, new { @class = "form-control", multiple = "multiple" })
+                                @Html.DropDownListFor(model => model.MemberPeoples, Model.ListMemberPeoples, new { @class = "form-control select selectpeoples", multiple = "multiple" })
                                 @Html.ValidationMessageFor(model => model.MemberPeoples, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(model => model.MemberRoles, htmlAttributes: new { @class = "control-label col-md-4" })
                             <div class="col-md-5">
-                                @Html.DropDownListFor(model => model.MemberRoles, Model.ListMemberRoles, new { @class = "form-control", multiple = "multiple" })
+                                @Html.DropDownListFor(model => model.MemberRoles, Model.ListMemberRoles, new { @class = "form-control select selectroles", multiple = "multiple" })
                                 @Html.ValidationMessageFor(model => model.MemberRoles, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(model => model.SpecialMembers, htmlAttributes: new { @class = "control-label col-md-4" })
                             <div class="col-md-5">
-                                @Html.DropDownListFor(model => model.SpecialMembers, Model.ListSpecialMembers, new { @class = "form-control", multiple = "multiple" })
+                                @Html.DropDownListFor(model => model.SpecialMembers, Model.ListSpecialMembers, new { @class = "form-control select selectMembers", multiple = "multiple" })
                                 @Html.ValidationMessageFor(model => model.SpecialMembers, "", new { @class = "text-danger" })
                             </div>
                         </div>
@@ -60,15 +60,61 @@
 
 @section scripts
 {
+    @{
+        var memberPeoples = string.Join(",", Model.MemberPeoples);
+        var memberRoles = string.Join(",", Model.MemberRoles);
+        var specialMembers = string.Join(",", Model.SpecialMembers);
+    }
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
-    <script src="~/assets/js/grids/comman.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            $(".selectComman").select2({
-                tags: true,
-                multiple: true
+            var selectPeoples = $(".selectpeoples").select2({
+                tags: [],
+                tokenSeparators: [','],
+                multiple: true,
+                allowClear: true,
+                placeholder: "Select People",
+                formatNoMatches: function () {
+                    return '';
+                }
             });
+            var values = '@memberPeoples';
+            var selectedPeoples = values.split(",")
+            console.log(selectedPeoples);
+            selectPeoples.val(selectedPeoples).trigger("change");
+
+
+            var selectRoles = $(".selectroles").select2({
+                tags: [],
+                tokenSeparators: [','],
+                multiple: true,
+                allowClear: true,
+                placeholder: "Select Roles",
+                formatNoMatches: function () {
+                    return '';
+                }
+            });
+            var values = '@memberRoles';
+            var selectedRoles = values.split(",")
+            console.log(selectedRoles);
+            selectRoles.val(selectedRoles).trigger("change");
+
+
+            var selectMembers = $(".selectMembers").select2({
+                tags: [],
+                tokenSeparators: [','],
+                multiple: true,
+                allowClear: true,
+                placeholder: "Select Members",
+                formatNoMatches: function () {
+                    return '';
+                }
+            });
+            var values = '@specialMembers';
+            var selectedMembers = values.split(",")
+            console.log(selectedMembers);
+            selectMembers.val(selectedMembers).trigger("change");
         });
     </script>
 
