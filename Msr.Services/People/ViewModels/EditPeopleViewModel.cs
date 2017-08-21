@@ -344,25 +344,28 @@ namespace Msr.Services.People.ViewModels
                 Value = x.Value.ToString()
             }).OrderBy(o => o.Text).ToList();
         }
-        public EditPeopleViewModel MapToDto(PeopleObjectView model)
+
+        public void MapToDto(PeopleObjectView model)
         {
-            return new EditPeopleViewModel
+
+            Id = model.Id;
+            ObjectId = model.ObjectId;
+            FirstName = model.FirstName;
+            LastName = model.LastName;
+            OfficialPosition = model.PositionName;
+            BossName = model.BossName;
+            CompanyEditPerson = model.Company;
+            HireDate = model.DateHired;
+
+            if (!string.IsNullOrWhiteSpace(model.SystemStatus))
             {
-                Id = model.Id,
-                ObjectId = model.ObjectId,
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                OfficialPosition = model.PositionName,
-                BossName = model.BossName,
-                CompanyEditPerson = model.Company,
-                HireDate = model.DateHired,
-                StatusEditPerson = model.SystemStatus.Trim(),
-                ScreenType = model.ScreenType,
-                LanguageCode = model.LanguageId,
-                IsDepartmentHead = model.IsHead,
-                TimeZone = model.TimeZone,
-                LoginId = model.LoginId
-            };
+                StatusEditPerson = model.SystemStatus.Trim();
+            }
+            ScreenType = model.ScreenType;
+            LanguageCode = model.LanguageId;
+            IsDepartmentHead = model.IsHead;
+            TimeZone = model.TimeZone;
+            LoginId = model.LoginId;
         }
     }
 }

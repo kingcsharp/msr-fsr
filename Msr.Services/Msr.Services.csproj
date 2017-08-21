@@ -262,6 +262,7 @@
     <Compile Include="Parts\Procedures\SavePartProcedure.cs" />
     <Compile Include="Parts\Procedures\ShowListedFiles.cs" />
     <Compile Include="Parts\ViewModels\AddPartViewModel.cs" />
+    <Compile Include="Parts\ViewModels\ProductSupplierView.cs" />
     <Compile Include="PartTypes\PartTypeService.cs" />
     <Compile Include="PartTypes\Procedures\DeletePartTypeProcedure.cs" />
     <Compile Include="PartTypes\Procedures\SavePartTypeProcedure.cs" />

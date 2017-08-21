@@ -30,7 +30,6 @@ namespace Answer.Web.Controllers
             _roleService = new RoleService();
         }
 
-        // GET: Parts
         public ActionResult Index()
         {
             var viewModel = new EngineeringViewModel();
@@ -39,6 +38,7 @@ namespace Answer.Web.Controllers
 
             return View(viewModel);
         }
+
         public ActionResult PartsData(JqGridParam param)
         {
             var taskService = new PartsService();
@@ -140,7 +140,7 @@ namespace Answer.Web.Controllers
 
             part = part.MapToDto(model);
 
-            part.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService());
+            part.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), GetCurrentUser().Company);
 
             return View(part);
         }
@@ -155,7 +155,7 @@ namespace Answer.Web.Controllers
         {
             var part = new AddPartViewModel();
 
-            part.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService());
+            part.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), GetCurrentUser().Company);
 
             return View(part);
         }
@@ -181,14 +181,14 @@ namespace Answer.Web.Controllers
                 {
                     TempData["ErrorMessage"] = "Something went wrong.";
 
-                    model.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService());
+                    model.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), GetCurrentUser().Company);
 
                     return View(model);
                 }
 
             }
 
-            model.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService());
+            model.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), GetCurrentUser().Company);
 
             return View(model);
 
@@ -203,8 +203,9 @@ namespace Answer.Web.Controllers
 
             part = part.MapToDto(model);
 
-            part.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService());
+            part.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), GetCurrentUser().Company);
 
+            part.InternalEqualParts = taskService.GetInternalEqualPartByPartId(part.Id);
             return View(part);
         }
 
@@ -218,7 +219,7 @@ namespace Answer.Web.Controllers
                 model.NTLogin = GetCurrentUser().Id;
                 model.SubParts = null;
 
-                var response = taskService.Save(model);
+                var response = taskService.Edit(model);
 
                 if (response)
                 {
@@ -229,12 +230,12 @@ namespace Answer.Web.Controllers
 
                 TempData["ErrorMessage"] = "Something went wrong.";
 
-                model.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService());
+                model.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), GetCurrentUser().Company);
 
                 return View(model);
             }
 
-            model.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService());
+            model.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), GetCurrentUser().Company);
 
             return View(model);
         }
@@ -279,7 +280,7 @@ namespace Answer.Web.Controllers
             foreach (var location in locations)
             {
                 var part = partSafetyStocks.SingleOrDefault(x => x.LocationId == location.Id) ?? new PartsSafetyStock();
-                
+
                 if (!string.IsNullOrEmpty(part.Id))
                 {
                     part.RolesAssignedToWarn = _partsService.GetSafetyStockRoles(part.Id, "WARN");

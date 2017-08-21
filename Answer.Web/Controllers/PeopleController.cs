@@ -14,6 +14,13 @@ namespace Answer.Web.Controllers
 {
     public class PeopleController : BaseController
     {
+        private readonly PeopleService _peopleService;
+
+        public PeopleController()
+        {
+            _peopleService = new PeopleService();
+        }
+
         public ActionResult Index()
         {
             var viewModel = new EngineeringViewModel();
@@ -25,11 +32,10 @@ namespace Answer.Web.Controllers
 
         public ActionResult PeopleData(JqGridParam param)
         {
-            var peopleService = new PeopleService();
 
             var defaultStatusList = "CREATING,DENIED,APPROVED,APPROVED_BUT_REVISING,APPROVED_BUT_DELETING".Split(',');
 
-            var totalRows = peopleService.GetPeople().Where(x => defaultStatusList.Contains(x.Status));
+            var totalRows = _peopleService.GetPeople().Where(x => defaultStatusList.Contains(x.Status));
 
             if (param.where != null && param.where.rules.Any())
             {
@@ -149,20 +155,21 @@ namespace Answer.Web.Controllers
         public ActionResult Add()
         {
             var people = new AddPeopleViewModel();
+
             people.Setup(new DocumentFilesService(), new PeopleService(), new CompanyService());
+
             return View(people);
         }
+
         [AcceptVerbs(verbs: HttpVerbs.Post)]
         public ActionResult Add(AddPeopleViewModel model)
         {
-            var peopleService = new PeopleService();
-
             if (ModelState.IsValid)
             {
                 model.NTLogin = GetCurrentUser().Id;
                 model.Password = AuthenticationHelper.PassWordEncrypt("test"); //pending to find password creation
                 
-                var response = peopleService.Create(model: model);
+                var response = _peopleService.Create(model: model);
 
                 if (response)
                 {
@@ -183,14 +190,17 @@ namespace Answer.Web.Controllers
 
         public ActionResult Edit(string id)
         {
-            var taskService = new PeopleService();
-            var model = taskService.GetPeopleById(id);
-            var phoneInfo = taskService.GetPhoneInfoByObjId(id);
-            var emailInfo = taskService.GetEmailInfoByObjId(id);
-            var locationInfo = taskService.GetLocationInfoByObjId(id);
+            var model = _peopleService.GetPeopleById(id);
+            var phoneInfo = _peopleService.GetPhoneInfoByObjId(id);
+            var emailInfo = _peopleService.GetEmailInfoByObjId(id);
+            var locationInfo = _peopleService.GetLocationInfoByObjId(id);
+
             var people = new EditPeopleViewModel();
-            people = people.MapToDto(model);
+
+            people.MapToDto(model);
+
             people.Setup(new DocumentFilesService(), new PeopleService(), new CompanyService());
+
             if (phoneInfo != null)
             {
                 people.PrimaryPhoneNumber = phoneInfo.PrimaryPhoneNumber;
@@ -217,14 +227,13 @@ namespace Answer.Web.Controllers
         [AcceptVerbs(verbs: HttpVerbs.Post)]
         public ActionResult Edit(EditPeopleViewModel model)
         {
-            var peopleService = new PeopleService();
-           
+          
             if (ModelState.IsValid)
             {
                 model.NTLogin = GetCurrentUser().Id;
                 model.Password = AuthenticationHelper.PassWordEncrypt("test"); //pending to find password creation
 
-                var response = peopleService.Edit(model);
+                var response = _peopleService.Edit(model);
 
                 if (response)
                 {
@@ -244,10 +253,9 @@ namespace Answer.Web.Controllers
         }
         public ActionResult Delete(string id)
         {
-            var taskService = new PeopleService();
 
             string ntLogin = GetCurrentUser().Id;
-            var response = taskService.Delete(id, ntLogin);
+            var response = _peopleService.Delete(id, ntLogin);
 
             if (response)
             {
