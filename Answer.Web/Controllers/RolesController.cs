@@ -115,7 +115,8 @@ namespace Answer.Web.Controllers
         public ActionResult Create()
         {
             var saveRoleViewModel = new SaveRoleViewModel();
-            saveRoleViewModel.Setup(new RoleService(), new UserService());
+
+            saveRoleViewModel.Setup(new RoleService(), new UserService(),GetCurrentUser());
 
             return View(saveRoleViewModel);
         }
@@ -142,13 +143,13 @@ namespace Answer.Web.Controllers
                 {
                     TempData["ErrorMessage"] = "Something went wrong.";
 
-                    model.Setup(new RoleService(), new UserService());
+                    model.Setup(new RoleService(), new UserService(), GetCurrentUser());
 
                     return View(model);
                 }
             }
 
-            model.Setup(new RoleService(), new UserService());
+            model.Setup(new RoleService(), new UserService(), GetCurrentUser());
 
             return View(model);
         }
@@ -162,7 +163,7 @@ namespace Answer.Web.Controllers
             var saveRoleViewModel = new SaveRoleViewModel();
 
             saveRoleViewModel = saveRoleViewModel.MapToDto(model);
-            saveRoleViewModel.Setup(new RoleService(), new UserService());
+            saveRoleViewModel.Setup(new RoleService(), new UserService(), GetCurrentUser());
 
             return View(saveRoleViewModel);
         }
@@ -188,13 +189,13 @@ namespace Answer.Web.Controllers
                 {
                     TempData["ErrorMessage"] = "Something went wrong.";
 
-                    model.Setup(new RoleService(), new UserService());
+                    model.Setup(new RoleService(), new UserService(), GetCurrentUser());
 
                     return View(model);
                 }
             }
 
-            model.Setup(new RoleService(), new UserService());
+            model.Setup(new RoleService(), new UserService(), GetCurrentUser());
 
             return View(model);
         }
@@ -227,7 +228,7 @@ namespace Answer.Web.Controllers
             var saveRoleViewModel = new SaveRoleViewModel();
 
             saveRoleViewModel = saveRoleViewModel.MapToDto(model);
-            saveRoleViewModel.Setup(new RoleService(), new UserService());
+            saveRoleViewModel.Setup(new RoleService(), new UserService(), GetCurrentUser());
 
             return View(saveRoleViewModel);
         }

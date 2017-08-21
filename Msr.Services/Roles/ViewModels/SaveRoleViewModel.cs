@@ -1,15 +1,11 @@
 ﻿using Msr.Models.Roles;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 using Msr.Models.Common;
-using Msr.Services.Orders;
 using Msr.Services.Users;
+using Msr.Services.Users.Messages;
 
 namespace Msr.Services.Roles.ViewModels
 {
@@ -53,34 +49,34 @@ namespace Msr.Services.Roles.ViewModels
 
         public List<SelectListItem> ListPeopleAssigned { get; set; }
 
-        public void Setup(RoleService roleService, UserService userService)
+        public void Setup(RoleService roleService, UserService userService, LoggedUserIdResult getCurrentUser)
         {
             SecurityLevels = new List<SelectListItem>
             {
                 new SelectListItem
                 {
-                    Text = @"ROLES_SECURITY_LEVEL_PUBLIC",
+                    Text = @"1 View What All Users Are Allowed to View",
                     Value = "1",
                     Selected = true
                 },
                 new SelectListItem
                 {
-                    Text = @"ROLES_SECURITY_LEVEL_SOME_WHAT_CONFIDENTIAL",
+                    Text = @"2 View What Managers & Below Are Allowed to View",
                     Value = "2"
                 },
                 new SelectListItem
                 {
-                    Text = @"ROLES_SECURITY_LEVEL_CONFIDENTIAL",
+                    Text = @"3 View What Directors & Below Are Allowed to View",
                     Value = "3"
                 },
                 new SelectListItem
                 {
-                    Text = @"ROLES_SECURITY_LEVEL_EXTREMELY_CONFIDENTIAL",
+                    Text = @"4 View What VP's & Below Are Allowed to View",
                     Value = "4"
                 },
                 new SelectListItem
                 {
-                    Text = @"ROLES_SYSTEM",
+                    Text = @"System",
                     Value = "5"
                 }
             };
@@ -91,15 +87,16 @@ namespace Msr.Services.Roles.ViewModels
                 Value = x.ObJect_Id.ToString()
             }).OrderBy(o => o.Text).ToList();
 
-            ListPeopleAssigned = userService.GetPeoplesQueryable().Select(x => new SelectListItem
+            ListPeopleAssigned = userService.GetSearchUser().Select(x => new SelectListItem
             {
-                Text = x.FullName,
-                Value = x.ObjectId.ToString()
+                Text = x.Full_Name,
+                Value = x.Obj_Id
             }).OrderBy(o => o.Text).ToList();
 
-            ChildRoles = roleService.GetChildRoles(id: ObjectId).Select(x => x.Value).ToList();
 
-            PeopleAssigned = roleService.GetAssignedPeople(id: ObjectId).Select(x => x.Value).ToList();
+            ChildRoles = roleService.GetChildRoles(ObjectId).Select(x => x.Value).ToList();
+
+            PeopleAssigned = roleService.GetAssignedPeople(Id).Select(x => x.Value).ToList();
         }
 
         public SaveRoleViewModel MapToDto(RolesView model)
