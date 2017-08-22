@@ -157,7 +157,7 @@
     });
     function RolesEditFormatter(cellvalue, options, rowObject) {
         var editButton = '<a  title="Edit" href="/Roles/Edit/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
-        var detailbutton = '<a title="Detail" href="/Roles/Detail/' + rowObject.Id + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-eye"></i></a>';
+        var detailbutton = '<a title="Detail" href="/Roles/Detail/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-eye"></i></a>';
         var deleteButton = '';
         var buttonWorkflowLeft = '';
         var buttonWorkflowRight = '';
