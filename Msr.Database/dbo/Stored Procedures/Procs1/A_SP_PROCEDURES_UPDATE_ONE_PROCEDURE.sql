@@ -14,7 +14,7 @@ CREATE      PROCEDURE A_SP_PROCEDURES_UPDATE_ONE_PROCEDURE
 @DURATION float,
 @DURATION_TYPE nvarchar(50),
 @strNTLogin nvarchar(50),
-@threshold int
+@threshold int =null
 
 AS
 
