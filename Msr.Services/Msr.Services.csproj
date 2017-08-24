@@ -262,6 +262,7 @@
     <Compile Include="Parts\Procedures\SavePartProcedure.cs" />
     <Compile Include="Parts\Procedures\ShowListedFiles.cs" />
     <Compile Include="Parts\ViewModels\AddPartViewModel.cs" />
+    <Compile Include="Parts\ViewModels\ProductSupplierView.cs" />
     <Compile Include="PartTypes\PartTypeService.cs" />
     <Compile Include="PartTypes\Procedures\DeletePartTypeProcedure.cs" />
     <Compile Include="PartTypes\Procedures\SavePartTypeProcedure.cs" />
@@ -310,6 +311,7 @@
     <Compile Include="Regions\Procedures\SaveRegionProcedure.cs" />
     <Compile Include="Regions\RegionService.cs" />
     <Compile Include="Regions\ViewModels\DeleteRegionViewModel.cs" />
+    <Compile Include="Roles\Messages\RoleApprovedData.cs" />
     <Compile Include="Roles\Procedures\DeleteRoleAssignedProcedure.cs" />
     <Compile Include="Roles\Procedures\SaveRoleAssignPersonRoleProcedure.cs" />
     <Compile Include="Roles\Procedures\SaveRoleToRoleProcedure.cs" />

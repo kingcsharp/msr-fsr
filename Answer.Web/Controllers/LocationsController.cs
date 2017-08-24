@@ -201,11 +201,11 @@ namespace Answer.Web.Controllers
             return View(model);
         }
 
-        public ActionResult LocationDelete(string id)
+        public ActionResult LocationDelete(string id,string ntlogin)
         {
             var taskService = new LocationService();
 
-            var response = taskService.Delete(id: id);
+            var response = taskService.Delete(id: id,ntlogin:ntlogin);
 
             if (response)
             {

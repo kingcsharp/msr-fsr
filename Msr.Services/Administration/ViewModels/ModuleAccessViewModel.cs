@@ -4,7 +4,7 @@ namespace Msr.Services.Administration.ViewModels
 {
     public class ModuleAccessViewModel
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         public List<string> RoleId { get; set; }
     }

@@ -125,7 +125,7 @@ namespace Answer.Web.Controllers
         {
             var location = new SaveDocumentViewModel();
 
-            location.Setup(new RoleService(), new PartsService(),new DocumentService());
+            location.Setup(new RoleService(), new PartsService(),new DocumentService(), GetCurrentUser().Id);
 
             location.Id = "NEW";
             location.Rev = 1; 
@@ -174,7 +174,7 @@ namespace Answer.Web.Controllers
 
             location = location.MapToDto(model: model);
 
-            location.Setup(new RoleService(),new PartsService(), new DocumentService());
+            location.Setup(new RoleService(),new PartsService(), new DocumentService(), GetCurrentUser().Id);
 
             return View(location);
         }

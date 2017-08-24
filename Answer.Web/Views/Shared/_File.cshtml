@@ -154,6 +154,7 @@
 <script src="~/assets/js/plugins/bootstrap3/bootstrap-dialog.min.js"></script>
 <script type="text/javascript" src="~/assets/js/jquery.mockjax.js"></script>
 <script src="~/assets/js/grids/files-dialog-single-selection.js"></script>
+
 <script>
 
     $(document).ready(function () {
@@ -164,8 +165,21 @@
             //xhrFields: {withCredentials: true},
             url: '/Files/Add',
             uploadTemplateId: "template-upload",
-            downloadTemplateId: "template-download",
+            downloadTemplateId: "template-download"
 
+        }).bind('fileuploaddone', function (e, data) {
+
+            $('#two').removeClass('active');
+
+            $('#one').addClass('active');
+
+            $('#files-tab').tab('show');
+
+            $('#files-tab').addClass('active in');
+
+            $('#file-upload-tab').removeClass('active in');
+
+            LoadFilesGrid();
         });
     });
 

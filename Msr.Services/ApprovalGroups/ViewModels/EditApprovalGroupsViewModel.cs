@@ -45,13 +45,13 @@ namespace Msr.Services.ApprovalGroups.ViewModels
 
         public string NTLogin { get; set; }
 
-        public void Setup(UserService userService, RoleService roleService, ApprovalGroupsService approvalGroupsService)
+        public void Setup(UserService userService, RoleService roleService, ApprovalGroupsService approvalGroupsService,string ntlogin)
         {
             ////EXEC A_SP_ROLE_SELECT NULL, NULL, NULL,NULL, '1618',' ORDER BY NAME'
-            ListMemberPeoples = userService.GetPeoplesQueryable().Select(x => new SelectListItem
+            ListMemberPeoples = userService.GetSearchUser().Select(x => new SelectListItem
             {
-                Text = x.FullName,
-                Value = x.ObjectId.ToString()
+                Text = x.Full_Name,
+                Value = x.Obj_Id
             }).OrderBy(o => o.Text).ToList();
 
             ListMemberRoles = roleService.GetUserRolesQueryable().Select(x => new SelectListItem
@@ -60,13 +60,11 @@ namespace Msr.Services.ApprovalGroups.ViewModels
                 Value = x.ObjectId.ToString()
             }).OrderBy(o => o.Text).ToList();
 
-            MemberPeoples = approvalGroupsService.GetGroupMembers(id: Id).ToList();
+            MemberPeoples = approvalGroupsService.GetGroupMembers(id: Id,ntlogin:ntlogin).ToList();
 
             MemberRoles = approvalGroupsService.GetGroupRoles(id: Id).Select(x => x.Id).ToList();
 
             SpecialMembers = approvalGroupsService.GetGroupSpecialMembers(id: Id).Select(x => x.Id).ToList();
-
-            //ListSpecialMembers -- need to be implemented Not able to search from where they are ariving..
         }
 
         public EditApprovalGroupsViewModel MapToDto(ApprovalGroupsView model)

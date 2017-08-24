@@ -104,7 +104,7 @@ namespace Msr.Services.Companies.ViewModels
 
         public IEnumerable<SelectListItem> CompanyTypes { get; set; }
 
-        public void Setup(DocumentFilesService documentFilesService, CompanyService companyService)
+        public void Setup(DocumentFilesService documentFilesService, CompanyService companyService,string ntlog)
         {
             CompanyTypes = new List<SelectListItem>
             {
@@ -122,20 +122,20 @@ namespace Msr.Services.Companies.ViewModels
 
             };
 
-            ListReferenceFiles = documentFilesService.GetSelectedFiles(id: ObjectId, type: null).Select(x => new SelectListItem
+            ListReferenceFiles = documentFilesService.GetSelectedFiles(id: ObjectId, type: null, ntlogin: ntlog).Select(x => new SelectListItem
             {
                 Text = x.Show,
                 Value = x.Value.ToString()
                 //Selected = true
             }).OrderBy(o => o.Text).ToList();
 
-            ListPictureFiles = documentFilesService.GetSelectedFiles(id: ObjectId, type: "PICTURE").Select(x => new SelectListItem
+            ListPictureFiles = documentFilesService.GetSelectedFiles(id: ObjectId, type: "PICTURE", ntlogin: ntlog).Select(x => new SelectListItem
             {
                 Text = x.Show,
                 Value = x.Value.ToString()
             }).OrderBy(o => o.Text).ToList();
 
-            ListLogoFiles = documentFilesService.GetSelectedFiles(id: ObjectId, type: "LOGO").Select(x => new SelectListItem
+            ListLogoFiles = documentFilesService.GetSelectedFiles(id: ObjectId, type: "LOGO", ntlogin: ntlog).Select(x => new SelectListItem
             {
                 Text = x.Show,
                 Value = x.Value.ToString()               

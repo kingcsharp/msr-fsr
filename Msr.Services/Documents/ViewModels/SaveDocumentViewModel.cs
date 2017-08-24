@@ -89,7 +89,7 @@ namespace Msr.Services.Documents.ViewModels
             };
             }
         }
-        public void Setup(RoleService roleService, PartsService partsService, DocumentService documentService)
+        public void Setup(RoleService roleService, PartsService partsService, DocumentService documentService,string ntlog)
         {
             ListRoles = roleService.GetUserRolesQueryable().Select(x => new SelectListItem
             {
@@ -98,25 +98,25 @@ namespace Msr.Services.Documents.ViewModels
             }).OrderBy(o => o.Text).ToList();
             //ListRoles.Insert(0, new SelectListItem { Text = "", Value = "" });
             
-            ListReferenceFiles = partsService.GetSelectedFiles(id: ObjectId, type: null).Select(x => new SelectListItem
+            ListReferenceFiles = partsService.GetSelectedFiles(id: ObjectId, type: null,ntlogin:ntlog).Select(x => new SelectListItem
             {
                 Text = x.Show,
                 Value = x.Value,
             }).OrderBy(o => o.Text).ToList();
 
-            ListReferenceObjects = documentService.GetSelectedObjects(id: Id).Select(x => new SelectListItem
+            ListReferenceObjects = documentService.GetSelectedObjects(id: Id,ntlogin:ntlog).Select(x => new SelectListItem
             {
                 Text = x.Name,
                 Value = x.Id.ToString(),
             }).OrderBy(o => o.Text).ToList();
 
-            ListReferenceTheories = documentService.GetSelectedTheories(id:Id).Select(x => new SelectListItem
+            ListReferenceTheories = documentService.GetSelectedTheories(id:Id,ntlogin:ntlog).Select(x => new SelectListItem
             {
                 Text = x.Name,
                 Value =x.Id.ToString(),
             }).OrderBy(o => o.Text).ToList();
 
-            Roles = documentService.GetSelectedRoles(id: Id).Select(x => x.RoleId).ToList();
+            Roles = documentService.GetSelectedRoles(id: Id,ntlogin:ntlog).Select(x => x.RoleId).ToList();
         }
 
         public SaveDocumentViewModel MapToDto(DocumentView model)

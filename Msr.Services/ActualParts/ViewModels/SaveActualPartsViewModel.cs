@@ -10,6 +10,7 @@ using Msr.Models.ActualParts;
 using Msr.Services.Locations;
 using Msr.Services.Users;
 using Msr.Services.Products;
+using Msr.Services.Users.Messages;
 
 namespace Msr.Services.ActualParts.ViewModels
 {
@@ -31,7 +32,7 @@ namespace Msr.Services.ActualParts.ViewModels
         public string ObjectId { get; set; }
 
         [Required]
-        [Display(Name = "This Actual is a :")]
+        [Display(Name = "Part Id:")]
         public string PartId { get; set; }
 
         [Display(Name = "QTY :")]
@@ -55,7 +56,7 @@ namespace Msr.Services.ActualParts.ViewModels
         [Display(Name = "Products Installed :")]
         public List<string> Products { get; set; }
 
-        [Display(Name = "This Part Installed in :")]
+        [Display(Name = "Actual Part This Actual Part Is Installed In:")]
         public string ParentId { get; set; }
 
         [Display(Name = "Sub Parts Action :")]
@@ -82,7 +83,7 @@ namespace Msr.Services.ActualParts.ViewModels
 
         public List<SelectListItem> ListSubPartActions { get; set; }
 
-        public void SetUp(ActualPartsService actualPartsService, PartsService partsService, LocationService locationService, UserService userService, ProductService productService)
+        public void SetUp(ActualPartsService actualPartsService, PartsService partsService, LocationService locationService, UserService userService, ProductService productService, LoggedUserIdResult getCurrentUser)
         {
             ListSubPartActions = new List<SelectListItem>
             {
@@ -106,11 +107,12 @@ namespace Msr.Services.ActualParts.ViewModels
             }).OrderBy(o => o.Text).ToList();
             ListParents.Insert(0, new SelectListItem { Text = @"Select Actual Part", Value = "" });
 
-            //ListParts = partsService.GetPartsQueryable().Where(x => x.Status.StartsWith("APPROVED")).Select(x => new SelectListItem
-            //{
-            //    Text = x.Name,
-            //    Value = x.PartId.ToString()
-            //}).OrderBy(o => o.Text).ToList();
+            ListParts = partsService.GetPartsQueryable().Where(x => x.Name != null).Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.ObjectId.ToString()
+            }).OrderBy(o => o.Text).ToList();
+
             ListParts.Insert(0, new SelectListItem { Text = @"Select Part", Value = "" });
 
             ListLocations = locationService.GetLocationsQueryable().Select(x => new SelectListItem
@@ -120,13 +122,13 @@ namespace Msr.Services.ActualParts.ViewModels
             }).OrderBy(o => o.Text).ToList();
             ListLocations.Insert(0, new SelectListItem { Text = @"Select Location", Value = "" });
 
-            ////ListCurOwners = actualPartsService.GetActualPartCompanies().Select(x => new SelectListItem
-            ////{
-            ////    Text = x.Name,
-            ////    Value = x.Id.ToString()
-            ////}).OrderBy(o => o.Text).ToList();
+            ListCurOwners = actualPartsService.GetActualPartCompanies("").Where(x=> x.Status =="APPROVED").Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.Id.ToString()
+            }).OrderBy(o => o.Text).ToList();
 
-            ////ListCurOwners.Insert(0, new SelectListItem { Text = @"Select Owner", Value = "" });
+            ListCurOwners.Insert(0, new SelectListItem { Text = @"Select Owner", Value = "" });
 
             ListPersons = userService.GetPeoplesQueryable().ToList().Select(x => new SelectListItem
             {

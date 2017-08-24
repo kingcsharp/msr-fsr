@@ -234,7 +234,7 @@ namespace Answer.Web.Controllers
             return PartialView("_WipListModal", viewModel);
         }
 
-        public ActionResult Details(int? id)
+        public ActionResult Details(int? id,string ntlogin)
         {
             var currentUser = GetCurrentUser();
             var orderService = new OrderService();
@@ -249,15 +249,15 @@ namespace Answer.Web.Controllers
                 id = int.Parse(workItems.First().FillId);
             }
 
-            var response = _orderService.GetPurchaseItemDetails(id.Value);
+            var response = _orderService.GetPurchaseItemDetails(id.Value,ntlogin);
             response.WoItems = workItems;
 
             return View(response);
         }
 
-        public ActionResult PrintTraveler(int id)
+        public ActionResult PrintTraveler(int id,string ntlogin)
         {
-            var response = _orderService.GetTsrDetails(id);
+            var response = _orderService.GetTsrDetails(id,ntlogin);
 
             return PartialView("_ViewTsr", response);
         }
@@ -440,8 +440,7 @@ namespace Answer.Web.Controllers
         [HttpPost]
         public ActionResult UpdateRootPart(int partId, string serialNumber, int taskId)
         {
-            var loggedUserId = User.Identity.GetUserId();
-            loggedUserId = "1618";//to be removed
+            var loggedUserId = GetCurrentUser().Id;
             _orderService.UpdateRootPart(partId, serialNumber, taskId, loggedUserId);
 
             return Json("OK", JsonRequestBehavior.AllowGet);
@@ -450,8 +449,7 @@ namespace Answer.Web.Controllers
         [HttpPost]
         public ActionResult UpdateRootParts(List<ActualPart> parts, int taskId)
         {
-            //var loggedUserId = User.Identity.GetUserId();
-            var loggedUserId = "1618";//to be removed
+            var loggedUserId = GetCurrentUser().Id;//to be removed
             foreach (ActualPart part in parts.Where(x => x.TreeLevel > 0))
             {
                 _orderService.UpdateRootPart(part.Id, part.Serial, taskId, loggedUserId);
@@ -462,7 +460,7 @@ namespace Answer.Web.Controllers
 
         public ActionResult SearchNcrs(int? partId, int? ncrId, string partSerialNumber, string taskStatus, string assignee)
         {
-            var viewModel = _orderService.SearchNcrs(partId, "1618");
+            var viewModel = _orderService.SearchNcrs(partId, GetCurrentUser().Id);
             return View(viewModel);
         }
 

@@ -71,12 +71,12 @@ namespace Msr.Services.ProcedureVerbs
             }
         }
 
-        public bool Delete(string id)
+        public bool Delete(string id,string ntlogin)
         {
             try
             {
                 //need to be dynamic
-                var NTLogin = "1618";
+                var NTLogin = ntlogin;
                 var deleteProcedureVerbProcedure = new DeleteProcedureVerbProcedure() { ObjId = id, NTLogin = NTLogin };
 
                 _dbContext.Database.ExecuteStoredProcedure(deleteProcedureVerbProcedure);

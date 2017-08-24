@@ -139,7 +139,7 @@ namespace Msr.Services.People.ViewModels
         public List<SelectListItem> ListCompanyEditPerson { get; set; }
         public IEnumerable<SelectListItem> ListOfficialPosition { get; set; }
         public IEnumerable<SelectListItem> ListBossInfo { get; set; }
-        public void Setup(DocumentFilesService documentFilesService, PeopleService peopleService, CompanyService companyService)
+        public void Setup(DocumentFilesService documentFilesService, PeopleService peopleService, CompanyService companyService,string ntlog)
         {
             ListStatusEditPerson = new List<SelectListItem>
             {
@@ -333,36 +333,39 @@ namespace Msr.Services.People.ViewModels
                 Text = x.FullName,
                 Value = x.FullName
             }).Distinct().ToList();
-            ListReferenceFiles = documentFilesService.GetSelectedFiles(id: ObjectId, type: null).Select(x => new SelectListItem
+            ListReferenceFiles = documentFilesService.GetSelectedFiles(id: ObjectId, type: null, ntlogin: ntlog).Select(x => new SelectListItem
             {
                 Text = x.Show,
                 Value = x.Value.ToString()
             }).OrderBy(o => o.Text).ToList();
-            ListPictureFiles = documentFilesService.GetSelectedFiles(id: ObjectId, type: "PICTURE").Select(x => new SelectListItem
+            ListPictureFiles = documentFilesService.GetSelectedFiles(id: ObjectId, type: "PICTURE", ntlogin: ntlog).Select(x => new SelectListItem
             {
                 Text = x.Show,
                 Value = x.Value.ToString()
             }).OrderBy(o => o.Text).ToList();
         }
-        public EditPeopleViewModel MapToDto(PeopleObjectView model)
+
+        public void MapToDto(PeopleObjectView model)
         {
-            return new EditPeopleViewModel
+
+            Id = model.Id;
+            ObjectId = model.ObjectId;
+            FirstName = model.FirstName;
+            LastName = model.LastName;
+            OfficialPosition = model.PositionName;
+            BossName = model.BossName;
+            CompanyEditPerson = model.Company;
+            HireDate = model.DateHired;
+
+            if (!string.IsNullOrWhiteSpace(model.SystemStatus))
             {
-                Id = model.Id,
-                ObjectId = model.ObjectId,
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                OfficialPosition = model.PositionName,
-                BossName = model.BossName,
-                CompanyEditPerson = model.Company,
-                HireDate = model.DateHired,
-                StatusEditPerson = model.SystemStatus.Trim(),
-                ScreenType = model.ScreenType,
-                LanguageCode = model.LanguageId,
-                IsDepartmentHead = model.IsHead,
-                TimeZone = model.TimeZone,
-                LoginId = model.LoginId
-            };
+                StatusEditPerson = model.SystemStatus.Trim();
+            }
+            ScreenType = model.ScreenType;
+            LanguageCode = model.LanguageId;
+            IsDepartmentHead = model.IsHead;
+            TimeZone = model.TimeZone;
+            LoginId = model.LoginId;
         }
     }
 }

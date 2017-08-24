@@ -141,7 +141,7 @@ namespace Answer.Web.Controllers
         {
             var saveProcedureViewModel = new SaveProcedureViewModel();
 
-            saveProcedureViewModel.Setup(new ProceduresService(), new RoleService(), new ProcedureVerbsService());
+            saveProcedureViewModel.Setup(new ProceduresService(), new RoleService(), new ProcedureVerbsService(), GetCurrentUser().Id);
 
             return View(saveProcedureViewModel);
         }
@@ -152,7 +152,7 @@ namespace Answer.Web.Controllers
             var procedureService = new ProceduresService();
 
             //need to be dynamic
-            model.NTLogin = "1618";
+            model.NTLogin = GetCurrentUser().Id;
 
             if (ModelState.IsValid)
             {
@@ -167,14 +167,14 @@ namespace Answer.Web.Controllers
                 {
                     TempData["ErrorMessage"] = "Something went wrong.";
 
-                    model.Setup(new ProceduresService(), new RoleService(), new ProcedureVerbsService());
+                    model.Setup(new ProceduresService(), new RoleService(), new ProcedureVerbsService(), GetCurrentUser().Id);
 
                     return View(model);
                 }
             }
 
 
-            model.Setup(new ProceduresService(), new RoleService(), new ProcedureVerbsService());
+            model.Setup(new ProceduresService(), new RoleService(), new ProcedureVerbsService(), GetCurrentUser().Id);
 
             return View(model);
         }
@@ -187,7 +187,7 @@ namespace Answer.Web.Controllers
             var model = procedureService.GetProcedureById(id: id);
 
             saveProcedureViewModel = saveProcedureViewModel.MapToDto(model);
-            saveProcedureViewModel.Setup(new ProceduresService(), new RoleService(), new ProcedureVerbsService());
+            saveProcedureViewModel.Setup(new ProceduresService(), new RoleService(), new ProcedureVerbsService(), GetCurrentUser().Id);
 
             return View(saveProcedureViewModel);
         }
@@ -199,7 +199,7 @@ namespace Answer.Web.Controllers
             var procedureService = new ProceduresService();
 
             //need to be dynamic
-            model.NTLogin = "1618";
+            model.NTLogin = GetCurrentUser().Id;
 
             if (ModelState.IsValid)
             {
@@ -214,14 +214,14 @@ namespace Answer.Web.Controllers
                 {
                     TempData["ErrorMessage"] = "Something went wrong.";
 
-                    model.Setup(new ProceduresService(), new RoleService(), new ProcedureVerbsService());
+                    model.Setup(new ProceduresService(), new RoleService(), new ProcedureVerbsService(),GetCurrentUser().Id);
 
                     return View(model);
                 }
             }
 
 
-            model.Setup(new ProceduresService(), new RoleService(), new ProcedureVerbsService());
+            model.Setup(new ProceduresService(), new RoleService(), new ProcedureVerbsService(), GetCurrentUser().Id);
 
             return View(model);
         }
@@ -273,7 +273,7 @@ namespace Answer.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                model.LoginId = "1618";
+                model.LoginId = GetCurrentUser().Id;
                 var response = _proceduresService.SaveAssignProcedure(model);
 
                 if (!response.HasErrors())

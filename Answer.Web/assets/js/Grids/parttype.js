@@ -111,7 +111,7 @@
         pager: "#jqGridPager",
         height: 'auto',
         gridview: true,
-        sortname: 'Id',
+        sortname: 'Name',
         sortable: true,
         sortorder: 'asc',
         cellEdit: false,

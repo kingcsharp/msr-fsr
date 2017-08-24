@@ -101,11 +101,11 @@ namespace Answer.Web.Controllers
             return Json(json, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult PreProDelete(string id)
+        public ActionResult PreProDelete(string id,string ntlogin)
         {
             var taskService = new PreProServices();
 
-            var response = taskService.Delete(id: id);
+            var response = taskService.Delete(id: id,ntlogin:ntlogin);
 
             if (response)
             {
@@ -124,7 +124,7 @@ namespace Answer.Web.Controllers
 
             model.CreatingCo = GetCurrentUser().Company;
 
-            model.Setup(new PreProServices());
+            model.Setup(new PreProServices(), GetCurrentUser().Id);
 
             return View(model);
         }
@@ -151,14 +151,14 @@ namespace Answer.Web.Controllers
                 {
                     TempData["ErrorMessage"] = "Something went wrong.";
 
-                    model.Setup(new PreProServices());
+                    model.Setup(new PreProServices(), GetCurrentUser().Id);
 
                     return View(model);
                 }
 
             }
 
-            model.Setup(new PreProServices());
+            model.Setup(new PreProServices(), GetCurrentUser().Id);
 
             return View(model);
         }
@@ -174,7 +174,7 @@ namespace Answer.Web.Controllers
 
             part = part.MapToDto(model);
 
-            part.Setup(new PreProServices());
+            part.Setup(new PreProServices(), GetCurrentUser().Id);
 
             return View(part);
         }
@@ -191,7 +191,7 @@ namespace Answer.Web.Controllers
 
             procedurePreProView.CreatingCo = GetCurrentUser().Company;
 
-            procedurePreProView.Setup(new PreProServices());
+            procedurePreProView.Setup(new PreProServices(), GetCurrentUser().Id);
 
             procedurePreProView.Labor = "No Labour Assigned";
             procedurePreProView.ApplicationObjects = "Object Description";
@@ -220,14 +220,14 @@ namespace Answer.Web.Controllers
                 {
                     TempData["ErrorMessage"] = "Something went wrong.";
 
-                    model.Setup(new PreProServices());
+                    model.Setup(new PreProServices(), GetCurrentUser().Id);
 
                     return View(model);
                 }
 
             }
 
-            model.Setup(new PreProServices());
+            model.Setup(new PreProServices(), GetCurrentUser().Id);
 
             return View(model);
         }

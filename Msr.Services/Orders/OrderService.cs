@@ -86,7 +86,7 @@ namespace Msr.Services.Orders
             return content;
         }
 
-        public WorkOrderDetailsResponse GetPurchaseItemDetails(int fillId)
+        public WorkOrderDetailsResponse GetPurchaseItemDetails(int fillId,string ntlogin)
         {
             var detailsResponse = new WorkOrderDetailsResponse {FillId = fillId};
 
@@ -108,14 +108,14 @@ namespace Msr.Services.Orders
 
             if (detailsResponse.FileSearchResult?.FillObjectId != null)
             {
-                var ncrData = SearchNcrs(detailsResponse.FileSearchResult.FillObjectId, "1618");
+                var ncrData = SearchNcrs(detailsResponse.FileSearchResult.FillObjectId, ntlogin);
                 detailsResponse.NcrCount = ncrData.Count();
             }
 
             return detailsResponse;
         }
 
-        public TsrDetailsResponse GetTsrDetails(int fillId)
+        public TsrDetailsResponse GetTsrDetails(int fillId,string ntlogin)
         {
             try
             {
@@ -132,7 +132,7 @@ namespace Msr.Services.Orders
                         detailsResponse.TsrTaskResults = multi.Read<TsrTaskResult>().ToList();
                     }
                 }
-                SearchNcrs(fillId, "1618");
+                SearchNcrs(fillId, ntlogin);
                 FormatHtml(detailsResponse);
 
                 return detailsResponse;

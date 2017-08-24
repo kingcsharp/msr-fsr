@@ -115,7 +115,8 @@ namespace Answer.Web.Controllers
         public ActionResult Create()
         {
             var saveRoleViewModel = new SaveRoleViewModel();
-            saveRoleViewModel.Setup(new RoleService(), new UserService());
+
+            saveRoleViewModel.Setup(new RoleService(), new UserService(),GetCurrentUser(),GetCurrentUser().Id);
 
             return View(saveRoleViewModel);
         }
@@ -142,13 +143,13 @@ namespace Answer.Web.Controllers
                 {
                     TempData["ErrorMessage"] = "Something went wrong.";
 
-                    model.Setup(new RoleService(), new UserService());
+                    model.Setup(new RoleService(), new UserService(), GetCurrentUser(), GetCurrentUser().Id);
 
                     return View(model);
                 }
             }
 
-            model.Setup(new RoleService(), new UserService());
+            model.Setup(new RoleService(), new UserService(), GetCurrentUser(), GetCurrentUser().Id);
 
             return View(model);
         }
@@ -162,7 +163,7 @@ namespace Answer.Web.Controllers
             var saveRoleViewModel = new SaveRoleViewModel();
 
             saveRoleViewModel = saveRoleViewModel.MapToDto(model);
-            saveRoleViewModel.Setup(new RoleService(), new UserService());
+            saveRoleViewModel.Setup(new RoleService(), new UserService(), GetCurrentUser(), GetCurrentUser().Id);
 
             return View(saveRoleViewModel);
         }
@@ -188,23 +189,23 @@ namespace Answer.Web.Controllers
                 {
                     TempData["ErrorMessage"] = "Something went wrong.";
 
-                    model.Setup(new RoleService(), new UserService());
+                    model.Setup(new RoleService(), new UserService(), GetCurrentUser(), GetCurrentUser().Id);
 
                     return View(model);
                 }
             }
 
-            model.Setup(new RoleService(), new UserService());
+            model.Setup(new RoleService(), new UserService(), GetCurrentUser(), GetCurrentUser().Id);
 
             return View(model);
         }
 
 
-        public ActionResult RoleDelete(string id)
+        public ActionResult RoleDelete(string id,string ntlogin)
         {
             var taskService = new RoleService();
 
-            var response = taskService.Delete(id: id);
+            var response = taskService.Delete(id: id,ntlogin:ntlogin);
 
             if (response)
             {
@@ -227,7 +228,7 @@ namespace Answer.Web.Controllers
             var saveRoleViewModel = new SaveRoleViewModel();
 
             saveRoleViewModel = saveRoleViewModel.MapToDto(model);
-            saveRoleViewModel.Setup(new RoleService(), new UserService());
+            saveRoleViewModel.Setup(new RoleService(), new UserService(), GetCurrentUser(), GetCurrentUser().Id);
 
             return View(saveRoleViewModel);
         }

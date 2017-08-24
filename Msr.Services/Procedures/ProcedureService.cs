@@ -34,25 +34,25 @@ namespace Msr.Services.Procedures
         {
             return GetProceduresQueryable().SingleOrDefault(x => x.ObjectId == id);
         }
-        public List<SelectFile> GetSelectedFiles(string id, string type)
+        public List<SelectFile> GetSelectedFiles(string id, string type,string ntlogin)
         {
             var objId = new SqlParameter("@objID", id ?? "0");
 
             var selecttype = type == null ? new SqlParameter("@type", DBNull.Value) : new SqlParameter("@type", type);
 
             //need to be dynamic
-            var NTLogin = new SqlParameter("@strNTLogin", "1618");
+            var NTLogin = new SqlParameter("@strNTLogin", ntlogin);
 
             var result = _dbContext.Database.SqlQuery<SelectFile>("EXEC A_SP_FILES_SHOW_FOR_OBJECT  @objID, @type, @strNTLogin", objId, selecttype, NTLogin).ToList();
 
             return result;
         }
-        public List<string> GetSelectedRoles(string id)
+        public List<string> GetSelectedRoles(string id,string ntlogin)
         {
             var objId = new SqlParameter("@strID", id ?? "0");
 
             //need to be dynamic
-            var NTLogin = new SqlParameter("@strNTLogin", "1618");
+            var NTLogin = new SqlParameter("@strNTLogin", ntlogin);
 
             var result = _dbContext.Database.SqlQuery<string>("EXEC Portal_GetProcedureRoles  @strID, @strNTLogin", objId, NTLogin).ToList();
 

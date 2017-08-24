@@ -71,7 +71,7 @@ namespace Msr.Services.Procedures.ViewModels
 
         public List<SelectListItem> RolesList { get; set; }
 
-        public void Setup(ProceduresService proceduresService, RoleService roleService, ProcedureVerbsService procedureTypesService)
+        public void Setup(ProceduresService proceduresService, RoleService roleService, ProcedureVerbsService procedureTypesService,string ntlogin)
         {
             SystemList = new List<SelectListItem>
             {
@@ -253,13 +253,13 @@ namespace Msr.Services.Procedures.ViewModels
             }).OrderBy(o => o.Text).ToList();
             VerbList.Insert(0, new SelectListItem { Text = @"Select Varb", Value = "" });
 
-            ReferenceFilesList = proceduresService.GetSelectedFiles(id: ObjectId, type: DBNull.Value.ToString(CultureInfo.InvariantCulture)).Select(x => new SelectListItem
+            ReferenceFilesList = proceduresService.GetSelectedFiles(id: ObjectId,ntlogin:ntlogin, type: DBNull.Value.ToString(CultureInfo.InvariantCulture)).Select(x => new SelectListItem
             {
                 Text = x.Show,
                 Value = x.Value.ToString()
             }).OrderBy(o => o.Text).ToList();
 
-            Roles = proceduresService.GetSelectedRoles(id: Id);
+            Roles = proceduresService.GetSelectedRoles(id: Id,ntlogin:ntlogin);
         }
 
         public SaveProcedureViewModel MapToDto(ProcedureView model)

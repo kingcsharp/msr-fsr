@@ -93,11 +93,11 @@ namespace Msr.Services.Locations
             }
         }
 
-        public bool Delete(string id)
+        public bool Delete(string id,string ntlogin)
         {
             try
             {
-                var NTLogin = "1618";
+                var NTLogin = ntlogin;
                 var deletePartProcedure = new DeleteLocationProcedure() { ObjID = id, NTLogin = NTLogin };
 
                 _dbContext.Database.ExecuteStoredProcedure(deletePartProcedure);

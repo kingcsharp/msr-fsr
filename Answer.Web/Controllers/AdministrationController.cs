@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Answer.Web.ViewModel.Administration;
 using System.Web.Mvc;
+using Msr.Models.Comman;
 using Msr.Services.Administration;
 using Msr.Services.Administration.Messages;
 using Msr.Services.Administration.ViewModels;
@@ -10,6 +11,7 @@ using Msr.Services.Companies;
 using Msr.Services.jqGrid;
 using Msr.Services.Locations;
 using Msr.Services.Roles;
+
 
 namespace Answer.Web.Controllers
 {
@@ -142,7 +144,7 @@ namespace Answer.Web.Controllers
         [HttpPost]
         public ActionResult UpdateAssignRoleToJob(List<UpdateAssignRoleToJobItem> companiesWithRoles, string selectedJobId)
         {
-            var result = _administrationService.UpdateAssignRoleToJob(new UpdateAssignRoleToJobRequest { RoleToJobItems = companiesWithRoles, SelectedJobId = selectedJobId });
+            var result = _administrationService.UpdateAssignRoleToJob(new UpdateAssignRoleToJobRequest { RoleToJobItems = companiesWithRoles, SelectedJobId = selectedJobId },GetCurrentUser().Id);
 
             if (!result.HasErrors())
             {
@@ -208,7 +210,7 @@ namespace Answer.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = _administrationService.UpdateAssignCompaniesToView(recievableRoleItems);
+                var result = _administrationService.UpdateAssignCompaniesToView(recievableRoleItems, GetCurrentUser().Id);
 
                 if (!result.HasErrors())
                 {
@@ -233,6 +235,8 @@ namespace Answer.Web.Controllers
 
             vm.SetUp(new RoleService());
 
+            vm.SelectedRoles = _roleService.GetSelectedRolesByCompanyId(GetCurrentUser().Company);
+               
             return View(vm);
         }
 
@@ -242,7 +246,8 @@ namespace Answer.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                var result = _administrationService.UpdateModuleAccess(items,GetCurrentUser().Id);
+
+                var result = _administrationService.UpdateModuleAccess(items, GetCurrentUser().Id);
 
                 if (!result.HasErrors())
                 {
@@ -312,7 +317,7 @@ namespace Answer.Web.Controllers
         {
             var vm = new ReAssignBossViewModel();
 
-            vm.NTLogin = "1618"; // Need to change
+            vm.NTLogin = GetCurrentUser().Id;
 
             vm.SetUp(_administrationService);
 
@@ -321,7 +326,7 @@ namespace Answer.Web.Controllers
         [HttpPost]
         public ActionResult ReAssignBoss(ReAssignBossViewModel items)
         {
-            items.NTLogin = "1618"; // Need to change
+            items.NTLogin = GetCurrentUser().Id;
             if (ModelState.IsValid)
             {
                 var model = new ReAssignBossView();
@@ -340,7 +345,7 @@ namespace Answer.Web.Controllers
 
             var vm = new ReAssignBossViewModel();
 
-            vm.NTLogin = "1618"; // Need to change
+            vm.NTLogin = GetCurrentUser().Id;
 
             vm.SetUp(_administrationService);
 

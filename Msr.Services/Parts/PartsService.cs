@@ -10,6 +10,7 @@ using EntityFrameworkExtras.EF6;
 using Msr.Services.Parts.ViewModels;
 using System.Data;
 using Msr.Models.Common;
+using Msr.Models.People;
 
 namespace Msr.Services.Parts
 {
@@ -30,7 +31,7 @@ namespace Msr.Services.Parts
         {
             return GetPartsQueryable().Where(x => x.ObjectId == Id).SingleOrDefault();
         }
-        public List<SelectFile> GetSelectedFiles(string id, string type)
+        public List<SelectFile> GetSelectedFiles(string id, string type,string ntlogin)
         {
             var objID = new SqlParameter("@objID", id == null ? "0" : id);
             var selecttype = new SqlParameter();
@@ -43,17 +44,17 @@ namespace Msr.Services.Parts
                 selecttype = new SqlParameter("@type", type);
             }
             //need to be dynamic
-            var NTLogin = new SqlParameter("@strNTLogin", "1618");
+            var NTLogin = new SqlParameter("@strNTLogin", ntlogin);
 
             var result = _dbContext.Database.SqlQuery<SelectFile>("EXEC A_SP_FILES_SHOW_FOR_OBJECT  @objID, @type, @strNTLogin", objID, selecttype, NTLogin).ToList();
 
             return result;
         }
-        public SelectInternalPart GetInternalPart(string id)
+        public SelectInternalPart GetInternalPart(string id,string ntlogin)
         {
             var strID = new SqlParameter("@strID", id == null ? "0" : id);
             //need to be dynamic
-            var NTLogin = new SqlParameter("@strNTLogin", "1618");
+            var NTLogin = new SqlParameter("@strNTLogin", ntlogin);
 
             var result = _dbContext.Database.SqlQuery<SelectInternalPart>("EXEC A_SP_PART_SHOW_EQUIVELANT_INTERNAL_PART  @strID, @strNTLogin", strID, NTLogin).SingleOrDefault();
 
@@ -75,7 +76,7 @@ namespace Msr.Services.Parts
 
             return result;
         }
-        public bool Save(AddPartViewModel model)
+        public bool Edit(AddPartViewModel model)
         {
             try
             {
@@ -128,7 +129,7 @@ namespace Msr.Services.Parts
                     CustomerSeeAvailability = model.CustomerSeeAvailability,
                     SupplierSeeAvailability = model.SupplierSeeAvailability,
                     SupplierSeeInstallBase = model.SupplierSeeInstallBase,
-                    InternalEqualParts = null,
+                    InternalEqualParts = model.InternalEqualParts,
                     WeightType = model.WeightType,
                     CreateProd = model.CreateProd,
                     SupplierCo = model.SupplierCo,
@@ -171,7 +172,7 @@ namespace Msr.Services.Parts
                     CustomerSeeAvailability = model.CustomerSeeAvailability,
                     SupplierSeeAvailability = model.SupplierSeeAvailability,
                     SupplierSeeInstallBase = model.SupplierSeeInstallBase,
-                    InternalEqualParts = null,
+                    InternalEqualParts = model.InternalEqualParts,
                     WeightType = model.WeightType,
                     CreateProd = model.CreateProd,
                     SupplierCo = model.SupplierCo,
@@ -232,12 +233,12 @@ namespace Msr.Services.Parts
                 return false;
             }
         }
-        public bool Delete(string id)
+        public bool Delete(string id,string ntlogin)
         {
             try
             {
                 //need to be dynamic
-                var NTLogin = "1618";
+                var NTLogin = ntlogin;
                 var deletePartProcedure = new DeletePartProcedure() { ObjID = id, NTLogin = NTLogin };
 
                 _dbContext.Database.ExecuteStoredProcedure(deletePartProcedure);
@@ -329,8 +330,8 @@ namespace Msr.Services.Parts
             var loginIdParam = new SqlParameter("@loginIdParam", loginId);
             var emailTypeParam = new SqlParameter("@emailTypeParam", emailType);
             var safetyStockRole = _dbContext.Database.ExecuteSqlCommand("INSERT INTO A_PARTS_SAFETY_STOCK_ROLES (ID,SAFETY_STOCK_ID,ROLE_ID,EMAIL_TYPE,DRCM,MODBY) " +
-                                                                    "VALUES (newID(), @safetyStockIdParam, @roleParam, @emailTypeParam, getDate(), @loginIdParam)",
-            safetyStockIdParam, roleParam, emailTypeParam, loginIdParam);
+                                                                        "VALUES (newID(), @safetyStockIdParam, @roleParam, @emailTypeParam, getDate(), @loginIdParam)",
+                safetyStockIdParam, roleParam, emailTypeParam, loginIdParam);
         }
 
         public string GetSinglePartSafetyStockIdByLocation(string locationId, string partObjectId)
@@ -342,6 +343,21 @@ namespace Msr.Services.Parts
                     "SELECT Id FROM A_PARTS_SAFETY_STOCK_LEVELS WHERE LOCATION_ID = @locationIdsParam AND PART_OBJ_ID = @partObjectIdParam",
                     locationIdsParam, partObjectIdParam).SingleOrDefault();
 
+            return result;
+        }
+
+        public string GetInternalEqualPartByPartId(string id)
+        {
+            var result =
+                _dbContext.Database.SqlQuery<string>(
+                        "SELECT EQUAL_PART_ID FROM A_PARTS_INTERNAL_EQUALS where PART_ID='" + id + "'")
+                    .FirstOrDefault();
+
+            return result;
+        }
+        public List<ProductSupplierView> GetProductSuppliersByCreatingCo(string id)
+        {
+            var result = _dbContext.Database.SqlQuery<ProductSupplierView>("SELECT DISTINCT TOP 500 NAME,ID FROM A_V_COMPANIES_DROP_SEARCH WHERE ROOT_CO_ID = '" + id + "'").ToList();
             return result;
         }
     }

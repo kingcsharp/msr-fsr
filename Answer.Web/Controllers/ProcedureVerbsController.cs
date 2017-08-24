@@ -24,7 +24,7 @@ namespace Answer.Web.Controllers
         {
             var procedureTypesService = new ProcedureVerbsService();
 
-            var totalRows = procedureTypesService.GetProceduresVerbs();
+            var totalRows = procedureTypesService.GetProceduresVerbs().Where(x => x.Status != "DELETED");
 
             if (param.where != null && param.where.rules.Any())
             {
@@ -107,7 +107,7 @@ namespace Answer.Web.Controllers
         {
             var procedureVerbsService = new ProcedureVerbsService();
 
-            model.NTLogin = "1618";
+            model.NTLogin = GetCurrentUser().Id;
 
             if (ModelState.IsValid)
             {
@@ -152,7 +152,7 @@ namespace Answer.Web.Controllers
         {
             var procedureService = new ProcedureVerbsService();
 
-            model.NTLogin = "1618";
+            model.NTLogin = GetCurrentUser().Id;
 
             if (ModelState.IsValid)
             {
@@ -178,11 +178,11 @@ namespace Answer.Web.Controllers
 
             return View(model);
         }
-        public ActionResult Delete(string id)
+        public ActionResult Delete(string id,string ntlogin)
         {
             var procedureVerbsService = new ProcedureVerbsService();
 
-            var response = procedureVerbsService.Delete(id: id);
+            var response = procedureVerbsService.Delete(id: id,ntlogin:ntlogin);
 
             if (response)
             {

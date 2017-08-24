@@ -103,7 +103,7 @@ namespace Msr.Services.PrePro.ViewModel
 
         public IList<SelectListItem> ReferenceTheoriesList { get; set; }
 
-        public void Setup(PreProServices preProServices)
+        public void Setup(PreProServices preProServices,string ntlogin)
         {
             BaseStartOnCounterList = new List<SelectListItem>
             {
@@ -244,14 +244,14 @@ namespace Msr.Services.PrePro.ViewModel
 
             };
 
-            ReferenceProceduresList = preProServices.GetSelectedRefProcedures(id: Id).Select(x => new SelectListItem
+            ReferenceProceduresList = preProServices.GetSelectedRefProcedures(id: Id,ntlogin:ntlogin).Select(x => new SelectListItem
             {
                 Text = x.Name,
                 Value = x.Id.ToString()
             }).OrderBy(o => o.Text).ToList();
 
 
-            ReferenceFilesList = preProServices.GetSelectedRefFiles(id: Id).Select(x => new SelectListItem
+            ReferenceFilesList = preProServices.GetSelectedRefFiles(id: Id,ntlogin:ntlogin).Select(x => new SelectListItem
             {
                 Text = x.Name,
                 Value = x.Id.ToString(),

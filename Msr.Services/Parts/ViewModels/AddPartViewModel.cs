@@ -27,6 +27,8 @@ namespace Msr.Services.Parts.ViewModels
             ListInternalEqualParts = new List<SelectListItem>();
             ListSpecialCustomers = new List<SelectListItem>();
             ListCustomerExceptions = new List<SelectListItem>();
+            ListPartsTypes = new List<SelectListItem>();
+            ListSupplierCompany = new List<SelectListItem>();
         }
 
         public string Id { get; set; }
@@ -69,14 +71,14 @@ namespace Msr.Services.Parts.ViewModels
         [DisplayName("Allow suppliers to see actual parts install base? :")]
         public Int16? SupplierSeeInstallBase { get; set; }
 
-        [DisplayName("InternalEqualPart :")]
+        [DisplayName("Internal Equal Part :")]
         public string InternalEqualParts { get; set; }
 
         [NotMapped]
         [DisplayName("Selected InternalEqualPart :")]
         public string SelectedInternalEqualParts { get; set; }
 
-        [DisplayName("ExternalEqualPart :")]
+        [DisplayName("External Equal Part :")]
         public string ExternalEqualParts { get; set; }
 
         [DisplayName("Shipping Weight Type :")]
@@ -139,16 +141,18 @@ namespace Msr.Services.Parts.ViewModels
 
         public IEnumerable<SelectListItem> PartsTypes { get; set; }
 
+        public List<SelectListItem> ListPartsTypes { get; set; }
+
         public IEnumerable<SelectListItem> ProductTypes { get; set; }
 
         public IEnumerable<SelectListItem> ListSpecialCustomers { get; set; }
 
         public IEnumerable<SelectListItem> ListCustomerExceptions { get; set; }
 
-        public IEnumerable<SelectListItem> ListSupplierCompany { get; set; }
+        public List<SelectListItem> ListSupplierCompany { get; set; }
 
 
-        public void Setup(DocumentFilesService documentFilesService, PartsService partsService, PartTypeService partTypeService)
+        public void Setup(DocumentFilesService documentFilesService, PartsService partsService, PartTypeService partTypeService, string CreatingCo,string ntlog)
         {
             OrderingUnits = new List<SelectListItem>
             {
@@ -182,7 +186,7 @@ namespace Msr.Services.Parts.ViewModels
 
             ShippingWeightTypes = new List<SelectListItem>
             {
-               new SelectListItem
+                new SelectListItem
                 {
                     Text = "Ounces",
                     Value = "WT_OZ",
@@ -202,7 +206,7 @@ namespace Msr.Services.Parts.ViewModels
             };
             CreateProds = new List<SelectListItem>
             {
-               new SelectListItem
+                new SelectListItem
                 {
                     Text = "No Product",
                     Value = "0",
@@ -217,7 +221,7 @@ namespace Msr.Services.Parts.ViewModels
             };
             Spares = new List<SelectListItem>
             {
-               new SelectListItem
+                new SelectListItem
                 {
                     Text = "No",
                     Value = "SPARE_NO",
@@ -228,12 +232,12 @@ namespace Msr.Services.Parts.ViewModels
                     Text = "Level 1",
                     Value = "SPARE_1"
                 },
-                 new SelectListItem
+                new SelectListItem
                 {
                     Text = "Level 2",
                     Value = "SPARE_2"
                 },
-                  new SelectListItem
+                new SelectListItem
                 {
                     Text = "Level 3",
                     Value = "SPARE_3"
@@ -242,7 +246,7 @@ namespace Msr.Services.Parts.ViewModels
             };
             Consumables = new List<SelectListItem>
             {
-               new SelectListItem
+                new SelectListItem
                 {
                     Text = "No",
                     Value = "CON_NO",
@@ -271,7 +275,7 @@ namespace Msr.Services.Parts.ViewModels
 
             ProductTypes = new List<SelectListItem>
             {
-               new SelectListItem
+                new SelectListItem
                 {
                     Text = "PROD_SERVICE",
                     Value = "SERVICE",
@@ -291,7 +295,7 @@ namespace Msr.Services.Parts.ViewModels
                     Text = "",
                     Value = ""
                 },
-               new SelectListItem
+                new SelectListItem
                 {
                     Text = "All Insternal Customers Except My Dept",
                     Value = "ALL_INTERNAL_BUT_ME"
@@ -302,15 +306,14 @@ namespace Msr.Services.Parts.ViewModels
                     Value = "ALL_EXTERNAL"
                 }
             };
-            //Need to be from session of loged in user Company
-            ListSupplierCompany = new List<SelectListItem>
+
+            ListSupplierCompany.Add(new SelectListItem { Value = CreatingCo, Text = @"[MSR-FSR] MSR-FSR" });
+
+            ListSupplierCompany.AddRange(partsService.GetProductSuppliersByCreatingCo(CreatingCo).ToList().Select(x => new SelectListItem
             {
-                new SelectListItem
-                {
-                    Text = @"[MSR-FSR] MSR-FSR",
-                    Value = "2"
-                }
-            };
+                Text = x.Name,
+                Value = x.Id.ToString()
+            }).OrderBy(o => o.Text).ToList());
 
             ListInternalEqualParts = partsService.GetPartsQueryable().ToList().Select(x => new SelectListItem
             {
@@ -318,25 +321,33 @@ namespace Msr.Services.Parts.ViewModels
                 Value = x.ObjectId.ToString()
             }).OrderBy(o => o.Text).ToList();
 
+            ListPartsTypes.Add(new SelectListItem { Value = "", Text = "" });
+
+            ListPartsTypes.AddRange(partTypeService.GetPartTypesQueryable().ToList().Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.Id.ToString()
+            }).OrderBy(o => o.Text).ToList());
+
             PartsTypes = partTypeService.GetPartTypesQueryable().ToList().Select(x => new SelectListItem
             {
                 Text = x.Name,
                 Value = x.Id.ToString()
             }).OrderBy(o => o.Text).ToList();
 
-            ListReferenceFiles = documentFilesService.GetSelectedFiles(id: Id, type: null).Select(x => new SelectListItem
+            ListReferenceFiles = documentFilesService.GetSelectedFiles(id: Id, type: null,ntlogin:ntlog).Select(x => new SelectListItem
             {
                 Text = x.Show,
                 Value = x.Value.ToString(),
             }).OrderBy(o => o.Text).ToList();
 
-            ListPictureFiles = documentFilesService.GetSelectedFiles(id: Id, type: "PICTURE").Select(x => new SelectListItem
+            ListPictureFiles = documentFilesService.GetSelectedFiles(id: Id, type: "PICTURE", ntlogin: ntlog).Select(x => new SelectListItem
             {
                 Text = x.Show,
                 Value = x.Value.ToString(),
             }).OrderBy(o => o.Text).ToList();
 
-            ListReferenceTheories = documentFilesService.GetSelectedFiles(id: Id, type: "THEORY").Select(x => new SelectListItem
+            ListReferenceTheories = documentFilesService.GetSelectedFiles(id: Id, type: "THEORY", ntlogin: ntlog).Select(x => new SelectListItem
             {
                 Text = x.Show,
                 Value = x.Value.ToString(),
@@ -380,8 +391,8 @@ namespace Msr.Services.Parts.ViewModels
                 CreateProd = model.CreateProd,
                 SupplierCo = model.SupplierCo,
                 ProductType = model.ProductType,
-                ProcVerb = model.ProcVerb
-
+                ProcVerb = model.ProcVerb,
+                Price = model.Price != null ? (string.Format("{0:0.00}", model.Price)).ToString() : null
             };
         }
     }
