@@ -282,6 +282,7 @@
     <Compile Include="PrePro\Procedure\SaveTheoryProcedure.cs" />
     <Compile Include="PrePro\TheoryFileService.cs" />
     <Compile Include="PrePro\ViewModel\ProcedurePreProViewModel.cs" />
+    <Compile Include="Procedures\Messages\GetStepDataResult.cs" />
     <Compile Include="Procedures\Messages\ProceduresApprovedDataResult.cs" />
     <Compile Include="People\Procedures\SavePasswrodProcedure.cs" />
     <Compile Include="People\Procedures\EditPeopleProcedure.cs" />
@@ -289,6 +290,7 @@
     <Compile Include="People\ViewModels\EditPeopleViewModel.cs" />
     <Compile Include="People\ViewModels\AddPeopleViewModel.cs" />
     <Compile Include="Procedures\ProcedureService.cs" />
+    <Compile Include="Procedures\Procedures\GetStepsDataProcedure.cs" />
     <Compile Include="Procedures\Procedures\AdminSqlToRunQueUpProcedure.cs" />
     <Compile Include="Procedures\Procedures\DeleteProcedureRolesProcedure.cs" />
     <Compile Include="Procedures\Procedures\SaveFileProcedure.cs" />

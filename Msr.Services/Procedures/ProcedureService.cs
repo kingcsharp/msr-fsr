@@ -9,6 +9,7 @@ using System.Globalization;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Msr.Models.Common;
 using Msr.Services.Procedures.Messages;
@@ -202,6 +203,27 @@ namespace Msr.Services.Procedures
             }
 
             return new BaseNotification();
+        }
+
+        public List<GetStepDataResult> GetStepsData(string procedureObjectId, string loginId)
+        {
+            var getStepsDataProcedure = new GetStepsDataProcedure() { ProcedureObjectId = procedureObjectId, NTLogin = loginId};
+            var result = _dbContext.Database.ExecuteStoredProcedure<GetStepDataResult>(getStepsDataProcedure).ToList();
+            foreach (var stepData in result)
+            {
+                stepData.Step_Text = stepData.Step_Text.Replace("<<bb>>", "<br/><h4>")
+                        .Replace("<</bb>>", "</h4>")
+                        .Replace("<<nl/>>", "<br/>");
+
+                if (!string.IsNullOrWhiteSpace(stepData.Pre_Step))
+                {
+                    Regex regex = new Regex("<i>(.*)</i>");
+                    var preStepMatch = regex.Match(stepData.Pre_Step);
+                    stepData.Pre_Step = preStepMatch.Groups[1].ToString();
+                }
+            }
+
+            return result;
         }
     }
 }
