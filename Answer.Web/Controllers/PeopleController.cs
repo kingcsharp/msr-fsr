@@ -199,7 +199,7 @@ namespace Answer.Web.Controllers
 
             people.MapToDto(model);
 
-            people.Setup(new DocumentFilesService(), new PeopleService(), new CompanyService());
+            people.Setup(new DocumentFilesService(), new PeopleService(), new CompanyService(), GetCurrentUser().Id);
 
             if (phoneInfo != null)
             {
@@ -243,7 +243,7 @@ namespace Answer.Web.Controllers
                 else
                 {
                     TempData["ErrorMessage"] = "Something went wrong.";
-                    model.Setup(new DocumentFilesService(), new PeopleService(), new CompanyService());
+                    model.Setup(new DocumentFilesService(), new PeopleService(), new CompanyService(), GetCurrentUser().Id);
 
                     return View(model);
                 }

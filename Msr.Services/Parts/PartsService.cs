@@ -31,7 +31,7 @@ namespace Msr.Services.Parts
         {
             return GetPartsQueryable().Where(x => x.ObjectId == Id).SingleOrDefault();
         }
-        public List<SelectFile> GetSelectedFiles(string id, string type)
+        public List<SelectFile> GetSelectedFiles(string id, string type,string ntlogin)
         {
             var objID = new SqlParameter("@objID", id == null ? "0" : id);
             var selecttype = new SqlParameter();
@@ -44,17 +44,17 @@ namespace Msr.Services.Parts
                 selecttype = new SqlParameter("@type", type);
             }
             //need to be dynamic
-            var NTLogin = new SqlParameter("@strNTLogin", "1618");
+            var NTLogin = new SqlParameter("@strNTLogin", ntlogin);
 
             var result = _dbContext.Database.SqlQuery<SelectFile>("EXEC A_SP_FILES_SHOW_FOR_OBJECT  @objID, @type, @strNTLogin", objID, selecttype, NTLogin).ToList();
 
             return result;
         }
-        public SelectInternalPart GetInternalPart(string id)
+        public SelectInternalPart GetInternalPart(string id,string ntlogin)
         {
             var strID = new SqlParameter("@strID", id == null ? "0" : id);
             //need to be dynamic
-            var NTLogin = new SqlParameter("@strNTLogin", "1618");
+            var NTLogin = new SqlParameter("@strNTLogin", ntlogin);
 
             var result = _dbContext.Database.SqlQuery<SelectInternalPart>("EXEC A_SP_PART_SHOW_EQUIVELANT_INTERNAL_PART  @strID, @strNTLogin", strID, NTLogin).SingleOrDefault();
 
@@ -233,12 +233,12 @@ namespace Msr.Services.Parts
                 return false;
             }
         }
-        public bool Delete(string id)
+        public bool Delete(string id,string ntlogin)
         {
             try
             {
                 //need to be dynamic
-                var NTLogin = "1618";
+                var NTLogin = ntlogin;
                 var deletePartProcedure = new DeletePartProcedure() { ObjID = id, NTLogin = NTLogin };
 
                 _dbContext.Database.ExecuteStoredProcedure(deletePartProcedure);

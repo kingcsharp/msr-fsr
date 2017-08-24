@@ -18,7 +18,7 @@
                 <div class="col-lg-2">
                     @Html.Partial("_AdminSetup")
                 </div>
-                <div class="col-lg-6">
+                <div class="col-lg-4">
                     @Html.Partial("Message")
 
                     @using (Html.BeginForm("ModuleAccess", "Administration", FormMethod.Post, new {id = "assign-form"}))
@@ -33,9 +33,10 @@
                             {
                                 <tr>
                                     <td>@Model.CompaniesToView[index].Name</td>
-                                    <td>
-                                        @Html.Hidden("items[" + index + "].CoId", Model.CompaniesToView[index].Id)
-                                        @Html.DropDownList("items[" + index + "].RoleId", Model.Roles, new { @class = "form-control select roles-select", multiple = "multiple" })
+                                    <td style="width: 300px;">
+                                        @Html.Hidden("items[" + index + "].Id", Model.CompaniesToView[index].Id)
+                                        @Html.DropDownList("items[" + index + "].RoleId", new SelectList(Model.Roles, "Value", "Text", Model.SelectedRoles.Where(x=>x.Menu_Id == Model.CompaniesToView[index].Id).Select(x=>x.Role_Id)), new { @class = "form-control select-"+index+"", multiple = "multiple" })
+                                        
                                     </td>
                                 </tr>
                             }
@@ -60,21 +61,30 @@
     <script type="text/javascript">
         $(document).ready(function() {
 
-            $('.select').select2();
+            @for (int index = 0; index < Model.CompaniesToView.Count; index++)
+            {
+                <text>
+                    
+                   $('.select-@index').select2();
 
-            var selectPeoples = $(".roles-select").select2({
-                tags: [],
-                tokenSeparators: [','],
-                multiple: true,
-                allowClear: true,
-                placeholder: "Select Role",
-                formatNoMatches: function () {
-                    return '';
-                }
-            });
-            var values = '@roles';
-            var selectedPeoples = values.split(",");
-            selectPeoples.val(selectedPeoples).trigger("change");
+                    var selectPeoples = $(".select-@index").select2({
+                        tags: [],
+                        tokenSeparators: [','],
+                        multiple: true,
+                        allowClear: true,
+                        placeholder: "Select Role",
+                        formatNoMatches: function () {
+                            return '';
+                        }
+                    });
+                    var values = '@string.Join(",",Model.SelectedRoles.Where(x => x.Menu_Id == Model.CompaniesToView[index].Id).Select(x => x.Role_Id))';
+                    var selectedPeoples = values.split(",");
+                    selectPeoples.val(selectedPeoples).trigger("change");
+
+                </text>
+            }
+
+          
 
         });
     </script>

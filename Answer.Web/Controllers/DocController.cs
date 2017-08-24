@@ -105,7 +105,7 @@ namespace Answer.Web.Controllers
         {
             var orderService = new OrderService();
 
-            var response = orderService.DeleteOrderItemImageById(id, "1618");
+            var response = orderService.DeleteOrderItemImageById(id, GetCurrentUser().Id);
 
                 if (response)
                 {

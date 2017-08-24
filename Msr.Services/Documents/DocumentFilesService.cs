@@ -15,7 +15,7 @@ namespace Msr.Services.Documents
         {
             _dbContext = new MsrDbContext();
         }
-        public List<SelectFile> GetSelectedFiles(string id, string type)
+        public List<SelectFile> GetSelectedFiles(string id, string type,string ntlogin)
         {
             var objID = new SqlParameter("@objID", id == null ? "0" : id);
             var selecttype = new SqlParameter();
@@ -28,7 +28,7 @@ namespace Msr.Services.Documents
                 selecttype = new SqlParameter("@type", type);
             }
             //need to be dynamic
-            var NTLogin = new SqlParameter("@strNTLogin", "1618");
+            var NTLogin = new SqlParameter("@strNTLogin", ntlogin);
 
             var result = _dbContext.Database.SqlQuery<SelectFile>("EXEC A_SP_FILES_SHOW_FOR_OBJECT  @objID, @type, @strNTLogin", objID, selecttype, NTLogin).ToList();
 

@@ -35,23 +35,23 @@ namespace Msr.Services.PrePro
             return GetPreProQueryable().SingleOrDefault(x => x.Id == id);
         }
 
-        public List<SelectFile> GetSelectedRefProcedures(string id)
+        public List<SelectFile> GetSelectedRefProcedures(string id,string ntlogin)
         {
             var objId = new SqlParameter("@ID", id ?? "0");
 
             //need to be dynamic
-            var NTLogin = new SqlParameter("@strNTLogin", "1618");
+            var NTLogin = new SqlParameter("@strNTLogin", ntlogin);
 
             var result = _dbContext.Database.SqlQuery<SelectFile>("EXEC Portal_ProcedureStepGetRefProcedures @ID, @strNTLogin", objId, NTLogin).ToList();
 
             return result;
         }
-        public List<SelectFile> GetSelectedRefFiles(string id)
+        public List<SelectFile> GetSelectedRefFiles(string id, string ntlogin)
         {
             var objId = new SqlParameter("@procStepID", id ?? "0");
 
             //need to be dynamic
-            var NTLogin = new SqlParameter("@strNTLogin", "1618");
+            var NTLogin = new SqlParameter("@strNTLogin", ntlogin);
 
             var result = _dbContext.Database.SqlQuery<SelectFile>("EXEC Portal_ProcedureStepGetRefFiles @procStepID, @strNTLogin", objId, NTLogin).ToList();
 
@@ -67,12 +67,12 @@ namespace Msr.Services.PrePro
             return result;
         }
 
-        public bool Delete(string id)
+        public bool Delete(string id,string ntlogin)
         {
             try
             {
                 //need to be dynamic
-                var NTLogin = "1618";
+                var NTLogin = ntlogin;
                 var deletePreproProcedure = new DeleteProcedureStepProcedure() { Objid = id, NTLogin = NTLogin };
 
                 _dbContext.Database.ExecuteStoredProcedure(deletePreproProcedure);

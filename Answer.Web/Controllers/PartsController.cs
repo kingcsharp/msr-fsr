@@ -77,6 +77,14 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.CompanyName.ToLower().Contains(rule.data.ToLower()));
                     }
+                    else if (rule.field == nameof(PartsView.Consumable))
+                    {
+                        totalRows = totalRows.Where(x => x.Consumable.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(PartsView.LockedByName))
+                    {
+                        totalRows = totalRows.Where(x => x.LockedByName.ToLower().Contains(rule.data.ToLower()));
+                    }
                     else if (rule.field == nameof(PartsView.Rev))
                     {
                         int value;
@@ -140,7 +148,7 @@ namespace Answer.Web.Controllers
 
             part = part.MapToDto(model);
 
-            part.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), GetCurrentUser().Company);
+            part.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), GetCurrentUser().Company, GetCurrentUser().Id);
 
             return View(part);
         }
@@ -155,7 +163,7 @@ namespace Answer.Web.Controllers
         {
             var part = new AddPartViewModel();
 
-            part.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), GetCurrentUser().Company);
+            part.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), GetCurrentUser().Company, GetCurrentUser().Id);
 
             return View(part);
         }
@@ -181,14 +189,14 @@ namespace Answer.Web.Controllers
                 {
                     TempData["ErrorMessage"] = "Something went wrong.";
 
-                    model.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), GetCurrentUser().Company);
+                    model.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), GetCurrentUser().Company,GetCurrentUser().Id);
 
                     return View(model);
                 }
 
             }
 
-            model.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), GetCurrentUser().Company);
+            model.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), GetCurrentUser().Company, GetCurrentUser().Id);
 
             return View(model);
 
@@ -203,7 +211,7 @@ namespace Answer.Web.Controllers
 
             part = part.MapToDto(model);
 
-            part.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), GetCurrentUser().Company);
+            part.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), GetCurrentUser().Company, GetCurrentUser().Id);
 
             part.InternalEqualParts = taskService.GetInternalEqualPartByPartId(part.Id);
             return View(part);
@@ -230,20 +238,20 @@ namespace Answer.Web.Controllers
 
                 TempData["ErrorMessage"] = "Something went wrong.";
 
-                model.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), GetCurrentUser().Company);
+                model.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), GetCurrentUser().Company, GetCurrentUser().Id);
 
                 return View(model);
             }
 
-            model.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), GetCurrentUser().Company);
+            model.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), GetCurrentUser().Company, GetCurrentUser().Id);
 
             return View(model);
         }
-        public ActionResult PartDelete(string id)
+        public ActionResult PartDelete(string id,string ntlog)
         {
             var taskService = new PartsService();
 
-            var response = taskService.Delete(id: id);
+            var response = taskService.Delete(id: id,ntlogin:ntlog);
 
             if (response)
             {

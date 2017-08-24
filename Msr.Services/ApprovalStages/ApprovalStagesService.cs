@@ -32,11 +32,11 @@ namespace Msr.Services.ApprovalStages
             return GetApprovalStagesQueryable().Where(x => x.Id == id).FirstOrDefault();
         }
 
-        public List<SelectMemberGroup> GetStageMemberGroups(string id)
+        public List<SelectMemberGroup> GetStageMemberGroups(string id,string ntlog)
         {
             var strID = new SqlParameter("@ID", id == null ? "0" : id);
 
-            var NTLogin = new SqlParameter("@strNTLogin", "1618");
+            var NTLogin = new SqlParameter("@strNTLogin", ntlog);
 
             var result = _dbContext.Database.SqlQuery<SelectMemberGroup>("EXEC Portal_SelectStageMemberGroups  @ID, @strNTLogin", strID, NTLogin).ToList();
 

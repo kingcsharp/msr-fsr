@@ -82,7 +82,7 @@ namespace Msr.Services.Administration
             return result;
         }
 
-        public BaseNotification UpdateAssignRoleToJob(UpdateAssignRoleToJobRequest jobRequest)
+        public BaseNotification UpdateAssignRoleToJob(UpdateAssignRoleToJobRequest jobRequest,string ntlogin)
         {
             var result = new BaseNotification();
 
@@ -90,7 +90,7 @@ namespace Msr.Services.Administration
             {
                 foreach (var job in jobRequest.RoleToJobItems)
                 {
-                    var sql = $"exec A_SP_ADMIN_JOB_ROLE_UPDATE '{jobRequest.SelectedJobId}', '{job.CoId}','{job.RoleId}','1618'";
+                    var sql = $"exec A_SP_ADMIN_JOB_ROLE_UPDATE '{jobRequest.SelectedJobId}', '{job.CoId}','{job.RoleId}','ntlogin'";
 
                     _dbContext.Database.ExecuteSqlCommand(sql);
                 }
@@ -112,7 +112,7 @@ namespace Msr.Services.Administration
             {
                 foreach (var job in items)
                 {
-                    var sql = $"exec A_SP_ADMIN_SERVICE_CALL_ACCT_RECEIVABLE_ROLE_UPDATE '{job.CoId}','{job.RoleId}','{job.LocationId}','1618'";
+                    var sql = $"exec A_SP_ADMIN_SERVICE_CALL_ACCT_RECEIVABLE_ROLE_UPDATE '{job.CoId}','{job.RoleId}','{job.LocationId}','ntlogin'";
 
                     _dbContext.Database.ExecuteSqlCommand(sql);
                 }
@@ -120,7 +120,7 @@ namespace Msr.Services.Administration
             }
             catch (Exception ex)
             {
-
+               
             }
 
             return result;
@@ -143,7 +143,7 @@ namespace Msr.Services.Administration
             return result;
         }
 
-        public BaseNotification UpdateAssignCompaniesToView(List<AssignCompaniesToViewItemViewModel> items)
+        public BaseNotification UpdateAssignCompaniesToView(List<AssignCompaniesToViewItemViewModel> items,string ntlogin)
         {
             var result = new BaseNotification();
 
@@ -151,7 +151,7 @@ namespace Msr.Services.Administration
             {
                 foreach (var job in items)
                 {
-                    var sql = $"exec A_SP_ADMIN_COMPANIES_CAN_VIEW_ME_UPDATE '{job.CoId}','{job.ViewCoId}','1618'";
+                    var sql = $"exec A_SP_ADMIN_COMPANIES_CAN_VIEW_ME_UPDATE '{job.CoId}','{job.ViewCoId}','ntlogin'";
 
                     _dbContext.Database.ExecuteSqlCommand(sql);
                 }
@@ -182,8 +182,8 @@ namespace Msr.Services.Administration
             {
                 foreach (var job in items)
                 {
-                    var sql = $"exec A_SP_ADMIN_MENU_ROLES_UPDATE '{job.Id}','{string.Join(",", job.RoleId)}','{loginId}'";
-
+                    var sql = $"exec A_SP_ADMIN_MENU_ROLES_UPDATE '{job.Id}','{string.Join(", ", job.RoleId)}','{loginId}'";
+                   
                     _dbContext.Database.ExecuteSqlCommand(sql);
                 }
 

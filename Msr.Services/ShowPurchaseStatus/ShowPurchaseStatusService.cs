@@ -17,7 +17,7 @@ namespace Msr.Services.ShowPurchaseStatus
         {
             _dbContext = new MsrDbContext();
         }
-        public IQueryable<ShowPurchaseStatusView> GetPurchaseStatusQueryable(string id)
+        public IQueryable<ShowPurchaseStatusView> GetPurchaseStatusQueryable(string id,string ntlogin)
         {
             var fieldList = new SqlParameter("@fieldList", DBNull.Value);
             var alias = new SqlParameter("@alias", "S");
@@ -26,8 +26,7 @@ namespace Msr.Services.ShowPurchaseStatus
             var strObjects = new SqlParameter("@strObjects", DBNull.Value);
             var strProjects = new SqlParameter("@strProjects", DBNull.Value);
             var strSort = new SqlParameter("@strSort", "ORDER BY SORT_ID");
-            //need to be dynamic
-            var strNTLogin = new SqlParameter("@strNTLogin", "1618");
+            var strNTLogin = new SqlParameter("@strNTLogin", ntlogin);
 
             var result = _dbContext.Database.SqlQuery<ShowPurchaseStatusView>("EXEC A_SP_TASKS_SEARCH @fieldList,@alias,@strWHERE,@strPurposes,@strObjects,@strProjects,@strSort,@strNTLogin", fieldList, alias, strWhere, strPurposes, strObjects, strProjects, strSort, strNTLogin).ToList();
 
