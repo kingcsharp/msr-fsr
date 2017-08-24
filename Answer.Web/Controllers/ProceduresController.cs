@@ -285,5 +285,11 @@ namespace Answer.Web.Controllers
 
             return View(model);
         }
+
+        public ActionResult EditSteps(string id)
+        {
+            var viewModel = _proceduresService.GetStepsData(id, "1618");
+            return View(viewModel);
+        }
     }
 }
