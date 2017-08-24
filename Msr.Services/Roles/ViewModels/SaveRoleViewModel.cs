@@ -15,6 +15,11 @@ namespace Msr.Services.Roles.ViewModels
 {
     public class SaveRoleViewModel
     {
+        public SaveRoleViewModel()
+        {
+            ChildRoles = new List<string>();
+            PeopleAssigned = new List<string>();
+        }
         public string Id { get; set; }
 
         [Required]

@@ -1,22 +1,15 @@
-﻿using Msr.Models;
-using Msr.Services.Documents;
-using Msr.Services.jqGrid;
+﻿using Msr.Services.jqGrid;
 using Msr.Services.PrePro;
 using Msr.Services.PrePro.ViewModel;
-using Msr.Services.ProcedureTypes;
-using Msr.Services.TheoryParagraph;
 using Msr.Web.ViewModel.Engineering;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Msr.Models.PrePro;
-using Msr.Services.ProcedureVerbs;
 
 namespace Answer.Web.Controllers
 {
-    public class PreProSearchController : Controller
+    public class PreProSearchController : BaseController
     {
         // GET: PreProSearch
         public ActionResult Index()
@@ -127,21 +120,23 @@ namespace Answer.Web.Controllers
 
         public ActionResult Create()
         {
-            var part = new ProcedurePreProViewModel();
+            var model = new ProcedurePreProViewModel();
 
-            part.Setup(new PreProServices());
+            model.CreatingCo = GetCurrentUser().Company;
 
-            return View(part);
+            model.Setup(new PreProServices());
+
+            return View(model);
         }
         [AcceptVerbs(HttpVerbs.Post)]
+        [ValidateInput(false)]
         public ActionResult Create(ProcedurePreProViewModel model)
         {
             var taskService = new PreProServices();
 
             if (ModelState.IsValid)
             {
-                //Need to dynamic 
-                model.NTLogin = "1618";
+                model.NTLogin = GetCurrentUser().Id;
                 //  model.SubParts = null;
 
                 var response = taskService.Create(model: model);
@@ -194,6 +189,8 @@ namespace Answer.Web.Controllers
 
             procedurePreProView = procedurePreProView.MapToDto(model);
 
+            procedurePreProView.CreatingCo = GetCurrentUser().Company;
+
             procedurePreProView.Setup(new PreProServices());
 
             procedurePreProView.Labor = "No Labour Assigned";
@@ -202,14 +199,14 @@ namespace Answer.Web.Controllers
             return View(procedurePreProView);
         }
         [AcceptVerbs(HttpVerbs.Post)]
+        [ValidateInput(false)]
         public ActionResult Edit(ProcedurePreProViewModel model)
         {
             var preProServices = new PreProServices();
 
             if (ModelState.IsValid)
             {
-                //Need to dynamic 
-                model.NTLogin = "1618";
+                model.NTLogin = GetCurrentUser().Id;
 
                 var response = preProServices.Save(model: model);
 

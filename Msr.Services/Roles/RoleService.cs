@@ -65,26 +65,29 @@ namespace Msr.Services.Roles
 
                 _dbContext.Database.ExecuteStoredProcedure(saveUserRoleProcedure);
 
-                var singleRole = GetRoleByid(saveUserRoleProcedure.ReturnID);
+                var sql =
+                    "SELECT OBJECT_ID as ObjectId FROM A_ROLES_HISTORY WHERE ID = '" + saveUserRoleProcedure.ReturnID + "'";
 
-                var deleteRoleParentSaveProcedure = new DeleteRoleParentProcedure() { ObjId = singleRole.ObjectId, NTLogin = model.NTLogin };
+                var ObjectId = _dbContext.Database.SqlQuery<string>(sql);
+
+                var deleteRoleParentSaveProcedure = new DeleteRoleParentProcedure() { ObjId = ObjectId.ToString(), NTLogin = model.NTLogin };
 
                 _dbContext.Database.ExecuteStoredProcedure(deleteRoleParentSaveProcedure);
 
-                var deleteRolePeopleAssignedProcedure = new DeleteRoleAssignedProcedure() { ObjId = singleRole.ObjectId, NTLogin = model.NTLogin };
+                var deleteRolePeopleAssignedProcedure = new DeleteRoleAssignedProcedure() { ObjId = ObjectId.ToString(), NTLogin = model.NTLogin };
 
                 _dbContext.Database.ExecuteStoredProcedure(deleteRolePeopleAssignedProcedure);
 
                 foreach (var file in model.ChildRoles)
                 {
-                    var saveFileProcedure = new SaveRoleToRoleProcedure() { Child = file, StrId = singleRole.ObjectId, NTLogin = model.NTLogin };
+                    var saveFileProcedure = new SaveRoleToRoleProcedure() { Child = file, StrId = saveUserRoleProcedure.ReturnID, NTLogin = model.NTLogin };
 
                     _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
                 }
 
                 foreach (var file in model.PeopleAssigned)
                 {
-                    var saveFileProcedure = new SaveRoleToRoleProcedure() { Child = file, StrId = singleRole.ObjectId, NTLogin = model.NTLogin };
+                    var saveFileProcedure = new SaveRoleAssignPersonRoleProcedure() { Child = file, StrId = saveUserRoleProcedure.ReturnID, NTLogin = model.NTLogin };
 
                     _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
                 }
@@ -99,7 +102,7 @@ namespace Msr.Services.Roles
             }
         }
 
-        public bool Edit(SaveRoleViewModel model)
+        public bool Save(SaveRoleViewModel model)
         {
             try
             {
@@ -128,7 +131,6 @@ namespace Msr.Services.Roles
 
                     _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
                 }
-
 
                 return true;
 
@@ -172,5 +174,7 @@ namespace Msr.Services.Roles
 
             return result;
         }
+
+
     }
 }

@@ -28,7 +28,7 @@ namespace Answer.Web.Controllers
 
             return PartialView("_Locations");
         }
-             
+
         public ActionResult LocationsData(JqGridParam param)
         {
             var locationService = new LocationService();
@@ -46,6 +46,28 @@ namespace Answer.Web.Controllers
                     if (rule.field == nameof(LocationView.Id))
                     {
                         totalRows = totalRows.Where(x => x.Id == rule.data);
+                    }
+                    else if (rule.field == nameof(LocationView.Name))
+                    {
+                        totalRows = totalRows.Where(x => x.Name.ToLower().Contains(rule.data.ToLower()));
+                    }
+
+                    else if (rule.field == nameof(LocationView.RegionName))
+                    {
+                        totalRows = totalRows.Where(x => x.RegionName.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(LocationView.Revision))
+                    {
+                        int value;
+                        if (Int32.TryParse(rule.data, out value))
+                        {
+                            totalRows = totalRows.Where(x => x.Revision == value);
+                        }
+
+                    }
+                    else if (rule.field == nameof(LocationView.LockedByName))
+                    {
+                        totalRows = totalRows.Where(x => x.LockedByName.ToLower().Contains(rule.data.ToLower()));
                     }
                     else if (rule.field == nameof(LocationView.Name))
                     {

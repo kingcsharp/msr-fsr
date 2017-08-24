@@ -54,7 +54,7 @@ namespace Msr.Services.PrePro.ViewModel
 
         public string ApplicationObjects { get; set; }
 
-        public List<string> ReferenceObject { get; set; }
+        public string ReferenceObject { get; set; }
 
         public List<string> ReferenceTheories { get; set; }
 
@@ -82,13 +82,15 @@ namespace Msr.Services.PrePro.ViewModel
 
         public string NTLogin { get; set; }
 
+        public string CreatingCo { get; set; }
+
         public List<SelectListItem> BaseStartOnCounterList { get; set; }
 
         public List<SelectListItem> StepDurationTypeList { get; set; }
 
         public List<SelectListItem> SystemTaskList { get; set; }
 
-        public IList<SelectListItem> ReferenceVerbList { get; set; }
+        public List<SelectListItem> ReferenceVerbList { get; set; }
 
         public List<SelectListItem> ReferenceObjectsList { get; set; }
 
@@ -105,11 +107,11 @@ namespace Msr.Services.PrePro.ViewModel
         {
             BaseStartOnCounterList = new List<SelectListItem>
             {
-                    new SelectListItem
-                    { Text = "NO",
-                        Value = "0",
-                        Selected = true
-                    },
+                new SelectListItem
+                { Text = "NO",
+                    Value = "0",
+                    Selected = true
+                },
                 new SelectListItem
                 {
                     Text = "YES",
@@ -132,7 +134,7 @@ namespace Msr.Services.PrePro.ViewModel
                     Value = "TIME_SYS_MINUTES",
                     Selected = true
                 },
-                 new SelectListItem
+                new SelectListItem
                 {
                     Text = "SYS_HOURS",
                     Value = "TIME_SYS_HOURS"
@@ -170,7 +172,7 @@ namespace Msr.Services.PrePro.ViewModel
                     Value = "SYS_CONSUME",
                     Selected = true
                 },
-                 new SelectListItem
+                new SelectListItem
                 {
                     Text = "SYS_CREATE",
                     Value = "SYS_CREATE"
@@ -204,7 +206,7 @@ namespace Msr.Services.PrePro.ViewModel
                     Value = "SYS_PROVIED_AND_STAY",
 
                 },
-                 new SelectListItem
+                new SelectListItem
                 {
                     Text = "SYS_PROVIDE_TAKE_BACK",
                     Value = "SYS_PROVIDE_TAKE_BACK",
@@ -227,7 +229,7 @@ namespace Msr.Services.PrePro.ViewModel
                     Value = "SYS_SEND",
 
                 },
-                 new SelectListItem
+                new SelectListItem
                 {
                     Text = "SYS_SERIALIZE",
                     Value = "SYS_SERIALIZE",
@@ -262,8 +264,24 @@ namespace Msr.Services.PrePro.ViewModel
                 Value = x.Id.ToString(),
             }).OrderBy(o => o.Text).ToList();
 
+            ReferenceVerbList.Add(new SelectListItem { Value = "", Text = "--Select--" });
+
+            ReferenceVerbList.AddRange(preProServices.GetApprovedVerbsByCreatingCo(CreatingCo).Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.Id.ToString(),
+            }).OrderBy(o => o.Text).ToList());
+
+            ReferenceObjectsList.Add(new SelectListItem { Value = "", Text = "--Select--" });
+
+            ReferenceObjectsList.AddRange(preProServices.GetReferenceObjectsByCreatingCo(CreatingCo).Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.Id.ToString(),
+            }).OrderBy(o => o.Text).ToList());
+
         }
-     
+
         public ProcedurePreProViewModel MapToDto(PrePropSearchView model)
         {
             return new ProcedurePreProViewModel
@@ -279,8 +297,8 @@ namespace Msr.Services.PrePro.ViewModel
                 SystemTask = model.SystemTask,
                 //NumTestQuestion = model,
                 //ApplicationObjects = model,
-                ////ReferenceVerb = model.ReferenceVerb,
-                ////ReferenceObject = model.ReferenceObject
+                ReferenceVerb = model.ReferenceVerb,
+                ReferenceObject = model.ReferenceObject,
                 Comments = model.Comments
             };
         }

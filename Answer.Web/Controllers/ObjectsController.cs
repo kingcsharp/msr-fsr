@@ -9,7 +9,7 @@ using System.Web.Mvc;
 
 namespace Answer.Web.Controllers
 {
-    public class ObjectsController : Controller
+    public class ObjectsController : BaseController
     {
         public ActionResult Index()
         {

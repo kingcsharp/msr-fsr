@@ -9,7 +9,7 @@ using System.Web.Mvc;
 
 namespace Answer.Web.Controllers
 {
-    public class TheoryParagraphController : Controller
+    public class TheoryParagraphController : BaseController
     {
         // GET: TheoryParagraph
         public ActionResult Index()

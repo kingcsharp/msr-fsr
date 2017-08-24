@@ -66,7 +66,7 @@ namespace Msr.Services.PrePro
 
             return result;
         }
-       
+
         public bool Delete(string id)
         {
             try
@@ -122,7 +122,7 @@ namespace Msr.Services.PrePro
 
                 _dbContext.Database.ExecuteStoredProcedure(savePartProcedure);
 
-                var savePrePopProcedure = new SavePrePopProcedure() { ObjId = model.ObjectId , ProcStepId = model.Id, NTLogin = model.NTLogin };
+                var savePrePopProcedure = new SavePrePopProcedure() { ObjId = model.ObjectId, ProcStepId = model.Id, NTLogin = model.NTLogin };
 
                 _dbContext.Database.ExecuteStoredProcedure(savePrePopProcedure);
 
@@ -208,6 +208,18 @@ namespace Msr.Services.PrePro
 
                 return false;
             }
+        }
+        public List<SelectFile> GetApprovedVerbsByCreatingCo(string CreatingCo)
+        {
+            var result = _dbContext.Database.SqlQuery<SelectFile>("SET QUOTED_IDENTIFIER OFF SELECT NAME AS Name, ID AS Id, CREATING_CO as CreatingCo FROM A_APPROVED_VERBS where CREATING_CO='" + CreatingCo + "'").ToList();
+
+            return result;
+        }
+        public List<SelectFile> GetReferenceObjectsByCreatingCo(string CreatingCo)
+        {
+            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT ID as Id, OBJ_TABLE as Name, CREATING_CO as CreatingCo FROM A_V_APPROVED_OBJECTS where CREATING_CO='" + CreatingCo + "'").ToList();
+
+            return result;
         }
     }
 }

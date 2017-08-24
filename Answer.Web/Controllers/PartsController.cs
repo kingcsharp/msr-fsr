@@ -45,7 +45,7 @@ namespace Answer.Web.Controllers
 
             var totalRows = taskService.GetPartsQueryable();
 
-            var defaultStatusList = new[] {"CREATING", "DENIED", "APPROVED", "APPROVED_BUT_REVISING", "APPROVED_BUT_DELETING"};
+            var defaultStatusList = new[] { "CREATING", "DENIED", "APPROVED", "APPROVED_BUT_REVISING", "APPROVED_BUT_DELETING" };
 
             totalRows = totalRows.Where(x => defaultStatusList.Contains(x.Status) && x.CompanyPartNumber != null);
 
@@ -61,6 +61,14 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.Name.ToLower().Contains(rule.data.ToLower()));
                     }
+                    else if (rule.field == nameof(PartsView.Spare))
+                    {
+                        totalRows = totalRows.Where(x => x.Spare.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(PartsView.Unit))
+                    {
+                        totalRows = totalRows.Where(x => x.Unit.ToLower().Contains(rule.data.ToLower()));
+                    }
                     else if (rule.field == nameof(PartsView.CompanyPartNumber))
                     {
                         totalRows = totalRows.Where(x => x.CompanyPartNumber.ToLower().Contains(rule.data.ToLower()));
@@ -75,7 +83,7 @@ namespace Answer.Web.Controllers
                         if (Int32.TryParse(rule.data, out value))
                         {
                             totalRows = totalRows.Where(x => x.Rev == value);
-                        }                        
+                        }
                     }
                     else if (rule.field == nameof(PartsView.Status))
                     {
@@ -253,10 +261,13 @@ namespace Answer.Web.Controllers
             {
                 PartObjectId = id
             };
+
             var currentUser = GetCurrentUser();
             var locations = _locationService.GetLocationsForSafetyStock(currentUser.Root_Company);
+
             List<PartsSafetyStock> partSafetyStocks = _partsService.GetPartSafetyStocksByLocation(locations.Select(x => x.Id), id);
             List<RoleResult> roles = _roleService.GetActiveRoles();
+
             viewModel.Roles.Add(new SelectListItem { Value = "", Text = "--Select Role--" });
 
             viewModel.Roles.AddRange(roles.Select(x => new SelectListItem
@@ -286,10 +297,14 @@ namespace Answer.Web.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult EditSafetyStock(string partObjectId, List<PartsSafetyStock> partsSafetyStocks)
         {
+            var user = GetCurrentUser();
+
             foreach (var safetyStock in partsSafetyStocks)
             {
-                _partsService.UpdatePartsSafetyStocks(safetyStock, partObjectId, "1618");
+                _partsService.UpdatePartsSafetyStocks(safetyStock, partObjectId, user.Id);
             }
+
+            TempData["SuccessMessage"] = "Edit Safety Stock updated successfully.";
 
             return RedirectToAction("EditSafetyStock");
         }

@@ -242,7 +242,7 @@ namespace Msr.Services.Orders
                     HireDate = model.HireDate,
                     Status = model.StatusEditPerson,
                     StrNTlogin = model.NTLogin,
-                    Company = model.CompanyEditPerson
+                    ////Company = model.CompanyEditPerson TODO timeout issue
                 }; 
                 var result = _dbContext.Database.ExecuteStoredProcedure<EditPeopleProcedure>(savePeopleProcedure);
 

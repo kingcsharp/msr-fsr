@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data;
 using EntityFrameworkExtras.EF6;
 
 namespace Msr.Services.Procedures.Procedures
 {
-    [StoredProcedure("A_SP_PROCEDURES_UPDATE_ONE_PROCEDURE")]
+    [StoredProcedure("Portal_ProcedureUpdate")]
     public class SaveProcedureProcedure
     {
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "newObjID", Direction = ParameterDirection.Output)]

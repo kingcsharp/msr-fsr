@@ -1,7 +1,7 @@
 ﻿@model Msr.Services.Procedures.ViewModels.SaveProcedureViewModel
 
 @{
-    ViewBag.Title = "Add";
+    ViewBag.Title = "Edit Procedure";
 
 }
 
@@ -18,20 +18,7 @@
         <div class="row">
             <h2 class="page-header">
                 Edit Procedure
-                <div class=" pull-right" data-toggle="modal">
-                    <!-- Split button -->
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-warning">Action</button>
-                        <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="caret"></span>
-                            <span class="sr-only">Toggle Dropdown</span>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a href="~/Procedures/deleteProcedures/@Model.ObjectId">Delete</a></li>
-                        </ul>
-                    </div>
-
-                </div>
+               
             </h2>
             <div class="col-lg-10">
                 @Html.Partial("Message")
@@ -127,7 +114,7 @@
                         </div>
                         <div class="form-group">
                             <div class="col-md-offset-2 col-md-10">
-                                <input type="submit" value="Save" class="btn btn-success" />
+                                <input type="submit" value="Submit" class="btn btn-success" />
                                 <a href="@Url.Action("Index", "Procedures")" class="btn btn-warning">Cancel</a>
                             </div>
                         </div>

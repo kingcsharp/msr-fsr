@@ -15,7 +15,7 @@ using System.Web.Mvc;
 
 namespace Answer.Web.Controllers
 {
-    public class ActualPartsController : Controller
+    public class ActualPartsController : BaseController
     {
         // GET: ActualParts
         public ActionResult Index(string serial)

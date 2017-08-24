@@ -199,7 +199,6 @@
     <Compile Include="Controllers\PreProSearchController.cs" />
     <Compile Include="Controllers\PrintOtherController.cs" />
     <Compile Include="Controllers\ProceduresController.cs" />
-    <Compile Include="Controllers\ProcedureTypesController.cs" />
     <Compile Include="Controllers\ProcedureVerbsController.cs" />
     <Compile Include="Controllers\ProductsActualPartsController.cs" />
     <Compile Include="Controllers\RegionsController.cs" />
@@ -1025,7 +1024,7 @@
     <Content Include="Views\Parts\AddPartTypes.cshtml" />
     <Content Include="Views\Parts\PartTypes.cshtml" />
     <Content Include="Views\Parts\SavePartTypes.cshtml" />
-    <Content Include="Views\Administration\AdminSetup.cshtml" />
+    <Content Include="Views\Administration\_AdminSetup.cshtml" />
     <Content Include="Views\Administration\AssignAccRecievableRole.cshtml" />
     <Content Include="Views\Administration\AssignCompaniesToView.cshtml" />
     <Content Include="Views\Administration\AssignNewsProcedure.cshtml" />

@@ -194,6 +194,7 @@
     function actualPartsEditFormatter(cellvalue, options, rowObject) {
 
         var editButton = '<a  title="Edit" href="/Actualparts/edit/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
+        var viewHistory = '<a href="/ActualParts/ViewHistory/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" title="Edit" style="margin:2px;font-size: .8em;"><i class="fa fa-history" aria-hidden="true"></i> History</a>';
 
         var deleteButton = '';
         var buttonWorkflowLeft = '';
@@ -211,7 +212,7 @@
             deleteButton = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-danger" title="Proceed to delete." style="margin:2px;font-size: .8em;"><i class="fa fa fa-trash"></i></a>';
         }
 
-        return editButton + deleteButton + buttonWorkflowLeft + buttonWorkflowRight;
+        return editButton + viewHistory + deleteButton + buttonWorkflowLeft + buttonWorkflowRight;
     }
     function serialFormatter(cellvalue, options, rowObject) {
 

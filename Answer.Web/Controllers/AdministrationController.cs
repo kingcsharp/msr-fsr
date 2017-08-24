@@ -196,7 +196,7 @@ namespace Answer.Web.Controllers
         {
             var vm = new AssignCompaniesToViewViewModel();
 
-            vm.CompaniesToView = _administrationService.GetAssignCompaniesToView();
+            vm.CompaniesToView = _administrationService.GetAssignCompaniesToView(GetCurrentUser().Id);
 
             vm.SetUp(new CompanyService());
 
@@ -242,13 +242,13 @@ namespace Answer.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                var result = _administrationService.UpdateModuleAccess(items);
+                var result = _administrationService.UpdateModuleAccess(items,GetCurrentUser().Id);
 
                 if (!result.HasErrors())
                 {
                     TempData["SuccessMessage"] = "Module Access has been updated successfully.";
 
-                    return RedirectToAction("AssignCompaniesToView");
+                    return RedirectToAction("ModuleAccess");
                 }
 
                 TempData["ErrorMessage"] = result.ErrorMessage();

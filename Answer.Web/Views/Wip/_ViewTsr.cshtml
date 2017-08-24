@@ -3,14 +3,17 @@
     string baseUrl = string.Format("{0}://{1}{2}", HttpContext.Current.Request.Url.Scheme, HttpContext.Current.Request.Url.Authority, Url.Content("~"));
 }
 
-<div id="qrcodeTable" style="margin: 35px; text-align: center;"></div>
-<div id="qrcodeCanvas">
+<div id="print-traveler-container">
+    <div id="qrcodeTable" style="margin: 35px; text-align: center;"></div>
+    <div id="qrcodeCanvas">
+    </div>
+
+    @foreach (var task in Model.TsrTaskResults.Where(x => x.Level == 2))
+    {
+        @Html.Raw(task.Des)
+    }
 </div>
 
-@foreach (var task in Model.TsrTaskResults.Where(x => x.Level == 2))
-{
-    @Html.Raw(task.Des)
-}
 <script src="~/assets/js/qrcode.js"></script>
 <script src="~/assets/js/jquery.qrcode.js"></script>
 <script>

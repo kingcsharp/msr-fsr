@@ -1,25 +1,15 @@
 ﻿@model Msr.Services.PrePro.ViewModel.ProcedurePreProViewModel
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Edit Procedure Step Template";
 }
 
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="row">
             <h2 class="page-header">
-                Edit Procedure Step
+                Edit Procedure Step Template
                 <div class=" pull-right" data-toggle="modal">
-                    <!-- Split button -->
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-warning">Action</button>
-                        <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="caret"></span>
-                            <span class="sr-only">Toggle Dropdown</span>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a href="~/PreProSearch/delete/@Model.Id">Delete</a></li>
-                        </ul>
-                    </div>
+                  
 
                 </div>
             </h2>
@@ -165,7 +155,7 @@
 
                                 <div class="form-group">
                                     <div class="col-md-offset-4 col-md-10">
-                                        <input type="submit" value="Update" class="btn btn-default" />
+                                        <input type="submit" value="Save" class="btn btn-success" />
                                         @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-warning" })
                                     </div>
                                 </div>

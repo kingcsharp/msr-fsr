@@ -6,6 +6,6 @@ namespace Msr.Services.Administration.ViewModels
     {
         public int Id { get; set; }
 
-        public int RoleId { get; set; }
+        public List<string> RoleId { get; set; }
     }
 }
