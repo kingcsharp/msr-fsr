@@ -70,25 +70,26 @@
     $('[data-toggle="tooltip"]').tooltip();
 
     $('.btn-accepted').on('click', function () {
-        if (confirm('Do you want to take ownership of this WO Item?')) {
-            var id = $(this).data('task-id');
-            var fillId = $(this).data('fill-id');
-            $.ajax({
-                type: "POST",
-                url: "/wip/TakeTaskOwnersShip?taskId=" + id,
-                dataType: 'json',
-                success: function (data) {
-                    if (data.Code === "OK") {
-                        window.location.href = '/wip/Details/' + fillId;
-                    } else {
-                        alert(data.Message);
-                    }
-                },
-                error: function () {
+        var id = $(this).data('task-id');
+        var fillId = $(this).data('fill-id');
+        eModal.confirm('Do you want to take ownership of this WO Item?')
+            .then(function() {
+                $.ajax({
+                    type: "POST",
+                    url: "/wip/TakeTaskOwnersShip?taskId=" + id,
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.Code === "OK") {
+                            window.location.href = '/wip/Details/' + fillId;
+                        } else {
+                            alert(data.Message);
+                        }
+                    },
+                    error: function () {
 
-                }
-            });
-        }
+                    }
+                });
+            }, null);
     });
 </script>               
                     @*<div class="row">

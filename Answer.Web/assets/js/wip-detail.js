@@ -25,8 +25,8 @@ $(window).load(function () {
 $(function () {
 
     if (parseInt($('#ncr-count').val()) > 0) {
-        var result = confirm('There are NCRs associated to this part. Would you like to view them?');
-        handleNCRButtonPush(result);
+        eModal.confirm('There are NCRs associated to this part. Would you like to view them?', 'NCR Check')
+        .then(handleNCRButtonPush, null);
     }
 
     $('.selectpicker').selectpicker();
@@ -352,21 +352,19 @@ function loadStep(step) {
     });
 }
 
-function handleNCRButtonPush(v) {
-    if (v) {
-        var id = $('#fill-id').val();
+function handleNCRButtonPush() {
+    var id = $('#fill-id').val();
 
-        $.ajax({
-            type: "GET",
-            url: '/wip/getncrmodel?id=' + id,
-            dataType: 'html',
-            success: function (data) {
-                $('#ncrModal').modal("show");
-                $('#ncrModal').find('.modal-body').html(data);
-            },
-            error: function () {
+    $.ajax({
+        type: "GET",
+        url: '/wip/getncrmodel?id=' + id,
+        dataType: 'html',
+        success: function(data) {
+            $('#ncrModal').modal("show");
+            $('#ncrModal').find('.modal-body').html(data);
+        },
+        error: function() {
 
-            }
-        });        
-    }
+        }
+    });
 }
