@@ -17,7 +17,6 @@ namespace Answer.Web.Controllers
 {
     public class ActualPartsController : BaseController
     {
-        // GET: ActualParts
         public ActionResult Index(string serial)
         {
             var viewModel = new EngineeringViewModel();
@@ -29,7 +28,15 @@ namespace Answer.Web.Controllers
         public ActionResult ActualPartsData(JqGridParam param)
         {
             var actualPartsService = new ActualPartsService();
+
             var totalRows = actualPartsService.GetActualPartsQueryable();
+
+            var defaultStatusList = GetDefaultStatus();
+
+            ////EXEC A_SP_ACTUAL_PARTS_SEARCH ' (ROOT LIKE ''%%'' OR ROOT is NULL ) AND  (COMPANY_PART_NUMBER LIKE ''%%'' OR COMPANY_PART_NUMBER is NULL ) AND  (PART_DESC LIKE ''%%'' OR PART_DESC is NULL ) AND  (PART_TYPE_NAME LIKE ''%%'' OR PART_TYPE_NAME is NULL ) AND  (SERIAL LIKE ''%%'' OR SERIAL is NULL ) AND  (NICK_NAME LIKE ''%%'' OR NICK_NAME is NULL ) AND  (LOCATION_NAME LIKE ''%%'' OR LOCATION_NAME is NULL ) AND  (CURRENT_OWNER_NAME LIKE ''%%'' OR CURRENT_OWNER_NAME is NULL ) AND  (AP_STATUS LIKE ''%%'' OR AP_STATUS is NULL ) AND  (PARENT_NAME LIKE ''%%'' OR PARENT_NAME is NULL ) AND  (RESP_PERSON_FULL_NAME LIKE ''%%'' OR RESP_PERSON_FULL_NAME is NULL ) AND  (LOCATION LIKE ''%%'' OR LOCATION is NULL ) AND  PARENT_ID IS NULL AND STATUS IN (''CREATING'',''DENIED'',''APPROVED'',''APPROVED_BUT_REVISING'',''APPROVED_BUT_DELETING'')',' ORDER BY PART_DESC,NICK_NAME','1618'
+
+            totalRows = totalRows.Where(x => defaultStatusList.Contains(x.Status) && x.ParentId ==null );
+
             if (param.where != null && param.where.rules.Any())
             {
                 foreach (var rule in param.where.rules)
@@ -123,19 +130,24 @@ namespace Answer.Web.Controllers
         {
             var approvalGroup = new SaveActualPartsViewModel();
 
-            approvalGroup.SetUp(new ActualPartsService(), new PartsService(), new LocationService(), new UserService(), new ProductService());
+            approvalGroup.SetUp(new ActualPartsService(), new PartsService(), new LocationService(), new UserService(), new ProductService(), GetCurrentUser());
 
             return View(approvalGroup);
         }
+
         [AcceptVerbs(verbs: HttpVerbs.Post)]
         public ActionResult Create(SaveActualPartsViewModel model)
         {
             var actualPartsService = new ActualPartsService();
+
             if (ModelState.IsValid)
             {
-                //Need to dynamic 
-                model.NTLogin = "1618";
+                var user = GetCurrentUser();
+
+                model.NTLogin = user.Id;
+
                 var response = actualPartsService.Create(model: model);
+
                 if (response)
                 {
                     TempData["SuccessMessage"] = "Approval Group has been created successfully.";
@@ -145,12 +157,13 @@ namespace Answer.Web.Controllers
                 {
                     TempData["ErrorMessage"] = "Something went wrong.";
 
-                    model.SetUp(new ActualPartsService(), new PartsService(), new LocationService(), new UserService(), new ProductService());
+                    model.SetUp(new ActualPartsService(), new PartsService(), new LocationService(), new UserService(), new ProductService(), GetCurrentUser());
                     return View(model);
                 }
             }
             return View();
         }
+
         public ActionResult Edit(string id)
         {
             var actualPartsService = new ActualPartsService();
@@ -161,22 +174,26 @@ namespace Answer.Web.Controllers
 
             actualPart = actualPart.MapToDto(model);
 
-            actualPart.SetUp(new ActualPartsService(), new PartsService(), new LocationService(), new UserService(), new ProductService());
+            actualPart.SetUp(new ActualPartsService(), new PartsService(), new LocationService(), new UserService(), new ProductService(), GetCurrentUser());
 
             return View(actualPart);
         }
+
         [AcceptVerbs(verbs: HttpVerbs.Post)]
         public ActionResult Edit(SaveActualPartsViewModel model)
         {
-
             var actualPartsService = new ActualPartsService();
+
             if (ModelState.IsValid)
             {
-                //Need to dynamic//
-                model.NTLogin = "1618";
-                //this is from dropdown autoselect current user Company from sesion//
-                model.CurOwner = "2";
+                var user = GetCurrentUser();
+
+                model.NTLogin = user.Id;
+
+                model.CurOwner = user.Company;
+
                 var response = actualPartsService.Edit(model: model);
+
                 if (response)
                 {
                     TempData["SuccessMessage"] = "Approval Group has been updated successfully.";
@@ -185,16 +202,17 @@ namespace Answer.Web.Controllers
                 }
 
                 TempData["ErrorMessage"] = "Something went wrong.";
+
                 return View(model);
             }
 
             return View(model);
         }
-        public ActionResult ActualPartDelete(string id)
+        public ActionResult ActualPartDelete(string id,string ntlogin)
         {
             var taskService = new PartsService();
 
-            var response = taskService.Delete(id: id);
+            var response = taskService.Delete(id: id,ntlogin:ntlogin);
 
             if (response)
             {
@@ -291,11 +309,11 @@ namespace Answer.Web.Controllers
             return Json(json, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult ViewHistoryClose(string id)
+        public ActionResult ViewHistoryClose(string id,string ntlog)
         {
             var taskService = new ActualPartsService();
 
-            var response = taskService.Close(id: id);
+            var response = taskService.Close(id: id,ntlogin:ntlog);
 
             if (response)
             {
@@ -304,6 +322,7 @@ namespace Answer.Web.Controllers
             }
 
             TempData["ErrorMessage"] = "Something went wrong.";
+
             return RedirectToAction("ViewHistory");
         }
     }

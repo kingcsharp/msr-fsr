@@ -45,7 +45,7 @@ namespace Msr.Services.ApprovalGroups.ViewModels
 
         public string NTLogin { get; set; }
 
-        public void Setup(UserService userService, RoleService roleService, ApprovalGroupsService approvalGroupsService)
+        public void Setup(UserService userService, RoleService roleService, ApprovalGroupsService approvalGroupsService,string ntlogin)
         {
             ////EXEC A_SP_ROLE_SELECT NULL, NULL, NULL,NULL, '1618',' ORDER BY NAME'
             ListMemberPeoples = userService.GetSearchUser().Select(x => new SelectListItem
@@ -60,7 +60,7 @@ namespace Msr.Services.ApprovalGroups.ViewModels
                 Value = x.ObjectId.ToString()
             }).OrderBy(o => o.Text).ToList();
 
-            MemberPeoples = approvalGroupsService.GetGroupMembers(id: Id).ToList();
+            MemberPeoples = approvalGroupsService.GetGroupMembers(id: Id,ntlogin:ntlogin).ToList();
 
             MemberRoles = approvalGroupsService.GetGroupRoles(id: Id).Select(x => x.Id).ToList();
 

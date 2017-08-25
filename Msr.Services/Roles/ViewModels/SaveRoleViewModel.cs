@@ -49,7 +49,7 @@ namespace Msr.Services.Roles.ViewModels
 
         public List<SelectListItem> ListPeopleAssigned { get; set; }
 
-        public void Setup(RoleService roleService, UserService userService, LoggedUserIdResult getCurrentUser)
+        public void Setup(RoleService roleService, UserService userService, LoggedUserIdResult getCurrentUser,string ntlog)
         {
             SecurityLevels = new List<SelectListItem>
             {
@@ -94,9 +94,9 @@ namespace Msr.Services.Roles.ViewModels
             }).OrderBy(o => o.Text).ToList();
 
 
-            ChildRoles = roleService.GetChildRoles(ObjectId).Select(x => x.Value).ToList();
+            ChildRoles = roleService.GetChildRoles(ObjectId,ntlogin:ntlog).Select(x => x.Value).ToList();
 
-            PeopleAssigned = roleService.GetAssignedPeople(Id).Select(x => x.Value).ToList();
+            PeopleAssigned = roleService.GetAssignedPeople(Id,ntlogin: ntlog).Select(x => x.Value).ToList();
         }
 
         public SaveRoleViewModel MapToDto(RolesView model)

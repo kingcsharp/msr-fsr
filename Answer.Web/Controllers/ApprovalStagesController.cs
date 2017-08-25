@@ -84,7 +84,7 @@ namespace Answer.Web.Controllers
         {
             var approvalStage = new EditApprovalStagesViewModel();
 
-            approvalStage.Setup(new ApprovalGroupsService(), new ApprovalStagesService());
+            approvalStage.Setup(new ApprovalGroupsService(), new ApprovalStagesService(), GetCurrentUser().Id);
 
             return View(approvalStage);
         }
@@ -96,7 +96,7 @@ namespace Answer.Web.Controllers
             if (ModelState.IsValid)
             {
              
-                model.NTLogin = "1618";
+                model.NTLogin = GetCurrentUser().Id;
                 var response = approvalStagesService.Create(model: model);
                 if (response)
                 {
@@ -106,7 +106,7 @@ namespace Answer.Web.Controllers
                 else
                 {
                     TempData["ErrorMessage"] = "Something went wrong.";
-                    model.Setup(new ApprovalGroupsService(), new ApprovalStagesService());
+                    model.Setup(new ApprovalGroupsService(), new ApprovalStagesService(), GetCurrentUser().Id);
                     return View(model);
                 }
             }
@@ -123,7 +123,7 @@ namespace Answer.Web.Controllers
 
             approvalStage = approvalStage.MapToDto(model);
 
-            approvalStage.Setup(new ApprovalGroupsService(), new ApprovalStagesService());
+            approvalStage.Setup(new ApprovalGroupsService(), new ApprovalStagesService(), GetCurrentUser().Id);
 
             return View(approvalStage);
         }
@@ -135,7 +135,7 @@ namespace Answer.Web.Controllers
             if (ModelState.IsValid)
             {
                 //Need to dynamic 
-                model.NTLogin = "1618";
+                model.NTLogin = GetCurrentUser().Id;
 
                 var response = approvalStagesService.Edit(model: model);
                 if (response)

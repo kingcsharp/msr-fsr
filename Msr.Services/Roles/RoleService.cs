@@ -14,6 +14,7 @@ using Msr.Models.Common;
 using Msr.Models.Parts;
 using Msr.Services.PrePro.Procedure;
 using Msr.Services.Roles.Messages;
+using Msr.Services.Users.Messages;
 
 namespace Msr.Services.Roles
 {
@@ -25,27 +26,25 @@ namespace Msr.Services.Roles
         {
             _dbContext = new MsrDbContext();
         }
-
+        
         public IQueryable<RolesView> GetUserRolesQueryable()
         {
             return _dbContext.RolesViews;
         }
 
-        public List<SelectFile> GetChildRoles(string id)
+        public List<SelectFile> GetChildRoles(string id, string ntlogin)
         {
             var strID = new SqlParameter("@ID", id == null ? "0" : id);
-            //need to be dynamic
-            var NTLogin = new SqlParameter("@strNTLogin", "1618");
+            var NTLogin = new SqlParameter("@strNTLogin", ntlogin);
 
             var result = _dbContext.Database.SqlQuery<SelectFile>("EXEC A_SP_POPFILL_EDITROLE_CHILD_ROLES  @ID, @strNTLogin", strID, NTLogin).ToList();
 
             return result;
         }
-        public List<SelectFile> GetAssignedPeople(string id)
+        public List<SelectFile> GetAssignedPeople(string id,string ntlogin)
         {
             var strID = new SqlParameter("@ID", id == null ? "0" : id);
-            //need to be dynamic
-            var NTLogin = new SqlParameter("@strNTLogin", "1618");
+            var NTLogin = new SqlParameter("@strNTLogin", ntlogin);
 
             var result = _dbContext.Database.SqlQuery<SelectFile>("EXEC A_SP_POPFILL_EDITROLE_PEOPLE_ASSIGNED @ID, @strNTLogin", strID, NTLogin).ToList();
 
@@ -143,12 +142,11 @@ namespace Msr.Services.Roles
             }
         }
 
-        public bool Delete(string id)
+        public bool Delete(string id,string ntlogin)
         {
             try
             {
-                //need to be dynamic
-                var NTLogin = "1618";
+                var NTLogin = ntlogin;
                 var deleteRoleProcedure = new DeleteRoleProcedure() { ObjID = id, NTLogin = NTLogin };
 
                 _dbContext.Database.ExecuteStoredProcedure(deleteRoleProcedure);
@@ -175,6 +173,12 @@ namespace Msr.Services.Roles
             return result;
         }
 
+        public List<RoleApprovedData> GetSelectedRolesByCompanyId(string id)
+        {
+            var result = _dbContext.Database.SqlQuery<RoleApprovedData>("SELECT mr.*,r.NAME FROM A_MENU_ROLES mr,A_V_ROLES_APPROVED_DATA r WHERE r.ID = mr.ROLE_ID AND mr.CO = '" + id +"'").ToList();
+
+            return result;
+        }
 
     }
 }

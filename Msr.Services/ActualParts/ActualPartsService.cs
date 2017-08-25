@@ -36,28 +36,28 @@ namespace Msr.Services.ActualParts
         }
         public List<SelectFile> GetActualParts(string status)
         {
-            var result = GetActualPartsQueryable().Where(x => x.Status.StartsWith(status) & !(x.SysName == null || x.SysName.Trim() == string.Empty))
+            var result = GetActualPartsQueryable().Where(x => x.Status== status & !(x.SysName == null || x.SysName.Trim() == string.Empty))
                 .Select(x => new SelectFile { Id = x.ObjectId, Name = x.SysName }).ToList();
 
             return result;
         }
 
-        public List<string> GetActualpartProductsInstalled(string id)
+        public List<string> GetActualpartProductsInstalled(string id,string ntlogin)
         {
             var strID = new SqlParameter("@ID", id == null ? "0" : id);
             //need to be dynamic
-            var NTLogin = new SqlParameter("@strNTLogin", "1618");
+            var NTLogin = new SqlParameter("@strNTLogin", ntlogin);
 
             var result = _dbContext.Database.SqlQuery<string>("Exec Portal_ActualPartProductInstalled @ID, @strNTLogin", strID, NTLogin).ToList();
 
             return result;
         }
 
-        public List<RootCompanyTree> GetActualPartCompanies()
+        public List<RootCompanyTree> GetActualPartCompanies(string ntlogin)
         {
-            var strID = new SqlParameter("@PERSON_ID", "1618");
+            var strID = new SqlParameter("@PERSON_ID", ntlogin);
             //need to be dynamic
-            var NTLogin = new SqlParameter("@strNTLogin", "1618");
+            var NTLogin = new SqlParameter("@strNTLogin", ntlogin);
 
             var result = _dbContext.Database.SqlQuery<RootCompanyTree>("Exec A_SP_COMPANIES_SHOW_PERSONS_ROOT_COMPANY_TREE @PERSON_ID, @strNTLogin", strID, NTLogin).ToList();
 
@@ -129,12 +129,12 @@ namespace Msr.Services.ActualParts
             }
         }
 
-        public bool Close(string id)
+        public bool Close(string id,string ntlogin)
         {
             try
             {
                 //need to be dynamic
-                var NTLogin = "1618";
+                var NTLogin = ntlogin;
                 var closeViewHistoryTaskProcedure = new CloseViewHistoryTaskProcedure() { Id = id, NTLogin = NTLogin };
 
                 _dbContext.Database.ExecuteStoredProcedure(closeViewHistoryTaskProcedure);

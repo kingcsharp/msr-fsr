@@ -79,7 +79,7 @@ namespace Answer.Web.Controllers
         {
             var approvalGroup = new EditApprovalGroupsViewModel();
 
-            approvalGroup.Setup(new UserService(), new RoleService(), new ApprovalGroupsService());
+            approvalGroup.Setup(new UserService(), new RoleService(), new ApprovalGroupsService(),GetCurrentUser().Id);
 
             return View(approvalGroup);
         }
@@ -91,7 +91,7 @@ namespace Answer.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                model.NTLogin = "1618";
+                model.NTLogin = GetCurrentUser().Id;
 
                 var response = approvalGroupsService.Create(model: model);
 
@@ -104,7 +104,7 @@ namespace Answer.Web.Controllers
                 {
                     TempData["ErrorMessage"] = "Something went wrong.";
 
-                    model.Setup(new UserService(), new RoleService(), new ApprovalGroupsService());
+                    model.Setup(new UserService(), new RoleService(), new ApprovalGroupsService(), GetCurrentUser().Id);
                     return View(model);
                 }
             }
@@ -122,7 +122,7 @@ namespace Answer.Web.Controllers
 
             approvalStage = approvalStage.MapToDto(model);
 
-            approvalStage.Setup(new UserService(), new RoleService(), new ApprovalGroupsService());
+            approvalStage.Setup(new UserService(), new RoleService(), new ApprovalGroupsService(), GetCurrentUser().Id);
 
             return View(approvalStage);
         }
@@ -134,7 +134,7 @@ namespace Answer.Web.Controllers
             var approvalGroupsService = new ApprovalGroupsService();
             if (ModelState.IsValid)
             {
-                model.NTLogin = "1618";
+                model.NTLogin = GetCurrentUser().Id;
 
                 var response = approvalGroupsService.Edit(model: model);
 

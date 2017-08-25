@@ -29,7 +29,7 @@ namespace Msr.Services.ApprovalStages.VIewModels
 
         public string NTLogin { get; set; }
 
-        public void Setup(ApprovalGroupsService approvalGroupsService, ApprovalStagesService approvalStagesService)
+        public void Setup(ApprovalGroupsService approvalGroupsService, ApprovalStagesService approvalStagesService,string ntlogin)
         {
             ListGroups = approvalGroupsService.GetApprovalGroupsQueryable().Select(x => new SelectListItem
             {
@@ -37,7 +37,7 @@ namespace Msr.Services.ApprovalStages.VIewModels
                 Value = x.Id
             }).OrderBy(o => o.Text).ToList();
 
-            Groups = approvalStagesService.GetStageMemberGroups(id: Id).Select(x => x.Id).ToList();
+            Groups = approvalStagesService.GetStageMemberGroups(id: Id,ntlog:ntlogin).Select(x => x.Id).ToList();
         }
 
         public EditApprovalStagesViewModel MapToDto(ApprovalStagesView model)

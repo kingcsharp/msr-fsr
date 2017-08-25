@@ -25,11 +25,11 @@ namespace Answer.Web.Controllers
 
             return View(viewModel);
         }
-        public ActionResult ShowPurchaseStatusData(JqGridParam param, string id)
+        public ActionResult ShowPurchaseStatusData(JqGridParam param, string id,string ntlogin)
         {
             var showPurchaseStatusService = new ShowPurchaseStatusService();
 
-            var totalRows = showPurchaseStatusService.GetPurchaseStatusQueryable(id: id).AsQueryable();
+            var totalRows = showPurchaseStatusService.GetPurchaseStatusQueryable(id: id,ntlogin:ntlogin).AsQueryable();
 
             if (param.where != null && param.where.rules.Any())
             {

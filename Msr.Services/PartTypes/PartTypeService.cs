@@ -61,12 +61,12 @@ namespace Msr.Services.PartTypes
             }
         }
 
-        public bool Delete(string id)
+        public bool Delete(string id,string ntlogin)
         {
             try
             {
                 //need to be dynamic
-                var NTLogin = "1618";
+                var NTLogin = ntlogin;
                 var deletePartTypeProcedure = new DeletePartTypeProcedure() { ObjID = id, NTLogin = NTLogin };
 
                 _dbContext.Database.ExecuteStoredProcedure(deletePartTypeProcedure);

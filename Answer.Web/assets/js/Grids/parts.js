@@ -95,15 +95,15 @@ function SetUpGrid(returnUrl) {
                 searchoptions: { value: ":[All];APPROVED:Approved;CREATING:Creating;APPROVED_BUT_REVISING:Approved But Revising" },
                 align: 'center'
             },
+
             {
                 label: 'Checked Out To',
                 name: 'LockedByName',
                 index: 'LockedByName',
                 colmenu: false,
-                stype: "select",
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                searchoptions: { value: ":[All];APPROVED:Approved;CREATING:Creating;APPROVED_BUT_REVISING:Approved But Revising" },
-                align: 'center'
+                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                align: 'left'
             },
             { name: 'Actions', index: 'ID', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: PartEditFormatter, width: 200, align: 'center' }
         ],

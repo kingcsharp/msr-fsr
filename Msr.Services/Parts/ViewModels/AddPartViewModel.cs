@@ -152,7 +152,7 @@ namespace Msr.Services.Parts.ViewModels
         public List<SelectListItem> ListSupplierCompany { get; set; }
 
 
-        public void Setup(DocumentFilesService documentFilesService, PartsService partsService, PartTypeService partTypeService, string CreatingCo)
+        public void Setup(DocumentFilesService documentFilesService, PartsService partsService, PartTypeService partTypeService, string CreatingCo,string ntlog)
         {
             OrderingUnits = new List<SelectListItem>
             {
@@ -335,19 +335,19 @@ namespace Msr.Services.Parts.ViewModels
                 Value = x.Id.ToString()
             }).OrderBy(o => o.Text).ToList();
 
-            ListReferenceFiles = documentFilesService.GetSelectedFiles(id: Id, type: null).Select(x => new SelectListItem
+            ListReferenceFiles = documentFilesService.GetSelectedFiles(id: Id, type: null,ntlogin:ntlog).Select(x => new SelectListItem
             {
                 Text = x.Show,
                 Value = x.Value.ToString(),
             }).OrderBy(o => o.Text).ToList();
 
-            ListPictureFiles = documentFilesService.GetSelectedFiles(id: Id, type: "PICTURE").Select(x => new SelectListItem
+            ListPictureFiles = documentFilesService.GetSelectedFiles(id: Id, type: "PICTURE", ntlogin: ntlog).Select(x => new SelectListItem
             {
                 Text = x.Show,
                 Value = x.Value.ToString(),
             }).OrderBy(o => o.Text).ToList();
 
-            ListReferenceTheories = documentFilesService.GetSelectedFiles(id: Id, type: "THEORY").Select(x => new SelectListItem
+            ListReferenceTheories = documentFilesService.GetSelectedFiles(id: Id, type: "THEORY", ntlogin: ntlog).Select(x => new SelectListItem
             {
                 Text = x.Show,
                 Value = x.Value.ToString(),

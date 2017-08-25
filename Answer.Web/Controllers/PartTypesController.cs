@@ -130,7 +130,7 @@ namespace Answer.Web.Controllers
             if (ModelState.IsValid)
             {
                 //need to de dynamic
-                parttype.NTLogin = "1618";
+                parttype.NTLogin = GetCurrentUser().Id;
 
                 var response = partTypeservice.Create(parttype);
 
@@ -175,7 +175,7 @@ namespace Answer.Web.Controllers
             if (ModelState.IsValid)
             {
                 //need to de dynamic
-                parttype.NTLogin = "1618";
+                parttype.NTLogin = GetCurrentUser().Id;
 
                 var response = partTypeservice.Edit(parttype);
                 if (response)
@@ -200,11 +200,11 @@ namespace Answer.Web.Controllers
         }
 
 
-        public ActionResult Delete(string id)
+        public ActionResult Delete(string id,string ntlogin)
         {
             var taskService = new PartTypeService();
 
-            var response = taskService.Delete(id: id);
+            var response = taskService.Delete(id: id,ntlogin:ntlogin);
 
             if (response)
             {

@@ -30,11 +30,11 @@ namespace Msr.Services.ApprovalGroups
         {
             return GetApprovalGroupsQueryable().Where(x => x.Id == id).SingleOrDefault();
         }
-        public List<string> GetGroupMembers(string id)
+        public List<string> GetGroupMembers(string id,string ntlogin)
         {
             var strID = new SqlParameter("@ID", id == null ? "0" : id);
             //need to be dynamic
-            var NTLogin = new SqlParameter("@strNTLogin", "1618");
+            var NTLogin = new SqlParameter("@strNTLogin", ntlogin);
 
             var result = _dbContext.Database.SqlQuery<string>("EXEC Portal_SelectGroupsMembers  @ID, @strNTLogin", strID, NTLogin).ToList();
 
