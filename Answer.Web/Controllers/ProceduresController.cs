@@ -298,6 +298,13 @@ namespace Answer.Web.Controllers
         public ActionResult EditSteps(string id)
         {
             var viewModel = _proceduresService.GetStepsData(id, "1618");
+            ViewBag.ProcObjectId = id;
+            return View(viewModel);
+        }
+
+        public ActionResult EditStep(string stepId, string procedureObjectId)
+        {
+            var viewModel = _proceduresService.GetStepData(procedureObjectId, stepId, "1618");
             return View(viewModel);
         }
     }

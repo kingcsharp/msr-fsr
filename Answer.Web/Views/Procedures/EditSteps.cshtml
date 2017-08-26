@@ -1,6 +1,6 @@
 ﻿@model List<Msr.Services.Procedures.Messages.GetStepDataResult>
 @{
-    ViewBag.Title = "EditSteps";
+    ViewBag.Title = "Edit Steps";
 }
 
 <div class="container-fluid">
@@ -20,9 +20,13 @@
                                 <th>Duration</th>
                                 <th>Duration Unit</th>
                                 <th>Preceding Step</th>
+                                <th>Actions</th>
                             </tr>
                             @foreach (var step in Model)
                             {
+
+                                var url = "/procedures/EditStep?stepId=" + @step.Id + "&procedureObjectId=" + @ViewBag.ProcObjectId;
+
                                 <tr>
                                     <td>
                                         @step.Print_Order
@@ -36,8 +40,9 @@
                                     <td>@step.Duration</td>
                                     <td>
                                         @step.Duration_Type
-                                </td>
+                                    </td>
                                     <td>@step.Pre_Step</td>
+                                    <td><a href="@url">Edit</a></td>
                                 </tr>
                             }
                         </table>
