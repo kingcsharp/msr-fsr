@@ -11,6 +11,7 @@ using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 using Msr.Models.Common;
 using Msr.Services.Procedures.Messages;
 using Msr.Services.Procedures.Procedures;
@@ -224,6 +225,28 @@ namespace Msr.Services.Procedures
             }
 
             return result;
+        }
+
+        public GetStepEditDataViewModel GetStepData(string stepId, string procedureObjectId, string loginId)
+        {
+            GetStepEditDataViewModel getStepEditDataViewModel = new GetStepEditDataViewModel();
+            var getStepEditDataProcedure = new GetStepEditDataProcedure() { Id = stepId, NTLogin = loginId };
+            getStepEditDataViewModel.GetStepEditData = _dbContext.Database.ExecuteStoredProcedure<GetStepEditDataResult>(getStepEditDataProcedure).FirstOrDefault();
+
+            var getStepListOfOtherStepsProcedure = new GetStepListOfOtherStepsProcedure() { CurStepID = procedureObjectId, Id = stepId, NTLogin = loginId };
+            var getStepListOfOtherStepsResult = _dbContext.Database.ExecuteStoredProcedure<GetStepListOfOtherStepsResult>(getStepListOfOtherStepsProcedure).ToList();
+
+            getStepEditDataViewModel.GetStepListOfOtherSteps.AddRange(
+                getStepListOfOtherStepsResult.Select(x => new SelectListItem()
+                {
+                    Text = x.Step_Text,
+                    Value = x.Id
+                }));
+
+            var getStepLaborProcedure = new GetStepLaborProcedure() { Id = stepId, NTLogin = loginId };
+            getStepEditDataViewModel.GetStepLabors = _dbContext.Database.ExecuteStoredProcedure<GetStepLaborResult>(getStepLaborProcedure).ToList();
+
+            return getStepEditDataViewModel;
         }
     }
 }

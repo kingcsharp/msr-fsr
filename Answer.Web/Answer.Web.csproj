@@ -1076,6 +1076,7 @@
     <Content Include="Views\Files\Edit.cshtml" />
     <Content Include="Views\Shared\_TextAdder.cshtml" />
     <Content Include="Views\Procedures\EditSteps.cshtml" />
+    <Content Include="Views\Procedures\EditStep.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

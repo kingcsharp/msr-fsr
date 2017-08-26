@@ -1,0 +1,68 @@
+﻿@model Msr.Services.Procedures.ViewModels.GetStepEditDataViewModel
+@{
+    ViewBag.Title = "EditStep";
+}
+
+<div class="container-fluid">
+    <div class="side-body padding-top">
+        <div class="row">
+            <h2 class="page-header">
+                Edit Step
+            </h2>
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-horizontal">
+                    @Html.ValidationSummary(true, "", new {@class = "text-danger"})
+                    <div class="form-group">
+                        <label class="control-label">Base Start On Counter?</label>
+                        <div class="col-md-5">
+                            @Html.DropDownListFor(model => model.GetStepEditData.Start_On_Counter, Model.BaseCounterList, new {@class = "form-control select"})
+                            @Html.ValidationMessageFor(model => model.GetStepEditData.Start_On_Counter, "", new {@class = "text-danger"})
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Preceding Step/s:</label>
+                        <div class="col-md-5">
+                            @Html.DropDownListFor(model => model.GetStepEditData.Start_On_Counter, Model.GetStepListOfOtherSteps, new {@class = "form-control select"})
+                            @Html.ValidationMessageFor(model => model.GetStepEditData.Start_On_Counter, "", new {@class = "text-danger"})
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Estimated Step Duration:</label>
+                        <div class="col-md-5">
+                            @Html.TextBoxFor(model => model.GetStepEditData.Duration, new {@class = "form-control"})
+                            @Html.ValidationMessageFor(model => model.GetStepEditData.Duration, "", new {@class = "text-danger"})
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Duration Type:</label>
+                        <div class="col-md-5">
+                            @Html.DropDownListFor(model => model.GetStepEditData.Duration_Type, Model.DurationTypeList, new {@class = "form-control select"})
+                            @Html.ValidationMessageFor(model => model.GetStepEditData.Start_On_Counter, "", new {@class = "text-danger"})
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Labor:</label>
+                        <div class="col-md-5">
+                            <table>
+                                <tr>
+                                    <td>Role Name</td>
+                                    <td>Time</td>
+                                </tr>
+                                @foreach (var role in Model.GetStepLabors)
+                                {
+                                    <tr>
+                                        <td>@role.Role_Name</td>
+                                        <td>@role.Qty + " " + @role.QtyType</td>
+                                    </tr>
+                                }
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

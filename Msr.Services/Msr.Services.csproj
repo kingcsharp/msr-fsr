@@ -282,6 +282,9 @@
     <Compile Include="PrePro\Procedure\SaveTheoryProcedure.cs" />
     <Compile Include="PrePro\TheoryFileService.cs" />
     <Compile Include="PrePro\ViewModel\ProcedurePreProViewModel.cs" />
+    <Compile Include="Procedures\Messages\GetStepLaborResult.cs" />
+    <Compile Include="Procedures\Messages\GetStepListOfOtherStepsResult.cs" />
+    <Compile Include="Procedures\Messages\GetStepEditDataResult.cs" />
     <Compile Include="Procedures\Messages\GetStepDataResult.cs" />
     <Compile Include="Procedures\Messages\ProceduresApprovedDataResult.cs" />
     <Compile Include="People\Procedures\SavePasswrodProcedure.cs" />
@@ -290,6 +293,10 @@
     <Compile Include="People\ViewModels\EditPeopleViewModel.cs" />
     <Compile Include="People\ViewModels\AddPeopleViewModel.cs" />
     <Compile Include="Procedures\ProcedureService.cs" />
+    <Compile Include="Procedures\Procedures\GetStepLaborProcedure.cs" />
+    <Compile Include="Procedures\Procedures\GetStepListOfOtherStepsProcedure.cs" />
+    <Compile Include="Procedures\Procedures\GetStepEditDataProcedure.cs" />
+    <Compile Include="Procedures\Procedures\GetStepsDataProcedure.cs" />
     <Compile Include="Procedures\Procedures\AdminSqlToRunQueUpProcedure.cs" />
     <Compile Include="Procedures\Procedures\DeleteProcedureRolesProcedure.cs" />
     <Compile Include="Procedures\Procedures\GetStepsDataProcedure.cs" />
@@ -297,6 +304,7 @@
     <Compile Include="Procedures\Procedures\SaveProcedureProcedure.cs" />
     <Compile Include="Procedures\Procedures\SaveProcedureRoleProcedure.cs" />
     <Compile Include="Procedures\ViewModels\AssignProcedureViewModel.cs" />
+    <Compile Include="Procedures\ViewModels\GetStepEditDataViewModel.cs" />
     <Compile Include="Procedures\ViewModels\ViewProcedureViewModel.cs" />
     <Compile Include="Procedures\ViewModels\SaveProcedureViewModel.cs" />
     <Compile Include="Procedures\Procedures\DeleteFileProcedure.cs" />
