@@ -1,487 +1,97 @@
 ﻿@model Answer.Web.ViewModel.Wip.WipListViewModel
 
 
-                    @foreach (var item in Model.WoItemsInprogress)
-                    {
-                        <div class="row">
-                            <div class="col-lg-5 col-md-5 col-sm-6">
-                                <strong>Proc: @item.ProductName <br>@item.ProcName</strong>
-                            </div>
-                            
-                           
-                            <div class="col-lg-7 col-md-7 col-sm-6">
-                                @foreach (var proItem in Model.WoItemsByProcedures.Where(x => x.ProcName == item.ProcName).OrderByDescending(o => o.DueDate))
-                                {
-                                    var statusText = "";
-                                    var cssIconButton = "";
-                                    var cssButton = "";
+@foreach (var item in Model.WoItemsInprogress)
+{
+    <div class="row">
+        <div class="col-lg-5 col-md-5 col-sm-6">
+            <strong>Proc: @item.ProductName <br>@item.ProcName</strong>
+        </div>
 
-                                    if (proItem.Status == "CLOSED" || proItem.Status == "FINISHED")
-                                    {
-                                        cssButton = "step-complete";
-                                    }
-                                    else if (proItem.Status == "ACCEPTED")
-                                    {
-                                        cssIconButton = "fa fa-cog fa-spin fa-2x";
-                                        cssButton = "btn-success btn-accepted";
-                                        statusText= "In Progress";
-                                    }
-                                    else if (proItem.Status == "PENDING_PARENT_ACCEPTANCE")
-                                    {
-                                        cssIconButton = "fa-cog";
-                                        cssButton = "btn btn-sq btn-success wip-button";
-                                        statusText= "Waiting to Start";
-                                    }
 
-                                    if (DateTime.Now > proItem.DueDate)
-                                    {
-                                        cssIconButton = "fa fa-exclamation-circle fa-2x";
-                                        cssButton = "btn-danger";
-                                    }
+        <div class="col-lg-7 col-md-7 col-sm-6">
+            @foreach (var proItem in Model.WoItemsByProcedures.Where(x => x.ProcName == item.ProcName).OrderByDescending(o => o.DueDate))
+            {
+                var statusText = "";
+                var cssIconButton = "";
+                var cssButton = "";
 
-                                    if (string.IsNullOrWhiteSpace(proItem.RequesteeName))
-                                    {
-                                        cssIconButton = "fa fa-ban fa-stack-2x";
-                                        cssButton = "btn-success";
-                                    }
+                if (proItem.Status == "CLOSED" || proItem.Status == "FINISHED")
+                {
+                    cssButton = "step-complete";
+                }
+                else if (proItem.Status == "ACCEPTED")
+                {
+                    cssIconButton = "fa fa-cog fa-spin fa-2x";
+                    cssButton = "btn-success btn-accepted";
+                    statusText = "In Progress";
+                }
+                else if (proItem.Status == "PENDING_PARENT_ACCEPTANCE")
+                {
+                    cssIconButton = "fa-cog";
+                    cssButton = "btn btn-sq btn-success wip-button";
+                    statusText = "Waiting to Start";
+                }
 
-                                    var daysTillDueDate = proItem.DueDate?.Subtract(DateTime.Now).Days;
-                                    if (daysTillDueDate <= proItem.Threshold)
-                                    {
-                                        cssIconButton = "fa fa-clock-o fa-2x";
-                                        cssButton = "btn-warning";
-                                    }
+                if (DateTime.Now > proItem.DueDate)
+                {
+                    cssIconButton = "fa fa-exclamation-circle fa-2x";
+                    cssButton = "btn-danger";
+                }
 
-                                    <button data-toggle="tooltip" data-task-id="@proItem.TaskId" data-fill-id="@proItem.FillId" data-placement="bottom" data-html="true"
-                                            title="<strong>Serial #:</strong>@proItem.Serial<br />
+                if (string.IsNullOrWhiteSpace(proItem.RequesteeName))
+                {
+                    cssIconButton = "fa fa-ban fa-stack-2x";
+                    cssButton = "btn-success";
+                }
+
+                var daysTillDueDate = proItem.DueDate?.Subtract(DateTime.Now).Days;
+                if (daysTillDueDate <= proItem.Threshold)
+                {
+                    cssIconButton = "fa fa-clock-o fa-2x";
+                    cssButton = "btn-warning";
+                }
+
+                <button data-toggle="tooltip" data-task-id="@proItem.TaskId" data-fill-id="@proItem.FillId" data-placement="bottom" data-html="true"
+                        title="<strong>Serial #:</strong>@proItem.Serial<br />
                                        <strong>Status:</strong> @statusText<br />
                                        <strong>Assigned To:</strong> @proItem.RequesteeName"
                                             class="btn btn-sq @cssButton wip-button">
                                         <i class="@cssIconButton"></i>
-                                    </button>
-                                }       
-                                </div>
-                            
-                        </div>
-                    }
+                </button>
+            }
+        </div>
+
+    </div>
+}
 
 <script>
 
     $('[data-toggle="tooltip"]').tooltip();
-
-    $('.btn-accepted').on('click', function () {
-        var id = $(this).data('task-id');
+    $('.wip-button').on('click', function() {
         var fillId = $(this).data('fill-id');
-        eModal.confirm('Do you want to take ownership of this WO Item?')
-            .then(function() {
-                $.ajax({
-                    type: "POST",
-                    url: "/wip/TakeTaskOwnersShip?taskId=" + id,
-                    dataType: 'json',
-                    success: function (data) {
-                        if (data.Code === "OK") {
-                            window.location.href = '/wip/Details/' + fillId;
-                        } else {
-                            alert(data.Message);
-                        }
-                    },
-                    error: function () {
+        if ($(this).hasClass('btn-accepted')) {
+            var id = $(this).data('task-id');
+            eModal.confirm('Do you want to take ownership of this WO Item?')
+                .then(function () {
+                    $.ajax({
+                        type: "POST",
+                        url: "/wip/TakeTaskOwnersShip?taskId=" + id,
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data.Code === "OK") {
+                                window.location.href = '/wip/Details/' + fillId;
+                            } else {
+                                alert(data.Message);
+                            }
+                        },
+                        error: function () {
 
-                    }
-                });
-            }, null);
+                        }
+                    });
+                }, null);
+        } else {
+            window.location.href = '/wip/Details/' + fillId;
+        }
     });
 </script>               
-                    @*<div class="row">
-                        <div class="col-lg-5 col-md-5 col-sm-6">
-                            <strong>Proc:Gate Valve IPN 503030200<br>INTEL 01-INT-453</strong>
-                        </div>
-                        <div class="col-lg-7 col-md-7 col-sm-6">
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 12-12a<br />
-                                       <strong>Status:</strong> In Progress<br />
-                                       <strong>Assigned To:</strong> Jeff Tevonian"
-                                class="btn btn-sq btn-success wip-button">
-                              <i class="fa fa-cog fa-spin fa-2x"></i>
-                            </button>
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 12-12c<br /><strong>Status:</strong> Waiting to Start<br /><strong>Assigned To:</strong> Unassigned"
-                                    class="btn btn-sq btn-info wip-button">
-                                <i class="fa fa-hourglass fa-2x"></i>
-                            </button>
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 12-12d<br /><strong>Status:</strong>Waiting to Start<br /><strong>Assigned To:</strong> Unassigned<br /><strong>Due Date:</strong> 2/2/2017"
-                                    class="btn btn-sq btn-warning wip-button">
-                                <i class="fa fa-clock-o fa-2x"></i>
-                            </button>
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 13<br /><strong>Status:</strong>Waiting to Start<br /><strong>Assigned To:</strong> Unassigned"
-                                    class="btn btn-sq btn-info wip-button">
-                                <i class="fa fa-hourglass fa-2x"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-5 col-md-5 col-sm-6">
-                            <strong>Proc:Terbor Pump IPN 50002320023<br>INTEL 01-INT-453</strong>
-                        </div>
-                        <div class="col-lg-7 col-md-7 col-sm-6">
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 12-12a<br />
-                                       <strong>Status:</strong> Overdue <br />
-                                       <strong>Assigned To:</strong> Jeff Tevonian"
-                                class="btn btn-sq btn-danger wip-button">
-                              <i class="fa fa-exclamation-circle fa-2x"></i>
-                            </button>
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 12-12b<br />
-                                       <strong>Status:</strong>In Progress<br />
-                                       <strong>Assigned To:</strong> Unassigned"
-                                class="btn btn-sq btn-success  wip-button">
-                              <span class="fa-stack">
-                                  <i class="fa fa-user fa-stack-2x"></i>
-                                  <i class="fa fa-ban fa-stack-2x" style="color:red"></i>
-                              </span>
-                            </button>
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 12-12d<br /><strong>Status:</strong>Waiting to Start<br /><strong>Assigned To:</strong> Unassigned<br /><strong>Due Date:</strong> 2/4/2017"
-                                    class="btn btn-sq btn-warning wip-button">
-                                <i class="fa fa-clock-o fa-2x"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-5 col-md-5 col-sm-6">
-                            <strong>Proc: EPM Module 43343332<br>Applied MAterials 04-AMT-112</strong>
-                        </div>
-                        <div class="col-lg-7 col-md-7 col-sm-6">
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 12-12b<br />
-                                       <strong>Status:</strong>In Progress<br />
-                                       <strong>Assigned To:</strong> Unassigned"
-                                class="btn btn-sq btn-success  wip-button">
-                              <span class="fa-stack">
-                                  <i class="fa fa-user fa-stack-2x"></i>
-                                  <i class="fa fa-ban fa-stack-2x" style="color:red"></i>
-                              </span>
-                            </button>
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 12-12c<br /><strong>Status:</strong> Waiting to Start<br /><strong>Assigned To:</strong> Unassigned"
-                                    class="btn btn-sq btn-warning wip-button">
-                                <i class="fa fa-clock-o fa-2x"></i>
-                            </button>
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 12-12d<br /><strong>Status:</strong>Overdue<br /><strong>Assigned To:</strong> Unassigned<br /><strong>Due Date:</strong> 1/25/2017"
-                                    class="btn btn-sq btn-danger wip-button">
-                                <i class="fa fa-exclamation-circle fa-2x"></i><br />
-                            </button>
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 13<br /><strong>Status:</strong>Waiting to Start<br /><strong>Assigned To:</strong> Unassigned"
-                                    class="btn btn-sq btn-info wip-button">
-                                <i class="fa fa-hourglass fa-2x"></i>
-                            </button>
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 12-12e<br /><strong>Status:</strong>Waiting to Start<br /><strong>Assigned To:</strong> Unassigned"
-                                    class="btn btn-sq btn-info wip-button">
-                                <i class="fa fa-hourglass fa-2x"></i><br />
-                            </button>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-5 col-md-5 col-sm-6">
-                            <strong>Proc: SUS Plate IPN003433443<br>INTEL 03-INT-334</strong>
-                        </div>
-                        <div class="col-lg-7 col-md-7 col-sm-6">
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 14a<br />
-                                       <strong>Status:</strong> In Progress<br />
-                                       <strong>Assigned To:</strong> Jeff Tevonian"
-                                class="btn btn-sq btn-success wip-button">
-                              <i class="fa fa-cog fa-spin fa-2x"></i>
-                            </button>
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 14b<br />
-                                       <strong>Status:</strong>In Progress<br />
-                                       <strong>Assigned To:</strong> Emily Hary"
-                                class="btn btn-sq btn-success  wip-button">
-                              <i class="fa fa-cog fa-spin fa-2x"></i>
-                            </button>
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 14c<br />
-                                       <strong>Status:</strong> In Progress<br />
-                                       <strong>Assigned To:</strong> Joe Maderatz"
-                                class="btn btn-sq btn-success wip-button">
-                              <i class="fa fa-cog fa-spin fa-2x"></i>
-                            </button>
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 14d<br />
-                                       <strong>Status:</strong>In Progress<br />
-                                       <strong>Assigned To:</strong> Billy Bob"
-                                class="btn btn-sq btn-success  wip-button">
-                              <i class="fa fa-cog fa-spin fa-2x"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-5 col-md-5 col-sm-6">
-                            <strong>Proc:Gate Valve IPN 503030200<br>INTEL 01-INT-453</strong>
-                        </div>
-                        <div class="col-lg-7 col-md-7 col-sm-6">
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 12-12a<br />
-                                       <strong>Status:</strong> In Progress<br />
-                                       <strong>Assigned To:</strong> Jeff Tevonian"
-                                class="btn btn-sq btn-success wip-button">
-                              <i class="fa fa-cog fa-spin fa-2x"></i>
-                            </button>
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 12-12c<br /><strong>Status:</strong> Waiting to Start<br /><strong>Assigned To:</strong> Unassigned"
-                                    class="btn btn-sq btn-warning wip-button">
-                                <i class="fa fa-clock-o fa-2x"></i>
-                            </button>
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 12-12d<br /><strong>Status:</strong>Waiting to Start<br /><strong>Assigned To:</strong> Unassigned"
-                                    class="btn btn-sq btn-warning wip-button">
-                                <i class="fa fa-clock-o fa-2x"></i>
-                            </button>
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 13<br /><strong>Status:</strong>Waiting to Start<br /><strong>Assigned To:</strong> Unassigned"
-                                    class="btn btn-sq btn-warning wip-button">
-                                <i class="fa fa-clock-o fa-2x"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-5 col-md-5 col-sm-6">
-                            <strong>Proc:Terbor Pump IPN 50002320023<br>INTEL 01-INT-453</strong>
-                        </div>
-                        <div class="col-lg-7 col-md-7 col-sm-6">
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 12-12a<br />
-                                       <strong>Status:</strong> Overdue <br />
-                                       <strong>Assigned To:</strong> Jeff Tevonian <br/>
-                                       <strong>Due Date:</strong> 1/24/17"
-                                class="btn btn-sq btn-danger wip-button">
-                              <i class="fa fa-exclamation-circle fa-2x"></i>
-                            </button>
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 12-12b<br />
-                                       <strong>Status:</strong>In Progress<br />
-                                       <strong>Assigned To:</strong> Unassigned"
-                                class="btn btn-sq btn-success  wip-button">
-                              <span class="fa-stack">
-                                  <i class="fa fa-user fa-stack-2x"></i>
-                                  <i class="fa fa-ban fa-stack-2x" style="color:red"></i>
-                              </span>
-                            </button>
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 12-12d<br /><strong>Status:</strong>Waiting to Start<br /><strong>Assigned To:</strong> Unassigned"
-                                    class="btn btn-sq btn-warning wip-button">
-                                <i class="fa fa-clock-o fa-2x"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-5 col-md-5 col-sm-6">
-                            <strong>Proc: EPM Module 43343332<br>Applied MAterials 04-AMT-112</strong>
-                        </div>
-                        <div class="col-lg-7 col-md-7 col-sm-6">
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 12-12b<br />
-                                       <strong>Status:</strong>In Progress<br />
-                                       <strong>Assigned To:</strong> Unassigned"
-                                class="btn btn-sq btn-success  wip-button">
-                              <span class="fa-stack">
-                                  <i class="fa fa-user fa-stack-2x"></i>
-                                  <i class="fa fa-ban fa-stack-2x" style="color:red"></i>
-                              </span>
-                            </button>
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 12-12c<br /><strong>Status:</strong> Waiting to Start<br /><strong>Assigned To:</strong> Unassigned"
-                                    class="btn btn-sq btn-warning wip-button">
-                                <i class="fa fa-clock-o fa-2x"></i>
-                            </button>
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 12-12d<br /><strong>Status:</strong>Waiting to Start<br /><strong>Assigned To:</strong> Unassigned"
-                                    class="btn btn-sq btn-warning wip-button">
-                                <i class="fa fa-clock-o fa-2x"></i><br />
-                            </button>
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 13<br /><strong>Status:</strong>Waiting to Start<br /><strong>Assigned To:</strong> Unassigned"
-                                    class="btn btn-sq btn-warning wip-button">
-                                <i class="fa fa-clock-o fa-2x"></i>
-                            </button>
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 12-12e<br /><strong>Status:</strong>Waiting to Start<br /><strong>Assigned To:</strong> Unassigned"
-                                    class="btn btn-sq btn-warning wip-button">
-                                <i class="fa fa-clock-o fa-2x"></i><br />
-                            </button>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-5 col-md-5 col-sm-6">
-                            <strong>Proc: SUS Plate IPN003433443<br>INTEL 03-INT-334</strong>
-                        </div>
-                        <div class="col-lg-7 col-md-7 col-sm-6">
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 14a<br />
-                                       <strong>Status:</strong> In Progress<br />
-                                       <strong>Assigned To:</strong> Jeff Tevonian"
-                                class="btn btn-sq btn-success wip-button">
-                              <i class="fa fa-cog fa-spin fa-2x"></i>
-                            </button>
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 14b<br />
-                                       <strong>Status:</strong>In Progress<br />
-                                       <strong>Assigned To:</strong> Emily Hary"
-                                class="btn btn-sq btn-success  wip-button">
-                              <i class="fa fa-cog fa-spin fa-2x"></i>
-                            </button>
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 14c<br />
-                                       <strong>Status:</strong> In Progress<br />
-                                       <strong>Assigned To:</strong> Joe Maderatz"
-                                class="btn btn-sq btn-success wip-button">
-                              <i class="fa fa-cog fa-spin fa-2x"></i>
-                            </button>
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 14d<br />
-                                       <strong>Status:</strong>In Progress<br />
-                                       <strong>Assigned To:</strong> Billy Bob"
-                                class="btn btn-sq btn-success  wip-button">
-                              <i class="fa fa-cog fa-spin fa-2x"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-5 col-md-5 col-sm-6">
-                            <strong>Proc:Gate Valve IPN 503030200<br>INTEL 01-INT-453</strong>
-                        </div>
-                        <div class="col-lg-7 col-md-7 col-sm-6">
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 12-12a<br />
-                                       <strong>Status:</strong> In Progress<br />
-                                       <strong>Assigned To:</strong> Jeff Tevonian"
-                                class="btn btn-sq btn-success wip-button">
-                              <i class="fa fa-cog fa-spin fa-2x"></i>
-                            </button>
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 12-12c<br /><strong>Status:</strong> Waiting to Start<br /><strong>Assigned To:</strong> Unassigned"
-                                    class="btn btn-sq btn-warning wip-button">
-                                <i class="fa fa-clock-o fa-2x"></i>
-                            </button>
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 12-12d<br /><strong>Status:</strong>Waiting to Start<br /><strong>Assigned To:</strong> Unassigned"
-                                    class="btn btn-sq btn-warning wip-button">
-                                <i class="fa fa-clock-o fa-2x"></i>
-                            </button>
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 13<br /><strong>Status:</strong>Waiting to Start<br /><strong>Assigned To:</strong> Unassigned"
-                                    class="btn btn-sq btn-warning wip-button">
-                                <i class="fa fa-clock-o fa-2x"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-5 col-md-5 col-sm-6">
-                            <strong>Proc:Terbor Pump IPN 50002320023<br>INTEL 01-INT-453</strong>
-                        </div>
-                        <div class="col-lg-7 col-md-7 col-sm-6">
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 12-12a<br />
-                                       <strong>Status:</strong> Overdue <br />
-                                       <strong>Assigned To:</strong> Jeff Tevonian"
-                                class="btn btn-sq btn-danger wip-button">
-                              <i class="fa fa-exclamation-circle fa-2x"></i>
-                            </button>
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 12-12b<br />
-                                       <strong>Status:</strong>In Progress<br />
-                                       <strong>Assigned To:</strong> Unassigned"
-                                class="btn btn-sq btn-success  wip-button">
-                              <span class="fa-stack">
-                                  <i class="fa fa-user fa-stack-2x"></i>
-                                  <i class="fa fa-ban fa-stack-2x" style="color:red"></i>
-                              </span>
-                            </button>
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 12-12d<br /><strong>Status:</strong>Waiting to Start<br /><strong>Assigned To:</strong> Unassigned"
-                                    class="btn btn-sq btn-warning wip-button">
-                                <i class="fa fa-clock-o fa-2x"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-5 col-md-5 col-sm-6">
-                            <strong>Proc: EPM Module 43343332<br>Applied MAterials 04-AMT-112</strong>
-                        </div>
-                        <div class="col-lg-7 col-md-7 col-sm-6">
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 12-12b<br />
-                                       <strong>Status:</strong>In Progress<br />
-                                       <strong>Assigned To:</strong> Unassigned"
-                                class="btn btn-sq btn-success  wip-button">
-                              <span class="fa-stack">
-                                  <i class="fa fa-user fa-stack-2x"></i>
-                                  <i class="fa fa-ban fa-stack-2x" style="color:red"></i>
-                              </span>
-                            </button>
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 12-12c<br /><strong>Status:</strong> Waiting to Start<br /><strong>Assigned To:</strong> Unassigned"
-                                    class="btn btn-sq btn-warning wip-button">
-                                <i class="fa fa-clock-o fa-2x"></i>
-                            </button>
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 12-12d<br /><strong>Status:</strong>Waiting to Start<br /><strong>Assigned To:</strong> Unassigned"
-                                    class="btn btn-sq btn-warning wip-button">
-                                <i class="fa fa-clock-o fa-2x"></i><br />
-                            </button>
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 13<br /><strong>Status:</strong>Waiting to Start<br /><strong>Assigned To:</strong> Unassigned"
-                                    class="btn btn-sq btn-warning wip-button">
-                                <i class="fa fa-clock-o fa-2x"></i>
-                            </button>
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 12-12e<br /><strong>Status:</strong>Waiting to Start<br /><strong>Assigned To:</strong> Unassigned"
-                                    class="btn btn-sq btn-warning wip-button">
-                                <i class="fa fa-clock-o fa-2x"></i><br />
-                            </button>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-5 col-md-5 col-sm-6">
-                            <strong>Proc: SUS Plate IPN003433443<br>INTEL 03-INT-334</strong>
-                        </div>
-                        <div class="col-lg-7 col-md-7 col-sm-6">
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 14a<br />
-                                       <strong>Status:</strong> In Progress<br />
-                                       <strong>Assigned To:</strong> Jeff Tevonian"
-                                class="btn btn-sq btn-success wip-button">
-                              <i class="fa fa-cog fa-spin fa-2x"></i>
-                            </button>
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 14b<br />
-                                       <strong>Status:</strong>In Progress<br />
-                                       <strong>Assigned To:</strong> Emily Hary"
-                                class="btn btn-sq btn-success  wip-button">
-                              <i class="fa fa-cog fa-spin fa-2x"></i>
-                            </button>
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 14c<br />
-                                       <strong>Status:</strong> In Progress<br />
-                                       <strong>Assigned To:</strong> Joe Maderatz"
-                                class="btn btn-sq btn-success wip-button">
-                              <i class="fa fa-cog fa-spin fa-2x"></i>
-                            </button>
-                            <button data-toggle="tooltip" data-placement="top" data-html="true"
-                                    title="<strong>Serial #:</strong> 14d<br />
-                                       <strong>Status:</strong>In Progress<br />
-                                       <strong>Assigned To:</strong> Billy Bob"
-                                class="btn btn-sq btn-success  wip-button">
-                              <i class="fa fa-cog fa-spin fa-2x"></i>
-                            </button>
-                        </div>
-                    </div>*@
-
-       

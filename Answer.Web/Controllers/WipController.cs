@@ -222,7 +222,7 @@ namespace Answer.Web.Controllers
             var orderService = new OrderService();
 
             viewModel.WoItemsInprogress  = orderService.GetWorkOrderQueryable()
-                    .Where(x => x.Status == WorkItemStatusConstants.Accepted && x.SupplierId == currentUser.Root_Company) 
+                    .Where(x => x.Status == WorkItemStatusConstants.Accepted && x.SupplierId == currentUser.Root_Company && x.RequesteeId != currentUser.Id) 
                     .OrderByDescending(o => o.DueDate)
                     .ToList();
 
