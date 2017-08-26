@@ -1,0 +1,961 @@
+@page  {}
+.right {
+	text-align: right;
+}
+div {
+	margin: 0px; padding: 0px;
+}
+table {
+	margin: 0px; padding: 0px; font-family: Arial; font-size: inherit;
+}
+.workerBox {
+	border: outset currentColor; border-image: none; margin-bottom: 10px;
+}
+.barcode {
+	font-family: "BC I25 Medium","barcod39","Free 3 of 9","Free 3 of 9 Extended"; font-weight: normal;
+}
+table.procProgRep {
+	border-collapse: collapse;
+}
+td.procProgRep {
+	border: thin ridge currentColor; border-image: none;
+}
+div.reportNameRow {
+	padding: 3px; border: thin ridge currentColor; border-image: none; text-align: center; margin-bottom: 15px;
+}
+div.saveSearchBox {
+	border: thin ridge currentColor; border-image: none; height: 300px; overflow: auto; display: none; background-color: white;
+}
+span.ERROR {
+	color: red;
+}
+span.WARNING {
+	color: orange;
+}
+.sm {
+	font-size: x-small;
+}
+.title {
+	font-size: larger; font-weight: bold;
+}
+.passingMonitor {
+	color: green; font-size: 8px; background-color: green;
+}
+.failingMonitor {
+	color: red; font-size: 8px; background-color: red;
+}
+.leftMenuHeader {
+	border: 1px solid black; border-image: none; width: 350px; color: black; background-color: silver;
+}
+.leftMenuSection {
+	border: 1px solid black; border-image: none; width: 350px; padding-left: 10px; background-color: white;
+}
+.shortMenuLinks {
+	padding-left: 20px;
+}
+.hiddenForWords {
+	display: none;
+}
+.black {
+	color: black;
+}
+.taskActionObjectWidth {
+	width: 325px;
+}
+.bgGray {
+	background-color: rgb(221, 221, 221);
+}
+input.taskActionItemQty {
+	width: 50px;
+}
+input.small {
+	width: 100px;
+}
+select.small {
+	width: 100px;
+}
+.tt {
+	width: 450px;
+}
+.thinBlue {
+	border: 1px blue; border-image: none;
+}
+.insetBorder {
+	border: 1px inset currentColor; border-image: none;
+}
+.outsetBorder {
+	border: 1px outset currentColor; border-image: none;
+}
+.ridgeBorder {
+	border: 1px ridge currentColor; border-image: none;
+}
+.tinyBorder {
+	border: 1px solid black; border-image: none;
+}
+.sidePadding {
+	padding-right: 5px; padding-left: 5px;
+}
+.tab {
+	padding-left: 10px;
+}
+.taskPreText {
+	margin: 0px; border: thin ridge currentColor; border-image: none; width: 450px; font-family: Arial; font-size: small; background-color: rgb(238, 238, 238);
+}
+.alignRight {
+	text-align: right;
+}
+.alignLeft {
+	text-align: left;
+}
+.bold {
+	font-weight: bold;
+}
+.underline {
+	text-decoration: underline;
+}
+td.menuColumn {
+	
+}
+div.default_body {
+	text-align: left; font-family: arial; font-size: small; font-weight: 500;
+}
+.docwidth {
+	width: 600px;
+}
+input.extraSmall {
+	font-size: x-small;
+}
+td.rowActionButtons {
+	
+}
+a {
+	text-decoration: none;
+}
+td.stdTitle {
+	border: thin ridge currentColor; border-image: none; text-align: center; font-weight: bold; background-color: silver;
+}
+td.MainMenuWarning {
+	padding-left: 10px;
+}
+a.mm {
+	color: black;
+}
+a.escalation {
+	color: red;
+}
+a.WARNING {
+	color: rgb(204, 102, 0);
+}
+div.tip_popUp {
+	left: 0px; top: 0px; position: absolute;
+}
+div.tip_popUp {
+	border: thin ridge currentColor; border-image: none; width: 300px; color: black; font-size: x-small; background-color: white;
+}
+input.monitorResult {
+	width: 100px;
+}
+td.monitorTitle {
+	border: thin ridge currentColor; border-image: none; text-align: center; font-weight: bold;
+}
+td.monitorData {
+	border: thin ridge currentColor; border-image: none; text-align: left; background-color: white;
+}
+div.viewCol {
+	border: thin ridge currentColor; border-image: none; color: black; padding-left: 2px; background-color: rgb(238, 238, 238);
+}
+td.data {
+	border: thin ridge currentColor; border-image: none; color: black; background-color: white;
+}
+td.label {
+	text-align: right; color: black;
+}
+td.label2 {
+	text-align: right; color: black;
+}
+div.label2 {
+	text-align: right;
+}
+div.hiddenReferencePicture {
+	border: thin outset blue; border-image: none; font-size: x-small; background-color: white;
+}
+span.closeX {
+	border: thin solid white; border-image: none; background-color: white;
+}
+div.closeX {
+	text-align: right; background-color: blue;
+}
+img.refpic {
+	border: 0px currentColor; border-image: none;
+}
+table.menu {
+	width: 100%;
+}
+td.menu {
+	text-align: left;
+}
+table.note {
+	border: thin ridge currentColor; border-image: none; border-collapse: collapse;
+}
+td.noteTitle {
+	border: currentColor; border-image: none; text-align: center; color: black; font-weight: bold;
+}
+td.note {
+	border: currentColor; border-image: none;
+}
+td.standardTitle {
+	text-align: center; font-weight: bold;
+}
+input.forecastInputField {
+	width: 70px;
+}
+td.bg {
+	border: thin ridge currentColor; border-image: none;
+}
+td.deemphasize {
+	border: thin ridge currentColor; border-image: none; color: gray; background-color: white;
+}
+a.normal {
+	color: blue; font-weight: 500;
+}
+a.normal:hover {
+	color: green; font-weight: 500;
+}
+input.taskEntry {
+	width: 400px;
+}
+input.searchWidth {
+	width: 250px;
+}
+table.WF_TABLE {
+	padding: 0px; width: 500px; border-collapse: collapse;
+}
+th.WF_TABLE {
+	border: thin ridge currentColor; border-image: none; background-color: silver;
+}
+td.WF_TABLE {
+	border: thin ridge currentColor; border-image: none; background-color: rgb(255, 255, 255);
+}
+span.revInfo {
+	color: silver; font-style: italic;
+}
+table.ttRev {
+	border-collapse: collapse;
+}
+th.ttRev {
+	border: thin ridge currentColor; border-image: none; text-align: center; color: silver; font-weight: 500; background-color: rgb(238, 238, 238);
+}
+td.ttRev {
+	border: thin ridge currentColor; border-image: none; text-align: center; color: silver; font-weight: 300; background-color: rgb(255, 255, 255);
+}
+div.ttView {
+	border: thin ridge currentColor; border-image: none; width: 99%;
+}
+div.tt {
+	width: 450px; background-color: white;
+}
+div.displayField {
+	border: thin ridge currentColor; border-image: none; width: 450px; text-align: right; background-color: rgb(221, 221, 221);
+}
+table.ttView {
+	margin: 5px; width: 100%; border-collapse: collapse; background-color: rgb(255, 255, 255);
+}
+div.note {
+	background-color: rgb(255, 255, 204);
+}
+table.colorCode {
+	border: thin ridge currentColor; border-image: none; border-collapse: collapse;
+}
+td.TEA_TT_POST {
+	text-align: center; padding-top: 10px; padding-bottom: 10px;
+}
+td.TEA_TT_Pre {
+	text-align: left; padding-bottom: 5px;
+}
+.KPI_IN_SPEC {
+	background-color: rgb(164, 242, 188);
+}
+.KPI_Warning {
+	background-color: rgb(255, 252, 158);
+}
+.KPI_Failing {
+	background-color: rgb(247, 183, 185);
+}
+.KPINormal {
+	background-color: white;
+}
+.KPINew {
+	background-color: rgb(180, 228, 228);
+}
+.KPIWarning {
+	background-color: rgb(255, 252, 158);
+}
+.KPIFinished {
+	background-color: rgb(164, 242, 188);
+}
+.KPIFailing {
+	background-color: rgb(247, 183, 185);
+}
+.KPIInSpec {
+	background-color: rgb(164, 242, 188);
+}
+input.TTSearch {
+	width: 200px;
+}
+select.TTSearch {
+	width: 200px;
+}
+caption.resultSet {
+	margin: 0px; padding: 0px; border: 0px currentColor; border-image: none; text-align: left; border-collapse: collapse; border-spacing: 0px;
+}
+th.resultSet {
+	vertical-align: top;
+}
+td.peopleLeftColumn {
+	width: 300px;
+}
+td.test {
+	border: thick ridge currentColor; border-image: none;
+}
+th.tree {
+	border: thin groove currentColor; border-image: none;
+}
+span.treeData {
+	width: 400px; overflow: hidden;
+}
+img.rowAction {
+	width: 15px; height: 15px;
+}
+table.notApproved {
+	border: thin solid red; border-image: none;
+}
+table.leftHeader {
+	color: red; font-weight: 300;
+}
+div.TTBody {
+	color: black; background-color: white;
+}
+div.TTTitle {
+	color: black; font-size: large;
+}
+.tt {
+	width: 600px;
+}
+select.ttSearchDrop {
+	width: 35em;
+}
+input.ttSearchDrop {
+	width: 10em;
+}
+select.ttSearchDropSmall {
+	width: 15em;
+}
+input.ttSearchDropSmall {
+	width: 5em;
+}
+input.wide {
+	width: 600px;
+}
+input.ttunhighlited {
+	width: 450px; background-color: rgb(238, 238, 238);
+}
+select.wide {
+	width: 600px;
+}
+div.wide {
+	width: 600px;
+}
+textarea.tt {
+	font-family: Arial; font-size: small;
+}
+textarea.wide {
+	width: 600px;
+}
+select.ttunhighlited {
+	width: 450px; background-color: rgb(238, 238, 238);
+}
+textarea.ttunhighlited {
+	width: 450px; background-color: rgb(238, 238, 238);
+}
+div.closeButton {
+	color: black; vertical-align: middle; position: absolute; background-color: rgb(212, 208, 200);
+}
+input.wide {
+	width: 300px;
+}
+div.textAdderMinimized {
+	border: thin outset currentColor; border-image: none; left: 1px; top: 1px; width: 100px; color: black; vertical-align: middle; visibility: hidden; position: absolute; background-color: white;
+}
+div.textAdder {
+	border: thin outset currentColor; border-image: none; width: 155px; color: black; vertical-align: middle; visibility: visible; position: absolute; background-color: white ;padding: 6px 0px 6px 6px;
+}
+div.selectClose {
+	visibility: visible; position: absolute;
+}
+span.selectNote {
+	border: thin solid black; border-image: none;
+}
+div.textAdderButton {
+	border: thin outset currentColor; border-image: none; text-align: center; color: black; vertical-align: middle; background-color: rgb(212, 208, 200);
+}
+div.phoneLabel {
+	width: 120px; text-align: right; font-weight: bold;
+}
+div.addressButton {
+	border: thin outset currentColor; border-image: none; width: 200px; text-align: center; background-color: rgb(212, 208, 200);
+}
+div.button {
+	border: thin outset currentColor; border-image: none; text-align: center; background-color: rgb(212, 208, 200);
+}
+a.addPhoneButton {
+	color: black; text-decoration: none;
+}
+a.addPhoneButton:hover {
+	color: blue; text-decoration: blink;
+}
+a.pageLink {
+	color: red;
+}
+a.pageLink:hover {
+	color: orange;
+}
+img.picture {
+	width: 2.25in; height: 3in;
+}
+td.tree {
+	vertical-align: middle;
+}
+td.Tasktree {
+	margin: 0px; padding: 0px; border: thin solid black; border-image: none;
+}
+th.Tasktree {
+	margin: 0px; padding: 0px; border: thin solid black; border-image: none; background-color: silver;
+}
+div.Tasktree {
+	padding: 0px;
+}
+textarea.tree {
+	background-color: rgb(240, 240, 240);
+}
+input.datebox {
+	font-family: arial, Helvetica, sans-serif;
+}
+table.tight {
+	text-align: left; border-collapse: collapse;
+}
+td.tight {
+	margin: 0px; padding: 0px; text-align: left;
+}
+table.tree {
+	margin: 0px; border-collapse: collapse;
+}
+td.Tasktree {
+	margin: 0px; padding: 0px; width: 200px; text-align: left; vertical-align: top;
+}
+img.tree {
+	border: 0px currentColor; border-image: none; width: 15px; height: 15px;
+}
+img.spacer {
+	width: 15px; height: 15px;
+}
+a.tree {
+	
+}
+a.button {
+	padding: 2px; border: thin outset currentColor; border-image: none; color: black; font-size: small; text-decoration: none; background-color: rgb(212, 208, 200);
+}
+a.rowActButton {
+	border: 2px solid silver; border-image: none; color: black; font-size: small; text-decoration: none; margin-right: 2px; background-color: rgb(212, 208, 200);
+}
+a.rowActButton:hover {
+	border: 2px solid cyan; border-image: none; background-color: rgb(164, 160, 8);
+}
+a.KPI_BUTTON {
+	color: black; text-decoration: none; margin-right: 5px;
+}
+input.editTaskDate {
+	padding: 0px; width: 115px; font-family: arial, Helvetica, sans-serif; font-size: small;
+}
+input.editTaskCounter {
+	padding: 0px; width: 75px; font-family: arial, Helvetica, sans-serif; font-size: small;
+}
+td.taskDateTitle {
+	text-align: left; padding-left: 5px; vertical-align: bottom; background-color: silver;
+}
+td.taskDateDate {
+	width: 32%; text-align: left;
+}
+td.taskDateCounter {
+	width: 18%; text-align: left;
+}
+table.editTaskDate {
+	padding: 0px; width: 480px; border-collapse: collapse;
+}
+div.editTaskDate {
+	font-size: x-small;
+}
+div.taskEntryDisabled {
+	border: thin inset currentColor; border-image: none; width: 400px; color: rgb(80, 80, 80); padding-left: 3px; font-family: arial, Helvetica, sans-serif; font-size: small; font-style: italic; background-color: white;
+}
+div.taskEntry {
+	border: thin inset currentColor; border-image: none; width: 400px; padding-left: 5px; font-family: arial, Helvetica, sans-serif; font-size: small; background-color: white;
+}
+select.taskEntry {
+	width: 400px;
+}
+textarea.taskEntry {
+	width: 400px;
+}
+textarea {
+	font-family: arial, Helvetica, sans-serif; font-size: small;
+}
+select.norm {
+	width: 20em;
+}
+input.norm {
+	width: 20em;
+}
+div.label {
+	margin: 0px; padding: 0px; text-align: right; font-weight: normal;
+}
+table.standard {
+	border: 0px currentColor; border-image: none; border-collapse: collapse;
+}
+td.stdTitle {
+	border: thin ridge currentColor; border-image: none; padding-right: 7px; padding-left: 7px; font-size: small; vertical-align: top; background-color: rgb(221, 221, 221);
+}
+th.standard {
+	border: thin ridge currentColor; border-image: none; padding-right: 7px; padding-left: 7px; font-size: small; vertical-align: top; background-color: rgb(221, 221, 221);
+}
+td.header {
+	border: thin ridge currentColor; border-image: none; text-align: center; padding-right: 7px; padding-left: 7px; font-size: small; vertical-align: top; background-color: rgb(221, 221, 221);
+}
+th.actions {
+	text-align: left;
+}
+td.actions {
+	border: thin ridge currentColor; border-image: none; font-size: small;
+}
+th.actTreeTitle {
+	border: thin ridge currentColor; border-image: none; padding-right: 7px; padding-left: 7px; font-size: small; font-weight: 500;
+}
+td.actTreeTitle {
+	border: thin ridge currentColor; border-image: none; font-size: small; background-color: white;
+}
+th.bold {
+	font-weight: 500;
+}
+td.standard {
+	border: thin ridge currentColor; border-image: none; font-size: small;
+}
+td.resCol_1 {
+	background-color: rgb(251, 252, 246);
+}
+td.resCol_2 {
+	background-color: white;
+}
+td.bold {
+	font-weight: bold;
+}
+th.invisible {
+	border: 0px currentColor; border-image: none;
+}
+td.invisible {
+	border: 0px currentColor; border-image: none;
+}
+select.standard {
+	width: 20em; font-family: arial, Helvetica, sans-serif; font-size: small;
+}
+input.standard {
+	width: 20em; font-family: arial, Helvetica, sans-serif; font-size: small;
+}
+input {
+	font-family: arial, Helvetica, sans-serif; font-size: inherit;
+}
+textarea.editTaskForm {
+	width: 420px; font-family: arial, Helvetica, sans-serif; font-size: small;
+}
+select {
+	font-family: arial, Helvetica, sans-serif; font-size: small;
+}
+select.editTaskForm {
+	width: 420px;
+}
+span.littlenote {
+	font-style: italic;
+}
+span.light {
+	color: white; font-style: italic;
+}
+div.disEditTask {
+	margin: 1px; border: double silver; border-image: none; width: 420px; color: rgb(85, 85, 85); font-style: italic; background-color: rgb(240, 240, 240);
+}
+span.lightLabel {
+	color: gray;
+}
+div.relatedTask {
+	border: thin solid silver; border-image: none; text-align: center; font-weight: 700; vertical-align: top;
+}
+div.searchData {
+	text-align: left; color: green; font-style: italic;
+}
+div.comment {
+	border: thin solid silver; border-image: none;
+}
+span.extraData {
+	color: blue; font-style: italic;
+}
+div.ERROR {
+	color: red;
+}
+div.myGroup {
+	border: thin double silver; border-image: none; text-align: center; color: white; background-color: green;
+}
+a.prodButton {
+	border: thin outset currentColor; border-image: none; background-color: white;
+}
+a.prodButton:hover {
+	border: thin outset currentColor; border-image: none; background-color: cyan;
+}
+a.collapse {
+	
+}
+a.collapse:hover {
+	
+}
+input.prodButton {
+	border: thin outset currentColor; border-image: none;
+}
+input.prodButton:hover {
+	border: thin outset currentColor; border-image: none; background-color: cyan;
+}
+img.prodButton {
+	height: 16px;
+}
+img.prodTree {
+	width: 20px; height: 20px; vertical-align: middle;
+}
+table.customerName {
+	border: thin solid white; border-image: none; text-align: center; color: white; font-size: small; font-weight: 700;
+}
+body {
+	margin: 0px; text-align: left; font-family: Arial; background-color: white;
+}
+span.customerName {
+	border: thin solid white; border-image: none; color: white;
+}
+table.bottom_row {
+	width: 100%; font-size: small;
+}
+td.bottomRight {
+	text-align: right;
+}
+div.thanks {
+	font-size: xx-large;
+}
+span.delete_title {
+	font-size: larger; font-weight: 700;
+}
+table.delete_a_file {
+	border: thin solid black; border-image: none; font-size: small; border-collapse: collapse;
+}
+table.loginScreen {
+	margin: auto;
+}
+table.auto_menu_REGULAR {
+	font-family: arial; font-size: small; font-weight: 500; border-collapse: collapse; background-color: white;
+}
+div.printable_body {
+	margin: 0px; padding: 0px;
+}
+table.downloader {
+	border: thin inset currentColor; border-image: none; background-color: white;
+}
+div.title {
+	text-align: center; font-family: arial; font-weight: 700;
+}
+table.border {
+	border: thin solid black; border-image: none; font-size: small; border-collapse: collapse;
+}
+td.border {
+	border: thin solid black; border-image: none;
+}
+th.border {
+	border: thin solid black; border-image: none;
+}
+.alumBG {
+	color: orange;
+}
+.titleBar {
+	border-bottom-color: rgb(236, 149, 33); border-bottom-width: medium; border-bottom-style: solid;
+}
+.footer {
+	border-top-color: rgb(236, 149, 33); border-top-width: medium; border-top-style: solid;
+}
+table.Main_Body {
+	margin: 0px; padding: 0px; border: 0px currentColor; border-image: none; width: 100%; font-size: small; border-collapse: collapse;
+}
+td.header {
+	margin: 0px; padding: 0px; vertical-align: bottom;
+}
+div.body {
+	color: black;
+}
+a {
+	color: blue;
+}
+a:hover {
+	color: green;
+}
+div.spacer {
+	font-size: 3px;
+}
+table.levelkey {
+	margin: 0px; padding: 0px; border: 0px currentColor; border-image: none; font-size: small; border-collapse: collapse;
+}
+div.levelkey {
+	text-align: left;
+}
+table.levelkey {
+	border: thin double black; border-image: none;
+}
+span.myFolder_DocTitle {
+	color: red; font-size: larger; font-weight: 700;
+}
+div.WARNING {
+	background: yellow; border: outset currentColor; border-image: none; color: red;
+}
+div.favForm {
+	border: thin outset currentColor; border-image: none; width: 400px; color: black; vertical-align: middle; visibility: hidden; position: absolute; background-color: white;
+}
+div.objectForm {
+	border: thin outset currentColor; border-image: none; width: 400px; color: black; vertical-align: middle; visibility: hidden; position: absolute; background-color: white;
+}
+pre.standardPre {
+	margin: 0px; padding: 0px; font-family: arial; font-size: small;
+}
+.subTitle {
+	font-size: larger; font-weight: 700;
+}
+@media print
+{
+body {
+	background-image: none; background-color: rgb(255, 255, 255);
+}
+}
+table.ncr_report {
+	border: thin solid black; border-image: none;
+}
+div.printableReport {
+	margin: auto; width: 8in; align-content: center; background-color: white;
+}
+div.ncr_supplierName {
+	font-size: x-large; font-weight: bold;
+}
+td.ncr_Label {
+	width: 25%; text-align: right; color: rgb(85, 85, 85);
+}
+div.littleHelpArea {
+	margin: auto; padding: 15px; border-radius: 50px; border: thin solid silver; border-image: none; width: 450px; -webkit-border-radius: 50px; -moz-border-radius: 50px;
+}
+div.loginBox {
+	margin: auto; border-radius: 10px; border: thin solid black; border-image: none; width: 300px; -webkit-box-shadow: rgba(0, 0, 0, 0.0.1) 0 1px 0 0; -webkit-border-radius: 10px; -moz-border-radius: 10px; -moz-box-shadow: rgba(0, 0, 0, 0.0.1) 0 1px 0 0;
+}
+/*input[type='submit'] {
+	padding: 3px 10px; border-radius: 5px; border: 2px solid rgb(102, 102, 102); border-image: none; height: 20px; color: rgb(11, 134, 8); font-family: "Lucida Grande",Tahoma,Verdana,Arial,sans-serif; font-size: 10px; font-weight: 700; margin-left: 2px; vertical-align: top; background-color: transparent; -webkit-box-shadow: rgba(0, 0, 0, 0.0.1) 0 2px 0 0; -webkit-border-radius: 5px; -moz-border-radius: 5px; -moz-box-shadow: rgba(0, 0, 0, 0.0.1) 0 2px 0 0;
+}*/
+input[type='button'] {
+	padding: 3px 10px; border-radius: 5px; border: 2px solid rgb(102, 102, 102); border-image: none; height: 20px; color: rgb(11, 134, 8); font-family: "Lucida Grande",Tahoma,Verdana,Arial,sans-serif; font-size: 10px; font-weight: 700; margin-left: 2px; vertical-align: top; background-color: transparent; -webkit-box-shadow: rgba(0, 0, 0, 0.0.1) 0 2px 0 0; -webkit-border-radius: 5px; -moz-border-radius: 5px; -moz-box-shadow: rgba(0, 0, 0, 0.0.1) 0 2px 0 0;
+}
+input[type='submit']:hover {
+	margin-left: 2px; cursor: pointer; background-color: rgb(221, 221, 221);
+}
+input[type='button']:hover {
+	margin-left: 2px; cursor: pointer; background-color: rgb(221, 221, 221);
+}
+table.centered {
+	margin: auto;
+}
+table.resultSetForm {
+	margin: auto;
+}
+div.searchFormNew {
+	padding: 15px; border-radius: 10px; border: thin solid black; border-image: none; margin-top: 15px; margin-left: 30px; -webkit-border-radius: 10px; -moz-border-radius: 10px;
+}
+div.rowActionButtonDiv {
+	
+}
+span.rowActButton {
+	
+}
+.tooltip {
+	font-size: x-small;
+}
+img.printable {
+	border-radius: 10px; border: thin solid white; border-image: none; max-width: 7.8in; -webkit-border-radius: 10px; -moz-border-radius: 10px;
+}
+table.tsrHeader {
+	margin: auto; border: thin solid black; border-image: none; border-collapse: collapse;
+}
+td.tsrHeader {
+	padding: 3px; border: thin solid black; border-image: none; vertical-align: top;
+}
+table.ncr_attachment {
+	margin: 3px; border-radius: 10px; border: thin solid silver; border-image: none; -webkit-border-radius: 10px; -moz-border-radius: 10px;
+}
+.printableInvoice {
+	margin: auto; padding: 0.25in;
+}
+.invoiceLogoHeader {
+	height: 0.5in;
+}
+img.invoiceLogo {
+	height: 0.3in;
+}
+.invoiceTitle {
+	font-size: xx-large; font-weight: bold;
+}
+.invoicePONUM {
+	font-size: x-large; font-weight: bold;
+}
+.invoiceNumber {
+	font-size: large; font-weight: bold;
+}
+.remitLine {
+	height: 0.7in; padding-left: 0.5in;
+}
+.customerBox {
+	border-radius: 10px; border: thin solid black; border-image: none; width: 3.5in; height: 0.9in; padding-top: 0.2in; padding-left: 0.25in; font-size: 14px; margin-top: 0.35in; margin-left: 0.5in; -webkit-border-radius: 10px; -moz-border-radius: 10px;
+}
+.invoiceItems {
+	margin-top: 0.75in;
+}
+table.invoiceItems {
+	margin: auto; border: thin solid black; border-image: none; border-collapse: collapse;
+}
+td.invoiceItemTitle {
+	border-width: thin thin medium; border-style: solid solid double; border-color: black; border-image: none;
+}
+td.invoiceItemItem {
+	padding: 2px; border: thin solid black; border-image: none;
+}
+td.money {
+	text-align: right;
+}
+.invoiceTotals {
+	text-align: right; margin-top: 0.1in;
+}
+table.invoiceTotals {
+	float: right; border-collapse: collapse;
+}
+td.invoiceTotalsLabel {
+	border: thin solid black; border-image: none; text-align: right;
+}
+td.invoiceTotalsVal {
+	border: thin solid black; border-image: none; text-align: right;
+}
+img.smallIcon {
+	width: 14px; height: 14px;
+}
+input.wipSupplier {
+	width: 5em;
+}
+select.wipSupplier {
+	width: 17em;
+}
+.jqifade {
+	position: absolute; background-color: rgb(119, 119, 119);
+}
+iframe.jqifade {
+	display: block; z-index: -1;
+}
+div.jqi {
+	padding: 7px; border-radius: 6px; border: 1px solid rgb(238, 238, 238); border-image: none; width: 400px; text-align: left; font-family: Verdana,Geneva,Arial,Helvetica,sans-serif; font-size: 11px; position: absolute; max-width: 90%; background-color: rgb(255, 255, 255); -webkit-border-radius: 6px; -moz-border-radius: 6px;
+}
+div.jqi .jqicontainer {
+	
+}
+div.jqi .jqiclose {
+	top: 4px; width: 18px; right: -2px; color: rgb(187, 187, 187); font-weight: 700; position: absolute; cursor: default;
+}
+div.jqi .jqistate {
+	background-color: rgb(255, 255, 255);
+}
+div.jqi .jqititle {
+	padding: 5px 10px; line-height: 20px; font-size: 16px; border-bottom-color: rgb(238, 238, 238); border-bottom-width: 1px; border-bottom-style: solid;
+}
+div.jqi .jqimessage {
+	padding: 10px; color: rgb(68, 68, 68); line-height: 20px; overflow: auto;
+}
+div.jqi .jqibuttonshide {
+	display: none;
+}
+div.jqi .jqibuttons {
+	margin: 0px -7px -7px; border-radius: 0px 0px 6px 6px; text-align: right; border-top-color: rgb(228, 228, 228); border-top-width: 1px; border-top-style: solid; background-color: rgb(244, 244, 244); -webkit-border-radius: 0 0 6px 6px; -moz-border-radius: 0 0 6px 6px;
+}
+div.jqi .jqibuttons button {
+	border-width: 0px 0px 0px 1px; border-style: none none none solid; border-color: currentColor currentColor currentColor rgb(228, 228, 228); margin: 0px; padding: 15px 20px; border-image: none; color: rgb(119, 119, 119); font-size: 12px; font-weight: 700; background-color: transparent;
+}
+div.jqi .jqibuttons button.jqidefaultbutton {
+	color: rgb(72, 154, 254);
+}
+div.jqi .jqibuttons button:hover {
+	outline: 0px; color: rgb(40, 122, 222);
+}
+div.jqi .jqibuttons button:focus {
+	outline: 0px; color: rgb(40, 122, 222);
+}
+div.jqi .jqibuttons button[disabled] {
+	color: rgb(170, 170, 170);
+}
+.jqiwarning .jqi .jqibuttons {
+	background-color: rgb(185, 86, 86);
+}
+div.jqi .jqiparentstate::after {
+	border-radius: 6px; left: 0px; top: 0px; right: 0px; bottom: 0px; position: absolute; content: ""; opacity: 0.6; background-color: rgb(119, 119, 119); -webkit-border-radius: 6px; -moz-border-radius: 6px;
+}
+div.jqi .jqisubstate {
+	border-width: 0px 1px 1px; border-style: none solid solid; border-color: currentColor rgb(238, 238, 238) rgb(238, 238, 238); padding: 7px; border-radius: 0px 0px 6px 6px; border-image: none; left: 20%; top: 0px; width: 60%; position: absolute; -webkit-border-radius: 0 0 6px 6px; -moz-border-radius: 0 0 6px 6px;
+}
+div.jqi .jqisubstate .jqibuttons button {
+	padding: 10px 18px;
+}
+.jqi .jqiarrow {
+	border: 10px solid transparent; border-image: none; width: 0px; height: 0px; line-height: 0; font-size: 0px; position: absolute;
+}
+.jqi .jqiarrowtl {
+	left: 10px; top: -20px; border-bottom-color: rgb(255, 255, 255);
+}
+.jqi .jqiarrowtc {
+	left: 50%; top: -20px; margin-left: -10px; border-bottom-color: rgb(255, 255, 255);
+}
+.jqi .jqiarrowtr {
+	top: -20px; right: 10px; border-bottom-color: rgb(255, 255, 255);
+}
+.jqi .jqiarrowbl {
+	left: 10px; bottom: -20px; border-top-color: rgb(255, 255, 255);
+}
+.jqi .jqiarrowbc {
+	left: 50%; bottom: -20px; margin-left: -10px; border-top-color: rgb(255, 255, 255);
+}
+.jqi .jqiarrowbr {
+	right: 10px; bottom: -20px; border-top-color: rgb(255, 255, 255);
+}
+.jqi .jqiarrowlt {
+	left: -20px; top: 10px; border-right-color: rgb(255, 255, 255);
+}
+.jqi .jqiarrowlm {
+	left: -20px; top: 50%; margin-top: -10px; border-right-color: rgb(255, 255, 255);
+}
+.jqi .jqiarrowlb {
+	left: -20px; bottom: 10px; border-right-color: rgb(255, 255, 255);
+}
+.jqi .jqiarrowrt {
+	top: 10px; right: -20px; border-left-color: rgb(255, 255, 255);
+}
+.jqi .jqiarrowrm {
+	top: 50%; right: -20px; margin-top: -10px; border-left-color: rgb(255, 255, 255);
+}
+.jqi .jqiarrowrb {
+	right: -20px; bottom: 10px; border-left-color: rgb(255, 255, 255);
+}

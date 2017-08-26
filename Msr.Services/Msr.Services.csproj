@@ -290,9 +290,9 @@
     <Compile Include="People\ViewModels\EditPeopleViewModel.cs" />
     <Compile Include="People\ViewModels\AddPeopleViewModel.cs" />
     <Compile Include="Procedures\ProcedureService.cs" />
-    <Compile Include="Procedures\Procedures\GetStepsDataProcedure.cs" />
     <Compile Include="Procedures\Procedures\AdminSqlToRunQueUpProcedure.cs" />
     <Compile Include="Procedures\Procedures\DeleteProcedureRolesProcedure.cs" />
+    <Compile Include="Procedures\Procedures\GetStepsDataProcedure.cs" />
     <Compile Include="Procedures\Procedures\SaveFileProcedure.cs" />
     <Compile Include="Procedures\Procedures\SaveProcedureProcedure.cs" />
     <Compile Include="Procedures\Procedures\SaveProcedureRoleProcedure.cs" />

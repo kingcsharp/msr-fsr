@@ -24,7 +24,7 @@ namespace Msr.Services.ActualParts.Procedures
         public string PartId { get; set; }
 
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "QTY")]
-        public double? Qty { get; set; }
+        public string Qty { get; set; }
 
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 1000, ParameterName = "SERIAL")]
         public string Serial { get; set; }

@@ -4,6 +4,7 @@ using Msr.Services.Roles;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,6 +25,7 @@ namespace Msr.Services.Documents.ViewModels
             ReferenceObject = new List<string>();
             ReferenceTheory = new List<string>();
         }
+
         [Display(Name = "Document #:")]
         public string Id { get; set; }
 
@@ -46,7 +48,7 @@ namespace Msr.Services.Documents.ViewModels
 
         [Display(Name = "Reference Files:")]
         public List<string> ReferenceFiles { get; set; }
-
+        [AllowHtml]
         [Display(Name = "Header Comments (notes,warning, etc.):")]
         public string Comments { get; set; }
 
@@ -57,6 +59,8 @@ namespace Msr.Services.Documents.ViewModels
         public List<string> Roles { get; set; }
 
         public string NTLogin { get; set; }
+
+
 
         public IList<SelectListItem> ListReferenceFiles { get; set; }
         public IList<SelectListItem> ListReferenceObjects { get; set; }
@@ -110,11 +114,18 @@ namespace Msr.Services.Documents.ViewModels
                 Value = x.Id.ToString(),
             }).OrderBy(o => o.Text).ToList();
 
-            ListReferenceTheories = documentService.GetSelectedTheories(id:Id,ntlogin:ntlog).Select(x => new SelectListItem
+            if (ReferenceTheory != null)
             {
-                Text = x.Name,
-                Value =x.Id.ToString(),
-            }).OrderBy(o => o.Text).ToList();
+                ListReferenceTheories = documentService.GetSelectedTheories(id: Id, ntlogin: ntlog).Select(x => new SelectListItem
+                {
+                    Text = x.Name,
+                    Value = x.Id.ToString(),
+                }).OrderBy(o => o.Text).ToList();
+            }
+          
+
+          
+           
 
             Roles = documentService.GetSelectedRoles(id: Id,ntlogin:ntlog).Select(x => x.RoleId).ToList();
         }
@@ -129,7 +140,7 @@ namespace Msr.Services.Documents.ViewModels
                 Name = model.Name,
                 Rev = model.Rev,
                 ApprovalStatus = model.SecurityLevel,
-                Company = model.CreatingCoName
+                Company = model.CreatingCoName 
             };
         }
     }

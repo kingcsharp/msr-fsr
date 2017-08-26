@@ -1,0 +1,12 @@
+table.hitdata {
+	color: white; font-size: small; border-collapse: collapse; background-color: rgb(255, 255, 255);
+}
+th.hit_data_title {
+	border: thin solid black; border-image: none; color: white; font-size: small; font-weight: bold; border-collapse: collapse; background-color: black;
+}
+td.hitdata {
+	border: thin solid black; border-image: none; color: black; font-size: small; border-collapse: collapse; background-color: white;
+}
+td.hitdata_center {
+	border: thin solid black; border-image: none; text-align: center; color: black; font-size: small; border-collapse: collapse; background-color: white;
+}

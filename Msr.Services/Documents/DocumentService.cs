@@ -9,8 +9,8 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+using System.Web.UI.WebControls;
 
 namespace Msr.Services.Documents
 {
@@ -59,19 +59,19 @@ namespace Msr.Services.Documents
 
         public List<SelectFile> GetSelectedTheories(string id, string ntlogin)
         {
-
+          
             var objID = new SqlParameter("@ID", id == null ? "0" : id);
 
             //need to be dynamic
             var NTLogin = new SqlParameter("@strNTLogin", ntlogin);
 
             var result = _dbContext.Database.SqlQuery<SelectFile>("EXEC A_SP_THEORY_GET_REF_THEORY  @ID, @strNTLogin", objID, NTLogin).ToList();
-
+            
             return result;
 
 
         }
-
+       
         public bool Save(SaveDocumentViewModel model)
         {
             try
@@ -116,20 +116,34 @@ namespace Msr.Services.Documents
 
         public bool Create(SaveDocumentViewModel model)
         {
+            var theory = "";
             try
             {
+                if (model.ReferenceTheory.Count == 0)
+                    
+                {
+                    theory = null;
+                }
+                else
+                {
+                     theory = model.ReferenceTheory != null ? string.Join(", ", model.ReferenceTheory) : null;
 
-
+                }
+               
                 var saveDocumentProcedure = new SaveDocumentProcedure
                 {
+
                     Company = model.Company,
                     Name = model.Name,
                     Comments = model.Comments,
                     SecurityLevel = model.ApprovalStatus,
                     RolesToView = model.Roles != null ? string.Join(", ", model.Roles) : null,
                     ReferenceObjects = model.ReferenceObject != null ? string.Join(", ", model.ReferenceObject) : null,
-                    ReferenceTheory = model.ReferenceTheory != null ? string.Join(", ", model.ReferenceTheory) : null,
-                    NTLogin = model.NTLogin
+
+                    ReferenceTheory = theory,
+
+
+                NTLogin = model.NTLogin
 
                 };
 
