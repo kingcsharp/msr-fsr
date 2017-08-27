@@ -361,7 +361,7 @@
    
     function peopleEditFormatter(cellvalue, options, rowObject) {
       
-        var editbtn = '<a href="/People/Edit/' + rowObject.ObjectId + '" data-call-back-id ="' + rowObject.ObjectId +'"  class="btn btn-xs btn-success editpeople" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
+        var editButton = '<a href="/People/Edit/' + rowObject.ObjectId + '" data-call-back-id ="' + rowObject.ObjectId +'"  class="btn btn-xs btn-success editpeople" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
 
         var deleteButton = '';
         var buttonWorkflowLeft = '';
