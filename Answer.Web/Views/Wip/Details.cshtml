@@ -59,15 +59,15 @@
                         <div id="parts-table" class="col-sm-12">
                             <table class="table table-responsive table-condensed table-bordered">
                                 <tbody>
-                                @if (Model.FileSearchResult != null)
-                                {
-                                    <tr><td>@Model.FileSearchResult.FillObjDesc qty:@Model.FileSearchResult.Qty </td></tr>
-                                }
+                                    @if (Model.FileSearchResult != null)
+                                    {
+                                        <tr><td>@Model.FileSearchResult.FillObjDesc qty:@Model.FileSearchResult.Qty </td></tr>
+                                    }
 
-                                @foreach (var part in Model.Parts)
-                                {
-                                    <tr><td>@part</td></tr>
-                                }
+                                    @foreach (var part in Model.Parts)
+                                    {
+                                        <tr><td>@part</td></tr>
+                                    }
                                 </tbody>
                             </table>
                         </div>
@@ -77,22 +77,22 @@
                         <div id="purchase" class="tab-pane fade">
                             <table class="table table-responsive table-condensed table-bordered">
                                 <tbody>
-                                <tr>
-                                    <th nowrap style="text-align: right">Customer:</th>
-                                    <td>@Model.FileSearchResult.CustomerName</td>
-                                </tr>
-                                <tr>
-                                    <th nowrap style="text-align: right">Product:</th>
-                                    <td>@Model.FileSearchResult.ProductName</td>
-                                </tr>
-                                <tr>
-                                    <th nowrap style="text-align: right">Procedure:</th>
-                                    <td>@Model.FileSearchResult.ProcedureName</td>
-                                </tr>
-                                <tr>
-                                    <th nowrap style="text-align: right">Purchase Item #:</th>
-                                    <td>@Model.FileSearchResult.PurchItemId</td>
-                                </tr>
+                                    <tr>
+                                        <th nowrap style="text-align: right">Customer:</th>
+                                        <td>@Model.FileSearchResult.CustomerName</td>
+                                    </tr>
+                                    <tr>
+                                        <th nowrap style="text-align: right">Product:</th>
+                                        <td>@Model.FileSearchResult.ProductName</td>
+                                    </tr>
+                                    <tr>
+                                        <th nowrap style="text-align: right">Procedure:</th>
+                                        <td>@Model.FileSearchResult.ProcedureName</td>
+                                    </tr>
+                                    <tr>
+                                        <th nowrap style="text-align: right">Purchase Item #:</th>
+                                        <td>@Model.FileSearchResult.PurchItemId</td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -123,11 +123,11 @@
                                 stepCss = "waiting";
                             }
 
-                      
+
                             <li class="step-task step @stepCss" data-stepId="@step.StepId" data-phStepId="@step.PhStepId" data-fill-id="@Model.FillId" title="@step.Description">
                                 <div>@step.Description</div>
                             </li>
-                           
+
                         }
                     </ul>
                 </div>
@@ -136,7 +136,7 @@
 
                         @foreach (var step in Model.TaskStepResults.Where(x => x.Has_Child != "1"))
                         {
-                            <li id="step-@step.StepId">                               
+                            <li id="step-@step.StepId">
                             </li>
                         }
 
@@ -231,11 +231,12 @@
     <script src="~/assets/js/plugins/bootstrap3/bootstrap-dialog.min.js"></script>
     <script type="text/javascript" src="~/assets/js/jquery.mockjax.js"></script>
     <script type="text/javascript" src="~/assets/js/wip-detail.js"></script>
-    
+    <script type="text/javascript" src="~/assets/js/docviewer.js"></script>
+
     <script type="text/javascript">
-        
+
         function PrintReport(id) {
-            
+
             var contents = document.getElementById(id).innerHTML;
             var frame1 = document.createElement('iframe');
 

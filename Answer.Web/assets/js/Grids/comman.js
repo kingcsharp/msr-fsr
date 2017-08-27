@@ -19,6 +19,27 @@
             });
 
         });
+
+    $('#select-referenceproceduresview').on('show.bs.modal',
+                    function (event) {
+                        var button = $(event.relatedTarget);
+                        var callBackId = button.data('call-back-id');
+                        var modal = $(this);
+
+                        $.ajax({
+                            type: "GET",
+                            url: '/Procedures/GetProceduresView?callBackId=' + callBackId,
+                            dataType: 'html',
+                            success: function (data) {
+                                modal.find('.modal-body').html(data);
+                            },
+                            error: function () {
+
+                            }
+                        });
+
+                    });
+  
     $('#select-images').on('show.bs.modal',
         function (event) {
 
@@ -59,7 +80,7 @@
             });
         });
 
-   
+  
     $('#select-theory').on('show.bs.modal',
         function (event) {
 

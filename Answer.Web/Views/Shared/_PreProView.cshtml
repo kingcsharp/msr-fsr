@@ -1,0 +1,29 @@
+﻿<input type="hidden" value="@ViewBag.CallBackId" id="target-control-id" />
+@model  IEnumerable<Msr.Models.Comman.SelectFile> 
+<div class="col-lg-12">
+    <table class="table table-bordered">
+        <tbody>
+        <tr>
+        <td>
+            <div>Name :</div>
+        </td>
+            @foreach (var item in Model)
+            {    
+        <tr>   
+            <td>
+                <div>@item.Name</div>
+            </td>
+            <td>
+                <div> <span class="data-toggle=" data-call-back-id="@item.Id" data-toggle="modal" data-target="#select-referenceproceduresview"><i class="icon fa fa-eye"></i></span> :
+                </div>
+            </td>
+        </tr>
+            }
+      
+        </tbody>
+    </table>
+</div>
+<script type="text/javascript" src="~/assets/js/i18n/grid.locale-en.js"></script>
+<script type="text/javascript" src="~/assets/js/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="~/assets/js/grids/PreProViewDialog.js"></script>
+

@@ -173,6 +173,18 @@ namespace Msr.Services.Procedures
             }
         }
 
+        public List<SelectFile> GetSelectedRefProcedures(string id, string ntlogin)
+        {
+            var objId = new SqlParameter("@ID", id ?? "0");
+
+            //need to be dynamic
+            var NTLogin = new SqlParameter("@strNTLogin", ntlogin);
+
+            var result = _dbContext.Database.SqlQuery<SelectFile>("EXEC Portal_ProcedureStepGetRefProcedures @ID, @strNTLogin", objId, NTLogin).ToList();
+
+            return result;
+        }
+
         public ProceduresApprovedDataResult GetApprovedData(string id)
         {
             var sql = $"SELECT OBJECT_ID FROM A_V_PROCEDURES_APPROVED_DATA WHERE ID={id}";

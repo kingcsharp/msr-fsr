@@ -49,6 +49,15 @@ namespace Answer.Web.Controllers
             return PartialView("_Procedures");
         }
 
+        public ActionResult GetProceduresView(string callBackId)
+        {
+            ViewBag.CallBackId = callBackId;
+            var procedureService = new ProceduresService();
+            var resultsFiles = procedureService.GetSelectedRefProcedures(callBackId, GetCurrentUser().Id).AsQueryable();
+
+            return PartialView("_PreProView", resultsFiles);
+        }
+        
         public ActionResult ProceduresData(JqGridParam param)
         {
             var procedureService = new ProceduresService();
@@ -312,7 +321,7 @@ namespace Answer.Web.Controllers
         public ActionResult EditStep(GetStepEditDataViewModel viewModel)
         {
             _proceduresService.UpdateStepData(viewModel);
-            return RedirectToAction("EditStep", new {stepId = viewModel.StepId, procedureObjectId = viewModel.ProcObjId});
+            return RedirectToAction("EditStep", new { stepId = viewModel.StepId, procedureObjectId = viewModel.ProcObjId });
         }
     }
 }

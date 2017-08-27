@@ -37,7 +37,6 @@ namespace Msr.Services.Documents
         {
             var objID = new SqlParameter("@ID", id == null ? "0" : id);
 
-            //need to be dynamic
             var NTLogin = new SqlParameter("@strNTLogin", ntlogin);
 
             var result = _dbContext.Database.SqlQuery<SelectFile>("EXEC Portal_GetTheoryObjects  @ID, @strNTLogin", objID, NTLogin).ToList();
@@ -49,7 +48,6 @@ namespace Msr.Services.Documents
         {
             var objID = new SqlParameter("@ID", id == null ? "0" : id);
 
-            //need to be dynamic
             var NTLogin = new SqlParameter("@strNTLogin", ntlogin);
 
             var result = _dbContext.Database.SqlQuery<SelectRole>("EXEC Portal_GetTheoryRoles  @ID, @strNTLogin", objID, NTLogin).ToList();
@@ -62,13 +60,11 @@ namespace Msr.Services.Documents
           
             var objID = new SqlParameter("@ID", id == null ? "0" : id);
 
-            //need to be dynamic
             var NTLogin = new SqlParameter("@strNTLogin", ntlogin);
 
             var result = _dbContext.Database.SqlQuery<SelectFile>("EXEC A_SP_THEORY_GET_REF_THEORY  @ID, @strNTLogin", objID, NTLogin).ToList();
             
             return result;
-
 
         }
        

@@ -95,12 +95,11 @@ namespace Msr.Services.Documents.ViewModels
         }
         public void Setup(RoleService roleService, PartsService partsService, DocumentService documentService,string ntlog)
         {
-            ListRoles = roleService.GetUserRolesQueryable().Select(x => new SelectListItem
+            ListRoles = roleService.GetActiveRoles().Select(x => new SelectListItem
             {
-                Text = x.RoleName,
-                Value = x.ObjectId
+                Text = x.Name,
+                Value = x.ObJect_Id
             }).OrderBy(o => o.Text).ToList();
-            //ListRoles.Insert(0, new SelectListItem { Text = "", Value = "" });
             
             ListReferenceFiles = partsService.GetSelectedFiles(id: ObjectId, type: null,ntlogin:ntlog).Select(x => new SelectListItem
             {
@@ -111,20 +110,14 @@ namespace Msr.Services.Documents.ViewModels
             ListReferenceObjects = documentService.GetSelectedObjects(id: Id,ntlogin:ntlog).Select(x => new SelectListItem
             {
                 Text = x.Name,
-                Value = x.Id.ToString(),
+                Value = x.Id,
             }).OrderBy(o => o.Text).ToList();
 
-            if (ReferenceTheory != null)
-            {
-                ListReferenceTheories = documentService.GetSelectedTheories(id: Id, ntlogin: ntlog).Select(x => new SelectListItem
+          ListReferenceTheories = documentService.GetSelectedTheories(id: Id, ntlogin: ntlog).Select(x => new SelectListItem
                 {
                     Text = x.Name,
-                    Value = x.Id.ToString(),
+                    Value = x.Id,
                 }).OrderBy(o => o.Text).ToList();
-            }
-          
-
-          
            
 
             Roles = documentService.GetSelectedRoles(id: Id,ntlogin:ntlog).Select(x => x.RoleId).ToList();

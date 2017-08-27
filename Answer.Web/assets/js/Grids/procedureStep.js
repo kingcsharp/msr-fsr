@@ -9,7 +9,7 @@
             {
                 label: ' #',
                 name: 'Id',
-                index: 'Id',
+                index: 'Root',
                 key: true,
                 colmenu: false,
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
@@ -66,7 +66,7 @@
         pager: "#jqGridPager",
         height: 'auto',
         gridview: true,
-        sortname: 'ObjId',
+        sortname: 'StepText',
         sortable: true,
         sortorder: 'asc',
         cellEdit: false,
@@ -88,12 +88,10 @@
                         .then(confirmCallback, optionalCancelCallback);
 
                     function confirmCallback() {
-                        console.log("ok")
                         window.location.href = "/PreProSearch/PreProDelete/" + callBackId
                     }
 
                     function optionalCancelCallback() {
-                        console.log("cancel")
                     }
 
                 });
@@ -120,8 +118,8 @@
     });
     function procedureStepEditFormatter(cellvalue, options, rowObject) {
 
-        var editButton = '<a  title="Edit" href="/PreProSearch/edit/' + rowObject.Id + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
-        var detailButton = '<a href="/PreProSearch/Details/' + rowObject.Id + '" title="Details" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-eye"></i></a>';
+        var editButton = '<a  title="Edit" href="/PreProSearch/edit/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
+        var detailButton = '<a href="/PreProSearch/Details/' + rowObject.ObjectId + '" title="Details" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-eye"></i></a>';
         var deleteButton = '';
         var buttonWorkflowLeft = '';
         var buttonWorkflowRight = '';

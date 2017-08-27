@@ -29,10 +29,9 @@ namespace Msr.Services.PrePro
         {
             return _dbContext.PrePropSearchView;
         }
-
         public PrePropSearchView GetById(string id)
         {
-            return GetPreProQueryable().SingleOrDefault(x => x.Id == id);
+            return GetPreProQueryable().SingleOrDefault(x => x.ObjectId == id);
         }
 
         public List<SelectFile> GetSelectedRefProcedures(string id,string ntlogin)
@@ -46,6 +45,8 @@ namespace Msr.Services.PrePro
 
             return result;
         }
+
+
         public List<SelectFile> GetSelectedRefFiles(string id, string ntlogin)
         {
             var objId = new SqlParameter("@procStepID", id ?? "0");

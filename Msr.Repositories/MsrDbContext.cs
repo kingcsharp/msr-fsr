@@ -82,7 +82,6 @@ namespace Msr.Repositories
             modelBuilder.Entity<PeopleObjectView>().ToTable("Portal_PeopleObjectSearchView");
             modelBuilder.Entity<ActualPartViewHistoryView>().ToTable("Portal_ActualPartsViewHistory");
             modelBuilder.Entity<ProductsActualPartView>().ToTable("Portal_ProductsActualPart");
-            modelBuilder.Entity<PrePropSearchView>().ToTable("Portal_PREPOP_View");
             modelBuilder.Entity<MonitorView>().ToTable("Portal_MonitorView");
             modelBuilder.Entity<LanguagesView>().ToTable("Portal_Languages");
             modelBuilder.Entity<TimeZonesView>().ToTable("Portal_TimeZones");

@@ -36,9 +36,9 @@ namespace Answer.Web.Controllers
 
             var totalRows = companyService.GetCompaniesQueryable();
 
-            var defaultStatusList = new[] { "CREATING", "DENIED", "APPROVED", "APPROVED_BUT_REVISING", "APPROVED_BUT_DELETING" };
+            var defaultStatusList = base.GetDefaultStatus();
 
-            totalRows = totalRows.Where(x => GetDefaultStatus().Contains(x.Status) && x.Id.Length > 0);
+            totalRows = totalRows.Where(x => defaultStatusList.Contains(x.Status) && x.Id.Length > 0);
 
             if (param.where != null && param.where.rules.Any())
             {

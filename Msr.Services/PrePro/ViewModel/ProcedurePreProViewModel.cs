@@ -50,15 +50,19 @@ namespace Msr.Services.PrePro.ViewModel
 
         [DisplayName("DESTINATION :")]
         public string Destination { get; set; }
+
+        [DisplayName("Reference Procedure Type:")]
         public string ReferenceVerb { get; set; }
 
+        [DisplayName("Application Objects:")]
         public string ApplicationObjects { get; set; }
 
+        [DisplayName("Reference Object:")]
         public string ReferenceObject { get; set; }
 
         public List<string> ReferenceTheories { get; set; }
 
-        [DisplayName("ReferenceProcs :")]
+        [DisplayName("Reference Procedure:")]
         public List<string> ReferenceProcedures { get; set; }
 
         [DisplayName("precedingSteps :")]
@@ -68,7 +72,7 @@ namespace Msr.Services.PrePro.ViewModel
         public double? Duration { get; set; }
 
 
-        [DisplayName("Step Duration Type :")]
+        [DisplayName("Duration Type:")]
         public string DurationType { get; set; }
 
         [DisplayName("Labor :")]
@@ -125,29 +129,29 @@ namespace Msr.Services.PrePro.ViewModel
             {
                 new SelectListItem
                 {
-                    Text = "SYS_SECONDS",
+                    Text = "Seconds",
                     Value = "TIME_SYS_SECONDS"
                 },
                 new SelectListItem
                 {
-                    Text = "SYS_MINUTES",
+                    Text = "Minutes",
                     Value = "TIME_SYS_MINUTES",
                     Selected = true
                 },
                 new SelectListItem
                 {
-                    Text = "SYS_HOURS",
+                    Text = "Hours",
                     Value = "TIME_SYS_HOURS"
                 },
                 new SelectListItem
                 {
-                    Text = "SYS_DAYS",
+                    Text = "Days",
                     Value = "TIME_SYS_DAYS",
 
                 },
                 new SelectListItem
                 {
-                    Text = "SYS_WEEKS",
+                    Text = "Weeks",
                     Value = "TIME_SYS_WEEKS",
 
                 }
@@ -163,83 +167,82 @@ namespace Msr.Services.PrePro.ViewModel
                 },
                 new SelectListItem
                 {
-                    Text = "SYS_COMP_TEST",
+                    Text = "System Comp Test",
                     Value = "SYS_COMP_TEST"
                 },
                 new SelectListItem
                 {
-                    Text = "SYS_CONSUME",
+                    Text = "Consume",
                     Value = "SYS_CONSUME",
                     Selected = true
                 },
                 new SelectListItem
                 {
-                    Text = "SYS_CREATE",
+                    Text = "Create",
                     Value = "SYS_CREATE"
                 },
                 new SelectListItem
                 {
-                    Text = "SYS_DNR",
+                    Text = "Diagnose and Repair",
                     Value = "SYS_DNR",
 
                 },
                 new SelectListItem
                 {
-                    Text = "SYS_E_ACCESS",
+                    Text = "E-Access",
                     Value = "SYS_E_ACCESS",
 
                 },
                 new SelectListItem
                 {
-                    Text = "SYS_INSTALL",
+                    Text = "Install",
                     Value = "SYS_INSTALL"
                 },
                 new SelectListItem
                 {
-                    Text = "SYS_PROVIED_AND_CONSUMED",
+                    Text = "Provide & Consumed",
                     Value = "SYS_PROVIED_AND_CONSUMED",
 
                 },
                 new SelectListItem
                 {
-                    Text = "SYS_PROVIED_AND_STAY",
+                    Text = "Provide & Stay",
                     Value = "SYS_PROVIED_AND_STAY",
 
                 },
                 new SelectListItem
                 {
-                    Text = "SYS_PROVIDE_TAKE_BACK",
+                    Text = "Provide & Taken Back",
                     Value = "SYS_PROVIDE_TAKE_BACK",
 
                 },
                 new SelectListItem
                 {
-                    Text = "SYS_RECEIVE",
+                    Text = "Receive",
                     Value = "SYS_RECEIVE"
                 },
                 new SelectListItem
                 {
-                    Text = "SYS_REMOVE",
+                    Text = "Remove",
                     Value = "SYS_REMOVE",
 
                 },
                 new SelectListItem
                 {
-                    Text = "SYS_SEND",
+                    Text = "Send",
                     Value = "SYS_SEND",
 
                 },
                 new SelectListItem
                 {
-                    Text = "SYS_SERIALIZE",
+                    Text = "Serialize",
                     Value = "SYS_SERIALIZE",
 
                 },
                 new SelectListItem
                 {
-                    Text = "SYS_SHIPPING",
+                    Text = "Shipping",
                     Value = "SYS_SHIPPING",
-
                 }
 
             };

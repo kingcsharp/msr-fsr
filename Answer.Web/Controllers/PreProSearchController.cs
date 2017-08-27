@@ -231,5 +231,11 @@ namespace Answer.Web.Controllers
 
             return View(model);
         }
+
+        [AcceptVerbs(HttpVerbs.Get)]
+        public ActionResult AddLabor(string id)
+        {
+            return View();
+        }
     }
 }

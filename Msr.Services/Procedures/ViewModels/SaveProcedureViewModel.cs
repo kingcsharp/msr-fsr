@@ -270,8 +270,8 @@ namespace Msr.Services.Procedures.ViewModels
 
             ReferenceFilesList = proceduresService.GetSelectedFiles(id: ObjectId,ntlogin:ntlogin, type: DBNull.Value.ToString(CultureInfo.InvariantCulture)).Select(x => new SelectListItem
             {
-                Text = x.Show,
-                Value = x.Value.ToString()
+                Text = x.Value,
+                Value = x.Show.ToString()
             }).OrderBy(o => o.Text).ToList();
 
             Roles = proceduresService.GetSelectedRoles(id: Id,ntlogin:ntlogin);

@@ -3,7 +3,7 @@
 @{
     ViewBag.Title = "Create";
 }
-
+<link href="~/assets/textformater/general.css" rel="stylesheet" />
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="row">
@@ -11,7 +11,7 @@
                 Add Document<button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
             </h2>
             <div class="col-lg-10">
-                @using (Html.BeginForm("Create", "Documents", FormMethod.Post, new { @class = "form form-horizontal", @onSubmit = "escapeAllSelects();;" ,@name = "editForm", @target = "", @action = "" }))
+                @using (Html.BeginForm("Create", "Documents", FormMethod.Post, new { @class = "form form-horizontal", @onSubmit = "escapeAllSelects();;", @name = "editForm", @target = "", @action = "" }))
                 {
                     @Html.AntiForgeryToken()
 
@@ -48,21 +48,22 @@
                                 @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
                             </div>
                         </div>
-                            
-                          
+
+
                         <div class="form-group">
-                            @Html.LabelFor(model => model.ReferenceTheory, htmlAttributes: new {@class = "control-label col-md-2"})
+                            @Html.LabelFor(model => model.ReferenceTheory, htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-5">
                                 <div style="width: 96%; float: left;">
-                                    @Html.ListBoxFor(m => m.ReferenceTheory, Model.ListReferenceTheories, new {@class = "form-control submitselect", multiple = "multiple"})
-                                    @Html.ValidationMessageFor(model => model.ReferenceTheory, "", new {@class = "text-danger"})
+                                    @Html.ListBoxFor(m => m.ReferenceTheory, Model.ListReferenceTheories, new { @class = "form-control submitselect", multiple = "multiple" })
+                                    @Html.ValidationMessageFor(model => model.ReferenceTheory, "", new { @class = "text-danger" })
                                 </div>
-                                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceTheory" data-toggle="modal" data-target="#select-theory"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceTheory"><i class="icon fa fa-trash"></i></span>
+                                <div style="width: 3%; float: right;">
+                                    <span class="data-toggle=" data-call-back-id="ReferenceTheory" data-toggle="modal" data-target="#select-theory"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceTheory"><i class="icon fa fa-trash"></i></span>
                                 </div>
                             </div>
                         </div>
 
-                           
+
 
 
                         <div class="form-group">
@@ -86,10 +87,10 @@
                                 <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceFiles" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceFiles"><i class="icon fa fa-trash"></i></span> </div>
                             </div>
                         </div>
-                            
-                            
-                            
-                              
+
+
+
+
                         <table class="form" style="margin-left: 250px;">
                             <script language="JavaScript" type="text/javascript">
                                 arrForms = arrForms.concat(new Array("editForm"));
@@ -97,8 +98,8 @@
                             <label class="control-label col-md-2" for="Title" style="margin-left: -15px;">Comments:</label>
                             <tr>
                                 <td class="form" colspan="" style="">
-                                      
-                                    <textarea ondblclick="storeCaret(this)" id="StepText" onselect="storeCaret(this);"  onclick="storeCaret(this)" onkeyup="storeCaret(this)" onmouseup="storeCaret(this)" onBlur="checkMaxSize(this, 4000);;lastTextArea = 'document.editForm.Comments';" name="Comments" rows="10" cols="100" class="tt" style=""></textarea>
+
+                                    @Html.EditorFor(model => model.Comments, new { htmlAttributes = new { onBlur = "checkMaxSize(this, 4000);;lastTextArea = 'document.editForm.Comments';", name = "Comments", rows = "10", cols = "80", @class = "text-formatter", style = "height:150px;width: 586px;" } })
                                 </td>
                                 <td><div style="width: 3%; float: right;"></div></td>
                             </tr>
@@ -106,7 +107,7 @@
                             <span class="tight" ID="document_editForm_cancelConfirm"> </span>
 
                         </table>
-                          
+
 
                         <div style="width: 300px; height: 300px; margin-left: 60%; margin-top: -210px;">
 
@@ -115,7 +116,7 @@
                             </td>
 
                         </div>
-             
+
                         <div class="form-group" style="margin-top: -70px;">
                             @Html.LabelFor(model => model.ApprovalStatus, htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-5">
@@ -145,52 +146,47 @@
     </div>
 </div>
 
-    @section scripts
+@section scripts
     {
-        <script src="~/assets/textformater/ValidateDocumentSubmit.js"></script>
-        <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
-        <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+    <script src="~/assets/textformater/ValidateDocumentSubmit.js"></script>
+    <script src="~/assets/textformater/textformatter.js"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
 
-        <script src="~/assets/js/grids/comman.js">
-        </script>
+    <script src="~/assets/js/grids/comman.js">
+    </script>
 
-        <script type="text/javascript">
-            
-            $(document).ready(function () {
+    <script type="text/javascript">
 
-                resetSelectClose();
-                resetTextAdder();
-                onLoadFunction();
-                startLogOutTimer();
-                showRowActionItems();
-                initialiseWebWizRTE();
+        $(document).ready(function () {
 
-                $(".selectroles").select2({
-                    tags: true,
-                    multiple: true
-                });
 
-                $('.deletefiles').click(function () {
+            $(".selectroles").select2({
+                tags: true,
+                multiple: true
+            });
 
-                    var callBackId = $(this).data('call-back-id');
+            $('.deletefiles').click(function () {
 
-                    eModal.confirm('Do you really want to Remove ' + callBackId + ' ?', 'Confirmation delete')
-                        .then(confirmCallback, optionalCancelCallback);
+                var callBackId = $(this).data('call-back-id');
 
-                    function confirmCallback() {
-                        console.log("ok");
-                        $('#' + callBackId + ' option:selected').remove();
-                    }
+                eModal.confirm('Do you really want to Remove ' + callBackId + ' ?', 'Confirmation delete')
+                    .then(confirmCallback, optionalCancelCallback);
 
-                    function optionalCancelCallback() {
-                        console.log("cancel");
-                    }
+                function confirmCallback() {
+                    console.log("ok");
+                    $('#' + callBackId + ' option:selected').remove();
+                }
 
-                });
+                function optionalCancelCallback() {
+                    console.log("cancel");
+                }
 
             });
 
-        </script>
+        });
+
+    </script>
 
 
-    }
+}

@@ -578,6 +578,7 @@
     <Content Include="assets\js\common\documentFiles.js" />
     <Content Include="assets\js\dashboard.js" />
     <Content Include="assets\js\dataTables.bootstrap.min.js" />
+    <Content Include="assets\js\docviewer.js" />
     <Content Include="assets\js\eModal.min.js" />
     <Content Include="assets\js\equipment_maint_form.js" />
     <Content Include="assets\js\finger.min.js" />
@@ -823,6 +824,7 @@
     <Content Include="assets\textformater\pi.gif" />
     <Content Include="assets\textformater\plusMinus.gif" />
     <Content Include="assets\textformater\sigma.gif" />
+    <Content Include="assets\textformater\textformatter.js" />
     <Content Include="assets\textformater\therefore.gif" />
     <Content Include="assets\textformater\theta.gif" />
     <Content Include="assets\textformater\ValidateDocumentSubmit.js" />
@@ -878,6 +880,7 @@
     <Content Include="assets\data\purchase_orders.json" />
     <Content Include="assets\js\Sample Refactoring Project.zip" />
     <Content Include="assets\js\wip-detail-tooltip.js.old" />
+    <Content Include="obj\Release\Package\PackageTmp\Views\Procedures\EditSteps.cshtml" />
     <None Include="Properties\PublishProfiles\dev.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -1075,8 +1078,11 @@
     <Content Include="Views\Parts\EditSafetyStock.cshtml" />
     <Content Include="Views\Files\Edit.cshtml" />
     <Content Include="Views\Shared\_TextAdder.cshtml" />
-    <Content Include="Views\Procedures\Steps.cshtml" />
+    <Content Include="Views\Procedures\EditSteps.cshtml" />
     <Content Include="Views\Procedures\EditStep.cshtml" />
+    <Content Include="Views\Shared\_PreProView.cshtml" />
+    <Content Include="Views\PreProSearch\AddLabor.cshtml" />
+    <Content Include="Views\Procedures\Steps.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1087,7 +1093,6 @@
   <ItemGroup>
     <Folder Include="assets\css\dropzone\" />
     <Folder Include="assets\js\dropzone\" />
-    <Folder Include="obj\" />
     <Folder Include="ViewModel\Images\" />
     <Folder Include="Views\Help\" />
     <Folder Include="Views\Objects\" />

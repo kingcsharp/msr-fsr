@@ -4,10 +4,10 @@
     ViewBag.Title = "Edit Document";
 }
 
-    <link href="~/assets/textformater/general.css" rel="stylesheet" />
+<link href="~/assets/textformater/general.css" rel="stylesheet" />
 
 <div class="container-fluid">
-    
+
     <div class="side-body padding-top">
         <div class="row">
             <h2 class="page-header">
@@ -18,77 +18,80 @@
                 <section class="panel">
                     <div class="panel-body bio-graph-info">
 
-                        @using (Html.BeginForm("Edit", "Documents", FormMethod.Post, new {@class = "form form-horizontal", @onSubmit = "escapeAllSelects();;", @name = "editForm", @target = "", @action = ""}))
+                        @using (Html.BeginForm("Edit", "Documents", FormMethod.Post, new { @class = "form form-horizontal", @onSubmit = "escapeAllSelects();;", @name = "editForm", @target = "", @action = "" }))
                         {
                             @Html.AntiForgeryToken()
 
                             <div class="form-horizontal">
-                                <input type="hidden" name="Id" value="@Model.Id"/>
-                                <input type="hidden" name="ObjectId" value="@Model.ObjectId"/>
+                                <input type="hidden" name="Id" value="@Model.Id" />
+                                <input type="hidden" name="ObjectId" value="@Model.ObjectId" />
                                 <div class="form-group">
-                                    @Html.LabelFor(model => model.Id, htmlAttributes: new {@class = "control-label col-md-2"})
+                                    @Html.LabelFor(model => model.Id, htmlAttributes: new { @class = "control-label col-md-2" })
                                     <div class="col-md-5">
-                                        @Html.EditorFor(model => model.Id, new {htmlAttributes = new {@class = "form-control", @readonly = "readonly"}})
-                                        @Html.ValidationMessageFor(model => model.Id, "", new {@class = "text-danger"})
+                                        @Html.EditorFor(model => model.Id, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                        @Html.ValidationMessageFor(model => model.Id, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
 
                                 <div class="form-group">
-                                    @Html.LabelFor(model => model.Rev, htmlAttributes: new {@class = "control-label col-md-2"})
+                                    @Html.LabelFor(model => model.Rev, htmlAttributes: new { @class = "control-label col-md-2" })
                                     <div class="col-md-5">
-                                        @Html.EditorFor(model => model.Rev, new {htmlAttributes = new {@class = "form-control", @readonly = "readonly"}})
-                                        @Html.ValidationMessageFor(model => model.Rev, "", new {@class = "text-danger"})
+                                        @Html.EditorFor(model => model.Rev, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                        @Html.ValidationMessageFor(model => model.Rev, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
 
                                 <div class="form-group">
-                                    @Html.LabelFor(model => model.Company, htmlAttributes: new {@class = "control-label col-md-2"})
+                                    @Html.LabelFor(model => model.Company, htmlAttributes: new { @class = "control-label col-md-2" })
                                     <div class="col-md-5">
-                                        @Html.EditorFor(model => model.Company, new {htmlAttributes = new {@class = "form-control", @readonly = "readonly"}})
-                                        @Html.ValidationMessageFor(model => model.Company, "", new {@class = "text-danger"})
+                                        @Html.EditorFor(model => model.Company, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                        @Html.ValidationMessageFor(model => model.Company, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
 
                                 <div class="form-group">
-                                    @Html.LabelFor(model => model.Name, htmlAttributes: new {@class = "control-label col-md-2"})
+                                    @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
                                     <div class="col-md-5">
-                                        @Html.EditorFor(model => model.Name, new {htmlAttributes = new {@class = "form-control"}})
-                                        @Html.ValidationMessageFor(model => model.Name, "", new {@class = "text-danger"})
+                                        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
 
                                 <div class="form-group">
-                                    @Html.LabelFor(model => model.ReferenceTheory, htmlAttributes: new {@class = "control-label col-md-2"})
+                                    @Html.LabelFor(model => model.ReferenceTheory, htmlAttributes: new { @class = "control-label col-md-2" })
                                     <div class="col-md-5">
                                         <div style="width: 96%; float: left;">
-                                            @Html.ListBoxFor(m => m.ReferenceTheory, Model.ListReferenceTheories, new {@class = "form-control submitselect", multiple = "multiple"})
-                                            @Html.ValidationMessageFor(model => model.ReferenceTheory, "", new {@class = "text-danger"})
+                                            @Html.ListBoxFor(m => m.ReferenceTheory, Model.ListReferenceTheories, new { @class = "form-control submitselect", multiple = "multiple" })
+                                            @Html.ValidationMessageFor(model => model.ReferenceTheory, "", new { @class = "text-danger" })
                                         </div>
-                                        <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceTheory" data-toggle="modal" data-target="#select-theory"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceTheory"><i class="icon fa fa-trash"></i></span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    @Html.LabelFor(model => model.ReferenceObject, htmlAttributes: new {@class = "control-label col-md-2"})
-                                    <div class="col-md-5">
-                                        <div style="width: 96%; float: left;">
-                                            @Html.ListBoxFor(m => m.ReferenceObject, Model.ListReferenceObjects, new {@class = "form-control submitselect", multiple = "multiple"})
-                                            @Html.ValidationMessageFor(model => model.ReferenceObject, "", new {@class = "text-danger"})
-                                        </div>
-                                        <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceObject" data-toggle="modal" data-target="#select-objects"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceObject"><i class="icon fa fa-trash"></i></span>
+                                        <div style="width: 3%; float: right;">
+                                            <span class="data-toggle=" data-call-back-id="ReferenceTheory" data-toggle="modal" data-target="#select-theory"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceTheory"><i class="icon fa fa-trash"></i></span>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="form-group">
-                                    @Html.LabelFor(model => model.ReferenceFiles, htmlAttributes: new {@class = "control-label col-md-2"})
+                                    @Html.LabelFor(model => model.ReferenceObject, htmlAttributes: new { @class = "control-label col-md-2" })
                                     <div class="col-md-5">
                                         <div style="width: 96%; float: left;">
-                                            @Html.ListBoxFor(m => m.ReferenceFiles, Model.ListReferenceFiles, new {@class = "form-control submitselect", multiple = "multiple"})
-                                            @Html.ValidationMessageFor(model => model.ReferenceFiles, "", new {@class = "text-danger"})
+                                            @Html.ListBoxFor(m => m.ReferenceObject, Model.ListReferenceObjects, new { @class = "form-control submitselect", multiple = "multiple" })
+                                            @Html.ValidationMessageFor(model => model.ReferenceObject, "", new { @class = "text-danger" })
                                         </div>
-                                        <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceFiles" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceFiles"><i class="icon fa fa-trash"></i></span>
+                                        <div style="width: 3%; float: right;">
+                                            <span class="data-toggle=" data-call-back-id="ReferenceObject" data-toggle="modal" data-target="#select-objects"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceObject"><i class="icon fa fa-trash"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.ReferenceFiles, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-5">
+                                        <div style="width: 96%; float: left;">
+                                            @Html.ListBoxFor(m => m.ReferenceFiles, Model.ListReferenceFiles, new { @class = "form-control submitselect", multiple = "multiple" })
+                                            @Html.ValidationMessageFor(model => model.ReferenceFiles, "", new { @class = "text-danger" })
+                                        </div>
+                                        <div style="width: 3%; float: right;">
+                                            <span class="data-toggle=" data-call-back-id="ReferenceFiles" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceFiles"><i class="icon fa fa-trash"></i></span>
                                         </div>
                                     </div>
                                 </div>
@@ -100,10 +103,12 @@
                                     <label class="control-label col-md-2" for="Title" style="margin-left: -15px;">Header Comments (notes,warning, etc.):</label>
                                     <tr>
                                         <td class="form" colspan="" style="">
-                                            @Html.EditorFor(model => model.Comments, new {htmlAttributes = new {ondblclick = "storeCaret(this)", id = "Comments", onselect = "storeCaret(this);", onclick = "storeCaret(this)", onkeyup = "storeCaret(this)", onmouseup = "storeCaret(this)", onBlur = "checkMaxSize(this, 4000);;lastTextArea = 'document.editForm.Comments';", name = "Comments", rows = "10", cols = "100", @class = "tt", style = "height:150px;"}})
+                                            @Html.TextAreaFor(model => model.Comments, new { htmlAttributes = new { onBlur = "checkMaxSize(this, 4000);;lastTextArea = 'document.editForm.Comments';", name = "Comments", rows = "10", cols = "80", @class = "text-formatter", style = "height:150px;" } })
+                                            
                                         </td>
                                         <td>
-                                            <div style="width: 3%; float: right;"></div></td>
+                                            <div style="width: 3%; float: right;"></div>
+                                        </td>
                                     </tr>
                                     <span class="tight" ID="document_editForm_cancelConfirm"> </span>
 
@@ -118,25 +123,25 @@
                                 </div>
 
                                 <div class="form-group" style="margin-top: -120px;">
-                                    @Html.LabelFor(model => model.ApprovalStatus, htmlAttributes: new {@class = "control-label col-md-2"})
+                                    @Html.LabelFor(model => model.ApprovalStatus, htmlAttributes: new { @class = "control-label col-md-2" })
                                     <div class="col-md-5">
-                                        @Html.DropDownListFor(model => model.ApprovalStatus, Model.ApprovalStatusList, new {@class = "form-control"})
-                                        @Html.ValidationMessageFor(model => model.ApprovalStatus, "", new {@class = "text-danger"})
+                                        @Html.DropDownListFor(model => model.ApprovalStatus, Model.ApprovalStatusList, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.ApprovalStatus, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
 
                                 <div class="form-group">
-                                    @Html.LabelFor(model => model.Roles, htmlAttributes: new {@class = "control-label col-md-2"})
+                                    @Html.LabelFor(model => model.Roles, htmlAttributes: new { @class = "control-label col-md-2" })
                                     <div class="col-md-5">
-                                        @Html.DropDownListFor(model => model.Roles, Model.ListRoles, new {@class = "form-control selectroles", multiple = "multiple"})
-                                        @Html.ValidationMessageFor(model => model.Roles, "", new {@class = "text-danger"})
+                                        @Html.DropDownListFor(model => model.Roles, Model.ListRoles, new { @class = "form-control selectroles", multiple = "multiple" })
+                                        @Html.ValidationMessageFor(model => model.Roles, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <div class="col-md-offset-2 col-md-5">
-                                        <input type="submit" value="Submit" class="btn btn-success" style="height: 35px;"/>
-                                        @Html.ActionLink("Cancel", "Index", null, new {@class = "btn btn-warning"})
+                                        <input type="submit" value="Submit" class="btn btn-success" style="height: 35px;" />
+                                        @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-warning" })
                                     </div>
                                 </div>
                             </div>
@@ -148,26 +153,20 @@
         </div>
     </div>
 </div>
-    @section scripts
+@section scripts
 {
-        @{
-            var roles = string.Join(",", Model.Roles);
-        }
-        
-        <script src="~/assets/textformater/ValidateDocumentSubmit.js"></script>
-        <script src="~/assets/textformater/ValidateDocumentSubmit.js"></script>
-        <script src="~/assets/js/grids/comman.js"></script>
+    @{
+        var roles = string.Join(",", Model.Roles);
+    }
 
-        <script type="text/javascript">
-            
+    <script src="~/assets/textformater/ValidateDocumentSubmit.js"></script>
+    <script src="~/assets/textformater/textformatter.js"></script>
+    <script src="~/assets/js/grids/comman.js"></script>
+
+    <script type="text/javascript">
+
             $(document).ready(function () {
 
-                resetSelectClose();
-                resetTextAdder();
-                onLoadFunction();
-                startLogOutTimer();
-                showRowActionItems();
-                initialiseWebWizRTE();
 
                 var selectRoles = $(".selectroles").select2({
                     tags: [],
@@ -204,7 +203,7 @@
 
 
             });
-        </script>
+    </script>
 
 
-    }
+}

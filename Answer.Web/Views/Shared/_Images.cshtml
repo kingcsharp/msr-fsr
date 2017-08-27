@@ -82,9 +82,8 @@
     <tr class="template-download fade">
         <td>
             <span class="preview">
-                {% if (file.url) { %}
-                <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img style="width:60px;height:60px;" width="60" height="60" src="{%=file.url%}"></a>
-                <span class="data-toggle=" data-call-back-item="{%=file.url%}" data-toggle="modal" data-target="#view-images" title="View File"><i class="icon fa fa-eye"></i></span>
+                {% if (file.url) { %}                
+                <a type="button" class="btn btn-default btn-xs btn-equal embed" style="margin-top: -17px;" data-toggle="modal" href="{%=file.url%}" data-target="#" onclick="viewerLoad('{%=file.url%}','{%=file.name%}')" title="View Inline"><span data-toggle="tooltip" data-placement="top" data-original-title="Launch Viewer" data-flobwicket="{%=file.name%}"> <i class="fa fa-eye"></i></span></a>
                 {% } %}
             </span>
         </td>
