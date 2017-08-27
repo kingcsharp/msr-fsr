@@ -12,10 +12,14 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Amazon.S3.Model;
 using Msr.Models.Common;
+using Msr.Services.Documents;
+using Msr.Services.Parts;
 using Msr.Services.Procedures.Messages;
 using Msr.Services.Procedures.Procedures;
 using Msr.Services.Procedures.ViewModels;
+using Msr.Services.ProcedureVerbs;
 
 namespace Msr.Services.Procedures
 {
@@ -35,7 +39,7 @@ namespace Msr.Services.Procedures
         {
             return GetProceduresQueryable().SingleOrDefault(x => x.ObjectId == id);
         }
-        public List<SelectFile> GetSelectedFiles(string id, string type,string ntlogin)
+        public List<SelectFile> GetSelectedFiles(string id, string type, string ntlogin)
         {
             var objId = new SqlParameter("@objID", id ?? "0");
 
@@ -48,7 +52,7 @@ namespace Msr.Services.Procedures
 
             return result;
         }
-        public List<string> GetSelectedRoles(string id,string ntlogin)
+        public List<string> GetSelectedRoles(string id, string ntlogin)
         {
             var objId = new SqlParameter("@strID", id ?? "0");
 
@@ -208,7 +212,7 @@ namespace Msr.Services.Procedures
 
         public List<GetStepDataResult> GetStepsData(string procedureObjectId, string loginId)
         {
-            var getStepsDataProcedure = new GetStepsDataProcedure() { ProcedureObjectId = procedureObjectId, NTLogin = loginId};
+            var getStepsDataProcedure = new GetStepsDataProcedure() { ProcedureObjectId = procedureObjectId, NTLogin = loginId };
             var result = _dbContext.Database.ExecuteStoredProcedure<GetStepDataResult>(getStepsDataProcedure).ToList();
             foreach (var stepData in result)
             {
@@ -229,24 +233,113 @@ namespace Msr.Services.Procedures
 
         public GetStepEditDataViewModel GetStepData(string stepId, string procedureObjectId, string loginId)
         {
-            GetStepEditDataViewModel getStepEditDataViewModel = new GetStepEditDataViewModel();
+            GetStepEditDataViewModel getStepEditDataViewModel = new GetStepEditDataViewModel()
+            {
+                StepId = stepId,
+                ProcObjId = procedureObjectId
+            };
             var getStepEditDataProcedure = new GetStepEditDataProcedure() { Id = stepId, NTLogin = loginId };
             getStepEditDataViewModel.GetStepEditData = _dbContext.Database.ExecuteStoredProcedure<GetStepEditDataResult>(getStepEditDataProcedure).FirstOrDefault();
 
-            var getStepListOfOtherStepsProcedure = new GetStepListOfOtherStepsProcedure() { CurStepID = procedureObjectId, Id = stepId, NTLogin = loginId };
+            var getStepListOfOtherStepsProcedure = new GetStepListOfOtherStepsProcedure() { CurStepID = stepId, Id = procedureObjectId, NTLogin = loginId };
             var getStepListOfOtherStepsResult = _dbContext.Database.ExecuteStoredProcedure<GetStepListOfOtherStepsResult>(getStepListOfOtherStepsProcedure).ToList();
+
+            var getPrecedingStepsProcedure = new GetPrecedingStepsProcedure() { CurStepID = stepId, NTLogin = loginId };
+            getStepEditDataViewModel.SelectedPrecedingSteps = _dbContext.Database.ExecuteStoredProcedure<string>(getPrecedingStepsProcedure).ToList();
 
             getStepEditDataViewModel.GetStepListOfOtherSteps.AddRange(
                 getStepListOfOtherStepsResult.Select(x => new SelectListItem()
                 {
                     Text = x.Step_Text,
-                    Value = x.Id
+                    Value = x.Id,
+                    Selected = getStepEditDataViewModel.SelectedPrecedingSteps.Contains(x.Id)
                 }));
 
             var getStepLaborProcedure = new GetStepLaborProcedure() { Id = stepId, NTLogin = loginId };
             getStepEditDataViewModel.GetStepLabors = _dbContext.Database.ExecuteStoredProcedure<GetStepLaborResult>(getStepLaborProcedure).ToList();
 
+            var getSystemTasksProcedure = new GetSystemTasksProcedure() { NTLogin = loginId };
+            getStepEditDataViewModel.SystemTasks = _dbContext.Database.ExecuteStoredProcedure<GetSystemTasksResult>(getSystemTasksProcedure).Select(x => new SelectListItem()
+            {
+                Text = x.Name,
+                Value = x.System_Id,
+                Selected = x.System_Id == getStepEditDataViewModel.GetStepEditData?.System_Task
+            }).ToList();
+
+            var getReferenceProceduresForStepProcedure = new GetReferenceProceduresForStepProcedure() { Id = stepId, NTLogin = loginId };
+            getStepEditDataViewModel.SelectedReferenceProcedures = _dbContext.Database.ExecuteStoredProcedure<GetReferenceProceduresForStepResult>(getReferenceProceduresForStepProcedure).Select(x => x.Proc_Obj_Id).ToList();
+
+            getStepEditDataViewModel.ReferenceProcedures = GetProceduresQueryable().Select(x => new SelectListItem()
+            {
+                Text = x.Name,
+                Value = x.ObjectId,
+                Selected = getStepEditDataViewModel.SelectedReferenceProcedures.Contains(x.Id)
+            }).ToList();
+
+            var procedureTypesService = new ProcedureVerbsService();
+
+            getStepEditDataViewModel.ReferenceProcedureTypes = procedureTypesService.GetProceduresVerbs().Where(x => x.Status != "DELETED").Select(x => new SelectListItem()
+            {
+                Text = x.Name,
+                Value = x.ObjectId
+            }).ToList();
+
+            PartsService partsService = new PartsService();
+            DocumentService documentService = new DocumentService();
+
+            getStepEditDataViewModel.ListReferenceFiles = partsService.GetSelectedFiles(id: stepId, type: null, ntlogin: loginId).Select(x => new SelectListItem
+            {
+                Text = x.Show,
+                Value = x.Value,
+            }).OrderBy(o => o.Text).ToList();
+
+            getStepEditDataViewModel.ListReferenceObjects = documentService.GetSelectedObjects(id: stepId, ntlogin: loginId).Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.Id.ToString(),
+            }).OrderBy(o => o.Text).ToList();
+
+            getStepEditDataViewModel.ListReferenceTheories = documentService.GetSelectedTheories(id: stepId, ntlogin: loginId).Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.Id.ToString(),
+            }).OrderBy(o => o.Text).ToList();
+
             return getStepEditDataViewModel;
+        }
+
+        public void UpdateStepData(GetStepEditDataViewModel viewModel)
+        {
+            var updateOneStep = new UpdateOneStepProcedure()
+            {
+                Id = viewModel.StepId,
+                StepText = viewModel.GetStepEditData.Step_Text,
+                ProcObjId = viewModel.ProcObjId,
+                Comments = viewModel.GetStepEditData.Comments,
+                StartOnCounter = viewModel.GetStepEditData.Start_On_Counter?.ToString(),
+                CounterValue = viewModel.GetStepEditData.Counter_Value?.ToString(),
+                CounterUnit = viewModel.GetStepEditData.Counter_Unit,
+                FromStartOrStop = viewModel.GetStepEditData.FROM_START_OR_STOP,
+                RelOrAbs = viewModel.GetStepEditData.REL_OR_ABS,
+                SystemTask = viewModel.GetStepEditData.System_Task,
+                Destination = viewModel.GetStepEditData.Destination,
+                SpecificLocation = viewModel.GetStepEditData.Specific_Location,
+                ReferenceVerb = viewModel.GetStepEditData.REFERENCE_VERB,
+                ReferenceObject = viewModel.GetStepEditData.REFERENCE_OBJECT,
+                ReferenceTheories = viewModel.GetStepEditData.REFERENCE_THEORIES,
+                GoToStep = viewModel.GetStepEditData.GOTO_STEP?.ToString(),
+                GoToStepId = viewModel.GetStepEditData.GOTO_STEP_ID,
+                Cycles = viewModel.GetStepEditData.Cycles,
+                CycleOnCounter = viewModel.GetStepEditData.Cycle_On_Counter?.ToString(),
+                CycleCount = viewModel.GetStepEditData.Cycle_Count?.ToString(),
+                CycleUnit = viewModel.GetStepEditData.Cycle_Unit,
+                ReferenceProcs = String.Join(",", viewModel.SelectedReferenceProcedures),
+                PrecedingSteps = String.Join(",", viewModel.SelectedPrecedingSteps),
+                Duration = viewModel.GetStepEditData.Duration,
+                DurationType = viewModel.GetStepEditData.Duration_Type
+            };
+
+            _dbContext.Database.ExecuteStoredProcedure(updateOneStep);
         }
     }
 }
