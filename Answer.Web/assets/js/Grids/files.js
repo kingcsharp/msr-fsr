@@ -34,7 +34,8 @@
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 align: 'center'
-            }
+            },
+            { name: 'Actions', index: 'Id', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: fileEditFormatter, width: 200, align: 'center' }
         ],
         viewrecords: true, // show the current page, data rang and total records on the toolbar
         rowNum: 10,
@@ -72,4 +73,13 @@
         searchOnEnter: true,
         searchOperators: true
     });
+
+    function fileEditFormatter(cellvalue, options, rowObject) {
+
+        var editButton = '<a  title="Edit" href="/Files/Edit/' +
+            rowObject.Id +
+            '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"> </i>  Edit</a>';
+        return editButton;
+    };
+
 })

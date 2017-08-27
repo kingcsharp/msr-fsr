@@ -11,7 +11,6 @@ namespace Answer.Web.Controllers
 {
     public class PreProSearchController : BaseController
     {
-        // GET: PreProSearch
         public ActionResult Index()
         {
             var viewModel = new EngineeringViewModel();
@@ -46,7 +45,8 @@ namespace Answer.Web.Controllers
                     else if (rule.field == nameof(PrePropSearchView.Rev))
                     {
                         int value;
-                        if (Int32.TryParse(rule.data, out value))
+
+                        if (int.TryParse(rule.data, out value))
                         {
                             totalRows = totalRows.Where(x => x.Rev == value);
                         }
@@ -54,6 +54,7 @@ namespace Answer.Web.Controllers
                     else if (rule.field == nameof(PrePropSearchView.Status))
                     {
                         var statusList = rule.data.Split(',').Select(x => x.Trim().ToLower());
+
                         if (statusList.Any())
                         {
                             totalRows = totalRows.Where(x => statusList.Contains(x.Status.ToLower()));
@@ -224,7 +225,6 @@ namespace Answer.Web.Controllers
 
                     return View(model);
                 }
-
             }
 
             model.Setup(new PreProServices(), GetCurrentUser().Id);

@@ -16,6 +16,12 @@ namespace Answer.Web.Controllers
 {
     public class FilesController : BaseController
     {
+        private FileService _fileService;
+
+        public FilesController()
+        {
+            _fileService = new FileService();
+        }
         public ActionResult Index()
         {
             var viewModel = new EngineeringViewModel();
@@ -104,16 +110,19 @@ namespace Answer.Web.Controllers
             return View();
         }
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Add(List<HttpPostedFileBase> files, string taskId)
+        public ActionResult Add(List<HttpPostedFileBase> files, string taskId, string[] title)
         {
             var fileService = new FileService();
 
-            foreach (HttpPostedFileBase file in files)
+
+            for (int i = 0; i < files.Count; i++)
             {
+                HttpPostedFileBase file = files[i];
                 var imageModel = new SaveFileUploadViewModel();
 
+                imageModel.Desc = title[i];
+
                 imageModel.Name = file.FileName;
-                imageModel.Desc = null;
 
                 var cloudUploader = new AWSFileHandler();
 
@@ -143,12 +152,23 @@ namespace Answer.Web.Controllers
             }
             return Json(new UploadedImageView(), JsonRequestBehavior.AllowGet);
         }
+
         public ActionResult ViewFile(string callBackitem)
         {
-            var callBackUrl = "http://docs.google.com/gview?url=" + callBackitem + "&embedded=true";//callBackitem url need to be dynamic
+            var callBackUrl = "http://docs.google.com/gview?url=" + callBackitem + "&embedded=true";
             ViewBag.callBackitem = callBackUrl;
 
             return PartialView("_ViewFile");
+        }
+
+        public ActionResult Edit(string id)
+        {
+            var imageModel = new SaveFileUploadViewModel();
+
+            var taskService = _fileService.GetFilesQueryable().SingleOrDefault(x => x.Id == id);
+            imageModel = imageModel.MapToDto(taskService);
+
+            return View(imageModel);
         }
     }
 }

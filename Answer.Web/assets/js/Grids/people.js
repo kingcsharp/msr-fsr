@@ -1,5 +1,5 @@
 ﻿function LoadPeopleGrid(url, returnUrl) {
-    //$.jgrid.defaults.responsive = true;
+
     $.jgrid.defaults.styleUI = 'Bootstrap';
 
     Smooch.init({ appToken: '9wxoxi2wbcbymhjf1ex1a0dux' });
@@ -17,7 +17,14 @@
                 index: 'Id',
                 key: true,
                 colmenu: false,
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                coloptions: {
+                    sorting: false,
+                    columns: true,
+                    filtering: false,
+                    seraching: false,
+                    grouping: false,
+                    freeze: false
+                },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 width: 100,
                 align: 'left'
@@ -29,7 +36,14 @@
                 colmenu: true,
                 editable: true, // must set editable to true if you want to make the field editable
                 editrules: { required: true },
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                coloptions: {
+                    sorting: false,
+                    columns: true,
+                    filtering: false,
+                    seraching: false,
+                    grouping: false,
+                    freeze: false
+                },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 width: 200,
                 align: 'left'
@@ -40,7 +54,14 @@
                 index: 'LastName',
                 colmenu: false,
                 editable: true,
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: true, grouping: false, freeze: false },
+                coloptions: {
+                    sorting: false,
+                    columns: true,
+                    filtering: false,
+                    seraching: true,
+                    grouping: false,
+                    freeze: false
+                },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 align: 'left',
                 width: 150,
@@ -52,7 +73,14 @@
                 index: 'PicRecord',
                 colmenu: false,
                 editable: true,
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                coloptions: {
+                    sorting: false,
+                    columns: true,
+                    filtering: false,
+                    seraching: false,
+                    grouping: false,
+                    freeze: false
+                },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 align: 'left'
             },
@@ -62,7 +90,14 @@
                 index: 'PositionName',
                 colmenu: false,
                 editable: true,
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                coloptions: {
+                    sorting: false,
+                    columns: true,
+                    filtering: false,
+                    seraching: false,
+                    grouping: false,
+                    freeze: false
+                },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 align: 'left'
             },
@@ -72,7 +107,14 @@
                 index: 'BossName',
                 colmenu: false,
                 editable: true,
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                coloptions: {
+                    sorting: false,
+                    columns: true,
+                    filtering: false,
+                    seraching: false,
+                    grouping: false,
+                    freeze: false
+                },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 align: 'left'
             },
@@ -82,7 +124,14 @@
                 index: 'RootCoName',
                 colmenu: false,
                 editable: true,
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                coloptions: {
+                    sorting: false,
+                    columns: true,
+                    filtering: false,
+                    seraching: false,
+                    grouping: false,
+                    freeze: false
+                },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 align: 'left'
             },
@@ -92,7 +141,14 @@
                 index: 'CompanyName',
                 colmenu: false,
                 editable: true,
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                coloptions: {
+                    sorting: false,
+                    columns: true,
+                    filtering: false,
+                    seraching: false,
+                    grouping: false,
+                    freeze: false
+                },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 align: 'left'
             },
@@ -102,7 +158,14 @@
                 index: 'PrimaryPhoneNumber',
                 colmenu: false,
                 editable: true,
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                coloptions: {
+                    sorting: false,
+                    columns: true,
+                    filtering: false,
+                    seraching: false,
+                    grouping: false,
+                    freeze: false
+                },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 align: 'left'
             },
@@ -112,7 +175,14 @@
                 index: 'WorkEmailAddress',
                 colmenu: false,
                 editable: true,
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                coloptions: {
+                    sorting: false,
+                    columns: true,
+                    filtering: false,
+                    seraching: false,
+                    grouping: false,
+                    freeze: false
+                },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 align: 'left'
             },
@@ -122,7 +192,14 @@
                 index: 'DateHired',
                 colmenu: false,
                 editable: true,
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                coloptions: {
+                    sorting: false,
+                    columns: true,
+                    filtering: false,
+                    seraching: false,
+                    grouping: false,
+                    freeze: false
+                },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 align: 'left'
             },
@@ -132,7 +209,14 @@
                 index: 'SystemStatus',
                 colmenu: false,
                 editable: true,
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                coloptions: {
+                    sorting: false,
+                    columns: true,
+                    filtering: false,
+                    seraching: false,
+                    grouping: false,
+                    freeze: false
+                },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 align: 'left'
             },
@@ -142,7 +226,14 @@
                 index: 'Rev',
                 colmenu: false,
                 editable: true,
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                coloptions: {
+                    sorting: false,
+                    columns: true,
+                    filtering: false,
+                    seraching: false,
+                    grouping: false,
+                    freeze: false
+                },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 align: 'left',
                 width: 100
@@ -154,8 +245,18 @@
                 colmenu: false,
                 editable: true,
                 stype: "select",
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                searchoptions: { value: ":[All];CREATING, DENIED, APPROVED, APPROVED_BUT_REVISING:Creating or Approved;CREATING, DENIED: Creating;IN_WORKFLOW:In Approval Workflow;APPROVED, APPROVED_BUT_REVISING, APPROVED_BUT_DELETING:Approved;DENIED:Denied;APPROVED_BUT_REVISING:Approved But Being Revised;APPROVED_BUT_DELETING:Approved But Being Deleted;DENIED:Denied;DELETED:Deleted;OLD:Obsolete" },
+                coloptions: {
+                    sorting: false,
+                    columns: true,
+                    filtering: false,
+                    seraching: false,
+                    grouping: false,
+                    freeze: false
+                },
+                searchoptions: {
+                    value:
+                        ":[All];CREATING, DENIED, APPROVED, APPROVED_BUT_REVISING:Creating or Approved;CREATING, DENIED: Creating;IN_WORKFLOW:In Approval Workflow;APPROVED, APPROVED_BUT_REVISING, APPROVED_BUT_DELETING:Approved;DENIED:Denied;APPROVED_BUT_REVISING:Approved But Being Revised;APPROVED_BUT_DELETING:Approved But Being Deleted;DENIED:Denied;DELETED:Deleted;OLD:Obsolete"
+                },
                 align: 'left'
             },
             {
@@ -165,19 +266,37 @@
                 colmenu: false,
                 editable: true, // must set editable to true if you want to make the field editable
                 editrules: { required: true },
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                coloptions: {
+                    sorting: false,
+                    columns: true,
+                    filtering: false,
+                    seraching: false,
+                    grouping: false,
+                    freeze: false
+                },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 width: 200,
                 align: 'left'
             },
-            { name: 'Actions', index: 'ObjectId', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: peopleEditFormatter, width: 200, align: 'center' }
+            {
+                name: 'Actions',
+                index: 'ObjectId',
+                key: true,
+                search: false,
+                hidden: false,
+                colmenu: false,
+                editable: false,
+                formatter: peopleEditFormatter,
+                width: 200,
+                align: 'center'
+            }
         ],
         ajaxRowOptions: {
             type: "POST",
             contentType: "application/json; charset=utf-8",
             dataType: "json"
         },
-        serializeRowData: function (postdata) {
+        serializeRowData: function(postdata) {
             return JSON.stringify(postdata);
         },
         viewrecords: true, // show the current page, data rang and total records on the toolbar
@@ -194,9 +313,33 @@
         editurl: 'clientArray',
         autowidth: true,
         colMenu: true,
-        gridComplete: function () {}
+      
+        gridComplete: function() {
+            $('.editpeople').on('click',
+                function (e) {
+                    e.preventDefault();
 
-    });
+                    var callBackId = $(this).data('call-back-id');
+                    var callBackName = $(this).data('call-back-name');
+
+                    eModal.confirm(
+                            'Are You Sure? Loking prevents others from editing.Cheaking out creats the next revision for you to edit ' + callBackName + ' ?','Confirmation Edit')
+                        .then(confirmCallback, optionalCancelCallback);
+
+                    function confirmCallback() {
+                        console.log("ok");
+                        window.location.href = "/People/Edit/" + callBackId;
+                    }
+
+                    function optionalCancelCallback() {
+                        console.log("cancel");
+                    }
+
+                });
+
+        }
+   
+});
     $('#jqGrid').navGrid("#jqGridPager", {
         search: false, // show search button on the toolbar
         add: false,
@@ -214,15 +357,17 @@
         searchOnEnter: true,
         searchOperators: true
     });
+
    
     function peopleEditFormatter(cellvalue, options, rowObject) {
-
-        var editButton = '<a  title="Edit" href="/People/Edit/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
+      
+        var editbtn = '<a href="/People/Edit/' + rowObject.ObjectId + '" data-call-back-id ="' + rowObject.ObjectId +'"  class="btn btn-xs btn-success editpeople" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
 
         var deleteButton = '';
         var buttonWorkflowLeft = '';
         var buttonWorkflowRight = '';
         var url = '';
+        var subordinate = '';
 
         if (rowObject.Status === 'CREATING') {
 
@@ -234,10 +379,13 @@
             url = '/workflow/delete?objId=' + rowObject.ObjectId + '&returnUrl=' + returnUrl;
             deleteButton = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-danger" title="Proceed to delete." style="margin:2px;font-size: .8em;"><i class="fa fa fa-trash"></i></a>';
         }
-
-        return editButton + deleteButton + buttonWorkflowLeft + buttonWorkflowRight;
+        if (rowObject.Status == 'APPROVED') {
+            subordinate = '<a  title="SubOrdinate" href="/People/Add/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-list-alt"></i></a>';
+        }
+        return editButton + deleteButton + buttonWorkflowLeft + buttonWorkflowRight + subordinate;
 
     }
+   
     $('#search').click(function () {
 
         jQuery("#jqGrid").setGridParam({

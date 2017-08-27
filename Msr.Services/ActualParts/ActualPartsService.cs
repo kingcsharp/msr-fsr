@@ -36,7 +36,7 @@ namespace Msr.Services.ActualParts
         }
         public List<SelectFile> GetActualParts(string status)
         {
-            var result = GetActualPartsQueryable().Where(x => x.Status== status & !(x.SysName == null || x.SysName.Trim() == string.Empty))
+            var result = GetActualPartsQueryable().Where(x => x.Status.StartsWith(status) & !(x.SysName == null || x.SysName.Trim() == string.Empty))
                 .Select(x => new SelectFile { Id = x.ObjectId, Name = x.SysName }).ToList();
 
             return result;
@@ -71,7 +71,7 @@ namespace Msr.Services.ActualParts
                 {
                     ObjId = model.ObjectId,
                     PartId = model.PartId,
-                    Qty = model.Qty <= 0 ? 1 : model.Qty,
+                    Qty = model.Qty.ToString(),
                     Serial = model.Serial,
                     NickName = model.NickName,
                     LocationId = model.LocationId,
@@ -102,8 +102,9 @@ namespace Msr.Services.ActualParts
             {
                 var saveActualPartsProcedure = new SaveActualPartsProcedure
                 {
+                    //Qty = model.Qty <= 0 ? 1 : model.Qty,
                     PartId = model.PartId,
-                    Qty = model.Qty <= 0 ? 1 : model.Qty,
+                    Qty = model.Qty.ToString(),
                     Serial = model.Serial,
                     NickName = model.NickName,
                     LocationId = model.LocationId,
