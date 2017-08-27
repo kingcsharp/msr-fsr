@@ -299,7 +299,6 @@
     <Compile Include="Procedures\Procedures\GetStepsDataProcedure.cs" />
     <Compile Include="Procedures\Procedures\AdminSqlToRunQueUpProcedure.cs" />
     <Compile Include="Procedures\Procedures\DeleteProcedureRolesProcedure.cs" />
-    <Compile Include="Procedures\Procedures\GetStepsDataProcedure.cs" />
     <Compile Include="Procedures\Procedures\SaveFileProcedure.cs" />
     <Compile Include="Procedures\Procedures\SaveProcedureProcedure.cs" />
     <Compile Include="Procedures\Procedures\SaveProcedureRoleProcedure.cs" />

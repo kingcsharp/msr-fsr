@@ -15,6 +15,7 @@ using Msr.Services.Roles;
 
 namespace Answer.Web.Controllers
 {
+    [Authorize]
     public class AdministrationController : BaseController
     {
         private AdministrationService _administrationService;
@@ -129,11 +130,14 @@ namespace Answer.Web.Controllers
             var vm = new AssignRoleToJobViewModel();
             vm.SelectedJobId = selectedJobId;
 
-            vm.Jobs = _administrationService.GetAssignRoleToJob();
+            var jobList = new List<SelectListItem> {new SelectListItem {Value = "", Text = "--Select Role--"}};
+            jobList.AddRange(_administrationService.GetAssignRoleToJob());
+
+            vm.Jobs = jobList;
 
             if (!string.IsNullOrWhiteSpace(selectedJobId))
             {
-                vm.Companies = _administrationService.GetRolesForJob(selectedJobId, GetCurrentUser().Id);
+                vm.Companies = _administrationService.GetRolesForJob(selectedJobId, GetCurrentUser().Company);
             }
 
             vm.SetUp(_roleService);
@@ -214,6 +218,9 @@ namespace Answer.Web.Controllers
 
                 if (!result.HasErrors())
                 {
+                    TempData["SuccessMessage"] = "Assign Wscr Closer has been updated successfully.";
+
+
                     return RedirectToAction("AssignCompaniesToView");
                 }
 
