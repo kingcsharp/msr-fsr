@@ -282,6 +282,8 @@
     <Compile Include="PrePro\Procedure\SaveTheoryProcedure.cs" />
     <Compile Include="PrePro\TheoryFileService.cs" />
     <Compile Include="PrePro\ViewModel\ProcedurePreProViewModel.cs" />
+    <Compile Include="Procedures\Messages\GetReferenceProceduresForStepResult.cs" />
+    <Compile Include="Procedures\Messages\GetSystemTasksResult.cs" />
     <Compile Include="Procedures\Messages\GetStepLaborResult.cs" />
     <Compile Include="Procedures\Messages\GetStepListOfOtherStepsResult.cs" />
     <Compile Include="Procedures\Messages\GetStepEditDataResult.cs" />
@@ -293,6 +295,10 @@
     <Compile Include="People\ViewModels\EditPeopleViewModel.cs" />
     <Compile Include="People\ViewModels\AddPeopleViewModel.cs" />
     <Compile Include="Procedures\ProcedureService.cs" />
+    <Compile Include="Procedures\Procedures\GetPrecedingStepsProcedure.cs" />
+    <Compile Include="Procedures\Procedures\UpdateOneStepProcedure.cs" />
+    <Compile Include="Procedures\Procedures\GetReferenceProceduresForStepProcedure.cs" />
+    <Compile Include="Procedures\Procedures\GetSystemTasksProcedure.cs" />
     <Compile Include="Procedures\Procedures\GetStepLaborProcedure.cs" />
     <Compile Include="Procedures\Procedures\GetStepListOfOtherStepsProcedure.cs" />
     <Compile Include="Procedures\Procedures\GetStepEditDataProcedure.cs" />

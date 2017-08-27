@@ -1,0 +1,54 @@
+﻿@model List<Msr.Services.Procedures.Messages.GetStepDataResult>
+@{
+    ViewBag.Title = "Edit Steps";
+}
+
+<div class="container-fluid">
+    <div class="side-body padding-top">
+        <div class="row">
+            <h2 class="page-header">
+                View Part
+            </h2>
+            <div class="col-lg-12">
+                <section class="panel">
+                    <div class="panel-body bio-graph-info">
+                        <table>
+                            <tr>
+                                <th>Order</th>
+                                <th>#</th>
+                                <th>Text</th>
+                                <th>Duration</th>
+                                <th>Duration Unit</th>
+                                <th>Preceding Step</th>
+                                <th>Actions</th>
+                            </tr>
+                            @foreach (var step in Model)
+                            {
+
+                                var url = "/procedures/EditStep?stepId=" + @step.Id + "&procedureObjectId=" + @ViewBag.ProcObjectId;
+
+                                <tr>
+                                    <td>
+                                        @step.Print_Order
+                                    </td>
+                                    <td>
+                                        @step.Id
+                                    </td>
+                                    <td>
+                                        @Html.Raw(step.Step_Text)
+                                    </td>
+                                    <td>@step.Duration</td>
+                                    <td>
+                                        @step.Duration_Type
+                                    </td>
+                                    <td>@step.Pre_Step</td>
+                                    <td><a class="btn btn-xs btn-success" href="@url">Edit<i class="fa fa-edit"></i></a></td>
+                                </tr>
+                            }
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>

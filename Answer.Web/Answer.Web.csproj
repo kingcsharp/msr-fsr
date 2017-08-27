@@ -1050,7 +1050,7 @@
     <Content Include="Views\ShowPurchaseStatus\_Purchase.cshtml" />
     <Content Include="Views\Shared\_PreProTheories.cshtml" />
     <Content Include="Views\Parts\EditSafetyStock.cshtml" />
-    <Content Include="Views\Procedures\EditSteps.cshtml" />
+    <Content Include="Views\Procedures\Steps.cshtml" />
     <Content Include="Views\Procedures\EditStep.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>

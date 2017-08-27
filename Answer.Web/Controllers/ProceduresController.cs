@@ -295,7 +295,7 @@ namespace Answer.Web.Controllers
             return View(model);
         }
 
-        public ActionResult EditSteps(string id)
+        public ActionResult Steps(string id)
         {
             var viewModel = _proceduresService.GetStepsData(id, "1618");
             ViewBag.ProcObjectId = id;
@@ -304,8 +304,15 @@ namespace Answer.Web.Controllers
 
         public ActionResult EditStep(string stepId, string procedureObjectId)
         {
-            var viewModel = _proceduresService.GetStepData(procedureObjectId, stepId, "1618");
+            var viewModel = _proceduresService.GetStepData(stepId, procedureObjectId, "1618");
             return View(viewModel);
+        }
+
+        [HttpPost]
+        public ActionResult EditStep(GetStepEditDataViewModel viewModel)
+        {
+            _proceduresService.UpdateStepData(viewModel);
+            return RedirectToAction("EditStep", new {stepId = viewModel.StepId, procedureObjectId = viewModel.ProcObjId});
         }
     }
 }
