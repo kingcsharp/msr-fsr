@@ -1079,7 +1079,6 @@
     <Content Include="Views\Parts\EditSafetyStock.cshtml" />
     <Content Include="Views\Files\Edit.cshtml" />
     <Content Include="Views\Shared\_TextAdder.cshtml" />
-    <Content Include="Views\Procedures\EditSteps.cshtml" />
     <Content Include="Views\Procedures\EditStep.cshtml" />
     <Content Include="Views\PreProSearch\AddLabor.cshtml" />
     <Content Include="Views\Procedures\Steps.cshtml" />
