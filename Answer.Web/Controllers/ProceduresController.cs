@@ -49,15 +49,6 @@ namespace Answer.Web.Controllers
             return PartialView("_Procedures");
         }
 
-        public ActionResult GetProceduresView(string callBackId)
-        {
-            ViewBag.CallBackId = callBackId;
-            var procedureService = new ProceduresService();
-            var resultsFiles = procedureService.GetSelectedRefProcedures(callBackId, GetCurrentUser().Id).AsQueryable();
-
-            return PartialView("_PreProView", resultsFiles);
-        }
-        
         public ActionResult ProceduresData(JqGridParam param)
         {
             var procedureService = new ProceduresService();
@@ -203,36 +194,59 @@ namespace Answer.Web.Controllers
 
         [AcceptVerbs(HttpVerbs.Post)]
         [ValidateInput(false)]
-        public ActionResult Edit(SaveProcedureViewModel model)
+        public ActionResult Edit(SaveProcedureViewModel model, string command)
         {
+
             var procedureService = new ProceduresService();
 
-            //need to be dynamic
             model.NTLogin = GetCurrentUser().Id;
 
             if (ModelState.IsValid)
             {
-                var response = procedureService.Save(model);
-                if (response)
+                if (command == "Update")
                 {
-                    TempData["SuccessMessage"] = "Procedure has been created successfully.";
+                    var response = procedureService.Save(model);
+                    if (response)
+                    {
+                        TempData["SuccessMessage"] = "Procedure has been updated successfully.";
 
-                    return RedirectToAction("Index");
+                        return RedirectToAction("Index");
+                    }
+                    else
+                    {
+                        TempData["ErrorMessage"] = "Something went wrong.";
+
+                        model.Setup(new ProceduresService(), new RoleService(), new ProcedureVerbsService(), GetCurrentUser().Id);
+
+                        return View("Edit", model);
+                    }
                 }
-                else
+                else if (command == "Cancel And Roll Back")
                 {
-                    TempData["ErrorMessage"] = "Something went wrong.";
+                    var response = procedureService.RollBack(model);
+                    if (response)
+                    {
+                        TempData["SuccessMessage"] = "Procedure has been canceled and roll back successfully.";
 
-                    model.Setup(new ProceduresService(), new RoleService(), new ProcedureVerbsService(),GetCurrentUser().Id);
+                        return RedirectToAction("Index");
+                    }
+                    else
+                    {
+                        TempData["ErrorMessage"] = "Something went wrong.";
 
-                    return View(model);
+                        model.Setup(new ProceduresService(), new RoleService(), new ProcedureVerbsService(),
+                            GetCurrentUser().Id);
+
+                        return View("Edit", model);
+                    }
                 }
+
             }
-
 
             model.Setup(new ProceduresService(), new RoleService(), new ProcedureVerbsService(), GetCurrentUser().Id);
 
-            return View(model);
+            return View("Edit", model);
+        
         }
 
         public ActionResult View(string id)

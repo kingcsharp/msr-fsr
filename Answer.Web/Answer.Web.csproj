@@ -590,6 +590,7 @@
     <Content Include="assets\js\grids\approvalstages.js" />
     <Content Include="assets\js\grids\buyer_grid.js" />
     <Content Include="assets\js\grids\comman.js" />
+    <Content Include="assets\js\grids\labors-step.js" />
     <Content Include="assets\js\grids\PrePro.js" />
     <Content Include="assets\js\grids\PreProTheoryDiolag.js" />
     <Content Include="assets\js\grids\procedures-dialog.js" />
@@ -1080,9 +1081,12 @@
     <Content Include="Views\Shared\_TextAdder.cshtml" />
     <Content Include="Views\Procedures\EditSteps.cshtml" />
     <Content Include="Views\Procedures\EditStep.cshtml" />
-    <Content Include="Views\Shared\_PreProView.cshtml" />
     <Content Include="Views\PreProSearch\AddLabor.cshtml" />
     <Content Include="Views\Procedures\Steps.cshtml" />
+    <Content Include="Views\PreProSearch\EditLabor.cshtml" />
+    <Content Include="Views\PreProSearch\Labors.cshtml" />
+    <Content Include="Views\Shared\_DocView.cshtml" />
+    <Content Include="Views\PreProSearch\ApplicableObjects.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

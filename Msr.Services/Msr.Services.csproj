@@ -164,6 +164,7 @@
     <Compile Include="Documents\DocumentFilesService.cs" />
     <Compile Include="Documents\DocumentService.cs" />
     <Compile Include="Documents\Procedures\SaveDocumentProcedure.cs" />
+    <Compile Include="Documents\ViewModels\DocFile.cs" />
     <Compile Include="Documents\ViewModels\SaveDocumentViewModel.cs" />
     <Compile Include="Files\FileService.cs" />
     <Compile Include="Files\Procedures\SaveFileUploadProcedure.cs" />
@@ -275,12 +276,16 @@
     <Compile Include="PrePro\Procedure\DeleteProcedureStepProcedure.cs" />
     <Compile Include="PrePro\Procedure\PreProSelectProcedure.cs" />
     <Compile Include="PrePro\Procedure\SavePrePopProcedure.cs" />
+    <Compile Include="PrePro\Procedure\SaveProcedureObjectLink.cs" />
     <Compile Include="PrePro\Procedure\SaveProcedurePreProFileProcedure.cs" />
     <Compile Include="PrePro\Procedure\SavePreProProcedure.cs" />
     <Compile Include="PrePro\Procedure\SaveProcedureStepFileLinkProcedure.cs" />
     <Compile Include="PrePro\Procedure\SaveProcedureStepProcedure.cs" />
     <Compile Include="PrePro\Procedure\SaveTheoryProcedure.cs" />
+    <Compile Include="PrePro\Procedure\SaveUpdateApplicableObjectsProcedure.cs" />
     <Compile Include="PrePro\TheoryFileService.cs" />
+    <Compile Include="PrePro\ViewModel\ApplicableObjectsView.cs" />
+    <Compile Include="PrePro\ViewModel\ProcedureObjectViewModel.cs" />
     <Compile Include="PrePro\ViewModel\ProcedurePreProViewModel.cs" />
     <Compile Include="Procedures\Messages\GetReferenceProceduresForStepResult.cs" />
     <Compile Include="Procedures\Messages\GetStepLaborResult.cs" />

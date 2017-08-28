@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
+using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Msr.Models.Orders;
+using Msr.Services.Documents;
 using Msr.Services.Orders;
 using Msr.Services.Orders.ViewModels;
+using Msr.Services.Parts;
 using Msr.Services.S3;
 using Msr.Web.Controllers;
 
@@ -115,6 +118,17 @@ namespace Answer.Web.Controllers
                 }
 
             return Json(new {Message = "Image upload failed."}, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult GetFileView(string callBackId, string type)
+        {
+            ViewBag.CallBackId = callBackId;
+
+            var docService = new DocumentFilesService();
+
+            var resultsFiles = docService.GetSelectedRefFiles(callBackId, type, GetCurrentUser().Id).AsQueryable();
+
+            return PartialView("_DocView", resultsFiles);
         }
 
     }

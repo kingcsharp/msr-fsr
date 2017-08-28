@@ -50,7 +50,8 @@
                 @Html.ListBoxFor(m => m.ReferenceFiles, Model.ListReferenceFiles, new { @class = "form-control submitselect", multiple = "multiple" })
                 @Html.ValidationMessageFor(model => model.ReferenceFiles, "", new { @class = "text-danger" })
             </div>
-            <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceFiles" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceFiles"><i class="icon fa fa-trash"></i></span> </div>
+            <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceFiles" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceFiles"><i class="icon fa fa-trash"></i></span>
+                <span class="data-toggle=" data-call-back-id="@Model.Id" data-file-type="" data-toggle="modal" data-target="#select-doc-view"><i class="icon fa fa-eye"></i></span></div>
         </div>
     </div>
     <div class="form-group">
@@ -59,7 +60,8 @@
             <div style="width: 96%; float: left;">
                 @Html.ListBoxFor(m => m.PictureFiles, Model.ListPictureFiles, new { @class = "form-control submitselect", multiple = "multiple" })
             </div>
-            <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="PictureFiles" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="PictureFiles"><i class="icon fa fa-trash"></i></span>  </div>
+            <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="PictureFiles" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="PictureFiles"><i class="icon fa fa-trash"></i></span>
+                <span class="data-toggle=" data-call-back-id="@Model.Id" data-file-type="PICTURE" data-toggle="modal" data-target="#select-doc-view"><i class="icon fa fa-eye"></i></span></div>
         </div>
     </div>
     <button type="button" class="btn btn-info collapsed" data-toggle="collapse" data-target="#AdvanceItems"></button>
@@ -160,7 +162,8 @@
                 <div style="width: 96%; float: left;">
                     @Html.ListBoxFor(m => m.ReferenceTheories, Model.ListReferenceTheories, new { @class = "form-control submitselect", multiple = "multiple" })
                 </div>
-                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceTheories" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceTheories"><i class="icon fa fa-trash"></i></span>  </div>
+                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceTheories" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceTheories"><i class="icon fa fa-trash"></i></span>
+                    <span class="data-toggle=" data-call-back-id="@Model.Id" data-file-type="THEORY"  data-toggle="modal" data-target="#select-doc-view"><i class="icon fa fa-eye"></i></span></div>
             </div>
         </div>
 
@@ -261,6 +264,7 @@
 {
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+    <script src="~/assets/js/grids/comman.js"></script>
     <script>
         $(document).ready(function () {
             if ('@Model.CreateProd' == 0) {

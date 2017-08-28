@@ -1,0 +1,27 @@
+﻿@model  IEnumerable<Msr.Services.Documents.ViewModels.DocFile> 
+<input type="hidden" value="@ViewBag.CallBackId" id="target-control-id" />
+<div class="col-lg-12">
+    <table class="table table-bordered">
+        <tbody>
+        <tr>
+        <td colspan="2">
+            Name 
+        </td>
+
+        @foreach (var item in Model)
+        {    
+            <tr>   
+                <td>
+                    @item.Show
+                </td>
+                <td>
+                    <a class="btn btn-default btn-xs btn-equal embed" data-toggle="modal" href="{%=file.url%}" data-target="#" onclick="viewerLoad('@item.ServerPath','@item.Show')" title="View Inline"><span data-toggle="tooltip" data-placement="top" data-original-title="Launch Viewer" data-flobwicket="{%=file.name%}"> <i class="fa fa-eye"></i></span></a>
+                </td>
+            </tr>
+        }
+      
+        </tbody>
+    </table>
+</div>
+
+

@@ -87,6 +87,7 @@ namespace Msr.Repositories
             modelBuilder.Entity<TimeZonesView>().ToTable("Portal_TimeZones");
             modelBuilder.Entity<OfficialPositionView>().ToTable("Portal_RolesApprovedDataQuick");
             modelBuilder.Entity<PrePropSearchView>().ToTable("Portal_ProcedureStepPrePop");
+            modelBuilder.Entity<ProcedureObjectsLaborStepView>().ToTable("Portal_ProcedureObjectLaborStepsView");
         }
 
         public DbSet<AspNetUser> AspNetUsers { get; set; }
@@ -135,6 +136,7 @@ namespace Msr.Repositories
         public DbSet<LanguagesView> LanguagesViews { get; set; }
         public DbSet<TimeZonesView> TimeZonesViews { get; set; }
         public DbSet<OfficialPositionView> OfficialPositionViews { get; set; }
-        
+        public DbSet<ProcedureObjectsLaborStepView> ProcedureObjectsLaborStepViews { get; set; }
+
     }
 }

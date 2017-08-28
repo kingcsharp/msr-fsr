@@ -34,7 +34,7 @@ namespace Msr.Services.PrePro
             return GetPreProQueryable().SingleOrDefault(x => x.ObjectId == id);
         }
 
-        public List<SelectFile> GetSelectedRefProcedures(string id,string ntlogin)
+        public List<SelectFile> GetSelectedRefProcedures(string id, string ntlogin)
         {
             var objId = new SqlParameter("@ID", id ?? "0");
 
@@ -68,7 +68,13 @@ namespace Msr.Services.PrePro
             return result;
         }
 
-        public bool Delete(string id,string ntlogin)
+        public List<SelectFile> GetApprovedObjectList()
+        {
+            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT DISTINCT TOP 500 OBJ_DESC AS Name,ID AS Id FROM A_V_APPROVED_OBJECTS WHERE CREATING_CO = '2' AND  OBJ_TABLE = 'A_ROLES_HISTORY'    AND (( OBJ_DESC LIKE '%a%' AND OBJ_DESC LIKE '%%' ) )    ORDER BY OBJ_DESC").ToList();
+
+            return result;
+        }
+        public bool Delete(string id, string ntlogin)
         {
             try
             {
@@ -210,17 +216,115 @@ namespace Msr.Services.PrePro
                 return false;
             }
         }
-        public List<SelectFile> GetApprovedVerbsByCreatingCo(string CreatingCo)
+        public List<SelectFile> GetApprovedVerbsByCreatingCo(string creatingCo)
         {
-            var result = _dbContext.Database.SqlQuery<SelectFile>("SET QUOTED_IDENTIFIER OFF SELECT NAME AS Name, ID AS Id, CREATING_CO as CreatingCo FROM A_APPROVED_VERBS where CREATING_CO='" + CreatingCo + "'").ToList();
+            var result = _dbContext.Database.SqlQuery<SelectFile>("SET QUOTED_IDENTIFIER OFF SELECT NAME AS Name, ID AS Id, CREATING_CO as CreatingCo FROM A_APPROVED_VERBS where CREATING_CO='" + creatingCo + "'").ToList();
 
             return result;
         }
-        public List<SelectFile> GetReferenceObjectsByCreatingCo(string CreatingCo)
+        public List<SelectFile> GetReferenceObjectsByCreatingCo(string creatingCo)
         {
-            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT ID as Id, OBJ_TABLE as Name, CREATING_CO as CreatingCo FROM A_V_APPROVED_OBJECTS where CREATING_CO='" + CreatingCo + "'").ToList();
+            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT ID as Id, OBJ_TABLE as Name, CREATING_CO as CreatingCo FROM A_V_APPROVED_OBJECTS where CREATING_CO='" + creatingCo + "'").ToList();
 
             return result;
+        }
+        public IQueryable<ProcedureObjectsLaborStepView> GetLaborStepsList()
+        {
+            return _dbContext.ProcedureObjectsLaborStepViews;
+        }
+
+        public bool AddLabor(ProcedureObjectViewModel model)
+        {
+            try
+            {
+                var saveProcedureObjectLink = new SaveProcedureObjectLink()
+                {
+                    ProcedureObjectId = model.ProcedureObjectId,
+                    ProcId = model.ProcId,
+                    StepId = model.ProcedureStepId,
+                    ApprovedObjectId = model.ApprovedObjectId,
+                    Qty = model.Qty,
+                    QtyType = model.QtyType,
+                    RelationShip = model.Relationship,
+                    LaborRole = model.LaborRole,
+                    NTLogin = model.NTLogin
+                };
+
+                _dbContext.Database.ExecuteStoredProcedure(saveProcedureObjectLink);
+
+                return true;
+
+            }
+            catch (Exception ex)
+            {
+                var message = "Error occured:" + ex.Message;
+
+                return false;
+            }
+        }
+
+        public bool SaveLabor(ProcedureObjectViewModel model)
+        {
+            try
+            {
+                var saveProcedureObjectLink = new SaveProcedureObjectLink()
+                {
+                    Id = model.Id,
+                    ProcedureObjectId = model.ProcedureObjectId,
+                    ProcId = model.ProcId,
+                    StepId = model.ProcedureStepId,
+                    ApprovedObjectId = model.ApprovedObjectId,
+                    Qty = model.Qty,
+                    QtyType = model.QtyType,
+                    RelationShip = model.Relationship,
+                    LaborRole = model.LaborRole,
+                    NTLogin = model.NTLogin
+                };
+
+                _dbContext.Database.ExecuteStoredProcedure(saveProcedureObjectLink);
+
+                return true;
+
+            }
+            catch (Exception ex)
+            {
+                var message = "Error occured:" + ex.Message;
+
+                return false;
+            }
+        }
+
+        public List<SelectFile> GetApplicableObjectsByCreatingCo(string creatingCo)
+            {
+                var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT ID as Id, OBJ_TABLE as Name FROM A_V_APPROVED_OBJECTS where CREATING_CO='" + creatingCo + "'").ToList();
+
+                return result;
+            }
+            public bool UpdateApplicableObjects(ApplicableObjectsView model)
+            {
+                try
+                {
+                    var saveUpdateApplicableObjectsProcedure = new SaveUpdateApplicableObjectsProcedure()
+                    {
+
+                        StepId = model.StepId,
+                        LinkId = model.LinkId,
+                        Quantity = model.Quantity,
+                        ObjectId = model.ObjectId,
+                        NTLogin = model.NTLogin
+                    };
+
+                    _dbContext.Database.ExecuteStoredProcedure(saveUpdateApplicableObjectsProcedure);
+
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    var message = "Error occured:" + ex.Message;
+
+                    return false;
+                }
+            }
         }
     }
-}
+

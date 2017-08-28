@@ -2806,5 +2806,7 @@
     <Build Include="dbo\Views\Portal\Portal_PeopleView.sql" />
     <Build Include="dbo\Views\Portal\Portal_MonitorsView.sql" />
     <Build Include="dbo\Tables\A_Task_Logs.sql" />
+    <Build Include="dbo\Views\Portal\Portal_ProductsView.sql" />
+    <Build Include="dbo\Views\Portal\Portal_ProcedureObjectLaborStepsView.sql" />
   </ItemGroup>
 </Project>

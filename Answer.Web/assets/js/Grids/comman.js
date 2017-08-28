@@ -1,4 +1,27 @@
 ﻿$(document).ready(function () {
+
+    $('#select-doc-view').on('show.bs.modal',
+        function (event) {
+            var button = $(event.relatedTarget);
+            var callBackId = button.data('call-back-id');
+            var imageType = button.data('file-type');
+            var modal = $(this);
+
+            $.ajax({
+                type: "GET",
+                url: '/doc/GetFileView?callBackId=' + callBackId + '&type=' + imageType,
+                dataType: 'html',
+                success: function (data) {
+                    modal.find('.modal-body').html(data);
+                },
+                error: function () {
+
+                }
+            });
+
+        });
+
+
     $('#select-referenceprocedures').on('show.bs.modal',
         function (event) {
 

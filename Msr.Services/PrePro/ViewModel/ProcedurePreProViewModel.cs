@@ -76,7 +76,7 @@ namespace Msr.Services.PrePro.ViewModel
         public string DurationType { get; set; }
 
         [DisplayName("Labor :")]
-        public string Labor { get; set; }
+        public List<ProcedureObjectsLaborStepView> Labor { get; set; }
 
         [DisplayName("Number Of Questions to use :")]
         public string NumTestQuestion { get; set; }

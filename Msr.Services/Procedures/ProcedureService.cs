@@ -4,6 +4,7 @@ using Msr.Repositories;
 using Msr.Services.Orders.Procedures;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
@@ -352,6 +353,73 @@ namespace Msr.Services.Procedures
             };
 
             _dbContext.Database.ExecuteStoredProcedure(updateOneStep);
+        }
+
+        public bool RollBack(SaveProcedureViewModel model)
+        {
+            try
+            {
+                var saveProcedureProcedure = new SaveProcedureProcedure
+                {
+                    ObjId = model.ObjectId,
+                    Company = model.Company,
+                    Verb = model.Verb,
+                    Name = model.Name,
+                    Comments = model.Comments,
+                    StepInAp = model.StepInAp,
+                    WipMsg = model.WipMsg,
+                    SecurityLevel = model.SecurityLevel,
+                    SystemId = model.SystemId,
+                    Duration = model.Duration,
+                    DurationType = model.DurationType,
+                    NTLogin = model.NTLogin,
+                    Threshold = model.Threshold
+                };
+
+                _dbContext.Database.ExecuteStoredProcedure(saveProcedureProcedure);
+
+                var deleteReferenceFileProcedure = new DeleteFileProcedure()
+                {
+                    ObjID = model.ObjectId,
+                    Type = DBNull.Value.ToString(CultureInfo.InvariantCulture),
+                    NTLogin = model.NTLogin
+                };
+
+                _dbContext.Database.ExecuteStoredProcedure(deleteReferenceFileProcedure);
+
+                var deleteProcedureRolesProcedure =
+                    new DeleteProcedureRolesProcedure() {ObjId = model.ObjectId, NTLogin = model.NTLogin};
+
+                _dbContext.Database.ExecuteStoredProcedure(deleteProcedureRolesProcedure);
+
+                var objId = new SqlParameter("@objID", model.ObjectId);
+
+                var NTLogin = new SqlParameter("@strNTLogin", model.NTLogin);
+
+                var retVal = new SqlParameter("@Success", SqlDbType.Int) {Direction = ParameterDirection.ReturnValue};
+
+                string command =
+                    string.Format("exec A_SP_OBJECT_UNLOCK_AND_DELETE  @objID, @strNTLogin");
+
+                int result = _dbContext.Database.ExecuteSqlCommand(command, objId,
+                    NTLogin, retVal);
+
+                if (retVal.SqlValue.ToString() == "0")
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                var message = "Error occured:" + ex.Message;
+
+                return false;
+            }
         }
     }
 }
