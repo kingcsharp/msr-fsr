@@ -1,0 +1,32 @@
+﻿CREATE VIEW [dbo].[Portal_ProductsView]
+AS
+SELECT        OBJECT_ID AS ObjectId,
+PARENT_ID AS ParentId, 
+NAME AS Name,
+SUPPLIER_ID AS SupplierId,
+SUPPLIER_NAME AS SupplierName,
+COMMENTS AS Comments,
+PROCEDURE_ID AS ProcedureId,
+VERB AS Verb, 
+VERB_NAME AS VerbName, 
+APP_OBJECT AS AppObject,
+APP_OBJ_NAME AS AppObjName,
+SHIP_OR_LABOR AS ShipOrLabor,
+CUSTOMIZABLE AS Customizable, 
+REQ_FORM AS ReqForm, 
+MGR_TEAM AS MgrTeam, 
+MGR_TEAM_NAME AS MgrTeamName, 
+SALES_TAX AS SalesTax,
+PROCEDURE_NAME AS ProcedureName, 
+ID AS Id,
+HISTORY_REF_ID AS HistoryRefId,
+CREATING_CO_NAME AS CreatingCoName, 
+CREATING_CO AS CreatingCo, 
+CUST_MGR_ROLE AS CustMgrRole,
+STATUS AS Status, 
+PERSON_SUPPLIER AS PersonSupplier,
+AVAILABILITY AS Availability, 
+SYSTEM_PROCEDURE AS SystemProcedure
+FROM dbo.A_V_PRODUCTS_APPROVED_SELECT_DATA
+
+GO
