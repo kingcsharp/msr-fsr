@@ -92,7 +92,7 @@ namespace Msr.Services.Parts.ViewModels
 
         public string ProductType { get; set; }
 
-        [DisplayName("Procedure Verb :")]
+        [DisplayName("Procedure Type :")]
         public string ProcVerb { get; set; }
 
         [DisplayName("Special Customer List :")]

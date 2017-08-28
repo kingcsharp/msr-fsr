@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Msr.Services.Companies;
 
 namespace Answer.Web.Controllers
 {
@@ -130,7 +131,7 @@ namespace Answer.Web.Controllers
         {
             var approvalGroup = new SaveActualPartsViewModel();
 
-            approvalGroup.SetUp(new ActualPartsService(), new PartsService(), new LocationService(), new UserService(), new ProductService(), GetCurrentUser());
+            approvalGroup.SetUp(new ActualPartsService(), new PartsService(), new LocationService(), new UserService(), new ProductService(), new CompanyService(), GetCurrentUser());
 
             return View(approvalGroup);
         }
@@ -157,7 +158,7 @@ namespace Answer.Web.Controllers
                 {
                     TempData["ErrorMessage"] = "Something went wrong.";
 
-                    model.SetUp(new ActualPartsService(), new PartsService(), new LocationService(), new UserService(), new ProductService(), GetCurrentUser());
+                    model.SetUp(new ActualPartsService(), new PartsService(), new LocationService(), new UserService(), new ProductService(), new CompanyService(), GetCurrentUser());
                     return View(model);
                 }
             }
@@ -174,7 +175,7 @@ namespace Answer.Web.Controllers
 
             actualPart = actualPart.MapToDto(model);
 
-            actualPart.SetUp(new ActualPartsService(), new PartsService(), new LocationService(), new UserService(), new ProductService(), GetCurrentUser());
+            actualPart.SetUp(new ActualPartsService(), new PartsService(), new LocationService(), new UserService(), new ProductService(),  new CompanyService(), GetCurrentUser());
 
             return View(actualPart);
         }

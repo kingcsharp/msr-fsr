@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Msr.Models.ActualParts;
+using Msr.Services.Companies;
 using Msr.Services.Locations;
 using Msr.Services.Users;
 using Msr.Services.Products;
@@ -83,8 +84,7 @@ namespace Msr.Services.ActualParts.ViewModels
 
         public List<SelectListItem> ListSubPartActions { get; set; }
 
-        public void SetUp(ActualPartsService actualPartsService, PartsService partsService, LocationService locationService, UserService userService, 
-            ProductService productService, LoggedUserIdResult getCurrentUser)
+        public void SetUp(ActualPartsService actualPartsService, PartsService partsService, LocationService locationService, UserService userService, ProductService productService, CompanyService companyService, LoggedUserIdResult getCurrentUser)
         {
             ListSubPartActions = new List<SelectListItem>
             {
@@ -125,10 +125,10 @@ namespace Msr.Services.ActualParts.ViewModels
 
             ListCurOwners.Insert(0, new SelectListItem { Text = @"Select Owner", Value = "" });
 
-            ListCurOwners.AddRange(actualPartsService.GetActualPartCompanies(getCurrentUser.Id).Select(x => new SelectListItem
+            ListCurOwners.AddRange(companyService.GetCompaniesQueryable().Where(x=>x.Status == "APPROVED") .Select(x => new SelectListItem
             {
                 Text = x.Name,
-                Value = x.Id.ToString()
+                Value = x.ObjectId
             }).OrderBy(o => o.Text).ToList());
 
             ListPersons.Insert(0, new SelectListItem { Text = @"Select Responsible Person", Value = "" });

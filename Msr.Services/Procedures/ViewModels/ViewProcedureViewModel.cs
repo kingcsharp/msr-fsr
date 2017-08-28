@@ -24,7 +24,7 @@ namespace Msr.Services.Procedures.ViewModels
 
         public string CreatingCompany { get; set; }
 
-        [Display(Name = "Procedure Verb :")]
+        [Display(Name = "Procedure Type :")]
         public string Verb { get; set; }
 
         [Display(Name = "Procedure System Task :")]
