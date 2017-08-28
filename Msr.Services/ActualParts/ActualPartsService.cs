@@ -45,7 +45,6 @@ namespace Msr.Services.ActualParts
         public List<string> GetActualpartProductsInstalled(string id,string ntlogin)
         {
             var strID = new SqlParameter("@ID", id == null ? "0" : id);
-            //need to be dynamic
             var NTLogin = new SqlParameter("@strNTLogin", ntlogin);
 
             var result = _dbContext.Database.SqlQuery<string>("Exec Portal_ActualPartProductInstalled @ID, @strNTLogin", strID, NTLogin).ToList();
@@ -56,7 +55,6 @@ namespace Msr.Services.ActualParts
         public List<RootCompanyTree> GetActualPartCompanies(string ntlogin)
         {
             var strID = new SqlParameter("@PERSON_ID", ntlogin);
-            //need to be dynamic
             var NTLogin = new SqlParameter("@strNTLogin", ntlogin);
 
             var result = _dbContext.Database.SqlQuery<RootCompanyTree>("Exec A_SP_COMPANIES_SHOW_PERSONS_ROOT_COMPANY_TREE @PERSON_ID, @strNTLogin", strID, NTLogin).ToList();
@@ -134,7 +132,6 @@ namespace Msr.Services.ActualParts
         {
             try
             {
-                //need to be dynamic
                 var NTLogin = ntlogin;
                 var closeViewHistoryTaskProcedure = new CloseViewHistoryTaskProcedure() { Id = id, NTLogin = NTLogin };
 

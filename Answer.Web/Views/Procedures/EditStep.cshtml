@@ -1,6 +1,6 @@
 ﻿@model Msr.Services.Procedures.ViewModels.GetStepEditDataViewModel
 @{
-    ViewBag.Title = "EditStep";
+    ViewBag.Title = "Edit Step";
 }
 
 <div class="container-fluid">
@@ -9,137 +9,185 @@
             <h2 class="page-header">
                 Edit Step
             </h2>
-            @using (Html.BeginForm())
-            {
-                @Html.AntiForgeryToken()
-                @Html.HiddenFor(x => x.StepId)
-                @Html.HiddenFor(x => x.ProcObjId)
-                @Html.HiddenFor(x => x.GetStepEditData.Destination)
-                @Html.HiddenFor(x => x.GetStepEditData.Specific_Location)
-                @Html.HiddenFor(x => x.GetStepEditData.GOTO_STEP)
-                @Html.HiddenFor(x => x.GetStepEditData.GOTO_STEP_ID)
-                @Html.HiddenFor(x => x.GetStepEditData.Cycles)
-                @Html.HiddenFor(x => x.GetStepEditData.Cycle_Unit)
-                @Html.HiddenFor(x => x.GetStepEditData.Cycle_Count)
-                @Html.HiddenFor(x => x.GetStepEditData.Cycle_On_Counter)
+            <div class="col-lg-10">
+                    @Html.Partial("Message")
+                @using (Html.BeginForm())
+                {
+                    <div class="form-horizontal">
 
-                <div class="form-horizontal col-lg-12">
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                    <div class="form-group">
-                        <label class="control-label">Base Start On Counter?</label>
-                        @Html.DropDownListFor(model => model.GetStepEditData.Start_On_Counter, Model.BaseCounterList, new { @class = "form-control select" })
-                        @Html.ValidationMessageFor(model => model.GetStepEditData.Start_On_Counter, "", new { @class = "text-danger" })
-                    </div>
-                    @if (Model.GetStepEditData.Start_On_Counter == 1)
-                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(x => x.StepId)
+                        @Html.HiddenFor(x => x.ProcObjId)
+                        @Html.HiddenFor(x => x.GetStepEditData.Destination)
+                        @Html.HiddenFor(x => x.GetStepEditData.Specific_Location)
+                        @Html.HiddenFor(x => x.GetStepEditData.GOTO_STEP)
+                        @Html.HiddenFor(x => x.GetStepEditData.GOTO_STEP_ID)
+                        @Html.HiddenFor(x => x.GetStepEditData.Cycles)
+                        @Html.HiddenFor(x => x.GetStepEditData.Cycle_Unit)
+                        @Html.HiddenFor(x => x.GetStepEditData.Cycle_Count)
+                        @Html.HiddenFor(x => x.GetStepEditData.Cycle_On_Counter)
+
+
+                        @Html.ValidationSummary(true, "", new {@class = "text-danger"})
+
                         <div class="form-group">
-                            <label class="control-label">Value</label>
-                            @Html.TextBoxFor(model => model.GetStepEditData.Counter_Value, new { @class = "form-control" })
-                            @Html.ValidationMessageFor(model => model.GetStepEditData.Counter_Value, "", new { @class = "text-danger" })
+                            <label class="control-label col-md-4">Base Start On Counter?</label>
+                            <div class="col-md-5">
+                                @Html.DropDownListFor(model => model.GetStepEditData.Start_On_Counter, Model.BaseCounterList, new {@class = "form-control select"})
+                                @Html.ValidationMessageFor(model => model.GetStepEditData.Start_On_Counter, "", new {@class = "text-danger"})
+                            </div>
                         </div>
-                    }
 
-                    @if (Model.GetStepEditData.Start_On_Counter == 1)
-                    {
+                        @if (Model.GetStepEditData.Start_On_Counter == 1)
+                        {
                         <div class="form-group">
-                            <label class="control-label">Unit</label>
-                            @Html.TextBoxFor(model => model.GetStepEditData.Counter_Unit, new { @class = "form-control" })
-                            @Html.ValidationMessageFor(model => model.GetStepEditData.Counter_Unit, "", new { @class = "text-danger" })
-                        </div>
-                    }
+                            <label class="control-label  col-md-4">Value</label>
+                            <div class="col-md-5">
+                                @Html.TextBoxFor(model => model.GetStepEditData.Counter_Value, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.GetStepEditData.Counter_Value, "", new { @class = "text-danger" })
+                            </div>
+                            </div>
+                        }
 
-                    @if (Model.GetStepEditData.Start_On_Counter == 1)
-                    {
+                        @if (Model.GetStepEditData.Start_On_Counter == 1)
+                        {
                         <div class="form-group">
-                            <label class="control-label">Relative to Other Step or Absolute?:</label>
-                            @Html.DropDownListFor(model => model.GetStepEditData.REL_OR_ABS, Model.RelativeOrAbsoluteList, new { @class = "form-control select" })
-                            @Html.ValidationMessageFor(model => model.GetStepEditData.REL_OR_ABS, "", new { @class = "text-danger" })
+                            <label class="control-label  col-md-4">Unit</label>
+                            <div class="col-md-5">
+                                @Html.TextBoxFor(model => model.GetStepEditData.Counter_Unit, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.GetStepEditData.Counter_Unit, "", new { @class = "text-danger" })
+                            </div>
+                            </div>
+                        }
+
+                        @if (Model.GetStepEditData.Start_On_Counter == 1)
+                        {
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Relative to Other Step or Absolute?:</label>
+                            <div class="col-md-5">
+                                @Html.DropDownListFor(model => model.GetStepEditData.REL_OR_ABS, Model.RelativeOrAbsoluteList, new { @class = "form-control select" })
+                                @Html.ValidationMessageFor(model => model.GetStepEditData.REL_OR_ABS, "", new { @class = "text-danger" })
+                            </div>
+                            </div>
+                        }
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Preceding Step/s:</label>
+                            <div class="col-md-5">
+                                @Html.DropDownListFor(model => model.SelectedPrecedingSteps, Model.GetStepListOfOtherSteps, new {@class = "form-control select", multiple = "multiple"})
+                                @Html.ValidationMessageFor(model => model.SelectedPrecedingSteps, "", new {@class = "text-danger"})
+                            </div>
                         </div>
-                    }
-                    <div class="form-group">
-                        <label class="control-label">Preceding Step/s:</label>
-                        @Html.DropDownListFor(model => model.SelectedPrecedingSteps, Model.GetStepListOfOtherSteps, new { @class = "form-control select", multiple = "multiple" })
-                        @Html.ValidationMessageFor(model => model.SelectedPrecedingSteps, "", new { @class = "text-danger" })
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">Estimated Step Duration:</label>
-                        @Html.TextBoxFor(model => model.GetStepEditData.Duration, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.GetStepEditData.Duration, "", new { @class = "text-danger" })
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">Duration Type:</label>
-                        @Html.DropDownListFor(model => model.GetStepEditData.Duration_Type, Model.DurationTypeList, new { @class = "form-control select" })
-                        @Html.ValidationMessageFor(model => model.GetStepEditData.Duration_Type, "", new { @class = "text-danger" })
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">Labor:</label>
-                        <table class="table table-bordered table-responsive">
-                            <tr>
-                                <td>Role Name</td>
-                                <td>Time</td>
-                            </tr>
-                            @foreach (var role in Model.GetStepLabors)
-                            {
-                                <tr>
-                                    <td>@role.Role_Name</td>
-                                    <td>@role.Qty  @role.QtyType</td>
-                                </tr>
-                            }
-                        </table>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">Step Text:</label>
-                        @Html.TextAreaFor(model => model.GetStepEditData.Step_Text, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.GetStepEditData.Step_Text, "", new { @class = "text-danger" })
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">System Task:</label>
-                        @Html.DropDownListFor(model => model.GetStepEditData.System_Task, Model.SystemTasks, new { @class = "form-control select" })
-                        @Html.ValidationMessageFor(model => model.GetStepEditData.System_Task, "", new { @class = "text-danger" })
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">Reference Procedure:</label>
-                        @Html.DropDownListFor(model => model.SelectedReferenceProcedures, Model.ReferenceProcedures, new { @class = "form-control select", multiple = "multiple" })
-                        @Html.ValidationMessageFor(model => model.SelectedReferenceProcedures, "", new { @class = "text-danger" })
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">Reference Procedure Type:</label>
-                        @Html.DropDownListFor(model => model.SelectedReferenceProcedureTypes, Model.ReferenceProcedureTypes, new { @class = "form-control select", multiple = "multiple" })
-                        @Html.ValidationMessageFor(model => model.SelectedReferenceProcedureTypes, "", new { @class = "text-danger" })
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.ReferenceTheory, htmlAttributes: new { @class = "control-label col-md-2" })
-                        @Html.ListBoxFor(m => m.ReferenceTheory, Model.ListReferenceTheories, new { @class = "form-control submitselect", multiple = "multiple" })
-                        @Html.ValidationMessageFor(model => model.ReferenceTheory, "", new { @class = "text-danger" })
-                        <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceTheory" data-toggle="modal" data-target="#select-theory"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceTheory"><i class="icon fa fa-trash"></i></span> </div>
-                    </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Estimated Step Duration:</label>
+                            <div class="col-md-5">
+                                @Html.TextBoxFor(model => model.GetStepEditData.Duration, new {@class = "form-control"})
+                                @Html.ValidationMessageFor(model => model.GetStepEditData.Duration, "", new {@class = "text-danger"})
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Duration Type:</label>
+                            <div class="col-md-5">
+                                @Html.DropDownListFor(model => model.GetStepEditData.Duration_Type, Model.DurationTypeList, new {@class = "form-control select"})
+                                @Html.ValidationMessageFor(model => model.GetStepEditData.Duration_Type, "", new {@class = "text-danger"})
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Labor:</label>
+                            <div class="col-md-5">
+                                <table class="table table-bordered table-responsive">
+                                    <tr>
+                                        <td>Role Name</td>
+                                        <td>Time</td>
+                                    </tr>
+                                    @foreach (var role in Model.GetStepLabors)
+                                    {
+                                        <tr>
+                                            <td>@role.Role_Name</td>
+                                            <td>@role.Qty @role.QtyType</td>
+                                        </tr>
+                                    }
+                                </table>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Step Text:</label>
+                            <div class="col-md-5">
+                                @Html.TextAreaFor(model => model.GetStepEditData.Step_Text, new {@class = "form-control"})
+                                @Html.ValidationMessageFor(model => model.GetStepEditData.Step_Text, "", new {@class = "text-danger"})
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">System Task:</label>
+                            <div class="col-md-5">
+                                @Html.DropDownListFor(model => model.GetStepEditData.System_Task, Model.SystemTasks, new {@class = "form-control select"})
+                                @Html.ValidationMessageFor(model => model.GetStepEditData.System_Task, "", new {@class = "text-danger"})
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Reference Procedure:</label>
+                            <div class="col-md-5">
+                                @Html.DropDownListFor(model => model.SelectedReferenceProcedures, Model.ReferenceProcedures, new {@class = "form-control select", multiple = "multiple"})
+                                @Html.ValidationMessageFor(model => model.SelectedReferenceProcedures, "", new {@class = "text-danger"})
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Reference Procedure Type:</label>
+                            <div class="col-md-5">
+                                @Html.DropDownListFor(model => model.SelectedReferenceProcedureTypes, Model.ReferenceProcedureTypes, new {@class = "form-control select", multiple = "multiple"})
+                                @Html.ValidationMessageFor(model => model.SelectedReferenceProcedureTypes, "", new {@class = "text-danger"})
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ReferenceTheory, htmlAttributes: new {@class = "control-label  col-md-4"})
+                            <div class="col-md-5">
+                                @Html.ListBoxFor(m => m.ReferenceTheory, Model.ListReferenceTheories, new { @class = "form-control submitselect", multiple = "multiple" })
+                                @Html.ValidationMessageFor(model => model.ReferenceTheory, "", new { @class = "text-danger" })
+                                <div style="width: 3%; float: right;">
+                                    <span class="data-toggle=" data-call-back-id="ReferenceTheory" data-toggle="modal" data-target="#select-theory"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceTheory"><i class="icon fa fa-trash"></i></span>
+                                </div>
+                            </div>
+                            </div>
 
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.ReferenceObject, htmlAttributes: new { @class = "control-label col-md-2" })
-                        @Html.ListBoxFor(m => m.ReferenceObject, Model.ListReferenceObjects, new { @class = "form-control submitselect", multiple = "multiple" })
-                        @Html.ValidationMessageFor(model => model.ReferenceObject, "", new { @class = "text-danger" })
-                        <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceObject" data-toggle="modal" data-target="#select-objects"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceObject"><i class="icon fa fa-trash"></i></span> </div>
-                    </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ReferenceObject, htmlAttributes: new {@class = "control-label  col-md-4"})
+                            <div class="col-md-5">
+                                @Html.ListBoxFor(m => m.ReferenceObject, Model.ListReferenceObjects, new { @class = "form-control submitselect", multiple = "multiple" })
+                                @Html.ValidationMessageFor(model => model.ReferenceObject, "", new { @class = "text-danger" })
+                                <div style="width: 3%; float: right;">
+                                    <span class="data-toggle=" data-call-back-id="ReferenceObject" data-toggle="modal" data-target="#select-objects"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceObject"><i class="icon fa fa-trash"></i></span>
+                                </div>
+                            </div>
+                            </div>
 
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.ReferenceFiles, htmlAttributes: new { @class = "control-label col-md-2" })
-                        @Html.ListBoxFor(m => m.ReferenceFiles, Model.ListReferenceFiles, new { @class = "form-control submitselect", multiple = "multiple" })
-                        @Html.ValidationMessageFor(model => model.ReferenceFiles, "", new { @class = "text-danger" })
-                        <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceFiles" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceFiles"><i class="icon fa fa-trash"></i></span> </div>
-                    </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ReferenceFiles, htmlAttributes: new {@class = "control-label  col-md-4"})
+                            <div class="col-md-5">
+                                @Html.ListBoxFor(m => m.ReferenceFiles, Model.ListReferenceFiles, new {@class = "form-control submitselect", multiple = "multiple"})
+                                @Html.ValidationMessageFor(model => model.ReferenceFiles, "", new {@class = "text-danger"})
+                                <div style="width: 3%; float: right;">
+                                    <span class="data-toggle=" data-call-back-id="ReferenceFiles" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceFiles"><i class="icon fa fa-trash"></i></span>
+                                </div>
+                            </div>
+                        </div>
 
-                    <div class="form-group">
-                        <label class="control-label">Comments:</label>
-                        @Html.TextAreaFor(model => model.GetStepEditData.Comments, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.GetStepEditData.Comments, "", new { @class = "text-danger" })
-                    </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Comments:</label>
+                            <div class="col-md-5">
+                                @Html.TextAreaFor(model => model.GetStepEditData.Comments, new {@class = "form-control"})
+                                @Html.ValidationMessageFor(model => model.GetStepEditData.Comments, "", new {@class = "text-danger"})
+                            </div>
+                        </div>
 
-                    <div class="form-group">
-                        <button type="submit" class="form-control btn btn-success">Save</button>
+                        <div class="form-group">
+                            <div class="col-md-offset-4 col-md-10">
+                                <button type="submit" class="btn btn-success">Save</button>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            }
-        </div>
+                        }
+                    </div>
+                
+            </div>
     </div>
 </div>
 @section scripts

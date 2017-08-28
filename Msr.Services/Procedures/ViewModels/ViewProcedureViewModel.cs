@@ -240,10 +240,10 @@ namespace Msr.Services.Procedures.ViewModels
                     Value = "TIME_SYS_WEEKS"
                 }
             };
-            RolesList = roleService.GetUserRolesQueryable().Select(x => new SelectListItem
+            RolesList = roleService.GetActiveRoles().Select(x => new SelectListItem
             {
-                Text = x.RoleName,
-                Value = x.ObjectId.ToString()
+                Text = x.Name,
+                Value = x.ObJect_Id.ToString()
             }).OrderBy(o => o.Text).ToList();
 
             VerbList = procedureTypesService.GetProceduresVerbs().Select(x => new SelectListItem

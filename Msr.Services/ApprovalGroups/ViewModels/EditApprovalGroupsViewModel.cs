@@ -54,10 +54,10 @@ namespace Msr.Services.ApprovalGroups.ViewModels
                 Value = x.Obj_Id
             }).OrderBy(o => o.Text).ToList();
 
-            ListMemberRoles = roleService.GetUserRolesQueryable().Select(x => new SelectListItem
+            ListMemberRoles = roleService.GetActiveRoles().Select(x => new SelectListItem
             {
-                Text = x.RoleName,
-                Value = x.ObjectId.ToString()
+                Text = x.Name,
+                Value = x.ObJect_Id.ToString()
             }).OrderBy(o => o.Text).ToList();
 
             MemberPeoples = approvalGroupsService.GetGroupMembers(id: Id,ntlogin:ntlogin).ToList();
