@@ -1,6 +1,7 @@
 ﻿@model  Msr.Services.Orders.Messaging.WorkOrderDetailsResponse
 @{
     ViewBag.Title = "Work Order Details " + Model.FileSearchResult?.FillObjDesc + " qty:" + Model.FileSearchResult?.Qty;
+    var status = new string[] {"COMPLETED", "FINISHED", "CLOSED"};
 }
 
 <!-- [[$wip-detail-sidenav?]] -->
@@ -36,7 +37,10 @@
                         </optgroup>
                     </select>
                 </div>
-                <div class="wip-detail-item-controls">
+                
+            @if (Model.TaskStepResults.Any(x => !status.Contains(x.Status)))
+            {
+                <div class="">
                     <button id="btn-cancel-steps" data-id="@Model.FillId" class="btn btn-danger btn-sm cancel-btn pull-right" data-toggle="modal" data-target="#widDetailCancelStepsModal"><i class="fa fa-close"></i> Cancel Remaining Steps</button>
                     <button data-id="@Model.FillId" class="btn btn-warning btn-sm cancel-btn pull-right instruction-tooltip" data-toggle="modal" data-target="#widDetailTakeOver"
                             data-toggle="tooltip" data-placement="top" data-html="true" id="btn-take-over-task"
@@ -44,6 +48,8 @@
                         <i class="fa fa-user"></i> Take Over this Task
                     </button>
                 </div>
+            }
+                
             </div>
             <div class="col-lg-6 col-md-6 col-sm-6 ">
                 <ul class="nav nav-tabs">

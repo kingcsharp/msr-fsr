@@ -8,7 +8,7 @@
 		// set default values
 		// typeNumber < 1 for automatic calculation
 		options	= $.extend( {}, {
-			render		: "canvas",
+			render		: "image",
 			width		: 256,
 			height		: 256,
 			typeNumber	: -1,
