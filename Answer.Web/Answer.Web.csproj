@@ -881,7 +881,6 @@
     <Content Include="assets\data\purchase_orders.json" />
     <Content Include="assets\js\Sample Refactoring Project.zip" />
     <Content Include="assets\js\wip-detail-tooltip.js.old" />
-    <Content Include="obj\Release\Package\PackageTmp\Views\Procedures\EditSteps.cshtml" />
     <None Include="Properties\PublishProfiles\dev.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
