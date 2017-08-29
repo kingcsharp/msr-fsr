@@ -21,12 +21,14 @@ namespace Answer.Web.Controllers
         private AdministrationService _administrationService;
         private readonly RoleService _roleService;
         private readonly LocationService _locationService;
+        private readonly CompanyService _companyService;
 
         public AdministrationController()
         {
             _locationService = new LocationService();
             _administrationService = new AdministrationService();
             _roleService = new RoleService();
+            _companyService = new CompanyService();
         }
 
         public ActionResult AdminSetup()
@@ -137,7 +139,7 @@ namespace Answer.Web.Controllers
 
             if (!string.IsNullOrWhiteSpace(selectedJobId))
             {
-                vm.Companies = _administrationService.GetRolesForJob(selectedJobId, GetCurrentUser().Company);
+                vm.Companies = _administrationService.GetRolesForJob(selectedJobId, GetCurrentUser().Id);
             }
 
             vm.SetUp(_roleService);
@@ -202,7 +204,11 @@ namespace Answer.Web.Controllers
         {
             var vm = new AssignCompaniesToViewViewModel();
 
-            vm.CompaniesToView = _administrationService.GetAssignCompaniesToView(GetCurrentUser().Id);
+            vm.CompaniesToView = _companyService.GetCompaniesQueryable().Where(x => x.Status == "APPROVED").Select(x => new AssignCompaniesToViewResult
+            {
+                Id = x.ObjectId,
+                Name = x.Name
+            }).ToList();
 
             vm.SetUp(new CompanyService());
 

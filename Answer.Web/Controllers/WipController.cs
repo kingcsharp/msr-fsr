@@ -12,7 +12,6 @@ using Msr.Services.Orders;
 using Msr.Services.Orders.Messaging;
 using Msr.Services.Orders.Procedures;
 using Msr.Services.Orders.ViewModels;
-using Msr.Web.Controllers;
 using Msr.Web.ViewModel.Engineering;
 
 namespace Answer.Web.Controllers
@@ -21,10 +20,12 @@ namespace Answer.Web.Controllers
     public class WipController : BaseController
     {
         private OrderService _orderService;
+        private TaskService _taskService;
 
         public WipController()
         {
             _orderService = new OrderService();
+            _taskService = new TaskService();
         }
 
         public ActionResult Index()
@@ -166,16 +167,14 @@ namespace Answer.Web.Controllers
 
         public ActionResult GetNcrModel(string id)
         {
-            var orderService = new OrderService();
-            var taskService = new TaskService();
-            var ncrDetails = orderService.GetNcrDetails(id);
+            var ncrDetails = _orderService.GetNcrDetails(id);
 
-            var docs = orderService.GetDocuments(ncrDetails.Details.FillObjId);
+            var docs = _orderService.GetDocuments(ncrDetails.Details.FillObjId);
 
-            var photos = GetDocViewModel(docs, orderService, 400);
+            var photos = GetDocViewModel(docs, _orderService, 400);
             ncrDetails.Photos = photos;
 
-            var response = taskService.GetTaskWithMonitors(id);
+            var response = _taskService.GetTaskWithMonitors(id);
 
             ncrDetails.MonitorItem = response.MonitorItem.Where(x => x.Description.Contains("Nonconformity") || x.Description.Contains("NCR")).ToList();
 
@@ -184,20 +183,16 @@ namespace Answer.Web.Controllers
 
         public ActionResult GetPhotsModel(string id)
         {
-            var orderService = new OrderService();
+            var docs = _orderService.GetDocuments(id);
 
-            var docs = orderService.GetDocuments(id);
-
-            var photos = GetDocViewModel(docs, orderService, 400);
+            var photos = GetDocViewModel(docs, _orderService, 400);
 
             return PartialView("_Photos", photos);
         }
 
         public ActionResult GetMonitorsModel(string id)
         {
-            var taskService = new TaskService();
-
-            var response = taskService.GetTaskWithMonitors(id);
+            var response = _taskService.GetTaskWithMonitors(id);
 
             return PartialView("_Monitors", response);
         }
@@ -207,7 +202,7 @@ namespace Answer.Web.Controllers
         {
             var noteService = new NoteService();
 
-            var loggedUserId = User.Identity.GetUserId();
+            var loggedUserId = GetCurrentUser().Id;
 
             noteService.AddNote(id, message, 1, loggedUserId);
 
@@ -219,16 +214,15 @@ namespace Answer.Web.Controllers
             var currentUser = GetCurrentUser();
 
             var viewModel = new WipListViewModel();
-            var orderService = new OrderService();
 
-            viewModel.WoItemsInprogress  = orderService.GetWorkOrderQueryable()
+            viewModel.WoItemsInprogress  = _orderService.GetWorkOrderQueryable()
                     .Where(x => x.Status == WorkItemStatusConstants.Accepted && x.SupplierId == currentUser.Root_Company && x.RequesteeId != currentUser.Id) 
                     .OrderByDescending(o => o.DueDate)
                     .ToList();
 
             var procs = viewModel.WoItemsInprogress.Select(p => p.ProcName).ToList();
 
-            viewModel.WoItemsByProcedures = orderService.GetWorkOrderQueryable().Where(x=> procs.Contains(x.ProcName)).ToList();
+            viewModel.WoItemsByProcedures = _orderService.GetWorkOrderQueryable().Where(x=> procs.Contains(x.ProcName)).ToList();
 
             
             return PartialView("_WipListModal", viewModel);
@@ -237,9 +231,8 @@ namespace Answer.Web.Controllers
         public ActionResult Details(int? id,string ntlogin)
         {
             var currentUser = GetCurrentUser();
-            var orderService = new OrderService();
 
-            var workItems =  orderService.GetWorkOrderQueryable()
+            var workItems =  _orderService.GetWorkOrderQueryable()
                                .Where(x => x.RequesteeId == currentUser.Id)
                                .OrderByDescending(o => o.DueDate)
                                .ToList();
@@ -250,7 +243,8 @@ namespace Answer.Web.Controllers
             }
 
             var response = _orderService.GetPurchaseItemDetails(id.Value,ntlogin);
-            response.WoItems = workItems;
+
+            response.MyWoItems = workItems;
 
             return View(response);
         }
@@ -277,7 +271,8 @@ namespace Answer.Web.Controllers
             var orderService = new OrderService();
             if (ModelState.IsValid)
             {
-                var loggedUserId = User.Identity.GetUserId();
+                var loggedUserId = GetCurrentUser().Id;
+
                 model.NTLogin = loggedUserId;
 
                 var response = false;
@@ -321,7 +316,8 @@ namespace Answer.Web.Controllers
         {
             ViewBag.FillId = fillId;
 
-            var loggedUserId = User.Identity.GetUserId();
+            var loggedUserId = GetCurrentUser().Id;
+
             var response = _orderService.GetWipStepDetails(stepId, fillId, loggedUserId, phStepId);
 
             foreach (var monitorTemplate in response.MonitorTemplateResult)
@@ -355,9 +351,12 @@ namespace Answer.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var loggedUserId = User.Identity.GetUserId();
+                var loggedUserId = GetCurrentUser().Id;
+
                 _orderService.UpdateStepMonitor(monitorTemplate);
+
                 var returnValue = _orderService.CloseTask(monitorTemplate.TaskId, loggedUserId);
+
                 if(returnValue  == "NEW_TEXT")
                     return RedirectToAction("Details", new { id = monitorTemplate.FillId });//"../monitors/addNewTextResults.asp?TASK_ID="
             }
@@ -368,7 +367,8 @@ namespace Answer.Web.Controllers
         [HttpPost]
         public ActionResult StepDoneClick(int stepId)
         {
-            var loggedUserId = User.Identity.GetUserId();
+            var loggedUserId = GetCurrentUser().Id;
+
             _orderService.StepDone(stepId, loggedUserId);
 
             return Json("OK", JsonRequestBehavior.AllowGet);
@@ -377,7 +377,8 @@ namespace Answer.Web.Controllers
         [HttpPost]
         public ActionResult StepStartClick(int stepId)
         {
-            var loggedUserId = User.Identity.GetUserId();
+            var loggedUserId = GetCurrentUser().Id;
+
             _orderService.StepStart(stepId, loggedUserId);
 
             return Json("OK", JsonRequestBehavior.AllowGet);
@@ -386,7 +387,8 @@ namespace Answer.Web.Controllers
         [HttpPost]
         public ActionResult AssumeTaskClick(int taskId)
         {
-            var loggedUserId = User.Identity.GetUserId();
+            var loggedUserId = GetCurrentUser().Id;
+
             _orderService.AssumeTask(taskId, loggedUserId);
 
             return Json("OK", JsonRequestBehavior.AllowGet);
@@ -402,7 +404,8 @@ namespace Answer.Web.Controllers
         [HttpPost]
         public ActionResult CancelUnfinishedSteps(int fillId)
         {
-            var loggedUserId = User.Identity.GetUserId();
+            var loggedUserId = GetCurrentUser().Id;
+
             _orderService.CancelUnfinishedSteps(fillId, loggedUserId);
 
             return Json("OK", JsonRequestBehavior.AllowGet);
@@ -410,7 +413,8 @@ namespace Answer.Web.Controllers
 
         public ActionResult GetReferenceTheory(int theoryId)
         {
-            var loggedUserId = User.Identity.GetUserId();
+            var loggedUserId = GetCurrentUser().Id;
+
             var response = _orderService.GetTheoryData(theoryId, loggedUserId);
 
             return PartialView("_ViewReferenceTheory", response);
@@ -418,7 +422,6 @@ namespace Answer.Web.Controllers
 
         public ActionResult GetReferenceTheoryFile(int fileId)
         {
-            var loggedUserId = User.Identity.GetUserId();
             //var response = _orderService.GetTheoryData(fileId, loggedUserId);
 
             //return PartialView("_ViewReferenceTheory", response);
@@ -428,12 +431,14 @@ namespace Answer.Web.Controllers
         [HttpPost]
         public ActionResult TakeTaskOwnersShip(int taskId)
         {
-            var loggedUserId = User.Identity.GetUserId();
+            var loggedUserId = GetCurrentUser().Id;
+
             var statusMessage = _orderService.AssumeTask(taskId, loggedUserId);
-            // need to check response and then redirect from JQuery
+            
             var response = statusMessage.Contains("ERROR")
                 ? new {Code = "Error", Message = statusMessage}
                 : new {Code = "OK", Message = statusMessage};
+
             return Json(response, JsonRequestBehavior.AllowGet);
         }
 

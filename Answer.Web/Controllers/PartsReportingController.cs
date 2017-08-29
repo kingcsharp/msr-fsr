@@ -21,7 +21,8 @@ namespace Msr.Web.Controllers
         {
             var vm = new PartsReportsViewModel();
 
-            var loggedUser = User.Identity.GetUserId();
+            var loggedUser = GetCurrentUser().Id;
+
             var userService = new UserService();
             var company = userService.GetCompanyId(loggedUser);
             var orderService = new OrderService();

@@ -12,7 +12,7 @@ namespace Msr.Services.Orders.Messaging
             FileSearchResult = new FileSearchResult();
             Parts = new List<string>();
             TaskStepResults = new List<TaskStepResult>();
-            WoItems = new List<WorkOrderView>();
+            MyWoItems = new List<WorkOrderView>();
         }
 
         public int FillId { get; set; }
@@ -20,7 +20,7 @@ namespace Msr.Services.Orders.Messaging
         public FileSearchResult FileSearchResult { get; set; }
         public List<string> Parts { get; set; }
         public List<TaskStepResult> TaskStepResults { get; set; }
-        public List<WorkOrderView> WoItems { get; set; }
+        public List<WorkOrderView> MyWoItems { get; set; }
         public IEnumerable<SelectListItem> WorkItems { get; set; }
     }
 }

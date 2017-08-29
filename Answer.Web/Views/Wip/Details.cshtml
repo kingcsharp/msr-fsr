@@ -22,9 +22,9 @@
                     <select id="wip-item-select" class="selectpicker form-control" name="wo-item">
                         <option data-content="<strong>Select an Item...</strong>">Select an Item</option>
                         <optgroup label="Items Assigned to Me">
-                            @if (Model.WoItems.Any())
+                            @if (Model.MyWoItems.Any())
                             {
-                                foreach (var item in Model.WoItems)
+                                foreach (var item in Model.MyWoItems)
                                 {
                                     <option data-content="<strong>@item.PurchaseItemId</strong><br>Proc: @item.ProcName<br>Serial: @item.Serial<span class='label label-success pull-right'>@item.Status</span>" data-status="@item.Status" data-fill-id="@Model.FillId">@item.FillId</option>
                                 }
