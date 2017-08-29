@@ -2808,5 +2808,6 @@
     <Build Include="dbo\Tables\A_Task_Logs.sql" />
     <Build Include="dbo\Views\Portal\Portal_ProductsView.sql" />
     <Build Include="dbo\Views\Portal\Portal_ProcedureObjectLaborStepsView.sql" />
+    <Build Include="dbo\Views\Portal\Portal_ProceduresVerbsView.sql" />
   </ItemGroup>
 </Project>
