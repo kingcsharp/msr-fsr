@@ -181,6 +181,7 @@
     <Compile Include="Controllers\ApprovalGroupsController.cs" />
     <Compile Include="Controllers\ApprovalStagesController.cs" />
     <Compile Include="Controllers\ApprovalWorkflowsController.cs" />
+    <Compile Include="Controllers\DeliveryController.cs" />
     <Compile Include="Controllers\PeopleController.cs" />
     <Compile Include="Controllers\CompaniesController.cs" />
     <Compile Include="Controllers\DocumentsController.cs" />
@@ -590,6 +591,7 @@
     <Content Include="assets\js\grids\approvalstages.js" />
     <Content Include="assets\js\grids\buyer_grid.js" />
     <Content Include="assets\js\grids\comman.js" />
+    <Content Include="assets\js\grids\delivery.js" />
     <Content Include="assets\js\grids\labors-step.js" />
     <Content Include="assets\js\grids\PrePro.js" />
     <Content Include="assets\js\grids\PreProTheoryDiolag.js" />
@@ -1085,6 +1087,7 @@
     <Content Include="Views\PreProSearch\Labors.cshtml" />
     <Content Include="Views\Shared\_DocView.cshtml" />
     <Content Include="Views\PreProSearch\ApplicableObjects.cshtml" />
+    <Content Include="Views\Delivery\Index.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

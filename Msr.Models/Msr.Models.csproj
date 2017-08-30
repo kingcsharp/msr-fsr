@@ -110,6 +110,7 @@
     <Compile Include="Companies\CompanyView.cs" />
     <Compile Include="Companies\EditCompanyView.cs" />
     <Compile Include="Companies\HeadPeopleView.cs" />
+    <Compile Include="Delivery\DeliveryScreenView.cs" />
     <Compile Include="Documents\DocumentFilesView.cs" />
     <Compile Include="Documents\DocumentView.cs" />
     <Compile Include="Documents\SelectRole.cs" />

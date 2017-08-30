@@ -161,6 +161,7 @@
     <Compile Include="Companies\ViewModels\EditCompanyViewModel.cs" />
     <Compile Include="Companies\ViewModels\GetFileViewModel.cs" />
     <Compile Include="Companies\ViewModels\HeadPeopleViewModel.cs" />
+    <Compile Include="Delivery\DeliveryService.cs" />
     <Compile Include="Documents\DocumentFilesService.cs" />
     <Compile Include="Documents\DocumentService.cs" />
     <Compile Include="Documents\Procedures\SaveDocumentProcedure.cs" />
@@ -387,6 +388,7 @@
     <Analyzer Include="..\packages\AWSSDK.S3.3.3.8.2\analyzers\dotnet\cs\AWSSDK.S3.CodeAnalysis.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Delivery\ViewModels\" />
     <Folder Include="Objects\Procedures\" />
     <Folder Include="Objects\ViewModels\" />
     <Folder Include="ProcedureTypes\ViewModels\" />
