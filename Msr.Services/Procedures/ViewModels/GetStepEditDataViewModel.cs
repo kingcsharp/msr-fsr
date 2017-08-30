@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 using Msr.Services.Procedures.Messages;
 
@@ -6,19 +7,25 @@ namespace Msr.Services.Procedures.ViewModels
 {
     public class GetStepEditDataViewModel
     {
-        public GetStepEditDataViewModel()
+        public GetStepEditDataViewModel(ProceduresService proceduresService, string procedureObjectId)
         {
             GetStepListOfOtherSteps = new List<SelectListItem>();
+            ReferenceProcedures = new List<SelectListItem>();
+            ReferenceProcedureTypes = new List<SelectListItem>();
+            ListReferenceTheories = new List<SelectListItem>();
+            ListReferenceObjects = new List<SelectListItem>();
+            ListReferenceFiles = new List<SelectListItem>();
+
             BaseCounterList = new List<SelectListItem>()
             {
                 new SelectListItem()
                 {
-                    Text = "NO***",
+                    Text = @"NO***",
                     Value = "0"
                 },
                 new SelectListItem()
                 {
-                    Text = "YES***",
+                    Text = @"YES***",
                     Value = "1"
                 }
             };
@@ -27,12 +34,12 @@ namespace Msr.Services.Procedures.ViewModels
             {
                 new SelectListItem()
                 {
-                    Text = "Relative",
+                    Text = @"Relative",
                     Value = "RELATIVE"
                 },
                 new SelectListItem()
                 {
-                    Text = "Absolute",
+                    Text = @"Absolute",
                     Value = "ABSOLUTE"
                 }
             };
@@ -41,30 +48,108 @@ namespace Msr.Services.Procedures.ViewModels
             {
                 new SelectListItem()
                 {
-                    Text = "Seconds",
+                    Text = @"Seconds",
                     Value = "TIME_SYS_SECONDS"
                 },
                 new SelectListItem()
                 {
-                    Text = "Minutes",
+                    Text = @"Minutes",
                     Value = "TIME_SYS_MINUTES"
                 },
                 new SelectListItem()
                 {
-                    Text = "Hours",
+                    Text = @"Hours",
                     Value = "TIME_SYS_HOURS"
                 },
                 new SelectListItem()
                 {
-                    Text = "Days",
+                    Text = @"Days",
                     Value = "TIME_SYS_DAYS"
                 },
                 new SelectListItem()
                 {
-                    Text = "Weeks",
+                    Text = @"Weeks",
                     Value = "TIME_SYS_WEEKS"
                 }
             };
+            SystemTasks = new List<SelectListItem>()
+            {
+                new SelectListItem
+                {
+                    Text = @"SYS_COMP_TEST",
+                    Value = "SYS_COMP_TEST"
+                },
+                new SelectListItem
+                {
+                    Text = @"SYS_CONSUME",
+                    Value = "SYS_CONSUME"
+                },
+                new SelectListItem
+                {
+                    Text = @"SYS_CREATE",
+                    Value = "SYS_CREATE"
+                },
+                new SelectListItem
+                {
+                    Text = @"SYS_DNR",
+                    Value = "SYS_DNR"
+                },
+                new SelectListItem
+                {
+                    Text = @"SYS_E_ACCESS",
+                    Value = "SYS_E_ACCESS"
+                },
+                new SelectListItem
+                {
+                    Text = @"SYS_INSTALL",
+                    Value = "SYS_INSTALL"
+                },
+                new SelectListItem
+                {
+                    Text = @"SYS_PROVIDE_AND_CONSUMED",
+                    Value = "SYS_PROVIDE_AND_CONSUMED"
+                },
+                new SelectListItem
+                {
+                    Text = @"SYS_PROVIDE_AND_STAY",
+                    Value = "SYS_PROVIDE_AND_STAY"
+                },
+                new SelectListItem
+                {
+                    Text = @"SYS_PROVIDE_TAKE_BACK",
+                    Value = "SYS_PROVIDE_TAKE_BACK"
+                },
+                new SelectListItem
+                {
+                    Text = @"SYS_RECEIVE",
+                    Value = "SYS_RECEIVE"
+                },
+                new SelectListItem
+                {
+                    Text = @"SYS_REMOVE",
+                    Value = "SYS_REMOVE"
+                },
+                new SelectListItem
+                {
+                    Text = @"SYS_SEND",
+                    Value = "SYS_SEND"
+                },
+                new SelectListItem
+                {
+                    Text = @"SYS_SERIALIZE",
+                    Value = "SYS_SERIALIZE"
+                },
+                new SelectListItem
+                {
+                    Text = @"SYS_SHIPPING",
+                    Value = "SYS_SHIPPING"
+                }
+            };
+            GetStepListOfOtherSteps = proceduresService.GetProcedureStepOtherStepsList(procedureObjectId, "1618").Select(x => new SelectListItem
+            {
+                Text = x.Step_Text,
+                Value = x.Id.ToString()
+            }).OrderBy(o => o.Text).ToList();
         }
 
         public string StepId { get; set; }

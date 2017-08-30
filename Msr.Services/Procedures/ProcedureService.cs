@@ -14,9 +14,9 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Amazon.S3.Model;
-using Msr.Models.Common;
 using Msr.Services.Documents;
 using Msr.Services.Parts;
+using Msr.Models.Common;
 using Msr.Services.Procedures.Messages;
 using Msr.Services.Procedures.Procedures;
 using Msr.Services.Procedures.ViewModels;
@@ -63,6 +63,49 @@ namespace Msr.Services.Procedures
             var result = _dbContext.Database.SqlQuery<string>("EXEC Portal_GetProcedureRoles  @strID, @strNTLogin", objId, NTLogin).ToList();
 
             return result;
+        }
+
+        public List<SelectFile> GetProcedurelist()
+        {
+            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT ID as Value, STEP_TEXT as Show FROM A_V_PREPOP_QUICK WHERE CREATING_CO = '2' ").ToList();
+
+            return result;
+        }
+
+        public List<ProcedureStepOtherStepListView> GetProcedureStepOtherStepsList(string procObjectId, string curStepID)
+        {
+            var poid = new SqlParameter("@POID", procObjectId ?? "0");
+
+            var cStepId = new SqlParameter("@curStepID", curStepID ?? "0");
+            //need to be dynamic
+            var ntLogin = new SqlParameter("@strNTLogin", "1618");
+
+            var result = _dbContext.Database.SqlQuery<ProcedureStepOtherStepListView>("EXEC A_SP_PROCEDURE_STEP_GET_LIST_OF_OTHER_STEPS  @POID, @curStepID, @strNTLogin", poid, cStepId, ntLogin).ToList();
+
+            return result;
+        }
+
+        public string PrePopSave(string procObjId, string prevStepId, string ntlogin)
+        {
+            try
+            {
+                var saveProcedureStepPreProStepProcedure = new SaveProcedureStepPreProStepProcedure()
+                {
+                    ProcObjId = procObjId,
+                    Preproid = null,
+                    prevStepId = prevStepId,
+                    NtLogin = ntlogin
+                };
+                _dbContext.Database.ExecuteStoredProcedure(saveProcedureStepPreProStepProcedure);
+
+                return saveProcedureStepPreProStepProcedure.NewObjId;
+            }
+            catch (Exception ex)
+            {
+                var message = "Error occured:" + ex.Message;
+
+                return string.Empty;
+            }
         }
         public bool Create(SaveProcedureViewModel model)
         {
@@ -230,8 +273,8 @@ namespace Msr.Services.Procedures
             foreach (var stepData in result)
             {
                 stepData.Step_Text = stepData.Step_Text.Replace("<<bb>>", "<br/><h4>")
-                        .Replace("<</bb>>", "</h4>")
-                        .Replace("<<nl/>>", "<br/>");
+                    .Replace("<</bb>>", "</h4>")
+                    .Replace("<<nl/>>", "<br/>");
 
                 if (!string.IsNullOrWhiteSpace(stepData.Pre_Step))
                 {
@@ -246,7 +289,7 @@ namespace Msr.Services.Procedures
 
         public GetStepEditDataViewModel GetStepData(string stepId, string procedureObjectId, string loginId)
         {
-            GetStepEditDataViewModel getStepEditDataViewModel = new GetStepEditDataViewModel()
+            GetStepEditDataViewModel getStepEditDataViewModel = new GetStepEditDataViewModel(new ProceduresService(), procedureObjectId)
             {
                 StepId = stepId,
                 ProcObjId = procedureObjectId
@@ -388,7 +431,7 @@ namespace Msr.Services.Procedures
                 _dbContext.Database.ExecuteStoredProcedure(deleteReferenceFileProcedure);
 
                 var deleteProcedureRolesProcedure =
-                    new DeleteProcedureRolesProcedure() {ObjId = model.ObjectId, NTLogin = model.NTLogin};
+                    new DeleteProcedureRolesProcedure() { ObjId = model.ObjectId, NTLogin = model.NTLogin };
 
                 _dbContext.Database.ExecuteStoredProcedure(deleteProcedureRolesProcedure);
 
@@ -396,7 +439,7 @@ namespace Msr.Services.Procedures
 
                 var NTLogin = new SqlParameter("@strNTLogin", model.NTLogin);
 
-                var retVal = new SqlParameter("@Success", SqlDbType.Int) {Direction = ParameterDirection.ReturnValue};
+                var retVal = new SqlParameter("@Success", SqlDbType.Int) { Direction = ParameterDirection.ReturnValue };
 
                 string command =
                     string.Format("exec A_SP_OBJECT_UNLOCK_AND_DELETE  @objID, @strNTLogin");
@@ -420,6 +463,21 @@ namespace Msr.Services.Procedures
 
                 return false;
             }
+        }
+
+        public IQueryable<ProcedureMonitorsViewModel> GetMonitors(ProcedureMonitorsViewModel model)
+        {
+            var objId = new SqlParameter("@RELATED_OBJECT_ID", model.Related_Object_Id);
+            var ProStepId = new SqlParameter("@PROCEDURE_STEP_ID", model.Procedure_Step_Id);
+            var TaskId = new SqlParameter("@TASK_ID", DBNull.Value); //pending to manage null
+            var NTLogin = new SqlParameter("@strNTLogin", model.StrNTLogin);
+
+            var result = _dbContext.Database
+                .SqlQuery<ProcedureMonitorsViewModel>(
+                    "EXEC A_SP_MONITOR_TEMPLATES_GET_DATA_FOR_OBJECT @RELATED_OBJECT_ID, @PROCEDURE_STEP_ID, @TASK_ID, @strNTLogin",
+                    objId, ProStepId, TaskId, NTLogin).ToList().AsQueryable();
+
+            return result;
         }
     }
 }

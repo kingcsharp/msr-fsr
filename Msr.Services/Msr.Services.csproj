@@ -286,6 +286,7 @@
     <Compile Include="PrePro\Procedure\SaveUpdateApplicableObjectsProcedure.cs" />
     <Compile Include="PrePro\TheoryFileService.cs" />
     <Compile Include="PrePro\ViewModel\ApplicableObjectsView.cs" />
+    <Compile Include="PrePro\ViewModel\ProcedureMonitorsViewModel.cs" />
     <Compile Include="PrePro\ViewModel\ProcedureObjectViewModel.cs" />
     <Compile Include="PrePro\ViewModel\ProcedurePreProViewModel.cs" />
     <Compile Include="Procedures\Messages\GetReferenceProceduresForStepResult.cs" />
@@ -313,6 +314,7 @@
     <Compile Include="Procedures\Procedures\SaveFileProcedure.cs" />
     <Compile Include="Procedures\Procedures\SaveProcedureProcedure.cs" />
     <Compile Include="Procedures\Procedures\SaveProcedureRoleProcedure.cs" />
+    <Compile Include="Procedures\Procedures\SaveProcedureStepPreProStepProcedure.cs" />
     <Compile Include="Procedures\Procedures\UpdateOneStepProcedure.cs" />
     <Compile Include="Procedures\ViewModels\AssignProcedureViewModel.cs" />
     <Compile Include="Procedures\ViewModels\GetStepEditDataViewModel.cs" />

@@ -199,6 +199,7 @@
     <Compile Include="Controllers\PartTypesController.cs" />
     <Compile Include="Controllers\PreProSearchController.cs" />
     <Compile Include="Controllers\PrintOtherController.cs" />
+    <Compile Include="Controllers\ProcedureMonitorsController.cs" />
     <Compile Include="Controllers\ProceduresController.cs" />
     <Compile Include="Controllers\ProcedureVerbsController.cs" />
     <Compile Include="Controllers\ProductsActualPartsController.cs" />
@@ -595,6 +596,7 @@
     <Content Include="assets\js\grids\labors-step.js" />
     <Content Include="assets\js\grids\PrePro.js" />
     <Content Include="assets\js\grids\PreProTheoryDiolag.js" />
+    <Content Include="assets\js\grids\procedure-monitors.js" />
     <Content Include="assets\js\grids\procedures-dialog.js" />
     <Content Include="assets\js\grids\productsactualpart.js" />
     <Content Include="assets\js\grids\people.js" />
@@ -1088,6 +1090,8 @@
     <Content Include="Views\Shared\_DocView.cshtml" />
     <Content Include="Views\PreProSearch\ApplicableObjects.cshtml" />
     <Content Include="Views\Delivery\Index.cshtml" />
+    <Content Include="Views\Procedures\CreateStep.cshtml" />
+    <Content Include="Views\ProcedureMonitors\Monitors.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

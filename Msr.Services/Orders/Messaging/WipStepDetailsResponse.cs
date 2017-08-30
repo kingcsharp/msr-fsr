@@ -2,6 +2,7 @@
 using Msr.Models.Tasks;
 using Msr.Services.Orders.Procedures;
 using Msr.Services.Orders.ViewModels;
+using Msr.Services.Users.Messages;
 
 namespace Msr.Services.Orders.Messaging
 {
@@ -24,5 +25,7 @@ namespace Msr.Services.Orders.Messaging
         public List<GetReferenceFiles> ReferenceFiles { get; set; }
         public List<GetReferenceTheories> ReferenceTheories { get; set; }
         public TaskLog TaskRunningTimer { get; set; }
+        public LoggedUserIdResult LoggedUserIdResult { get; set; }
+
     }
 }

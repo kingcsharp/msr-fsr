@@ -1,6 +1,6 @@
 ﻿using EntityFrameworkExtras.EF6;
 using Msr.Models;
-using Msr.Models.Comman;
+using Msr.Models.Common;
 using Msr.Repositories;
 using Msr.Services.Parts.Procedures;
 using Msr.Services.PrePro.Procedure;
@@ -71,6 +71,17 @@ namespace Msr.Services.PrePro
         public List<SelectFile> GetApprovedObjectList()
         {
             var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT DISTINCT TOP 500 OBJ_DESC AS Name,ID AS Id FROM A_V_APPROVED_OBJECTS WHERE CREATING_CO = '2' AND  OBJ_TABLE = 'A_ROLES_HISTORY'    AND (( OBJ_DESC LIKE '%a%' AND OBJ_DESC LIKE '%%' ) )    ORDER BY OBJ_DESC").ToList();
+
+            return result;
+        }
+        public List<LaborObjectsView> GetProcedureStepLaborList(string id, string ntlogin)
+        {
+            var objId = new SqlParameter("@ID", id ?? "0");
+
+            //need to be dynamic
+            var NTLogin = new SqlParameter("@strNTLogin", ntlogin);
+
+            var result = _dbContext.Database.SqlQuery<LaborObjectsView>("EXEC Portal_GetProcedureStepLabors @ID, @strNTLogin", objId, NTLogin).ToList();
 
             return result;
         }
@@ -218,13 +229,13 @@ namespace Msr.Services.PrePro
         }
         public List<SelectFile> GetApprovedVerbsByCreatingCo(string creatingCo)
         {
-            var result = _dbContext.Database.SqlQuery<SelectFile>("SET QUOTED_IDENTIFIER OFF SELECT NAME AS Name, ID AS Id, CREATING_CO as CreatingCo FROM A_APPROVED_VERBS where CREATING_CO='" + creatingCo + "'").ToList();
+            var result = _dbContext.Database.SqlQuery<SelectFile>("SET QUOTED_IDENTIFIER OFF SELECT NAME AS Show, ID AS Value, CREATING_CO as CreatingCo FROM A_APPROVED_VERBS where CREATING_CO='" + creatingCo + "'").ToList();
 
             return result;
         }
         public List<SelectFile> GetReferenceObjectsByCreatingCo(string creatingCo)
         {
-            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT ID as Id, OBJ_TABLE as Name, CREATING_CO as CreatingCo FROM A_V_APPROVED_OBJECTS where CREATING_CO='" + creatingCo + "'").ToList();
+            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT ID as Value, OBJ_TABLE as Show, CREATING_CO as CreatingCo FROM A_V_APPROVED_OBJECTS where CREATING_CO='" + creatingCo + "'").ToList();
 
             return result;
         }
@@ -295,36 +306,36 @@ namespace Msr.Services.PrePro
         }
 
         public List<SelectFile> GetApplicableObjectsByCreatingCo(string creatingCo)
-            {
-                var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT ID as Id, OBJ_TABLE as Name FROM A_V_APPROVED_OBJECTS where CREATING_CO='" + creatingCo + "'").ToList();
+        {
+            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT ID as Id, OBJ_TABLE as Name FROM A_V_APPROVED_OBJECTS where CREATING_CO='" + creatingCo + "'").ToList();
 
-                return result;
+            return result;
+        }
+        public bool UpdateApplicableObjects(ApplicableObjectsView model)
+        {
+            try
+            {
+                var saveUpdateApplicableObjectsProcedure = new SaveUpdateApplicableObjectsProcedure()
+                {
+
+                    StepId = model.StepId,
+                    LinkId = model.LinkId,
+                    Quantity = model.Quantity,
+                    ObjectId = model.ObjectId,
+                    NTLogin = model.NTLogin
+                };
+
+                _dbContext.Database.ExecuteStoredProcedure(saveUpdateApplicableObjectsProcedure);
+
+                return true;
             }
-            public bool UpdateApplicableObjects(ApplicableObjectsView model)
+            catch (Exception ex)
             {
-                try
-                {
-                    var saveUpdateApplicableObjectsProcedure = new SaveUpdateApplicableObjectsProcedure()
-                    {
+                var message = "Error occured:" + ex.Message;
 
-                        StepId = model.StepId,
-                        LinkId = model.LinkId,
-                        Quantity = model.Quantity,
-                        ObjectId = model.ObjectId,
-                        NTLogin = model.NTLogin
-                    };
-
-                    _dbContext.Database.ExecuteStoredProcedure(saveUpdateApplicableObjectsProcedure);
-
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    var message = "Error occured:" + ex.Message;
-
-                    return false;
-                }
+                return false;
             }
         }
     }
+}
 

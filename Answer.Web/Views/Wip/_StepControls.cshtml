@@ -30,15 +30,7 @@
         {
             <button class="btn btn-primary btn-lg print-btn pull-left start-timer-btn" id="start-step"><i class="glyphicon glyphicon-step-forward"></i> Start</button>
         }
-        else
-        {
-            <button class="btn btn-primary btn-lg print-btn pull-left show-timer-btn" id="show-step"><i class="glyphicon glyphicon-step-forward"></i> Show</button>
-            if (Model.TaskEditDataResult.Assignee != User.Identity.GetUserId())
-            {
-                <button class="btn btn-primary btn-lg print-btn pull-left show-timer-btn" id="assume-step"><i class="glyphicon glyphicon-step-forward"></i> Take over this task</button>
-            }
-        }
-
+      
         <button class="btn btn-warning btn-lg print-btn pull-left pause-timer-btn hidden" id="pause-step"><i class="glyphicon glyphicon-pause"></i> Pause</button>
         <button class="btn btn-warning btn-lg print-btn pull-left resume-timer-btn hidden" id="resume-step"><i class="glyphicon glyphicon-step-forward"></i> Resume</button>
         @if (Model.TaskRunningTimer != null && Model.TaskRunningTimer.EndTime == null)
@@ -51,6 +43,10 @@
         }
     </div>
     <div class="col-sm-2">
+        @if (string.IsNullOrWhiteSpace(Model.TaskEditDataResult.RequesteeId) && Model.TaskEditDataResult.RequesteeId != Model.LoggedUserIdResult.Id)
+        {
+        <button class="btn btn-warning btn-lg print-btn pull-left show-timer-btn" id="assume-step"><i class="glyphicon glyphicon-step-forward"></i> Take over this task</button>
+        }
         <button data-toggle="modal" data-id="@ViewBag.FillId" data-target="#ncrModal" class="btn btn-danger btn-lg print-btn pull-right" id="ncr-button"><i class="fa fa-plus-square"></i> NCR</button>
     </div>
 </div>

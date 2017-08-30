@@ -62,8 +62,8 @@ namespace Msr.Services.PrePro.ViewModel
             ApplicableObjectsList.AddRange(preProServices.GetApplicableObjectsByCreatingCo(creatingCo).Select(
                 x => new SelectListItem
                 {
-                    Text = x.Name,
-                    Value = x.Id.ToString()
+                    Text = x.Show,
+                    Value = x.Value.ToString()
                 }).OrderBy(o => o.Text).ToList());
 
         }

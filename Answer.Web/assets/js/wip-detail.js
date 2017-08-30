@@ -255,7 +255,15 @@ $(function () {
         loadStep(this);
     });
 
-    loadStep($('#carousel ul.slides li.step').first());
+    var stepInProgress = $('#carousel ul.slides li.step').first(".step-inprogress");
+
+    if (stepInProgress !== null) {
+        loadStep(stepInProgress);
+    } else {
+        loadStep($('#carousel ul.slides li.step').first());
+    }
+
+    
 
     $('#relatedDocument').on('hidden.bs.modal', function (event) {
         $(this).data('bs.modal', null);

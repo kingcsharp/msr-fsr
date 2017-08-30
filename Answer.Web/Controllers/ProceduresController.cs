@@ -246,7 +246,7 @@ namespace Answer.Web.Controllers
             model.Setup(new ProceduresService(), new RoleService(), new ProcedureVerbsService(), GetCurrentUser().Id);
 
             return View("Edit", model);
-        
+
         }
 
         public ActionResult View(string id)
@@ -322,7 +322,25 @@ namespace Answer.Web.Controllers
         {
             var viewModel = _proceduresService.GetStepsData(id, "1618");
             ViewBag.ProcObjectId = id;
+
+            ViewBag.Procedure = new SelectList(_proceduresService.GetProcedurelist(), "Value", "Show");
+
             return View(viewModel);
+        }
+        public ActionResult SaveStep(string ProcObjectId, string Procedure)
+        {
+            var id = _proceduresService.PrePopSave(ProcObjectId, Procedure, "1618");
+
+            ViewBag.Id = id;
+
+            return RedirectToAction("CreateStep", new { procedureObjectId = ProcObjectId, id = id });
+        }
+
+        public ActionResult CreateStep(string procedureObjectId, string NewObjectId)
+        {
+            var getStepEditDataViewModel = new GetStepEditDataViewModel(new ProceduresService(), procedureObjectId);
+
+            return View(getStepEditDataViewModel);
         }
 
         public ActionResult EditStep(string stepId, string procedureObjectId)

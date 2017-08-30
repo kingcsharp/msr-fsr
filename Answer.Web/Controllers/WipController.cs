@@ -316,9 +316,11 @@ namespace Answer.Web.Controllers
         {
             ViewBag.FillId = fillId;
 
-            var loggedUserId = GetCurrentUser().Id;
+            var loggedUserId = GetCurrentUser();
 
-            var response = _orderService.GetWipStepDetails(stepId, fillId, loggedUserId, phStepId);
+            var response = _orderService.GetWipStepDetails(stepId, fillId, loggedUserId.Id, phStepId);
+
+            response.LoggedUserIdResult = loggedUserId;
 
             foreach (var monitorTemplate in response.MonitorTemplateResult)
             {

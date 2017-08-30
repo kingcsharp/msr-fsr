@@ -118,6 +118,9 @@
                                 <input type="submit" id="rollBackButton" value="Update" name="command" class="btn btn-success"/>
                                 <a href="@Url.Action("Steps", "Procedures", new {Id = Model.ObjectId })" class="btn btn-info">Steps</a>
                                 <a href="@Url.Action("Index", "Procedures")" class="btn btn-warning">Cancel</a>
+                                <a href="@Url.Action("Monitors/" + Model.ObjectId, "ProcedureMonitors")" class="btn btn-info">
+                                    Monitors
+                                </a>
                             </div>
                         </div>
                     </div>
