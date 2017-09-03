@@ -826,6 +826,28 @@ namespace Msr.Services.Orders
             }
         }
 
+        public string AddProcedureAsSubTask(string objId, string parentId, string login)
+        {
+            
+            using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
+            {
+                var p = new DynamicParameters();
+
+                p.Add("@newObjID", dbType: DbType.String, direction: ParameterDirection.Output, size: 50);
+                p.Add("@messages", dbType: DbType.String, direction: ParameterDirection.Output, size: 500);
+                p.Add("@PARENT_TASK_ID", parentId, DbType.String, ParameterDirection.Input, size: 50);
+                p.Add("@PROC_HIST_ID", objId, DbType.String, ParameterDirection.Input, size: 50);
+                p.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input, size: 50);
+
+                conn.Query<StepStartTaskResult>("A_SP_TASK_ADD_PROCEDURE_AS_CHILD_TASK", p, commandType: CommandType.StoredProcedure);
+
+                string newObjID = p.Get<string>("newObjID");
+                string messages = p.Get<string>("messages");
+
+                return messages;
+            }
+        }
+
         private void FormatHtml(TsrDetailsResponse response)
         {
             foreach (var taskResult in response.TsrTaskResults)

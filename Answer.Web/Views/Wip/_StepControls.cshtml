@@ -25,7 +25,7 @@
     <div id="timer-input" class="col-sm-4 timer-input">
         <input type="text" name="timer" class="form-control timer input-lg" placeholder="@timespan" width="120">
     </div>
-    <div class="col-sm-6">
+    <div class="col-sm-5">
         @if (Model.TaskEditDataResult.Status != "ACCEPTED" && Model.TaskRunningTimer == null)
         {
             <button class="btn btn-primary btn-lg print-btn pull-left start-timer-btn" id="start-step"><i class="glyphicon glyphicon-step-forward"></i> Start</button>
@@ -37,17 +37,18 @@
         {
             <button class="btn btn-primary btn-lg print-btn pull-left " id="done-step"><i class="glyphicon glyphicon-stop"></i> Done</button>
         }
-        @if (Model.TaskEditDataResult.Status == "ACCEPTED" && Model.TaskEditDataResult.Status == "REQUESTED")
-        {
-            <button class="btn btn-primary btn-lg print-btn pull-left" id="done-step">Add Procedure</button>
-        }
+      
     </div>
-    <div class="col-sm-2">
+    <div class="col-sm-3">
         @if (string.IsNullOrWhiteSpace(Model.TaskEditDataResult.RequesteeId) && Model.TaskEditDataResult.RequesteeId != Model.LoggedUserIdResult.Id)
         {
         <button class="btn btn-warning btn-lg print-btn pull-left show-timer-btn" id="assume-step"><i class="glyphicon glyphicon-step-forward"></i> Take over this task</button>
         }
-        <button data-toggle="modal" data-id="@ViewBag.FillId" data-target="#ncrModal" class="btn btn-danger btn-lg print-btn pull-right" id="ncr-button"><i class="fa fa-plus-square"></i> NCR</button>
+        
+        @if (Model.TaskEditDataResult.Status == "ACCEPTED" || Model.TaskEditDataResult.Status == "REQUESTED")
+        {
+            <button data-toggle="modal" data-fill-id="@ViewBag.FillId" data-id="@Model.StepId" data-target="#addNcrModal" class="btn btn-danger btn-lg print-btn pull-right"><i class="fa fa-plus-square"></i> Add Procedure</button>
+        }  
     </div>
 </div>
 
@@ -65,18 +66,19 @@
         StepAssumeClick();
     });
 
-    $('#ncrModal').on('hidden.bs.modal', function(event) {
+    $('#addNcrModal').on('hidden.bs.modal', function(event) {
         $(this).data('bs.modal', null);
     });
 
-    $('#ncrModal').on('show.bs.modal', function(event) {
+    $('#addNcrModal').on('show.bs.modal', function(event) {
         var button = $(event.relatedTarget);
         var id = button.data('id');
+        var fillId = button.data('fill-id');
         var modal = $(this);
 
         $.ajax({
             type: "GET",
-            url: '/wip/getncrmodel?id=' + id,
+            url: '/Wip/AddNcrModel?parentId=' + id + '&fillid='+fillId,
             dataType: 'html',
             success: function(data) {
                 modal.find('.modal-body').html(data);

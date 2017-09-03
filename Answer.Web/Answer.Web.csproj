@@ -593,6 +593,7 @@
     <Content Include="assets\js\grids\buyer_grid.js" />
     <Content Include="assets\js\grids\comman.js" />
     <Content Include="assets\js\grids\delivery.js" />
+    <Content Include="assets\js\grids\procedure-select.js" />
     <Content Include="assets\js\grids\labors-step.js" />
     <Content Include="assets\js\grids\PrePro.js" />
     <Content Include="assets\js\grids\PreProTheoryDiolag.js" />
@@ -1092,6 +1093,7 @@
     <Content Include="Views\Delivery\Index.cshtml" />
     <Content Include="Views\Procedures\CreateStep.cshtml" />
     <Content Include="Views\ProcedureMonitors\Monitors.cshtml" />
+    <Content Include="Views\Wip\_AddNcrModel.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

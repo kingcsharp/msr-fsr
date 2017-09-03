@@ -251,6 +251,7 @@
     <Compile Include="Orders\TaskService.cs" />
     <Compile Include="Orders\PeopleService.cs" />
     <Compile Include="Companies\CompanyService.cs" />
+    <Compile Include="Orders\ViewModels\AddNcrViewModel.cs" />
     <Compile Include="Orders\ViewModels\ImageViewModel.cs" />
     <Compile Include="Orders\ViewModels\SaveWorkItemImageViewModel.cs" />
     <Compile Include="Orders\ViewModels\SaveWorkOrderViewModel.cs" />
@@ -301,6 +302,7 @@
     <Compile Include="People\Procedures\SavePeopleProcedure.cs" />
     <Compile Include="People\ViewModels\EditPeopleViewModel.cs" />
     <Compile Include="People\ViewModels\AddPeopleViewModel.cs" />
+    <Compile Include="Procedures\Messages\ProcedureSelectResult.cs" />
     <Compile Include="Procedures\ProcedureService.cs" />
     <Compile Include="Procedures\Procedures\GetPrecedingStepsProcedure.cs" />
     <Compile Include="Procedures\Procedures\GetReferenceProceduresForStepProcedure.cs" />

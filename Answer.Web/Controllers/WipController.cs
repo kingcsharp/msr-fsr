@@ -6,12 +6,16 @@ using System.Web.Mvc;
 using Answer.Web.ViewModel.Wip;
 using Microsoft.AspNet.Identity;
 using Msr.Models.Orders;
+using Msr.Models.Parts;
 using Msr.Services.jqGrid;
 using Msr.Services.Notes;
 using Msr.Services.Orders;
 using Msr.Services.Orders.Messaging;
 using Msr.Services.Orders.Procedures;
 using Msr.Services.Orders.ViewModels;
+using Msr.Services.PartTypes;
+using Msr.Services.Procedures;
+using Msr.Services.Procedures.Messages;
 using Msr.Web.ViewModel.Engineering;
 
 namespace Answer.Web.Controllers
@@ -21,11 +25,13 @@ namespace Answer.Web.Controllers
     {
         private OrderService _orderService;
         private TaskService _taskService;
+        private ProceduresService _proceduresService;
 
         public WipController()
         {
             _orderService = new OrderService();
             _taskService = new TaskService();
+            _proceduresService = new ProceduresService();
         }
 
         public ActionResult Index()
@@ -160,8 +166,6 @@ namespace Answer.Web.Controllers
                 rows = results
             };
 
-            Session["WIP_Nav"] = string.Join(",", results.Select(x => x.FillId).ToList());
-
             return Json(json, JsonRequestBehavior.AllowGet);
         }
 
@@ -179,6 +183,80 @@ namespace Answer.Web.Controllers
             ncrDetails.MonitorItem = response.MonitorItem.Where(x => x.Description.Contains("Nonconformity") || x.Description.Contains("NCR")).ToList();
 
             return PartialView("_NcrModel", ncrDetails);
+        }
+
+        public ActionResult AddNcrModel(string parentId, string fillId)
+        {
+            var vm  = new AddNcrViewModel();
+            vm.ParentId = parentId;
+            vm.FillId = fillId;
+
+            return PartialView("_AddNcrModel", vm);
+        }
+
+        public ActionResult AddNcrModelData(JqGridParam param)
+        {
+            var loggedUser = GetCurrentUser();
+
+            var totalRows = _proceduresService.GetProcedureSelect(loggedUser.Id, "", loggedUser.Company, "");
+
+            if (param.where != null && param.where.rules.Any())
+            {
+                foreach (var rule in param.where.rules)
+                {
+                    if (rule.field == nameof(ProcedureSelectResult.Name))
+                    {
+                        totalRows = totalRows.Where(x => x.Name == rule.data.ToLower());
+                    }
+                    else if (rule.field == nameof(ProcedureSelectResult.Creating_Co_Name))
+                    {
+                        totalRows = totalRows.Where(x => x.Creating_Co_Name.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(ProcedureSelectResult.Root))
+                    {
+                        totalRows = totalRows.Where(x => x.Root.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(ProcedureSelectResult.Verb_Name))
+                    {
+                        totalRows = totalRows.Where(x => x.Verb_Name.ToLower().Contains(rule.data.ToLower()));
+                    }
+                }
+            }
+
+            var orderBy = nameof(ProcedureSelectResult.Name);
+
+            if (!string.IsNullOrWhiteSpace(param.sortColumn))
+            {
+                orderBy = param.sortColumn;
+            }
+
+            if (param.sortOrder == "desc")
+            {
+                totalRows = totalRows.OrderByDescending(orderBy);
+            }
+            else
+            {
+                totalRows = totalRows.OrderBy(orderBy);
+            }
+
+            var totalRecords = totalRows.Count();
+            totalRows = totalRows.Skip(param.pageSize * (param.pageIndex - 1));
+            totalRows = totalRows.Take(param.pageSize);
+
+            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)param.pageSize);
+
+            var results = totalRows.ToList();
+
+            var json = new
+            {
+                total = totalPages,
+                page = param.pageIndex,
+                records = totalRecords,
+                rows = results
+            };
+
+            return Json(json, JsonRequestBehavior.AllowGet);
+
         }
 
         public ActionResult GetPhotsModel(string id)
@@ -310,8 +388,6 @@ namespace Answer.Web.Controllers
             return Json(new { success = false, responseText = "Something went wrong." }, JsonRequestBehavior.AllowGet);
         }
 
-
-
         public ActionResult GetWipStepDetails(int stepId, int fillId, int? phStepId)
         {
             ViewBag.FillId = fillId;
@@ -335,7 +411,6 @@ namespace Answer.Web.Controllers
 
             return PartialView("_InitialInspection", response);
         }
-
 
         [HttpPost]
         public ActionResult UpdateStepMonitor(MonitorTemplateResult monitorTemplate)
@@ -469,6 +544,13 @@ namespace Answer.Web.Controllers
         {
             var viewModel = _orderService.SearchNcrs(partId, GetCurrentUser().Id);
             return View(viewModel);
+        }
+
+        public ActionResult AddProcedureToTask(string objId, string parentId, string fillId)
+        {
+            _orderService.AddProcedureAsSubTask(objId, parentId, GetCurrentUser().Id);
+
+            return RedirectToAction("Details", new {id = fillId});
         }
 
         private List<DocumentView> GetDocViewModel(List<DocumentView> docs, OrderService orderService, int width)

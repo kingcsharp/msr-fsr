@@ -1,19 +1,14 @@
 ﻿using EntityFrameworkExtras.EF6;
 using Msr.Models.Procedures;
 using Msr.Repositories;
-using Msr.Services.Orders.Procedures;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Web.Mvc;
-using Amazon.S3.Model;
 using Msr.Services.Documents;
 using Msr.Services.Parts;
 using Msr.Models.Common;
@@ -479,5 +474,16 @@ namespace Msr.Services.Procedures
 
             return result;
         }
+
+        public IQueryable<ProcedureSelectResult> GetProcedureSelect(string logiId, string verbName, string co, string root)
+        {
+            var sql = $"EXEC A_SP_PROCEDURES_SELECT ' (NAME LIKE ''%%'' OR NAME is NULL ) AND  (ROOT LIKE ''%{root}%'' OR ROOT is NULL ) AND" +
+                $"  (CREATING_CO LIKE ''%{co}%'' OR CREATING_CO is NULL ) AND (( VERB_NAME LIKE ''%{verbName}%'' ) ) AND STATUS LIKE ''APPROVED%''',NULL,' ORDER BY NAME','{logiId}'";
+
+            var result = _dbContext.Database.SqlQuery<ProcedureSelectResult>(sql).ToList().AsQueryable();
+
+            return result;
+        }
+
     }
 }
