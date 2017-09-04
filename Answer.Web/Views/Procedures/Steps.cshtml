@@ -2,6 +2,7 @@
 @{
     ViewBag.Title = "Steps";
 }
+
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="row">
@@ -9,17 +10,22 @@
                 Steps
             </h2>
             <div class="panel-body bio-graph-info">
+                
                 <div class="form-group">
                     <label class="control-label col-md-2" for="Title" style="margin-left: -15px;">Procedures:</label>
                     <div class="col-md-3">
-                        @using (Html.BeginForm("SaveStep", "procedures", FormMethod.Post, new { @class = "form form-horizontal" }))
+                        @using (Html.BeginForm("SaveStep", "procedures", FormMethod.Post, new {@class = "form form-horizontal"}))
                         {
-                            <input type="hidden" name="ProcObjectId" value="@ViewBag.ProcObjectId" />
-                            @Html.DropDownList("Procedure", (IEnumerable<SelectListItem>)ViewBag.Accounts, null, new { @class = "form-control", name = "Procedure" })
+                            <input type="hidden" name="ProcObjectId" value="@ViewBag.ProcObjectId"/>
+                            @Html.DropDownList("Procedure", (IEnumerable<SelectListItem>) ViewBag.Accounts, null, new {@class = "form-control", name = "Procedure"})
                             <button type="submit" class="btn btn-xs btn-success">Add New Step</button>
-
                         }
+
+                        <div>
+                            <a href="@Url.Action("ReorderSteps", "Procedures", new { procedureObjectId = ViewBag.ProcObjectId })">ReorderSteps</a>
+                        </div>
                     </div>
+
                 </div>
             </div>
             <div class="col-lg-12">

@@ -103,10 +103,11 @@
                                     </script>
                                     <label class="control-label col-md-2" for="Title" style="margin-left: -15px;">Header Comments (notes,warning, etc.):</label>
                                     <tr>
+                                        
                                         <td class="form" colspan="" style="">
-                                            @Html.TextAreaFor(model => model.Comments, new { htmlAttributes = new { onBlur = "checkMaxSize(this, 4000);;lastTextArea = 'document.editForm.Comments';", name = "Comments", rows = "10", cols = "80", @class = "text-formatter", style = "height:150px;" } })
-                                            
+                                            @Html.TextAreaFor(model => model.Comments, new { onBlur = "checkMaxSize(this, 4000);;lastTextArea = 'document.editForm.Comments';", name = "Comments", rows = "10", cols = "80", @class = "text-formatter", style = "height:150px;" })
                                         </td>
+                             
                                         <td>
                                             <div style="width: 3%; float: right;"></div>
                                         </td>

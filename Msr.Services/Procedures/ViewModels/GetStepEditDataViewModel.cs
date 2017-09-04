@@ -2,12 +2,18 @@
 using System.Linq;
 using System.Web.Mvc;
 using Msr.Services.Procedures.Messages;
+using Msr.Services.ProcedureVerbs;
 
 namespace Msr.Services.Procedures.ViewModels
 {
     public class GetStepEditDataViewModel
     {
-        public GetStepEditDataViewModel(ProceduresService proceduresService, string procedureObjectId)
+        public GetStepEditDataViewModel()
+        {
+
+        }
+
+        public GetStepEditDataViewModel(ProceduresService proceduresService, ProcedureVerbsService procedureVerbsService, string procedureObjectId)
         {
             GetStepListOfOtherSteps = new List<SelectListItem>();
             ReferenceProcedures = new List<SelectListItem>();
@@ -15,6 +21,8 @@ namespace Msr.Services.Procedures.ViewModels
             ListReferenceTheories = new List<SelectListItem>();
             ListReferenceObjects = new List<SelectListItem>();
             ListReferenceFiles = new List<SelectListItem>();
+            GetStepEditData = new GetStepEditDataResult();
+            ReferenceFiles = new List<string>();
 
             BaseCounterList = new List<SelectListItem>()
             {
@@ -150,10 +158,24 @@ namespace Msr.Services.Procedures.ViewModels
                 Text = x.Step_Text,
                 Value = x.Id.ToString()
             }).OrderBy(o => o.Text).ToList();
+
+            ReferenceProcedures = proceduresService.GetProceduresQueryable().Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.ObjectId.ToString()
+            }).OrderBy(o => o.Text).ToList();
+
+            ReferenceProcedureTypes = procedureVerbsService.GetProceduresVerbs().Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.ObjectId.ToString()
+            }).OrderBy(o => o.Text).ToList();
         }
 
         public string StepId { get; set; }
         public string ProcObjId { get; set; }
+        public string NumTestQuestion { get; set; }
+        public string NtLogin { get; set; }
         public GetStepEditDataResult GetStepEditData { get; set; }
         public List<SelectListItem> GetStepListOfOtherSteps { get; set; }
         public List<GetStepLaborResult> GetStepLabors { get; set; }

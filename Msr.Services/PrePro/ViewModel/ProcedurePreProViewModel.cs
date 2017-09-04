@@ -1,19 +1,8 @@
-﻿using Msr.Services.Documents;
-using System;
-using Msr.Services.Documents.Procedures;
-using Msr.Services.Documents.ViewModels;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Mvc;
-using Msr.Models;
 using Msr.Models.PrePro;
-using Msr.Services.ProcedureVerbs;
-using Msr.Services.TheoryParagraph;
 
 namespace Msr.Services.PrePro.ViewModel
 {

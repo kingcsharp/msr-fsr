@@ -10,6 +10,8 @@ using Msr.Services.Documents;
 using Msr.Services.Orders;
 using Msr.Services.Orders.ViewModels;
 using Msr.Services.Parts;
+using Msr.Services.Procedures;
+using Msr.Services.PrePro;
 using Msr.Services.S3;
 using Msr.Web.Controllers;
 
@@ -127,6 +129,17 @@ namespace Answer.Web.Controllers
             var docService = new DocumentFilesService();
 
             var resultsFiles = docService.GetSelectedRefFiles(callBackId, type, GetCurrentUser().Id).AsQueryable();
+
+            return PartialView("_DocView", resultsFiles);
+        }
+
+        public ActionResult GetFileProcedureView(string callBackId)
+        {
+            ViewBag.CallBackId = callBackId;
+
+            var docService = new DocumentFilesService();
+
+            var resultsFiles = docService.GetProcedureSelectedRefFiles(callBackId, GetCurrentUser().Id).AsQueryable();
 
             return PartialView("_DocView", resultsFiles);
         }

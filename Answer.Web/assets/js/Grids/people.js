@@ -2,7 +2,7 @@
 
     $.jgrid.defaults.styleUI = 'Bootstrap';
 
-    Smooch.init({ appToken: '9wxoxi2wbcbymhjf1ex1a0dux' });
+    
 
     $("#jqGrid").jqGrid({
         url: url,
@@ -323,7 +323,7 @@
                     var callBackName = $(this).data('call-back-name');
 
                     eModal.confirm(
-                            'Are You Sure? Loking prevents others from editing.Cheaking out creats the next revision for you to edit ' + callBackName + ' ?','Confirmation Edit')
+                            'Are You Sure? Locking prevents others from editing. Checking out create the next revision for you to edit ' + callBackName + ' ?','Confirmation Edit')
                         .then(confirmCallback, optionalCancelCallback);
 
                     function confirmCallback() {

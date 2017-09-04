@@ -2810,5 +2810,16 @@
     <Build Include="dbo\Views\Portal\Portal_ProcedureObjectLaborStepsView.sql" />
     <Build Include="dbo\Views\Portal\Portal_ProceduresVerbsView.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_GetProcedureStepLabors.sql" />
+    <Build Include="dbo\Views\Portal\Portal_MonitorView.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_ProcedureStepGetRefProceduresView.sql" />
+    <Build Include="dbo\Views\Portal\Portal_ViewHistryActualPartDetails.sql" />
+    <Build Include="dbo\Views\Portal\Portal_ViewHistryDetails.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_HideApprovalStage.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_PEOPLE_UPDATE_ONE_PERSON.sql">
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </Build>
+    <Build Include="dbo\Stored Procedures\Portal\Portal_PeopleReassignBoss.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_ProcedureStepGetRefFilesDialog.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_SpFilesShowForObject.sql" />
   </ItemGroup>
 </Project>

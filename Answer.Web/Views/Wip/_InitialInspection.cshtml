@@ -1,4 +1,5 @@
-﻿@using Msr.Services.Orders.Procedures
+﻿@using Msr.Models.Tasks
+@using Msr.Services.Orders.Procedures
 @using Msr.Services.Orders.Procedures
 @model Msr.Services.Orders.Messaging.WipStepDetailsResponse
 
@@ -12,32 +13,69 @@
     var monitorsId = "monitors" + Model.StepId;
     var filesId = "files" + Model.StepId;
 }
-<div id="step-tabs" class="col-sm-12">
-    <ul class="nav nav-tabs">
-        <li class="active"><a data-toggle="tab" href="#@descriptionId">Task Description</a></li>
-        <li><a data-toggle="tab" href="#@monitorsId">Monitors</a></li>
-        <li><a data-toggle="tab" href="#@filesId">Files</a></li>
-    </ul>
-    <div class="tab-content">
-        <div id="@descriptionId" class="tab-pane fade task-window in active">
-            @Html.Partial("_InitialInspectionDetail", Model)
-        </div>
 
-        <div id="@monitorsId" class="tab-pane fade task-window">
-            
-            @*@if (Model.TaskEditDataResult.HasMonitor == true)*@
-            
+@{
+    var timespan = "0 Hours";
+    if (Model.TaskRunningTimer != null)
+    {
+        var timer = new TimeSpan();
+
+        if (Model.TaskRunningTimer.StatusId == TimerStatuseConstants.Stopped)
+        {
+            timer = TimeSpan.FromHours(Model.TaskRunningTimer.TotalTime);
+        }        
+
+        var timerInSeconds = timer.TotalSeconds;
+        if (timerInSeconds <= 60)
+        {
+            timespan = timer.Seconds + " sec";
+        }
+        else if (timer.TotalMinutes <= 60)
+        {
+            timespan = timer.Minutes + " minutes " + timer.Seconds + " sec";
+        }
+        else
+        {
+            timespan = timer.Hours + " hours " + timer.Minutes + " minutes " + timer.Seconds + " sec";
+        }
+    }
+}
+
+<div class="row">
+    @if (Model.TaskRunningTimer !=null && Model.TaskRunningTimer.StatusId == TimerStatuseConstants.Stopped)
+    {
+        <div id="timer-input" class="col-sm-4 timer-input">
+            <input type="text" name="timer" class="form-control timer input-lg" placeholder="@timespan" width="120">
+        </div>
+    }
+    <div id="step-tabs" class="col-sm-12">
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#@descriptionId">Task Description</a></li>
+            <li><a data-toggle="tab" href="#@monitorsId">Monitors</a></li>
+            <li><a data-toggle="tab" href="#@filesId">Files</a></li>
+        </ul>
+        <div class="tab-content">
+
+            <div id="@descriptionId" class="tab-pane fade task-window in active">
+                @Html.Partial("_InitialInspectionDetail", Model)
+            </div>
+
+            <div id="@monitorsId" class="tab-pane fade task-window">
+
+                @*@if (Model.TaskEditDataResult.HasMonitor == true)*@
+
                 @Html.Partial("_MonitorsTab", Model.MonitorTemplateResult)
-            
-            @*else
+
+                @*else
             {
                 Html.RenderPartial("_AddMonitors", new MonitorTemplateResult {Step_Id = Model.StepId.ToString()});
             }*@
-            
-        </div>
 
-        <div id="@filesId" class="tab-pane task-window fade">
-            @Html.Partial("_FilesTab",Model.Images)
+            </div>
+
+            <div id="@filesId" class="tab-pane task-window fade">
+                @Html.Partial("_FilesTab", Model.Images)
+            </div>
         </div>
     </div>
 </div>

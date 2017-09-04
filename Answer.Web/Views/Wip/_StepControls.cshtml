@@ -1,11 +1,23 @@
 ﻿@using Microsoft.AspNet.Identity
+@using Msr.Models.Tasks
 @model Msr.Services.Orders.Messaging.WipStepDetailsResponse
-@*getButtons(myRS)*@
+
 @{
     var timespan = "0 Hours";
     if (Model.TaskRunningTimer != null)
     {
-        TimeSpan timer = Model.TaskRunningTimer.EndTime?.Subtract(Model.TaskRunningTimer.StartTime) ?? DateTime.Now.Subtract(Model.TaskRunningTimer.StartTime);
+        TimeSpan timer = new TimeSpan();
+
+        if (Model.TaskRunningTimer.StatusId == TimerStatuseConstants.InProgress)
+        {
+            timer = Model.TaskRunningTimer.EndTime?.Subtract(Model.TaskRunningTimer.StartTime) ?? DateTime.Now.Subtract(Model.TaskRunningTimer.StartTime);
+            timer = timer + TimeSpan.FromHours(Model.TaskRunningTimer.TotalTime);
+        }
+        else
+        {
+            timer = TimeSpan.FromHours(Model.TaskRunningTimer.TotalTime);
+        }
+
         var timerInSeconds = timer.TotalSeconds;
         if (timerInSeconds <= 60)
         {
@@ -30,17 +42,22 @@
         {
             <button class="btn btn-primary btn-lg print-btn pull-left start-timer-btn" id="start-step"><i class="glyphicon glyphicon-step-forward"></i> Start</button>
         }
-      
-        <button class="btn btn-warning btn-lg print-btn pull-left pause-timer-btn hidden" id="pause-step"><i class="glyphicon glyphicon-pause"></i> Pause</button>
-        <button class="btn btn-warning btn-lg print-btn pull-left resume-timer-btn hidden" id="resume-step"><i class="glyphicon glyphicon-step-forward"></i> Resume</button>
-        @if (Model.TaskRunningTimer != null && Model.TaskRunningTimer.EndTime == null)
+        @if (Model.TaskRunningTimer != null && Model.TaskRunningTimer.StatusId == TimerStatuseConstants.Paused)
         {
-            <button class="btn btn-primary btn-lg print-btn pull-left " id="done-step"><i class="glyphicon glyphicon-stop"></i> Done</button>
+            <button class="btn btn-warning btn-lg print-btn pull-left" data-task-log-id="@Model.TaskRunningTimer.Id" id="resume-step"><i class="glyphicon glyphicon-step-forward"></i> Resume</button>
         }
+
+        @if (Model.TaskRunningTimer != null && Model.TaskRunningTimer.StatusId == TimerStatuseConstants.InProgress)
+        {
+            <button class="btn btn-warning btn-lg print-btn pull-left" data-task-log-id="@Model.TaskRunningTimer.Id" id="pause-step"><i class="glyphicon glyphicon-pause"></i> Pause</button>
+            <button class="btn btn-primary btn-lg print-btn pull-left " data-task-log-id="@Model.TaskRunningTimer.Id" id="done-step"><i class="glyphicon glyphicon-stop"></i> Done</button>
+        }
+        
+    
       
     </div>
     <div class="col-sm-3">
-        @if (string.IsNullOrWhiteSpace(Model.TaskEditDataResult.RequesteeId) && Model.TaskEditDataResult.RequesteeId != Model.LoggedUserIdResult.Id)
+        @if (!string.IsNullOrWhiteSpace(Model.TaskEditDataResult.RequesteeId) && Model.TaskEditDataResult.RequesteeId != Model.LoggedUserIdResult.Id)
         {
         <button class="btn btn-warning btn-lg print-btn pull-left show-timer-btn" id="assume-step"><i class="glyphicon glyphicon-step-forward"></i> Take over this task</button>
         }
@@ -53,6 +70,14 @@
 </div>
 
 <script>
+
+    $('#pause-step').on('click', function() {
+        StepPauseClick($(this).data('task-log-id'));
+    });
+
+    $('#resume-step').on('click', function() {
+        StepResumeClick($(this).data('task-log-id'));
+    });
 
     $('#start-step').on('click', function() {
         StepStartClick();
@@ -138,4 +163,35 @@
             }
         });
     }
+
+    function StepResumeClick(id) {
+
+        $.ajax({
+            type: "POST",
+            url: "/wip/stepResume?taskLogId=" + id,
+            dataType: 'json',
+            success: function (data) {
+                location.reload();
+            },
+            error: function () {
+
+            }
+        });
+    }
+
+    function StepPauseClick(id) {
+
+        $.ajax({
+            type: "POST",
+            url: "/wip/StepPause?taskLogId=" + id,
+            dataType: 'json',
+            success: function (data) {
+                location.reload();
+            },
+            error: function () {
+
+            }
+        });
+    }
+
 </script>

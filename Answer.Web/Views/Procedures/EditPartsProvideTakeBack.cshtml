@@ -1,0 +1,60 @@
+﻿@model Msr.Services.Procedures.ViewModels.PartsProvideTakeBackViewModel
+@{
+    ViewBag.Title = "Edit Parts Provide Take Back";
+}
+
+
+<div class="container-fluid">
+    <div class="side-body padding-top">
+        <div class="row">
+            <h2 class="page-header">
+                Edit Parts Provide Take Back<button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
+            </h2>
+            <div class="col-lg-10">
+                @Html.Partial("Message")
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+
+                    <input type="hidden" name="Pid" value="@ViewBag.ProcObjectId" />
+                    <input type="hidden" name="isSaving" value="true" />
+
+                    <input type="hidden" name="relationship" value="@ViewBag.relationships" />
+                    <div class="form-horizontal">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.APPROVED_OBJECT_ID, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-5">
+                                @Html.DropDownListFor(model => model.APPROVED_OBJECT_ID, Model.ApprovedObjectNameList, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.APPROVED_OBJECT_ID, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.QTY, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-5">
+                                @Html.EditorFor(model => model.QTY, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.QTY, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.QTY_TYPE, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-5">
+                                @Html.DropDownListFor(model => model.QTY_TYPE, Model.OrderingUnits, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.QTY_TYPE, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-4 col-md-10">
+                                <input type="submit" value="Submit" class="btn btn-success" />
+
+                                @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-warning" })
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+

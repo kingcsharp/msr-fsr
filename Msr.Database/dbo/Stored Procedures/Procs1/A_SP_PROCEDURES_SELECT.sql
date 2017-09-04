@@ -1,15 +1,4 @@
 ﻿
-
-
-
-
-
-
-
-
-
-
-
 CREATE           PROCEDURE A_SP_PROCEDURES_SELECT
 	@strWhere nvarchar(2000),
 	@strStepWhere nvarchar(2000),

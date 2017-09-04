@@ -607,11 +607,13 @@ namespace Msr.Services.Orders
             {
                 var stepStartDoneTaskResult = conn.Query<StepStartTaskResult>("A_SP_TASK_QUICK_CLOSE", p, commandType: CommandType.StoredProcedure);
 
-                var status = p.Get<string>("RET_STATUS");
+                var retStatus = p.Get<string>("RET_STATUS");
+                var msgs = p.Get<string>("MSGS");
 
-                var p1 = new DynamicParameters();
-                p1.Add("@userId", login, DbType.String, ParameterDirection.Input, size: 50);
-                conn.Execute("Portal_DeleteNavHistoryForUser", p1, commandType: CommandType.StoredProcedure);
+                if (!string.IsNullOrWhiteSpace(retStatus))
+                {
+                    return retStatus;
+                }
 
                 var p2 = new DynamicParameters();
 
@@ -644,6 +646,7 @@ namespace Msr.Services.Orders
                 {
                     TaskId = stepId.ToString(),
                     StartTime = DateTime.Now,
+                    StatusId = TimerStatuseConstants.InProgress,
                     UserId = login
                 });
                 _dbContext.SaveChanges();
@@ -672,9 +675,40 @@ namespace Msr.Services.Orders
                 if (taskLog != null)
                 {
                     taskLog.EndTime = DateTime.Now;
+                    taskLog.StatusId = TimerStatuseConstants.Stopped;
+                    taskLog.TotalTime = Math.Abs((taskLog.StartTime - taskLog.EndTime.Value).TotalHours);
                     _dbContext.SaveChanges();
                 }
             }
+        }
+
+        public void StepResume(int taskLogId)
+        {
+            var taskLog = _dbContext.TaskLogs.Where(x => x.Id == taskLogId)
+                .OrderByDescending(x => x.Id)
+                .FirstOrDefault();
+
+            taskLog.StatusId = TimerStatuseConstants.InProgress;
+            taskLog.StartTime = DateTime.Now;
+            taskLog.EndTime = null;
+
+            _dbContext.SaveChanges();
+        }
+
+        public void StepPause(int taskLogId)
+        {
+            var taskLog = _dbContext.TaskLogs.Where(x => x.Id == taskLogId)
+                    .OrderByDescending(x => x.Id)
+                    .FirstOrDefault();
+
+            taskLog.StatusId = TimerStatuseConstants.Paused;
+            taskLog.EndTime = DateTime.Now;
+
+            var pausedTime = Math.Abs((taskLog.StartTime - taskLog.EndTime.Value).TotalHours);
+
+            taskLog.TotalTime = taskLog.TotalTime + pausedTime;
+
+            _dbContext.SaveChanges();            
         }
 
         public void AssumeSteps(int fillId, string login)

@@ -1,5 +1,5 @@
 ﻿using EntityFrameworkExtras.EF6;
-using Msr.Models.Comman;
+using Msr.Models.Common;
 using Msr.Models.Documents;
 using Msr.Repositories;
 using Msr.Services.Documents.Procedures;

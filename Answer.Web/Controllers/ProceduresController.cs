@@ -3,15 +3,14 @@ using Msr.Services.jqGrid;
 using Msr.Services.Procedures;
 using Msr.Web.ViewModel.Engineering;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Web;
 using System.Web.Mvc;
 using System.Xml;
 using System.Xml.XPath;
 using System.Xml.Xsl;
+using Msr.Models.ActualParts;
 using Msr.Services.Procedures.ViewModels;
 using Msr.Services.ProcedureVerbs;
 using Msr.Services.Roles;
@@ -320,7 +319,8 @@ namespace Answer.Web.Controllers
 
         public ActionResult Steps(string id)
         {
-            var viewModel = _proceduresService.GetStepsData(id, "1618");
+            var viewModel = _proceduresService.GetStepsData(id, GetCurrentUser().Id);
+
             ViewBag.ProcObjectId = id;
 
             ViewBag.Procedure = new SelectList(_proceduresService.GetProcedurelist(), "Value", "Show");
@@ -329,23 +329,58 @@ namespace Answer.Web.Controllers
         }
         public ActionResult SaveStep(string ProcObjectId, string Procedure)
         {
-            var id = _proceduresService.PrePopSave(ProcObjectId, Procedure, "1618");
+            var id = _proceduresService.PrePopSave(ProcObjectId, Procedure, GetCurrentUser().Id);
 
             ViewBag.Id = id;
+            ViewBag.Procedure = Procedure;
 
-            return RedirectToAction("CreateStep", new { procedureObjectId = ProcObjectId, id = id });
+            return RedirectToAction("CreateStep", new { procedureObjectId = ProcObjectId, id = id, Procedure = Procedure });
         }
 
-        public ActionResult CreateStep(string procedureObjectId, string NewObjectId)
+        public ActionResult CreateStep(string procedureObjectId, string NewObjectId, string Procedure)
         {
-            var getStepEditDataViewModel = new GetStepEditDataViewModel(new ProceduresService(), procedureObjectId);
+            var getStepEditDataViewModel = new GetStepEditDataViewModel(new ProceduresService(), new ProcedureVerbsService(), procedureObjectId);
+
+            var singleOrDefault = _proceduresService.GetProcedurelist().SingleOrDefault(x => x.Value == Procedure);
+            if (singleOrDefault != null)
+            {
+                var value = singleOrDefault.Show;
+
+                getStepEditDataViewModel.GetStepEditData.Step_Text = value;
+                getStepEditDataViewModel.ProcObjId = procedureObjectId;
+            }
 
             return View(getStepEditDataViewModel);
+        }
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult CreateStep(GetStepEditDataViewModel model)
+        {
+
+            if (ModelState.IsValid)
+            {
+                model.NtLogin = GetCurrentUser().Id;
+
+                var response = _proceduresService.CreateStepData(model);
+
+                if (response)
+                {
+                    TempData["SuccessMessage"] = "Procedure has been assigned successfully.";
+
+                    return RedirectToAction("Index");
+                }
+
+                TempData["ErrorMessage"] = "Something went wrong.";
+
+                return View(model);
+            }
+
+            return View(model);
         }
 
         public ActionResult EditStep(string stepId, string procedureObjectId)
         {
-            var viewModel = _proceduresService.GetStepData(stepId, procedureObjectId, "1618");
+            var viewModel = _proceduresService.GetStepData(stepId, procedureObjectId, GetCurrentUser().Id);
+
             return View(viewModel);
         }
 
@@ -353,7 +388,609 @@ namespace Answer.Web.Controllers
         public ActionResult EditStep(GetStepEditDataViewModel viewModel)
         {
             _proceduresService.UpdateStepData(viewModel);
+
+            TempData["SuccessMessage"] = "Procedure Step been updated successfully.";
+
             return RedirectToAction("EditStep", new { stepId = viewModel.StepId, procedureObjectId = viewModel.ProcObjId });
+        }
+
+
+        public ActionResult editProcedureObject(string Pid, string relationship)
+        {
+            var part = new EditProcedureObjectViewModel();
+            ViewBag.ProcObjectId = Pid;
+            ViewBag.relationships = relationship;
+            part.Setup(new ProceduresService());
+
+            return View(part);
+        }
+        [HttpPost]
+        public ActionResult editProcedureObject(string Pid, string relationship, EditProcedureObjectViewModel model)
+        {
+            var procedureService = new ProceduresService();
+            //need to be dynamic
+            model.NTLogin = GetCurrentUser().Id;
+            model.PROCEDURE_ID = Pid;
+            model.RELATIONSHIP = relationship;
+            if (ModelState.IsValid)
+            {
+                var response = procedureService.CreateProcedureObject(model);
+                if (response)
+                {
+                    TempData["SuccessMessage"] = "Procedure Object has been created successfully.";
+
+                    return RedirectToAction("ShowProcedureObject", new { Pid = Pid, relationship = relationship });
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Something went wrong.";
+
+                    model.Setup(new ProceduresService());
+
+                    return View(model);
+                }
+            }
+
+
+            model.Setup(new ProceduresService());
+
+            return View(model);
+        }
+
+        public ActionResult ShowProcedureObject(string Pid, string relationship)
+        {
+            var viewModel = new EngineeringViewModel();
+            ViewBag.id = Pid;
+            ViewBag.relation = relationship;
+            return View(viewModel);
+        }
+
+        public ActionResult ShowProcedureView(string Pid, string relation, JqGridParam param)
+        {
+            var ProceduresService = new ProceduresService();
+
+            var totalRows = ProceduresService.GetSelectedProcedureObject(Pid, null, relation, GetCurrentUser().Id).AsQueryable();
+
+            var orderBy = nameof(ActualPartsView.PartDesc);
+            if (!string.IsNullOrWhiteSpace(param.sortColumn))
+            {
+                orderBy = param.sortColumn;
+            }
+            if (param.sortOrder == "desc")
+            {
+                totalRows = totalRows.OrderByDescending(orderBy);
+            }
+            else
+            {
+                totalRows = totalRows.OrderBy(orderBy);
+            }
+            var totalRecords = totalRows.Count();
+            totalRows = totalRows.Skip(param.pageSize * (param.pageIndex - 1));
+            totalRows = totalRows.Take(param.pageSize);
+            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)param.pageSize);
+            var results = totalRows.ToList();
+            var json = new
+            {
+                total = totalPages,
+                page = param.pageIndex,
+                records = totalRecords,
+                rows = results
+            };
+            return Json(json, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult DeleteProcedureObject(string id)
+        {
+            string value = id;
+            string[] data = value.Split(',');
+            string ID = data[0];
+            string Pid = data[1];
+            string relationship = data[2];
+            var taskService = new ProceduresService();
+
+            var response = taskService.Delete(id: ID, ntlogin: GetCurrentUser().Id);
+
+            if (response)
+            {
+                TempData["SuccessMessage"] = "Procedure Object deleted successfully.";
+
+                return RedirectToAction("editProcedureObject", new { Pid = Pid, relationship = relationship });
+            }
+
+            TempData["ErrorMessage"] = "Something went wrong.";
+            return RedirectToAction("ShowProcedureObject");
+        }
+
+        [AcceptVerbs(HttpVerbs.Get)]
+        public ActionResult EditProcedureObjectEdit(string ID)
+        {
+            string value = ID;
+            string[] words = value.Split(',');
+            string objid = words[0];
+            string relationship = words[1];
+            string Pid = words[2];
+
+            ViewBag.ObjId = objid;
+            ViewBag.relation = relationship;
+            ViewBag.id = Pid;
+            var procedureservices = new ProceduresService();
+
+            var procedureObjectViewModel = new EditProcedureObjectViewModel();
+
+            var model = procedureservices.EditProcedureObject(id: objid, ntlogin: GetCurrentUser().Id);
+
+            procedureObjectViewModel = procedureObjectViewModel.MapToDto(model);
+
+            procedureObjectViewModel.Setup(new ProceduresService());
+
+            return View(procedureObjectViewModel);
+        }
+        [HttpPost]
+        public ActionResult EditProcedureObjectEdit(string Pid, string relationship, string ObjId, EditProcedureObjectViewModel model)
+        {
+            var procedureService = new ProceduresService();
+            //need to be dynamic
+            model.NTLogin = GetCurrentUser().Id;
+            model.PROCEDURE_ID = Pid;
+            model.ID = ObjId;
+            model.RELATIONSHIP = relationship;
+            if (ModelState.IsValid)
+            {
+                var response = procedureService.SaveProcedureObject(model);
+                if (response)
+                {
+                    TempData["SuccessMessage"] = "Procedure Object has been created successfully.";
+
+                    return RedirectToAction("ShowProcedureObject", new { Pid = Pid, relationship = relationship });
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Something went wrong.";
+
+                    model.Setup(new ProceduresService());
+
+                    return View(model);
+                }
+            }
+
+
+            model.Setup(new ProceduresService());
+
+            return View(model);
+        }
+
+        public ActionResult EditPartsProvideTakeBack(string id)
+        {
+            string value = id;
+            string[] words = value.Split(',');
+            string objid = words[0];
+
+            string relationship = words[1];
+            string Pid = words[2];
+
+            ViewBag.ObjId = objid;
+            ViewBag.relation = relationship;
+            ViewBag.id = Pid;
+            var preProServices = new ProceduresService();
+
+            var procedureObjectViewModel = new PartsProvideTakeBackViewModel();
+
+            var model = preProServices.EditProcedureObject(id: objid, ntlogin: GetCurrentUser().Id);
+
+            procedureObjectViewModel = procedureObjectViewModel.MapToDto(model);
+
+            procedureObjectViewModel.Setup(new ProceduresService());
+
+            return View(procedureObjectViewModel);
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult EditPartsProvideTakeBack(string Pid, string relationship, string ObjId, PartsProvideTakeBackViewModel model)
+        {
+            var procedureService = new ProceduresService();
+            //need to be dynamic
+            model.NTLogin = GetCurrentUser().Id;
+            model.PROCEDURE_ID = Pid;
+            model.ID = ObjId;
+            model.RELATIONSHIP = relationship;
+            if (ModelState.IsValid)
+            {
+                var response = procedureService.SavePartsProvideTakeBack(model);
+                if (response)
+                {
+                    TempData["SuccessMessage"] = "Procedure Object has been created successfully.";
+
+                    return RedirectToAction("ShowPartsProvidedTakeBack", new { Pid = Pid, relationship = relationship });
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Something went wrong.";
+
+                    model.Setup(new ProceduresService());
+
+                    return View(model);
+                }
+            }
+
+
+            model.Setup(new ProceduresService());
+
+            return View(model);
+        }
+        public ActionResult CreatePartsProvideTakeBack(string Pid, string relationship)
+        {
+            var part = new PartsProvideTakeBackViewModel();
+            ViewBag.ProcObjectId = Pid;
+            ViewBag.relationships = relationship;
+            part.Setup(new ProceduresService());
+
+            return View(part);
+        }
+        [HttpPost]
+        public ActionResult CreatePartsProvideTakeBack(string Pid, string relationship, PartsProvideTakeBackViewModel model)
+        {
+            var procedureService = new ProceduresService();
+            //need to be dynamic
+            model.NTLogin = GetCurrentUser().Id;
+            model.PROCEDURE_ID = Pid;
+            model.RELATIONSHIP = relationship;
+            if (ModelState.IsValid)
+            {
+                var response = procedureService.CreatePartsProvideTakeBack(model);
+                if (response)
+                {
+                    TempData["SuccessMessage"] = "Procedure Object has been created successfully.";
+
+                    return RedirectToAction("ShowProcedureObject", new { Pid = Pid, relationship = relationship });
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Something went wrong.";
+
+                    model.Setup(new ProceduresService());
+
+                    return View(model);
+                }
+            }
+
+
+            model.Setup(new ProceduresService());
+
+            return View(model);
+        }
+
+
+        public ActionResult ProcedureConsumedCreate(string Pid, string relationship)
+        {
+            var part = new EditProcedureObjectViewModel();
+            ViewBag.ProcObjectId = Pid;
+            ViewBag.relationships = relationship;
+            part.Setup(new ProceduresService());
+
+            return View(part);
+        }
+        [HttpPost]
+        public ActionResult ProcedureConsumedCreate(string Pid, string relationship, EditProcedureObjectViewModel model)
+        {
+            var procedureService = new ProceduresService();
+            //need to be dynamic
+            model.NTLogin = GetCurrentUser().Id;
+            model.PROCEDURE_ID = Pid;
+            model.RELATIONSHIP = relationship;
+            if (ModelState.IsValid)
+            {
+                var response = procedureService.CreateProcedureObject(model);
+                if (response)
+                {
+                    TempData["SuccessMessage"] = "Procedure Consumed has been created successfully.";
+
+                   return RedirectToAction("ShowProcedureConsumed", new { Pid = Pid, relationship = relationship });
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Something went wrong.";
+
+                    model.Setup(new ProceduresService());
+
+                    return View(model);
+                }
+            }
+
+
+            model.Setup(new ProceduresService());
+
+            return View(model);
+        }
+
+
+        public ActionResult ShowProcedureConsumed(string Pid, string relationship)
+        {
+            var viewModel = new EngineeringViewModel();
+            ViewBag.id = Pid;
+            ViewBag.relation = relationship;
+            return View(viewModel);
+        }
+
+        public ActionResult ShowProcedureCondumedView(string Pid, string relation, JqGridParam param)
+        {
+            var ProceduresService = new ProceduresService();
+
+            var totalRows = ProceduresService.GetSelectedProcedureObject(Pid, null, relation, GetCurrentUser().Id).AsQueryable();
+
+            var orderBy = nameof(ActualPartsView.PartDesc);
+            if (!string.IsNullOrWhiteSpace(param.sortColumn))
+            {
+                orderBy = param.sortColumn;
+            }
+            if (param.sortOrder == "desc")
+            {
+                totalRows = totalRows.OrderByDescending(orderBy);
+            }
+            else
+            {
+                totalRows = totalRows.OrderBy(orderBy);
+            }
+            var totalRecords = totalRows.Count();
+            totalRows = totalRows.Skip(param.pageSize * (param.pageIndex - 1));
+            totalRows = totalRows.Take(param.pageSize);
+            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)param.pageSize);
+            var results = totalRows.ToList();
+            var json = new
+            {
+                total = totalPages,
+                page = param.pageIndex,
+                records = totalRecords,
+                rows = results
+            };
+            return Json(json, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult DeleteProcedureConsumed(string id)
+        {
+            string value = id;
+            string[] data = value.Split(',');
+            string ID = data[0];
+            string Pid = data[1];
+            string relationship = data[2];
+            var taskService = new ProceduresService();
+
+            var response = taskService.Delete(id: ID, ntlogin: GetCurrentUser().Id);
+
+            if (response)
+            {
+                TempData["SuccessMessage"] = "Procedure Object deleted successfully.";
+
+              return RedirectToAction("ShowProcedureConsumed", new { Pid = Pid, relationship = relationship });
+            }
+
+            TempData["ErrorMessage"] = "Something went wrong.";
+            return RedirectToAction("ShowProcedureConsumed");
+        }
+
+
+
+        [AcceptVerbs(HttpVerbs.Get)]
+        public ActionResult ProcedureConsumedEdit(string ID)
+        {
+            string value = ID;
+            string[] words = value.Split(',');
+            string objid = words[0];
+            string relationship = words[1];
+            string Pid = words[2];
+
+            ViewBag.ObjId = objid;
+            ViewBag.relation = relationship;
+            ViewBag.id = Pid;
+            var procedureservices = new ProceduresService();
+
+            var procedureObjectViewModel = new EditProcedureObjectViewModel();
+
+            var model = procedureservices.EditProcedureObject(id: objid, ntlogin: GetCurrentUser().Id);
+
+            procedureObjectViewModel = procedureObjectViewModel.MapToDto(model);
+
+            procedureObjectViewModel.Setup(new ProceduresService());
+
+            return View(procedureObjectViewModel);
+        }
+        [HttpPost]
+        public ActionResult ProcedureConsumedEdit(string Pid, string relationship, string ObjId, EditProcedureObjectViewModel model)
+        {
+            var preProServices = new ProceduresService();
+
+            var procedureService = new ProceduresService();
+            //need to be dynamic
+            model.NTLogin = GetCurrentUser().Id;
+            model.PROCEDURE_ID = Pid;
+            model.ID = ObjId;
+            model.RELATIONSHIP = relationship;
+            if (ModelState.IsValid)
+            {
+                var response = procedureService.SaveProcedureObject(model);
+                if (response)
+                {
+                    TempData["SuccessMessage"] = "Procedure Object has been created successfully.";
+
+                    return RedirectToAction("ShowProcedureConsumed", new { Pid = Pid, relationship = relationship });
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Something went wrong.";
+
+                    model.Setup(new ProceduresService());
+
+                    return View(model);
+                }
+            }
+
+            model.Setup(new ProceduresService());
+
+            return View(model);
+        }
+
+        public ActionResult CreatePartsProductactivity(string Pid, string relationship)
+        {
+            var part = new EditProcedureObjectViewModel();
+            ViewBag.ProcObjectId = Pid;
+            ViewBag.relationships = relationship;
+            part.Setup(new ProceduresService());
+
+            return View(part);
+        }
+        [HttpPost]
+        public ActionResult CreatePartsProductactivity(string Pid, string relationship, EditProcedureObjectViewModel model)
+        {
+            var procedureService = new ProceduresService();
+            //need to be dynamic
+            model.NTLogin = GetCurrentUser().Id;
+            model.PROCEDURE_ID = Pid;
+            model.RELATIONSHIP = relationship;
+            if (ModelState.IsValid)
+            {
+                var response = procedureService.CreateProcedureObject(model);
+                if (response)
+                {
+                    TempData["SuccessMessage"] = "Procedure Part Stay has been created successfully.";
+
+                    return RedirectToAction("ShowProductPartStay", new { Pid = Pid, relationship = relationship });
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Something went wrong.";
+
+                    model.Setup(new ProceduresService());
+
+                    return View(model);
+                }
+            }
+
+
+            model.Setup(new ProceduresService());
+
+            return View(model);
+        }
+
+        public ActionResult ShowProductPartStay(string Pid, string relationship)
+        {
+            var viewModel = new EngineeringViewModel();
+            ViewBag.id = Pid;
+            ViewBag.relation = relationship;
+            return View(viewModel);
+        }
+
+        public ActionResult ShowProductPartStayView(string Pid, string relation, JqGridParam param)
+        {
+            var ProceduresService = new ProceduresService();
+
+            var totalRows = ProceduresService.GetSelectedProcedureObject(Pid, null, relation, GetCurrentUser().Id).AsQueryable();
+
+            var orderBy = nameof(ActualPartsView.PartDesc);
+            if (!string.IsNullOrWhiteSpace(param.sortColumn))
+            {
+                orderBy = param.sortColumn;
+            }
+            if (param.sortOrder == "desc")
+            {
+                totalRows = totalRows.OrderByDescending(orderBy);
+            }
+            else
+            {
+                totalRows = totalRows.OrderBy(orderBy);
+            }
+            var totalRecords = totalRows.Count();
+            totalRows = totalRows.Skip(param.pageSize * (param.pageIndex - 1));
+            totalRows = totalRows.Take(param.pageSize);
+            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)param.pageSize);
+            var results = totalRows.ToList();
+            var json = new
+            {
+                total = totalPages,
+                page = param.pageIndex,
+                records = totalRecords,
+                rows = results
+            };
+            return Json(json, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult DeleteProductPartStay(string id)
+        {
+            string value = id;
+            string[] data = value.Split(',');
+            string ID = data[0];
+            string Pid = data[1];
+            string relationship = data[2];
+            var taskService = new ProceduresService();
+
+            var response = taskService.Delete(id: ID, ntlogin: GetCurrentUser().Id);
+
+            if (response)
+            {
+                TempData["SuccessMessage"] = "Procedure Part Stay deleted successfully.";
+
+                return RedirectToAction("CreatePartsProductactivity", new { Pid = Pid, relationship = relationship });
+            }
+
+            TempData["ErrorMessage"] = "Something went wrong.";
+            return RedirectToAction("ShowProductPartStay");
+        }
+
+        [AcceptVerbs(HttpVerbs.Get)]
+        public ActionResult EditProductPartStay(string ID)
+        {
+            string value = ID;
+            string[] words = value.Split(',');
+            string objid = words[0];
+            string relationship = words[1];
+            string Pid = words[2];
+
+            ViewBag.ObjId = objid;
+            ViewBag.relation = relationship;
+            ViewBag.id = Pid;
+            var preProServices = new ProceduresService();
+
+            var procedureObjectViewModel = new EditProcedureObjectViewModel();
+
+            var model = preProServices.EditProcedureObject(id: objid, ntlogin: GetCurrentUser().Id);
+
+            procedureObjectViewModel = procedureObjectViewModel.MapToDto(model);
+
+            procedureObjectViewModel.Setup(new ProceduresService());
+
+            return View(procedureObjectViewModel);
+        }
+        [HttpPost]
+        public ActionResult EditProductPartStay(string Pid, string relationship, string ObjId, EditProcedureObjectViewModel model)
+        {
+            var preProServices = new ProceduresService();
+
+            var procedureService = new ProceduresService();
+            //need to be dynamic
+            model.NTLogin = GetCurrentUser().Id;
+            model.PROCEDURE_ID = Pid;
+            model.ID = ObjId;
+            model.RELATIONSHIP = relationship;
+            if (ModelState.IsValid)
+            {
+                var response = procedureService.SaveProcedureObject(model);
+                if (response)
+                {
+                    TempData["SuccessMessage"] = "Procedure Part Stay has been edited successfully.";
+
+                    return RedirectToAction("ShowProductPartStay", new { Pid = Pid, relationship = relationship });
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Something went wrong.";
+
+                    model.Setup(new ProceduresService());
+
+                    return View(model);
+                }
+            }
+
+            model.Setup(new ProceduresService());
+
+            return View(model);
         }
     }
 }

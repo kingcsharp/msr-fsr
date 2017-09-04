@@ -161,7 +161,7 @@ namespace Answer.Web.Controllers
 
             if (response != null)
             {
-                TempData["SuccessMessage"] = "Workflow Hide successfully.";
+                TempData["SuccessMessage"] = "Workflow successfully hidden.";
                 return RedirectToAction("Index");
             }
             else

@@ -13,6 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Msr.Models.PrePro;
+using Msr.Services.Documents.ViewModels;
 
 namespace Msr.Services.PrePro
 {
@@ -38,7 +39,6 @@ namespace Msr.Services.PrePro
         {
             var objId = new SqlParameter("@ID", id ?? "0");
 
-            //need to be dynamic
             var NTLogin = new SqlParameter("@strNTLogin", ntlogin);
 
             var result = _dbContext.Database.SqlQuery<SelectFile>("EXEC Portal_ProcedureStepGetRefProcedures @ID, @strNTLogin", objId, NTLogin).ToList();
@@ -51,10 +51,20 @@ namespace Msr.Services.PrePro
         {
             var objId = new SqlParameter("@procStepID", id ?? "0");
 
-            //need to be dynamic
             var NTLogin = new SqlParameter("@strNTLogin", ntlogin);
 
             var result = _dbContext.Database.SqlQuery<SelectFile>("EXEC Portal_ProcedureStepGetRefFiles @procStepID, @strNTLogin", objId, NTLogin).ToList();
+
+            return result;
+        }
+
+        public List<DocFile> GetSelectedRefFilesDialog(string id, string ntlogin)
+        {
+            var objId = new SqlParameter("@procStepID", id ?? "0");
+
+            var NTLogin = new SqlParameter("@strNTLogin", ntlogin);
+
+            var result = _dbContext.Database.SqlQuery<DocFile>("EXEC Portal_ProcedureStepGetRefFilesDialog @procStepID, @strNTLogin", objId, NTLogin).ToList();
 
             return result;
         }
@@ -63,14 +73,14 @@ namespace Msr.Services.PrePro
         {
             if (id == null) return new List<SelectFile>();
 
-            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT t.NAME AS Name,t.ID AS Id FROM A_PROCEDURE_STEP_THEORY_LINK l, A_V_THEORY_APPROVED_DATA t  where l.PROC_STEP_ID = " + id + " and t.ID = l.THEORY_ID").ToList();
+            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT t.NAME AS Show,t.ID AS Value FROM A_PROCEDURE_STEP_THEORY_LINK l, A_V_THEORY_APPROVED_DATA t  where l.PROC_STEP_ID = " + id + " and t.ID = l.THEORY_ID").ToList();
 
             return result;
         }
 
         public List<SelectFile> GetApprovedObjectList()
         {
-            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT DISTINCT TOP 500 OBJ_DESC AS Name,ID AS Id FROM A_V_APPROVED_OBJECTS WHERE CREATING_CO = '2' AND  OBJ_TABLE = 'A_ROLES_HISTORY'    AND (( OBJ_DESC LIKE '%a%' AND OBJ_DESC LIKE '%%' ) )    ORDER BY OBJ_DESC").ToList();
+            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT DISTINCT TOP 500 OBJ_DESC AS Show,ID AS Value FROM A_V_APPROVED_OBJECTS WHERE CREATING_CO = '2' AND  OBJ_TABLE = 'A_ROLES_HISTORY'    AND (( OBJ_DESC LIKE '%a%' AND OBJ_DESC LIKE '%%' ) )    ORDER BY OBJ_DESC").ToList();
 
             return result;
         }
@@ -78,7 +88,6 @@ namespace Msr.Services.PrePro
         {
             var objId = new SqlParameter("@ID", id ?? "0");
 
-            //need to be dynamic
             var NTLogin = new SqlParameter("@strNTLogin", ntlogin);
 
             var result = _dbContext.Database.SqlQuery<LaborObjectsView>("EXEC Portal_GetProcedureStepLabors @ID, @strNTLogin", objId, NTLogin).ToList();
@@ -89,7 +98,6 @@ namespace Msr.Services.PrePro
         {
             try
             {
-                //need to be dynamic
                 var NTLogin = ntlogin;
                 var deletePreproProcedure = new DeleteProcedureStepProcedure() { Objid = id, NTLogin = NTLogin };
 
@@ -306,36 +314,36 @@ namespace Msr.Services.PrePro
         }
 
         public List<SelectFile> GetApplicableObjectsByCreatingCo(string creatingCo)
-        {
-            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT ID as Id, OBJ_TABLE as Name FROM A_V_APPROVED_OBJECTS where CREATING_CO='" + creatingCo + "'").ToList();
-
-            return result;
-        }
-        public bool UpdateApplicableObjects(ApplicableObjectsView model)
-        {
-            try
             {
-                var saveUpdateApplicableObjectsProcedure = new SaveUpdateApplicableObjectsProcedure()
-                {
+                var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT ID as Value, OBJ_TABLE as Show FROM A_V_APPROVED_OBJECTS where CREATING_CO='" + creatingCo + "'").ToList();
 
-                    StepId = model.StepId,
-                    LinkId = model.LinkId,
-                    Quantity = model.Quantity,
-                    ObjectId = model.ObjectId,
-                    NTLogin = model.NTLogin
-                };
-
-                _dbContext.Database.ExecuteStoredProcedure(saveUpdateApplicableObjectsProcedure);
-
-                return true;
+                return result;
             }
-            catch (Exception ex)
+            public bool UpdateApplicableObjects(ApplicableObjectsView model)
             {
-                var message = "Error occured:" + ex.Message;
+                try
+                {
+                    var saveUpdateApplicableObjectsProcedure = new SaveUpdateApplicableObjectsProcedure()
+                    {
 
-                return false;
+                        StepId = model.StepId,
+                        LinkId = model.LinkId,
+                        Quantity = model.Quantity,
+                        ObjectId = model.ObjectId,
+                        NTLogin = model.NTLogin
+                    };
+
+                    _dbContext.Database.ExecuteStoredProcedure(saveUpdateApplicableObjectsProcedure);
+
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    var message = "Error occured:" + ex.Message;
+
+                    return false;
+                }
             }
         }
     }
-}
 

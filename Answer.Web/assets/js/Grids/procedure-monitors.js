@@ -1,7 +1,7 @@
 ﻿function LoadProcedureMonitorGrid(url, objectId) {
     $.jgrid.defaults.styleUI = 'Bootstrap';
 
-    Smooch.init({ appToken: '9wxoxi2wbcbymhjf1ex1a0dux' });
+    
 
     $("#jqGrid").jqGrid({
         url: url,
@@ -11,11 +11,11 @@
         datatype: 'json',
         colModel: [
             {
-                label: 'Monitor Number',
-                name: 'MonitorNumber',
-                index: 'MonitorNumber',
+                name: 'Id',
+                index: 'Id',
                 key: true,
                 colmenu: false,
+                hidden: true,
                 coloptions: {
                     sorting: false,
                     columns: true,
@@ -27,6 +27,17 @@
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 width: 100,
                 align: 'left'
+            },
+            {
+                label: 'Monitor Number',
+                name: 'MonitorNumber',
+                index: 'MonitorNumber',
+                width: 100,
+                colmenu: false,
+                editable: true,
+                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                align: 'center'
             },
             {
                 label: 'Description',
@@ -84,6 +95,196 @@
                 hidedlg: false
             },
             {
+                label: 'Highest Threshold',
+                name: 'Highest_Threshold',
+                index: 'Highest_Threshold',
+                colmenu: false,
+                editable: true,
+                coloptions: {
+                    sorting: false,
+                    columns: true,
+                    filtering: false,
+                    seraching: true,
+                    grouping: false,
+                    freeze: false
+                },
+                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                align: 'left',
+                width: 150,
+                hidedlg: false
+            },
+            {
+                label: 'High Threshold',
+                name: 'High_Threshold',
+                index: 'High_Threshold',
+                colmenu: false,
+                editable: true,
+                coloptions: {
+                    sorting: false,
+                    columns: true,
+                    filtering: false,
+                    seraching: true,
+                    grouping: false,
+                    freeze: false
+                },
+                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                align: 'left',
+                width: 150,
+                hidedlg: false
+            },
+            {
+                label: 'Target',
+                name: 'Target',
+                index: 'Target',
+                colmenu: false,
+                editable: true,
+                coloptions: {
+                    sorting: false,
+                    columns: true,
+                    filtering: false,
+                    seraching: true,
+                    grouping: false,
+                    freeze: false
+                },
+                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                align: 'left',
+                width: 150,
+                hidedlg: false
+            },
+            {
+                label: 'Low Threshold',
+                name: 'Low_Threshold',
+                index: 'Low_Threshold',
+                colmenu: false,
+                editable: true,
+                coloptions: {
+                    sorting: false,
+                    columns: true,
+                    filtering: false,
+                    seraching: true,
+                    grouping: false,
+                    freeze: false
+                },
+                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                align: 'left',
+                width: 150,
+                hidedlg: false
+            },
+            {
+                label: 'Lowest Threshold',
+                name: 'Lowest_Threshold',
+                index: 'Lowest_Threshold',
+                colmenu: false,
+                editable: true,
+                coloptions: {
+                    sorting: false,
+                    columns: true,
+                    filtering: false,
+                    seraching: true,
+                    grouping: false,
+                    freeze: false
+                },
+                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                align: 'left',
+                width: 150,
+                hidedlg: false
+            },
+            {
+                label: 'Based On Opinion',
+                name: 'OpinionText',
+                index: 'OpinionText',
+                colmenu: false,
+                editable: true,
+                coloptions: {
+                    sorting: false,
+                    columns: true,
+                    filtering: false,
+                    seraching: true,
+                    grouping: false,
+                    freeze: false
+                },
+                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                align: 'left',
+                width: 150,
+                hidedlg: false
+            },
+            {
+                label: 'Use Result',
+                name: 'Use_Result_Text',
+                index: 'Use_Result_Text',
+                colmenu: false,
+                editable: true,
+                coloptions: {
+                    sorting: false,
+                    columns: true,
+                    filtering: false,
+                    seraching: true,
+                    grouping: false,
+                    freeze: false
+                },
+                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                align: 'left',
+                width: 150,
+                hidedlg: false
+            },
+            {
+                label: 'Hide Target',
+                name: 'Hide_Target_Text',
+                index: 'Hide_Target_Text',
+                colmenu: false,
+                editable: true,
+                coloptions: {
+                    sorting: false,
+                    columns: true,
+                    filtering: false,
+                    seraching: true,
+                    grouping: false,
+                    freeze: false
+                },
+                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                align: 'left',
+                width: 150,
+                hidedlg: false
+            },
+            {
+                label: 'If Fail Next',
+                name: 'Fail_Action',
+                index: 'Fail_Action',
+                colmenu: false,
+                editable: true,
+                coloptions: {
+                    sorting: false,
+                    columns: true,
+                    filtering: false,
+                    seraching: true,
+                    grouping: false,
+                    freeze: false
+                },
+                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                align: 'left',
+                width: 150,
+                hidedlg: false
+            },
+       
+            {
+                name: 'Related_Object_Id',
+                index: 'Related_Object_Id',
+                key: true,
+                colmenu: false,
+                hidden: true,
+                coloptions: {
+                    sorting: false,
+                    columns: true,
+                    filtering: false,
+                    seraching: false,
+                    grouping: false,
+                    freeze: false
+                },
+                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                width: 100,
+                align: 'left'
+            },
+            {
                 name: 'Actions',
                 index: 'Description',
                 key: true,
@@ -91,6 +292,7 @@
                 hidden: false,
                 colmenu: false,
                 editable: false,
+                formatter: monitorEditFormatter,
                 width: 200,
                 align: 'center'
             }
@@ -109,27 +311,45 @@
         pager: "#jqGridPager",
         height: 'auto',
         gridview: true,
-        sortname: 'Description',
+        sortname: 'MonitorNumber',
         sortable: true,
         sortorder: 'asc',
-        cellEdit: false,
+        cellEdit: true,
         cellsubmit: 'clientArray',
         editurl: 'clientArray',
         autowidth: true,
         colMenu: true,
-      
+        afterSaveCell: function (rowid, cellname, value, iRow, iCol) {
+            var id = $('#jqGrid').jqGrid('getCell', rowid, 'Id');
+            var monitorNumber = $('#jqGrid').jqGrid('getCell', rowid, 'MonitorNumber');
+            var options = {
+                Id: id,
+                MonitorNumber: monitorNumber
+            }
+            $.ajax({
+                type: 'POST',
+                url: '/ProcedureMonitors/Reorder',
+                data: options,
+                dataType: 'JSON',
+                success: function (resultData) {
+                    alert("hi");
+                    console.log("row with rowid=" + rowid + " is successfuly modified.");
+                }
+            });
+            $("#jqGrid").jqGrid().trigger('reloadGrid');
+            console.log('afterSaveCell : ' + cellname + 'rowid :' + rowid);
+        },
         gridComplete: function() {
             
         }
-   
-    });
+});
     $('#jqGrid').navGrid("#jqGridPager", {
-            search: false, // show search button on the toolbar
-            add: false,
-            edit: false,
-            del: false,
-            refresh: true
-        },
+        search: false, // show search button on the toolbar
+        add: false,
+        edit: false,
+        del: false,
+        refresh: true
+    },
         {},  // edit options
         {}, // add options
         {}, // delete options
@@ -141,8 +361,13 @@
         searchOperators: true
     });
 
-   
-   
+    function monitorEditFormatter(cellvalue, options, rowObject) {
+
+        var editButton = '<a href="/ProcedureMonitors/Edit/' + rowObject.Id + '" data-call-back-id ="' + rowObject.Id + '"  class="btn btn-xs btn-success editpeople" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i>  Edit</a>';
+        editButton = editButton + '<a href="/ProcedureMonitors/Delete/' + rowObject.Id + "," + rowObject.Related_Object_Id + '" data-call-back-id="' + rowObject.Related_Object_Id + '" title="Delete" class="btn btn-xs btn-danger deletepart" style="margin:2px;font-size: .8em;"><i class="fa fa-trash"></i> Delete</a>';
+       return editButton;
+
+    };
    
     $('#search').click(function () {
 

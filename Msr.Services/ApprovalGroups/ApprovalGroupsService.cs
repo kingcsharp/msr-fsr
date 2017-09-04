@@ -1,6 +1,6 @@
 ﻿using EntityFrameworkExtras.EF6;
 using Msr.Models.ApprovalGroups;
-using Msr.Models.Comman;
+using Msr.Models.Common;
 using Msr.Repositories;
 using Msr.Services.ApprovalGroups.Procedures;
 using Msr.Services.ApprovalGroups.ViewModels;

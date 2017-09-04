@@ -2,6 +2,7 @@
 @{
     ViewBag.Title = "Edit Step";
 }
+
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="row">
@@ -13,6 +14,7 @@
                 @using (Html.BeginForm())
                 {
                     <div class="form-horizontal">
+
                         @Html.AntiForgeryToken()
                         @Html.HiddenFor(x => x.StepId)
                         @Html.HiddenFor(x => x.ProcObjId)
@@ -25,7 +27,9 @@
                         @Html.HiddenFor(x => x.GetStepEditData.Cycle_Count)
                         @Html.HiddenFor(x => x.GetStepEditData.Cycle_On_Counter)
 
+
                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
                         <div class="form-group">
                             <label class="control-label col-md-4">Base Start On Counter?</label>
                             <div class="col-md-5">
@@ -33,6 +37,7 @@
                                 @Html.ValidationMessageFor(model => model.GetStepEditData.Start_On_Counter, "", new { @class = "text-danger" })
                             </div>
                         </div>
+
                         @if (Model.GetStepEditData.Start_On_Counter == 1)
                         {
                             <div class="form-group">
@@ -43,6 +48,7 @@
                                 </div>
                             </div>
                         }
+
                         @if (Model.GetStepEditData.Start_On_Counter == 1)
                         {
                             <div class="form-group">
@@ -53,6 +59,7 @@
                                 </div>
                             </div>
                         }
+
                         @if (Model.GetStepEditData.Start_On_Counter == 1)
                         {
                             <div class="form-group">
@@ -140,6 +147,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="form-group">
                             @Html.LabelFor(model => model.ReferenceObject, htmlAttributes: new { @class = "control-label  col-md-4" })
                             <div class="col-md-5">
@@ -150,6 +158,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="form-group">
                             @Html.LabelFor(model => model.ReferenceFiles, htmlAttributes: new { @class = "control-label  col-md-4" })
                             <div class="col-md-5">
@@ -160,6 +169,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="form-group">
                             <label class="control-label col-md-4">Comments:</label>
                             <div class="col-md-5">
@@ -167,6 +177,7 @@
                                 @Html.ValidationMessageFor(model => model.GetStepEditData.Comments, "", new { @class = "text-danger" })
                             </div>
                         </div>
+
                         <div class="form-group">
                             <div class="col-md-offset-4 col-md-10">
                                 <button type="submit" class="btn btn-success">Save</button>
@@ -175,6 +186,7 @@
                     </div>
                 }
             </div>
+
         </div>
     </div>
 </div>

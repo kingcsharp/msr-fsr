@@ -8,11 +8,11 @@ using Msr.Services.Products;
 using Msr.Services.Users;
 using Msr.Web.ViewModel.Engineering;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Msr.Services.Companies;
+using Msr.Services.Orders;
+using Msr.Services.Roles;
 
 namespace Answer.Web.Controllers
 {
@@ -325,6 +325,68 @@ namespace Answer.Web.Controllers
             TempData["ErrorMessage"] = "Something went wrong.";
 
             return RedirectToAction("ViewHistory");
+        }
+
+        public ActionResult ReassignTask(string id)
+        {
+            var actualPart = new ReassignTaskViewModel();
+
+            actualPart.SetUp(new PeopleService(), new RoleService());
+
+            actualPart.Id = id;
+
+            return View(actualPart);
+
+        }
+        [AcceptVerbs(verbs: HttpVerbs.Post)]
+        public ActionResult ReassignTask(ReassignTaskViewModel model)
+        {
+            var actualPartsService = new ActualPartsService();
+
+            if (ModelState.IsValid)
+            {
+                model.NTLogin = GetCurrentUser().Id;
+
+                var response = actualPartsService.ReAssignTask(model);
+
+                if (response)
+                {
+                    TempData["SuccessMessage"] = "Task has been reassigned successfully.";
+
+                    return RedirectToAction("Index");
+                }
+
+                TempData["ErrorMessage"] = "Something went wrong.";
+
+                return View(model);
+            }
+
+            return View(model);
+        }
+        public ActionResult DeleteHistory(string id)
+        {
+
+            string actualPartId = TempData["actualPartId"].ToString();
+
+            var actualPartsService = new ActualPartsService();
+
+            if (ModelState.IsValid)
+            {
+                var response = actualPartsService.DeleteViewHistory(id, GetCurrentUser().Id);
+
+                if (response)
+                {
+                    TempData["SuccessMessage"] = "History has been deleted successfully.";
+
+                    return RedirectToAction("Index");
+                }
+
+                TempData["ErrorMessage"] = "Something went wrong.";
+
+                return RedirectToAction(actionName: "ViewHistory", routeValues: new { id = actualPartId });
+                }
+
+            return RedirectToAction(actionName: "ViewHistory", routeValues: new { id = actualPartId });
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿function loadProcedureVerbsGrid(url, returnUrl) {
     $.jgrid.defaults.styleUI = 'Bootstrap';
 
-    Smooch.init({ appToken: '9wxoxi2wbcbymhjf1ex1a0dux' });
+    
 
     $("#jqGrid").jqGrid({
         url: url,

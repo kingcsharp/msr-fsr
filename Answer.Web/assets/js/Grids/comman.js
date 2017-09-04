@@ -21,6 +21,34 @@
 
         });
 
+    $('#select-doc_prepro_ref_file-view').on('show.bs.modal',
+        function(event) {
+            var button = $(event.relatedTarget);
+            var callBackId = button.data('call-back-id');
+            var imageType = button.data('file-type');
+            var modal = $(this);
+        });
+
+    $('#select-doc_prepro-view').on('show.bs.modal',
+        function (event) {
+            var button = $(event.relatedTarget);
+            var callBackId = button.data('call-back-id');
+            var imageType = button.data('file-type');
+            var modal = $(this);
+
+            $.ajax({
+                type: "GET",
+                url: '/doc/GetFileProcedureView?callBackId=' + callBackId,
+                dataType: 'html',
+                success: function (data) {
+                    modal.find('.modal-body').html(data);
+                },
+                error: function () {
+
+                }
+            });
+
+        });
 
     $('#select-referenceprocedures').on('show.bs.modal',
         function (event) {

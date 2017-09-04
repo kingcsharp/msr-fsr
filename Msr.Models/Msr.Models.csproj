@@ -105,8 +105,8 @@
     <Compile Include="ApprovalStages\ApprovalStagesView.cs" />
     <Compile Include="ApprovalStages\SelectMemberGroup.cs" />
     <Compile Include="ApprovalWorkflows\WorkflowStagesView.cs" />
-    <Compile Include="Comman\SelectFile.cs" />
     <Compile Include="ApprovalWorkflows\ApprovalWorkflowsView.cs" />
+    <Compile Include="Comman\SelectFile.cs" />
     <Compile Include="Companies\CompanyView.cs" />
     <Compile Include="Companies\EditCompanyView.cs" />
     <Compile Include="Companies\HeadPeopleView.cs" />
@@ -147,6 +147,9 @@
     <Compile Include="PrePro\LaborObjectsView.cs" />
     <Compile Include="PrePro\PrePropSearchView.cs" />
     <Compile Include="PrePro\ProcedureObjectsLaborStepView.cs" />
+    <Compile Include="Procedures\EditProcedureObjestFile.cs" />
+    <Compile Include="Procedures\ProcedureEditFile.cs" />
+    <Compile Include="Procedures\ProcedureEditObjectView.cs" />
     <Compile Include="Procedures\ProcedureStepOtherStepListView.cs" />
     <Compile Include="Procedures\ProcedureView.cs" />
     <Compile Include="ProcedureVerbs\ProcedureVerbsView.cs" />
@@ -159,6 +162,7 @@
     <Compile Include="Roles\RolesView.cs" />
     <Compile Include="ShowPurchaseStatus\PurchaseItem.cs" />
     <Compile Include="ShowPurchaseStatus\ShowPurchaseStatusView.cs" />
+    <Compile Include="Tasks\TimerStatuseConstants.cs" />
     <Compile Include="Tasks\ReportTypeConstants.cs" />
     <Compile Include="Tasks\MonitorTypeConstants.cs" />
     <Compile Include="Tasks\MonitorsWithTaskAndResult.cs" />

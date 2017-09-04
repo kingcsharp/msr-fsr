@@ -116,25 +116,7 @@ namespace Msr.Web.Controllers
                         return RedirectToLocal(returnUrl);
                     }
 
-                    if (user.RoleName == RolesConstants.AnswerUser)
-                    {
-                        return RedirectToAction("master","User");
-                    }
-                     if (user.RoleName == RolesConstants.ClientEngineer)
-                    {
-                        return RedirectToAction("Engineering", "Wip");
-                    }
-                     if (user.RoleName == RolesConstants.ClientAdmin)
-                    {
-                        return RedirectToAction("Client", "User");
-                    }
-
-                    if (user.RoleName == RolesConstants.ClientBuyer)
-                    {
-                        return RedirectToAction("Index", "Buyer");
-                    }
-
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Wip");
                     
                 case SignInStatus.LockedOut:
                     return View("Lockout");

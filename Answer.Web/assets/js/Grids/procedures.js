@@ -104,6 +104,27 @@
         editurl: 'clientArray',
         autowidth: true,
         colMenu: true,
+        gridComplete: function () {
+
+            $('.editprocedure').on('click',
+                function (e) {
+                    e.preventDefault();
+
+                    var callBackId = $(this).data('call-back-id');
+
+                    eModal.confirm('Are you sure? Locking prevents others from editing. Checking out creates the next revision for you to edit?')
+                        .then(confirmCallback, optionalCancelCallback);
+
+                    function confirmCallback() {
+                        window.location.href = "/Procedures/Edit/" + callBackId;
+                    }
+
+                    function optionalCancelCallback() {
+                    }
+
+                });
+
+        }
 
     });
     $('#jqGrid').navGrid("#jqGridPager", {
@@ -125,7 +146,7 @@
     });
     function procedureEditFormatter(cellvalue, options, rowObject) {
 
-        var thisCellVal = '<a href="/Procedures/Edit/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i> Edit</a>';
+        var thisCellVal = '<a href="/Procedures/Edit/' + rowObject.ObjectId + '" data-call-back-id ="' + rowObject.ObjectId +'" class="btn btn-xs btn-success editprocedure" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i> Edit</a>';
 
         var viewButton = '<a href="/Procedures/view/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i> View</a>';
 

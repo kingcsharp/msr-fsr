@@ -434,6 +434,12 @@ namespace Answer.Web.Controllers
 
                 var returnValue = _orderService.CloseTask(monitorTemplate.TaskId, loggedUserId);
 
+                if (!string.IsNullOrWhiteSpace(returnValue))
+                {
+                    TempData["ErrorMesage"] = returnValue;
+                }
+
+
                 if(returnValue  == "NEW_TEXT")
                     return RedirectToAction("Details", new { id = monitorTemplate.FillId });//"../monitors/addNewTextResults.asp?TASK_ID="
             }
@@ -457,6 +463,22 @@ namespace Answer.Web.Controllers
             var loggedUserId = GetCurrentUser().Id;
 
             _orderService.StepStart(stepId, loggedUserId);
+
+            return Json("OK", JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult StepPause(int taskLogId)
+        {
+            _orderService.StepPause(taskLogId);
+
+            return Json("OK", JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult StepResume(int taskLogId)
+        {
+            _orderService.StepResume(taskLogId);
 
             return Json("OK", JsonRequestBehavior.AllowGet);
         }

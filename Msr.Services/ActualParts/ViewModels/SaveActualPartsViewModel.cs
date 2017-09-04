@@ -103,8 +103,8 @@ namespace Msr.Services.ActualParts.ViewModels
 
             ListParents = actualPartsService.GetActualParts("APPROVED").Select(x => new SelectListItem
             {
-                Text = x.Name,
-                Value = x.Id.ToString()
+                Text = x.Show,
+                Value = x.Value.ToString()
             }).OrderBy(o => o.Text).ToList();
             ListParents.Insert(0, new SelectListItem { Text = @"Select Actual Part", Value = "" });
 

@@ -9,7 +9,7 @@ using System.Data.SqlClient;
 using Msr.Services.ActualParts.ViewModels;
 using EntityFrameworkExtras.EF6;
 using Msr.Services.ActualParts.Procedures;
-using Msr.Models.Comman;
+using Msr.Models.Common;
 
 namespace Msr.Services.ActualParts
 {
@@ -37,7 +37,7 @@ namespace Msr.Services.ActualParts
         public List<SelectFile> GetActualParts(string status)
         {
             var result = GetActualPartsQueryable().Where(x => x.Status.StartsWith(status) & !(x.SysName == null || x.SysName.Trim() == string.Empty))
-                .Select(x => new SelectFile { Id = x.ObjectId, Name = x.SysName }).ToList();
+                .Select(x => new SelectFile { Value = x.ObjectId, Show = x.SysName }).ToList();
 
             return result;
         }
@@ -138,6 +138,55 @@ namespace Msr.Services.ActualParts
                 _dbContext.Database.ExecuteStoredProcedure(closeViewHistoryTaskProcedure);
 
                 return true;
+            }
+            catch (Exception ex)
+            {
+                var message = "Error occured:" + ex.Message;
+
+                return false;
+            }
+        }
+        public bool ReAssignTask(ReassignTaskViewModel model)
+        {
+            try
+            {
+                var reAssignTaskProcedure = new ReAssignTaskProcedure
+                {
+                   
+                    Id = model.Id,
+                    Requestee_Id = model.PersonToReAssign,
+                    Group_Requestee_Id = model.GroupToReassign,
+                    Comments = model.ReAssignComments,
+                    StrNTLogin = model.NTLogin
+                };
+
+                _dbContext.Database.ExecuteStoredProcedure(reAssignTaskProcedure);
+
+                return true;
+
+            }
+            catch (Exception ex)
+            {
+                var message = "Error occured:" + ex.Message;
+
+                return false;
+            }
+        }
+      
+        public bool DeleteViewHistory(string id, string loginId)
+        {
+            try
+            {
+                var deleteHistoryProcedure = new DeleteHistoryProcedure
+                {
+                    ID = id,
+                    StrNTlogin = loginId
+                };
+
+                _dbContext.Database.ExecuteStoredProcedure(deleteHistoryProcedure);
+
+                return true;
+
             }
             catch (Exception ex)
             {

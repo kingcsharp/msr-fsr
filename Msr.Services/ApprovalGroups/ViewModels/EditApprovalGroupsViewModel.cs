@@ -62,9 +62,9 @@ namespace Msr.Services.ApprovalGroups.ViewModels
 
             MemberPeoples = approvalGroupsService.GetGroupMembers(id: Id,ntlogin:ntlogin).ToList();
 
-            MemberRoles = approvalGroupsService.GetGroupRoles(id: Id).Select(x => x.Id).ToList();
+            MemberRoles = approvalGroupsService.GetGroupRoles(id: Id).Select(x => x.Value).ToList();
 
-            SpecialMembers = approvalGroupsService.GetGroupSpecialMembers(id: Id).Select(x => x.Id).ToList();
+            SpecialMembers = approvalGroupsService.GetGroupSpecialMembers(id: Id).Select(x => x.Value).ToList();
         }
 
         public EditApprovalGroupsViewModel MapToDto(ApprovalGroupsView model)

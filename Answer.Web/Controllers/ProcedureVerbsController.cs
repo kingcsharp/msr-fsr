@@ -159,7 +159,7 @@ namespace Answer.Web.Controllers
                 var response = procedureService.Edit(model);
                 if (response)
                 {
-                    TempData["SuccessMessage"] = "Procedure Type has been created successfully.";
+                    TempData["SuccessMessage"] = "Procedure Type has been updated successfully.";
 
                     return RedirectToAction("Index");
                 }

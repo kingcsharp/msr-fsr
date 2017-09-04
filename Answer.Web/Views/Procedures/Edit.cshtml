@@ -57,10 +57,12 @@
                             @Html.LabelFor(model => model.ReferenceFiles, htmlAttributes: new { @class = "control-label col-md-3" })
                             <div class="col-md-5">
                                 <div style="width: 96%; float: left;">
-                                    @Html.ListBoxFor(m => m.ReferenceFiles, Model.ReferenceFilesList, new { @class = "form-control submitselect", multiple = "multiple" })
+                                    @Html.ListBoxFor(m => m.ReferenceFiles, Model.ReferenceFilesList, new { @class = "form-control submitselect selectitem", multiple = "multiple" })
                                     @Html.ValidationMessageFor(model => model.ReferenceFiles, "", new { @class = "text-danger" })
                                 </div>
-                                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceFiles" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceFiles"><i class="icon fa fa-trash"></i></span> </div>
+                                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceFiles" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span>
+                                    <span class="deletefiles" data-call-back-id="ReferenceFiles"><i class="icon fa fa-trash"></i></span>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -116,11 +118,16 @@
                             <div class="col-md-offset-2 col-md-10">
                                 <input type="submit" id="edtButton" value="Cancel And Roll Back" name="command" class="btn btn-success" />
                                 <input type="submit" id="rollBackButton" value="Update" name="command" class="btn btn-success"/>
-                                <a href="@Url.Action("Steps", "Procedures", new {Id = Model.ObjectId })" class="btn btn-info">Steps</a>
+                                <a href="@Url.Action("Steps", "Procedures", new {Id = Model.ObjectId})" class="btn btn-info">Steps</a>
                                 <a href="@Url.Action("Index", "Procedures")" class="btn btn-warning">Cancel</a>
-                                <a href="@Url.Action("Monitors/" + Model.ObjectId, "ProcedureMonitors")" class="btn btn-info">
-                                    Monitors
-                                </a>
+                            <a href="@Url.Action("Monitors/" + Model.ObjectId, "ProcedureMonitors")" class="btn btn-info">
+                                Monitors
+                            </a>         
+                                
+                                <a href="@Url.Action("ProcedureConsumedCreate", "Procedures", new { Pid=Model.ObjectId, relationship = @"PARTS_PROVIDE_CONSUMED" })" class="btn btn-info">Parts provided and consumed</a>
+                                <a href="@Url.Action("editProcedureObject", "Procedures", new { Pid=Model.ObjectId, relationship = @"PARTS_PROVIDE_STAY" })" class="btn btn-info">Parts provided and stay</a>
+                                <a href="@Url.Action("CreatePartsProvideTakeBack", "Procedures", new { Pid=Model.ObjectId, relationship = @"PARTS_PROVIDE_TAKE_BACK" })" class="btn btn-info">Parts Provided and taken back</a>
+                                <a href="@Url.Action("CreatePartsProductactivity", "Procedures", new { Pid=Model.ObjectId, relationship = @"PARTS_PRODUCED_STAY" })" class="btn btn-info">Parts product by activity and stay</a>
                             </div>
                         </div>
                     </div>
@@ -138,6 +145,7 @@
 
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+    <script src="~/assets/js/common/documentFiles.js"></script>
     <script src="~/assets/js/grids/comman.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {

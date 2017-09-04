@@ -1,8 +1,9 @@
 ﻿function LoadActualPartViewHistoryGrid(url) {
+
     //$.jgrid.defaults.responsive = true;
     $.jgrid.defaults.styleUI = 'Bootstrap';
 
-    Smooch.init({ appToken: '9wxoxi2wbcbymhjf1ex1a0dux' });
+    
 
     $("#jqGrid").jqGrid({
         url: url,
@@ -248,6 +249,25 @@
                     }
 
                 });
+            $('.deletehistory').on('click',
+                function (e) {
+                    e.preventDefault();
+
+                    var callBackId = $(this).data('call-back-id');
+                    var callBackName = $(this).data('call-back-name');
+
+                    eModal.confirm('Do you really want to delete ' + callBackName + ' ?', 'Confirmation delete')
+                        .then(confirmCallback, optionalCancelCallback);
+
+                    function confirmCallback() {
+                        window.location.href = "/ActualParts/DeleteHistory/" + callBackId;
+
+                    }
+
+                    function optionalCancelCallback() {
+                    }
+
+                });
         }
     });
     $('#jqGrid').navGrid("#jqGridPager", {
@@ -265,9 +285,9 @@
 
     function actualPartVIewHistoryFormatter(cellvalue, options, rowObject) {
         var thisCellVal = '<a href="/ActualParts/ViewHistoryClose/' + rowObject.Id + '" data-call-back-name="' + rowObject.Id + '" data-call-back-id="' + rowObject.Id + '" title="Close" class="btn btn-xs btn-danger deleteobject" style="margin:2px;font-size: .8em;"><i class="fa fa-check" aria-hidden="true"></i></a>';
-        thisCellVal = thisCellVal + '<a href="#/' + rowObject.Id + '" class="btn btn-xs btn-success" title="Reassign" style="margin:2px;font-size: .8em;"><i class="fa fa-hand-o-right" aria-hidden="true"></i></a>';
+        thisCellVal = thisCellVal + '<a href="/ActualParts/ReassignTask/' + rowObject.Id + '" class="btn btn-xs btn-success" title="Reassign" style="margin:2px;font-size: .8em;"><i class="fa fa-hand-o-right" aria-hidden="true"></i></a>';
         thisCellVal = thisCellVal + '<a href="#/' + rowObject.Id + '" class="btn btn-xs btn-success" title="View Procedure" style="margin:2px;font-size: .8em;"><i class="fa fa-book" aria-hidden="true"></i></a>';
-        thisCellVal = thisCellVal + '<a href="#/' + rowObject.Id + '" class="btn btn-xs btn-danger" title="Delete" style="margin:2px;font-size: .8em;"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+        thisCellVal = thisCellVal + '<a href="/ActualParts/DeleteHistory/' + rowObject.Id + '" data-call-back-name="' + rowObject.Id + '" data-call-back-id="' + rowObject.Id + '" class="btn btn-xs btn-danger deletehistory" title="Delete" style="margin:2px;font-size: .8em;"><i class="fa fa-trash" aria-hidden="true"></i></a>';
         thisCellVal = thisCellVal + '<a href="#/' + rowObject.Id + '" class="btn btn-xs btn-success" title="View Hierarchy" style="margin:2px;font-size: .8em;"><i class="fa fa-chain-broken" aria-hidden="true"></i></a>';
         thisCellVal = thisCellVal + '<a href="/ShowPurchaseStatus/Index/' + rowObject.Id + '" class="btn btn-xs btn-success" title="show Purchase Status" style="margin:2px;font-size: .8em;"><i class="fa fa-money" aria-hidden="true"></i></a>';
         thisCellVal = thisCellVal + '<a href="#/' + rowObject.Id + '" class="btn btn-xs btn-success" title="View Details" style="margin:2px;font-size: .8em;"><i class="fa fa-eye" aria-hidden="true"></i></a>';

@@ -113,14 +113,14 @@ $(function () {
             editable: true
         });
         $(this).addClass('hidden');
-        $('.pause-timer-btn, .remove-timer-btn').removeClass('hidden');
+        
     });
 
     // Init timer resume
     $('.resume-timer-btn').on('click', function () {
         $('.timer').timer('resume');
         $(this).addClass('hidden');
-        $('.pause-timer-btn, .remove-timer-btn').removeClass('hidden');
+        
     });
 
     // Init timer pause
@@ -136,13 +136,13 @@ $(function () {
         $('.timer').timer('remove');
         $(this).addClass('hidden');
         $('.start-timer-btn').removeClass('hidden');
-        $('.pause-timer-btn, .resume-timer-btn').addClass('hidden');
+        
     });
 
     // Additional focus event for this demo
     $('.timer').on('focus', function () {
         if (hasTimer) {
-            $('.pause-timer-btn').addClass('hidden');
+            
             $('.resume-timer-btn').removeClass('hidden');
         }
     });
@@ -150,7 +150,7 @@ $(function () {
     // Additional blur event for this demo
     $('.timer').on('blur', function () {
         if (hasTimer) {
-            $('.pause-timer-btn').removeClass('hidden');
+            
             $('.resume-timer-btn').addClass('hidden');
         }
     });
@@ -352,6 +352,7 @@ function loadStep(step) {
         url: "/wip/GetWipStepDetails?stepId=" + stepId + "&phStepId=" + phStepId + "&fillId=" + fillId,
         dataType: 'html',
         success: function (data) {
+            $('#step-' + stepId).html('');
             $('#step-' + stepId).html(data);
         },
         error: function () {

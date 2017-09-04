@@ -1,9 +1,4 @@
-﻿-- =============================================
--- Author:		<Author,,Name>
--- Create date: <Create Date,,>
--- Description:	<Description,,>
--- =============================================
-CREATE PROCEDURE Portal_ProcedureStepGetRefProcedures
+﻿CREATE PROCEDURE Portal_ProcedureStepGetRefProcedures
 	-- Add the parameters for the stored procedure here
 	@ID varchar(50),
     @strNTLogin varchar(50)
@@ -19,5 +14,5 @@ BEGIN
 
 	INSERT INTO @OutPutTable EXEC A_SP_PROCEDURE_STEP_GET_REF_PROCEDURES @ID, @strNTLogin
 	
-	SELECT ProcedureLink AS Id,ProcName AS Name from @OutPutTable
+	SELECT ProcedureLink AS Value,ProcName AS Show from @OutPutTable
 END

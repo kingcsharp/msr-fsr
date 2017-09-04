@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace Msr.Models.Procedures
 {
-    public class VerbTypes
+   public class EditProcedureObjestFile
     {
-        public string ID { get; set; }
-
-        public string NAME { get; set; }
+        public string OBJ_DESC { get; set; }
+        public string Id { get; set; }
     }
 }

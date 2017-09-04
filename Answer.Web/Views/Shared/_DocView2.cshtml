@@ -1,0 +1,29 @@
+﻿<input type="hidden" value="@ViewBag.CallBackId" id="target-control-id" />
+@model  IEnumerable<Msr.Services.PrePro.Messages.DocFile> 
+<div class="col-lg-12">
+    <table class="table table-bordered">
+        <tbody>
+        <tr>
+        <td>
+            <div>Name :</div>
+        </td>
+            @foreach (var item in Model)
+            {    
+        <tr>   
+            <td>
+                <div>@item.Name</div>
+            </td>
+            <td>
+                <div><a type="button" class="btn btn-default btn-xs btn-equal embed" style="margin-top: -17px;" data-toggle="modal" href="{%=file.url%}" data-target="#" onclick="viewerLoad('@item.ServerPath','@item.Name')" title="View Inline"><span data-toggle="tooltip" data-placement="top" data-original-title="Launch Viewer" data-flobwicket="{%=file.name%}"> <i class="fa fa-eye"></i></span></a>
+                </div>
+            </td>
+        </tr>
+            }
+      
+        </tbody>
+    </table>
+</div>
+<script type="text/javascript" src="~/assets/js/i18n/grid.locale-en.js"></script>
+<script type="text/javascript" src="~/assets/js/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="~/assets/js/grids/PreProViewDialog.js"></script>
+

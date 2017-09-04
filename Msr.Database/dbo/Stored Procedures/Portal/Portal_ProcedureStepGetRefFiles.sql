@@ -1,9 +1,4 @@
-﻿-- =============================================
--- Author:		<Author,,Name>
--- Create date: <Create Date,,>
--- Description:	<Description,,>
--- =============================================
-CREATE PROCEDURE Portal_ProcedureStepGetRefFiles
+﻿CREATE PROCEDURE Portal_ProcedureStepGetRefFiles
 	-- Add the parameters for the stored procedure here
 	@procStepID varchar(50),
     @strNTLogin varchar(50)
@@ -18,5 +13,5 @@ BEGIN
 
     -- Insert statements for procedure here
 		
-       SELECT NAME AS Name, DOC_ID AS Id FROM A_V_PROCEDURE_STEP_DOCUMENT_DATA WHERE STEP_ID = @procStepID
+       SELECT NAME AS Show, DOC_ID AS Value FROM A_V_PROCEDURE_STEP_DOCUMENT_DATA WHERE STEP_ID = @procStepID
 END

@@ -1,0 +1,41 @@
+﻿@model Msr.Services.Procedures.ViewModels.SaveReorderSteps
+@{
+    ViewBag.Title = "ReorderSteps";
+}
+
+<div class="container-fluid">
+    <div class="side-body padding-top">
+        <div class="row">
+            <h2 class="page-header">
+                Reorder Steps
+            </h2>
+
+            <div class="col-lg-12">
+                <section class="panel">
+                    <div class="panel-body bio-graph-info">
+                        @using (Html.BeginForm("ReorderSteps", "Procedures", FormMethod.Post))
+                        {
+                            <input type="hidden" name="procObjectId" value="@ViewBag.ProcObjectId" />
+                            <table class="table-condensed" style="width: 100%;">
+                                <tr>
+                                    <th style="width:14%">Order</th>
+                                    <th style="width:14%">Name</th>
+                                </tr>
+                                @for (int index = 0; index < Model.GetStepDataResults.Count; index++)
+                                {
+
+                                    <tr>
+                                        <td>@Html.Hidden("i" + index + "", Model.GetStepDataResults[index].Id)</td>
+                                        <td>@Html.TextBox("p" + index + "", Model.GetStepDataResults[index].Print_Order)</td>
+                                        <td>@Html.Raw(Model.GetStepDataResults[index].Step_Text)</td>
+                                    </tr>
+                                }
+                            </table>
+                            <input type="submit" value="Save Reorder Steps" class="btn btn-success" />
+                        }
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>

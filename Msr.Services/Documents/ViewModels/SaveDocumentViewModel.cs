@@ -109,14 +109,14 @@ namespace Msr.Services.Documents.ViewModels
 
             ListReferenceObjects = documentService.GetSelectedObjects(id: Id,ntlogin:ntlog).Select(x => new SelectListItem
             {
-                Text = x.Name,
-                Value = x.Id,
+                Text = x.Show,
+                Value = x.Value,
             }).OrderBy(o => o.Text).ToList();
 
           ListReferenceTheories = documentService.GetSelectedTheories(id: Id, ntlogin: ntlog).Select(x => new SelectListItem
                 {
-                    Text = x.Name,
-                    Value = x.Id,
+                    Text = x.Show,
+                    Value = x.Value,
                 }).OrderBy(o => o.Text).ToList();
            
 

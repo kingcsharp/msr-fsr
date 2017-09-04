@@ -56,5 +56,17 @@ namespace Msr.Services.Documents
 
             return result;
         }
+
+        public List<DocFile> GetProcedureSelectedRefFiles(string id, string ntlogin)
+        {
+            var objId = new SqlParameter("@procStepID", id ?? "0");
+
+            //need to be dynamic
+            var NTLogin = new SqlParameter("@strNTLogin", ntlogin);
+
+            var result = _dbContext.Database.SqlQuery<DocFile>("EXEC Portal_ProcedureStepGetRefFilesDialog @procStepID, @strNTLogin", objId, NTLogin).ToList();
+
+            return result;
+        }
     }
 }

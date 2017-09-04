@@ -86,8 +86,27 @@
             key: true,
             ajaxCellOptions: {},
             gridComplete: function () {
-                
-            },
+                $('.editlocation').on('click',
+                    function (e) {
+                        e.preventDefault();
+
+                        var callBackId = $(this).data('call-back-id');
+                        var callBackName = $(this).data('call-back-name');
+
+                        eModal.confirm(
+                                'Are you sure?')
+                            .then(confirmCallback, optionalCancelCallback);
+
+                        function confirmCallback() {
+                            window.location.href = "/Locations/Edit/" + callBackId;
+                        }
+
+                        function optionalCancelCallback() {
+                        }
+
+                    });
+
+            }
 
         });
         $('#jqGrid').navGrid("#jqGridPager", {
@@ -110,7 +129,7 @@
         });
         function LocationEditFormatter(cellvalue, options, rowObject) {
 
-            var editButton = '<a  title="Edit" href="/Locations/edit/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
+            var editButton = '<a  title="Edit" href="/Locations/edit/' + rowObject.ObjectId + '" data-call-back-id ="' + rowObject.ObjectId +'" class="btn btn-xs btn-success editlocation" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
 
             var deleteButton = '';
             var buttonWorkflowLeft = '';
