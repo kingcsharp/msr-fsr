@@ -1,200 +1,53 @@
-﻿<div id="textAdder" class="textAdder" >
-    <table>
-        <tr>
-            <td>
-                <div onmouseover="this.style.cursor='hand'" class="textAdderButton" style="font-weight: bold;width:5em;" onClick="
-insertAtCarat('&lt;&lt;bb&gt;&gt;','&lt;&lt;/bb&gt;&gt;','Enter Text To Bold***')
-">bold</div>
-            </td>
-            <td>
-                <div onmouseover="this.style.cursor='hand'" class="textAdderButton" style="color: red;width:5em;" onClick="
-insertAtCarat('&lt;&lt;r&gt;&gt;','&lt;&lt;/r&gt;&gt;','Enter Red Text***')
-">red</div>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <div onmouseover="this.style.cursor='hand'" class="textAdderButton" style="text-decoration: underline;width:5em;" onClick="
-insertAtCarat('&lt;&lt;u&gt;&gt;','&lt;&lt;/u&gt;&gt;','Enter Text to be Underlined***')
-">underline</div>
-            </td>
-            <td>
-                <div onmouseover="this.style.cursor='hand'" class="textAdderButton" style="color: purple;width:5em;" onClick="
-insertAtCarat('&lt;&lt;p&gt;&gt;','&lt;&lt;/p&gt;&gt;','Enter Purple Text***')
-">Purple</div>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <div onmouseover="this.style.cursor='hand'" class="textAdderButton" style="font-style: italic;width:5em;" onClick="
-insertAtCarat('&lt;&lt;i&gt;&gt;','&lt;&lt;/i&gt;&gt;','Enter Text to be Italicized***')
-">italics</div>
-            </td>
-            <td>
-                <div onmouseover="this.style.cursor='hand'" class="textAdderButton" style="color: blue;width:5em;" onClick="
-insertAtCarat('&lt;&lt;b&gt;&gt;','&lt;&lt;/b&gt;&gt;','Enter Blue Text***')
-">blue</div>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <div onmouseover="this.style.cursor='hand'" class="textAdderButton" style="width:5em;" onClick="
-insertAtCarat('&lt;&lt;li/&gt;&gt; ','','')
-">bullet</div>
-            </td>
-            <td>
-                <div onmouseover="this.style.cursor='hand'" class="textAdderButton" style="color: green;width:5em;" onClick="
-insertAtCarat('&lt;&lt;g&gt;&gt;','&lt;&lt;/g&gt;&gt;','Enter Green Text***')
-">green</div>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <div onmouseover="this.style.cursor='hand'" class="textAdderButton" style="width:5em;" onClick="
-insertAtCarat('&lt;&lt;link&gt;&gt;&lt;&lt;text&gt;&gt;','&lt;&lt;/text&gt;&gt;&lt;&lt;url&gt;&gt;Enter URL Here***&lt;&lt;/url&gt;&gt;&lt;&lt;/link&gt;&gt;','Enter Text TO DISPLAY HERE***')
-">link</div>
-            </td>
-            <td>
-                <div onmouseover="this.style.cursor='hand'" class="textAdderButton" style="color: yellow;width:5em;" onClick="
-insertAtCarat('&lt;&lt;y&gt;&gt;','&lt;&lt;/y&gt;&gt;','Enter Yellow Text***')
-">yellow</div>
-            </td>
-        </tr>
-        <tr>
-            <td></td>
-            <td>
-                <div onmouseover="this.style.cursor='hand'" class="textAdderButton" style="color: orange;width:5em;" onClick="
-insertAtCarat('&lt;&lt;o&gt;&gt;','&lt;&lt;/o&gt;&gt;','Enter Orange Text***')
-">orange</div>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">Pressing button will place a newline</td>
-        </tr>
-        <tr>
-            <td></td>
-            <td>
-                <div onmouseover="this.style.cursor='hand'" class="textAdderButton" style="color: black;width:5em;" onClick="
-insertAtCarat('','&lt;&lt;nl/&gt;&gt;','')
-">New Line</div>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">Pressing these buttons will put these characters</td>
-        </tr>
-        <tr>
-            <td>
-                <table class="tight">
-                    <tr>
-                        <td>
-                            <div onmouseover="this.style.cursor='hand'" class="textAdderButton" style="color: black;" onClick="
-insertAtCarat('','&lt;&lt;ang/&gt;&gt;','')
-"><img src="~/assets/textformater/Angstrom.gif" /></div>
-                        </td>
-                        <td>
-                            <div onmouseover="this.style.cursor='hand'" class="textAdderButton" style="color: black;" onClick="
-insertAtCarat('','&lt;&lt;micro/&gt;&gt;','')
-"><img src="~/assets/textformater/micro.gif" /></div>
-                        </td>
-                        <td>
-                            <div onmouseover="this.style.cursor='hand'" class="textAdderButton" style="color: black;" onClick="
-insertAtCarat('','&lt;&lt;omega/&gt;&gt;','')
-"><img src="~/assets/textformater/omega.gif" /></div>
-                        </td>
-                        <td>
-                            <div onmouseover="this.style.cursor='hand'" class="textAdderButton" style="color: black;" onClick="
-insertAtCarat('','&lt;&lt;phase/&gt;&gt;','')
-"><img src="~/assets/textformater/phase.gif" /></div>
-                        </td>
-                        <td>
-                            <div onmouseover="this.style.cursor='hand'" class="textAdderButton" style="color: black;" onClick="
-insertAtCarat('','&lt;&lt;theta/&gt;&gt;','')
-"><img src="~/assets/textformater/theta.gif" /></div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div onmouseover="this.style.cursor='hand'" class="textAdderButton" style="color: black;" onClick="
-insertAtCarat('','&lt;&lt;delta/&gt;&gt;','')
-"><img src="~/assets/textformater/delta.gif" /></div>
-                        </td>
-                        <td>
-                            <div onmouseover="this.style.cursor='hand'" class="textAdderButton" style="color: black;" onClick="
-insertAtCarat('','&lt;&lt;pi/&gt;&gt;','')
-"><img src="~/assets/textformater/pi.gif" /></div>
-                        </td>
-                        <td>
-                            <div onmouseover="this.style.cursor='hand'" class="textAdderButton" style="color: black;" onClick="
-insertAtCarat('','&lt;&lt;therefore/&gt;&gt;','')
-"><img src="~/assets/textformater/therefore.gif" /></div>
-                        </td>
-                        <td>
-                            <div onmouseover="this.style.cursor='hand'" class="textAdderButton" style="color: black;" onClick="
-insertAtCarat('','&lt;&lt;sigma/&gt;&gt;','')
-"><img src="~/assets/textformater/sigma.gif" /></div>
-                        </td>
-                        <td>
-                            <div onmouseover="this.style.cursor='hand'" class="textAdderButton" style="color: black;" onClick="
-insertAtCarat('','&lt;&lt;beta/&gt;&gt;','')
-"><img src="~/assets/textformater/beta.gif" /></div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div onmouseover="this.style.cursor='hand'" class="textAdderButton" style="color: black;" onClick="
-insertAtCarat('','&lt;&lt;divide/&gt;&gt;','')
-"><img src="~/assets/textformater/divide.gif" /></div>
-                        </td>
-                        <td>
-                            <div onmouseover="this.style.cursor='hand'" class="textAdderButton" style="color: black;" onClick="
-insertAtCarat('','&lt;&lt;plusMinus/&gt;&gt;','')
-"><img src="~/assets/textformater/plusMinus.gif" /></div>
-                        </td>
-                        <td>
-                            <div onmouseover="this.style.cursor='hand'" class="textAdderButton" style="color: black;" onClick="
-insertAtCarat('','~','')
-">~</div>
-                        </td>
-                        <td>
-                            <div onmouseover="this.style.cursor='hand'" class="textAdderButton" style="color: black;" onClick="
-insertAtCarat('','&lt;&lt;approx/&gt;&gt;','')
-"><img src="~/assets/textformater/approx.gif" /></div>
-                        </td>
-                        <td>
-                            <div onmouseover="this.style.cursor='hand'" class="textAdderButton" style="color: black;" onClick="
-insertAtCarat('','&lt;&lt;notEqual/&gt;&gt;','')
-"><img src="~/assets/textformater/notEqual.gif" /></div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div onmouseover="this.style.cursor='hand'" class="textAdderButton" style="color: black;" onClick="
-insertAtCarat('','&lt;&lt;lessEqual/&gt;&gt;','')
-"><img src="~/assets/textformater/lessEqual.gif" /></div>
-                        </td>
-                        <td>
-                            <div onmouseover="this.style.cursor='hand'" class="textAdderButton" style="color: black;" onClick="
-insertAtCarat('','&lt;&lt;greatEqual/&gt;&gt;','')
-"><img src="~/assets/textformater/greaterEqual.gif" /></div>
-                        </td>
-                        <td>
-                            <div onmouseover="this.style.cursor='hand'" class="textAdderButton" style="color: black;" onClick="
-insertAtCarat('','&lt;&lt;degree/&gt;&gt;','')
-"><img src="~/assets/textformater/degree.gif" /></div>
-                        </td>
-                        <td>
-                            <div onmouseover="this.style.cursor='hand'" class="textAdderButton" style="color: black;" onClick="
-insertAtCarat('','&lt;&lt;angle/&gt;&gt;','')
-"><img src="~/assets/textformater/angle.gif" /></div>
-                        </td>
-                        <td>
-                            <div onmouseover="this.style.cursor='hand'" class="textAdderButton" style="color: black;" onClick="
-insertAtCarat('','&lt;&lt;infinity/&gt;&gt;','')
-"><img src="~/assets/textformater/infinity.gif" /></div>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
+﻿<style>
+    .special-item {
+        font-size: 12px;
+    }
+</style>
+<div class="btn-toolbar" role="toolbar">
+    <div class="btn-group btn-group-xs" role="group">
+        <button type="button" class="btn btn-default btn-xs" onclick="insertAtCarat('<<bb>>','<</bb>>','Enter Text To Bold***')"><i class="fa fa-bold" aria-hidden="true"></i></button>
+        <button type="button" class="btn btn-default btn-xs" onclick="insertAtCarat('<<u>>','<</u>>','Enter Text to be Underlined***')"><i class="fa fa-underline" aria-hidden="true"></i></button>
+        <button type="button" class="btn btn-default btn-xs" onclick="insertAtCarat('<<i>>','<</i>>','Enter Text to be Italicized***')"><i class="fa fa-italic" aria-hidden="true"></i></button>
+        <button type="button" class="btn btn-default btn-xs" onclick="insertAtCarat('<<li/>> ','','')"><i class="fa fa-list-ul" aria-hidden="true"></i></button>
+        <button type="button" class="btn btn-default btn-xs" onclick="insertAtCarat('<<link>><<text>>','<</text>><<url>>Enter URL Here***<</url>><</link>>','Enter Text TO DISPLAY HERE***')"><i class="fa fa-link" aria-hidden="true"></i></button>
+    </div>
+
+    <div class="btn-group btn-group-xs" role="group">
+        <button type="button" class="btn btn-default btn-xs" onclick="insertAtCarat('<<r>>','<</r>>','Enter Red Text***')" data-toggle"tooltip" title="Red Text"><i class="fa fa-square" aria-hidden="true" style="color:red"></i></button>
+        <button type="button" class="btn btn-default btn-xs" onclick="insertAtCarat('<<p>>','<</p>>','Enter Purple Text***')" data-toggle"tooltip" title="Purple Text"><i class="fa fa-square" aria-hidden="true" style="color: purple"></i></button>
+        <button type="button" class="btn btn-default btn-xs" onclick="insertAtCarat('<<b>>','<</b>>','Enter Blue Text***')" data-toggle"tooltip" title="Blue Text"><i class="fa fa-square" aria-hidden="true" style="color:blue"></i></button>
+        <button type="button" class="btn btn-default btn-xs" onclick="insertAtCarat('<<y>>','<</y>>','Enter Yellow Text***')" data-toggle"tooltip" title="Yellow Text"><i class="fa fa-square" aria-hidden="true" style="color:yellow"></i></button>
+        <button type="button" class="btn btn-default btn-xs" onclick="insertAtCarat('<<o>>','<</o>>','Enter Orange Text***')" data-toggle"tooltip" title="Orange Text"><i class="fa fa-square" aria-hidden="true" style="color:orange"></i></button>
+    </div>
+
+    <button type="button" class="btn btn-default btn-xs" onclick="insertAtCarat('','<<nl/>>','')" data-toggle"tooltip" title="New Line">New Line</button>
+
+    <div class="btn-group" role="group">
+        <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Special Chars <span class="caret"></span></button>
+        <ul class="dropdown-menu">
+            <li class="special-item"><a href="#" onclick="insertAtCarat('','<<ang/>>','')"><img src="http://dev.answer2.msr-fsr.com/assets/textformater/Angstrom.gif"> Angstrom</li>
+            <li class="special-item"><a href="#" onclick="insertAtCarat('','<<micro/>>','')"><img src="http://dev.answer2.msr-fsr.com/assets/textformater/micro.gif"> Micro</li>
+            <li class="special-item"><a href="#" onclick="insertAtCarat('','<<omega/>>','')"><img src="http://dev.answer2.msr-fsr.com/assets/textformater/omega.gif"> Omega</li>
+            <li class="special-item"><a href="#" onclick="insertAtCarat('','<<phase/>>','')"><img src="http://dev.answer2.msr-fsr.com/assets/textformater/phase.gif"> Phase</li>
+            <li class="special-item"><a href="#" onclick="insertAtCarat('','<<theta/>>','')"><img src="http://dev.answer2.msr-fsr.com/assets/textformater/theta.gif"> Theta</li>
+
+            <li class="special-item"><a href="#" onclick="insertAtCarat('','<<delta/>>','')"><img src="http://dev.answer2.msr-fsr.com/assets/textformater/delta.gif" /> Delta</li>
+            <li class="special-item"><a href="#" onclick="insertAtCarat('','<<pi/>>','')"><img src="http://dev.answer2.msr-fsr.com/assets/textformater/pi.gif" /> Pi</li>
+            <li class="special-item"><a href="#" onclick="insertAtCarat('','<<therefore/>>','')"><img src="http://dev.answer2.msr-fsr.com/assets/textformater/therefore.gif"> Therefore</li>
+            <li class="special-item"><a href="#" onclick="insertAtCarat('','<<sigma/>>','')"><img src="http://dev.answer2.msr-fsr.com/assets/textformater/sigma.gif"> Sigma</li>
+            <li class="special-item"><a href="#" onclick="insertAtCarat('','<<beta/>>','')"><img src="http://dev.answer2.msr-fsr.com/assets/textformater/beta.gif"> Beta</li>
+
+            <li class="special-item"><a href="#" onclick="insertAtCarat('','<<divide/>>','')"><img src="http://dev.answer2.msr-fsr.com/assets/textformater/divide.gif" /> Divide</li>
+            <li class="special-item"><a href="#" onclick="insertAtCarat('','<<plusMinus/>>','')"><img src="http://dev.answer2.msr-fsr.com/assets/textformater/plusMinus.gif" /> Plus/Minus</li>
+            <li class="special-item"><a href="#" onclick="insertAtCarat('','~','')">~ Tilde</li>
+            <li class="special-item"><a href="#" onclick="insertAtCarat('','<<approx/>>','')"><img src="http://dev.answer2.msr-fsr.com/assets/textformater/approx.gif">Approx</li>
+            <li class="special-item"><a href="#" onclick="insertAtCarat('','<<notEqual/>>','')"><img src="http://dev.answer2.msr-fsr.com/assets/textformater/notEqual.gif"> Not Equal</li>
+
+            <li class="special-item"><a href="#" onclick="insertAtCarat('','<<lessEqual/>>','')"><img src="http://dev.answer2.msr-fsr.com/assets/textformater/lessEqual.gif" /> Less Equal</li>
+            <li class="special-item"><a href="#" onclick="insertAtCarat('','<<greaterEqual/>>','')"><img src="http://dev.answer2.msr-fsr.com/assets/textformater/greaterEqual.gif" />Greater Equal</li>
+            <li class="special-item"><a href="#" onclick="insertAtCarat('','<<degree/>>','')"><img src="http://dev.answer2.msr-fsr.com/assets/textformater/degree.gif">Degree</li>
+            <li class="special-item"><a href="#" onclick="insertAtCarat('','<<angle/>>','')"><img src="http://dev.answer2.msr-fsr.com/assets/textformater/angle.gif">Angle</li>
+            <li class="special-item"><a href="#" onclick="insertAtCarat('','<<infinity/>>','')"><img src="http://dev.answer2.msr-fsr.com/assets/textformater/infinity.gif"> Infnity</li>
+        </ul>
+    </div>
 </div>

@@ -71,35 +71,15 @@
                                         }
                                     </div>
                                 </div>
-
-                                <table class="form" style="margin-left: 245px;">
-                                    <script language="JavaScript" type="text/javascript">
-                                        arrForms = arrForms.concat(new Array("editForm"));
-
-                                    </script>
-                                    <label class="control-label col-md-2" for="Title" style="margin-left: -15px;">Step Text:</label>
-                                    <tr>
-                                        <td class="form" colspan="" style="">
-                                            @Html.TextAreaFor(model => model.StepText, new { onBlur = "checkMaxSize(this, 4000);;lastTextArea = 'document.editForm.StepText';", name = "StepText", rows = "10", cols = "80", @class = "text-formatter", style = "height:150px;" })
-                                        </td>
-                                        <td>
-                                            <div style="width: 3%; float: right;"></div>
-                                        </td>
-                                    </tr>
-
-                                    <span class="tight" ID="document_editForm_cancelConfirm"> </span>
-
-                                </table>
-
-                                <div style="width: 300px; height: 300px; margin-left: 60%; margin-top: -150px;">
-
-                                    <td>
+                                <div class="form-group" >
+                                    @Html.LabelFor(model => model.StepText, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-5">
                                         @Html.Partial("_TextAdder")
-                                    </td>
-
+                                        @Html.TextAreaFor(model => model.StepText, new {onBlur = "checkMaxSize(this, 4000);;lastTextArea = 'document.editForm.StepText';", name = "StepText", rows = "10", cols = "80", @class = "text-formatter form-control",})
+                                    </div>
                                 </div>
 
-                                <div class="form-group" style="margin-top: -120px;">
+                                <div class="form-group" >
                                     @Html.LabelFor(model => model.SystemTask, htmlAttributes: new { @class = "control-label col-md-2" })
                                     <div class="col-md-5">
                                         @Html.DropDownListFor(model => model.SystemTask, Model.SystemTaskList, new { @class = "form-control select" })
