@@ -90,8 +90,6 @@ namespace Msr.Web.Controllers
 
             var answerUser = peopleService.GetAnswerUser(model.User, model.Password);
 
-            Session["UserId"] = answerUser.Id;
-
             if (answerUser != null)
             {
                 model.Password = "msr" + answerUser.Id + "$";

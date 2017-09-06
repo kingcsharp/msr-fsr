@@ -306,7 +306,7 @@ namespace Answer.Web.Controllers
             return PartialView("_WipListModal", viewModel);
         }
 
-        public ActionResult Details(int? id,string ntlogin)
+        public ActionResult Details(int? id)
         {
             var currentUser = GetCurrentUser();
 
@@ -320,16 +320,18 @@ namespace Answer.Web.Controllers
                 id = int.Parse(workItems.First().FillId);
             }
 
-            var response = _orderService.GetPurchaseItemDetails(id.Value,ntlogin);
+            var response = _orderService.GetPurchaseItemDetails(id.Value, currentUser.Id);
 
             response.MyWoItems = workItems;
 
             return View(response);
         }
 
-        public ActionResult PrintTraveler(int id,string ntlogin)
+        public ActionResult PrintTraveler(int id)
         {
-            var response = _orderService.GetTsrDetails(id,ntlogin);
+            var currentUser = GetCurrentUser();
+
+            var response = _orderService.GetTsrDetails(id, currentUser.Id);
 
             return PartialView("_ViewTsr", response);
         }
@@ -448,29 +450,39 @@ namespace Answer.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult StepDoneClick(int stepId)
+        public ActionResult StepDoneClick(int stepId, int fillId)
         {
             var loggedUserId = GetCurrentUser().Id;
 
-            _orderService.StepDone(stepId, loggedUserId);
+            var result = _orderService.StepDone(stepId, loggedUserId, fillId);
+
+            if (result.HasErrors())
+            {
+                TempData["ErrorMesage"] = result.ErrorMessage();
+            }
 
             return Json("OK", JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
-        public ActionResult StepStartClick(int stepId)
+        public ActionResult StepStartClick(int stepId, int fillId)
         {
             var loggedUserId = GetCurrentUser().Id;
 
-            _orderService.StepStart(stepId, loggedUserId);
+           var result = _orderService.StepStart(stepId, loggedUserId, fillId);
+
+            if (result.HasErrors())
+            {
+                TempData["ErrorMesage"] = result.ErrorMessage();
+            }
 
             return Json("OK", JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
-        public ActionResult StepPause(int taskLogId)
+        public ActionResult StepPause(int taskLogId, int fillId)
         {
-            _orderService.StepPause(taskLogId);
+            _orderService.StepPause(taskLogId, fillId);
 
             return Json("OK", JsonRequestBehavior.AllowGet);
         }

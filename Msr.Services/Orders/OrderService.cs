@@ -454,7 +454,7 @@ namespace Msr.Services.Orders
 
         public WipStepDetailsResponse GetWipStepDetails(int stepId, int fillId, string login, int? phStepId)
         {
-            var detailsResponse = new WipStepDetailsResponse { StepId = stepId };
+            var detailsResponse = new WipStepDetailsResponse {StepId = stepId, FillId = fillId};
 
             using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
             {
@@ -470,7 +470,7 @@ namespace Msr.Services.Orders
                     detailsResponse.TaskEditDataResult.Description = detailsResponse.TaskEditDataResult.Description.Replace("<<bb>>", "<br/><h4>").Replace("<</bb>>", "</h4>").Replace("<<nl/>>", "<br/>");
                 }
 
-                detailsResponse.TaskRunningTimer = _dbContext.TaskLogs.SingleOrDefault(x => x.TaskId == stepId.ToString());
+                detailsResponse.TaskRunningTimer = _dbContext.TaskLogs.SingleOrDefault(x => x.TaskId == stepId && x.FillId == fillId);
 
                 var p1 = new DynamicParameters();
 
@@ -627,8 +627,10 @@ namespace Msr.Services.Orders
             }
         }
 
-        public void StepStart(int stepId, string login)
+        public BaseNotification StepStart(int stepId, string login, int fillId)
         {
+            var response = new BaseNotification();
+
             var p = new DynamicParameters();
 
             p.Add("@RET_STATUS", dbType: DbType.String, direction: ParameterDirection.Output, size: 500);
@@ -642,18 +644,31 @@ namespace Msr.Services.Orders
 
                 var status = p.Get<string>("RET_STATUS");
 
-                _dbContext.TaskLogs.Add(new TaskLog()
+                if (!string.IsNullOrWhiteSpace(status))
                 {
-                    TaskId = stepId.ToString(),
-                    StartTime = DateTime.Now,
-                    StatusId = TimerStatuseConstants.InProgress,
-                    UserId = login
-                });
-                _dbContext.SaveChanges();
+                    response.AddError(status);
+                }
+
+                if ((status != null && !status.Contains("ERROR")) || status == null)
+                {
+                    _dbContext.TaskLogs.Add(new TaskLog()
+                    {
+                        TaskId = stepId,
+                        StartTime = DateTime.Now,
+                        StatusId = TimerStatuseConstants.InProgress,
+                        UserId = login,
+                        FillId = fillId
+                    });
+
+                    _dbContext.SaveChanges();
+                }
             }
+            return response;
         }
-        public void StepDone(int stepId, string login)
+        public BaseNotification StepDone(int stepId, string login, int fillId)
         {
+            var response = new BaseNotification();
+
             var p = new DynamicParameters();
 
             p.Add("@RET_STATUS", dbType: DbType.String, direction: ParameterDirection.Output, size: 500);
@@ -667,19 +682,29 @@ namespace Msr.Services.Orders
 
                 var status = p.Get<string>("RET_STATUS");
 
-                var taskLog =
-                    _dbContext.TaskLogs.Where(x => x.TaskId == stepId.ToString() && x.EndTime == null)
-                        .OrderByDescending(x => x.Id)
-                        .FirstOrDefault();
-
-                if (taskLog != null)
+                if (!string.IsNullOrWhiteSpace(status))
                 {
-                    taskLog.EndTime = DateTime.Now;
-                    taskLog.StatusId = TimerStatuseConstants.Stopped;
-                    taskLog.TotalTime = Math.Abs((taskLog.StartTime - taskLog.EndTime.Value).TotalHours);
-                    _dbContext.SaveChanges();
+                    response.AddError(status);
+                }
+
+                if ((status != null && !status.Contains("ERROR")) || status == null)
+                {
+                    var taskLog =
+                        _dbContext.TaskLogs.Where(x => x.TaskId == stepId && x.FillId == fillId && x.EndTime == null)
+                            .OrderByDescending(x => x.Id)
+                            .FirstOrDefault();
+
+                    if (taskLog != null)
+                    {
+                        taskLog.EndTime = DateTime.Now;
+                        taskLog.StatusId = TimerStatuseConstants.Stopped;
+                        taskLog.TotalTime = Math.Abs((taskLog.StartTime - taskLog.EndTime.Value).TotalHours);
+                        _dbContext.SaveChanges();
+                    }
                 }
             }
+
+            return response;
         }
 
         public void StepResume(int taskLogId)
@@ -695,9 +720,9 @@ namespace Msr.Services.Orders
             _dbContext.SaveChanges();
         }
 
-        public void StepPause(int taskLogId)
+        public void StepPause(int taskLogId, int fillId)
         {
-            var taskLog = _dbContext.TaskLogs.Where(x => x.Id == taskLogId)
+            var taskLog = _dbContext.TaskLogs.Where(x => x.Id == taskLogId && x.FillId == fillId)
                     .OrderByDescending(x => x.Id)
                     .FirstOrDefault();
 

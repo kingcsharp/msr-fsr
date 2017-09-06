@@ -38,7 +38,8 @@
         <input type="text" name="timer" class="form-control timer input-lg" placeholder="@timespan" width="120">
     </div>
     <div class="col-sm-5">
-        @if (Model.TaskEditDataResult.Status != "ACCEPTED" && Model.TaskRunningTimer == null)
+        
+        @if ((Model.TaskEditDataResult.Status == "REQUESTED" || Model.TaskEditDataResult.Status == "ACCEPTED") && Model.TaskRunningTimer == null)
         {
             <button class="btn btn-primary btn-lg print-btn pull-left start-timer-btn" id="start-step"><i class="glyphicon glyphicon-step-forward"></i> Start</button>
         }
@@ -52,9 +53,7 @@
             <button class="btn btn-warning btn-lg print-btn pull-left" data-task-log-id="@Model.TaskRunningTimer.Id" id="pause-step"><i class="glyphicon glyphicon-pause"></i> Pause</button>
             <button class="btn btn-primary btn-lg print-btn pull-left " data-task-log-id="@Model.TaskRunningTimer.Id" id="done-step"><i class="glyphicon glyphicon-stop"></i> Done</button>
         }
-        
-    
-      
+
     </div>
     <div class="col-sm-3">
         @if (!string.IsNullOrWhiteSpace(Model.TaskEditDataResult.RequesteeId) && Model.TaskEditDataResult.RequesteeId != Model.LoggedUserIdResult.Id)
@@ -64,7 +63,7 @@
         
         @if (Model.TaskEditDataResult.Status == "ACCEPTED" || Model.TaskEditDataResult.Status == "REQUESTED")
         {
-            <button data-toggle="modal" data-fill-id="@ViewBag.FillId" data-id="@Model.StepId" data-target="#addNcrModal" class="btn btn-danger btn-lg print-btn pull-right"><i class="fa fa-plus-square"></i> Add Procedure</button>
+            <button data-toggle="modal" data-fill-id="@ViewBag.FillId" data-id="@Model.StepId" data-target="#addNcrModal" class="btn btn-danger btn-lg print-btn pull-right"><i class="fa fa-plus-square"></i> Add NCR</button>
         }  
     </div>
 </div>
@@ -117,10 +116,11 @@
 
     function StepDoneClick() {
         var stepId = @Model.StepId;
+        var fillId = @Model.FillId;
 
         $.ajax({
             type: "POST",
-            url: "/wip/StepDoneClick?stepId=" + stepId,
+            url: "/wip/StepDoneClick?stepId=" + stepId + "&fillId=" + fillId,
             dataType: 'json',
             success: function(data) {
                 location.reload();
@@ -133,10 +133,11 @@
 
     function StepStartClick() {
         var stepId = @Model.StepId;
+        var fillId = @Model.FillId;
 
         $.ajax({
             type: "POST",
-            url: "/wip/StepStartClick?stepId=" + stepId,
+            url: "/wip/StepStartClick?stepId=" + stepId + "&fillId=" + fillId,
             dataType: 'json',
             success: function (data) {
                 location.reload();
@@ -165,10 +166,11 @@
     }
 
     function StepResumeClick(id) {
+        var fillId = @Model.FillId;
 
         $.ajax({
             type: "POST",
-            url: "/wip/stepResume?taskLogId=" + id,
+            url: "/wip/stepResume?taskLogId=" + id + "&fillId=" + fillId,
             dataType: 'json',
             success: function (data) {
                 location.reload();
@@ -180,10 +182,11 @@
     }
 
     function StepPauseClick(id) {
+        var fillId = @Model.FillId;
 
         $.ajax({
             type: "POST",
-            url: "/wip/StepPause?taskLogId=" + id,
+            url: "/wip/StepPause?taskLogId=" + id + "&fillId=" + fillId,
             dataType: 'json',
             success: function (data) {
                 location.reload();

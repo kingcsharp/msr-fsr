@@ -7,11 +7,12 @@ namespace Msr.Models.Tasks
     {
         [Key]
         public int Id { get; set; }
-        public string TaskId { get; set; }
+        public int TaskId { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime? EndTime { get; set; }
         public double TotalTime { get; set; }
         public int StatusId  {get; set; }
         public string UserId { get; set; }
+        public int FillId { get; set; }
     }
 }

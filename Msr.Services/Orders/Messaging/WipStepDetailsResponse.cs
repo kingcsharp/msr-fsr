@@ -17,6 +17,7 @@ namespace Msr.Services.Orders.Messaging
         }
 
         public int StepId { get; set; }
+        public int FillId { get; set; }
         public int PhStepId { get; set; }
         public TaskEditDataResult TaskEditDataResult { get; set; }
         public List<MonitorTemplateResult> MonitorTemplateResult { get; set; }

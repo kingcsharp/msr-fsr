@@ -1,6 +1,4 @@
 ﻿@using Msr.Models.Tasks
-@using Msr.Services.Orders.Procedures
-@using Msr.Services.Orders.Procedures
 @model Msr.Services.Orders.Messaging.WipStepDetailsResponse
 
 @if (Model.TaskEditDataResult.Status != "CLOSED")
@@ -42,7 +40,7 @@
 }
 
 <div class="row">
-    @if (Model.TaskRunningTimer !=null && Model.TaskRunningTimer.StatusId == TimerStatuseConstants.Stopped)
+    @if (Model.TaskEditDataResult.Status == "CLOSED")
     {
         <div id="timer-input" class="col-sm-4 timer-input">
             <input type="text" name="timer" class="form-control timer input-lg" placeholder="@timespan" width="120">

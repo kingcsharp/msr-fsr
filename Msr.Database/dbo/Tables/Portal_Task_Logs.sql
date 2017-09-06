@@ -5,7 +5,8 @@
 	[EndTime] [datetime2](7) NULL,
 	[UserId] [nvarchar](50) NOT NULL,
 	[TotalTime] [float] NOT NULL,
-	[StatusId] [Int] NOT NULL
+	[StatusId] [Int] NOT NULL,
+	[FillId] [nvarchar](50) NOT NULL
 PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
