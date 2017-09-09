@@ -21,7 +21,7 @@ namespace Msr.Services.ShowPurchaseStatus
         {
             var fieldList = new SqlParameter("@fieldList", DBNull.Value);
             var alias = new SqlParameter("@alias", "S");
-            var strWhere = new SqlParameter("@strWHERE", $"(PURCHASE_HIST_ID = {id ?? "0"})");
+            var strWhere = new SqlParameter("@strWHERE", string.Format("(PURCHASE_HIST_ID = {0})", id ?? "0"));
             var strPurposes = new SqlParameter("@strPurposes", DBNull.Value);
             var strObjects = new SqlParameter("@strObjects", DBNull.Value);
             var strProjects = new SqlParameter("@strProjects", DBNull.Value);
