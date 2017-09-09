@@ -326,7 +326,7 @@ namespace Msr.Services.Procedures
 
         public ProceduresApprovedDataResult GetApprovedData(string id)
         {
-            var sql = string.Format("SELECT OBJECT_ID FROM A_V_PROCEDURES_APPROVED_DATA WHERE ID={0}",id);
+            var sql = $"SELECT OBJECT_ID FROM A_V_PROCEDURES_APPROVED_DATA WHERE ID={id}";
 
             var result = _dbContext.Database.SqlQuery<ProceduresApprovedDataResult>(sql).SingleOrDefault();
 
@@ -335,7 +335,7 @@ namespace Msr.Services.Procedures
 
         public string GetProcedureName(string id)
         {
-            var sql = string.Format("SELECT NAME FROM A_V_PROCEDURES_APPROVED_DATA WHERE ID ={0}",id);
+            var sql = $"SELECT NAME FROM A_V_PROCEDURES_APPROVED_DATA WHERE ID ={id}";
 
             var result = _dbContext.Database.SqlQuery<string>(sql).FirstOrDefault();
 
@@ -346,11 +346,16 @@ namespace Msr.Services.Procedures
         {
             foreach (var people in model.AssignToPeople)
             {
-                var sql = string.Format("EXEC A_SP_PROCEDURE_ASSIGN_TO_PEOPLE '{0}', '{1}', null, '{2}'",model.Id, people, model.DatetimeToStart);
+                var sql = $"EXEC A_SP_PROCEDURE_ASSIGN_TO_PEOPLE '{model.Id}', '{people}', null, '{model.DatetimeToStart}'";
 
+                //_dbContext.Database.SqlQuery<string>(sql).SingleOrDefault();
+
+                var finalSql = $"EXEC A_SP_ADMIN_SQL_TO_RUN_QUE_UP {sql}, {model.LoginId}";
                 var adminSqlToRunQueUpProcedure = new AdminSqlToRunQueUpProcedure() { MySql = sql, NTLogin = model.LoginId };
 
                 _dbContext.Database.ExecuteStoredProcedure(adminSqlToRunQueUpProcedure);
+
+                //_dbContext.Database.SqlQuery<string>(finalSql).SingleOrDefault();
             }
 
             return new BaseNotification();
@@ -884,7 +889,8 @@ namespace Msr.Services.Procedures
 
         public IQueryable<ProcedureSelectResult> GetProcedureSelect(string logiId, string verbName, string co, string root)
         {
-            var sql = string.Format(string.Format("EXEC A_SP_PROCEDURES_SELECT \' (NAME LIKE \'\'%%\'\' OR NAME is NULL ) AND  (ROOT LIKE \'\'%{{0}}%\'\' OR ROOT is NULL ) AND  (CREATING_CO LIKE ''%{1}%'' OR CREATING_CO is NULL ) AND (( VERB_NAME LIKE ''%{2}%'' ) ) AND STATUS LIKE ''APPROVED%''',NULL,' ORDER BY NAME','{0}'",logiId),root, co, verbName);
+            var sql = $"EXEC A_SP_PROCEDURES_SELECT ' (NAME LIKE ''%%'' OR NAME is NULL ) AND  (ROOT LIKE ''%{root}%'' OR ROOT is NULL ) AND" +
+                      $"  (CREATING_CO LIKE ''%{co}%'' OR CREATING_CO is NULL ) AND (( VERB_NAME LIKE ''%{verbName}%'' ) ) AND STATUS LIKE ''APPROVED%''',NULL,' ORDER BY NAME','{logiId}'";
 
             var result = _dbContext.Database.SqlQuery<ProcedureSelectResult>(sql).ToList().AsQueryable();
 

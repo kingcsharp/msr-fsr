@@ -75,7 +75,7 @@ namespace Msr.Services.Administration
         }
         public IList<RoleForJobItem> GetRolesForJob(string jobId, string logId)
         {
-            var sql = string.Format("exec A_SP_ADMIN_GET_ROLE_FOR_JOB '{0}',{1}", jobId, logId);
+            var sql = $"exec A_SP_ADMIN_GET_ROLE_FOR_JOB '{jobId}',{logId}";
 
             var result = _dbContext.Database.SqlQuery<RoleForJobItem>(sql).ToList();
 
@@ -90,7 +90,7 @@ namespace Msr.Services.Administration
             {
                 foreach (var job in jobRequest.RoleToJobItems)
                 {
-                    var sql = string.Format("exec A_SP_ADMIN_JOB_ROLE_UPDATE '{0}', '{1}','{1}','ntlogin'", jobRequest.SelectedJobId, job.CoId, job.RoleId);
+                    var sql = $"exec A_SP_ADMIN_JOB_ROLE_UPDATE '{jobRequest.SelectedJobId}', '{job.CoId}','{job.RoleId}','ntlogin'";
 
                     _dbContext.Database.ExecuteSqlCommand(sql);
                 }
@@ -112,7 +112,7 @@ namespace Msr.Services.Administration
             {
                 foreach (var job in items)
                 {
-                    var sql = string.Format("exec A_SP_ADMIN_SERVICE_CALL_ACCT_RECEIVABLE_ROLE_UPDATE '{0}','{1}','{2}','ntlogin'",job.CoId, job.RoleId,job.LocationId);
+                    var sql = $"exec A_SP_ADMIN_SERVICE_CALL_ACCT_RECEIVABLE_ROLE_UPDATE '{job.CoId}','{job.RoleId}','{job.LocationId}','ntlogin'";
 
                     _dbContext.Database.ExecuteSqlCommand(sql);
                 }
@@ -127,7 +127,7 @@ namespace Msr.Services.Administration
         }
         public List<AssignAccRecievableRoleResult> GetAssignAccRecievableRole(string userId)
         {
-            var sql = string.Format("exec A_SP_ADMIN_SERVICE_CALL_GET_ACCT_RECEIVED_ROLE_DATA {0}", userId);
+            var sql = $"exec A_SP_ADMIN_SERVICE_CALL_GET_ACCT_RECEIVED_ROLE_DATA {userId}";
 
             var result = _dbContext.Database.SqlQuery<AssignAccRecievableRoleResult>(sql).ToList();
 
@@ -136,7 +136,7 @@ namespace Msr.Services.Administration
 
         public List<AssignCompaniesToViewResult> GetAssignCompaniesToView(string id)
         {
-            var sql = string.Format("exec A_SP_ADMIN_GET_COMPANIES_TO_VIEW_MY_COMPANY {0}", id);
+            var sql = $"exec A_SP_ADMIN_GET_COMPANIES_TO_VIEW_MY_COMPANY {id}";
 
             var result = _dbContext.Database.SqlQuery<AssignCompaniesToViewResult>(sql).ToList();
 
@@ -151,7 +151,7 @@ namespace Msr.Services.Administration
             {
                 foreach (var job in items)
                 {
-                    var sql = string.Format("exec A_SP_ADMIN_COMPANIES_CAN_VIEW_ME_UPDATE '{0}','{1}','ntlogin'",job.CoId, job.ViewCoId);
+                    var sql = $"exec A_SP_ADMIN_COMPANIES_CAN_VIEW_ME_UPDATE '{job.CoId}','{job.ViewCoId}','ntlogin'";
 
                     _dbContext.Database.ExecuteSqlCommand(sql);
                 }
@@ -182,7 +182,7 @@ namespace Msr.Services.Administration
             {
                 foreach (var job in items)
                 {
-                    var sql = string.Format("exec A_SP_ADMIN_MENU_ROLES_UPDATE '{0}','{string.Join(", ", job.RoleId)}','{loginId}'", job.Id);
+                    var sql = $"exec A_SP_ADMIN_MENU_ROLES_UPDATE '{job.Id}','{string.Join(", ", job.RoleId)}','{loginId}'";
                    
                     _dbContext.Database.ExecuteSqlCommand(sql);
                 }

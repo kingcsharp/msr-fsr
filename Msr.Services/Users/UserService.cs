@@ -365,7 +365,7 @@ namespace Msr.Services.Users
 
         public LoggedUserIdResult GetUserId(string userId)
         {
-            var sql = string.Format("exec Portal_GetCurrentUser {0}",userId);
+            var sql = $"exec Portal_GetCurrentUser {userId}";
 
             var result = _dbContext.Database.SqlQuery<LoggedUserIdResult>(sql).Single();
 
