@@ -884,9 +884,7 @@ namespace Msr.Services.Procedures
 
         public IQueryable<ProcedureSelectResult> GetProcedureSelect(string logiId, string verbName, string co, string root)
         {
-            var sql = string.Format(
-                $"EXEC A_SP_PROCEDURES_SELECT \' (NAME LIKE \'\'%%\'\' OR NAME is NULL ) AND  (ROOT LIKE \'\'%{{0}}%\'\' OR ROOT is NULL ) AND  (CREATING_CO LIKE ''%{1}%'' OR CREATING_CO is NULL ) AND (( VERB_NAME LIKE ''%{2}%'' ) ) AND STATUS LIKE ''APPROVED%''',NULL,' ORDER BY NAME','{logiId}'",
-                root, co, verbName);
+            var sql = string.Format(string.Format("EXEC A_SP_PROCEDURES_SELECT \' (NAME LIKE \'\'%%\'\' OR NAME is NULL ) AND  (ROOT LIKE \'\'%{{0}}%\'\' OR ROOT is NULL ) AND  (CREATING_CO LIKE ''%{1}%'' OR CREATING_CO is NULL ) AND (( VERB_NAME LIKE ''%{2}%'' ) ) AND STATUS LIKE ''APPROVED%''',NULL,' ORDER BY NAME','{0}'",logiId),root, co, verbName);
 
             var result = _dbContext.Database.SqlQuery<ProcedureSelectResult>(sql).ToList().AsQueryable();
 
