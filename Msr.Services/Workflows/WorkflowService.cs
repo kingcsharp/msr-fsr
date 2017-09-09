@@ -32,7 +32,7 @@ namespace Msr.Services.Workflows
 
         public List<ShowApplicableWorkflowsResult> GetSpObjectShowApplicableWorkflows(string id, string loginId)
         {
-            var sql = string.Format("exec A_SP_OBJECT_SHOW_APPLICABLE_WORKFLOWS '{0}','{1}'", id, loginId);
+            var sql = $"exec A_SP_OBJECT_SHOW_APPLICABLE_WORKFLOWS '{id}','{loginId}'";
 
             var result = _dbContext.Database.SqlQuery<ShowApplicableWorkflowsResult>(sql).ToList();
 
