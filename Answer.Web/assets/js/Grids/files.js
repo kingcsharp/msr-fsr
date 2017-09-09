@@ -38,7 +38,7 @@
             { name: 'Actions', index: 'Id', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: fileEditFormatter, width: 200, align: 'center' }
         ],
         viewrecords: true, // show the current page, data rang and total records on the toolbar
-        rowNum: 10,
+        rowNum: 10, rowList: [10, 20, 50, 100],
         loadonce: false, // this is just for the demo
         pager: "#jqGridPagerFiles",
         height: 'auto',

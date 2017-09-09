@@ -91,7 +91,7 @@
         ],
 
         viewrecords: true, 
-        rowNum: 10,
+        rowNum: 10, rowList: [10, 20, 50, 100],
         loadonce: false, 
         pager: "#jqGridPager",
         height: 'auto',

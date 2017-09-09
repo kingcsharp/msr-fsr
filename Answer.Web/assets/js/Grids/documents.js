@@ -95,7 +95,7 @@
             { name: 'Actions', index: 'ID', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: documentEditFormatter, width: 100, align: 'center' }
         ],
         viewrecords: true, // show the current page, data rang and total records on the toolbar
-        rowNum: 10,
+        rowNum: 10, rowList: [10, 20, 50, 100],
         loadonce: false, // this is just for the demo
         pager: "#jqGridPager",
         height: 'auto',

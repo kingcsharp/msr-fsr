@@ -45,7 +45,7 @@
             return JSON.stringify(postdata);
         },
         viewrecords: true, // show the current page, data rang and total records on the toolbar
-        rowNum: 10,
+        rowNum: 10, rowList: [10, 20, 50, 100],
         loadonce: false, // this is just for the demo
         pager: "#jqGridPager",
         height: 'auto',

@@ -27,7 +27,7 @@ $(document).ready(function () {
 						searchoptions : {searchOperMenu : false,sopt : ['eq','gt','lt','ge','le']},width: 80, align: 'center', formatter: repFormatter, editable:true }
 		],
 		viewrecords: true, // show the current page, data rang and total records on the toolbar
-		rowNum: 10,
+		rowNum: 10, rowList: [10, 20, 50, 100],
 		loadonce: true, // this is just for the demo
 		pager: "#custReqsGrid",
 		height: 'auto',
