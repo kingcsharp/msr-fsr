@@ -14,6 +14,7 @@ using Msr.Services.S3;
 
 namespace Answer.Web.Controllers
 {
+    [Authorize]
     public class FilesController : BaseController
     {
         private FileService _fileService;

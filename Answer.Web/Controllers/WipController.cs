@@ -222,6 +222,10 @@ namespace Answer.Web.Controllers
                     }
                 }
             }
+            else
+            {
+                totalRows = totalRows.Where(x => x.Verb_Name.ToLower() == "ncr");
+            }
 
             var orderBy = nameof(ProcedureSelectResult.Name);
 

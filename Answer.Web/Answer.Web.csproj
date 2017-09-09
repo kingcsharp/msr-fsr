@@ -598,6 +598,7 @@
     <Content Include="assets\js\grids\procedure-monitors.js" />
     <Content Include="assets\js\grids\PrePro.js" />
     <Content Include="assets\js\grids\PreProTheoryDiolag.js" />
+    <Content Include="assets\js\grids\procedure-select.js" />
     <Content Include="assets\js\grids\ProcedureConsumed.js" />
     <Content Include="assets\js\grids\PartsProvidedTakeBack.js" />
     <Content Include="assets\js\grids\ProcedureObjectStay.js" />

@@ -6,6 +6,7 @@ using Msr.Services.Users.Messages;
 
 namespace Answer.Web.Controllers
 {
+    
     public class BaseController : Controller
     {
         public LoggedUserIdResult GetCurrentUser()

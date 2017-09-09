@@ -1,5 +1,5 @@
 ﻿@model Msr.Services.Orders.ViewModels.AddNcrViewModel
-    
+
 
 <table id="jqGridFiles"></table>
 <div id="jqGridPagerFiles"></div>
@@ -21,7 +21,7 @@
 <script>
 
     $(document).ready(function() {
-        LoadSelectProcedureGrid('@Model.ParentId', '@Model.FillId');
-    });
+        LoadSelectProcedureGrid('@Model.ParentId', '@Model.FillId', 'ncr');
+        });
 
 </script>

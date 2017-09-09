@@ -1,5 +1,5 @@
 ﻿
-function LoadSelectProcedureGrid(parentId, fillId) {
+function LoadSelectProcedureGrid(parentId, fillId, procedureType) {
     $.jgrid.defaults.styleUI = 'Bootstrap';
 
     $("#jqGridFiles").jqGrid({
@@ -14,12 +14,12 @@ function LoadSelectProcedureGrid(parentId, fillId) {
                 index: 'Name',
                 key: true,
                 colmenu: false,
-                
+
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 width: 150,
                 align: 'center',
-                
+
             },
             {
                 label: 'Company',
@@ -46,7 +46,7 @@ function LoadSelectProcedureGrid(parentId, fillId) {
                 index: 'Verb_Name',
                 colmenu: false,
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                searchoptions: { defaultValue: procedureType },
                 align: 'center'
             },
             { name: 'Actions', index: 'Id', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: ActionFormatter, width: 200, align: 'center' }
@@ -66,8 +66,9 @@ function LoadSelectProcedureGrid(parentId, fillId) {
         autowidth: true,
         colMenu: true,
         key: true,
-        ajaxCellOptions: {}
-
+        ajaxCellOptions: {},
+        gridComplete: function () {
+          }
     });
     $('#jqGridFiles').navGrid("#jqGridPagerFiles", {
             refresh: true,
@@ -90,10 +91,10 @@ function LoadSelectProcedureGrid(parentId, fillId) {
 
     function ActionFormatter(cellvalue, options, rowObject) {
 
-        var attachStep = '<a  title="As Procedure as a Sub Task" href="/wip/AddProcedureToTask?objId=' + rowObject.Id + '&parentId=' + parentId + '&fillId='+fillId+'" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-link"></i></a>';
+        var attachStep = '<a  title="As Procedure as a Sub Task" href="/wip/AddProcedureToTask?objId=' + rowObject.Id + '&parentId=' + parentId + '&fillId=' + fillId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-link"></i></a>';
 
 
-        return attachStep
+        return attachStep;
     }
 }
 
