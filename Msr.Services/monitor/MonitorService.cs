@@ -1,11 +1,6 @@
 ﻿using Msr.Models.Monitor;
 using Msr.Repositories;
-
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Msr.Services.monitor
 {
@@ -17,7 +12,8 @@ namespace Msr.Services.monitor
         {
             _dbContext = new MsrDbContext();
         }
-        public IQueryable<MonitorView> GetLocationsQueryable()
+
+        public IQueryable<MonitorView> GetMonitorsQueryable()
         {
             return _dbContext.MonitorViews;
         }

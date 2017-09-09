@@ -75,9 +75,14 @@
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 align: 'center'
+            },
+            {
+                label: 'Serial Number',
+                name: 'ActualPartsApprovedDataSerial',
+                index: 'ActualPartsApprovedDataSerial',
+                colmenu: false,
+                align: 'center'
             }
-            ,
-            //{ name: 'Actions', index: 'ID', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: LocationEditFormatter, width: 100, align: 'center' }
         ],
         viewrecords: true, // show the current page, data rang and total records on the toolbar
         rowNum: 10,

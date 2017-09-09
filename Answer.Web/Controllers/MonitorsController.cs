@@ -3,9 +3,7 @@ using Msr.Services.jqGrid;
 using Msr.Services.monitor;
 using Msr.Web.ViewModel.Engineering;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace Answer.Web.Controllers
@@ -25,7 +23,7 @@ namespace Answer.Web.Controllers
         {
             var monitorService = new MonitorService();
 
-            var totalRows = monitorService.GetLocationsQueryable();
+            var totalRows = monitorService.GetMonitorsQueryable();
 
             if (param.where != null && param.where.rules.Any())
             {
@@ -67,6 +65,10 @@ namespace Answer.Web.Controllers
                             totalRows = totalRows.Where(q => q.TaskStopDate.HasValue && q.TaskStopDate.Value.Day == value.Day &&
                                                              q.TaskStopDate.Value.Month == value.Month && q.TaskStopDate.Value.Year == value.Year);
                         }
+                    }
+                    else if (rule.field == nameof(MonitorView.ActualPartsApprovedDataSerial))
+                    {
+                        totalRows = totalRows.Where(x => x.ActualPartsApprovedDataSerial.ToLower().Contains(rule.data.ToLower()));
                     }
                 }
             }
