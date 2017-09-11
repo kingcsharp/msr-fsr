@@ -48,7 +48,10 @@ namespace Answer.Web.Controllers
                     }
                     else if (rule.field == nameof(ActualPartsView.Serial))
                     {
-                        totalRows = totalRows.Where(x => x.Serial.ToLower().Contains(rule.data.ToLower()));
+                        if (!string.IsNullOrWhiteSpace(rule.data))
+                        {
+                            totalRows = totalRows.Where(x => x.Serial.ToLower().Contains(rule.data.ToLower()));
+                        }
                     }
                     else if (rule.field == nameof(ActualPartsView.PartDesc))
                     {

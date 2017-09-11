@@ -7,9 +7,20 @@
         datatype: "json",
         colModel: [
             {
+                label: 'Title',
+                name: 'Title',
+                index: 'Title',
+                key: true,
+                colmenu: false,
+                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                width: 100,
+                align: 'center'
+            },
+            {
                 label: ' #',
                 name: 'Id',
-                index: 'Root',
+                index: 'Id',
                 key: true,
                 colmenu: false,
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
@@ -61,7 +72,8 @@
             { name: 'Actions', index: 'ID', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: procedureStepEditFormatter, width: 100, align: 'center' }
         ],
         viewrecords: true, // show the current page, data rang and total records on the toolbar
-        rowNum: 10, rowList: [10, 20, 50, 100],
+        rowNum: 10,
+        rowList: [10, 20, 50, 100],
         loadonce: false, // this is just for the demo
         pager: "#jqGridPager",
         height: 'auto',
@@ -99,13 +111,13 @@
 
     });
     $('#jqGrid').navGrid("#jqGridPager", {
-        refresh: true,
-        search: false, // show search button on the toolbar
-        add: false,
-        edit: false,
-        del: false,
+            refresh: true,
+            search: false, // show search button on the toolbar
+            add: false,
+            edit: false,
+            del: false,
 
-    },
+        },
         {}, // edit options
         {}, // add options
         {}, // delete options

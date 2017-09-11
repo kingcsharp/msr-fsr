@@ -29,21 +29,25 @@ namespace Msr.Services.Roles
         public List<SelectFile> GetChildRoles(string id, string ntlogin)
         {
             var strID = new SqlParameter("@ID", id == null ? "0" : id);
+
             var NTLogin = new SqlParameter("@strNTLogin", ntlogin);
 
             var result = _dbContext.Database.SqlQuery<SelectFile>("EXEC A_SP_POPFILL_EDITROLE_CHILD_ROLES  @ID, @strNTLogin", strID, NTLogin).ToList();
 
             return result;
         }
+
         public List<SelectFile> GetAssignedPeople(string id,string ntlogin)
         {
             var strID = new SqlParameter("@ID", id == null ? "0" : id);
+
             var NTLogin = new SqlParameter("@strNTLogin", ntlogin);
 
             var result = _dbContext.Database.SqlQuery<SelectFile>("EXEC A_SP_POPFILL_EDITROLE_PEOPLE_ASSIGNED @ID, @strNTLogin", strID, NTLogin).ToList();
 
             return result;
         }
+
         public RolesView GetRoleByid(string id)
         {
             return _dbContext.RolesViews.SingleOrDefault(x => x.ObjectId == id);
@@ -174,5 +178,11 @@ namespace Msr.Services.Roles
             return result;
         }
 
+        public List<RoleResult> GetApprovedRoles()
+        {
+            var result = _dbContext.Database.SqlQuery<RoleResult>("select ID as Id, NAME as Name from A_APPROVED_ROLES where STATUS='APPROVED'").ToList();
+
+            return result;
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿function LoadProceduresGrid(url) {
+﻿function LoadProceduresGrid(url, returnUrl) {
     $("#jqGrid").jqGrid({
         url: url,
         mtype: "GET",
@@ -6,7 +6,7 @@
         datatype: "json",
         colModel: [
             {
-                label: '#',
+                label: 'Id',
                 name: 'Id',
                 index: 'Id',
                 key: true,
@@ -47,14 +47,14 @@
                 align: 'left'
             },
             {
-            	label: 'Procedure Type',
+                label: 'Procedure Type',
                 name: 'VerbName',
                 index: 'VerbName',
-            	colmenu: false,
-            	//stype: "select",
-            	coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-            	// searchoptions: { value: ":[All];CREATING, DENIED, APPROVED, APPROVED_BUT_REVISING:Creating or Approved;CREATING, DENIED: Creating;IN_WORKFLOW:In Approval Workflow;APPROVED, APPROVED_BUT_REVISING, APPROVED_BUT_DELETING:Approved;DENIED:Denied;APPROVED_BUT_REVISING:Approved But Being Revised;APPROVED_BUT_DELETING:Approved But Being Deleted;DENIED:Denied;DELETED:Deleted;OLD:Obsolete" },
-            	align: 'center'
+                colmenu: false,
+                //stype: "select",
+                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                // searchoptions: { value: ":[All];CREATING, DENIED, APPROVED, APPROVED_BUT_REVISING:Creating or Approved;CREATING, DENIED: Creating;IN_WORKFLOW:In Approval Workflow;APPROVED, APPROVED_BUT_REVISING, APPROVED_BUT_DELETING:Approved;DENIED:Denied;APPROVED_BUT_REVISING:Approved But Being Revised;APPROVED_BUT_DELETING:Approved But Being Deleted;DENIED:Denied;DELETED:Deleted;OLD:Obsolete" },
+                align: 'center'
             },
             {
                 label: 'Security Level',
@@ -90,9 +90,10 @@
             { name: 'Actions', index: 'Id', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: procedureEditFormatter, width: 100, align: 'center' }
         ],
 
-        viewrecords: true, 
-        rowNum: 10, rowList: [10, 20, 50, 100],
-        loadonce: false, 
+        viewrecords: true,
+        rowNum: 10,
+        rowList: [10, 20, 50, 100],
+        loadonce: false,
         pager: "#jqGridPager",
         height: 'auto',
         gridview: true,
@@ -128,12 +129,12 @@
 
     });
     $('#jqGrid').navGrid("#jqGridPager", {
-        search: false, // show search button on the toolbar
-        add: false,
-        edit: false,
-        del: false,
-        refresh: true
-    },
+            search: false, // show search button on the toolbar
+            add: false,
+            edit: false,
+            del: false,
+            refresh: true
+        },
         {}, // edit options
         {}, // add options
         {}, // delete options
@@ -145,14 +146,27 @@
         searchOperators: true
     });
     function procedureEditFormatter(cellvalue, options, rowObject) {
+        var viewButton = '<a href="/Procedures/view/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" title="View" style="margin:2px;font-size: .8em;"><i class="fa fa-eye"></i></a>';
+        var editButton = '<a  title="Edit" href="/Procedures/edit/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
 
-        var thisCellVal = '<a href="/Procedures/Edit/' + rowObject.ObjectId + '" data-call-back-id ="' + rowObject.ObjectId +'" class="btn btn-xs btn-success editprocedure" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i> Edit</a>';
+        var deleteButton = '';
+        var buttonWorkflowLeft = '';
+        var buttonWorkflowRight = '';
+        var url = '';
 
-        var viewButton = '<a href="/Procedures/view/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i> View</a>';
+        if (rowObject.Status === 'CREATING') {
 
-        var assignProcedureButton = '<a href="/Procedures/assignProcedure/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i> Assign</a>';
+            url = '/workflow/submit?objId=' + rowObject.ObjectId + '&returnUrl=' + returnUrl;
+            buttonWorkflowLeft = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '"  data-call-back-id="' + rowObject.ObjectId + '" class="btn btn-xs btn-success unlock" title="Cancel Creation. Edit will be lost" style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-left"></i></a>';
 
-        return thisCellVal + viewButton + assignProcedureButton;
+            buttonWorkflowRight = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-success" title="Proceed to approval workflow for release." style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-right"></i></a>';
+        } else {
+            url = '/workflow/delete?objId=' + rowObject.ObjectId + '&returnUrl=' + returnUrl;
+            deleteButton = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-danger" title="Proceed to Delete." style="margin:2px;font-size: .8em;"><i class="fa fa fa-trash"></i></a>';
+        }
+        var assignProcedureButton = '<a href="/Procedures/assignProcedure/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" title="Assign this procedure" style="margin:2px;font-size: .8em;"> <i class="fa fa-users"></i></a>';
+
+        return viewButton + editButton + deleteButton + buttonWorkflowLeft + buttonWorkflowRight + assignProcedureButton;
     }
 
     $('#search').click(function () {

@@ -109,7 +109,7 @@ namespace Msr.Services.ActualParts
                     CurOwner = model.CurOwner,
                     ApStatus = model.APStatus,
                     Products = model.Products != null ? string.Join(", ", model.Products) : DBNull.Value.ToString(),
-                    ParentId = model.ParentId,
+                    ////ParentId = model.ParentId,
                     SubPartAction = model.SubpartAction,
                     ResponsiblePerson = model.ResponsiblePerson,
                     NTLogin = model.NTLogin

@@ -582,11 +582,11 @@ namespace Msr.Services.Orders
             p.Add("@id", request.Id, DbType.String, ParameterDirection.Input);
             p.Add("@failAction", request.Fail_Action, DbType.String, ParameterDirection.Input);
             p.Add("@result", request.Print_Result, DbType.String, ParameterDirection.Input);
-            p.Add("@comment", request.Description, DbType.String, ParameterDirection.Input);
+            p.Add("@comment", request.Comment, DbType.String, ParameterDirection.Input);
             p.Add("@target", request.Target, DbType.String, ParameterDirection.Input);
             p.Add("@tolerance", request.Tolerance, DbType.String, ParameterDirection.Input);
             p.Add("@theSaurusId", request.TheSaurusId, DbType.String, ParameterDirection.Input);
-            p.Add("@strNTLogin", request.StrNtLogin, DbType.String, ParameterDirection.Input);
+            p.Add("@strNTLogin", request.StrNtLogin, DbType.String, ParameterDirection.ReturnValue);
 
             using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
             {

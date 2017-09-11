@@ -756,6 +756,7 @@
     <Content Include="assets\js\modal.js" />
     <Content Include="assets\js\modernizr.js" />
     <Content Include="assets\js\monitor_chart.js" />
+    <Content Include="assets\js\ObjectAssign.js" />
     <Content Include="assets\js\plugins\bootstrap3\bootstrap-dialog.min.css" />
     <Content Include="assets\js\plugins\bootstrap3\bootstrap-dialog.min.js" />
     <Content Include="assets\js\plugins\grid.addons.js" />

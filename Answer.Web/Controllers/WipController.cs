@@ -407,6 +407,14 @@ namespace Answer.Web.Controllers
             foreach (var monitorTemplate in response.MonitorTemplateResult)
             {
                 monitorTemplate.Setup();
+
+                for (int i = 0; i < monitorTemplate.FailActionList.Count; i++)
+                {
+                    if (monitorTemplate.FailActionList[i].Value == monitorTemplate.Fail_Action)
+                    {
+                        monitorTemplate.FailActionList[i].Selected = true;
+                    }
+                }
             }
 
             response.Images = new ImageViewModel

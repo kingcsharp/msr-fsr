@@ -2,7 +2,7 @@
     //$.jgrid.defaults.responsive = true;
     $.jgrid.defaults.styleUI = 'Bootstrap';
 
-    
+
 
     $("#jqGrid").jqGrid({
         url: url,
@@ -30,7 +30,7 @@
                 editable: true, // must set editable to true if you want to make the field editable
                 editrules: { required: true },
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                searchoptions: { defaultValue: search },
+                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'], defaultValue: search },
                 width: 200,
                 align: 'left',
                 formatter: serialFormatter
@@ -156,7 +156,8 @@
             return JSON.stringify(postdata);
         },
         viewrecords: true, // show the current page, data rang and total records on the toolbar
-        rowNum: 10, rowList: [10, 20, 50, 100],
+        rowNum: 10,
+        rowList: [10, 20, 50, 100],
         loadonce: false, // this is just for the demo
         pager: "#jqGridPager",
         height: 'auto',
@@ -179,12 +180,12 @@
         }
     });
     $('#jqGrid').navGrid("#jqGridPager", {
-        search: false, // show search button on the toolbar
-        add: false,
-        edit: false,
-        del: false,
-        refresh: true
-    },
+            search: false, // show search button on the toolbar
+            add: false,
+            edit: false,
+            del: false,
+            refresh: true
+        },
         {},  // edit options
         {}, // add options
         {}, // delete options
@@ -194,7 +195,7 @@
     function actualPartsEditFormatter(cellvalue, options, rowObject) {
 
         var editButton = '<a  title="Edit" href="/Actualparts/edit/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
-        var viewHistory = '<a href="/ActualParts/ViewHistory/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" title="Edit" style="margin:2px;font-size: .8em;"><i class="fa fa-history" aria-hidden="true"></i> History</a>';
+        var viewHistory = '<a href="/ActualParts/ViewHistory/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" title="History" style="margin:2px;font-size: .8em;"><i class="fa fa-history" aria-hidden="true"></i> History</a>';
 
         var deleteButton = '';
         var buttonWorkflowLeft = '';

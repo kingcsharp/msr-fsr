@@ -20,6 +20,9 @@ namespace Msr.Services.PrePro.ViewModel
             Labors = new List<LaborObjectsView>();
         }
 
+        [Required]
+        public string Title { get; set; }
+
         public string Id { get; set; }
 
         public string ObjectId { get; set; }

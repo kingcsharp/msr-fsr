@@ -9,28 +9,28 @@ namespace Msr.Services.Procedures.ViewModels
     {
         public AddMonitorForProcedureViewModel()
         {
-            
+
             MonitorTypesList = new List<SelectListItem>();
 
             ShouldBeList = new List<SelectListItem>();
 
             BasedOPionList = new List<SelectListItem>();
-            
+
             UseResultList = new List<SelectListItem>();
-            
+
             HideTargetList = new List<SelectListItem>();
-            
+
             FailNextActionList = new List<SelectListItem>();
-            
+
             ForceEndActionList = new List<SelectListItem>();
-            
+
             AlwaysPassList = new List<SelectListItem>();
-            
+
         }
         public string NewId { get; set; }
 
         public string Messages { get; set; }
-        
+
         public string Id { get; set; }
 
         [DisplayName("Monitor Type")]
@@ -38,33 +38,38 @@ namespace Msr.Services.Procedures.ViewModels
 
         [DisplayName("Description")]
         public string Description { get; set; }
-        
+
         public string Start_System_Task { get; set; }
-        
+
         public string Start_Type { get; set; }
 
         public string Stop_System_Task { get; set; }
-        
+
         public string Stop_Type { get; set; }
-        
+
         public string Counter_Or_Clock { get; set; }
-        
+
         public string Clock_Unit { get; set; }
 
         [DisplayName("Highest Threshold")]
-        public string Highest_Threshold { get; set; }
+        [Range(0, float.MaxValue, ErrorMessage = "Can only be between 0 .. max")]
+        public float? Highest_Threshold { get; set; }
 
         [DisplayName("Highest Threashold")]
-        public string High_Threshold { get; set; }
+        [Range(0, float.MaxValue, ErrorMessage = "Can only be between 0 .. max")]
+        public float? High_Threshold { get; set; }
 
         [DisplayName("Target")]
-        public string Target { get; set; }
+        [Range(0, float.MaxValue, ErrorMessage = "Can only be between 0 .. max")]
+        public float? Target { get; set; }
 
         [DisplayName("Low Threshold")]
-        public string Low_Threshold { get; set; }
+        [Range(0, float.MaxValue, ErrorMessage = "Can only be between 0 .. max")]
+        public float? Low_Threshold { get; set; }
 
         [DisplayName("Lowest Threshold")]
-        public string Lowest_Threshold { get; set; }
+        [Range(0, float.MaxValue, ErrorMessage = "Can only be between 0 .. max")]
+        public float? Lowest_Threshold { get; set; }
 
         [DisplayName("Should Be")]
         public string Should_Be { get; set; }
@@ -79,34 +84,34 @@ namespace Msr.Services.Procedures.ViewModels
         public string Use_Result { get; set; }
 
         public string Fail_Stop { get; set; }
-        
+
         public string Step_Id { get; set; }
-        
+
         public string Correct_Answer { get; set; }
-        
+
         public string Text_Target { get; set; }
-        
+
         public string Task_Id { get; set; }
-        
+
         public string Tolerance { get; set; }
-        
+
         public string Related_Object_Id { get; set; }
 
         [DisplayName("Fault Handling")]
         public string Fail_Action { get; set; }
-        
+
         public string Target_Object_Type { get; set; }
-        
+
         public string Target_Object { get; set; }
-        
+
         public string Skip_Mode { get; set; }
 
         [DisplayName("Force specified 'Fault handling' on task assignee?")]
-        public string Cant_Change { get; set; }
+        public byte? Cant_Change { get; set; }
 
         [DisplayName("Always Pass? (Just collecting data.. not judging)")]
-        public string Always_Pass { get; set; }
-        
+        public byte? Always_Pass { get; set; }
+
         public string StrNTLogin { get; set; }
 
         public List<SelectListItem> MonitorTypesList { get; set; }
@@ -207,15 +212,15 @@ namespace Msr.Services.Procedures.ViewModels
 
                 Clock_Unit = model.Clock_Unit,
 
-                Highest_Threshold = model.Highest_Threshold.ToString(),
+                Highest_Threshold = model.Highest_Threshold,
 
-                High_Threshold = model.High_Threshold.ToString(),
+                High_Threshold = model.High_Threshold,
 
-                Target = model.Target.ToString(),
+                Target = model.Target,
 
-                Low_Threshold = model.Low_Threshold.ToString(),
+                Low_Threshold = model.Low_Threshold,
 
-                Lowest_Threshold = model.Lowest_Threshold.ToString(),
+                Lowest_Threshold = model.Lowest_Threshold,
 
                 Should_Be = model.Should_Be,
 
@@ -247,9 +252,9 @@ namespace Msr.Services.Procedures.ViewModels
 
                 Skip_Mode = model.Skip_Mode,
 
-                Cant_Change = model.Cant_Change.ToString(),
+                Cant_Change = model.Cant_Change,
 
-                Always_Pass = model.Always_Pass.ToString(),
+                Always_Pass = model.Always_Pass,
 
                 StrNTLogin = model.StrNTLogin
             };

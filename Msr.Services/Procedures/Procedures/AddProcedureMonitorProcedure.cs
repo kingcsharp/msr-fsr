@@ -45,19 +45,19 @@ namespace Msr.Services.Procedures.Procedures
         public string Clock_Unit { get; set; }
 
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "HIGHEST_THRESHOLD")]
-        public string Highest_Threshold { get; set; }
+        public float? Highest_Threshold { get; set; }
 
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "HIGH_THRESHOLD")]
-        public string High_Threshold { get; set; }
+        public float? High_Threshold { get; set; }
 
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "TARGET")]
-        public string Target { get; set; }
+        public float? Target { get; set; }
 
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "LOW_THRESHOLD")]
-        public string Low_Threshold { get; set; }
+        public float? Low_Threshold { get; set; }
 
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "LOWEST_THRESHOLD")]
-        public string Lowest_Threshold { get; set; }
+        public float? Lowest_Threshold { get; set; }
 
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "SHOULD_BE")]
         public string Should_Be { get; set; }
@@ -104,11 +104,11 @@ namespace Msr.Services.Procedures.Procedures
         [StoredProcedureParameter(SqlDbType.VarChar, Size = 50, ParameterName = "SKIP_MODE")]
         public string Skip_Mode { get; set; }
 
-        [StoredProcedureParameter(SqlDbType.VarChar, Size = 50, ParameterName = "CANT_CHANGE")]
-        public string Cant_Change { get; set; }
+        [StoredProcedureParameter(SqlDbType.TinyInt, ParameterName = "CANT_CHANGE")]
+        public byte? Cant_Change { get; set; }
 
-        [StoredProcedureParameter(SqlDbType.VarChar, Size = 50, ParameterName = "ALWAYS_PASS")]
-        public string Always_Pass { get; set; }
+        [StoredProcedureParameter(SqlDbType.TinyInt, ParameterName = "ALWAYS_PASS")]
+        public byte? Always_Pass { get; set; }
 
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "StrNTLogin")]
         public string StrNTLogin { get; set; }

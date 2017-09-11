@@ -95,12 +95,12 @@ namespace Msr.Services.Documents.ViewModels
         }
         public void Setup(RoleService roleService, PartsService partsService, DocumentService documentService,string ntlog)
         {
-            ListRoles = roleService.GetActiveRoles().Select(x => new SelectListItem
+            ListRoles = roleService.GetApprovedRoles().Select(x => new SelectListItem
             {
                 Text = x.Name,
-                Value = x.ObJect_Id
+                Value = x.Id
             }).OrderBy(o => o.Text).ToList();
-            
+
             ListReferenceFiles = partsService.GetSelectedFiles(id: ObjectId, type: null,ntlogin:ntlog).Select(x => new SelectListItem
             {
                 Text = x.Show,

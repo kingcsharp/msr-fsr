@@ -2790,7 +2790,7 @@
     <Build Include="dbo\Views\Portal\Portal_Languages.sql" />
     <Build Include="dbo\Views\Portal\Portal_TimeZones.sql" />
     <Build Include="dbo\Views\Portal\Portal_RolesApprovedDataQuick.sql" />
-    <Build Include="dbo\Views\Portal\Portal_ProcedureStepPrePop.sql" />
+    <Build Include="dbo\Views\Portal\Portal_PrePropSearchView.sql" />
     <Build Include="dbo\Views\Portal\Portal_ProductsActualPart.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_ProcedureStepGetRefFiles.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_ProcedureStepGetRefProcedures.sql" />
@@ -2821,5 +2821,6 @@
     <Build Include="dbo\Stored Procedures\Portal\Portal_PeopleReassignBoss.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_ProcedureStepGetRefFilesDialog.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_SpFilesShowForObject.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_ProcedureStepUpdateOneStep.sql" />
   </ItemGroup>
 </Project>

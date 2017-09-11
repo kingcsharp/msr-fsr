@@ -143,7 +143,8 @@ namespace Msr.Services.PrePro
                     PrecedingSteps = null,
                     Duration = model.Duration.ToString(),
                     DurationType = model.DurationType,
-                    NTLogin = model.NTLogin
+                    NTLogin = model.NTLogin,
+                    Title = model.Title
                 };
 
                 _dbContext.Database.ExecuteStoredProcedure(savePartProcedure);
@@ -206,7 +207,8 @@ namespace Msr.Services.PrePro
                     PrecedingSteps = null,
                     Duration = model.Duration.ToString(),
                     DurationType = model.DurationType,
-                    NTLogin = model.NTLogin
+                    NTLogin = model.NTLogin,
+                    Title = model.Title
                 };
 
                 _dbContext.Database.ExecuteStoredProcedure(savePartProcedure);
@@ -314,36 +316,36 @@ namespace Msr.Services.PrePro
         }
 
         public List<SelectFile> GetApplicableObjectsByCreatingCo(string creatingCo)
-            {
-                var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT ID as Value, OBJ_TABLE as Show FROM A_V_APPROVED_OBJECTS where CREATING_CO='" + creatingCo + "'").ToList();
+        {
+            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT ID as Value, OBJ_TABLE as Show FROM A_V_APPROVED_OBJECTS where CREATING_CO='" + creatingCo + "'").ToList();
 
-                return result;
+            return result;
+        }
+        public bool UpdateApplicableObjects(ApplicableObjectsView model)
+        {
+            try
+            {
+                var saveUpdateApplicableObjectsProcedure = new SaveUpdateApplicableObjectsProcedure()
+                {
+
+                    StepId = model.StepId,
+                    LinkId = model.LinkId,
+                    Quantity = model.Quantity,
+                    ObjectId = model.ObjectId,
+                    NTLogin = model.NTLogin
+                };
+
+                _dbContext.Database.ExecuteStoredProcedure(saveUpdateApplicableObjectsProcedure);
+
+                return true;
             }
-            public bool UpdateApplicableObjects(ApplicableObjectsView model)
+            catch (Exception ex)
             {
-                try
-                {
-                    var saveUpdateApplicableObjectsProcedure = new SaveUpdateApplicableObjectsProcedure()
-                    {
+                var message = "Error occured:" + ex.Message;
 
-                        StepId = model.StepId,
-                        LinkId = model.LinkId,
-                        Quantity = model.Quantity,
-                        ObjectId = model.ObjectId,
-                        NTLogin = model.NTLogin
-                    };
-
-                    _dbContext.Database.ExecuteStoredProcedure(saveUpdateApplicableObjectsProcedure);
-
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    var message = "Error occured:" + ex.Message;
-
-                    return false;
-                }
+                return false;
             }
         }
     }
+}
 

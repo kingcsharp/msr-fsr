@@ -52,7 +52,7 @@ namespace Answer.Web.Controllers
         {
             var procedureService = new ProceduresService();
 
-            var totalRows = procedureService.GetProceduresQueryable();
+            var totalRows = procedureService.GetProceduresQueryable().Where(x => x.Status != "DELETED");
 
             if (param.where != null && param.where.rules.Any())
             {

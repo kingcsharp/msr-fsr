@@ -86,7 +86,7 @@ namespace Msr.Repositories
             modelBuilder.Entity<LanguagesView>().ToTable("Portal_Languages");
             modelBuilder.Entity<TimeZonesView>().ToTable("Portal_TimeZones");
             modelBuilder.Entity<OfficialPositionView>().ToTable("Portal_RolesApprovedDataQuick");
-            modelBuilder.Entity<PrePropSearchView>().ToTable("Portal_ProcedureStepPrePop");
+            modelBuilder.Entity<PrePropSearchView>().ToTable("Portal_PrePropSearchView");
             modelBuilder.Entity<ProcedureObjectsLaborStepView>().ToTable("Portal_ProcedureObjectLaborStepsView");
         }
 

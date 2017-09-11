@@ -1,4 +1,4 @@
-﻿CREATE          PROCEDURE A_SP_PROCEDURE_STEP_UPDATE_ONE_STEP
+﻿CREATE          PROCEDURE Portal_ProcedureStepUpdateOneStep
 @newID nvarchar(50) OUTPUT,
 @messages nvarchar(500) OUTPUT,
 @ID nvarchar(50),
@@ -26,7 +26,8 @@
 @precedingSteps varchar(8000),
 @DURATION float,
 @DURATION_TYPE nvarchar(50),
-@strNTLogin nvarchar(50)
+@strNTLogin nvarchar(50),
+@title nvarchar(50)
 AS
 print 'Starting procedure A_SP_PROCEDURE_STEP_UPDATE_ONE_STEP'
 print 'Get the value of the Procedure ID for this Procedure Object ID'
@@ -68,7 +69,8 @@ CYCLE_UNIT = @CYCLE_UNIT,
 DURATION = @DURATION,
 DURATION_TYPE = @DURATION_TYPE,
 DRCM = getDate(),
-MODBY = @strNTLogin
+MODBY = @strNTLogin,
+TITLE = @title
 WHERE ID = @newID
 
 print 'Adding links to the reference Theories'
