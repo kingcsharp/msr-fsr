@@ -81,21 +81,23 @@ $(function () {
         var containerUl = $('#wip-item-select').siblings('div.dropdown-menu').find('ul.dropdown-menu');
 
         if (state) {
-            containerUl.find('li').each(function (index, value) {
-                if ($(this).find('a span.label').html() === "FINISHED") {
-                    $(this).show();
-                }
-            });
-            console.log('on');
-        } else {
+
             containerUl.find('li').each(function (index, value) {
                 if ($(this).find('a span.label').html() === "FINISHED") {
                     $(this).hide();
                 }
             });
-            console.log('off');
+            
+        } else {
+
+            containerUl.find('li').each(function (index, value) {
+                if ($(this).find('a span.label').html() === "FINISHED" || $(this).find('a span.label').html() === "CLOSED") {
+                    $(this).show();
+                }
+            });
+            
         }
-        //$('.selectpicker').selectpicker('refresh');
+
     });
 
     $('[data-toggle="tooltip"]').tooltip();
