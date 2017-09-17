@@ -627,9 +627,9 @@ namespace Msr.Services.Orders
             }
         }
 
-        public BaseNotification StepStart(int stepId, string login, int fillId)
+        public ResultNotification<TaskLog> StepStart(int stepId, string login, int fillId)
         {
-            var response = new BaseNotification();
+            var response = new ResultNotification<TaskLog>();
 
             var p = new DynamicParameters();
 
@@ -707,8 +707,10 @@ namespace Msr.Services.Orders
             return response;
         }
 
-        public void StepResume(int taskLogId)
+        public ResultNotification<TaskLog> StepResume(int taskLogId)
         {
+            var result = new ResultNotification<TaskLog>();
+
             var taskLog = _dbContext.TaskLogs.Where(x => x.Id == taskLogId)
                 .OrderByDescending(x => x.Id)
                 .FirstOrDefault();
@@ -718,10 +720,16 @@ namespace Msr.Services.Orders
             taskLog.EndTime = null;
 
             _dbContext.SaveChanges();
+
+            result.Entity = taskLog;
+
+            return result;
         }
 
-        public void StepPause(int taskLogId, int fillId)
+        public ResultNotification<TaskLog> StepPause(int taskLogId, int fillId)
         {
+            var result = new ResultNotification<TaskLog>();
+
             var taskLog = _dbContext.TaskLogs.Where(x => x.Id == taskLogId && x.FillId == fillId)
                     .OrderByDescending(x => x.Id)
                     .FirstOrDefault();
@@ -733,7 +741,11 @@ namespace Msr.Services.Orders
 
             taskLog.TotalTime = taskLog.TotalTime + pausedTime;
 
-            _dbContext.SaveChanges();            
+            _dbContext.SaveChanges();
+
+            result.Entity = taskLog;
+
+            return result;
         }
 
         public void AssumeSteps(int fillId, string login)
@@ -767,6 +779,7 @@ namespace Msr.Services.Orders
                 var stepStartDoneTaskResult = conn.Query<StepStartTaskResult>("A_SP_FILL_CANCEL_UNFINISHED_STEPS", p, commandType: CommandType.StoredProcedure);
 
                 var status = p.Get<string>("RET_STATUS");
+                var msg = p.Get<string>("MSGS");
             }
         }
 
@@ -783,7 +796,10 @@ namespace Msr.Services.Orders
             {
                 var stepStartDoneTaskResult = conn.Query<StepStartTaskResult>("A_SP_TASK_ASSUME_CONTROL", p, commandType: CommandType.StoredProcedure);
 
-                return p.Get<string>("RET_STATUS");
+                var retStatus = p.Get<string>("RET_STATUS");
+                var msg = p.Get<string>("MSGS");
+
+                return retStatus;
             }
         }
 

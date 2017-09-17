@@ -36,8 +36,6 @@ $(function () {
 
         window.location.href = '/wip/details/' + $(this).val();
 
-
-
         var term = /Complete/;
         var exists = term.test(currVal);
         if (!exists) {
@@ -55,9 +53,9 @@ $(function () {
                     }
                 },
                 callback: function (result) {
-                    console.log('This was logged in the callback: ' + result);
+                    
                     if (result) {
-                        $("#ncrModal").modal()
+                        $("#ncrModal").modal();
                     }
                 }
             });

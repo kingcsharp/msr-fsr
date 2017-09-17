@@ -155,6 +155,7 @@
     <Compile Include="ApprovalWorkflows\Procedures\HideApprovalWorkflowProcedure.cs" />
     <Compile Include="ApprovalWorkflows\ViewModels\ApprovalWorkflowsViewModel.cs" />
     <Compile Include="ApprovalWorkflows\ViewModels\EditApprovalStagesViewModel.cs" />
+    <Compile Include="ResultNotification.cs" />
     <Compile Include="BaseNotificationRequest.cs" />
     <Compile Include="BaseNotification.cs" />
     <Compile Include="Companies\Procedures\DeleteCompanyProcedure.cs" />

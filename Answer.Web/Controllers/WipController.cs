@@ -296,6 +296,7 @@ namespace Answer.Web.Controllers
             var currentUser = GetCurrentUser();
 
             var viewModel = new WipListViewModel();
+            viewModel.CurrentUser = currentUser;
 
             viewModel.WoItemsInprogress  = _orderService.GetWorkOrderQueryable()
                     .Where(x => x.Status == WorkItemStatusConstants.Accepted && x.SupplierId == currentUser.Root_Company && x.RequesteeId != currentUser.Id) 
@@ -488,23 +489,23 @@ namespace Answer.Web.Controllers
                 TempData["ErrorMesage"] = result.ErrorMessage();
             }
 
-            return Json("OK", JsonRequestBehavior.AllowGet);
+            return Json(result.Entity, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
         public ActionResult StepPause(int taskLogId, int fillId)
         {
-            _orderService.StepPause(taskLogId, fillId);
+            var result = _orderService.StepPause(taskLogId, fillId);
 
-            return Json("OK", JsonRequestBehavior.AllowGet);
+            return Json(result.Entity, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
         public ActionResult StepResume(int taskLogId)
         {
-            _orderService.StepResume(taskLogId);
+            var result = _orderService.StepResume(taskLogId);
 
-            return Json("OK", JsonRequestBehavior.AllowGet);
+            return Json(result.Entity, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -557,12 +558,13 @@ namespace Answer.Web.Controllers
             var loggedUserId = GetCurrentUser().Id;
 
             var statusMessage = _orderService.AssumeTask(taskId, loggedUserId);
-            
-            var response = statusMessage.Contains("ERROR")
-                ? new {Code = "Error", Message = statusMessage}
-                : new {Code = "OK", Message = statusMessage};
 
-            return Json(response, JsonRequestBehavior.AllowGet);
+            if (!string.IsNullOrWhiteSpace(statusMessage) && statusMessage.Contains("ERROR"))
+            {
+                return Json(new { Code = "Error", Message = statusMessage }, JsonRequestBehavior.AllowGet);
+            }
+
+            return Json(new { Code = "OK", Message = statusMessage }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]

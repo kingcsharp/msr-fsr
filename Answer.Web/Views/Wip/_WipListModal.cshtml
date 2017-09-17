@@ -15,6 +15,7 @@
                 var statusText = "";
                 var cssIconButton = "";
                 var cssButton = "";
+                var acceptedButton = "";
 
                 if (proItem.Status == "CLOSED" || proItem.Status == "FINISHED")
                 {
@@ -23,7 +24,13 @@
                 else if (proItem.Status == "ACCEPTED")
                 {
                     cssIconButton = "fa fa-cog fa-spin fa-2x";
-                    cssButton = "btn-success btn-accepted";
+                    cssButton = "btn-success";
+
+                    if (proItem.RequesteeId != Model.CurrentUser.Id)
+                    {
+                        acceptedButton = "btn-accepted";
+                    }
+
                     statusText = "In Progress";
                 }
                 else if (proItem.Status == "PENDING_PARENT_ACCEPTANCE")
@@ -54,14 +61,14 @@
 
                 <button data-toggle="tooltip" data-task-id="@proItem.TaskId" data-fill-id="@proItem.FillId" data-placement="bottom" data-html="true"
                         title="<strong>Serial #:</strong>@proItem.Serial<br />
-                                       <strong>Status:</strong> @statusText<br />
+                                       <strong>Status:</strong> @statusText <br />
                                        <strong>Assigned To:</strong> @proItem.RequesteeName <br/>
                                         @if (proItem.DueDate.HasValue)
                                         {
                                             <strong>Due Date:</strong> @proItem.DueDate.Value.ToShortDateString() <br />
                                         }
                                         "
-                                            class="btn btn-sq @cssButton wip-button">
+                                            class="btn btn-sq @cssButton wip-button @acceptedButton">
                                         <i class="@cssIconButton"></i>
                 </button>
             }
@@ -73,10 +80,15 @@
 <script>
 
     $('[data-toggle="tooltip"]').tooltip();
-    $('.wip-button').on('click', function() {
+
+    $('.wip-button').on('click', function () {
+
         var fillId = $(this).data('fill-id');
+
         if ($(this).hasClass('btn-accepted')) {
+
             var id = $(this).data('task-id');
+
             eModal.confirm('Do you want to take ownership of this WO Item?')
                 .then(function () {
                     $.ajax({
@@ -98,5 +110,7 @@
         } else {
             window.location.href = '/wip/Details/' + fillId;
         }
+
+
     });
 </script>               
