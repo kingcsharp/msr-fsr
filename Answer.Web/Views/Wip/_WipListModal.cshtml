@@ -10,7 +10,7 @@
 
 
         <div class="col-lg-7 col-md-7 col-sm-6">
-            @foreach (var proItem in Model.WoItemsByProcedures.Where(x => x.ProcName == item.ProcName).OrderByDescending(o => o.DueDate))
+            @foreach (var proItem in Model.WoItemsByProcedures.Where(x => x.ProcName == item.ProcName).OrderBy(o => o.DueDate))
             {
                 var statusText = "";
                 var cssIconButton = "";
