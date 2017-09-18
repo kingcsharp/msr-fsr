@@ -1,4 +1,8 @@
-$(window).load(function () {
+
+//document ready
+$(function () {
+
+
     // The slider being synced must be initialized first
     $('#carousel').flexslider({
         animation: "slide",
@@ -19,10 +23,17 @@ $(window).load(function () {
         sync: "#carousel"
     });
 
+    setTimeout(function () {
+        var stepInProgress = $('#carousel ul.slides').find(".step-inprogress").first();
 
-});
-//document ready
-$(function () {
+        if (stepInProgress !== null) {
+            $(stepInProgress).trigger("click");
+        } else {
+            loadStep($('#carousel ul.slides li.step').first());
+        }
+    }, 1000);
+
+
 
     if (parseInt($('#ncr-count').val()) > 0) {
         eModal.confirm('There are NCRs associated to this part. Would you like to view them?', 'NCR Check')
@@ -101,7 +112,7 @@ $(function () {
     $('[data-toggle="tooltip"]').tooltip();
 
     $(".wip-button").on('doubletap', function () {
-        console.log("closing modal and loading wip detail ");
+        
         $('#wipListModal').modal("hide");
     });
 
@@ -255,13 +266,7 @@ $(function () {
         loadStep(this);
     });
 
-    var stepInProgress = $('#carousel ul.slides li.step').first(".step-inprogress");
 
-    if (stepInProgress !== null) {
-        loadStep(stepInProgress);
-    } else {
-        loadStep($('#carousel ul.slides li.step').first());
-    }
 
     
 
@@ -341,19 +346,25 @@ $('#btn-cancel-steps').on('click', function () {
 });
 
 function loadStep(step) {
+
+    //$(step).addClass('flex-active-slide');
+
     var stepId = $(step).data("stepid");
     var phStepId = $(step).data("phstepid");
     var fillId = $(step).data("fill-id");
-
     $('#step-' + stepId).html('<img src="/assets/img/loading.gif"  style="width:32px;height:32px;" />');
 
     $.ajax({
         type: "GET",
         url: "/wip/GetWipStepDetails?stepId=" + stepId + "&phStepId=" + phStepId + "&fillId=" + fillId,
         dataType: 'html',
+        cache: false,
         success: function (data) {
             $('#step-' + stepId).html('');
             $('#step-' + stepId).html(data);
+  
+
+            
         },
         error: function () {
 

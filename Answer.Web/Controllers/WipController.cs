@@ -474,7 +474,7 @@ namespace Answer.Web.Controllers
                 TempData["ErrorMesage"] = result.ErrorMessage();
             }
 
-            return Json("OK", JsonRequestBehavior.AllowGet);
+            return Json(result.Entity, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]

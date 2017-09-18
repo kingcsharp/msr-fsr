@@ -4,55 +4,46 @@
 
 @{
     var timespan = "0 Hours";
+    var resumeButton = "hidden";
+    var startButton = "hidden";
+    var pauseButton = "hidden";
+    var doneButton = "hidden";
+    int? taskId = null;
+
     if (Model.TaskRunningTimer != null)
     {
-        TimeSpan timer = new TimeSpan();
-
-        if (Model.TaskRunningTimer.StatusId == TimerStatuseConstants.InProgress)
-        {
-            timer = Model.TaskRunningTimer.EndTime?.Subtract(Model.TaskRunningTimer.StartTime) ?? DateTime.Now.Subtract(Model.TaskRunningTimer.StartTime);
-            timer = timer + TimeSpan.FromHours(Model.TaskRunningTimer.TotalTime);
-        }
-        else
-        {
-            timer = TimeSpan.FromHours(Model.TaskRunningTimer.TotalTime);
-        }
-
-        var timerInSeconds = timer.TotalSeconds;
-        if (timerInSeconds <= 60)
-        {
-            timespan = timer.Seconds + " sec";
-        }
-        else if (timer.TotalMinutes <= 60)
-        {
-            timespan = timer.Minutes + " minutes " + timer.Seconds + " sec";
-        }
-        else
-        {
-            timespan = timer.Hours + " hours " + timer.Minutes + " minutes " + timer.Seconds + " sec";
-        }
+        taskId = Model.TaskRunningTimer.Id;
     }
+}
+
+@if ((Model.TaskEditDataResult.Status == "REQUESTED" || Model.TaskEditDataResult.Status == "ACCEPTED") && Model.TaskRunningTimer == null)
+{
+    startButton = "show";
 }
 <div class="row">
     <div id="timer-input" class="col-sm-4 timer-input">
-        <input type="text" name="timer" class="form-control timer input-lg" placeholder="@timespan" width="120">
+        <input  type="text" name="timer" class="form-control timer input-lg"  width="120">
     </div>
     <div class="col-sm-5">
         
-        @if ((Model.TaskEditDataResult.Status == "REQUESTED" || Model.TaskEditDataResult.Status == "ACCEPTED") && Model.TaskRunningTimer == null)
-        {
-            <button class="btn btn-primary btn-lg print-btn pull-left start-timer-btn" id="start-step"><i class="glyphicon glyphicon-step-forward"></i> Start</button>
-        }
+    
+        <button class="timer-btn btn btn-primary btn-lg print-btn pull-left start-timer-btn @startButton" id="start-step"><i class="glyphicon glyphicon-step-forward"></i> Start</button> 
+
         @if (Model.TaskRunningTimer != null && Model.TaskRunningTimer.StatusId == TimerStatuseConstants.Paused)
         {
-            <button class="btn btn-warning btn-lg print-btn pull-left" data-task-log-id="@Model.TaskRunningTimer.Id" id="resume-step"><i class="glyphicon glyphicon-step-forward"></i> Resume</button>
+            resumeButton = "show";
         }
+
+        <button class="timer-btn btn btn-warning btn-lg print-btn pull-left @resumeButton" data-task-log-id="@taskId" id="resume-step"><i class="glyphicon glyphicon-step-forward"></i> Resume</button>
 
         @if (Model.TaskRunningTimer != null && Model.TaskRunningTimer.StatusId == TimerStatuseConstants.InProgress)
         {
-            <button class="btn btn-warning btn-lg print-btn pull-left" data-task-log-id="@Model.TaskRunningTimer.Id" id="pause-step"><i class="glyphicon glyphicon-pause"></i> Pause</button>
-            <button class="btn btn-primary btn-lg print-btn pull-left " data-task-log-id="@Model.TaskRunningTimer.Id" id="done-step"><i class="glyphicon glyphicon-stop"></i> Done</button>
+            pauseButton = "show";
+            doneButton = "show";
         }
+         
+        <button class="timer-btn btn btn-warning btn-lg print-btn pull-left @pauseButton" data-task-log-id="@taskId" id="pause-step"><i class="glyphicon glyphicon-pause"></i> Pause</button>
+        <button class="timer-btn btn btn-primary btn-lg print-btn pull-left @doneButton" data-task-log-id="@taskId" id="done-step"><i class="glyphicon glyphicon-stop"></i> Done</button>
 
     </div>
     <div class="col-sm-3">
@@ -70,49 +61,77 @@
 
 <script>
 
-    $('#pause-step').on('click', function() {
-        StepPauseClick($(this).data('task-log-id'));
-    });
+    $(function () {
 
-    $('#resume-step').on('click', function() {
-        StepResumeClick($(this).data('task-log-id'));
-    });
+        alert('@Model.TotalTime');
 
-    $('#start-step').on('click', function() {
-        StepStartClick();
-    });
-
-    $('#done-step').on('click', function() {
-        StepDoneClick();
-    });
-
-    $('#assume-step').on('click', function() {
-        StepAssumeClick();
-    });
-
-    $('#addNcrModal').on('hidden.bs.modal', function(event) {
-        $(this).data('bs.modal', null);
-    });
-
-    $('#addNcrModal').on('show.bs.modal', function(event) {
-        var button = $(event.relatedTarget);
-        var id = button.data('id');
-        var fillId = button.data('fill-id');
-        var modal = $(this);
-
-        $.ajax({
-            type: "GET",
-            url: '/Wip/AddNcrModel?parentId=' + id + '&fillid='+fillId,
-            dataType: 'html',
-            success: function(data) {
-                modal.find('.modal-body').html(data);
-            },
-            error: function() {
-
-            }
+        $('.timer').timer({
+            countdown: true,
+            duration: '@Model.TotalTime'
         });
-    });
 
+
+        $('#pause-step').on('click', function () {
+            StepPauseClick($(this).data('task-log-id'));
+            $('.timer').timer('pause');
+
+        });
+
+        $('#resume-step').on('click',function() {
+            StepResumeClick($(this).data('task-log-id'));
+
+            $('.timer').timer('resume');
+
+        });
+
+        $('#start-step').on('click', function () {
+
+            StepStartClick();
+            $('.timer').timer({
+                editable: true
+            });
+
+        });
+
+        $('#done-step').on('click', function() {
+            StepDoneClick();
+            $('.timer').timer('pause');
+
+            });
+
+        $('#assume-step').on('click',
+            function() {
+                StepAssumeClick();
+            });
+
+        $('#addNcrModal').on('hidden.bs.modal',
+            function(event) {
+                $(this).data('bs.modal', null);
+            });
+
+        $('#addNcrModal').on('show.bs.modal',
+            function(event) {
+                var button = $(event.relatedTarget);
+                var id = button.data('id');
+                var fillId = button.data('fill-id');
+                var modal = $(this);
+
+                $.ajax({
+                    type: "GET",
+                    url: '/Wip/AddNcrModel?parentId=' + id + '&fillid=' + fillId,
+                    dataType: 'html',
+                    success: function(data) {
+                        modal.find('.modal-body').html(data);
+                    },
+                    error: function() {
+
+                    }
+                });
+            });
+
+
+
+    });
 
     function StepDoneClick() {
         var stepId = @Model.StepId;
@@ -123,7 +142,7 @@
             url: "/wip/StepDoneClick?stepId=" + stepId + "&fillId=" + fillId,
             dataType: 'json',
             success: function(data) {
-                location.reload();
+                TimerVisibility(data);
             },
             error: function() {
 
@@ -140,7 +159,7 @@
             url: "/wip/StepStartClick?stepId=" + stepId + "&fillId=" + fillId,
             dataType: 'json',
             success: function (data) {
-                location.reload();
+                TimerVisibility(data);
             },
             error: function () {
 
@@ -173,7 +192,7 @@
             url: "/wip/stepResume?taskLogId=" + id + "&fillId=" + fillId,
             dataType: 'json',
             success: function (data) {
-                location.reload();
+                TimerVisibility(data);
             },
             error: function () {
 
@@ -189,12 +208,34 @@
             url: "/wip/StepPause?taskLogId=" + id + "&fillId=" + fillId,
             dataType: 'json',
             success: function (data) {
-                location.reload();
+                TimerVisibility(data);
             },
             error: function () {
 
             }
         });
+    }
+
+    function TimerVisibility(data) {
+
+        $('.timer-btn').attr('data-task-log-id', data.Id);
+
+        if (data.StatusId === 2) {
+            $('#resume-step').removeClass('hidden');
+
+
+
+            $('#pause-step').addClass('hidden');
+            $('#done-step').addClass('hidden');
+        } else
+        if (data.StatusId === 1) {
+            $('#pause-step').removeClass('hidden');
+            $('#done-step').removeClass('hidden');
+
+
+            $('#resume-step').addClass('hidden');
+        }
+
     }
 
 </script>

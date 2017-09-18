@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Msr.Models.Tasks;
 using Msr.Services.Orders.Procedures;
 using Msr.Services.Orders.ViewModels;
@@ -27,6 +28,6 @@ namespace Msr.Services.Orders.Messaging
         public List<GetReferenceTheories> ReferenceTheories { get; set; }
         public TaskLog TaskRunningTimer { get; set; }
         public LoggedUserIdResult LoggedUserIdResult { get; set; }
-
+        public string TotalTime { get; set; }
     }
 }

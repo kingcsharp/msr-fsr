@@ -1,8 +1,11 @@
 ﻿CREATE TABLE [dbo].[A_Task_Logs]
 (
 	[Id] INT NOT NULL PRIMARY KEY IDENTITY, 
-    [TaskId] NVARCHAR(50) NOT NULL, 
+    [TaskId] int NOT NULL, 
     [StartTime] DATETIME2 NOT NULL, 
     [EndTime] DATETIME2 NULL, 
-    [UserId] NVARCHAR(50) NOT NULL
+	[UserId] NVARCHAR(50) NOT NULL,
+	[TotalTime] float NOT NULL,
+	[StatusId] int NOT NULL,
+	[FillId] int NOT NULL    
 )

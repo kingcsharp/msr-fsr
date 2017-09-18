@@ -12,38 +12,13 @@
     var filesId = "files" + Model.StepId;
 }
 
-@{
-    var timespan = "0 Hours";
-    if (Model.TaskRunningTimer != null)
-    {
-        var timer = new TimeSpan();
 
-        if (Model.TaskRunningTimer.StatusId == TimerStatuseConstants.Stopped)
-        {
-            timer = TimeSpan.FromHours(Model.TaskRunningTimer.TotalTime);
-        }        
-
-        var timerInSeconds = timer.TotalSeconds;
-        if (timerInSeconds <= 60)
-        {
-            timespan = timer.Seconds + " sec";
-        }
-        else if (timer.TotalMinutes <= 60)
-        {
-            timespan = timer.Minutes + " minutes " + timer.Seconds + " sec";
-        }
-        else
-        {
-            timespan = timer.Hours + " hours " + timer.Minutes + " minutes " + timer.Seconds + " sec";
-        }
-    }
-}
 
 <div class="row">
     @if (Model.TaskEditDataResult.Status == "CLOSED")
     {
         <div id="timer-input" class="col-sm-4 timer-input">
-            <input type="text" name="timer" class="form-control timer input-lg" placeholder="@timespan" width="120">
+            <input type="text" name="timer" class="form-control timer input-lg"  width="120">
         </div>
     }
     <div id="step-tabs" class="col-sm-12">
@@ -77,3 +52,16 @@
         </div>
     </div>
 </div>
+
+<script>
+    
+ 
+            $('.timer').timer({
+                countdown: true,
+                duration: '@Model.TotalTime'
+            });
+
+
+        $('.timer').timer('pause');
+    
+    </script>
