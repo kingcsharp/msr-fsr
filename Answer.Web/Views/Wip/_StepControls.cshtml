@@ -8,21 +8,24 @@
     var startButton = "hidden";
     var pauseButton = "hidden";
     var doneButton = "hidden";
+    var timerInput = "hidden";
     int? taskId = null;
 
     if (Model.TaskRunningTimer != null)
     {
         taskId = Model.TaskRunningTimer.Id;
+        
     }
 }
 
 @if ((Model.TaskEditDataResult.Status == "REQUESTED" || Model.TaskEditDataResult.Status == "ACCEPTED") && Model.TaskRunningTimer == null)
 {
     startButton = "show";
+    timerInput = "";
 }
 <div class="row">
-    <div id="timer-input" class="col-sm-4 timer-input">
-        <input  type="text" name="timer" class="form-control timer input-lg"  width="120">
+    <div id="timer-input" class="col-sm-4 timer-input @timerInput">
+        <input  type="text" name="timer" class="form-control timer input-lg "  width="120">
     </div>
     <div class="col-sm-5">
         
@@ -177,9 +180,13 @@
             dataType: 'json',
             success: function (data) {
                 TimerVisibility(data);
-                $('.timer').timer({
-                    editable: true
-                });
+
+                if (data.ErrorMessage === '') {
+                        $('.timer').timer({
+                            editable: true
+                        });
+                    }
+
             },
             error: function () {
 

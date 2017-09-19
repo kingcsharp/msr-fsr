@@ -10,6 +10,12 @@
     var descriptionId = "description" + Model.StepId;
     var monitorsId = "monitors" + Model.StepId;
     var filesId = "files" + Model.StepId;
+    var timerInput = "hidden";
+
+    if (Model.TaskRunningTimer != null)
+    {
+        timerInput = "";
+    }
 }
 
 
@@ -17,7 +23,7 @@
 <div class="row">
     @if (Model.TaskEditDataResult.Status == "CLOSED")
     {
-        <div id="timer-input" class="col-sm-4 timer-input">
+        <div id="timer-input" class="col-sm-4 timer-input @timerInput">
             <input type="text" name="timer" class="form-control timer input-lg"  width="120">
         </div>
     }
