@@ -22,9 +22,6 @@ namespace Msr.Services
             return _errors.Any();
         }
 
-        public string ErrorMessage()
-        {
-            return string.Join(",", _errors);
-        }
+        public string ErrorMessage => string.Join(",", _errors);
     }
 }

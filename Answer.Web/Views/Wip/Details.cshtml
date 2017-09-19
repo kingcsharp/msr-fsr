@@ -128,7 +128,10 @@
                             {
                                 stepCss = "waiting";
                             }
-
+                            else
+                            {
+                                stepCss = "requested";
+                            }
 
                             <li class="step-task step @stepCss" data-stepId="@step.StepId" data-phStepId="@step.PhStepId" data-fill-id="@Model.FillId" title="@step.Description">
                                 <div>@step.Description</div>

@@ -454,7 +454,6 @@ namespace Answer.Web.Controllers
                     TempData["ErrorMesage"] = returnValue;
                 }
 
-
                 if(returnValue  == "NEW_TEXT")
                     return RedirectToAction("Details", new { id = monitorTemplate.FillId });//"../monitors/addNewTextResults.asp?TASK_ID="
             }
@@ -469,12 +468,7 @@ namespace Answer.Web.Controllers
 
             var result = _orderService.StepDone(stepId, loggedUserId, fillId);
 
-            if (result.HasErrors())
-            {
-                TempData["ErrorMesage"] = result.ErrorMessage();
-            }
-
-            return Json(result.Entity, JsonRequestBehavior.AllowGet);
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -484,12 +478,7 @@ namespace Answer.Web.Controllers
 
            var result = _orderService.StepStart(stepId, loggedUserId, fillId);
 
-            if (result.HasErrors())
-            {
-                TempData["ErrorMesage"] = result.ErrorMessage();
-            }
-
-            return Json(result.Entity, JsonRequestBehavior.AllowGet);
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -497,7 +486,7 @@ namespace Answer.Web.Controllers
         {
             var result = _orderService.StepPause(taskLogId, fillId);
 
-            return Json(result.Entity, JsonRequestBehavior.AllowGet);
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -505,7 +494,7 @@ namespace Answer.Web.Controllers
         {
             var result = _orderService.StepResume(taskLogId);
 
-            return Json(result.Entity, JsonRequestBehavior.AllowGet);
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]

@@ -32,6 +32,7 @@
         @if (Model.TaskRunningTimer != null && Model.TaskRunningTimer.StatusId == TimerStatuseConstants.Paused)
         {
             resumeButton = "show";
+            doneButton = "show";
         }
 
         <button class="timer-btn btn btn-warning btn-lg print-btn pull-left @resumeButton" data-task-log-id="@taskId" id="resume-step"><i class="glyphicon glyphicon-step-forward"></i> Resume</button>
@@ -63,14 +64,18 @@
 
     $(function () {
 
-        alert('@Model.TotalTime');
 
-        $('.timer').timer({
-            countdown: true,
-            duration: '@Model.TotalTime'
-        });
+        @if (Model.TotalTime != "0s")
+        {
+            <text>
+                $('.timer').timer({
+                    countdown: true,
+                    duration: '@Model.TotalTime'
+                });
+            </text>
+        }
 
-
+        
         $('#pause-step').on('click', function () {
             StepPauseClick($(this).data('task-log-id'));
             $('.timer').timer('pause');
@@ -87,9 +92,7 @@
         $('#start-step').on('click', function () {
 
             StepStartClick();
-            $('.timer').timer({
-                editable: true
-            });
+           
 
         });
 
@@ -97,7 +100,7 @@
             StepDoneClick();
             $('.timer').timer('pause');
 
-            });
+        });
 
         $('#assume-step').on('click',
             function() {
@@ -143,6 +146,20 @@
             dataType: 'json',
             success: function(data) {
                 TimerVisibility(data);
+
+                var stepInProgress = $('#carousel ul.slides').find(".waiting").first();
+
+                if (stepInProgress !== null) {
+                    $(stepInProgress).removeClass('waiting');
+                    $(stepInProgress).trigger("click");
+                }
+
+                var stepRequested = $('#carousel ul.slides').find(".requested").first();
+
+                if (stepRequested !== null) {
+                    $(stepRequested).addClass('step-complete');
+                }
+
             },
             error: function() {
 
@@ -160,6 +177,9 @@
             dataType: 'json',
             success: function (data) {
                 TimerVisibility(data);
+                $('.timer').timer({
+                    editable: true
+                });
             },
             error: function () {
 
@@ -218,24 +238,28 @@
 
     function TimerVisibility(data) {
 
-        $('.timer-btn').attr('data-task-log-id', data.Id);
+        if (data.ErrorMessage !== '') {
+            alert(data.ErrorMessage);
+        } else {
+            
+        $('.timer-btn').attr('data-task-log-id', data.Entity.Id);
 
-        if (data.StatusId === 2) {
+        if (data.Entity.StatusId === 2) {
             $('#resume-step').removeClass('hidden');
-
-
-
             $('#pause-step').addClass('hidden');
-            $('#done-step').addClass('hidden');
+            
         } else
-        if (data.StatusId === 1) {
-            $('#pause-step').removeClass('hidden');
+            if (data.Entity.StatusId === 1) {
             $('#done-step').removeClass('hidden');
-
-
+            $('#pause-step').removeClass('hidden');
             $('#resume-step').addClass('hidden');
+            $('#start-step').addClass('hidden');
+            } else if (data.Entity.StatusId === 3) {
+            $('#pause-step').addClass('hidden');
+            $('#resume-step').addClass('hidden');
+            $('#done-step').addClass('hidden');
+            }
         }
-
     }
 
 </script>

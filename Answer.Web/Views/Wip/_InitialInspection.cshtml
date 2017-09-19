@@ -55,13 +55,17 @@
 
 <script>
     
- 
+    @if (Model.TotalTime != "0s")
+    {
+        <text>
             $('.timer').timer({
                 countdown: true,
                 duration: '@Model.TotalTime'
             });
 
-
-        $('.timer').timer('pause');
+            $('.timer').timer('pause');
+        </text>
+    }
+      
     
-    </script>
+</script>

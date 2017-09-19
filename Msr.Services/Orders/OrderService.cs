@@ -663,6 +663,7 @@ namespace Msr.Services.Orders
                     };
 
                     _dbContext.TaskLogs.Add(entity);
+                    _dbContext.SaveChanges();
 
                     var taskDto = new TaskLogDto(entity);
                     taskDto.TotalTime = GetTotalTime(entity);
@@ -698,8 +699,7 @@ namespace Msr.Services.Orders
 
                 if ((status != null && !status.Contains("ERROR")) || status == null)
                 {
-                    var taskLog =
-                        _dbContext.TaskLogs.Where(x => x.TaskId == stepId && x.FillId == fillId && x.EndTime == null)
+                    var taskLog = _dbContext.TaskLogs.Where(x => x.TaskId == stepId && x.FillId == fillId)
                             .OrderByDescending(x => x.Id)
                             .FirstOrDefault();
 
