@@ -1,65 +1,340 @@
-﻿@model List<Msr.Services.Procedures.Messages.GetStepDataResult>
+﻿@model Msr.Services.Procedures.Messages.GetStepDataResult
+
 @{
-    ViewBag.Title = "Steps";
+    ViewBag.Title = ViewBag.ProdecureName + " :Steps";
 }
 
 <div class="container-fluid">
-    <div class="side-body padding-top">
-        <div class="row">
-            <h2 class="page-header">
-                Steps
-            </h2>
-            <div class="panel-body bio-graph-info">
-                
-                <div class="form-group">
-                    <label class="control-label col-md-2" for="Title" style="margin-left: -15px;">Procedures:</label>
-                    <div class="col-md-3">
-                        @using (Html.BeginForm("SaveStep", "procedures", FormMethod.Post, new {@class = "form form-horizontal"}))
-                        {
-                            <input type="hidden" name="ProcObjectId" value="@ViewBag.ProcObjectId"/>
-                            @Html.DropDownList("Procedure", (IEnumerable<SelectListItem>) ViewBag.Accounts, null, new {@class = "form-control", name = "Procedure"})
-                            <button type="submit" class="btn btn-xs btn-success">Add New Step</button>
-                        }
 
-                        <div>
-                            <a href="@Url.Action("ReorderSteps", "Procedures", new { procedureObjectId = ViewBag.ProcObjectId })">ReorderSteps</a>
+<div class="side-body padding-top">
+
+<div class="row">
+<h2 class="page-header">
+    @ViewBag.ProdecureName :Steps
+</h2>
+
+<div class="panel-body bio-graph-info">
+    @Html.Partial("Message")
+
+    @using (Html.BeginForm("SaveStep", "procedures", FormMethod.Post, new {@class = "form form-horizontal"}))
+    {
+        <div class="row">
+            <div class="col-lg-10">
+                <div class="form-horizontal">
+
+                    <input type="hidden" name="ProcObjectId" value="@ViewBag.ProcObjectId"/>
+
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Template:</label>
+                        <div class="col-md-5">
+                            @Html.DropDownList("Procedure", (IEnumerable<SelectListItem>) ViewBag.Accounts, null, new {@class = "form-control", name = "Procedure"})
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <button type="submit" class="btn btn-success">Add New Step</button>
+                            <a href="@Url.Action("Edit", "Procedures", new{ id= ViewBag.ProcObjectId })" class="btn btn-warning">Cancel</a>
+                            
                         </div>
                     </div>
 
                 </div>
             </div>
-            <div class="col-lg-12">
-                <section class="panel">
-                    <div class="panel-body bio-graph-info">
-                        <table class="table-condensed" style="width: 100%;">
-                            <tr>
-                                <th style="width:5%">Order</th>
-                                <th style="width:5%">#</th>
-                                <th style="width:40%">Text</th>
-                                <th style="width:5%">Duration</th>
-                                <th style="width:5%">Duration Unit</th>
-                                <th style="width:5%">Preceding Step</th>
-                                <th style="width:14%">Actions</th>
-                            </tr>
-                            @foreach (var step in Model)
-                            {
-
-                                var url = "/procedures/EditStep?stepId=" + @step.Id + "&procedureObjectId=" + @ViewBag.ProcObjectId;
-
-                                <tr>
-                                    <td>@step.Print_Order</td>
-                                    <td>@step.Id</td>
-                                    <td>@Html.Raw(step.Step_Text)</td>
-                                    <td>@step.Duration</td>
-                                    <td>@step.Duration_Type</td>
-                                    <td>@step.Pre_Step</td>
-                                    <td><a class="btn btn-xs btn-success" href="@url">Edit<i class="fa fa-edit"></i></a></td>
-                                </tr>
-                            }
-                        </table>
-                    </div>
-                </section>
-            </div>
         </div>
-    </div>
+    }
 </div>
+
+@foreach (var step in Model.GetStepDataResults)
+{
+    using (Html.BeginForm("EditStep", "Procedures", FormMethod.Post, new {@class = "formPost"}))
+    {
+        <input type="hidden" name="procstepId" value="@ViewBag.ProcObjectId"/>
+        <input type="hidden" name="Id" value="@step.Id"/>
+        <div class="procedure-step row" id='step1'>
+            <div class="col-lg-6 ">
+                <table class="table table-condensed left-table">
+                    <tr>
+                        <th style='width: 95px'>Step Number:</th>
+                        <td class='step-number'>@step.Print_Order</td>
+                        <th style='width: 95px'>Predecessor:</th>
+                        <td><input type='text' name='a0' class='form-control' value='@step.Id'/></td>
+                        <th>Location:</th>
+                        <td><input type='text' name='b0' class='form-control' value='Non-CU S/R'/></td>
+                    </tr>
+                    <tr>
+                        <th>Step Title:</th>
+                        <td colspan=5><input type='text' name='c0' class='form-control pre-populated' value='Test Inception'/></td>
+                    </tr>
+                    <tr>
+                        <th>Step Text:</th>
+                        <td colspan="5">@Html.TextArea("Step_Text", step.Step_Text, new {@class = "form-control"}) @*<textarea name="d0" class="form-control" rows="2" width="100%">@Html.Raw(step.Step_Text)</textarea>*@</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <th colspan="2" align='right'>Labor Time:</th>
+                        <td>
+                            <div class="input-group">
+                                <input type='number' name='e0' class='form-control pre-populated' value='15'/>
+                                <span class="input-group-addon">mins.</span>
+                            </div>
+                        </td>
+                        <th align='right'>Equipment Time:</th>
+                        <td>
+                            <div class="input-group">
+                                <input type='number' name='f0' class='form-control pre-populated' value='@step.Duration'/>
+                                <span class="input-group-addon">mins.</span>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-lg-2">
+                <table class="table">
+                    <tr>
+                        <th>Auth Roles:</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.ListBox("GetStepLabors", step.GetStepLaborsList, new {@class = "form-control submitselect"})
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-lg-4">
+                <table class="table">
+                    <tr>
+                        <th>Monitors:</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li>
+                                    <a href="#" data-value="@step.Id" class="add-monitor_@step.Id add-monitor">+ Add Monitor</a>
+                                </li>
+                            </ul>
+                            @{
+                                var tabid = "";
+                            }
+                            <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+                            @foreach (var item in @step.GetMoniterViewModels)
+                            {
+                                if (@step.Id == item.Step_Id)
+                                {
+                                    tabid = item.Id;
+
+                                    <script type="text/javascript">
+                                        $(document).ready(function() {
+                                            var tabId = 'monitor_@tabid';
+                                            $('.add-monitor_@step.Id').closest('li')
+                                                .before(
+                                                    '<li><a href="#monitor_@tabid">Monitor @tabid</a> <span class="deleteMoniter" data-ProcedureName="@ViewBag.ProdecureName" data-ProcId="@item.Related_Object_Id" data-id="@tabid"> x </span></li>');
+                                            $('.tab-content').append('<div class="tab-pane" id="' + tabId + '"></div>');
+                                            $("#" + tabId).loadTemplate($("#monitor-formEdit"),
+                                                {
+                                                    Description: '@item.Description',
+                                                    ObjectId: '@item.Id',
+                                                    RelatedOnjId: '@item.Related_Object_Id',
+                                                    StepId: '@item.Step_Id'
+                                                });
+                                            //$('.nav-tabs li:nth-child(' + tabId + ') a').click();
+                                            //alert(tabId);
+                                        });
+                                        @*@{
+                                                        Model.AddMonitorForProcedureViewModel.Id = @item.Id;
+                                                    }*@
+                                    </script>
+                                }
+
+                            }
+
+
+                            <script type="text/html" id="monitor-formEdit">
+                                <div class="tab-pane active" id="1a">
+                                    <div class="col-lg-10">
+                                        @{
+                                            Model.AddMonitorForProcedureViewModel.Step_Id = step.Id;
+                                        }
+                                        @using (Html.BeginForm("EditMoniter", "Procedures"))
+                                        {
+                                            @Html.AntiForgeryToken()
+                                            @Html.HiddenFor(x => x.AddMonitorForProcedureViewModel.Id, new {data_value = "ObjectId"})
+                                            @Html.HiddenFor(x => x.AddMonitorForProcedureViewModel.Related_Object_Id, new {data_value = "RelatedOnjId"})
+                                            @Html.HiddenFor(x => x.AddMonitorForProcedureViewModel.Step_Id, new {data_value = "StepId"})
+                                            <input type="hidden" name="ProdecureName" value="@ViewBag.ProdecureName"/>
+                                            <div class="form-horizontal">
+                                                @Html.ValidationSummary(true, "", new {@class = "text-danger"})
+
+                                                <div class="form-group">
+                                                    @Html.LabelFor(model => model.AddMonitorForProcedureViewModel.Monitor_Type, htmlAttributes: new {@class = "control-label col-md-4"})
+                                                    <div class="col-md-5">
+                                                        @Html.DropDownListFor(model => model.AddMonitorForProcedureViewModel.Monitor_Type, Model.AddMonitorForProcedureViewModel.MonitorTypesList, new {@class = "form-control selectroles"})
+                                                        @Html.ValidationMessageFor(model => model.AddMonitorForProcedureViewModel.Monitor_Type, "", new {@class = "text-danger"})
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    @Html.LabelFor(model => model.AddMonitorForProcedureViewModel.Description, htmlAttributes: new {@class = "control-label col-md-4"})
+                                                    <div class="col-md-5">
+                                                        @Html.TextAreaFor(model => model.AddMonitorForProcedureViewModel.Description, new {@class = "form-control", data_content = "Description"})
+                                                        @Html.ValidationMessageFor(model => model.AddMonitorForProcedureViewModel.Description, "", new {@class = "text-danger"})
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="col-md-offset-4 col-md-10">
+                                                        <input type="submit" value="Submit" class="btn btn-success"/>
+                                                        @*<a href="@Url.Action("Monitors", "ProcedureMonitors", new {Id = Model.AddMonitorForProcedureViewModel.Related_Object_Id })" class="btn btn-warning">Cancel</a>*@
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </script>
+
+                            <script type="text/html" id="monitor-form">
+                                <div class="tab-pane active" id="1a">
+                                    <div class="col-lg-10">
+                                        @{
+                                            Model.AddMonitorForProcedureViewModel.Step_Id = step.Id;
+                                        }
+                                        @Html.Partial("Message")
+                                        @using (Html.BeginForm("AddMoniter", "Procedures"))
+                                        {
+                                            @Html.AntiForgeryToken()
+                                            @Html.HiddenFor(x => x.AddMonitorForProcedureViewModel.Id, new {data_content = "ObjectId"})
+                                            @Html.HiddenFor(x => x.AddMonitorForProcedureViewModel.Related_Object_Id, new {data_content = "RelatedOnjId"})
+                                            @Html.HiddenFor(x => x.AddMonitorForProcedureViewModel.Step_Id, new {data_content = "StepId"})
+                                            <input type="hidden" name="ProdecureName" value="@ViewBag.ProdecureName"/>
+                                            <div class="form-horizontal">
+                                                @Html.ValidationSummary(true, "", new {@class = "text-danger"})
+
+                                                <div class="form-group">
+                                                    @Html.LabelFor(model => model.AddMonitorForProcedureViewModel.Monitor_Type, htmlAttributes: new {@class = "control-label col-md-4"})
+                                                    <div class="col-md-5">
+                                                        @Html.DropDownListFor(model => model.AddMonitorForProcedureViewModel.Monitor_Type, Model.AddMonitorForProcedureViewModel.MonitorTypesList, new {@class = "form-control selectroles"})
+                                                        @Html.ValidationMessageFor(model => model.AddMonitorForProcedureViewModel.Monitor_Type, "", new {@class = "text-danger"})
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    @Html.LabelFor(model => model.AddMonitorForProcedureViewModel.Description, htmlAttributes: new {@class = "control-label col-md-4"})
+                                                    <div class="col-md-5">
+                                                        @Html.TextAreaFor(model => model.AddMonitorForProcedureViewModel.Description, new {@class = "form-control", data_content = "Description"})
+                                                        @Html.ValidationMessageFor(model => model.AddMonitorForProcedureViewModel.Description, "", new {@class = "text-danger"})
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="col-md-offset-4 col-md-10">
+                                                        <input type="submit" value="Submit" class="btn btn-success"/>
+                                                        @*<a href="@Url.Action("Monitors", "ProcedureMonitors", new {Id = Model.AddMonitorForProcedureViewModel.Related_Object_Id })" class="btn btn-warning">Cancel</a>*@
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </script>
+                            <div class="tab-content clearfix">
+                            </div>
+
+
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+        </div>
+        <input type="submit" class="btn btn-success" value="Save"/>
+    }
+}
+</div>
+</div>
+</div>
+
+@section scripts{
+    <script type="text/javascript" src="https://c0066.paas1.tx.modxcloud.com/assets/js/jquery.loadTemplate.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#monitor1-switch').bootstrapSwitch();
+            $('#monitor1-switch').on('switchChange.bootstrapSwitch', function (e, state) {
+                e.preventDefault();
+                if (state) {
+                    $("#1a tr.on-off-row").show();
+                    console.log('on');
+                } else {
+                    $("#1a tr.on-off-row").hide();
+                    console.log('off');
+                }
+            });
+
+            $('#monitor2-switch').bootstrapSwitch();
+            $('#monitor2-switch').on('switchChange.bootstrapSwitch', function (e, state) {
+                e.preventDefault();
+                if (state) {
+                    $("#2a tr.on-off-row").show();
+                    console.log('on');
+                } else {
+                    $("#2a tr.on-off-row").hide();
+                    console.log('off');
+                }
+            });
+
+            $(".nav-tabs").on("click", "a", function (e) {
+                    e.preventDefault();
+                    if (!$(this).hasClass('add-monitor')) {
+                        $(this).tab('show');
+                    }
+                })
+                .on("click", "span", function () {
+                    var clicked = $(this);
+                    eModal.confirm(
+                            'Are you sure?')
+                        .then(confirmCallback, optionalCancelCallback);
+
+                    function confirmCallback() {
+
+                        var id = clicked.data('id'); 
+                        var stepId = clicked.data('procid');
+                        var ProdecureName = clicked.data('ProcedureName');
+                        $.ajax({
+                            type: "POST",
+                            url: "/Procedures/DeleteStep",
+                            dataType: 'json',
+                            data: { id: id, procStepId: stepId, ProdecureName: ProdecureName },
+                            success: function (data) {
+                                location.reload();
+                            },
+                            error: function () {
+                                alert("something went wrong");
+                            }
+                        });
+                        
+                    }
+
+                    function optionalCancelCallback() {
+                        console.log("Cancel");
+                    }
+
+                });
+
+            $('.add-monitor').click(function (e) {
+                e.preventDefault();
+                var id = $(".nav-tabs").children().length; 
+                var tabId = 'monitor_' + id;
+                $(this).closest('li').before('<li><a href="#monitor_' + id + '">Monitor ' + id + '</a> <span> x </span></li>');
+                // consoloe.log($(this).closest('td').find('tab-conten'));
+                $('.tab-content').append('<div class="tab-pane" id="' + tabId + '"></div>');
+                $("#" + tabId).loadTemplate($("#monitor-form"));
+                $('.nav-tabs li:nth-child(' + id + ') a').click();
+            });
+
+            $("form").submit(function (e) {
+                $('.submitselect option').prop('selected', true);
+            });
+
+            $('.deleteMoniter').click(function (e) {
+
+            });
+        });
+    </script>
+}
+

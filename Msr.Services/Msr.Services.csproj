@@ -156,6 +156,7 @@
     <Compile Include="ApprovalWorkflows\ViewModels\ApprovalWorkflowsViewModel.cs" />
     <Compile Include="ApprovalWorkflows\ViewModels\EditApprovalStagesViewModel.cs" />
     <Compile Include="Orders\Messaging\TaskLogDto.cs" />
+    <Compile Include="Procedures\ViewModels\ProcedureStepMonitorsViewModel.cs" />
     <Compile Include="ResultNotification.cs" />
     <Compile Include="BaseNotificationRequest.cs" />
     <Compile Include="BaseNotification.cs" />

@@ -10,7 +10,7 @@ namespace Msr.Services.Procedures.ViewModels
     {
         public GetStepEditDataViewModel()
         {
-
+            GetStepEditData = new GetStepEditDataResult();
         }
 
         public GetStepEditDataViewModel(ProceduresService proceduresService, ProcedureVerbsService procedureVerbsService, string procedureObjectId)
@@ -172,6 +172,7 @@ namespace Msr.Services.Procedures.ViewModels
             }).OrderBy(o => o.Text).ToList();
         }
 
+        public string Id { get; set; }
         public string StepId { get; set; }
         public string ProcObjId { get; set; }
         public string NumTestQuestion { get; set; }

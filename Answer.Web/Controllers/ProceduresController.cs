@@ -11,6 +11,7 @@ using System.Xml;
 using System.Xml.XPath;
 using System.Xml.Xsl;
 using Msr.Models.ActualParts;
+using Msr.Services.Procedures.Messages;
 using Msr.Services.Procedures.ViewModels;
 using Msr.Services.ProcedureVerbs;
 using Msr.Services.Roles;
@@ -319,11 +320,19 @@ namespace Answer.Web.Controllers
 
         public ActionResult Steps(string id)
         {
-            var viewModel = _proceduresService.GetStepsData(id, GetCurrentUser().Id);
+            var procedureName = _proceduresService.GetProceduresQueryable().Where(x => x.ObjectId == id).SingleOrDefault().Name;
 
+            var viewModel = new GetStepDataResult
+            {
+                GetStepDataResults = _proceduresService.GetStepsData(id, GetCurrentUser().Id)
+            };
+            viewModel.AddMonitorForProcedureViewModel.Setup();
+            viewModel.AddMonitorForProcedureViewModel.Related_Object_Id = id;
             ViewBag.ProcObjectId = id;
+            ViewBag.ProdecureName = procedureName;
 
             ViewBag.Procedure = new SelectList(_proceduresService.GetProcedurelist(), "Value", "Show");
+
 
             return View(viewModel);
         }
@@ -385,13 +394,16 @@ namespace Answer.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult EditStep(GetStepEditDataViewModel viewModel)
+        [ValidateInput(false)]
+        public ActionResult EditStep(GetStepEditDataViewModel viewModel, string procstepId, string Step_Text, string Id)
         {
+            viewModel.StepId = Id;
+            viewModel.GetStepEditData.Step_Text = Step_Text;
+            viewModel.ProcObjId = procstepId;
             _proceduresService.UpdateStepData(viewModel);
 
             TempData["SuccessMessage"] = "Procedure Step been updated successfully.";
-
-            return RedirectToAction("EditStep", new { stepId = viewModel.StepId, procedureObjectId = viewModel.ProcObjId });
+            return RedirectToAction("Steps", new { Id = procstepId });
         }
 
 
@@ -684,7 +696,7 @@ namespace Answer.Web.Controllers
                 {
                     TempData["SuccessMessage"] = "Procedure Consumed has been created successfully.";
 
-                   return RedirectToAction("ShowProcedureConsumed", new { Pid = Pid, relationship = relationship });
+                    return RedirectToAction("ShowProcedureConsumed", new { Pid = Pid, relationship = relationship });
                 }
                 else
                 {
@@ -760,7 +772,7 @@ namespace Answer.Web.Controllers
             {
                 TempData["SuccessMessage"] = "Procedure Object deleted successfully.";
 
-              return RedirectToAction("ShowProcedureConsumed", new { Pid = Pid, relationship = relationship });
+                return RedirectToAction("ShowProcedureConsumed", new { Pid = Pid, relationship = relationship });
             }
 
             TempData["ErrorMessage"] = "Something went wrong.";
@@ -992,5 +1004,82 @@ namespace Answer.Web.Controllers
 
             return View(model);
         }
+        [AcceptVerbs(verbs: HttpVerbs.Post)]
+        public ActionResult AddMoniter(GetStepDataResult model, string ProdecureName)
+        {
+            var proceduresService = new ProceduresService();
+            if (ModelState.IsValid)
+            {
+                model.AddMonitorForProcedureViewModel.Id = null;
+                model.AddMonitorForProcedureViewModel.StrNTLogin = GetCurrentUser().Id;
+                var response = proceduresService.AddMonitorForProcedure(model: model.AddMonitorForProcedureViewModel);
+                if (response)
+                {
+                    TempData["SuccessMessage"] = "Monitor has been added successfully.";
+
+                    return RedirectToAction(actionName: "Steps", routeValues: new { id = model.AddMonitorForProcedureViewModel.Related_Object_Id, ProdecureName = ProdecureName });
+                }
+
+                TempData["ErrorMessage"] = "Something went wrong.";
+                return RedirectToAction("Steps", "Procedures", new
+                {
+                    id = model.AddMonitorForProcedureViewModel.Step_Id,
+                    ProdecureName = ProdecureName
+                });
+            }
+
+            return RedirectToAction("Steps", "Procedures", new
+            {
+                id = model.AddMonitorForProcedureViewModel.Step_Id,
+                ProdecureName = ProdecureName
+            });
+        }
+        [AcceptVerbs(verbs: HttpVerbs.Post)]
+        public ActionResult EditMoniter(GetStepDataResult model, string ProdecureName)
+        {
+            var proceduresService = new ProceduresService();
+            if (ModelState.IsValid)
+            {
+                model.AddMonitorForProcedureViewModel.StrNTLogin = GetCurrentUser().Id;
+                var response = proceduresService.EditMonitorForProcedure(model: model.AddMonitorForProcedureViewModel);
+                if (response)
+                {
+                    TempData["SuccessMessage"] = "Monitor has been updated successfully.";
+
+                    return RedirectToAction(actionName: "Steps", routeValues: new { id = model.AddMonitorForProcedureViewModel.Related_Object_Id, ProdecureName = ProdecureName });
+                }
+
+                TempData["ErrorMessage"] = "Something went wrong.";
+                return RedirectToAction("Steps", "Procedures", new
+                {
+                    id = model.AddMonitorForProcedureViewModel.Step_Id,
+                    ProdecureName = ProdecureName
+                });
+            }
+
+            return RedirectToAction("Steps", "Procedures", new
+            {
+                id = model.AddMonitorForProcedureViewModel.Step_Id,
+                ProdecureName = ProdecureName
+            });
+        }
+        [AcceptVerbs(verbs: HttpVerbs.Post)]
+        public ActionResult DeleteStep(string id, string procStepId, string ProdecureName)
+        {
+            var proceduresService = new ProceduresService();
+
+            var result = proceduresService.DeleteStep(id, GetCurrentUser().Id);
+            if (result)
+            {
+                TempData["SuccessMessage"] = "Step has been deleted successfully.";
+
+                return Json("Ok", JsonRequestBehavior.AllowGet);
+            }
+
+            TempData["ErrorMessage"] = "Something went wrong.";
+
+            return RedirectToAction("Steps", "Procedures", new { id = procStepId, ProdecureName = ProdecureName });
+        }
     }
+
 }

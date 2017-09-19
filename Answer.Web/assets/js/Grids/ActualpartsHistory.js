@@ -35,20 +35,7 @@
                 width: 350,
                 align: 'left'
             },
-            {
-                label: 'Cur Plan Start Date',
-                name: 'CurPlannerStartDate',
-                index: 'CurPlannerStartDate',
-                colmenu: true,
-                editable: true, // must set editable to true if you want to make the field editable
-                editrules: { required: true },
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                width: 130,
-                formatter: 'date',
-                formatoptions: { srcformat: "m/d/Y H:i", newformat: "m/d/Y" },
-                align: 'left'
-            },
+          
             {
                 label: 'Cur Plan Start Date',
                 name: 'CurPlannedStopDate',
@@ -91,45 +78,8 @@
                 formatoptions: { srcformat: "m/d/Y H:i", newformat: "m/d/Y" },
                 align: 'left',
             },
-            {
-                label: 'Original Requestor',
-                name: 'OriginalRequestor',
-                index: 'OriginalRequestor',
-                colmenu: false,
-                editable: true, // must set editable to true if you want to make the field editable
-                editrules: { required: true },
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                width: 150,
-                align: 'left',
-                formatter: linkFormatter
-            },
-            {
-                label: 'Latest Requestee',
-                name: 'LatestRequestee',
-                index: 'LatestRequestee',
-                colmenu: false,
-                editable: true, // must set editable to true if you want to make the field editable
-                editrules: { required: true },
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                width: 150,
-                align: 'left',
-                formatter: linkFormatter
-            },
-            {
-                label: 'Company',
-                name: 'CompanyName',
-                index: 'CompanyName',
-                colmenu: false,
-                editable: true, // must set editable to true if you want to make the field editable
-                editrules: { required: true },
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                width: 80,
-                align: 'left',
-                formatter: linkFormatter
-            },
+           
+         
             {
                 label: 'Request Date',
                 name: 'RequestDate',
@@ -144,67 +94,10 @@
                 formatoptions: { srcformat: "m/d/Y H:i", newformat: "m/d/Y" },
                 align: 'left'
             },
-            {
-                label: 'Task Stat Title',
-                name: 'TaskStetTitle',
-                index: 'TaskStetTitle',
-                colmenu: false,
-                editable: true, // must set editable to true if you want to make the field editable
-                editrules: { required: true },
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                width: 200,
-                align: 'left'
-            },
-            {
-                label: 'Task Stat Title',
-                name: 'TaskStetTitle',
-                index: 'TaskStetTitle',
-                colmenu: false,
-                editable: true, // must set editable to true if you want to make the field editable
-                editrules: { required: true },
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                width: 200,
-                align: 'left'
-            },
-            {
-                label: 'Task Stat Title',
-                name: 'TaskStetTitle',
-                index: 'TaskStetTitle',
-                colmenu: false,
-                editable: true, // must set editable to true if you want to make the field editable
-                editrules: { required: true },
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                width: 200,
-                align: 'left'
-            },
-            {
-                label: 'Task Priority',
-                name: 'TaskPriority',
-                index: 'TaskPriority',
-                colmenu: false,
-                editable: true, // must set editable to true if you want to make the field editable
-                editrules: { required: true },
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                width: 200,
-                align: 'left'
-            },
-            {
-                label: 'Moniter Status',
-                name: 'DnrStatus',
-                index: 'DnrStatus',
-                colmenu: false,
-                editable: true, // must set editable to true if you want to make the field editable
-                editrules: { required: true },
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                width: 200,
-                align: 'left'
-            },
-            { name: 'Actions', index: 'Id', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: actualPartVIewHistoryFormatter, width: 200, align: 'center' }
+          
+     
+      
+          
         ],
         ajaxRowOptions: {
             type: "POST",

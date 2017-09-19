@@ -3,6 +3,7 @@
     public class GetStepLaborResult
     {
         public string Role_Name { get; set; }
+        public string Role_id { get; set; }
         public double? Qty { get; set; }
         public string QtyType { get; set; }
     }

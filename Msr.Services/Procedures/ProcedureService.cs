@@ -162,6 +162,89 @@ namespace Msr.Services.Procedures
                 return false;
             }
         }
+        public bool EditMonitorForProcedure(AddMonitorForProcedureViewModel model)
+        {
+            try
+            {
+                var addProcedureMonitorProcedure = new AddProcedureMonitorProcedure()
+                {
+
+                    Id = model.Id,
+
+                    Monitor_Type = model.Monitor_Type,
+
+                    Description = model.Description,
+
+                    Start_System_Task = model.Start_System_Task,
+
+                    Start_Type = model.Start_Type,
+
+                    Stop_System_Task = model.Stop_System_Task,
+
+                    Stop_Type = model.Stop_Type,
+
+                    Counter_Or_Clock = model.Counter_Or_Clock,
+
+                    Clock_Unit = model.Clock_Unit,
+
+                    Highest_Threshold = model.Highest_Threshold,
+
+                    High_Threshold = model.High_Threshold,
+
+                    Target = model.Target,
+
+                    Low_Threshold = model.Low_Threshold,
+
+                    Lowest_Threshold = model.Lowest_Threshold,
+
+                    Should_Be = model.Should_Be,
+
+                    Opinion = model.Opinion,
+
+                    Hide_Target = model.Hide_Target,
+
+                    Use_Result = model.Use_Result,
+
+                    Fail_Stop = model.Fail_Stop,
+
+                    Step_Id = model.Step_Id,
+
+                    Correct_Answer = model.Correct_Answer,
+
+                    Text_Target = model.Text_Target,
+
+                    Task_Id = model.Task_Id,
+
+                    Tolerance = model.Tolerance,
+
+                    Related_Object_Id = model.Related_Object_Id,
+
+                    Fail_Action = model.Fail_Action,
+
+                    Target_Object_Type = model.Target_Object_Type,
+
+                    Target_Object = model.Target_Object,
+
+                    Skip_Mode = model.Skip_Mode,
+
+                    Cant_Change = model.Cant_Change,
+
+                    Always_Pass = model.Always_Pass,
+
+                    StrNTLogin = model.StrNTLogin
+                };
+
+                _dbContext.Database.ExecuteStoredProcedure(addProcedureMonitorProcedure);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                var message = "Error occured:" + ex.Message;
+
+                return false;
+            }
+        }
         public string PrePopSave(string procObjId, string prevStepId, string ntlogin)
         {
             try
@@ -184,12 +267,12 @@ namespace Msr.Services.Procedures
                 return string.Empty;
             }
         }
-        public List<ProcedureEditObjectView> GetSelectedProcedureObject(string procobjid,string sid,string relationship, string ntlogin)
+        public List<ProcedureEditObjectView> GetSelectedProcedureObject(string procobjid, string sid, string relationship, string ntlogin)
         {
             string ss = null;
             var procId = new SqlParameter("@PROC_OBJ_ID", procobjid);
-            var stepid = new SqlParameter("@PROC_STEP_ID",value: DBNull.Value);
-           
+            var stepid = new SqlParameter("@PROC_STEP_ID", value: DBNull.Value);
+
             var relation = new SqlParameter("@RELATIONSHIP", relationship);
             var NTLogin = new SqlParameter("@strNTLogin", ntlogin);
             var result = _dbContext.Database.SqlQuery<ProcedureEditObjectView>("EXEC A_SP_PROCEDURE_GET_APPROVED_OBJECTS_BY_RELATIONSHIP @PROC_OBJ_ID,@PROC_STEP_ID,@RELATIONSHIP, @strNTLogin", procId, stepid, relation, NTLogin).ToList();
@@ -232,7 +315,7 @@ namespace Msr.Services.Procedures
 
                 foreach (var file in model.ReferenceFiles)
                 {
-                    var saveFileProcedure = new SaveFileProcedure() { ObjId = saveProcedureProcedure.NewObjId, DocId = file, Type = DBNull.Value.ToString(CultureInfo.InvariantCulture), NTLogin = model.NTLogin };
+                    var saveFileProcedure = new SaveFileProcedure() { ObjId = saveProcedureProcedure.NewObjId, DocId = file, Type = null, NTLogin = model.NTLogin };
 
                     _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
                 }
@@ -267,7 +350,7 @@ namespace Msr.Services.Procedures
 
                 foreach (var file in model.ReferenceFiles)
                 {
-                    var saveFileProcedure = new SaveFileProcedure() { ObjId = model.ObjectId, DocId = file, Type = DBNull.Value.ToString(CultureInfo.InvariantCulture), NTLogin = model.NTLogin };
+                    var saveFileProcedure = new SaveFileProcedure() { ObjId = model.ObjectId, DocId = file, Type = null, NTLogin = model.NTLogin };
 
                     _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
                 }
@@ -365,11 +448,12 @@ namespace Msr.Services.Procedures
         {
             var getStepsDataProcedure = new GetStepsDataProcedure() { ProcedureObjectId = procedureObjectId, NTLogin = loginId };
             var result = _dbContext.Database.ExecuteStoredProcedure<GetStepDataResult>(getStepsDataProcedure).ToList();
+
             foreach (var stepData in result)
             {
                 stepData.Step_Text = stepData.Step_Text.Replace("<<bb>>", "<br/><h4>")
-                        .Replace("<</bb>>", "</h4>")
-                        .Replace("<<nl/>>", "<br/>");
+                    .Replace("<</bb>>", "</h4>")
+                    .Replace("<<nl/>>", "<br/>");
 
                 if (!string.IsNullOrWhiteSpace(stepData.Pre_Step))
                 {
@@ -377,11 +461,23 @@ namespace Msr.Services.Procedures
                     var preStepMatch = regex.Match(stepData.Pre_Step);
                     stepData.Pre_Step = preStepMatch.Groups[1].ToString();
                 }
+                stepData.GetStepLaborsList = GetLaborsById(stepData.Id, "1618").Select(x => new SelectListItem
+                {
+                    Text = x.Role_Name,
+                    Value = x.Role_id.ToString(),
+                }).OrderBy(o => o.Text).ToList();
+                stepData.GetMoniterViewModels = GetMoniterByStepId(stepData.Id);
             }
 
             return result;
         }
 
+        public List<GetStepLaborResult> GetLaborsById(string stepId, string loginId)
+        {
+
+            var getStepLaborProcedure = new GetStepLaborProcedure() { Id = stepId, NTLogin = loginId };
+            return _dbContext.Database.ExecuteStoredProcedure<GetStepLaborResult>(getStepLaborProcedure).ToList();
+        }
         public GetStepEditDataViewModel GetStepData(string stepId, string procedureObjectId, string loginId)
         {
             GetStepEditDataViewModel getStepEditDataViewModel = new GetStepEditDataViewModel(new ProceduresService(), new ProcedureVerbsService(), procedureObjectId)
@@ -547,7 +643,7 @@ namespace Msr.Services.Procedures
                 updateOneStep.ReferenceProcs = String.Join(",", viewModel.SelectedReferenceProcedures);
             }
 
-            if (viewModel.SelectedReferenceProcedures !=null)
+            if (viewModel.SelectedReferenceProcedures != null)
             {
                 updateOneStep.PrecedingSteps = String.Join(",", viewModel.SelectedPrecedingSteps);
             }
@@ -624,6 +720,31 @@ namespace Msr.Services.Procedures
                 return false;
             }
         }
+
+        public List<GetMoniterViewModel> GetMoniterByStepId(string id)
+        {
+            try
+            {
+                var objId = new SqlParameter("@RELATED_OBJECT_ID", DBNull.Value);
+
+                var proStepId = id == null ? new SqlParameter("@PROCEDURE_STEP_ID", DBNull.Value) : new SqlParameter("@PROCEDURE_STEP_ID", id);
+
+                var taskId = new SqlParameter("@TASK_ID", DBNull.Value);
+
+                var ntLogin = new SqlParameter("@strNTLogin", "1618");
+
+                var result = _dbContext.Database.SqlQuery<GetMoniterViewModel>("EXEC A_SP_MONITOR_TEMPLATES_GET_DATA_FOR_OBJECT @RELATED_OBJECT_ID, @PROCEDURE_STEP_ID, @TASK_ID, @strNTLogin",
+                    objId, proStepId, taskId, ntLogin).ToList();
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                var message = "Error occured:" + ex.Message;
+
+                return new List<GetMoniterViewModel>();
+            }
+        }
         public IQueryable<GetMoniterViewModel> GetMonitors(GetMoniterViewModel model, bool reorderByLatestMonitor)
         {
             var objId = new SqlParameter("@RELATED_OBJECT_ID", model.Related_Object_Id);
@@ -650,9 +771,9 @@ namespace Msr.Services.Procedures
             }
 
             var NTLogin = new SqlParameter("@strNTLogin", model.StrNTLogin);
-            
+
             List<GetMoniterViewModel> result = _dbContext.Database.SqlQuery<GetMoniterViewModel>("EXEC A_SP_MONITOR_TEMPLATES_GET_DATA_FOR_OBJECT @RELATED_OBJECT_ID, @PROCEDURE_STEP_ID, @TASK_ID, @strNTLogin",
-                    objId, ProStepId, TaskId, NTLogin).ToList();
+                objId, ProStepId, TaskId, NTLogin).ToList();
 
             if (reorderByLatestMonitor)
             {
@@ -716,8 +837,8 @@ namespace Msr.Services.Procedures
 
             return result;
         }
-        
-  
+
+
 
         public bool CreateProcedureObject(EditProcedureObjectViewModel model)
         {
@@ -755,12 +876,12 @@ namespace Msr.Services.Procedures
             {
                 var saveProcedureProcedure = new SaveProcedureObjects
                 {
-                     Id=model.ID,
-                     ProcedureObjId = model.PROCEDURE_ID,
+                    Id = model.ID,
+                    ProcedureObjId = model.PROCEDURE_ID,
                     ApprovedObjectId = model.APPROVED_OBJECT_ID,
                     Qty = model.QTY,
                     QtyType = model.QTY_TYPE,
-                   Relationship = model.RELATIONSHIP,
+                    Relationship = model.RELATIONSHIP,
                 };
 
                 _dbContext.Database.ExecuteStoredProcedure(saveProcedureProcedure);
@@ -897,6 +1018,20 @@ namespace Msr.Services.Procedures
             return result;
         }
 
+        public bool DeleteStep(string id, string ntLogin)
+        {
+            try
+            {
+                _dbContext.Database.ExecuteSqlCommand($"DELETE FROM A_MONITOR_TEMPLATES WHERE ID = {id}");
 
+                return true;
+            }
+            catch (Exception ex)
+            {
+                var message = "Error occured:" + ex.Message;
+
+                return false;
+            }
+        }
     }
 }

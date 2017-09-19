@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Web.Mvc;
-
-namespace Msr.Services.Procedures.ViewModels
+﻿namespace Msr.Services.PrePro.ViewModel
 {
     public class ProcedureMonitorsViewModel
     {

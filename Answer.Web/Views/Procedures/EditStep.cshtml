@@ -2,7 +2,6 @@
 @{
     ViewBag.Title = "Edit Step";
 }
-
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="row">
@@ -14,7 +13,6 @@
                 @using (Html.BeginForm())
                 {
                     <div class="form-horizontal">
-
                         @Html.AntiForgeryToken()
                         @Html.HiddenFor(x => x.StepId)
                         @Html.HiddenFor(x => x.ProcObjId)
@@ -27,9 +25,7 @@
                         @Html.HiddenFor(x => x.GetStepEditData.Cycle_Count)
                         @Html.HiddenFor(x => x.GetStepEditData.Cycle_On_Counter)
 
-
                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
                         <div class="form-group">
                             <label class="control-label col-md-4">Base Start On Counter?</label>
                             <div class="col-md-5">
@@ -37,7 +33,6 @@
                                 @Html.ValidationMessageFor(model => model.GetStepEditData.Start_On_Counter, "", new { @class = "text-danger" })
                             </div>
                         </div>
-
                         @if (Model.GetStepEditData.Start_On_Counter == 1)
                         {
                             <div class="form-group">
@@ -48,7 +43,6 @@
                                 </div>
                             </div>
                         }
-
                         @if (Model.GetStepEditData.Start_On_Counter == 1)
                         {
                             <div class="form-group">
@@ -59,7 +53,6 @@
                                 </div>
                             </div>
                         }
-
                         @if (Model.GetStepEditData.Start_On_Counter == 1)
                         {
                             <div class="form-group">
@@ -143,33 +136,30 @@
                                 @Html.ListBoxFor(m => m.ReferenceTheory, Model.ListReferenceTheories, new { @class = "form-control submitselect", multiple = "multiple" })
                                 @Html.ValidationMessageFor(model => model.ReferenceTheory, "", new { @class = "text-danger" })
                                 <div style="width: 3%; float: right;">
-                                    <span class="data-toggle=" data-call-back-id="ReferenceTheory" data-toggle="modal" data-target="#select-theory"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceTheory"><i class="icon fa fa-trash"></i></span>
+                                    <span class="data-toggle=" data-call-back-id="ReferenceTheory" data-toggle="modal" data-target="#select-theory"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceTheory"><i class="icon fa fa-minus-circle"></i></span>
                                 </div>
                             </div>
                         </div>
-
                         <div class="form-group">
                             @Html.LabelFor(model => model.ReferenceObject, htmlAttributes: new { @class = "control-label  col-md-4" })
                             <div class="col-md-5">
                                 @Html.ListBoxFor(m => m.ReferenceObject, Model.ListReferenceObjects, new { @class = "form-control submitselect", multiple = "multiple" })
                                 @Html.ValidationMessageFor(model => model.ReferenceObject, "", new { @class = "text-danger" })
                                 <div style="width: 3%; float: right;">
-                                    <span class="data-toggle=" data-call-back-id="ReferenceObject" data-toggle="modal" data-target="#select-objects"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceObject"><i class="icon fa fa-trash"></i></span>
+                                    <span class="data-toggle=" data-call-back-id="ReferenceObject" data-toggle="modal" data-target="#select-objects"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceObject"><i class="icon fa fa-minus-circle"></i></span>
                                 </div>
                             </div>
                         </div>
-
                         <div class="form-group">
                             @Html.LabelFor(model => model.ReferenceFiles, htmlAttributes: new { @class = "control-label  col-md-4" })
                             <div class="col-md-5">
                                 @Html.ListBoxFor(m => m.ReferenceFiles, Model.ListReferenceFiles, new { @class = "form-control submitselect", multiple = "multiple" })
                                 @Html.ValidationMessageFor(model => model.ReferenceFiles, "", new { @class = "text-danger" })
                                 <div style="width: 3%; float: right;">
-                                    <span class="data-toggle=" data-call-back-id="ReferenceFiles" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceFiles"><i class="icon fa fa-trash"></i></span>
+                                    <span class="data-toggle=" data-call-back-id="ReferenceFiles" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceFiles"><i class="icon fa fa-minus-circle"></i></span>
                                 </div>
                             </div>
                         </div>
-
                         <div class="form-group">
                             <label class="control-label col-md-4">Comments:</label>
                             <div class="col-md-5">
@@ -177,16 +167,14 @@
                                 @Html.ValidationMessageFor(model => model.GetStepEditData.Comments, "", new { @class = "text-danger" })
                             </div>
                         </div>
-
                         <div class="form-group">
                             <div class="col-md-offset-4 col-md-10">
-                                <button type="submit" class="btn btn-success">Save</button>
+                                <button type="submit" class="btn btn-success">Save Edit Step</button> | <a class="btn btn-info" href="@Url.Action("AddMonitor","Procedures",new{ RelatedObjectId =Model.StepId,ProcedureStepId=Model.ProcObjId })">Add Monitor to step</a>
                             </div>
                         </div>
                     </div>
                 }
             </div>
-
         </div>
     </div>
 </div>
