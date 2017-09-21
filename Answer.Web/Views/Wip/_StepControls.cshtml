@@ -23,14 +23,20 @@
     startButton = "show";
     timerInput = "";
 }
-<div class="row">
+
+@if (Model.TaskRunningTimer != null)
+{
+    timerInput = "";
+}
+
+<div class="row" id="@Model.StepId">
     <div id="timer-input" class="col-sm-4 timer-input @timerInput">
         <input  type="text" name="timer" class="form-control timer input-lg "  width="120">
     </div>
     <div class="col-sm-5">
         
     
-        <button class="timer-btn btn btn-primary btn-lg print-btn pull-left start-timer-btn @startButton" id="start-step"><i class="glyphicon glyphicon-step-forward"></i> Start</button> 
+        <button class="timer-btn btn btn-primary btn-lg print-btn pull-left start-timer-btn @startButton start-step" id="start-step"><i class="glyphicon glyphicon-step-forward"></i> Start</button> 
 
         @if (Model.TaskRunningTimer != null && Model.TaskRunningTimer.StatusId == TimerStatuseConstants.Paused)
         {
@@ -78,34 +84,32 @@
             </text>
         }
 
-        
-        $('#pause-step').on('click', function () {
+
+        $('#@Model.StepId #pause-step').on('click', function () {
             StepPauseClick($(this).data('task-log-id'));
             $('.timer').timer('pause');
 
         });
 
-        $('#resume-step').on('click',function() {
+        $('#@Model.StepId #resume-step').on('click',function() {
             StepResumeClick($(this).data('task-log-id'));
 
             $('.timer').timer('resume');
 
         });
 
-        $('#start-step').on('click', function () {
+        $('#@Model.StepId #start-step').on('click', function () {
 
             StepStartClick();
-           
-
         });
 
-        $('#done-step').on('click', function() {
+        $('#@Model.StepId #done-step').on('click', function() {
             StepDoneClick();
             $('.timer').timer('pause');
 
         });
 
-        $('#assume-step').on('click',
+        $('#@Model.StepId #assume-step').on('click',
             function() {
                 StepAssumeClick();
             });
@@ -154,10 +158,11 @@
 
                 if (stepInProgress !== null) {
                     $(stepInProgress).removeClass('waiting');
+                    $(stepInProgress).addClass('requested');
                     $(stepInProgress).trigger("click");
                 }
 
-                var stepRequested = $('#carousel ul.slides').find(".requested").first();
+                var stepRequested = $('[data-stepid=' + stepId + ']');
 
                 if (stepRequested !== null) {
                     $(stepRequested).addClass('step-complete');
@@ -248,23 +253,25 @@
         if (data.ErrorMessage !== '') {
             alert(data.ErrorMessage);
         } else {
-            
+
         $('.timer-btn').attr('data-task-log-id', data.Entity.Id);
 
         if (data.Entity.StatusId === 2) {
-            $('#resume-step').removeClass('hidden');
-            $('#pause-step').addClass('hidden');
-            
+            $('#@Model.StepId #resume-step').removeClass('hidden');
+            $('#@Model.StepId #pause-step').addClass('hidden');
+
         } else
             if (data.Entity.StatusId === 1) {
-            $('#done-step').removeClass('hidden');
-            $('#pause-step').removeClass('hidden');
-            $('#resume-step').addClass('hidden');
-            $('#start-step').addClass('hidden');
-            } else if (data.Entity.StatusId === 3) {
-            $('#pause-step').addClass('hidden');
-            $('#resume-step').addClass('hidden');
-            $('#done-step').addClass('hidden');
+            $('#@Model.StepId #done-step').removeClass('hidden');
+            $('#@Model.StepId #pause-step').removeClass('hidden');
+            $('#@Model.StepId #resume-step').addClass('hidden');
+            $('#@Model.StepId #start-step').addClass('hidden');
+            }
+            else if (data.Entity.StatusId === 3)
+            {
+            $('#@Model.StepId #pause-step').addClass('hidden');
+            $('#@Model.StepId #resume-step').addClass('hidden');
+            $('#@Model.StepId #done-step').addClass('hidden');
             }
         }
     }
