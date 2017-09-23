@@ -1498,3 +1498,129 @@ color: black;
     padding: 3px 0;
 }
 
+
+/*custom style steps*/
+.no-border {
+    border-bottom: 0px !important;
+}
+
+    .no-border th, .no-border td {
+        border: 0px !important;
+    }
+
+.quote-header th {
+    text-align: right;
+}
+
+.items-table th {
+    text-align: center;
+}
+
+.items-table > tbody > tr > td {
+    min-height: 35px;
+    height: 35px;
+}
+
+.line-caption {
+    font-size: 9px;
+    padding-top: 2px !important;
+}
+
+.procedure-step {
+    /*border: 1px solid #c0c0c0 !important;*/
+    padding: 10px !important;
+    margin-bottom: 0px !important;
+}
+
+    .procedure-step.row > [class*="col-"] {
+        margin-bottom: 0px;
+    }
+
+    .procedure-step.row > div > table {
+        margin-bottom: 20px;
+    }
+
+        .procedure-step.row > div > table.left-table th {
+            text-align: right;
+        }
+
+.step-number {
+    font-weight: 700;
+    color: red;
+}
+
+input.pre-populated {
+    color: red;
+}
+
+#exTab1 .tab-content {
+    background-color: #e4efe2;
+}
+
+#exTab1 .nav-tabs > li > a {
+    border-radius: 0;
+}
+
+#exTab1 table {
+    background-color: inherit !important;
+}
+
+.tab-content > div {
+    padding: 0px !important;
+    border-left: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+    border-right: 1px solid #e0e0e0;
+}
+
+.monitor-control {
+    height: 25px !important;
+    padding: 2px 6px;
+    font-size: 12px;
+}
+
+.tab-content th {
+    text-align: right;
+    width: 30%;
+}
+
+.table .active tr, .table .active tr td, .table .active tr th {
+    max-height: 30px !important;
+    height: 30px !important;
+}
+
+.table .active td, .table .active th {
+    background-color: #fff !important;
+    padding-bottom: 0px;
+}
+
+    .table .active td:last-child {
+        padding-bottom: 5px;
+    }
+
+
+.table {
+    margin-bottom: 0px !important;
+}
+
+.handle {
+    cursor: move;
+    list-style: none;
+}
+
+.highlight {
+    border: 1px solid #1ABC9C;
+    background-color: #C8C8C8;
+}
+
+.btn-toolbar {
+    /*margin-left: 253px;*/
+}
+
+#GetStepEditData_Step_Text {
+    /*margin: 0 0 0 250px;*/
+    width: 70%;
+}
+
+.stepLabel {
+    margin: 0 0 0 250px;
+}

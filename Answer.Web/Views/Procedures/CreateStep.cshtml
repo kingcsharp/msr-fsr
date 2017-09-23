@@ -90,8 +90,8 @@
                                 </div>*@
                         </div>
                         <div class="form-group" >
-                            @Html.LabelFor(model => model.GetStepEditData.Step_Text, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-5">
+                            @Html.LabelFor(model => model.GetStepEditData.Step_Text, htmlAttributes: new { @class = "control-label col-md-2 stepLabel" })
+                            <div class="col-md-7">
                                 @Html.Partial("_TextAdder")
                                 @Html.TextAreaFor(model => model.GetStepEditData.Step_Text, new {onBlur = "checkMaxSize(this, 4000);;lastTextArea = 'document.editForm.GetStepEditData_Step_Text';", name = "GetStepEditData_Step_Text", rows = "10", cols = "80", @class = "text-formatter form-control",})
                             </div>

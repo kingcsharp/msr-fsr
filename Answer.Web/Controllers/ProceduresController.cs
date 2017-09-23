@@ -375,7 +375,7 @@ namespace Answer.Web.Controllers
                 {
                     TempData["SuccessMessage"] = "Procedure has been assigned successfully.";
 
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Steps", "Procedures", new { Id = model.ProcObjId });
                 }
 
                 TempData["ErrorMessage"] = "Something went wrong.";
@@ -1079,6 +1079,14 @@ namespace Answer.Web.Controllers
             TempData["ErrorMessage"] = "Something went wrong.";
 
             return RedirectToAction("Steps", "Procedures", new { id = procStepId, ProdecureName = ProdecureName });
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult ReorderSteps(string procObjectId, string[] array)
+        {
+            _proceduresService.SaveReorderSteps(array, procObjectId);
+
+            return Json("Ok", JsonRequestBehavior.AllowGet);
         }
     }
 

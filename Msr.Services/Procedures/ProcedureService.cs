@@ -469,7 +469,7 @@ namespace Msr.Services.Procedures
                 stepData.GetMoniterViewModels = GetMoniterByStepId(stepData.Id);
             }
 
-            return result;
+            return result.OrderBy(x => x.Print_Order).ToList();
         }
 
         public List<GetStepLaborResult> GetLaborsById(string stepId, string loginId)
@@ -638,12 +638,12 @@ namespace Msr.Services.Procedures
             updateOneStep.CycleCount = viewModel.GetStepEditData.Cycle_Count?.ToString();
             updateOneStep.CycleUnit = viewModel.GetStepEditData.Cycle_Unit;
 
-            if (viewModel.SelectedReferenceProcedures != null)
+            if (viewModel.SelectedReferenceProcedures != null && viewModel.SelectedReferenceProcedures.Count > 0)
             {
                 updateOneStep.ReferenceProcs = String.Join(",", viewModel.SelectedReferenceProcedures);
             }
 
-            if (viewModel.SelectedReferenceProcedures != null)
+            if (viewModel.SelectedPrecedingSteps != null && viewModel.SelectedPrecedingSteps.Count > 0)
             {
                 updateOneStep.PrecedingSteps = String.Join(",", viewModel.SelectedPrecedingSteps);
             }
@@ -1025,6 +1025,42 @@ namespace Msr.Services.Procedures
                 _dbContext.Database.ExecuteSqlCommand($"DELETE FROM A_MONITOR_TEMPLATES WHERE ID = {id}");
 
                 return true;
+            }
+            catch (Exception ex)
+            {
+                var message = "Error occured:" + ex.Message;
+
+                return false;
+            }
+        }
+        public bool SaveReorderSteps(string[] formCollection, string id)
+        {
+            try
+            {
+                var procedureId = _dbContext.Database.SqlQuery<string>("SELECT ID FROM A_PROCEDURES_HISTORY WHERE OBJECT_ID =" + id + "").SingleOrDefault();
+
+                _dbContext.Database.ExecuteSqlCommand("DELETE FROM A_PROCEDURE_STEP_PRECEDING_STEPS WHERE MY_STEP IN (SELECT ID FROM A_PROCEDURE_STEPS WHERE PROCEDURE_ID =" + procedureId + ")");
+
+                for (var index = 0; index < formCollection.Length; index++)
+                {
+                    var step = formCollection[index];
+                    var split = step.Split(',');
+                    var sql = "UPDATE A_PROCEDURE_STEPS SET PRINT_ORDER =" + (index + 1) + " WHERE ID = " + split[1] + "";
+                    _dbContext.Database.ExecuteSqlCommand(sql);
+                }
+
+                var procedureStepBasedonPrintOrders =
+                    new ProcedureStepBasedonPrintOrders { ProcHistId = procedureId, NTLogin = "1618" };
+
+                _dbContext.Database.ExecuteStoredProcedure(procedureStepBasedonPrintOrders);
+
+                var procedureSetPrintOrderProcedure =
+                    new ProcedureSetPrintOrderProcedure { Pid = procedureId, NTLogin = "1618" };
+
+                _dbContext.Database.ExecuteStoredProcedure(procedureSetPrintOrderProcedure);
+
+                return true;
+
             }
             catch (Exception ex)
             {

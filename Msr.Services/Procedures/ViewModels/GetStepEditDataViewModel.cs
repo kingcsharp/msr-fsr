@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using Amazon.Runtime.Internal;
 using Msr.Services.Procedures.Messages;
 using Msr.Services.ProcedureVerbs;
 
@@ -10,7 +11,16 @@ namespace Msr.Services.Procedures.ViewModels
     {
         public GetStepEditDataViewModel()
         {
+            GetStepListOfOtherSteps = new List<SelectListItem>();
+            ReferenceProcedures = new List<SelectListItem>();
+            ReferenceProcedureTypes = new List<SelectListItem>();
+            ListReferenceTheories = new List<SelectListItem>();
+            ListReferenceObjects = new List<SelectListItem>();
+            ListReferenceFiles = new List<SelectListItem>();
             GetStepEditData = new GetStepEditDataResult();
+            SelectedReferenceProcedures = new List<string>();
+            ReferenceFiles = new List<string>();
+            SelectedPrecedingSteps = new List<string>();
         }
 
         public GetStepEditDataViewModel(ProceduresService proceduresService, ProcedureVerbsService procedureVerbsService, string procedureObjectId)
