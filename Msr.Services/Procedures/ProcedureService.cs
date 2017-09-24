@@ -62,7 +62,7 @@ namespace Msr.Services.Procedures
 
         public List<SelectFile> GetProcedurelist()
         {
-            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT ID as Value, STEP_TEXT as Show FROM A_V_PREPOP_QUICK WHERE CREATING_CO = '2' ").ToList();
+            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT ID as Value, Title as Show FROM A_V_PREPOP_QUICK WHERE CREATING_CO = '2' ").ToList();
 
             return result;
         }
