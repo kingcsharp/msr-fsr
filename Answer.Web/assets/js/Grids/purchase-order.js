@@ -371,15 +371,13 @@
     });
 
     function moneyFormatter(cellvalue, options, rowObject) {
-        if (cellvalue == null)
-        {
-            var editButton = '$ 0.00';
+
+        if (cellvalue !== null) {
+            return '$ ' + cellvalue + '';
         }
-        else
-        {
-            var editButton = '$ ' + cellvalue + '';
-        }
-        return editButton;
+
+        return '';
+
     };
 }
 
