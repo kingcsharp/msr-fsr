@@ -19,14 +19,13 @@ using Msr.Models.TheoryParagraphs;
 using Msr.Models.ApprovalStages;
 using Msr.Models.ApprovalGroups;
 using Msr.Models.ActualParts;
-using System.Linq;
 using Msr.Models.Products;
 using Msr.Models.Monitor;
 using Msr.Models.ProcedureVerbs;
 using Msr.Models.People;
 using Msr.Models.ProductsActualPart;
-using Msr.Models;
 using Msr.Models.PrePro;
+using Msr.Models.PurchesOrder;
 
 
 namespace Msr.Repositories
@@ -76,7 +75,6 @@ namespace Msr.Repositories
             modelBuilder.Entity<ApprovalGroupsView>().ToTable("Portal_ApprovalGroupsView");
             modelBuilder.Entity<ActivitiesView>().ToTable("Portal_ActivitiesView");
             modelBuilder.Entity<WorkflowStagesView>().ToTable("Portal_WorkflowStages");
-            //modelBuilder.Entity<MonitorView>().ToTable("A_V_MONITORS_WITH_TASK_AND_RESULT");
             modelBuilder.Entity<ActualPartsView>().ToTable("Portal_ActualPartsView");
             modelBuilder.Entity<ProductsView>().ToTable("Portal_ProductsView");
             modelBuilder.Entity<PeopleObjectView>().ToTable("Portal_PeopleObjectSearchView");
@@ -88,6 +86,7 @@ namespace Msr.Repositories
             modelBuilder.Entity<OfficialPositionView>().ToTable("Portal_RolesApprovedDataQuick");
             modelBuilder.Entity<PrePropSearchView>().ToTable("Portal_PrePropSearchView");
             modelBuilder.Entity<ProcedureObjectsLaborStepView>().ToTable("Portal_ProcedureObjectLaborStepsView");
+            modelBuilder.Entity<PurchesOrderView>().ToTable("Portal_PurchaseOrders");
         }
 
         public DbSet<AspNetUser> AspNetUsers { get; set; }
@@ -137,6 +136,7 @@ namespace Msr.Repositories
         public DbSet<TimeZonesView> TimeZonesViews { get; set; }
         public DbSet<OfficialPositionView> OfficialPositionViews { get; set; }
         public DbSet<ProcedureObjectsLaborStepView> ProcedureObjectsLaborStepViews { get; set; }
+        public DbSet<PurchesOrderView> PurchesOrderViews { get; set; }
 
     }
 }

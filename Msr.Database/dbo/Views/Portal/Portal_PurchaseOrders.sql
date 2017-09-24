@@ -1,0 +1,62 @@
+﻿CREATE VIEW Portal_PurchaseOrders
+AS
+
+SELECT    
+a.ID as Id,
+a.OBJECT_ID as ObjectId,
+a.NAME as Name, 
+a.REFERENCE_PO as ReferencePo,
+a.REFERENCE_NAME as ReferenceName, 
+dbo.d2v(a.OPEN_DATE) AS OpenDate ,
+dbo.d2v(a.CLOSE_DATE) 
+AS CloseDate,
+a.SUPPLIER_CO as SupplierCo, 
+a.CUSTOMER_CO as CustomerCo, 
+a.CUSTOMER_BILL_CO as CustomerBill,
+a.MAXIMUM_USES as MaximumUses,
+a.TOTAL_PURCHASE_LIMIT as TotalPurchaseLimit,
+a.CREDIT_LIMIT as CreditLimit, 
+a.APPROVAL_WF as ApprovalWf, 
+a.INVOICE_TRIGGER as InvoiceTrigger,
+a.INVOICE_PERIOD_NUMBER as InvoicePeriodNumber,
+a.INVOICE_PERIOD_TYPE as InvoicePeriodType, 
+a.FIRST_INVOICE_DATE as FirstInvoiceDate,
+a.NEXT_INVOICE_DATE as NextInvoiceDate, 
+a.PAYMENT_GRACE_PERIOD as PaymentGracePeriod, 
+a.LATE_FEE_PERCENTAGE as LateFeePercentage, 
+a.REAPPLY_LATE_FEE as ReapplyLateFee,
+a.DRCM as Drcm,
+a.MODBY as ModBy , 
+a.ACCT_TYPE as AccType, 
+a.TOTAL_PURCHASES as TotalPurchases, 
+a.BALANCE as Balance, 
+a.AMT_INVOICED as AmtInvoiced, 
+a.ACCT_STATUS as AcctStatus, 
+sup.NAME AS SupplierName,
+co.NAME AS CustomerName,
+bill_co.NAME AS CustBillName,
+o.ID AS ObjId, 
+o.LOCKED_BY as LockedBy,
+o.UNLOCKED_BY as UnlockedBy, 
+o.CREATED_BY as CreatedBy, 
+o.CREATE_DATE as CreateDate, 
+o.ROOT as Root, 
+o.REV_INFO as RevInfo,
+o.CREATING_CO as CreatingCo,
+o.STATUS as Status, 
+o.REV as Rev, 
+o.WFS_ID as WfsId, 
+o.LOCKED_BY_NAME as LockedByName,
+o.CREATING_CO_NAME as CreatingCoName, 
+o.APPROVAL_ACTIVITY as ApprovalActivity,
+a.INVOICED_BALANCE as InvoicedBalance, 
+a.UNINVOICED_BALANCE as UninvoicedBalance, 
+a.TOTAL_CREDITS as TotalCredits, 
+a.TOTAL_DEBITS as TotalDebits,
+a.BILLING_EMAIL as BillingEmail,
+TOTAL_PURCHASE_LIMIT-TOTAL_DEBITS AS UnusedAmmount
+FROM dbo.A_ACCOUNTS_HISTORY a INNER JOIN
+dbo.A_OBJECTS o ON a.OBJECT_ID = o.ID LEFT OUTER JOIN
+dbo.A_V_COMPANIES_APPROVED_DATA sup ON a.SUPPLIER_CO = sup.ID LEFT OUTER JOIN
+dbo.A_V_COMPANIES_APPROVED_DATA co ON a.CUSTOMER_CO = co.ID LEFT OUTER JOIN
+dbo.A_V_COMPANIES_APPROVED_DATA bill_co ON a.CUSTOMER_BILL_CO = bill_co.ID

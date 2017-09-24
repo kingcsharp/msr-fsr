@@ -2822,5 +2822,6 @@
     <Build Include="dbo\Stored Procedures\Portal\Portal_ProcedureStepGetRefFilesDialog.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_SpFilesShowForObject.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_ProcedureStepUpdateOneStep.sql" />
+    <Build Include="dbo\Views\Portal\Portal_PurchaseOrders.sql" />
   </ItemGroup>
 </Project>

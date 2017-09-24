@@ -203,6 +203,7 @@
     <Compile Include="Controllers\ProceduresController.cs" />
     <Compile Include="Controllers\ProcedureVerbsController.cs" />
     <Compile Include="Controllers\ProductsActualPartsController.cs" />
+    <Compile Include="Controllers\PurchaseOrderController.cs" />
     <Compile Include="Controllers\RegionsController.cs" />
     <Compile Include="Controllers\RolesController.cs" />
     <Compile Include="Controllers\ShowPurchaseStatusController.cs" />
@@ -623,6 +624,7 @@
     <Content Include="assets\js\grids\procedures.js" />
     <Content Include="assets\js\grids\procedureverbs.js" />
     <Content Include="assets\js\grids\procedurestep.js" />
+    <Content Include="assets\js\grids\purchase-order.js" />
     <Content Include="assets\js\grids\regions.js" />
     <Content Include="assets\js\grids\showpruchasestatus.js" />
     <Content Include="assets\js\grids\theoryparagraph-model.js" />
@@ -1116,6 +1118,8 @@
     <Content Include="Views\Wip\_AddNcrModel.cshtml" />
     <Content Include="Views\Delivery\Index.cshtml" />
     <Content Include="Views\Procedures\EditSteps.cshtml" />
+    <Content Include="Views\PurchaseOrder\Index.cshtml" />
+    <Content Include="Views\PurchaseOrder\_NewPurchaseOrder.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
