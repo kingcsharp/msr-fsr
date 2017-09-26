@@ -30,7 +30,7 @@ namespace Msr.Services.ApprovalGroups
         {
             return GetApprovalGroupsQueryable().Where(x => x.Id == id).SingleOrDefault();
         }
-        public List<string> GetGroupMembers(string id,string ntlogin)
+        public List<string> GetGroupMembers(string id, string ntlogin)
         {
             var strID = new SqlParameter("@ID", id == null ? "0" : id);
             //need to be dynamic
@@ -44,7 +44,7 @@ namespace Msr.Services.ApprovalGroups
         {
             var strID = new SqlParameter("@ID", id == null ? "0" : id);
 
-            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT R.ROLE_ID as Id,R.ROLE_NAME as Name FROM A_V_WF_GROUP_ROLE_LINK R WHERE R.GROUP_ID = @ID", strID).ToList();
+            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT R.ROLE_ID as Value,R.ROLE_NAME as Show FROM A_V_WF_GROUP_ROLE_LINK R WHERE R.GROUP_ID = @ID", strID).ToList();
 
             return result;
         }
@@ -52,7 +52,7 @@ namespace Msr.Services.ApprovalGroups
         {
             var strID = new SqlParameter("@ID", id == null ? "0" : id);
 
-            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT s.SPECIAL_ID as Id,s.NAME as Name FROM A_V_WF_GROUP_SPECIAL_MEMBERS s WHERE s.GROUP_ID = @ID", strID).ToList();
+            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT s.SPECIAL_ID as Value,s.NAME as Show FROM A_V_WF_GROUP_SPECIAL_MEMBERS s WHERE s.GROUP_ID = @ID", strID).ToList();
 
             return result;
         }

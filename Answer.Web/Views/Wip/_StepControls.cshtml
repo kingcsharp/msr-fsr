@@ -73,7 +73,6 @@
 
     $(function () {
 
-
         @if (Model.TotalTime != "0s")
         {
             <text>
@@ -94,7 +93,7 @@
         $('#@Model.StepId #resume-step').on('click',function() {
             StepResumeClick($(this).data('task-log-id'));
 
-            $('.timer').timer('resume');
+            $('#@Model.StepId .timer').timer('resume');
 
         });
 

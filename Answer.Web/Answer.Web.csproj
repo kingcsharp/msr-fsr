@@ -604,6 +604,7 @@
     <Content Include="assets\js\grids\PartsProvidedTakeBack.js" />
     <Content Include="assets\js\grids\ProcedureObjectStay.js" />
     <Content Include="assets\js\grids\procedures-dialog.js" />
+    <Content Include="assets\js\grids\products.js" />
     <Content Include="assets\js\grids\productsactualpart.js" />
     <Content Include="assets\js\grids\people.js" />
     <Content Include="assets\js\grids\companies.js" />

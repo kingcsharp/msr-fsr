@@ -158,6 +158,7 @@
     <Compile Include="ProductsActualPart\ProductsActualPartView.cs" />
     <Compile Include="Products\ProductsView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PurchesOrder\ProductsCanPurchase.cs" />
     <Compile Include="PurchesOrder\PurchesOrderView.cs" />
     <Compile Include="Regions\RegionsView.cs" />
     <Compile Include="Roles\RolesView.cs" />

@@ -157,7 +157,9 @@
     <Compile Include="ApprovalWorkflows\ViewModels\EditApprovalStagesViewModel.cs" />
     <Compile Include="Orders\Messaging\TaskLogDto.cs" />
     <Compile Include="Procedures\ViewModels\ProcedureStepMonitorsViewModel.cs" />
+    <Compile Include="PurchesOrder\Procedures\AddPurchaseOrderProcedure.cs" />
     <Compile Include="PurchesOrder\PurchesOrderService.cs" />
+    <Compile Include="PurchesOrder\ViewModels\NewPurchaseOrderViewModel.cs" />
     <Compile Include="ResultNotification.cs" />
     <Compile Include="BaseNotificationRequest.cs" />
     <Compile Include="BaseNotification.cs" />
@@ -423,8 +425,6 @@
     <Folder Include="ProductsActualParts\VIewModels\" />
     <Folder Include="Products\Procedures\" />
     <Folder Include="Products\ViewModels\" />
-    <Folder Include="PurchesOrder\Procedures\" />
-    <Folder Include="PurchesOrder\ViewModels\" />
     <Folder Include="TheoryParagraph\Procedures\" />
     <Folder Include="TheoryParagraph\ViewModels\" />
   </ItemGroup>

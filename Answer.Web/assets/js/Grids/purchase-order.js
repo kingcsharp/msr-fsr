@@ -381,3 +381,25 @@
     };
 }
 
+
+
+$('#add-work-order').on('hidden.bs.modal', function (event) {
+    $(this).data('bs.modal', null);
+});
+
+$('#add-work-order').on('show.bs.modal', function (event) {
+    var modal = $(this);
+
+    $.ajax({
+        type: "GET",
+        url: '/purchaseOrder/add',
+        dataType: 'html',
+        success: function (data) {
+            modal.find('.modal-body').html(data);
+        },
+        error: function () {
+
+        }
+    });
+});
+

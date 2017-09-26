@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using Msr.Services.jqGrid;
 using Msr.Services.PurchesOrder;
 using Msr.Models.PurchesOrder;
+using Msr.Services.PurchesOrder.ViewModels;
 
 namespace Answer.Web.Controllers
 {
@@ -165,6 +166,97 @@ namespace Answer.Web.Controllers
             };
 
             return Json(json, JsonRequestBehavior.AllowGet);
-        }       
+        }
+
+        [HttpGet]
+        public ActionResult Add()
+        {
+            var vm = new NewPurchaseOrderViewModel();
+            vm.Setup(new PurchesOrderService());
+
+            return PartialView("_NewPurchaseOrder", vm);
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult Add(NewPurchaseOrderViewModel model)
+        {
+            var purchaseOrderService = new PurchesOrderService();
+
+            var response = purchaseOrderService.Save(model: model);
+
+            if (response)
+            {
+                TempData["SuccessMessage"] = "Order has been saved successfully.";
+                return RedirectToAction("Index");
+            }
+           
+                TempData["ErrorMessage"] = "Something went wrong.";
+                return RedirectToAction("Index");
+   
+            return RedirectToAction("Index");
+        }
+
+        [AcceptVerbs(HttpVerbs.Get)]
+        public ActionResult ProductsData(JqGridParam param, string id, string clientValue)
+        {
+            var newPurchaseOrderViewModel = new NewPurchaseOrderViewModel();
+
+            newPurchaseOrderViewModel.Setup(new PurchesOrderService());
+
+            /*var totalRows = newPurchaseOrderViewModel.ProductsList.AsQueryable();*/
+
+            var purchaseOrderService = new PurchesOrderService();
+
+            var totalRows = purchaseOrderService.GetCompinesProducts(id, clientValue).AsQueryable();
+
+            if (param.where != null && param.where.rules.Any())
+            {
+                foreach (var rule in param.where.rules)
+                {
+
+                    //if (rule.field == nameof(PurchesOrderView.Name))
+                    //{
+                    //    totalRows = totalRows.Where(x => x.Name == rule.data.ToLower());
+                    //}
+                    //else if (rule.field == nameof(PurchesOrderView.ReferencePo))
+                    //{
+                    //    totalRows = totalRows.Where(x => x.ReferencePo.ToLower().Contains(rule.data.ToLower()));
+                    //}
+                }
+            }
+            var orderBy = nameof(ProductsCanPurchase.Name);
+            var orderDirection = "asc";
+
+            if (!string.IsNullOrWhiteSpace(param.sortColumn))
+            {
+                orderBy = param.sortColumn;
+            }
+            if (param.sortOrder == "desc")
+            {
+                totalRows = totalRows.OrderByDescending(orderBy);
+            }
+            else
+            {
+                totalRows = totalRows.OrderBy(orderBy);
+            }
+
+            var totalRecords = totalRows.Count();
+            totalRows = totalRows.Skip(param.pageSize * (param.pageIndex - 1));
+
+            totalRows = totalRows.Take(param.pageSize);
+            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)param.pageSize);
+
+            var results = totalRows.ToList();
+
+            var json = new
+            {
+                total = totalPages,
+                page = param.pageIndex,
+                records = totalRecords,
+                rows = results
+            };
+
+            return Json(json, JsonRequestBehavior.AllowGet);
+        }
     }
 }
