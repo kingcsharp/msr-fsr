@@ -32,6 +32,7 @@
                 colmenu: false,
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                width: 100,
                 align: 'left'
             },
             {
@@ -43,6 +44,7 @@
                 editrules: { required: true },
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                width: 80,
                 align: 'left'
             },
             {
@@ -54,6 +56,7 @@
                 editrules: { required: true },
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                width: 80,
                 align: 'left'
             },
             {
@@ -65,10 +68,11 @@
                 editrules: { required: true },
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                width: 80,
                 align: 'left'
             },
             {
-                label: 'Customer root name',
+                label: 'Customer name',
                 name: 'Customer_root_name',
                 index: 'Customer_root_name',
                 colmenu: false,
@@ -76,6 +80,7 @@
                 editrules: { required: true },
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                width: 80,
                 align: 'left'
             },
             {
@@ -87,6 +92,7 @@
                 editrules: { required: true },
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                width: 80,
                 align: 'left'
             }
         ],
@@ -117,17 +123,17 @@
     function selectFormatter(cellvalue, options, rowObject) {
         var html = "";
 
-        html = '<input class="selected-file" type="checkbox" value="' + cellvalue + '" />';
+        html = '<input class="selected-file" type="checkbox" value="' + cellvalue + '|' + rowObject.Name + '" />';
 
         return html;
     }
     $('#jqGridProducts').navGrid("#jqGridProductsPager", {
-        search: false, // show search button on the toolbar
-        add: false,
-        edit: false,
-        del: false,
-        refresh: true
-    },
+            search: false, // show search button on the toolbar
+            add: false,
+            edit: false,
+            del: false,
+            refresh: true
+        },
         {},  // edit options
         {}, // add options
         {}, // delete options

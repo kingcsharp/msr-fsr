@@ -472,6 +472,7 @@
     <Content Include="assets\css\animate.css\animate.css" />
     <Content Include="assets\css\animate.css\animate.min.css" />
     <Content Include="assets\css\animate.min.css" />
+    <Content Include="assets\css\bootstrap-datetimepicker.min.css" />
     <Content Include="assets\css\bootstrap-editable.css" />
     <Content Include="assets\css\bootstrap-print-fix.css" />
     <Content Include="assets\css\bootstrap-select.css" />
@@ -564,6 +565,7 @@
     <Content Include="assets\js\alert.js" />
     <Content Include="assets\js\app.js" />
     <Content Include="assets\js\bootbox.min.js" />
+    <Content Include="assets\js\bootstrap-datetimepicker.min.js" />
     <Content Include="assets\js\bootstrap-editable.min.js" />
     <Content Include="assets\js\bootstrap-select.js" />
     <Content Include="assets\js\bootstrap-switch.js" />
@@ -625,6 +627,7 @@
     <Content Include="assets\js\grids\procedures.js" />
     <Content Include="assets\js\grids\procedureverbs.js" />
     <Content Include="assets\js\grids\procedurestep.js" />
+    <Content Include="assets\js\grids\add-purchase-order.js" />
     <Content Include="assets\js\grids\purchase-order.js" />
     <Content Include="assets\js\grids\regions.js" />
     <Content Include="assets\js\grids\showpruchasestatus.js" />
@@ -758,6 +761,7 @@
     <Content Include="assets\js\master-user-tour.js" />
     <Content Include="assets\js\modal.js" />
     <Content Include="assets\js\modernizr.js" />
+    <Content Include="assets\js\moment.min.js" />
     <Content Include="assets\js\monitor_chart.js" />
     <Content Include="assets\js\ObjectAssign.js" />
     <Content Include="assets\js\plugins\bootstrap3\bootstrap-dialog.min.css" />
@@ -1120,7 +1124,10 @@
     <Content Include="Views\Delivery\Index.cshtml" />
     <Content Include="Views\Procedures\EditSteps.cshtml" />
     <Content Include="Views\PurchaseOrder\Index.cshtml" />
-    <Content Include="Views\PurchaseOrder\_NewPurchaseOrder.cshtml" />
+    <Content Include="Views\PurchaseOrder\Create.cshtml" />
+    <Content Include="Views\PurchaseOrder\Edit.cshtml" />
+    <Content Include="Views\PurchaseOrder\_Products.cshtml" />
+    <Content Include="Views\PurchaseOrder\_Controls.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

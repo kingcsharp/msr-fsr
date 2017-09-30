@@ -160,6 +160,7 @@
     <Compile Include="PurchesOrder\Procedures\AddPurchaseOrderProcedure.cs" />
     <Compile Include="PurchesOrder\PurchesOrderService.cs" />
     <Compile Include="PurchesOrder\ViewModels\NewPurchaseOrderViewModel.cs" />
+    <Compile Include="PurchesOrder\ViewModels\AddPurchaseResponse.cs" />
     <Compile Include="ResultNotification.cs" />
     <Compile Include="BaseNotificationRequest.cs" />
     <Compile Include="BaseNotification.cs" />

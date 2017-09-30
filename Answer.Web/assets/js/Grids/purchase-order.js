@@ -114,7 +114,7 @@
                     freeze: false
                 },
                 formatter: 'currency',
-                formatoptions: {prefix: "$" },
+                formatoptions: { prefix: "$" },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 align: 'left'
             },
@@ -123,7 +123,7 @@
                 name: 'SupplierName',
                 index: 'SupplierName',
                 colmenu: false,
-                editable: true, 
+                editable: true,
                 coloptions: {
                     sorting: false,
                     columns: true,
@@ -292,7 +292,7 @@
                 index: 'Status',
                 colmenu: false,
                 stype: "select",
-                width:'130',
+                width: '130',
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                 searchoptions: { value: ":[All];CREATING, DENIED, APPROVED, APPROVED_BUT_REVISING:Creating or Approved;CREATING, DENIED: Creating;IN_WORKFLOW:In Approval Workflow;APPROVED, APPROVED_BUT_REVISING, APPROVED_BUT_DELETING:Approved;DENIED:Denied;APPROVED_BUT_REVISING:Approved But Being Revised;APPROVED_BUT_DELETING:Approved But Being Deleted;DENIED:Denied;DELETED:Deleted;OLD:Obsolete" },
                 align: 'center'
@@ -309,7 +309,7 @@
         },
         viewrecords: true,
         rowNum: 10, rowList: [10, 20, 50, 100],
-        loadonce: false, 
+        loadonce: false,
         pager: "#jqGridPager",
         height: 'auto',
         gridview: true,
@@ -325,12 +325,12 @@
 
     });
     $('#jqGrid').navGrid("#jqGridPager", {
-        search: false, 
-        add: false,
-        edit: false,
-        del: false,
-        refresh: true
-    },
+            search: false,
+            add: false,
+            edit: false,
+            del: false,
+            refresh: true
+        },
         {},  // edit options
         {}, // add options
         {}, // delete options
@@ -350,9 +350,9 @@
         var sgrid = $("#jqGrid")[0];
         sgrid.triggerToolbar();
         $(this).datepicker('hide');
-        });
+    });
 
- 
+
 
     $("#gs_OpenDate").datepicker({
         format: 'm/d/yyyy',
@@ -360,7 +360,7 @@
         var sgrid = $("#jqGrid")[0];
         sgrid.triggerToolbar();
         $(this).datepicker('hide');
-        });
+    });
 
     $('#search').click(function () {
 
@@ -381,25 +381,4 @@
     };
 }
 
-
-
-$('#add-work-order').on('hidden.bs.modal', function (event) {
-    $(this).data('bs.modal', null);
-});
-
-$('#add-work-order').on('show.bs.modal', function (event) {
-    var modal = $(this);
-
-    $.ajax({
-        type: "GET",
-        url: '/purchaseOrder/add',
-        dataType: 'html',
-        success: function (data) {
-            modal.find('.modal-body').html(data);
-        },
-        error: function () {
-
-        }
-    });
-});
 

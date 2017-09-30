@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
+using Msr.Infrastructure.Common.Constansts;
 using Msr.Services.jqGrid;
 using Msr.Services.PurchesOrder;
 using Msr.Models.PurchesOrder;
@@ -10,6 +11,12 @@ namespace Answer.Web.Controllers
 {
     public class PurchaseOrderController : BaseController
     {
+        private readonly PurchesOrderService _purchesOrderService;
+
+        public PurchaseOrderController()
+        {
+            _purchesOrderService = new PurchesOrderService();
+        }
         public ActionResult Index()
         {
             ViewBag.ActiveClass = "PurchaseOrder";
@@ -19,15 +26,13 @@ namespace Answer.Web.Controllers
 
         public ActionResult PurchaseOrderData(JqGridParam param)
         {
-            var purchaseOrderService = new PurchesOrderService();
+            var totalRows = _purchesOrderService.GetPurchesOrderQueryable();
 
-            var totalRows = purchaseOrderService.GetPurchesOrderQueryable();
-       
             if (param.where != null && param.where.rules.Any())
             {
                 foreach (var rule in param.where.rules)
                 {
-                  
+
                     if (rule.field == nameof(PurchesOrderView.Name))
                     {
                         totalRows = totalRows.Where(x => x.Name == rule.data.ToLower());
@@ -57,7 +62,7 @@ namespace Answer.Web.Controllers
                             totalRows = totalRows.Where(x => x.UninvoicedBalance == value);
                         }
                     }
-                 
+
                     else if (rule.field == nameof(PurchesOrderView.Balance))
                     {
                         decimal value;
@@ -148,7 +153,7 @@ namespace Answer.Web.Controllers
             {
                 totalRows = totalRows.OrderBy(orderBy);
             }
-            
+
             var totalRecords = totalRows.Count();
             totalRows = totalRows.Skip(param.pageSize * (param.pageIndex - 1));
 
@@ -168,32 +173,76 @@ namespace Answer.Web.Controllers
             return Json(json, JsonRequestBehavior.AllowGet);
         }
 
-        [HttpGet]
-        public ActionResult Add()
+        public ActionResult GetProducts(string callBackId, string client, string supplierdepartment)
         {
-            var vm = new NewPurchaseOrderViewModel();
-            vm.Setup(new PurchesOrderService());
+            ViewBag.CallBackId = callBackId;
+            ViewBag.Client = client;
+            ViewBag.SupplierDepartment = supplierdepartment;
 
-            return PartialView("_NewPurchaseOrder", vm);
+            return PartialView("_Products");
         }
 
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Add(NewPurchaseOrderViewModel model)
+        [HttpGet]
+        public ActionResult Create()
         {
-            var purchaseOrderService = new PurchesOrderService();
+            var vm = new NewPurchaseOrderViewModel();
 
-            var response = purchaseOrderService.Save(model: model);
+            vm.Setup(_purchesOrderService);
 
-            if (response)
+            return View(vm);
+        }
+
+        [HttpGet]
+        public ActionResult Edit(string id)
+        {
+            var purchaseOrder = new NewPurchaseOrderViewModel();
+
+            var model = _purchesOrderService.GetById(id);
+
+            purchaseOrder = purchaseOrder.MaptoDto(model);
+                
+            purchaseOrder.Setup(new PurchesOrderService());
+
+            return View(purchaseOrder);
+        }
+
+        [HttpPost]
+        public ActionResult Create(NewPurchaseOrderViewModel model)
+        {
+            if (ModelState.IsValid)
             {
-                TempData["SuccessMessage"] = "Order has been saved successfully.";
-                return RedirectToAction("Index");
+                var purchaseOrderService = new PurchesOrderService();
+
+                var response = purchaseOrderService.Create(model);
+
+                if (!response.HasErrors())
+                {
+                    TempData[NotificationConstants.SuccessMessage] = response.SuccessMessage;
+
+                    if (model.Save == "true")
+                    {
+                        return RedirectToAction("Edit", new { id = response.Entity.NewId });
+                    }
+
+                    if (model.SaveClose == "true")
+                    {
+                        return RedirectToAction("Index");
+                    }
+
+                    if (model.SaveWorkflow == "true")
+                    {
+                        var returnUrl = Url.Action("Index", "PurchaseOrder");
+
+                        return RedirectToAction("Submit", "Workflow", new { objId = response.Entity.NewId, returnUrl });
+                    }
+                }
+
+                TempData[NotificationConstants.ErrrorMessage] = response.ErrorMessage;
             }
-           
-                TempData["ErrorMessage"] = "Something went wrong.";
-                return RedirectToAction("Index");
-   
-            return RedirectToAction("Index");
+
+            model.Setup(new PurchesOrderService());
+
+            return View(model);
         }
 
         [AcceptVerbs(HttpVerbs.Get)]
@@ -202,8 +251,6 @@ namespace Answer.Web.Controllers
             var newPurchaseOrderViewModel = new NewPurchaseOrderViewModel();
 
             newPurchaseOrderViewModel.Setup(new PurchesOrderService());
-
-            /*var totalRows = newPurchaseOrderViewModel.ProductsList.AsQueryable();*/
 
             var purchaseOrderService = new PurchesOrderService();
 
@@ -214,14 +261,30 @@ namespace Answer.Web.Controllers
                 foreach (var rule in param.where.rules)
                 {
 
-                    //if (rule.field == nameof(PurchesOrderView.Name))
-                    //{
-                    //    totalRows = totalRows.Where(x => x.Name == rule.data.ToLower());
-                    //}
-                    //else if (rule.field == nameof(PurchesOrderView.ReferencePo))
-                    //{
-                    //    totalRows = totalRows.Where(x => x.ReferencePo.ToLower().Contains(rule.data.ToLower()));
-                    //}
+                    if (rule.field == nameof(ProductsCanPurchase.Order_id))
+                    {
+                        totalRows = totalRows.Where(x => x.Order_id == rule.data.ToLower());
+                    }
+                    else if (rule.field == nameof(ProductsCanPurchase.supplier_name))
+                    {
+                        totalRows = totalRows.Where(x => x.supplier_name.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(ProductsCanPurchase.Customer_root_name))
+                    {
+                        totalRows = totalRows.Where(x => x.Customer_root_name.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(ProductsCanPurchase.supplier_name))
+                    {
+                        totalRows = totalRows.Where(x => x.supplier_name.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(ProductsCanPurchase.Name))
+                    {
+                        totalRows = totalRows.Where(x => x.Name.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(ProductsCanPurchase.Customer_root_name))
+                    {
+                        totalRows = totalRows.Where(x => x.Customer_root_name.ToLower().Contains(rule.data.ToLower()));
+                    }
                 }
             }
             var orderBy = nameof(ProductsCanPurchase.Name);

@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data;
 using EntityFrameworkExtras.EF6;
 
 namespace Msr.Services.PurchesOrder.Procedures
-{    
-        [StoredProcedure("A_SP_ACCOUNTS_UPDATE_ACCOUNT")]
-        public class AddPurchaseOrderProcedure
-        {           
+{
+    [StoredProcedure("A_SP_ACCOUNTS_UPDATE_ACCOUNT")]
+    public class AddPurchaseOrderProcedure
+    {
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "NewID", Direction = ParameterDirection.Output)]
         public string NewID { get; set; }
 
@@ -110,7 +105,7 @@ namespace Msr.Services.PurchesOrder.Procedures
         public string BillingEmail { get; set; }
 
         [StoredProcedureParameter(SqlDbType.Float, ParameterName = "TAX_RATE")]
-        public string TaxRate { get; set; }
+        public decimal? TaxRate { get; set; }
 
         [StoredProcedureParameter(SqlDbType.VarChar, Size = 50, ParameterName = "StrNTLogin")]
         public string Strntlogin { get; set; }

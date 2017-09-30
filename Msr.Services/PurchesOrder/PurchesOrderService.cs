@@ -2,16 +2,11 @@
 using Msr.Repositories;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Msr.Services.PurchesOrder.ViewModels;
 using Msr.Services.PurchesOrder.Procedures;
 using EntityFrameworkExtras.EF6;
 using Msr.Models.Comman;
-using Msr.Models.Parts;
 
 namespace Msr.Services.PurchesOrder
 {
@@ -29,9 +24,9 @@ namespace Msr.Services.PurchesOrder
             return _dbContext.PurchesOrderViews;
         }
 
-        public PurchesOrderView GetById(string Id)
+        public PurchesOrderView GetById(string id)
         {
-            return GetPurchesOrderQueryable().SingleOrDefault(x => x.ObjectId == Id);
+            return GetPurchesOrderQueryable().SingleOrDefault(x => x.ObjectId == id);
         }
 
         public List<SelectFile> GetCompaniesList()
@@ -49,57 +44,68 @@ namespace Msr.Services.PurchesOrder
 
             return result;
         }
-        public bool Save(NewPurchaseOrderViewModel model)
+
+        public List<SelectFile> PurchasedOrderProducts(string id)
         {
+            var result = _dbContext.Database.SqlQuery<SelectFile>($"SELECT ORDER_ID AS ID,NAME FROM A_V_ACCOUNTS_PURCHASABLE_ORDERS WHERE ACCOUNT_OBJECT_ID = '{id}' ORDER BY NAME").ToList();
+
+            return result;
+        }
+
+        public ResultNotification<AddPurchaseResponse> Create(NewPurchaseOrderViewModel model)
+        {
+            var responsePurchase = new ResultNotification<AddPurchaseResponse> { Entity = new AddPurchaseResponse() };
+
             try
             {
                 var addPurchaseOrderProcedure = new AddPurchaseOrderProcedure
                 {
-                    ////Client = model.Client,
-                    ////ReferencePO = model.POName,
+                    ObjId = model.ObjId,
+                    Name = model.POName,
                     AcctType = model.AccountType,
                     ReferencePO = model.RefCustPO,
-                    SupplierCo = model.SupplierDepartment.ToString(),
-                    CustomerBillCo = model.CustRefNum.ToString(),
-                    OpenDate = model.OpenDate.ToString(),
-                    CloseDate = model.CloseDate.ToString(),
-                    TotalPurchaseLimit = model.TotalPurchaseLimit.ToString(CultureInfo.InvariantCulture),
-                    TaxRate = model.Tax.ToString(CultureInfo.InvariantCulture),
+                    SupplierCo = model.SupplierDepartment,
+                    CustomerBillCo = model.CustRefNum,
+                    OpenDate = model.OpenDate,
+                    CloseDate = model.CloseDate,
+                    TotalPurchaseLimit = model.TotalPurchaseLimit.ToString(),
+                    TaxRate = model.Tax,
                     InvoiceTrigger = model.InvoiceTrigger,
-                    InvoicePeriodNumber = model.InvoicePeriod.ToString(),
+                    InvoicePeriodNumber = model.InvoicePeriod,
                     InvoicePeriodType = model.InvoicePeriodType,
                     FirstInvoiceDate = model.FirstInvoiceDate.ToString(),
                     PaymentGracePeriod = model.GracePeriod.ToString(),
                     LateFeePercentage = model.LatePaymentFee.ToString(),
                     ReapplyLateFee = model.ReApplyFrequency.ToString(),
-                    //// = model.FromDate,
-                    //// = model.ToDate,
-                    //// = model.ClientName,
+
                     Strntlogin = model.NTLogin
                 };
 
                 _dbContext.Database.ExecuteStoredProcedure(addPurchaseOrderProcedure);
 
                 _dbContext.Database.ExecuteSqlCommand($"DELETE FROM A_ACCOUNT_PURCHASABLE_ORDERS_LINK WHERE ACCOUNT_ID = '{addPurchaseOrderProcedure.NewID}'");
+
                 if (model.Products != null)
                 {
-                    var productList = model.Products.Split(',');
-
-                    foreach (var product in productList)
+                    foreach (var product in model.Products)
                     {
                         _dbContext.Database.ExecuteSqlCommand($"INSERT INTO A_ACCOUNT_PURCHASABLE_ORDERS_LINK (ID,ACCOUNT_ID,ORDER_ID,DRCM,MODBY) VALUES (newID(),'{addPurchaseOrderProcedure.NewID}','{product}',getDate(),'{model.NTLogin}')");
-
                     }
                 }
 
-                return true;
+                responsePurchase.Entity.NewId = addPurchaseOrderProcedure.NewID;
+                responsePurchase.SuccessMessage = "Purchase order has been created successfully.";
+
+                return responsePurchase;
 
             }
             catch (Exception ex)
             {
-                var message = "Error occured:" + ex.Message;
+                ////log
+                
+                responsePurchase.AddError("There is an error with request");
 
-                return false;
+                return responsePurchase;
             }
         }
     }

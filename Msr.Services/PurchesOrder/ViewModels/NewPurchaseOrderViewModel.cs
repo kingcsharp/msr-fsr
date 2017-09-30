@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Msr.Models.PurchesOrder;
+using System.ComponentModel.DataAnnotations;
 
 namespace Msr.Services.PurchesOrder.ViewModels
 {
@@ -11,35 +14,53 @@ namespace Msr.Services.PurchesOrder.ViewModels
         public NewPurchaseOrderViewModel()
         {
             ClientList = new List<SelectListItem>();
-            AccountTypeList = new List<SelectListItem>();
+            ProductsList = new List<SelectListItem>();
+            Products = new List<string>();
         }
-
+        public string Id { get; set; }
         public string ObjId { get; set; }
+        [Required]
         public string Client { get; set; }
+        [Required]
+        [Display(Name = "PO Name")]
         public string POName { get; set; }
+        [Required]
         public string AccountType { get; set; }
+        [Required]
+        [Display(Name = "Reference Cust PO")]
         public string RefCustPO { get; set; }
-        public int? SupplierDepartment { get; set; }
-        public int? CustRefNum { get; set; }
-        public DateTime? OpenDate { get; set; }
-        public DateTime? CloseDate { get; set; }
-        public decimal TotalPurchaseLimit { get; set; }
-        public decimal Tax { get; set; }
+        [Required]
+        public string SupplierDepartment { get; set; }
+        public string CustRefNum { get; set; }
+        [Required]
+        [Display(Name = "Open Date")]
+        public string OpenDate { get; set; }
+        [Required]
+        [Display(Name = "Close Date")]
+        public string CloseDate { get; set; }
+        [Required]
+        public decimal? TotalPurchaseLimit { get; set; }
+        public decimal? Tax { get; set; }
         public string InvoiceTrigger { get; set; }
-        public int? InvoicePeriod { get; set; }
+        public string InvoicePeriod { get; set; }
         public string InvoicePeriodType { get; set; }
+        [Required]
+        [Display(Name = "First Invoice Date")]
         public DateTime? FirstInvoiceDate { get; set; }
         public int? GracePeriod { get; set; }
-        public int? LatePaymentFee { get; set; }
+        public float? LatePaymentFee { get; set; }
         public int? ReApplyFrequency { get; set; }
-        public string Products { get; set; }
-
-        public List<ProductsCanPurchase> ProductsList { get; set; }
+        public List<string> Products { get; set; }
+        public string Save { get; set; }
+        public string SaveClose { get; set; }
+        public string SaveWorkflow { get; set; }
+        //public List<ProductsCanPurchase> ProductsList { get; set; }
 
         public DateTime? FromDate { get; set; }
         public DateTime? ToDate { get; set; }
         public string ClientName { get; set; }
         public string NTLogin { get; set; }
+        public List<SelectListItem> ProductsList { get; set; }
         public List<SelectListItem> ClientList { get; set; }
         public List<SelectListItem> AccountTypeList { get; set; }
         public List<SelectListItem> SupplierDepartmentList { get; set; }
@@ -47,25 +68,34 @@ namespace Msr.Services.PurchesOrder.ViewModels
         public List<SelectListItem> InvoicePeriodTypeList { get; set; }
         public void Setup(PurchesOrderService purchesOrderService)
         {
-            ClientList.Add(new SelectListItem() { Value = "", Text = "Select Client" });
-            
-            ClientList.AddRange(purchesOrderService.GetCompaniesList().Select(x => new SelectListItem
+            ClientList = purchesOrderService.GetCompaniesList().Select(x => new SelectListItem
             {
                 Text = x.Name,
                 Value = x.Id.ToString()
-            }).OrderBy(o => o.Text).ToList());
+            }).OrderBy(o => o.Text).ToList();
+            ClientList.Insert(0, new SelectListItem() { Value = "", Text = @"Select Client" });
+
 
             SupplierDepartmentList = purchesOrderService.GetCompaniesList().Select(x => new SelectListItem
             {
                 Text = x.Name,
                 Value = x.Id.ToString()
             }).OrderBy(o => o.Text).ToList();
+            SupplierDepartmentList.Insert(0, new SelectListItem() { Value = "", Text = @"Select Supplier Department" });
 
-
-            AccountTypeList.Add(new SelectListItem() { Value = "", Text = "Select Type" });
-
-            AccountTypeList.AddRange(new List<SelectListItem>
+            ProductsList = purchesOrderService.PurchasedOrderProducts(id: ObjId).Select(x => new SelectListItem
             {
+                Text = x.Name,
+                Value = x.Id.ToString()
+            }).OrderBy(o => o.Text).ToList();
+
+            AccountTypeList = new List<SelectListItem>
+            {// static flag 
+                new SelectListItem
+                {
+                    Text = @"Select Type",
+                    Value = "",
+                },
                 new SelectListItem
                 {
                     Text = @"Purchasing",
@@ -76,10 +106,9 @@ namespace Msr.Services.PurchesOrder.ViewModels
                     Text = @"Warranty/Maintenance",
                     Value = "WARRANTY_ACCOUNT",
                 }
-            });
-
+            };
             InvoiceTriggerList = new List<SelectListItem>
-            {
+            {//static flag
                 new SelectListItem
                 {
                     Text = @"All Line Items On Purchase Debited",
@@ -102,9 +131,8 @@ namespace Msr.Services.PurchesOrder.ViewModels
                     Value = "MANUAL"
                 }
             };
-
             InvoicePeriodTypeList = new List<SelectListItem>
-            {
+            {//static flag
                 new SelectListItem
                 {
                     Text = @"Days",
@@ -122,6 +150,32 @@ namespace Msr.Services.PurchesOrder.ViewModels
                 }
             };
 
+        }
+
+        public NewPurchaseOrderViewModel MaptoDto(PurchesOrderView model)
+        {
+            return new NewPurchaseOrderViewModel()
+            {
+                Id = model.Id,
+                ObjId = model.ObjId,
+                Client = model.CustomerCo,
+                POName = model.Name,
+                SupplierDepartment = model.SupplierCo,
+                AccountType = model.AccType,
+                RefCustPO = model.CustBillName,
+                CustRefNum = model.CustomerBill,
+                OpenDate = model.OpenDate,
+                CloseDate = model.CloseDate,
+                TotalPurchaseLimit = model.TotalPurchaseLimit,
+                Tax = model.TotalPurchases,
+                InvoiceTrigger = model.InvoiceTrigger,
+                InvoicePeriod = model.InvoicePeriodNumber,
+                InvoicePeriodType = model.InvoicePeriodType,
+                FirstInvoiceDate = model.FirstInvoiceDate,
+                GracePeriod = model.PaymentGracePeriod,
+                LatePaymentFee = model.LateFeePercentage,
+                ReApplyFrequency = ReApplyFrequency
+            };
         }
     }
 }
