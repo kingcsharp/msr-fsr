@@ -12,7 +12,7 @@
     var filesId = "files" + Model.StepId;
     var timerInput = "hidden";
 
-    if (Model.TaskRunningTimer != null)
+    if (Model.TaskRunningDto != null)
     {
         timerInput = "";
     }
@@ -61,17 +61,22 @@
 
 <script>
     
-    @if (Model.TotalTime != "0s")
+    @if (Model.TaskRunningDto !=null &&  Model.TaskRunningDto.Duration != "0s")
     {
         <text>
             $('.timer').timer({
-                countdown: true,
-                duration: '@Model.TotalTime'
+                seconds: @Model.TaskRunningDto.TotalSeconds,
+                duration: '@Model.TaskRunningDto.Duration'
             });
 
             $('.timer').timer('pause');
         </text>
     }
-      
+
+    
+    @if (Model.TaskRunningDto != null &&  Model.TaskRunningDto.StatusId == TimerStatuseConstants.InProgress)
+    {
+        <text>$('.timer').timer('resume');</text>
+    }
     
 </script>

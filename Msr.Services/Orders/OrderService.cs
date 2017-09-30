@@ -470,9 +470,9 @@ namespace Msr.Services.Orders
                     detailsResponse.TaskEditDataResult.Description = detailsResponse.TaskEditDataResult.Description.Replace("<<bb>>", "<br/><h4>").Replace("<</bb>>", "</h4>").Replace("<<nl/>>", "<br/>");
                 }
 
-                detailsResponse.TaskRunningTimer = _dbContext.TaskLogs.SingleOrDefault(x => x.TaskId == stepId && x.FillId == fillId);
+                var taskLog = _dbContext.TaskLogs.SingleOrDefault(x => x.TaskId == stepId && x.FillId == fillId);
 
-                detailsResponse.TotalTime = GetTotalTime(detailsResponse.TaskRunningTimer);
+                detailsResponse.TaskRunningDto =  GetTotalTime(taskLog);
 
                 var p1 = new DynamicParameters();
 
@@ -665,8 +665,7 @@ namespace Msr.Services.Orders
                     _dbContext.TaskLogs.Add(entity);
                     _dbContext.SaveChanges();
 
-                    var taskDto = new TaskLogDto(entity);
-                    taskDto.TotalTime = GetTotalTime(entity);
+                    var taskDto = GetTotalTime(entity);
 
                     response.Entity = taskDto;
 
@@ -710,11 +709,7 @@ namespace Msr.Services.Orders
                         taskLog.TotalTime = Math.Abs((taskLog.StartTime - taskLog.EndTime.Value).TotalHours);
                         _dbContext.SaveChanges();
 
-                        var taskDto = new TaskLogDto(taskLog);
-                        taskDto.TotalTime = GetTotalTime(taskLog);
-
-                        response.Entity = taskDto;
-
+                        response.Entity = GetTotalTime(taskLog);
                     }
                 }
             }
@@ -735,11 +730,8 @@ namespace Msr.Services.Orders
             taskLog.EndTime = null;
 
             _dbContext.SaveChanges();
-
-            var taskDto = new TaskLogDto(taskLog);
-            taskDto.TotalTime = GetTotalTime(taskLog);
-
-            result.Entity = taskDto;
+            
+            result.Entity = GetTotalTime(taskLog);
 
             return result;
         }
@@ -761,10 +753,7 @@ namespace Msr.Services.Orders
 
             _dbContext.SaveChanges();
 
-            var taskDto = new TaskLogDto(taskLog);
-            taskDto.TotalTime = GetTotalTime(taskLog);
-
-            result.Entity = taskDto;
+            result.Entity = GetTotalTime(taskLog);
 
             return result;
         }
@@ -944,16 +933,18 @@ namespace Msr.Services.Orders
             }
         }
 
-        public string GetTotalTime(TaskLog taskLog)
+        public TaskLogDto GetTotalTime(TaskLog taskLog)
         {
-            var timespan = "0s";
-
             if (taskLog == null)
             {
-                return timespan;
+                return null;
             }
 
-            TimeSpan timer = new TimeSpan();
+            var taskLogDto = new TaskLogDto(taskLog);
+
+            taskLogDto.Duration = "0s";
+
+            var timer = new TimeSpan();
 
             if (taskLog.StatusId == TimerStatuseConstants.InProgress)
             {
@@ -969,18 +960,20 @@ namespace Msr.Services.Orders
 
             if (timerInSeconds <= 60)
             {
-                timespan = timer.Seconds + "s";
+                taskLogDto.Duration = timer.Seconds + "s";
             }
             else if (timer.TotalMinutes <= 60)
             {
-                timespan = timer.Minutes + "m" + timer.Seconds + "s";
+                taskLogDto.Duration = timer.Minutes + "m" + timer.Seconds + "s";
             }
             else
             {
-                timespan = timer.Hours + "h" + timer.Minutes + "m" + timer.Seconds + "s";
+                taskLogDto.Duration = timer.Hours + "h" + timer.Minutes + "m" + timer.Seconds + "s";
             }
 
-            return timespan;
+            taskLogDto.TotalSeconds = timer.TotalSeconds;
+
+            return taskLogDto;
         }
 
         private void FormatHtml(TsrDetailsResponse response)
