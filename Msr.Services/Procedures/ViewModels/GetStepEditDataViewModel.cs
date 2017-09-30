@@ -18,6 +18,16 @@ namespace Msr.Services.Procedures.ViewModels
             ListReferenceObjects = new List<SelectListItem>();
             ListReferenceFiles = new List<SelectListItem>();
             GetStepEditData = new GetStepEditDataResult();
+            BaseCounterList = new List<SelectListItem>();
+            GetStepListOfOtherSteps = new List<SelectListItem>();
+            DurationTypeList = new List<SelectListItem>();
+            SystemTasks = new List<SelectListItem>();
+            ReferenceProcedures = new List<SelectListItem>();
+            ReferenceProcedureTypes = new List<SelectListItem>();
+            RelativeOrAbsoluteList = new List<SelectListItem>();
+            ListReferenceFiles = new List<SelectListItem>();
+            ListReferenceObjects = new List<SelectListItem>();
+            ListReferenceTheories = new List<SelectListItem>();
             SelectedReferenceProcedures = new List<string>();
             ReferenceFiles = new List<string>();
             SelectedPrecedingSteps = new List<string>();

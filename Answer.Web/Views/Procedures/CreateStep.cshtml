@@ -11,12 +11,10 @@
             </h2>
             <div class="col-lg-10">
                 @Html.Partial("Message")
-                @using (Html.BeginForm("CreateStep", "Procedures", FormMethod.Post, new { @class = "form form-horizontal", onSubmit = "escapeAllSelects();", name = "editForm", }))
+                @using (Html.BeginForm("CreateStep", "Procedures", FormMethod.Post, new { @class = "form form-horizontal", @onSubmit = "escapeAllSelects();;", @name = "editForm", @target = "", @action = "" }))
                 {
                     <div class="form-horizontal">
-
                         @Html.AntiForgeryToken()
-
                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                         <input type="hidden" name="ProcObjId" value="@Model.ProcObjId" />
                         <div class="form-group">
@@ -70,7 +68,6 @@
                                     @Html.ValidationMessageFor(model => model.GetStepEditData.REL_OR_ABS, "", new { @class = "text-danger" })
                                 </div>
                             </div>*@
-
                         <div class="form-group">
                             <label class="control-label col-md-4">Labor:</label>
                             @*<div class="col-md-5">
@@ -89,11 +86,11 @@
                                     </table>
                                 </div>*@
                         </div>
-                        <div class="form-group" >
-                            @Html.LabelFor(model => model.GetStepEditData.Step_Text, htmlAttributes: new { @class = "control-label col-md-2 stepLabel" })
-                            <div class="col-md-7">
+                        <div class="form-group" style="margin-left:300px;">
+                            @Html.LabelFor(model => model.GetStepEditData.Step_Text, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-5">
                                 @Html.Partial("_TextAdder")
-                                @Html.TextAreaFor(model => model.GetStepEditData.Step_Text, new {onBlur = "checkMaxSize(this, 4000);;lastTextArea = 'document.editForm.GetStepEditData_Step_Text';", name = "GetStepEditData_Step_Text", rows = "10", cols = "80", @class = "text-formatter form-control",})
+                                @Html.TextAreaFor(model => model.GetStepEditData.Step_Text, new { onBlur = "checkMaxSize(this, 4000);;lastTextArea = 'document.editForm.GetStepEditData_Step_Text';", name = "GetStepEditData_Step_Text", rows = "10", cols = "130", @class = "text-formatter form-control", style = "height:150px;width:590px;" })
                             </div>
                         </div>
                         <div class="form-group">
@@ -127,7 +124,6 @@
                             </div>
                         </div>
 
-
                         <div class="form-group">
                             @Html.LabelFor(model => model.ReferenceObject, htmlAttributes: new { @class = "control-label  col-md-4" })
                             <div class="col-md-5">
@@ -140,7 +136,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="form-group">
                             @Html.LabelFor(model => model.ReferenceFiles, htmlAttributes: new { @class = "control-label  col-md-4" })
                             <div class="col-md-5">
@@ -168,20 +163,18 @@
                         <div class="form-group">
                             <label class="control-label col-md-4">Comments:</label>
                             <div class="col-md-5">
-                                @Html.TextAreaFor(model => model.GetStepEditData.Comments, new { onBlur = "checkMaxSize(this, 4000);;lastTextArea = 'document.editForm.GetStepEditData_Comments';", name = "StepText", rows = "10", cols = "80", @class = "text-formatter", style = "height:150px;" })
+                                @Html.Partial("_TextAdder")
+                                @Html.TextAreaFor(model => model.GetStepEditData.Comments, new { onBlur = "checkMaxSize(this, 4000);;lastTextArea = 'document.editForm.GetStepEditData_Comments';", name = "GetStepEditData_Comments", rows = "10", cols = "80", @class = "text-formatter", style = "height:150px;" })
                             </div>
                         </div>
-
                         <div class="form-group">
                             <div class="col-md-offset-4 col-md-10">
-
                                 <button type="submit" class="btn btn-success">Save</button>
                             </div>
                         </div>
                     </div>
                 }
             </div>
-
         </div>
     </div>
 </div>
