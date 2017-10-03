@@ -11,9 +11,9 @@
     <div class="side-body padding-top">
         <div class="row">
             <h2 class="page-header">
-                Role Details
+                Role Details<button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
             </h2>
-            <div class="col-lg-10">
+            <div id="contents" class="col-lg-10">
                 @Html.Partial("Message")
                 @using (Html.BeginForm("Edit", "Roles", FormMethod.Post))
                 {
@@ -65,7 +65,11 @@
                                 @Html.ValidationMessageFor(model => model.PeoplePosAssigned, "", new { @class = "text-danger" })
                             </div>
                         </div>
-                        
+                        <div class="form-group">
+                            <div class="col-md-offset-4 col-md-10">
+                                @Html.ActionLink("Back", "Index", null, new { @class = "btn btn-warning" })
+                            </div>
+                        </div>
                     </div>
                 }
             </div>
@@ -82,9 +86,6 @@
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
     <script type="text/javascript">
         $(document).ready(function (parameters) {
-
-            $('input').attr('readonly','readonly');
-
             $('.select').select2();
 
             var selectRoles = $(".selectchildRoles").select2({
@@ -116,6 +117,7 @@
             var selectedPeoplesList = valuePeople.split(",");
             console.log(selectedPeoplesList);
             selectPeoples.val(selectedPeoplesList).trigger("change");
+            $('#contents :input').attr('disabled', true);
         });
     </script>
 }

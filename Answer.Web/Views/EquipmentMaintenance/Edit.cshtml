@@ -1,0 +1,118 @@
+﻿@model Msr.Services.EquipmentMaintenances.ViewModels.EditEquipmentMaintainanceViewModel
+
+@{
+    ViewBag.Title = "Edit Equipment Maintenance";
+}
+
+<div class="container-fluid">
+    <div class="side-body padding-top">
+        <div class="row">
+            <h2 class="page-header">Edit Equipment Maintenance</h2>
+        </div>
+        <div class="row" id="maintenanceForm">
+            <div class="col-lg-12">
+                @using (Html.BeginForm("Edit", "EquipmentMaintenance", FormMethod.Post, new { @class = "form-horizontal" }))
+                {
+                    <input type="hidden" name="Id" value="@Model.Id" />
+                    @Html.Partial("Message")
+                    
+                    <fieldset>
+
+                        @Html.Partial("_Controls")
+                    </fieldset>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts
+{
+    <script src="~/assets/js/moment.min.js"></script>
+    <script src="~/assets/js/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+
+
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+
+            $('.datepick').datetimepicker();
+
+            $('.dateSelecter').click(function(parameters) {
+                $(this).find('.datepick').focus();
+            });
+
+
+            $("#PrimaryLocationId").change(function() {
+
+                var id = $("#PrimaryLocationId").val();
+                $.ajax({
+                    type: 'POST',
+                    url: "/EquipmentMaintenance/GetChildLocations/" + id,
+                    success: function(data) {
+
+                        $("#SubLocationFirstId").empty();
+                        $("#SubLocationSecondId").empty();
+
+                        if (data === '') {
+                            $("#SubLocationFirstId").prop('disabled', true);
+                            $("#SubLocationSecondId").prop('disabled', true);
+                        } else {
+                            $("#SubLocationFirstId").prop('disabled', false);
+                            $("#SubLocationSecondId").prop('disabled', false);
+
+                            $.each(data.locations,
+                                function(i, row) {
+                                    $("#SubLocationFirstId")
+                                        .append("<option value='" + row.Value + "'>" + row.Text + "</option>");
+                                });
+                        }
+
+                    },
+                    error: function() {
+                        alert("Something Went Wrong.");
+                    }
+                });
+
+            });
+
+
+            $("#SubLocationFirstId").change(function() {
+
+                var id = $("#SubLocationFirstId").val();
+
+                $.ajax({
+                    type: 'POST',
+                    url: "/EquipmentMaintenance/GetChildLocations/" + id,
+                    success: function(data) {
+
+                        $("#SubLocationSecondId").empty();
+
+                        if (data === '') {
+                            $("#SubLocationSecondId").prop('disabled', true);
+                        } else {
+                            $("#SubLocationSecondId").prop('disabled', false);
+                            $.each(data.locations,
+                                function(i, row) {
+                                    $("#SubLocationSecondId")
+                                        .append("<option value='" + row.Value + "'>" + row.Text + "</option>");
+                                });
+                        }
+
+
+                    },
+                    error: function() {
+                        alert("Something Went Wrong.");
+                    }
+                });
+
+            });
+
+        });
+    </script>
+
+}
+

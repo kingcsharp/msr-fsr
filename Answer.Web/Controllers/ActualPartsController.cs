@@ -36,7 +36,7 @@ namespace Answer.Web.Controllers
 
             ////EXEC A_SP_ACTUAL_PARTS_SEARCH ' (ROOT LIKE ''%%'' OR ROOT is NULL ) AND  (COMPANY_PART_NUMBER LIKE ''%%'' OR COMPANY_PART_NUMBER is NULL ) AND  (PART_DESC LIKE ''%%'' OR PART_DESC is NULL ) AND  (PART_TYPE_NAME LIKE ''%%'' OR PART_TYPE_NAME is NULL ) AND  (SERIAL LIKE ''%%'' OR SERIAL is NULL ) AND  (NICK_NAME LIKE ''%%'' OR NICK_NAME is NULL ) AND  (LOCATION_NAME LIKE ''%%'' OR LOCATION_NAME is NULL ) AND  (CURRENT_OWNER_NAME LIKE ''%%'' OR CURRENT_OWNER_NAME is NULL ) AND  (AP_STATUS LIKE ''%%'' OR AP_STATUS is NULL ) AND  (PARENT_NAME LIKE ''%%'' OR PARENT_NAME is NULL ) AND  (RESP_PERSON_FULL_NAME LIKE ''%%'' OR RESP_PERSON_FULL_NAME is NULL ) AND  (LOCATION LIKE ''%%'' OR LOCATION is NULL ) AND  PARENT_ID IS NULL AND STATUS IN (''CREATING'',''DENIED'',''APPROVED'',''APPROVED_BUT_REVISING'',''APPROVED_BUT_DELETING'')',' ORDER BY PART_DESC,NICK_NAME','1618'
 
-            totalRows = totalRows.Where(x => defaultStatusList.Contains(x.Status) && x.ParentId ==null );
+            totalRows = totalRows.Where(x => defaultStatusList.Contains(x.Status) && x.ParentId == null);
 
             if (param.where != null && param.where.rules.Any())
             {
@@ -154,7 +154,7 @@ namespace Answer.Web.Controllers
 
                 if (response)
                 {
-                    TempData["SuccessMessage"] = "Approval Group has been created successfully.";
+                    TempData["SuccessMessage"] = "Actual Part has been created successfully.";
                     return RedirectToAction("Index");
                 }
                 else
@@ -178,7 +178,7 @@ namespace Answer.Web.Controllers
 
             actualPart = actualPart.MapToDto(model);
 
-            actualPart.SetUp(new ActualPartsService(), new PartsService(), new LocationService(), new UserService(), new ProductService(),  new CompanyService(), GetCurrentUser());
+            actualPart.SetUp(new ActualPartsService(), new PartsService(), new LocationService(), new UserService(), new ProductService(), new CompanyService(), GetCurrentUser());
 
             return View(actualPart);
         }
@@ -194,13 +194,11 @@ namespace Answer.Web.Controllers
 
                 model.NTLogin = user.Id;
 
-                model.CurOwner = user.Company;
-
                 var response = actualPartsService.Edit(model: model);
 
                 if (response)
                 {
-                    TempData["SuccessMessage"] = "Approval Group has been updated successfully.";
+                    TempData["SuccessMessage"] = "Actual Part has been updated successfully.";
 
                     return RedirectToAction("Index");
                 }
@@ -212,11 +210,11 @@ namespace Answer.Web.Controllers
 
             return View(model);
         }
-        public ActionResult ActualPartDelete(string id,string ntlogin)
+        public ActionResult ActualPartDelete(string id, string ntlogin)
         {
             var taskService = new PartsService();
 
-            var response = taskService.Delete(id: id,ntlogin:ntlogin);
+            var response = taskService.Delete(id: id, ntlogin: ntlogin);
 
             if (response)
             {
@@ -313,11 +311,11 @@ namespace Answer.Web.Controllers
             return Json(json, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult ViewHistoryClose(string id,string ntlog)
+        public ActionResult ViewHistoryClose(string id, string ntlog)
         {
             var taskService = new ActualPartsService();
 
-            var response = taskService.Close(id: id,ntlogin:ntlog);
+            var response = taskService.Close(id: id, ntlogin: ntlog);
 
             if (response)
             {
@@ -387,7 +385,7 @@ namespace Answer.Web.Controllers
                 TempData["ErrorMessage"] = "Something went wrong.";
 
                 return RedirectToAction(actionName: "ViewHistory", routeValues: new { id = actualPartId });
-                }
+            }
 
             return RedirectToAction(actionName: "ViewHistory", routeValues: new { id = actualPartId });
         }

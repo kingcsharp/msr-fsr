@@ -19,6 +19,7 @@ using Msr.Models.TheoryParagraphs;
 using Msr.Models.ApprovalStages;
 using Msr.Models.ApprovalGroups;
 using Msr.Models.ActualParts;
+using Msr.Models.EquipmentMaintenances;
 using Msr.Models.Products;
 using Msr.Models.Monitor;
 using Msr.Models.ProcedureVerbs;
@@ -87,6 +88,8 @@ namespace Msr.Repositories
             modelBuilder.Entity<PrePropSearchView>().ToTable("Portal_PrePropSearchView");
             modelBuilder.Entity<ProcedureObjectsLaborStepView>().ToTable("Portal_ProcedureObjectLaborStepsView");
             modelBuilder.Entity<PurchesOrderView>().ToTable("Portal_PurchaseOrders");
+            modelBuilder.Entity<EquipmentMaintenance>().ToTable("Portal_EquipmentMaintenance");
+            modelBuilder.Entity<EquipmentMaintenanceView>().ToTable("Portal_EquipmentMaintenanceView");
         }
 
         public DbSet<AspNetUser> AspNetUsers { get; set; }
@@ -137,6 +140,8 @@ namespace Msr.Repositories
         public DbSet<OfficialPositionView> OfficialPositionViews { get; set; }
         public DbSet<ProcedureObjectsLaborStepView> ProcedureObjectsLaborStepViews { get; set; }
         public DbSet<PurchesOrderView> PurchesOrderViews { get; set; }
+        public DbSet<EquipmentMaintenance> EquipmentMaintenances { get; set; }
+        public DbSet<EquipmentMaintenanceView> EquipmentMaintenanceViews { get; set; }
 
     }
 }

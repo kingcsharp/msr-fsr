@@ -1,0 +1,43 @@
+﻿@model  Msr.Web.ViewModel.Engineering.EngineeringViewModel
+@{
+    ViewBag.Title = "Equipments Maintenance";
+}
+<style>
+    .navbar {
+        z-index: 99;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="side-body padding-top">
+        <div class="row">
+            <h2 class="page-header">
+                Equipments Maintenance <button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
+            </h2>
+            <div class="col-lg-12">
+                @Html.Partial("Message")
+                <table id="jqGrid"></table>
+                <div id="jqGridPager"></div>
+            </div>
+        </div>
+        <div class="row">
+            <a href="~/EquipmentMaintenance/Create" class="btn btn-success help-btn">Add</a>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{ 
+<script type="text/javascript" src="~/assets/js/i18n/grid.locale-en.js"></script>
+<script type="text/javascript" src="~/assets/js/jquery.jqGrid.min.js"></script>
+
+<script src="~/assets/js/grids/equipment-maintenance.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {         
+
+        LoadEquipmentGrid();  
+
+        });
+</script>
+}

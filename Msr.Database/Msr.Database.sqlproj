@@ -2823,5 +2823,7 @@
     <Build Include="dbo\Stored Procedures\Portal\Portal_SpFilesShowForObject.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_ProcedureStepUpdateOneStep.sql" />
     <Build Include="dbo\Views\Portal\Portal_PurchaseOrders.sql" />
+    <Build Include="dbo\Views\Portal\Portal_EquipmentMaintenanceView.sql" />
+    <Build Include="dbo\Tables\Portal_EquipmentMaintenance.sql" />
   </ItemGroup>
 </Project>

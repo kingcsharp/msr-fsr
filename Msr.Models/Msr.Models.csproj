@@ -114,6 +114,8 @@
     <Compile Include="Documents\DocumentFilesView.cs" />
     <Compile Include="Documents\DocumentView.cs" />
     <Compile Include="Documents\SelectRole.cs" />
+    <Compile Include="EquipmentMaintenances\EquipmentMaintenance.cs" />
+    <Compile Include="EquipmentMaintenances\EquipmentMaintenanceView.cs" />
     <Compile Include="Files\FileView.cs" />
     <Compile Include="Files\ListFileView.cs" />
     <Compile Include="Locations\LocationView.cs" />
