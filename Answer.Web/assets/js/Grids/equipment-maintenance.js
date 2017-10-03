@@ -113,7 +113,7 @@
                 editrules: { required: true },
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                 stype: "select",
-                searchoptions: { value: ":[All];NEW:New;PROCESSING:Processing;COMPLETED:Completed," },
+                searchoptions: { value: ":[All];NEW:New;PROCESSING:Processing;COMPLETED:Completed" },
                 width: 150,
                 align: 'left'
             },
