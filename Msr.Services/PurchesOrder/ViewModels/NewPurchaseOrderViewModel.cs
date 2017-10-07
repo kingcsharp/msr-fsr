@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Mvc;
 using Msr.Models.PurchesOrder;
 using System.ComponentModel.DataAnnotations;
@@ -40,7 +38,7 @@ namespace Msr.Services.PurchesOrder.ViewModels
         public string CloseDate { get; set; }
         [Required]
         public decimal? TotalPurchaseLimit { get; set; }
-        public decimal? Tax { get; set; }
+        public double? Tax { get; set; }
         public string InvoiceTrigger { get; set; }
         public string InvoicePeriod { get; set; }
         public string InvoicePeriodType { get; set; }
@@ -54,7 +52,6 @@ namespace Msr.Services.PurchesOrder.ViewModels
         public string Save { get; set; }
         public string SaveClose { get; set; }
         public string SaveWorkflow { get; set; }
-        //public List<ProductsCanPurchase> ProductsList { get; set; }
 
         public DateTime? FromDate { get; set; }
         public DateTime? ToDate { get; set; }
@@ -66,6 +63,7 @@ namespace Msr.Services.PurchesOrder.ViewModels
         public List<SelectListItem> SupplierDepartmentList { get; set; }
         public List<SelectListItem> InvoiceTriggerList { get; set; }
         public List<SelectListItem> InvoicePeriodTypeList { get; set; }
+
         public void Setup(PurchesOrderService purchesOrderService)
         {
             ClientList = purchesOrderService.GetCompaniesList().Select(x => new SelectListItem
@@ -83,14 +81,16 @@ namespace Msr.Services.PurchesOrder.ViewModels
             }).OrderBy(o => o.Text).ToList();
             SupplierDepartmentList.Insert(0, new SelectListItem() { Value = "", Text = @"Select Supplier Department" });
 
-            ProductsList = purchesOrderService.PurchasedOrderProducts(id: ObjId).Select(x => new SelectListItem
+            ProductsList = purchesOrderService.GetCompinesProducts(Client, SupplierDepartment).Select(x => new SelectListItem
             {
                 Text = x.Name,
-                Value = x.Id.ToString()
+                Value = x.Order_id.ToString()
             }).OrderBy(o => o.Text).ToList();
 
+            Products = purchesOrderService.PurchasedOrderProducts(ObjId).Select(x => x.Id).ToList();
+
             AccountTypeList = new List<SelectListItem>
-            {// static flag 
+            {
                 new SelectListItem
                 {
                     Text = @"Select Type",
@@ -107,8 +107,9 @@ namespace Msr.Services.PurchesOrder.ViewModels
                     Value = "WARRANTY_ACCOUNT",
                 }
             };
+
             InvoiceTriggerList = new List<SelectListItem>
-            {//static flag
+            {
                 new SelectListItem
                 {
                     Text = @"All Line Items On Purchase Debited",
@@ -131,8 +132,9 @@ namespace Msr.Services.PurchesOrder.ViewModels
                     Value = "MANUAL"
                 }
             };
+
             InvoicePeriodTypeList = new List<SelectListItem>
-            {//static flag
+            {
                 new SelectListItem
                 {
                     Text = @"Days",
@@ -162,19 +164,19 @@ namespace Msr.Services.PurchesOrder.ViewModels
                 POName = model.Name,
                 SupplierDepartment = model.SupplierCo,
                 AccountType = model.AccType,
-                RefCustPO = model.CustBillName,
+                RefCustPO = model.ReferencePo,
                 CustRefNum = model.CustomerBill,
                 OpenDate = model.OpenDate,
                 CloseDate = model.CloseDate,
                 TotalPurchaseLimit = model.TotalPurchaseLimit,
-                Tax = model.TotalPurchases,
+                Tax = model.TaxRate,
                 InvoiceTrigger = model.InvoiceTrigger,
                 InvoicePeriod = model.InvoicePeriodNumber,
                 InvoicePeriodType = model.InvoicePeriodType,
                 FirstInvoiceDate = model.FirstInvoiceDate,
                 GracePeriod = model.PaymentGracePeriod,
                 LatePaymentFee = model.LateFeePercentage,
-                ReApplyFrequency = ReApplyFrequency
+                ReApplyFrequency = model.ReapplyLateFee
             };
         }
     }

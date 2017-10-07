@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Msr.Models.PurchesOrder
 {
-   public class PurchesOrderView
+    public class PurchesOrderView
     {
         public string Id { get; set; }
 
@@ -58,7 +54,7 @@ namespace Msr.Models.PurchesOrder
 
         public string AccType { get; set; }
 
-        public Decimal? TotalPurchases { get; set; }
+        public decimal? TotalPurchases { get; set; }
 
         public Decimal? Balance { get; set; }
 
@@ -111,5 +107,7 @@ namespace Msr.Models.PurchesOrder
         public string BillingEmail { get; set; }
 
         public decimal? UnusedAmmount { get; set; }
+
+        public Double? TaxRate { get; set; }
     }
 }

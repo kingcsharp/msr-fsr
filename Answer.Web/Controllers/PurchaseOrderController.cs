@@ -26,7 +26,7 @@ namespace Answer.Web.Controllers
 
         public ActionResult PurchaseOrderData(JqGridParam param)
         {
-            var totalRows = _purchesOrderService.GetPurchesOrderQueryable();
+            var totalRows = _purchesOrderService.GetPurchesOrderQueryable().Where(x => x.Status != "DELETED");
 
             if (param.where != null && param.where.rules.Any())
             {
@@ -35,7 +35,7 @@ namespace Answer.Web.Controllers
 
                     if (rule.field == nameof(PurchesOrderView.Name))
                     {
-                        totalRows = totalRows.Where(x => x.Name == rule.data.ToLower());
+                        totalRows = totalRows.Where(x => x.Name.ToLower().Contains(rule.data.ToLower()));
                     }
                     else if (rule.field == nameof(PurchesOrderView.ReferencePo))
                     {
@@ -200,7 +200,7 @@ namespace Answer.Web.Controllers
             var model = _purchesOrderService.GetById(id);
 
             purchaseOrder = purchaseOrder.MaptoDto(model);
-                
+
             purchaseOrder.Setup(new PurchesOrderService());
 
             return View(purchaseOrder);
@@ -245,6 +245,18 @@ namespace Answer.Web.Controllers
             return View(model);
         }
 
+        public JsonResult ProductsList(string id, string supplierCo)
+        {
+            var purchaseOrderService = new PurchesOrderService();
+
+            var products = purchaseOrderService.GetCompinesProducts(id, supplierCo).Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.Order_id.ToString()
+            }).OrderBy(o => o.Text).ToList();
+
+            return Json(products, JsonRequestBehavior.AllowGet);
+        }
         [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult ProductsData(JqGridParam param, string id, string clientValue)
         {

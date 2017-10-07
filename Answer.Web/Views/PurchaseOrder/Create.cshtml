@@ -1,10 +1,8 @@
 ﻿@model Msr.Services.PurchesOrder.ViewModels.NewPurchaseOrderViewModel
-
 @{
     ViewBag.Title = "Create Purchase Order";
 }
 <link href="~/assets/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
-
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="row">
@@ -12,7 +10,7 @@
                 Create Purchase Order<button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
             </h2>
             <div class="col-lg-10">
-                @using (Html.BeginForm("Create", "PurchaseOrder", FormMethod.Post, new { @class = "form form-horizontal partCreate" }))
+                @using (Html.BeginForm("Create", "PurchaseOrder", FormMethod.Post, new { @class = "form form-horizontal" }))
                 {
                     @Html.Partial("_Controls")
                 }
@@ -20,7 +18,6 @@
         </div>
     </div>
 </div>
-
 
 @section scripts
 {

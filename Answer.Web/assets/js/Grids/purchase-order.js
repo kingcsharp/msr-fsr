@@ -1,4 +1,4 @@
-﻿function LoadPurchaseOrderGrid(url) {
+﻿function LoadPurchaseOrderGrid(url, returnUrl) {
 
     $.jgrid.defaults.styleUI = 'Bootstrap';
 
@@ -297,7 +297,7 @@
                 searchoptions: { value: ":[All];CREATING, DENIED, APPROVED, APPROVED_BUT_REVISING:Creating or Approved;CREATING, DENIED: Creating;IN_WORKFLOW:In Approval Workflow;APPROVED, APPROVED_BUT_REVISING, APPROVED_BUT_DELETING:Approved;DENIED:Denied;APPROVED_BUT_REVISING:Approved But Being Revised;APPROVED_BUT_DELETING:Approved But Being Deleted;DENIED:Denied;DELETED:Deleted;OLD:Obsolete" },
                 align: 'center'
             },
-            { name: 'Actions', index: 'ID', key: true, search: false, hidden: false, colmenu: false, editable: false, width: 100, align: 'center' }
+            { name: 'Actions', index: 'ID', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: ActionFormatter, width: 100, align: 'center' }
         ],
         ajaxRowOptions: {
             type: "POST",
@@ -321,7 +321,50 @@
         editurl: 'clientArray',
         autowidth: true,
         colMenu: true,
-        gridComplete: function () { }
+        gridComplete: function () {
+
+            $('.unlock').on('click',
+                function (e) {
+                    e.preventDefault();
+
+                    var callBackId = $(this).data('call-back-id');
+                    var callBackName = $(this).data('call-back-name');
+
+                    eModal.confirm('Pressing OK will delete revision "' + callBackName + '"', 'Confirmation delete')
+                        .then(confirmCallback, optionalCancelCallback);
+
+                    function confirmCallback() {
+                        window.location.href = "/workflow/UnlockAndDelete?objId=" + callBackId + '&returnUrl=' + returnUrl;
+                    }
+
+                    function optionalCancelCallback() {
+
+                    }
+
+                });
+
+
+            $('.editpurchaseorder').on('click',
+                function (e) {
+                    e.preventDefault();
+
+                    var callBackId = $(this).data('call-back-id');
+                    var callBackName = $(this).data('call-back-name');
+
+                    eModal.confirm(
+                            'Are you sure?')
+                        .then(confirmCallback, optionalCancelCallback);
+
+                    function confirmCallback() {
+                        window.location.href = "/PurchaseOrder/Edit/" + callBackId;
+                    }
+
+                    function optionalCancelCallback() {
+                    }
+
+                });
+
+        }
 
     });
     $('#jqGrid').navGrid("#jqGridPager", {
@@ -377,8 +420,30 @@
         }
 
         return '';
-
     };
+
+    function ActionFormatter(cellvalue, options, rowObject) {
+
+        var editButton = '<a  title="Edit" href="/PurchaseOrder/edit/' + rowObject.ObjectId + '" data-call-back-id ="' + rowObject.ObjectId + '" class="btn btn-xs btn-success editpurchaseorder" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
+
+        var deleteButton = '';
+        var buttonWorkflowLeft = '';
+        var buttonWorkflowRight = '';
+        var url = '';
+
+        if (rowObject.Status === 'CREATING') {
+
+            url = '/workflow/submit?objId=' + rowObject.ObjectId + '&returnUrl=' + returnUrl;
+            buttonWorkflowLeft = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '"  data-call-back-id="' + rowObject.ObjectId + '" class="btn btn-xs btn-success unlock" title="Cancel Creation. Edit will be lost" style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-left"></i></a>';
+
+            buttonWorkflowRight = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-success" title="Proceed to approval workflow for release." style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-right"></i></a>';
+        } else {
+            url = '/workflow/delete?objId=' + rowObject.ObjectId + '&returnUrl=' + returnUrl;
+            deleteButton = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-danger" title="Proceed to delete." style="margin:2px;font-size: .8em;"><i class="glyphicon glyphicon-trash"></i></a>';
+        }
+
+        return editButton + deleteButton + buttonWorkflowLeft + buttonWorkflowRight;
+    }
 }
 
 

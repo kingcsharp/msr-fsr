@@ -36,13 +36,17 @@ namespace Msr.Services.PurchesOrder
             return result;
         }
 
-        public List<ProductsCanPurchase> GetCompinesProducts(string coid, string clientCo)
+        public List<ProductsCanPurchase> GetCompinesProducts(string clientCo, string supplierCo)
         {
-            var sql =
-                $"SELECT DISTINCT TOP 500 * FROM A_V_ORDERS_LOOK_UP_FOR_ACCOUNT WHERE ORDER_ID IS NOT NULL AND (( CUSTOMER_CO LIKE '%{coid}%' ) ) AND (( SUPPLIER_ID LIKE '%{clientCo}%' ) ) ORDER BY NAME";
-            var result = _dbContext.Database.SqlQuery<ProductsCanPurchase>(sql).ToList();
+            if (!string.IsNullOrWhiteSpace(clientCo)  && !string.IsNullOrWhiteSpace(supplierCo))
+            {
+                var sql =
+                    $"SELECT DISTINCT TOP 500 * FROM A_V_ORDERS_LOOK_UP_FOR_ACCOUNT WHERE ORDER_ID IS NOT NULL AND (( CUSTOMER_CO LIKE '%{clientCo}%' ) ) AND (( SUPPLIER_ID LIKE '%{supplierCo}%' ) ) ORDER BY NAME";
+                var result = _dbContext.Database.SqlQuery<ProductsCanPurchase>(sql).ToList();
 
-            return result;
+                return result;
+            }
+            return new List<ProductsCanPurchase>();
         }
 
         public List<SelectFile> PurchasedOrderProducts(string id)
@@ -65,6 +69,7 @@ namespace Msr.Services.PurchesOrder
                     AcctType = model.AccountType,
                     ReferencePO = model.RefCustPO,
                     SupplierCo = model.SupplierDepartment,
+                    CustomerCo = model.Client,
                     CustomerBillCo = model.CustRefNum,
                     OpenDate = model.OpenDate,
                     CloseDate = model.CloseDate,
@@ -94,7 +99,17 @@ namespace Msr.Services.PurchesOrder
                 }
 
                 responsePurchase.Entity.NewId = addPurchaseOrderProcedure.NewID;
-                responsePurchase.SuccessMessage = "Purchase order has been created successfully.";
+
+                if (string.IsNullOrWhiteSpace(model.ObjId))
+                {
+                    responsePurchase.SuccessMessage = "Purchase order has been created successfully.";
+                }
+                else
+                {
+                    responsePurchase.SuccessMessage = "Purchase order has been updated successfully.";
+                }
+
+                
 
                 return responsePurchase;
 
@@ -102,8 +117,8 @@ namespace Msr.Services.PurchesOrder
             catch (Exception ex)
             {
                 ////log
-                
-                responsePurchase.AddError("There is an error with request");
+
+                responsePurchase.AddError("There is an error with the request");
 
                 return responsePurchase;
             }

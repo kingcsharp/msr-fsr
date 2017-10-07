@@ -44,6 +44,41 @@
 
     });
 
+    $(".select").select2({
+        allowClear: false
+    });
+
+    $('#Client,#SupplierDepartment').on('change',
+
+        function (parameters) {
+            var clientValue = $('#Client').val();
+            var supplierCoValue = $('#SupplierDepartment').val();
+
+            $.ajax({
+                type: "GET",
+                url: '/PurchaseOrder/ProductsList/' + clientValue + '?supplierCo=' + supplierCoValue,
+                dataType: 'JSON',
+                success: function (data) {
+                    
+                    $("#Products").select2("val", "");
+
+                    $.each(data, function (index, item) {
+                        var products = $('#Products');
+                        products.append("<option value='" + item.Value + "'>" + item.Text + "</option>");
+
+                        $('#product-message').html('');
+                    });
+                    
+                    if (data.length === 0) {
+                        $('#product-message').html('No products found');
+                    } 
+
+                },
+                error: function () {
+                    $('#product-message').html('There is an error with the request.');
+                }
+            });
+        });
 });
 
 

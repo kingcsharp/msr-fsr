@@ -1,5 +1,5 @@
 ﻿@model Msr.Services.PurchesOrder.ViewModels.NewPurchaseOrderViewModel
-    
+
 @Html.AntiForgeryToken()
 @Html.HiddenFor(x => x.ObjId)
 <table class="table quote-header" width="100%">
@@ -44,20 +44,20 @@
     <tr>
         <th align="right">Open Date:</th>
         <td>
-            <div class="input-group">
+            <div class="input-group datepick">
                 @Html.EditorFor(model => model.OpenDate, new { htmlAttributes = new { @class = "form-control datepick" } })
                 <span class="input-group-addon">
-                    <i class="fa fa-calendar"></i>
+                    <span class="glyphicon glyphicon-calendar"></span>
                 </span>
             </div>
             @Html.ValidationMessageFor(model => model.OpenDate, "", new { @class = "text-danger" })
         </td>
         <th align="right">Close Date:</th>
         <td>
-            <div class="input-group">
+            <div class="input-group datepick">
                 @Html.EditorFor(model => model.CloseDate, new { htmlAttributes = new { @class = "form-control datepick" } })
                 <span class="input-group-addon">
-                    <i class="fa fa-calendar"></i>
+                    <span class="glyphicon glyphicon-calendar"></span>
                 </span>
             </div>
             @Html.ValidationMessageFor(model => model.CloseDate, "", new { @class = "text-danger" })
@@ -99,11 +99,11 @@
     <tr>
         <th align="right">First Invoice Date:</th>
         <td>
-            <div class="input-group">
+            <div class="input-group datepick">
                 @Html.EditorFor(model => model.FirstInvoiceDate, new { htmlAttributes = new { @class = "form-control datepick" } })
 
                 <span class="input-group-addon">
-                    <i class="fa fa-calendar"></i>
+                    <span class="glyphicon glyphicon-calendar"></span>
                 </span>
             </div>
 
@@ -133,20 +133,19 @@
     <tr>
         <th align="right">Products:</th>
         <td>
-            
-                <div style="width: 96%; float: left;">
-                    @Html.ListBoxFor(m => m.Products, Model.ProductsList, new { @class = "form-control submitselect", multiple = "multiple" })
-                </div>
-                <div style="width: 3%; float: right;">
-                    <span class="data-toggle=" data-call-back-id="Products" data-toggle="modal" data-target="#select-products"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="Products"><i class="icon fa fa-trash"></i></span>
-                </div>
-            
+
+            <div>
+                @Html.DropDownListFor(m => m.Products, Model.ProductsList, new { @class = "form-control selectproducts submitselect select", multiple = "multiple" })
+            </div>
+            <div id="product-message" class="alert-info">
+            </div>
         </td>
 
     </tr>
 
     <tr>
-        <td colspan="4">@Html.HiddenFor(model => model.Save, new { @class = "form-control" })
+        <td colspan="4">
+            @Html.HiddenFor(model => model.Save, new { @class = "form-control" })
             @Html.HiddenFor(model => model.SaveClose, new { @class = "form-control" })
             @Html.HiddenFor(model => model.SaveWorkflow, new { @class = "form-control" })
         </td>
@@ -163,7 +162,6 @@
 
     </tr>
 </table>
-
 
 
 <div id="select-products" class="modal fade" role="dialog">

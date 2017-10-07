@@ -33,9 +33,11 @@
     <script type="text/javascript" src="~/assets/js/Grids/purchase-order.js"></script>
 
     <script type="text/javascript">
-        $(document).ready(function() {
+        $(document).ready(function () {
 
-            LoadPurchaseOrderGrid('@Url.Action("PurchaseOrderData", "PurchaseOrder")');
+            $.jgrid.defaults.styleUI = 'Bootstrap';
+
+            LoadPurchaseOrderGrid('@Url.Action("PurchaseOrderData", "PurchaseOrder")','@Request.Url.OriginalString');
 
         });
     </script>

@@ -105,7 +105,7 @@ namespace Msr.Services.PurchesOrder.Procedures
         public string BillingEmail { get; set; }
 
         [StoredProcedureParameter(SqlDbType.Float, ParameterName = "TAX_RATE")]
-        public decimal? TaxRate { get; set; }
+        public double? TaxRate { get; set; }
 
         [StoredProcedureParameter(SqlDbType.VarChar, Size = 50, ParameterName = "StrNTLogin")]
         public string Strntlogin { get; set; }
