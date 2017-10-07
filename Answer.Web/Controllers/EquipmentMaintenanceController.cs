@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using Msr.Infrastructure.Common.Constansts;
 using Msr.Services.jqGrid;
 using Msr.Models.EquipmentMaintenances;
 using Msr.Services.EquipmentMaintenances;
@@ -40,10 +41,10 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.ObjectId == rule.data.ToLower());
                     }
-                
-                    else if (rule.field == nameof(EquipmentMaintenanceView.PrimaryLocation))
+
+                    else if (rule.field == nameof(EquipmentMaintenanceView.ParentLocation))
                     {
-                        totalRows = totalRows.Where(x => x.PrimaryLocation.ToLower().Contains(rule.data.ToLower()));
+                        totalRows = totalRows.Where(x => x.ParentLocation.ToLower().Contains(rule.data.ToLower()));
                     }
                     else if (rule.field == nameof(EquipmentMaintenanceView.SubLocationFirst))
                     {
@@ -59,12 +60,16 @@ namespace Answer.Web.Controllers
                         if (DateTime.TryParse(rule.data, out value))
                         {
                             totalRows = totalRows.Where(q => q.DateTime.HasValue && q.DateTime.Value.Day == value.Day &&
-                                        q.DateTime.Value.Month == value.Month && q.DateTime.Value.Year == value.Year);
+                                                             q.DateTime.Value.Month == value.Month && q.DateTime.Value.Year == value.Year);
                         }
                     }
-                    else if (rule.field == nameof(EquipmentMaintenanceView.Technician))
+                    else if (rule.field == nameof(EquipmentMaintenanceView.RequestedBy))
                     {
-                        totalRows = totalRows.Where(x => x.Technician.ToLower().Contains(rule.data.ToLower()));
+                        totalRows = totalRows.Where(x => x.RequestedBy.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(EquipmentMaintenanceView.ApprovedBy))
+                    {
+                        totalRows = totalRows.Where(x => x.ApprovedBy.ToLower().Contains(rule.data.ToLower()));
                     }
                     else if (rule.field == nameof(EquipmentMaintenanceView.TroubleState))
                     {
@@ -130,24 +135,29 @@ namespace Answer.Web.Controllers
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Create(CreateEquipmentMaintenanceViewModel model, string id)
+        public ActionResult Create(FormCollection form, string id)
         {
-            if (ModelState.IsValid)
+            var model = new CreateEquipmentMaintenanceViewModel();
+
+            var loggedUser = GetCurrentUser();
+
+            model.RequestedById = loggedUser.Id;
+            model.NTLogin = loggedUser.Id;
+
+            model.Status = "REQUESTED";
+
+            if (TryUpdateModel(model, form))
             {
-                var loggedUser = GetCurrentUser();
-
-                model.NTLogin = loggedUser.Id;
-
                 var response = _equipmentMaintenanceService.Create(model);
 
                 if (!response.HasErrors())
                 {
-                    TempData["SuccessMessage"] = "Equipment for maintenance has been added successfully.";
+                    TempData[NotificationConstants.SuccessMessage] = "Equipment for maintenance has been added successfully.";
 
                     return RedirectToAction("Index");
                 }
 
-                TempData["ErrorMessage"] = response.ErrorMessage;
+                TempData[NotificationConstants.ErrrorMessage] = response.ErrorMessage;
             }
             model.Setup(_equipmentMaintenanceService, id);
 
@@ -161,33 +171,114 @@ namespace Answer.Web.Controllers
             var model = _equipmentMaintenanceService.GetById(id);
 
             vm.Read(model);
-            
+
             vm.Setup(_equipmentMaintenanceService, id);
 
             return View(vm);
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Edit(EditEquipmentMaintainanceViewModel model, string id)
+        public ActionResult Edit(FormCollection form, string id)
         {
-            var equipmentMaintenanceService = new EquipmentMaintenanceService();
-
-            if (ModelState.IsValid)
+            var model = new EditEquipmentMaintainanceViewModel();
+            var loggedUser = GetCurrentUser();
+            model.ApprovedById = loggedUser.Id;
+            model.NTLogin = loggedUser.Id;
+            
+            if (TryUpdateModel(model, form))
             {
-                var response = equipmentMaintenanceService.Update(model);
+                var response = _equipmentMaintenanceService.Update(model);
 
                 if (!response.HasErrors())
                 {
-                    TempData["SuccessMessage"] = "Equipment for maintenance has been updated successfully.";
+                    TempData[NotificationConstants.SuccessMessage] = "Equipment for maintenance has been updated successfully.";
 
                     return RedirectToAction("Index");
                 }
             }
 
+            TempData[NotificationConstants.ErrrorMessage] = "There is an error with the request.";
+
+            model.Setup(_equipmentMaintenanceService, id);
+
             return View(model);
         }
+        public JsonResult GetAllParentLocations()
+        {
+            var locations = _locationService.GetLocationsQueryable().Where(x => x.ParentLocation == null).Select(
+                x => new SelectListItem
+                {
+                    Text = x.Name,
+                    Value = x.ParentLocation,
+                }).OrderBy(o => o.Text).ToList();
 
+            if (!locations.Any())
+            {
+                return Json("", JsonRequestBehavior.AllowGet);
+            }
+
+            var locationsList =
+                new List<SelectListItem> { new SelectListItem { Value = "", Text = @"Select a Sublocation" } };
+
+            locationsList.AddRange(locations);
+
+
+            return Json(new { locations = locationsList }, JsonRequestBehavior.AllowGet);
+        }
         public JsonResult GetChildLocations(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                return Json("", JsonRequestBehavior.AllowGet);
+            }
+
+            var locations = _locationService.GetLocationsQueryable().Where(x => x.ObjectId == id).Select(
+                x => new SelectListItem
+                {
+                    Text = x.Name,
+                    Value = x.ParentLocation,
+                }).OrderBy(o => o.Text).ToList();
+
+            if (!locations.Any())
+            {
+                return Json(new { locations = "" }, JsonRequestBehavior.AllowGet);
+            }
+
+            var locationsList = new List<SelectListItem>();
+
+            locationsList.AddRange(locations);
+
+
+            return Json(new { locations = locationsList }, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult GetSecoundLocationsManually(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                return Json("", JsonRequestBehavior.AllowGet);
+            }
+
+            var locations = _locationService.GetLocationsQueryable().Where(x => x.ParentLocation == id).Select(
+                x => new SelectListItem
+                {
+                    Text = x.Name,
+                    Value = x.ObjectId,
+                }).OrderBy(o => o.Text).ToList();
+
+            if (!locations.Any())
+            {
+                return Json(new { locations = "" }, JsonRequestBehavior.AllowGet);
+            }
+
+            var locationsList =
+                new List<SelectListItem> { new SelectListItem { Value = "", Text = @"Select a Sublocation" } };
+
+            locationsList.AddRange(locations);
+
+
+            return Json(new { locations = locationsList }, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult GetthirdLocationsManually(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
             {
@@ -207,12 +298,53 @@ namespace Answer.Web.Controllers
             }
 
             var locationsList = new List<SelectListItem>();
-            locationsList.Add(new SelectListItem { Value = "", Text = "Select a Sublocation" });
 
             locationsList.AddRange(locations);
 
 
             return Json(new { locations = locationsList }, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult GetSecoundLocations(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                return Json("", JsonRequestBehavior.AllowGet);
+            }
+
+            var locations = _locationService.GetSecoundLocations(id).Select(
+                x => new SelectListItem
+                {
+                    Text = x.Name,
+                    Value = x.ObjectId,
+                }).OrderBy(o => o.Text).ToList();
+
+            if (!locations.Any())
+            {
+                return Json("", JsonRequestBehavior.AllowGet);
+            }
+
+            var locationsList = new List<SelectListItem>();
+
+            locationsList.AddRange(locations);
+
+
+            return Json(new { locations = locationsList }, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult GetParentLocations(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                return Json("", JsonRequestBehavior.AllowGet);
+            }
+
+            var locations = _locationService.GetParentLocations(id);
+
+            if (!locations.Any())
+            {
+                return Json(new { locations = "" }, JsonRequestBehavior.AllowGet);
+            }
+
+            return Json(new { locations }, JsonRequestBehavior.AllowGet);
         }
     }
 }

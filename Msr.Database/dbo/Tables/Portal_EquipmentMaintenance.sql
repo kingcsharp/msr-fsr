@@ -1,22 +1,22 @@
-﻿CREATE TABLE [dbo].[Portal_EquipmentMaintenance](
-	[Id] [varchar](50) NOT NULL,
-	[ObjectId] [varchar](50) NULL,
-	[ScanBarcode] [nvarchar](130) NULL,
-	[PrimaryLocationId] [nvarchar](100) NOT NULL,
-	[SubLocationFirstId] [varchar](50) NULL,
-	[SubLocationSecondId] [varchar](50) NULL,
-	[DateTime] [datetime] NULL,
-	[Technician] [nvarchar](50) NULL,
-	[TroubleState] [bit] NULL,
-	[MaintenanceTask] [nvarchar](50) NULL,
-	[Comments] [nvarchar](4000) NULL,
-	[Status] [nvarchar](50) NULL,
-	[StrNTLogin] [nvarchar](50) NOT NULL,
- CONSTRAINT [PK_PortalEquipmentMaintenance] PRIMARY KEY CLUSTERED 
-(
-	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
+﻿CREATE TABLE [dbo].[Portal_EquipmentMaintenance] (
+    [Id]                NVARCHAR (50)   NOT NULL,
+    [ObjectId]          NVARCHAR (50)   NULL,
+    [ScanBarcode]       NVARCHAR (130)  NULL,
+    [ParentLocation]    NVARCHAR (100)  NOT NULL,
+    [SubLocationFirst]  NVARCHAR (100)  NULL,
+    [SubLocationSecond] NVARCHAR (100)  NULL,
+    [DateTime]          DATETIME        NULL,
+    [RequestedById]       NVARCHAR (50)   NOT NULL,
+    [TroubleState]      BIT             NULL,
+    [MaintenanceTask]   NVARCHAR (50)   NULL,
+    [Comments]          NVARCHAR (4000) NULL,
+    [Status]            NVARCHAR (50)   NOT NULL,
+    [StrNTLogin]        NVARCHAR (50)   NOT NULL,
+    [ApprovedById]        VARCHAR (50)    NULL,
+    CONSTRAINT [PK_PortalEquipmentMaintenance] PRIMARY KEY CLUSTERED ([Id] ASC)
+);
+
+
 
 GO
 

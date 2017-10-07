@@ -22,20 +22,17 @@ namespace Msr.Services.EquipmentMaintenances.Procedures
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "ScanBarcode")]
         public string ScanBarcode { get; set; }
 
-        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 100, ParameterName = "PrimaryLocationId")]
+        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 100, ParameterName = "ParentLocation")]
         public string PrimaryLocationId { get; set; }
 
-        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 100, ParameterName = "SubLocationFirstId")]
+        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 100, ParameterName = "SubLocationFirst")]
         public string SubLocationFirstId { get; set; }
 
-        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "SubLocationSecondId")]
+        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "SubLocationSecond")]
         public string SubLocationSecondId { get; set; }
 
         [StoredProcedureParameter(SqlDbType.DateTime, ParameterName = "DateTime")]
         public DateTime? DateTime { get; set; }
-
-        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "Technician")]
-        public string Technician { get; set; }
 
         [StoredProcedureParameter(SqlDbType.Bit, ParameterName = "TroubleState")]
         public bool? TroubleState { get; set; }
@@ -51,5 +48,11 @@ namespace Msr.Services.EquipmentMaintenances.Procedures
 
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "strNTLogin")]
         public string NTLogin { get; set; }
+
+        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "ApprovedById")]
+        public string ApprovedById { get; set; }
+
+        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "RequestedById")]
+        public string RequestedById { get; set; }
     }
 }

@@ -21,10 +21,10 @@
                 width: 100,
                 align: 'left'
             },
-          {
+            {
                 label: 'Primary Location',
-                name: 'PrimaryLocation',
-                index: 'PrimaryLocation',
+                name: 'ParentLocation',
+                index: 'ParentLocation',
                 colmenu: false,
                 editable: true,
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: true, grouping: false, freeze: false },
@@ -65,9 +65,20 @@
                 align: 'center'
             },
             {
-                label: 'Technician',
-                name: 'Technician',
-                index: 'Technician',
+                label: 'Requested By',
+                name: 'RequestedBy',
+                index: 'RequestedBy',
+                colmenu: false,
+                editable: true,
+                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                align: 'left'
+            },
+
+            {
+                label: 'Approved By',
+                name: 'ApprovedBy',
+                index: 'ApprovedBy',
                 colmenu: false,
                 editable: true,
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
@@ -75,7 +86,7 @@
                 align: 'left'
             },
             {
-                label: 'Equipment Trouble State',
+                label: 'Equipment State',
                 name: 'TroubleState',
                 index: 'TroubleState',
                 colmenu: false,
@@ -83,6 +94,7 @@
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 align: 'left'
+
             },
             {
                 label: 'Maintenance Task',
@@ -117,7 +129,18 @@
                 width: 150,
                 align: 'left'
             },
-            { name: 'Actions', index: 'Id', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: EquipmentsEditFormatter, width: 200, align: 'center' }
+            {
+                name: 'Actions',
+                index: 'Id',
+                key: true,
+                search: false,
+                hidden: false,
+                colmenu: false,
+                editable: false,
+                sortable:false,
+                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                formatter: EquipmentsEditFormatter, width: 200, align: 'center'
+            }
         ],
 
         ajaxRowOptions: {
@@ -134,6 +157,11 @@
         pager: "#jqGridPager",
         height: 'auto',
         gridview: true,
+        rowattr: function (rd) {
+            if (rd.TroubleState === "true") { 
+                return { "class": "hilightyellow" };
+            }
+        },
         sortname: 'Id',
         sortable: true,
         sortorder: 'asc',
@@ -143,18 +171,26 @@
         autowidth: true,
         colMenu: true,
         gridComplete: function () {
-
+            var rowIds = $('#jqGrid').jqGrid('getDataIDs');
+            for (i = 0; i < rowIds.length; i++) {
+                //iterate over each row
+                rowData = $('#jqGrid').jqGrid('getRowData', rowIds[i]);
+                //set background style if ColValue === true\
+                if (rowData['TroubleState'] === "true") {
+                    $('#jqGrid').jqGrid('setRowData', rowIds[i], false, "hilightyellow");
+                }
+            }
         }
 
     });
     $('#jqGrid').navGrid("#jqGridPager", {
-            search: false, 
+            search: false,
             add: false,
             edit: false,
             del: false,
             refresh: true
         },
-        
+
         { multipleSearch: true }
     );
     $('#jqGrid').jqGrid('filterToolbar', {

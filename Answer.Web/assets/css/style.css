@@ -1624,3 +1624,10 @@ input.pre-populated {
 .stepLabel {
     margin: 0 0 0 250px;
 }
+
+.hilightyellow {
+    background-color: lightgoldenrodyellow;
+}
+.navbar {
+    z-index: 99;
+}

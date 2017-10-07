@@ -1,15 +1,16 @@
-﻿create procedure [dbo].[Portal_CreateEquipmentProcedure]
+﻿CREATE procedure [dbo].[Portal_CreateEquipmentProcedure]
 
 @newID varchar(50) OUTPUT,
 @messages varchar(2000) OUTPUT,
 @Id varchar(50),
 @ObjectId varchar(50),
 @ScanBarcode varchar(100),
-@PrimaryLocationId varchar(100),
-@SubLocationFirstId varchar(100),
-@SubLocationSecondId varchar(100),
+@ParentLocation varchar(100),
+@SubLocationFirst varchar(100),
+@SubLocationSecond varchar(100),
 @DateTime datetime,
-@Technician varchar(100),
+@RequestedById varchar(100),
+@ApprovedById varchar(100),
 @TroubleState bit,
 @MaintenanceTask varchar(100),
 @Comments varchar(4000),
@@ -25,8 +26,8 @@ IF @Id is null
 		print 'This is a new location so inserting it now'
 		exec sp_GetUniqueID3 @myID OUTPUT
 		
-		INSERT INTO Portal_EquipmentMaintenance (Id,ScanBarcode,PrimaryLocationId,SubLocationFirstId,SubLocationSecondId, DateTime, Technician, TroubleState, MaintenanceTask, Comments,Status,strNtLogin)
-		VALUES (@myID,@ScanBarcode,@PrimaryLocationId,@SubLocationFirstId,@SubLocationSecondId,@DateTime,@Technician,@TroubleState,
+		INSERT INTO Portal_EquipmentMaintenance (Id,ScanBarcode,ParentLocation,SubLocationFirst,SubLocationSecond, DateTime, RequestedById,ApprovedById, TroubleState, MaintenanceTask, Comments,Status,strNtLogin)
+		VALUES (@myID,@ScanBarcode,@ParentLocation,@SubLocationFirst,@SubLocationSecond,@DateTime,@RequestedById,@ApprovedById,@TroubleState,
 
 		@MaintenanceTask,@Comments,@Status,@strNTLogin)
 		SELECT @newID = Id FROM Portal_EquipmentMaintenance WHERE ID = @myID 
@@ -37,11 +38,12 @@ ELSE
 
 		UPDATE Portal_EquipmentMaintenance 
 		SET ScanBarcode = @ScanBarcode,
-		PrimaryLocationId = @PrimaryLocationId,
-		SubLocationFirstId = @SubLocationFirstId,
-		SubLocationSecondId = @SubLocationSecondId,
+		ParentLocation = @ParentLocation,
+		SubLocationFirst = @SubLocationFirst,
+		SubLocationSecond = @SubLocationSecond,
 		[DateTime] = @DateTime,
-		Technician = @Technician,
+		RequestedById = @RequestedById,
+		ApprovedById = @ApprovedById,
 		TroubleState = @TroubleState,
 		MaintenanceTask = @MaintenanceTask,
 		Comments = @Comments,

@@ -6,8 +6,6 @@ using Msr.Services.Locations.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Msr.Services.Locations
 {
@@ -25,11 +23,23 @@ namespace Msr.Services.Locations
             return _dbContext.LocationViews;
         }
 
-        public LocationView GetById(string Id)
+        public LocationView GetById(string id)
         {
-            return GetLocationsQueryable().Where(x => x.ObjectId == Id).SingleOrDefault();
+            return GetLocationsQueryable().SingleOrDefault(x => x.ObjectId == id);
+        }
+        public string GetParentLocations(string id)
+        {
+            var locations = GetLocationsQueryable().SingleOrDefault(x => x.ObjectId == id);
+
+            return GetLocationsQueryable().Where(x => x.ObjectId == locations.ParentLocation).SingleOrDefault().Name;
         }
 
+        public List<LocationView> GetSecoundLocations(string id)
+        {
+            var locations = GetLocationsQueryable().SingleOrDefault(x => x.ObjectId == id);
+
+            return GetLocationsQueryable().Where(x => x.ParentLocation == locations.ParentLocation).ToList();
+        }
         public bool Save(SaveLocationViewModel model)
         {
             try
@@ -81,7 +91,7 @@ namespace Msr.Services.Locations
                     NTLogin = model.LoggedUserIdResult.Id
                 };
 
-               _dbContext.Database.ExecuteStoredProcedure(saveLocationProcedure);
+                _dbContext.Database.ExecuteStoredProcedure(saveLocationProcedure);
 
                 return true;
             }
@@ -93,7 +103,7 @@ namespace Msr.Services.Locations
             }
         }
 
-        public bool Delete(string id,string ntlogin)
+        public bool Delete(string id, string ntlogin)
         {
             try
             {

@@ -23,8 +23,7 @@ namespace Msr.Services.EquipmentMaintenances.ViewModels
         [Required]
         public string PrimaryLocationId { get; set; }
 
-        [Required]
-        public string Technician { get; set; }
+        public string RequestedById { get; set; }
 
         public bool? EquipmentTroubleState { get; set; }
 
@@ -41,12 +40,12 @@ namespace Msr.Services.EquipmentMaintenances.ViewModels
         public DateTime? DateTime { get; set; }
 
         public bool TroubleState { get; set; }
-
-        [Required]
         public string Status { get; set; }
 
         public List<SelectListItem> StatusList { get; set; }
 
+
+        public string ApprovedById { get; set; }
         public string NTLogin { get; set; }
 
 
@@ -63,7 +62,7 @@ namespace Msr.Services.EquipmentMaintenances.ViewModels
                 Value = x.ObjectId,
             }).OrderBy(o => o.Text).ToList();
 
-            SubLocationFirstList.Add(new SelectListItem { Value = "", Text = "Select a Sublocation" });
+            SubLocationFirstList.Add(new SelectListItem { Value = "", Text = @"Select a Sublocation" });
 
             SubLocationFirstList.AddRange(equipmentMaintenanceService.GetSubLocation1(PrimaryLocationId).Select(x => new SelectListItem
             {
@@ -73,45 +72,44 @@ namespace Msr.Services.EquipmentMaintenances.ViewModels
 
             if (!string.IsNullOrWhiteSpace(SubLocationFirstId))
             {
-                SubLocationSecondList.Add(new SelectListItem { Value = "", Text = "Select a Sublocation" });
                 SubLocationSecondList.AddRange(equipmentMaintenanceService.GetSubLocation1(SubLocationFirstId).Select(x => new SelectListItem
                 {
                     Text = x.Name,
                     Value = x.ObjectId,
                 }).OrderBy(o => o.Text).ToList());
             }
-            
+
             MaintenanceTaskList = new List<SelectListItem>
             {
-               new SelectListItem
+                new SelectListItem
                 {
-                    Text = "Add /Replace Media",
+                    Text = @"Add /Replace Media",
                     Value = "Add /Replace Media",
                     Selected = true
                 },
                 new SelectListItem
                 {
-                    Text = "Cleaning",
+                    Text = @"Cleaning",
                     Value = "Cleaning"
                 },
                 new SelectListItem
                 {
-                    Text = "PM",
+                    Text = @"PM",
                     Value = "PM"
                 },
                 new SelectListItem
                 {
-                    Text = "Repair",
+                    Text = @"Repair",
                     Value = "Repair"
                 }
             };
 
             StatusList = new List<SelectListItem>
             {
-                new SelectListItem {Text = "Select Status"},
-                new SelectListItem {Text = "New", Value = "NEW"},
-                new SelectListItem {Text = "Processing", Value = "PROCESSING"},
-                new SelectListItem {Text = "Completed", Value = "COMPLETED"}
+                new SelectListItem {Text = @"Select Status", Value = ""},
+                new SelectListItem {Text = @"Requested", Value = "REQUESTED"},
+                new SelectListItem {Text = @"InProgress", Value = "INPROGRESS"},
+                new SelectListItem {Text = @"Completed", Value = "COMPLETED"}
             };
 
         }
@@ -120,11 +118,12 @@ namespace Msr.Services.EquipmentMaintenances.ViewModels
         {
             Id = model.Id;
             ScanBarcode = model.ScanBarcode;
-            PrimaryLocationId = model.PrimaryLocationId;
-            SubLocationFirstId = model.SubLocationFirstId;
-            SubLocationSecondId = model.SubLocationSecondId;
+            PrimaryLocationId = model.ParentLocation;
+            SubLocationFirstId = model.SubLocationFirst;
+            SubLocationSecondId = model.SubLocationSecond;
             DateTime = model.DateTime;
-            Technician = model.Technician;
+            RequestedById = model.RequestedById;
+            ApprovedById = model.ApprovedById;
             TroubleState = model.TroubleState;
             MaintenanceTask = model.MaintenanceTask;
             Comments = model.Comments;

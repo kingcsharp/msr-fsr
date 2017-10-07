@@ -34,16 +34,17 @@ namespace Msr.Services.EquipmentMaintenances
                     SubLocationSecondId = model.SubLocationSecondId,
                     DateTime = model.DateTime,
                     TroubleState = model.TroubleState,
-                    Technician = model.Technician,
+                    RequestedById = model.RequestedById,
+                    ApprovedById = model.ApprovedById,
                     MaintenanceTask = model.MaintenanceTask,
                     Comments = model.Comments,
                     NTLogin = model.NTLogin,
-                    Status = "NEW"
+                    Status = "REQUESTED"
                 };
 
                 _dbContext.Database.ExecuteStoredProcedure(savePartProcedure);
 
-                response.SuccessMessage = "Equipment for maintenance has been added successfully";
+                response.SuccessMessage = "Equipment for maintenance has been created successfully";
             }
             catch (Exception ex)
             {
@@ -53,15 +54,22 @@ namespace Msr.Services.EquipmentMaintenances
 
             return response;
         }
-       
+
         public List<LocationView> GetLocation()
         {
-            return _dbContext.LocationViews.ToList();
+            return _dbContext.LocationViews.Where(x => x.ParentLocation == null).ToList();
         }
 
         public List<LocationView> GetSubLocation1(string locationId)
         {
-            return _dbContext.LocationViews.Where(x => x.ParentLocation == locationId).ToList();
+            if (locationId == null)
+            {
+                return new List<LocationView>();
+            }
+            else
+            {
+                return _dbContext.LocationViews.Where(x => x.ParentLocation == locationId).ToList();
+            }
         }
 
         public List<LocationView> GetPrimaryLocation()
@@ -80,20 +88,22 @@ namespace Msr.Services.EquipmentMaintenances
 
             try
             {
-
                 var equipment = _dbContext.EquipmentMaintenances.SingleOrDefault(x => x.Id == model.Id);
 
                 equipment.ObjectId = model.ObjectId;
                 equipment.ScanBarcode = model.ScanBarcode;
-                equipment.PrimaryLocationId = model.PrimaryLocationId;
-                equipment.SubLocationFirstId = model.SubLocationFirstId;
-                equipment.SubLocationSecondId = model.SubLocationSecondId;
-                equipment.DateTime = model.DateTime;
-                equipment.Technician = model.Technician;
+                equipment.ParentLocation = model.PrimaryLocationId;
+                equipment.SubLocationFirst = model.SubLocationFirstId;
+                equipment.SubLocationSecond = model.SubLocationSecondId;
+                equipment.RequestedById = equipment.RequestedById;
                 equipment.TroubleState = model.TroubleState;
                 equipment.MaintenanceTask = model.MaintenanceTask;
+                equipment.DateTime = model.DateTime;
                 equipment.Comments = model.Comments;
                 equipment.Status = model.Status;
+                equipment.StrNTLogin = model.NTLogin;
+                equipment.ApprovedById = model.ApprovedById;
+
 
                 _dbContext.SaveChanges();
 

@@ -1,18 +1,12 @@
 ﻿@model  Msr.Web.ViewModel.Engineering.EngineeringViewModel
 @{
-    ViewBag.Title = "Equipments Maintenance";
+    ViewBag.Title = "Equipment Maintenance";
 }
-<style>
-    .navbar {
-        z-index: 99;
-    }
-</style>
-
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="row">
             <h2 class="page-header">
-                Equipments Maintenance <button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
+                Equipment Maintenance <button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
             </h2>
             <div class="col-lg-12">
                 @Html.Partial("Message")
@@ -28,16 +22,16 @@
 
 @section scripts
 { 
-<script type="text/javascript" src="~/assets/js/i18n/grid.locale-en.js"></script>
-<script type="text/javascript" src="~/assets/js/jquery.jqGrid.min.js"></script>
+    <script type="text/javascript" src="~/assets/js/i18n/grid.locale-en.js"></script>
+    <script type="text/javascript" src="~/assets/js/jquery.jqGrid.min.js"></script>
 
-<script src="~/assets/js/grids/equipment-maintenance.js"></script>
+    <script src="~/assets/js/grids/equipment-maintenance.js"></script>
 
-<script type="text/javascript">
-    $(document).ready(function () {         
+    <script type="text/javascript">
+        $(document).ready(function () {         
 
-        LoadEquipmentGrid();  
+            LoadEquipmentGrid();  
 
         });
-</script>
+    </script>
 }
