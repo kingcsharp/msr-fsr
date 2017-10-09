@@ -588,7 +588,7 @@ namespace Msr.Services.Orders
             p.Add("@target", request.Target, DbType.String, ParameterDirection.Input);
             p.Add("@tolerance", request.Tolerance, DbType.String, ParameterDirection.Input);
             p.Add("@theSaurusId", request.TheSaurusId, DbType.String, ParameterDirection.Input);
-            p.Add("@strNTLogin", request.StrNtLogin, DbType.String, ParameterDirection.ReturnValue);
+            p.Add("@strNTLogin", request.StrNtLogin, DbType.String, ParameterDirection.Input);
 
             using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
             {
@@ -704,9 +704,14 @@ namespace Msr.Services.Orders
 
                     if (taskLog != null)
                     {
-                        taskLog.EndTime = DateTime.Now;
+                        if (taskLog.StatusId == TimerStatuseConstants.InProgress)
+                        {
+                            taskLog.EndTime = DateTime.Now;
+                            taskLog.TotalTime =  TimeSpan.FromSeconds((taskLog.EndTime.Value - taskLog.StartTime).TotalSeconds);
+                        }
+                        
                         taskLog.StatusId = TimerStatuseConstants.Stopped;
-                        taskLog.TotalTime = Math.Abs((taskLog.StartTime - taskLog.EndTime.Value).TotalHours);
+                        
                         _dbContext.SaveChanges();
 
                         response.Entity = GetTotalTime(taskLog);
@@ -747,9 +752,9 @@ namespace Msr.Services.Orders
             taskLog.StatusId = TimerStatuseConstants.Paused;
             taskLog.EndTime = DateTime.Now;
 
-            var pausedTime = Math.Abs((taskLog.StartTime - taskLog.EndTime.Value).TotalHours);
+            var pausedTime = TimeSpan.FromSeconds((taskLog.EndTime.Value - taskLog.StartTime).TotalSeconds);
 
-            taskLog.TotalTime = taskLog.TotalTime + pausedTime;
+            taskLog.TotalTime = taskLog.TotalTime.Add(pausedTime);
 
             _dbContext.SaveChanges();
 
@@ -949,11 +954,11 @@ namespace Msr.Services.Orders
             if (taskLog.StatusId == TimerStatuseConstants.InProgress)
             {
                 timer = taskLog.EndTime?.Subtract(taskLog.StartTime) ?? DateTime.Now.Subtract(taskLog.StartTime);
-                timer = timer + TimeSpan.FromHours(taskLog.TotalTime);
+                timer = timer.Add(taskLog.TotalTime);
             }
             else
             {
-                timer = TimeSpan.FromHours(taskLog.TotalTime);
+                timer = taskLog.TotalTime;
             }
 
             var timerInSeconds = timer.TotalSeconds;

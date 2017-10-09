@@ -77,11 +77,10 @@
         {
             <text>
                 $('.timer').timer({
-                    seconds: @Model.TaskRunningDto.TotalSeconds,
+                    seconds: @Math.Round(Model.TaskRunningDto.TotalSeconds),
                     duration: '@Model.TaskRunningDto.Duration'
                 });
             </text>
-
         }
 
 

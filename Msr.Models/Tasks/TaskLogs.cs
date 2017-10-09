@@ -10,7 +10,7 @@ namespace Msr.Models.Tasks
         public int TaskId { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime? EndTime { get; set; }
-        public double TotalTime { get; set; }
+        public TimeSpan TotalTime { get; set; }
         public int StatusId  {get; set; }
         public string UserId { get; set; }
         public int FillId { get; set; }

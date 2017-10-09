@@ -432,6 +432,9 @@ namespace Answer.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                var currentUser = GetCurrentUser();
+
+                monitorTemplate.StrNtLogin = currentUser.Id;
                 _orderService.UpdateStepMonitor(monitorTemplate);
             }
 
