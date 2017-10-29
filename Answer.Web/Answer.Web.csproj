@@ -637,6 +637,8 @@
     <Content Include="assets\js\grids\purchase-order.js" />
     <Content Include="assets\js\grids\regions.js" />
     <Content Include="assets\js\grids\requirement-steps.js" />
+    <Content Include="assets\js\JsBarcode.all.min.js" />
+    <Content Include="assets\js\printThis.js" />
     <Content Include="assets\js\requirements_form.js" />
     <Content Include="assets\js\grids\showpruchasestatus.js" />
     <Content Include="assets\js\grids\theoryparagraph-model.js" />
