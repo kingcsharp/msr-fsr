@@ -1,0 +1,412 @@
+﻿
+@model Msr.Services.CustomerRequirements.ViewModel.CustomerRequirementViewModel
+
+@{
+    ViewBag.Title = "Requirements";
+}
+<link href="~/assets/css/select2.min.css" rel="stylesheet" />
+<div class="container-fluid">
+<div class="side-body padding-top">
+<div class="row">
+<h2 class="page-header">Customer Requirements Form <button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#reqHelpModal" data-intro="For more help click the Help button" data-position="bottom">Help</button></h2>
+<div class="col-lg-12 col-md-11">
+    <div>@Html.Partial("Message")</div>
+</div>
+<div class="col-lg-12">
+@using (Html.BeginForm("Create", "CustomerRequirement", FormMethod.Post, new { @class = "form form-horizontal", role = "form" }))
+{
+    <input type="hidden" value="" id="postType" name="postType" />
+    <div class="container-fluid shadow">
+
+    <div class="row">
+    <div class="col-md-12">
+        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+    </div>
+
+    <div id="valErr" class="row viewerror clearfix hidden">
+        <div class="alert alert-danger">Oops! Seems there are some errors..</div>
+    </div>
+    <div id="valOk" class="row viewerror clearfix hidden">
+        <div class="alert alert-success">Yay! ..</div>
+    </div>
+    <div class="col-md-12">
+        <div class="form-group">
+            <label class="control-label col-lg-1 col-md-2" for="requirementName">Requirement Name:</label>
+            <div class="controls col-lg-11 col-md-10">
+                @Html.EditorFor(model => model.RequirementName, new { htmlAttributes = new { @class = "form-control input-lg", @placeholder = "Enter a name you will use to Identify this requirement" } })
+                @Html.ValidationMessageFor(model => model.RequirementName, "", new { @class = "text-danger" })
+
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label class="control-label col-lg-2 col-md-3" for="location">Location:</label>
+            <div class="controls col-lg-10 col-md-9">
+                @Html.EditorFor(model => model.Location, new { htmlAttributes = new { @class = "form-control input-lg" } })
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label class="control-label col-lg-2 col-md-3" for="specAuthor">Representative:</label>
+            <div class="controls col-lg-10 col-md-9">
+                @Html.EditorFor(model => model.Respresentative, new { htmlAttributes = new { @class = "form-control input-lg" } })
+                @Html.ValidationMessageFor(model => model.Respresentative, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+    <div class="row">
+    <div class="col-md-12">
+    <div class="row" id="tab1" data-role="tab">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#tabContent1" data-toggle="tab" id="tabLabel">Customer Information</a></li>
+        <li class=""><a href="#tabContent2" data-toggle="tab" id="tabLabel2">General Information</a></li>
+        <li class=""><a href="#tabContent3" data-toggle="tab" id="tabLabel3">Process Information</a></li>
+        <li class=""><a href="#tabContent4" data-toggle="tab" id="tabLabel4">Kit Breakdown By Part</a></li>
+        <li class=""><a href="#tabContent5" data-toggle="tab" id="tabLabel5">Additional Information / Comments</a></li>
+    </ul>
+    <div class="tab-content">
+    <div class="tab-pane active" id="tabContent1">
+        <div class="">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group" style="display: block;">
+                                <label class="control-label control-label-right col-sm-3" for="field7">Company:</label>
+                                <div class="controls col-sm-9">
+                                    @Html.EditorFor(model => model.Company, new { htmlAttributes = new { @class = "form-control" } })
+                                    <span id="errId1" class="error"></span>
+                                </div>
+                            </div>
+                            <div class="form-group" style="display: block;">
+                                <label class="control-label  col-sm-3" for="field9">Street Address:</label>
+                                <div class="controls col-sm-9">
+                                    @Html.EditorFor(model => model.StreetAddress, new { htmlAttributes = new { @class = "form-control" } })
+                                    <span id="errId2" class="error"></span>
+                                </div>
+                            </div>
+                            <div id="panel15" class="panel panel-default" data-role="panel" style="display: block;">
+                                <div class="panel-heading">Commercial Contact Info</div>
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <label class=" col-sm-3" for="field17">Name</label>
+                                        <div class="controls col-sm-9">
+                                            @Html.EditorFor(model => model.CommercialName, new { htmlAttributes = new { @class = "form-control", @required = "" } })
+                                            @Html.ValidationMessageFor(model => model.CommercialName, "", new { @class = "text-danger" })
+                                            <span id="errId3" class="error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class=" col-sm-3" for="field18">Title</label>
+                                        <div class="controls col-sm-9">
+                                            @Html.EditorFor(model => model.CommercialTitle, new { htmlAttributes = new { @class = "form-control" } })
+                                            <span id="errId4" class="error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class=" col-sm-3" for="field19">Phone</label>
+                                        <div class="controls col-sm-9">
+                                            @Html.EditorFor(model => model.CommercialPhone, new { htmlAttributes = new { @class = "form-control", @required = "" } })
+                                            @Html.ValidationMessageFor(model => model.CommercialPhone, "", new { @class = "text-danger" })
+                                            <span id="errId5" class="error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class=" col-sm-3" for="field20">Email</label>
+                                        <div class="controls col-sm-9">
+                                            @Html.EditorFor(model => model.CommercialEmail, new { htmlAttributes = new { @class = "form-control" } })
+                                            <span id="errId6" class="error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="control-label  col-sm-3" for="field21">Division / Fab #:</label>
+                                <div class="controls col-sm-9">
+                                    @Html.EditorFor(model => model.DivisionFab, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label  col-sm-3" for="field22">City, State, ZIP:</label>
+                                <div class="controls col-sm-9">
+                                    @Html.EditorFor(model => model.CityStateZIP, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                            </div>
+                            <div id="panel23" class="panel panel-default" data-role="panel">
+                                <div class="panel-heading">Technical Contact Info:</div>
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <label class=" col-sm-3" for="field24">Name</label>
+                                        <div class="controls col-sm-9">
+                                            @Html.EditorFor(model => model.TechnicalName, new { htmlAttributes = new { @class = "form-control" } })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class=" col-sm-3" for="field26">Title</label>
+                                        <div class="controls col-sm-9">
+                                            @Html.EditorFor(model => model.TechnicalTitle, new { htmlAttributes = new { @class = "form-control" } })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class=" col-sm-3" for="field25">Phone</label>
+                                        <div class="controls col-sm-9">
+                                            @Html.EditorFor(model => model.TechnicalPhone, new { htmlAttributes = new { @class = "form-control" } })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class=" col-sm-3" for="field27">Email</label>
+                                        <div class="controls col-sm-9">
+                                            @Html.EditorFor(model => model.TechnicalEmail, new { htmlAttributes = new { @class = "form-control" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Tab 1 -->
+    <div class="tab-pane" id="tabContent2">
+        <div class="">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label  col-sm-3" for="field28">Short Description:</label>
+                        <div class="controls col-sm-9">
+                            @Html.EditorFor(model => model.ShortDescription, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ShortDescription, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label  col-sm-3" for="field29">Part /Kit No:</label>
+                        <div class="controls col-sm-9">
+                            @Html.EditorFor(model => model.PartKitNo, new { htmlAttributes = new { @class = "form-control" } })
+                        </div>
+
+                    </div>
+                </div>
+            </div><div class="form-group" style="display: block;">
+                <label class="control-label  col-sm-3" for="field33">Customer Specifications (if any):</label>
+                <div class="controls col-sm-9">
+                    @Html.TextAreaFor(model => model.CustomerSpecifications, new { @class = "form-control", style = "width:100", @rows = 3 })
+                </div>
+
+            </div><div class="form-group" style="display: block;">
+                <label class="control-label  col-sm-3" for="field37">In-Process Analytical Requirements:</label>
+                <div class="controls col-sm-9">
+                    @Html.TextAreaFor(model => model.InProcessAnalyticalRequirements, new { @class = "form-control", style = "width:100", @rows = 3 })
+                </div>
+
+            </div><div class="form-group" style="display: block;">
+                <label class="control-label  col-sm-3" for="field30">Detailed Description of Requested Service(s):</label>
+                <div class="controls col-sm-9">
+                    @Html.TextAreaFor(model => model.DetailedDescription, new { @class = "form-control", style = "width:100", @rows = 3 })
+                </div>
+
+            </div><div class="form-group" style="display: block;">
+                <label class="control-label  col-sm-3" for="field36">Critical-to-Function Attributes:</label>
+                <div class="controls col-sm-9">
+                    @Html.TextAreaFor(model => model.CriticalToFunction, new { @class = "form-control", style = "width:100", @rows = 3 })
+                </div>
+
+            </div><div class="form-group" style="display: block;">
+                <label class="control-label  col-sm-3" for="field35">Specific Customer Qualification Requirements:</label>
+                <div class="controls col-sm-9">
+                    @Html.TextAreaFor(model => model.SpecificCustomerQualification, new { @class = "form-control", style = "width:100", @rows = 3 })
+                </div>
+
+            </div><div class="form-group" style="display: block;">
+                <label class="control-label  col-sm-3" for="field34">Forecasted Volumes &amp; Start Dates:</label>
+                <div class="controls col-sm-9">
+                    @Html.TextAreaFor(model => model.ForecastedVolumes, new { @class = "form-control", style = "width:100", @rows = 3 })
+                </div>
+
+            </div><div class="form-group" style="display: block;">
+                <label class="control-label  col-sm-3" for="field38">Special Packaging/Shipping:</label>
+                <div class="controls col-sm-9">
+                    @Html.TextAreaFor(model => model.SpecialPackagingShipping, new { @class = "form-control", style = "width:100", @rows = 3 })
+                </div>
+
+            </div><div class="row" style="display: block;">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label  col-sm-3" for="field40">Expected Quote Date:</label>
+                        <div class="controls col-sm-9">
+                            @Html.EditorFor(model => model.ExpectedQuoteDate, new { htmlAttributes = new { @id = "quoteDate", @class = "form-control", @placeholder = "mm/dd/yyyy" } })
+                        </div>
+
+                    </div><div class="form-group">
+                        <label class="control-label  col-sm-3" for="field41">Pickup Notification:</label>
+                        <div class="controls col-sm-9">
+
+                            @Html.EditorFor(model => model.PickupNotification, new { htmlAttributes = new { @class = "form-control" } })
+                        </div>
+
+                    </div>
+                </div><div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label  col-sm-3" for="field42">Expected Cycle Time:</label>
+                        <div class="controls col-sm-9">
+
+                            @Html.EditorFor(model => model.ExpectedCycleTime, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ExpectedCycleTime, "", new { @class = "text-danger" })
+                        </div>
+
+                    </div><div class="form-group">
+                        <label class="control-label  col-sm-3" for="field43">Shipping Method:</label>
+                        <div class="controls col-sm-2">
+
+                            @Html.DropDownListFor(model => model.ShippingMethod, Model.ShippingMehtodList, new { @id = "shippingMethod", @class = "form-control select2" })
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Tab 2 -->
+    <div class="tab-pane" id="tabContent3">
+        <div class="row clearfix">
+            <div class="col-md-12 column">
+                <table class="table table-bordered table-hover table-striped table-condensed" id="process_steps">
+                    <thead>
+                    <tr>
+                        <th class="text-center">
+                            Row #
+                        </th>
+                        <th class="text-center">
+                            Contaminents By-Products
+                        </th>
+                        <th class="text-center">
+                            Non-CU or CU Risk
+                        </th>
+                        <th class="text-center">
+                            Material
+                        </th>
+                        <th class="text-center">
+                            Approx. Dimensions
+                        </th>
+                        <th class="text-center">
+                            Existing Process Spec. # or New
+                        </th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr id='row0'>
+                        <td>
+                            1
+                        </td>
+                        <td> @Html.TextBox("[0].Contaminents", "", new { @class = "form-control", @placeholder = "Contaminents By-Products" }) </td>
+                        <td> @Html.TextBox("[0].NonCU", "", new { @class = "form-control", @placeholder = "Non-CU or CU Risk" }) </td>
+                        <td> @Html.TextBox("[0].Material", "", new { @class = "form-control", @placeholder = "Material" }) </td>
+                        <td> @Html.TextBox("[0].ApproxDimensions", "", new { @class = "form-control", @placeholder = "Approx. Dimensions" }) </td>
+                        <td> @Html.TextBox("[0].ExistingProcess", "", new { @class = "form-control", @placeholder = "Process Spec. # or New" }) </td>
+                    </tr>
+                    <tr id='row1'></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <a id="add_row" class="btn btn-primary pull-left">Add Row</a><a id='delete_row' class="pull-left btn btn-warning" style="margin-left: 10px;">Delete Row</a>
+    </div>
+    <!-- End Tab 3 -->
+    <div class="tab-pane" id="tabContent4">
+        <div class="row clearfix">
+            <div class="col-md-12 column">
+                <table class="table table-bordered table-hover table-striped table-condensed" id="kit_parts">
+                    <thead>
+                    <tr>
+                        <th class="text-center">
+                            Row #
+                        </th>
+                        <th class="text-center">
+                            Part Description
+                        </th>
+                        <th class="text-center">
+                            Substrate
+                        </th>
+                        <th class="text-center">
+                            Coating/Surface Treatment
+                        </th>
+                        <th class="text-center">
+                            Cust. Part No.
+                        </th>
+                        <th class="text-center">
+                            Mfg. Part No.
+                        </th>
+                        <th class="text-center">
+                            # Parts per Kit
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr id='rowa-0'>
+                        <td>
+                            1
+                        </td>
+                        <td> @Html.TextBox("[0].PartDescription", "", new { @class = "form-control", @placeholder = "Part Description" }) </td>
+                        <td> @Html.TextBox("[0].Substrate", "", new { @class = "form-control", @placeholder = "Substrate" }) </td>
+                        <td> @Html.TextBox("[0].CoatingSurface", "", new { @class = "form-control", @placeholder = "Coating/Surface Treatment" }) </td>
+                        <td> @Html.TextBox("[0].CustPartNo", "", new { @class = "form-control", @placeholder = "Cust. Part No." }) </td>
+                        <td> @Html.TextBox("[0].MfgPartNo", "", new { @class = "form-control", @placeholder = "Mfg. Part No." }) </td>
+                        <td> @Html.TextBox("[0].PartsPerKit", "", new { @class = "form-control", @placeholder = "# Parts per Kit" }) </td>
+                    </tr>
+                    <tr id='rowa-1'></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <a id="add_rowa" class="btn btn-primary pull-left">Add Row</a><a id='delete_rowa' class="pull-left btn btn-warning" style="margin-left: 10px;">Delete Row</a>
+    </div>
+    <!-- End Tab 4 -->
+    <div class="tab-pane" id="tabContent5">
+        <div class="">
+            <div class="form-group controls col-md-12">
+                <label class="" for="field63">Additional Information or Comments</label>
+                <div>
+                    @Html.TextAreaFor(model => model.AdditionalInformation, new { @class = "form-control", @style = "width:100", @rows = 3 })
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- End Tab 5 -->
+    </div>
+    </div>
+    </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group pull-right">
+                <button id="button60" type="submit" class="btn btn-info" style="margin-right:10px;" onclick="draft()"><i class="fa fa-save"></i> Save Draft</button>
+                <button id="button57" type="submit" class="btn btn-success" style="margin-right:20px;" onclick="saveSubmit()"><i class="fa fa-send"></i> Save &amp; Submit</button>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+}
+</div>
+                     
+</div>
+</div>
+</div>
+      
+@section scripts
+{
+    <script src="~/assets/js/requirements_form.js"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+}
+
+
+

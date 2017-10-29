@@ -155,6 +155,10 @@
     <Compile Include="ApprovalWorkflows\Procedures\HideApprovalWorkflowProcedure.cs" />
     <Compile Include="ApprovalWorkflows\ViewModels\ApprovalWorkflowsViewModel.cs" />
     <Compile Include="ApprovalWorkflows\ViewModels\EditApprovalStagesViewModel.cs" />
+    <Compile Include="CustomerRequirements\CustomerRequirementService.cs" />
+    <Compile Include="CustomerRequirements\ViewModel\CustomerRequirementViewModel.cs" />
+    <Compile Include="CustomerRequirements\ViewModel\PartInfoViewModel.cs" />
+    <Compile Include="CustomerRequirements\ViewModel\ProcessInfoViewModel.cs" />
     <Compile Include="EquipmentMaintenances\EquipmentMaintenanceService.cs" />
     <Compile Include="EquipmentMaintenances\Procedures\CreateEquipmaintenanceProcadure.cs" />
     <Compile Include="EquipmentMaintenances\Procedures\GetIdProcedure.cs" />
@@ -164,10 +168,16 @@
     <Compile Include="EquipmentMaintenances\ViewModels\GetNewIdModel.cs" />
     <Compile Include="Orders\Messaging\TaskLogDto.cs" />
     <Compile Include="Procedures\ViewModels\ProcedureStepMonitorsViewModel.cs" />
+    <Compile Include="ProductionPlanning\ProductionPlanningService.cs" />
+    <Compile Include="ProductionPlanning\ViewModels\RequirementStatusViewModel.cs" />
+    <Compile Include="ProductionPlanning\ViewModels\RequirementStepsViewModel.cs" />
     <Compile Include="PurchesOrder\Procedures\AddPurchaseOrderProcedure.cs" />
     <Compile Include="PurchesOrder\PurchesOrderService.cs" />
     <Compile Include="PurchesOrder\ViewModels\NewPurchaseOrderViewModel.cs" />
     <Compile Include="PurchesOrder\ViewModels\AddPurchaseResponse.cs" />
+    <Compile Include="Quotes\QuoteService.cs" />
+    <Compile Include="Quotes\ViewModels\FreeFormQuoteViewModel.cs" />
+    <Compile Include="Quotes\ViewModels\QuoteItemsViewModel.cs" />
     <Compile Include="ResultNotification.cs" />
     <Compile Include="BaseNotificationRequest.cs" />
     <Compile Include="BaseNotification.cs" />
@@ -433,6 +443,7 @@
     <Folder Include="ProductsActualParts\VIewModels\" />
     <Folder Include="Products\Procedures\" />
     <Folder Include="Products\ViewModels\" />
+    <Folder Include="Quotes\Procedures\" />
     <Folder Include="TheoryParagraph\Procedures\" />
     <Folder Include="TheoryParagraph\ViewModels\" />
   </ItemGroup>

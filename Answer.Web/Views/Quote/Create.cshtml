@@ -1,0 +1,289 @@
+﻿@model Answer.Web.ViewModel.Quote.FreeFormQuoteViewModel
+@{
+    ViewBag.Title = "Free Form Quote";
+}
+<div class="app-container">
+    <div class="row content-container">
+        <div class="container">
+            <div class="side-body padding-top">
+                @using (Html.BeginForm())
+                {
+
+                    <div class="row">
+                        <style>
+                            .no-border {
+                                border-bottom: 0px !important;
+                            }
+
+                                .no-border th, .no-border td {
+                                    border: 1px !important;
+                                }
+
+                            .quote-header th {
+                                text-align: right;
+                            }
+
+                            .items-table th {
+                                text-align: center;
+                            }
+
+                            .items-table > tbody > tr > td {
+                                min-height: 35px;
+                                height: 35px;
+                            }
+
+                            .line-caption {
+                                font-size: 9px;
+                                padding-top: 2px !important;
+                            }
+                        </style>
+
+                        <table class="table no-border quote-header" width="100%">
+                            <tbody>
+                                <tr>
+                                    <td rowspan="2" width="60%" align="left"><img src="/assets/img/msr-ccs.png" alt="MSR-FSR Critical Component Services"></td>
+                                    <th align="right">
+                                        Date:
+                                    </th>
+                                    <td>
+                                        @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control", type = "Date" } })
+                                        @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2"></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" align="center"><h2>Quotation</h2></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table class="table quote-header" width="100%">
+                            <tbody>
+                                <tr>
+                                    <th align="right">Customer:</th>
+                                    <td>
+                                        @Html.EditorFor(model => model.Customer, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.Customer, "", new { @class = "text-danger" })
+                                    </td>
+                                    <th align="right">Contact:</th>
+                                    <td>
+                                        @Html.EditorFor(model => model.Contact, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.Contact, "", new { @class = "text-danger" })
+                                    </td>
+                                    <th align="right">F.O.B.:</th>
+                                    <td>
+                                        @Html.EditorFor(model => model.FOB, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.FOB, "", new { @class = "text-danger" })
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th align="right">Address:</th>
+                                    <td>
+                                        @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+                                    </td>
+                                    <th align="right">Title:</th>
+                                    <td>
+                                        @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                                    </td>
+                                    <th align="right">Terms:</th>
+                                    <td>
+                                        @Html.EditorFor(model => model.Terms, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.Terms, "", new { @class = "text-danger" })
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th align="right">City, State Zip::</th>
+                                    <td>
+                                        @Html.EditorFor(model => model.CityStateZip, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.CityStateZip, "", new { @class = "text-danger" })
+                                    </td>
+                                    <th align="right">Phone:</th>
+                                    <td>
+                                        @Html.EditorFor(model => model.Phone, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
+                                    </td>
+                                    <th align="right">Delivery:</th>
+                                    <td>
+                                        @Html.EditorFor(model => model.Delivery, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.Delivery, "", new { @class = "text-danger" })
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table class="table table-bordered table-striped items-table" width="100%" id="quote_items">
+                            <thead>
+                                <tr>
+                                    <th width="10%">Item No.</th>
+                                    <th width="10%">Quantity</th>
+                                    <th width="30%" style="text-align: left !important">Description</th>
+                                    <th>Lead Time</th>
+                                    <th>Customer Part No.</th>
+                                    <th>Price</th>
+                                    <th>Extension</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr id="row0">
+                                    <td>
+                                        1
+                                    </td>
+                                    <td>
+                                        @Html.TextBox("[0].Quantity", "", new { @class = "form-control", required="required" })
+                                        @Html.ValidationMessage("[0].Quantity", "", new { @class = "text-danger" })
+                                    </td>
+                                    <td>
+                                        @Html.TextBox("[0].Description", "", new { @class = "form-control" })
+                                        @Html.ValidationMessage("[0].Description", "", new { @class = "text-danger" })
+                                    </td>
+                                    <td>
+                                        @Html.TextBox("[0].LeadTime", "", new { @class = "form-control" })
+                                        @Html.ValidationMessage("[0].LeadTime", "", new { @class = "text-danger" })
+                                    </td>
+                                    <td>
+                                        @Html.TextBox("[0].CustomerPartNo", "", new { @class = "form-control" })
+                                        @Html.ValidationMessage("[0].CustomerPartNo", "", new { @class = "text-danger" })
+                                    </td>
+                                    <td>
+                                        @Html.TextBox("[0].Price", "", new { @class = "form-control" })
+                                        @Html.ValidationMessage("[0].Price", "", new { @class = "text-danger" })
+                                    </td>
+                                    <td>
+                                        @Html.TextBox("[0].Extension", "", new { @class = "form-control" })
+                                        @Html.ValidationMessage("[0].Extension", "", new { @class = "text-danger" })
+                                    </td>
+                                </tr>
+                                <tr id="row1"></tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="7">
+                                        <a id="add_row" class="btn btn-primary pull-left" data-toggle="tooltip" data-placement="top" title="" data-original-title="Add an Item to the Quote"><i class="fa fa-plus-circle"></i> Add Item</a>
+                                        <a id="delete_row" class="pull-left btn btn-warning" style="margin-left: 10px;" data-toggle="tooltip" data-placement="top" title="" data-original-title="Removes Last Item from the Quote"><i class="fa fa-minus-circle"></i> Remove Item</a>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        <table class="table table-bordered table-striped items-table" width="100%" id="process_specs">
+                            <thead>
+                                <tr>
+                                    <th width="20%">Existing Process Spec. # or New</th>
+                                    <th width="80%">Process Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        @Html.TextAreaFor(model => model.ExistingProcess, new { @class = "form-control", style = "width:100", @rows = 3 })
+                                        @Html.ValidationMessageFor(model => model.ExistingProcess, "", new { @class = "text-danger" })
+                                    </td>
+                                    <td>
+                                        @Html.TextAreaFor(model => model.ProcessDescription, new { @class = "form-control", style = "width:100", @rows = 3 })
+                                        @Html.ValidationMessageFor(model => model.ProcessDescription, "", new { @class = "text-danger" })
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table class="table" width="100%">
+                            <tbody>
+                                <tr>
+                                    <td width="100%">
+                                        <small>
+                                            This quotation is subject to the following terms and conditions, and is good only for 30 Days from date of quotation.<br>
+                                            <ol>
+                                                <li>
+                                                    All orders tendered to MSR-FSR are subject to credit approval and final acceptance by MSR-FSR<br>
+                                                    MSR-FSR reserves the right to refuse any order tendered pursuant to this quotation without incurring any liability because of such refusal.
+                                                </li>
+                                                <li>
+                                                    MSR-FSR guarantees to the purchaser that all goods sold pursuant to an accepted purchase order(s) shall conform to MSR-FSR process specifications and shall be free from defects in materials and workmanship. MSR-FSR expressly disclaims all other warranties, whether express, implied or statutory, including the warranty of merchantability and fitness for use.<br>
+                                                    In no event will MSR-FSR be liable for consequential damages arising out of the use of the products described herein.
+                                                </li>
+                                                <li>MSR-FSR will use its reasonably best efforts to expedite the delivery of any goods sold: however, MSR-FSR does not guarantee any specific delivery date nor assume any responsibility for delays due to any cause beyond the control of MSR-FSR.</li>
+                                                <li>Prices indicated are good for thirty (30) days from date of this quotation and based on quantities specificed unless otherwise noted.</li>
+                                                <li>Prices are in USD unless specified otherwise. If services are provided outside of the US and in USD, pricing may be adjusted based on foreign currency effects.</li>
+                                                <li>This quote is based on a projected process flow derived from best known methods, and may require re-negotiation and change based on subsequent validation results or process changes. </li>
+                                            </ol>
+                                        </small>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table class="table  no-border" width="100%">
+                            <tbody>
+                                <tr>
+                                    <td colspan="5" width="60%"></td>
+                                    <td colspan="2">Respectfully submitted,</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5" width="60%"></td>
+                                    <td width="20%" style="border-bottom: 1px solid #000 !important;">
+                                        @Html.EditorFor(model => model.CreatedBy, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.CreatedBy, "", new { @class = "text-danger" })
+                                    </td>
+                                    <td width="30%" style="border-bottom: 1px solid #000 !important;">
+                                        @Html.EditorFor(model => model.TitleSubmit, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.TitleSubmit, "", new { @class = "text-danger" })
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5" width="60%"></td>
+                                    <td width="20%" class="line-caption">Created By</td>
+                                    <td width="30%" class="line-caption">Title</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5" width="60%"></td>
+                                    <td colspan="2" width="40%" style="border-bottom: 1px solid #000 !important;">
+                                        @Html.EditorFor(model => model.AddressSubmit, new { htmlAttributes = new { @class = "form-control", style = "width:100%" } })
+                                        @Html.ValidationMessageFor(model => model.AddressSubmit, "", new { @class = "text-danger" })
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5" width="60%"></td>
+                                    <td colspan="2" width="40%" class="line-caption">Address</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5" width="60%"></td>
+                                    <td colspan="2" width="40%">MSR-FSR LLC</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <input type="submit" id="submit" class="pull-right btn btn-success fa fa-send" style="margin-left: 10px;" data-toggle="tooltip" data-placement="top" title="" data-original-title="Save and Send Quote to Client" value="Save &amp; Submit" />
+                        <input type="submit" id="save_draft" class="pull-right btn btn-info fa fa-save" style="margin-left: 10px;" data-toggle="tooltip" data-placement="top" title="" data-original-title="Save with In Progress Status" value="Save Draft" />
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // freeform quote items table
+            var i = 1;
+            $("#add_row").click(function () {
+                $('#row' + i).html("<td>" + (i + 1) + "</td><td><input type='text' name='[" + i + "].Quantity' class='form-control' /></td><td><input type='text' name='[" + i + "].Description' class='form-control'/></td><td><input type='text' name='[" + i + "].LeadTime' class='form-control'/></td><td><input type='text' name='[" + i + "].CustomerPartNo' class='form-control'/></td><td><input type='text' name='[" + i + "].Price' class='form-control'/></td><td><input type='text' name='[" + i + "].Extension' class='form-control'/></td>");
+                $('#quote_items').append('<tr id="row' + (i + 1) + '" ></tr>');
+                i++;
+                //recalculateTotals();
+            });
+            $("#delete_row").click(function () {
+                if (i > 1) {
+                    $("#row" + (i - 1)).html('');
+                    i--;
+                }
+            });
+        });
+    </script>
+}

@@ -177,6 +177,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ActualPartsController.cs" />
+    <Compile Include="Controllers\CustomerRequirementController.cs" />
     <Compile Include="Controllers\DeliveryController.cs" />
     <Compile Include="Controllers\AdministrationController.cs" />
     <Compile Include="Controllers\ApprovalGroupsController.cs" />
@@ -203,8 +204,10 @@
     <Compile Include="Controllers\ProcedureMonitorsController.cs" />
     <Compile Include="Controllers\ProceduresController.cs" />
     <Compile Include="Controllers\ProcedureVerbsController.cs" />
+    <Compile Include="Controllers\ProductionPlanningController.cs" />
     <Compile Include="Controllers\ProductsActualPartsController.cs" />
     <Compile Include="Controllers\PurchaseOrderController.cs" />
+    <Compile Include="Controllers\QuoteController.cs" />
     <Compile Include="Controllers\RegionsController.cs" />
     <Compile Include="Controllers\RolesController.cs" />
     <Compile Include="Controllers\ShowPurchaseStatusController.cs" />
@@ -608,6 +611,7 @@
     <Content Include="assets\js\grids\PartsProvidedTakeBack.js" />
     <Content Include="assets\js\grids\ProcedureObjectStay.js" />
     <Content Include="assets\js\grids\procedures-dialog.js" />
+    <Content Include="assets\js\grids\production-planning.js" />
     <Content Include="assets\js\grids\products.js" />
     <Content Include="assets\js\grids\productsactualpart.js" />
     <Content Include="assets\js\grids\people.js" />
@@ -632,6 +636,8 @@
     <Content Include="assets\js\grids\add-purchase-order.js" />
     <Content Include="assets\js\grids\purchase-order.js" />
     <Content Include="assets\js\grids\regions.js" />
+    <Content Include="assets\js\grids\requirement-steps.js" />
+    <Content Include="assets\js\requirements_form.js" />
     <Content Include="assets\js\grids\showpruchasestatus.js" />
     <Content Include="assets\js\grids\theoryparagraph-model.js" />
     <Content Include="assets\js\grids\theoryparagraph.js" />
@@ -1134,6 +1140,15 @@
     <Content Include="Views\EquipmentMaintenance\Edit.cshtml" />
     <Content Include="Views\EquipmentMaintenance\Index.cshtml" />
     <Content Include="Views\EquipmentMaintenance\_Controls.cshtml" />
+    <Content Include="Views\CustomerRequirement\Create.cshtml" />
+    <Content Include="Views\ProductionPlanning\Add.cshtml" />
+    <Content Include="Views\ProductionPlanning\Edit.cshtml" />
+    <Content Include="Views\ProductionPlanning\Index.cshtml" />
+    <Content Include="Views\ProductionPlanning\_ViewRequirements.cshtml" />
+    <Content Include="Views\ProductionPlanning\EditStatus.cshtml" />
+    <Content Include="Views\ProductionPlanning\_ViewQuote.cshtml" />
+    <Content Include="Views\Quote\Create.cshtml" />
+    <Content Include="Views\Quote\Index.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

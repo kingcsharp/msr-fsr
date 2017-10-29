@@ -1,18 +1,4 @@
-﻿
-
-
-
-
-
-
-
-
-
-
-
-
-
-CREATE                 PROCEDURE dbo.A_SP_QUOTE_ITEM_UPDATE_ITEM
+﻿CREATE                 PROCEDURE dbo.A_SP_QUOTE_ITEM_UPDATE_ITEM
 @newID nvarchar(50) OUTPUT,
 @messages nvarchar(2000) OUTPUT,
 @QUOTE_OBJ_ID varchar(50),

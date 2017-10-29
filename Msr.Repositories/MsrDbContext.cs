@@ -19,6 +19,8 @@ using Msr.Models.TheoryParagraphs;
 using Msr.Models.ApprovalStages;
 using Msr.Models.ApprovalGroups;
 using Msr.Models.ActualParts;
+using Msr.Models.CustomerRequirement;
+using Msr.Models.CustomerRequirements;
 using Msr.Models.EquipmentMaintenances;
 using Msr.Models.Products;
 using Msr.Models.Monitor;
@@ -26,6 +28,7 @@ using Msr.Models.ProcedureVerbs;
 using Msr.Models.People;
 using Msr.Models.ProductsActualPart;
 using Msr.Models.PrePro;
+using Msr.Models.ProductionPlanning;
 using Msr.Models.PurchesOrder;
 
 
@@ -90,6 +93,12 @@ namespace Msr.Repositories
             modelBuilder.Entity<PurchesOrderView>().ToTable("Portal_PurchaseOrders");
             modelBuilder.Entity<EquipmentMaintenance>().ToTable("Portal_EquipmentMaintenance");
             modelBuilder.Entity<EquipmentMaintenanceView>().ToTable("Portal_EquipmentMaintenanceView");
+            modelBuilder.Entity<CustomerRequirement>().ToTable("Portal_CustomerRequirement");
+            modelBuilder.Entity<CustomerRequirementView>().ToTable("Portal_CustomerRequirementView");
+            modelBuilder.Entity<ProcessInfoView>().ToTable("Portal_ProcessInfo");
+            modelBuilder.Entity<PartInfoView>().ToTable("Portal_PartInfo");
+            modelBuilder.Entity<RequirementStepsView>().ToTable("Portal_RequirementSteps");
+            modelBuilder.Entity<ProductionPlanningView>().ToTable("Portal_ProductionPlanningView");
         }
 
         public DbSet<AspNetUser> AspNetUsers { get; set; }
@@ -142,6 +151,12 @@ namespace Msr.Repositories
         public DbSet<PurchesOrderView> PurchesOrderViews { get; set; }
         public DbSet<EquipmentMaintenance> EquipmentMaintenances { get; set; }
         public DbSet<EquipmentMaintenanceView> EquipmentMaintenanceViews { get; set; }
+        public DbSet<CustomerRequirement> CustomerRequirements { get; set; }
+        public DbSet<CustomerRequirementView> CustomerRequirementViews { get; set; }
+        public DbSet<ProcessInfoView> ProcessInfoViews { get; set; }
+        public DbSet<PartInfoView> PartInfoViews { get; set; }
+        public DbSet<RequirementStepsView> RequirementStepsViews { get; set; }
+        public DbSet<ProductionPlanningView> ProductionPlanningViews { get; set; }
 
     }
 }
