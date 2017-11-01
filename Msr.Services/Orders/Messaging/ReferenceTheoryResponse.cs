@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using Amazon.Runtime.Internal;
 using Msr.Services.Orders.Procedures;
-using Msr.Services.Orders.ViewModels;
 
 namespace Msr.Services.Orders.Messaging
 {
