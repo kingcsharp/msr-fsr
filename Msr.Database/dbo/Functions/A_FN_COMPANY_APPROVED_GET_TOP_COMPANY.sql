@@ -10,7 +10,7 @@ BEGIN
 declare @supRootCo varchar(50)
 declare @tRoot as varchar(50)
 set @tRoot = @ID
-while @tRoot is not null
+
 	begin
 	set @supRootCo = @tRoot
 	SELECT @tRoot = PARENT FROM A_V_COMPANIES_APPROVED_DATA WHERE ID = @supRootCo
