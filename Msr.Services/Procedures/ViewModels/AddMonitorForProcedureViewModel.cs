@@ -171,10 +171,10 @@ namespace Msr.Services.Procedures.ViewModels
 
             FailNextActionList = new List<SelectListItem>
             {
-                new SelectListItem {Text = "CONTINUE", Value = "CONTINUE"},
-                new SelectListItem {Text = "DONOTCLOSE", Value = "DONOTCLOSE"},
-                new SelectListItem {Text = "DNR", Value = "DNR"},
-                new SelectListItem {Text = "DNR", Value = "DNR"}
+                new SelectListItem {Text = @"Continue to next step.", Value = "CONTINUE"},
+                new SelectListItem {Text = @"Stay at this step until passing result is entered.", Value = "DONOTCLOSE"},
+                new SelectListItem {Text = @"Start Diagnose &amp; Repair Tool.", Value = "DNR"},
+                new SelectListItem {Text = @"Skip all steps and end procedure.", Value = "ENDPROCEDURE"}
             };
 
             ForceEndActionList = new List<SelectListItem>
