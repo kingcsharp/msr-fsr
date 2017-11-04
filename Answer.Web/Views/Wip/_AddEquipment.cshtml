@@ -1,0 +1,274 @@
+﻿@model Msr.Services.EquipmentMaintenances.ViewModels.CreateEquipmentMaintenanceViewModel
+
+        @using (Html.BeginForm("AddEquipmentMaintenance", "Wip", FormMethod.Post, new { @class = "form-horizontal add-equipment-maintenace" }))
+        {
+            @Html.Partial("Message")
+
+            <fieldset>
+                <input type="hidden" name="id" value="@ViewBag.FillId " />
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="scancode">Scan Barcode</label>
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.ScanBarcode, new { htmlAttributes = new { @class = "form-control input-md", @placeholder = "Put cursor here to scan" } })
+                        @Html.ValidationMessageFor(model => model.ScanBarcode, "", new { @class = "text-danger" })
+                        <span class="help-block">Or Manually select Location beolow</span>
+                        <div class="alert alert-info">Entry of barcode above will update the select values below on match</div>
+                        <div id="error" class="alert alert-danger"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="selectbasic">Primary Location</label>
+                    <div class="col-md-4">
+                        @Html.DropDownListFor(model => model.PrimaryLocationId, Model.PrimaryLocationList, "Select a Location", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.PrimaryLocationId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="Sublocation1">Select Sublocation 1</label>
+                    <div class="col-md-4">
+                        @Html.DropDownListFor(model => model.SubLocationFirstId, Model.SubLocationFirstList, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.SubLocationFirstId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="Sublocation2">Select Sublocation 2</label>
+                    <div class="col-md-4">
+                        @Html.DropDownListFor(model => model.SubLocationSecondId, Model.SubLocationSecondList, "Select a Sublocation", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.SubLocationSecondId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="DateTime">Date/Time</label>
+                    <div class="col-md-4">
+                        <div style="width: 70%;float: left">
+                        @Html.EditorFor(model => model.DateTime, new {htmlAttributes = new {@class = "form-control datepick ", @placeholder = "Current Date Time", @style = "",}})
+                        </div>
+                        <div style="width: 30%; height: 35px;float: left">
+                            <span class="input-group-addon"><i class="fa fa-calendar" style="height: 19px;"></i></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="EquipmentTroubleState">Trouble State</label>
+                    <div class="col-md-4">
+                        <div class="checkbox">
+                            <label for="EquipmentState-0">
+                                @Html.CheckBoxFor(model => model.TroubleState, new { @class = "checkbox" })
+                                @Html.ValidationMessageFor(model => model.TroubleState, "", new { @class = "text-danger" })
+                                Yes
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                @if (Model.CanAddPreventativeEm)
+                {
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="DateTime">PM Last Completed Date</label>
+                    <div class="col-md-4">
+                        <div style="width: 70%;float: left">
+                            @Html.EditorFor(model => model.PMLastCompletedDate, new {htmlAttributes = new {@class = "form-control datepick ", @placeholder = "PM Last Completed Date", @style = "",}})
+                        </div>
+                        <div style="width: 30%; height: 35px;float: left">
+                            <span class="input-group-addon"><i class="fa fa-calendar" style="height: 19px;"></i></span>
+                        </div>
+                    </div>
+                </div>
+                
+               
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="scancode">Frequency Field:</label>
+                        <div class="col-md-4">
+                            @Html.EditorFor(model => model.FrequencyField, new {htmlAttributes = new {@class = "form-control input-md", @placeholder = ""}})
+                            @Html.ValidationMessageFor(model => model.FrequencyField, "", new {@class = "text-danger"})
+                        </div>
+                    </div>
+                }
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="comments">Comments</label>
+                        <div class="col-md-4">
+                            @Html.TextAreaFor(model => model.Comments, new {@class = "form-control input-md", @placeholder = "Enter you comments"})
+                        </div>
+                    </div>
+                
+            </fieldset>
+        }
+
+<script src="~/assets/js/moment.min.js"></script>
+<script src="~/assets/js/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $('#add-equipment-maintenace').on('click', function () {
+                    $('.add-equipment-maintenace').submit();
+            });
+
+        $('#error').hide();
+        $('.datepick').datetimepicker();
+
+        $('.dateSelecter').click(function (parameters) {
+            $(this).find('.datepick').focus();
+        });
+        $('#ScanBarcode').on('keyup', function () {
+            if ($(this).val().length > 3) {
+
+                var id = $(this).val();
+                $.ajax({
+                    type: "POST",
+                    url: "/EquipmentMaintenance/GetChildLocations/" + id,
+                    success: function (data) {
+                        if (data.locations === "") {
+                            $('#error').html('Location not found select manually');
+                            $('#error').show();
+                            $('#PrimaryLocationId').prop('selectedIndex', 0);
+                            $("#SubLocationFirstId").empty();
+                            $("#SubLocationSecondId").empty();
+
+                            $("#SubLocationFirstId").prop('disabled', true);
+                            $("#SubLocationSecondId").prop('disabled', true);
+
+
+                        } else {
+                            $("#SubLocationFirstId").empty();
+                            $("#SubLocationSecondId").empty();
+                            console.log(data.locations);
+                            if (data.locations !== "") {
+                                $.each(data.locations, function (i, row) {
+                                    $("#SubLocationSecondId").append("<option value='" + row.Value + "'>" + row.Text + "</option>");
+                                });
+                                var id1 = $("#SubLocationSecondId").val();
+                                $.ajax({
+                                    type: 'POST',
+                                    url: "/EquipmentMaintenance/GetSecoundLocations/" + id1,
+                                    success: function (data) {
+                                        $.each(data.locations,
+                                            function (i, row) {
+                                                $("#SubLocationFirstId")
+                                                    .append("<option value='" + row.Value + "'>" + row.Text + "</option>");
+                                            });
+
+                                        var id2 = $("#SubLocationFirstId").val();
+                                        if (id2 == null) {
+                                            alert("Location not found select manually");
+                                        } else {
+                                            $.ajax({
+                                                type: 'POST',
+                                                url: "/EquipmentMaintenance/GetParentLocations/" + id2,
+                                                success: function (data) {
+                                                    var parentLocation = data.locations;
+                                                    console.log(parentLocation);
+
+                                                    //$("#PrimaryLocationId option:selected").prop("selected", false);
+                                                    //$("#PrimaryLocationId option").filter(function () {
+                                                    //    console.log(this.text == parentLocation);
+                                                    //    console.log(parentLocation);
+                                                    //    return this.text == parentLocation;
+                                                    //}).attr('selected', true);
+                                                    var index;
+                                                    $("#PrimaryLocationId option").each(function (i) {
+                                                        if (this.text === parentLocation) {
+                                                            index = i;
+                                                            return this.text === parentLocation;
+                                                        }
+                                                    }).attr('selected', true);
+                                                    $('#PrimaryLocationId option').eq(index).prop('selected', true);
+                                                    $('#error').hide();
+                                                    $("#SubLocationFirstId").prop('disabled', false);
+                                                    $("#SubLocationSecondId").prop('disabled', false);
+                                                },
+                                                error: function () {
+                                                    alert("Something Went Wrong.");
+                                                }
+                                            });
+                                        }
+
+
+                                    },
+                                    error: function () {
+                                        alert("Something Went Wrong.");
+                                    }
+                                });
+                            }
+
+                        }
+
+                    },
+                    error: function () {
+                        alert("Something Went Wrong.");
+                    }
+                });
+            }
+        });
+    });
+
+
+    $("#PrimaryLocationId").change(function () {
+
+        var id = $("#PrimaryLocationId").val();
+        $.ajax({
+            type: 'POST',
+            url: "/EquipmentMaintenance/GetSecoundLocationsManually/" + id,
+            success: function (data) {
+
+                $("#SubLocationFirstId").empty();
+                $("#SubLocationSecondId").empty();
+
+                if (data === '') {
+                    $("#SubLocationFirstId").prop('disabled', true);
+                    $("#SubLocationSecondId").prop('disabled', true);
+                } else {
+                    $("#SubLocationFirstId").prop('disabled', false);
+                    $("#SubLocationSecondId").prop('disabled', false);
+
+                    $.each(data.locations,
+                        function (i, row) {
+                            $("#SubLocationFirstId")
+                                .append("<option value='" + row.Value + "'>" + row.Text + "</option>");
+                        });
+                }
+
+            },
+            error: function () {
+                alert("Something Went Wrong.");
+            }
+        });
+
+    });
+
+
+    $("#SubLocationFirstId").change(function () {
+
+        var id = $("#SubLocationFirstId").val();
+
+        $.ajax({
+            type: 'POST',
+            url: "/EquipmentMaintenance/GetthirdLocationsManually/" + id,
+            success: function (data) {
+
+                $("#SubLocationSecondId").empty();
+
+                if (data === '') {
+                    $("#SubLocationSecondId").prop('disabled', true);
+                } else {
+                    $("#SubLocationSecondId").prop('disabled', false);
+                    $.each(data.locations,
+                        function (i, row) {
+                            $("#SubLocationSecondId")
+                                .append("<option value='" + row.Value + "'>" + row.Text + "</option>");
+                        });
+                }
+            },
+            error: function () {
+                alert("Something Went Wrong.");
+            }
+        });
+
+
+    });
+
+
+</script>

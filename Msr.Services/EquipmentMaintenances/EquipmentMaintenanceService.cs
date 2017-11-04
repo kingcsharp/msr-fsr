@@ -39,7 +39,9 @@ namespace Msr.Services.EquipmentMaintenances
                     MaintenanceTask = model.MaintenanceTask,
                     Comments = model.Comments,
                     NTLogin = model.NTLogin,
-                    Status = "REQUESTED"
+                    Status = model.Status,
+                    PMLastCompletedDate = model.PMLastCompletedDate,
+                    FrequencyField = model.FrequencyField,
                 };
 
                 _dbContext.Database.ExecuteStoredProcedure(savePartProcedure);

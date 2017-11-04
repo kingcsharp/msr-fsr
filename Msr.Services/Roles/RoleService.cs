@@ -184,5 +184,16 @@ namespace Msr.Services.Roles
 
             return result;
         }
+
+        public List<GetMyRolesResult> GetMyRoles(string personId)
+        {
+            var myID = new SqlParameter("@myID", personId);
+            var strNTLogin = new SqlParameter("@strNTLogin", personId);
+
+            var result = _dbContext.Database.SqlQuery<GetMyRolesResult>("EXEC A_SP_ROLES_GET_MY_ROLES @myID, @strNTLogin", myID, strNTLogin).ToList();
+
+            return result;
+        }
+
     }
 }

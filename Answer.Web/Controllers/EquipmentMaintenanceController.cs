@@ -8,6 +8,7 @@ using Msr.Models.EquipmentMaintenances;
 using Msr.Services.EquipmentMaintenances;
 using Msr.Services.EquipmentMaintenances.ViewModels;
 using Msr.Services.Locations;
+using Msr.Services.Roles;
 
 namespace Answer.Web.Controllers
 {
@@ -15,11 +16,13 @@ namespace Answer.Web.Controllers
     {
         private readonly EquipmentMaintenanceService _equipmentMaintenanceService;
         private readonly LocationService _locationService;
+        private readonly RoleService _roleService;
 
         public EquipmentMaintenanceController()
         {
             _locationService = new LocationService();
             _equipmentMaintenanceService = new EquipmentMaintenanceService();
+            _roleService = new RoleService();
         }
 
         public ActionResult Index()
@@ -81,7 +84,8 @@ namespace Answer.Web.Controllers
                     }
                     else if (rule.field == nameof(EquipmentMaintenanceView.Status))
                     {
-                        var statusList = rule.data.Split(',').Select(x => x.Trim().ToLower());
+                        var statusList = rule.data.Split(',').Select(x => x.Trim().ToLower()).ToList();
+
                         if (statusList.Any())
                         {
                             totalRows = totalRows.Where(x => statusList.Contains(x.Status.ToLower()));
@@ -91,7 +95,6 @@ namespace Answer.Web.Controllers
                 }
             }
             var orderBy = nameof(EquipmentMaintenanceView.Id);
-            var orderDirection = "asc";
 
             if (!string.IsNullOrWhiteSpace(param.sortColumn))
             {
@@ -110,7 +113,7 @@ namespace Answer.Web.Controllers
             totalRows = totalRows.Skip(param.pageSize * (param.pageIndex - 1));
 
             totalRows = totalRows.Take(param.pageSize);
-            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)param.pageSize);
+            var totalPages = (int)Math.Ceiling(totalRecords / (float)param.pageSize);
 
             var results = totalRows.ToList();
 
@@ -127,9 +130,15 @@ namespace Answer.Web.Controllers
 
         public ActionResult Create(string id)
         {
-            var model = new CreateEquipmentMaintenanceViewModel();
+            var loggedUser = GetCurrentUser();
 
-            model.Setup(_equipmentMaintenanceService, id);
+            var model = new CreateEquipmentMaintenanceViewModel();
+            model.NTLogin = loggedUser.Id;
+            model.Setup(_equipmentMaintenanceService, _roleService);
+
+            var myRoles = _roleService.GetMyRoles(loggedUser.Id);
+
+            model.CanAddPreventativeEm = myRoles.Any(x => x.Role_Name.Contains(RoleConstants.ProductionManager));
 
             return View(model);
         }
@@ -141,38 +150,52 @@ namespace Answer.Web.Controllers
 
             var loggedUser = GetCurrentUser();
 
-            model.RequestedById = loggedUser.Id;
-            model.NTLogin = loggedUser.Id;
-
-            model.Status = "REQUESTED";
-
             if (TryUpdateModel(model, form))
             {
+                model.Id = null;
+
+                if (!model.TroubleState)
+                {
+                    model.RequestedById = loggedUser.Id;
+                    model.MaintenanceTask = EquipmentMaintenanceTypeConstants.RoutineMaintenance;
+                    model.Status = EquipmentMaintenanceConstants.Assigned;
+                }
+                else
+                {
+                    model.MaintenanceTask = EquipmentMaintenanceTypeConstants.Repair;
+                    model.Status = EquipmentMaintenanceConstants.Requested;
+                }
+
                 var response = _equipmentMaintenanceService.Create(model);
 
                 if (!response.HasErrors())
                 {
-                    TempData[NotificationConstants.SuccessMessage] = "Equipment for maintenance has been added successfully.";
+                    TempData[NotificationConstants.SuccessMessage] = "Equipment for maintenance has been created successfully.";
 
                     return RedirectToAction("Index");
                 }
 
                 TempData[NotificationConstants.ErrrorMessage] = response.ErrorMessage;
             }
-            model.Setup(_equipmentMaintenanceService, id);
+
+            model.NTLogin = loggedUser.Id;
+            model.Setup(_equipmentMaintenanceService, _roleService);
 
             return View(model);
         }
 
         public ActionResult Edit(string id)
         {
+            var loggedUser = GetCurrentUser();
+
             var vm = new EditEquipmentMaintainanceViewModel();
 
             var model = _equipmentMaintenanceService.GetById(id);
 
             vm.Read(model);
 
-            vm.Setup(_equipmentMaintenanceService, id);
+            vm.NTLogin = loggedUser.Id;
+            vm.Setup(_equipmentMaintenanceService, _roleService);
 
             return View(vm);
         }
@@ -199,7 +222,8 @@ namespace Answer.Web.Controllers
 
             TempData[NotificationConstants.ErrrorMessage] = "There is an error with the request.";
 
-            model.Setup(_equipmentMaintenanceService, id);
+            model.NTLogin = loggedUser.Id;
+            model.Setup(_equipmentMaintenanceService, _roleService);
 
             return View(model);
         }

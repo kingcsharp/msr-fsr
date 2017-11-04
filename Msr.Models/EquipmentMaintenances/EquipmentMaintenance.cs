@@ -5,6 +5,8 @@ namespace Msr.Models.EquipmentMaintenances
 {
     public class EquipmentMaintenance
     {
+        public DateTime? PMLastCompletedDate;
+
         [Key]
         public string Id { get; set; }
         public string ObjectId { get; set; }
@@ -20,5 +22,6 @@ namespace Msr.Models.EquipmentMaintenances
         public string Status { get; set; }
         public string StrNTLogin { get; set; }
         public string ApprovedById { get; set; }
+        public int? FrequencyField { get; set; }
     }
 }

@@ -18,7 +18,7 @@ em.Status,
 abyp.FULL_NAME ApprovedBy,
 em.ApprovedById
 FROM            dbo.Portal_EquipmentMaintenance em
-INNER JOIN A_APPROVED_PEOPLE ap ON ap.Id = em.RequestedById
+LEFT JOIN A_APPROVED_PEOPLE ap ON ap.Id = em.RequestedById
 LEFT JOIN A_APPROVED_PEOPLE abyp ON abyp.ID = em.ApprovedById
 
 GO

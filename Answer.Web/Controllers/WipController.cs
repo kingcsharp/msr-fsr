@@ -5,8 +5,11 @@ using System.Linq;
 using System.Web.Mvc;
 using Answer.Web.ViewModel.Wip;
 using Microsoft.AspNet.Identity;
+using Msr.Infrastructure.Common.Constansts;
 using Msr.Models.Orders;
 using Msr.Models.Parts;
+using Msr.Services.EquipmentMaintenances;
+using Msr.Services.EquipmentMaintenances.ViewModels;
 using Msr.Services.jqGrid;
 using Msr.Services.Notes;
 using Msr.Services.Orders;
@@ -16,6 +19,7 @@ using Msr.Services.Orders.ViewModels;
 using Msr.Services.PartTypes;
 using Msr.Services.Procedures;
 using Msr.Services.Procedures.Messages;
+using Msr.Services.Roles;
 using Msr.Web.ViewModel.Engineering;
 
 namespace Answer.Web.Controllers
@@ -26,12 +30,14 @@ namespace Answer.Web.Controllers
         private OrderService _orderService;
         private TaskService _taskService;
         private ProceduresService _proceduresService;
+        private RoleService _roleService;
 
         public WipController()
         {
             _orderService = new OrderService();
             _taskService = new TaskService();
             _proceduresService = new ProceduresService();
+            _roleService = new RoleService();
         }
 
         public ActionResult Index()
@@ -592,6 +598,64 @@ namespace Answer.Web.Controllers
 
             return RedirectToAction("Details", new {id = fillId});
         }
+
+        public ActionResult AddEquipmentMaintenance(string id)
+        {
+            var loggedUser = GetCurrentUser();
+
+            ViewBag.FillId = id;
+
+            var model = new CreateEquipmentMaintenanceViewModel();
+            model.NTLogin = loggedUser.Id;
+
+            model.Setup(new EquipmentMaintenanceService(), _roleService);
+
+            return PartialView("_AddEquipment", model);
+        }
+
+        [HttpPost]
+        public ActionResult AddEquipmentMaintenance(FormCollection form, int id)
+        {
+            EquipmentMaintenanceService equipmentMaintenanceService = new EquipmentMaintenanceService();
+
+            var model = new CreateEquipmentMaintenanceViewModel();
+            var loggedUser = GetCurrentUser();
+            model.NTLogin = loggedUser.Id;
+
+            if (TryUpdateModel(model, form))
+            {
+                model.Id = null;
+
+                if (!model.TroubleState)
+                {
+                    model.RequestedById = loggedUser.Id;
+                    model.MaintenanceTask = EquipmentMaintenanceTypeConstants.RoutineMaintenance;
+                    model.Status = EquipmentMaintenanceConstants.Assigned;
+                }
+                else
+                {
+                    model.MaintenanceTask = EquipmentMaintenanceTypeConstants.Repair;
+                    model.Status = EquipmentMaintenanceConstants.Requested;
+                }
+
+                var response = equipmentMaintenanceService.Create(model);
+
+                if (!response.HasErrors())
+                {
+                    TempData["SuccessMessage"] = "Equipment maintenance has been created successfully.";
+
+                    return RedirectToAction("Details", "Wip", new { id = id });
+                }
+
+                TempData["ErrorMessage"] = response.ErrorMessage;
+            }
+
+            model.NTLogin = loggedUser.Id;
+            model.Setup(equipmentMaintenanceService, _roleService);
+
+            return RedirectToAction("Details", "Wip", new { id = id });
+        }
+
 
         private List<DocumentView> GetDocViewModel(List<DocumentView> docs, OrderService orderService, int width)
         {

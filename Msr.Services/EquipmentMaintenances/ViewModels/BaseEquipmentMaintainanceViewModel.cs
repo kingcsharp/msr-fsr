@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Mvc;
+using Msr.Infrastructure.Common.Constansts;
+using Msr.Services.Roles;
 
 namespace Msr.Services.EquipmentMaintenances.ViewModels
 {
@@ -25,8 +28,6 @@ namespace Msr.Services.EquipmentMaintenances.ViewModels
 
         public string RequestedById { get; set; }
 
-        public bool? EquipmentTroubleState { get; set; }
-
         public string MaintenanceTask { get; set; }
 
         public string Comments { get; set; }
@@ -39,23 +40,35 @@ namespace Msr.Services.EquipmentMaintenances.ViewModels
 
         public DateTime? DateTime { get; set; }
 
+        [DisplayName("Trouble State")]
         public bool TroubleState { get; set; }
+
         public string Status { get; set; }
 
         public List<SelectListItem> StatusList { get; set; }
 
-
         public string ApprovedById { get; set; }
+
         public string NTLogin { get; set; }
 
+        public DateTime? PMLastCompletedDate { get; set; }
+
+        public int? FrequencyField { get; set; }
+
+        public bool CanAddPreventativeEm { get; set; }
 
         public IEnumerable<SelectListItem> PrimaryLocationList { get; set; }
         public List<SelectListItem> SubLocationFirstList { get; set; }
         public List<SelectListItem> SubLocationSecondList { get; set; }
         public List<SelectListItem> MaintenanceTaskList { get; set; }
 
-        public void Setup(EquipmentMaintenanceService equipmentMaintenanceService, string locationId)
+        public void Setup(EquipmentMaintenanceService equipmentMaintenanceService, RoleService roleService)
         {
+
+            var myRoles = roleService.GetMyRoles(NTLogin);
+
+            CanAddPreventativeEm = myRoles.Any(x => x.Role_Name.Contains(RoleConstants.ProductionManager));
+
             PrimaryLocationList = equipmentMaintenanceService.GetLocation().Select(x => new SelectListItem
             {
                 Text = x.Name,
@@ -108,7 +121,7 @@ namespace Msr.Services.EquipmentMaintenances.ViewModels
             {
                 new SelectListItem {Text = @"Select Status", Value = ""},
                 new SelectListItem {Text = @"Requested", Value = "REQUESTED"},
-                new SelectListItem {Text = @"InProgress", Value = "INPROGRESS"},
+                new SelectListItem {Text = @"Assigned", Value = "ASSIGNED"},
                 new SelectListItem {Text = @"Completed", Value = "COMPLETED"}
             };
 
@@ -127,7 +140,8 @@ namespace Msr.Services.EquipmentMaintenances.ViewModels
             TroubleState = model.TroubleState;
             MaintenanceTask = model.MaintenanceTask;
             Comments = model.Comments;
-            Status = model.Status;
+            PMLastCompletedDate = model.PMLastCompletedDate;
+            FrequencyField = model.FrequencyField;
         }
     }
 }

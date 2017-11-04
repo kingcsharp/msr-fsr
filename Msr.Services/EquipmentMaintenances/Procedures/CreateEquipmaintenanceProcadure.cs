@@ -54,5 +54,11 @@ namespace Msr.Services.EquipmentMaintenances.Procedures
 
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "RequestedById")]
         public string RequestedById { get; set; }
+
+        [StoredProcedureParameter(SqlDbType.DateTime, ParameterName = "PMLastCompletedDate")]
+        public DateTime? PMLastCompletedDate { get; set; }
+
+        [StoredProcedureParameter(SqlDbType.Int, ParameterName = "FrequencyField")]
+        public int? FrequencyField { get; set; }
     }
 }

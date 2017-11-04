@@ -6,13 +6,15 @@
     [SubLocationFirst]  NVARCHAR (100)  NULL,
     [SubLocationSecond] NVARCHAR (100)  NULL,
     [DateTime]          DATETIME        NULL,
-    [RequestedById]       NVARCHAR (50)   NOT NULL,
+    [RequestedById]       NVARCHAR (50)  NULL,
     [TroubleState]      BIT             NULL,
     [MaintenanceTask]   NVARCHAR (50)   NULL,
     [Comments]          NVARCHAR (4000) NULL,
     [Status]            NVARCHAR (50)   NOT NULL,
     [StrNTLogin]        NVARCHAR (50)   NOT NULL,
-    [ApprovedById]        VARCHAR (50)    NULL,
+    [ApprovedById]        VARCHAR (50)    NULL,	
+	[PMLastCompletedDate] DATETIME        NULL,
+	[FrequencyField] INT        NULL,
     CONSTRAINT [PK_PortalEquipmentMaintenance] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

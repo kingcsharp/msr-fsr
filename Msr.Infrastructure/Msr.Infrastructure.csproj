@@ -67,6 +67,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\Constansts\EquipmentMaintenanceTypeConstants.cs" />
+    <Compile Include="Common\Constansts\EquipmentMaintenanceConstants.cs" />
+    <Compile Include="Common\Constansts\RoleConstants.cs" />
     <Compile Include="Common\Constansts\NotificationConstants.cs" />
     <Compile Include="Email\EmailService.cs" />
     <Compile Include="Helpers\AuthenticationHelper.cs" />

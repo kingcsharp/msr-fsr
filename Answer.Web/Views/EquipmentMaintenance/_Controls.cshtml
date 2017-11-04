@@ -32,14 +32,12 @@
         @Html.EditorFor(model => model.DateTime, new { htmlAttributes = new { @class = "form-control datepick ", @placeholder = "Current Date Time", @style="width:530px; margin-left:13px;", } })
         <div style="width:80px; height:35px;margin-left:515px;">
             <span class="input-group-addon"><span class="glyphicon glyphicon-th" style="height:20px;"></span></span>
-        </div>
-                                            
-    </div>
-                                     
+        </div>                              
+    </div>                       
 </div>
 
 <div class="form-group">
-    <label class="col-md-4 control-label" for="EquipmentTroubleState">Equipment State</label>
+    <label class="col-md-4 control-label" for="EquipmentTroubleState">Trouble State</label>
     <div class="col-md-4">
         <div class="checkbox">
             <label for="EquipmentState-0">
@@ -73,6 +71,31 @@
         @Html.TextAreaFor(model => model.Comments,   new { @class = "form-control input-md" })
     </div>
 </div>
+
+@if (Model.CanAddPreventativeEm)
+{
+    <div class="form-group">
+        <label class="col-md-4 control-label" for="DateTime">PM Last Completed Date</label>
+        <div class="col-md-4">
+            <div style="width: 91%;float: left">
+                @Html.EditorFor(model => model.PMLastCompletedDate, new {htmlAttributes = new {@class = "form-control datepick ", @placeholder = "PM Last Completed Date", @style = "",}})
+            </div>
+            <div style="width: 9%; height: 35px;float: left">
+                <span class="input-group-addon"><i class="fa fa-calendar" style="height: 19px;"></i></span>
+            </div>
+        </div>
+    </div>
+                
+               
+    <div class="form-group">
+        <label class="col-md-4 control-label" for="scancode">Frequency Field:</label>
+        <div class="col-md-4">
+            @Html.EditorFor(model => model.FrequencyField, new {htmlAttributes = new {@class = "form-control input-md", @placeholder = ""}})
+            @Html.ValidationMessageFor(model => model.FrequencyField, "", new {@class = "text-danger"})
+        </div>
+    </div>
+}
+
 <div class="form-group">
     <label class="col-md-4 control-label" for="save"></label>
     <div class="col-md-8">

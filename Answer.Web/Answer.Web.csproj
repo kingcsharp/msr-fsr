@@ -1160,6 +1160,7 @@
     <Content Include="Views\ProductionPlanning\_ViewQuote.cshtml" />
     <Content Include="Views\Quote\Create.cshtml" />
     <Content Include="Views\Quote\Index.cshtml" />
+    <Content Include="Views\Wip\_AddEquipment.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

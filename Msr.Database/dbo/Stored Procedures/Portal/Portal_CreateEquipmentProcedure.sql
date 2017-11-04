@@ -15,7 +15,9 @@
 @MaintenanceTask varchar(100),
 @Comments varchar(4000),
 @Status varchar(100),
-@strNTLogin varchar(50)
+@strNTLogin varchar(50),
+@PMLastCompletedDate datetime,
+@FrequencyField int
 
 AS BEGIN
 
@@ -26,10 +28,8 @@ IF @Id is null
 		print 'This is a new location so inserting it now'
 		exec sp_GetUniqueID3 @myID OUTPUT
 		
-		INSERT INTO Portal_EquipmentMaintenance (Id,ScanBarcode,ParentLocation,SubLocationFirst,SubLocationSecond, DateTime, RequestedById,ApprovedById, TroubleState, MaintenanceTask, Comments,Status,strNtLogin)
-		VALUES (@myID,@ScanBarcode,@ParentLocation,@SubLocationFirst,@SubLocationSecond,@DateTime,@RequestedById,@ApprovedById,@TroubleState,
-
-		@MaintenanceTask,@Comments,@Status,@strNTLogin)
+		INSERT INTO Portal_EquipmentMaintenance (Id,ScanBarcode,ParentLocation,SubLocationFirst,SubLocationSecond, DateTime, RequestedById,ApprovedById, TroubleState, MaintenanceTask, Comments,Status,strNtLogin,PMLastCompletedDate, FrequencyField)
+		VALUES (@myID,@ScanBarcode,@ParentLocation,@SubLocationFirst,@SubLocationSecond,@DateTime,@RequestedById,@ApprovedById,@TroubleState,@MaintenanceTask,@Comments,@Status,@strNTLogin,@PMLastCompletedDate,@FrequencyField)
 		SELECT @newID = Id FROM Portal_EquipmentMaintenance WHERE ID = @myID 
 	END
 ELSE
@@ -48,7 +48,9 @@ ELSE
 		MaintenanceTask = @MaintenanceTask,
 		Comments = @Comments,
 		Status = @Status,
-		strNTLogin = @strNTLogin
+		strNTLogin = @strNTLogin,
+		PMLastCompletedDate = @PMLastCompletedDate,
+		FrequencyField =@FrequencyField
 		WHERE Id = @ObjectId
 		
 		SET @newID = @Id

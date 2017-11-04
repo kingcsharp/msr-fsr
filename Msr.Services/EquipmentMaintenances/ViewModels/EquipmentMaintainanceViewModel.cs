@@ -9,6 +9,6 @@ namespace Msr.Services.EquipmentMaintenances.ViewModels
 {
     public class CreateEquipmentMaintenanceViewModel : BaseEquipmentMaintainanceViewModel
     {
-
+        
     }
 }
