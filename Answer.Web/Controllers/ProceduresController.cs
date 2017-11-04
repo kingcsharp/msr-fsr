@@ -251,18 +251,26 @@ namespace Answer.Web.Controllers
 
         public ActionResult View(string id)
         {
-            var saveProcedureViewModel = new ViewProcedureViewModel();
+            var html = "";
+            try
+            {
+                var saveProcedureViewModel = new ViewProcedureViewModel();
 
-            var procedureService = new ProceduresService();
+                var procedureService = new ProceduresService();
 
-            var approvedData = procedureService.GetApprovedData(id);
-            string filePath = Server.MapPath(AppDataGlobalsettingsXml);
+                var approvedData = procedureService.GetApprovedData(id);
+                string filePath = Server.MapPath(AppDataGlobalsettingsXml);
 
-            var doc = new XmlDocument();
-            doc.Load(filePath + approvedData.Object_Id + ".xml");
+                var doc = new XmlDocument();
+                doc.Load(filePath + approvedData.Object_Id + ".xml");
 
-            var html = GetHtml(Server.MapPath(XSLTPath), doc.InnerXml.ToString());
+                html = GetHtml(Server.MapPath(XSLTPath), doc.InnerXml.ToString());
 
+            }
+            catch (Exception ex)
+            {
+
+            }
             return View((object)html);
         }
 
@@ -1005,62 +1013,36 @@ namespace Answer.Web.Controllers
             return View(model);
         }
         [AcceptVerbs(verbs: HttpVerbs.Post)]
-        public ActionResult AddMoniter(GetStepDataResult model, string ProdecureName)
+        public ActionResult SaveMoniter(GetStepDataResult model)
         {
             var proceduresService = new ProceduresService();
             if (ModelState.IsValid)
             {
-                model.AddMonitorForProcedureViewModel.Id = null;
                 model.AddMonitorForProcedureViewModel.StrNTLogin = GetCurrentUser().Id;
                 var response = proceduresService.AddMonitorForProcedure(model: model.AddMonitorForProcedureViewModel);
-                if (response)
+                if (!response.HasErrors())
                 {
-                    TempData["SuccessMessage"] = "Monitor has been added successfully.";
+                    TempData["SuccessMessage"] = model.AddMonitorForProcedureViewModel.Id == null
+                        ? "Monitor has been added successfully."
+                        : "Monitor has been Updated successfully.";
 
-                    return RedirectToAction(actionName: "Steps", routeValues: new { id = model.AddMonitorForProcedureViewModel.Related_Object_Id, ProdecureName = ProdecureName });
+
+                    return RedirectToAction(actionName: "Steps", routeValues: new { id = model.AddMonitorForProcedureViewModel.Related_Object_Id, ProdecureName = model.AddMonitorForProcedureViewModel.ProcedureName });
+                    //return Json(new {id = response.Entity.NewId }, JsonRequestBehavior.AllowGet);
                 }
 
                 TempData["ErrorMessage"] = "Something went wrong.";
                 return RedirectToAction("Steps", "Procedures", new
                 {
                     id = model.AddMonitorForProcedureViewModel.Step_Id,
-                    ProdecureName = ProdecureName
+                    ProdecureName = model.AddMonitorForProcedureViewModel.ProcedureName
                 });
             }
 
             return RedirectToAction("Steps", "Procedures", new
             {
                 id = model.AddMonitorForProcedureViewModel.Step_Id,
-                ProdecureName = ProdecureName
-            });
-        }
-        [AcceptVerbs(verbs: HttpVerbs.Post)]
-        public ActionResult EditMoniter(GetStepDataResult model, string ProdecureName)
-        {
-            var proceduresService = new ProceduresService();
-            if (ModelState.IsValid)
-            {
-                model.AddMonitorForProcedureViewModel.StrNTLogin = GetCurrentUser().Id;
-                var response = proceduresService.EditMonitorForProcedure(model: model.AddMonitorForProcedureViewModel);
-                if (response)
-                {
-                    TempData["SuccessMessage"] = "Monitor has been updated successfully.";
-
-                    return RedirectToAction(actionName: "Steps", routeValues: new { id = model.AddMonitorForProcedureViewModel.Related_Object_Id, ProdecureName = ProdecureName });
-                }
-
-                TempData["ErrorMessage"] = "Something went wrong.";
-                return RedirectToAction("Steps", "Procedures", new
-                {
-                    id = model.AddMonitorForProcedureViewModel.Step_Id,
-                    ProdecureName = ProdecureName
-                });
-            }
-
-            return RedirectToAction("Steps", "Procedures", new
-            {
-                id = model.AddMonitorForProcedureViewModel.Step_Id,
-                ProdecureName = ProdecureName
+                ProdecureName = model.AddMonitorForProcedureViewModel.ProcedureName
             });
         }
         [AcceptVerbs(verbs: HttpVerbs.Post)]
@@ -1087,6 +1069,26 @@ namespace Answer.Web.Controllers
             _proceduresService.SaveReorderSteps(array, procObjectId);
 
             return Json("Ok", JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult AddMoniter(string moniterType, string failAction, string description, string objectId, string relatedObject, string stepId, string procedureName)
+        {
+            var model = new GetStepDataResult
+            {
+                AddMonitorForProcedureViewModel =
+                {
+                    Id = objectId,
+                    Monitor_Type = moniterType,
+                    Fail_Action = failAction,
+                    Description = description ?? "",
+                    Related_Object_Id = relatedObject,
+                    Step_Id = stepId,
+                    ProcedureName = procedureName
+                }
+            };
+            ViewBag.ProcedureName = procedureName;
+            model.AddMonitorForProcedureViewModel.Setup();
+            return PartialView("_Moniter", model);
         }
     }
 

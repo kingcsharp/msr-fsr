@@ -1,0 +1,33 @@
+﻿@model Msr.Services.Procedures.Messages.GetStepDataResult
+@using (Html.BeginForm("SaveMoniter", "Procedures", FormMethod.Post, new { @id = "moniter-form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(x => x.AddMonitorForProcedureViewModel.Id)
+    @Html.HiddenFor(x => x.AddMonitorForProcedureViewModel.Related_Object_Id)
+    @Html.HiddenFor(x => x.AddMonitorForProcedureViewModel.Step_Id)
+    @Html.HiddenFor(x => x.AddMonitorForProcedureViewModel.ProcedureName)
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.AddMonitorForProcedureViewModel.Monitor_Type, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-5">
+                @Html.DropDownListFor(model => model.AddMonitorForProcedureViewModel.Monitor_Type, Model.AddMonitorForProcedureViewModel.MonitorTypesList, new { @class = "form-control selectroles" })
+                @Html.ValidationMessageFor(model => model.AddMonitorForProcedureViewModel.Monitor_Type, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.AddMonitorForProcedureViewModel.Fail_Action, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-5">
+                @Html.DropDownListFor(model => model.AddMonitorForProcedureViewModel.Fail_Action, Model.AddMonitorForProcedureViewModel.FailNextActionList, new { @class = "form-control selectroles" })
+                @Html.ValidationMessageFor(model => model.AddMonitorForProcedureViewModel.Fail_Action, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.AddMonitorForProcedureViewModel.Description, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-5">
+                @Html.TextAreaFor(model => model.AddMonitorForProcedureViewModel.Description, new { @class = "form-control", data_content = "Description" })
+                @Html.ValidationMessageFor(model => model.AddMonitorForProcedureViewModel.Description, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+}

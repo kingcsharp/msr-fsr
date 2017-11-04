@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Web.Mvc;
 
 namespace Msr.Services.Procedures.ViewModels
@@ -114,6 +115,9 @@ namespace Msr.Services.Procedures.ViewModels
 
         public string StrNTLogin { get; set; }
 
+        [NotMapped]
+        public string ProcedureName { get; set; }
+
         public List<SelectListItem> MonitorTypesList { get; set; }
 
         public List<SelectListItem> ShouldBeList { get; set; }
@@ -171,10 +175,10 @@ namespace Msr.Services.Procedures.ViewModels
 
             FailNextActionList = new List<SelectListItem>
             {
-                new SelectListItem {Text = @"Continue to next step.", Value = "CONTINUE"},
-                new SelectListItem {Text = @"Stay at this step until passing result is entered.", Value = "DONOTCLOSE"},
-                new SelectListItem {Text = @"Start Diagnose &amp; Repair Tool.", Value = "DNR"},
-                new SelectListItem {Text = @"Skip all steps and end procedure.", Value = "ENDPROCEDURE"}
+                new SelectListItem {Text = @"CONTINUE", Value = "CONTINUE"},
+                new SelectListItem {Text = @"DO NOT CLOSE", Value = "DONOTCLOSE"},
+                new SelectListItem {Text = @"START DNR", Value = "DNR"},
+                new SelectListItem {Text = @"END PROCEDURE", Value = "ENDPROCEDURE"}
             };
 
             ForceEndActionList = new List<SelectListItem>

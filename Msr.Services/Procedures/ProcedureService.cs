@@ -16,6 +16,7 @@ using Msr.Services.Procedures.Messages;
 using Msr.Services.Procedures.Procedures;
 using Msr.Services.Procedures.ViewModels;
 using Msr.Services.ProcedureVerbs;
+using Msr.Services.PurchesOrder.ViewModels;
 
 namespace Msr.Services.Procedures
 {
@@ -79,8 +80,9 @@ namespace Msr.Services.Procedures
 
             return result;
         }
-        public bool AddMonitorForProcedure(AddMonitorForProcedureViewModel model)
+        public ResultNotification<AddPurchaseResponse> AddMonitorForProcedure(AddMonitorForProcedureViewModel model)
         {
+            var responsePurchase = new ResultNotification<AddPurchaseResponse> { Entity = new AddPurchaseResponse() };
             try
             {
                 var addProcedureMonitorProcedure = new AddProcedureMonitorProcedure()
@@ -153,13 +155,18 @@ namespace Msr.Services.Procedures
 
                 _dbContext.Database.ExecuteStoredProcedure(addProcedureMonitorProcedure);
 
-                return true;
+                responsePurchase.Entity.NewId = addProcedureMonitorProcedure.NewId;
+                responsePurchase.SuccessMessage = "Purchase order has been created successfully.";
+
+                return responsePurchase;
             }
             catch (Exception ex)
             {
                 var message = "Error occured:" + ex.Message;
 
-                return false;
+                responsePurchase.AddError(message);
+
+                return responsePurchase;
             }
         }
         public bool EditMonitorForProcedure(AddMonitorForProcedureViewModel model)

@@ -20,13 +20,13 @@ namespace Answer.Web.Controllers
 
             var model = new GetMoniterViewModel();
 
-            model.Related_Object_Id = objectId; 
+            model.Related_Object_Id = objectId;
 
             model.StrNTLogin = GetCurrentUser().Id;
 
             bool reorderByLatestMonitor = false;
 
-            var totalRows =  procedureService.GetMonitors(model, reorderByLatestMonitor);
+            var totalRows = procedureService.GetMonitors(model, reorderByLatestMonitor);
 
             if (param.where != null && param.where.rules.Any())
             {
@@ -44,7 +44,7 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.Should_Be.ToLower().Contains(rule.data.ToLower()));
                     }
-                   
+
                 }
             }
 
@@ -79,7 +79,7 @@ namespace Answer.Web.Controllers
                 records = totalRecords,
                 rows = results
             };
-          
+
             return Json(json, JsonRequestBehavior.AllowGet);
         }
 
@@ -103,7 +103,7 @@ namespace Answer.Web.Controllers
                 model.Id = null;
                 model.StrNTLogin = GetCurrentUser().Id;
                 var response = proceduresService.AddMonitorForProcedure(model: model);
-                if (response)
+                if (!response.HasErrors())
                 {
                     TempData["SuccessMessage"] = "Monitor has been added successfully.";
 
@@ -122,7 +122,7 @@ namespace Answer.Web.Controllers
 
             var taskService = new ProceduresService();
 
-           var model = taskService.GetMonitorById(id, GetCurrentUser().Id);
+            var model = taskService.GetMonitorById(id, GetCurrentUser().Id);
 
             addMonitorForProcedureViewModel = addMonitorForProcedureViewModel.MapToDto(model);
 
@@ -139,7 +139,7 @@ namespace Answer.Web.Controllers
             {
                 model.StrNTLogin = GetCurrentUser().Id;
                 var response = proceduresService.AddMonitorForProcedure(model: model);
-                if (response)
+                if (!response.HasErrors())
                 {
                     TempData["SuccessMessage"] = "Monitor has been updated successfully.";
 
@@ -169,7 +169,7 @@ namespace Answer.Web.Controllers
             {
                 TempData["SuccessMessage"] = "Monitor has been deleted successfully.";
 
-                 return RedirectToAction(actionName: "Monitors", routeValues: new { id = objId });
+                return RedirectToAction(actionName: "Monitors", routeValues: new { id = objId });
             }
 
             TempData["ErrorMessage"] = "Something went wrong.";
@@ -183,7 +183,7 @@ namespace Answer.Web.Controllers
 
             proceduresService.UpdatePrintOrder(model.Id, model.MonitorNumber.ToString());
 
-            return RedirectToAction(actionName: "Monitors", routeValues: new {id = ViewBag.ObjectId});
+            return RedirectToAction(actionName: "Monitors", routeValues: new { id = ViewBag.ObjectId });
 
         }
 
