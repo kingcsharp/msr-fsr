@@ -86,7 +86,7 @@
                 align: 'left'
             },
             {
-                label: 'Equipment State',
+                label: 'Trouble State',
                 name: 'TroubleState',
                 index: 'TroubleState',
                 colmenu: false,
@@ -222,4 +222,3 @@
 
     });
 }
-
