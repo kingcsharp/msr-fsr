@@ -16,7 +16,11 @@ em.MaintenanceTask,
 em.Comments,
 em.Status,
 abyp.FULL_NAME ApprovedBy,
-em.ApprovedById
+em.ApprovedById,
+em.PemLastCompletedDate,
+em.FrequencyField,
+em.CreatedDate,
+em.UpdatedDate
 FROM            dbo.Portal_EquipmentMaintenance em
 LEFT JOIN A_APPROVED_PEOPLE ap ON ap.Id = em.RequestedById
 LEFT JOIN A_APPROVED_PEOPLE abyp ON abyp.ID = em.ApprovedById

@@ -1,14 +1,12 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Msr.Models.EquipmentMaintenances
 {
     public class EquipmentMaintenance
     {
-        public DateTime? PMLastCompletedDate;
-
-        [Key]
-        public string Id { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
         public string ObjectId { get; set; }
         public string ScanBarcode { get; set; }
         public string ParentLocation { get; set; }
@@ -23,5 +21,8 @@ namespace Msr.Models.EquipmentMaintenances
         public string StrNTLogin { get; set; }
         public string ApprovedById { get; set; }
         public int? FrequencyField { get; set; }
+        public DateTime? PemLastCompletedDate { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public DateTime? UpdatedDate { get; set; }
     }
 }

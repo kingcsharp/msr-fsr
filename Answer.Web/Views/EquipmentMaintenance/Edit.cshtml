@@ -1,9 +1,7 @@
 ﻿@model Msr.Services.EquipmentMaintenances.ViewModels.EditEquipmentMaintainanceViewModel
-
 @{
     ViewBag.Title = "Edit Equipment Maintenance";
 }
-
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="row">
@@ -14,10 +12,11 @@
                 @using (Html.BeginForm("Edit", "EquipmentMaintenance", FormMethod.Post, new { @class = "form-horizontal" }))
                 {
                     <input type="hidden" name="Id" value="@Model.Id" />
+                    <input type="hidden" name="ObjectId" value="@Model.ObjectId" />
+                    <input type="hidden" name="PrimaryLocationId" value="@Model.PrimaryLocationId" />
                     @Html.Partial("Message")
-                    
-                    <fieldset>
 
+                    <fieldset>
                         @Html.Partial("_Controls")
                     </fieldset>
                 }
@@ -26,19 +25,22 @@
     </div>
 </div>
 
-
 @section scripts
 {
     <script src="~/assets/js/moment.min.js"></script>
     <script src="~/assets/js/bootstrap-datetimepicker.min.js"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
-
-
     <script type="text/javascript">
 
-        $(document).ready(function() {
-
+        $(document).ready(function () {
+            if ('@ViewBag.AsignRole' === 'ProductionManager') {
+                $('.readonly').attr("disabled", true);
+            }
+            else if ('@ViewBag.AsignRole' === 'MaintenanceTechnician') {
+                $(".lastcompletedate").prop("readonly", true);
+                $('.readonly').attr("disabled", true);
+            }
             $('.datepick').datetimepicker();
 
             $('.dateSelecter').click(function(parameters) {
@@ -113,6 +115,4 @@
 
         });
     </script>
-
 }
-

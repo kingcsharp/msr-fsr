@@ -19,7 +19,7 @@ namespace Msr.Services.EquipmentMaintenances.ViewModels
             MaintenanceTaskList = new List<SelectListItem>();
         }
 
-        public string Id { get; set; }
+        public int Id { get; set; }
 
         public string ObjectId { get; set; }
 
@@ -51,11 +51,15 @@ namespace Msr.Services.EquipmentMaintenances.ViewModels
 
         public string NTLogin { get; set; }
 
-        public DateTime? PMLastCompletedDate { get; set; }
+        public DateTime? PemLastCompletedDate { get; set; }
 
         public int? FrequencyField { get; set; }
 
         public bool CanAddPreventativeEm { get; set; }
+
+        public DateTime CreatedDate { get; set; }
+
+        public DateTime? UpdatedDate { get; set; }
 
         public IEnumerable<SelectListItem> PrimaryLocationList { get; set; }
         public List<SelectListItem> SubLocationFirstList { get; set; }
@@ -140,8 +144,10 @@ namespace Msr.Services.EquipmentMaintenances.ViewModels
             TroubleState = model.TroubleState;
             MaintenanceTask = model.MaintenanceTask;
             Comments = model.Comments;
-            PMLastCompletedDate = model.PMLastCompletedDate;
+            Status = model.Status;
+            PemLastCompletedDate = model.PemLastCompletedDate;
             FrequencyField = model.FrequencyField;
+            NTLogin = model.StrNTLogin;
         }
     }
 }

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Migrations;
 using System.Linq;
-using EntityFrameworkExtras.EF6;
+using Msr.Infrastructure.Common.Constansts;
 using Msr.Models.EquipmentMaintenances;
 using Msr.Models.Locations;
 using Msr.Repositories;
-using Msr.Services.EquipmentMaintenances.Procedures;
 using Msr.Services.EquipmentMaintenances.ViewModels;
 
 namespace Msr.Services.EquipmentMaintenances
@@ -25,26 +25,27 @@ namespace Msr.Services.EquipmentMaintenances
 
             try
             {
-                var savePartProcedure = new CreateEquipmantMaintenanceProcedure()
+                var entity = new Models.EquipmentMaintenances.EquipmentMaintenance
                 {
-                    Id = model.Id,
                     ScanBarcode = model.ScanBarcode,
-                    PrimaryLocationId = model.PrimaryLocationId,
-                    SubLocationFirstId = model.SubLocationFirstId,
-                    SubLocationSecondId = model.SubLocationSecondId,
+                    ParentLocation = model.PrimaryLocationId,
+                    SubLocationFirst = model.SubLocationFirstId,
+                    SubLocationSecond = model.SubLocationSecondId,
                     DateTime = model.DateTime,
                     TroubleState = model.TroubleState,
                     RequestedById = model.RequestedById,
                     ApprovedById = model.ApprovedById,
                     MaintenanceTask = model.MaintenanceTask,
                     Comments = model.Comments,
-                    NTLogin = model.NTLogin,
+                    StrNTLogin = model.NTLogin,
                     Status = model.Status,
-                    PMLastCompletedDate = model.PMLastCompletedDate,
+                    PemLastCompletedDate = model.PemLastCompletedDate,
                     FrequencyField = model.FrequencyField,
+                    CreatedDate = DateTime.Now
                 };
 
-                _dbContext.Database.ExecuteStoredProcedure(savePartProcedure);
+                _dbContext.EquipmentMaintenances.Add(entity);
+                _dbContext.SaveChanges();
 
                 response.SuccessMessage = "Equipment for maintenance has been created successfully";
             }
@@ -79,7 +80,7 @@ namespace Msr.Services.EquipmentMaintenances
             return _dbContext.LocationViews.Where(x => x.ParentLocation == null).ToList();
         }
 
-        public Models.EquipmentMaintenances.EquipmentMaintenance GetById(string id)
+        public Models.EquipmentMaintenances.EquipmentMaintenance GetById(int id)
         {
             return _dbContext.EquipmentMaintenances.SingleOrDefault(x => x.Id == id);
         }
@@ -90,27 +91,80 @@ namespace Msr.Services.EquipmentMaintenances
 
             try
             {
-                var equipment = _dbContext.EquipmentMaintenances.SingleOrDefault(x => x.Id == model.Id);
+                var equipment = _dbContext.EquipmentMaintenances.Single(x => x.Id == model.Id);
 
-                equipment.ObjectId = model.ObjectId;
-                equipment.ScanBarcode = model.ScanBarcode;
-                equipment.ParentLocation = model.PrimaryLocationId;
-                equipment.SubLocationFirst = model.SubLocationFirstId;
-                equipment.SubLocationSecond = model.SubLocationSecondId;
-                equipment.RequestedById = equipment.RequestedById;
-                equipment.TroubleState = model.TroubleState;
-                equipment.MaintenanceTask = model.MaintenanceTask;
-                equipment.DateTime = model.DateTime;
-                equipment.Comments = model.Comments;
-                equipment.Status = model.Status;
-                equipment.StrNTLogin = model.NTLogin;
-                equipment.ApprovedById = model.ApprovedById;
+                //equipment.ObjectId = model.ObjectId;
+                //equipment.ScanBarcode = model.ScanBarcode;
+                //equipment.ParentLocation = model.PrimaryLocationId;
+                //equipment.SubLocationFirst = model.SubLocationFirstId;
+                //equipment.SubLocationSecond = model.SubLocationSecondId;
+                //equipment.RequestedById = equipment.RequestedById;
+                //equipment.TroubleState = model.TroubleState;
+                //equipment.MaintenanceTask = model.MaintenanceTask;
+                //equipment.DateTime = model.DateTime;
+                //equipment.Comments = model.Comments;
+                //equipment.Status = model.Status;
+                //equipment.StrNTLogin = model.NTLogin;
+                //equipment.ApprovedById = model.ApprovedById;
+                equipment.UpdatedDate = DateTime.Now;
+                equipment.PemLastCompletedDate = DateTime.Now;
+                //equipment.FrequencyField = model.FrequencyField;
+                
 
+                _dbContext.EquipmentMaintenances.AddOrUpdate(equipment);
 
                 _dbContext.SaveChanges();
 
                 response.SuccessMessage = "Equipment for maintenance has been updated successfully";
 
+            }
+            catch (Exception ex)
+            {
+                var message = "Error occured:" + ex.Message;
+                response.AddError(message);
+            }
+            return response;
+        }
+
+        public ResultNotification<string> TakeOwnership(int id, string loginId)
+        {
+            var response = new ResultNotification<string>();
+
+            try
+            {
+                var equipment = _dbContext.EquipmentMaintenances.Single(x => x.Id == id);
+
+                equipment.RequestedById = loginId;
+                equipment.Status = EquipmentMaintenanceConstants.Assigned;
+                equipment.UpdatedDate = DateTime.Now;
+
+                _dbContext.SaveChanges();
+
+                response.SuccessMessage = "Equipment for maintenance has been updated successfully";
+            }
+            catch (Exception ex)
+            {
+                var message = "Error occured:" + ex.Message;
+                response.AddError(message);
+            }
+            return response;
+        }
+
+        public ResultNotification<string> MarkCompleted(int id)
+        {
+            var response = new ResultNotification<string>();
+
+            try
+            {
+                var equipment = _dbContext.EquipmentMaintenances.Single(x => x.Id == id);
+
+                equipment.Status = EquipmentMaintenanceConstants.Completed;
+                equipment.UpdatedDate = DateTime.Now;
+                equipment.PemLastCompletedDate = DateTime.Now;
+
+                _dbContext.SaveChanges();
+
+                response.SuccessMessage = "Equipment for maintenance has been updated successfully";
             }
             catch (Exception ex)
             {

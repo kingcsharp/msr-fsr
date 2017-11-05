@@ -1,5 +1,4 @@
-﻿@model  Msr.Web.ViewModel.Engineering.EngineeringViewModel
-@{
+﻿@{
     ViewBag.Title = "Equipment Maintenance";
 }
 <div class="container-fluid">
@@ -30,7 +29,7 @@
     <script type="text/javascript">
         $(document).ready(function () {         
 
-            LoadEquipmentGrid();  
+            LoadEquipmentGrid('@ViewBag.HasMaintenanceTechnicianRole','@ViewBag.HasProductionManagerRole');  
 
         });
     </script>

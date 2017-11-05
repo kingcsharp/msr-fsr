@@ -29,6 +29,13 @@ namespace Answer.Web.Controllers
         {
             ViewBag.ActiveClass = "EquipmentMaintenance";
 
+            var loggedUser = GetCurrentUser();
+
+            var myRoles = _roleService.GetMyRoles(loggedUser.Id);
+
+            ViewBag.HasMaintenanceTechnicianRole = myRoles.Any(x => x.Role_Name.Contains(RoleConstants.MaintenanceTechnician));
+            ViewBag.HasProductionManagerRole = myRoles.Any(x => x.Role_Name.Contains(RoleConstants.ProductionManager));
+
             return View();
         }
 
@@ -89,6 +96,23 @@ namespace Answer.Web.Controllers
                         if (statusList.Any())
                         {
                             totalRows = totalRows.Where(x => statusList.Contains(x.Status.ToLower()));
+                        }
+                    }
+                    else if (rule.field == nameof(EquipmentMaintenanceView.PemLastCompletedDate))
+                    {
+                        DateTime value;
+                        if (DateTime.TryParse(rule.data, out value))
+                        {
+                            totalRows = totalRows.Where(q => q.PemLastCompletedDate.HasValue && q.PemLastCompletedDate.Value.Day == value.Day &&
+                                                             q.PemLastCompletedDate.Value.Month == value.Month && q.PemLastCompletedDate.Value.Year == value.Year);
+                        }
+                    }
+                    else if (rule.field == nameof(EquipmentMaintenanceView.FrequencyField))
+                    {
+                        int value;
+                        if (int.TryParse(rule.data, out value))
+                        {
+                            totalRows = totalRows.Where(q => q.FrequencyField == value);
                         }
                     }
 
@@ -152,7 +176,7 @@ namespace Answer.Web.Controllers
 
             if (TryUpdateModel(model, form))
             {
-                model.Id = null;
+                model.NTLogin = loggedUser.Id;
 
                 if (!model.TroubleState)
                 {
@@ -184,7 +208,7 @@ namespace Answer.Web.Controllers
             return View(model);
         }
 
-        public ActionResult Edit(string id)
+        public ActionResult Edit(int id)
         {
             var loggedUser = GetCurrentUser();
 
@@ -197,6 +221,8 @@ namespace Answer.Web.Controllers
             vm.NTLogin = loggedUser.Id;
             vm.Setup(_equipmentMaintenanceService, _roleService);
 
+            ViewBag.AsignRole = "ProductionManager";
+
             return View(vm);
         }
 
@@ -204,9 +230,6 @@ namespace Answer.Web.Controllers
         public ActionResult Edit(FormCollection form, string id)
         {
             var model = new EditEquipmentMaintainanceViewModel();
-            var loggedUser = GetCurrentUser();
-            model.ApprovedById = loggedUser.Id;
-            model.NTLogin = loggedUser.Id;
             
             if (TryUpdateModel(model, form))
             {
@@ -221,6 +244,8 @@ namespace Answer.Web.Controllers
             }
 
             TempData[NotificationConstants.ErrrorMessage] = "There is an error with the request.";
+
+            var loggedUser = GetCurrentUser();
 
             model.NTLogin = loggedUser.Id;
             model.Setup(_equipmentMaintenanceService, _roleService);
@@ -369,6 +394,40 @@ namespace Answer.Web.Controllers
             }
 
             return Json(new { locations }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public ActionResult TakeOwnership(int id)
+        {
+            var loggedUser = GetCurrentUser();
+
+            var takeOwnershipResult = _equipmentMaintenanceService.TakeOwnership(id, loggedUser.Id);
+
+            if (!takeOwnershipResult.HasErrors())
+            {
+                TempData[NotificationConstants.SuccessMessage] = "Equipment maintenance has been assigned successfully.";
+            }
+            else
+            {
+                TempData[NotificationConstants.ErrrorMessage] = takeOwnershipResult.ErrorMessage;
+            }
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public ActionResult MarkCompleted(int id)
+        {
+            var result = _equipmentMaintenanceService.MarkCompleted(id);
+
+            if (!result.HasErrors())
+            {
+                TempData[NotificationConstants.SuccessMessage] = "Equipment maintenance status has been set to completed.";
+            }
+            else
+            {
+                TempData[NotificationConstants.ErrrorMessage] = result.ErrorMessage;
+            }
+            return RedirectToAction("Index");
         }
     }
 }

@@ -4,7 +4,7 @@ namespace Msr.Models.EquipmentMaintenances
 {
     public class EquipmentMaintenanceView
     {
-        public string Id { get; set; }
+        public int Id { get; set; }
         public string ObjectId { get; set; }
         public string ParentLocation { get; set; }
         public string SubLocationFirst { get; set; }
@@ -18,5 +18,7 @@ namespace Msr.Models.EquipmentMaintenances
         public string RequestedById { get; set; }
         public string ApprovedById { get; set; }
         public string ApprovedBy { get; set; }
+        public DateTime? PemLastCompletedDate { get; set; }
+        public int? FrequencyField { get; set; }
     }
 }

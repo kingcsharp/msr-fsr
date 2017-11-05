@@ -1,4 +1,4 @@
-﻿function LoadEquipmentGrid() {
+﻿function LoadEquipmentGrid(hasMaintenanceTechnicianRole, hasProductionManagerRole) {
     $.jgrid.defaults.responsive = true;
 
     $.jgrid.defaults.styleUI = 'Bootstrap';
@@ -117,6 +117,28 @@
                 align: 'left'
             },
             {
+                label: 'Last Completed Date',
+                name: 'PemLastCompletedDate',
+                index: 'PemLastCompletedDate',
+                colmenu: false,
+                editable: true,
+                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                formatoptions: { srcformat: "m/d/Y H:i", newformat: "m/d/Y H:i" },
+                formatter: 'date',
+                align: 'left'
+            },
+            {
+                label: 'Frequency',
+                name: 'FrequencyField',
+                index: 'FrequencyField',
+                colmenu: false,
+                editable: true,
+                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                align: 'left'
+            },
+            {
                 label: 'Status',
                 name: 'Status',
                 index: 'Status',
@@ -125,7 +147,7 @@
                 editrules: { required: true },
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                 stype: "select",
-                searchoptions: { value: ":[All];NEW:New;PROCESSING:Processing;COMPLETED:Completed" },
+                searchoptions: { value: ":[All];REQUESTED:Requested;ASSIGNED:Assigned;COMPLETED:Completed" },
                 width: 150,
                 align: 'left'
             },
@@ -137,9 +159,9 @@
                 hidden: false,
                 colmenu: false,
                 editable: false,
-                sortable:false,
+                sortable: false,
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                formatter: EquipmentsEditFormatter, width: 200, align: 'center'
+                formatter: equipmentsEditFormatter, width: 200, align: 'center'
             }
         ],
 
@@ -158,7 +180,7 @@
         height: 'auto',
         gridview: true,
         rowattr: function (rd) {
-            if (rd.TroubleState === "true") { 
+            if (rd.TroubleState === "true") {
                 return { "class": "hilightyellow" };
             }
         },
@@ -175,11 +197,55 @@
             for (i = 0; i < rowIds.length; i++) {
                 //iterate over each row
                 rowData = $('#jqGrid').jqGrid('getRowData', rowIds[i]);
-                //set background style if ColValue === true\
+                
                 if (rowData['TroubleState'] === "true") {
                     $('#jqGrid').jqGrid('setRowData', rowIds[i], false, "hilightyellow");
                 }
+
+                if (hasProductionManagerRole === "True") {
+                    $("#jqGrid").jqGrid('showCol', ["FrequencyField", "PemLastCompletedDate"]);
+                } else {
+                    $("#jqGrid").jqGrid('hideCol', ["FrequencyField", "PemLastCompletedDate"]);
+                }
             }
+
+            $('.take-ownership').on('click',
+                function (e) {
+                    e.preventDefault();
+
+                    var objectId = $(this).data('object-id');
+
+                    eModal.confirm('Do you want to take Ownership ?', 'Confirmation ownership')
+                        .then(confirmCallback, optionalCancelCallback);
+
+                    function confirmCallback() {
+                        window.location.href = "/EquipmentMaintenance/TakeOwnership?id=" + objectId + "";
+                    }
+
+                    function optionalCancelCallback() {
+                        console.log("cancel");
+                    }
+
+                });
+
+            $('.mark-completed').on('click',
+                function (e) {
+                    e.preventDefault();
+
+                    var objectId = $(this).data('object-id');
+
+                    eModal.confirm('Do you want to set completed ?', 'Confirmation delete')
+                        .then(confirmCallback, optionalCancelCallback);
+
+                    function confirmCallback() {
+                        window.location.href = "/EquipmentMaintenance/MarkCompleted?id=" + objectId + "";
+                    }
+
+                    function optionalCancelCallback() {
+                        console.log("cancel");
+                    }
+
+                });
         }
 
     });
@@ -207,11 +273,19 @@
         $(this).datepicker('hide');
     });
 
-    function EquipmentsEditFormatter(cellvalue, options, rowObject) {
+    function equipmentsEditFormatter(cellvalue, options, rowObject) {
+        var thisCellVal = '';
+
+        if (hasMaintenanceTechnicianRole === "True" && (rowObject.Status === "ASSIGNED" || rowObject.Status === "REQUESTED")) {
+            thisCellVal = thisCellVal + '<a href="#" data-object-id="' + rowObject.Id + '" title="Take  Qwnership" class="btn btn-xs btn-warning take-ownership" style="margin:2px;font-size: .8em;"><i class="fa fa-user"></i></a>';
+        }
+        if (hasMaintenanceTechnicianRole === "True" && rowObject.Status === "ASSIGNED") {
+            thisCellVal = thisCellVal + '<a href="#" data-object-id="' + rowObject.Id + '" title="Mark Completed" class="btn btn-xs btn-info mark-completed" style="margin:2px;font-size: .8em;"><i class="fa fa-check-circle"></i></a>';
+        }
 
         var editButton = '<a  title="Edit" href="/EquipmentMaintenance/Edit/' + rowObject.Id + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
 
-        return editButton;
+        return thisCellVal + editButton;
     }
 
     $('#search').click(function () {

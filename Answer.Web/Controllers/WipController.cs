@@ -624,7 +624,7 @@ namespace Answer.Web.Controllers
 
             if (TryUpdateModel(model, form))
             {
-                model.Id = null;
+                model.Id = 0;
 
                 if (!model.TroubleState)
                 {

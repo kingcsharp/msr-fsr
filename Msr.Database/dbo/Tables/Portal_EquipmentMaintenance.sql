@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [dbo].[Portal_EquipmentMaintenance] (
-    [Id]                NVARCHAR (50)   NOT NULL,
+    [Id]                INT   NOT NULL IDENTITY,
     [ObjectId]          NVARCHAR (50)   NULL,
     [ScanBarcode]       NVARCHAR (130)  NULL,
     [ParentLocation]    NVARCHAR (100)  NOT NULL,
@@ -13,8 +13,10 @@
     [Status]            NVARCHAR (50)   NOT NULL,
     [StrNTLogin]        NVARCHAR (50)   NOT NULL,
     [ApprovedById]        VARCHAR (50)    NULL,	
-	[PMLastCompletedDate] DATETIME        NULL,
+	[PemLastCompletedDate] DATETIME        NULL,
 	[FrequencyField] INT        NULL,
+	[CreatedDate] datetime        NOT NULL,
+	[UpdatedDate] datetime        NULL,
     CONSTRAINT [PK_PortalEquipmentMaintenance] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
