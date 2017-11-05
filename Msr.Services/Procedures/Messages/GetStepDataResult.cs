@@ -15,9 +15,23 @@ namespace Msr.Services.Procedures.Messages
             GetMoniterViewModels = new List<GetMoniterViewModel>();
         }
         private string DurationType;
+
         public string Id { get; set; }
         [AllowHtml]
         public string Step_Text { get; set; }
+        public string StepTitle {
+            get
+            {
+                try
+                {
+                    return Step_Text.Substring(Step_Text.IndexOf("<h4>"), Step_Text.IndexOf("</h4>")).Replace("<h4>","").Replace("</h4>","");
+                }
+                catch
+                {
+                    return "";
+                }
+            }
+        }
         public double? Duration { get; set; }
         public string Duration_Type
         {

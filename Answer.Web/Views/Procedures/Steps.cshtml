@@ -58,7 +58,7 @@
                             <input type="hidden" id="StepId" name="Id" value="@step.Id" />
                             <div class="procedure-step row" id='step1'>
 
-                                <div class="col-lg-6 ">
+                                <div class="col-lg-6 ">l
 
                                     <table class="table table-condensed left-table">
                                         <tr>
@@ -66,12 +66,10 @@
                                             <td class='step-number'>@step.Print_Order</td>
                                             <th style='width: 95px'>Predecessor:</th>
                                             <td><input type='text' name='a0' class='form-control' value='@step.Id' /></td>
-                                            <th>Location:</th>
-                                            <td><input type='text' name='b0' class='form-control' value='Non-CU S/R' /></td>
                                         </tr>
                                         <tr>
                                             <th>Step Title:</th>
-                                            <td colspan=5><input type='text' name='c0' class='form-control pre-populated' value='Test Inception' /></td>
+                                            <td colspan=5><input type='text' name='c0' class='form-control pre-populated' value='@step.StepTitle' disabled="disabled" /></td>
                                         </tr>
                                         <tr>
                                             <th>Step Text:</th>
