@@ -22,7 +22,7 @@ namespace Msr.Services.Files
         }
         public IQueryable<FileView> GetFilesQueryable()
         {
-           // _dbContext.FIleViews.AsQueryable().Where(x=>log).ToList();
+            // _dbContext.FIleViews.AsQueryable().Where(x=>log).ToList();
             return _dbContext.FIleViews.AsQueryable();
         }
         public List<ListFileView> SelectListedFiles(string id)
@@ -33,19 +33,29 @@ namespace Msr.Services.Files
 
             return fileListView.ToList();
         }
-        public bool SaveFileUpload(SaveFileUploadViewModel model)
+        public NewFile SaveFileUpload(SaveFileUploadViewModel model)
         {
+            NewFile newFile = new NewFile();
+
             try
             {
                 var saveWorkItemImagesProcedure = new SaveFileUploadProcedure { DocId = model.DocId, OldDocId = model.OldDocId, Name = model.Name, Desc = model.Desc, Path = model.Path, ContentType = model.ContentType, SrcId = model.SrcId, SrcName = model.SrcName, SrcDesc = model.SrcDesc, SrcPath = model.SrcPath, SrcContentType = model.SrcContentType, SrcChanged = model.SrcChanged, DocChanged = model.DocChanged, DropSrc = model.DropSrc, NTLogin = model.NTLogin };
 
                 _dbContext.Database.ExecuteStoredProcedure(saveWorkItemImagesProcedure);
 
-                return true;
+                newFile.Id = saveWorkItemImagesProcedure.NewId;
+
+                newFile.Name = saveWorkItemImagesProcedure.Name;
+
+                newFile.Status = true;
+
+                return newFile;
             }
             catch (Exception ex)
             {
-                return false;
+                newFile.Status = false;
+
+                return newFile;
             }
         }
     }

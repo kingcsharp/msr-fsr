@@ -56,7 +56,7 @@
                 </div>
             </div>
             <!-- The table listing the files available for upload/download -->
-            <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
+            <table role="presentation" class="table table-striped" id="filesUploadTb"><tbody class="files"></tbody></table>
         </form>
         <!-- The template to display files available for upload -->
         <script id="template-upload" type="text/x-tmpl">
@@ -159,13 +159,30 @@
 
     $(document).ready(function () {
         LoadFilesGrid();
-
+        
         $('#fileupload').fileupload({
             // Uncomment the following to send cross-domain cookies:
             //xhrFields: {withCredentials: true},
             url: '/Files/Add',
             uploadTemplateId: "template-upload",
-            downloadTemplateId: "template-download"
+            downloadTemplateId: "template-download",
+            success: function (data) {
+                var rowCount = $("#filesUploadTb td").closest("tr").length;
+                if (rowCount == 1){
+                    var callBackId = $(this).closest(".modal-body").find('#target-control-id').val();
+
+                    $(data).each(function (index) {
+
+                        $('#' + callBackId + '').append($('<option></option>').val(data[index].Id).html(data[index].Name));
+                        $('#' + callBackId + ' option').prop('selected', true);
+
+                    });
+
+                    $(".modal-body").empty();
+                    $('.closeClick').click();
+               
+                }
+            }
 
         }).bind('fileuploaddone', function (e, data) {
 

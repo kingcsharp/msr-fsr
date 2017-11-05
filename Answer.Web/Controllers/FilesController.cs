@@ -111,10 +111,11 @@ namespace Answer.Web.Controllers
             return View();
         }
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Add(List<HttpPostedFileBase> files, string taskId, string[] title)
+        public JsonResult Add(List<HttpPostedFileBase> files, string taskId, string[] title)
         {
             var fileService = new FileService();
 
+            List<NewFile> selectedfiles = new List<NewFile>();
 
             for (int i = 0; i < files.Count; i++)
             {
@@ -149,9 +150,14 @@ namespace Answer.Web.Controllers
                 imageModel.DropSrc = "YES";
                 imageModel.NTLogin = GetCurrentUser().Id;
 
-                fileService.SaveFileUpload(imageModel);
+                var responese = fileService.SaveFileUpload(imageModel);
+
+                if (responese.Status == true)
+                {
+                    selectedfiles.Add(responese);
+                }
             }
-            return Json(new UploadedImageView(), JsonRequestBehavior.AllowGet);
+            return Json(selectedfiles, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult ViewFile(string callBackitem)

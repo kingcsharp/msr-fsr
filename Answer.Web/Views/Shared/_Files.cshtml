@@ -52,7 +52,7 @@
                 </div>
             </div>
             <!-- The table listing the files available for upload/download -->
-            <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
+            <table role="presentation" class="table table-striped" id="filesUploadTb"><tbody class="files"></tbody></table>
         </form>
         <!-- The template to display files available for upload -->
         <script id="template-upload" type="text/x-tmpl">
@@ -137,28 +137,42 @@
 </div>
 <script type="text/javascript" src="~/assets/js/i18n/grid.locale-en.js"></script>
 <script type="text/javascript" src="~/assets/js/jquery.jqGrid.min.js"></script>
-
 <script src="//cdn.rawgit.com/noelboss/featherlight/1.6.1/release/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript" src="~/assets/js/grids/files-dialog.js"></script>
 <script type="text/javascript" src="~/assets/js/jquery.flexslider.js"></script>
 <script type="text/javascript" src="~/assets/js/bootstrap-select.js"></script>
 <script type="text/javascript" src="~/assets/js/finger.min.js"></script>
 <script type="text/javascript" src="~/assets/js/timer.jquery.min.js"></script>
-
 <script src="~/assets/js/plugins/bootstrap3/bootstrap-dialog.min.js"></script>
-
 <script>
 
     $(document).ready(function () {
         LoadGrid();
-
+        var countRows = 0;
         $('#fileupload').fileupload({
             // Uncomment the following to send cross-domain cookies:
             //xhrFields: {withCredentials: true},
             url: '/Files/Add',
             uploadTemplateId: "template-upload",
-            downloadTemplateId: "template-download"
+            downloadTemplateId: "template-download",
+            success: function (data) {
 
+                var callBackId = $(this).closest(".modal-body").find('#target-control-id').val();
+
+                $(data).each(function (index) {
+
+                    $('#' + callBackId + '').append($('<option></option>').val(data[index].Id).html(data[index].Name));
+                    $('#' + callBackId + ' option').prop('selected', true);
+
+                });
+
+                countRows = countRows + 1;
+                var rowCount = $("#filesUploadTb td").closest("tr").length;
+                if (rowCount == countRows) {
+                    $(".modal-body").empty();
+                    $('.closeClick').click();
+                }
+            }
         }).bind('fileuploaddone', function (e, data) {
 
             $('#two').removeClass('active');
@@ -172,6 +186,8 @@
             $('#file-upload-tab').removeClass('active in');
 
             LoadGrid();
+
+
         });
     });
 

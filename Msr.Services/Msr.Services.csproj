@@ -164,6 +164,7 @@
     <Compile Include="EquipmentMaintenances\ViewModels\EditEquipmentMaintainanceViewModel.cs" />
     <Compile Include="EquipmentMaintenances\ViewModels\EquipmentMaintainanceViewModel.cs" />
     <Compile Include="EquipmentMaintenances\ViewModels\GetNewIdModel.cs" />
+    <Compile Include="Files\ViewModels\NewFile.cs" />
     <Compile Include="Orders\Messaging\TaskLogDto.cs" />
     <Compile Include="Procedures\ViewModels\ProcedureStepMonitorsViewModel.cs" />
     <Compile Include="ProductionPlanning\ProductionPlanningService.cs" />
