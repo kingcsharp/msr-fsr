@@ -90,7 +90,7 @@
         <td>
             <p class="name">
                 {% if (file.url) { %}
-                <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.url?'data-gallery':''%}>{%=file.name%}</a>
+                <a target="_blank" href="{%=file.url%}" id="btn" title="{%=file.name%}" download="{%=file.name%}" data-gallery="{%=file.url%}">{%=file.name%}</a>
                 {% } else { %}
                 <span>{%=file.name%}</span>
                 {% } %}
