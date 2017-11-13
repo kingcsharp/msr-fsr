@@ -33,7 +33,7 @@
     <div id="timer-input" class="col-sm-4 timer-input @timerInput">
         <input  type="text" name="timer" class="form-control timer input-lg "  width="120">
     </div>
-    <div class="col-sm-5">
+    <div class="col-sm-4">
         
     
         <button class="timer-btn btn btn-primary btn-lg print-btn pull-left start-timer-btn @startButton start-step" id="start-step"><i class="glyphicon glyphicon-step-forward"></i> Start</button> 
@@ -56,7 +56,7 @@
         <button class="timer-btn btn btn-primary btn-lg print-btn pull-left @doneButton" data-task-log-id="@taskId" id="done-step"><i class="glyphicon glyphicon-stop"></i> Done</button>
 
     </div>
-    <div class="col-sm-3">
+    <div class="col-sm-4">
         @if (!string.IsNullOrWhiteSpace(Model.TaskEditDataResult.RequesteeId) && Model.TaskEditDataResult.RequesteeId != Model.LoggedUserIdResult.Id)
         {
         <button class="btn btn-warning btn-lg print-btn pull-left show-timer-btn" id="assume-step"><i class="glyphicon glyphicon-step-forward"></i> Take over this task</button>
@@ -64,8 +64,8 @@
         
         @if (Model.TaskEditDataResult.Status == "ACCEPTED" || Model.TaskEditDataResult.Status == "REQUESTED")
         {
-            <button data-toggle="modal" data-fill-id="@ViewBag.FillId" data-id="@Model.StepId" data-target="#addNcrModal" class="btn btn-danger btn-lg print-btn pull-right"><i class="fa fa-plus-square"></i> Add NCR</button>
-            <button data-toggle="modal" data-fill-id="@ViewBag.FillId" data-target="#add-new-equipment-model" class="btn btn-danger btn-lg print-btn pull-right"><i class="fa fa-plus-square"></i> EM/PM</button>
+            <button  data-toggle="modal" data-fill-id="@ViewBag.FillId" data-id="@Model.StepId" data-target="#addNcrModal" class="btn btn-danger btn-lg print-btn pull-right"><i class="fa fa-plus-square"></i> Add NCR</button>
+            <button  data-toggle="modal" data-fill-id="@ViewBag.FillId" data-target="#add-new-equipment-model" class="btn btn-danger btn-lg print-btn pull-right"><i class="fa fa-plus-square"></i> EM/PM</button>
         }  
     </div>
 </div>
