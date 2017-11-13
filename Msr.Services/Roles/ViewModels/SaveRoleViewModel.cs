@@ -49,7 +49,7 @@ namespace Msr.Services.Roles.ViewModels
 
         public List<SelectListItem> ListPeopleAssigned { get; set; }
 
-        public void Setup(RoleService roleService, UserService userService, LoggedUserIdResult getCurrentUser,string ntlog)
+        public void Setup(RoleService roleService, UserService userService, LoggedUserIdResult getCurrentUser, string ntlog)
         {
             SecurityLevels = new List<SelectListItem>
             {
@@ -84,19 +84,25 @@ namespace Msr.Services.Roles.ViewModels
             ListChildRoles = roleService.GetActiveRoles().ToList().Select(x => new SelectListItem
             {
                 Text = x.Name,
-                Value = x.ObJect_Id.ToString()
+                Value = x.Id.ToString()
             }).OrderBy(o => o.Text).ToList();
 
             ListPeopleAssigned = userService.GetSearchUser().Select(x => new SelectListItem
             {
                 Text = x.Full_Name,
-                Value = x.Obj_Id
+                Value = x.Root
             }).OrderBy(o => o.Text).ToList();
 
+            //ListPeopleAssigned = roleService.GetApprovedPersons().Select(x => new SelectListItem
+            //{
+            //    Text = x.Full_Name,
+            //    Value = x.Id
+            //}).OrderBy(o => o.Text).ToList();
 
-            ChildRoles = roleService.GetChildRoles(ObjectId,ntlogin:ntlog).Select(x => x.Value).ToList();
 
-            PeopleAssigned = roleService.GetAssignedPeople(Id,ntlogin: ntlog).Select(x => x.Value).ToList();
+            ChildRoles = roleService.GetChildRoles(Id, ntlogin: ntlog).Select(x => x.Value).ToList();
+
+            PeopleAssigned = roleService.GetAssignedPeople(Id, ntlogin: ntlog).Select(x => x.Value).ToList();
         }
 
         public SaveRoleViewModel MapToDto(RolesView model)

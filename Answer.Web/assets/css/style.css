@@ -2138,3 +2138,12 @@ input.pre-populated {
 .back-step {
     width: 85px;
 }
+
+.info-danger {
+    background-color: #ff5a5a;
+}
+
+
+.info-warning {
+    background-color: #ffe4b5;
+}

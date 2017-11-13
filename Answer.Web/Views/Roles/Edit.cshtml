@@ -94,14 +94,13 @@
                 tokenSeparators: [','],
                 multiple: true,
                 allowClear: true,
-                placeholder: "Select People",
+                placeholder: "Select Role",
                 formatNoMatches: function () {
                     return '';
                 }
             });
-            var valueROles = '@childRoles';
-            var selectRolesList = valueROles.split(",");
-            console.log(selectRolesList);
+            var valueRoles = '@childRoles';
+            var selectRolesList = valueRoles.split(",");
             selectRoles.val(selectRolesList).trigger("change");
 
             var selectPeoples = $(".selectassignedpeoples").select2({
@@ -116,8 +115,8 @@
             });
             var valuePeople = '@selectedPeoples';
             var selectedPeoplesList = valuePeople.split(",");
-            console.log(selectedPeoplesList);
-            selectPeoples.val(selectedPeoplesList).trigger("change");
+            
+            $(".selectassignedpeoples").val(selectedPeoplesList).trigger("change");
         });
     </script>
 }

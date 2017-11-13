@@ -6,7 +6,6 @@ using System.Data.SqlClient;
 using System.Linq;
 using Dapper;
 using Msr.Repositories;
-using Msr.Services.Orders.Procedures;
 using Msr.Services.Workflows.Messages;
 using Msr.Services.Workflows.ViewModels;
 
@@ -93,6 +92,41 @@ namespace Msr.Services.Workflows
             catch (Exception e)
             {
                 ////log
+            }
+
+            return result;
+        }
+
+        public ResultNotification<string> CheckOutObject(string objectId, string loginId)
+        {
+            var result = new ResultNotification<string>();
+
+            try
+            {
+                var p = new DynamicParameters();
+
+                p.Add("@newObjID", dbType: DbType.String, direction: ParameterDirection.Output, size: 50);
+                p.Add("@objID", objectId, DbType.String, ParameterDirection.Input, 50);
+                p.Add("@strNTLogin", loginId, DbType.String, ParameterDirection.Input, 50);
+
+                using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
+                {
+                    int i = conn.Execute("A_SP_OBJECT_CHECKOUT", p, commandType: CommandType.StoredProcedure);
+
+                    var newObjID = p.Get<string>("newObjID");
+
+                    result.Entity = newObjID;
+
+                    var sqlMainData = string.Format("exec A_SP_OBJECT_GET_MAIN_DATA '{0}','{1}'", objectId, loginId);
+                    _dbContext.Database.SqlQuery<ObjectDataResult>(sqlMainData).Single();
+
+                    var sqlCheckoutData = string.Format("exec A_SP_OBJECT_CHECKED_TO_ME '{0}','{1}'", objectId, loginId);
+                    _dbContext.Database.SqlQuery<ObjectDataResult>(sqlCheckoutData).Single();
+
+                }
+            }
+            catch (Exception e)
+            {
             }
 
             return result;

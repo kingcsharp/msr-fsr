@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web.Mvc;
 using Msr.Infrastructure.Common.Constansts;
 using Msr.Services.Roles;
+using Msr.Services.Roles.Procedures;
 
 namespace Msr.Services.EquipmentMaintenances.ViewModels
 {
@@ -38,6 +39,7 @@ namespace Msr.Services.EquipmentMaintenances.ViewModels
 
         public string SubLocationSecondId { get; set; }
 
+        [Required]
         public DateTime? DateTime { get; set; }
 
         [DisplayName("Trouble State")]
@@ -47,15 +49,16 @@ namespace Msr.Services.EquipmentMaintenances.ViewModels
 
         public List<SelectListItem> StatusList { get; set; }
 
-        public string ApprovedById { get; set; }
+        public string AssignedToId { get; set; }
 
         public string NTLogin { get; set; }
 
         public DateTime? PemLastCompletedDate { get; set; }
 
+//        [MinLength(1)]
         public int? FrequencyField { get; set; }
 
-        public bool CanAddPreventativeEm { get; set; }
+        public List<GetMyRolesResult> Roles { get; set; }
 
         public DateTime CreatedDate { get; set; }
 
@@ -69,9 +72,7 @@ namespace Msr.Services.EquipmentMaintenances.ViewModels
         public void Setup(EquipmentMaintenanceService equipmentMaintenanceService, RoleService roleService)
         {
 
-            var myRoles = roleService.GetMyRoles(NTLogin);
-
-            CanAddPreventativeEm = myRoles.Any(x => x.Role_Name.Contains(RoleConstants.ProductionManager));
+            Roles = roleService.GetAssignedRoles(NTLogin);
 
             PrimaryLocationList = equipmentMaintenanceService.GetLocation().Select(x => new SelectListItem
             {
@@ -126,7 +127,8 @@ namespace Msr.Services.EquipmentMaintenances.ViewModels
                 new SelectListItem {Text = @"Select Status", Value = ""},
                 new SelectListItem {Text = @"Requested", Value = "REQUESTED"},
                 new SelectListItem {Text = @"Assigned", Value = "ASSIGNED"},
-                new SelectListItem {Text = @"Completed", Value = "COMPLETED"}
+                new SelectListItem {Text = @"Completed", Value = "COMPLETED"},
+                new SelectListItem {Text = @"Scheduled", Value = "SCHEDULED"},
             };
 
         }
@@ -140,7 +142,7 @@ namespace Msr.Services.EquipmentMaintenances.ViewModels
             SubLocationSecondId = model.SubLocationSecond;
             DateTime = model.DateTime;
             RequestedById = model.RequestedById;
-            ApprovedById = model.ApprovedById;
+            AssignedToId = model.AssignedToId;
             TroubleState = model.TroubleState;
             MaintenanceTask = model.MaintenanceTask;
             Comments = model.Comments;

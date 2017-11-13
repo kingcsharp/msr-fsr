@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ namespace Msr.Models.Roles
     {
         public string Id { get; set; }
 
+        [Key]
         public string ObjectId { get; set; }
 
         public string SecurityLevel { get; set; }

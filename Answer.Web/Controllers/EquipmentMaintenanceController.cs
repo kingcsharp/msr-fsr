@@ -31,7 +31,7 @@ namespace Answer.Web.Controllers
 
             var loggedUser = GetCurrentUser();
 
-            var myRoles = _roleService.GetMyRoles(loggedUser.Id);
+            var myRoles = _roleService.GetAssignedRoles(loggedUser.Id);
 
             ViewBag.HasMaintenanceTechnicianRole = myRoles.Any(x => x.Role_Name.Contains(RoleConstants.MaintenanceTechnician));
             ViewBag.HasProductionManagerRole = myRoles.Any(x => x.Role_Name.Contains(RoleConstants.ProductionManager));
@@ -77,9 +77,9 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.RequestedBy.ToLower().Contains(rule.data.ToLower()));
                     }
-                    else if (rule.field == nameof(EquipmentMaintenanceView.ApprovedBy))
+                    else if (rule.field == nameof(EquipmentMaintenanceView.AssignedTo))
                     {
-                        totalRows = totalRows.Where(x => x.ApprovedBy.ToLower().Contains(rule.data.ToLower()));
+                        totalRows = totalRows.Where(x => x.AssignedTo.ToLower().Contains(rule.data.ToLower()));
                     }
                     else if (rule.field == nameof(EquipmentMaintenanceView.TroubleState))
                     {
@@ -158,38 +158,40 @@ namespace Answer.Web.Controllers
 
             var model = new CreateEquipmentMaintenanceViewModel();
             model.NTLogin = loggedUser.Id;
+
             model.Setup(_equipmentMaintenanceService, _roleService);
-
-            var myRoles = _roleService.GetMyRoles(loggedUser.Id);
-
-            model.CanAddPreventativeEm = myRoles.Any(x => x.Role_Name.Contains(RoleConstants.ProductionManager));
 
             return View(model);
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Create(FormCollection form, string id)
+        public ActionResult Create(FormCollection form)
         {
             var model = new CreateEquipmentMaintenanceViewModel();
 
             var loggedUser = GetCurrentUser();
+            model.NTLogin = loggedUser.Id;
 
-            if (TryUpdateModel(model, form))
+            TryUpdateModel(model, form);
+
+            var myRoles = _roleService.GetAssignedRoles(loggedUser.Id);
+
+            var hasProductionManagerRole = myRoles.Any(x => x.Role_Name.Contains(RoleConstants.ProductionManager));
+
+            if (hasProductionManagerRole)
             {
-                model.NTLogin = loggedUser.Id;
-
-                if (!model.TroubleState)
+                if (!model.PemLastCompletedDate.HasValue)
                 {
-                    model.RequestedById = loggedUser.Id;
-                    model.MaintenanceTask = EquipmentMaintenanceTypeConstants.RoutineMaintenance;
-                    model.Status = EquipmentMaintenanceConstants.Assigned;
+                    ModelState.AddModelError(nameof(CreateEquipmentMaintenanceViewModel.PemLastCompletedDate), "PemLastCompletedDate is required");
                 }
-                else
+                if (!model.FrequencyField.HasValue)
                 {
-                    model.MaintenanceTask = EquipmentMaintenanceTypeConstants.Repair;
-                    model.Status = EquipmentMaintenanceConstants.Requested;
+                    ModelState.AddModelError(nameof(CreateEquipmentMaintenanceViewModel.FrequencyField), "FrequencyField is required");
                 }
+            }
 
+            if (ModelState.IsValid)
+            {
                 var response = _equipmentMaintenanceService.Create(model);
 
                 if (!response.HasErrors())
@@ -202,7 +204,6 @@ namespace Answer.Web.Controllers
                 TempData[NotificationConstants.ErrrorMessage] = response.ErrorMessage;
             }
 
-            model.NTLogin = loggedUser.Id;
             model.Setup(_equipmentMaintenanceService, _roleService);
 
             return View(model);
@@ -221,17 +222,17 @@ namespace Answer.Web.Controllers
             vm.NTLogin = loggedUser.Id;
             vm.Setup(_equipmentMaintenanceService, _roleService);
 
-            ViewBag.AsignRole = "ProductionManager";
-
             return View(vm);
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Edit(FormCollection form, string id)
+        public ActionResult Edit(FormCollection form)
         {
             var model = new EditEquipmentMaintainanceViewModel();
-            
-            if (TryUpdateModel(model, form))
+
+            TryUpdateModel(model, form);
+
+            if (ModelState.IsValid)
             {
                 var response = _equipmentMaintenanceService.Update(model);
 

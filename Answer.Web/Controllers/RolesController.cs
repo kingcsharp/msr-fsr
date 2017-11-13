@@ -9,11 +9,20 @@ using System.Linq;
 using System.Web.Mvc;
 using Msr.Services.Orders;
 using Msr.Services.Users;
+using Msr.Services.Workflows;
 
 namespace Answer.Web.Controllers
 {
+    [Authorize]
     public class RolesController : BaseController
     {
+        private WorkflowService _workflowService;
+
+        public RolesController()
+        {
+            _workflowService = new WorkflowService();
+        }
+
         public ActionResult Index()
         {
             var viewModel = new EngineeringViewModel();
@@ -31,17 +40,13 @@ namespace Answer.Web.Controllers
 
             var totalRows = roleService.GetUserRolesQueryable();
 
-            totalRows = totalRows.Where(x => defaultStatusList.Contains(x.Status) && x.Id.Length > 0);
+            totalRows = totalRows.Where(x => defaultStatusList.Contains(x.Status));
 
             if (param.where != null && param.where.rules.Any())
             {
                 foreach (var rule in param.where.rules)
                 {
-                    if (rule.field == nameof(RolesView.Id))
-                    {
-                        totalRows = totalRows.Where(x => x.Id == rule.data.ToLower());
-                    }
-                    else if (rule.field == nameof(RolesView.RoleName))
+                    if (rule.field == nameof(RolesView.RoleName))
                     {
                         totalRows = totalRows.Where(x => x.RoleName.ToLower().Contains(rule.data.ToLower()));
                     }
@@ -101,7 +106,17 @@ namespace Answer.Web.Controllers
 
             var totalPages = (int)Math.Ceiling((float)totalRecords / (float)param.pageSize);
 
-            var results = totalRows.ToList();
+            var results = totalRows.Select(x => new
+            {
+                x.RoleName,
+                x.SecurityLevelName,
+                x.SecurityLevel,
+                x.LockedBy,
+                x.LockedByName,
+                x.Revision,
+                x.Status,
+                x.ObjectId
+            }).ToList();
 
             var json = new
             {
@@ -156,9 +171,13 @@ namespace Answer.Web.Controllers
 
         public ActionResult Edit(string id)
         {
+            var currrentUser = GetCurrentUser();
+
             var roleService = new RoleService();
 
-            var model = roleService.GetRoleByid(id: id);
+            var result = _workflowService.CheckOutObject(id, currrentUser.Id);
+
+            var model = roleService.GetRoleByid(result.Entity);
 
             var saveRoleViewModel = new SaveRoleViewModel();
 

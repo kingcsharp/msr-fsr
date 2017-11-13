@@ -13,5 +13,7 @@ namespace Msr.Services.Users.Messages
         public string Obj_Id { get; set; }
 
         public string Full_Name { get; set; }
+
+        public string Root { get; set; }
     }
 }

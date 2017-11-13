@@ -5,5 +5,6 @@
         public static readonly string Assigned = "ASSIGNED";
         public static readonly string Requested = "REQUESTED";
         public static readonly string Completed = "COMPLETED";
+        public static readonly string Scheduled = "SCHEDULED";
     }
 }

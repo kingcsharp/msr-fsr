@@ -52,7 +52,6 @@ namespace Msr.Services.Roles
         {
             return _dbContext.RolesViews.SingleOrDefault(x => x.ObjectId == id);
         }
-
         public bool Create(SaveRoleViewModel model)
         {
             try
@@ -67,11 +66,11 @@ namespace Msr.Services.Roles
 
                 var ObjectId = _dbContext.Database.SqlQuery<string>(sql);
 
-                var deleteRoleParentSaveProcedure = new DeleteRoleParentProcedure() { ObjId = ObjectId.ToString(), NTLogin = model.NTLogin };
+                var deleteRoleParentSaveProcedure = new DeleteRoleParentProcedure() { ObjId = saveUserRoleProcedure.ReturnID, NTLogin = model.NTLogin };
 
                 _dbContext.Database.ExecuteStoredProcedure(deleteRoleParentSaveProcedure);
 
-                var deleteRolePeopleAssignedProcedure = new DeleteRoleAssignedProcedure() { ObjId = ObjectId.ToString(), NTLogin = model.NTLogin };
+                var deleteRolePeopleAssignedProcedure = new DeleteRoleAssignedProcedure() { ObjId = saveUserRoleProcedure.ReturnID, NTLogin = model.NTLogin };
 
                 _dbContext.Database.ExecuteStoredProcedure(deleteRolePeopleAssignedProcedure);
 
@@ -107,24 +106,24 @@ namespace Msr.Services.Roles
 
                 _dbContext.Database.ExecuteStoredProcedure(saveUserRoleProcedure);
 
-                var deleteRoleParentSaveProcedure = new DeleteRoleParentProcedure() { ObjId = model.ObjectId, NTLogin = model.NTLogin };
+                var deleteRoleParentSaveProcedure = new DeleteRoleParentProcedure() { ObjId = model.Id, NTLogin = model.NTLogin };
 
                 _dbContext.Database.ExecuteStoredProcedure(deleteRoleParentSaveProcedure);
 
-                var deleteRolePeopleAssignedProcedure = new DeleteRoleAssignedProcedure() { ObjId = model.ObjectId, NTLogin = model.NTLogin };
+                var deleteRolePeopleAssignedProcedure = new DeleteRoleAssignedProcedure() { ObjId = model.Id, NTLogin = model.NTLogin };
 
                 _dbContext.Database.ExecuteStoredProcedure(deleteRolePeopleAssignedProcedure);
 
                 foreach (var file in model.ChildRoles)
                 {
-                    var saveFileProcedure = new SaveRoleToRoleProcedure() { Child = file, StrId = model.ObjectId, NTLogin = model.NTLogin };
+                    var saveFileProcedure = new SaveRoleToRoleProcedure() { Child = file, StrId = model.Id, NTLogin = model.NTLogin };
 
                     _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
                 }
 
                 foreach (var file in model.PeopleAssigned)
                 {
-                    var saveFileProcedure = new SaveRoleToRoleProcedure() { Child = file, StrId = model.ObjectId, NTLogin = model.NTLogin };
+                    var saveFileProcedure = new SaveRoleAssignPersonRoleProcedure() { Child = file, StrId = model.Id, NTLogin = model.NTLogin };
 
                     _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
                 }
@@ -139,7 +138,6 @@ namespace Msr.Services.Roles
                 return false;
             }
         }
-
         public bool Delete(string id,string ntlogin)
         {
             try
@@ -193,6 +191,13 @@ namespace Msr.Services.Roles
             var result = _dbContext.Database.SqlQuery<GetMyRolesResult>("EXEC A_SP_ROLES_GET_MY_ROLES @myID, @strNTLogin", myID, strNTLogin).ToList();
 
             return result;
+        }
+
+        public List<GetMyRolesResult> GetAssignedRoles(string personId)
+        {
+            var result = _dbContext.Database.SqlQuery<GetMyRolesResult>($"SELECT distinct ROLE_ID, ROLE, PERSON, STATUS, ROLE_NAME FROM A_APPROVED_ROLE_ASSIGNEES WHERE PERSON = {personId}").ToList();
+
+            return result.Where(x => x.Status == "ACTIVE").ToList();
         }
 
     }

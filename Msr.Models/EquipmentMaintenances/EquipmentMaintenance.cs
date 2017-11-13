@@ -19,7 +19,7 @@ namespace Msr.Models.EquipmentMaintenances
         public string Comments { get; set; }
         public string Status { get; set; }
         public string StrNTLogin { get; set; }
-        public string ApprovedById { get; set; }
+        public string AssignedToId { get; set; }
         public int? FrequencyField { get; set; }
         public DateTime? PemLastCompletedDate { get; set; }
         public DateTime CreatedDate { get; set; }

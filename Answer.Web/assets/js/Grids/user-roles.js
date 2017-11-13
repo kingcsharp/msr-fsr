@@ -6,17 +6,7 @@
         emptyrecords: 'No records to display',
         datatype: "json",
         colModel: [
-            {
-                label: 'Id',
-                name: 'Id',
-                index: 'Id',
-                key: true,
-                colmenu: false,
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                width: 50,
-                align: 'left'
-            },
+           
             {
                 label: 'Role Name',
                 name: 'RoleName',
@@ -63,8 +53,8 @@
             },
             {
                 label: 'Revision',
-                name: 'Rev',
-                index: 'Rev',
+                name: 'Revision',
+                index: 'Revision',
                 colmenu: false,
                 editable: true,
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
@@ -92,7 +82,7 @@
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 align: 'center'
             },
-            { name: 'Actions', index: 'ID', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: RolesEditFormatter, width: 150, align: 'center' }
+            { name: 'Actions', index: 'ObjectId', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: RolesEditFormatter, width: 150, align: 'center' }
         ],
         ajaxRowOptions: {
             type: "POST",
@@ -127,11 +117,9 @@
                     .then(confirmCallback, optionalCancelCallback);
 
                 function confirmCallback() {
-                    console.log("ok")
-                    window.location.href = "/Roles/RoleDelete/" + callBackId
+                    window.location.href = "/Roles/RoleDelete/" + callBackId;
                 }
                 function optionalCancelCallback() {
-                    console.log("cancel")
                 }
 
             })
@@ -156,7 +144,13 @@
         searchOperators: true
     });
     function RolesEditFormatter(cellvalue, options, rowObject) {
-        var editButton = '<a  title="Edit" href="/Roles/Edit/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
+        
+        var editButton = '';
+
+        if (rowObject.Status !== 'APPROVED_BUT_REVISING') {
+            editButton = '<a  title="Edit" href="/Roles/Edit/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
+        }
+        
         var detailbutton = '<a title="Detail" href="/Roles/Detail/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-eye"></i></a>';
         var deleteButton = '';
         var buttonWorkflowLeft = '';

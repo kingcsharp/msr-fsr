@@ -1,4 +1,5 @@
-﻿@model Msr.Services.EquipmentMaintenances.ViewModels.CreateEquipmentMaintenanceViewModel
+﻿@using Msr.Infrastructure.Common.Constansts
+@model Msr.Services.EquipmentMaintenances.ViewModels.CreateEquipmentMaintenanceViewModel
 @{
     ViewBag.Title = "Create Equipment Maintenance";
 }
@@ -48,7 +49,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-4 control-label" for="DateTime">Date/Time</label>
+                            <label class="col-md-4 control-label" for="DateTime">Created On</label>
                             <div class="input-group date  col-md-4">
                                 @Html.EditorFor(model => model.DateTime, new { htmlAttributes = new { @class = "form-control datepick ", @placeholder = "Current Date Time", @style = "width:530px; margin-left:13px;", } })
                                 <div style="width:80px; height:35px;margin-left:515px;">
@@ -69,43 +70,55 @@
                             </div>
                         </div>
                      
-                        <div class="form-group">
-                            <label class="col-md-4 control-label" for="comments">Comments</label>
-                            <div class="col-md-4">
-                                @Html.TextAreaFor(model => model.Comments, new { @class = "form-control input-md" })
-                            </div>
-                        </div>
-                        
-                        @if (Model.CanAddPreventativeEm)
+                     
+                        @if (Model.Roles.Any(x => x.Role_Name == RoleConstants.ProductionManager || x.Role_Name == RoleConstants.MaintenanceTechnician))
                         {
                             <div class="form-group">
-                                <label class="col-md-4 control-label" for="DateTime">PM Last Completed Date</label>
+                                <label class="col-md-4 control-label" for="comments">Comments</label>
                                 <div class="col-md-4">
-                                    <div style="width: 70%;float: left">
-                                        @Html.EditorFor(model => model.PemLastCompletedDate, new {htmlAttributes = new {@class = "form-control datepick ", @placeholder = "PM Last Completed Date", @style = "",}})
+                                    @Html.TextAreaFor(model => model.Comments, new {@class = "form-control input-md"})
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            @Html.HiddenFor(model => model.Comments)
+                        }
+
+                        @if (Model.Roles.Any(x => x.Role_Name == RoleConstants.ProductionManager))
+                        {
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="PMLastCompletedDate">PM Last Completed Date</label>
+                                <div class="col-md-4">
+                                    <div style="width: 91%;float: left">
+                                        @Html.EditorFor(model => model.PemLastCompletedDate, new { htmlAttributes = new { @class = "form-control datepick lastcompletedate", @placeholder = "PM Last Completed Date", @style = "", } })
+                                        @Html.ValidationMessageFor(model => model.PemLastCompletedDate, "", new { @class = "text-danger" })
                                     </div>
-                                    <div style="width: 30%; height: 35px;float: left">
+                                    <div style="width: 9%; height: 35px;float: left">
                                         <span class="input-group-addon"><i class="fa fa-calendar" style="height: 19px;"></i></span>
                                     </div>
                                 </div>
                             </div>
-                
-               
+
                             <div class="form-group">
                                 <label class="col-md-4 control-label" for="scancode">Frequency Field:</label>
                                 <div class="col-md-4">
-                                    @Html.EditorFor(model => model.FrequencyField, new {htmlAttributes = new {@class = "form-control input-md", @placeholder = ""}})
-                                    @Html.ValidationMessageFor(model => model.FrequencyField, "", new {@class = "text-danger"})
+                                    @Html.EditorFor(model => model.FrequencyField, new { htmlAttributes = new { @class = "form-control input-md", @placeholder = "" } })
+                                    @Html.ValidationMessageFor(model => model.FrequencyField, "", new { @class = "text-danger" })
                                 </div>
                             </div>
                         }
-
+                        else
+                        {
+                            @Html.HiddenFor(model => model.PemLastCompletedDate)
+                            @Html.HiddenFor(model => model.FrequencyField)
+                        }
                           
                        
                         <div class="form-group">
                             <label class="col-md-4 control-label" for="save"></label>
                             <div class="col-md-8">
-                                <input type="submit" name="btn" value="Submit" class="btn btn-success" />
+                                <input type="submit" value="Submit" class="btn btn-success" />
                                 @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-danger" })
                             </div>
                         </div>

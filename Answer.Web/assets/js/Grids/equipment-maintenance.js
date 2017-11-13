@@ -18,7 +18,6 @@
                 colmenu: false,
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                width: 100,
                 align: 'left'
             },
             {
@@ -53,7 +52,7 @@
                 align: 'left'
             },
             {
-                label: 'Date/Time',
+                label: 'Created On',
                 name: 'DateTime',
                 index: 'DateTime',
                 colmenu: false,
@@ -76,9 +75,9 @@
             },
 
             {
-                label: 'Approved By',
-                name: 'ApprovedBy',
-                index: 'ApprovedBy',
+                label: 'Assigned To',
+                name: 'AssignedTo',
+                index: 'AssignedTo',
                 colmenu: false,
                 editable: true,
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
@@ -148,7 +147,6 @@
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                 stype: "select",
                 searchoptions: { value: ":[All];REQUESTED:Requested;ASSIGNED:Assigned;COMPLETED:Completed" },
-                width: 150,
                 align: 'left'
             },
             {
@@ -161,7 +159,9 @@
                 editable: false,
                 sortable: false,
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                formatter: equipmentsEditFormatter, width: 200, align: 'center'
+                formatter: equipmentsEditFormatter,
+                
+                align: 'center'
             }
         ],
 
@@ -194,19 +194,41 @@
         colMenu: true,
         gridComplete: function () {
             var rowIds = $('#jqGrid').jqGrid('getDataIDs');
+
             for (i = 0; i < rowIds.length; i++) {
                 //iterate over each row
                 rowData = $('#jqGrid').jqGrid('getRowData', rowIds[i]);
-                
-                if (rowData['TroubleState'] === "true") {
-                    $('#jqGrid').jqGrid('setRowData', rowIds[i], false, "hilightyellow");
+
+
+                if (rowData['PemLastCompletedDate'] !== null &&
+                    (rowData['Status'] === "ASSIGNED" || rowData['Status'] === "REQUESTED")) {
+
+                    var pmDate = Date.parse(rowData['PemLastCompletedDate']);
+
+                    var currentDate = new Date();
+                    var currentDateWith7Days = new Date();
+                    currentDateWith7Days.setDate(currentDateWith7Days.getDate() + 7);
+
+                    if (pmDate > currentDate && currentDateWith7Days > pmDate) {
+                        $('#jqGrid').jqGrid('setRowData', rowIds[i], false, "info-warning");
+                    }
+
+                    if (currentDate > pmDate) {
+                        $('#jqGrid').jqGrid('setRowData', rowIds[i], false, "info-danger");
+                    }
+                } else {
+                    if (rowData['TroubleState'] === "true") {
+                        $('#jqGrid').jqGrid('setRowData', rowIds[i], false, "info-danger");
+                    }
                 }
+
 
                 if (hasProductionManagerRole === "True") {
                     $("#jqGrid").jqGrid('showCol', ["FrequencyField", "PemLastCompletedDate"]);
                 } else {
                     $("#jqGrid").jqGrid('hideCol', ["FrequencyField", "PemLastCompletedDate"]);
                 }
+
             }
 
             $('.take-ownership').on('click',
@@ -275,7 +297,7 @@
 
     function equipmentsEditFormatter(cellvalue, options, rowObject) {
         var thisCellVal = '';
-
+        
         if (hasMaintenanceTechnicianRole === "True" && (rowObject.Status === "ASSIGNED" || rowObject.Status === "REQUESTED")) {
             thisCellVal = thisCellVal + '<a href="#" data-object-id="' + rowObject.Id + '" title="Take  Qwnership" class="btn btn-xs btn-warning take-ownership" style="margin:2px;font-size: .8em;"><i class="fa fa-user"></i></a>';
         }

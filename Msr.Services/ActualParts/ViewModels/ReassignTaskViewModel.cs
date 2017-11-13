@@ -45,9 +45,9 @@ namespace Msr.Services.ActualParts.ViewModels
 
             GroupList.Add(new SelectListItem { Value = "", Text = "--Select Group--" });
 
-            GroupList.AddRange(roleService.GetUserRolesQueryable().Select(x => new SelectListItem
+            GroupList.AddRange(roleService.GetUserRolesQueryable().ToList().Select(x => new SelectListItem
             {
-                Value = x.Id,
+                Value = x.Id.ToString(),
                 Text = x.RoleName
             }).Distinct().OrderBy(o => o.Text));
         }

@@ -31,9 +31,11 @@ namespace Answer.Web.Controllers
         private TaskService _taskService;
         private ProceduresService _proceduresService;
         private RoleService _roleService;
+        private EquipmentMaintenanceService _equipmentMaintenanceService;
 
         public WipController()
         {
+            _equipmentMaintenanceService = new EquipmentMaintenanceService();
             _orderService = new OrderService();
             _taskService = new TaskService();
             _proceduresService = new ProceduresService();
@@ -622,21 +624,27 @@ namespace Answer.Web.Controllers
             var loggedUser = GetCurrentUser();
             model.NTLogin = loggedUser.Id;
 
-            if (TryUpdateModel(model, form))
+            TryUpdateModel(model, form);
+
+            var myRoles = _roleService.GetAssignedRoles(loggedUser.Id);
+
+            var hasProductionManagerRole = myRoles.Any(x => x.Role_Name.Contains(RoleConstants.ProductionManager));
+
+            if (hasProductionManagerRole)
+            {
+                if (!model.PemLastCompletedDate.HasValue)
+                {
+                    ModelState.AddModelError(nameof(CreateEquipmentMaintenanceViewModel.PemLastCompletedDate), "PemLastCompletedDate is required");
+                }
+                if (!model.FrequencyField.HasValue)
+                {
+                    ModelState.AddModelError(nameof(CreateEquipmentMaintenanceViewModel.FrequencyField), "FrequencyField is required");
+                }
+            }
+
+            if (ModelState.IsValid)
             {
                 model.Id = 0;
-
-                if (!model.TroubleState)
-                {
-                    model.RequestedById = loggedUser.Id;
-                    model.MaintenanceTask = EquipmentMaintenanceTypeConstants.RoutineMaintenance;
-                    model.Status = EquipmentMaintenanceConstants.Assigned;
-                }
-                else
-                {
-                    model.MaintenanceTask = EquipmentMaintenanceTypeConstants.Repair;
-                    model.Status = EquipmentMaintenanceConstants.Requested;
-                }
 
                 var response = equipmentMaintenanceService.Create(model);
 

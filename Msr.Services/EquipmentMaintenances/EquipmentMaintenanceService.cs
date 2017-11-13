@@ -33,16 +33,27 @@ namespace Msr.Services.EquipmentMaintenances
                     SubLocationSecond = model.SubLocationSecondId,
                     DateTime = model.DateTime,
                     TroubleState = model.TroubleState,
-                    RequestedById = model.RequestedById,
-                    ApprovedById = model.ApprovedById,
                     MaintenanceTask = model.MaintenanceTask,
                     Comments = model.Comments,
                     StrNTLogin = model.NTLogin,
-                    Status = model.Status,
                     PemLastCompletedDate = model.PemLastCompletedDate,
                     FrequencyField = model.FrequencyField,
                     CreatedDate = DateTime.Now
                 };
+
+                entity.RequestedById = model.NTLogin;
+
+                if (model.TroubleState)
+                {
+                    entity.MaintenanceTask = EquipmentMaintenanceTypeConstants.Repair;
+                    entity.Status = EquipmentMaintenanceConstants.Requested;
+                }
+                else
+                {
+                    entity.MaintenanceTask = EquipmentMaintenanceTypeConstants.RoutineMaintenance;
+                    entity.Status = EquipmentMaintenanceConstants.Assigned;
+                    entity.AssignedToId = model.NTLogin;
+                }
 
                 _dbContext.EquipmentMaintenances.Add(entity);
                 _dbContext.SaveChanges();
@@ -105,11 +116,11 @@ namespace Msr.Services.EquipmentMaintenances
                 //equipment.Comments = model.Comments;
                 //equipment.Status = model.Status;
                 //equipment.StrNTLogin = model.NTLogin;
-                //equipment.ApprovedById = model.ApprovedById;
                 equipment.UpdatedDate = DateTime.Now;
                 equipment.PemLastCompletedDate = DateTime.Now;
-                //equipment.FrequencyField = model.FrequencyField;
-                
+                equipment.Comments = model.Comments;
+                equipment.FrequencyField = model.FrequencyField;
+
 
                 _dbContext.EquipmentMaintenances.AddOrUpdate(equipment);
 
@@ -134,7 +145,7 @@ namespace Msr.Services.EquipmentMaintenances
             {
                 var equipment = _dbContext.EquipmentMaintenances.Single(x => x.Id == id);
 
-                equipment.RequestedById = loginId;
+                equipment.AssignedToId = loginId;
                 equipment.Status = EquipmentMaintenanceConstants.Assigned;
                 equipment.UpdatedDate = DateTime.Now;
 
@@ -158,9 +169,16 @@ namespace Msr.Services.EquipmentMaintenances
             {
                 var equipment = _dbContext.EquipmentMaintenances.Single(x => x.Id == id);
 
-                equipment.Status = EquipmentMaintenanceConstants.Completed;
+                if (equipment.PemLastCompletedDate.HasValue)
+                {
+                    equipment.Status = EquipmentMaintenanceConstants.Scheduled;
+                }
+                else
+                {
+                    equipment.Status = EquipmentMaintenanceConstants.Completed;
+                }
+
                 equipment.UpdatedDate = DateTime.Now;
-                equipment.PemLastCompletedDate = DateTime.Now;
 
                 _dbContext.SaveChanges();
 

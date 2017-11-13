@@ -15,9 +15,8 @@ namespace Msr.Models.EquipmentMaintenances
         public string Comments { get; set; }
         public string Status { get; set; }
         public string RequestedBy { get; set; }
+        public string AssignedTo { get; set; }
         public string RequestedById { get; set; }
-        public string ApprovedById { get; set; }
-        public string ApprovedBy { get; set; }
         public DateTime? PemLastCompletedDate { get; set; }
         public int? FrequencyField { get; set; }
     }
