@@ -4,12 +4,12 @@ using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Answer.Web.Controllers;
 using Msr.Infrastructure.Email;
 
 namespace Msr.Web.Controllers
 {
-    [Authorize]
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         public ActionResult Index()
         {

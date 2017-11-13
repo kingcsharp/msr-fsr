@@ -24,7 +24,6 @@ using Msr.Web.ViewModel.Engineering;
 
 namespace Answer.Web.Controllers
 {
-    [Authorize]
     public class WipController : BaseController
     {
         private OrderService _orderService;

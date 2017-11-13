@@ -13,7 +13,6 @@ using Answer.Web.Controllers;
 
 namespace Msr.Web.Controllers
 {
-    [Authorize]
     public class BuyerController : BaseController
     {
         public ActionResult Index()

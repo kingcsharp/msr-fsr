@@ -23,7 +23,6 @@ using Answer.Web.Controllers;
 
 namespace Msr.Web.Controllers
 {
-    [Authorize]
     public class UserController : BaseController
     {
         public UserController()

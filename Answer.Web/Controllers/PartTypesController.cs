@@ -11,7 +11,6 @@ using Msr.Web.ViewModel.Engineering;
 
 namespace Answer.Web.Controllers
 {
-    [Authorize]
     public class PartTypesController : BaseController
     {
         public ActionResult Index()

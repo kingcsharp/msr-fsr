@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Configuration;
 using System.Web.Mvc;
+using Answer.Web.Controllers;
 using Msr.Infrastructure.Email;
 using Msr.Web.ViewModel.Help;
 
 namespace Msr.Web.Controllers
 {
-    [Authorize]
-    public class HelpController : Controller
+    public class HelpController : BaseController
     {
         [HttpPost]
         public JsonResult SupportRequest(SupportViewModel viewModel)

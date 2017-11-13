@@ -15,7 +15,6 @@ using Msr.Services.Roles;
 
 namespace Answer.Web.Controllers
 {
-    [Authorize]
     public class AdministrationController : BaseController
     {
         private AdministrationService _administrationService;

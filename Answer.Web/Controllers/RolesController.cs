@@ -13,7 +13,6 @@ using Msr.Services.Workflows;
 
 namespace Answer.Web.Controllers
 {
-    [Authorize]
     public class RolesController : BaseController
     {
         private WorkflowService _workflowService;

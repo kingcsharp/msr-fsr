@@ -14,7 +14,6 @@ using Answer.Web.Controllers;
 
 namespace Msr.Web.Controllers
 {
-    [Authorize]
     public class PartsReportingController : BaseController
     {
         public ActionResult Index()

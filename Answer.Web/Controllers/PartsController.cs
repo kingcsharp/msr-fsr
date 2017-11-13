@@ -16,7 +16,6 @@ using Msr.Services.Roles.Messages;
 
 namespace Answer.Web.Controllers
 {
-    [Authorize]
     public class PartsController : BaseController
     {
         private readonly LocationService _locationService;

@@ -17,7 +17,6 @@ using Msr.Web.Controllers;
 
 namespace Answer.Web.Controllers
 {
-    [Authorize]
     public class DocController : BaseController
     {
         public ActionResult View(string filePath, string fileType, string fileName, int? height)
