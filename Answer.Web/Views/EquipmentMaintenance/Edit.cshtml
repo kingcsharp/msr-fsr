@@ -45,7 +45,13 @@
             else if (hasMaintenanceTechnician === 'True') {
                 $(".lastcompletedate").prop("readonly", true);
                 $('.readonly').attr("disabled", true);
+            } else {
+                $('.readonly').attr("disabled", true);
+                $(".lastcompletedate").prop("readonly", true);
+                $('.readonly').attr("disabled", true);
+                $('.submit-form-equipment').hide();
             }
+
             $('.datepick').datetimepicker();
 
             $('.dateSelecter').click(function(parameters) {
