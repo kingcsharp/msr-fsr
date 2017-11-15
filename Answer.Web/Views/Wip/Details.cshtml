@@ -205,7 +205,7 @@
             <div class="modal-body" id="print-other-container"></div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-info" id="display-report"><i class="fa fa-print"></i> Display</button>
-                <button type="button" class="btn btn-info" id="print-other-report" onclick="PrintReport('print-other-content')" style="display: none"><i class="fa fa-print"></i> Print Report</button>
+                <button type="button" class="btn btn-info" id="print-other-report" style="display: none"><i class="fa fa-print"></i> Print Report</button>
                 <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close-o"></i> Cancel</button>
             </div>
         </div>
@@ -261,9 +261,15 @@
     <script type="text/javascript" src="~/assets/js/ObjectAssign.js"></script>
     <script type="text/javascript" src="~/assets/js/wip-detail.js"></script>
     <script type="text/javascript" src="~/assets/js/docviewer.js"></script>
+    <script type="text/javascript" src="~/assets/js/printThis.js"></script>
     <script type="text/javascript" src="~/assets/js/timer.jquery.min.js"></script>
 
     <script type="text/javascript">
+
+        $('#print-other-report').on('click',
+            function() {
+                $('#print-other-content').printThis();
+            });
 
         function PrintReport(id) {
 
