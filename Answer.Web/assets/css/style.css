@@ -2148,13 +2148,17 @@ input.pre-populated {
     background-color: #ffe4b5;
 }
 
-.underline {
+.step-underline {
     text-decoration: underline;
     font-weight: bold;
 }
 .bold {
     font-weight: bold;
 }
-#print-other-content .table > tbody > tr > td, .flat-blue .table > tbody > tr > th, .flat-blue .table > tfoot > tr > td, .flat-blue .table > tfoot > tr > th {
+
+#print-other-content .table > tbody > tr > td,
+#print-other-content .flat-blue .table > tbody > tr > th,
+#print-other-content .flat-blue .table > tfoot > tr > td,
+#print-other-content .flat-blue .table > tfoot > tr > th {
     border-color: #0E0D0D !important;
 }
