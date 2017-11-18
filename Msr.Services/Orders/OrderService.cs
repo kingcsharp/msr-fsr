@@ -454,7 +454,7 @@ namespace Msr.Services.Orders
 
         public WipStepDetailsResponse GetWipStepDetails(int stepId, int fillId, string login, int? phStepId)
         {
-            var detailsResponse = new WipStepDetailsResponse {StepId = stepId, FillId = fillId};
+            var detailsResponse = new WipStepDetailsResponse {StepId = stepId, FillId = fillId, LoginId = login};
 
             using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
             {

@@ -18,7 +18,8 @@
     }
 }
 
-@if ((Model.TaskEditDataResult.Status == "REQUESTED" || Model.TaskEditDataResult.Status == "ACCEPTED") && Model.TaskRunningDto == null)
+@*getButtons*@
+@if (Model.HasRole && (Model.TaskEditDataResult.Status != "ACCEPTED") && Model.TaskRunningDto == null)
 {
     startButton = "show";
     timerInput = "";
