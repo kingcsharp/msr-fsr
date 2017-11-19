@@ -414,7 +414,7 @@ namespace Answer.Web.Controllers
 
             //checkMyRole(myRS("GROUP_REQUESTEE_ID")) or strNTLogin = myRS("REQUESTEE_ID") then
             //getButtons
-            if (myRoles.Any(x => x.Role_Id == response.TaskEditDataResult.GroupRequesteeId) && response.TaskEditDataResult.RequesteeId == loggedUserId.Id)
+            if (myRoles.Any(x => x.Role_Id == response.TaskEditDataResult.GroupRequesteeId) || response.TaskEditDataResult.RequesteeId == loggedUserId.Id)
             {
                 response.HasRole = true;
             }
