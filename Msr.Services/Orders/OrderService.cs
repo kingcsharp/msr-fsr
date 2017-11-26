@@ -470,7 +470,7 @@ namespace Msr.Services.Orders
                     detailsResponse.TaskEditDataResult.Description = detailsResponse.TaskEditDataResult.Description.Replace("<<bb>>", "<br/><h4>").Replace("<</bb>>", "</h4>").Replace("<<nl/>>", "<br/>");
                 }
 
-                var taskLog = _dbContext.TaskLogs.SingleOrDefault(x => x.TaskId == stepId && x.FillId == fillId);
+                var taskLog = _dbContext.TaskLogs.FirstOrDefault(x => x.TaskId == stepId && x.FillId == fillId);
 
                 detailsResponse.TaskRunningDto =  GetTotalTime(taskLog);
 
@@ -722,19 +722,37 @@ namespace Msr.Services.Orders
             return response;
         }
 
-        public ResultNotification<TaskLogDto> StepResume(int taskLogId)
+        public ResultNotification<TaskLogDto> StepResume(int? id, int stepId, int fillId, string loggedUserId)
         {
             var result = new ResultNotification<TaskLogDto>();
 
-            var taskLog = _dbContext.TaskLogs.Where(x => x.Id == taskLogId)
+            var taskLog = _dbContext.TaskLogs.Where(x => x.Id == id)
                 .OrderByDescending(x => x.Id)
                 .FirstOrDefault();
 
-            taskLog.StatusId = TimerStatuseConstants.InProgress;
-            taskLog.StartTime = DateTime.Now;
-            taskLog.EndTime = null;
+            if (taskLog == null)
+            {
+                var entity = new TaskLog()
+                {
+                    TaskId = stepId,
+                    StartTime = DateTime.Now,
+                    StatusId = TimerStatuseConstants.InProgress,
+                    UserId = loggedUserId,
+                    FillId = fillId
+                };
 
-            _dbContext.SaveChanges();
+                _dbContext.TaskLogs.Add(entity);
+                _dbContext.SaveChanges();
+
+                taskLog = entity;
+            }
+            else
+            {
+                taskLog.StatusId = TimerStatuseConstants.InProgress;
+                taskLog.StartTime = DateTime.Now;
+                taskLog.EndTime = null;
+                _dbContext.SaveChanges();
+            }
             
             result.Entity = GetTotalTime(taskLog);
 
@@ -798,8 +816,10 @@ namespace Msr.Services.Orders
             }
         }
 
-        public string AssumeTask(int taskId, string login)
+        public ResultNotification<bool> AssumeTask(int taskId, string login)
         {
+            var ressult = new ResultNotification<bool>();
+
             var p = new DynamicParameters();
 
             p.Add("@RET_STATUS", dbType: DbType.String, direction: ParameterDirection.Output, size: 500);
@@ -814,8 +834,13 @@ namespace Msr.Services.Orders
                 var retStatus = p.Get<string>("RET_STATUS");
                 var msg = p.Get<string>("MSGS");
 
-                return retStatus;
+                if (!string.IsNullOrWhiteSpace(retStatus))
+                {
+                    ressult.AddError(retStatus);
+                }
             }
+
+            return ressult;
         }
 
         public ReferenceTheoryResponse GetTheoryData(int theoryId, string login)

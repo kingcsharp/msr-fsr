@@ -414,7 +414,7 @@ namespace Answer.Web.Controllers
 
             //checkMyRole(myRS("GROUP_REQUESTEE_ID")) or strNTLogin = myRS("REQUESTEE_ID") then
             //getButtons
-            if (myRoles.Any(x => x.Role_Id == response.TaskEditDataResult.GroupRequesteeId) || response.TaskEditDataResult.RequesteeId == loggedUserId.Id)
+            if ((myRoles.Any(x => x.Role_Name == "Technician") && response.TaskEditDataResult.RequesteeId ==null) || response.TaskEditDataResult.RequesteeId == loggedUserId.Id)
             {
                 response.HasRole = true;
             }
@@ -509,9 +509,11 @@ namespace Answer.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult StepResume(int taskLogId)
+        public ActionResult StepResume(int? taskLogId, int stepId, int fillId)
         {
-            var result = _orderService.StepResume(taskLogId);
+            var loggedUser = GetCurrentUser();
+
+            var result = _orderService.StepResume(taskLogId, stepId, fillId, loggedUser.Id);
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
@@ -521,7 +523,12 @@ namespace Answer.Web.Controllers
         {
             var loggedUserId = GetCurrentUser().Id;
 
-            _orderService.AssumeTask(taskId, loggedUserId);
+            var result = _orderService.AssumeTask(taskId, loggedUserId);
+
+            if (result.HasErrors())
+            {
+                return Json(result.ErrorMessage, JsonRequestBehavior.AllowGet);
+            }
 
             return Json("OK", JsonRequestBehavior.AllowGet);
         }
@@ -567,7 +574,7 @@ namespace Answer.Web.Controllers
 
             var statusMessage = _orderService.AssumeTask(taskId, loggedUserId);
 
-            if (!string.IsNullOrWhiteSpace(statusMessage) && statusMessage.Contains("ERROR"))
+            if (statusMessage.HasErrors())
             {
                 return Json(new { Code = "Error", Message = statusMessage }, JsonRequestBehavior.AllowGet);
             }

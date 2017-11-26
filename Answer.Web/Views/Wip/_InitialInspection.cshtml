@@ -74,7 +74,7 @@
     }
 
     
-    @if (Model.TaskRunningDto != null &&  Model.TaskRunningDto.StatusId == TimerStatuseConstants.InProgress)
+    @if ((Model.TaskRunningDto != null &&  Model.TaskRunningDto.StatusId == TimerStatuseConstants.InProgress)|| Model.TaskRunningDto == null)
     {
         <text>$('.timer').timer('resume');</text>
     }
