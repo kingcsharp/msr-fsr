@@ -12,6 +12,7 @@ namespace Msr.Services.Procedures.ViewModels
 {
     public class GetMoniterViewModel
     {
+
         public GetMoniterViewModel()
         {
 
@@ -39,6 +40,8 @@ namespace Msr.Services.Procedures.ViewModels
         public string Id { get; set; }
 
         public string Monitor_Type { get; set; }
+
+        public string Input_Type { get; set; }
 
         public string Description { get; set; }
 

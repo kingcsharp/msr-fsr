@@ -266,7 +266,7 @@ namespace Msr.Services.Procedures.ViewModels
                 Text = x.Name,
                 Value = x.ObjectId.ToString()
             }).OrderBy(o => o.Text).ToList();
-            VerbList.Insert(0, new SelectListItem { Text = @"Select Varb", Value = "" });
+            VerbList.Insert(0, new SelectListItem { Text = @"--Select--", Value = "" });
 
             ReferenceFilesList = proceduresService.GetSelectedFiles(id: ObjectId,ntlogin:ntlogin, type: DBNull.Value.ToString(CultureInfo.InvariantCulture)).Select(x => new SelectListItem
             {
@@ -277,24 +277,20 @@ namespace Msr.Services.Procedures.ViewModels
             Roles = proceduresService.GetSelectedRoles(id: Id,ntlogin:ntlogin);
         }
 
-        public SaveProcedureViewModel MapToDto(ProcedureView model)
+        public void MapToDto(ProcedureView model)
         {
-            return new SaveProcedureViewModel
-            {
-                Id = model.Id,
-                ObjectId = model.ObjectId,
-                Name = model.Name,
-                CreatingCompany = model.CreatingCo,
-                Verb = model.Verb,
-                SystemId = model.SystemId,
-                Comments = model.Comments,
-                SecurityLevel = model.SecurityLevel,
-                StepInAp = model.StepInAp,
-                Duration = model.Duration,
-                DurationType = model.DurationType,
-                WipMsg = model.WipMsg,
-                Threshold = model.Threshold
-            };
+            ObjectId = model.ObjectId;
+            Name = model.Name;
+            CreatingCompany = model.CreatingCo;
+            Verb = model.Verb;
+            SystemId = model.SystemId;
+            Comments = model.Comments;
+            SecurityLevel = model.SecurityLevel;
+            StepInAp = model.StepInAp;
+            Duration = model.Duration;
+            DurationType = model.DurationType;
+            WipMsg = model.WipMsg;
+            Threshold = model.Threshold;
         }
     }
 }

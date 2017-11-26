@@ -23,6 +23,9 @@ namespace Msr.Services.Procedures.Procedures
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "MONITOR_TYPE")]
         public string Monitor_Type { get; set; }
 
+        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "Input_Type")]
+        public string Input_Type { get; set; }
+
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 2000, ParameterName = "DESCRIPTION")]
         public string Description { get; set; }
 
@@ -112,8 +115,5 @@ namespace Msr.Services.Procedures.Procedures
 
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "StrNTLogin")]
         public string StrNTLogin { get; set; }
-
-
-
     }
 }

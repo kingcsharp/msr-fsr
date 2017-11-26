@@ -29,7 +29,7 @@ namespace Msr.Models.Procedures
         public string CreatingDept { get; set; }
         public string DeptName { get; set; }
         public string SecurityName { get; set; }
-        public string IsSystem { get; set; }
+        public Int16? IsSystem { get; set; }
         public string Comments { get; set; }
         public decimal? StepInAp { get; set; }
         public decimal? WipMsg { get; set; }

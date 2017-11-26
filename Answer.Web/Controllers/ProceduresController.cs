@@ -16,6 +16,7 @@ using Msr.Services.Procedures.ViewModels;
 using Msr.Services.ProcedureVerbs;
 using Msr.Services.Roles;
 using Msr.Services.Users;
+using Msr.Services.Workflows;
 
 namespace Answer.Web.Controllers
 {
@@ -23,6 +24,7 @@ namespace Answer.Web.Controllers
     {
         private readonly ProceduresService _proceduresService;
         private readonly UserService _userService;
+        private readonly WorkflowService _workflowService;
 
         const string AppDataGlobalsettingsXml = @"/App_Data//procedureFolder/";
         const string XSLTPath = @"/assets//styles//xslt//procedures.xsl";
@@ -31,6 +33,7 @@ namespace Answer.Web.Controllers
         {
             _proceduresService = new ProceduresService();
             _userService = new UserService();
+            _workflowService = new WorkflowService();
         }
 
 
@@ -53,7 +56,7 @@ namespace Answer.Web.Controllers
         {
             var procedureService = new ProceduresService();
 
-            var totalRows = procedureService.GetProceduresQueryable().Where(x => x.Status != "DELETED");
+            var totalRows = procedureService.GetProceduresQueryable().Where(x => x.Status != "DELETED" && x.Status != "OLD");
 
             if (param.where != null && param.where.rules.Any())
             {
@@ -181,15 +184,20 @@ namespace Answer.Web.Controllers
 
         public ActionResult Edit(string id)
         {
-            var saveProcedureViewModel = new SaveProcedureViewModel();
+            var vm = new SaveProcedureViewModel();
+            vm.Id = id;
+
             var procedureService = new ProceduresService();
 
-            var model = procedureService.GetProcedureById(id: id);
+            var currrentUser = GetCurrentUser();
+            var result = _workflowService.CheckOutObject(id, currrentUser.Id);
 
-            saveProcedureViewModel = saveProcedureViewModel.MapToDto(model);
-            saveProcedureViewModel.Setup(new ProceduresService(), new RoleService(), new ProcedureVerbsService(), GetCurrentUser().Id);
+            var model = procedureService.GetProcedureById(result.Entity);
 
-            return View(saveProcedureViewModel);
+            vm.MapToDto(model);
+            vm.Setup(new ProceduresService(), new RoleService(), new ProcedureVerbsService(), GetCurrentUser().Id);
+
+            return View(vm);
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
@@ -356,18 +364,23 @@ namespace Answer.Web.Controllers
 
         public ActionResult CreateStep(string procedureObjectId, string NewObjectId, string Procedure)
         {
-            var getStepEditDataViewModel = new GetStepEditDataViewModel(new ProceduresService(), new ProcedureVerbsService(), procedureObjectId);
+            var currentUser = GetCurrentUser();
+
+            var vm = new GetStepEditDataViewModel();
+            vm.NtLogin = currentUser.Login;
+
+            vm.SetUp(new ProceduresService(), new ProcedureVerbsService(), procedureObjectId);
 
             var singleOrDefault = _proceduresService.GetProcedurelist().SingleOrDefault(x => x.Value == Procedure);
             if (singleOrDefault != null)
             {
                 var value = singleOrDefault.Show;
 
-                getStepEditDataViewModel.GetStepEditData.Step_Text = value;
-                getStepEditDataViewModel.ProcObjId = procedureObjectId;
+                vm.GetStepEditData.Step_Text = value;
+                vm.ProcObjId = procedureObjectId;
             }
 
-            return View(getStepEditDataViewModel);
+            return View(vm);
         }
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult CreateStep(GetStepEditDataViewModel model)
@@ -396,9 +409,14 @@ namespace Answer.Web.Controllers
 
         public ActionResult EditStep(string stepId, string procedureObjectId)
         {
-            var viewModel = _proceduresService.GetStepData(stepId, procedureObjectId, GetCurrentUser().Id);
+            var vm = _proceduresService.GetStepData(stepId, procedureObjectId, GetCurrentUser().Id);
 
-            return View(viewModel);
+            var currentUser = GetCurrentUser();
+            vm.NtLogin = currentUser.Login;
+
+            vm.SetUp(new ProceduresService(), new ProcedureVerbsService(), procedureObjectId);
+
+            return View(vm);
         }
 
         [HttpPost]
@@ -981,8 +999,6 @@ namespace Answer.Web.Controllers
         [HttpPost]
         public ActionResult EditProductPartStay(string Pid, string relationship, string ObjId, EditProcedureObjectViewModel model)
         {
-            var preProServices = new ProceduresService();
-
             var procedureService = new ProceduresService();
             //need to be dynamic
             model.NTLogin = GetCurrentUser().Id;
@@ -1012,14 +1028,66 @@ namespace Answer.Web.Controllers
 
             return View(model);
         }
+  
         [AcceptVerbs(verbs: HttpVerbs.Post)]
-        public ActionResult SaveMoniter(GetStepDataResult model)
+        public ActionResult DeleteStep(string id, string procStepId, string ProdecureName)
+        {
+            var proceduresService = new ProceduresService();
+
+            var result = proceduresService.DeleteStep(id, GetCurrentUser().Id);
+            if (result)
+            {
+                TempData["SuccessMessage"] = "Step has been deleted successfully.";
+
+                return Json("Ok", JsonRequestBehavior.AllowGet);
+            }
+
+            TempData["ErrorMessage"] = "Something went wrong.";
+
+            return RedirectToAction("Steps", "Procedures", new { id = procStepId, ProdecureName = ProdecureName });
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult ReorderSteps(string procObjectId, string[] array)
+        {
+            var currentUser =  GetCurrentUser();
+            
+            _proceduresService.SaveReorderSteps(array, procObjectId, currentUser.Id);
+
+            return Json("Ok", JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult AddMonitor(string moniterType, string inputType, string failAction, string description, string objectId, string relatedObject, string stepId, string procedureName)
+        {
+            var model = new GetStepDataResult
+            {
+                AddMonitorForProcedureViewModel =
+                {
+                    Id = objectId,
+                    Monitor_Type = moniterType,
+                    Input_Type = inputType,
+                    Fail_Action = failAction,
+                    Description = description ?? "",
+                    Related_Object_Id = relatedObject,
+                    Step_Id = stepId,
+                    ProcedureName = procedureName
+                }
+            };
+            ViewBag.ProcedureName = procedureName;
+            model.AddMonitorForProcedureViewModel.Setup();
+            return PartialView("_Monitor", model);
+        }
+
+        [AcceptVerbs(verbs: HttpVerbs.Post)]
+        public ActionResult SaveMonitor(GetStepDataResult model)
         {
             var proceduresService = new ProceduresService();
             if (ModelState.IsValid)
             {
                 model.AddMonitorForProcedureViewModel.StrNTLogin = GetCurrentUser().Id;
+
                 var response = proceduresService.AddMonitorForProcedure(model: model.AddMonitorForProcedureViewModel);
+
                 if (!response.HasErrors())
                 {
                     TempData["SuccessMessage"] = model.AddMonitorForProcedureViewModel.Id == null
@@ -1044,51 +1112,6 @@ namespace Answer.Web.Controllers
                 id = model.AddMonitorForProcedureViewModel.Step_Id,
                 ProdecureName = model.AddMonitorForProcedureViewModel.ProcedureName
             });
-        }
-        [AcceptVerbs(verbs: HttpVerbs.Post)]
-        public ActionResult DeleteStep(string id, string procStepId, string ProdecureName)
-        {
-            var proceduresService = new ProceduresService();
-
-            var result = proceduresService.DeleteStep(id, GetCurrentUser().Id);
-            if (result)
-            {
-                TempData["SuccessMessage"] = "Step has been deleted successfully.";
-
-                return Json("Ok", JsonRequestBehavior.AllowGet);
-            }
-
-            TempData["ErrorMessage"] = "Something went wrong.";
-
-            return RedirectToAction("Steps", "Procedures", new { id = procStepId, ProdecureName = ProdecureName });
-        }
-
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult ReorderSteps(string procObjectId, string[] array)
-        {
-            _proceduresService.SaveReorderSteps(array, procObjectId);
-
-            return Json("Ok", JsonRequestBehavior.AllowGet);
-        }
-
-        public ActionResult AddMoniter(string moniterType, string failAction, string description, string objectId, string relatedObject, string stepId, string procedureName)
-        {
-            var model = new GetStepDataResult
-            {
-                AddMonitorForProcedureViewModel =
-                {
-                    Id = objectId,
-                    Monitor_Type = moniterType,
-                    Fail_Action = failAction,
-                    Description = description ?? "",
-                    Related_Object_Id = relatedObject,
-                    Step_Id = stepId,
-                    ProcedureName = procedureName
-                }
-            };
-            ViewBag.ProcedureName = procedureName;
-            model.AddMonitorForProcedureViewModel.Setup();
-            return PartialView("_Moniter", model);
         }
     }
 

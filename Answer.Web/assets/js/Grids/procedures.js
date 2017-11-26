@@ -147,7 +147,11 @@
     });
     function procedureEditFormatter(cellvalue, options, rowObject) {
         var viewButton = '<a href="/Procedures/view/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" title="View" style="margin:2px;font-size: .8em;"><i class="fa fa-eye"></i></a>';
-        var editButton = '<a  title="Edit" href="/Procedures/edit/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
+        
+        var editButton = '';
+        if (rowObject.Status !== 'APPROVED_BUT_REVISING') {
+            var editButton = '<a  title="Edit" href="/Procedures/edit/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
+        }
 
         var deleteButton = '';
         var buttonWorkflowLeft = '';

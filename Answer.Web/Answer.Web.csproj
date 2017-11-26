@@ -27,6 +27,7 @@
     </NuGetPackageImportStamp>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -1161,7 +1162,7 @@
     <Content Include="Views\Quote\Create.cshtml" />
     <Content Include="Views\Quote\Index.cshtml" />
     <Content Include="Views\Wip\_AddEquipment.cshtml" />
-    <Content Include="Views\Procedures\_Moniter.cshtml" />
+    <Content Include="Views\Procedures\_Monitor.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

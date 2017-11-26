@@ -117,6 +117,7 @@
                                         <tr>
                                             <th>Monitor Type</th>
                                             <th>Description</th>
+                                            <th>Input Type</th>
                                             <th></th>
                                         </tr>
                                         </thead>
@@ -126,9 +127,18 @@
                                             <tr>                                               
                                                 <td>@item.Monitor_Type</td>
                                                 <td>@item.Description</td>
+                                                <td>@item.Input_Type</td>
                                                 <td>
-                                                    <span title="Edit Monitor" class="btn btn-xs btn-success" data-toggle="modal" data-procedure-name="@ViewBag.ProdecureName" data-moniter-type="@item.Monitor_Type" data-fail-action="@item.Fail_Action" data-description="@item.Description"
-                                                       data-object-id="@item.Id" data-related-object="@item.Related_Object_Id" data-step-id="@item.Step_Id" data-target="#addMoniterModal" href="#monitor_@item.Id"><i class="fa fa-edit" aria-hidden="true"></i></span> 
+                                                    <span title="Edit Monitor" class="btn btn-xs btn-success" data-toggle="modal" data-procedure-name="@ViewBag.ProdecureName" 
+                                                          data-moniter-type="@item.Monitor_Type"
+                                                          data-input-type="@item.Input_Type"
+                                                          data-fail-action="@item.Fail_Action" 
+                                                          data-description="@item.Description"
+                                                          data-object-id="@item.Id" 
+                                                          data-related-object="@item.Related_Object_Id"
+                                                          data-step-id="@item.Step_Id"
+                                                          data-target="#addMoniterModal" 
+                                                          href="#monitor_@item.Id"><i class="fa fa-edit" aria-hidden="true"></i></span> 
                                                     <span title="Delete Monitor" style="cursor: pointer;" class="deleteMoniter btn btn-xs btn-danger" data-ProcedureName="@ViewBag.ProdecureName" data-ProcId="@item.Related_Object_Id" data-id="@item.Id">
                                                         <i class="fa fa-trash-o" aria-hidden="true"></i>
                                                     </span>
@@ -198,6 +208,7 @@
                 var button = $(event.relatedTarget);
                 //var id = button.data('id');
                 var moniterType = button.data('moniter-type');
+                var inputType = button.data('input-type');
                 var failAction = button.data('fail-action');
                 var description = button.data('description');
                 var objectId = button.data('object-id');
@@ -208,7 +219,7 @@
                 modal.find('.modal-body').html('');
                 $.ajax({
                     type: "GET",
-                    url: '/Procedures/AddMoniter?moniterType=' + moniterType + '&failAction=' + failAction + '&description=' + description + '&objectId=' + objectId + '&relatedObject=' + relatedObject + '&stepId=' + stepId + '&procedureName=' + procedureName,
+                    url: '/Procedures/AddMonitor?moniterType=' + moniterType + '&inputType=' + inputType + '&failAction=' + failAction + '&description=' + description + '&objectId=' + objectId + '&relatedObject=' + relatedObject + '&stepId=' + stepId + '&procedureName=' + procedureName,
                     dataType: 'html',
                     success: function (data) {
                         modal.find('.modal-body').html(data);

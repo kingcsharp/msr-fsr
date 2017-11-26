@@ -40,6 +40,9 @@ namespace Msr.Services.Procedures.ViewModels
         [DisplayName("Description")]
         public string Description { get; set; }
 
+        [DisplayName("Input Type")]
+        public string Input_Type { get; set; }
+
         public string Start_System_Task { get; set; }
 
         public string Start_Type { get; set; }
@@ -120,6 +123,8 @@ namespace Msr.Services.Procedures.ViewModels
 
         public List<SelectListItem> MonitorTypesList { get; set; }
 
+        public List<SelectListItem> InputTypesList { get; set; }
+
         public List<SelectListItem> ShouldBeList { get; set; }
 
         public List<SelectListItem> BasedOPionList { get; set; }
@@ -136,15 +141,19 @@ namespace Msr.Services.Procedures.ViewModels
 
         public void Setup()
         {
+            InputTypesList = new List<SelectListItem>
+            {
+                new SelectListItem {Text = "Manual", Value = "MANUAL"},
+                new SelectListItem {Text = "QR Code", Value = "QR_CODE"},
+                new SelectListItem {Text = "Sensor", Value = "SENSOR"}
+            };
 
             MonitorTypesList = new List<SelectListItem>
             {
                 new SelectListItem {Text = "NUMBER", Value = "NUMBER"},
-                new SelectListItem {Text = "USER_NUMBER", Value = "USER_NUMBER"},
                 new SelectListItem {Text = "YES_NO", Value = "YES_NO"},
-                new SelectListItem {Text = "MULTIPLE", Value = "MULTIPLE"},
                 new SelectListItem {Text = "TEXT", Value = "TEXT"},
-                new SelectListItem {Text = "OBJECT", Value = "OBJECT"}
+                new SelectListItem {Text = "PASS_FAIL", Value = "PASS_FAIL"}
             };
 
             ShouldBeList = new List<SelectListItem>
@@ -201,65 +210,36 @@ namespace Msr.Services.Procedures.ViewModels
                 Id = model.Id,
 
                 Monitor_Type = model.Monitor_Type,
-
+                Input_Type = model.Input_Type,
                 Description = model.Description,
-
                 Start_System_Task = model.Start_System_Task,
-
                 Start_Type = model.Start_Type,
-
                 Stop_System_Task = model.Stop_System_Task,
-
                 Stop_Type = model.Stop_Type,
-
                 Counter_Or_Clock = model.Counter_Or_Clock,
-
                 Clock_Unit = model.Clock_Unit,
-
                 Highest_Threshold = model.Highest_Threshold,
-
                 High_Threshold = model.High_Threshold,
-
                 Target = model.Target,
-
                 Low_Threshold = model.Low_Threshold,
-
                 Lowest_Threshold = model.Lowest_Threshold,
-
                 Should_Be = model.Should_Be,
-
                 Opinion = model.Opinion.ToString(),
-
                 Hide_Target = model.Hide_Target.ToString(),
-
                 Use_Result = model.Use_Result.ToString(),
-
                 Fail_Stop = model.Fail_Stop.ToString(),
-
                 Step_Id = model.Step_Id,
-
                 Correct_Answer = model.Correct_Answer,
-
                 Text_Target = model.Text_Target,
-
                 Task_Id = model.Task_Id,
-
                 Tolerance = model.Tolerance,
-
                 Related_Object_Id = model.Related_Object_Id,
-
                 Fail_Action = model.Fail_Action,
-
                 Target_Object_Type = model.Target_Object_Type,
-
                 Target_Object = model.Target_Object,
-
                 Skip_Mode = model.Skip_Mode,
-
                 Cant_Change = model.Cant_Change,
-
                 Always_Pass = model.Always_Pass,
-
                 StrNTLogin = model.StrNTLogin
             };
         }

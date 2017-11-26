@@ -91,6 +91,7 @@ namespace Msr.Services.Procedures
                     Id = model.Id,
 
                     Monitor_Type = model.Monitor_Type,
+                    Input_Type = model.Input_Type,
 
                     Description = model.Description,
 
@@ -156,7 +157,6 @@ namespace Msr.Services.Procedures
                 _dbContext.Database.ExecuteStoredProcedure(addProcedureMonitorProcedure);
 
                 responsePurchase.Entity.NewId = addProcedureMonitorProcedure.NewId;
-                responsePurchase.SuccessMessage = "Purchase order has been created successfully.";
 
                 return responsePurchase;
             }
@@ -468,12 +468,12 @@ namespace Msr.Services.Procedures
                     var preStepMatch = regex.Match(stepData.Pre_Step);
                     stepData.Pre_Step = preStepMatch.Groups[1].ToString();
                 }
-                stepData.GetStepLaborsList = GetLaborsById(stepData.Id, "1618").Select(x => new SelectListItem
+                stepData.GetStepLaborsList = GetLaborsById(stepData.Id, loginId).Select(x => new SelectListItem
                 {
                     Text = x.Role_Name,
                     Value = x.Role_id.ToString(),
                 }).OrderBy(o => o.Text).ToList();
-                stepData.GetMoniterViewModels = GetMoniterByStepId(stepData.Id);
+                stepData.GetMoniterViewModels = GetMoniterByStepId(stepData.Id, loginId);
             }
 
             return result.OrderBy(x => x.Print_Order).ToList();
@@ -487,7 +487,7 @@ namespace Msr.Services.Procedures
         }
         public GetStepEditDataViewModel GetStepData(string stepId, string procedureObjectId, string loginId)
         {
-            GetStepEditDataViewModel getStepEditDataViewModel = new GetStepEditDataViewModel(new ProceduresService(), new ProcedureVerbsService(), procedureObjectId)
+            GetStepEditDataViewModel getStepEditDataViewModel = new GetStepEditDataViewModel
             {
                 StepId = stepId,
                 ProcObjId = procedureObjectId
@@ -728,7 +728,7 @@ namespace Msr.Services.Procedures
             }
         }
 
-        public List<GetMoniterViewModel> GetMoniterByStepId(string id)
+        public List<GetMoniterViewModel> GetMoniterByStepId(string id, string loginId)
         {
             try
             {
@@ -738,7 +738,7 @@ namespace Msr.Services.Procedures
 
                 var taskId = new SqlParameter("@TASK_ID", DBNull.Value);
 
-                var ntLogin = new SqlParameter("@strNTLogin", "1618");
+                var ntLogin = new SqlParameter("@strNTLogin", loginId);
 
                 var result = _dbContext.Database.SqlQuery<GetMoniterViewModel>("EXEC A_SP_MONITOR_TEMPLATES_GET_DATA_FOR_OBJECT @RELATED_OBJECT_ID, @PROCEDURE_STEP_ID, @TASK_ID, @strNTLogin",
                     objId, proStepId, taskId, ntLogin).ToList();
@@ -1040,7 +1040,7 @@ namespace Msr.Services.Procedures
                 return false;
             }
         }
-        public bool SaveReorderSteps(string[] formCollection, string id)
+        public bool SaveReorderSteps(string[] formCollection, string id, string currentUserId)
         {
             try
             {
@@ -1057,12 +1057,12 @@ namespace Msr.Services.Procedures
                 }
 
                 var procedureStepBasedonPrintOrders =
-                    new ProcedureStepBasedonPrintOrders { ProcHistId = procedureId, NTLogin = "1618" };
+                    new ProcedureStepBasedonPrintOrders { ProcHistId = procedureId, NTLogin = currentUserId };
 
                 _dbContext.Database.ExecuteStoredProcedure(procedureStepBasedonPrintOrders);
 
                 var procedureSetPrintOrderProcedure =
-                    new ProcedureSetPrintOrderProcedure { Pid = procedureId, NTLogin = "1618" };
+                    new ProcedureSetPrintOrderProcedure { Pid = procedureId, NTLogin = currentUserId };
 
                 _dbContext.Database.ExecuteStoredProcedure(procedureSetPrintOrderProcedure);
 

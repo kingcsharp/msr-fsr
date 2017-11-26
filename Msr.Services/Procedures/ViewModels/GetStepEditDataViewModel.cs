@@ -32,7 +32,7 @@ namespace Msr.Services.Procedures.ViewModels
             SelectedPrecedingSteps = new List<string>();
         }
 
-        public GetStepEditDataViewModel(ProceduresService proceduresService, ProcedureVerbsService procedureVerbsService, string procedureObjectId)
+        public void SetUp(ProceduresService proceduresService, ProcedureVerbsService procedureVerbsService, string procedureObjectId)
         {
             GetStepListOfOtherSteps = new List<SelectListItem>();
             ReferenceProcedures = new List<SelectListItem>();
@@ -172,7 +172,7 @@ namespace Msr.Services.Procedures.ViewModels
                     Value = "SYS_SHIPPING"
                 }
             };
-            GetStepListOfOtherSteps = proceduresService.GetProcedureStepOtherStepsList(procedureObjectId, "1618").Select(x => new SelectListItem
+            GetStepListOfOtherSteps = proceduresService.GetProcedureStepOtherStepsList(procedureObjectId, NtLogin).Select(x => new SelectListItem
             {
                 Text = x.Step_Text,
                 Value = x.Id.ToString()
