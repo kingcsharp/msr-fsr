@@ -63,7 +63,7 @@
         
         @if (Model.TaskEditDataResult.Status == "ACCEPTED" || Model.TaskEditDataResult.Status == "REQUESTED")
         {
-            <button data-toggle="modal" data-fill-id="@ViewBag.FillId" data-target="#add-new-equipment-model" class="btn btn-danger btn-lg print-btn pull-right"><i class="fa fa-plus-square"></i> EM/PM</button>	
+            <button data-toggle="modal" data-fill-id="@ViewBag.FillId" data-id="@Model.StepId" data-target="#addNcrModal" class="btn btn-danger btn-lg print-btn pull-right"><i class="fa fa-plus-square"></i> Add NCR</button>
             <button data-toggle="modal" data-fill-id="@ViewBag.FillId" data-target="#add-new-equipment-model" class="btn btn-info btn-lg print-btn pull-right"><i class="fa fa-plus-square"></i> EM/PM</button>
         }  
         
