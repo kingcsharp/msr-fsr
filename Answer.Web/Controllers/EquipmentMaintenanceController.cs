@@ -47,12 +47,8 @@ namespace Answer.Web.Controllers
             {
                 foreach (var rule in param.where.rules)
                 {
-                    if (rule.field == nameof(EquipmentMaintenanceView.ObjectId))
-                    {
-                        totalRows = totalRows.Where(x => x.ObjectId == rule.data.ToLower());
-                    }
-
-                    else if (rule.field == nameof(EquipmentMaintenanceView.ParentLocation))
+                
+                     if (rule.field == nameof(EquipmentMaintenanceView.ParentLocation))
                     {
                         totalRows = totalRows.Where(x => x.ParentLocation.ToLower().Contains(rule.data.ToLower()));
                     }
@@ -113,6 +109,14 @@ namespace Answer.Web.Controllers
                         if (int.TryParse(rule.data, out value))
                         {
                             totalRows = totalRows.Where(q => q.FrequencyField == value);
+                        }
+                    }
+                    else if (rule.field == nameof(EquipmentMaintenanceView.Id))
+                    {
+                        int value;
+                        if (int.TryParse(rule.data, out value))
+                        {
+                            totalRows = totalRows.Where(q => q.Id == value);
                         }
                     }
 
@@ -418,7 +422,9 @@ namespace Answer.Web.Controllers
         [HttpGet]
         public ActionResult MarkCompleted(int id)
         {
-            var result = _equipmentMaintenanceService.MarkCompleted(id);
+            var loggedUser = GetCurrentUser();
+
+            var result = _equipmentMaintenanceService.MarkCompleted(id, loggedUser.Id);
 
             if (!result.HasErrors())
             {

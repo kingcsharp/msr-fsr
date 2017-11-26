@@ -200,28 +200,38 @@
                 rowData = $('#jqGrid').jqGrid('getRowData', rowIds[i]);
 
 
-                if (rowData['PemLastCompletedDate'] !== null &&
-                    (rowData['Status'] === "ASSIGNED" || rowData['Status'] === "REQUESTED")) {
+                if (rowData['PemLastCompletedDate'] !== null && rowData['MaintenanceTask'] === 'Routine Maintenance' && rowData['TroubleState'] === "false") {
 
-                    var pmDate = Date.parse(rowData['PemLastCompletedDate']);
+                    if ((rowData['Status'] === "ASSIGNED" || rowData['Status'] === "REQUESTED") &&
+                        rowData['TroubleState'] === "true") {
+                        var pmDate = Date.parse(rowData['PemLastCompletedDate']);
 
-                    var currentDate = new Date();
-                    var currentDateWith7Days = new Date();
-                    currentDateWith7Days.setDate(currentDateWith7Days.getDate() + 7);
+                        var currentDate = new Date();
+                        var currentDateWith7Days = new Date();
+                        currentDateWith7Days.setDate(currentDateWith7Days.getDate() + 7);
 
-                    if (pmDate > currentDate && currentDateWith7Days > pmDate) {
-                        $('#jqGrid').jqGrid('setRowData', rowIds[i], false, "info-warning");
+                        if (pmDate > currentDate && currentDateWith7Days > pmDate) {
+                            $('#jqGrid').jqGrid('setRowData', rowIds[i], false, "warning");
+                        } else if (pmDate > currentDate) {
+                            $('#jqGrid').jqGrid('setRowData', rowIds[i], false, "danger");
+                        }
                     }
 
-                    if (currentDate > pmDate) {
-                        $('#jqGrid').jqGrid('setRowData', rowIds[i], false, "info-danger");
-                    }
                 } else {
-                    if (rowData['TroubleState'] === "true") {
-                        $('#jqGrid').jqGrid('setRowData', rowIds[i], false, "info-danger");
+                    if (rowData['MaintenanceTask'] === 'Repair' && rowData['TroubleState'] === "true") {
+
+                        if ((rowData['Status'] === "ASSIGNED" || rowData['Status'] === "REQUESTED")) {
+                                $('#jqGrid').jqGrid('setRowData', rowIds[i], false, "danger");
+                        }
+
+                        if (rowData['Status'] === "COMPLETED") {
+                            {
+                                $('#jqGrid').jqGrid('setRowData', rowIds[i], false, "success");
+                            }
+                        }
+
                     }
                 }
-
 
                 if (hasProductionManagerRole === "True") {
                     $("#jqGrid").jqGrid('showCol', ["FrequencyField", "PemLastCompletedDate"]);

@@ -161,7 +161,7 @@ namespace Msr.Services.EquipmentMaintenances
             return response;
         }
 
-        public ResultNotification<string> MarkCompleted(int id)
+        public ResultNotification<string> MarkCompleted(int id, string loggedUserId)
         {
             var response = new ResultNotification<string>();
 
@@ -172,6 +172,27 @@ namespace Msr.Services.EquipmentMaintenances
                 if (equipment.PemLastCompletedDate.HasValue)
                 {
                     equipment.Status = EquipmentMaintenanceConstants.Scheduled;
+
+                    var duplicateEquipment = new Models.EquipmentMaintenances.EquipmentMaintenance
+                    {
+                        ScanBarcode = equipment.ScanBarcode,
+                        ParentLocation = equipment.ParentLocation,
+                        SubLocationFirst = equipment.SubLocationFirst,
+                        SubLocationSecond = equipment.SubLocationSecond,
+                        DateTime = DateTime.Now,
+                        TroubleState = equipment.TroubleState,
+                        MaintenanceTask = equipment.MaintenanceTask,
+                        Comments = "",
+                        StrNTLogin = loggedUserId,
+                        PemLastCompletedDate = DateTime.Now,
+                        FrequencyField = equipment.FrequencyField,
+                        CreatedDate = DateTime.Now,
+                        Status = EquipmentMaintenanceConstants.Requested,
+                        AssignedToId = "",
+                        RequestedById = equipment.RequestedById
+                    };
+
+                    _dbContext.EquipmentMaintenances.Add(duplicateEquipment);
                 }
                 else
                 {
