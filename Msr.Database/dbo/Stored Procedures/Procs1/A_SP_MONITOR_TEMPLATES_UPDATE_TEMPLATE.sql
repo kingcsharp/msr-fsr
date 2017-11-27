@@ -1,21 +1,11 @@
 ﻿
 
-
-
-
-
-
-
-
-
-
-
-
 CREATE          PROCEDURE A_SP_MONITOR_TEMPLATES_UPDATE_TEMPLATE
 @newID nvarchar(50) OUTPUT,
 @messages nvarchar(2000) OUTPUT,
 @ID nvarchar(50),
 @MONITOR_TYPE  nvarchar(50),
+@Input_type  nvarchar(50),
 @DESCRIPTION nvarchar(2000),
 @START_SYSTEM_TASK nvarchar(50),
 @START_TYPE nvarchar(50),
@@ -77,6 +67,7 @@ UPDATE A_MONITOR_TEMPLATES SET
 RELATED_OBJECT_TYPE = @relObjType,
 RELATED_OBJECT_DESCRIPTION = @relObjDesc,
 MONITOR_TYPE = @MONITOR_TYPE,
+Input_Type = @Input_Type,
 DESCRIPTION = @DESCRIPTION,
 START_SYSTEM_TASK = @START_SYSTEM_TASK,
 START_TYPE = @START_TYPE ,
