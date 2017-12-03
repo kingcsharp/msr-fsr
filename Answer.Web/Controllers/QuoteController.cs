@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
+using System.Web.Script.Serialization;
+using Msr.Services.CustomerRequirements;
+using Msr.Services.CustomerRequirements.ViewModel;
 using Msr.Services.Quotes;
 using Msr.Services.Quotes.ViewModels;
 
@@ -10,33 +9,61 @@ namespace Answer.Web.Controllers
 {
     public class QuoteController : Controller
     {
-        // GET: Quote
-        public ActionResult Index()
+        private QuoteService _quoteService;
+
+        public QuoteController()
         {
-            return View();
+            _quoteService = new QuoteService();
         }
 
-        // GET: Quote
         public ActionResult Create()
         {
-            return View();
+            var model = new FreeFormQuoteViewModel();
+
+            model.Setup();
+
+            return View(model);
         }
 
-        [AcceptVerbs(verbs: HttpVerbs.Post)]
-        public ActionResult Create(FreeFormQuoteViewModel model, List<QuoteItemsViewModel> quoteItemsViewModels)
+        [AcceptVerbs(HttpVerbs.Post)]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(FreeFormQuoteViewModel viewModel)
         {
-            var quoteService = new QuoteService();
-            var response = quoteService.Create(model, quoteItemsViewModels);
-
-            if (!response.HasErrors())
+            if (ModelState.IsValid)
             {
-                TempData["SuccessMessage"] = response.SuccessMessage;
+                var response = _quoteService.Create(viewModel);
 
-                return RedirectToAction("Index", "Quote");
+                if (!response.HasErrors())
+                {
+                    TempData["SuccessMessage"] = response.SuccessMessage;
+
+                    return RedirectToAction("Create", "Quote");
+                }
+
+                TempData["ErrorMessage"] = response.ErrorMessage;
             }
 
-            TempData["ErrorMessage"] = response.ErrorMessage;
-            return View();
+            return View(viewModel);
+        }
+
+        public ActionResult ViewQuote(int id)
+        {
+            var requirment = _quoteService.GetById(id);
+
+            var vm = new JavaScriptSerializer().Deserialize<FreeFormQuoteViewModel>(requirment.QuoteJson);
+
+            return PartialView("_ViewQuote", vm);
+        }
+
+        public ActionResult ViewRequirements(int id)
+        {
+            var requirment = _quoteService.GetById(id);
+
+            var vm = new JavaScriptSerializer().Deserialize<CustomerRequirementViewModel>(requirment.CustomerRequirementJson);
+
+            vm.Setup(new CustomerRequirementService());
+
+            return PartialView("_ViewRequirements", vm);
         }
     }
 }

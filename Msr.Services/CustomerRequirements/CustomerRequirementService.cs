@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using EntityFrameworkExtras.EF6;
+using System.Web.Script.Serialization;
 using Msr.Models.CustomerRequirement;
 using Msr.Models.CustomerRequirements;
 using Msr.Repositories;
 using Msr.Services.CustomerRequirements.ViewModel;
-using Msr.Services.EquipmentMaintenance.ViewModels;
-using Msr.Services.EquipmentMaintenances.Procedures;
 
 namespace Msr.Services.CustomerRequirements
 {
@@ -19,65 +17,61 @@ namespace Msr.Services.CustomerRequirements
         {
             _dbContext = new MsrDbContext();
         }
+
         public IQueryable<CustomerRequirementView> GetProductionPlaningQueryable()
         {
             return _dbContext.CustomerRequirementViews;
         }
+
         public CustomerRequirementView GetById(string Id)
         {
             return GetProductionPlaningQueryable().Where(x => x.Id == Id).SingleOrDefault();
         }
+
         public List<ProcessInfoView> ProcessInfoView(string id)
         {
             return _dbContext.ProcessInfoViews.Where(x => x.ObjectId == id).ToList();
         }
+
         public List<PartInfoView> PartInfoViews(string id)
         {
             return _dbContext.PartInfoViews.Where(x => x.ObjectId == id).ToList();
         }
-        public ResultNotification<string> Create(CustomerRequirementViewModel model, List<ProcessInfoViewModel> process, List<PartInfoViewModel> part)
+
+        public ResultNotification<string> Create(CustomerRequirementViewModel model)
         {
-            var result = new ResultNotification<string>();
+            var response = new ResultNotification<string>();
+
             try
             {
-                var getIdProcedure = new GetIdProcedure { };
-
-                var res = _dbContext.Database.ExecuteStoredProcedure<GetNewIdModel>(getIdProcedure);
-
-                var customerRequirement = CustomerRequirementMapping(model);
-
-                customerRequirement.Id = getIdProcedure.NewID;
-
-                _dbContext.CustomerRequirements.Add(customerRequirement);
-
-                foreach (var processRecord in process)
+                foreach (var item in model.Parts)
                 {
-                    var processInfo = ProcessInfoMapping(processRecord);
+                    var entity = new CustomerSubmittedRequirement
+                    {
+                        Company = model.Company,
+                        Division = model.DivisionFab,
+                        Description = model.ShortDescription,
+                        PartKitNo = model.PartKitNo,
+                        Respresentative = model.Respresentative,
+                        SubmittedBy = model.SubmittedBy,
+                        SubmittedDate = DateTime.Now,
+                        CustomerRequirementJson = new JavaScriptSerializer().Serialize(model)
+                    };
 
-                    processInfo.ObjectId = customerRequirement.Id;
-
-                    _dbContext.ProcessInfoViews.Add(processInfo);
+                    _dbContext.CustomerSubmittedRequirements.Add(entity);
                 }
-                foreach (var partRecord in part)
-                {
-                    var partInfo = PartInfoMapping(partRecord);
 
-                    partInfo.ObjectId = customerRequirement.Id;
-
-                    _dbContext.PartInfoViews.Add(partInfo);
-                }
                 _dbContext.SaveChanges();
 
-                result.SuccessMessage = "Requirement has been saved successfully.";
+                response.SuccessMessage = "Quote has been submitted successfully.";
             }
             catch (Exception ex)
             {
                 var message = "Error occured:" + ex.Message;
-
-                result.AddError(message);               
+                response.AddError(message);
             }
 
-            return result;
+            return response;
         }
         public PartInfoView PartInfoMapping(PartInfoViewModel model)
         {

@@ -2,7 +2,11 @@ $(document).ready(function(){
      // process specs table
      var i=1;
      $("#add_row").click(function(){
-         $('#row' + i).html("<td>" + (i + 1) + "</td> <td><input name='[" + i + "].Contaminents' type='text' placeholder='Contaminents By-Products' class='form-control input-md'  /> </td><td><input name='[" + i + "].NonCU' type='text' placeholder='Non-CU or CU Risk' class='form-control input-md'  /> </td><td><input  name='[" + i + "].Material' type='text' placeholder='Material'  class='form-control input-md'></td><td><input  name='[" + i + "].ApproxDimensions' type='text' placeholder='Approx. Dimensions'  class='form-control input-md'></td><td><input  name='[" + i +"].ExistingProcess' type='text' placeholder=''Process Spec. # or New'  class='form-control input-md'></td>");
+         $('#row' + i).html("<td>" + (i + 1) + "</td> <td><input name='Process[" + i + "].Contaminents' type='text' placeholder='Contaminents By-Products' class='form-control input-md'  /> </td>" +
+             "<td><input name='Process[" + i + "].NonCU' type='text' placeholder='Non-CU or CU Risk' class='form-control input-md'  /> </td>" +
+             "<td><input  name='Process[" + i + "].Material' type='text' placeholder='Material'  class='form-control input-md'></td>" +
+             "<td><input  name='Process[" + i + "].ApproxDimensions' type='text' placeholder='Approx. Dimensions'  class='form-control input-md'></td>" +
+             "<td><input  name='Process[" + i +"].ExistingProcess' type='text' placeholder=''Process Spec. # or New'  class='form-control input-md'></td>");
           $('#process_steps').append('<tr id="row'+(i+1)+'"></tr>');
           i++; 
      });
@@ -17,7 +21,13 @@ $(document).ready(function(){
      var j=1;
      $("#add_rowa").click(function(){
       $('#rowa-'+j).html(
-          "<td>" + (j + 1) + "</td><td><input name='[" + j + "].PartDescription' type='text' placeholder='Part Description' class='form-control input-md'  /> </td><td><input name='[" + j + "].Substrate' placeholder='Substrate' class='form-control input-md'  /> </td><td><input  name='[" + j + "].CoatingSurface' type='text' placeholder='Coating/Surface Treatment'  class='form-control input-md'></td><td><input  name='[" + j + "].CustPartNo' type='text' placeholder='Cust. Part No.'  class='form-control input-md'></td><td><input  name='[" + j + "].MfgPartNo' type='text' placeholder='Mfg. Part No.'  class='form-control input-md'></td><td><input  name='[" + j +"].PartsPerKit' type='text' placeholder='# Parts per Kit'  class='form-control input-md'></td>");
+          "<td>" + (j + 1) + "</td>" +
+          "<td><input name='Parts[" + j + "].PartDescription' type='text' placeholder='Part Description' class='form-control input-md'  /> </td>" +
+          "<td><input name='Parts[" + j + "].Substrate' placeholder='Substrate' class='form-control input-md'  /> </td><td>" +
+          "<input  name='Parts[" + j + "].CoatingSurface' type='text' placeholder='Coating/Surface Treatment'  class='form-control input-md'></td>" +
+          "<td><input  name='Parts[" + j + "].CustPartNo' type='text' placeholder='Cust. Part No.'  class='form-control input-md'></td>" +
+          "<td><input  name='Parts[" + j + "].MfgPartNo' type='text' placeholder='Mfg. Part No.'  class='form-control input-md'></td>" +
+          "<td><input  name='Parts[" + j +"].PartsPerKit' type='text' placeholder='# Parts per Kit'  class='form-control input-md'></td>");
 
       $('#kit_parts').append('<tr id="rowa-'+(j+1)+'"></tr>');
       j++; 

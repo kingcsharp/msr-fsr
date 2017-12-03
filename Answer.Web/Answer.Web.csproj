@@ -1156,9 +1156,9 @@
     <Content Include="Views\ProductionPlanning\Add.cshtml" />
     <Content Include="Views\ProductionPlanning\Edit.cshtml" />
     <Content Include="Views\ProductionPlanning\Index.cshtml" />
-    <Content Include="Views\ProductionPlanning\_ViewRequirements.cshtml" />
+    <Content Include="Views\Quote\_ViewRequirements.cshtml" />
     <Content Include="Views\ProductionPlanning\EditStatus.cshtml" />
-    <Content Include="Views\ProductionPlanning\_ViewQuote.cshtml" />
+    <Content Include="Views\Quote\_ViewQuote.cshtml" />
     <Content Include="Views\Quote\Create.cshtml" />
     <Content Include="Views\Quote\Index.cshtml" />
     <Content Include="Views\Wip\_AddEquipment.cshtml" />
@@ -1245,7 +1245,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>55169</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:55169/</IISUrl>
+          <IISUrl>http://localhost:55170/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

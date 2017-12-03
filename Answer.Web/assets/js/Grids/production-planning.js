@@ -39,8 +39,8 @@ $(document).ready(function () {
             },
             {
                 label: 'Division/Fab#',
-                name: 'DivisionFab',
-                index: 'DivisionFab',
+                name: 'Division',
+                index: 'Division',
                 colmenu: false,
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
@@ -70,8 +70,8 @@ $(document).ready(function () {
            
             {
                 label: 'Description',
-                name: 'ShortDescription',
-                index: 'ShortDescription',
+                name: 'Description',
+                index: 'Description',
                 colmenu: false,
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
@@ -128,11 +128,9 @@ $(document).ready(function () {
                     .then(confirmCallback, optionalCancelCallback);
 
                 function confirmCallback() {
-                    console.log("ok")
                     window.location.href = "/Locations/LocationDelete/" + callBackId
                 }
                 function optionalCancelCallback() {
-                    console.log("cancel")
                 }
 
             })
@@ -159,18 +157,8 @@ $(document).ready(function () {
     });
 
     function productionEditFormatter(cellvalue, options, rowObject) {
-        switch (rowObject.Status) {
-            case 'IN_APPROVAL':
-               actionButtons = '<a  class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="left" title="Cancel Workflow"><i class="fa fa-arrow-left"></i></a><a  href="/ProductionPlanning/EditStatus?id=' + rowObject.Id + '&currentStatus=IN_APPROVAL" class="btn btn-xs btn-success" data-toggle="tooltip" data-placement="left" title="Start Approval Workflow" style="margin-left:2px;"><i class="fa fa-arrow-right"></i></a>';
-                break;
-            case 'IN_PROGRESS':
-                actionButtons = '<a  title="Edit" href="/ProductionPlanning/Edit/' + rowObject.Id + '" class="btn btn-xs btn-warning" style="margin:2px;font-size: .8em;"><i class="fa fa-pencil"> Edit</i></a>';
-                break;
-            default:
-                actionButtons = '<a id="process-start-btn" type="submit" class="btn btn-xs btn-primary" data-toggle="tooltip" data-placement="left" title="Start Process Definition" onclick="received(&#39;' + rowObject.Id + '&#39;,&#39;IN_PROGRESS&#39;)"><i class="fa fa-play-circle"></i> Start</a>';
-                   
-        }
-        thisCellVal = actionButtons;
+        thisCellVal = actionButtons = '<a  title="Edit" href="/ProductionPlanning/Edit/' + rowObject.Id + '" class="btn btn-xs btn-warning" style="margin:2px;font-size: .8em;"><i class="fa fa-pencil"> Edit</i></a>';
+
         return thisCellVal;
     }
 

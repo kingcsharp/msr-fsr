@@ -1,15 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using System.Web.Mvc;
+using Amazon.Runtime.Internal;
 using Msr.Models.CustomerRequirement;
 using Msr.Models.CustomerRequirements;
 
 namespace Msr.Services.CustomerRequirements.ViewModel
 {
     public class CustomerRequirementViewModel
-    {        
+    {
+        public CustomerRequirementViewModel()
+        {
+            Parts = new List<PartInfoViewModel>();
+            Process = new AutoConstructedList<ProcessInfoViewModel>();
+        }
+
         public string Id { get; set; }
         [Required]
         [Display(Name = "Requirement Name")]
@@ -53,22 +60,21 @@ namespace Msr.Services.CustomerRequirements.ViewModel
         public string PickupNotification { get; set; }
         public string ShippingMethod { get; set; }
         public string AdditionalInformation { get; set; }
-        [Required]
         public DateTime? SubmittedDate { get; set; }
 
-        [Required]
         public string Status { get; set; }
 
-        [Required]
         public string SubmittedBy { get; set; }
 
         public IEnumerable<SelectListItem> ShippingMehtodList { get; set; }
-        [NotMapped]
+        
         public List<ProcessInfoView> ProcessInfoViews { get; set; }
-        [NotMapped]
+        
         public List<PartInfoView> PartInfoViews { get; set; }
 
-        public string postType { get; set; }
+        public List<ProcessInfoViewModel> Process { get; set; }
+
+        public List<PartInfoViewModel> Parts { get; set; }        
 
         public void Setup(CustomerRequirementService customerRequirementService)
         {           
@@ -109,6 +115,16 @@ namespace Msr.Services.CustomerRequirements.ViewModel
             ProcessInfoViews = customerRequirementService.ProcessInfoView(Id);
 
             PartInfoViews = customerRequirementService.PartInfoViews(Id);
+            
+            if (!Process.Any())
+            {
+                Process.Add(new ProcessInfoViewModel());
+            }
+
+            if (!Parts.Any())
+            {
+                Parts.Add(new PartInfoViewModel());        
+            }
         }
 
         public CustomerRequirementViewModel MapToDto(CustomerRequirementView model)

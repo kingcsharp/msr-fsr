@@ -5,6 +5,7 @@
     ViewBag.Title = "Requirements";
 }
 <link href="~/assets/css/select2.min.css" rel="stylesheet" />
+
 <div class="container-fluid">
 <div class="side-body padding-top">
 <div class="row">
@@ -77,6 +78,7 @@
                                 <label class="control-label control-label-right col-sm-3" for="field7">Company:</label>
                                 <div class="controls col-sm-9">
                                     @Html.EditorFor(model => model.Company, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(x => x.Company, "", new {@class = "text-danger"})
                                     <span id="errId1" class="error"></span>
                                 </div>
                             </div>
@@ -84,7 +86,7 @@
                                 <label class="control-label  col-sm-3" for="field9">Street Address:</label>
                                 <div class="controls col-sm-9">
                                     @Html.EditorFor(model => model.StreetAddress, new { htmlAttributes = new { @class = "form-control" } })
-                                    <span id="errId2" class="error"></span>
+                                    @Html.ValidationMessageFor(x => x.StreetAddress, "", new {@class = "text-danger"})
                                 </div>
                             </div>
                             <div id="panel15" class="panel panel-default" data-role="panel" style="display: block;">
@@ -94,7 +96,7 @@
                                         <label class=" col-sm-3" for="field17">Name</label>
                                         <div class="controls col-sm-9">
                                             @Html.EditorFor(model => model.CommercialName, new { htmlAttributes = new { @class = "form-control", @required = "" } })
-                                            @Html.ValidationMessageFor(model => model.CommercialName, "", new { @class = "text-danger" })
+                                            @Html.ValidationMessageFor(x => x.CommercialName, "", new {@class = "text-danger"})
                                             <span id="errId3" class="error"></span>
                                         </div>
                                     </div>
@@ -102,6 +104,7 @@
                                         <label class=" col-sm-3" for="field18">Title</label>
                                         <div class="controls col-sm-9">
                                             @Html.EditorFor(model => model.CommercialTitle, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(x => x.CommercialTitle, "", new {@class = "text-danger"})
                                             <span id="errId4" class="error"></span>
                                         </div>
                                     </div>
@@ -117,7 +120,7 @@
                                         <label class=" col-sm-3" for="field20">Email</label>
                                         <div class="controls col-sm-9">
                                             @Html.EditorFor(model => model.CommercialEmail, new { htmlAttributes = new { @class = "form-control" } })
-                                            <span id="errId6" class="error"></span>
+                                            @Html.ValidationMessageFor(model => model.CommercialEmail, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
                                 </div>
@@ -301,16 +304,38 @@
                     </thead>
 
                     <tbody>
-                    <tr id='row0'>
-                        <td>
-                            1
-                        </td>
-                        <td> @Html.TextBox("[0].Contaminents", "", new { @class = "form-control", @placeholder = "Contaminents By-Products" }) </td>
-                        <td> @Html.TextBox("[0].NonCU", "", new { @class = "form-control", @placeholder = "Non-CU or CU Risk" }) </td>
-                        <td> @Html.TextBox("[0].Material", "", new { @class = "form-control", @placeholder = "Material" }) </td>
-                        <td> @Html.TextBox("[0].ApproxDimensions", "", new { @class = "form-control", @placeholder = "Approx. Dimensions" }) </td>
-                        <td> @Html.TextBox("[0].ExistingProcess", "", new { @class = "form-control", @placeholder = "Process Spec. # or New" }) </td>
-                    </tr>
+                    
+                    @for (int i = 0; i < Model.Process.Count; i++)
+                    {
+                        <tr id='row0'>
+                            <td>
+                                @(i+1)
+                            </td>
+                            <td>
+                                @Html.TextBoxFor(x => Model.Process[i].Contaminents, new { @class = "form-control", @placeholder = "Contaminents By-Products" })
+                                @Html.ValidationMessageFor(x => Model.Process[i].Contaminents, "", new {@class = "text-danger"})
+                            </td>
+                            <td> 
+                                @Html.TextBoxFor(x => Model.Process[i].NonCU, new { @class = "form-control", @placeholder = "Non-CU or CU Risk" })
+                                @Html.ValidationMessageFor(x => Model.Process[i].NonCU, "", new {@class = "text-danger"})
+                            </td>
+                            <td>
+                                @Html.TextBoxFor(x => Model.Process[i].Material, new { @class = "form-control", @placeholder = "Material" })
+                                @Html.ValidationMessageFor(x => Model.Process[i].Material, "", new {@class = "text-danger"})
+                            </td>
+
+                            <td> 
+                                @Html.TextBoxFor(x => Model.Process[i].ApproxDimensions, new { @class = "form-control", @placeholder = "Approx. Dimensions" })
+                                @Html.ValidationMessageFor(x => Model.Process[i].ApproxDimensions, "", new {@class = "text-danger"})
+                            </td>
+                            <td>
+                                @Html.TextBoxFor(x => Model.Process[i].ExistingProcess, new { @class = "form-control", @placeholder = "Process Spec. # or New" })
+                                @Html.ValidationMessageFor(x => Model.Process[i].ExistingProcess, "", new { @class = "text-danger" })
+
+                            </td>
+                        </tr>
+                    }
+               
                     <tr id='row1'></tr>
                     </tbody>
                 </table>
@@ -349,17 +374,42 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr id='rowa-0'>
-                        <td>
-                            1
-                        </td>
-                        <td> @Html.TextBox("[0].PartDescription", "", new { @class = "form-control", @placeholder = "Part Description" }) </td>
-                        <td> @Html.TextBox("[0].Substrate", "", new { @class = "form-control", @placeholder = "Substrate" }) </td>
-                        <td> @Html.TextBox("[0].CoatingSurface", "", new { @class = "form-control", @placeholder = "Coating/Surface Treatment" }) </td>
-                        <td> @Html.TextBox("[0].CustPartNo", "", new { @class = "form-control", @placeholder = "Cust. Part No." }) </td>
-                        <td> @Html.TextBox("[0].MfgPartNo", "", new { @class = "form-control", @placeholder = "Mfg. Part No." }) </td>
-                        <td> @Html.TextBox("[0].PartsPerKit", "", new { @class = "form-control", @placeholder = "# Parts per Kit" }) </td>
-                    </tr>
+                      
+                    @for (int i = 0; i < Model.Parts.Count; i++)
+                    {
+                        <tr id='rowa-0'>
+                            <td>
+                                @(i+1)
+                            </td>
+                            <td> 
+                                @Html.TextBoxFor(x => Model.Parts[i].PartDescription, new { @class = "form-control", @placeholder = "Material" })
+                                @Html.ValidationMessageFor(x => Model.Parts[i].PartDescription, "", new {@class = "text-danger"})
+                            </td>
+                            <td>
+                                @Html.TextBoxFor(x => Model.Parts[i].Substrate, new { @class = "form-control", @placeholder = "Substrate" })
+                                @Html.ValidationMessageFor(x => Model.Parts[i].Substrate, "", new {@class = "text-danger"})
+
+                            </td>
+                            <td>
+                                @Html.TextBoxFor(x => Model.Parts[i].CoatingSurface, new { @class = "form-control", @placeholder = "Coating/Surface Treatment" })
+                                @Html.ValidationMessageFor(x => Model.Parts[i].CoatingSurface, "", new {@class = "text-danger"})
+
+                            </td>
+                            <td>
+                                @Html.TextBoxFor(x => Model.Parts[i].CustPartNo, new { @class = "form-control", @placeholder = "Cust. Part No." })
+                                @Html.ValidationMessageFor(x => Model.Parts[i].CustPartNo, "", new {@class = "text-danger"})
+                            </td>
+                            <td>
+                                @Html.TextBoxFor(x => Model.Parts[i].MfgPartNo, new { @class = "form-control", @placeholder = "Mfg. Part No." })
+                                @Html.ValidationMessageFor(x => Model.Parts[i].MfgPartNo, "", new {@class = "text-danger"})
+                            </td>
+                            <td> 
+                                @Html.TextBoxFor(x => Model.Parts[i].PartsPerKit, new { @class = "form-control", @placeholder = "# Parts per Kit" })
+                                @Html.ValidationMessageFor(x => Model.Parts[i].PartsPerKit, "", new {@class = "text-danger"})
+                            </td>
+                        </tr>
+                    }
+                       
                     <tr id='rowa-1'></tr>
                     </tbody>
                 </table>
@@ -387,7 +437,6 @@
     <div class="row">
         <div class="col-md-12">
             <div class="form-group pull-right">
-                <button id="button60" type="submit" class="btn btn-info" style="margin-right:10px;" onclick="draft()"><i class="fa fa-save"></i> Save Draft</button>
                 <button id="button57" type="submit" class="btn btn-success" style="margin-right:20px;" onclick="saveSubmit()"><i class="fa fa-send"></i> Save &amp; Submit</button>
             </div>
         </div>

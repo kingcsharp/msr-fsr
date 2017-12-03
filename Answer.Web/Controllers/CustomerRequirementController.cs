@@ -19,37 +19,26 @@ namespace Answer.Web.Controllers
         {
             var model = new CustomerRequirementViewModel();
             model.Setup(new CustomerRequirementService());
+
             return View(model);
         }
 
         [HttpPost]
-        public ActionResult Create(FormCollection form, List<ProcessInfoViewModel> process, List<PartInfoViewModel> part)
+        public ActionResult Create(CustomerRequirementViewModel model)
         {
-            var model = new CustomerRequirementViewModel();
-
             var customerRequirementService = new CustomerRequirementService();
 
-            model.SubmittedBy = GetCurrentUser().Id;
-            model.SubmittedDate = DateTime.Now;
+            if (ModelState.IsValid)
+            {
+                model.SubmittedBy = GetCurrentUser().Id;
 
-            if (form["postType"] == "Save & Submit")
-            {
-                model.Status = "APPROVED";
-            }
-            else
-            {
-                model.Status = "RECEIVED";
-            }
-
-            if (TryUpdateModel(model, form))
-            {
-                var response = customerRequirementService.Create(model, process, part);
+                var response = customerRequirementService.Create(model);
 
                 if (!response.HasErrors())
                 {
                     TempData["SuccessMessage"] = response.SuccessMessage;
 
-                    return RedirectToAction("Index", "ProductionPlanning");
+                    return RedirectToAction("Create", "CustomerRequirement");
                 }
 
                 TempData["ErrorMessage"] = response.ErrorMessage;

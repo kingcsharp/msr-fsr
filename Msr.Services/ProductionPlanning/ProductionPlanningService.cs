@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Msr.Models.CustomerRequirements;
 using Msr.Services.ProductionPlanning.ViewModels;
 
 namespace Msr.Services.ProductionPlanning
@@ -18,15 +19,15 @@ namespace Msr.Services.ProductionPlanning
             _dbContext = new MsrDbContext();
         }
 
-        public IQueryable<ProductionPlanningView> GetProductionPlaningQueryable()
+        public IQueryable<CustomerSubmittedRequirement> GetProductionPlaningQueryable()
         {
-            return _dbContext.ProductionPlanningViews;
+            return _dbContext.CustomerSubmittedRequirements;
         }
 
-        public ProductionPlanningView GetById(string Id)
-        {
-            return GetProductionPlaningQueryable().Where(x => x.Id == Id).SingleOrDefault();
-        }
+        ////public CustomerSubmittedRequirement GetById(string Id)
+        ////{
+        ////    return GetProductionPlaningQueryable().Where(x => x.Id == Id).SingleOrDefault();
+        ////}
 
         public List<RequirementStepsView> GetStepsByObjectId(string Id)
         {

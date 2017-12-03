@@ -1,11 +1,15 @@
-﻿$(document).ready(function () {
+﻿
+
+
+$(document).ready(function () {
+    //$.jgrid.defaults.responsive = true;
+    // process specs table
 
     var i = parseInt($('#totalRecords').val());
     if (i == 0) {
         manageFirstStep();
     }
-    function manageFirstStep()
-    {
+    function manageFirstStep() {
         $('#row' + i).html("<td><select class='form-control' name='requirementSteps[" + i + "].Process' required><option value=''>Select a Step...</option><option value='INCOMING_INSPECTION'>INCOMING INSPECTION</option><option value='SERIALIZE'>SERIALIZE</option><option value='BEAD_BLAST'>BEAD BLAST</option><option value='SOAK_EXHAUSTED'>SOAK - EXHAUSTED</option></select><span class=" + "text-danger field-validation-error" + " data-valmsg-for=" + "requirementSteps[" + i + "].Process" + " data-valmsg-replace=" + "true" + "></span></td><td><input type='text' name='requirementSteps[" + i + "].Step'  class='form-control' value='" + (i + 1) + "' onkeyup = 'javascript:checkType(this)' required/><span class=" + "text-danger field-validation-error" + " data-valmsg-for=" + "requirementSteps[" + i + "].Step" + " data-valmsg-replace=" + "true" + "></span></td><td><input type='text' name='requirementSteps[" + i + "].StandardDirectLaborMinutes' class='form-control labor-mins' onkeyup = 'javascript:checkType(this)' required='' data-val-required='The Standard Direct Labor Minutes field is required.'/><span class=" + "text-danger field-validation-error" + " data-valmsg-for=" + "requirementSteps[" + i + "].StandardDirectLaborMinutes" + " data-valmsg-replace=" + "true" + "></span><td><input type='texct' name='requirementSteps[" + i + "].StandardMachineMinutes' class='form-control machine-mins' onkeyup = 'javascript:checkType(this)' required/><span class=" + "text-danger field-validation-error" + " data-valmsg-for=" + "requirementSteps[" + i + "].StandardMachineMinutes" + " data-valmsg-replace=" + "true" + "></span></td><td class='text-center hidden hide-col'><div class='input-group'><span class='input-group-addon'>$</span><input type='text' name='requirementSteps[" + i + "].ReplacementCost' value='0' class='form-control' onkeyup='javascript:checkType(this)' onblur = 'javascript:checkBlank(this)'><span class='input-group-addon'>.00</span></div></td><td class='text-center hidden hide-col'><div class='input-group'><input type='text' name='requirementSteps[" + i + "].Utilization' value='0' class='form-control numbersOnly' onkeyup='javascript:checkType(this)' onblur = 'javascript:checkBlank(this)'><span class='input-group-addon'>%</span></div></td><td class='text-center hidden hide-col'><input type='text' name='requirementSteps[" + i + "].UsefulLife' value='0' class='form-control' onkeyup='javascript:checkType(this)' onblur = 'javascript:checkBlank(this)'></div></td><td class='text-center hidden hide-col'><div class='input-group'><span class='input-group-addon'>$</span><input type='text' name='requirementSteps[" + i + "].EquipExpensePerMinute' value='0' class='form-control' onkeyup='javascript:checkType(this)' onblur = 'javascript:checkBlank(this)'><span class='input-group-addon'>.00</span></div></td><td class='text-center hidden hide-col'><div class='input-group'><span class='input-group-addon'>$</span><input type='text' name='requirementSteps[" + i + "].AnnualRM' value='0' class='form-control' onkeyup='javascript:checkType(this)' onblur = 'javascript:checkBlank(this)'><span class='input-group-addon'>.00</span></div></td><td class='text-center hidden hide-col'><div class='input-group'><span class='input-group-addon'>$</span><input type='text' name='requirementSteps[" + i + "].RMPerMinute' value='0' class='form-control' onkeyup='javascript:checkType(this)' onblur = 'javascript:checkBlank(this)'><span class='input-group-addon'>.00</span></div></td>");
         $('#process_steps').append('<tr id="row' + (i + 1) + '" ></tr>');
         i++;
@@ -13,7 +17,8 @@
         manageSwitchColum();
     }
     $("#add_row").click(function () {
-        $('#row' + i).html("<td><select class='form-control' name='requirementSteps[" + i + "].Process' required><option value=''>Select a Step...</option><option value='INCOMING_INSPECTION'>INCOMING INSPECTION</option><option value='SERIALIZE'>SERIALIZE</option><option value='BEAD_BLAST'>BEAD BLAST</option><option value='SOAK_EXHAUSTED'>SOAK - EXHAUSTED</option></select><span class=" + "text-danger field-validation-error" + " data-valmsg-for=" + "requirementSteps[" + i + "].Process" + " data-valmsg-replace=" + "true" + "></span></td><td><input type='text' name='requirementSteps[" + i + "].Step'  class='form-control' value='" + (i + 1) + "' onkeyup = 'javascript:checkType(this)' required/><span class=" + "text-danger field-validation-error" + " data-valmsg-for=" + "requirementSteps[" + i + "].Step" + " data-valmsg-replace=" + "true" + "></span></td><td><input type='text' name='requirementSteps[" + i + "].StandardDirectLaborMinutes' class='form-control labor-mins' onkeyup = 'javascript:checkType(this)' required='' data-val-required='The Standard Direct Labor Minutes field is required.'/><span class=" + "text-danger field-validation-error" + " data-valmsg-for=" + "requirementSteps[" + i + "].StandardDirectLaborMinutes" + " data-valmsg-replace=" + "true" + "></span><td><input type='texct' name='requirementSteps[" + i + "].StandardMachineMinutes' class='form-control machine-mins' onkeyup = 'javascript:checkType(this)' required/><span class=" + "text-danger field-validation-error" + " data-valmsg-for=" + "requirementSteps[" + i + "].StandardMachineMinutes" + " data-valmsg-replace=" + "true" + "></span></td><td class='text-center hidden hide-col'><div class='input-group'><span class='input-group-addon'>$</span><input type='text' name='requirementSteps[" + i + "].ReplacementCost' value='0' class='form-control' onkeyup='javascript:checkType(this)' onblur = 'javascript:checkBlank(this)'><span class='input-group-addon'>.00</span></div></td><td class='text-center hidden hide-col'><div class='input-group'><input type='text' name='requirementSteps[" + i + "].Utilization' value='0' class='form-control numbersOnly' onkeyup='javascript:checkType(this)' onblur = 'javascript:checkBlank(this)'><span class='input-group-addon'>%</span></div></td><td class='text-center hidden hide-col'><input type='text' name='requirementSteps[" + i + "].UsefulLife' value='0' class='form-control' onkeyup='javascript:checkType(this)' onblur = 'javascript:checkBlank(this)'></div></td><td class='text-center hidden hide-col'><div class='input-group'><span class='input-group-addon'>$</span><input type='text' name='requirementSteps[" + i + "].EquipExpensePerMinute' value='0' class='form-control' onkeyup='javascript:checkType(this)' onblur = 'javascript:checkBlank(this)'><span class='input-group-addon'>.00</span></div></td><td class='text-center hidden hide-col'><div class='input-group'><span class='input-group-addon'>$</span><input type='text' name='requirementSteps[" + i + "].AnnualRM' value='0' class='form-control' onkeyup='javascript:checkType(this)' onblur = 'javascript:checkBlank(this)'><span class='input-group-addon'>.00</span></div></td><td class='text-center hidden hide-col'><div class='input-group'><span class='input-group-addon'>$</span><input type='text' name='requirementSteps[" + i + "].RMPerMinute' value='0' class='form-control' onkeyup='javascript:checkType(this)' onblur = 'javascript:checkBlank(this)'><span class='input-group-addon'>.00</span></div></td>");
+        var dropdownProcess = $('#proId').html()
+        $('#row' + i).html("<td><select class='form-control' name='requirementSteps[" + i + "].Process' required>" + dropdownProcess + "</select><span class=" + "text-danger field-validation-error" + " data-valmsg-for=" + "requirementSteps[" + i + "].Process" + " data-valmsg-replace=" + "true" + "></span></td><td><input type='text' name='requirementSteps[" + i + "].Step'  class='form-control' value='" + (i + 1) + "' onkeyup = 'javascript:checkType(this)' required/><span class=" + "text-danger field-validation-error" + " data-valmsg-for=" + "requirementSteps[" + i + "].Step" + " data-valmsg-replace=" + "true" + "></span></td><td><input type='text' name='requirementSteps[" + i + "].StandardDirectLaborMinutes' class='form-control labor-mins' onkeyup = 'javascript:checkType(this)' required='' data-val-required='The Standard Direct Labor Minutes field is required.'/><span class=" + "text-danger field-validation-error" + " data-valmsg-for=" + "requirementSteps[" + i + "].StandardDirectLaborMinutes" + " data-valmsg-replace=" + "true" + "></span><td><input type='texct' name='requirementSteps[" + i + "].StandardMachineMinutes' class='form-control machine-mins' onkeyup = 'javascript:checkType(this)' required/><span class=" + "text-danger field-validation-error" + " data-valmsg-for=" + "requirementSteps[" + i + "].StandardMachineMinutes" + " data-valmsg-replace=" + "true" + "></span></td><td class='text-center hidden hide-col'><div class='input-group'><span class='input-group-addon'>$</span><input type='text' name='requirementSteps[" + i + "].ReplacementCost' value='0' class='form-control' onkeyup='javascript:checkType(this)' onblur = 'javascript:checkBlank(this)'><span class='input-group-addon'>.00</span></div></td><td class='text-center hidden hide-col'><div class='input-group'><input type='text' name='requirementSteps[" + i + "].Utilization' value='0' class='form-control numbersOnly' onkeyup='javascript:checkType(this)' onblur = 'javascript:checkBlank(this)'><span class='input-group-addon'>%</span></div></td><td class='text-center hidden hide-col'><input type='text' name='requirementSteps[" + i + "].UsefulLife' value='0' class='form-control' onkeyup='javascript:checkType(this)' onblur = 'javascript:checkBlank(this)'></div></td><td class='text-center hidden hide-col'><div class='input-group'><span class='input-group-addon'>$</span><input type='text' name='requirementSteps[" + i + "].EquipExpensePerMinute' value='0' class='form-control' onkeyup='javascript:checkType(this)' onblur = 'javascript:checkBlank(this)'><span class='input-group-addon'>.00</span></div></td><td class='text-center hidden hide-col'><div class='input-group'><span class='input-group-addon'>$</span><input type='text' name='requirementSteps[" + i + "].AnnualRM' value='0' class='form-control' onkeyup='javascript:checkType(this)' onblur = 'javascript:checkBlank(this)'><span class='input-group-addon'>.00</span></div></td><td class='text-center hidden hide-col'><div class='input-group'><span class='input-group-addon'>$</span><input type='text' name='requirementSteps[" + i + "].RMPerMinute' value='0' class='form-control' onkeyup='javascript:checkType(this)' onblur = 'javascript:checkBlank(this)'><span class='input-group-addon'>.00</span></div></td>");
 
         $('#process_steps').append('<tr id="row' + (i + 1) + '" ></tr>');
         i++;
@@ -38,9 +43,9 @@
                 if (i == 0) {
                     manageFirstStep();
                 }
-        }
-        recalculateTotals();
-        
+            }
+            recalculateTotals();
+
         }
     });
 
@@ -49,19 +54,19 @@
 
     $('#showHiddenColumns').on('switchChange.bootstrapSwitch', function (e, state) {
         e.preventDefault();
-        
+
         if (state) { //switch on
-                $("#colSwitch").addClass('bootstrap-switch-on');
-                $("#colSwitch").removeClass('bootstrap-switch-off');
-            
+            $("#colSwitch").addClass('bootstrap-switch-on');
+            $("#colSwitch").removeClass('bootstrap-switch-off');
+
             $(".hide-col").removeClass('hidden');
             $(".hide-col").removeClass('hidden');
 
         } else {
-           
+
             $("#colSwitch").removeClass('bootstrap-switch-on');
             $("#colSwitch").addClass('bootstrap-switch-off');
-           
+
             $(".hide-col").addClass('hidden');
             $(".hide-col").addClass('hidden');
         }
@@ -76,6 +81,46 @@
         recalculateTotals();
     });
     recalculateTotals();
+    $('#userRequirementsModal').on('show.bs.modal',
+        function (event) {
+            var button = $(event.relatedTarget);
+            var callBackId = button.data('call-back-id');
+            var modal = $(this);
+
+            $.ajax({
+                type: "GET",
+                url: '/Quote/ViewRequirements/' + callBackId,
+                dataType: 'html',
+                success: function (data) {
+                    modal.find('.modal-body').html(data);
+                },
+                error: function () {
+
+                }
+            });
+
+        });
+
+    $('#quoteModal').on('show.bs.modal',
+        function (event) {
+
+            var button = $(event.relatedTarget);
+            var id = button.data('id');
+
+            var modal = $(this);
+            $.ajax({
+                type: "GET",
+                url: '/Quote/ViewQuote/' + id,
+                dataType: 'html',
+                success: function (data) {
+                    modal.find('.modal-body').html(data);
+                },
+                error: function () {
+
+                }
+            });
+
+        });
 });
 
 function recalculateTotals() {
@@ -128,9 +173,9 @@ function checkType(e) {
     }
 }
 function checkBlank(e) {
-        if (e.value == "") {
-            e.value = 0.00;
-        }
+    if (e.value == "") {
+        e.value = 0.00;
+    }
 }
 function saveSubmit() {
     $('#postType').val('Save & Submit');

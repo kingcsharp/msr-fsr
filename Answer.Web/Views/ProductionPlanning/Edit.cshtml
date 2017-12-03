@@ -1,7 +1,7 @@
-﻿@model Msr.Services.ProductionPlanning.ViewModels.RequirementStepsViewModel
+﻿@model Msr.Models.CustomerRequirements.CustomerSubmittedRequirement
 @{
 
-    ViewBag.Title = "Requirements Step Definition";
+    ViewBag.Title = "Create Product";
 }
 <div class="app-container">
 <div class="row content-container">
@@ -18,7 +18,7 @@
 </div>
 <div class="row" id="reqDetail" style="margin-top:-200px;">
 <div class="col-lg-9 col-md-8">
-    <h2 class="page-header" style="margin-left:50px;">Requirements Step Definition <span id="partNumTitle">@Model.PartKitNo</span> </h2>
+    <h2 class="page-header" style="margin-left:50px;">Create Product <span id="partNumTitle">@Model.PartKitNo</span> </h2>
 </div>
 <div class="col-lg-3 col-md-4" style="display:block;">
 
@@ -32,9 +32,13 @@
             </div>
         </div>
     </div>
-    <div style="display: inline-block;margin-left: 10px;position: relative;top: 19px;" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="View Orginally Submitted Requirements from Customer">
-        <button type="button" class="btn btn-primary pull-right" data-call-back-id="@Model.ObjectId" data-toggle="modal" data-target="#userRequirementsModal"><i class="fa fa-eye"></i> View Requirements</button>
-    </div>
+    
+    @if (!string.IsNullOrWhiteSpace(Model.CustomerRequirementJson))
+    {
+        <div style="display: inline-block; margin-left: 10px; position: relative; top: 19px;" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="View Orginally Submitted Requirements from Customer">
+            <button type="button" class="btn btn-primary pull-right" data-call-back-id="@Model.Id" data-toggle="modal" data-target="#userRequirementsModal"><i class="fa fa-eye"></i> View Requirements</button>
+        </div>
+    }
 </div>
                
 <div class="col-lg-12" style="padding-left:75px">
@@ -44,7 +48,7 @@
     </div>
     @using (Html.BeginForm("Edit", "ProductionPlanning", FormMethod.Post, new { @id = "stepForm", @class = "form form-horizontal", role = "form" }))
     {
-        <div class="row clearfix">
+        @*<div class="row clearfix">
             <div class="col-md-12 column">
                 <input type="hidden" value="@Model.requirementSteps.Count" id="totalRecords" />
                 <input type="hidden" value="" id="postType" name="postType" />
@@ -214,14 +218,19 @@
                     </tfoot>
                 </table>
             </div>
-        </div>
+        </div>*@
         <a id="add_row" class="btn btn-primary pull-left" data-toggle="tooltip" data-placement="top" title="" data-original-title="Add a Step to the Definition"><i class="fa fa-plus-circle"></i> Add Step</a>
         <a id="delete_row" class="pull-left btn btn-warning" style="margin-left: 10px;" data-toggle="tooltip" data-placement="top" title="" data-original-title="Removes Last Step from Definition"><i class="fa fa-minus-circle"></i> Remove Step</a>
         <span data-toggle="tooltip" data-placement="top" title="" data-original-title="Back To Production Planning">&nbsp;&nbsp; @Html.ActionLink("Back", "Index", null, new { @class = "btn btn-warning back-step" })</span>
 
         <button id="submit" class="pull-right btn btn-success" style="margin-left: 10px;" data-toggle="tooltip" data-placement="top" title="" data-original-title="Saves and Sends Quoation to Client" onclick="saveSubmit()"><i class="fa fa-send"></i> Save &amp; Submit</button>
         <button id="save_draft" class="pull-right btn btn-info" style="margin-left: 10px;" data-toggle="tooltip" data-placement="top" title="" data-original-title="Saves with In Progress Status" type="submit" onclick="draft()"><i class="fa fa-save"></i> Save Draft</button>
-        <span class="pull-right btn btn-primary" style="margin-left: 10px;" data-call-back-id="115212" data-placement="top" title="" data-original-title="Generates a Quote Preview" data-toggle="modal" data-target="#quoteModal"><i class="fa fa-eye"></i>Preview Quote</span>
+
+        if (!string.IsNullOrWhiteSpace(Model.QuoteJson))
+         {
+             <span class="pull-right btn btn-primary" style="margin-left: 10px;" data-id="@Model.Id" data-placement="top" title="" data-original-title="Generates a Quote Preview" data-toggle="modal" data-target="#quoteModal"><i class="fa fa-eye"></i>Preview Quote</span>
+         }
+        
     }
 </div>
 
@@ -295,7 +304,7 @@
     </div>
 </div>
 
-<div id="supportModal" class="modal fade" role="dialog">
+@*<div id="supportModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
 
         <!-- Modal content-->
@@ -415,14 +424,13 @@
 
 
     </div>
-</div>
+</div>*@
 <div class="ui-jqdialog modal-content" id="alertmod_custReqsGrid" dir="ltr" style="width: 200px; height: auto; z-index: 950; overflow: hidden; top: 460.5px; left: 860px;" tabindex="-1" role="dialog" aria-labelledby="alerthd_custReqsGrid" aria-hidden="true"><div class="ui-jqdialog-titlebar modal-header" id="alerthd_custReqsGrid" style="cursor: move;"><span class="ui-jqdialog-title" style="float: left;">Warning</span><a class="ui-jqdialog-titlebar-close " style="right: 0.3em;"><span class="glyphicon glyphicon-remove-circle"></span></a></div><div class="ui-jqdialog-content modal-body" id="alertcnt_custReqsGrid"><div>Please, select row</div><span tabindex="0"><span tabindex="-1" id="jqg_alrt"></span></span></div><div class="jqResize ui-resizable-handle ui-resizable-se glyphicon glyphicon-import"></div></div>
 
 @section scripts
 {
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
-    <script type="text/javascript" src="~/assets/js/jquery_005.js"></script>
     <script type="text/javascript" src="~/assets/js/ObjectAssign.js"></script>
     <script type="text/javascript" src="~/assets/js/grids/requirement-steps.js"></script>
 }

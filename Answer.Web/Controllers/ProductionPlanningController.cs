@@ -12,6 +12,7 @@ using Msr.Models.CustomerRequirements;
 using Msr.Services.CustomerRequirements;
 using Msr.Services.CustomerRequirements.ViewModel;
 using Msr.Services.ProductionPlanning.ViewModels;
+using Msr.Services.Quotes;
 using Msr.Services.Quotes.ViewModels;
 
 namespace Answer.Web.Controllers
@@ -19,10 +20,12 @@ namespace Answer.Web.Controllers
     public class ProductionPlanningController : BaseController
     {
         private readonly ProductionPlanningService productionPlanService;
+        private readonly QuoteService _quoteService;
 
         public ProductionPlanningController()
         {
             productionPlanService = new ProductionPlanningService();
+            _quoteService = new QuoteService();
         }
 
         public ActionResult Index()
@@ -38,10 +41,6 @@ namespace Answer.Web.Controllers
 
             var totalRows = productionPlanningService.GetProductionPlaningQueryable();
 
-            var defaultStatusList = base.GetDefaultStatus();
-
-            totalRows = totalRows.Where(x => x.Id.Length > 0);
-
             if (param.where != null && param.where.rules.Any())
             {
                 foreach (var rule in param.where.rules)
@@ -50,41 +49,40 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.Company.ToLower().Contains(rule.data.ToLower()));
                     }
-                    else if (rule.field == nameof(CustomerRequirementView.SubmittedDate))
+                    else if (rule.field == nameof(CustomerSubmittedRequirement.SubmittedDate))
                     {
                         DateTime value;
                         if (DateTime.TryParse(rule.data, out value))
                         {
-                            totalRows = totalRows.Where(q => q.SubmittedDate.HasValue &&
-                                                             q.SubmittedDate.Value.Day == value.Day &&
-                                                             q.SubmittedDate.Value.Month == value.Month &&
-                                                             q.SubmittedDate.Value.Year == value.Year);
+                            totalRows = totalRows.Where(q => q.SubmittedDate.Day == value.Day &&
+                                                             q.SubmittedDate.Month == value.Month &&
+                                                             q.SubmittedDate.Year == value.Year);
                         }
                     }
-                    else if (rule.field == nameof(CustomerRequirementView.DivisionFab))
+                    else if (rule.field == nameof(CustomerSubmittedRequirement.Division))
                     {
-                        totalRows = totalRows.Where(x => x.DivisionFab.ToLower().Contains(rule.data.ToLower()));
+                        totalRows = totalRows.Where(x => x.Division.ToLower().Contains(rule.data.ToLower()));
                     }
-                    else if (rule.field == nameof(CustomerRequirementView.SubmittedBy))
+                    else if (rule.field == nameof(CustomerSubmittedRequirement.SubmittedBy))
                     {
                         totalRows = totalRows.Where(x => x.SubmittedBy.ToLower().Contains(rule.data.ToLower()));
                     }
-                    else if (rule.field == nameof(CustomerRequirementView.PartKitNo))
+                    else if (rule.field == nameof(CustomerSubmittedRequirement.PartKitNo))
                     {
                         totalRows = totalRows.Where(x => x.PartKitNo.ToLower().Contains(rule.data.ToLower()));
                     }
-                    else if (rule.field == nameof(CustomerRequirementView.ShortDescription))
+                    else if (rule.field == nameof(CustomerSubmittedRequirement.Description))
                     {
-                        totalRows = totalRows.Where(x => x.ShortDescription.ToLower().Contains(rule.data.ToLower()));
+                        totalRows = totalRows.Where(x => x.Description.ToLower().Contains(rule.data.ToLower()));
                     }
-                    else if (rule.field == nameof(CustomerRequirementView.Respresentative))
+                    else if (rule.field == nameof(CustomerSubmittedRequirement.Respresentative))
                     {
                         totalRows = totalRows.Where(x => x.Respresentative.ToLower().Contains(rule.data.ToLower()));
                     }
-                    else if (rule.field == nameof(CustomerRequirementView.Status))
-                    {
-                        totalRows = totalRows.Where(x => x.Status.ToLower().Contains(rule.data.ToLower()));
-                    }
+                    ////else if (rule.field == nameof(CustomerSubmittedRequirement.Status))
+                    ////{
+                    ////    totalRows = totalRows.Where(x => x.Status.ToLower().Contains(rule.data.ToLower()));
+                    ////}
                 }
             }
 
@@ -128,19 +126,11 @@ namespace Answer.Web.Controllers
             return View();
         }
 
-        public ActionResult Edit(string id)
+        public ActionResult Edit(int id)
         {
-            RequirementStepsViewModel model = new RequirementStepsViewModel();
+            var requirment =_quoteService.GetById(id);
 
-            var productionPlanningService = new ProductionPlanningService();
-
-            var getSteps = productionPlanningService.GetStepsByObjectId(id);
-
-            model.Setup(getSteps, id);
-
-            model.ObjectId = id;
-
-            return View(model);
+            return View(requirment);
         }
 
         [HttpPost]
@@ -202,38 +192,6 @@ namespace Answer.Web.Controllers
             customerRequirementViewModel.Setup(new CustomerRequirementService());
 
             return PartialView("_ViewRequirements", customerRequirementViewModel);
-        }
-        public ActionResult ViewQuote(string id)
-        {
-            var listitems = new List<QuoteItemsViewModel>();
-            var item = new QuoteItemsViewModel
-            {
-                ItemNo = 1,
-                Quantity = 1,
-                Description = "Singulus Kit 101010011",
-                Price = (decimal)137.00,
-                Extension = "137.00"
-            };
-
-            listitems.Add(item);
-            var freeFormQuoteViewModel = new FreeFormQuoteViewModel
-            {
-                Date = DateTime.Today.ToString(CultureInfo.InvariantCulture),
-                Customer = "Intel",
-                Address = "4500 S. Dobson Road",
-                Contact = "Tracy Ridge",
-                CityStateZip = "Chandler, AZ, 85248",
-                FOB = DateTime.Today.ToString(CultureInfo.InvariantCulture),
-                Title = "EMM Manager",
-                Terms = "terms",
-                Phone = "480-715-2008",
-                Delivery = "Post",
-                Email = "tracy.ridge@intel.com",
-                QuoteItemsViewModels = listitems
-
-            };
-
-            return PartialView("_ViewQuote", freeFormQuoteViewModel);
         }
 
         public ActionResult Status(string id, string currentStatus)

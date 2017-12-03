@@ -1,47 +1,60 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Web.Script.Serialization;
 using Msr.Services.Quotes.ViewModels;
+using Msr.Models.CustomerRequirements;
+using Msr.Repositories;
 
 namespace Msr.Services.Quotes
 {
     public class QuoteService
     {
-        public ResultNotification<string> Create(FreeFormQuoteViewModel model, List<QuoteItemsViewModel> quoteItemsViewModels)
+        private readonly MsrDbContext _dbContext;
+
+        public QuoteService()
         {
-            var response = new ResultNotification<string>();
-            try
-            {
-                //need to know what to use procedure or entity framework savechanges()
-                response.SuccessMessage = "Quote has been saved successfully.";
-                return response;
-            }
-            catch (Exception ex)
-            {
-                var message = "Error occured:" + ex.Message;
-                response.AddError(message);
-                return response;
-            }
-           
+            _dbContext = new MsrDbContext();
         }
-        public ResultNotification<string> Edit(FreeFormQuoteViewModel model, List<QuoteItemsViewModel> quoteItemsViewModels)
+
+        public ResultNotification<string> Create(FreeFormQuoteViewModel model)
         {
             var response = new ResultNotification<string>();
+
             try
             {
-                //need to know what to use procedure or entity framework savechanges()
-                response.SuccessMessage = "Quote has been edited successfully.";
-                return response;
+
+                foreach (var item in model.QuoteItems)
+                {
+                    var entity = new CustomerSubmittedRequirement
+                    {
+                        Company = model.Customer,
+                        Description = item.Description,
+                        SubmittedBy = model.CreatedBy,
+                        SubmittedDate = model.Date.Value,
+                        QuoteJson = new JavaScriptSerializer().Serialize(model)
+                    };
+
+                    _dbContext.CustomerSubmittedRequirements.Add(entity);
+                }
+
+                _dbContext.SaveChanges();
+
+                response.SuccessMessage = "Quote has been submitted successfully.";
             }
             catch (Exception ex)
             {
                 var message = "Error occured:" + ex.Message;
                 response.AddError(message);
-                return response;
             }
 
+            return response;
+        }
+
+        public CustomerSubmittedRequirement GetById(int id)
+        {
+            var requirment = _dbContext.CustomerSubmittedRequirements.SingleOrDefault(x => x.Id == id);
+
+            return requirment;
         }
     }
 }

@@ -2162,3 +2162,29 @@ input.pre-populated {
 #print-other-content .flat-blue .table > tfoot > tr > th {
     border-color: #0E0D0D !important;
 }
+
+.no-border {
+    border-bottom: 0px !important;
+}
+
+.no-border th, .no-border td {
+    border: 1px !important;
+}
+
+.quote-header th {
+    text-align: right;
+}
+
+.items-table th {
+    text-align: center;
+}
+
+.items-table > tbody > tr > td {
+    min-height: 35px;
+    height: 35px;
+}
+
+.line-caption {
+    font-size: 9px;
+    padding-top: 2px !important;
+}

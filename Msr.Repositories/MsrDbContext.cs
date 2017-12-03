@@ -99,6 +99,7 @@ namespace Msr.Repositories
             modelBuilder.Entity<PartInfoView>().ToTable("Portal_PartInfo");
             modelBuilder.Entity<RequirementStepsView>().ToTable("Portal_RequirementSteps");
             modelBuilder.Entity<ProductionPlanningView>().ToTable("Portal_ProductionPlanningView");
+            modelBuilder.Entity<CustomerSubmittedRequirement>().ToTable("Portal_CustomerSubmittedRequirement");
         }
 
         public DbSet<AspNetUser> AspNetUsers { get; set; }
@@ -157,6 +158,7 @@ namespace Msr.Repositories
         public DbSet<PartInfoView> PartInfoViews { get; set; }
         public DbSet<RequirementStepsView> RequirementStepsViews { get; set; }
         public DbSet<ProductionPlanningView> ProductionPlanningViews { get; set; }
+        public DbSet<CustomerSubmittedRequirement> CustomerSubmittedRequirements { get; set; }
 
     }
 }

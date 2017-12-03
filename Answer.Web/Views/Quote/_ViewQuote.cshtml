@@ -39,7 +39,7 @@
         </tr>
         <tr>
             <th align="right">Part / Kit No.:</th>
-            <td>Singulus Kit 101010011</td>
+            <td></td>
         </tr>
         <tr>
             <td colspan="3" align="center"><h2>Quotation</h2></td>
@@ -95,7 +95,7 @@
             <th align="right">Delivery:</th>
             <td>@Html.DisplayFor(x => x.Delivery)</td>
             <th align="right">Email:</th>
-            <td>@Html.DisplayFor(x => x.Email)</td>
+            <td></td>
         </tr>
         <tr>
             <td colspan="4"></td>
@@ -114,17 +114,20 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.QuoteItemsViewModels)
-        {
-            <tr>
-                <td align="center">@item.ItemNo</td>
-                <td align="center">@item.Quantity</td>
-                <td align="center">Unit</td>
-                <td>@item.Description</td>
-                <td align="center">@item.Price</td>
-                <td align="center">@item.Extension</td>
-            </tr>
-        }
+    
+    @foreach (var item in Model.QuoteItems)
+    {
+        var index = 1;
+        <tr>
+            <td align="center">@index</td>
+            <td align="center">@item.Quantity</td>
+            <td align="center">Unit</td>
+            <td>@item.Description</td>
+            <td align="center">$ @item.Price</td>
+            <td align="center">$ @item.Extension</td>
+        </tr>
+        index = index +1;
+    }
     </tbody>
 </table>
 <table class="table" width="100%">
