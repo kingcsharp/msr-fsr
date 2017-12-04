@@ -22,7 +22,6 @@ namespace Msr.Services.Quotes
 
             try
             {
-
                 foreach (var item in model.QuoteItems)
                 {
                     var entity = new CustomerSubmittedRequirement
@@ -31,6 +30,7 @@ namespace Msr.Services.Quotes
                         Description = item.Description,
                         SubmittedBy = model.CreatedBy,
                         SubmittedDate = model.Date.Value,
+                        Status = CustomerSubmittedRequirementConstants.Received,
                         QuoteJson = new JavaScriptSerializer().Serialize(model)
                     };
 

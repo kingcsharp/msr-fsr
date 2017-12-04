@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using Msr.Services.CustomerRequirements;
 using Msr.Services.CustomerRequirements.ViewModel;
 
@@ -18,7 +14,7 @@ namespace Answer.Web.Controllers
         public ActionResult Create()
         {
             var model = new CustomerRequirementViewModel();
-            model.Setup(new CustomerRequirementService());
+            model.Setup();
 
             return View(model);
         }
@@ -44,7 +40,7 @@ namespace Answer.Web.Controllers
                 TempData["ErrorMessage"] = response.ErrorMessage;
             }
 
-            model.Setup(new CustomerRequirementService());
+            model.Setup();
 
             return View(model);
         }

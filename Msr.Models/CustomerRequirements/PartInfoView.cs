@@ -10,5 +10,11 @@
         public string CustPartNo { get; set; }
         public string MfgPartNo { get; set; }
         public string PartsPerKit { get; set; }
+        public string Quantity { get; set; }
+        public string LeadTime { get; set; }
+        public string Price { get; set; }
+        public string Extension { get; set; }
+        public string ProcedureId { get; set; }
+        public string Status { get; set; }
     }
 }

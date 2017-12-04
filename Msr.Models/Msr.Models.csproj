@@ -115,6 +115,7 @@
     <Compile Include="CustomerRequirements\CustomerSubmittedRequirement.cs" />
     <Compile Include="CustomerRequirements\PartInfoView.cs" />
     <Compile Include="CustomerRequirements\ProcessInfoView.cs" />
+    <Compile Include="CustomerRequirements\CustomerSubmittedRequirementConstants.cs" />
     <Compile Include="Delivery\DeliveryScreenView.cs" />
     <Compile Include="Documents\DocumentFilesView.cs" />
     <Compile Include="Documents\DocumentView.cs" />
@@ -163,7 +164,7 @@
     <Compile Include="ProcedureVerbs\VerbType.cs" />
     <Compile Include="ProcedureVerbs\VerbTypes.cs" />
     <Compile Include="ProductionPlanning\ProductionPlanningView.cs" />
-    <Compile Include="ProductionPlanning\RequirementStepsView.cs" />
+    <Compile Include="ProductionPlanning\RequirementStep.cs" />
     <Compile Include="ProductsActualPart\ProductsActualPartView.cs" />
     <Compile Include="Products\ProductsView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

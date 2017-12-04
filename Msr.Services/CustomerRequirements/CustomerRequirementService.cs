@@ -54,6 +54,7 @@ namespace Msr.Services.CustomerRequirements
                         PartKitNo = model.PartKitNo,
                         Respresentative = model.Respresentative,
                         SubmittedBy = model.SubmittedBy,
+                        Status = CustomerSubmittedRequirementConstants.Received,
                         SubmittedDate = DateTime.Now,
                         CustomerRequirementJson = new JavaScriptSerializer().Serialize(model)
                     };
@@ -82,7 +83,7 @@ namespace Msr.Services.CustomerRequirements
             partInfoView.PartDescription = model.PartDescription;
             partInfoView.Substrate = model.Substrate;
             partInfoView.CoatingSurface = model.CoatingSurface;
-            partInfoView.CustPartNo = model.CustPartNo;
+          //  partInfoView.CustPartNo = model.CustPartNo;
             partInfoView.MfgPartNo = model.MfgPartNo;
             partInfoView.PartsPerKit = model.PartsPerKit;
 

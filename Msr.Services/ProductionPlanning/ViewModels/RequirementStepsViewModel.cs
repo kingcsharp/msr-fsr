@@ -1,8 +1,12 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Web.Mvc;
-using Msr.Models.ProductionPlanning;
+using Msr.Services.Parts.ViewModels;
+using Msr.Models.CustomerRequirements;
+using Msr.Services.Procedures.ViewModels;
+using Msr.Services.Procedures.Messages;
 
 namespace Msr.Services.ProductionPlanning.ViewModels
 {
@@ -10,133 +14,133 @@ namespace Msr.Services.ProductionPlanning.ViewModels
     {
         public RequirementStepsViewModel()
         {
-            requirementSteps = new List<RequirementStepsViewModel>();
+            AddPartViewModel = new AddPartViewModel();
+            SaveProcedureViewModel = new SaveProcedureViewModel();
+            Steps = new List<RequirementStepsDetailsViewModel>();
         }
+
+        public CustomerSubmittedRequirement SubmittedRequirement { get; set; }
+        public bool HasQuote { get; set; }
+
         public int Id { get; set; }
         public string ObjectId { get; set; }
-
+        public string OldProductProcedureId { get; set; }
         [Required]
-        public string Process { get; set; }
-
-        [Required]
-        [Range(0, double.MaxValue, ErrorMessage = "Please enter numaric value only")]
-        public int Step { get; set; }
-
-        [Required]
-        [Display(Name = "Standard Direct Labor Minutes")]
-        [Range(0, double.MaxValue, ErrorMessage = "Please enter numaric value only")]
-        public decimal StandardDirectLaborMinutes { get; set; }
-
-        [Required]
-        [Display(Name = "Standard Machine Minutes")]
-        [Range(0, double.MaxValue, ErrorMessage = "Please enter numaric value only")]
-        public decimal StandardMachineMinutes { get; set; }
-
-       
-        [Display(Name = "Replacement Cost")]
-        
-        public decimal ReplacementCost { get; set; }
-
-       
-        [Display(Name = "Utilization")]
-        
-        public decimal Utilization { get; set; }
-        
-        [Display(Name = "UsefulLife")]
-        
-        public decimal UsefulLife { get; set; }
-
-        [Display(Name = "Equip Expense Per Minute")]
-        
-        public decimal EquipExpensePerMinute { get; set; }
-
-        [Display(Name = "Annual RM")]
-        
-        public decimal AnnualRM { get; set; }
-
-        [Display(Name = "RM Per Minute")]
-        
-        public decimal RMPerMinute { get; set; }
+        public string ProductProcedureId { get; set; }
+        public string ProductPartId { get; set; }
+        public string ProductName { get; set; }
+        public string ProductSupplierId { get; set; }
+        public string ProductLocationId { get; set; }
+        public string ProductCustomerName { get; set; }
+        public string ProductCustomerDivision { get; set; }
 
         [Display(Name = "Total Direct Mins")]
-        
+
         public decimal TotalDirectMins { get; set; }
 
         [Display(Name = "Total Machine Mins")]
-        
+
         public decimal TotalMachineMins { get; set; }
 
         [Display(Name = "Total Direct Dollar")]
-        
+
         public decimal TotalDirectDollar { get; set; }
 
         [Display(Name = "Standard Machine Dollar")]
-        
+
         public decimal StandardMachineDollar { get; set; }
 
         [Display(Name = "Total Sale Price")]
-        
+
         public decimal TotalSalePrice { get; set; }
 
-        public string PartKitNo { get; set; }
-
-        public string postType { get; set; }
-
-        public List<RequirementStepsViewModel> requirementSteps { get; set; }
-
+        public AddPartViewModel AddPartViewModel { get; set; }
+        public SaveProcedureViewModel SaveProcedureViewModel { get; set; }
+        public List<RequirementStepsDetailsViewModel> Steps { get; set; }
         public List<SelectListItem> ProcessList { get; set; }
+        public List<SelectListItem> ProductSupplierList { get; set; }
+        public List<SelectListItem> ProductLocationList { get; set; }
+        public List<SelectListItem> ProcedureList { get; set; }
+        public List<SelectListItem> PartList { get; set; }
 
-        public void Setup(List<RequirementStepsView> steps, string id)
+        public void Setup(ProductionPlanningService productionPlanningService, List<GetStepDataResult> stepsdropdownDataResults)
         {
-            ProductionPlanningService service = new ProductionPlanningService();
-            foreach (var step in steps)
+            ProcedureList = productionPlanningService.GetProceduretList().Select(x => new SelectListItem
             {
-                RequirementStepsViewModel addStep = new RequirementStepsViewModel();
+                Text = x.Show,
+                Value = x.Value.ToString()
+            }).OrderBy(o => o.Text).ToList();
 
-                addStep.Id = step.Id;
-                addStep.ObjectId = step.ObjectId;
-                addStep.Process = step.Process;
-                addStep.Step = step.Step;
-                addStep.StandardDirectLaborMinutes = step.StandardDirectLaborMinutes;
-                addStep.StandardMachineMinutes = step.StandardMachineMinutes;
-                addStep.ReplacementCost = step.ReplacementCost;
-                addStep.Utilization = step.Utilization;
-                addStep.UsefulLife = step.UsefulLife;
-                addStep.EquipExpensePerMinute = step.EquipExpensePerMinute;
-                addStep.AnnualRM = step.AnnualRM;
-                addStep.RMPerMinute = step.RMPerMinute;
-                requirementSteps.Add(addStep);
-            }
-            ProcessList = new List<SelectListItem>
+            PartList = productionPlanningService.GetPartList().Select(x => new SelectListItem
             {
-                 new SelectListItem
-                {
-                    Text = "Select a Step...",
-                    Value = ""
-                },
-                new SelectListItem
-                {
-                    Text = "INCOMING INSPECTION",
-                    Value = "INCOMING_INSPECTION"
-                },
-                new SelectListItem
-                {
-                    Text = "SERIALIZE",
-                    Value = "SERIALIZE"
-                },
-                new SelectListItem
-                {
-                    Text = "BEAD BLAST",
-                    Value = "BEAD_BLAST"
-                },
-                new SelectListItem
-                {
-                    Text = "SOAK - EXHAUSTED",
-                    Value = "SOAK_EXHAUSTED"
-                }
-            };
-            PartKitNo = service.GetPartKitNo(id);
+                Text = x.Show,
+                Value = x.Value.ToString()
+            }).OrderBy(o => o.Text).ToList();
+
+            ProductSupplierList = productionPlanningService.GetSupplierList().Select(x => new SelectListItem
+            {
+                Text = x.Show,
+                Value = x.Value.ToString()
+            }).OrderBy(o => o.Text).ToList();
+
+            ProductLocationList = productionPlanningService.GetLocationsQueryable().Where(x => x.Status == "APPROVED").Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.ObjId
+            }).OrderBy(o => o.Text).ToList();
+
+            ProcessList = stepsdropdownDataResults.Select(x => new SelectListItem
+            {
+                Text = x.StepTitle,
+                Value = x.Id.ToString()
+            }).OrderBy(o => o.Text).ToList();
         }
 
+
+        public void Read(ProductionPlanningService productionPlanService, CustomerSubmittedRequirement requirment)
+        {
+            Id = requirment.Id;
+            SubmittedRequirement = requirment;
+            ProductCustomerDivision = requirment.Division;
+            ProductSupplierId = requirment.SupplierId;
+            ProductLocationId = requirment.LocationId;
+            ProductCustomerName = requirment.Customer;
+            ProductCustomerDivision = requirment.Division;
+            ProductName = requirment.ProductName;
+            ProductPartId = requirment.PartId;
+            ProductProcedureId = requirment.ProcedureId;
+            OldProductProcedureId = requirment.ProcedureId;
+            OldProductProcedureId = requirment.ProcedureId;
+
+            if (!string.IsNullOrWhiteSpace(requirment.QuoteJson))
+            {
+                HasQuote = true;
+            }
+
+            var attachedSteps = productionPlanService.GetStepsByObjectId(requirment.Id);
+
+            if (attachedSteps.Any())
+            {
+                foreach (var step in attachedSteps)
+                {
+                    Steps.Add(new RequirementStepsDetailsViewModel
+                    {
+                        Id = step.Id,
+                        ObjectId = step.ObjectId,
+                        Process = step.Process,
+                        Step = step.Step,
+                        StandardDirectLaborMinutes = step.StandardDirectLaborMinutes,
+                        StandardMachineMinutes = step.StandardMachineMinutes,
+                        ReplacementCost = step.ReplacementCost,
+                        Utilization = step.Utilization,
+                        UsefulLife = step.UsefulLife,
+                        EquipExpensePerMinute = step.EquipExpensePerMinute,
+                        AnnualRM = step.AnnualRm,
+                        RMPerMinute = step.RmPerMinute
+
+                    });
+                }
+            }
+        }
     }
 }

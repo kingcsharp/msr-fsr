@@ -3,40 +3,71 @@ using Msr.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Msr.Models.CustomerRequirements;
+using Msr.Services.Procedures;
+using Msr.Services.Procedures.Messages;
 using Msr.Services.ProductionPlanning.ViewModels;
+using Msr.Models.Common;
+using Msr.Models.Locations;
 
 namespace Msr.Services.ProductionPlanning
 {
     public class ProductionPlanningService
     {
         private readonly MsrDbContext _dbContext;
+        private ProceduresService _proceduresService;
 
         public ProductionPlanningService()
         {
             _dbContext = new MsrDbContext();
+            _proceduresService = new ProceduresService();
         }
 
         public IQueryable<CustomerSubmittedRequirement> GetProductionPlaningQueryable()
         {
             return _dbContext.CustomerSubmittedRequirements;
         }
-
-        ////public CustomerSubmittedRequirement GetById(string Id)
-        ////{
-        ////    return GetProductionPlaningQueryable().Where(x => x.Id == Id).SingleOrDefault();
-        ////}
-
-        public List<RequirementStepsView> GetStepsByObjectId(string Id)
+        public IQueryable<PartInfoView> GetProductionPartInfoViewQueryable()
         {
-            return _dbContext.RequirementStepsViews.Where(x => x.ObjectId == Id).OrderBy(x => x.Id).ToList();
+            return _dbContext.PartInfoViews;
         }
 
-        public string GetPartKitNo(string Id)
+        public PartInfoView GetProductionById(int Id)
         {
-            var result = _dbContext.CustomerRequirementViews.Where(x => x.Id == Id).SingleOrDefault();
+            return GetProductionPartInfoViewQueryable().SingleOrDefault(x => x.Id == Id);
+        }
+        public CustomerRequirement GetCustomerById(string Id)
+        {
+            return _dbContext.CustomerRequirements.SingleOrDefault(x => x.Id == Id);
+        }
+        public List<RequirementStep> GetStepsByObjectId(int id)
+        {
+            return _dbContext.RequirementSteps.Where(x => x.CustomerSubmittedRequirementId == id).OrderBy(x => x.Id).ToList();
+        }
+      
+        public IQueryable<LocationView> GetLocationsQueryable()
+        {
+            return _dbContext.LocationViews;
+        }
+        public GetStepDataResult GetSteps(string id)
+        {
+            var procedureName = _proceduresService.GetProceduresQueryable().Where(x => x.ObjectId == id).SingleOrDefault().Name;
+
+            var viewModel = new GetStepDataResult
+            {
+                GetStepDataResults = _proceduresService.GetStepsData(id, "1618")
+            };
+
+            viewModel.AddMonitorForProcedureViewModel.Setup();
+            viewModel.AddMonitorForProcedureViewModel.Related_Object_Id = id;
+            //ViewBag.ProcObjectId = id;
+            //ViewBag.ProdecureName = procedureName;
+            return viewModel;
+        }
+
+        public string GetPartKitNo(string id)
+        {
+            var result = _dbContext.CustomerRequirementViews.Where(x => x.Id == id).SingleOrDefault();
 
             if (result != null)
             {
@@ -48,9 +79,9 @@ namespace Msr.Services.ProductionPlanning
             }
         }
 
-        public void UpdateStep(RequirementStepsView model)
+        public void UpdateStep(RequirementStep model)
         {
-            var step = _dbContext.RequirementStepsViews.Where(x => x.Id == model.Id).SingleOrDefault();
+            var step = _dbContext.RequirementSteps.SingleOrDefault(x => x.Id == model.Id);
             step.Process = model.Process;
             step.Step = model.Step;
             step.StandardDirectLaborMinutes = model.StandardDirectLaborMinutes;
@@ -59,8 +90,8 @@ namespace Msr.Services.ProductionPlanning
             step.Utilization = model.Utilization;
             step.UsefulLife = model.UsefulLife;
             step.EquipExpensePerMinute = model.EquipExpensePerMinute;
-            step.AnnualRM = model.AnnualRM;
-            step.RMPerMinute = model.RMPerMinute;
+            step.AnnualRm = model.AnnualRm;
+            step.RmPerMinute = model.RmPerMinute;
             _dbContext.SaveChanges();
         }
 
@@ -75,40 +106,58 @@ namespace Msr.Services.ProductionPlanning
             else
             {
                 step.Status = "IN_APPROVAL";
-
             }
 
             _dbContext.SaveChanges();
         }
 
-        public ResultNotification<string> Edit(string id, RequirementStepsViewModel model)
+        public ResultNotification<string> Save(RequirementStepsViewModel model)
         {
-            var count = model.requirementSteps.Count;
-
             var result = new ResultNotification<string>();
+
             try
             {
-                foreach (var step in model.requirementSteps)
+                var requirment = _dbContext.CustomerSubmittedRequirements.Single(x => x.Id == model.Id);
+                requirment.SupplierId = model.ProductSupplierId;
+                requirment.LocationId = model.ProductLocationId;
+                requirment.Customer = model.ProductCustomerName;
+                requirment.ProductName = model.ProductName;
+                requirment.PartId = model.ProductPartId;
+                requirment.ProcedureId = model.ProductProcedureId;
+                requirment.Division = model.ProductCustomerDivision;
+
+                foreach (var step in model.Steps)
                 {
                     var requirementStep = StepMapping(step);
 
-                    requirementStep.ObjectId = id;
+                    var record = _dbContext.RequirementSteps.SingleOrDefault(x => x.Id == requirementStep.Id);
 
-                    if (requirementStep.Id == 0)
+                    if (record == null)
                     {
-                        _dbContext.RequirementStepsViews.Add(requirementStep);
+                        requirementStep.CustomerSubmittedRequirementId = model.Id;
+
+                        _dbContext.RequirementSteps.Add(requirementStep);
                     }
                     else
                     {
                         UpdateStep(requirementStep);
                     }
-
                 }
+
+                var stepsIds = model.Steps.Select(x => x.Id).ToList();
+
+                var stepsToDelete = _dbContext.RequirementSteps.Where(x => x.CustomerSubmittedRequirementId == model.Id && !stepsIds.Contains(x.Id)).ToList();
+
+                foreach (var step in stepsToDelete)
+                {
+                    _dbContext.RequirementSteps.Remove(step);
+                }
+
                 _dbContext.SaveChanges();
 
-                UpdateStatus(id, model.postType);
+                //UpdateStatus(id, model.postType); need to know how to implement this.
 
-                if (model.requirementSteps.Count > 1)
+                if (model.Steps.Count > 1)
                 {
                     result.SuccessMessage = "Requirement steps have been saved successfully.";
                 }
@@ -128,35 +177,41 @@ namespace Msr.Services.ProductionPlanning
             return result;
         }
 
-        public RequirementStepsView StepMapping(RequirementStepsViewModel model)
+        public RequirementStep StepMapping(RequirementStepsDetailsViewModel model)
         {
-            RequirementStepsView step = new RequirementStepsView();
-
-            step.Id = model.Id;
-            step.ObjectId = model.ObjectId;
-            step.Process = model.Process;
-            step.Step = model.Step;
-            step.StandardDirectLaborMinutes = model.StandardDirectLaborMinutes;
-            step.StandardMachineMinutes = model.StandardMachineMinutes;
-            step.ReplacementCost = model.ReplacementCost;
-            step.Utilization = model.Utilization;
-            step.UsefulLife = model.UsefulLife;
-            step.EquipExpensePerMinute = model.EquipExpensePerMinute;
-            step.AnnualRM = model.AnnualRM;
-            step.RMPerMinute = model.RMPerMinute;
+            var step = new RequirementStep
+            {
+                Id = model.Id,
+                ObjectId = model.ObjectId,
+                Process = model.Process,
+                Step = model.Step,
+                StandardDirectLaborMinutes = model.StandardDirectLaborMinutes.GetValueOrDefault(),
+                StandardMachineMinutes = model.StandardMachineMinutes.GetValueOrDefault(),
+                ReplacementCost = model.ReplacementCost,
+                Utilization = model.Utilization,
+                UsefulLife = model.UsefulLife,
+                EquipExpensePerMinute = model.EquipExpensePerMinute,
+                AnnualRm = model.AnnualRM,
+                RmPerMinute = model.RMPerMinute
+            };
 
             return step;
         }
+
+        public List<RequirementStep> GetStepsByRequirementId(int id)
+        {
+            var result = _dbContext.RequirementSteps.Where(x => x.CustomerSubmittedRequirementId == id).ToList();
+
+            return result;
+        }
+
+
         public void DeleteStep(int id)
         {
+            var result = _dbContext.RequirementSteps.Single(x => x.Id == id);
 
-            var result = _dbContext.RequirementStepsViews.Where(x => x.Id == id).SingleOrDefault();
-            if (result != null)
-            {
-                _dbContext.RequirementStepsViews.Remove(result);
-                _dbContext.SaveChanges();
-            }
-
+            _dbContext.RequirementSteps.Remove(result);
+            _dbContext.SaveChanges();
         }
 
         public ResultNotification<string> ChangeStatus(string id, string status)
@@ -184,5 +239,28 @@ namespace Msr.Services.ProductionPlanning
             return result;
 
         }
+
+        public List<SelectFile> GetProceduretList()
+        {
+            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT DISTINCT SHOWNAME as Show,Object_Id as Value   FROM A_V_PROCEDURES_APPROVED_DATA_DROP_DOWN WHERE ( CREATING_CO = '2'  ) AND (( NAME LIKE '%f%' AND NAME LIKE '%%' ) )    ORDER BY SHOWNAME").ToList();
+
+            return result;
+        }
+
+        public List<SelectFile> GetPartList()
+        {
+            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT DISTINCT NAME_COMBO as Show,ID as Value   FROM A_V_PARTS_APPROVED_DATA WHERE ( COMPANY = '2'  ) AND (( NAME_COMBO LIKE '%f%' AND NAME_COMBO LIKE '%%' ) )    ORDER BY NAME_COMBO").ToList();
+
+            return result;
+        }
+
+        public List<SelectFile> GetSupplierList()
+        {
+            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT DISTINCT NAME as Show,ID as Value FROM A_V_COMPANIES_DROP_SEARCH WHERE ( ROOT_CO_ID = '2' ) AND (( NAME LIKE '%f%' AND NAME LIKE '%%' ) ) ORDER BY NAME").ToList();
+
+            return result;
+        }
+
+
     }
 }

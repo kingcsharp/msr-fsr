@@ -1,37 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Msr.Services.jqGrid;
-using Msr.Web.ViewModel.Engineering;
 using Msr.Services.ProductionPlanning;
-using Msr.Models.ProductionPlanning;
 using Msr.Models.CustomerRequirements;
-using Msr.Services.CustomerRequirements;
-using Msr.Services.CustomerRequirements.ViewModel;
+using Msr.Services.Procedures;
 using Msr.Services.ProductionPlanning.ViewModels;
 using Msr.Services.Quotes;
-using Msr.Services.Quotes.ViewModels;
 
 namespace Answer.Web.Controllers
 {
     public class ProductionPlanningController : BaseController
     {
-        private readonly ProductionPlanningService productionPlanService;
+        private readonly ProductionPlanningService _productionPlanService;
+        private readonly ProceduresService _proceduresService;
         private readonly QuoteService _quoteService;
 
         public ProductionPlanningController()
         {
-            productionPlanService = new ProductionPlanningService();
+            _proceduresService = new ProceduresService();
+            _productionPlanService = new ProductionPlanningService();
             _quoteService = new QuoteService();
         }
 
         public ActionResult Index()
         {
             ViewBag.ActiveClass = "ProductionPlanning";
-
             return View();
         }
 
@@ -122,82 +117,102 @@ namespace Answer.Web.Controllers
 
         public ActionResult Add()
         {
-
             return View();
         }
 
         public ActionResult Edit(int id)
         {
+            var currentUser = GetCurrentUser();
             var requirment =_quoteService.GetById(id);
 
-            return View(requirment);
+            var viewModel = new RequirementStepsViewModel();
+            viewModel.Read(_productionPlanService, requirment);
+
+            var procedureSteps = _proceduresService.GetStepsData(viewModel.ProductProcedureId, currentUser.Id);
+            viewModel.Setup(_productionPlanService, procedureSteps);
+
+            if (!string.IsNullOrWhiteSpace(viewModel.ProductProcedureId) && !viewModel.Steps.Any())
+            {
+                foreach (var step in procedureSteps)
+                {
+                    viewModel.Steps.Add(new RequirementStepsDetailsViewModel
+                    {
+                        ObjectId = step.Id,
+                        Process = step.StepTitle,
+                        Step = (int)step.Print_Order
+                    });
+                }
+            }
+
+            viewModel.ProductName = requirment.ProductName;
+
+            return View(viewModel);
         }
 
         [HttpPost]
-        public ActionResult Edit(string id, RequirementStepsViewModel model)
+        public ActionResult Edit(string id, RequirementStepsViewModel vm, string saveSubmit, string saveDraft)
         {
-            var productionPlanningService = new ProductionPlanningService();
-
+            var currentUser = GetCurrentUser();
             ModelState.Clear();
+
+            if (vm.ProductProcedureId != vm.OldProductProcedureId)
+            {
+                vm.OldProductProcedureId = vm.ProductProcedureId;
+                var procedureSteps = _proceduresService.GetStepsData(vm.ProductProcedureId, currentUser.Id);
+
+                vm.Steps = new List<RequirementStepsDetailsViewModel>();
+
+                foreach (var step in procedureSteps)
+                {
+                    vm.Steps.Add(new RequirementStepsDetailsViewModel
+                    {
+                        ObjectId = step.Id,
+                        Process = step.StepTitle,
+                        Step = (int)step.Print_Order
+                    });
+                }
+                vm.Setup(_productionPlanService, procedureSteps);
+
+                return View(vm);
+            }
 
             if (ModelState.IsValid)
             {
-                var response = productionPlanningService.Edit(id: id, model: model);
-
-                if (!response.HasErrors())
+                if (!string.IsNullOrWhiteSpace(saveDraft))
                 {
-                    TempData["SuccessMessage"] = response.SuccessMessage;
+                    var response = _productionPlanService.Save(vm);
 
-                    if (model.postType == "Save & Submit")
+                    if (!response.HasErrors())
                     {
-                        return RedirectToAction("Index");
+                        TempData["SuccessMessage"] = response.SuccessMessage;
+
+                        if (!string.IsNullOrWhiteSpace(saveSubmit))
+                        {
+                            return RedirectToAction("Index");
+                        }
+                        else
+                        {
+
+                            vm.Setup(_productionPlanService, _proceduresService.GetStepsData(vm.ProductProcedureId, currentUser.Id));
+
+                            return View(vm);
+
+                        }
                     }
-                    else
-                    {
-                        model = new RequirementStepsViewModel();
 
-                        var getRequirementSteps = productionPlanningService.GetStepsByObjectId(id);
-
-                        model.Setup(getRequirementSteps, id);
-
-                        model.ObjectId = id;
-
-                        return View(model);
-
-                    }
-
+                    TempData["ErrorMessage"] = response.ErrorMessage;
                 }
-
-                TempData["ErrorMessage"] = response.ErrorMessage;
-
             }
 
-            var getSteps = productionPlanningService.GetStepsByObjectId(id);
+            vm.Setup(_productionPlanService, _proceduresService.GetStepsData(vm.ProductProcedureId, currentUser.Id));
 
-            model.Setup(getSteps, id);
-
-            return View(model);
-        }
-
-        public ActionResult ViewRequirements(string id)
-        {
-            var customerRequirementService = new CustomerRequirementService();
-
-            var model = customerRequirementService.GetById(id);
-
-            var customerRequirementViewModel = new CustomerRequirementViewModel();
-
-            customerRequirementViewModel = customerRequirementViewModel.MapToDto(model);
-
-            customerRequirementViewModel.Setup(new CustomerRequirementService());
-
-            return PartialView("_ViewRequirements", customerRequirementViewModel);
+            return View(vm);
         }
 
         public ActionResult Status(string id, string currentStatus)
         {
 
-            var response = productionPlanService.ChangeStatus(id, currentStatus);
+            var response = _productionPlanService.ChangeStatus(id, currentStatus);
 
             if (!response.HasErrors())
             {
@@ -228,7 +243,7 @@ namespace Answer.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                var response = productionPlanService.ChangeStatus(model.Id, model.Status);
+                var response = _productionPlanService.ChangeStatus(model.Id, model.Status);
 
                 if (!response.HasErrors())
                 {

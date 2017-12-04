@@ -1,440 +1,103 @@
-﻿@model Msr.Models.CustomerRequirements.CustomerSubmittedRequirement
-@{
+﻿@model Msr.Services.ProductionPlanning.ViewModels.RequirementStepsViewModel
 
-    ViewBag.Title = "Create Product";
+@{
+    ViewBag.Title = "Requirements Step Definition";
 }
+
 <div class="app-container">
 <div class="row content-container">
-<div class="container-fluid">
-<div class="side-body padding-top" style="visibility:hidden;">
-    <div class="row">
+    <div class="container-fluid">
+        <div class="side-body padding-top" style="visibility:hidden;">
+            <div class="row">
 
-        <div class="col-lg-12">
-            <table id="custReqsGrid"></table>
-        </div>
-        <div id=""></div>
-    </div>
-
-</div>
-<div class="row" id="reqDetail" style="margin-top:-200px;">
-<div class="col-lg-9 col-md-8">
-    <h2 class="page-header" style="margin-left:50px;">Create Product <span id="partNumTitle">@Model.PartKitNo</span> </h2>
-</div>
-<div class="col-lg-3 col-md-4" style="display:block;">
-
-    <div style="display:inline-block;" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Show/Hide Finincial Columns">
-        <div class="form-group">
-            <label style="margin-top:-200px; margin-left:-130px; width:360px;">Show All Columns</label>
-            <div style="width:100px;height:50px; margin-top:-200px;">
-                <div class="make-switch switch-small" data-on="success" data-off="warning" style="display:inline-block;padding-top: 166px;">
-                    <div id="colSwitch" class="bootstrap-switch-off bootstrap-switch-id-showHiddenColumns bootstrap-switch bootstrap-switch-wrapper bootstrap-switch-animate" style="width: 108px; background-color:white;height:36px;"><div class="bootstrap-switch-container" style="width: 159px; margin-left: -20px; text-align:center; height:34px !important;"><span class="bootstrap-switch-handle-on bootstrap-switch-primary" style="width: 53px;">ON</span><span class="bootstrap-switch-label" style="margin-left:-60px;">&nbsp;</span><span class="bootstrap-switch-handle-off bootstrap-switch-default" style="margin-left:-90px;">OFF</span><input id="showHiddenColumns" name="unhide-switch" type="checkbox"></div></div>
+                <div class="col-lg-12">
+                    <table id="custReqsGrid"></table>
                 </div>
+                <div id=""></div>
             </div>
         </div>
-    </div>
-    
-    @if (!string.IsNullOrWhiteSpace(Model.CustomerRequirementJson))
-    {
-        <div style="display: inline-block; margin-left: 10px; position: relative; top: 19px;" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="View Orginally Submitted Requirements from Customer">
-            <button type="button" class="btn btn-primary pull-right" data-call-back-id="@Model.Id" data-toggle="modal" data-target="#userRequirementsModal"><i class="fa fa-eye"></i> View Requirements</button>
-        </div>
-    }
-</div>
-               
-<div class="col-lg-12" style="padding-left:75px">
-    <div class="col-lg-12 col-md-11">
-        <div>@Html.Partial("Message")</div>
-        <div style="text-align:left;padding-left:52px">@Html.ValidationSummary(false, "", new { @class = "text-danger" })</div>
-    </div>
-    @using (Html.BeginForm("Edit", "ProductionPlanning", FormMethod.Post, new { @id = "stepForm", @class = "form form-horizontal", role = "form" }))
-    {
-        @*<div class="row clearfix">
-            <div class="col-md-12 column">
-                <input type="hidden" value="@Model.requirementSteps.Count" id="totalRecords" />
-                <input type="hidden" value="" id="postType" name="postType" />
-                <table class="table table-bordered table-hover table-striped table-condensed" id="process_steps">
-                    <thead>
-                    <tr data-toggle="tooltip" data-placement="top" title="">
-                        <th class="text-center" width="15%">
-                            Process
-                        </th>
-                        <th class="text-center" width="5%">
-                            Step #
-                        </th>
-                        <th class="text-center">
-                            Standard Direct Labor Minutes
-                        </th>
-                        <th class="text-center">
-                            Standard Machine Minutes
-                        </th>
-                        <th class="text-center hidden hide-col" width="10%">
-                            Replacement Cost
-                        </th>
-                        <th class="text-center hidden hide-col" width="10%">
-                            Utilization
-                        </th>
-                        <th class="text-center hidden hide-col" width="10%">
-                            Useful Life
-                        </th>
-                        <th class="text-center hidden hide-col" width="10%">
-                            Equip. Expense Per Minute
-                        </th>
-                        <th class="text-center hidden hide-col" width="10%">
-                            Annual R&amp;M
-                        </th>
-                        <th class="text-center hidden hide-col" width="10%">
-                            R&amp;M Per Minute
-                        </th>
 
-                    </tr>
-                    </thead>
-                    <tbody>
+        <div class="container-fluid" style="margin-top:-10%;">
+            <div class="side-body padding-top">
+                <div class="" id="reqDetail">
 
-                    @for (int i = 0; i < Model.requirementSteps.Count; i++)
+                    <div class="row">
+                        <div class="col-sm-9">
+                            <h2>New Product Definition</h2>
+                        </div>
+                        @if (!Model.HasQuote)
+                        {
+
+                            <div class="col-sm-3" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="View Orginally Submitted Requirements from Customer">
+                                <button type="button" class="btn btn-primary pull-right" data-call-back-id="@Model.Id" data-toggle="modal" data-target="#userRequirementsModal"><i class="fa fa-eye"></i> View Requirements</button>
+                            </div>
+                        }
+                    </div>
+
+                    @using (Html.BeginForm("Edit", "ProductionPlanning", FormMethod.Post, new { @id = "production-planning-form", @class = "", role = "form"}))
                     {
-                        var rowid = "row" + i;
-                        <tr id="@rowid" data-toggle="tooltip" data-placement="top" title="">
-                            <td>
-                                @for (int j = 0; j < Model.ProcessList.Count; j++)
-                                {
-                                    if (Model.ProcessList[j].Value == Model.requirementSteps[i].Process)
-                                    {
-                                        Model.ProcessList[j].Selected = true;
-                                    }
-                                    else
-                                    {
-                                        Model.ProcessList[j].Selected = false;
-                                    }
-                                }
-                                @Html.DropDownListFor(model => model.requirementSteps[i].Process, Model.ProcessList, new { @id = "proId", @class = "form-control" })
-                                @Html.ValidationMessageFor(model => Model.requirementSteps[i].Process, "", new { @class = "text-danger" })
-                            </td>
-                            <td>
-                                @Html.HiddenFor(x => Model.requirementSteps[i].Id, new { @id = "stepId", @class = "form-control" })
-                                @Html.TextBoxFor(x => Model.requirementSteps[i].Step, new { @class = "form-control", @onkeyup = "javascript:checkType(this)" })
-                                @Html.ValidationMessageFor(x => Model.requirementSteps[i].Step, "", new { @class = "text-danger" })
-                            </td>
-                            <td>
-                                @Html.TextBoxFor(x => Model.requirementSteps[i].StandardDirectLaborMinutes, new { @class = "form-control labor-mins", @onkeyup = "javascript:checkType(this)" })
-                                @Html.ValidationMessageFor(x => Model.requirementSteps[i].StandardDirectLaborMinutes, "", new { @class = "text-danger" })
-                            </td>
-                            <td>
-                                @Html.TextBoxFor(x => Model.requirementSteps[i].StandardMachineMinutes, new { @class = "form-control machine-mins", @onkeyup = "javascript:checkType(this)" })
-                                @Html.ValidationMessageFor(x => Model.requirementSteps[i].StandardMachineMinutes, "", new { @class = "text-danger" })
-                            </td>
-                            <td class="text-center hidden hide-col">
-                                <div class="input-group">
-                                    <span class="input-group-addon">$</span>
-                                    @Html.TextBoxFor(x => Model.requirementSteps[i].ReplacementCost, new { @class = "form-control", @onkeyup = "javascript:checkType(this)", @onblur = "javascript:checkBlank(this)" })
-                                    @Html.ValidationMessageFor(x => Model.requirementSteps[i].ReplacementCost, "", new { @class = "text-danger" })
-                                    <span class="input-group-addon">.00</span>
-                                </div>
-                            </td>
-                            <td class="text-center hidden hide-col">
-                                <div class="input-group">
-                                    @Html.TextBoxFor(x => Model.requirementSteps[i].Utilization, new { @class = "form-control", @onkeyup = "javascript:checkType(this)", @onblur = "javascript:checkBlank(this)" })
-                                    @Html.ValidationMessageFor(x => Model.requirementSteps[i].Utilization, "", new { @class = "text-danger" })
-                                    <span class="input-group-addon">%</span>
-                                </div>
-                            </td>
-                            <td class="text-center hidden hide-col">
-                                @Html.TextBoxFor(x => Model.requirementSteps[i].UsefulLife, new { @class = "form-control", @onkeyup = "javascript:checkType(this)", @onblur = "javascript:checkBlank(this)" })
-                                @Html.ValidationMessageFor(x => Model.requirementSteps[i].UsefulLife, "", new { @class = "text-danger" })
+                        @Html.HiddenFor(x=>x.Id)
+                        @Html.HiddenFor(x=>x.OldProductProcedureId)
+                        @Html.HiddenFor(x=>x.HasQuote)
 
-                            </td>
-                            <td class="text-center hidden hide-col">
-                                <div class="input-group">
-                                    <span class="input-group-addon">$</span>
-                                    @Html.TextBoxFor(x => Model.requirementSteps[i].EquipExpensePerMinute, new { @class = "form-control", @onkeyup = "javascript:checkType(this)", @onblur = "javascript:checkBlank(this)" })
-                                    @Html.ValidationMessageFor(x => Model.requirementSteps[i].EquipExpensePerMinute, "", new { @class = "text-danger" })
-                                    <span class="input-group-addon">.00</span>
-                                </div>
-                            </td>
-                            <td class="text-center hidden hide-col">
-                                <div class="input-group">
-                                    <span class="input-group-addon">$</span>
-                                    @Html.TextBoxFor(x => Model.requirementSteps[i].AnnualRM, new { @class = "form-control", @onkeyup = "javascript:checkType(this)", @onblur = "javascript:checkBlank(this)" })
-                                    @Html.ValidationMessageFor(x => Model.requirementSteps[i].AnnualRM, "", new { @class = "text-danger" })
-                                    <span class="input-group-addon">.00</span>
-                                </div>
-                            </td>
-                            <td class="text-center hidden hide-col">
-                                <div class="input-group">
-                                    <span class="input-group-addon">$</span>
-                                    @Html.TextBoxFor(x => Model.requirementSteps[i].RMPerMinute, new { @class = "form-control", @onkeyup = "javascript:checkType(this)", @onblur = "javascript:checkBlank(this)" })
-                                    @Html.ValidationMessageFor(x => Model.requirementSteps[i].RMPerMinute, "", new { @class = "text-danger" })
-                                    <span class="input-group-addon">.00</span>
-                                </div>
-                            </td>
-                        </tr>
+                        @Html.Partial("_Product")
 
-                    }
-                    @{
-                        var trows = "row" + Model.requirementSteps.Count;
+                             @Html.Partial("_Steps")
+
+                         
                     }
 
-                    <tr id="@trows"></tr>
-                    </tbody>
-                    <tfoot>
-                    <tr>
-                        <td>&nbsp;</td>
-                        <td class="text-right">Total:</td>
-                        <td class="text-right">
-                            @Html.EditorFor(model => model.TotalDirectMins, new { htmlAttributes = new { @id = "totalDirectMins", @class = "form-control" } })
-                        </td>
-                        <td class="text-right">
-                            @Html.EditorFor(model => model.TotalMachineMins, new { htmlAttributes = new { @id = "totalMachineMins", @class = "form-control" } })
-                        </td>
-                        <td colspan="6" class="hidden hide-col">&nbsp;</td>
-                    </tr>
-                    <tr>
-                        <td>&nbsp;</td>
-                        <td class="text-right">Dollars:</td>
-                        <td class="text-right">
-                            <div class="input-group">
-                                <span class="input-group-addon">$</span>
-                                @Html.EditorFor(model => model.TotalDirectDollar, new { htmlAttributes = new { @id = "totalDirectDollar", @class = "form-control" } })
-                            </div>
-                        </td>
-                        <td class="text-right">
-                            <div class="input-group">
-                                <span class="input-group-addon">$</span>
-                                @Html.EditorFor(model => model.StandardMachineDollar, new { htmlAttributes = new { @id = "standardMachineDollar", @class = "form-control" } })
-                            </div>
-                        </td>
-                        <td colspan="6" class="hidden hide-col">&nbsp;</td>
-                    </tr>
-                    <tr>
-                        <td>&nbsp;</td>
-                        <td colspan="2" class="text-right">Recommended Sale Price:</td>
-                        <td class="text-right">
-                            <div class="input-group">
-                                <span class="input-group-addon">$</span>
-                                @Html.EditorFor(model => model.TotalSalePrice, new { htmlAttributes = new { @id = "totalSalePrice", @class = "form-control" } })
-                            </div>
-                        </td>
-                        <td colspan="6" class="hidden hide-col">&nbsp;</td>
-                    </tr>
-                    </tfoot>
-                </table>
-            </div>
-        </div>*@
-        <a id="add_row" class="btn btn-primary pull-left" data-toggle="tooltip" data-placement="top" title="" data-original-title="Add a Step to the Definition"><i class="fa fa-plus-circle"></i> Add Step</a>
-        <a id="delete_row" class="pull-left btn btn-warning" style="margin-left: 10px;" data-toggle="tooltip" data-placement="top" title="" data-original-title="Removes Last Step from Definition"><i class="fa fa-minus-circle"></i> Remove Step</a>
-        <span data-toggle="tooltip" data-placement="top" title="" data-original-title="Back To Production Planning">&nbsp;&nbsp; @Html.ActionLink("Back", "Index", null, new { @class = "btn btn-warning back-step" })</span>
-
-        <button id="submit" class="pull-right btn btn-success" style="margin-left: 10px;" data-toggle="tooltip" data-placement="top" title="" data-original-title="Saves and Sends Quoation to Client" onclick="saveSubmit()"><i class="fa fa-send"></i> Save &amp; Submit</button>
-        <button id="save_draft" class="pull-right btn btn-info" style="margin-left: 10px;" data-toggle="tooltip" data-placement="top" title="" data-original-title="Saves with In Progress Status" type="submit" onclick="draft()"><i class="fa fa-save"></i> Save Draft</button>
-
-        if (!string.IsNullOrWhiteSpace(Model.QuoteJson))
-         {
-             <span class="pull-right btn btn-primary" style="margin-left: 10px;" data-id="@Model.Id" data-placement="top" title="" data-original-title="Generates a Quote Preview" data-toggle="modal" data-target="#quoteModal"><i class="fa fa-eye"></i>Preview Quote</span>
-         }
-        
-    }
-</div>
-
-</div>
-</div>
-</div>
-</div>
-
-<div id="userRequirementsModal" class="modal fade" role="dialog">
-    <div class="modal-dialog modal-lg">
-
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">×</button>
-                <h4 class="modal-title">Requirements Submission Details</h4>
-            </div>
-            <div class="modal-body" style="max-height: 100% !important;">
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-info" onclick="js:window.print()"><i class="fa fa-print"></i> Print </button>
-                    <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close-o"></i> Close</button>
                 </div>
             </div>
-
         </div>
     </div>
+
+</div>
 </div>
 
-<div id="quoteModal" class="modal fade" role="dialog">
-    <div class="modal-dialog modal-lg">
-
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">×</button>
-                <h4 class="modal-title">Quote Preview</h4>
-            </div>
-            <div class="modal-body" style="max-height: 100% !important;">
-               
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-info" onclick="js:window.print()"><i class="fa fa-print"></i> Print </button>
-                <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close-o"></i> Close</button>
-            </div>
-        </div>
-
-    </div>
-</div>
-
-<div id="wipHelpModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">×</button>
-                <h4 class="modal-title">Work Order Screen Help</h4>
-            </div>
-            <div class="modal-body">
-                <h4>Help Information for Work Order Screens</h4>
-
-                <div class="alert alert-info">Here is where the help information will go for this section. </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary pull-left" data-toggle="modal" data-target="#supportModal"><i class="fa fa-life-bouy"></i> Open Ticket</button>
-                <button type="button" class="btn btn-info" onclick="js:window.print()"><i class="fa fa-print"></i> Print Help</button>
-                <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close-o"></i> Close</button>
-            </div>
-        </div>
-
-    </div>
-</div>
-
-@*<div id="supportModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">×</button>
-                <h4 class="modal-title">Support Request</h4>
-            </div>
-            <div class="modal-body">
-
-                <form class="form form-horizontal" action=" " method="post" id="support_form">
-                    <fieldset>
-
-                        <!-- Text input-->
-
-                        <div class="form-group">
-                            <label class="col-md-4 control-label">First Name</label>
-                            <div class="col-md-8 inputGroupContainer">
-                                <div class="input-group">
-                                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                                    @Html.EditorFor(model => model.Process, new { htmlAttributes = new { @class = "form-control", @value = "7" } })
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Text input-->
-
-                        <div class="form-group">
-                            <label class="col-md-4 control-label">Last Name</label>
-                            <div class="col-md-8 inputGroupContainer">
-                                <div class="input-group">
-                                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                                    @Html.EditorFor(model => model.Process, new { htmlAttributes = new { @class = "form-control", @value = "7" } })
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Text input-->
-                        <div class="form-group">
-                            <label class="col-md-4 control-label">E-Mail</label>
-                            <div class="col-md-8 inputGroupContainer">
-                                <div class="input-group">
-                                    <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
-                                    @Html.EditorFor(model => model.Process, new { htmlAttributes = new { @class = "form-control", @value = "7" } })
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <!-- Text input-->
-
-                        <div class="form-group">
-                            <label class="col-md-4 control-label">Phone #</label>
-                            <div class="col-md-8 inputGroupContainer">
-                                <div class="input-group">
-                                    <span class="input-group-addon"><i class="glyphicon glyphicon-earphone"></i></span>
-                                    @Html.EditorFor(model => model.Process, new { htmlAttributes = new { @class = "form-control", @value = "7" } })
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <!-- Text input-->
-                        <div class="form-group">
-                            <label class="col-md-4 control-label">Subject</label>
-                            <div class="col-md-8 inputGroupContainer">
-                                <div class="input-group">
-                                    <span class="input-group-addon"><i class="fa fa-reorder"></i></span>
-                                    @Html.EditorFor(model => model.Process, new { htmlAttributes = new { @class = "form-control", @value = "7" } })
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- radio checks -->
-                        <div class="form-group">
-                            <label class="col-md-4 control-label">Preferred Contact Method</label>
-                            <div class="col-md-4">
-                                <div class="radio">
-                                    <label>
-                                        Email
-                                    </label>
-                                    @Html.EditorFor(model => model.Process, new { htmlAttributes = new { @class = "form-control", @value = "7" } })
-                                </div>
-                                <div class="radio">
-                                    <label>
-                                        Phone
-                                    </label>
-                                    @Html.EditorFor(model => model.Process, new { htmlAttributes = new { @class = "form-control", @value = "7" } })
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Text area -->
-
-                        <div class="form-group">
-                            <label class="col-md-4 control-label">Details</label>
-                            <div class="col-md-8 inputGroupContainer">
-                                <div class="input-group">
-                                    <span class="input-group-addon"><i class="glyphicon glyphicon-pencil"></i></span>
-                                    @Html.TextAreaFor(model => model.Process, new { @class = "form-control", style = "width:580", @rows = 3 })
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Success message -->
-                        <div class="alert alert-success" role="alert" id="success_message" style="display: none;"><strong><i class="fa fa-thumbs-up"></i> Success </strong> Your request has been sent. We will get back to you shortly via the contact information provided.</div>
-
-
-                    </fieldset>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" id="sendit" class="btn btn-success">Send <span class="fa sa-send"></span></button>
-                <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close-o"></i> Close</button>
-            </div>
-        </div>
-
-
-    </div>
-</div>*@
-<div class="ui-jqdialog modal-content" id="alertmod_custReqsGrid" dir="ltr" style="width: 200px; height: auto; z-index: 950; overflow: hidden; top: 460.5px; left: 860px;" tabindex="-1" role="dialog" aria-labelledby="alerthd_custReqsGrid" aria-hidden="true"><div class="ui-jqdialog-titlebar modal-header" id="alerthd_custReqsGrid" style="cursor: move;"><span class="ui-jqdialog-title" style="float: left;">Warning</span><a class="ui-jqdialog-titlebar-close " style="right: 0.3em;"><span class="glyphicon glyphicon-remove-circle"></span></a></div><div class="ui-jqdialog-content modal-body" id="alertcnt_custReqsGrid"><div>Please, select row</div><span tabindex="0"><span tabindex="-1" id="jqg_alrt"></span></span></div><div class="jqResize ui-resizable-handle ui-resizable-se glyphicon glyphicon-import"></div></div>
+@Html.Partial("_Models")
+@Html.Partial("_Parts");
+@Html.Partial("_Procedure");
 
 @section scripts
 {
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+    
     <script type="text/javascript" src="~/assets/js/ObjectAssign.js"></script>
     <script type="text/javascript" src="~/assets/js/grids/requirement-steps.js"></script>
-}
+    
+    <script src="~/assets/js/grids/comman.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('#Print').on('click', function () {
+                $('#printThis').printThis();
+            });
+
+            $('#ProductProcedureId').on('change', function () {
+                $('#form-change').trigger('click');
+            });
+
+
+        $(".select").select2();
+        $(".selectroles").select2({
+            tags: [],
+            tokenSeparators: [','],
+            multiple: true,
+            allowClear: true,
+            placeholder: "Select Roles",
+            formatNoMatches: function () {
+                return '';
+            }
+        });
 
     
+
+        });
+        </script>
+    }
+
 
 

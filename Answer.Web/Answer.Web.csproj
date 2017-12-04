@@ -1163,6 +1163,11 @@
     <Content Include="Views\Quote\Index.cshtml" />
     <Content Include="Views\Wip\_AddEquipment.cshtml" />
     <Content Include="Views\Procedures\_Monitor.cshtml" />
+    <Content Include="Views\ProductionPlanning\_Parts.cshtml" />
+    <Content Include="Views\ProductionPlanning\_Procedure.cshtml" />
+    <Content Include="Views\ProductionPlanning\_Product.cshtml" />
+    <Content Include="Views\ProductionPlanning\_Models.cshtml" />
+    <Content Include="Views\ProductionPlanning\_Steps.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

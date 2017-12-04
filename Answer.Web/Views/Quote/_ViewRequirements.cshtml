@@ -223,16 +223,7 @@
                                         <label class="control-label  col-sm-3" for="field43">Shipping Method:</label>
                                         <div class="controls col-sm-9">
                                             @Html.DropDownListFor(model => model.ShippingMethod, Model.ShippingMehtodList, "--Select Shipping Method--", new { @class = "form-control no-radius" })
-                                            @*@Html.DropDownList("Select a Step", new List<SelectListItem>
-                                                {
-                                                    new SelectListItem{ Text="INCOMING INSPECTION", Value = "1" },
-                                                    new SelectListItem{ Text="SERIALIZE", Value = "2" },
-                                                    new SelectListItem{ Text="Option 3", Value = "3" },
-
-                                                }, new { @class = "form-control no-radius" })*@
-
-
-                                        </div>
+                                           </div>
                                     </div>
                                 </div>
                             </div>
@@ -266,7 +257,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach (var item in Model.ProcessInfoViews)
+                                                @foreach (var item in Model.Process)
                                                 {
                                                     <tr id="row0">
 
@@ -329,7 +320,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach (var item in Model.PartInfoViews)
+                                                @foreach (var item in Model.Parts)
                                                 {
                                                     <tr id="row0">
 

@@ -4,8 +4,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Mvc;
 using Amazon.Runtime.Internal;
-using Msr.Models.CustomerRequirement;
-using Msr.Models.CustomerRequirements;
 
 namespace Msr.Services.CustomerRequirements.ViewModel
 {
@@ -67,16 +65,12 @@ namespace Msr.Services.CustomerRequirements.ViewModel
         public string SubmittedBy { get; set; }
 
         public IEnumerable<SelectListItem> ShippingMehtodList { get; set; }
-        
-        public List<ProcessInfoView> ProcessInfoViews { get; set; }
-        
-        public List<PartInfoView> PartInfoViews { get; set; }
 
         public List<ProcessInfoViewModel> Process { get; set; }
 
         public List<PartInfoViewModel> Parts { get; set; }        
 
-        public void Setup(CustomerRequirementService customerRequirementService)
+        public void Setup()
         {           
             ShippingMehtodList = new List<SelectListItem>
             {
@@ -112,10 +106,6 @@ namespace Msr.Services.CustomerRequirements.ViewModel
                 }
             };
 
-            ProcessInfoViews = customerRequirementService.ProcessInfoView(Id);
-
-            PartInfoViews = customerRequirementService.PartInfoViews(Id);
-            
             if (!Process.Any())
             {
                 Process.Add(new ProcessInfoViewModel());
@@ -125,46 +115,6 @@ namespace Msr.Services.CustomerRequirements.ViewModel
             {
                 Parts.Add(new PartInfoViewModel());        
             }
-        }
-
-        public CustomerRequirementViewModel MapToDto(CustomerRequirementView model)
-        {
-            return new CustomerRequirementViewModel()
-            {
-                Id = model.Id,
-                RequirementName = model.RequirementName,
-                Location = model.Location,
-                Respresentative = model.Respresentative,
-                Company = model.Company,
-                DivisionFab = model.DivisionFab,
-                StreetAddress = model.StreetAddress,
-                CityStateZIP = model.CityStateZIP,
-                CommercialName = model.CommercialName,
-                CommercialTitle = model.CommercialTitle,
-                CommercialPhone = model.CommercialPhone,
-                CommercialEmail = model.CommercialEmail,
-                TechnicalName = model.TechnicalName,
-                TechnicalTitle = model.TechnicalTitle,
-                TechnicalEmail = model.TechnicalEmail,
-                TechnicalPhone = model.TechnicalPhone,
-                ShortDescription = model.ShortDescription,
-                PartKitNo = model.PartKitNo,
-                CustomerSpecifications = model.CustomerSpecifications,
-                InProcessAnalyticalRequirements = model.InProcessAnalyticalRequirements,
-                DetailedDescription = model.DetailedDescription,
-                CriticalToFunction = model.CriticalToFunction,
-                SpecificCustomerQualification = model.SpecificCustomerQualification,
-                ForecastedVolumes = model.ForecastedVolumes,
-                SpecialPackagingShipping = model.SpecialPackagingShipping,
-                ExpectedQuoteDate = model.ExpectedQuoteDate,
-                ExpectedCycleTime = model.ExpectedCycleTime,
-                PickupNotification = model.PickupNotification,
-                ShippingMethod = model.ShippingMethod,
-                AdditionalInformation = model.AdditionalInformation,
-                SubmittedDate = model.SubmittedDate,
-                Status = model.Status,
-                SubmittedBy = model.SubmittedBy
-            };
         }
 
     }

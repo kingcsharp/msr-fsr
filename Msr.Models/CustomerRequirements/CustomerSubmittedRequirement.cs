@@ -13,13 +13,13 @@ namespace Msr.Models.CustomerRequirements
         public string PartKitNo { get; set; }
         public string SubmittedBy { get; set; }
         public DateTime SubmittedDate { get; set; }
-        public int? Status { get; set; }
+        public string Status { get; set; }
         public string QuoteJson { get; set; }
         public string CustomerRequirementJson { get; set; }
-        public int? SupplierId { get; set; }
-        public int? LocationId { get; set; }
+        public string SupplierId { get; set; }
+        public string LocationId { get; set; }
         public string ProductName { get; set; }
-        public int? PartId { get; set; }
-        public int? ProcedureId { get; set; }
+        public string PartId { get; set; }
+        public string ProcedureId { get; set; }
     }
 }

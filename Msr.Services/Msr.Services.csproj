@@ -170,6 +170,7 @@
     <Compile Include="Procedures\ViewModels\ProcedureStepMonitorsViewModel.cs" />
     <Compile Include="ProductionPlanning\ProductionPlanningService.cs" />
     <Compile Include="ProductionPlanning\ViewModels\RequirementStatusViewModel.cs" />
+    <Compile Include="ProductionPlanning\ViewModels\RequirementStepsDetailsViewModel.cs" />
     <Compile Include="ProductionPlanning\ViewModels\RequirementStepsViewModel.cs" />
     <Compile Include="PurchesOrder\Procedures\AddPurchaseOrderProcedure.cs" />
     <Compile Include="PurchesOrder\PurchesOrderService.cs" />

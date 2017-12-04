@@ -1,0 +1,140 @@
+﻿@model Msr.Services.ProductionPlanning.ViewModels.RequirementStepsViewModel
+
+<div id="proceduremodel" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Procedure Details</h4>
+            </div>
+            <div class="modal-body">
+                <style>
+                    .form-horizontal .control-label {
+                        text-align: right !important;
+                    }
+                </style>
+                <div class="container-fluid">
+                    <div class="row">
+
+
+                        <div class="col-lg-12">
+
+                            @using (Html.BeginForm("Create", "ProductionPlanning", FormMethod.Post, new { @class = "form-horizontal", @role = "form" }))
+                            {
+                                @Html.AntiForgeryToken()
+
+                                <div class="form-horizontal addpart part">
+
+                                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.SaveProcedureViewModel.Verb, htmlAttributes: new { @class = "control-label col-md-3" })
+                                        <div class="col-md-5">
+                                            @Html.DropDownListFor(model => model.SaveProcedureViewModel.Verb, Model.SaveProcedureViewModel.VerbList, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.SaveProcedureViewModel.Verb, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.SaveProcedureViewModel.SystemId, htmlAttributes: new { @class = "control-label col-md-3" })
+                                        <div class="col-md-5">
+                                            @Html.DropDownListFor(model => model.SaveProcedureViewModel.SystemId, Model.SaveProcedureViewModel.SystemList, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.SaveProcedureViewModel.SystemId, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.SaveProcedureViewModel.Name, htmlAttributes: new { @class = "control-label col-md-3" })
+                                        <div class="col-md-5">
+
+                                            @Html.EditorFor(model => model.SaveProcedureViewModel.Name, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.SaveProcedureViewModel.Name, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.SaveProcedureViewModel.ReferenceFiles, htmlAttributes: new { @class = "control-label col-md-3" })
+                                        <div class="col-md-5">
+                                            <div style="width: 96%; float: left;">
+                                                @Html.ListBoxFor(m => m.SaveProcedureViewModel.ReferenceFiles, Model.SaveProcedureViewModel.ReferenceFilesList, new { @class = "form-control submitselect", multiple = "multiple", @id = "ReferenceFile" })
+                                                @Html.ValidationMessageFor(model => model.SaveProcedureViewModel.ReferenceFiles, "", new { @class = "text-danger" })
+                                            </div>
+                                            <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceFile" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceFile"><i class="icon fa fa-trash"></i></span> </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.SaveProcedureViewModel.Comments, htmlAttributes: new { @class = "control-label col-md-3" })
+                                        <div class="col-md-5">
+                                            @Html.TextAreaFor(model => model.SaveProcedureViewModel.Comments, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.SaveProcedureViewModel.Comments, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.SaveProcedureViewModel.SecurityLevel, htmlAttributes: new { @class = "control-label col-md-3" })
+                                        <div class="col-md-5">
+                                            @Html.DropDownListFor(model => model.SaveProcedureViewModel.SecurityLevel, Model.SaveProcedureViewModel.SecurityLevelList, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.SaveProcedureViewModel.SecurityLevel, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.SaveProcedureViewModel.Roles, htmlAttributes: new { @class = "control-label col-md-3" })
+                                        <div class="col-md-5">
+                                            @Html.DropDownListFor(model => model.SaveProcedureViewModel.Roles, Model.SaveProcedureViewModel.RolesList, new { @class = "form-control", multiple = "multiple", style = "z-index: 999;" })
+                                            @Html.ValidationMessageFor(model => model.SaveProcedureViewModel.Roles, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.SaveProcedureViewModel.StepInAp, htmlAttributes: new { @class = "control-label col-md-3" })
+                                        <div class="col-md-5">
+                                            @Html.DropDownListFor(model => model.SaveProcedureViewModel.StepInAp, Model.SaveProcedureViewModel.SetpInApList, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.SaveProcedureViewModel.StepInAp, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.SaveProcedureViewModel.Duration, htmlAttributes: new { @class = "control-label col-md-3" })
+                                        <div class="col-md-5">
+                                            @Html.EditorFor(model => model.SaveProcedureViewModel.Duration, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.SaveProcedureViewModel.Duration, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.SaveProcedureViewModel.DurationType, htmlAttributes: new { @class = "control-label col-md-3" })
+                                        <div class="col-md-5">
+                                            @Html.DropDownListFor(model => model.SaveProcedureViewModel.DurationType, Model.SaveProcedureViewModel.DurationTypeList, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.SaveProcedureViewModel.DurationType, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.SaveProcedureViewModel.WipMsg, htmlAttributes: new { @class = "control-label col-md-3" })
+                                        <div class="col-md-5">
+                                            @Html.DropDownListFor(model => model.SaveProcedureViewModel.WipMsg, Model.SaveProcedureViewModel.WipMsgList, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.SaveProcedureViewModel.WipMsg, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-offset-2 col-md-10">
+                                            <input type="submit" value="Submit" class="btn btn-success" />
+                                            <a href="@Url.Action("Index","Procedures")" class="btn btn-warning">Cancel</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+

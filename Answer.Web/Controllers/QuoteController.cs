@@ -7,7 +7,7 @@ using Msr.Services.Quotes.ViewModels;
 
 namespace Answer.Web.Controllers
 {
-    public class QuoteController : Controller
+    public class QuoteController : BaseController
     {
         private QuoteService _quoteService;
 
@@ -31,6 +31,8 @@ namespace Answer.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+               var currentUser = GetCurrentUser().Id;
+
                 var response = _quoteService.Create(viewModel);
 
                 if (!response.HasErrors())
@@ -61,7 +63,7 @@ namespace Answer.Web.Controllers
 
             var vm = new JavaScriptSerializer().Deserialize<CustomerRequirementViewModel>(requirment.CustomerRequirementJson);
 
-            vm.Setup(new CustomerRequirementService());
+            vm.Setup();
 
             return PartialView("_ViewRequirements", vm);
         }
