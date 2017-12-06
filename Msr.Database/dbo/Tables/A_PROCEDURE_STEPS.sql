@@ -28,6 +28,12 @@
     [DURATION_TYPE]      VARCHAR (50)    NULL,
     [DATE_LAST_MODIFIED] DATETIME        NULL,
 	[TITLE]      VARCHAR (250)    NULL,
+	[ReplacementCost]       DECIMAL(18, 0)   NULL,
+    [Utilization]           DECIMAL(18, 0)   NULL,
+    [UsefulLife]            DECIMAL(18, 0)   NULL,
+    [EquipExpensePerMinute] DECIMAL(18, 0)   NULL,
+    [AnnualRM]              DECIMAL(18, 0)   NULL,
+    [RMPerMinute]           DECIMAL(18, 0)   NULL,
     CONSTRAINT [PK_A_PROCEDURE_STEPS] PRIMARY KEY CLUSTERED ([ID] ASC)
 );
 

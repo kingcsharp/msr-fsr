@@ -13,6 +13,7 @@ using Msr.Services.Procedures.Messages;
 using Msr.Services.ProductionPlanning.ViewModels;
 using Msr.Models.Common;
 using Msr.Models.Locations;
+using Msr.Services.Procedures.ViewModels;
 using Msr.Services.Workflows;
 
 namespace Msr.Services.ProductionPlanning
@@ -135,6 +136,34 @@ namespace Msr.Services.ProductionPlanning
 
                 if (!string.IsNullOrWhiteSpace(submit))
                 {
+                    var procedureRefId = string.Empty;
+                    var procedureSteps = _proceduresService.GetStepsData(model.ProductProcedureId, model.LoginId);
+
+                    foreach (var step in model.Steps)
+                    {
+                        var existingStep = procedureSteps.SingleOrDefault(x => x.Id == step.ObjectId && x.Print_Order == step.Step);
+
+                        if (existingStep == null)
+                        {
+                            ////if (string.IsNullOrWhiteSpace(procedureRefId))
+                            ////{
+                            ////    procedureRefId = _dbContext.Database.SqlQuery<string>($"SELECT HISTORY_REF_ID  FROM A_V_PROCEDURES_APPROVED_DATA_DROP_DOWN WHERE object_id ={model.ProductProcedureId}").Single();
+                            ////}
+
+                            var vm = new GetStepEditDataViewModel();
+                            vm.GetStepEditData.Step_Text = "<h4>" + procedureSteps.Where(x => x.Id == step.ObjectId).FirstOrDefault().StepTitle + "</h4>";
+                            vm.GetStepEditData.Print_Order = step.Step;
+                            vm.ProcObjId = model.ProductProcedureId;
+                            vm.ReplacementCost = step.ReplacementCost;
+                            vm.Utilization = step.Utilization;
+                            vm.UsefulLife = step.UsefulLife;
+                            vm.EquipExpensePerMinute = step.EquipExpensePerMinute;
+                            vm.AnnualRM = step.AnnualRM;
+                            vm.RMPerMinute = step.RMPerMinute;
+
+                            _proceduresService.CreateStepData(vm);
+                        }
+                    }
 
                     try
                     {

@@ -22,27 +22,27 @@ namespace Msr.Services.ProductionPlanning.ViewModels
 
         [Display(Name = "Replacement Cost")]
 
-        public decimal ReplacementCost { get; set; }
+        public decimal? ReplacementCost { get; set; }
 
         [Display(Name = "Utilization")]
 
-        public decimal Utilization { get; set; }
+        public decimal? Utilization { get; set; }
 
         [Display(Name = "UsefulLife")]
 
-        public decimal UsefulLife { get; set; }
+        public decimal? UsefulLife { get; set; }
 
         [Display(Name = "Equip Expense Per Minute")]
 
-        public decimal EquipExpensePerMinute { get; set; }
+        public decimal? EquipExpensePerMinute { get; set; }
 
         [Display(Name = "Annual RM")]
 
-        public decimal AnnualRM { get; set; }
+        public decimal? AnnualRM { get; set; }
 
         [Display(Name = "RM Per Minute")]
 
-        public decimal RMPerMinute { get; set; }
+        public decimal? RMPerMinute { get; set; }
 
         [Display(Name = "Total Direct Mins")]
 

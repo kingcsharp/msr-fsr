@@ -4,7 +4,7 @@ using EntityFrameworkExtras.EF6;
 
 namespace Msr.Services.Procedures.Procedures
 {
-    [StoredProcedure("A_SP_PROCEDURE_STEP_UPDATE_ONE_STEP")]
+    [StoredProcedure("Portal_A_SP_PROCEDURE_STEP_UPDATE_ONE_STEP")]
     public class UpdateOneStepProcedure
     {
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "newID", Direction = ParameterDirection.Output)]
@@ -90,5 +90,23 @@ namespace Msr.Services.Procedures.Procedures
 
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "strNTLogin")]
         public string NTLogin { get; set; }
+
+        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "ReplacementCost")]
+        public decimal? ReplacementCost { get; set; }
+
+        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "Utilization")]
+        public decimal? Utilization { get; set; }
+
+        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "UsefulLife")]
+        public decimal? UsefulLife { get; set; }
+
+        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "EquipExpensePerMinute")]
+        public decimal? EquipExpensePerMinute { get; set; }
+
+        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "AnnualRM")]
+        public decimal? AnnualRM { get; set; }
+
+        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "RMPerMinute")]
+        public decimal? RMPerMinute { get; set; }
     }
 }

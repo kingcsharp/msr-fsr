@@ -214,5 +214,11 @@ namespace Msr.Services.Procedures.ViewModels
         public List<string> ReferenceTheory { get; set; }
         public List<string> ReferenceObject { get; set; }
         public List<string> ReferenceFiles { get; set; }
+        public decimal? ReplacementCost { get; set; }
+        public decimal? Utilization { get; set; }
+        public decimal? UsefulLife { get; set; }
+        public decimal? EquipExpensePerMinute { get; set; }
+        public decimal? AnnualRM { get; set; }
+        public decimal? RMPerMinute { get; set; }
     }
 }
