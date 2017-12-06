@@ -34,7 +34,7 @@
         $.jgrid.defaults.styleUI = 'Bootstrap';
 
         $(document).ready(function () {
-            LoadProceduresGrid('@Url.Action("ProceduresData", "Procedures")');
+            LoadProceduresGrid('@Url.Action("ProceduresData", "Procedures")','@Url.Action("Index", "Procedures")');
         });
     </script>
 

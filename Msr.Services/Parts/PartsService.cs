@@ -31,7 +31,7 @@ namespace Msr.Services.Parts
         {
             return GetPartsQueryable().Where(x => x.ObjectId == Id).SingleOrDefault();
         }
-        public List<SelectFile> GetSelectedFiles(string id, string type,string ntlogin)
+        public List<SelectFile> GetSelectedFiles(string id, string type, string ntlogin)
         {
             var objID = new SqlParameter("@objID", id == null ? "0" : id);
             var selecttype = new SqlParameter();
@@ -50,7 +50,7 @@ namespace Msr.Services.Parts
 
             return result;
         }
-        public SelectInternalPart GetInternalPart(string id,string ntlogin)
+        public SelectInternalPart GetInternalPart(string id, string ntlogin)
         {
             var strID = new SqlParameter("@strID", id == null ? "0" : id);
             //need to be dynamic
@@ -153,8 +153,9 @@ namespace Msr.Services.Parts
                 return false;
             }
         }
-        public bool Create(AddPartViewModel model)
+        public ResultNotification<string> Create(AddPartViewModel model)
         {
+            var result = new ResultNotification<string>();
             try
             {
 
@@ -186,7 +187,7 @@ namespace Msr.Services.Parts
                 };
 
                 _dbContext.Database.ExecuteStoredProcedure(savePartProcedure);
-
+                result.Entity = savePartProcedure.NewObjID;
                 var singlePart = GetById(savePartProcedure.NewObjID);
 
 
@@ -224,16 +225,16 @@ namespace Msr.Services.Parts
                     _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
                 }
 
-                return true;
+                return result;
             }
             catch (Exception ex)
             {
                 var message = "Error occured:" + ex.Message;
 
-                return false;
+                return result;
             }
         }
-        public bool Delete(string id,string ntlogin)
+        public bool Delete(string id, string ntlogin)
         {
             try
             {

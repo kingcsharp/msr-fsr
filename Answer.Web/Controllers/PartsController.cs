@@ -178,7 +178,7 @@ namespace Answer.Web.Controllers
 
                 var response = taskService.Create(model: model);
 
-                if (response)
+                if (!response.HasErrors())
                 {
                     TempData["SuccessMessage"] = "Part has been created successfully.";
 

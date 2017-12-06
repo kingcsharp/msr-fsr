@@ -5,9 +5,14 @@ using System.Web.Mvc;
 using Msr.Services.jqGrid;
 using Msr.Services.ProductionPlanning;
 using Msr.Models.CustomerRequirements;
+using Msr.Services.Documents;
+using Msr.Services.Parts;
+using Msr.Services.PartTypes;
 using Msr.Services.Procedures;
 using Msr.Services.ProductionPlanning.ViewModels;
 using Msr.Services.Quotes;
+using Msr.Services.Workflows;
+using Msr.Services.Workflows.ViewModels;
 
 namespace Answer.Web.Controllers
 {
@@ -16,12 +21,14 @@ namespace Answer.Web.Controllers
         private readonly ProductionPlanningService _productionPlanService;
         private readonly ProceduresService _proceduresService;
         private readonly QuoteService _quoteService;
+        private readonly WorkflowService _workflowService;
 
         public ProductionPlanningController()
         {
             _proceduresService = new ProceduresService();
             _productionPlanService = new ProductionPlanningService();
             _quoteService = new QuoteService();
+            _workflowService = new WorkflowService();
         }
 
         public ActionResult Index()
@@ -258,6 +265,39 @@ namespace Answer.Web.Controllers
             model.Setup();
 
             return View(model);
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult AddPart(RequirementStepsViewModel model)
+        {
+            var loggedUsed = GetCurrentUser();
+            var taskService = new PartsService();
+
+            SubmitWorkflowViewModel aproveworkflow = new SubmitWorkflowViewModel();
+            model.AddPartViewModel.NTLogin = loggedUsed.Id;
+            model.AddPartViewModel.SubParts = null;
+
+            var response = taskService.Create(model.AddPartViewModel);
+
+            if (!response.HasErrors())
+            {
+                TempData["SuccessMessage"] = "Part has been created successfully.";
+
+                aproveworkflow.ObjectId = response.Entity;
+                aproveworkflow.CompletionStart = "Approved";
+                aproveworkflow.ApprovalWorflowId = "37";
+                aproveworkflow.LoggedUserIdResult = loggedUsed;
+
+                _workflowService.SubmitWorkflow(aproveworkflow);
+
+                return RedirectToAction("Index");
+            }
+        
+            TempData["ErrorMessage"] = "Something went wrong.";
+
+            model.AddPartViewModel.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), GetCurrentUser().Company, GetCurrentUser().Id);
+
+            return RedirectToAction("Index");
         }
     }
 }
