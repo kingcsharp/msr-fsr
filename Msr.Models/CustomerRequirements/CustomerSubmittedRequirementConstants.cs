@@ -4,5 +4,6 @@
     {
         public static string Received = "Received";
         public static string InProgress = "In Progress";
+        public static string Completed = "Completed";
     }
 }

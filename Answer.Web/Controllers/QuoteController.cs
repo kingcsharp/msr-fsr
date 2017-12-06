@@ -31,7 +31,9 @@ namespace Answer.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-               var currentUser = GetCurrentUser().Id;
+               var currentUser = GetCurrentUser();
+
+                viewModel.CreatedBy = currentUser.Login;
 
                 var response = _quoteService.Create(viewModel);
 

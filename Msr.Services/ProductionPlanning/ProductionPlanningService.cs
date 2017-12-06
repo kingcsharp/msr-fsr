@@ -2,13 +2,18 @@
 using Msr.Repositories;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
+using Dapper;
 using Msr.Models.CustomerRequirements;
 using Msr.Services.Procedures;
 using Msr.Services.Procedures.Messages;
 using Msr.Services.ProductionPlanning.ViewModels;
 using Msr.Models.Common;
 using Msr.Models.Locations;
+using Msr.Services.Workflows;
 
 namespace Msr.Services.ProductionPlanning
 {
@@ -16,11 +21,13 @@ namespace Msr.Services.ProductionPlanning
     {
         private readonly MsrDbContext _dbContext;
         private ProceduresService _proceduresService;
+        private readonly WorkflowService _workflowService;
 
         public ProductionPlanningService()
         {
             _dbContext = new MsrDbContext();
             _proceduresService = new ProceduresService();
+            _workflowService = new WorkflowService();
         }
 
         public IQueryable<CustomerSubmittedRequirement> GetProductionPlaningQueryable()
@@ -111,7 +118,7 @@ namespace Msr.Services.ProductionPlanning
             _dbContext.SaveChanges();
         }
 
-        public ResultNotification<string> Save(RequirementStepsViewModel model)
+        public ResultNotification<string> Save(RequirementStepsViewModel model, string submit)
         {
             var result = new ResultNotification<string>();
 
@@ -125,6 +132,88 @@ namespace Msr.Services.ProductionPlanning
                 requirment.PartId = model.ProductPartId;
                 requirment.ProcedureId = model.ProductProcedureId;
                 requirment.Division = model.ProductCustomerDivision;
+
+                if (!string.IsNullOrWhiteSpace(submit))
+                {
+
+                    try
+                    {
+                        var p = new DynamicParameters();
+
+                        p.Add("@newID", dbType: DbType.String, direction: ParameterDirection.Output, size: 50);
+                        p.Add("@messages", dbType: DbType.String, direction: ParameterDirection.Output, size: 500);
+                        p.Add("@objID", null, DbType.String, ParameterDirection.Input, size: 50);
+                        p.Add("@PARENT_ID", null, DbType.String, ParameterDirection.Input, size: 50);
+                        p.Add("@SUPPLIER_ID", model.ProductSupplierId, DbType.String, ParameterDirection.Input,
+                            size: 50);
+                        p.Add("@Name", requirment.ProductName, DbType.String, ParameterDirection.Input, size: 50);
+                        p.Add("@COMMENTS", "", DbType.String, ParameterDirection.Input, size: 50);
+                        p.Add("@PROCEDURE_ID", requirment.ProcedureId, DbType.String, ParameterDirection.Input,
+                            size: 50);
+                        p.Add("@APP_OBJECT", requirment.PartId, DbType.String, ParameterDirection.Input, size: 50);
+                        p.Add("@CUSTOMIZABLE", "0", DbType.String, ParameterDirection.Input, size: 50);
+                        p.Add("@REQ_FORM", null, DbType.String, ParameterDirection.Input, size: 50);
+                        p.Add("@MGR_TEAM", null, DbType.String, ParameterDirection.Input, size: 50);
+                        p.Add("@SALES_TAX", null, DbType.String, ParameterDirection.Input, size: 50);
+                        p.Add("@OBJ_USED_ON", null, DbType.String, ParameterDirection.Input, size: 50);
+                        p.Add("@MGR_ROLE", null, DbType.String, ParameterDirection.Input, size: 50);
+                        p.Add("@OEM", null, DbType.String, ParameterDirection.Input, size: 50);
+                        p.Add("@MODEL", null, DbType.String, ParameterDirection.Input, size: 50);
+                        p.Add("@PROCESS_AREA", null, DbType.String, ParameterDirection.Input, size: 50);
+                        p.Add("@COPPER", null, DbType.String, ParameterDirection.Input, size: 50);
+                        p.Add("@MM", null, DbType.String, ParameterDirection.Input, size: 50);
+                        p.Add("@strNTLogin", model.LoginId, DbType.String, ParameterDirection.Input, size: 50);
+
+
+                        using (IDbConnection conn =
+                            new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
+                        {
+                            int i = conn.Execute("A_SP_PRODUCT_UPDATE_ONE_PRODUCT", p,
+                                commandType: CommandType.StoredProcedure);
+
+                            var newId = p.Get<string>("newID");
+                            var messages = p.Get<string>("messages");
+
+                            //_dbContext.Database.SqlQuery<SelectFile>($"DELETE FROM A_PRODUCTS_QUICK_PRICE WHERE PROD_HIST_ID = (SELECT ID FROM A_PRODUCTS_HISTORY WHERE    OBJECT_ID IN(SELECT ID FROM A_PRODUCTS_HISTORY WHERE OBJECT_ID = '{newId}'))").ToList();
+
+                            //_dbContext.Database.SqlQuery<SelectFile>($"INSERT INTO A_PRODUCTS_QUICK_PRICE (ID,PROD_HIST_ID,CUST_ID,PRICE,DRCM,MODBY,CREATE_PRICE_LIST,PROD_TIME,PROD_TIME_UNIT,CAPACITY,CAPACITY_UNITS) " +
+                            //    $"VALUES(newID(), '{newId}', '{requirment.SupplierId}', NULL, getDate(), '{model.LoginId}', '1', '5', 'TIME_SYS_DAYS', NULL, 'minute'))").ToList();
+
+                            var workflow = _workflowService.CheckOutObject(newId, model.LoginId);
+
+                            var p1 = new DynamicParameters();
+
+                            p1.Add("@msg", dbType: DbType.String, direction: ParameterDirection.Output, size: 500);
+                            p1.Add("@msg2", dbType: DbType.String, direction: ParameterDirection.Output, size: 50);
+                            p1.Add("@objID", workflow.Entity, DbType.String, ParameterDirection.Input, size: 50);
+                            p1.Add("@wfID", "37", DbType.String, ParameterDirection.Input,
+                                size: 50); //Admin WorkflowAdmin Workflow
+                            p1.Add("@revComment", requirment.ProductName, DbType.String, ParameterDirection.Input,
+                                size: 2000);
+                            p1.Add("@statOnCompletion", "APPROVED", DbType.String, ParameterDirection.Input, size: 50);
+                            p1.Add("@allRevs", null, DbType.String, ParameterDirection.Input, size: 50);
+                            p1.Add("@strNTLogin", model.LoginId, DbType.String, ParameterDirection.Input, size: 50);
+
+                            conn.Execute("A_SP_OBJECT_START_WF", p1, commandType: CommandType.StoredProcedure);
+
+                            var msg = p1.Get<string>("msg");
+                            var msg2 = p1.Get<string>("msg2");
+
+                            result.SuccessMessage = msg;
+                        }
+
+                        requirment.Status = CustomerSubmittedRequirementConstants.Completed;
+                    }
+                    catch (Exception ex)
+                    {
+                        result.AddError("There was an error creating product");
+                    }
+                }
+                else
+                {
+                    requirment.Status = CustomerSubmittedRequirementConstants.InProgress;
+                }
+
 
                 foreach (var step in model.Steps)
                 {

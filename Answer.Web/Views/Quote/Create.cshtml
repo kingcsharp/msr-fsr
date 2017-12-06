@@ -206,46 +206,47 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <table class="table  no-border" width="100%">
-                            <tbody>
-                                <tr>
-                                    <td colspan="5" width="60%"></td>
-                                    <td colspan="2">Respectfully submitted,</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="5" width="60%"></td>
-                                    <td width="20%" style="border-bottom: 1px solid #000 !important;">
-                                        @Html.EditorFor(model => model.CreatedBy, new { htmlAttributes = new { @class = "form-control" } })
-                                        @Html.ValidationMessageFor(model => model.CreatedBy, "", new { @class = "text-danger" })
-                                    </td>
-                                    <td width="30%" style="border-bottom: 1px solid #000 !important;">
-                                        @Html.EditorFor(model => model.TitleSubmit, new { htmlAttributes = new { @class = "form-control" } })
-                                        @Html.ValidationMessageFor(model => model.TitleSubmit, "", new { @class = "text-danger" })
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="5" width="60%"></td>
-                                    <td width="20%" class="line-caption">Created By</td>
-                                    <td width="30%" class="line-caption">Title</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="5" width="60%"></td>
-                                    <td colspan="2" width="40%" style="border-bottom: 1px solid #000 !important;">
-                                        @Html.EditorFor(model => model.AddressSubmit, new { htmlAttributes = new { @class = "form-control", style = "width:100%" } })
-                                        @Html.ValidationMessageFor(model => model.AddressSubmit, "", new { @class = "text-danger" })
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="5" width="60%"></td>
-                                    <td colspan="2" width="40%" class="line-caption">Address</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="5" width="60%"></td>
-                                    <td colspan="2" width="40%">MSR-FSR LLC</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    <input type="submit" id="submit" class="pull-right btn btn-success fa fa-send" style="margin-left: 10px;" data-toggle="tooltip" data-placement="top" title="" data-original-title="Save and Send Quote to Client" value="Save &amp; Submit" />
+                    <table class="table  no-border" width="100%">
+                        <tbody>
+                        <tr>
+                            <td colspan="5" width="60%"></td>
+                            <td colspan="2">Respectfully submitted,</td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" width="60%"></td>
+                            <td width="20%" style="border-bottom: 1px solid #000 !important;">
+                                @Html.EditorFor(model => model.CreatedBy, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.CreatedBy, "", new { @class = "text-danger" })
+                            </td>
+                            <td width="30%" style="border-bottom: 1px solid #000 !important;">
+                                @Html.EditorFor(model => model.TitleSubmit, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.TitleSubmit, "", new { @class = "text-danger" })
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" width="60%"></td>
+                            <td width="20%" class="line-caption">Created By</td>
+                            <td width="30%" class="line-caption">Title</td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" width="60%"></td>
+                            <td colspan="2" width="40%" style="border-bottom: 1px solid #000 !important;">
+                                @Html.EditorFor(model => model.AddressSubmit, new { htmlAttributes = new { @class = "form-control", style = "width:100%" } })
+                                @Html.ValidationMessageFor(model => model.AddressSubmit, "", new { @class = "text-danger" })
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" width="60%"></td>
+                            <td colspan="2" width="40%" class="line-caption">Address</td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" width="60%"></td>
+                            <td colspan="2" width="40%">MSR-FSR LLC</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                        <input type="submit" id="submit" class="pull-right btn btn-success fa fa-send" style="margin-left: 10px;" data-toggle="tooltip" data-placement="top" title="" data-original-title="Save and Send Quote to Client" value="Save &amp; Submit" />
+                    <a class="pull-right btn btn-danger fa" style="margin-left: 10px;" href="~/ProductionPlanning" >Cancel</a>
                     </div>
                 }
             </div>

@@ -12,7 +12,7 @@ namespace Msr.Services.CustomerRequirements.ViewModel
         public CustomerRequirementViewModel()
         {
             Parts = new List<PartInfoViewModel>();
-            Process = new AutoConstructedList<ProcessInfoViewModel>();
+            Process = new List<ProcessInfoViewModel>();
         }
 
         public string Id { get; set; }

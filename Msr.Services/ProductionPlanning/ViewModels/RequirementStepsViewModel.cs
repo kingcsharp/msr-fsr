@@ -23,15 +23,24 @@ namespace Msr.Services.ProductionPlanning.ViewModels
         public bool HasQuote { get; set; }
 
         public int Id { get; set; }
+        public string LoginId { get; set; }
         public string ObjectId { get; set; }
         public string OldProductProcedureId { get; set; }
         [Required]
         public string ProductProcedureId { get; set; }
+        [Required]
         public string ProductPartId { get; set; }
+        [Required]
         public string ProductName { get; set; }
+
+        [Required]
         public string ProductSupplierId { get; set; }
+
         public string ProductLocationId { get; set; }
+
+        [Required]
         public string ProductCustomerName { get; set; }
+
         public string ProductCustomerDivision { get; set; }
 
         [Display(Name = "Total Direct Mins")]

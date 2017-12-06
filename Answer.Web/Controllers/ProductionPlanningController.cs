@@ -178,9 +178,9 @@ namespace Answer.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                if (!string.IsNullOrWhiteSpace(saveDraft))
-                {
-                    var response = _productionPlanService.Save(vm);
+                vm.LoginId = currentUser.Id;
+
+                var response = _productionPlanService.Save(vm, saveSubmit);
 
                     if (!response.HasErrors())
                     {
@@ -202,7 +202,6 @@ namespace Answer.Web.Controllers
 
                     TempData["ErrorMessage"] = response.ErrorMessage;
                 }
-            }
 
             vm.Setup(_productionPlanService, _proceduresService.GetStepsData(vm.ProductProcedureId, currentUser.Id));
 
