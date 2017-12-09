@@ -229,7 +229,7 @@ namespace Msr.Services.Parts
             }
             catch (Exception ex)
             {
-                var message = "Error occured:" + ex.Message;
+                result.AddError(ex.Message);
 
                 return result;
             }

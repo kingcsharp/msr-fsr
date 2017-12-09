@@ -1,16 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web.Mvc;
+using Dapper;
 using Msr.Services.jqGrid;
 using Msr.Services.ProductionPlanning;
 using Msr.Models.CustomerRequirements;
+using Msr.Services;
 using Msr.Services.Documents;
 using Msr.Services.Parts;
+using Msr.Services.Parts.ViewModels;
 using Msr.Services.PartTypes;
 using Msr.Services.Procedures;
+using Msr.Services.Procedures.ViewModels;
+using Msr.Services.ProcedureVerbs;
 using Msr.Services.ProductionPlanning.ViewModels;
 using Msr.Services.Quotes;
+using Msr.Services.Roles;
 using Msr.Services.Workflows;
 using Msr.Services.Workflows.ViewModels;
 
@@ -39,9 +47,8 @@ namespace Answer.Web.Controllers
 
         public ActionResult ProductionPlanningData(JqGridParam param)
         {
-            var productionPlanningService = new ProductionPlanningService();
 
-            var totalRows = productionPlanningService.GetProductionPlaningQueryable();
+            var totalRows = _productionPlanService.GetProductionPlaningQueryable().Where(x => x.ProductStatus != "DELETED" && x.ProductStatus != "OLD");
 
             if (param.where != null && param.where.rules.Any())
             {
@@ -51,7 +58,7 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.Company.ToLower().Contains(rule.data.ToLower()));
                     }
-                    else if (rule.field == nameof(CustomerSubmittedRequirement.SubmittedDate))
+                    else if (rule.field == nameof(CustomerRequirementView.SubmittedDate))
                     {
                         DateTime value;
                         if (DateTime.TryParse(rule.data, out value))
@@ -61,23 +68,23 @@ namespace Answer.Web.Controllers
                                                              q.SubmittedDate.Year == value.Year);
                         }
                     }
-                    else if (rule.field == nameof(CustomerSubmittedRequirement.Division))
+                    else if (rule.field == nameof(CustomerRequirementView.Division))
                     {
                         totalRows = totalRows.Where(x => x.Division.ToLower().Contains(rule.data.ToLower()));
                     }
-                    else if (rule.field == nameof(CustomerSubmittedRequirement.SubmittedBy))
+                    else if (rule.field == nameof(CustomerRequirementView.SubmittedBy))
                     {
                         totalRows = totalRows.Where(x => x.SubmittedBy.ToLower().Contains(rule.data.ToLower()));
                     }
-                    else if (rule.field == nameof(CustomerSubmittedRequirement.PartKitNo))
+                    else if (rule.field == nameof(CustomerRequirementView.PartKitNo))
                     {
                         totalRows = totalRows.Where(x => x.PartKitNo.ToLower().Contains(rule.data.ToLower()));
                     }
-                    else if (rule.field == nameof(CustomerSubmittedRequirement.Description))
+                    else if (rule.field == nameof(CustomerRequirementView.Description))
                     {
                         totalRows = totalRows.Where(x => x.Description.ToLower().Contains(rule.data.ToLower()));
                     }
-                    else if (rule.field == nameof(CustomerSubmittedRequirement.Respresentative))
+                    else if (rule.field == nameof(CustomerRequirementView.Respresentative))
                     {
                         totalRows = totalRows.Where(x => x.Respresentative.ToLower().Contains(rule.data.ToLower()));
                     }
@@ -127,10 +134,62 @@ namespace Answer.Web.Controllers
             return View();
         }
 
-        public ActionResult Edit(int id)
+        public ActionResult Start(int id)
         {
             var currentUser = GetCurrentUser();
             var requirment =_quoteService.GetById(id);
+
+            _productionPlanService.UpdateStatus(id, CustomerSubmittedRequirementConstants.InProgress);
+
+            return RedirectToAction("Edit", "ProductionPlanning", new {id});
+        }
+
+        public ActionResult Edit(int id)
+        {
+            var currentUser = GetCurrentUser();
+            var requirment = _quoteService.GetById(id);
+
+            if (!string.IsNullOrWhiteSpace(requirment.ProductId))
+            {
+                var productView = _productionPlanService.GetProductionPlaningQueryable().SingleOrDefault(x => x.ProductId == requirment.ProductId);
+
+                if (productView.ProductStatus != "CREATING")
+                {
+                    var result = _workflowService.CheckOutObject(productView.ProductId, currentUser.Id);
+                }
+            }
+
+            var vm = new RequirementStepsViewModel();
+            vm.Read(_productionPlanService, requirment);
+
+            var procedureSteps = _proceduresService.GetStepsData(vm.ProductProcedureId, currentUser.Id);
+            vm.Setup(_productionPlanService, procedureSteps);
+
+            if (!string.IsNullOrWhiteSpace(vm.ProductProcedureId) && !vm.Steps.Any())
+            {
+                foreach (var step in procedureSteps)
+                {
+                    vm.Steps.Add(new RequirementStepsDetailsViewModel
+                    {
+                        ObjectId = step.Id,
+                        Process = step.StepTitle,
+                        Step = (int)step.Print_Order
+                    });
+                }
+            }
+
+            vm.ProductName = requirment.ProductName;
+            vm.AddPartViewModel.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), GetCurrentUser().Company, GetCurrentUser().Id);
+            vm.SaveProcedureViewModel.Setup(new ProceduresService(), new RoleService(), new ProcedureVerbsService(), GetCurrentUser().Id);
+
+            return View(vm);
+        }
+
+
+        public ActionResult View(int id)
+        {
+            var currentUser = GetCurrentUser();
+            var requirment = _quoteService.GetById(id);
 
             var viewModel = new RequirementStepsViewModel();
             viewModel.Read(_productionPlanService, requirment);
@@ -189,33 +248,33 @@ namespace Answer.Web.Controllers
 
                 var response = _productionPlanService.Save(vm, saveSubmit);
 
-                    if (!response.HasErrors())
+                if (!response.HasErrors())
+                {
+                    TempData["SuccessMessage"] = response.SuccessMessage;
+
+                    if (!string.IsNullOrWhiteSpace(saveSubmit))
                     {
-                        TempData["SuccessMessage"] = response.SuccessMessage;
-
-                        if (!string.IsNullOrWhiteSpace(saveSubmit))
-                        {
-                            return RedirectToAction("Index");
-                        }
-                        else
-                        {
-
-                            vm.Setup(_productionPlanService, _proceduresService.GetStepsData(vm.ProductProcedureId, currentUser.Id));
-
-                            return View(vm);
-
-                        }
+                        return RedirectToAction("Submit", "Workflow",
+                            new {objId = response.Entity.ProductId, returnUrl = Url.Content("~/ProductionPlanning")});
                     }
 
-                    TempData["ErrorMessage"] = response.ErrorMessage;
+                    vm.Setup(_productionPlanService, _proceduresService.GetStepsData(vm.ProductProcedureId, currentUser.Id));
+
+                    return RedirectToAction("Index");
+
                 }
 
+                TempData["ErrorMessage"] = response.ErrorMessage;
+            }
+
             vm.Setup(_productionPlanService, _proceduresService.GetStepsData(vm.ProductProcedureId, currentUser.Id));
+            vm.AddPartViewModel.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), GetCurrentUser().Company, GetCurrentUser().Id);
+            vm.SaveProcedureViewModel.Setup(new ProceduresService(), new RoleService(), new ProcedureVerbsService(), GetCurrentUser().Id);
 
             return View(vm);
         }
 
-        public ActionResult Status(string id, string currentStatus)
+        public ActionResult Status(int id, string currentStatus)
         {
 
             var response = _productionPlanService.ChangeStatus(id, currentStatus);
@@ -243,61 +302,74 @@ namespace Answer.Web.Controllers
             return View(model);
         }
 
-        [HttpPost]
-        public ActionResult EditStatus(RequirementStatusViewModel model)
-        {
-
-            if (ModelState.IsValid)
-            {
-                var response = _productionPlanService.ChangeStatus(model.Id, model.Status);
-
-                if (!response.HasErrors())
-                {
-                    TempData["SuccessMessage"] = response.SuccessMessage;
-
-                    return RedirectToAction("Index");
-                }
-
-                TempData["ErrorMessage"] = response.ErrorMessage;
-
-            }
-
-            model.Setup();
-
-            return View(model);
-        }
-
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult AddPart(RequirementStepsViewModel model)
+        public ActionResult AddPart(AddPartViewModel model)
         {
-            var loggedUsed = GetCurrentUser();
-            var taskService = new PartsService();
+            var currentUser = GetCurrentUser();
 
-            SubmitWorkflowViewModel aproveworkflow = new SubmitWorkflowViewModel();
-            model.AddPartViewModel.NTLogin = loggedUsed.Id;
-            model.AddPartViewModel.SubParts = null;
+            var result = new ResultNotification<string>();
+            var partservice = new PartsService();
+            model.NTLogin = currentUser.Id;
+            model.SubParts = null;
 
-            var response = taskService.Create(model.AddPartViewModel);
+            var response = partservice.Create(model);
 
             if (!response.HasErrors())
             {
                 TempData["SuccessMessage"] = "Part has been created successfully.";
 
-                aproveworkflow.ObjectId = response.Entity;
-                aproveworkflow.CompletionStart = "Approved";
-                aproveworkflow.ApprovalWorflowId = "37";
-                aproveworkflow.LoggedUserIdResult = loggedUsed;
+                var checkOutObject = _workflowService.CheckOutObject(response.Entity, model.NTLogin);
+                
+                var submitWorkflow = new SubmitWorkflowViewModel();
+                submitWorkflow.CompletionStart = "APPROVED";
+                submitWorkflow.LoggedUserIdResult = currentUser;
+                submitWorkflow.ObjectId = checkOutObject.Entity;
+                submitWorkflow.ApprovalWorflowId = "37";
+                submitWorkflow.Comment = "Part approved by system";
+                submitWorkflow.LoginId = currentUser.Id;
+                _workflowService.SubmitWorkflow(submitWorkflow);
+          
+                var partList = _productionPlanService.GetPartList();
 
-                _workflowService.SubmitWorkflow(aproveworkflow);
-
-                return RedirectToAction("Index");
+                return Json(new { Message = result.SuccessMessage, data = partList, PartId = response.Entity }, JsonRequestBehavior.AllowGet);
             }
-        
-            TempData["ErrorMessage"] = "Something went wrong.";
 
-            model.AddPartViewModel.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), GetCurrentUser().Company, GetCurrentUser().Id);
+            return Json(new { Message = result.ErrorMessage }, JsonRequestBehavior.AllowGet);
 
-            return RedirectToAction("Index");
         }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public JsonResult CreateProcedure(SaveProcedureViewModel model)
+        {
+            var currentUser = GetCurrentUser();
+            var procedureService = new ProceduresService();
+            var result = new ResultNotification<string>();
+            
+            var response = procedureService.Create(model);
+
+            TempData["SuccessMessage"] = "Procedure has been created successfully.";
+
+            if (!response.HasErrors())
+            {
+                var checkOutObject = _workflowService.CheckOutObject(response.Entity, model.NTLogin);
+
+                var submitWorkflow = new SubmitWorkflowViewModel();
+                submitWorkflow.CompletionStart = "APPROVED";
+                submitWorkflow.LoggedUserIdResult = currentUser;
+                submitWorkflow.ObjectId = checkOutObject.Entity;
+                submitWorkflow.ApprovalWorflowId = "37";
+                submitWorkflow.Comment = "Procedure approved by system";
+                _workflowService.SubmitWorkflow(submitWorkflow);
+
+                var procedureList = _productionPlanService.GetProceduretList();
+
+                return Json(new { Message = result.SuccessMessage, data = procedureList, ProcedureId = response.Entity }, JsonRequestBehavior.AllowGet);
+            }
+
+            return Json(new { Message = result.ErrorMessage }, JsonRequestBehavior.AllowGet);
+        }
+
+
+
     }
 }

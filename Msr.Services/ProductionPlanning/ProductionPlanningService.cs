@@ -15,6 +15,7 @@ using Msr.Models.Common;
 using Msr.Models.Locations;
 using Msr.Services.Procedures.ViewModels;
 using Msr.Services.Workflows;
+using Msr.Services.Workflows.ViewModels;
 
 namespace Msr.Services.ProductionPlanning
 {
@@ -31,22 +32,13 @@ namespace Msr.Services.ProductionPlanning
             _workflowService = new WorkflowService();
         }
 
-        public IQueryable<CustomerSubmittedRequirement> GetProductionPlaningQueryable()
+        public IQueryable<CustomerRequirementView> GetProductionPlaningQueryable()
         {
-            return _dbContext.CustomerSubmittedRequirements;
+            return _dbContext.CustomerRequirementViews;
         }
         public IQueryable<PartInfoView> GetProductionPartInfoViewQueryable()
         {
             return _dbContext.PartInfoViews;
-        }
-
-        public PartInfoView GetProductionById(int Id)
-        {
-            return GetProductionPartInfoViewQueryable().SingleOrDefault(x => x.Id == Id);
-        }
-        public CustomerRequirement GetCustomerById(string Id)
-        {
-            return _dbContext.CustomerRequirements.SingleOrDefault(x => x.Id == Id);
         }
         public List<RequirementStep> GetStepsByObjectId(int id)
         {
@@ -56,35 +48,6 @@ namespace Msr.Services.ProductionPlanning
         public IQueryable<LocationView> GetLocationsQueryable()
         {
             return _dbContext.LocationViews;
-        }
-        public GetStepDataResult GetSteps(string id)
-        {
-            var procedureName = _proceduresService.GetProceduresQueryable().Where(x => x.ObjectId == id).SingleOrDefault().Name;
-
-            var viewModel = new GetStepDataResult
-            {
-                GetStepDataResults = _proceduresService.GetStepsData(id, "1618")
-            };
-
-            viewModel.AddMonitorForProcedureViewModel.Setup();
-            viewModel.AddMonitorForProcedureViewModel.Related_Object_Id = id;
-            //ViewBag.ProcObjectId = id;
-            //ViewBag.ProdecureName = procedureName;
-            return viewModel;
-        }
-
-        public string GetPartKitNo(string id)
-        {
-            var result = _dbContext.CustomerRequirementViews.Where(x => x.Id == id).SingleOrDefault();
-
-            if (result != null)
-            {
-                return result.PartKitNo;
-            }
-            else
-            {
-                return "";
-            }
         }
 
         public void UpdateStep(RequirementStep model)
@@ -103,25 +66,18 @@ namespace Msr.Services.ProductionPlanning
             _dbContext.SaveChanges();
         }
 
-        public void UpdateStatus(string id, string type)
+        public void UpdateStatus(int id, string status)
         {
-            var step = _dbContext.CustomerRequirementViews.Where(x => x.Id == id).SingleOrDefault();
+            var requirment = _dbContext.CustomerSubmittedRequirements.Single(x => x.Id == id);
 
-            if (type == "Save & Submit")
-            {
-                step.Status = "APPROVED";
-            }
-            else
-            {
-                step.Status = "IN_APPROVAL";
-            }
+            requirment.Status = status;
 
             _dbContext.SaveChanges();
         }
 
-        public ResultNotification<string> Save(RequirementStepsViewModel model, string submit)
+        public ResultNotification<CustomerSubmittedRequirement> Save(RequirementStepsViewModel model, string submit)
         {
-            var result = new ResultNotification<string>();
+            var result = new ResultNotification<CustomerSubmittedRequirement>();
 
             try
             {
@@ -134,9 +90,13 @@ namespace Msr.Services.ProductionPlanning
                 requirment.ProcedureId = model.ProductProcedureId;
                 requirment.Division = model.ProductCustomerDivision;
 
+                if (string.IsNullOrWhiteSpace(requirment.ProductId))
+                {
+                    CreateProduct(model, requirment, result);
+                }
+
                 if (!string.IsNullOrWhiteSpace(submit))
                 {
-                    var procedureRefId = string.Empty;
                     var procedureSteps = _proceduresService.GetStepsData(model.ProductProcedureId, model.LoginId);
 
                     foreach (var step in model.Steps)
@@ -145,13 +105,8 @@ namespace Msr.Services.ProductionPlanning
 
                         if (existingStep == null)
                         {
-                            ////if (string.IsNullOrWhiteSpace(procedureRefId))
-                            ////{
-                            ////    procedureRefId = _dbContext.Database.SqlQuery<string>($"SELECT HISTORY_REF_ID  FROM A_V_PROCEDURES_APPROVED_DATA_DROP_DOWN WHERE object_id ={model.ProductProcedureId}").Single();
-                            ////}
-
                             var vm = new GetStepEditDataViewModel();
-                            vm.GetStepEditData.Step_Text = "<h4>" + procedureSteps.Where(x => x.Id == step.ObjectId).FirstOrDefault().StepTitle + "</h4>";
+                            vm.GetStepEditData.Step_Text = "<h4>" + procedureSteps.FirstOrDefault(x => x.Id == step.ObjectId).StepTitle + "</h4>";
                             vm.GetStepEditData.Print_Order = step.Step;
                             vm.ProcObjId = model.ProductProcedureId;
                             vm.ReplacementCost = step.ReplacementCost;
@@ -165,84 +120,12 @@ namespace Msr.Services.ProductionPlanning
                         }
                     }
 
-                    try
-                    {
-                        var p = new DynamicParameters();
-
-                        p.Add("@newID", dbType: DbType.String, direction: ParameterDirection.Output, size: 50);
-                        p.Add("@messages", dbType: DbType.String, direction: ParameterDirection.Output, size: 500);
-                        p.Add("@objID", null, DbType.String, ParameterDirection.Input, size: 50);
-                        p.Add("@PARENT_ID", null, DbType.String, ParameterDirection.Input, size: 50);
-                        p.Add("@SUPPLIER_ID", model.ProductSupplierId, DbType.String, ParameterDirection.Input,
-                            size: 50);
-                        p.Add("@Name", requirment.ProductName, DbType.String, ParameterDirection.Input, size: 50);
-                        p.Add("@COMMENTS", "", DbType.String, ParameterDirection.Input, size: 50);
-                        p.Add("@PROCEDURE_ID", requirment.ProcedureId, DbType.String, ParameterDirection.Input,
-                            size: 50);
-                        p.Add("@APP_OBJECT", requirment.PartId, DbType.String, ParameterDirection.Input, size: 50);
-                        p.Add("@CUSTOMIZABLE", "0", DbType.String, ParameterDirection.Input, size: 50);
-                        p.Add("@REQ_FORM", null, DbType.String, ParameterDirection.Input, size: 50);
-                        p.Add("@MGR_TEAM", null, DbType.String, ParameterDirection.Input, size: 50);
-                        p.Add("@SALES_TAX", null, DbType.String, ParameterDirection.Input, size: 50);
-                        p.Add("@OBJ_USED_ON", null, DbType.String, ParameterDirection.Input, size: 50);
-                        p.Add("@MGR_ROLE", null, DbType.String, ParameterDirection.Input, size: 50);
-                        p.Add("@OEM", null, DbType.String, ParameterDirection.Input, size: 50);
-                        p.Add("@MODEL", null, DbType.String, ParameterDirection.Input, size: 50);
-                        p.Add("@PROCESS_AREA", null, DbType.String, ParameterDirection.Input, size: 50);
-                        p.Add("@COPPER", null, DbType.String, ParameterDirection.Input, size: 50);
-                        p.Add("@MM", null, DbType.String, ParameterDirection.Input, size: 50);
-                        p.Add("@strNTLogin", model.LoginId, DbType.String, ParameterDirection.Input, size: 50);
-
-
-                        using (IDbConnection conn =
-                            new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
-                        {
-                            int i = conn.Execute("A_SP_PRODUCT_UPDATE_ONE_PRODUCT", p,
-                                commandType: CommandType.StoredProcedure);
-
-                            var newId = p.Get<string>("newID");
-                            var messages = p.Get<string>("messages");
-
-                            //_dbContext.Database.SqlQuery<SelectFile>($"DELETE FROM A_PRODUCTS_QUICK_PRICE WHERE PROD_HIST_ID = (SELECT ID FROM A_PRODUCTS_HISTORY WHERE    OBJECT_ID IN(SELECT ID FROM A_PRODUCTS_HISTORY WHERE OBJECT_ID = '{newId}'))").ToList();
-
-                            //_dbContext.Database.SqlQuery<SelectFile>($"INSERT INTO A_PRODUCTS_QUICK_PRICE (ID,PROD_HIST_ID,CUST_ID,PRICE,DRCM,MODBY,CREATE_PRICE_LIST,PROD_TIME,PROD_TIME_UNIT,CAPACITY,CAPACITY_UNITS) " +
-                            //    $"VALUES(newID(), '{newId}', '{requirment.SupplierId}', NULL, getDate(), '{model.LoginId}', '1', '5', 'TIME_SYS_DAYS', NULL, 'minute'))").ToList();
-
-                            var workflow = _workflowService.CheckOutObject(newId, model.LoginId);
-
-                            var p1 = new DynamicParameters();
-
-                            p1.Add("@msg", dbType: DbType.String, direction: ParameterDirection.Output, size: 500);
-                            p1.Add("@msg2", dbType: DbType.String, direction: ParameterDirection.Output, size: 50);
-                            p1.Add("@objID", workflow.Entity, DbType.String, ParameterDirection.Input, size: 50);
-                            p1.Add("@wfID", "37", DbType.String, ParameterDirection.Input,
-                                size: 50); //Admin WorkflowAdmin Workflow
-                            p1.Add("@revComment", requirment.ProductName, DbType.String, ParameterDirection.Input,
-                                size: 2000);
-                            p1.Add("@statOnCompletion", "APPROVED", DbType.String, ParameterDirection.Input, size: 50);
-                            p1.Add("@allRevs", null, DbType.String, ParameterDirection.Input, size: 50);
-                            p1.Add("@strNTLogin", model.LoginId, DbType.String, ParameterDirection.Input, size: 50);
-
-                            conn.Execute("A_SP_OBJECT_START_WF", p1, commandType: CommandType.StoredProcedure);
-
-                            var msg = p1.Get<string>("msg");
-                            var msg2 = p1.Get<string>("msg2");
-
-                            result.SuccessMessage = msg;
-                        }
-
-                        requirment.Status = CustomerSubmittedRequirementConstants.Completed;
-                    }
-                    catch (Exception ex)
-                    {
-                        result.AddError("There was an error creating product");
-                    }
+                    requirment.Status = CustomerSubmittedRequirementConstants.Completed;
                 }
                 else
                 {
                     requirment.Status = CustomerSubmittedRequirementConstants.InProgress;
                 }
-
 
                 foreach (var step in model.Steps)
                 {
@@ -273,17 +156,7 @@ namespace Msr.Services.ProductionPlanning
 
                 _dbContext.SaveChanges();
 
-                //UpdateStatus(id, model.postType); need to know how to implement this.
-
-                if (model.Steps.Count > 1)
-                {
-                    result.SuccessMessage = "Requirement steps have been saved successfully.";
-                }
-                else
-                {
-                    result.SuccessMessage = "Requirement step has been saved successfully.";
-                }
-
+                result.Entity = requirment;
             }
             catch (Exception ex)
             {
@@ -293,6 +166,50 @@ namespace Msr.Services.ProductionPlanning
             }
 
             return result;
+        }
+
+        private void CreateProduct(RequirementStepsViewModel model, CustomerSubmittedRequirement requirment, ResultNotification<CustomerSubmittedRequirement> result)
+        {
+            try
+            {
+                var p = new DynamicParameters();
+
+                p.Add("@newID", dbType: DbType.String, direction: ParameterDirection.Output, size: 50);
+                p.Add("@messages", dbType: DbType.String, direction: ParameterDirection.Output, size: 500);
+
+                p.Add("@productName", model.ProductName, DbType.String, ParameterDirection.Input, size: 50);
+                p.Add("@supplierId", model.ProductSupplierId, DbType.String, ParameterDirection.Input, size: 50);
+                p.Add("@partId", requirment.PartId, DbType.String, ParameterDirection.Input, size: 50);
+                p.Add("@procedureId", requirment.ProcedureId, DbType.String, ParameterDirection.Input,size: 50);
+                p.Add("@loginId", model.LoginId, DbType.String, ParameterDirection.Input, size: 50);
+
+                using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
+                {
+                    int i = conn.Execute("Portal_CreateProduct", p, commandType: CommandType.StoredProcedure);
+                    var newId = p.Get<string>("newID");
+                    var messages = p.Get<string>("messages");
+                    requirment.ProductId = newId;
+                }
+            }
+            catch (Exception ex)
+            {
+                result.AddError("There was an error creating product");
+            }
+        }
+
+        private void SubmitProductToWorkflow(RequirementStepsViewModel model, ResultNotification<string> result, string newId)
+        {
+            var workflow = _workflowService.CheckOutObject(newId, model.LoginId);
+
+            var submitWorkflow = new SubmitWorkflowViewModel();
+            submitWorkflow.CompletionStart = "APPROVED";
+            submitWorkflow.ObjectId = workflow.Entity;
+            submitWorkflow.ApprovalWorflowId = "37";
+            submitWorkflow.Comment = "Product approved by system";
+            submitWorkflow.LoginId = model.LoginId;
+            var workflowResponse = _workflowService.SubmitWorkflow(submitWorkflow);
+
+            result.SuccessMessage = workflowResponse.SuccessMessage;
         }
 
         public RequirementStep StepMapping(RequirementStepsDetailsViewModel model)
@@ -332,12 +249,12 @@ namespace Msr.Services.ProductionPlanning
             _dbContext.SaveChanges();
         }
 
-        public ResultNotification<string> ChangeStatus(string id, string status)
+        public ResultNotification<string> ChangeStatus(int id, string status)
         {
             var result = new ResultNotification<string>();
             try
             {
-                var step = _dbContext.CustomerRequirementViews.Where(x => x.Id == id).SingleOrDefault();
+                var step = _dbContext.CustomerRequirementViews.SingleOrDefault(x => x.Id == id);
 
                 step.Status = status;
 
@@ -360,25 +277,22 @@ namespace Msr.Services.ProductionPlanning
 
         public List<SelectFile> GetProceduretList()
         {
-            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT DISTINCT SHOWNAME as Show,Object_Id as Value   FROM A_V_PROCEDURES_APPROVED_DATA_DROP_DOWN WHERE ( CREATING_CO = '2'  ) AND (( NAME LIKE '%f%' AND NAME LIKE '%%' ) )    ORDER BY SHOWNAME").ToList();
+            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT DISTINCT SHOWNAME as Show,Object_Id as Value   FROM A_V_PROCEDURES_APPROVED_DATA_DROP_DOWN WHERE ( CREATING_CO = '2'  ) AND ((NAME LIKE '%%' ) )    ORDER BY SHOWNAME").ToList();
 
             return result;
         }
-
         public List<SelectFile> GetPartList()
         {
-            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT DISTINCT NAME_COMBO as Show,ID as Value   FROM A_V_PARTS_APPROVED_DATA WHERE ( COMPANY = '2'  ) AND (( NAME_COMBO LIKE '%f%' AND NAME_COMBO LIKE '%%' ) )    ORDER BY NAME_COMBO").ToList();
+            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT DISTINCT NAME_COMBO as Show,ID as Value   FROM A_V_PARTS_APPROVED_DATA WHERE ( COMPANY = '2'  ) AND (( NAME_COMBO LIKE '%%' ) )    ORDER BY NAME_COMBO").ToList();
 
             return result;
         }
 
         public List<SelectFile> GetSupplierList()
         {
-            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT DISTINCT NAME as Show,ID as Value FROM A_V_COMPANIES_DROP_SEARCH WHERE ( ROOT_CO_ID = '2' ) AND (( NAME LIKE '%f%' AND NAME LIKE '%%' ) ) ORDER BY NAME").ToList();
+            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT DISTINCT NAME as Show,ID as Value FROM A_V_COMPANIES_DROP_SEARCH WHERE ( ROOT_CO_ID = '2' ) AND ((NAME LIKE '%%' ) ) ORDER BY NAME").ToList();
 
             return result;
         }
-
-
     }
 }

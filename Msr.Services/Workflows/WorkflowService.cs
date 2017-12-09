@@ -53,7 +53,7 @@ namespace Msr.Services.Workflows
                 p.Add("@revComment", vm.Comment, DbType.String, ParameterDirection.Input, size: 2000);
                 p.Add("@statOnCompletion", vm.CompletionStart, DbType.String, ParameterDirection.Input, size: 50);
                 p.Add("@allRevs", vm.AllRevs, DbType.String, ParameterDirection.Input, size: 50);
-                p.Add("@strNTLogin", vm.LoggedUserIdResult.Id, DbType.String, ParameterDirection.Input, size: 50);
+                p.Add("@strNTLogin", vm.LoginId, DbType.String, ParameterDirection.Input, size: 50);
 
                 using (IDbConnection conn =
                     new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))

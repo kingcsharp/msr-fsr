@@ -1168,6 +1168,7 @@
     <Content Include="Views\ProductionPlanning\_Product.cshtml" />
     <Content Include="Views\ProductionPlanning\_Models.cshtml" />
     <Content Include="Views\ProductionPlanning\_Steps.cshtml" />
+    <Content Include="Views\ProductionPlanning\View.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

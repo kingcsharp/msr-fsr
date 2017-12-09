@@ -153,14 +153,14 @@ namespace Answer.Web.Controllers
         public ActionResult Create(SaveProcedureViewModel model)
         {
             var procedureService = new ProceduresService();
-
-            //need to be dynamic
+            
             model.NTLogin = GetCurrentUser().Id;
 
             if (ModelState.IsValid)
             {
                 var response = procedureService.Create(model);
-                if (response)
+
+                if (!response.HasErrors())
                 {
                     TempData["SuccessMessage"] = "Procedure has been created successfully.";
 
@@ -182,17 +182,21 @@ namespace Answer.Web.Controllers
             return View(model);
         }
 
-        public ActionResult Edit(string id)
+        public ActionResult Edit(string id, string status)
         {
             var vm = new SaveProcedureViewModel();
             vm.Id = id;
 
             var procedureService = new ProceduresService();
 
-            var currrentUser = GetCurrentUser();
-            var result = _workflowService.CheckOutObject(id, currrentUser.Id);
-
-            var model = procedureService.GetProcedureById(result.Entity);
+            if (status.ToUpper() != "CREATING")
+            {
+                var currrentUser = GetCurrentUser();
+                var result = _workflowService.CheckOutObject(id, currrentUser.Id);
+                id = result.Entity;
+            }
+            
+            var model = procedureService.GetProcedureById(id);
 
             vm.MapToDto(model);
             vm.Setup(new ProceduresService(), new RoleService(), new ProcedureVerbsService(), GetCurrentUser().Id);
@@ -262,8 +266,6 @@ namespace Answer.Web.Controllers
             var html = "";
             try
             {
-                var saveProcedureViewModel = new ViewProcedureViewModel();
-
                 var procedureService = new ProceduresService();
 
                 var approvedData = procedureService.GetApprovedData(id);
@@ -626,11 +628,11 @@ namespace Answer.Web.Controllers
         public ActionResult EditPartsProvideTakeBack(string Pid, string relationship, string ObjId, PartsProvideTakeBackViewModel model)
         {
             var procedureService = new ProceduresService();
-            //need to be dynamic
             model.NTLogin = GetCurrentUser().Id;
             model.PROCEDURE_ID = Pid;
             model.ID = ObjId;
             model.RELATIONSHIP = relationship;
+
             if (ModelState.IsValid)
             {
                 var response = procedureService.SavePartsProvideTakeBack(model);
@@ -638,7 +640,7 @@ namespace Answer.Web.Controllers
                 {
                     TempData["SuccessMessage"] = "Procedure Object has been created successfully.";
 
-                    return RedirectToAction("ShowPartsProvidedTakeBack", new { Pid = Pid, relationship = relationship });
+                    return RedirectToAction("ShowPartsProvidedTakeBack", new { Pid, relationship });
                 }
                 else
                 {

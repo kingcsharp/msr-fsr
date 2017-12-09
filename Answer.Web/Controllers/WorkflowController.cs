@@ -39,6 +39,7 @@ namespace Answer.Web.Controllers
             {
                 vm.LoggedUserIdResult = GetCurrentUser();
                 vm.CompletionStart = "APPROVED";
+                vm.LoginId = vm.LoggedUserIdResult.Id;
 
                 var result = _workflowService.SubmitWorkflow(vm);
 

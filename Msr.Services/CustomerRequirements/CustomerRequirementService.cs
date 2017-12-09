@@ -23,11 +23,6 @@ namespace Msr.Services.CustomerRequirements
             return _dbContext.CustomerRequirementViews;
         }
 
-        public CustomerRequirementView GetById(string Id)
-        {
-            return GetProductionPlaningQueryable().Where(x => x.Id == Id).SingleOrDefault();
-        }
-
         public List<ProcessInfoView> ProcessInfoView(string id)
         {
             return _dbContext.ProcessInfoViews.Where(x => x.ObjectId == id).ToList();

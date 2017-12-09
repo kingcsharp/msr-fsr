@@ -292,9 +292,9 @@ namespace Msr.Services.Procedures
 
             return result;
         }
-        public bool Create(SaveProcedureViewModel model)
+        public ResultNotification<string> Create(SaveProcedureViewModel model)
         {
-
+            var result = new ResultNotification<string>();
             try
             {
                 var saveProcedureProcedure = new SaveProcedureProcedure
@@ -314,7 +314,7 @@ namespace Msr.Services.Procedures
 
                 _dbContext.Database.ExecuteStoredProcedure(saveProcedureProcedure);
 
-
+                result.Entity = saveProcedureProcedure.NewObjId;
 
                 var deleteReferenceFileProcedure = new DeleteFileProcedure() { ObjID = saveProcedureProcedure.NewObjId, Type = DBNull.Value.ToString(CultureInfo.InvariantCulture), NTLogin = model.NTLogin };
 
@@ -337,15 +337,17 @@ namespace Msr.Services.Procedures
 
                     _dbContext.Database.ExecuteStoredProcedure(saveProcedureRoleProcedure);
                 }
-                return true;
+                return result;
             }
             catch (Exception ex)
             {
-                var message = "Error occured:" + ex.Message;
 
-                return false;
+                var message = "Error occured:" + ex.Message;
+                result.AddError(message);
+                return result;
             }
         }
+
         public bool Save(SaveProcedureViewModel model)
         {
 

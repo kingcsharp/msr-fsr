@@ -41,7 +41,7 @@ namespace Answer.Web.Controllers
                 {
                     TempData["SuccessMessage"] = response.SuccessMessage;
 
-                    return RedirectToAction("Create", "Quote");
+                    return RedirectToAction("Index", "ProductionPlanning");
                 }
 
                 TempData["ErrorMessage"] = response.ErrorMessage;

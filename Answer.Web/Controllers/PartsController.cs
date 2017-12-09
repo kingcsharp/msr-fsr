@@ -151,6 +151,7 @@ namespace Answer.Web.Controllers
 
             return View(part);
         }
+
         public ActionResult ViewFile(string callBackitem)
         {
             var callBackUrl = "http://docs.google.com/gview?url=" + "http://infolab.stanford.edu/pub/papers/google.pdf&embedded=true";//callBackitem url need to be dynamic
@@ -176,7 +177,7 @@ namespace Answer.Web.Controllers
                 model.NTLogin = GetCurrentUser().Id;
                 model.SubParts = null;
 
-                var response = taskService.Create(model: model);
+                var response = taskService.Create(model);
 
                 if (!response.HasErrors())
                 {

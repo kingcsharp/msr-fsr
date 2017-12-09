@@ -16,6 +16,8 @@ namespace Msr.Services.Workflows.ViewModels
 
         public string ObjectId { get; set; }
 
+        public string LoginId { get; set; }
+
         [Display(Name = "Item Name")]
         public string Name { get; set; }
 

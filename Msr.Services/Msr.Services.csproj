@@ -438,6 +438,7 @@
     <Folder Include="Objects\ViewModels\" />
     <Folder Include="PrePro\Messages\" />
     <Folder Include="ProcedureTypes\ViewModels\" />
+    <Folder Include="ProductionPlanning\Messages\" />
     <Folder Include="ProductsActualParts\Procedures\" />
     <Folder Include="ProductsActualParts\VIewModels\" />
     <Folder Include="Products\Procedures\" />

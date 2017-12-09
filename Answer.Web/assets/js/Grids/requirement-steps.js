@@ -14,6 +14,7 @@ $(document).ready(function () {
         recalculateTotals();
         manageSwitchColum();
     }
+
     $("#add_row").click(function () {
         var dropdownProcess = $('#proId').html()
         $('#row' + i).html("<td><select class='form-control' name='steps[" + i + "].ObjectId' required>" + dropdownProcess + "</select><span class=" + "text-danger field-validation-error" + " data-valmsg-for=" + "steps[" + i + "].Process" + " data-valmsg-replace=" + "true" + "></span></td>" +
@@ -25,6 +26,7 @@ $(document).ready(function () {
         recalculateTotals();
         manageSwitchColum();
     });
+
     $("#delete_row").click(function () {
         if (i >= 1) {
             var sid = $("#row" + (i - 1) + " #stepId").val();
