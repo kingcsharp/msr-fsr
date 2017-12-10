@@ -2830,6 +2830,7 @@
     <Build Include="dbo\Tables\Portal_CustomerSubmittedRequirement.sql" />
     <Build Include="dbo\Views\Portal\Portal_ProductionPlanningView.sql" />
     <Build Include="dbo\Tables\Portal_CustomerRequirement.sql" />
+    <Build Include="dbo\Views\Portal_CustomerRequirementView.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Msr.Database.refactorlog" />
