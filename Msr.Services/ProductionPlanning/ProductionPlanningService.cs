@@ -188,7 +188,11 @@ namespace Msr.Services.ProductionPlanning
                     int i = conn.Execute("Portal_CreateProduct", p, commandType: CommandType.StoredProcedure);
                     var newId = p.Get<string>("newID");
                     var messages = p.Get<string>("messages");
+
+                    var checkoutResult = _workflowService.CheckOutObject(newId, model.LoginId);
+
                     requirment.ProductId = newId;
+                    requirment.ProductWorkflowId = checkoutResult.Entity;
                 }
             }
             catch (Exception ex)

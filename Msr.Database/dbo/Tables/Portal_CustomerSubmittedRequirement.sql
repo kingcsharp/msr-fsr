@@ -20,6 +20,7 @@ CREATE TABLE [dbo].[Portal_CustomerSubmittedRequirement](
 	[PartId] [nvarchar](50) NULL,
 	[ProcedureId] [nvarchar](50) NULL,
 	[ProductId] [nvarchar](50) NULL,
+	ProductWorkflowId [nvarchar](50) NULL,
  CONSTRAINT [PK_Portal_CustomerSubmittedRequirements] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC

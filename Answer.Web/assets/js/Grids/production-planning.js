@@ -120,22 +120,7 @@ $(document).ready(function () {
         key: true,
         ajaxCellOptions: {},
         gridComplete: function () {
-            $('.deletepart').on('click', function (e) {
-                e.preventDefault();
-
-                var callBackId = $(this).data('call-back-id');
-                var callBackName = $(this).data('call-back-name');
-
-                eModal.confirm('Do you really want to delete ' + callBackName + ' ?', 'Confirmation delete')
-                    .then(confirmCallback, optionalCancelCallback);
-
-                function confirmCallback() {
-                    window.location.href = "/Locations/LocationDelete/" + callBackId
-                }
-                function optionalCancelCallback() {
-                }
-
-            })
+            
         },
 
     });
@@ -186,12 +171,12 @@ $(document).ready(function () {
 
         if (rowObject.ProductStatus === 'CREATING') {
 
-            url = '/workflow/submit?objId=' + rowObject.ProductId + '&returnUrl=' + returnUrl;
-            buttonWorkflowLeft = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '"  data-call-back-id="' + rowObject.ProductId + '" class="btn btn-xs btn-danger unlock" title="Cancel Creation. Edit will be lost" style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-left"></i></a>';
+            url = '/workflow/submit?objId=' + rowObject.ProductWorkflowId + '&returnUrl=' + returnUrl;
+            buttonWorkflowLeft = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '"  data-call-back-id="' + rowObject.ProductWorkflowId + '" class="btn btn-xs btn-danger unlock" title="Cancel Creation. Edit will be lost" style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-left"></i></a>';
 
             buttonWorkflowRight = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-success" title="Proceed to approval workflow for release." style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-right"></i></a>';
         } else {
-            url = '/workflow/delete?objId=' + rowObject.ObjectId + '&returnUrl=' + returnUrl;
+            url = '/workflow/delete?objId=' + rowObject.ProductWorkflowId + '&returnUrl=' + returnUrl;
             deleteButton = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-danger" title="Proceed to Delete." style="margin:2px;font-size: .8em;"><i class="fa fa fa-trash"></i></a>';
         }
         

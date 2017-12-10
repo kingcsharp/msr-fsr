@@ -48,7 +48,7 @@ namespace Answer.Web.Controllers
         public ActionResult ProductionPlanningData(JqGridParam param)
         {
 
-            var totalRows = _productionPlanService.GetProductionPlaningQueryable().Where(x => x.ProductStatus != "DELETED" && x.ProductStatus != "OLD");
+            var totalRows = _productionPlanService.GetProductionPlaningQueryable().Where(x => x.ProductStatus != "DELETED" && x.ProductStatus != "OLD" && x.ProductStatus != "APPROVED_BUT_REVISING");
 
             if (param.where != null && param.where.rules.Any())
             {
@@ -151,7 +151,7 @@ namespace Answer.Web.Controllers
 
             if (!string.IsNullOrWhiteSpace(requirment.ProductId))
             {
-                var productView = _productionPlanService.GetProductionPlaningQueryable().SingleOrDefault(x => x.ProductId == requirment.ProductId);
+                var productView = _productionPlanService.GetProductionPlaningQueryable().SingleOrDefault(x => x.ProductId == requirment.ProductId && x.ProductStatus == "CREATING");
 
                 if (productView.ProductStatus != "CREATING")
                 {
@@ -191,7 +191,11 @@ namespace Answer.Web.Controllers
             var currentUser = GetCurrentUser();
             var requirment = _quoteService.GetById(id);
 
+            var productView = _productionPlanService.GetProductionPlaningQueryable().SingleOrDefault(x => x.Id == id);
+
             var viewModel = new RequirementStepsViewModel();
+            viewModel.ProductStatus = productView.ProductStatus;
+
             viewModel.Read(_productionPlanService, requirment);
 
             var procedureSteps = _proceduresService.GetStepsData(viewModel.ProductProcedureId, currentUser.Id);
@@ -255,7 +259,7 @@ namespace Answer.Web.Controllers
                     if (!string.IsNullOrWhiteSpace(saveSubmit))
                     {
                         return RedirectToAction("Submit", "Workflow",
-                            new {objId = response.Entity.ProductId, returnUrl = Url.Content("~/ProductionPlanning")});
+                            new {objId = response.Entity.ProductWorkflowId, returnUrl = Url.Content("~/ProductionPlanning")});
                     }
 
                     vm.Setup(_productionPlanService, _proceduresService.GetStepsData(vm.ProductProcedureId, currentUser.Id));

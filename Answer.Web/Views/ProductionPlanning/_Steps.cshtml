@@ -198,14 +198,14 @@
                 </div>
             </div>
 
-            if (Model.SubmittedRequirement.Status != CustomerSubmittedRequirementConstants.Completed) { 
+            if (Model.ProductStatus != "APPROVED") { 
                  <a id="add_row" class="btn btn-primary pull-left" data-toggle="tooltip" data-placement="top" title="" data-original-title="Add a Step to the Definition"><i class="fa fa-plus-circle"></i> Add Step</a>
             <a id="delete_row" class="pull-left btn btn-warning" style="margin-left: 10px;" data-toggle="tooltip" data-placement="top" title="" data-original-title="Removes Last Step from Definition"><i class="fa fa-minus-circle"></i> Remove Step</a>
         }
             <span data-toggle="tooltip" data-placement="top" title="" data-original-title="Back To Production Planning">&nbsp;&nbsp; @Html.ActionLink("Back", "Index", null, new {@class = "btn btn-warning back-step"})</span>
         
             }
-        @if (Model.SubmittedRequirement.Status != CustomerSubmittedRequirementConstants.Completed)
+        @if (Model.ProductStatus != "APPROVED")
         {
             <button id="form-change" class="hidden" style="margin-left: 10px;" data-toggle="tooltip" data-placement="top" title="" data-original-title="Saves and Sends Quoation to Client" name="" value=""> Submit</button>
             <button id="submit" class="pull-right btn btn-success" style="margin-left: 10px;" data-toggle="tooltip" data-placement="top" title="" data-original-title="Saves and Sends Quoation to Client" name="SaveSubmit" value="SaveSubmit"><i class="fa fa-send"></i> Save &amp; Submit</button>

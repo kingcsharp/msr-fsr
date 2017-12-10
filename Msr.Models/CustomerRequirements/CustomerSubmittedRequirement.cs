@@ -22,5 +22,6 @@ namespace Msr.Models.CustomerRequirements
         public string PartId { get; set; }
         public string ProcedureId { get; set; }
         public string ProductId { get; set; }
+        public string ProductWorkflowId { get; set; }
     }
 }

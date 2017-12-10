@@ -71,6 +71,7 @@ namespace Msr.Services.ProductionPlanning.ViewModels
         public List<SelectListItem> ProductLocationList { get; set; }
         public List<SelectListItem> ProcedureList { get; set; }
         public List<SelectListItem> PartList { get; set; }
+        public string ProductStatus { get; set; }
 
         public void Setup(ProductionPlanningService productionPlanningService, List<GetStepDataResult> stepsdropdownDataResults)
         {
@@ -119,7 +120,7 @@ namespace Msr.Services.ProductionPlanning.ViewModels
             ProductPartId = requirment.PartId;
             ProductProcedureId = requirment.ProcedureId;
             OldProductProcedureId = requirment.ProcedureId;
-            OldProductProcedureId = requirment.ProcedureId;
+            SubmittedRequirement = requirment;
 
             if (!string.IsNullOrWhiteSpace(requirment.QuoteJson))
             {
