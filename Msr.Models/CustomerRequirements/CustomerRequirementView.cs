@@ -14,8 +14,6 @@ namespace Msr.Models.CustomerRequirements
         public string SubmittedBy { get; set; }
         public DateTime SubmittedDate { get; set; }
         public string Status { get; set; }
-        public string QuoteJson { get; set; }
-        public string CustomerRequirementJson { get; set; }
         public string SupplierId { get; set; }
         public string LocationId { get; set; }
         public string ProductName { get; set; }
@@ -24,5 +22,6 @@ namespace Msr.Models.CustomerRequirements
         public string ProductId { get; set; }
         public string ProductWorkflowId { get; set; }
         public string ProductStatus { get; set; }
+ 
     }
 }

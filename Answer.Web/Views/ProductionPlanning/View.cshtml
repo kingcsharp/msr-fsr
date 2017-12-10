@@ -56,8 +56,6 @@
 </div>
 
 @Html.Partial("_Models")
-@Html.Partial("_Parts",Model.AddPartViewModel);
-@Html.Partial("_Procedure", Model.SaveProcedureViewModel);
 
 @section scripts
 {
@@ -74,24 +72,9 @@
 
         $('#Print').on('click', function () {
             $('#printThis').printThis();
-        });
+            });
 
-        $('#ProductProcedureId').on('change', function () {
-            $('#form-change').trigger('click');
-        });
-
-        $(".select").select2();
-
-        $(".selectroles").select2({
-            tags: [],
-            tokenSeparators: [','],
-            multiple: true,
-            allowClear: true,
-            placeholder: "Select Roles",
-            formatNoMatches: function () {
-                return '';
-            }
-        });
+        $("input,select").prop('disabled', true);
 
         });
         </script>

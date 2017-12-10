@@ -110,7 +110,6 @@
     <Compile Include="Companies\CompanyView.cs" />
     <Compile Include="Companies\EditCompanyView.cs" />
     <Compile Include="Companies\HeadPeopleView.cs" />
-    <Compile Include="CustomerRequirements\CustomerRequirement.cs" />
     <Compile Include="CustomerRequirements\CustomerRequirementView.cs" />
     <Compile Include="CustomerRequirements\CustomerSubmittedRequirement.cs" />
     <Compile Include="CustomerRequirements\PartInfoView.cs" />

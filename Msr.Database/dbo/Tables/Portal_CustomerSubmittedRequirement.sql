@@ -1,5 +1,4 @@
-﻿SET QUOTED_IDENTIFIER ON
-GO
+﻿GO
 
 CREATE TABLE [dbo].[Portal_CustomerSubmittedRequirement](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
@@ -21,6 +20,8 @@ CREATE TABLE [dbo].[Portal_CustomerSubmittedRequirement](
 	[ProcedureId] [nvarchar](50) NULL,
 	[ProductId] [nvarchar](50) NULL,
 	ProductWorkflowId [nvarchar](50) NULL,
+	[LeadTime] float NULL,
+	[Price] float NULL,
  CONSTRAINT [PK_Portal_CustomerSubmittedRequirements] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC

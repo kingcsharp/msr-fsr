@@ -12,13 +12,13 @@ namespace Msr.Services.Quotes.ViewModels
         public string Description { get; set; }
 
         [Required]
-        public decimal? LeadTime { get; set; }
+        public double? LeadTime { get; set; }
 
         [Required]
         public string CustomerPartNo { get; set; }
         
         [Required]
-        public decimal? Price { get; set; }
+        public double? Price { get; set; }
 
         public decimal? Extension { get; set; }
     }

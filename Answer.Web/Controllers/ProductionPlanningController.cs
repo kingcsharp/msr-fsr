@@ -373,7 +373,23 @@ namespace Answer.Web.Controllers
             return Json(new { Message = result.ErrorMessage }, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpGet]
+        public ActionResult Procedure()
+        {
+            var viewModel = new RequirementStepsViewModel();
+            viewModel.SaveProcedureViewModel.Setup(new ProceduresService(), new RoleService(), new ProcedureVerbsService(), GetCurrentUser().Id);
 
+            return PartialView("_Procedure", viewModel.SaveProcedureViewModel);
+        }
+
+        [HttpGet]
+        public ActionResult Part()
+        {
+            var viewModel = new RequirementStepsViewModel();
+            viewModel.AddPartViewModel.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), GetCurrentUser().Company, GetCurrentUser().Id);
+
+            return PartialView("_Parts", viewModel);
+        }
 
     }
 }

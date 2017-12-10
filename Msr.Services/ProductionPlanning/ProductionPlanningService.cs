@@ -6,6 +6,7 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Web.Script.Serialization;
 using Dapper;
 using Msr.Models.CustomerRequirements;
 using Msr.Services.Procedures;
@@ -14,6 +15,7 @@ using Msr.Services.ProductionPlanning.ViewModels;
 using Msr.Models.Common;
 using Msr.Models.Locations;
 using Msr.Services.Procedures.ViewModels;
+using Msr.Services.Quotes.ViewModels;
 using Msr.Services.Workflows;
 using Msr.Services.Workflows.ViewModels;
 
@@ -182,7 +184,10 @@ namespace Msr.Services.ProductionPlanning
                 p.Add("@partId", requirment.PartId, DbType.String, ParameterDirection.Input, size: 50);
                 p.Add("@procedureId", requirment.ProcedureId, DbType.String, ParameterDirection.Input,size: 50);
                 p.Add("@loginId", model.LoginId, DbType.String, ParameterDirection.Input, size: 50);
-
+                p.Add("@leadTime", requirment.LeadTime, DbType.Double, ParameterDirection.Input, size: 50);
+                p.Add("@price", requirment.Price, DbType.Double, ParameterDirection.Input, size: 50);
+           
+                
                 using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
                 {
                     int i = conn.Execute("Portal_CreateProduct", p, commandType: CommandType.StoredProcedure);

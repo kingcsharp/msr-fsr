@@ -56,8 +56,37 @@
 </div>
 
 @Html.Partial("_Models")
-@Html.Partial("_Parts",Model.AddPartViewModel);
-@Html.Partial("_Procedure", Model.SaveProcedureViewModel);
+
+<div id="partmodel" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">part Details</h4>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close-o"></i> Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="proceduremodel" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Procedure Details</h4>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close-o"></i> Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section scripts
 {
@@ -92,6 +121,44 @@
                 return '';
             }
         });
+
+        $('#partmodel').on('show.bs.modal',
+            function (event) {
+
+
+                var modal = $(this);
+
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Action("Part", "ProductionPlanning")',
+                    dataType: 'html',
+                    success: function (data) {
+                        modal.find('.modal-body').html(data);
+
+                    },
+                    error: function (data) {
+                    }
+                });
+        });
+
+        $('#proceduremodel').on('show.bs.modal',
+            function (event) {
+
+
+                var modal = $(this);
+
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Action("Procedure", "ProductionPlanning")',
+                    dataType: 'html',
+                    success: function (data) {
+                        modal.find('.modal-body').html(data);
+
+                    },
+                    error: function (data) {
+                    }
+                });
+            });
 
         });
         </script>
