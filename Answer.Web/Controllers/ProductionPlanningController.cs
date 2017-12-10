@@ -191,7 +191,7 @@ namespace Answer.Web.Controllers
             var currentUser = GetCurrentUser();
             var requirment = _quoteService.GetById(id);
 
-            var productView = _productionPlanService.GetProductionPlaningQueryable().SingleOrDefault(x => x.Id == id);
+            var productView = _productionPlanService.GetProductionPlaningQueryable().FirstOrDefault(x => x.Id == id && x.ProductStatus== "APPROVED");
 
             var viewModel = new RequirementStepsViewModel();
             viewModel.ProductStatus = productView.ProductStatus;
