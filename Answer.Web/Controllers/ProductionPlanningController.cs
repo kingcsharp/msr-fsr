@@ -259,7 +259,7 @@ namespace Answer.Web.Controllers
                     if (!string.IsNullOrWhiteSpace(saveSubmit))
                     {
                         return RedirectToAction("Submit", "Workflow",
-                            new {objId = response.Entity.ProductWorkflowId, returnUrl = Url.Content("~/ProductionPlanning")});
+                            new {objId = response.Entity.ProductId, returnUrl = Url.Content("~/ProductionPlanning")});
                     }
 
                     vm.Setup(_productionPlanService, _proceduresService.GetStepsData(vm.ProductProcedureId, currentUser.Id));
