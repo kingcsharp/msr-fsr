@@ -268,8 +268,6 @@ $(function () {
 
 
 
-    
-
     $('#relatedDocument').on('hidden.bs.modal', function (event) {
         $(this).data('bs.modal', null);
     });
@@ -345,9 +343,8 @@ $('#btn-cancel-steps').on('click', function () {
 
 });
 
-function loadStep(step) {
 
-    //$(step).addClass('flex-active-slide');
+function loadStep(step) {
 
     var stepId = $(step).data("stepid");
     var phStepId = $(step).data("phstepid");

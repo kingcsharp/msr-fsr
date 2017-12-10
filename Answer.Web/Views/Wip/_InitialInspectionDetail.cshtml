@@ -7,9 +7,36 @@
 <table class="table table-responsive table-bordered">
 
     <tbody>
-        @{
+    
+    <tr>
+        <th nowrap style="text-align: right; width: 180px;">Assignee: </th>
+        <td>@Model.TaskEditDataResult.Assignee</td>
+    </tr>
+    <tr>
+        <td colspan=2>
+            <strong>@Model.TaskEditDataResult.StepTitle</strong>
+        </td>
+    </tr>
+    <tr>
+        <td colspan=2>
+            @{ var startIndex = Model.TaskEditDataResult.Description.IndexOf("<br/><br/>") + 10;}
+            
+            @if (Model.TaskEditDataResult.Description.Length > startIndex)
+            {
+                @Html.Raw(Model.TaskEditDataResult.Description.Substring(startIndex, (Model.TaskEditDataResult.Description.Length - startIndex)))
+            }
+            else
+            {
+                @Html.Raw(Model.TaskEditDataResult.Description.Substring(startIndex, (Model.TaskEditDataResult.Description.Length - startIndex)))
+            }
+
+         </td>
+    </tr>
+
+    @*@{
             int i = 0;
         }
+
         @foreach (var step in Model.TaskItemParts)
         {
 
@@ -39,7 +66,7 @@
 
                 i = i + 1;
             }
-        }
+        }*@
     </tbody>
 </table>
 <div class="row">

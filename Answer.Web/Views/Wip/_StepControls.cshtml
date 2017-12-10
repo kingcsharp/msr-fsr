@@ -19,7 +19,7 @@
 }
 
 @*getButtons*@
-@if ((Model.TaskEditDataResult.Status != "ACCEPTED" && Model.TaskRunningDto == null))
+@if ((Model.TaskEditDataResult.Status != "ACCEPTED" && Model.TaskRunningDto == null) && Model.TaskEditDataResult.Status != "FINISHED")
 {
     startButton = "show";
     timerInput = "";
@@ -154,7 +154,7 @@
             });
 
         $('#add-new-equipment-model').on('show.bs.modal',
-            function (event) {
+            function(event) {
                 var button = $(event.relatedTarget);
                 //var id = button.data('id');
                 var fillId = button.data('fill-id');
@@ -164,10 +164,10 @@
                     type: "GET",
                     url: '/Wip/AddEquipmentMaintenance?id=' + fillId,
                     dataType: 'html',
-                    success: function (data) {
+                    success: function(data) {
                         modal.find('.modal-body').html(data);
                     },
-                    error: function () {
+                    error: function() {
 
                     }
                 });
@@ -206,6 +206,8 @@
             }
         });
     }
+
+
 
     function StepStartClick() {
         var stepId = @Model.StepId;

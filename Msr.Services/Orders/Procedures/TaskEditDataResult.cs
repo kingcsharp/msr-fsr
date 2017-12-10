@@ -5,6 +5,8 @@ namespace Msr.Services.Orders.Procedures
     {
         public string Description { get; set; }
 
+        public string StepTitle { get; set; }
+
         public string Status { get; set; }
 
         public string Assignee { get; set; }
