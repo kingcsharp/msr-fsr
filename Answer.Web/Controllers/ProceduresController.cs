@@ -272,7 +272,7 @@ namespace Answer.Web.Controllers
                 string filePath = Server.MapPath(AppDataGlobalsettingsXml);
 
                 var doc = new XmlDocument();
-                doc.Load(filePath + approvedData.Object_Id + ".xml");
+                doc.Load(filePath + id + ".xml");
 
                 html = GetHtml(Server.MapPath(XSLTPath), doc.InnerXml.ToString());
 

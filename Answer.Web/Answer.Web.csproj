@@ -263,8 +263,11 @@
     <Content Include="App_Data\Emailer.xml" />
     <Content Include="App_Data\GlobalSettings.xml" />
     <Content Include="App_Data\procedureFolder\101.xml" />
+    <Content Include="App_Data\procedureFolder\111904.xml" />
     <Content Include="App_Data\procedureFolder\11365.xml" />
     <Content Include="App_Data\procedureFolder\11383.xml" />
+    <Content Include="App_Data\procedureFolder\114609.xml" />
+    <Content Include="App_Data\procedureFolder\115311.xml" />
     <Content Include="App_Data\procedureFolder\12032.xml" />
     <Content Include="App_Data\procedureFolder\12559.xml" />
     <Content Include="App_Data\procedureFolder\13040.xml" />
@@ -514,6 +517,7 @@
     <Content Include="assets\css\line-icons.css" />
     <Content Include="assets\css\login.css" />
     <Content Include="assets\css\main-menu.css" />
+    <Content Include="assets\css\procedures.css" />
     <Content Include="assets\css\profile.css" />
     <Content Include="assets\css\select2.min.css" />
     <Content Include="assets\css\style.css" />

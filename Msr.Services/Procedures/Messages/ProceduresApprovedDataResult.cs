@@ -8,6 +8,6 @@ namespace Msr.Services.Procedures.Messages
 {
     public class ProceduresApprovedDataResult
     {
-        public string Object_Id { get; set; }
+        public string Id { get; set; }
     }
 }

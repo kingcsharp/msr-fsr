@@ -1,0 +1,55 @@
+div.procedure{width:100%;border:none;background-color:#FFFFFF;}
+div.headerData{width:100%;border:none;background-color:Transparent;margin-bottom:10px;}
+div.headerTable{width:100%;border:none;background-color:Transparent;margin-bottom:10px;}
+div.assistantTable{width:100%;border:none;background-color:Transparent;margin-bottom:5px;border-bottom:thin ridge;padding-bottom:5;}
+div.partTable{width:100%;border:none;background-color:Transparent;margin-bottom:5px;border-bottom:thin ridge;padding-bottom:5;}
+div.TableTitle{color:black;font-weight:bold}
+
+span.AP_STAT_CREATING{color:Red;font-weight:bold}
+
+table.procedureHeader{margin:0;padding:0;border-collapse:collapse;width:100%;}
+td.procedureHeaderTitle{margin:0;}
+
+table.procedureTitle{margin:0;padding:0;border-collapse:collapse;}
+td.procedureName{margin:0;font-weight:700;font-size:x-large;}
+td.procedureRevInfo{margin:0}
+
+table.headTable{border:thin ridge;margin:0;padding:0;border-collapse:collapse;}
+td.procedureHeaderTableLeft{border: ridge thin ;background-color:#DDDDDD; text-align:right; padding-right:5px;}
+td.procedureHeaderTableRight{border: ridge thin ;background-color:white; text-align:left; padding-left:5px;}
+
+table.procedureAssistantTable{border:thin ridge;margin:0;padding:0;border-collapse:collapse;}
+td.procedureAssistantTitle{border: ridge thin ;background-color:#DDDDDD; text-align:center;color:Black;}
+td.procedureAssistantData{border: ridge thin ;background-color:#FFFFFF; text-align:left;padding-left:5px;}
+
+table.partTable{border:thin ridge;margin:0;padding:0;border-collapse:collapse;}
+td.partTableTitle{border: ridge thin ;background-color:#DDDDDD; text-align:center;color:Black;}
+td.partTableData{border: ridge thin ;background-color:white; text-align:left;padding-left:5px;}
+
+td.procedurePostRecordColumn{border:none;background-color:white;text-align:left;padding-left:30px;}
+
+div.procedureStepAssistantRoles{border:none;color:Black;font-size: small;margin:0;padding:0;}
+table.procedureStepAssistantRoles{border:none;color:Black;font-size: small;margin:0;padding:0;border-collapse:collapse;}
+td.procedureStepAssistantRoles{border:none;color:Black;font-size: small}
+
+div.procedureStepMonitors{border:none;color:Black;font-size: small;margin:0;}
+table.procedureStepMonitors{border:none;color:Black;font-size: small;margin:0;padding:0;border-collapse:collapse;}
+td.procedureStepMonitors{border:none;color:Black;font-size: small}
+
+div.procedureComment{border:none;color:Black;font-size: small;margin:0;}
+table.procedureComment{border:none;color:Black;font-size: small;margin:0;padding:0;border-collapse:collapse;}
+td.procedureComment{border:none;color:Black;font-size: small}
+
+div.procedureStepRefFiles{border:none;}
+div.partTableTitle{font-weight:bold;}
+
+table.revData{font-size: x-small;border:thin ridge;margin:0;padding:0;border-collapse:collapse;}
+th.revData{font-weight:500;border: ridge thin ;background-color:#DDDDDD; text-align:left; padding-right:5px;}
+td.revData{border: ridge thin ;background-color:white;}
+
+div.procedureCommentBox{border-bottom:thin ridge}
+
+.table td {
+    padding: 5px;
+}
+

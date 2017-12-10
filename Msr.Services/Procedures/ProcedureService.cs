@@ -418,7 +418,7 @@ namespace Msr.Services.Procedures
 
         public ProceduresApprovedDataResult GetApprovedData(string id)
         {
-            var sql = $"SELECT OBJECT_ID FROM A_V_PROCEDURES_APPROVED_DATA WHERE ID={id}";
+            var sql = $"SELECT * FROM A_OBJECTS WHERE ID = '{id}' AND STATUS LIKE 'APPROVED%'";
 
             var result = _dbContext.Database.SqlQuery<ProceduresApprovedDataResult>(sql).SingleOrDefault();
 
