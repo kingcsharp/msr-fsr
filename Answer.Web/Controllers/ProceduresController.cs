@@ -271,6 +271,15 @@ namespace Answer.Web.Controllers
                 var approvedData = procedureService.GetApprovedData(id);
                 string filePath = Server.MapPath(AppDataGlobalsettingsXml);
 
+                string fileFullPath = filePath + id + ".xml";
+                    
+                if (!System.IO.File.Exists(fileFullPath))
+                {
+                    TempData["ErrorMessage"] = $"File not found. Path:'{id + ".xml"}'";
+
+                    return View((object)html);
+                }
+
                 var doc = new XmlDocument();
                 doc.Load(filePath + id + ".xml");
 
