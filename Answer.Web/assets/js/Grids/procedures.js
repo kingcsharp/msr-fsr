@@ -150,7 +150,7 @@
         
         var editButton = '';
         if (rowObject.Status !== 'APPROVED_BUT_REVISING') {
-            var editButton = '<a  title="Edit" href="/Procedures/edit/' + rowObject.ObjectId + '&status=' + rowObject.Status +'" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
+             editButton = '<a  title="Edit" href="/Procedures/edit/' + rowObject.ObjectId + '?&status=' + rowObject.Status +'" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
         }
 
         var deleteButton = '';
@@ -166,7 +166,10 @@
             buttonWorkflowRight = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-success" title="Proceed to approval workflow for release." style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-right"></i></a>';
         } else {
             url = '/workflow/delete?objId=' + rowObject.ObjectId + '&returnUrl=' + returnUrl;
-            deleteButton = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-danger" title="Proceed to Delete." style="margin:2px;font-size: .8em;"><i class="fa fa fa-trash"></i></a>';
+            if (rowObject.Status !== 'APPROVED_BUT_REVISING') {
+
+                deleteButton = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-danger" title="Proceed to Delete." style="margin:2px;font-size: .8em;"><i class="fa fa fa-trash"></i></a>';
+                }
         }
         var assignProcedureButton = '<a href="/Procedures/assignProcedure/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" title="Assign this procedure" style="margin:2px;font-size: .8em;"> <i class="fa fa-users"></i></a>';
 
