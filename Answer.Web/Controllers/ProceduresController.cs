@@ -268,16 +268,6 @@ namespace Answer.Web.Controllers
 
             return View(viewModel);
         }
-        private string GetHtml(string xsltPath, string xml)
-        {
-            var stream = new MemoryStream(ASCIIEncoding.Default.GetBytes(xml));
-            var document = new XPathDocument(stream);
-            var writer = new StringWriter();
-            var transform = new XslCompiledTransform();
-            transform.Load(xsltPath);
-            transform.Transform(document, null, writer);
-            return writer.ToString();
-        }
 
         public ActionResult AssignProcedure(string id)
         {
