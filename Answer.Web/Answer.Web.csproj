@@ -249,6 +249,7 @@
     <Compile Include="ViewModel\Help\SupportViewModel.cs" />
     <Compile Include="ViewModel\Notes\AddNoteViewModel.cs" />
     <Compile Include="ViewModel\PartsReportsViewModel.cs" />
+    <Compile Include="ViewModel\ProcedureViewModel.cs" />
     <Compile Include="ViewModel\Reports\ReportItemData.cs" />
     <Compile Include="ViewModel\UserProfileViewModel.cs" />
     <Compile Include="ViewModel\EditClientUserViewModel.cs" />

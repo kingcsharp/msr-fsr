@@ -10,6 +10,7 @@ using System.Web.Mvc;
 using System.Xml;
 using System.Xml.XPath;
 using System.Xml.Xsl;
+using Answer.Web.ViewModel;
 using Msr.Models.ActualParts;
 using Msr.Services.Procedures.Messages;
 using Msr.Services.Procedures.ViewModels;
@@ -182,20 +183,13 @@ namespace Answer.Web.Controllers
             return View(model);
         }
 
-        public ActionResult Edit(string id, string status)
+        public ActionResult Edit(string id)
         {
             var vm = new SaveProcedureViewModel();
             vm.Id = id;
 
             var procedureService = new ProceduresService();
 
-            if (status.ToUpper() != "CREATING")
-            {
-                var currrentUser = GetCurrentUser();
-                var result = _workflowService.CheckOutObject(id, currrentUser.Id);
-                id = result.Entity;
-            }
-            
             var model = procedureService.GetProcedureById(id);
 
             vm.MapToDto(model);
@@ -263,36 +257,17 @@ namespace Answer.Web.Controllers
 
         public ActionResult View(string id)
         {
-            var html = "";
-            try
-            {
-                var procedureService = new ProceduresService();
+            var viewModel = new ProcedureViewModel();
 
-                var approvedData = procedureService.GetApprovedData(id);
-                string filePath = Server.MapPath(AppDataGlobalsettingsXml);
+            var model = _proceduresService.GetProcedureById(id);
 
-                string fileFullPath = filePath + id + ".xml";
-                    
-                if (!System.IO.File.Exists(fileFullPath))
-                {
-                    TempData["ErrorMessage"] = $"File not found. Path:'{id + ".xml"}'";
+            var stepDataResults = _proceduresService.GetStepsData(id, GetCurrentUser().Id);
 
-                    return View((object)html);
-                }
+            viewModel.ProcedureView = model;
+            viewModel.StepDataList = stepDataResults;
 
-                var doc = new XmlDocument();
-                doc.Load(filePath + id + ".xml");
-
-                html = GetHtml(Server.MapPath(XSLTPath), doc.InnerXml.ToString());
-
-            }
-            catch (Exception ex)
-            {
-
-            }
-            return View((object)html);
+            return View(viewModel);
         }
-
         private string GetHtml(string xsltPath, string xml)
         {
             var stream = new MemoryStream(ASCIIEncoding.Default.GetBytes(xml));
