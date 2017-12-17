@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using Msr.Infrastructure.Common.Constansts;
+using Msr.Models.Orders;
 using Msr.Services.jqGrid;
 using Msr.Services.PurchesOrder;
 using Msr.Models.PurchesOrder;
@@ -17,6 +18,7 @@ namespace Answer.Web.Controllers
         {
             _purchesOrderService = new PurchesOrderService();
         }
+
         public ActionResult Index()
         {
             ViewBag.ActiveClass = "PurchaseOrder";
@@ -139,7 +141,6 @@ namespace Answer.Web.Controllers
             }
             var orderBy = nameof(PurchesOrderView.Name);
 
-            var orderDirection = "asc";
 
             if (!string.IsNullOrWhiteSpace(param.sortColumn))
             {
@@ -158,7 +159,7 @@ namespace Answer.Web.Controllers
             totalRows = totalRows.Skip(param.pageSize * (param.pageIndex - 1));
 
             totalRows = totalRows.Take(param.pageSize);
-            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)param.pageSize);
+            var totalPages = (int) Math.Ceiling((float) totalRecords / (float) param.pageSize);
 
             var results = totalRows.ToList();
 
@@ -221,7 +222,7 @@ namespace Answer.Web.Controllers
 
                     if (model.Save == "true")
                     {
-                        return RedirectToAction("Edit", new { id = response.Entity.NewId });
+                        return RedirectToAction("Edit", new {id = response.Entity.NewId});
                     }
 
                     if (model.SaveClose == "true")
@@ -233,7 +234,7 @@ namespace Answer.Web.Controllers
                     {
                         var returnUrl = Url.Action("Index", "PurchaseOrder");
 
-                        return RedirectToAction("Submit", "Workflow", new { objId = response.Entity.NewId, returnUrl });
+                        return RedirectToAction("Submit", "Workflow", new {objId = response.Entity.NewId, returnUrl});
                     }
                 }
 
@@ -257,6 +258,7 @@ namespace Answer.Web.Controllers
 
             return Json(products, JsonRequestBehavior.AllowGet);
         }
+
         [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult ProductsData(JqGridParam param, string id, string clientValue)
         {
@@ -300,7 +302,6 @@ namespace Answer.Web.Controllers
                 }
             }
             var orderBy = nameof(ProductsCanPurchase.Name);
-            var orderDirection = "asc";
 
             if (!string.IsNullOrWhiteSpace(param.sortColumn))
             {
@@ -319,7 +320,204 @@ namespace Answer.Web.Controllers
             totalRows = totalRows.Skip(param.pageSize * (param.pageIndex - 1));
 
             totalRows = totalRows.Take(param.pageSize);
-            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)param.pageSize);
+            var totalPages = (int) Math.Ceiling((float) totalRecords / (float) param.pageSize);
+
+            var results = totalRows.ToList();
+
+            var json = new
+            {
+                total = totalPages,
+                page = param.pageIndex,
+                records = totalRecords,
+                rows = results
+            };
+
+            return Json(json, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public ActionResult PurchasePoDetails(string id)
+        {
+            var purchaseOrder = new PurchaseFormAccountViewModel();
+
+            purchaseOrder = _purchesOrderService.AccountPurchaseOrderById(id);
+
+            purchaseOrder.Setup(new PurchesOrderService());
+
+            return View(purchaseOrder);
+        }
+
+        [HttpPost]
+        public ActionResult PurchasePoDetails(PurchaseFormAccountViewModel model)
+        {
+            var response = _purchesOrderService.PurchasedOrderUpdateAndShowOrderItemList(model, GetCurrentUser().Id);
+
+            if (!response.HasErrors())
+            {
+
+                return RedirectToAction("CreatePurchase", "PurchaseOrder", new {id = response.Entity, oldId = model.OBJECT_ID, refrencePo = model.REFERENCE_PO});
+            }
+            TempData["ErrorMessage"] = response.ErrorMessage;
+
+            return RedirectToAction("PurchasePoDetails", new {id = model.OBJECT_ID});
+        }
+
+        [HttpGet]
+        public ActionResult CreatePurchase(string id, string oldId)
+        {
+            var model = _purchesOrderService.PurchasedOrderById(id);
+            model.OrderItems = _purchesOrderService.PurchasedOrderOrderItems(model.ID);
+
+            model.oldId = oldId;
+            model.newId = model.ID;
+
+            model.Setup(new PurchesOrderService());
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult CreatePurchase(PurchasePoModel model, string id, string submitType)
+        {
+            var currentUser = GetCurrentUser();
+
+            var modelpo = _purchesOrderService.PurchasedOrderById(model.ID);
+
+            var data = _purchesOrderService.CreatePurchaseSaveUpdate(model, currentUser.Id);
+
+            if (!data.HasErrors())
+            {
+                if (submitType == "SubmitWorkflow")
+                {
+                    _purchesOrderService.PurchaseOrderWorkFlow(model.OBJECT_ID, currentUser.Id);
+
+                    var url = Url.Action("PurchaseOrderMultifill", "PurchaseOrder", new {id = model.OBJECT_ID});
+
+                    return RedirectToAction("Submit", "Workflow", new {objId = model.OBJECT_ID, returnUrl = url});
+
+                }
+                modelpo.Setup(new PurchesOrderService());
+            }
+
+            return RedirectToAction("CreatePurchase", "PurchaseOrder", new {id = model.OBJECT_ID, oldId = model.oldId});
+        }
+
+        [HttpPost]
+        public ActionResult AddPurchaseOrderItem(string id, string orderid)
+        {
+            return Json(new {data = "OK"}, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public ActionResult PurchaseOrderMultifill(string id)
+        {
+            var currentUser = GetCurrentUser();
+
+            var purchaseOrderMultiFillViewModel = new PurchaseOrderMultiFillViewModel();
+
+            var purchaseApprovedData = _purchesOrderService.PurchasedApprovedDataById(id);
+
+            var fillList = _purchesOrderService.PurchasedOrderSearchTasks(purchaseApprovedData.HISTORY_REF_ID, currentUser.Id);
+
+            var purchaseOrderFillViewModel = purchaseOrderMultiFillViewModel.MapToDto(fillList);
+
+            purchaseOrderMultiFillViewModel.PurchaseApprovedData = purchaseApprovedData;
+
+            purchaseOrderMultiFillViewModel.FillList = purchaseOrderFillViewModel;
+
+            purchaseOrderMultiFillViewModel.SetUp();
+
+            return View(purchaseOrderMultiFillViewModel);
+        }
+
+        [HttpPost]
+        public ActionResult PurchaseOrderMultifill(PurchaseOrderMultiFillViewModel model)
+        {
+            if (model.FillList.Count > 0)
+            {
+                _purchesOrderService.SavePurchaseMultiFill(model, GetCurrentUser().Id);
+
+                return RedirectToAction("PurchaseOrderMultifillPage", new {id = model.PurchaseApprovedData.ID});
+            }
+            return RedirectToAction("PurchaseOrderMultifill", new {id = model.PurchaseApprovedData.ID});
+
+        }
+
+        [HttpGet]
+        public ActionResult PurchaseOrderMultifillPage(string id)
+        {
+            var purchaseApprovedData = _purchesOrderService.PurchasedApprovedDataById(id);
+
+            return View(purchaseApprovedData);
+        }
+
+        public ActionResult Purchases()
+        {
+            ViewBag.ActiveClass = "Purchases";
+
+            return View();
+        }
+
+        public ActionResult PurchaseViewData(JqGridParam param)
+        {
+            var totalRows = _purchesOrderService.GetPurchaseViewQueryable().Where(x => x.Status != "DELETED");
+
+            if (param.where != null && param.where.rules.Any())
+            {
+                foreach (var rule in param.where.rules)
+                {
+
+                    if (rule.field == nameof(PurchaseView.ObjectId))
+                    {
+                        totalRows = totalRows.Where(x => x.ObjectId.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(PurchaseView.CustPurchNum))
+                    {
+                        totalRows = totalRows.Where(x => x.CustPurchNum.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(PurchaseView.Description))
+                    {
+                        totalRows = totalRows.Where(x => x.Description.ToLower().Contains(rule.data.ToLower()));
+                    }
+
+                    else if (rule.field == nameof(PurchaseView.PurchaseStatus))
+                    {
+                        totalRows = totalRows.Where(x => x.PurchaseStatus.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(PurchaseView.DateCreated))
+                    {
+                        DateTime value;
+                        if (DateTime.TryParse(rule.data, out value))
+                        {
+                            totalRows = totalRows.Where(x => x.DateCreated == value);
+                        }
+                    }
+                    else if (rule.field == nameof(PurchaseView.Status))
+                    {
+                        totalRows = totalRows.Where(x => x.Status.ToLower().Contains(rule.data.ToLower()));
+                    }
+                }
+            }
+            var orderBy = nameof(PurchaseView.Id);
+
+            if (!string.IsNullOrWhiteSpace(param.sortColumn))
+            {
+                orderBy = param.sortColumn;
+            }
+            if (param.sortOrder == "desc")
+            {
+                totalRows = totalRows.OrderByDescending(orderBy);
+            }
+            else
+            {
+                totalRows = totalRows.OrderBy(orderBy);
+            }
+
+            var totalRecords = totalRows.Count();
+            totalRows = totalRows.Skip(param.pageSize * (param.pageIndex - 1));
+
+            totalRows = totalRows.Take(param.pageSize);
+            var totalPages = (int) Math.Ceiling((float) totalRecords / (float) param.pageSize);
 
             var results = totalRows.ToList();
 
@@ -335,3 +533,4 @@ namespace Answer.Web.Controllers
         }
     }
 }
+

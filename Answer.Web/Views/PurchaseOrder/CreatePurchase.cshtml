@@ -1,0 +1,228 @@
+﻿@model Msr.Services.PurchesOrder.ViewModels.PurchasePoModel
+@{
+    ViewBag.Title = "Purchase Order View Items";
+}
+
+
+<link href="~/assets/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+<div class="container-fluid">
+    <div class="side-body padding-top">
+        <div class="row">
+            <h2 class="page-header">
+                Purchase Order View Items<button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
+            </h2>
+            @Html.Partial("Message")
+
+                <div class="col-lg-10">
+                    @using (Html.BeginForm("CreatePurchase", "PurchaseOrder", FormMethod.Post, new { @class = "form form-horizontal partCreate" }))
+                    {
+                        <input type="hidden" id="OBJECT_ID" name="OBJECT_ID" value="@Model.OBJECT_ID" />
+                        <input type="hidden" id="oldId" name="oldId" value="@Model.oldId" />
+                        <input type="hidden" id="newid" name="newid" value="@Model.newId" />
+                        <input type="hidden" id="CUST_PURCH_NUM" name="CUST_PURCH_NUM" value="@Model.CUST_PURCH_NUM" />
+                        <input type="hidden" id="SubmitType" name="SubmitType" />
+                        <table class="table quote-header">
+                            <tr>
+                                <th>PO Name :</th>
+                                <td>
+                                    @Html.EditorFor(model => model.ID, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                    @Html.ValidationMessageFor(model => model.ID, "", new { @class = "text-danger" })
+                                </td>
+
+
+                            </tr>
+                            <tr>
+                                <th align="right">Purchase Status #:</th>
+                                <td>
+                                    @Html.EditorFor(model => model.PURCHASE_STATUS, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                    @Html.ValidationMessageFor(model => model.PURCHASE_STATUS, "", new { @class = "text-danger" })
+                                </td>
+                            </tr>
+                            <tr>
+                                <th align="right">CUST_PURCH_NUM:</th>
+                                <td>
+                                    @Html.EditorFor(model => model.CUST_PURCH_NUM, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.CUST_PURCH_NUM, "", new { @class = "text-danger" })
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <th align="right">Add Item:</th>
+
+                                <td>
+                                    <div class="input-group">
+                                        @Html.DropDownListFor(model => model.NewPo, Model.NewPoList, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.NewPo, "", new { @class = "text-danger" })
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.NewPo, "", new { @class = "text-danger" })
+                                </td>
+
+                                <td style="padding-left: 0px;">
+                                    @if (Model.STATUS == "CREATING")
+                                    {
+                                        <input id="AddToPurchase" type="button" name="BSUBMIT" class="btn btn-primary" value="Add To Purchase"/>
+                                    }
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th>Accout to use for everything:</th>
+
+                                <td>
+                                    <div class="input-group">
+                                        @Html.DropDownListFor(model => model.ACCT_FOR_ALL, Model.AcctForAllList, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.ACCT_FOR_ALL, "", new { @class = "text-danger" })
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.ACCT_FOR_ALL, "", new { @class = "text-danger" })
+                                </td>
+
+                                <td style="padding-left: 0px;">
+                                @if (Model.STATUS == "CREATING")
+                                {
+                                    <input id="Submit" type="submit" name="BSUBMIT" class="btn btn-success" value="Apply Account and Update Status"/>
+                                }
+                                </td>
+                            </tr>
+                            <tr>
+
+                                <th align="right">Set all due dates too:</th>
+                                <td>
+                                    <div class="input-group datepick">
+                                        @Html.EditorFor(model => model.all_date, new { htmlAttributes = new { @class = "form-control datepick" } })
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.all_date, "", new { @class = "text-danger" })
+                                </td>
+                                <td>
+                                @if (Model.STATUS == "CREATING")
+                                {
+                                    <input id="copydate" type="button" class="btn btn-info" value="Apply To All Items"/>
+                                }
+                                </td>
+                            </tr>
+                        </table>
+
+                        <table class="table table-bordered">
+                            <tr>
+                                <th>Purchase Item Id</th>
+                                <th>Description</th>
+                                <th>Account</th>
+                                <th>Cust Line</th>
+                                <th>Due Date</th>
+                                <th>Qty</th>
+                                <th>Unit Price</th>
+                                <th>Ext Price</th>
+                            </tr>
+
+                            @for (int i = 0; i < Model.OrderItems.Count; i++)
+                            {
+                                <tr>
+
+                                    <td>
+                                        @Html.TextBoxFor(modelItem => Model.OrderItems[i].ID, new { @class = "form-control", @readonly = "readonly" })
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(modelItem => Model.OrderItems[i].PROD_SHOW_NAME, new { @class = "form-control", @readonly = "readonly" })
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(modelItem => Model.OrderItems[i].ACCT_NAME, new { @class = "form-control", @readonly = "readonly" })
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(modelItem => Model.OrderItems[i].CUST_LINE_ITEM, new { @class = "form-control" })
+                                    </td>
+                                    <td>
+                                        <div class="input-group datepick">
+                                            @Html.TextBoxFor(modelItem => Model.OrderItems[i].DUE_DATE, new { @class = "form-control purchasedate" })
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(modelItem => Model.OrderItems[i].QTY, new { @class = "form-control", @style = "width:50px;" })
+                                    </td>
+                                    <td>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">$</span>
+                                            @Html.TextBoxFor(modelItem => Model.OrderItems[i].UNIT_PRICE, new { @class = "form-control", @readonly = "readonly" })
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">$</span>
+                                            @Html.TextBoxFor(modelItem => Model.OrderItems[i].TOTAL_PRICE, new { @class = "form-control", @readonly = "readonly" })
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+                        
+                        if(Model.STATUS == "CREATING")
+                         {
+                             <table>
+                                 <tr>
+                                     <td>
+                                         <input id="Submit" type="submit" name="BSUBMIT" class="btn btn-success" value="Save And Update Status" />
+                                         <input id="SubmitWorkflow" type="submit" name="BSUBMIT" class="btn btn-primary" value="Submitt Purchase To Workflow" />
+                                     </td>
+                                 </tr>
+                             </table>
+                         }
+                    }
+                </div>
+
+        </div>
+    </div>
+</div>
+
+
+@section scripts
+{
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+    <script src="~/assets/js/moment.min.js"></script>
+    <script src="~/assets/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/assets/js/dataTables.bootstrap.min.js"></script>
+
+    <script>
+
+        $('.datepick').datetimepicker();
+        $('.purchasedate').datetimepicker();
+
+        $("#SubmitWorkflow").click(function() {
+
+            $("#SubmitType").val('SubmitWorkflow');
+        });
+
+        $("#Submit").click(function() {
+
+            $("#SubmitType").val('Submit');
+        });
+
+        $("#copydate").click(function() {
+
+            $(".purchasedate").val($('#all_date').val());
+
+        });
+
+        $("#AddToPurchase").click(function () {
+            var NewPoId = $("#NewPo").val();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("AddPurchaseOrderItem", "PurchaseOrder")',
+                dataType: 'JSON',
+                data: { 'id':@Model.OBJECT_ID,'orderid': NewPoId },
+                success: function (data) {
+                    location.reload();
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+
+        });
+
+    </script>
+}

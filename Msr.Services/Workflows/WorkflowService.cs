@@ -103,6 +103,16 @@ namespace Msr.Services.Workflows
 
             try
             {
+                var checkIfObjectInCreatingSql = $"select status from A_OBJECTS where id ='{objectId}'";
+
+                var status = _dbContext.Database.SqlQuery<string>(checkIfObjectInCreatingSql).Single();
+
+                if (status == "CREATING")
+                {
+                    result.Entity = objectId;
+                    return result;
+                }
+
                 var p = new DynamicParameters();
 
                 p.Add("@newObjID", dbType: DbType.String, direction: ParameterDirection.Output, size: 50);

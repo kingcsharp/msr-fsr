@@ -425,7 +425,7 @@
     function ActionFormatter(cellvalue, options, rowObject) {
 
         var editButton = '<a  title="Edit" href="/PurchaseOrder/edit/' + rowObject.ObjectId + '" data-call-back-id ="' + rowObject.ObjectId + '" class="btn btn-xs btn-success editpurchaseorder" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
-
+        var showPoButton = '<a  title="Purchase On this PO" href="/PurchaseOrder/PurchasePoDetails/' + rowObject.ObjectId + '" data-call-back-id ="' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-dollar"></i></a>';
         var deleteButton = '';
         var buttonWorkflowLeft = '';
         var buttonWorkflowRight = '';
@@ -442,7 +442,7 @@
             deleteButton = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-danger" title="Proceed to delete." style="margin:2px;font-size: .8em;"><i class="glyphicon glyphicon-trash"></i></a>';
         }
 
-        return editButton + deleteButton + buttonWorkflowLeft + buttonWorkflowRight;
+        return showPoButton + editButton + deleteButton + buttonWorkflowLeft + buttonWorkflowRight;
     }
 }
 

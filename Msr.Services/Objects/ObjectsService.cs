@@ -20,5 +20,9 @@ namespace Msr.Services.Objects
         {
             return _dbContext.ObjectViews.OrderBy(x => x.ObjectTable);
         }
+        public ObjectView GetObjectById(string id)
+        {
+            return GetObjectsQueryable().Where(x => x.Id == id).SingleOrDefault();
+        }
     }
 }

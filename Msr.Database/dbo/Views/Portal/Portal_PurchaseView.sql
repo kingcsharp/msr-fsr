@@ -1,0 +1,16 @@
+﻿CREATE VIEW [dbo].[Portal_PurchaseView]
+AS
+
+SELECT DISTINCT
+Id,
+OBJECT_ID AS ObjectId,
+CUST_PURCH_NUM AS CustPurchNum,
+Description,
+PURCHASE_STATUS AS PurchaseStatus,
+Status,
+DATE_CREATED AS DateCreated,
+ROOT,
+ID
+SUP_PURCH_NUM
+FROM A_O_PURCHASES WHERE ID IS NOT NULL 
+

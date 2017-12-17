@@ -1,0 +1,51 @@
+﻿@model Msr.Models.PurchesOrder.PurchaseApprovedData
+@{
+    ViewBag.Title = "Purchase Multi fill Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="side-body padding-top">
+        <div class="row">
+            <h2 class="page-header">
+                Purchase Multi fill Page<button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
+            </h2>
+            @Html.Partial("Message")
+
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <th>
+                            Purchase Status
+                        </th>
+
+                        <td>
+                            @Model.STATUS
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Description
+                        </th>
+
+                        <td>
+                            @Model.DESCRIPTION
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Purchase Status
+                        </th>
+
+                        <td>
+                            @Model.PURCHASE_STATUS
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+        </div>
+    </div>
+</div>
+

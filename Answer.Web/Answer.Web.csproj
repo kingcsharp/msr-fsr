@@ -648,6 +648,7 @@
     <Content Include="assets\js\grids\procedureverbs.js" />
     <Content Include="assets\js\grids\procedurestep.js" />
     <Content Include="assets\js\grids\add-purchase-order.js" />
+    <Content Include="assets\js\grids\purchases.js" />
     <Content Include="assets\js\grids\purchase-order.js" />
     <Content Include="assets\js\grids\regions.js" />
     <Content Include="assets\js\grids\requirement-steps.js" />
@@ -1173,6 +1174,11 @@
     <Content Include="Views\ProductionPlanning\_Models.cshtml" />
     <Content Include="Views\ProductionPlanning\_Steps.cshtml" />
     <Content Include="Views\ProductionPlanning\View.cshtml" />
+    <Content Include="Views\PurchaseOrder\CreatePurchase.cshtml" />
+    <Content Include="Views\PurchaseOrder\PurchasePoDetails.cshtml" />
+    <Content Include="Views\PurchaseOrder\Purchases.cshtml" />
+    <Content Include="Views\PurchaseOrder\PurchaseOrderMultifill.cshtml" />
+    <Content Include="Views\PurchaseOrder\PurchaseOrderMultifillPage.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

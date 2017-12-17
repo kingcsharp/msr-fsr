@@ -1,0 +1,121 @@
+﻿@model Msr.Services.PurchesOrder.ViewModels.PurchaseFormAccountViewModel
+@{
+    ViewBag.Title = "Purchase Order Details";
+}
+
+<div class="container-fluid">
+    <div class="side-body padding-top">
+        <div class="row">
+            <h2 class="page-header">
+                Purchase Order Details<button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
+            </h2>
+            @Html.Partial("Message")
+            <div class="col-lg-10">
+                @using (Html.BeginForm("PurchasePoDetails", "PurchaseOrder", FormMethod.Post, new { @class = "form form-horizontal partCreate" }))
+                {
+                    @Html.HiddenFor(x => x.OBJECT_ID);
+                    <input type="hidden" id="Id" name="Id" value="@Model.HISTORY_REF_ID" />
+                    <table class="table quote-header table-bordered">
+                        <tr>
+                            <th style="width:200px;">Account Name:</th>
+                            <td>
+                                @Html.EditorFor(model => model.NAME, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                @Html.ValidationMessageFor(model => model.NAME, "", new { @class = "text-danger" })
+                            </td>
+                        </tr>
+                        <tr>
+                            <th align="right">Reference PO#:</th>
+                            <td>
+                                @Html.EditorFor(model => model.REFERENCE_PO, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                @Html.ValidationMessageFor(model => model.REFERENCE_PO, "", new { @class = "text-danger" })
+                            </td>
+                        </tr>
+                        <tr>
+                            <th align="right">Supplier</th>
+                            <td>
+                                @Html.EditorFor(model => model.SUPPLIER_NAME, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                @Html.ValidationMessageFor(model => model.SUPPLIER_NAME, "", new { @class = "text-danger" })
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <th align="right">Customer:</th>
+                            <td>
+                                @Html.EditorFor(model => model.CUSTOMER_NAME, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                @Html.ValidationMessageFor(model => model.CUSTOMER_NAME, "", new { @class = "text-danger" })
+                            </td>
+                        </tr>
+                        <tr>
+                            <th align="right">Open Date:</th>
+                            <td>
+                                @Html.EditorFor(model => model.OPEN_DATE, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                @Html.ValidationMessageFor(model => model.OPEN_DATE, "", new { @class = "text-danger" })
+                            </td>
+                            
+                        </tr>
+                        <tr>
+                            <th align="right">Close Date:</th>
+                            <td>
+                                @Html.EditorFor(model => model.CLOSE_DATE, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                @Html.ValidationMessageFor(model => model.CLOSE_DATE, "", new { @class = "text-danger" })
+                            </td>
+                        </tr>
+                        <tr>
+                            <th align="right">Max Amount to Charge:</th>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon">$</span>
+                                    @Html.EditorFor(model => model.TOTAL_PURCHASE_LIMIT, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                    <span class="input-group-addon">0.00</span>
+                                </div>
+                                @Html.ValidationMessageFor(model => model.TOTAL_PURCHASE_LIMIT, "", new { @class = "text-danger" })
+                            </td>
+                        </tr>
+                    </table>
+                    <br />
+                    <br />
+                    <table class="table table-bordered">
+                        <tr>
+                            <th>Product</th>
+                            <th>Purchase Qty</th>
+                        </tr>
+
+
+                        @for (int i = 0; i < Model.Products.Count; i++)
+                        {
+                            <tr>
+                                <td style="width:150px;">
+                                    @Html.HiddenFor(x => Model.ProductPo[i].ORDER_ID)
+                                    @Html.HiddenFor(x => Model.ProductPo[i].ACCT_ID)
+                                    @Html.HiddenFor(x => Model.ProductPo[i].ACCOUNT_OBJECT_ID)
+                                    @Html.HiddenFor(x => Model.ProductPo[i].Progress)
+                                    @Html.TextBoxFor(x => Model.ProductPo[i].Name, new { @class = "form-control", @readonly = "readonly" })
+                                </td>
+                                <td style="width:150px;">
+                                    @Html.TextBoxFor(x => Model.ProductPo[i].Qty, new { @class = "form-control", @required = "", @style = "width:150px;" })
+                                    @Html.ValidationMessageFor(x => Model.ProductPo[i].Qty, "", new { @class = "text-danger" })
+                                </td>
+                            </tr>
+                        }
+
+                        <tr class="no-border">
+                            <td colspan="2">
+                                <div id="message" class="alert-success success"></div>
+                                <div id="error-message" class="alert-danger error"></div>
+                                <input type="submit" name="BSUBMIT" class="btn btn-success" value="Create Purchase">
+                            </td>
+
+                        </tr>
+                    </table>
+                }
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+}

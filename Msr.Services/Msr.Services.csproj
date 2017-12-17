@@ -173,7 +173,17 @@
     <Compile Include="ProductionPlanning\ViewModels\RequirementStepsDetailsViewModel.cs" />
     <Compile Include="ProductionPlanning\ViewModels\RequirementStepsViewModel.cs" />
     <Compile Include="PurchesOrder\Procedures\AddPurchaseOrderProcedure.cs" />
+    <Compile Include="PurchesOrder\Procedures\FillWithPartAndSerialNumberProcedure.cs" />
+    <Compile Include="PurchesOrder\Procedures\PurchasePoDetailProcedure.cs" />
+    <Compile Include="PurchesOrder\Procedures\PurchasePoProcedure.cs" />
+    <Compile Include="PurchesOrder\Procedures\PurchasePoViewItemProcedure.cs" />
+    <Compile Include="PurchesOrder\ViewModels\PurchaseFormAccountViewModel.cs" />
+    <Compile Include="PurchesOrder\ViewModels\PurchaseOrderFillViewModel.cs" />
+    <Compile Include="PurchesOrder\ViewModels\PurchaseOrderMultiFillViewModel.cs" />
+    <Compile Include="PurchesOrder\ViewModels\PurchasePoModel.cs" />
+    <Compile Include="PurchesOrder\ViewModels\PurchasePoViewModel.cs" />
     <Compile Include="PurchesOrder\PurchesOrderService.cs" />
+    <Compile Include="PurchesOrder\ViewModels\ResponsePurchase.cs" />
     <Compile Include="PurchesOrder\ViewModels\NewPurchaseOrderViewModel.cs" />
     <Compile Include="PurchesOrder\ViewModels\AddPurchaseResponse.cs" />
     <Compile Include="Quotes\QuoteService.cs" />
