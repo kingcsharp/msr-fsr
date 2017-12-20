@@ -1,16 +1,12 @@
 ﻿@model Msr.Services.Procedures.ViewModels.SaveProcedureViewModel
 
-
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-12">
-
             @using (Html.BeginForm("CreateProcedure", "ProductionPlanning", FormMethod.Post, new { @id = "AddProcedure", @class = "form-horizontal", @role = "form" }))
             {
                 <div class="form-horizontal addpart part">
-
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
 
                     <div class="form-group">
                         @Html.LabelFor(model => model.Verb, htmlAttributes: new { @class = "control-label col-md-3" })
@@ -26,16 +22,13 @@
                             @Html.ValidationMessageFor(model => model.SystemId, "", new { @class = "text-danger" })
                         </div>
                     </div>
-
                     <div class="form-group">
                         @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-3" })
                         <div class="col-md-5">
-
                             @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
                         </div>
                     </div>
-
                     <div class="form-group">
                         @Html.LabelFor(model => model.ReferenceFiles, htmlAttributes: new { @class = "control-label col-md-3" })
                         <div class="col-md-5">
@@ -67,7 +60,6 @@
                             @Html.ValidationMessageFor(model => model.Roles, "", new { @class = "text-danger" })
                         </div>
                     </div>
-
                     <div class="form-group">
                         @Html.LabelFor(model => model.StepInAp, htmlAttributes: new { @class = "control-label col-md-3" })
                         <div class="col-md-5">
@@ -110,9 +102,6 @@
 </div>
 
 
-
-
-
 <script type="text/javascript">
     $('#ProcedureSubmit').on('click',
         function() {
@@ -136,6 +125,9 @@
                     $('#ProductProcedureId').val(result.ProcedureId);
                     $('#ProductProcedureId').trigger('click');
                     $('#procedureClose').click();
+                    $(".selectProcedure").next(".select2").remove();
+                    var selectProcedure = $("#ProductProcedureId").select2();
+                    selectProcedure.val(result.ProcedureId).trigger("change");
                 },
                 error : function(error) {
                     alert(error.Message);
@@ -143,5 +135,4 @@
             });
         });
 </script>
-
 

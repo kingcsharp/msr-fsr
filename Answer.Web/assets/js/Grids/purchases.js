@@ -62,19 +62,11 @@
                 name: 'PurchaseStatus',
                 index: 'PurchaseStatus',
                 colmenu: false,
-                editable: true,
+                stype: "select",
                 width: 90,
-                coloptions: {
-                    sorting: false,
-                    columns: true,
-                    filtering: false,
-                    seraching: false,
-                    grouping: false,
-                    freeze: false
-                },
-
-                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                align: 'left'
+                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                searchoptions: { value: ":[ALL STATUSES];CLOSED:CLOSED;ALL_FILLED:ALL_FILLED;EXECUTING:EXECUTING;WAITING_FILLS:WAITING_FILLS" },
+                align: 'center'
             },
             {
                 label: 'CreatedDate',
@@ -90,25 +82,16 @@
                 align: 'center',
             
             },
-
             {
                 label: 'Approval Status',
                 name: 'Status',
                 index: 'Status',
                 colmenu: false,
-                width: 120,
-                editable: true,
-                coloptions: {
-                    sorting: false,
-                    columns: true,
-                    filtering: false,
-                    seraching: false,
-                    grouping: false,
-                    freeze: false
-                },
-
-                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                align: 'left'
+                stype: "select",
+                width: '130',
+                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                searchoptions: { value: ":[All];CREATING, DENIED, APPROVED, APPROVED_BUT_REVISING, APPROVED_BUT_DELETING :Current ;CREATING, DENIED: Creating;IN_WORKFLOW:In Approval Workflow;APPROVED, APPROVED_BUT_REVISING, APPROVED_BUT_DELETING:Approved;DENIED:Denied;APPROVED_BUT_REVISING:Approved But Being Revised;APPROVED_BUT_DELETING:Approved But Being Deleted;DENIED:Denied;DELETED:Deleted;OLD:Obsolete" },
+                align: 'center'
             },
 
             { name: 'Actions', index: 'ID', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: ActionFormatter, width: 130, align: 'center' }
@@ -162,7 +145,7 @@
     });
 
 
-    $("#gs_CloseDate").datepicker({
+    $("#gs_DateCreated").datepicker({
         format: 'm/d/yyyy',
     }).on('changeDate', function () {
         var sgrid = $("#jqGrid")[0];
@@ -170,15 +153,6 @@
         $(this).datepicker('hide');
     });
 
-
-
-    $("#gs_OpenDate").datepicker({
-        format: 'm/d/yyyy',
-    }).on('changeDate', function () {
-        var sgrid = $("#jqGrid")[0];
-        sgrid.triggerToolbar();
-        $(this).datepicker('hide');
-    });
 
     $('#search').click(function () {
 

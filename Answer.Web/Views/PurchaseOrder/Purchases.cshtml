@@ -1,5 +1,4 @@
 ﻿@using Msr.Services.PurchesOrder.ViewModels
-
 @{
     ViewBag.Title = "Purchases";
 }
@@ -13,26 +12,24 @@
         <div class="row">
             <h2 class="page-header">
                 <span class="icon fa fa-usd"></span>
-                Purchases <button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
+                Purchases
                 <a href="@Url.Action("Create", "PurchaseOrder")" class="btn btn-primary help-btn pull-right" style="margin-right: 10px"><i class="fa fa-plus"></i> New</a>
             </h2>
             <div class="col-lg-12">
                 @Html.Partial("Message")
                 <table id="jqGrid"></table>
-                <div id="jqGridPager"></div> 
+                <div id="jqGridPager"></div>
             </div>
         </div>
-       
+
     </div>
 </div>
-
 @section scripts
 {
     <script src="~/assets/js/plugins/bootstrap3/bootstrap-dialog.min.js"></script>
     <script type="text/javascript" src="~/assets/js/i18n/grid.locale-en.js"></script>
     <script type="text/javascript" src="~/assets/js/jquery.jqGrid.min.js"></script>
     <script type="text/javascript" src="~/assets/js/Grids/purchases.js"></script>
-
     <script type="text/javascript">
         $(document).ready(function () {
 
@@ -43,6 +40,4 @@
         });
     </script>
 }
-
-
 

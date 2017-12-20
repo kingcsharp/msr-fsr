@@ -405,8 +405,10 @@ namespace Answer.Web.Controllers
         [HttpPost]
         public ActionResult AddPurchaseOrderItem(string id, string orderid)
         {
-            return Json(new {data = "OK"}, JsonRequestBehavior.AllowGet);
+            var modelpo = _purchesOrderService.AddPurchasedOrderItem(id, orderid, GetCurrentUser().Id);
+            return Json(new { data = "OK" }, JsonRequestBehavior.AllowGet);
         }
+
 
         [HttpGet]
         public ActionResult PurchaseOrderMultifill(string id)
@@ -415,7 +417,9 @@ namespace Answer.Web.Controllers
 
             var purchaseOrderMultiFillViewModel = new PurchaseOrderMultiFillViewModel();
 
-            var purchaseApprovedData = _purchesOrderService.PurchasedApprovedDataById(id);
+            var refId = _purchesOrderService.GetHistId(currentUser.Id, id);
+
+            var purchaseApprovedData = _purchesOrderService.PurchasedApprovedDataById(refId);
 
             var fillList = _purchesOrderService.PurchasedOrderSearchTasks(purchaseApprovedData.HISTORY_REF_ID, currentUser.Id);
 
@@ -437,16 +441,20 @@ namespace Answer.Web.Controllers
             {
                 _purchesOrderService.SavePurchaseMultiFill(model, GetCurrentUser().Id);
 
-                return RedirectToAction("PurchaseOrderMultifillPage", new {id = model.PurchaseApprovedData.ID});
+                return RedirectToAction("PurchaseOrderMultifillPage", new {id = model.PurchaseApprovedData.OBJECT_ID});
             }
-            return RedirectToAction("PurchaseOrderMultifill", new {id = model.PurchaseApprovedData.ID});
+            return RedirectToAction("PurchaseOrderMultifill", new {id = model.PurchaseApprovedData.OBJECT_ID });
 
         }
 
         [HttpGet]
         public ActionResult PurchaseOrderMultifillPage(string id)
         {
-            var purchaseApprovedData = _purchesOrderService.PurchasedApprovedDataById(id);
+            var currentUser = GetCurrentUser();
+
+            var refId = _purchesOrderService.GetHistId(currentUser.Id, id);
+
+            var purchaseApprovedData = _purchesOrderService.PurchasedApprovedDataById(refId);
 
             return View(purchaseApprovedData);
         }
@@ -492,9 +500,24 @@ namespace Answer.Web.Controllers
                             totalRows = totalRows.Where(x => x.DateCreated == value);
                         }
                     }
+                   else if (rule.field == nameof(PurchaseView.DateCreated))
+                    {
+                        DateTime value;
+                        if (DateTime.TryParse(rule.data, out value))
+                        {
+                            totalRows = totalRows.Where(x => x.DateCreated.Day == value.Day &&
+                                                             x.DateCreated.Month == value.Month &&
+                                                             x.DateCreated.Year == value.Year);
+                        }
+                    }
                     else if (rule.field == nameof(PurchaseView.Status))
                     {
-                        totalRows = totalRows.Where(x => x.Status.ToLower().Contains(rule.data.ToLower()));
+                        var statusList = rule.data.Split(',').Select(x => x.Trim().ToLower());
+
+                        if (statusList.Any())
+                        {
+                            totalRows = totalRows.Where(x => statusList.Contains(x.Status.ToLower()));
+                        }
                     }
                 }
             }

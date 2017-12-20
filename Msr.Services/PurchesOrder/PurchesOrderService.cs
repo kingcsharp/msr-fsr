@@ -105,7 +105,7 @@ namespace Msr.Services.PurchesOrder
         }
         public PurchaseApprovedData PurchasedApprovedDataById(string id)
         {
-            var sql = $"SELECT* FROM A_V_PURCHASES_APPROVED_DATA WHERE ID = '{id}'";
+            var sql = $"SELECT* FROM A_V_PURCHASES_APPROVED_DATA WHERE HISTORY_REF_ID = '{id}'";
 
             var result = _dbContext.Database.SqlQuery<PurchaseApprovedData>(sql).SingleOrDefault();
 
@@ -405,9 +405,16 @@ namespace Msr.Services.PurchesOrder
 
                 return responsePurchase;
             }
-
-
-
         }
+
+        public string GetHistId(string loginId, string objectId)
+        {
+            var sql =
+                $"SELECT PURCHASE_HIST_ID FROM A_TASK_ORDER_INFORMATION WHERE TASK_ID IN(SELECT  TOP 1 TASK_ID FROM A_V_FILL_TASKS WHERE PURCH_ITEM_ID IN(SELECT ID FROM A_ORDER_ITEMS WHERE PURCHASE_HIST_ID IN(SELECT OBJ_ID FROM A_OBJECTS WHERE ID = '{objectId}')) AND REQUESTEE_ID IS NOT NULL AND REQUESTEE_ID={loginId})";
+            var result = _dbContext.Database.SqlQuery<string>(sql).FirstOrDefault();
+
+            return result;
+        }
+
     }
 }

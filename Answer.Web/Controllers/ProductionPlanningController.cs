@@ -137,11 +137,11 @@ namespace Answer.Web.Controllers
         public ActionResult Start(int id)
         {
             var currentUser = GetCurrentUser();
-            var requirment =_quoteService.GetById(id);
+            var requirment = _quoteService.GetById(id);
 
             _productionPlanService.UpdateStatus(id, CustomerSubmittedRequirementConstants.InProgress);
 
-            return RedirectToAction("Edit", "ProductionPlanning", new {id});
+            return RedirectToAction("Edit", "ProductionPlanning", new { id });
         }
 
         public ActionResult Edit(int id)
@@ -191,7 +191,7 @@ namespace Answer.Web.Controllers
             var currentUser = GetCurrentUser();
             var requirment = _quoteService.GetById(id);
 
-            var productView = _productionPlanService.GetProductionPlaningQueryable().FirstOrDefault(x => x.Id == id && x.ProductStatus== "APPROVED");
+            var productView = _productionPlanService.GetProductionPlaningQueryable().FirstOrDefault(x => x.Id == id && x.ProductStatus == "APPROVED");
 
             var viewModel = new RequirementStepsViewModel();
             viewModel.ProductStatus = productView.ProductStatus;
@@ -259,7 +259,7 @@ namespace Answer.Web.Controllers
                     if (!string.IsNullOrWhiteSpace(saveSubmit))
                     {
                         return RedirectToAction("Submit", "Workflow",
-                            new {objId = response.Entity.ProductId, returnUrl = Url.Content("~/ProductionPlanning")});
+                            new { objId = response.Entity.ProductId, returnUrl = Url.Content("~/ProductionPlanning") });
                     }
 
                     vm.Setup(_productionPlanService, _proceduresService.GetStepsData(vm.ProductProcedureId, currentUser.Id));
@@ -307,23 +307,23 @@ namespace Answer.Web.Controllers
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult AddPart(AddPartViewModel model)
+        public ActionResult AddPart(RequirementStepsViewModel model)
         {
             var currentUser = GetCurrentUser();
 
             var result = new ResultNotification<string>();
             var partservice = new PartsService();
-            model.NTLogin = currentUser.Id;
-            model.SubParts = null;
+            model.AddPartViewModel.NTLogin = currentUser.Id;
+            model.AddPartViewModel.SubParts = null;
 
-            var response = partservice.Create(model);
+            var response = partservice.Create(model.AddPartViewModel);
 
             if (!response.HasErrors())
             {
                 TempData["SuccessMessage"] = "Part has been created successfully.";
 
-                var checkOutObject = _workflowService.CheckOutObject(response.Entity, model.NTLogin);
-                
+                var checkOutObject = _workflowService.CheckOutObject(response.Entity, model.AddPartViewModel.NTLogin);
+
                 var submitWorkflow = new SubmitWorkflowViewModel();
                 submitWorkflow.CompletionStart = "APPROVED";
                 submitWorkflow.LoggedUserIdResult = currentUser;
@@ -332,7 +332,7 @@ namespace Answer.Web.Controllers
                 submitWorkflow.Comment = "Part approved by system";
                 submitWorkflow.LoginId = currentUser.Id;
                 _workflowService.SubmitWorkflow(submitWorkflow);
-          
+
                 var partList = _productionPlanService.GetPartList();
 
                 return Json(new { Message = result.SuccessMessage, data = partList, PartId = response.Entity }, JsonRequestBehavior.AllowGet);
@@ -348,7 +348,7 @@ namespace Answer.Web.Controllers
             var currentUser = GetCurrentUser();
             var procedureService = new ProceduresService();
             var result = new ResultNotification<string>();
-            
+            model.NTLogin = currentUser.Id;
             var response = procedureService.Create(model);
 
             TempData["SuccessMessage"] = "Procedure has been created successfully.";
@@ -363,6 +363,7 @@ namespace Answer.Web.Controllers
                 submitWorkflow.ObjectId = checkOutObject.Entity;
                 submitWorkflow.ApprovalWorflowId = "37";
                 submitWorkflow.Comment = "Procedure approved by system";
+                submitWorkflow.LoginId = currentUser.Id;
                 _workflowService.SubmitWorkflow(submitWorkflow);
 
                 var procedureList = _productionPlanService.GetProceduretList();
