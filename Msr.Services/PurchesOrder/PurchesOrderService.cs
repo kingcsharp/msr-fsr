@@ -117,7 +117,7 @@ namespace Msr.Services.PurchesOrder
 
             var ids = result.Where(x => x.FILL_ID != null).Select(x => x.FILL_ID).ToArray();
             var str = string.Join(",", ids);
-     
+
             if (!string.IsNullOrEmpty(str))
             {
                 var sql = $"SELECT * FROM A_V_FILLS_SEARCH WHERE ID IN(" + str + ") AND FILL_OBJ_ID IS NULL";
@@ -200,9 +200,44 @@ namespace Msr.Services.PurchesOrder
                 var ntLog = new SqlParameter("@strNTLogin", ntLogin);
                 _dbContext.Database.ExecuteSqlCommand("exec A_SP_PURCHASES_UPDATE_ALL_ACCOUNTS_ON_PURCHASE_ITEMS @pHistID,@strNTLogin", id, ntLog);
 
+                var nullValue = DBNull.Value;
+
                 for (int i = 0; i < model.OrderItems.Count; i++)
                 {
-                    _dbContext.Database.ExecuteSqlCommand("UPDATE A_ORDER_ITEMS SET DUE_DATE = '" + model.OrderItems[i].DUE_DATE + "', QTY = '" + model.OrderItems[i].QTY + "', CUST_LINE_ITEM = '" + model.OrderItems[i].CUST_LINE_ITEM + "' WHERE ID = '" + model.OrderItems[i].ID + "'");
+                    var dueDate = new SqlParameter();
+                    var qty = new SqlParameter();
+                    var custLintItem = new SqlParameter();
+
+                    if (model.OrderItems[i].DUE_DATE == null)
+                    {
+                        dueDate = new SqlParameter("@DUE_DATE", DBNull.Value);
+                    }
+                    else
+                    {
+                        dueDate = new SqlParameter("@DUE_DATE", model.OrderItems[i].DUE_DATE);
+                    }
+
+                    if (model.OrderItems[i].QTY == null)
+                    {
+                        qty = new SqlParameter("@QTY", DBNull.Value);
+                    }
+                    else
+                    {
+                        qty = new SqlParameter("@QTY", model.OrderItems[i].QTY);
+                    }
+
+                    if (model.OrderItems[i].CUST_LINE_ITEM == null)
+                    {
+                        custLintItem = new SqlParameter("@CUST_LINE_ITEM", DBNull.Value);
+                    }
+                    else
+                    {
+                        custLintItem = new SqlParameter("@CUST_LINE_ITEM", model.OrderItems[i].CUST_LINE_ITEM);
+                    }
+
+                    var orderId = new SqlParameter("@ID", model.OrderItems[i].ID);
+
+                    _dbContext.Database.ExecuteSqlCommand("exec Portal_UpdateOrderItem @DUE_DATE,@QTY,@CUST_LINE_ITEM,@ID", dueDate, qty, custLintItem, orderId);
                 }
 
             }
@@ -334,7 +369,6 @@ namespace Msr.Services.PurchesOrder
                     PaymentGracePeriod = model.GracePeriod.ToString(),
                     LateFeePercentage = model.LatePaymentFee.ToString(),
                     ReapplyLateFee = model.ReApplyFrequency.ToString(),
-
                     Strntlogin = model.NTLogin
                 };
 

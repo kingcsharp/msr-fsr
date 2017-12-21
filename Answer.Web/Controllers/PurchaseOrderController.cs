@@ -159,7 +159,7 @@ namespace Answer.Web.Controllers
             totalRows = totalRows.Skip(param.pageSize * (param.pageIndex - 1));
 
             totalRows = totalRows.Take(param.pageSize);
-            var totalPages = (int) Math.Ceiling((float) totalRecords / (float) param.pageSize);
+            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)param.pageSize);
 
             var results = totalRows.ToList();
 
@@ -214,6 +214,8 @@ namespace Answer.Web.Controllers
             {
                 var purchaseOrderService = new PurchesOrderService();
 
+                model.NTLogin = GetCurrentUser().Id;
+
                 var response = purchaseOrderService.Create(model);
 
                 if (!response.HasErrors())
@@ -222,7 +224,7 @@ namespace Answer.Web.Controllers
 
                     if (model.Save == "true")
                     {
-                        return RedirectToAction("Edit", new {id = response.Entity.NewId});
+                        return RedirectToAction("Edit", new { id = response.Entity.NewId });
                     }
 
                     if (model.SaveClose == "true")
@@ -234,7 +236,7 @@ namespace Answer.Web.Controllers
                     {
                         var returnUrl = Url.Action("Index", "PurchaseOrder");
 
-                        return RedirectToAction("Submit", "Workflow", new {objId = response.Entity.NewId, returnUrl});
+                        return RedirectToAction("Submit", "Workflow", new { objId = response.Entity.NewId, returnUrl });
                     }
                 }
 
@@ -320,7 +322,7 @@ namespace Answer.Web.Controllers
             totalRows = totalRows.Skip(param.pageSize * (param.pageIndex - 1));
 
             totalRows = totalRows.Take(param.pageSize);
-            var totalPages = (int) Math.Ceiling((float) totalRecords / (float) param.pageSize);
+            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)param.pageSize);
 
             var results = totalRows.ToList();
 
@@ -338,9 +340,12 @@ namespace Answer.Web.Controllers
         [HttpGet]
         public ActionResult PurchasePoDetails(string id)
         {
-            var purchaseOrder = new PurchaseFormAccountViewModel();
+            var purchaseOrder = _purchesOrderService.AccountPurchaseOrderById(id);
 
-            purchaseOrder = _purchesOrderService.AccountPurchaseOrderById(id);
+            if (purchaseOrder == null)
+            {
+                purchaseOrder = new PurchaseFormAccountViewModel();
+            }
 
             purchaseOrder.Setup(new PurchesOrderService());
 
@@ -355,11 +360,11 @@ namespace Answer.Web.Controllers
             if (!response.HasErrors())
             {
 
-                return RedirectToAction("CreatePurchase", "PurchaseOrder", new {id = response.Entity, oldId = model.OBJECT_ID, refrencePo = model.REFERENCE_PO});
+                return RedirectToAction("CreatePurchase", "PurchaseOrder", new { id = response.Entity, oldId = model.OBJECT_ID, refrencePo = model.REFERENCE_PO });
             }
             TempData["ErrorMessage"] = response.ErrorMessage;
 
-            return RedirectToAction("PurchasePoDetails", new {id = model.OBJECT_ID});
+            return RedirectToAction("PurchasePoDetails", new { id = model.OBJECT_ID });
         }
 
         [HttpGet]
@@ -391,15 +396,15 @@ namespace Answer.Web.Controllers
                 {
                     _purchesOrderService.PurchaseOrderWorkFlow(model.OBJECT_ID, currentUser.Id);
 
-                    var url = Url.Action("PurchaseOrderMultifill", "PurchaseOrder", new {id = model.OBJECT_ID});
+                    var url = Url.Action("PurchaseOrderMultifill", "PurchaseOrder", new { id = model.OBJECT_ID });
 
-                    return RedirectToAction("Submit", "Workflow", new {objId = model.OBJECT_ID, returnUrl = url});
+                    return RedirectToAction("Submit", "Workflow", new { objId = model.OBJECT_ID, returnUrl = url });
 
                 }
                 modelpo.Setup(new PurchesOrderService());
             }
 
-            return RedirectToAction("CreatePurchase", "PurchaseOrder", new {id = model.OBJECT_ID, oldId = model.oldId});
+            return RedirectToAction("CreatePurchase", "PurchaseOrder", new { id = model.OBJECT_ID, oldId = model.oldId });
         }
 
         [HttpPost]
@@ -441,9 +446,9 @@ namespace Answer.Web.Controllers
             {
                 _purchesOrderService.SavePurchaseMultiFill(model, GetCurrentUser().Id);
 
-                return RedirectToAction("PurchaseOrderMultifillPage", new {id = model.PurchaseApprovedData.OBJECT_ID});
+                return RedirectToAction("PurchaseOrderMultifillPage", new { id = model.PurchaseApprovedData.OBJECT_ID });
             }
-            return RedirectToAction("PurchaseOrderMultifill", new {id = model.PurchaseApprovedData.OBJECT_ID });
+            return RedirectToAction("PurchaseOrderMultifill", new { id = model.PurchaseApprovedData.OBJECT_ID });
 
         }
 
@@ -500,7 +505,7 @@ namespace Answer.Web.Controllers
                             totalRows = totalRows.Where(x => x.DateCreated == value);
                         }
                     }
-                   else if (rule.field == nameof(PurchaseView.DateCreated))
+                    else if (rule.field == nameof(PurchaseView.DateCreated))
                     {
                         DateTime value;
                         if (DateTime.TryParse(rule.data, out value))
@@ -540,7 +545,7 @@ namespace Answer.Web.Controllers
             totalRows = totalRows.Skip(param.pageSize * (param.pageIndex - 1));
 
             totalRows = totalRows.Take(param.pageSize);
-            var totalPages = (int) Math.Ceiling((float) totalRecords / (float) param.pageSize);
+            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)param.pageSize);
 
             var results = totalRows.ToList();
 
