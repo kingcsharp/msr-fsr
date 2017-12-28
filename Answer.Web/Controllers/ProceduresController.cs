@@ -189,11 +189,15 @@ namespace Answer.Web.Controllers
             vm.Id = id;
 
             var procedureService = new ProceduresService();
+            
+            var currrentUser = GetCurrentUser();
+            var result = _workflowService.CheckOutObject(id, currrentUser.Id);
+            id = result.Entity;
 
             var model = procedureService.GetProcedureById(id);
 
             vm.MapToDto(model);
-            vm.Setup(new ProceduresService(), new RoleService(), new ProcedureVerbsService(), GetCurrentUser().Id);
+            vm.Setup(new ProceduresService(), new RoleService(), new ProcedureVerbsService(), currrentUser.Id);
 
             return View(vm);
         }
