@@ -1,0 +1,199 @@
+﻿@model Msr.Services.Invoices.ViewModel.InvoiceDetailViewModel
+@{
+    ViewBag.Title = "Printable Invoice";
+}
+
+<div class="container-fluid">
+    <div class="side-body padding-top">
+        <div class="row">
+            <h2 class="page-header">
+                Printable Invoice
+            </h2>
+            <div class="invoicePrint">
+                <table>
+                    <tr>
+                        <th style="float:left;">
+                            Remit To:
+                        </th>
+                        <td>
+                            @Model.SUPPLIER_NAME
+                        </td>
+                    </tr>
+                    <br />
+                    <br />
+                    <tr>
+                        <th>
+                            Customer:
+                        </th>
+                        <td>
+                            @Model.CUSTOMER_NAME
+                        </td>
+                    </tr>
+                </table>
+                <table class="table table-bordered" style="width:300px; float:right;">
+
+                    <tr style="margin-top:40px;">
+                        <th>
+                            Invoice No:
+                        </th>
+                        <td>
+                            @Model.INVOICE_ID
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Invoice Date:
+                        </th>
+                        <td>
+                            @Model.INVOICE_DATE
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>REF PO ID:</th>
+                        <td>
+                            @Model.PO_NUMBER
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>REF PO NAME:</th>
+                        <td>
+                            @Model.REFERENCE_NAME
+                        </td>
+                    </tr>
+                </table>
+                <table class="table table-bordered" style="width:100%;">
+                    <tr>
+                        <th>Date Posted</th>
+                        <th>Act Inv Item Type</th>
+                        <th>Cust Purchase Number</th>
+                        <th>Cust Line Item</th>
+                        <th>AII Purchase Number</th>
+                        <th>AII Item Id</th>
+                        <th>Quantity</th>
+                        <th>Inv Item Description</th>
+                        <th>Unit Price</th>
+                        <th>Amt of Inv Items</th>
+                        <th>Tax</th>
+                    </tr>
+
+
+                    @for (int i = 0; i < Model.invoiceDetailList.Count; i++)
+                    {
+                        <tr>
+                            <td style="width:150px;">
+                                @Html.DisplayFor(x => Model.invoiceDetailList[i].DATE_POSTED, new { @class = "form-control", @readonly = "readonly", @style = "width:170px;" })
+                            </td>
+                            <td style="width:100px;">
+                                @Html.DisplayFor(x => Model.invoiceDetailList[i].ITEM_TYPE, new { @class = "form-control", @readonly = "readonly", @style = "width:150px;" })
+                            </td>
+                            <td style="width:150px;">
+                                @Html.DisplayFor(x => Model.invoiceDetailList[i].CUST_PURCH_NUM, new { @class = "form-control", @readonly = "readonly" })
+                            </td>
+                            <td style="width:130px;">
+                                @Html.DisplayFor(x => Model.invoiceDetailList[i].PURCH_ITEM_ID, new { @class = "form-control", @readonly = "readonly", @style = "width:150px;" })
+                            </td>
+                            <td style="width:130px;">
+                                @Html.DisplayFor(x => Model.invoiceDetailList[i].PURCHASE_ID, new { @class = "form-control", @readonly = "readonly", @style = "width:150px;" })
+                            </td>
+                            <td style="width:130px;">
+                                @Html.DisplayFor(x => Model.invoiceDetailList[i].CUST_LINE_ITEM, new { @class = "form-control", @readonly = "readonly", @style = "width:150px;" })
+                            </td>
+                            <td style="width:60px;">
+                                @Html.DisplayFor(x => Model.invoiceDetailList[i].QTY, new { @class = "form-control", @readonly = "readonly", @style = "width:80px;" })
+                            </td>
+                            <td style="width:140px;">
+                                @Html.DisplayFor(x => Model.invoiceDetailList[i].DESCRIPTION, new { @class = "form-control", @readonly = "readonly" })
+                            </td>
+                            <td style="width:150px;">
+                                @Html.DisplayFor(x => Model.invoiceDetailList[i].UNIT_PRICE, new { @class = "form-control", @readonly = "readonly", @style = "width:150px;" })
+                            </td>
+                            <td style="width:100px;">
+
+                                $@Html.DisplayFor(x => Model.invoiceDetailList[i].AMOUNT, new { @class = "form-control", @readonly = "readonly", @style = "width:150px;" })
+                            </td>
+                            <td style="width:80px;">
+                                $@Html.DisplayFor(x => Model.invoiceDetailList[i].TAX, new { @class = "form-control", @readonly = "readonly", @style = "width:150px;" })
+                            </td>
+                        </tr>
+                    }
+
+
+                </table>
+                <br /><br />
+
+                <table class="table table-bordered" width="500px;">
+                    <tr>
+                        <th style="width:100px;">Account Id:</th>
+                        <td style="float:left;width:500px;">
+                            @Html.DisplayFor(model => model.ACCOUNT_ID, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style="width:100px;">Invoice Id:</th>
+                        <td style="float:left;width:500px;">
+                            @Html.DisplayFor(model => model.INVOICE_ID, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style="width:100px;">Invoice Date:</th>
+                        <td style="float:left;width:500px;">
+                            @Html.DisplayFor(model => model.INVOICE_DATE, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style="width:200px;">New Payments and Credits:</th>
+                        <td style="float:left;width:500px;">
+                            $@Html.DisplayFor(model => model.TOTAL_CREDITS, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <th style="width:100px;">New Debits:</th>
+                        <td style="float:left;width:500px;">
+                            $@Html.DisplayFor(model => model.TOTAL_DEBITS, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style="width:100px;">New Late Fees:</th>
+                        <td style="float:left;width:500px;">
+                            $ @Html.DisplayFor(model => model.LATE_FEES, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <th style="width:100px;">Tax:</th>
+                        <td style="float:left;width:500px;">
+                            $ @Html.DisplayFor(model => model.TOTAL_TAX, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style="width:100px;">Total Due:</th>
+                        <td style="float:left;width:500px;">
+                            $ @Html.DisplayFor(model => model.TOTAL_DUE, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <a class="btn btn-warning pull-right" href="@Url.Action("Detail", "Invoices", new { id=Model.INVOICE_ID})">Cancel</a>
+                            <a class="btn btn-info pull-right hidden-print print-this" style="margin-right: 10px;"><i class="fa fa-print"></i> Print </a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/assets/js/jquery.min.js"></script>
+<script src="~/assets/js/printThis.js"></script>
+
+<script type="text/javascript">
+    $('.print-this').on('click', function () {
+        $('.invoicePrint').printThis({
+            debug: true,
+            importCSS: true,
+            importStyle: true
+        });
+    })
+</script>

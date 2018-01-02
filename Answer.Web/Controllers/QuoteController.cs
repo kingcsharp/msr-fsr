@@ -31,11 +31,11 @@ namespace Answer.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-               var currentUser = GetCurrentUser();
+                var currentUser = GetCurrentUser();
 
                 viewModel.CreatedBy = currentUser.Login;
 
-                var response = _quoteService.Create(viewModel);
+                var response = _quoteService.Create(viewModel, currentUser);
 
                 if (!response.HasErrors())
                 {

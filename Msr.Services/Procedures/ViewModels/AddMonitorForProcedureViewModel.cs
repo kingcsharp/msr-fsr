@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using Msr.Services.EquipmentMaintenances;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using System.Web.Mvc;
 
 namespace Msr.Services.Procedures.ViewModels
@@ -26,6 +28,8 @@ namespace Msr.Services.Procedures.ViewModels
             ForceEndActionList = new List<SelectListItem>();
 
             AlwaysPassList = new List<SelectListItem>();
+
+            EquipmentMaintenanceList = new List<SelectListItem>();
 
         }
         public string NewId { get; set; }
@@ -59,7 +63,7 @@ namespace Msr.Services.Procedures.ViewModels
         [Range(0, float.MaxValue, ErrorMessage = "Can only be between 0 .. max")]
         public float? Highest_Threshold { get; set; }
 
-        [DisplayName("Highest Threashold")]
+        [DisplayName("High Threashold")]
         [Range(0, float.MaxValue, ErrorMessage = "Can only be between 0 .. max")]
         public float? High_Threshold { get; set; }
 
@@ -139,7 +143,9 @@ namespace Msr.Services.Procedures.ViewModels
 
         public List<SelectListItem> AlwaysPassList { get; set; }
 
-        public void Setup()
+        public List<SelectListItem> EquipmentMaintenanceList { get; set; }
+
+        public void Setup(EquipmentMaintenanceService equipmentMaintenanceService)
         {
             InputTypesList = new List<SelectListItem>
             {
@@ -150,6 +156,7 @@ namespace Msr.Services.Procedures.ViewModels
 
             MonitorTypesList = new List<SelectListItem>
             {
+                new SelectListItem {Text = "EQUIPMENT", Value = "EQUIPMENT"},
                 new SelectListItem {Text = "NUMBER", Value = "NUMBER"},
                 new SelectListItem {Text = "YES_NO", Value = "YES_NO"},
                 new SelectListItem {Text = "TEXT", Value = "TEXT"},
@@ -201,6 +208,12 @@ namespace Msr.Services.Procedures.ViewModels
                 new SelectListItem {Text = "NO", Value = "0"},
                 new SelectListItem {Text = "YES", Value = "1"}
             };
+
+            EquipmentMaintenanceList = equipmentMaintenanceService.GetEquipmentsQueryable().ToList().Select(x => new SelectListItem
+            {
+                Text = x.ParentLocation,
+                Value = x.Id.ToString()
+            }).OrderBy(o => o.Text).ToList();
 
         }
         public AddMonitorForProcedureViewModel MapToDto(GetMoniterViewModel model)

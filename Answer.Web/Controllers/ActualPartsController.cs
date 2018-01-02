@@ -157,15 +157,11 @@ namespace Answer.Web.Controllers
                     TempData["SuccessMessage"] = "Actual Part has been created successfully.";
                     return RedirectToAction("Index");
                 }
-                else
-                {
-                    TempData["ErrorMessage"] = "Something went wrong.";
-
-                    model.SetUp(new ActualPartsService(), new PartsService(), new LocationService(), new UserService(), new ProductService(), new CompanyService(), GetCurrentUser());
-                    return View(model);
-                }
             }
-            return View();
+            TempData["ErrorMessage"] = "Something went wrong.";
+
+            model.SetUp(new ActualPartsService(), new PartsService(), new LocationService(), new UserService(), new ProductService(), new CompanyService(), GetCurrentUser());
+            return View(model);
         }
 
         public ActionResult Edit(string id)

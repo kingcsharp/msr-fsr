@@ -46,7 +46,7 @@ namespace Msr.Services.ProductionPlanning
         {
             return _dbContext.RequirementSteps.Where(x => x.CustomerSubmittedRequirementId == id).OrderBy(x => x.Id).ToList();
         }
-      
+
         public IQueryable<LocationView> GetLocationsQueryable()
         {
             return _dbContext.LocationViews;
@@ -182,18 +182,18 @@ namespace Msr.Services.ProductionPlanning
                 p.Add("@productName", model.ProductName, DbType.String, ParameterDirection.Input, size: 50);
                 p.Add("@supplierId", model.ProductSupplierId, DbType.String, ParameterDirection.Input, size: 50);
                 p.Add("@partId", requirment.PartId, DbType.String, ParameterDirection.Input, size: 50);
-                p.Add("@procedureId", requirment.ProcedureId, DbType.String, ParameterDirection.Input,size: 50);
+                p.Add("@procedureId", requirment.ProcedureId, DbType.String, ParameterDirection.Input, size: 50);
                 p.Add("@loginId", model.LoginId, DbType.String, ParameterDirection.Input, size: 50);
                 p.Add("@leadTime", requirment.LeadTime, DbType.Double, ParameterDirection.Input, size: 50);
                 p.Add("@price", requirment.Price, DbType.Double, ParameterDirection.Input, size: 50);
-           
-                
+
+
                 using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
                 {
                     int i = conn.Execute("Portal_CreateProduct", p, commandType: CommandType.StoredProcedure);
                     var newId = p.Get<string>("newID");
                     var messages = p.Get<string>("messages");
-                    
+
                     requirment.ProductId = newId;
                 }
             }
@@ -298,6 +298,29 @@ namespace Msr.Services.ProductionPlanning
         {
             var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT DISTINCT NAME as Show,ID as Value FROM A_V_COMPANIES_DROP_SEARCH WHERE ( ROOT_CO_ID = '2' ) AND ((NAME LIKE '%%' ) ) ORDER BY NAME").ToList();
 
+            return result;
+        }
+        public string GetSupplierIdByName(string name)
+        {
+            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT DISTINCT NAME as Show,ID as Value FROM A_V_COMPANIES_DROP_SEARCH WHERE ( ROOT_CO_ID = '2' ) AND (( NAME LIKE '%%' AND NAME LIKE '%%' ) ) and (ROOT_NAME='" + name + "') ORDER BY NAME").SingleOrDefault();
+
+            return result?.Value;
+        }
+        public string GetProceduretIdById(string id)
+        {
+            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT DISTINCT SHOWNAME as Show,ID as Value   FROM A_V_PROCEDURES_APPROVED_DATA_DROP_DOWN WHERE ( CREATING_CO = '2'  ) AND (( NAME LIKE '%%' AND NAME LIKE '%%' ) ) and(ID='" + id + "')   ORDER BY SHOWNAME").SingleOrDefault();
+
+            return result?.Value;
+        }
+        public string GetPartIdByCompanyPartNumber(string companyPartNumber)
+        {
+            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT DISTINCT NAME_COMBO as Show, ID as Value   FROM A_V_PARTS_APPROVED_DATA WHERE(COMPANY = '2') AND((NAME_COMBO LIKE '%%')) and(COMPANY_PART_NUMBER = '" + companyPartNumber + "')    ORDER BY NAME_COMBO").SingleOrDefault();
+
+            return result?.Value;
+        }
+        public List<string> Getjsondata(int? id)
+        {
+            var result = _dbContext.Database.SqlQuery<string>("select QuoteJson from Portal_CustomerSubmittedRequirement where Id = '" + id + "'").ToList();
             return result;
         }
     }

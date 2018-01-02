@@ -1,10 +1,7 @@
 @using System.Security.Claims
 @using Msr.Models.Users
 
-@{
-    var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
 
-}
 <div class="side-menu sidebar-inverse">
     <nav class="navbar navbar-default" role="navigation">
         <div class="side-menu-container">
@@ -205,7 +202,7 @@
                         <div class="panel-body">
                             <ul class="nav navbar-nav">
                                 <li>
-                                    <a href="[[~5]]">
+                                    <a href="~/Invoices/Index">
                                         <span class="icon fa fa-exchange"></span><span class="title">Invoices</span>
                                     </a>
                                 </li>
@@ -217,7 +214,7 @@
                                 </li>
                               
                             </ul>
-                        </div>
+                        </div>``
                     </div>
                 </li>
                 <li class="panel panel-default dropdown">

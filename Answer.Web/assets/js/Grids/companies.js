@@ -2,7 +2,7 @@
     //$.jgrid.defaults.responsive = true;
     $.jgrid.defaults.styleUI = 'Bootstrap';
 
-    
+
 
     $("#jqGrid").jqGrid({
         url: url,
@@ -98,20 +98,21 @@
                 searchoptions: { value: ":[All];CREATING, DENIED, APPROVED, APPROVED_BUT_REVISING:Creating or Approved;CREATING, DENIED: Creating;IN_WORKFLOW:In Approval Workflow;APPROVED, APPROVED_BUT_REVISING, APPROVED_BUT_DELETING:Approved;DENIED:Denied;APPROVED_BUT_REVISING:Approved But Being Revised;APPROVED_BUT_DELETING:Approved But Being Deleted;DENIED:Denied;DELETED:Deleted;OLD:Obsolete" },
                 align: 'left'
             },
-            {   label: 'Checked Out To',
-            name: 'LockedByName',
-            index: 'LockedByName',
-            colmenu: false,
-            editable: true, // must set editable to true if you want to make the field editable
-            editrules: { required: true },
-            coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-            searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-            width: 200,
-            align: 'left'
-        },
+            {
+                label: 'Checked Out To',
+                name: 'LockedByName',
+                index: 'LockedByName',
+                colmenu: false,
+                editable: true, // must set editable to true if you want to make the field editable
+                editrules: { required: true },
+                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                width: 200,
+                align: 'left'
+            },
             { name: 'Actions', index: 'ID', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: CompaniesEditFormatter, width: 200, align: 'center' }
         ],
-        
+
         ajaxRowOptions: {
             type: "POST",
             contentType: "application/json; charset=utf-8",
@@ -135,17 +136,17 @@
         autowidth: true,
         colMenu: true,
         gridComplete: function () {
-          
+
         }
 
     });
     $('#jqGrid').navGrid("#jqGridPager", {
-        search: false, // show search button on the toolbar
-        add: false,
-        edit: false,
-        del: false,
-        refresh: true
-    },
+            search: false, // show search button on the toolbar
+            add: false,
+            edit: false,
+            del: false,
+            refresh: true
+        },
         {},  // edit options
         {}, // add options
         {}, // delete options
@@ -157,7 +158,7 @@
         searchOperators: true
     });
     function CompaniesEditFormatter(cellvalue, options, rowObject) {
-        
+
         var editButton = '<a href="/Companies/Details/' + rowObject.ObjectId + '" title="View Company" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-eye"></i> </a>';
         editButton = editButton + '<a  title="Edit" href="/Companies/Edit/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
         var deleteButton = '';
@@ -173,7 +174,7 @@
             buttonWorkflowRight = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-success" title="Proceed to approval workflow for release." style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-right"></i></a>';
         } else {
             url = '/workflow/delete?objId=' + rowObject.ObjectId + '&returnUrl=' + returnUrl;
-            deleteButton = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-danger" title="Proceed to delete." style="margin:2px;font-size: .8em;"><i class="fa fa fa-trash"></i></a>';
+            deleteButton = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-danger" title="Proceed to delete." style="margin:2px;font-size: .8em;"><i class="fa fa fa-trash-o"></i></a>';
         }
 
         return editButton + deleteButton + buttonWorkflowLeft + buttonWorkflowRight;
@@ -265,13 +266,13 @@ function LoadCompanyDialogGrid() {
 
     });
     $('#jqGridCompanies').navGrid("#jqGridPagerCompanies", {
-        refresh: true,
-        search: false, // show search button on the toolbar
-        add: false,
-        edit: false,
-        del: false,
+            refresh: true,
+            search: false, // show search button on the toolbar
+            add: false,
+            edit: false,
+            del: false,
 
-    },
+        },
         {}, // edit options
         {}, // add options
         {}, // delete options

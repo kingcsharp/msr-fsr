@@ -5,10 +5,8 @@ using Msr.Web.ViewModel.Engineering;
 using System;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Web.Mvc;
 using System.Xml;
-using System.Xml.XPath;
 using System.Xml.Xsl;
 using Answer.Web.ViewModel;
 using Msr.Models.ActualParts;
@@ -18,6 +16,7 @@ using Msr.Services.ProcedureVerbs;
 using Msr.Services.Roles;
 using Msr.Services.Users;
 using Msr.Services.Workflows;
+using Msr.Services.EquipmentMaintenances;
 
 namespace Answer.Web.Controllers
 {
@@ -154,7 +153,7 @@ namespace Answer.Web.Controllers
         public ActionResult Create(SaveProcedureViewModel model)
         {
             var procedureService = new ProceduresService();
-            
+
             model.NTLogin = GetCurrentUser().Id;
 
             if (ModelState.IsValid)
@@ -189,16 +188,15 @@ namespace Answer.Web.Controllers
             vm.Id = id;
 
             var procedureService = new ProceduresService();
-            
+
+
             var currrentUser = GetCurrentUser();
             var result = _workflowService.CheckOutObject(id, currrentUser.Id);
             id = result.Entity;
-
             var model = procedureService.GetProcedureById(id);
 
             vm.MapToDto(model);
             vm.Setup(new ProceduresService(), new RoleService(), new ProcedureVerbsService(), currrentUser.Id);
-
             return View(vm);
         }
 
@@ -322,7 +320,7 @@ namespace Answer.Web.Controllers
             {
                 GetStepDataResults = _proceduresService.GetStepsData(id, GetCurrentUser().Id)
             };
-            viewModel.AddMonitorForProcedureViewModel.Setup();
+            viewModel.AddMonitorForProcedureViewModel.Setup(new EquipmentMaintenanceService());
             viewModel.AddMonitorForProcedureViewModel.Related_Object_Id = id;
             ViewBag.ProcObjectId = id;
             ViewBag.ProdecureName = procedureName;
@@ -1008,7 +1006,7 @@ namespace Answer.Web.Controllers
 
             return View(model);
         }
-  
+
         [AcceptVerbs(verbs: HttpVerbs.Post)]
         public ActionResult DeleteStep(string id, string procStepId, string ProdecureName)
         {
@@ -1030,14 +1028,14 @@ namespace Answer.Web.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult ReorderSteps(string procObjectId, string[] array)
         {
-            var currentUser =  GetCurrentUser();
-            
+            var currentUser = GetCurrentUser();
+
             _proceduresService.SaveReorderSteps(array, procObjectId, currentUser.Id);
 
             return Json("Ok", JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult AddMonitor(string moniterType, string inputType, string failAction, string description, string objectId, string relatedObject, string stepId, string procedureName)
+        public ActionResult AddMonitor(string moniterType, string inputType, string failAction, string description, string objectId, string relatedObject, string stepId, string procedureName, string shouldBe, float? highestThreshold, float? highThreshold, float? target, float? lowThreshold, float? lowestThreshold, string targetObject)
         {
             var model = new GetStepDataResult
             {
@@ -1050,11 +1048,19 @@ namespace Answer.Web.Controllers
                     Description = description ?? "",
                     Related_Object_Id = relatedObject,
                     Step_Id = stepId,
-                    ProcedureName = procedureName
+                    ProcedureName = procedureName,
+                    Should_Be = shouldBe,
+                    Highest_Threshold =highestThreshold,
+                    High_Threshold =highThreshold,
+                    Target= target,
+                    Low_Threshold =lowThreshold,
+                    Lowest_Threshold =lowestThreshold,
+                    Target_Object =targetObject
+
                 }
             };
             ViewBag.ProcedureName = procedureName;
-            model.AddMonitorForProcedureViewModel.Setup();
+            model.AddMonitorForProcedureViewModel.Setup(new EquipmentMaintenanceService());
             return PartialView("_Monitor", model);
         }
 
@@ -1065,6 +1071,17 @@ namespace Answer.Web.Controllers
             if (ModelState.IsValid)
             {
                 model.AddMonitorForProcedureViewModel.StrNTLogin = GetCurrentUser().Id;
+
+                if (model.AddMonitorForProcedureViewModel.Monitor_Type != "NUMBER")
+                {
+                    model.AddMonitorForProcedureViewModel.Should_Be = "EQUAL";
+                    model.AddMonitorForProcedureViewModel.Highest_Threshold = null;
+                    model.AddMonitorForProcedureViewModel.High_Threshold = null;
+                    model.AddMonitorForProcedureViewModel.Target = null;
+                    model.AddMonitorForProcedureViewModel.Low_Threshold = null;
+                    model.AddMonitorForProcedureViewModel.Lowest_Threshold = null;
+                    model.AddMonitorForProcedureViewModel.Target_Object = null;
+                }
 
                 var response = proceduresService.AddMonitorForProcedure(model: model.AddMonitorForProcedureViewModel);
 

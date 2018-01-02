@@ -1,7 +1,7 @@
 ﻿function loadProcedureVerbsGrid(url, returnUrl) {
     $.jgrid.defaults.styleUI = 'Bootstrap';
 
-    
+
 
     $("#jqGrid").jqGrid({
         url: url,
@@ -101,12 +101,12 @@
         }
     });
     $('#jqGrid').navGrid("#jqGridPager", {
-        search: false, // show search button on the toolbar
-        add: false,
-        edit: false,
-        del: false,
-        refresh: true
-    },
+            search: false, // show search button on the toolbar
+            add: false,
+            edit: false,
+            del: false,
+            refresh: true
+        },
         {}, // edit options
         {}, // add options
         {}, // delete options
@@ -134,7 +134,7 @@
             buttonWorkflowRight = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-success" title="Proceed to approval workflow for release." style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-right"></i></a>';
         } else {
             url = '/workflow/delete?objId=' + rowObject.ObjectId + '&returnUrl=' + returnUrl;
-            deleteButton = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-danger" title="Proceed to Delete." style="margin:2px;font-size: .8em;"><i class="fa fa fa-trash"></i></a>';
+            deleteButton = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-danger" title="Proceed to Delete." style="margin:2px;font-size: .8em;"><i class="fa fa fa-trash-o"></i></a>';
         }
 
 

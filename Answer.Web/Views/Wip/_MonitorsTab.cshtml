@@ -70,7 +70,7 @@
         {
             <div class="form-group">
                 <label class="col-lg-2 control-label">Correct Answer:</label>
-                
+
                 @if (@monitorTemplate.Yes_No_Answer == "1")
                 {
                     <div class="col-lg-2" style="font-weight: bold;">
@@ -83,18 +83,18 @@
                         No
                     </div>
                 }
-                
+
             </div>
             <div class="form-group">
                 <label class="col-lg-2 control-label">Your Answer:</label>
                 <div class="col-lg-2">
-                    @if(monitorTemplate.Yes_No_Answer==monitorTemplate.Print_Result)
+                    @if (monitorTemplate.Yes_No_Answer == monitorTemplate.Print_Result)
                     {
-                        @Html.DropDownListFor(x => monitorTemplate.Print_Result, monitorTemplate.ResultList, new {@class = "form-control"})
+                        @Html.DropDownListFor(x => monitorTemplate.Print_Result, monitorTemplate.ResultList, new { @class = "form-control" })
                     }
                     else
                     {
-                        @Html.DropDownListFor(x => monitorTemplate.Print_Result, monitorTemplate.ResultList, new {@class = "form-control red"})
+                        @Html.DropDownListFor(x => monitorTemplate.Print_Result, monitorTemplate.ResultList, new { @class = "form-control red" })
                     }
                 </div>
             </div>
@@ -210,6 +210,15 @@
                 @monitorTemplate.Monitor_Type
             </div>
         </div>
+        if (monitorTemplate.Monitor_Type == "EQUIPMENT")
+        {
+            <div class="form-group">
+                <label class="col-lg-2 control-label">Target_Object:</label>
+                <div class="col-lg-2">
+                    @Html.DropDownListFor(x => monitorTemplate.Target, monitorTemplate.EquipmentMaintenanceList, new { @class = "form-control select" })
+                </div>
+            </div>
+        }
 
         <div class="form-group">
             <label class="col-lg-2 control-label">
@@ -224,7 +233,7 @@
             </div>
         </div>
 
-        if (monitorTemplate.Step_Id !=null && int.Parse(monitorTemplate.Step_Id) > 0)
+        if (monitorTemplate.Step_Id != null && int.Parse(monitorTemplate.Step_Id) > 0)
         {
             <div class="form-group">
                 <label class="col-lg-2 control-label">
@@ -303,4 +312,6 @@
             }
         });
     });
+
+    $('.select').select2();
 </script>

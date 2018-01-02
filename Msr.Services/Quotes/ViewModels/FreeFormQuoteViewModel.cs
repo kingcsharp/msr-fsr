@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Msr.Models.CustomerRequirements;
@@ -10,7 +11,7 @@ namespace Msr.Services.Quotes.ViewModels
     {
         public FreeFormQuoteViewModel()
         {
-               QuoteItems = new List<QuoteItemsViewModel>();
+            QuoteItems = new List<QuoteItemsViewModel>();
         }
 
         [Required]
@@ -25,13 +26,16 @@ namespace Msr.Services.Quotes.ViewModels
 
         public string Address { get; set; }
 
+        [Required]
         public string Title { get; set; }
 
         public string Terms { get; set; }
 
         public string CityStateZip { get; set; }
 
-        public string Phone { get; set; }
+        [Display(Name = "Phone")]
+        [DataType(DataType.PhoneNumber)]
+        public int? Phone { get; set; }
 
         public string Delivery { get; set; }
 

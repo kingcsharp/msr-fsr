@@ -33,15 +33,17 @@ namespace Msr.Services.CustomerRequirements.ViewModel
         public string CommercialTitle { get; set; }
         [Required]
         [Display(Name = "Phone")]
+        [Range(0, int.MaxValue, ErrorMessage = "Please enter valid Number")]
         public string CommercialPhone { get; set; }
         [EmailAddress]
         public string CommercialEmail { get; set; }
         public string TechnicalName { get; set; }
         public string TechnicalTitle { get; set; }
+        [Range(0, int.MaxValue, ErrorMessage = "Please enter valid Number")]
         public string TechnicalPhone { get; set; }
         [EmailAddress]
         public string TechnicalEmail { get; set; }
-        
+
         [Required(ErrorMessage = "Short Description field is required under General Information Tab")]
         [Display(Name = "Short Description")]
         public string ShortDescription { get; set; }
@@ -53,7 +55,7 @@ namespace Msr.Services.CustomerRequirements.ViewModel
         public string SpecificCustomerQualification { get; set; }
         public string ForecastedVolumes { get; set; }
         public string SpecialPackagingShipping { get; set; }
-        public DateTime? ExpectedQuoteDate { get; set; }       
+        public DateTime? ExpectedQuoteDate { get; set; }
         public string ExpectedCycleTime { get; set; }
         public string PickupNotification { get; set; }
         public string ShippingMethod { get; set; }
@@ -68,13 +70,13 @@ namespace Msr.Services.CustomerRequirements.ViewModel
 
         public List<ProcessInfoViewModel> Process { get; set; }
 
-        public List<PartInfoViewModel> Parts { get; set; }        
+        public List<PartInfoViewModel> Parts { get; set; }
 
         public void Setup()
-        {           
+        {
             ShippingMehtodList = new List<SelectListItem>
             {
-                 new SelectListItem
+                new SelectListItem
                 {
                     Text = @"Please select....",
                     Value = ""
@@ -113,7 +115,7 @@ namespace Msr.Services.CustomerRequirements.ViewModel
 
             if (!Parts.Any())
             {
-                Parts.Add(new PartInfoViewModel());        
+                Parts.Add(new PartInfoViewModel());
             }
         }
 

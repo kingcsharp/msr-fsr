@@ -1,7 +1,5 @@
 ﻿
-
-
-CREATE        PROCEDURE A_SP_MONITOR_UPDATE_RESULT_AND_COMMENT
+CREATE        PROCEDURE [dbo].[A_SP_MONITOR_UPDATE_RESULT_AND_COMMENT]
 @newID nvarchar(50) OUTPUT,
 @messages nvarchar(2000) OUTPUT,
 @ID nvarchar(50),
@@ -20,6 +18,23 @@ declare @myType as varchar(50),@rollUpID varchar(50)
 SELECT @myType = MONITOR_TYPE,@rollUpID = ROLL_UP_ID FROM A_MONITOR_TEMPLATES WHERE ID = @ID
 print @myType
 UPDATE A_MONITOR_TEMPLATES SET FAIL_ACTION = @FAIL_ACTION WHERE ID = @ID
+--Custom Created type Equipment start
+if @myType = 'EQUIPMENT'
+	begin
+		UPDATE A_MONITOR_TEMPLATES 
+			SET 
+			TARGET = convert(float,@TARGET),
+			TOLERANCE = convert(float,@TOLERANCE),
+			HIGHEST_THRESHOLD = (convert(float,@TARGET) + (convert(float,@TARGET) * (convert(float,@TOLERANCE)/100))),
+			LOWEST_THRESHOLD = (convert(float,@TARGET) - (convert(float,@TARGET) * (convert(float,@TOLERANCE)/100)))
+			WHERE ID = @ID
+		INSERT INTO A_MONITOR_RESULTS 
+			(ID,MONITOR_TEMPLATE_ID,NUM_VAL,PRINT_RESULT,DRCM,MODBY,COMMENT)
+		VALUES (newID(),@ID,@RESULT,@RESULT,getDate(),@strNTLogin,@COMMENT)
+		goto fin
+	end
+	--Custom Created type Equipment end
+
 if @myType = 'USER_NUMBER'
 	begin
 		UPDATE A_MONITOR_TEMPLATES SET TARGET = convert(float,@TARGET),

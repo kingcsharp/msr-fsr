@@ -1,4 +1,4 @@
-﻿function LoadDocumentsGrid (url, returnUrl) {
+﻿function LoadDocumentsGrid(url, returnUrl) {
     $("#jqGrid").jqGrid({
         url: url,
         mtype: "GET",
@@ -113,13 +113,13 @@
 
     });
     $('#jqGrid').navGrid("#jqGridPager", {
-        refresh: true,
-        search: false, // show search button on the toolbar
-        add: false,
-        edit: false,
-        del: false,
+            refresh: true,
+            search: false, // show search button on the toolbar
+            add: false,
+            edit: false,
+            del: false,
 
-    },
+        },
         {}, // edit options
         {}, // add options
         {}, // delete options
@@ -130,11 +130,11 @@
         searchOnEnter: true,
         searchOperators: true
     });
-   
+
     function documentEditFormatter(cellvalue, options, rowObject) {
 
         var editButton = '<a  title="Edit" href="/Documents/Edit/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
-        
+
         var deleteButton = '';
         var buttonWorkflowLeft = '';
         var buttonWorkflowRight = '';
@@ -148,12 +148,12 @@
             buttonWorkflowRight = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-success" title="Proceed to approval workflow for release." style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-right"></i></a>';
         } else {
             url = '/workflow/delete?objId=' + rowObject.ObjectId + '&returnUrl=' + returnUrl;
-            deleteButton = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-danger" title="Proceed to delete." style="margin:2px;font-size: .8em;"><i class="fa fa fa-trash"></i></a>';
+            deleteButton = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-danger" title="Proceed to delete." style="margin:2px;font-size: .8em;"><i class="fa fa fa-trash-o"></i></a>';
         }
-       
+
         return editButton + deleteButton + buttonWorkflowLeft + buttonWorkflowRight;
 
     };
 
-   
+
 }

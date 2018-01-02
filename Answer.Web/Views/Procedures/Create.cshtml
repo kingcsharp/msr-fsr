@@ -22,7 +22,7 @@
             <div class="col-lg-10">
                 @Html.Partial("Message")
                 @using (Html.BeginForm())
-            {
+                {
                     @Html.AntiForgeryToken()
 
                     <div class="form-horizontal">
@@ -57,7 +57,7 @@
                                     @Html.ListBoxFor(m => m.ReferenceFiles, Model.ReferenceFilesList, new { @class = "form-control submitselect", multiple = "multiple" })
                                     @Html.ValidationMessageFor(model => model.ReferenceFiles, "", new { @class = "text-danger" })
                                 </div>
-                                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceFiles" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceFiles"><i class="icon fa fa-trash"></i></span> </div>
+                                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceFiles" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceFiles"><i class="icon fa fa-trash-o"></i></span> </div>
                             </div>
                         </div>
                         <div class="form-group">

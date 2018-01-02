@@ -1,0 +1,57 @@
+﻿@model Msr.Services.Invoices.ViewModel.InvoiceViewModel
+@{
+    ViewBag.Title = "Invoices";
+}
+<div class="container-fluid">
+    <div class="side-body padding-top">
+        <div class="row">
+            <h2 class="page-header">
+                Invoices <button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
+            </h2>
+            <table class="table table-bordered">
+                <tr>
+                    <td style="width:200px;">
+                        Total of Debits
+                    </td>
+                    <td style="float:left;">$@Model.NewItemsAmt</td>
+                </tr>
+                <tr>
+                    <td style="width:200px;">
+                        Total Amount paid
+                    </td>
+                    <td style="float:left;">
+                     $@Model.AmtPaid
+                    </td>
+                </tr>
+            </table>
+            <div></div>
+            <div class="col-lg-12">
+                @Html.Partial("Message")
+                <table id="jqGrid"></table>
+                <div id="jqGridPager"></div>
+            </div>
+        </div>
+       
+    </div>
+</div>
+
+@section scripts
+{
+    <script src="~/assets/js/plugins/bootstrap3/bootstrap-dialog.min.js"></script>
+    <script type="text/javascript" src="~/assets/js/i18n/grid.locale-en.js"></script>
+    <script type="text/javascript" src="~/assets/js/jquery.jqGrid.min.js"></script>
+
+    <script src="//cdn.rawgit.com/noelboss/featherlight/1.6.1/release/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="~/assets/js/grids/invoices.js"></script>
+    <script>
+        //$.jgrid.defaults.responsive = true;
+        $.jgrid.defaults.styleUI = 'Bootstrap';
+
+
+
+        $(document).ready(function () {
+            InvoicesGrid('@Url.Action("InvoicesData", "Invoices")');
+        });
+
+    </script>
+}

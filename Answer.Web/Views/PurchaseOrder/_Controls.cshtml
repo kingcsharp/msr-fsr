@@ -1,5 +1,4 @@
 ﻿@model Msr.Services.PurchesOrder.ViewModels.NewPurchaseOrderViewModel
-
 @Html.AntiForgeryToken()
 @Html.HiddenFor(x => x.ObjId)
 <table class="table quote-header" width="100%">
@@ -9,7 +8,6 @@
             @Html.DropDownListFor(model => model.Client, Model.ClientList, new { @class = "form-control" })
             @Html.ValidationMessageFor(model => model.Client, "", new { @class = "text-danger" })
         </td>
-
         <th>PO Name :</th>
         <td>
             @Html.EditorFor(model => model.POName, new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter PO Name" } })
@@ -22,7 +20,6 @@
             @Html.DropDownListFor(model => model.AccountType, Model.AccountTypeList, new { @class = "form-control" })
             @Html.ValidationMessageFor(model => model.AccountType, "", new { @class = "text-danger" })
         </td>
-
         <th align="right">Reference Cust PO #:</th>
         <td>
             @Html.EditorFor(model => model.RefCustPO, new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter Reference Customer PO # (typically a blanket PO)" } })
@@ -101,12 +98,10 @@
         <td>
             <div class="input-group datepick">
                 @Html.EditorFor(model => model.FirstInvoiceDate, new { htmlAttributes = new { @class = "form-control datepick" } })
-
                 <span class="input-group-addon">
                     <span class="glyphicon glyphicon-calendar"></span>
                 </span>
             </div>
-
         </td>
         <th align="right">Payment Grace Period:</th>
         <td>
@@ -114,7 +109,6 @@
             @Html.ValidationMessageFor(model => model.GracePeriod, "", new { @class = "text-danger" })
         </td>
     </tr>
-
     <tr>
         <th align="right">Late Payment Fee:</th>
         <td>
@@ -133,16 +127,13 @@
     <tr>
         <th align="right">Products:</th>
         <td>
-
             <div>
                 @Html.DropDownListFor(m => m.Products, Model.ProductsList, new { @class = "form-control selectproducts submitselect select", multiple = "multiple" })
             </div>
             <div id="product-message" class="alert-info">
             </div>
         </td>
-
     </tr>
-
     <tr>
         <td colspan="4">
             @Html.HiddenFor(model => model.Save, new { @class = "form-control" })
@@ -159,10 +150,8 @@
             <input type="submit" name="BCLOSE" class="btn btn-warning" onclick="return SaveCloseFun()" value="Save &amp; Close">
             <input type="submit" name="BSaveSubmit" class="btn btn-success" onclick="return SaveSubmitApprovalFun()" value="Save &amp; Submit to Approval Workflow">
         </td>
-
     </tr>
 </table>
-
 
 <div id="select-products" class="modal fade" role="dialog">
     <div class="modal-dialog modal-lg">
@@ -180,3 +169,29 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    @{
+        var productsJoin = string.Join(",", Model.Products);
+    }
+    $(document).ready(function () {
+        $('.select').select2();
+
+        var selectProducts = $(".selectproducts").select2({
+            tags: [],
+            tokenSeparators: [','],
+            multiple: true,
+            allowClear: true,
+            placeholder: "Select Products",
+            formatNoMatches: function () {
+                return '';
+            }
+        });
+
+        var values = '@productsJoin';
+        var selectedProducts = values.split(",");
+
+        selectProducts.val(selectedProducts).trigger("change");
+
+    });
+
+</script>

@@ -1,11 +1,8 @@
 ﻿@model Msr.Services.PrePro.ViewModel.ProcedurePreProViewModel
-
 @{
     ViewBag.Title = "Create Procedure Step Template";
 }
-
 <link href="~/assets/textformater/general.css" rel="stylesheet" />
-
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="row">
@@ -53,14 +50,14 @@
                                 @Html.ValidationMessageFor(model => model.Labor, "", new { @class = "text-danger" })
                             </div>
                         </div>
-                        <div class="form-group" >
+                        <div class="form-group">
                             @Html.LabelFor(model => model.Comments, htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-5">
                                 @Html.Partial("_TextAdder")
-                                @Html.TextAreaFor(model => model.Comments, new {onBlur = "checkMaxSize(this, 4000);;lastTextArea = 'document.editForm.StepText';", name = "StepText", rows = "10", cols = "80", @class = "text-formatter form-control",})
+                                @Html.TextAreaFor(model => model.Comments, new { onBlur = "checkMaxSize(this, 4000);;lastTextArea = 'document.editForm.StepText';", name = "StepText", rows = "10", cols = "80", @class = "text-formatter form-control", })
                             </div>
                         </div>
-                        <div class="form-group" >
+                        <div class="form-group">
                             @Html.LabelFor(model => model.SystemTask, htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-5">
                                 @Html.DropDownListFor(model => model.SystemTask, Model.SystemTaskList, new { @class = "form-control select" })
@@ -86,7 +83,6 @@
                                 @*<div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="REFERENCE_OBJECT" data-toggle="modal" data-target="#select-objects"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="REFERENCE_OBJECT"><i class="icon fa fa-trash"></i></span> </div>*@
                             </div>
                         </div>
-
                         <div class="form-group">
                             @Html.LabelFor(model => model.ReferenceProcedures, htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-5">
@@ -94,10 +90,9 @@
                                     @Html.ListBoxFor(m => m.ReferenceProcedures, Model.ReferenceProceduresList, new { @class = "form-control  submitselect" })
                                     @Html.ValidationMessageFor(model => model.ReferenceProcedures, "", new { @class = "text-danger" })
                                 </div>
-                                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceProcedures" data-toggle="modal" data-target="#select-referenceprocedures"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceProcedures"><i class="icon fa fa-trash"></i></span> </div>
+                                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceProcedures" data-toggle="modal" data-target="#select-referenceprocedures"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceProcedures"><i class="icon fa fa-trash-o"></i></span> </div>
                             </div>
                         </div>
-
                         <div class="form-group">
                             @Html.LabelFor(model => model.ReferenceVerb, htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-5">
@@ -108,7 +103,6 @@
                                 @*<div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="REFERENCE_OBJECT" data-toggle="modal" data-target="#select-objects"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="REFERENCE_OBJECT"><i class="icon fa fa-trash"></i></span> </div>*@
                             </div>
                         </div>
-
                         <div class="form-group">
                             @Html.LabelFor(model => model.ReferenceObject, htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-5">
@@ -119,27 +113,24 @@
                                 @*<div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="REFERENCE_OBJECT" data-toggle="modal" data-target="#select-objects"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="REFERENCE_OBJECT"><i class="icon fa fa-trash"></i></span> </div>*@
                             </div>
                         </div>
-
                         <div class="form-group">
                             @Html.LabelFor(model => model.ReferenceFiles, htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-5">
                                 <div style="width: 96%; float: left;">
                                     @Html.ListBoxFor(m => m.ReferenceFiles, Model.ReferenceFilesList, new { @class = "form-control submitselect", multiple = "multiple" })
                                 </div>
-                                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceFiles" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceFiles"><i class="icon fa fa-trash"></i></span>  </div>
+                                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceFiles" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceFiles"><i class="icon fa fa-trash-o"></i></span>  </div>
                             </div>
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(model => model.ReferenceTheories, htmlAttributes: new { @class = "control-label col-md-2" })
-
                             <div class="col-md-5">
                                 <div style="width: 96%; float: left;">
                                     @Html.ListBoxFor(m => m.ReferenceTheories, Model.ReferenceTheoriesList, new { @class = "form-control submitselect", multiple = "multiple" })
                                 </div>
-                                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceTheories" data-toggle="modal" data-target="#select-theory"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceTheories"><i class="icon fa fa-trash"></i></span>  </div>
+                                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceTheories" data-toggle="modal" data-target="#select-theory"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceTheories"><i class="icon fa fa-trash-o"></i></span>  </div>
                             </div>
                         </div>
-
 
                         <div class="form-group">
                             @Html.LabelFor(model => model.Comments, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -162,13 +153,11 @@
 </div>
 @section scripts
 {
-
     <script src="~/assets/textformater/ValidateDocumentSubmit.js"></script>
     <script src="~/assets/textformater/textformatter.js"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
     <script src="~/assets/js/grids/comman.js"></script>
-
     <script>
         $(document).ready(function () {
 
@@ -245,9 +234,6 @@
 
     </script>
 
-
 }
-
-
 
 

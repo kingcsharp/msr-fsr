@@ -213,9 +213,9 @@
                 align: 'left'
             },
             {
-                label: 'Unused Ammount',
-                name: 'UnusedAmmount',
-                index: 'UnusedAmmount',
+                label: 'Unused Amount',
+                name: 'UnusedAmount',
+                index: 'UnusedAmount',
                 colmenu: false,
                 width: 140,
                 editable: true,

@@ -58,7 +58,7 @@
                                     @Html.ValidationMessageFor(model => model.ReferenceTheory, "", new { @class = "text-danger" })
                                 </div>
                                 <div style="width: 3%; float: right;">
-                                    <span class="data-toggle=" data-call-back-id="ReferenceTheory" data-toggle="modal" data-target="#select-theory"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceTheory"><i class="icon fa fa-trash"></i></span>
+                                    <span class="data-toggle=" data-call-back-id="ReferenceTheory" data-toggle="modal" data-target="#select-theory"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceTheory"><i class="icon fa fa-trash-o"></i></span>
                                 </div>
                             </div>
                         </div>
@@ -73,7 +73,7 @@
                                     @Html.ListBoxFor(m => m.ReferenceObject, Model.ListReferenceObjects, new { @class = "form-control submitselect", multiple = "multiple" })
                                     @Html.ValidationMessageFor(model => model.ReferenceObject, "", new { @class = "text-danger" })
                                 </div>
-                                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceObject" data-toggle="modal" data-target="#select-objects"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceObject"><i class="icon fa fa-trash"></i></span> </div>
+                                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceObject" data-toggle="modal" data-target="#select-objects"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceObject"><i class="icon fa fa-trash-o"></i></span> </div>
                             </div>
                         </div>
 
@@ -84,7 +84,7 @@
                                     @Html.ListBoxFor(m => m.ReferenceFiles, Model.ListReferenceFiles, new { @class = "form-control submitselect", multiple = "multiple" })
                                     @Html.ValidationMessageFor(model => model.ReferenceFiles, "", new { @class = "text-danger" })
                                 </div>
-                                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceFiles" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceFiles"><i class="icon fa fa-trash"></i></span> </div>
+                                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceFiles" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceFiles"><i class="icon fa fa-trash-o"></i></span> </div>
                             </div>
                         </div>
                         <div class="form-group" >
@@ -126,7 +126,7 @@
 </div>
 
 @section scripts
-    {
+{
     <script src="~/assets/textformater/ValidateDocumentSubmit.js"></script>
     <script src="~/assets/textformater/textformatter.js"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>

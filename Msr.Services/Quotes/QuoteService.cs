@@ -1,22 +1,34 @@
 ﻿using System;
 using System.Linq;
+using System.Web.Mvc;
 using System.Web.Script.Serialization;
+using EntityFrameworkExtras.EF6;
 using Msr.Services.Quotes.ViewModels;
 using Msr.Models.CustomerRequirements;
+using Msr.Models.Parts;
 using Msr.Repositories;
+using Msr.Services.Parts;
+using Msr.Services.Parts.Procedures;
+using Msr.Services.Parts.ViewModels;
+using Msr.Services.Users.Messages;
+using Msr.Services.Workflows;
+using Msr.Services.Workflows.ViewModels;
 
 namespace Msr.Services.Quotes
 {
     public class QuoteService
     {
         private readonly MsrDbContext _dbContext;
+        private readonly WorkflowService _workflowService;
+
 
         public QuoteService()
         {
             _dbContext = new MsrDbContext();
+            _workflowService = new WorkflowService();
         }
 
-        public ResultNotification<string> Create(FreeFormQuoteViewModel model)
+        public ResultNotification<string> Create(FreeFormQuoteViewModel model, LoggedUserIdResult currentUser)
         {
             var response = new ResultNotification<string>();
 
@@ -26,7 +38,7 @@ namespace Msr.Services.Quotes
                 {
                     var entity = new CustomerSubmittedRequirement
                     {
-                        Company = model.Customer,
+                        Company = model.Customer.Trim(),
                         LeadTime = item.LeadTime,
                         Price = item.Price,
                         Description = item.Description,
@@ -44,10 +56,41 @@ namespace Msr.Services.Quotes
                     {
                         entity.PartId = part.ObjectId;
                     }
+                    else
+                    {
+                        var partModel = new AddPartViewModel
+                        {
+                            CompanyPartNumber = item.CustomerPartNo,
+                            Name = item.CustomerPartNo,
+                            NTLogin = currentUser.Id
+                        };
+
+
+                        var partservice = new PartsService();
+
+                        response = partservice.Create(partModel);
+
+                        if (!response.HasErrors())
+                        {
+                            var checkOutObject = _workflowService.CheckOutObject(response.Entity, partModel.NTLogin);
+
+                            var submitWorkflow = new SubmitWorkflowViewModel
+                            {
+                                CompletionStart = "APPROVED",
+                                LoggedUserIdResult = currentUser,
+                                ObjectId = checkOutObject.Entity,
+                                ApprovalWorflowId = "37",
+                                Comment = "Part approved by system",
+                                LoginId = currentUser.Id
+                            };
+                            _workflowService.SubmitWorkflow(submitWorkflow);
+
+                        }
+                    }
 
                     model.ExistingProcess = model.ExistingProcess.Trim();
 
-                    var procedure = _dbContext.Procedures.FirstOrDefault(x => x.Name == model.ExistingProcess && x.Status == "APPROVED");
+                    var procedure = _dbContext.Procedures.FirstOrDefault(x => x.Id == model.ExistingProcess && x.Status == "APPROVED");
 
                     if (procedure != null)
                     {
@@ -75,6 +118,10 @@ namespace Msr.Services.Quotes
             var requirment = _dbContext.CustomerSubmittedRequirements.SingleOrDefault(x => x.Id == id);
 
             return requirment;
+        }
+        public PartsView GetPartById(string id)
+        {
+            return _dbContext.PartsViews.Where(x => x.ObjectId == id).SingleOrDefault();
         }
     }
 }

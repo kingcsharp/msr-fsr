@@ -58,6 +58,14 @@ namespace Msr.Services.PurchesOrder
             return new List<ProductsCanPurchase>();
         }
 
+        public List<string> GetProductsById(string accountObjId)
+        {
+            var result = _dbContext.Database.SqlQuery<string>($"SELECT ORDER_ID FROM A_V_ACCOUNTS_PURCHASABLE_ORDERS WHERE ACCOUNT_OBJECT_ID = '{accountObjId}' ORDER BY NAME").ToList();
+
+            return result;
+        }
+
+
         public List<SelectFile> PurchasedOrderProducts(string id)
         {
             var result = _dbContext.Database.SqlQuery<SelectFile>($"SELECT ORDER_ID AS ID,NAME FROM A_V_ACCOUNTS_PURCHASABLE_ORDERS WHERE ACCOUNT_OBJECT_ID = '{id}' ORDER BY NAME").ToList();

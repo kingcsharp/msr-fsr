@@ -423,7 +423,7 @@ namespace Answer.Web.Controllers
 
             foreach (var monitorTemplate in response.MonitorTemplateResult)
             {
-                monitorTemplate.Setup();
+                monitorTemplate.Setup(_equipmentMaintenanceService);
 
                 for (int i = 0; i < monitorTemplate.FailActionList.Count; i++)
                 {

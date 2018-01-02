@@ -103,13 +103,13 @@
         </div>
     </div>
 </div>
-
 @section scripts
 {
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             $(".select").select2();
         });
     </script>
-
 }

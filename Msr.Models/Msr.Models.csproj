@@ -123,6 +123,7 @@
     <Compile Include="EquipmentMaintenances\EquipmentMaintenanceView.cs" />
     <Compile Include="Files\FileView.cs" />
     <Compile Include="Files\ListFileView.cs" />
+    <Compile Include="Invoices\InvoiceView.cs" />
     <Compile Include="Locations\LocationView.cs" />
     <Compile Include="Monitor\MonitorView.cs" />
     <Compile Include="Notes\Note.cs" />

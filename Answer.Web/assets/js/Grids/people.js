@@ -2,7 +2,7 @@
 
     $.jgrid.defaults.styleUI = 'Bootstrap';
 
-    
+
 
     $("#jqGrid").jqGrid({
         url: url,
@@ -296,7 +296,7 @@
             contentType: "application/json; charset=utf-8",
             dataType: "json"
         },
-        serializeRowData: function(postdata) {
+        serializeRowData: function (postdata) {
             return JSON.stringify(postdata);
         },
         viewrecords: true, // show the current page, data rang and total records on the toolbar
@@ -313,8 +313,8 @@
         editurl: 'clientArray',
         autowidth: true,
         colMenu: true,
-      
-        gridComplete: function() {
+
+        gridComplete: function () {
             $('.editpeople').on('click',
                 function (e) {
                     e.preventDefault();
@@ -323,7 +323,7 @@
                     var callBackName = $(this).data('call-back-name');
 
                     eModal.confirm(
-                            'Are You Sure? Locking prevents others from editing. Checking out create the next revision for you to edit ' + callBackName + ' ?','Confirmation Edit')
+                            'Are You Sure? Locking prevents others from editing. Checking out create the next revision for you to edit ' + callBackName + ' ?', 'Confirmation Edit')
                         .then(confirmCallback, optionalCancelCallback);
 
                     function confirmCallback() {
@@ -338,15 +338,15 @@
                 });
 
         }
-   
-});
+
+    });
     $('#jqGrid').navGrid("#jqGridPager", {
-        search: false, // show search button on the toolbar
-        add: false,
-        edit: false,
-        del: false,
-        refresh: true
-    },
+            search: false, // show search button on the toolbar
+            add: false,
+            edit: false,
+            del: false,
+            refresh: true
+        },
         {},  // edit options
         {}, // add options
         {}, // delete options
@@ -358,10 +358,10 @@
         searchOperators: true
     });
 
-   
+
     function peopleEditFormatter(cellvalue, options, rowObject) {
-      
-        var editButton = '<a href="/People/Edit/' + rowObject.ObjectId + '" data-call-back-id ="' + rowObject.ObjectId +'"  class="btn btn-xs btn-success editpeople" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
+
+        var editButton = '<a href="/People/Edit/' + rowObject.ObjectId + '" data-call-back-id ="' + rowObject.ObjectId + '"  class="btn btn-xs btn-success editpeople" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
 
         var deleteButton = '';
         var buttonWorkflowLeft = '';
@@ -377,7 +377,7 @@
             buttonWorkflowRight = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-success" title="Proceed to approval workflow for release." style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-right"></i></a>';
         } else {
             url = '/workflow/delete?objId=' + rowObject.ObjectId + '&returnUrl=' + returnUrl;
-            deleteButton = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-danger" title="Proceed to delete." style="margin:2px;font-size: .8em;"><i class="fa fa fa-trash"></i></a>';
+            deleteButton = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-danger" title="Proceed to delete." style="margin:2px;font-size: .8em;"><i class="fa fa fa-trash-o"></i></a>';
         }
         if (rowObject.Status == 'APPROVED') {
             subordinate = '<a  title="SubOrdinate" href="/People/Add/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-list-alt"></i></a>';
@@ -385,7 +385,7 @@
         return editButton + deleteButton + buttonWorkflowLeft + buttonWorkflowRight + subordinate;
 
     }
-   
+
     $('#search').click(function () {
 
         jQuery("#jqGrid").setGridParam({

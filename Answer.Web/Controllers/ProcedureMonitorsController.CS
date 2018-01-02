@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using Msr.Services.jqGrid;
 using Msr.Services.Procedures;
 using Msr.Services.Procedures.ViewModels;
+using Msr.Services.EquipmentMaintenances;
 
 namespace Answer.Web.Controllers
 {
@@ -89,7 +90,7 @@ namespace Answer.Web.Controllers
 
             model.Related_Object_Id = id;
 
-            model.Setup();
+            model.Setup(new EquipmentMaintenanceService());
 
             return View(model);
         }
@@ -126,7 +127,7 @@ namespace Answer.Web.Controllers
 
             addMonitorForProcedureViewModel = addMonitorForProcedureViewModel.MapToDto(model);
 
-            addMonitorForProcedureViewModel.Setup();
+            addMonitorForProcedureViewModel.Setup(new EquipmentMaintenanceService());
 
             return View(addMonitorForProcedureViewModel);
         }

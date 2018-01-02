@@ -4,7 +4,8 @@ using System.Linq;
 using System.Web.Mvc;
 using Msr.Models.PurchesOrder;
 using System.ComponentModel.DataAnnotations;
-using Msr.Models.Comman;
+using System.Net.Http.Headers;
+
 
 namespace Msr.Services.PurchesOrder.ViewModels
 {
@@ -15,10 +16,11 @@ namespace Msr.Services.PurchesOrder.ViewModels
             ClientList = new List<SelectListItem>();
             ProductsList = new List<SelectListItem>();
             Products = new List<string>();
+
         }
         public string Id { get; set; }
         public string ObjId { get; set; }
-      
+
         [Required]
         public string Client { get; set; }
         [Required]
@@ -29,7 +31,7 @@ namespace Msr.Services.PurchesOrder.ViewModels
         [Required]
         [Display(Name = "Reference Cust PO")]
         public string RefCustPO { get; set; }
-     //   [Required]
+        //   [Required]
         public string SupplierDepartment { get; set; }
         public string CustRefNum { get; set; }
         [Required]
@@ -60,14 +62,14 @@ namespace Msr.Services.PurchesOrder.ViewModels
         public string ClientName { get; set; }
         public string NTLogin { get; set; }
         public string HISTORY_REF_ID { get; set; }
-        
+
         public List<SelectListItem> ProductsList { get; set; }
         public List<SelectListItem> ClientList { get; set; }
         public List<SelectListItem> AccountTypeList { get; set; }
         public List<SelectListItem> SupplierDepartmentList { get; set; }
         public List<SelectListItem> InvoiceTriggerList { get; set; }
         public List<SelectListItem> InvoicePeriodTypeList { get; set; }
-        
+
         public void Setup(PurchesOrderService purchesOrderService)
         {
             ClientList = purchesOrderService.GetCompaniesList().Select(x => new SelectListItem
@@ -91,7 +93,8 @@ namespace Msr.Services.PurchesOrder.ViewModels
                 Value = x.Order_id.ToString()
             }).OrderBy(o => o.Text).ToList();
 
-         
+            Products = purchesOrderService.GetProductsById(accountObjId: ObjId);
+
             AccountTypeList = new List<SelectListItem>
             {
                 new SelectListItem

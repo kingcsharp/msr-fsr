@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 using Msr.Services.Parts.ViewModels;
 using Msr.Models.CustomerRequirements;
 using Msr.Services.Procedures.ViewModels;
 using Msr.Services.Procedures.Messages;
+using Msr.Services.Quotes.ViewModels;
+using Newtonsoft.Json;
 
 namespace Msr.Services.ProductionPlanning.ViewModels
 {
@@ -104,6 +107,20 @@ namespace Msr.Services.ProductionPlanning.ViewModels
                 Text = x.StepTitle,
                 Value = x.Id.ToString()
             }).OrderBy(o => o.Text).ToList();
+
+            var jsondata = productionPlanningService.Getjsondata(id: Id).FirstOrDefault();
+
+            if (jsondata != null)
+            {
+                FreeFormQuoteViewModel result = JsonConvert.DeserializeObject<FreeFormQuoteViewModel>(jsondata);
+                var name = result.Customer;
+                var procedureId = result.ExistingProcess;
+                var customerPartNo = result.QuoteItems.FirstOrDefault().CustomerPartNo;
+                ProductSupplierId = productionPlanningService.GetSupplierIdByName(name: name);
+                ProductProcedureId = productionPlanningService.GetProceduretIdById(id: procedureId);
+                ProductPartId = productionPlanningService.GetPartIdByCompanyPartNumber(companyPartNumber: customerPartNo);
+            }
+
         }
 
 

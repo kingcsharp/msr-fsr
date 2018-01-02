@@ -194,6 +194,7 @@
     <Compile Include="Controllers\ApprovalStagesController.cs" />
     <Compile Include="Controllers\ApprovalWorkflowsController.cs" />
     <Compile Include="Controllers\EquipmentMaintenanceController.cs" />
+    <Compile Include="Controllers\InvoicesController.cs" />
     <Compile Include="Controllers\PeopleController.cs" />
     <Compile Include="Controllers\CompaniesController.cs" />
     <Compile Include="Controllers\DocumentsController.cs" />
@@ -615,6 +616,7 @@
     <Content Include="assets\js\grids\buyer_grid.js" />
     <Content Include="assets\js\grids\comman.js" />
     <Content Include="assets\js\grids\equipment-maintenance.js" />
+    <Content Include="assets\js\grids\invoices.js" />
     <Content Include="assets\js\grids\labors-step.js" />
     <Content Include="assets\js\grids\delivery.js" />
     <Content Include="assets\js\grids\PartProductStay.js" />
@@ -1180,6 +1182,11 @@
     <Content Include="Views\PurchaseOrder\Purchases.cshtml" />
     <Content Include="Views\PurchaseOrder\PurchaseOrderMultifill.cshtml" />
     <Content Include="Views\PurchaseOrder\PurchaseOrderMultifillPage.cshtml" />
+    <Content Include="Views\Invoices\Detail.cshtml" />
+    <Content Include="Views\Invoices\EditCreditDebit.cshtml" />
+    <Content Include="Views\Invoices\Index.cshtml" />
+    <Content Include="Views\Invoices\InvoiceListDetail.cshtml" />
+    <Content Include="Views\Invoices\PrintableInvoice.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
