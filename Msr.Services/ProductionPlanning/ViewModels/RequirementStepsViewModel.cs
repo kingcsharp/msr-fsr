@@ -110,7 +110,7 @@ namespace Msr.Services.ProductionPlanning.ViewModels
 
             var jsondata = productionPlanningService.Getjsondata(id: Id).FirstOrDefault();
 
-            if (jsondata != null)
+            if (jsondata != null && ProductStatus != "APPROVED")
             {
                 FreeFormQuoteViewModel result = JsonConvert.DeserializeObject<FreeFormQuoteViewModel>(jsondata);
                 var name = result.Customer;

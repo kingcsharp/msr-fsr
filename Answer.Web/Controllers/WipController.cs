@@ -102,7 +102,7 @@ namespace Answer.Web.Controllers
                         if (DateTime.TryParse(rule.data, out value))
                         {
                             totalRows = totalRows.Where(q => q.StDate.HasValue && q.StDate.Value.Day == value.Day &&
-                                        q.StDate.Value.Month == value.Month && q.StDate.Value.Year == value.Year);
+                                                             q.StDate.Value.Month == value.Month && q.StDate.Value.Year == value.Year);
                         }
                     }
                     else if (rule.field == nameof(WorkOrderView.DueDate))
@@ -111,7 +111,7 @@ namespace Answer.Web.Controllers
                         if (DateTime.TryParse(rule.data, out value))
                         {
                             totalRows = totalRows.Where(q => q.DueDate.HasValue && q.DueDate.Value.Day == value.Day &&
-                                        q.DueDate.Value.Month == value.Month && q.DueDate.Value.Year == value.Year);
+                                                             q.DueDate.Value.Month == value.Month && q.DueDate.Value.Year == value.Year);
                         }
                     }
                     else if (rule.field == nameof(WorkOrderView.ProcName))
@@ -194,7 +194,7 @@ namespace Answer.Web.Controllers
 
         public ActionResult AddNcrModel(string parentId, string fillId)
         {
-            var vm  = new AddNcrViewModel();
+            var vm = new AddNcrViewModel();
             vm.ParentId = parentId;
             vm.FillId = fillId;
 
@@ -305,16 +305,16 @@ namespace Answer.Web.Controllers
             var viewModel = new WipListViewModel();
             viewModel.CurrentUser = currentUser;
 
-            viewModel.WoItemsInprogress  = _orderService.GetWorkOrderQueryable()
-                    .Where(x => x.Status == WorkItemStatusConstants.Accepted && x.SupplierId == currentUser.Root_Company && x.RequesteeId != currentUser.Id) 
-                    .OrderByDescending(o => o.DueDate)
-                    .ToList();
+            viewModel.WoItemsInprogress = _orderService.GetWorkOrderQueryable()
+                .Where(x => x.Status == WorkItemStatusConstants.Accepted && x.SupplierId == currentUser.Root_Company && x.RequesteeId != currentUser.Id)
+                .OrderByDescending(o => o.DueDate)
+                .ToList();
 
             var procs = viewModel.WoItemsInprogress.Select(p => p.ProcName).ToList();
 
-            viewModel.WoItemsByProcedures = _orderService.GetWorkOrderQueryable().Where(x=> procs.Contains(x.ProcName)).ToList();
+            viewModel.WoItemsByProcedures = _orderService.GetWorkOrderQueryable().Where(x => procs.Contains(x.ProcName)).ToList();
 
-            
+
             return PartialView("_WipListModal", viewModel);
         }
 
@@ -322,10 +322,10 @@ namespace Answer.Web.Controllers
         {
             var currentUser = GetCurrentUser();
 
-            var workItems =  _orderService.GetWorkOrderQueryable()
-                               .Where(x => x.RequesteeId == currentUser.Id)
-                               .OrderByDescending(o => o.DueDate)
-                               .ToList();
+            var workItems = _orderService.GetWorkOrderQueryable()
+                .Where(x => x.RequesteeId == currentUser.Id)
+                .OrderByDescending(o => o.DueDate)
+                .ToList();
 
             if (!id.HasValue)
             {
@@ -414,7 +414,7 @@ namespace Answer.Web.Controllers
 
             //checkMyRole(myRS("GROUP_REQUESTEE_ID")) or strNTLogin = myRS("REQUESTEE_ID") then
             //getButtons
-            if ((myRoles.Any(x => x.Role_Name == "Technician") && response.TaskEditDataResult.RequesteeId ==null) || response.TaskEditDataResult.RequesteeId == loggedUserId.Id)
+            if ((myRoles.Any(x => x.Role_Name == "Technician") && response.TaskEditDataResult.RequesteeId == null) || response.TaskEditDataResult.RequesteeId == loggedUserId.Id)
             {
                 response.HasRole = true;
             }
@@ -473,7 +473,7 @@ namespace Answer.Web.Controllers
                     TempData["ErrorMesage"] = returnValue;
                 }
 
-                if(returnValue  == "NEW_TEXT")
+                if (returnValue == "NEW_TEXT")
                     return RedirectToAction("Details", new { id = monitorTemplate.FillId });//"../monitors/addNewTextResults.asp?TASK_ID="
             }
 
@@ -495,7 +495,7 @@ namespace Answer.Web.Controllers
         {
             var loggedUserId = GetCurrentUser().Id;
 
-           var result = _orderService.StepStart(stepId, loggedUserId, fillId);
+            var result = _orderService.StepStart(stepId, loggedUserId, fillId);
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
@@ -613,7 +613,7 @@ namespace Answer.Web.Controllers
         {
             _orderService.AddProcedureAsSubTask(objId, parentId, GetCurrentUser().Id);
 
-            return RedirectToAction("Details", new {id = fillId});
+            return RedirectToAction("Details", new { id = fillId });
         }
 
         public ActionResult AddEquipmentMaintenance(string id)
@@ -678,7 +678,14 @@ namespace Answer.Web.Controllers
 
             return RedirectToAction("Details", "Wip", new { id = id });
         }
+        [HttpPost]
+        public JsonResult CheckEquipmentStatusById(int? Id)
+        {
 
+            var equipmentMaintenance = _equipmentMaintenanceService.GetEquipmentsQueryable().Where(x => x.Id == Id).SingleOrDefault();
+
+            return Json(new { TroubleState = equipmentMaintenance.TroubleState }, JsonRequestBehavior.AllowGet);
+        }
 
         private List<DocumentView> GetDocViewModel(List<DocumentView> docs, OrderService orderService, int width)
         {

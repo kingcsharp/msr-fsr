@@ -70,7 +70,6 @@
         {
             <div class="form-group">
                 <label class="col-lg-2 control-label">Correct Answer:</label>
-
                 @if (@monitorTemplate.Yes_No_Answer == "1")
                 {
                     <div class="col-lg-2" style="font-weight: bold;">
@@ -83,7 +82,6 @@
                         No
                     </div>
                 }
-
             </div>
             <div class="form-group">
                 <label class="col-lg-2 control-label">Your Answer:</label>
@@ -213,9 +211,10 @@
         if (monitorTemplate.Monitor_Type == "EQUIPMENT")
         {
             <div class="form-group">
-                <label class="col-lg-2 control-label">Target_Object:</label>
+                <label class="col-lg-2 control-label">Target:</label>
                 <div class="col-lg-2">
-                    @Html.DropDownListFor(x => monitorTemplate.Target, monitorTemplate.EquipmentMaintenanceList, new { @class = "form-control select" })
+                    @Html.TextBoxFor(x => monitorTemplate.Target, new { @class = "form-control monitorTemplate_Target" })
+                    <span style="color:red" class="troubleStateMessage"></span>
                 </div>
             </div>
         }
@@ -306,6 +305,32 @@
             data: form.serialize(),
             success: function (data) {
                 location.reload();
+            },
+            error: function () {
+
+            }
+        });
+    });
+
+    $(".monitorTemplate_Target").on('change', function () {
+        var textbox = $(this);
+        var value = $(this).val();
+        //alert(value);
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("CheckEquipmentStatusById", "Wip")",
+            dataType: 'json',
+            data: { 'Id': value},
+            success: function (data) {
+                if (data.TroubleState == false) {
+                    $('.troubleStateMessage').css('color', 'red');
+                    $('.troubleStateMessage').text("Invalid Equipment.");
+                    textbox.val('');
+                }
+                else {
+                    $('.troubleStateMessage').css('color', 'green');
+                }
+
             },
             error: function () {
 
