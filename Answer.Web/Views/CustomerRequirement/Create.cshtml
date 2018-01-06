@@ -1,13 +1,16 @@
 ﻿
 @model Msr.Services.CustomerRequirements.ViewModel.CustomerRequirementViewModel
 @{
-    ViewBag.Title = "Requirements";
+    ViewBag.Title = "New Requirements";
 }
 <link href="~/assets/css/select2.min.css" rel="stylesheet" />
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="row">
-            <h2 class="page-header">Customer Requirements Form <button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#reqHelpModal" data-intro="For more help click the Help button" data-position="bottom">Help</button></h2>
+        <h2 class="page-header">
+            <span class="icon fa fa-plus-circle"></span>
+            New Requirements <button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#reqHelpModal" data-intro="For more help click the Help button" data-position="bottom">Help</button>
+        </h2>
             <div class="col-lg-12 col-md-11">
                 <div>@Html.Partial("Message")</div>
             </div>

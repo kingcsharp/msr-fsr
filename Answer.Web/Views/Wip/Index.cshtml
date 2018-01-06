@@ -1,6 +1,6 @@
 ﻿@model  Msr.Web.ViewModel.Engineering.EngineeringViewModel
 @{
-    ViewBag.Title = "Work Orders";
+    ViewBag.Title = "Wip Menu";
 }
 
 <link rel="stylesheet" href="//blueimp.github.io/Gallery/css/blueimp-gallery.min.css">
@@ -8,7 +8,8 @@
     <div class="side-body padding-top">
         <div class="row">
             <h2 class="page-header">
-                Work Orders <button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
+                <span class="icon fa fa-list"></span>
+                Wip Menu <button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
             </h2>
             <div class="col-lg-12">
                 @Html.Partial("Message")
