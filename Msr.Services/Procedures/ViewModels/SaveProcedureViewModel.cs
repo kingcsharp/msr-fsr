@@ -69,6 +69,8 @@ namespace Msr.Services.Procedures.ViewModels
 
         public int? Threshold { get; set; }
 
+        public string Root { get; set; }
+
         public List<string> ReferenceFiles { get; set; }
 
         public List<SelectListItem> VerbList { get; set; }

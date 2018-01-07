@@ -4,7 +4,6 @@ using System.Linq;
 using System.Web.Mvc;
 using Msr.Models.PurchesOrder;
 using System.ComponentModel.DataAnnotations;
-using System.Net.Http.Headers;
 
 
 namespace Msr.Services.PurchesOrder.ViewModels
@@ -49,8 +48,12 @@ namespace Msr.Services.PurchesOrder.ViewModels
         [Required]
         [Display(Name = "First Invoice Date")]
         public DateTime? FirstInvoiceDate { get; set; }
+
+        [Range(0, int.MaxValue, ErrorMessage = "Please enter valid integer Number")]
         public int? GracePeriod { get; set; }
         public float? LatePaymentFee { get; set; }
+
+        [Range(0, int.MaxValue, ErrorMessage = "Please enter valid integer Number")]
         public int? ReApplyFrequency { get; set; }
         public List<string> Products { get; set; }
         public string Save { get; set; }

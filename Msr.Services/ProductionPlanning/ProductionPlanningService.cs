@@ -99,7 +99,9 @@ namespace Msr.Services.ProductionPlanning
 
                 if (!string.IsNullOrWhiteSpace(submit))
                 {
-                    var procedureSteps = _proceduresService.GetStepsData(model.ProductProcedureId, model.LoginId);
+                    var procedureObjectId = GetProceduretById(model.ProductProcedureId).Value;
+
+                    var procedureSteps = _proceduresService.GetStepsData(procedureObjectId, model.LoginId);
 
                     foreach (var step in model.Steps)
                     {
@@ -280,7 +282,12 @@ namespace Msr.Services.ProductionPlanning
             return result;
 
         }
+        public SelectFile GetProceduretById(string id)
+        {
+            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT DISTINCT SHOWNAME as Show,OBJECT_ID as Value   FROM A_V_PROCEDURES_APPROVED_DATA_DROP_DOWN WHERE ID =" + id + "").SingleOrDefault();
 
+            return result;
+        }
         public List<SelectFile> GetProceduretList()
         {
             var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT DISTINCT SHOWNAME as Show,ID as Value   FROM A_V_PROCEDURES_APPROVED_DATA_DROP_DOWN WHERE ( CREATING_CO = '2'  ) AND ((NAME LIKE '%%' ) )    ORDER BY SHOWNAME").ToList();

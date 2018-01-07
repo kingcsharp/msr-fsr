@@ -59,19 +59,19 @@
                 url: '/PurchaseOrder/ProductsList/' + clientValue + '?supplierCo=' + supplierCoValue,
                 dataType: 'JSON',
                 success: function (data) {
-                    
-                    $("#Products").select2("val", "");
 
+                    $("#Products").select2("val", "");
+                    $('#Products').html('');
                     $.each(data, function (index, item) {
                         var products = $('#Products');
                         products.append("<option value='" + item.Value + "'>" + item.Text + "</option>");
 
                         $('#product-message').html('');
                     });
-                    
+
                     if (data.length === 0) {
                         $('#product-message').html('No products found');
-                    } 
+                    }
 
                 },
                 error: function () {

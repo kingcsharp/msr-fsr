@@ -162,7 +162,15 @@ namespace Answer.Web.Controllers
             var vm = new RequirementStepsViewModel();
             vm.Read(_productionPlanService, requirment);
 
-            var procedureSteps = _proceduresService.GetStepsData(vm.ProductProcedureId, currentUser.Id);
+            var procedureObjectId = "";
+
+            if (!string.IsNullOrWhiteSpace(vm.ProductProcedureId))
+            {
+                vm.OldProductProcedureId = vm.ProductProcedureId;
+                procedureObjectId = _productionPlanService.GetProceduretById(vm.ProductProcedureId).Value;
+            }
+
+            var procedureSteps = _proceduresService.GetStepsData(procedureObjectId, currentUser.Id);
             vm.Setup(_productionPlanService, procedureSteps);
 
             if (!string.IsNullOrWhiteSpace(vm.ProductProcedureId) && !vm.Steps.Any())
@@ -198,7 +206,9 @@ namespace Answer.Web.Controllers
 
             viewModel.Read(_productionPlanService, requirment);
 
-            var procedureSteps = _proceduresService.GetStepsData(viewModel.ProductProcedureId, currentUser.Id);
+
+            var procedureObjectId = _productionPlanService.GetProceduretById(viewModel.ProductProcedureId).Value;
+            var procedureSteps = _proceduresService.GetStepsData(procedureObjectId, currentUser.Id);
             viewModel.Setup(_productionPlanService, procedureSteps);
 
             if (!string.IsNullOrWhiteSpace(viewModel.ProductProcedureId) && !viewModel.Steps.Any())
@@ -228,7 +238,10 @@ namespace Answer.Web.Controllers
             if (vm.ProductProcedureId != vm.OldProductProcedureId)
             {
                 vm.OldProductProcedureId = vm.ProductProcedureId;
-                var procedureSteps = _proceduresService.GetStepsData(vm.ProductProcedureId, currentUser.Id);
+
+                var procedureObjectId = _productionPlanService.GetProceduretById(vm.ProductProcedureId).Value;
+
+                var procedureSteps = _proceduresService.GetStepsData(procedureObjectId, currentUser.Id);
 
                 vm.Steps = new List<RequirementStepsDetailsViewModel>();
 

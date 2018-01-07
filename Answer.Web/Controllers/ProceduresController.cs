@@ -1099,14 +1099,14 @@ namespace Answer.Web.Controllers
                 TempData["ErrorMessage"] = "Something went wrong.";
                 return RedirectToAction("Steps", "Procedures", new
                 {
-                    id = model.AddMonitorForProcedureViewModel.Step_Id,
+                    id = model.AddMonitorForProcedureViewModel.Related_Object_Id,
                     ProdecureName = model.AddMonitorForProcedureViewModel.ProcedureName
                 });
             }
 
             return RedirectToAction("Steps", "Procedures", new
             {
-                id = model.AddMonitorForProcedureViewModel.Step_Id,
+                id = model.AddMonitorForProcedureViewModel.Related_Object_Id,
                 ProdecureName = model.AddMonitorForProcedureViewModel.ProcedureName
             });
         }

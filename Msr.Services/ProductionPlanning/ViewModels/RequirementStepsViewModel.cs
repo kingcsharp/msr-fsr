@@ -108,18 +108,7 @@ namespace Msr.Services.ProductionPlanning.ViewModels
                 Value = x.Id.ToString()
             }).OrderBy(o => o.Text).ToList();
 
-            var jsondata = productionPlanningService.Getjsondata(id: Id).FirstOrDefault();
 
-            if (jsondata != null && ProductStatus != "APPROVED")
-            {
-                FreeFormQuoteViewModel result = JsonConvert.DeserializeObject<FreeFormQuoteViewModel>(jsondata);
-                var name = result.Customer;
-                var procedureId = result.ExistingProcess;
-                var customerPartNo = result.QuoteItems.FirstOrDefault().CustomerPartNo;
-                ProductSupplierId = productionPlanningService.GetSupplierIdByName(name: name);
-                ProductProcedureId = productionPlanningService.GetProceduretIdById(id: procedureId);
-                ProductPartId = productionPlanningService.GetPartIdByCompanyPartNumber(companyPartNumber: customerPartNo);
-            }
 
         }
 
@@ -168,6 +157,33 @@ namespace Msr.Services.ProductionPlanning.ViewModels
                     });
                 }
             }
+            else
+            {
+                var jsondata = productionPlanService.Getjsondata(id: Id).FirstOrDefault();
+
+                if (jsondata != null && ProductStatus != "APPROVED")
+                {
+                    FreeFormQuoteViewModel result = JsonConvert.DeserializeObject<FreeFormQuoteViewModel>(jsondata);
+
+                    var name = result.Customer;
+                    var procedureId = result.ExistingProcess;
+                    var customerPartNo = result.QuoteItems.FirstOrDefault().CustomerPartNo;
+
+                    if (string.IsNullOrWhiteSpace(ProductSupplierId))
+                    {
+                        ProductSupplierId = productionPlanService.GetSupplierIdByName(name: name);
+                    }
+                    if (string.IsNullOrWhiteSpace(ProductProcedureId))
+                    {
+                        ProductProcedureId = productionPlanService.GetProceduretIdById(id: procedureId);
+                    }
+                    if (string.IsNullOrWhiteSpace(ProductPartId))
+                    {
+                        ProductPartId = productionPlanService.GetPartIdByCompanyPartNumber(companyPartNumber: customerPartNo);
+                    }
+                }
+            }
+
         }
     }
 }
