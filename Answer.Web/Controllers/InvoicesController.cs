@@ -2,13 +2,20 @@
 using Msr.Services.Invoices;
 using Msr.Services.Invoices.ViewModel;
 using Msr.Services.jqGrid;
+using Msr.Services.PurchesOrder;
 using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.IO;
 using System.Linq;
+using System.Web.Helpers;
 using System.Web.Mvc;
-
+using System.Web.UI;
+using System.Web.UI.WebControls;
 namespace Answer.Web.Controllers
 {
-    public class InvoicesController :  BaseController
+    public class InvoicesController : BaseController
     {
         private readonly InvoicesService _invoicesService;
 
@@ -20,19 +27,13 @@ namespace Answer.Web.Controllers
         public ActionResult Index()
         {
             var viewModel = new InvoiceViewModel();
-            viewModel.NewItemsAmt = _invoicesService.GetInvoicesTotalDebitAmount();
-            viewModel.AmtPaid = _invoicesService.GetInvoicesTotalPaidAmount();
 
-           if(viewModel.AmtPaid == null)
-            {
-                viewModel.AmtPaid =Convert.ToDecimal("0.00");
-            }
-            ViewBag.ActiveClass = "Invoices";
+            ViewBag.ActiveClass = "Invoice";
 
             return View(viewModel);
         }
-        
-       public ActionResult InvoicesData(JqGridParam param)
+
+        public ActionResult InvoicesData(JqGridParam param)
         {
 
             var totalRows = _invoicesService.GetInvoicesQueryable();
@@ -41,33 +42,26 @@ namespace Answer.Web.Controllers
             {
                 foreach (var rule in param.where.rules)
                 {
-                    if (rule.field == nameof(InvoiceView.InvoiceId))
-                    {
-                        totalRows = totalRows.Where(x => x.InvoiceId == rule.data.ToLower());
-                    }
-                    else if (rule.field == nameof(InvoiceView.Status))
+
+                    if (rule.field == nameof(InvoiceView.Status))
                     {
                         totalRows = totalRows.Where(x => x.Status.ToLower().Contains(rule.data.ToLower()));
                     }
-                    else if (rule.field == nameof(InvoiceView.SupplierName))
+                    else if (rule.field == nameof(InvoiceView.CustPo))
                     {
-                        totalRows = totalRows.Where(x => x.SupplierName.ToLower().Contains(rule.data.ToLower()));
+                        totalRows = totalRows.Where(x => x.CustPo.ToLower().Contains(rule.data.ToLower()));
                     }
-                    else if (rule.field == nameof(InvoiceView.PoNumber))
+                    else if (rule.field == nameof(InvoiceView.Client))
                     {
-                        totalRows = totalRows.Where(x => x.PoNumber.ToLower().Contains(rule.data.ToLower()));
+                        totalRows = totalRows.Where(x => x.Client.ToLower().Contains(rule.data.ToLower()));
                     }
-                    else if (rule.field == nameof(InvoiceView.ReferencePo))
+                    else if (rule.field == nameof(InvoiceView.Description))
                     {
-                        totalRows = totalRows.Where(x => x.ReferencePo.ToLower().Contains(rule.data.ToLower()));
+                        totalRows = totalRows.Where(x => x.Description.ToLower().Contains(rule.data.ToLower()));
                     }
-                    else if (rule.field == nameof(InvoiceView.CustPurchNum))
+                    else if (rule.field == nameof(InvoiceView.InvoiceNumber))
                     {
-                        totalRows = totalRows.Where(x => x.CustPurchNum.ToLower().Contains(rule.data.ToLower()));
-                    }
-                    else if (rule.field == nameof(InvoiceView.AcctName))
-                    {
-                        totalRows = totalRows.Where(x => x.AcctName.ToLower().Contains(rule.data.ToLower()));
+                       totalRows = totalRows.Where(x => x.InvoiceNumber.ToLower().Contains(rule.data.ToLower()));
                     }
 
                     else if (rule.field == nameof(InvoiceView.InvoiceDate))
@@ -80,11 +74,11 @@ namespace Answer.Web.Controllers
                                                              x.InvoiceDate.Year == value.Year);
                         }
                     }
-                   
+
                 }
             }
 
-            var orderBy = nameof(InvoiceView.InvoiceId);
+            var orderBy = nameof(InvoiceView.Id);
 
             if (!string.IsNullOrWhiteSpace(param.sortColumn))
             {
@@ -119,149 +113,114 @@ namespace Answer.Web.Controllers
             return Json(json, JsonRequestBehavior.AllowGet);
         }
 
-       [HttpGet]
-       public ActionResult Detail(string id)
-
+        [HttpPost]
+        public ActionResult InvoiceModelDetail(string id)
         {
-            var invoiceDetail = new InvoiceDetailViewModel();
+            var invoiceViewModel = new InvoiceViewModel();
 
-            invoiceDetail = _invoicesService.InvoiceDetailById(id);
+            invoiceViewModel.invoiceDetailList = _invoicesService.InvoiceItemsDetailListById(id).ToList();
 
-            invoiceDetail.SetUp(new InvoicesService(), GetCurrentUser().Id);
+            return PartialView("_InvoiceItemsList", invoiceViewModel);
 
-            return View(invoiceDetail);
+        }
+
+        [HttpGet]
+        public ActionResult LoadInvoice()
+        {
+            var invoiceViewModel = new InvoiceViewModel();
+
+            invoiceViewModel.SetUp(new PurchesOrderService(), new InvoicesService());
+
+            return PartialView("_InvoiceAddEditModel", invoiceViewModel);
+
+        }
+
+        [HttpGet]
+        public ActionResult LoadInvoiceById(int? id)
+        {
+            var invoiceViewModel = new InvoiceViewModel();
+
+            var model = _invoicesService.GetInvoicesQueryable().Where(x => x.Id == id).SingleOrDefault();
+
+            invoiceViewModel.invoiceDetailList = _invoicesService.InvoiceItemsDetailListById(model.CustPo).ToList();
+
+            invoiceViewModel = invoiceViewModel.MapToDto(model);
+
+            invoiceViewModel.SetUp(new PurchesOrderService(), new InvoicesService());
+
+            return PartialView("_InvoiceAddEditModel", invoiceViewModel);
+
         }
 
         [HttpPost]
-        public ActionResult Detail(InvoiceDetailViewModel model,string ButtonType)
+        public ActionResult Create(InvoiceViewModel model)
         {
-            var invoiceService = new InvoicesService();
 
-            if (ModelState.IsValid)
+            var currentUser = GetCurrentUser();
+            model.Supplier = currentUser.Root_Company;
+            if (model.Id == null)
             {
-                var response = invoiceService.Create(model,GetCurrentUser().Id);
-
+                var response = _invoicesService.Create(model: model);
                 if (!response.HasErrors())
                 {
-                    TempData["SuccessMessage"] = "Invoice has been created successfully.";
-
-                    return RedirectToAction("Detail", "Invoices", model.INVOICE_ID);
+                    TempData["SuccessMessage"] = "Invoice Created Successfully";
                 }
                 else
                 {
-                    TempData["ErrorMessage"] = "Something went wrong.";
-
-                    model.SetUp(new InvoicesService(), GetCurrentUser().Id);
-
-                    return View(model);
+                    TempData["SuccessMessage"] = "Something Went Wrong";
                 }
-
             }
-
-            model.SetUp(new InvoicesService(), GetCurrentUser().Id);
-
-            return View(model);
-        }
-
-
-        [HttpPost]
-        public ActionResult InvoiceToCustomer(string invoiceId,string accId,DateTime? invoiceDate,DateTime? dueDate)
-        {
-            var invoiceDetail = new InvoiceDetailViewModel();
-            var responce = _invoicesService.SendInvoiceToCustomer(invoiceId, accId, invoiceDate, dueDate,GetCurrentUser().Id);
-
-            return Json(responce, JsonRequestBehavior.AllowGet);
-        }
-
-
-        [HttpGet]
-        public ActionResult InvoiceListDetail(string purchaseId)
-        {
-            var invoiceDetail = new InvoiceViewPurchaseItemViewModels();
-
-            invoiceDetail.SetUp(_invoicesService, purchaseId,GetCurrentUser().Id);
-
-            return View(invoiceDetail);
-        }
-
-        [HttpGet]
-        public ActionResult EditCreditDebit(string invoiceId,string accId,string id)
-        {
-            var model = new InvoiceDetailEditViewModel();
-
-            var invoiceService = new InvoicesService();
-            if(id!=null)
+            else
             {
-                model = invoiceService.InvoiceEditDetailById(id);
-                invoiceId = model.INVOICE_ID;
-                accId = model.ACCOUNT_ID;
-            }
-            model.SetUp(new InvoicesService(), invoiceId, accId, GetCurrentUser().Id);
-
-            return View(model);
-        }
-
-        [HttpPost]
-        public ActionResult EditCreditDebit(InvoiceDetailEditViewModel model,string ButtonType)
-       {
-            var invoiceService = new InvoicesService();
-           
-            if (ModelState.IsValid)
-            {
-                if(ButtonType== "saveAndClose")
+                var response = _invoicesService.Edit(model: model);
+                if (!response.HasErrors())
                 {
-                    var response = invoiceService.EditDebitCreadit(model, GetCurrentUser().Id);
-                    if (!response.HasErrors())
-                    {
-                        TempData["SuccessMessage"] = "Invoice has been created successfully.";
-
-                        return RedirectToAction("Detail", "Invoices", new { id=model.INVOICE_ID});
-                    }
+                    TempData["SuccessMessage"] = "Invoice Updated Successfully";
                 }
                 else
                 {
-                   var response = invoiceService.EditDebitCreadit(model, GetCurrentUser().Id);
-
-                    if (!response.HasErrors())
-                    {
-                        TempData["SuccessMessage"] = "Invoice has been created successfully.";
-
-                        return RedirectToAction("EditCreditDebit", "Invoices", new { model.INVOICE_ID, model.ACCOUNT_ID });
-                    }
+                    TempData["SuccessMessage"] = "Something Went Wrong";
                 }
             }
-                TempData["ErrorMessage"] = "Something went wrong.";
-            
-            model.SetUp(new InvoicesService(), model.INVOICE_ID, model.ACCOUNT_ID, GetCurrentUser().Id);
-
-            return View(model);
+            return RedirectToAction("index");
         }
-
-        [HttpGet]
-        public ActionResult PrintableInvoice(string id)
+        public ActionResult ExportFile(int? id, string items)
         {
-            var invoiceDetail = new InvoiceDetailViewModel();
+            var invoice = _invoicesService.GetInvoicesQueryable().Where(x => x.Id == id).SingleOrDefault();
+            MemoryStream memoryStream = new MemoryStream();
+            TextWriter tw = new StreamWriter(memoryStream);
 
-            invoiceDetail = _invoicesService.InvoiceDetailById(id);
+            var delimiter = "\t";
 
-            invoiceDetail.SetUp(new InvoicesService(), GetCurrentUser().Id);
+            tw.Write("Customer Number{0}", delimiter);
+            tw.Write("Account{0}", delimiter);
+            tw.Write("Invoice Date{0}", delimiter);
+            tw.Write("Invoice Number{0}", delimiter);
+            tw.Write("Po Number{0}", delimiter);
+            tw.Write("Item Code{0}", delimiter);
+            tw.Write("Description{0}", delimiter);
+            tw.Write("Qty{0}", delimiter);
+            tw.Write("Price{0}", delimiter);
+            tw.WriteLine(delimiter);
+            var itemsArray = items.Split(',');
 
-            return View(invoiceDetail);
-        }
-
-        public ActionResult InvoiceDetailDelete(string id,string invoiceId)
-        {
-            var response = _invoicesService.Delete(id: id, ntlogin: GetCurrentUser().Id);
-
-            if (response)
+            foreach (var item in itemsArray)
             {
-                TempData["SuccessMessage"] = "Invoice deleted successfully.";
-
-                return RedirectToAction("Detail", "Invoices",new { id = invoiceId });
+                var invoiceItem = _invoicesService.InvoiceItemDetailById(item);
+                tw.Write("{0}{1}", invoice.Client, delimiter);
+                tw.Write("{0}{1}", "1100", delimiter);
+                tw.Write("{0}{1}", invoice.InvoiceDate.ToString("d"), delimiter);
+                tw.Write("{0}{1}", invoice.InvoiceNumber, delimiter);
+                tw.Write("{0}{1}", invoice.CustPo, delimiter);
+                tw.Write("{0}{1}", invoiceItem.CUST_PURCH_NUM, delimiter);
+                tw.Write("{0}{1}", invoiceItem.DESCRIPTION, delimiter);
+                tw.Write("{0}{1}", invoiceItem.QTY, delimiter);
+                tw.Write("{0}{1}", invoiceItem.UNIT_PRICE, delimiter);
+                tw.WriteLine(delimiter);
             }
-
-            TempData["ErrorMessage"] = "Something went wrong.";
-            return RedirectToAction("Detail", "Invoices", new { id = invoiceId });
+            tw.Flush();
+            tw.Close();
+            return File(memoryStream.GetBuffer(), "application/text", string.Format("{0}.iif", invoice.InvoiceNumber));
         }
 
     }

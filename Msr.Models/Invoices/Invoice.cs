@@ -7,22 +7,25 @@ using System.Threading.Tasks;
 
 namespace Msr.Models.Invoices
 {
-    public class InvoiceView
+    public class Invoice
     {
-        public int? Id { get; set; }
+        [Required]
+        public int Id { get; set; }
 
+        [Required]
         public string Client { get; set; }
 
         public string Description { get; set; }
 
+        [Required]
         public string Status { get; set; }
 
+        [Required]
         public string CustPo { get; set; }
 
+        [Required]
         public DateTime InvoiceDate { get; set; }
-
-        public string InvoiceNumber { get; set; }
-
+        
         public Double? TotalDue { get; set; }
 
         public Double? Tax { get; set; }
@@ -31,6 +34,7 @@ namespace Msr.Models.Invoices
 
         public string Supplier { get; set; }
 
+        [Required]
         public string InvoiceClass { get; set; }
     }
 }

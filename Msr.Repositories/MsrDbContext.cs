@@ -32,6 +32,7 @@ using Msr.Models.ProductionPlanning;
 using Msr.Models.PurchesOrder;
 using Msr.Models.Invoices;
 
+
 namespace Msr.Repositories
 {
     public partial class MsrDbContext : DbContext
@@ -100,7 +101,9 @@ namespace Msr.Repositories
             modelBuilder.Entity<ProductionPlanningView>().ToTable("Portal_ProductionPlanningView");
             modelBuilder.Entity<CustomerSubmittedRequirement>().ToTable("Portal_CustomerSubmittedRequirement");
             modelBuilder.Entity<PurchaseView>().ToTable("Portal_PurchaseView");
-            modelBuilder.Entity<InvoiceView>().ToTable("Portal_InvoicesView");
+            modelBuilder.Entity<InvoiceView>().ToTable("Portal_InvoiceView");
+            modelBuilder.Entity<Invoice>().ToTable("Portal_Invoice");
+
         }
 
         public DbSet<AspNetUser> AspNetUsers { get; set; }
@@ -161,5 +164,6 @@ namespace Msr.Repositories
         public DbSet<CustomerSubmittedRequirement> CustomerSubmittedRequirements { get; set; }
         public DbSet<PurchaseView> PurchaseViews { get; set; }
         public DbSet<InvoiceView> InvoicesViews { get; set; }
+        public DbSet<Invoice> Invoices { get; set; }
     }
 }

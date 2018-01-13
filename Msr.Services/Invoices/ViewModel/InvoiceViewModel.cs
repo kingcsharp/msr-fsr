@@ -1,121 +1,144 @@
-﻿using System;
+﻿using Msr.Models.Invoices;
+using Msr.Services.PurchesOrder;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 
 namespace Msr.Services.Invoices.ViewModel
 {
-   public class InvoiceViewModel
+    public class InvoiceViewModel
     {
-        [Key]
-        public string InvoiceId { get; set; }
+        public InvoiceViewModel()
+        {
+            StatusList = new List<SelectListItem>();
+            ClientList = new List<SelectListItem>();
+            InvoiceIdList = new List<SelectListItem>();
+            PoList = new List<SelectListItem>();
+        }
+        public int? Id { get; set; }
 
-        public string AcctName { get; set; }
+        public string Client { get; set; }
 
-        public DateTime InvoiceDate { get; set; }
+        public string InvoiceDescription { get; set; }
 
         public string Status { get; set; }
 
-        public Decimal? AmtPaid { get; set; }
+        [Required]
+        public string CustPo { get; set; }
 
-        public Decimal? NewItemsAmt { get; set; }
+        public DateTime? InvoiceDate { get; set; }
 
-        public Decimal? PreviousBalance { get; set; }
+        public int InvoiceNumber { get; set; }
 
-        public Decimal? PaymentAmount { get; set; }
+        public Double? TotalDue { get; set; }
 
-        public Decimal? DisputedAmount { get; set; }
+        public Double? Tax { get; set; }
 
-        public Decimal? TotalDue { get; set; }
+        public string Items { get; set; }
 
-        public DateTime? DueDate { get; set; }
+        public string Supplier { get; set; }
 
-        public string AcctType { get; set; }
+        public string InvoiceId { get; set; }
 
-        public string CreatingCo { get; set; }
+        public string InvoiceClass { get; set; }
 
-        public string ReferencePo { get; set; }
+        public List<InvoiceDetailListViewModel> invoiceDetailList { get; set; }
 
-        public string ReferenceName { get; set; }
+        public List<SelectListItem> ClientList { get; set; }
 
-        public DateTime? OpenDate { get; set; }
+        public List<SelectListItem> StatusList { get; set; }
 
-        public DateTime? CloseDate { get; set; }
+        public List<SelectListItem> InvoiceIdList { get; set; }
 
-        public string SupplierCo { get; set; }
+        public List<SelectListItem> PoList { get; set; }
 
-        public string CustomerCo { get; set; }
+        public void SetUp(PurchesOrderService purchesOrderService, InvoicesService invoicesService)
+        {
 
-        public string CustomerBillCo { get; set; }
+            StatusList = new List<SelectListItem>
+            {
+                new SelectListItem
+                {
+                    Text = "INVOICED",
+                    Value = "INVOICED",
+                    Selected = true
+                },
+                new SelectListItem
+                {
+                    Text = "OUTSTANDING",
+                    Value = "OUTSTANDING"
+                },
+                new SelectListItem
+                {
+                    Text = "OVERDUE",
+                    Value = "OVERDUE"
+                },
+                new SelectListItem
+                {
+                    Text = "CLOSED",
+                    Value = "CLOSED"
+                }
+            };
 
-        public Decimal? TotalPurchaseLimit { get; set; }
+            InvoiceIdList = new List<SelectListItem>
+            {
+                  new SelectListItem
+                {
+                    Text = "PDX",
+                    Value = "03",
+                    Selected = true
+                },
+                new SelectListItem
+                {
+                    Text = "PHX",
+                    Value = "04"
+                },
+                new SelectListItem
+                {
+                    Text = "IRE",
+                    Value = "05"
+                },
 
-        public Decimal? CreaditLimit { get; set; }
+            };
 
-        public string SupplierName { get; set; }
 
-        public string CustomerName { get; set; }
+            PoList = invoicesService.InvoicePoList().Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.Id.ToString()
+            }).OrderBy(o => o.Text).ToList();
+            PoList.Insert(0, new SelectListItem() { Value = "", Text = @"Select Po" });
 
-        public string CustBillName { get; set; }
+            ClientList = purchesOrderService.GetCompaniesList().Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.Id.ToString()
+            }).OrderBy(o => o.Text).ToList();
+            ClientList.Insert(0, new SelectListItem() { Value = "", Text = @"Select Client" });
+        }
 
-        public string ProductId { get; set; }
+        public InvoiceViewModel MapToDto(InvoiceView invoiceView)
+        {
+            return new InvoiceViewModel
+            {
+                Id = invoiceView.Id,
+                Client = invoiceView.Client,
+                InvoiceDescription = invoiceView.Description,
+                Status = invoiceView.Status,
+                CustPo = invoiceView.CustPo,
+                TotalDue = invoiceView.TotalDue,
+                InvoiceDate = invoiceView.InvoiceDate,
+       
+                Tax = invoiceView.Tax,
+                InvoiceClass = invoiceView.InvoiceClass,
+                Items = invoiceView.Items,
+                Supplier = invoiceView.Supplier,
+            };
 
-        public string ProductName { get; set; }
-
-        public string AccountId { get; set; }
-
-        public Decimal? LateFees { get; set; }
-
-        public Decimal? TotalPurchases { get; set; }
-
-        public DateTime? DateSentToCustomer { get; set; }
-
-        public string PurchaseId { get; set; }
-
-        public string InvoiceName { get; set; }
-
-        public DateTime? CreateDate { get; set; }
-
-        public string InvoiceType { get; set; }
-
-        public int? MaximumUses { get; set; }
-
-        public string InvoiceTrigger { get; set; }
-
-        public string InvoicePeriodNumber { get; set; }
-
-        public string InvoicePeriodType { get; set; }
-
-        public DateTime? FirstInvoiceDate { get; set; }
-
-        public DateTime? NextInvoiceDate { get; set; }
-
-        public int? PaymentGracePeriod { get; set; }
-
-        public Single? LateFeePercentage { get; set; }
-
-        public Decimal? AmtInvoiced { get; set; }
-
-        public Decimal? Balance { get; set; }
-
-        public Decimal? InvoicedBalance { get; set; }
-
-        public Decimal? UninvoicedBalance { get; set; }
-
-        public string BellingEmail { get; set; }
-
-        public Decimal? TotalDebits { get; set; }
-
-        public Decimal? TotalCredits { get; set; }
-
-        public string CustPurchNum { get; set; }
-
-        public Decimal? InvoiceBalance { get; set; }
-
-        public Decimal? TotalTax { get; set; }
-
-        public string PoNumber { get; set; }
+        }
     }
 }

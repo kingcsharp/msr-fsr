@@ -6,10 +6,11 @@
         styleUI: 'Bootstrap',
         datatype: "json",
         colModel: [
+            { name: 'Id', index: 'Id', width: 60, align: 'center', hidden: true, edittype: 'text', editable: true, editrules: { edithidden: true } },
             {
-                label: 'Wo Item',
-                name: 'InvoiceId',
-                index: 'InvoiceId',
+                label: 'Customer',
+                name: 'Client',
+                index: 'Client',
                 key: true,
                 colmenu: false,
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
@@ -17,96 +18,32 @@
                 width: 100,
                 align: 'left'
             },
+            
             {
-                label: "Status",
-                name: 'Status',
-                index: 'Status',
-                colmenu: false,
-                stype: "select",
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                searchoptions: { value: ":[All];CREATING:Creating;CLOSED:Closed;INVOICED:Invoiced;SENT_TO_CUSTOMER:Sent to Cust;PAID_IN_FULL:Paid in Full" },
-               
-                width: 120,
-                align: 'left'
-            },
-            {
-                label: "Supplier",
-                name: 'SupplierName',
-                index: 'SupplierName',
-                colmenu: false,
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: true, grouping: false, freeze: false },
-                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                align: 'left',
-                hidedlg: false
-            },
-            {
-                label: 'Serial',
-                name: 'CustPurchNum',
-                index: 'CustPurchNum',
+                label: 'Supplier',
+                name: 'Supplier',
+                index: 'Supplier',
                 colmenu: false,
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 align: 'left'
             },
             {
-                label: 'Po',
-                name: 'ReferencePo',
-                index: 'ReferencePo',
+                label: 'Description',
+                name: 'Description',
+                index: 'Description',
                 colmenu: false,
                 width: 160,
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 align: 'left'
             },
-            {
-                label: 'Qty',
-                name: '',
-                index: '',
-                colmenu: false,
-                width: 100,
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                align: 'left'
-            },
-
-            {
-                label: "Product Name",
-                name: 'AcctName',
-                index: 'AcctName',
-                colmenu: true,
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                width: 160,
-                align: 'left'
-            },
-         
             {
                 label: 'Invoice',
-                name: 'AmtInvoiced',
-                index: 'AmtInvoiced',
+                name: 'InvoiceNumber',
+                index: 'InvoiceNumber',
                 colmenu: false,
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                align: 'left'
-            },
-            {
-                label: 'Status',
-                name: 'UninvoicedBalance',
-                index: 'UninvoicedBalance',
-                colmenu: false,
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                align: 'center'
-            },
-
-            {
-                label: 'Price',
-                name: 'NewItemsAmt',
-                index: 'NewItemsAmt',
-                colmenu: false,
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                formatter: 'currency',
-                formatoptions: { prefix: "$" },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 align: 'left'
             },
@@ -124,7 +61,20 @@
             },
 
             {
-                label: 'Date',
+                label: "Status",
+                name: 'Status',
+                index: 'Status',
+                colmenu: false,
+                stype: "select",
+                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                searchoptions: { value: ":[All];CREATING:Creating;CLOSED:Closed;INVOICED:Invoiced;SENT_TO_CUSTOMER:Sent to Cust;PAID_IN_FULL:Paid in Full" },
+
+                width: 120,
+                align: 'left'
+            },
+
+            {
+                label: 'Due Date',
                 name: 'InvoiceDate',
                 index: 'InvoiceDate',
                 formatter: 'date',
@@ -134,7 +84,7 @@
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 align: 'left'
             },
-            { name: 'Actions', index: 'InvoiceId', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: InvoiceEditFormatter, width: 130, align: 'center' }
+            { name: 'Actions', index: 'Id', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: InvoiceEditFormatter, width: 130, align: 'center' }
         ],
 
         viewrecords: true, // show the current page, data rang and total records on the toolbar
@@ -143,7 +93,7 @@
         pager: "#jqGridPager",
         height: 'auto',
         gridview: true,
-        sortname: 'SupplierName',
+        sortname: 'Id',
         sortable: true,
         sortorder: 'asc',
         cellEdit: true,
@@ -183,9 +133,10 @@
 
     function InvoiceEditFormatter(cellvalue, options, rowObject) {
 
-        var detailtButton = '<a  title="Detail" href="/Invoices/Detail/' + rowObject.InvoiceId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-eye"></i></a>';
+        var editButton = '<span data-call-id="' + rowObject.Id + '" data-toggle="modal"  data-target="#editInvModal" class="btn btn-xs btn-success"  title="Edit" style="margin:2px;font-size: .8em;"><i class="fa fa-edit" aria-hidden="true"></i></span>';
+        var exportButton = '<a href="/Invoices/ExportFile/' + rowObject.Id + '?&items=' + rowObject.Items + '"  class="btn btn-xs btn-info" title="Export" style="margin:2px;font-size: .8em;"><i class="fa fa-file-text" aria-hidden="true"></i></a>';
 
-        return detailtButton
+        return editButton + exportButton;
     }
 
     $('#search').click(function () {
@@ -195,6 +146,6 @@
         }).trigger("reloadGrid");
 
     });
-  
+
 
 }

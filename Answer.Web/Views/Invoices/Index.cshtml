@@ -1,58 +1,110 @@
 ﻿@model Msr.Services.Invoices.ViewModel.InvoiceViewModel
 @{
-    ViewBag.Title = "Invoices";
+    ViewBag.Title = "Invoice";
 }
+
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="row">
             <h2 class="page-header">
                 <span class="icon fa fa-exchange"></span>
                 Invoices <button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
+                <button class="btn btn-primary help-btn pull-right" data-toggle="modal" data-target="#invModal" data-intro="Create a New Invoice" data-position="bottom" style="margin-right: 10px"><i class="fa fa-plus"></i> New</button>
             </h2>
-            <table class="table table-bordered">
-                <tr>
-                    <td style="width:200px;">
-                        Total of Debits
-                    </td>
-                    <td style="float:left;">$@Model.NewItemsAmt</td>
-                </tr>
-                <tr>
-                    <td style="width:200px;">
-                        Total Amount paid
-                    </td>
-                    <td style="float:left;">
-                     $@Model.AmtPaid
-                    </td>
-                </tr>
-            </table>
-            <div></div>
             <div class="col-lg-12">
                 @Html.Partial("Message")
                 <table id="jqGrid"></table>
                 <div id="jqGridPager"></div>
             </div>
         </div>
-       
     </div>
 </div>
-
+<div id="invModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Add Invoice</h4>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close-o"></i> Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="editInvModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Edit Invoice</h4>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close-o"></i> Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 @section scripts
 {
     <script src="~/assets/js/plugins/bootstrap3/bootstrap-dialog.min.js"></script>
     <script type="text/javascript" src="~/assets/js/i18n/grid.locale-en.js"></script>
     <script type="text/javascript" src="~/assets/js/jquery.jqGrid.min.js"></script>
-
+    <script src="~/assets/js/grids/invoices.js"></script>
     <script src="//cdn.rawgit.com/noelboss/featherlight/1.6.1/release/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="~/assets/js/grids/invoices.js"></script>
     <script>
         //$.jgrid.defaults.responsive = true;
         $.jgrid.defaults.styleUI = 'Bootstrap';
-
-
-
         $(document).ready(function () {
             InvoicesGrid('@Url.Action("InvoicesData", "Invoices")');
         });
+    </script>
+    <script>
+        $('#invModal').on('show.bs.modal',
+            function (event) {
+
+                var modal = $(this);
+                $.ajax({
+                    type: "GET",
+                    url: '/Invoices/LoadInvoice',
+                    dataType: 'html',
+                    success: function (data) {
+                        modal.find('.modal-body').html(data);
+                    },
+                    error: function () {
+                    }
+                });
+            });
+
+
+        $('#editInvModal').on('show.bs.modal',
+            function (event) {
+
+                var button = $(event.relatedTarget);
+                var id = button.data('call-id');
+                var modal = $(this);
+                $.ajax({
+                    type: "GET",
+                    url: '/Invoices/LoadInvoiceById/' + id,
+                    dataType: 'html',
+                    success: function (data) {
+                        modal.find('.modal-body').html(data);
+                    },
+                    error: function () {
+
+                    }
+                });
+
+            });
 
     </script>
+
 }
+
+

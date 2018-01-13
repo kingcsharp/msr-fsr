@@ -1182,10 +1182,9 @@
     <Content Include="Views\PurchaseOrder\Purchases.cshtml" />
     <Content Include="Views\PurchaseOrder\PurchaseOrderMultifill.cshtml" />
     <Content Include="Views\PurchaseOrder\PurchaseOrderMultifillPage.cshtml" />
-    <Content Include="Views\Invoices\Detail.cshtml" />
-    <Content Include="Views\Invoices\EditCreditDebit.cshtml" />
+    <Content Include="Views\Invoices\_InvoiceAddEditModel.cshtml" />
     <Content Include="Views\Invoices\Index.cshtml" />
-    <Content Include="Views\Invoices\InvoiceListDetail.cshtml" />
+    <Content Include="Views\Invoices\_InvoiceItemsList.cshtml" />
     <Content Include="Views\Invoices\PrintableInvoice.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
