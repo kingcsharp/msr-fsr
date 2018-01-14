@@ -2834,6 +2834,8 @@
     <Build Include="dbo\Views\Portal\Portal_PurchaseView.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_UpdateOrderItem.sql" />
     <Build Include="dbo\Views\Portal\Portal_InvoicesView.sql" />
+    <Build Include="dbo\Tables\Portal_Invoice.sql" />
+    <Build Include="dbo\Views\Portal_InvoiceView.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Msr.Database.refactorlog" />
