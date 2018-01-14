@@ -148,13 +148,11 @@ namespace Answer.Web.Controllers
             invoiceViewModel.SetUp(new PurchesOrderService(), new InvoicesService());
 
             return PartialView("_InvoiceAddEditModel", invoiceViewModel);
-
         }
 
         [HttpPost]
         public ActionResult Create(InvoiceViewModel model)
         {
-
             var currentUser = GetCurrentUser();
             model.Supplier = currentUser.Root_Company;
             if (model.Id == null)
