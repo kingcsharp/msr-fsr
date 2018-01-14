@@ -19,15 +19,7 @@
                 align: 'left'
             },
             
-            {
-                label: 'Supplier',
-                name: 'Supplier',
-                index: 'Supplier',
-                colmenu: false,
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                align: 'left'
-            },
+         
             {
                 label: 'Description',
                 name: 'Description',
@@ -67,7 +59,7 @@
                 colmenu: false,
                 stype: "select",
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                searchoptions: { value: ":[All];CREATING:Creating;CLOSED:Closed;INVOICED:Invoiced;SENT_TO_CUSTOMER:Sent to Cust;PAID_IN_FULL:Paid in Full" },
+                searchoptions: { value: ":[All];INVOICED:INVOICED;OUTSTANDING:OUTSTANDING;OVERDUE:OVERDUE;CLOSED:CLOSED" },
 
                 width: 120,
                 align: 'left'

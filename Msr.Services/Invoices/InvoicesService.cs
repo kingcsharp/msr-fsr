@@ -41,7 +41,7 @@ namespace Msr.Services.Invoices
 
         public List<SelectFile> InvoicePoList()
         {
-            var result = _dbContext.Database.SqlQuery<SelectFile>($"SELECT DISTINCT PO_NUMBER as Id,PO_NUMBER as Name from A_V_INVOICES_WITH_ACCT_INFORMATION where PO_NUMBER is not null").ToList();
+            var result = _dbContext.Database.SqlQuery<SelectFile>($"select DISTINCT PO_NUMBER as Id,PO_NUMBER as Name from dbo.A_ACCOUNT_INVOICES where PO_NUMBER IS NOT NULL").ToList();
 
             return result;
         }

@@ -122,7 +122,6 @@ namespace Answer.Web.Controllers
             invoiceViewModel.invoiceDetailList = _invoicesService.InvoiceItemsDetailListById(id).ToList();
 
             return PartialView("_InvoiceItemsList", invoiceViewModel);
-
         }
 
         [HttpGet]
@@ -133,7 +132,6 @@ namespace Answer.Web.Controllers
             invoiceViewModel.SetUp(new PurchesOrderService(), new InvoicesService());
 
             return PartialView("_InvoiceAddEditModel", invoiceViewModel);
-
         }
 
         [HttpGet]
