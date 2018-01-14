@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web.Helpers;
 using System.Web.Mvc;
 using System.Web.UI;
@@ -186,41 +187,44 @@ namespace Answer.Web.Controllers
         }
         public ActionResult ExportFile(int? id, string items)
         {
-            var invoice = _invoicesService.GetInvoicesQueryable().Where(x => x.Id == id).SingleOrDefault();
-            MemoryStream memoryStream = new MemoryStream();
-            TextWriter tw = new StreamWriter(memoryStream);
-
             var delimiter = "\t";
+            var invoice = _invoicesService.GetInvoicesQueryable().Where(x => x.Id == id).SingleOrDefault();
 
-            tw.Write("Customer Number{0}", delimiter);
-            tw.Write("Account{0}", delimiter);
-            tw.Write("Invoice Date{0}", delimiter);
-            tw.Write("Invoice Number{0}", delimiter);
-            tw.Write("Po Number{0}", delimiter);
-            tw.Write("Item Code{0}", delimiter);
-            tw.Write("Description{0}", delimiter);
-            tw.Write("Qty{0}", delimiter);
-            tw.Write("Price{0}", delimiter);
-            tw.WriteLine(delimiter);
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append(string.Format("Customer Number{0}", delimiter));
+            sb.Append(string.Format("Account{0}", delimiter));
+            sb.Append(string.Format("Invoice Date{0}", delimiter));
+            sb.Append(string.Format("Invoice Number{0}", delimiter));
+            sb.Append(string.Format("Po Number{0}", delimiter));
+            sb.Append(string.Format("Item Code{0}", delimiter));
+            sb.Append(string.Format("Description{0}", delimiter));
+            sb.Append(string.Format("Qty{0}", delimiter));
+            sb.Append(string.Format("Price{0}", delimiter));
+            sb.Append(Environment.NewLine);
+
             var itemsArray = items.Split(',');
 
             foreach (var item in itemsArray)
             {
                 var invoiceItem = _invoicesService.InvoiceItemDetailById(item);
-                tw.Write("{0}{1}", invoice.Client, delimiter);
-                tw.Write("{0}{1}", "1100", delimiter);
-                tw.Write("{0}{1}", invoice.InvoiceDate.ToString("d"), delimiter);
-                tw.Write("{0}{1}", invoice.InvoiceNumber, delimiter);
-                tw.Write("{0}{1}", invoice.CustPo, delimiter);
-                tw.Write("{0}{1}", invoiceItem.CUST_PURCH_NUM, delimiter);
-                tw.Write("{0}{1}", invoiceItem.DESCRIPTION, delimiter);
-                tw.Write("{0}{1}", invoiceItem.QTY, delimiter);
-                tw.Write("{0}{1}", invoiceItem.UNIT_PRICE, delimiter);
-                tw.WriteLine(delimiter);
+
+                sb.Append(string.Format("{0}{1}", invoice.Client, delimiter));
+                sb.Append(string.Format("{0}{1}", "1100 Accounts Receivable", delimiter));
+                sb.Append(string.Format("{0}{1}", invoice.InvoiceDate.ToString("d"), delimiter));
+                sb.Append(string.Format("{0}{1}", invoice.InvoiceNumber, delimiter));
+                sb.Append(string.Format("{0}{1}", invoice.CustPo, delimiter));
+                sb.Append(string.Format("{0}{1}", invoiceItem.CUST_PURCH_NUM, delimiter));
+                sb.Append(string.Format("{0}{1}", invoiceItem.DESCRIPTION, delimiter));
+                sb.Append(string.Format("{0}{1}", invoiceItem.QTY, delimiter));
+                sb.Append(string.Format("{0}{1}", invoiceItem.UNIT_PRICE, delimiter));
+                sb.Append(Environment.NewLine);
             }
-            tw.Flush();
-            tw.Close();
-            return File(memoryStream.GetBuffer(), "application/text", string.Format("{0}.iif", invoice.InvoiceNumber));
+
+            var byteArray = Encoding.ASCII.GetBytes(sb.ToString());
+            var stream = new MemoryStream(byteArray);
+
+            return File(stream, "text/plain", string.Format("{0}.iif", invoice.InvoiceNumber));
         }
 
     }

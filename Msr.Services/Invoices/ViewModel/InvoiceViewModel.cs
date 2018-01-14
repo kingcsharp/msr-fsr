@@ -21,6 +21,7 @@ namespace Msr.Services.Invoices.ViewModel
         }
         public int? Id { get; set; }
 
+        [Required]
         public string Client { get; set; }
 
         public string InvoiceDescription { get; set; }
@@ -34,6 +35,7 @@ namespace Msr.Services.Invoices.ViewModel
 
         public int InvoiceNumber { get; set; }
 
+        [Required]
         public Double? TotalDue { get; set; }
 
         public Double? Tax { get; set; }
