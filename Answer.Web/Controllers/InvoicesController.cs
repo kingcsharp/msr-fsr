@@ -210,7 +210,7 @@ namespace Answer.Web.Controllers
                 var invoiceItem = _invoicesService.InvoiceItemDetailById(item);
 
                 sb.Append(string.Format("{0}{1}", invoice.Client, delimiter));
-                sb.Append(string.Format("{0}{1}", "1100 Accounts Receivable", delimiter));
+                sb.Append(string.Format("{0}{1}", "1100", delimiter));
                 sb.Append(string.Format("{0}{1}", invoice.InvoiceDate.ToString("d"), delimiter));
                 sb.Append(string.Format("{0}{1}", invoice.InvoiceNumber, delimiter));
                 sb.Append(string.Format("{0}{1}", invoice.CustPo, delimiter));
