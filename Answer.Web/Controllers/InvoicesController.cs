@@ -220,7 +220,7 @@ namespace Answer.Web.Controllers
             var byteArray = Encoding.ASCII.GetBytes(sb.ToString());
             var stream = new MemoryStream(byteArray);
 
-            return File(stream, "text/plain", string.Format("{0}.iif", invoice.InvoiceNumber));
+            return File(stream, "text/plain", string.Format("{0}.iff", invoice.InvoiceNumber));
         }
 
     }
