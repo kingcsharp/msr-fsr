@@ -23,7 +23,9 @@ namespace Msr.Models.Invoices
 
         public string InvoiceNumber { get; set; }
 
-        public Double? TotalDue { get; set; }
+        public Double? SubTotal { get; set; }
+
+        public Double? Total { get; set; }
 
         public Double? Tax { get; set; }
 

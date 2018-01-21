@@ -36,7 +36,10 @@ namespace Msr.Services.Invoices.ViewModel
         public int InvoiceNumber { get; set; }
 
         [Required]
-        public Double? TotalDue { get; set; }
+        public Double? SubTotal { get; set; }
+
+        [Required]
+        public Double? Total { get; set; }
 
         public Double? Tax { get; set; }
 
@@ -123,7 +126,7 @@ namespace Msr.Services.Invoices.ViewModel
             ClientList.Insert(0, new SelectListItem() { Value = "", Text = @"Select Client" });
         }
 
-        public InvoiceViewModel MapToDto(InvoiceView invoiceView)
+        public InvoiceViewModel MapToDto(Invoice invoiceView)
         {
             return new InvoiceViewModel
             {
@@ -132,9 +135,9 @@ namespace Msr.Services.Invoices.ViewModel
                 InvoiceDescription = invoiceView.Description,
                 Status = invoiceView.Status,
                 CustPo = invoiceView.CustPo,
-                TotalDue = invoiceView.TotalDue,
+                SubTotal = invoiceView.SubTotal,
+                Total = invoiceView.Total,
                 InvoiceDate = invoiceView.InvoiceDate,
-       
                 Tax = invoiceView.Tax,
                 InvoiceClass = invoiceView.InvoiceClass,
                 Items = invoiceView.Items,

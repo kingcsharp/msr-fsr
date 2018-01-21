@@ -20,11 +20,15 @@ namespace Msr.Services.Invoices
             _dbContext = new MsrDbContext();
         }
 
-        public IQueryable<InvoiceView> GetInvoicesQueryable()
+        public IQueryable<InvoiceView> GetInvoiceViewQueryable()
         {
             return _dbContext.InvoicesViews;
         }
 
+        public IQueryable<Invoice> GetInvoicesQueryable()
+        {
+            return _dbContext.Invoices;
+        }
 
         public List<InvoiceDetailListViewModel> InvoiceItemsDetailListById(string poNumber)
         {
@@ -58,8 +62,8 @@ namespace Msr.Services.Invoices
                 invoice.Status = model.Status;
                 invoice.CustPo = model.CustPo;
                 invoice.InvoiceDate = model.InvoiceDate.Value;
-               
-                invoice.TotalDue = model.TotalDue;
+                invoice.Total = model.Total;
+                invoice.SubTotal = model.SubTotal;
                 invoice.Tax = model.Tax;
                 invoice.Supplier = model.Supplier;
                 invoice.InvoiceClass = model.InvoiceClass;
@@ -88,7 +92,8 @@ namespace Msr.Services.Invoices
                 invoice.Status = model.Status;
                 invoice.CustPo = model.CustPo;
                 invoice.InvoiceDate = model.InvoiceDate.Value;
-                invoice.TotalDue = model.TotalDue;
+                invoice.Total = model.Total;
+                invoice.SubTotal = model.SubTotal;
                 invoice.Tax = model.Tax;
                 invoice.InvoiceClass = model.InvoiceClass;
                 invoice.Supplier = model.Supplier;

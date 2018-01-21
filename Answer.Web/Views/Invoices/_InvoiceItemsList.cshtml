@@ -4,18 +4,15 @@
 {
     <table class="table table-bordered" id="records_table">
         <tr>
-            <th>Add</th>
+            <th></th>
             <th>Date Posted</th>
-            <th>Act Inv Item Type</th>
             <th>Cust Purchase Number</th>
             <th>AII Purchase Number</th>
             <th>AII Item Id</th>
-            <th>Inv Item Description</th>
-            <th>Inv Item Comments</th>
-            <th>Quantity</th>
+            <th style="width:100px;">Description</th>
+            <th>Qty</th>
             <th>Unit Price</th>
             <th>Amt of Inv Items</th>
-            <th>Tax</th>
             <th>Total</th>
         </tr>
         @for (int i = 0; i < Model.invoiceDetailList.Count; i++)
@@ -25,153 +22,56 @@
                 <td class="getId">
                     <input name="checkbox" class="checkAmount" value="@Model.invoiceDetailList[i].ID" id="poId" type="checkBox">
                 </td>
-                <td style="width:150px;">
-                    @Html.DisplayFor(x => Model.invoiceDetailList[i].DATE_POSTED, new { @class = "form-control", @readonly = "readonly", @style = "width:170px;" })
+                <td>
+                    @string.Format("{0:M/d/yyyy}", Model.invoiceDetailList[i].DATE_POSTED)
                 </td>
-                <td style="width:100px;">
-                    @Html.DisplayFor(x => Model.invoiceDetailList[i].ITEM_TYPE, new { @class = "form-control", @readonly = "readonly", @style = "width:150px;" })
+             
+                <td>
+                    @Model.invoiceDetailList[i].CUST_PURCH_NUM
                 </td>
-                <td style="width:100px;">
-                    @Html.DisplayFor(x => Model.invoiceDetailList[i].CUST_PURCH_NUM, new { @class = "form-control", @readonly = "readonly" })
+                <td>
+                    @Model.invoiceDetailList[i].PURCHASE_ID
                 </td>
-                <td style="width:130px;">
-                    @Html.DisplayFor(x => Model.invoiceDetailList[i].PURCHASE_ID, new { @class = "form-control", @readonly = "readonly", @style = "width:150px;" })
+                <td>
+                    @Model.invoiceDetailList[i].PURCH_ITEM_ID
                 </td>
-                <td style="width:140px;">
-                    @Html.DisplayFor(x => Model.invoiceDetailList[i].PURCH_ITEM_ID, new { @class = "form-control", @readonly = "readonly" })
+                <td>
+                    @Model.invoiceDetailList[i].DESCRIPTION
                 </td>
-                <td style="width:150px;">
-                    @Html.DisplayFor(x => Model.invoiceDetailList[i].DESCRIPTION, new { @class = "form-control", @readonly = "readonly", @style = "width:150px;" })
+                <td>
+                    @Model.invoiceDetailList[i].QTY
                 </td>
-                <td style="width:100px;">
-                    @Html.DisplayFor(x => Model.invoiceDetailList[i].COMMENTS, new { @class = "form-control", @readonly = "readonly", @style = "width:80px;" })
+                <td>
+                        $@Model.invoiceDetailList[i].UNIT_PRICE                        
                 </td>
-                <td style="width:80px;">
-                    @Html.DisplayFor(x => Model.invoiceDetailList[i].QTY, new { @class = "form-control", @readonly = "readonly", @style = "width:100px;" })
+                <td class="poAmount">
+                    @if (Model.invoiceDetailList[i].AMOUNT.HasValue)
+                    {
+                        <span> $@Model.invoiceDetailList[i].AMOUNT</span>
+                        @Html.HiddenFor(x => Model.invoiceDetailList[i].AMOUNT, new { @id = "amountPo" })
+                    }                    
                 </td>
-                <td style="width:200px;">
-                    <div class="input-group">
-                        <span class="input-group-addon">$</span>
-                        @Html.TextBoxFor(x => Model.invoiceDetailList[i].UNIT_PRICE, new { @class = "form-control", @readonly = "readonly", @style = "width:100px;" })
-                    </div>
-                </td>
-                <td style="width:80px;" class="poAmount">
-                    <div class="input-group">
-                        <span class="input-group-addon">$</span>
-                        @Html.TextBoxFor(x => Model.invoiceDetailList[i].AMOUNT, new { @class = "form-control", @readonly = "readonly", @id = "amountPo", @style = "width:100px;" })
-                    </div>
-                </td>
-                <td style="width:100px;" class="poTax">
-                    <div class="input-group">
-                        <span class="input-group-addon">$</span>
-                        @Html.TextBoxFor(x => Model.invoiceDetailList[i].TAX, new { @class = "form-control", @readonly = "readonly", @id = "taxPo", @style = "width:80px;" })
-                    </div>
-                </td>
-                <td style="width:100px;">
-                    <div class="input-group">
-                        <span class="input-group-addon">$</span>
-                        @Html.TextBoxFor(x => Model.invoiceDetailList[i].TOTAL, new { @class = "form-control", @readonly = "readonly", @style = "width:100px;" })
-                    </div>
+
+                <td>
+                    @if (Model.invoiceDetailList[i].TOTAL.HasValue)
+                    {
+                        <span>$ @Model.invoiceDetailList[i].TOTAL</span>
+                    }                   
+                    
                 </td>
             </tr>
         }
     </table>
 }
+
+<script src="~/assets/js/grids/invoice-tax.js"></script>
+
 <script type="text/javascript">
 
-        var total = 0;
-        var totalTax = 0;
-        var values = [];
-        var id = $('#editId').val();
-
-        if (id !=='') {
-    //for edit
-            $('input[type="checkbox"]').click(function () {
-                if ($(this).prop("checked") == true) {
-                    var id = $(this).closest('tr').find('.getId').find('#poId').val();
-                    values.push(id);
-                    $('#itemId').val(values);
-
-
-                    var editTotalAmount = $('#totalAmount').val();
-                    var value = $(this).closest('tr').find('.poAmount').find('#amountPo').val();
-                    total = (parseFloat(editTotalAmount) + parseFloat(value)).toFixed(2);
-                    $('#totalAmount').val(total);
-
-                    var edittotalTax = $('#totalTaxAmount').val();
-                    var taxValue = $(this).closest('tr').find('.poTax').find('#taxPo').val();
-                    if (taxValue == '') {
-                        taxValue = 0;
-                    }
-                    totalTax = (parseFloat(edittotalTax) + parseFloat(taxValue)).toFixed(2);
-                    $('#totalTaxAmount').val(totalTax);
-                }
-                else {
-                    var id = $(this).closest('tr').find('.getId').find('#poId').val();
-                    values = values.filter(function (item) {
-                        return item !== id
-                    });
-                    $('#itemId').val(values);
-
-
-
-                    var editTotalAmount = $('#totalAmount').val();
-                    var value = $(this).closest('tr').find('.poAmount').find('#amountPo').val();
-                    total = (parseFloat(editTotalAmount) - parseFloat(value)).toFixed(2);
-                    $('#totalAmount').val(total);
-
-
-
-                    var edittotalTax = $('#totalTaxAmount').val();
-                    var taxValue = $(this).closest('tr').find('.poTax').find('#taxPo').val();
-                    if (taxValue == '') {
-                        taxValue = 0;
-                    }
-                    totalTax = (parseFloat(edittotalTax) - parseFloat(taxValue)).toFixed(2);
-                    $('#totalTaxAmount').val(totalTax);
-                }
-            });
-
-        }
-        else {
-          //for add
-
-            $('input[type="checkbox"]').click(function () {
-                if ($(this).prop("checked") == true) {
-                    var id = $(this).closest('tr').find('.getId').find('#poId').val();
-                    values.push(id);
-                    $('#itemId').val(values);
-
-                    var value = $(this).closest('tr').find('.poAmount').find('#amountPo').val();
-                    total = (parseFloat(total) + parseFloat(value)).toFixed(2);
-                    $('#totalAmount').val(total);
-
-                    var taxValue = $(this).closest('tr').find('.poTax').find('#taxPo').val();
-                    if (taxValue == '') {
-                        taxValue = 0;
-                    }
-                    totalTax = (parseFloat(totalTax) + parseFloat(taxValue)).toFixed(2);
-                    $('#totalTaxAmount').val(totalTax);
-                }
-                else {
-                    var id = $(this).closest('tr').find('.getId').find('#poId').val();
-                    values = values.filter(function (item) {
-                        return item !== id
-                    });
-                    $('#itemId').val(values);
-                    var value = $(this).closest('tr').find('.poAmount').find('#amountPo').val();
-                    total = (parseFloat(total) - parseFloat(value)).toFixed(2);
-                    $('#totalAmount').val(total);
-                    var taxValue = $(this).closest('tr').find('.poTax').find('#taxPo').val();
-                    if (taxValue == '') {
-                        taxValue = 0;
-                    }
-                    totalTax = (parseFloat(totalTax) - parseFloat(taxValue)).toFixed(2);
-                    $('#totalTaxAmount').val(totalTax);
-                }
-            });
-        }
-
+    $(document).ready(function () {
+        $('input[type="checkbox"]').click(function () {
+            CheckBoxSelection($('#editId').val(), this, $(this).closest('tr').find('.poAmount').find('#amountPo').val());
+        });
+    });
 
 </script>
-

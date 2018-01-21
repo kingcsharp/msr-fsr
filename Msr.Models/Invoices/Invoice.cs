@@ -25,8 +25,10 @@ namespace Msr.Models.Invoices
 
         [Required]
         public DateTime InvoiceDate { get; set; }
-        
-        public Double? TotalDue { get; set; }
+
+        public Double? SubTotal { get; set; }
+
+        public Double? Total { get; set; }
 
         public Double? Tax { get; set; }
 

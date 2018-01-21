@@ -616,6 +616,7 @@
     <Content Include="assets\js\grids\buyer_grid.js" />
     <Content Include="assets\js\grids\comman.js" />
     <Content Include="assets\js\grids\equipment-maintenance.js" />
+    <Content Include="assets\js\grids\invoice-tax.js" />
     <Content Include="assets\js\grids\invoices.js" />
     <Content Include="assets\js\grids\labors-step.js" />
     <Content Include="assets\js\grids\delivery.js" />

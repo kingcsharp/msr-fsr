@@ -37,7 +37,7 @@ namespace Answer.Web.Controllers
         public ActionResult InvoicesData(JqGridParam param)
         {
 
-            var totalRows = _invoicesService.GetInvoicesQueryable();
+            var totalRows = _invoicesService.GetInvoiceViewQueryable();
 
             if (param.where != null && param.where.rules.Any())
             {
@@ -184,43 +184,135 @@ namespace Answer.Web.Controllers
         public ActionResult ExportFile(int? id, string items)
         {
             var delimiter = "\t";
-            var invoice = _invoicesService.GetInvoicesQueryable().Where(x => x.Id == id).SingleOrDefault();
+            var invoice = _invoicesService.GetInvoiceViewQueryable().Where(x => x.Id == id).SingleOrDefault();
 
             StringBuilder sb = new StringBuilder();
 
-            sb.Append(string.Format("Customer Number{0}", delimiter));
-            sb.Append(string.Format("Account{0}", delimiter));
-            sb.Append(string.Format("Invoice Date{0}", delimiter));
-            sb.Append(string.Format("Invoice Number{0}", delimiter));
-            sb.Append(string.Format("Po Number{0}", delimiter));
-            sb.Append(string.Format("Item Code{0}", delimiter));
-            sb.Append(string.Format("Description{0}", delimiter));
-            sb.Append(string.Format("Qty{0}", delimiter));
-            sb.Append(string.Format("Price{0}", delimiter));
+            sb.Append(string.Format("!TRNS{0}", delimiter));
+            sb.Append(string.Format("TRNSID{0}", delimiter));
+            sb.Append(string.Format("TRNSTYPE{0}", delimiter));
+            sb.Append(string.Format("DATE{0}", delimiter));
+            sb.Append(string.Format("ACCNT{0}", delimiter));
+            sb.Append(string.Format("NAME{0}", delimiter));
+            sb.Append(string.Format("CLASS{0}", delimiter));
+            sb.Append(string.Format("AMOUNT{0}", delimiter));
+            sb.Append(string.Format("DOCNUM{0}", delimiter));
+            sb.Append(string.Format("MEMO{0}", delimiter));
+            sb.Append(string.Format("CLEAR{0}", delimiter));
+            sb.Append(string.Format("TOPRINT{0}", delimiter));
+            sb.Append(string.Format("ADDR1{0}", delimiter));
+            sb.Append(string.Format("ADDR2{0}", delimiter));
+            sb.Append(string.Format("ADDR3{0}", delimiter));
+            sb.Append(string.Format("ADDR4{0}", delimiter));
+            sb.Append(string.Format("ADDR5{0}", delimiter));
+            sb.Append(string.Format("DUEDATE{0}", delimiter));
+            sb.Append(string.Format("TERMS{0}", delimiter));
+            sb.Append(string.Format("PAID{0}", delimiter));
+            sb.Append(string.Format("SHIPDATE{0}", delimiter));
             sb.Append(Environment.NewLine);
 
+            sb.Append(string.Format("!SPL{0}", delimiter));
+            sb.Append(string.Format("SPLID{0}", delimiter));
+            sb.Append(string.Format("TRNSTYPE{0}", delimiter));
+            sb.Append(string.Format("DATE{0}", delimiter));
+            sb.Append(string.Format("ACCNT{0}", delimiter));
+            sb.Append(string.Format("NAME{0}", delimiter));
+            sb.Append(string.Format("CLASS{0}", delimiter));
+            sb.Append(string.Format("AMOUNT{0}", delimiter));
+            sb.Append(string.Format("DOCNUM{0}", delimiter));
+            sb.Append(string.Format("MEMO{0}", delimiter));
+            sb.Append(string.Format("CLEAR{0}", delimiter));
+            sb.Append(string.Format("QNTY{0}", delimiter));
+            sb.Append(string.Format("PRICE{0}", delimiter));
+            sb.Append(string.Format("INVITEM{0}", delimiter));
+            sb.Append(string.Format("PAYMETH{0}", delimiter));
+            sb.Append(string.Format("TAXABLE{0}", delimiter));
+            sb.Append(string.Format("REIMBEXP{0}", delimiter));
+            sb.Append(string.Format("EXTRA{0}", delimiter));
+            sb.Append(Environment.NewLine);
+            sb.Append(string.Format("!ENDTRNS"));
+            sb.Append(Environment.NewLine);
+
+            sb.Append(string.Format("TRNS{0}", delimiter)); //TRNS
+            sb.Append(string.Format("{0}{1}", invoice.InvoiceNumber, delimiter)); //TRNSID
+            sb.Append(string.Format("{0}{1}", "INVOICE", delimiter)); //TRNSTYPE
+            sb.Append(string.Format("{0:d}{1}", invoice.InvoiceDate, delimiter)); //DATE
+            sb.Append(string.Format("{0}{1}", "1100", delimiter)); //ACCNT
+            sb.Append(string.Format("{0}{1}", "", delimiter)); //NAME
+            sb.Append(string.Format("{0}{1}", invoice.InvoiceClass, delimiter)); //CLASS
+            sb.Append(string.Format("{0}{1}", invoice.Total, delimiter)); //AMOUNT
+            sb.Append(string.Format("{0}{1}", "", delimiter)); //DOCNUM
+            sb.Append(string.Format("{0}{1}", "", delimiter)); //MEMO
+            sb.Append(string.Format("{0}{1}", "", delimiter)); //CLEAR
+            sb.Append(string.Format("{0}{1}", "", delimiter)); //TOPRINT
+            sb.Append(string.Format("{0}{1}", "", delimiter)); //ADDR1
+            sb.Append(string.Format("{0}{1}", "", delimiter)); //ADDR2
+            sb.Append(string.Format("{0}{1}", "", delimiter)); //ADDR3
+            sb.Append(string.Format("{0}{1}", "", delimiter)); //ADDR4
+            sb.Append(string.Format("{0}{1}", "", delimiter)); //ADDR5
+            sb.Append(string.Format("{0:d}{1}", "", delimiter)); //DUEDATE
+            sb.Append(string.Format("{0}{1}", "", delimiter)); //TERMS
+            sb.Append(string.Format("{0}{1}", "", delimiter)); //PAID
+            sb.Append(string.Format("{0:d}{1}", "", delimiter)); //SHIPDATE
+
+            sb.Append(Environment.NewLine);
             var itemsArray = items.Split(',');
 
             foreach (var item in itemsArray)
             {
-                var invoiceItem = _invoicesService.InvoiceItemDetailById(item);
+                if (!string.IsNullOrWhiteSpace(item))
+                {
+                    var invoiceItem = _invoicesService.InvoiceItemDetailById(item);
 
-                sb.Append(string.Format("{0}{1}", invoice.Client, delimiter));
-                sb.Append(string.Format("{0}{1}", "1100", delimiter));
-                sb.Append(string.Format("{0}{1}", invoice.InvoiceDate.ToString("d"), delimiter));
-                sb.Append(string.Format("{0}{1}", invoice.InvoiceNumber, delimiter));
-                sb.Append(string.Format("{0}{1}", invoice.CustPo, delimiter));
-                sb.Append(string.Format("{0}{1}", invoiceItem.CUST_PURCH_NUM, delimiter));
-                sb.Append(string.Format("{0}{1}", invoiceItem.DESCRIPTION, delimiter));
-                sb.Append(string.Format("{0}{1}", invoiceItem.QTY, delimiter));
-                sb.Append(string.Format("{0}{1}", invoiceItem.UNIT_PRICE, delimiter));
-                sb.Append(Environment.NewLine);
+                    sb.Append(string.Format("SPL{0}", delimiter)); //SPL
+                    sb.Append(string.Format("{0}{1}", invoice.InvoiceNumber, delimiter)); //SPLID
+                    sb.Append(string.Format("{0}", "INVOICE")); //TRNSTYPE
+                    sb.Append(string.Format("{0:d}{1}", invoice.InvoiceDate, delimiter)); //DATE
+                    sb.Append(string.Format("{0}{1}", "1100", delimiter)); //ACCNT
+                    sb.Append(string.Format("{0}{1}", invoiceItem.PURCHASER_NAME, delimiter)); //NAME
+                    sb.Append(string.Format("{0}{1}", invoice.InvoiceClass, delimiter)); //CLASS
+                    sb.Append(string.Format("{0}{1}", invoiceItem.AMOUNT, delimiter)); //AMOUNT
+                    sb.Append(string.Format("{0}{1}", "", delimiter)); //DOCNUM
+                    sb.Append(string.Format("{0}{1}", "", delimiter)); //MEMO
+                    sb.Append(string.Format("{0}{1}", invoiceItem.QTY, delimiter)); //MEMO
+                    sb.Append(string.Format("{0}{1}", invoiceItem.UNIT_PRICE, delimiter)); //QNTY
+                    sb.Append(string.Format("{0}{1}", "", delimiter)); //PRICE
+                    sb.Append(string.Format("{0}{1}", "Y", delimiter)); //INVITEM
+                    sb.Append(string.Format("{0}{1}", "", delimiter)); //PAYMETH
+                    sb.Append(string.Format("{0}{1}", "", delimiter)); //TAXABLE
+                    sb.Append(string.Format("{0}{1}", "", delimiter)); //REIMBEXP
+                    sb.Append(string.Format("{0}{1}", "", delimiter)); //EXTRA
+                    sb.Append(Environment.NewLine);
+                }
             }
 
+            sb.Append(string.Format("SPL{0}", delimiter));
+            sb.Append(string.Format("{0}{1}", invoice.InvoiceNumber, delimiter));
+            sb.Append(string.Format("{0:d}{1}", "INVOICE", delimiter));
+            sb.Append(string.Format("{0:d}{1}", invoice.InvoiceDate, delimiter));
+            sb.Append(string.Format("{0}{1}", "1100", delimiter)); //ACCNT
+            sb.Append(string.Format("{0}{1}", "Sales Tax Payable", delimiter)); //NAME
+            sb.Append(string.Format("{0}{1}", invoice.InvoiceClass, delimiter)); //CLASS
+            sb.Append(string.Format("{0}{1}", "", delimiter)); //AMOUNT
+            sb.Append(string.Format("{0}{1}", "", delimiter)); //DOCNUM
+            sb.Append(string.Format("{0}{1}", "", delimiter)); //MEMO
+            sb.Append(string.Format("{0}{1}", "", delimiter)); //MEMO
+            sb.Append(string.Format("{0}{1}", "", delimiter)); //Qty
+            sb.Append(string.Format("{0}%", invoice.Tax)); //PRICE
+            sb.Append(string.Format("{0}{1}", "", delimiter));//INVITEM
+            sb.Append(string.Format("{0}{1}", "N", delimiter)); //PAYMETH
+            sb.Append(string.Format("{0}{1}", "Y", delimiter));//TAXABLE
+            sb.Append(string.Format("{0}{1}", "", delimiter)); //REIMBEXP
+            sb.Append(string.Format("{0}{1}", "", delimiter)); //EXTRA
+            
+            sb.Append(Environment.NewLine);
+
+
+            sb.Append(string.Format("ENDTRNS"));
             var byteArray = Encoding.ASCII.GetBytes(sb.ToString());
             var stream = new MemoryStream(byteArray);
 
-            return File(stream, "text/plain", string.Format("{0}.iff", invoice.InvoiceNumber));
+            return File(stream, "text/plain", string.Format("{0}.iif", invoice.InvoiceNumber));
         }
 
     }
