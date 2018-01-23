@@ -199,12 +199,17 @@
                 //iterate over each row
                 rowData = $('#jqGrid').jqGrid('getRowData', rowIds[i]);
 
-
                 if (rowData['PemLastCompletedDate'] !== null && rowData['MaintenanceTask'] === 'Routine Maintenance' && rowData['TroubleState'] === "false") {
 
                     if ((rowData['Status'] === "ASSIGNED" || rowData['Status'] === "REQUESTED") &&
-                        rowData['TroubleState'] === "true") {
-                        var pmDate = Date.parse(rowData['PemLastCompletedDate']);
+                        rowData['TroubleState'] === "false") {
+                        debugger;
+                        var pmDate = new Date(Date.parse(rowData['PemLastCompletedDate']));
+                        
+                        if (rowData['FrequencyField'] !== '') {
+                            frequencyFieldDays = parseInt(rowData['FrequencyField']);
+                            pmDate.setDate(pmDate.getDate() + frequencyFieldDays);
+                        }
 
                         var currentDate = new Date();
                         var currentDateWith7Days = new Date();
@@ -311,7 +316,7 @@
         var thisCellVal = '';
         
         if (hasMaintenanceTechnicianRole === "True" && (rowObject.Status === "ASSIGNED" || rowObject.Status === "REQUESTED")) {
-            thisCellVal = thisCellVal + '<a href="#" data-object-id="' + rowObject.Id + '" title="Take  Qwnership" class="btn btn-xs btn-warning take-ownership" style="margin:2px;font-size: .8em;"><i class="fa fa-user"></i></a>';
+            thisCellVal = thisCellVal + '<a href="#" data-object-id="' + rowObject.Id + '" title="Take  Ownership" class="btn btn-xs btn-warning take-ownership" style="margin:2px;font-size: .8em;"><i class="fa fa-user"></i></a>';
         }
         if (hasMaintenanceTechnicianRole === "True" && rowObject.Status === "ASSIGNED") {
             thisCellVal = thisCellVal + '<a href="#" data-object-id="' + rowObject.Id + '" title="Mark Completed" class="btn btn-xs btn-info mark-completed" style="margin:2px;font-size: .8em;"><i class="fa fa-check-circle"></i></a>';

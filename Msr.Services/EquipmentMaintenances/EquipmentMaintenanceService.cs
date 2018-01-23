@@ -169,34 +169,15 @@ namespace Msr.Services.EquipmentMaintenances
             {
                 var equipment = _dbContext.EquipmentMaintenances.Single(x => x.Id == id);
 
-                if (equipment.PemLastCompletedDate.HasValue)
+
+                if (equipment.MaintenanceTask == EquipmentMaintenanceTypeConstants.Repair)
                 {
-                    equipment.Status = EquipmentMaintenanceConstants.Scheduled;
-
-                    var duplicateEquipment = new Models.EquipmentMaintenances.EquipmentMaintenance
-                    {
-                        ScanBarcode = equipment.ScanBarcode,
-                        ParentLocation = equipment.ParentLocation,
-                        SubLocationFirst = equipment.SubLocationFirst,
-                        SubLocationSecond = equipment.SubLocationSecond,
-                        DateTime = DateTime.Now,
-                        TroubleState = equipment.TroubleState,
-                        MaintenanceTask = equipment.MaintenanceTask,
-                        Comments = "",
-                        StrNTLogin = loggedUserId,
-                        PemLastCompletedDate = DateTime.Now,
-                        FrequencyField = equipment.FrequencyField,
-                        CreatedDate = DateTime.Now,
-                        Status = EquipmentMaintenanceConstants.Requested,
-                        AssignedToId = "",
-                        RequestedById = equipment.RequestedById
-                    };
-
-                    _dbContext.EquipmentMaintenances.Add(duplicateEquipment);
+                    equipment.Status = EquipmentMaintenanceConstants.Completed;
                 }
                 else
                 {
-                    equipment.Status = EquipmentMaintenanceConstants.Completed;
+                    equipment.Status = EquipmentMaintenanceConstants.Requested;
+                    equipment.PemLastCompletedDate = DateTime.Now;
                 }
 
                 equipment.UpdatedDate = DateTime.Now;
