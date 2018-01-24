@@ -322,13 +322,10 @@
             dataType: 'json',
             data: { 'Id': value},
             success: function (data) {
-                if (data.TroubleState == false) {
-                    $('.troubleStateMessage').css('color', 'red');
-                    $('.troubleStateMessage').text("Invalid Equipment.");
+
+                if (data.CanUsed == false) {
+                   alert(data.ErrorMessage)
                     textbox.val('');
-                }
-                else {
-                    $('.troubleStateMessage').css('color', 'green');
                 }
 
             },

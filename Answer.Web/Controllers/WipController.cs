@@ -682,9 +682,31 @@ namespace Answer.Web.Controllers
         public JsonResult CheckEquipmentStatusById(int? Id)
         {
 
-            var equipmentMaintenance = _equipmentMaintenanceService.GetEquipmentsQueryable().Where(x => x.Id == Id).SingleOrDefault();
+            var equipmentMaintenance = _equipmentMaintenanceService.GetEquipmentsQueryable().Where(x => x.Id == Id).FirstOrDefault();
 
-            return Json(new { TroubleState = equipmentMaintenance.TroubleState }, JsonRequestBehavior.AllowGet);
+            var canUsed = false;
+            var errorMessage = string.Empty;
+
+            if (equipmentMaintenance == null)
+            {
+                errorMessage = $"Invalid equipment Id '{Id}'";
+            }
+            else
+            {
+                if (equipmentMaintenance.TroubleState)
+                {
+                    errorMessage = "This equipment can not be used due to trouble state enabled";
+                }
+                else if (equipmentMaintenance.PemLastCompletedDate.HasValue && DateTime.Now  > equipmentMaintenance.PemLastCompletedDate.Value )
+                {
+                    errorMessage = "This equipment can not be used due to overdue for preventative maintenance.";
+                }
+                else {
+                    canUsed = true;
+                }
+            }
+
+            return Json(new { CanUsed = canUsed, ErrorMessage = errorMessage }, JsonRequestBehavior.AllowGet);
         }
 
         private List<DocumentView> GetDocViewModel(List<DocumentView> docs, OrderService orderService, int width)

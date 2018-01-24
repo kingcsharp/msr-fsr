@@ -35,6 +35,12 @@ namespace Msr.Services.ProcedureVerbs
             return result;
         }
 
+
+        public IQueryable<ProcedureVerbsView> ProceduresVerbsList()
+        {
+            return _dbContext.ProcedureVerbs.Where(x => x.Status == "APPROVED");
+        }
+
         public bool Save(SaveProcedureVerbsViewModel model)
         {
             try

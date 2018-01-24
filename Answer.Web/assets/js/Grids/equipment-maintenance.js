@@ -90,9 +90,12 @@
                 index: 'TroubleState',
                 colmenu: false,
                 editable: true,
+                stype: "select",
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                align: 'left'
+                searchoptions: { value: ":[All];true:Yes;false:No" },
+                align: 'center',
+                formatter: 'checkbox', editoptions: { value: '1:0' },
+                formatoptions: { disabled: true }
 
             },
             {

@@ -14,7 +14,7 @@ declare @tester as varchar(50),@taskStat varchar(50)
 SELECT @taskStat = STATUS FROM A_TASKS WHERE ID = @ID
 if @taskStat not in ('ACCEPTED')
 	begin
-	set @RET_STATUS = 'ERROR - This task is not accepted so it can not be assumed.'
+	set @RET_STATUS = 'ERROR - Please start the task to take over this task.'
 	goto fin
 	end
 

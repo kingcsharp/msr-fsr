@@ -25,7 +25,7 @@
         <div class="form-group showifEquipment">
             @Html.LabelFor(model => model.AddMonitorForProcedureViewModel.Target_Object, htmlAttributes: new { @class = "control-label col-md-4" })
             <div class="col-md-5">
-                @Html.DropDownListFor(model => model.AddMonitorForProcedureViewModel.Target_Object, Model.AddMonitorForProcedureViewModel.EquipmentMaintenanceList, new { @class = "form-control selectroles" })
+                @Html.TextBoxFor(model => model.AddMonitorForProcedureViewModel.Target_Object, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.AddMonitorForProcedureViewModel.Target_Object, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -101,26 +101,18 @@
         else {
             $('.showMoniterIfNumner').show();
         }
-        if (selectedValue != 'EQUIPMENT') {
-            $('.showifEquipment').hide();
-        }
-        else {
-            $('.showifEquipment').show();
-        }
+     
+      
     });
     $('#AddMonitorForProcedureViewModel_Monitor_Type').on('change', function () {
         var value = $(this).val();
+
         if (value == "NUMBER") {
             $('.showMoniterIfNumner').show();
         }
         else {
             $('.showMoniterIfNumner').hide();
         }
-        if (value == "EQUIPMENT") {
-            $('.showifEquipment').show();
-        }
-        else {
-            $('.showifEquipment').hide();
-        }
+  
     });
 </script>

@@ -208,13 +208,6 @@ namespace Msr.Services.Procedures.ViewModels
                 new SelectListItem {Text = "NO", Value = "0"},
                 new SelectListItem {Text = "YES", Value = "1"}
             };
-
-            EquipmentMaintenanceList = equipmentMaintenanceService.GetEquipmentsQueryable().ToList().Select(x => new SelectListItem
-            {
-                Text = x.ParentLocation,
-                Value = x.Id.ToString()
-            }).OrderBy(o => o.Text).ToList();
-
         }
         public AddMonitorForProcedureViewModel MapToDto(GetMoniterViewModel model)
         {

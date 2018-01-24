@@ -1037,6 +1037,12 @@ namespace Answer.Web.Controllers
 
         public ActionResult AddMonitor(string moniterType, string inputType, string failAction, string description, string objectId, string relatedObject, string stepId, string procedureName, string shouldBe, float? highestThreshold, float? highThreshold, float? target, float? lowThreshold, float? lowestThreshold, string targetObject)
         {
+            if (string.IsNullOrWhiteSpace(objectId)) {
+                inputType = "";
+                shouldBe = "";
+                targetObject = "";
+            }
+
             var model = new GetStepDataResult
             {
                 AddMonitorForProcedureViewModel =
@@ -1080,7 +1086,7 @@ namespace Answer.Web.Controllers
                     model.AddMonitorForProcedureViewModel.Target = null;
                     model.AddMonitorForProcedureViewModel.Low_Threshold = null;
                     model.AddMonitorForProcedureViewModel.Lowest_Threshold = null;
-                    model.AddMonitorForProcedureViewModel.Target_Object = null;
+                    ////model.AddMonitorForProcedureViewModel.Target_Object = null;
                 }
 
                 var response = proceduresService.AddMonitorForProcedure(model: model.AddMonitorForProcedureViewModel);

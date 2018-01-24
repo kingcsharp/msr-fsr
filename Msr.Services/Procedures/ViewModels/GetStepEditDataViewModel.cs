@@ -184,7 +184,7 @@ namespace Msr.Services.Procedures.ViewModels
                 Value = x.ObjectId.ToString()
             }).OrderBy(o => o.Text).ToList();
 
-            ReferenceProcedureTypes = procedureVerbsService.GetProceduresVerbs().Select(x => new SelectListItem
+            ReferenceProcedureTypes = procedureVerbsService.ProceduresVerbsList().Select(x => new SelectListItem
             {
                 Text = x.Name,
                 Value = x.ObjectId.ToString()
