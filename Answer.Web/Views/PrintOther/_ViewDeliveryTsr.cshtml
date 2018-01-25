@@ -92,7 +92,7 @@
             lineColor: "#000808"
         });
 
-        JsBarcode("#barcode-item", "@string.Format("{0}/{1}",Model.PurchaseItemInfoResult.CompanyPartNumber,Model.PurchaseItemInfoResult.CustLineItem)", {
+        JsBarcode("#barcode-item", "@string.Format("{0}/{1}",Model.PurchaseWithSupplierQuotesResult.CustomerPo, Model.PurchaseItemInfoResult.CustLineItem)", {
             format:"CODE128",
             displayValue: false,
             width: 2,
