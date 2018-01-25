@@ -34,7 +34,7 @@ namespace Msr.Services.Quotes.ViewModels
         public string CityStateZip { get; set; }
 
         [Display(Name = "Phone")]
-        [RegularExpression(@"^(\d{10})$", ErrorMessage = "Please enter valid phone number.")]
+        [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Please enter valid phone number.")]
         public int? Phone { get; set; }
 
         public string Delivery { get; set; }
