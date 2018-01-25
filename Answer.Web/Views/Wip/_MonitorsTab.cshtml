@@ -214,7 +214,6 @@
                 <label class="col-lg-2 control-label">Target:</label>
                 <div class="col-lg-2">
                     @Html.TextBoxFor(x => monitorTemplate.Target, new { @class = "form-control monitorTemplate_Target" })
-                    <span style="color:red" class="troubleStateMessage"></span>
                 </div>
             </div>
         }
@@ -324,7 +323,7 @@
             success: function (data) {
 
                 if (data.CanUsed == false) {
-                   alert(data.ErrorMessage)
+                    eModal.alert(data.ErrorMessage);
                     textbox.val('');
                 }
 
