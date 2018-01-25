@@ -149,7 +149,7 @@
                 editrules: { required: true },
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                 stype: "select",
-                searchoptions: { value: ":[All];REQUESTED:Requested;ASSIGNED:Assigned;COMPLETED:Completed" },
+                searchoptions: { value: ":[All];REQUESTED:Requested;ASSIGNED:Assigned;COMPLETED:Completed;SCHEDULED:Scheduled" },
                 align: 'left'
             },
             {

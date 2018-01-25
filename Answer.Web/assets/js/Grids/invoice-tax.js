@@ -76,7 +76,7 @@ function RemoveItems(id) {
 function CalculateTax(subTotal, tax) {
     if (tax !== '') {
         var totalTaxPerAmount = (subTotal * tax) / 100;
-        var totalAmount = parseFloat(subTotal) - parseFloat(totalTaxPerAmount);
+        var totalAmount = parseFloat(subTotal) + parseFloat(totalTaxPerAmount);
         $('#total').val(totalAmount);
     } else {
         $('#total').val(subTotal);
