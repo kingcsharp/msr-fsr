@@ -85,6 +85,10 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.Comments.ToLower().Contains(rule.data.ToLower()));
                     }
+                    else if (rule.field == nameof(EquipmentMaintenanceView.MaintenanceTask))
+                    {
+                        totalRows = totalRows.Where(x => x.MaintenanceTask.ToLower().Contains(rule.data.ToLower()));
+                    }
                     else if (rule.field == nameof(EquipmentMaintenanceView.Status))
                     {
                         var statusList = rule.data.Split(',').Select(x => x.Trim().ToLower()).ToList();

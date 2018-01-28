@@ -117,7 +117,7 @@ namespace Msr.Services.EquipmentMaintenances
                 //equipment.Status = model.Status;
                 //equipment.StrNTLogin = model.NTLogin;
                 equipment.UpdatedDate = DateTime.Now;
-                equipment.PemLastCompletedDate = DateTime.Now;
+                equipment.PemLastCompletedDate = model.PemLastCompletedDate;
                 equipment.Comments = model.Comments;
                 equipment.FrequencyField = model.FrequencyField;
 

@@ -18,7 +18,6 @@
                 width: 100,
                 align: 'left'
             },
-            
          
             {
                 label: 'Description',

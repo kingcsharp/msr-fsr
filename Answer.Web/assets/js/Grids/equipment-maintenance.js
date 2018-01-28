@@ -105,7 +105,8 @@
                 colmenu: false,
                 editable: true,
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                stype: "select",
+                searchoptions: { value: ":[All];Routine Maintenance:Routine Maintenance;Repair:Repair" },
                 align: 'left'
             },
             {
@@ -202,10 +203,10 @@
                 //iterate over each row
                 rowData = $('#jqGrid').jqGrid('getRowData', rowIds[i]);
 
-                if (rowData['PemLastCompletedDate'] !== null && rowData['MaintenanceTask'] === 'Routine Maintenance' && rowData['TroubleState'] === "false") {
+                if (rowData['PemLastCompletedDate'] !== null && rowData['MaintenanceTask'] === 'Routine Maintenance' && rowData['TroubleState'] === "0") {
 
                     if ((rowData['Status'] === "ASSIGNED" || rowData['Status'] === "REQUESTED") &&
-                        rowData['TroubleState'] === "false") {
+                        rowData['TroubleState'] === "0") {
                         debugger;
                         var pmDate = new Date(Date.parse(rowData['PemLastCompletedDate']));
                         
@@ -226,25 +227,19 @@
                     }
 
                 } else {
-                    if (rowData['MaintenanceTask'] === 'Repair' && rowData['TroubleState'] === "true") {
+
+                    if (rowData['MaintenanceTask'] === 'Repair' && rowData['TroubleState'] === "1") {
+
 
                         if ((rowData['Status'] === "ASSIGNED" || rowData['Status'] === "REQUESTED")) {
                                 $('#jqGrid').jqGrid('setRowData', rowIds[i], false, "danger");
-                        }
-
-                        if (rowData['Status'] === "COMPLETED") {
+                        }else if (rowData['Status'] === "COMPLETED") {
                             {
                                 $('#jqGrid').jqGrid('setRowData', rowIds[i], false, "success");
                             }
                         }
 
                     }
-                }
-
-                if (hasProductionManagerRole === "True") {
-                    $("#jqGrid").jqGrid('showCol', ["FrequencyField", "PemLastCompletedDate"]);
-                } else {
-                    $("#jqGrid").jqGrid('hideCol', ["FrequencyField", "PemLastCompletedDate"]);
                 }
 
             }

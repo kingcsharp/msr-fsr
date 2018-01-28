@@ -679,31 +679,39 @@ namespace Answer.Web.Controllers
             return RedirectToAction("Details", "Wip", new { id = id });
         }
         [HttpPost]
-        public JsonResult CheckEquipmentStatusById(int? Id)
+        public JsonResult CheckEquipmentStatusById(string id)
         {
-
-            var equipmentMaintenance = _equipmentMaintenanceService.GetEquipmentsQueryable().Where(x => x.Id == Id).FirstOrDefault();
+            var equipmentMaintenance = _equipmentMaintenanceService.GetEquipmentsQueryable().Where(x => x.SubLocationSecondId == id || x.SubLocationFirstId == id).FirstOrDefault();
 
             var canUsed = false;
             var errorMessage = string.Empty;
 
             if (equipmentMaintenance == null)
             {
-                errorMessage = $"Invalid equipment Id '{Id}'";
+                errorMessage = $"Invalid equipment Id '{id}'";
             }
             else
             {
                 if (equipmentMaintenance.TroubleState)
                 {
-                    errorMessage = "This equipment can not be used due to trouble state enabled";
+                    errorMessage = "This equipment can not be used due to trouble state reported";
                 }
-                else if (equipmentMaintenance.PemLastCompletedDate.HasValue && DateTime.Now  > equipmentMaintenance.PemLastCompletedDate.Value )
+                else if (equipmentMaintenance.PemLastCompletedDate.HasValue && equipmentMaintenance.PemLastCompletedDate.Value.AddDays(equipmentMaintenance.FrequencyField.Value) > DateTime.Now)
                 {
                     errorMessage = "This equipment can not be used due to overdue for preventative maintenance.";
                 }
-                else {
-                    canUsed = true;
+                else
+                {
+                    if (equipmentMaintenance.Status != EquipmentMaintenanceConstants.Completed && equipmentMaintenance.MaintenanceTask== EquipmentMaintenanceTypeConstants.Repair)
+                    {
+                        errorMessage = "This equipment can not be used due to status not Completed";
+                    }
                 }
+            }
+
+            if (string.IsNullOrWhiteSpace(errorMessage))
+            {
+                canUsed = true;
             }
 
             return Json(new { CanUsed = canUsed, ErrorMessage = errorMessage }, JsonRequestBehavior.AllowGet);
