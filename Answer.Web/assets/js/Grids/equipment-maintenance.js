@@ -207,7 +207,6 @@
 
                     if ((rowData['Status'] === "ASSIGNED" || rowData['Status'] === "REQUESTED") &&
                         rowData['TroubleState'] === "0") {
-                        debugger;
                         var pmDate = new Date(Date.parse(rowData['PemLastCompletedDate']));
                         
                         if (rowData['FrequencyField'] !== '') {
