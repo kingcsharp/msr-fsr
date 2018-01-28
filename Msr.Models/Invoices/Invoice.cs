@@ -26,11 +26,11 @@ namespace Msr.Models.Invoices
         [Required]
         public DateTime InvoiceDate { get; set; }
 
-        public Double? SubTotal { get; set; }
+        public decimal? SubTotal { get; set; }
 
-        public Double? Total { get; set; }
+        public decimal? Total { get; set; }
 
-        public Double? Tax { get; set; }
+        public decimal? Tax { get; set; }
 
         public string Items { get; set; }
 

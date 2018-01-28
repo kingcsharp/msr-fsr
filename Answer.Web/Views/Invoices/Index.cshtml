@@ -74,6 +74,7 @@
                     type: "GET",
                     url: '/Invoices/LoadInvoice',
                     dataType: 'html',
+                    cache: false,
                     success: function (data) {
                         modal.find('.modal-body').html(data);
                     },
@@ -93,6 +94,7 @@
                     type: "GET",
                     url: '/Invoices/LoadInvoiceById/' + id,
                     dataType: 'html',
+                    cache: false,
                     success: function (data) {
                         modal.find('.modal-body').html(data);
                     },

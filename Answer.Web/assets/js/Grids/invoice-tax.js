@@ -56,9 +56,15 @@ function CheckBoxSelection(id, element, value) {
 }
 
 
-$('#totalTaxAmount').on('keyup', function () {
-    CalculateTax($('#totalAmount').val(), $(this).val());
+$('#totalTaxAmount').on('change', function () {
 
+    if ($(this).val() === '') {
+        $(this).val(0);
+    }
+
+    $(this).val(parseFloat($(this).val()).toFixed(2));
+
+    CalculateTax($('#totalAmount').val(), $(this).val());
 });
 
 function AddItems(id) {
@@ -77,7 +83,7 @@ function CalculateTax(subTotal, tax) {
     if (tax !== '') {
         var totalTaxPerAmount = (subTotal * tax) / 100;
         var totalAmount = parseFloat(subTotal) + parseFloat(totalTaxPerAmount);
-        $('#total').val(totalAmount);
+        $('#total').val(totalAmount.toFixed(2));
     } else {
         $('#total').val(subTotal);
     }

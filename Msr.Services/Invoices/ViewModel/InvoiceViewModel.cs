@@ -36,12 +36,12 @@ namespace Msr.Services.Invoices.ViewModel
         public int InvoiceNumber { get; set; }
 
         [Required]
-        public Double? SubTotal { get; set; }
+        public decimal? SubTotal { get; set; }
 
         [Required]
-        public Double? Total { get; set; }
+        public decimal? Total { get; set; }
 
-        public Double? Tax { get; set; }
+        public decimal? Tax { get; set; }
 
         public string Items { get; set; }
 
