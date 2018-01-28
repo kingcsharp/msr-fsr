@@ -259,7 +259,7 @@
         var fillId = @Model.FillId;
         var taskId = '@Model.StepId';
         id = $('#resume-step').attr('data-task-log-id');
-
+        eLoaderOpen()
         $.ajax({
             type: "POST",
             url: "/wip/stepResume?taskLogId=" + id + "&stepId=" + taskId +"&fillId=" + fillId,
@@ -277,6 +277,7 @@
                 }
 
                 TimerVisibility(data);
+                eLoaderClose()
             },
             error: function () {
 
@@ -286,13 +287,14 @@
 
     function StepPauseClick(id) {
         var fillId = @Model.FillId;
-
+        eLoaderOpen()
         $.ajax({
             type: "POST",
             url: "/wip/StepPause?taskLogId=" + id + "&fillId=" + fillId,
             dataType: 'json',
             success: function (data) {
                 TimerVisibility(data);
+                eLoaderClose()
             },
             error: function () {
 
@@ -326,6 +328,19 @@
             $('#@Model.StepId #done-step').addClass('hidden');
             }
         }
+    }
+
+    function eLoaderOpen() {
+        $("#emodel").modal({
+
+            backdrop: 'static',
+
+            keyboard: false
+
+        });
+    }
+    function eLoaderClose() {
+        $("#emodel").modal('hide');
     }
 
 </script>

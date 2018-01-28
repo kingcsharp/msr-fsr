@@ -43,7 +43,7 @@ namespace Msr.Services.Orders.Procedures
 
         public string Text_Target { get; set; }
 
-        public string TaskId { get; set; }
+        public string Task_Id { get; set; }
 
         public string Roll_Up_Id { get; set; }
 

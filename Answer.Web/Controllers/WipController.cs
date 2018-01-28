@@ -466,7 +466,7 @@ namespace Answer.Web.Controllers
 
                 _orderService.UpdateStepMonitor(monitorTemplate);
 
-                var returnValue = _orderService.CloseTask(monitorTemplate.TaskId, loggedUserId);
+                var returnValue = _orderService.CloseTask(monitorTemplate.Task_Id, loggedUserId);
 
                 if (!string.IsNullOrWhiteSpace(returnValue))
                 {
