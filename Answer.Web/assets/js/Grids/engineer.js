@@ -328,7 +328,7 @@ $(document).ready(function () {
 
     function workItemFormatter(cellvalue, options, rowObject) {
 
-        var thisCellVal = '<a href="/wip/details/' + rowObject.FillId + '">' + cellvalue + '</a>';
+        var thisCellVal = '<span class="badge info"><a style="color:white;" href="/wip/details/' + rowObject.FillId + '">' + cellvalue + '</a><span>';
 
         return thisCellVal;
     }
