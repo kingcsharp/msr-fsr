@@ -21,6 +21,19 @@
         @Html.HiddenFor(x => monitorTemplate.FillId)
         @Html.HiddenFor(x => monitorTemplate.Task_Id)
 
+        <div class="form-group">
+            <label class="col-lg-2 control-label">Monitor #:</label>
+            <div class="col-lg-2">
+                @i
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-lg-2 control-label">Monitor Type:</label>
+            <div class="col-lg-2">
+                @monitorTemplate.Monitor_Type
+            </div>
+        </div>
 
         <div class="form-group">
             <label class="col-lg-2 control-label">Monitor Description:</label>
@@ -31,6 +44,7 @@
 
         if (monitorTemplate.Monitor_Type == "USER_NUMBER")
         {
+
             <div class="form-group">
                 <label class="col-lg-2 control-label">Should Be:</label>
                 <div class="col-lg-2">
@@ -187,28 +201,8 @@
                 </div>
             </div>
         }
-        <div class="form-group">
-            <label class="col-lg-2 control-label">Comments:</label>
-            <div class="col-lg-2">
-                @Html.TextAreaFor(x => monitorTemplate.Comment, new { @class = "form-control" })
-            </div>
-        </div>
 
-        <hr />
 
-        <div class="form-group">
-            <label class="col-lg-2 control-label">Monitor #:</label>
-            <div class="col-lg-2">
-                @i
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="col-lg-2 control-label">Monitor Type:</label>
-            <div class="col-lg-2">
-                @monitorTemplate.Monitor_Type
-            </div>
-        </div>
         if (monitorTemplate.Monitor_Type == "EQUIPMENT")
         {
             <div class="form-group">
@@ -283,6 +277,13 @@
             </label>
             <div class="col-lg-8">
                 @Html.DropDownListFor(x => monitorTemplate.Fail_Action, monitorTemplate.FailActionList, new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-lg-2 control-label">Comments:</label>
+            <div class="col-lg-2">
+                @Html.TextAreaFor(x => monitorTemplate.Comment, new { @class = "form-control" })
             </div>
         </div>
 

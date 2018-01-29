@@ -218,10 +218,11 @@
                         var currentDateWith7Days = new Date();
                         currentDateWith7Days.setDate(currentDateWith7Days.getDate() + 7);
 
-                        if (pmDate > currentDate && currentDateWith7Days > pmDate) {
-                            $('#jqGrid').jqGrid('setRowData', rowIds[i], false, "warning");
-                        } else if (pmDate > currentDate) {
+                        if (currentDate >= pmDate) {
                             $('#jqGrid').jqGrid('setRowData', rowIds[i], false, "danger");
+                            
+                        } else if (pmDate < currentDateWith7Days) {
+                            $('#jqGrid').jqGrid('setRowData', rowIds[i], false, "warning");
                         }
                     }
 
@@ -268,7 +269,7 @@
 
                     var objectId = $(this).data('object-id');
 
-                    eModal.confirm('Do you want to set completed ?', 'Confirmation delete')
+                    eModal.confirm('Do you want to set completed ?', 'Confirmation')
                         .then(confirmCallback, optionalCancelCallback);
 
                     function confirmCallback() {

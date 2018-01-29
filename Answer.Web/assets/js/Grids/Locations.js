@@ -10,8 +10,8 @@
             colModel: [
                 {
                     label: ' #',
-                    name: 'Id',
-                    index: 'Id',
+                    name: 'ObjectId',
+                    index: 'ObjectId',
                     key: true,
                     colmenu: false,
                     coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },

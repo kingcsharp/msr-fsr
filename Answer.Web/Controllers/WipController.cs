@@ -696,7 +696,7 @@ namespace Answer.Web.Controllers
                 {
                     errorMessage = "This equipment can not be used due to trouble state reported";
                 }
-                else if (equipmentMaintenance.PemLastCompletedDate.HasValue && equipmentMaintenance.PemLastCompletedDate.Value.AddDays(equipmentMaintenance.FrequencyField.Value) > DateTime.Now)
+                else if (equipmentMaintenance.PemLastCompletedDate.HasValue && DateTime.Now >= equipmentMaintenance.PemLastCompletedDate.Value.AddDays(equipmentMaintenance.FrequencyField.Value))
                 {
                     errorMessage = "This equipment can not be used due to overdue for preventative maintenance.";
                 }
