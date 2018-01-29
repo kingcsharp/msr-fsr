@@ -205,8 +205,7 @@
 
                 if (rowData['PemLastCompletedDate'] !== null && rowData['MaintenanceTask'] === 'Routine Maintenance' && rowData['TroubleState'] === "0") {
 
-                    if ((rowData['Status'] === "ASSIGNED" || rowData['Status'] === "REQUESTED") &&
-                        rowData['TroubleState'] === "0") {
+                    if ((rowData['Status'] === "ASSIGNED" || rowData['Status'] === "REQUESTED")) {
                         var pmDate = new Date(Date.parse(rowData['PemLastCompletedDate']));
                         
                         if (rowData['FrequencyField'] !== '') {

@@ -681,7 +681,7 @@ namespace Answer.Web.Controllers
         [HttpPost]
         public JsonResult CheckEquipmentStatusById(string id)
         {
-            var equipmentMaintenance = _equipmentMaintenanceService.GetEquipmentsQueryable().Where(x => x.SubLocationSecondId == id || x.SubLocationFirstId == id).FirstOrDefault();
+            var equipmentMaintenance = _equipmentMaintenanceService.GetEquipmentsQueryable().Where(x => x.SubLocationSecondId == id || x.SubLocationFirstId == id).OrderBy(x=>x.DateTime).FirstOrDefault();
 
             var canUsed = false;
             var errorMessage = string.Empty;
@@ -692,19 +692,22 @@ namespace Answer.Web.Controllers
             }
             else
             {
-                if (equipmentMaintenance.TroubleState)
+                 if (equipmentMaintenance.PemLastCompletedDate.HasValue && equipmentMaintenance.MaintenanceTask == EquipmentMaintenanceTypeConstants.RoutineMaintenance && equipmentMaintenance.TroubleState == false)                   
                 {
-                    errorMessage = "This equipment can not be used due to trouble state reported";
+                    if (equipmentMaintenance.Status == EquipmentMaintenanceConstants.Assigned || equipmentMaintenance.Status == EquipmentMaintenanceConstants.Requested && equipmentMaintenance.TroubleState == false) {
+
+                        if (DateTime.Now >= equipmentMaintenance.PemLastCompletedDate.Value.AddDays(equipmentMaintenance.FrequencyField.Value))
+                        {
+                            errorMessage = "This equipment can not be used due to overdue for preventative maintenance.";
+                        }
+                    }
                 }
-                else if (equipmentMaintenance.PemLastCompletedDate.HasValue && DateTime.Now >= equipmentMaintenance.PemLastCompletedDate.Value.AddDays(equipmentMaintenance.FrequencyField.Value))
+
+                if (equipmentMaintenance.MaintenanceTask == EquipmentMaintenanceTypeConstants.Repair && equipmentMaintenance.TroubleState)
                 {
-                    errorMessage = "This equipment can not be used due to overdue for preventative maintenance.";
-                }
-                else
-                {
-                    if (equipmentMaintenance.Status != EquipmentMaintenanceConstants.Completed && equipmentMaintenance.MaintenanceTask== EquipmentMaintenanceTypeConstants.Repair)
+                    if (equipmentMaintenance.Status == EquipmentMaintenanceConstants.Assigned || equipmentMaintenance.Status == EquipmentMaintenanceConstants.Requested && equipmentMaintenance.TroubleState == false)
                     {
-                        errorMessage = "This equipment can not be used due to status not Completed";
+                        errorMessage = "This equipment can not be used due to trouble state reported";
                     }
                 }
             }
