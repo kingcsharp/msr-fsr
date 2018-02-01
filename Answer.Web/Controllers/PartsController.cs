@@ -174,8 +174,11 @@ namespace Answer.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                model.NTLogin = GetCurrentUser().Id;
+                var curerntUser = GetCurrentUser();
+
+                model.NTLogin = curerntUser.Id;
                 model.SubParts = null;
+                model.Company = curerntUser.Company;
 
                 var response = taskService.Create(model);
 
