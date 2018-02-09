@@ -1,7 +1,0 @@
-﻿CREATE TABLE [dbo].[A_DISCUSSION_INV_PEOPLE] (
-    [DISCUSSION_ID] VARCHAR (50) NULL,
-    [PEOPLE_ID]     VARCHAR (50) NULL,
-    [MODBY]         VARCHAR (50) NULL,
-    [DRCM]          DATETIME     NULL
-);
-

@@ -8,7 +8,7 @@
     [TRACK_FROM_START]          SMALLINT       NULL,
     [DRCM]                      DATETIME       NULL,
     [MODBY]                     VARCHAR (50)   NULL,
-    [COMPANY]                   VARCHAR (50)   NOT NULL,
+    [COMPANY]                   VARCHAR (50)   NULL,
     [OBJECT_ID]                 VARCHAR (50)   NULL,
     [COMPANY_NAME]              NVARCHAR (100) NULL,
     [PART_TYPE_NAME]            NVARCHAR (100) NULL,

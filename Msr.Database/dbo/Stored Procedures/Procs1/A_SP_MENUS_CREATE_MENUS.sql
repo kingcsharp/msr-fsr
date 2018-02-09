@@ -12,9 +12,7 @@ as
 DELETE FROM A_MENUS
 
 
---Favorites
-exec A_SP_MENUS_CREATE_MENU_ITEM 'Favorites','Favorites','asp/favorites/searchFavoriteGroups.asp?firstTime=true'
-exec A_SP_MENUS_CREATE_MENU_ITEM 'Notes','Favorites','asp/notes/search.asp?firstTime=true'
+
 --Projects
 exec A_SP_MENUS_CREATE_MENU_ITEM 'Projects','Projects','asp/projects/searchproject.asp?firstTime=true'
 exec A_SP_MENUS_CREATE_MENU_ITEM 'Discussions','Projects','asp/discussions/searchDiscussion.asp?firstTime=true'

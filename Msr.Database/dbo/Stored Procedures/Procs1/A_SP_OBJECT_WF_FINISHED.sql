@@ -1,12 +1,5 @@
 ﻿
 
-
-
-
-
-
-
-
 CREATE                                PROCEDURE A_SP_OBJECT_WF_FINISHED
 @wfsID nvarchar(50),
 @strNTLogin  nvarchar(50)
@@ -155,12 +148,6 @@ if @myTable = 'A_EQUIP_EXP_HISTORY'
 		if @@ERROR <> 0 goto problem
 	end
 
-if @myTable = 'A_NEEDS_HISTORY'
-	begin
-		print 'Finishing the WF for A_NEEDS_HISTORY' + @myID
-		exec A_SP_NEEDS_FINISH_WF @myID,@objID,@strNTLogin
-		if @@ERROR <> 0 goto problem
-	end
 
 declare @stat as varchar(50),
 @finDate as varchar(50)

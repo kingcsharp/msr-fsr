@@ -73,7 +73,6 @@
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\A_PARTS_SUB_PARTS.sql" />
-    <Build Include="dbo\Tables\A_DISCUSSION_RESPONSE_ALERTS.sql" />
     <Build Include="dbo\Tables\A_PARTS_FUTURE_CUSTOMERS.sql" />
     <Build Include="dbo\Tables\A_TASK_ACTUAL_PARTS_LINKED_WHEN_FINISHED.sql" />
     <Build Include="dbo\Tables\A_PROJECT_ALLOWED_PEOPLE.sql" />
@@ -90,7 +89,6 @@
     <Build Include="dbo\Tables\A_ACCOUNT_ORDER_ITEM_STATUS.sql" />
     <Build Include="dbo\Tables\A_TASK_PROJECT_LINK.sql" />
     <Build Include="dbo\Tables\A_LOCATIONS_CHILD_LOOKUP.sql" />
-    <Build Include="dbo\Tables\A_DNR_PROC_INFO.sql" />
     <Build Include="dbo\Tables\A_ACTUAL_PARTS_RELATED_FILES.sql" />
     <Build Include="dbo\Tables\A_SURVEYS.sql" />
     <Build Include="dbo\Tables\A_PROD_PRICE_LIST_HISTORY.sql" />
@@ -109,14 +107,12 @@
     <Build Include="dbo\Tables\A_MESSAGES_ATTACHMENTS.sql" />
     <Build Include="dbo\Tables\A_PROJECT_SPONSORS.sql" />
     <Build Include="dbo\Tables\A_COMPANIES_CHILD_LOOKUP_TABLE.sql" />
-    <Build Include="dbo\Tables\A_DNR_PART_INFO.sql" />
     <Build Include="dbo\Tables\A_TASK_OBJECT_LINK.sql" />
     <Build Include="dbo\Tables\A_PROCEDURE_STEPS.sql" />
     <Build Include="dbo\Tables\A_PROCEDURE_STEP_PRECEDING_STEPS.sql" />
     <Build Include="dbo\Tables\A_ORDER_ITEMS.sql" />
     <Build Include="dbo\Tables\A_FORECAST_SALES_FUNNEL.sql" />
     <Build Include="dbo\Tables\A_TASK_ASSIGNEE.sql" />
-    <Build Include="dbo\Tables\A_SERVICE_CALL_WORK_TIME.sql" />
     <Build Include="dbo\Tables\A_PROCEDURE_STEP_RECURRENCE.sql" />
     <Build Include="dbo\Tables\A_SURVEY_ATTACHMENTS.sql" />
     <Build Include="dbo\Tables\A_LAST_UPLOAD_FILE_INFO.sql" />
@@ -145,14 +141,11 @@
     <Build Include="dbo\Tables\A_FORECASTS_HISTORY.sql" />
     <Build Include="dbo\Tables\A_TT_VERBS.sql" />
     <Build Include="dbo\Tables\A_COMPANY_EMPLOYEE_PRODUCT_LIST.sql" />
-    <Build Include="dbo\Tables\A_MEETING_AGENDA_ITEM_RELATED_OBJECTS.sql" />
     <Build Include="dbo\Tables\A_COMPANY_HEAD_PEOPLE.sql" />
     <Build Include="dbo\Tables\A_TT_VERBS_TYPE_LOOKUP.sql" />
-    <Build Include="dbo\Tables\A_SERVICE_CALLS_STATUS_HISTORY.sql" />
     <Build Include="dbo\Tables\A_NOTE_CATEGORIES.sql" />
     <Build Include="dbo\Tables\A_TASK_COMPLETION_STATS.sql" />
     <Build Include="dbo\Tables\A_NOTE_PEOPLE_WHO_VIEWED.sql" />
-    <Build Include="dbo\Tables\A_MEETING_TOPICS.sql" />
     <Build Include="dbo\Tables\A_NOTE_RELATIONS.sql" />
     <Build Include="dbo\Tables\A_MESSAGES_ROLE_LINK.sql" />
     <Build Include="dbo\Tables\A_COMPANIES_THAT_CAN_VIEW_ME.sql" />
@@ -181,12 +174,10 @@
     <Build Include="dbo\Tables\A_PARTS_HISTORY.sql" />
     <Build Include="dbo\Tables\A_ENGINEER_SCREEN_REPORTS.sql" />
     <Build Include="dbo\Tables\A_UNIT_TYPES.sql" />
-    <Build Include="dbo\Tables\A_MEETING_REALLY_INIVTED_COMPANY.sql" />
     <Build Include="dbo\Tables\A_PROD_PRICE_LIST_VOLUME_DISC.sql" />
     <Build Include="dbo\Tables\A_MESSAGES.sql" />
     <Build Include="dbo\Tables\A_PRODUCT_OBJ_USED_ON_LINK.sql" />
     <Build Include="dbo\Tables\A_ORDER_UNITS.sql" />
-    <Build Include="dbo\Tables\A_MEETING_RESPONSES.sql" />
     <Build Include="dbo\Tables\A_PROD_PRICE_CUSTOMERS.sql" />
     <Build Include="dbo\Tables\A_OUTSIDE_EMAIL_ADDRESSES.sql" />
     <Build Include="dbo\Tables\A_PROD_PRICE_LIST_EXTRA_COSTS_PRICE_TABLE.sql" />
@@ -199,17 +190,12 @@
     <Build Include="dbo\Tables\A_PROD_PRICE_LIST_EXTRA_COSTS.sql" />
     <Build Include="dbo\Tables\A_ROLES_DEPARTMENT_SUB_ROLES.sql" />
     <Build Include="dbo\Tables\A_PRODUCTS_QUICK_PRICE.sql" />
-    <Build Include="dbo\Tables\A_MEETING_INV_PEOPLE.sql" />
-    <Build Include="dbo\Tables\A_SERVICE_CALLS_WORK_TYPES.sql" />
     <Build Include="dbo\Tables\A_PAGE_PERMISSIONS.sql" />
     <Build Include="dbo\Tables\A_ACCOUNTS_HISTORY.sql" />
-    <Build Include="dbo\Tables\A_SERVICE_CALLS_ATTACHMENTS.sql" />
-    <Build Include="dbo\Tables\A_MEETING_INV_ROLE.sql" />
     <Build Include="dbo\Tables\A_COMPANY_HOLIDAYS.sql" />
     <Build Include="dbo\Tables\A_PAGES_WITH_NO_LOGIN.sql" />
     <Build Include="dbo\Tables\A_QUOTE_ORDER_LINK_STAT_HISTORY.sql" />
     <Build Include="dbo\Tables\A_PART_REPLACEMENT_DATA.sql" />
-    <Build Include="dbo\Tables\A_SERVICE_CALLS_WEEKLY_REPORTS.sql" />
     <Build Include="dbo\Tables\A_PROD_PRICE_LIST.sql" />
     <Build Include="dbo\Tables\A_SURVEY_RESPONSE_ALERTS.sql" />
     <Build Include="dbo\Tables\A_PROCEDURE_STEP_SYSTEM_TASK_COMP_TEST_DATA.sql" />
@@ -238,7 +224,6 @@
     <Build Include="dbo\Tables\A_PROPOSALS.sql" />
     <Build Include="dbo\Tables\A_SEARCHES_SAVED.sql" />
     <Build Include="dbo\Tables\A_PEOPLE.sql" />
-    <Build Include="dbo\Tables\A_SERVICE_CALLS_TOTAL_HOURS.sql" />
     <Build Include="dbo\Tables\A_THEORY_COMMENTS.sql" />
     <Build Include="dbo\Tables\A_SYSTEM_TASKS.sql" />
     <Build Include="dbo\Tables\A_PURCHASE_QUOTE_STATUS.sql" />
@@ -256,7 +241,6 @@
     <Build Include="dbo\Tables\A_SURVEY_COLORS.sql" />
     <Build Include="dbo\Tables\A_LANGUAGES.sql" />
     <Build Include="dbo\Tables\A_TEST_SET_POINTS.sql" />
-    <Build Include="dbo\Tables\A_SERVICE_CALLS_ACC_RECIEVABLE_ROLE.sql" />
     <Build Include="dbo\Tables\A_SURVEY_INV_PEOPLE.sql" />
     <Build Include="dbo\Tables\A_THEORY_PARAGRAPH_FILE_LINK.sql" />
     <Build Include="dbo\Tables\A_THEORY_PARAGRAPH_PROCEDURE_LINK.sql" />
@@ -283,13 +267,11 @@
     <Build Include="dbo\Tables\A_NOUN_HIERARCHIES.sql" />
     <Build Include="dbo\Tables\A_ADMIN_SQL_TO_RUN.sql" />
     <Build Include="dbo\Tables\A_ADMIN_EMAIL_SEND_LIST.sql" />
-    <Build Include="dbo\Tables\A_MEETING_AGENDA_ITEMS.sql" />
     <Build Include="dbo\Tables\A_THEORY_ROLES_ALLOWED.sql" />
     <Build Include="dbo\Tables\A_QUOTE_ORDER_LINK.sql" />
     <Build Include="dbo\Tables\A_NOUN_HIERARCHY_CHILDREN.sql" />
     <Build Include="dbo\Tables\A_NOTE_COMPANIES_TO_VIEW.sql" />
     <Build Include="dbo\Tables\A_ADMIN_CONFIGURATION.sql" />
-    <Build Include="dbo\Tables\A_MEETING_AGENDA_ITEM_DOC_LINK.sql" />
     <Build Include="dbo\Tables\A_NOTE_ROLES_TO_VIEW.sql" />
     <Build Include="dbo\Tables\A_WF_GROUPS.sql" />
     <Build Include="dbo\Tables\A_TASK_PRIORITY_LEVELS.sql" />
@@ -297,40 +279,27 @@
     <Build Include="dbo\Tables\A_ADMIN_EMAIL_QUE.sql" />
     <Build Include="dbo\Tables\A_FORECASTS.sql" />
     <Build Include="dbo\Tables\A_LOCATIONS.sql" />
-    <Build Include="dbo\Tables\A_DNR_TASK_NUM_MATCHING_CASES.sql" />
     <Build Include="dbo\Tables\A_ACCOUNT_INVOICE_ITEMS_PAYMENT_INFO.sql" />
-    <Build Include="dbo\Tables\A_DISCUSSION_COLORS.sql" />
     <Build Include="dbo\Tables\A_WF_STAGES.sql" />
     <Build Include="dbo\Tables\A_COUNTERS.sql" />
     <Build Include="dbo\Tables\A_NOTE_CHILDREN.sql" />
     <Build Include="dbo\Tables\A_WORKFLOW_GROUP_STARTED.sql" />
-    <Build Include="dbo\Tables\A_MEETING_AGENDA_KEY_STATEMENTS.sql" />
-    <Build Include="dbo\Tables\A_NEEDS_COMPANIES_ALLOWED.sql" />
     <Build Include="dbo\Tables\A_ACCOUNT_INVOICE_PAYMENT_LINK.sql" />
-    <Build Include="dbo\Tables\A_NEEDS.sql" />
     <Build Include="dbo\Tables\A_NOTE_FILES.sql" />
     <Build Include="dbo\Tables\A_COLORS.sql" />
     <Build Include="dbo\Tables\A_WF_GROUP_PEOPLE_WITH_PENDING_APPROVALS.sql" />
     <Build Include="dbo\Tables\A_LOCATIONS_HISTORY.sql" />
-    <Build Include="dbo\Tables\A_NEEDS_PEOPLE_ALLOWED.sql" />
     <Build Include="dbo\Tables\A_MONITOR_TEXT_THESAURUS.sql" />
     <Build Include="dbo\Tables\A_WORKFLOWS.sql" />
     <Build Include="dbo\Tables\A_WF_STAGE_GROUP_LINK.sql" />
-    <Build Include="dbo\Tables\A_MEETING_INV_COMPANY.sql" />
-    <Build Include="dbo\Tables\A_NEEDS_HISTORY.sql" />
-    <Build Include="dbo\Tables\A_DISCUSSION_ATTACHMENTS.sql" />
-    <Build Include="dbo\Tables\A_DNR_TASK_INFO.sql" />
     <Build Include="dbo\Tables\A_PART_TYPES.sql" />
-    <Build Include="dbo\Tables\A_DISCUSSION_INV_COMPANY.sql" />
     <Build Include="dbo\Tables\A_WORKFLOW_STAGE_LINK.sql" />
     <Build Include="dbo\Tables\A_WORKFLOWS_STARTED.sql" />
     <Build Include="dbo\Tables\A_MONITOR_TEMPLATES.sql" />
     <Build Include="dbo\Tables\A_COMPANIES_HISTORY.sql" />
-    <Build Include="dbo\Tables\A_DISCUSSION_INV_PEOPLE.sql" />
     <Build Include="dbo\Tables\A_TASK_CC_PEOPLE.sql" />
     <Build Include="dbo\Tables\A_ROLE_ASSIGNEE.sql" />
     <Build Include="dbo\Tables\A_COUNTERS_HISTORY.sql" />
-    <Build Include="dbo\Tables\A_DISCUSSION_INV_ROLE.sql" />
     <Build Include="dbo\Tables\A_Z_EMAILS_TO_SEND_ADDRESSES_TO_SEND_TO.sql" />
     <Build Include="dbo\Tables\A_TASK_ORDER_INFORMATION.sql" />
     <Build Include="dbo\Tables\A_WF_GROUP_PEOPLE_LINK.sql" />
@@ -339,7 +308,6 @@
     <Build Include="dbo\Tables\A_PERSON_ROLES.sql" />
     <Build Include="dbo\Tables\A_COMPANIES.sql" />
     <Build Include="dbo\Tables\A_ACCOUNT_PURCHASABLE_ORDERS_LINK.sql" />
-    <Build Include="dbo\Tables\A_DISCUSSION_RESPONSE.sql" />
     <Build Include="dbo\Tables\A_WF_GROUP_ROLE_LINK.sql" />
     <Build Include="dbo\Tables\A_TASK_MONITORS.sql" />
     <Build Include="dbo\Tables\A_EQUIP_EXP.sql" />
@@ -354,12 +322,10 @@
     <Build Include="dbo\Tables\A_WF_GROUP_SPECIAL_MEMBERS.sql" />
     <Build Include="dbo\Tables\A_Z_EMAILS_TO_SEND.sql" />
     <Build Include="dbo\Tables\A_PROPOSALS_HISTORY.sql" />
-    <Build Include="dbo\Tables\A_DISCUSSION_REALLY_INIVTED_COMPANY.sql" />
     <Build Include="dbo\Tables\A_TASK_PROCEDURE_ASSIGNEE.sql" />
     <Build Include="dbo\Tables\A_WF_GROUP_SPECIALS_LINK.sql" />
     <Build Include="dbo\Tables\A_PHONE_NUMBERS.sql" />
     <Build Include="dbo\Tables\A_PEOPLE_NEW_UNENCRYPTED_PASSWORDS.sql" />
-    <Build Include="dbo\Tables\A_PEOPLES_FAVORITES.sql" />
     <Build Include="dbo\Tables\A_Z_ORDER_ITEMS_BILL_TYPES.sql" />
     <Build Include="dbo\Tables\A_LOCATIONS_OBJECT_LINK.sql" />
     <Build Include="dbo\Tables\A_Z_EMAILS_TO_SEND_TEXT.sql" />
@@ -367,7 +333,6 @@
     <Build Include="dbo\Tables\A_PART_TYPES_HISTORY.sql" />
     <Build Include="dbo\Tables\A_FORECAST_CUSTOMER_LIST.sql" />
     <Build Include="dbo\Tables\A_WF_ACTIVITIES.sql" />
-    <Build Include="dbo\Tables\A_NAV_HISTORY.sql" />
     <Build Include="dbo\Tables\A_SECURITY_LEVELS.sql" />
     <Build Include="dbo\Tables\A_WF_ACT_LINK.sql" />
     <Build Include="dbo\Tables\A_LOCATIONS_RELATED_LOCATIONS.sql" />
@@ -383,31 +348,25 @@
     <Build Include="dbo\Tables\A_ROLES.sql" />
     <Build Include="dbo\Tables\A_DOCUMENT_LINK.sql" />
     <Build Include="dbo\Tables\A_Z_EMAILS_TO_SEND_ROLES_TO_EMAIL.sql" />
-    <Build Include="dbo\Tables\A_DISCUSSIONS.sql" />
     <Build Include="dbo\Tables\A_FORECAST_SUPPLIER_LIST.sql" />
     <Build Include="dbo\Tables\A_PROJECT_MEMBERS.sql" />
     <Build Include="dbo\Tables\A_PROCEDURE_STEP_DESTINATION_TYPES.sql" />
-    <Build Include="dbo\Tables\A_TASK_DISCUSSION_LINK.sql" />
     <Build Include="dbo\Tables\A_EMAILS.sql" />
     <Build Include="dbo\Tables\A_RESUME_DATA.sql" />
     <Build Include="dbo\Tables\A_PREPOP_HISTORY.sql" />
     <Build Include="dbo\Tables\A_FORECAST_ROLLUP_TYPES.sql" />
     <Build Include="dbo\Tables\A_ACTUAL_PARTS_PICK_LIST.sql" />
-    <Build Include="dbo\Tables\A_DISCUSSION_VIEWED_BY_PEOPLE.sql" />
     <Build Include="dbo\Tables\A_PARTS_SAFETY_STOCK_LEVELS.sql" />
     <Build Include="dbo\Tables\A_TASK_EMAIL_PEOPLE_LINK.sql" />
     <Build Include="dbo\Tables\A_COUNTERS_RECORDINGS.sql" />
     <Build Include="dbo\Tables\A_PEOPLE_HISTORY.sql" />
-    <Build Include="dbo\Tables\A_RESUMES.sql" />
     <Build Include="dbo\Tables\A_TASK_LAST_COMMENT.sql" />
     <Build Include="dbo\Tables\A_TASK_ACTION_OBJECT_LINK.sql" />
     <Build Include="dbo\Tables\A_ACTUAL_PARTS_HISTORY.sql" />
     <Build Include="dbo\Tables\A_Z_TEXT_DROP_DOWN_LOOK_UP.sql" />
     <Build Include="dbo\Tables\A_TASK_COMMENT.sql" />
     <Build Include="dbo\Tables\A_PARTS_EXTERNAL_EQUALS.sql" />
-    <Build Include="dbo\Tables\A_MEETINGS.sql" />
     <Build Include="dbo\Tables\A_ACTUAL_PARTS.sql" />
-    <Build Include="dbo\Tables\A_TASK_MEETING_LINK.sql" />
     <Build Include="dbo\Functions\A_FN_DATE_TIME_GET_LOCAL_TIME_FOR_PERSON.sql" />
     <Build Include="dbo\Functions\FN_ROLE_GET_COMPANY.sql" />
     <Build Include="dbo\Functions\A_FN_TASK_MAKE_PARENT_LIST.sql" />
@@ -452,7 +411,6 @@
     <Build Include="dbo\Functions\A_FN_COMPANY_GET_PARENT_LIST_XML.sql" />
     <Build Include="dbo\Functions\A_FN_COMPANY_GET_PATH_NAME_FROM_APPROVED_ID.sql" />
     <Build Include="dbo\Functions\A_FN_DATE_TIME_GET_GREENWITCH_TIME_FOR_PERSON.sql" />
-    <Build Include="dbo\Functions\A_FN_DISCUSSION_GET_LAST_VIEW_DATE.sql" />
     <Build Include="dbo\Functions\getEmailURL.sql" />
     <Build Include="dbo\Functions\A_FN_EE_GET_OVERALL_SHOW.sql">
       <QuotedIdentifier>Off</QuotedIdentifier>
@@ -476,7 +434,6 @@
     <Build Include="dbo\Functions\getRootURL.sql" />
     <Build Include="dbo\Functions\getUniqueID.sql" />
     <Build Include="dbo\Functions\A_FN_COMPANY_APPROVED_GET_TOP_COMPANY.sql" />
-    <Build Include="dbo\Functions\A_FN_DISCUSSION_GET_STANDARD_SEARCH_FLAG.sql" />
     <Build Include="dbo\Functions\A_FN_PROCEDURE_STEPS_MAKE_PRECEDING_LIST.sql" />
     <Build Include="dbo\Functions\xmlEncode.sql" />
     <Build Include="dbo\Functions\getTaskParentList.sql" />
@@ -495,7 +452,6 @@
     <Build Include="dbo\Stored Procedures\Procs1\_A_SP_ORDER_QUOTE_SHOW_ITEM_TREE.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_FORECAST_ITEM_FIGURE_INVOICED_AMOUNTS.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_LOCATION_UPDATE_PARENT_PATH.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_MEETINGS_REORDER_AGENDA_TOPICS.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_NOTE_CREATE_FROM_TASK_COMMENT.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_PRODUCT_POP_FILL_APP_OBJECTS.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_ACCONT_INVOICES_MOVE_ITEM_FROM_ONE_INVOICE_TO_ANOTHER.sql" />
@@ -640,10 +596,6 @@
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_ADMIN_MENU_ROLES_UPDATE.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_ADMIN_PROCEDURE_SAVE_NEWS_PROCEDURE.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_ADMIN_QUOTE_ROLE_UPDATE.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_ADMIN_SERVICE_CALL_ACCT_RECEIVABLE_ROLE_UPDATE.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_ADMIN_SERVICE_CALL_GET_ACCT_RECEIVED_ROLE_DATA.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_ADMIN_SQL_TO_RUN_EXECUTE.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_ADMIN_SQL_TO_RUN_QUE_UP.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_ADMIN_SQL_TO_RUN_QUE_UP_WITH_DATE.sql" />
@@ -730,7 +682,6 @@
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_CREATE_WEIGHT_UNIT.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_DD_COLOR_LIST.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_DD_LANGUAGES.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DD_PERSONS_FAVORITES.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_DD_PRIORITY_LEVEL_LIST.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_DD_PROCEDURE_STEP_RELATED_PARTS.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_DD_PURPOSE_LEVEL_LIST.sql" />
@@ -739,80 +690,6 @@
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_DD_TT_VERBS_TYPES.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_DD_WORKFLOW_ACTIVITIES.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_DESCRIPTION_SEARCH.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DISCUSSION_CLOSE.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DISCUSSION_COLOR_LIST.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DISCUSSION_DELETE_FILE_LINKS.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DISCUSSION_DELETE_INV_COMPANY.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DISCUSSION_DELETE_INV_PEOPLE.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DISCUSSION_DELETE_INV_ROLES.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DISCUSSION_EMAIL_GET_DATA_BY_ID.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DISCUSSION_EMAIL_GET_INVITED_PEOPLE.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DISCUSSION_GET_ALL_DATA.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DISCUSSION_GET_FILE_ATTACHMENTS.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DISCUSSION_GET_RESPONSE_DATA_BY_ID.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DISCUSSION_GET_TASKS_FOR_ONE_DISCUSSION.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DISCUSSION_GET_TREE_DATA.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DISCUSSION_INSERT_REALLY_INVITED_COMPANY_CHILD.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DISCUSSION_INSERT_REALLY_INVITED_COMPANY_PARENT.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DISCUSSION_RESPONSE_CHECK_FOR_CHILD.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DISCUSSION_RESPONSE_GET_CHILDREN.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DISCUSSION_RESPONSE_UPDATE_MY_PERFERANCE.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DISCUSSION_SEARCH.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DISCUSSION_SEND_EMAIL.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DISCUSSION_TREE_ADD_TO_TREE_TABLE.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DISCUSSION_TREE_SHOW_TREE.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DISCUSSION_UPDATE_INV_COMPANY.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DISCUSSION_UPDATE_INV_PEOPLE.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DISCUSSION_UPDATE_INV_ROLES.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DISCUSSION_UPDATE_ONE_DISCUSSION.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DISCUSSION_UPDATE_ONE_REPLY.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DISCUSSION_UPDATE_OPENING_STATEMENT.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DISCUSSION_UPDATE_REALLY_INVITED_COMPANY.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DISCUSSION_UPDATE_REF_FILES.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DISCUSSION_UPDATE_VIEW_BY_PEOPLE.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DNR_ADD_FREE_TEXT_PROCEDURE_TO_DNR.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DNR_ADD_FREE_TXT_PROCEDURE_TO_DNR.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DNR_ADD_PROCEDURE_AS_CHILD_TASK.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DNR_CLOSE.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DNR_FIND_ACTIONS_FROM_MATCHING_CASE.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DNR_FIND_ACTIONS_FROM_SIMILAR_CASES.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DNR_FIND_MATCHING_CASES.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DNR_FIND_MATCHING_CASES_WITH_TASK_DATA.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DNR_FIND_TESTS_FROM_MATCHING_CASE.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DNR_FIND_TESTS_FROM_MATCHING_CASE_II.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DNR_FIND_TESTS_FROM_SIMILAR_CASES.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DNR_GET_PARTS_ON_THIS_CALL.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DNR_PERMUTATION_FIND_MATCHING_CASES_PART_2.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DNR_PERMUTATION_FIND_MATCHING_CASES_PART_2_RESTORE.sql">
-      <AnsiNulls>Off</AnsiNulls>
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DNR_TASK_UPDATE_CHILDREN.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DNR_TELL_ME_NEXT_STEP.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_DOCUMENT_SECURITY.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_DOCUMENTS_GET_DOCUMENT_BY_ID.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_EMAILS_ADD_FOR_OBJECT.sql">
@@ -828,15 +705,6 @@
       <QuotedIdentifier>Off</QuotedIdentifier>
     </Build>
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_EQUIP_EXP_UPDATE_EQUIP_EXP.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_FAVORITE_DELETE_ITEM.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_FAVORITE_GROUPS_SEARCH.sql">
-      <AnsiNulls>Off</AnsiNulls>
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_FAVORITE_UPDATE_NUM.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_FAVORITES_DELETE_GROUP.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_FAVORITES_SHOW_ITEMS.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_FAVORITES_VERIFY_EXISTS.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_FILE_SAVE_UPLOAD_FILE.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_FILES_ADD_PDF_FOR_TASK_FILES.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_FILES_COPY_FROM_ONE_OBJ_TO_NEXT.sql" />
@@ -989,98 +857,7 @@
     </Build>
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_LOCATIONS_UPDATE_ONE_LOCATION_CHILD_TABLE.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_LOCATIONS_UPDATE_WHERE_USED_NAME.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_MAIN_MENU_GET_WARNINGS.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_MAIN_MENU_GET_WARNINGS_APPEND_WARNING.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_MEETING_ACCEPT_MEETING.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_MEETING_ADD_SYSTEM_AGENDA_ITEMS.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_MEETING_AGENDA_DELETE_FILE_LINKS.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_MEETING_AGENDA_ITEM_UPDATE_ONE_ITEM.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_MEETING_AGENDA_KEY_STATEMENT_UPDATE_ONE_STATEMENT.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_MEETING_AGENDA_UPDATE_REFERENCE_FILES.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_MEETING_COPY_ONE_MEETING.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_MEETING_DELETE_AGENDA.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_MEETING_DELETE_INV_COMPANY.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_MEETING_DELETE_INV_PEOPLE.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_MEETING_DELETE_INV_ROLES.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_MEETING_DELETE_MEETING.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_MEETING_EMAIL_SEND_EMAIL.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_MEETING_GET_AGENDA_ATTACHMENTS.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_MEETING_GET_AGENDA_BY_AGENDA_ID.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_MEETING_GET_AGENDA_BY_ID.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_MEETING_GET_AGENDA_COUNT.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_MEETING_GET_EMAIL_DATA_BY_ID.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_MEETING_GET_HOST_NAME.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_MEETING_GET_INVITED_PEOPLE.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_MEETING_GET_KEY_STATEMENTS_BY_AGENDA_ID.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_MEETING_GET_MEETING_BY_ID.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_MEETING_GET_MY_STATUS_FOR_THIS_MEETING.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_MEETING_GET_PROJECT_MEMBERS.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_MEETING_GET_REPONDANT_LIST.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_MEETING_GET_TASKS_FOR_ONE_MEETING.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_MEETING_INSERT_REALLY_INVITED_COMPANY_CHILD.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_MEETING_INSERT_REALLY_INVITED_COMPANY_PARENT.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_MEETING_LIST_AGENDA_BY_ID_ORDER_BY_ITEM.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_MEETING_ORDER_AGENDA_ITEMS.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_MEETING_REJECT_MEETING.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_MEETING_SEARCH.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_MEETING_UPDATE_AGENDA_TOPIC.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_MEETING_UPDATE_INV_COMPANY.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_MEETING_UPDATE_INV_PEOPLE.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_MEETING_UPDATE_INV_ROLES.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_MEETING_UPDATE_ONE_ACTION_PLAN.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_MEETING_UPDATE_ONE_MEETING.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_MEETING_UPDATE_REALLY_INVITED_COMPANY.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_MEETINGS_KEY_STATEMENTS_DELETE_ONE_BY_ID.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_MENUS_CREATE_MENU_ITEM.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_MENUS_CREATE_MENUS.sql">
       <QuotedIdentifier>Off</QuotedIdentifier>
@@ -1170,26 +947,6 @@
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_MONITORS_CHECK_TASK_FOR_NEW_TEXT_MONITOR_RESULTS.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_MONITORS_WITH_REULTS_GET_FOR_TASK.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_NCR_SEARCH.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_NEEDS_COPY_ONE.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_NEEDS_DELETE.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_NEEDS_FINISH_WF.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_NEEDS_GET_COMPANIES_TO_VIEW.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_NEEDS_GET_FILE_ATTACHMENTS.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_NEEDS_GET_PEOPLE_TO_VIEW.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_NEEDS_PUBLIC_ADS_COUNT.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_NEEDS_PUBLIC_ADS_SEARCH.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_NEEDS_SEARCH.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_NEEDS_UPDATE_NEED.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_NOTE_SEND_EMAIL.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_NOTES_SEARCH.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_NOTES_UPDATE_ONE_NOTE.sql">
@@ -1519,7 +1276,6 @@
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_POPFILL_EDITROLE_PARENT_ROLES.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_POPFILL_EDITROLE_PEOPLE_ASSIGNED.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_POPFILL_EDITROLE_POSITION_ASSIGNED_PEOPLE.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_POPFILL_MEETING_BY_ID.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_POPFILL_PEOPLE_BY_ID_LIST.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_POPFILL_PROJECT_BY_ID.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_POPFILL_SURVEY_BY_ID_LIST.sql" />
@@ -1723,37 +1479,6 @@
     </Build>
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_PRODUCTS_SHOW_ACT_PARTS_WHERE_USED.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_PRODUCTS_WITH_SUPPLIER_BY_ID.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_PROJECT_ADD_REMOVE_EXISTING_ITEMS.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_PROJECT_CLOSE.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_PROJECT_COPY_ONE_ITEMS_PROJ_OBJ_PURP_TAGS.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_PROJECT_COPY_ONE_PROJECT.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_PROJECT_DELETE_ONE_PROJECT.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_PROJECT_GENERAL_UPDATE_PURPOSES_AND_OBJECTS.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_PROJECT_GET_DATA_BY_ID.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_PROJECT_GET_ITEMS_FOR_ONE_PROJECT.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_PROJECT_ITEM_CLEAN_UP_ALL_TAGS.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_PROJECT_ITEM_UPDATE.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_PROJECT_ITEM_UPDATE_ALL_TAGS.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_PROJECT_SEARCH.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_PROJECT_SEARCH_ALL_RELATED_ITEMS.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_PROJECT_UPDATE_ALL_RELATED_ITEMS.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_PROJECT_UPDATE_ONE_PROJECT.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_PROJECTS_GET_LIST_FOR_ONE_ITEM.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_PROJECTS_GET_NAME_BY_MULTIPLE_ID.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_PROPOSALS_COPY_ONE.sql">
       <QuotedIdentifier>Off</QuotedIdentifier>
     </Build>
@@ -1861,9 +1586,6 @@
     </Build>
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_REGIONS_UPDATE_ONE_REGION.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_REGIONS_UPDATE_WHERE_USED_NAME.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_RESUMES_ADD_DATA.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_RESUMES_SEARCH.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_RESUMES_UPDATE_ONE.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_ROLE_COPY_ONE.sql">
       <QuotedIdentifier>Off</QuotedIdentifier>
     </Build>
@@ -1887,95 +1609,6 @@
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_ROLES_UPDATE_ONE_ROLE.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_SECURITY_LEVEL_GET_DATA_BY_ID.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_SECURITY_LEVEL_GET_FOR_PERSON.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_SERVICE_CALL_DELETE_SERVICE_CALL.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_SERVICE_CALL_GET_DATA_BY_ID.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_SERVICE_CALL_GET_GRAND_TOTALS.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_SERVICE_CALL_GET_HOURS_WORKED.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_SERVICE_CALL_GET_INVOICE_DATA_BY_ID.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_SERVICE_CALL_GET_MY_SECURITY_DATA.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_SERVICE_CALL_GET_STATUS_HISTORY.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_SERVICE_CALL_GET_VALID_SUBMIT_DATA.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_SERVICE_CALL_GET_WORK_TYPE_LIST.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_SERVICE_CALL_GET_WORK_TYPE_LIST_WITHOUT_COMPANY.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_SERVICE_CALL_MASS_SUBMIT_BACKWARD.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_SERVICE_CALL_MASS_SUBMIT_FORWARD.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_SERVICE_CALL_MOVE_BACKWARD.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_SERVICE_CALL_MOVE_FORWARD.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_SERVICE_CALL_RAW_DATA_SEARCH.sql">
-      <AnsiNulls>Off</AnsiNulls>
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_SERVICE_CALL_SEARCH.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_SERVICE_CALL_SEARCH_GET_FILTERED_SERVICE_CALLS_IDS.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_SERVICE_CALL_SEARCH_SERVICE_CALLS_BY_WORK_WEEK.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_SERVICE_CALL_SEARCH_TECHNICAL_NOTES.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_SERVICE_CALL_SEND_BACKWARD.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_SERVICE_CALL_SEND_EMAIL_UPDATE.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_SERVICE_CALL_SEND_FORWARD.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_SERVICE_CALL_SERVICE_CALLS_GET_TOTAL_HOURS_PER_WORKER.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_SERVICE_CALL_UPDATE_ONE_WEEKLY_REPORT.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_SERVICE_CALL_WORK_TYPE_DELETE_ONE_WORK_TYPE.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_SERVICE_CALL_WORK_TYPE_GET_DATA_BY_ID.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_SERVICE_CALL_WORK_TYPE_SEARCH.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_SERVICE_CALL_WORK_TYPE_UN_DELETE_ONE_WORK_TYPE.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_SERVICE_CALL_WORK_TYPES_SUPPLIER_UPDATE_ONE_WORK_TYPE.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_SERVICE_CALL_WORK_TYPES_UPDATE_ONE_WORK_TYPE.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_SERVICE_CALLS_GET_FILE_ATTACHMENTS.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_SERVICE_CALLS_MASS_IMPORT_TIME_CARD.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_SERVICE_CALLS_SHOW_ALL_DATES_USED.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_SERVICE_CALLS_SHOW_PEOPLE_SUMMARY.sql">
-      <AnsiNulls>Off</AnsiNulls>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_SERVICE_CALLS_SHOW_PEOPLE_SUMMARY2.sql">
-      <AnsiNulls>Off</AnsiNulls>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_SERVICE_CALLS_SHOW_PEOPLE_SUMMARY3.sql">
-      <AnsiNulls>Off</AnsiNulls>
-    </Build>
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_SPECIAL_APPROVERS_SEARCH.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_SURVEY_CLOSE.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_SURVEY_COLOR_LIST.sql" />
@@ -2102,16 +1735,10 @@
       <QuotedIdentifier>Off</QuotedIdentifier>
     </Build>
     <Build Include="dbo\Stored Procedures\Procs2\A_SP_TASK_GET_DATA.sql" />
-    <Build Include="dbo\Stored Procedures\Procs2\A_SP_TASK_GET_DISCUSSIONS_FOR_ONE_TASK.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
     <Build Include="dbo\Stored Procedures\Procs2\A_SP_TASK_GET_FILES_FOR_ONE_TASK.sql">
       <QuotedIdentifier>Off</QuotedIdentifier>
     </Build>
     <Build Include="dbo\Stored Procedures\Procs2\A_SP_TASK_GET_HIEARCHY_FOR_ROOT_TASK.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Stored Procedures\Procs2\A_SP_TASK_GET_MEETINGS_FOR_ONE_TASK.sql">
       <QuotedIdentifier>Off</QuotedIdentifier>
     </Build>
     <Build Include="dbo\Stored Procedures\Procs2\A_SP_TASK_GET_PEOPLE_TO_EMAIL.sql">
@@ -2163,7 +1790,6 @@
       <QuotedIdentifier>Off</QuotedIdentifier>
     </Build>
     <Build Include="dbo\Stored Procedures\Procs2\A_SP_TASK_UPDATE_ORDER_PROCESS.sql" />
-    <Build Include="dbo\Stored Procedures\Procs2\A_SP_TASK_UPDATE_PURPOSE_OBJECTS_PROJECTS.sql" />
     <Build Include="dbo\Stored Procedures\Procs2\A_SP_TASK_UPDATE_RELATED_ITEM_LIST.sql" />
     <Build Include="dbo\Stored Procedures\Procs2\A_SP_TASK_UPDATE_SCREEN_CHECK_TASKS.sql" />
     <Build Include="dbo\Stored Procedures\Procs2\A_SP_TASK_UPDATE_TASK_ASSIGNEE.sql">
@@ -2376,7 +2002,6 @@
     <Build Include="dbo\Views\A_APPROVED_VERBS.sql" />
     <Build Include="dbo\Views\A_APRROVED_PEOPLE.sql" />
     <Build Include="dbo\Views\A_CUSTOMER_PART_FILE_LINK_2.sql" />
-    <Build Include="dbo\Views\A_DNR_TASKS_WITH_MONITOR_INFO.sql" />
     <Build Include="dbo\Views\A_LOCATIONS_APPROVED_DATA.sql" />
     <Build Include="dbo\Views\A_O_ACCOUNTS.sql" />
     <Build Include="dbo\Views\A_O_ACTUAL_PARTS_HISTORY.sql" />
@@ -2387,7 +2012,6 @@
     <Build Include="dbo\Views\A_O_EQUIP_EXP.sql" />
     <Build Include="dbo\Views\A_O_FORECASTS.sql" />
     <Build Include="dbo\Views\A_O_LOCATIONS.sql" />
-    <Build Include="dbo\Views\A_O_NEEDS.sql" />
     <Build Include="dbo\Views\A_O_NOUN_HIER_HISTORY.sql" />
     <Build Include="dbo\Views\A_O_NOUN_HIERARCHIES.sql" />
     <Build Include="dbo\Views\A_O_ORDERS.sql" />
@@ -2446,15 +2070,6 @@
     <Build Include="dbo\Views\A_V_COUNTERS_BY_APPROVED_ID.sql" />
     <Build Include="dbo\Views\A_V_DELIVERY_TICKET_PURCH_ITEM_INFO.sql" />
     <Build Include="dbo\Views\A_V_DESCRIPTION_SEARCH.sql" />
-    <Build Include="dbo\Views\A_V_DISCUSSION_GET_FILE_ATTACHMENT_INFO.sql" />
-    <Build Include="dbo\Views\A_V_DISCUSSION_GET_RESPONSE_DATA_BY_ID.sql" />
-    <Build Include="dbo\Views\A_V_DISCUSSION_GET_TREE_DATA.sql" />
-    <Build Include="dbo\Views\A_V_DISCUSSION_SEARCH.sql" />
-    <Build Include="dbo\Views\A_V_DISCUSSION_TASKS.sql" />
-    <Build Include="dbo\Views\A_V_DISCUSSION_WITH_INITIAL_DATA.sql" />
-    <Build Include="dbo\Views\A_V_DNR_ACTUAL_PARTS_INFO.sql" />
-    <Build Include="dbo\Views\A_V_DNR_TASKS_WITH_CORRECTIVE_ACTIONS_INFO.sql" />
-    <Build Include="dbo\Views\A_V_DNR_TASKS_WITH_TEST_INFO.sql" />
     <Build Include="dbo\Views\A_V_DOCUMENTS_LINKED.sql" />
     <Build Include="dbo\Views\A_V_DOCUMENTS_WITH_LINKED_ITEM.sql" />
     <Build Include="dbo\Views\A_V_EMAILS_FOR_APPROVED_PEOPLE.sql" />
@@ -2463,8 +2078,6 @@
     <Build Include="dbo\Views\A_V_ENGINEER_SCREEN_DATA_WIP_ONE_STEP.sql" />
     <Build Include="dbo\Views\A_V_ENGINEER_SCREEN_DATA_WIP_ONE_STEP_Simplified.sql" />
     <Build Include="dbo\Views\A_V_EXTERNAL_PARTS_WITH_COMPANY.sql" />
-    <Build Include="dbo\Views\A_V_FAVORITE_MENU_ITEMS.sql" />
-    <Build Include="dbo\Views\A_V_FAVORITES_COMPLETE.sql" />
     <Build Include="dbo\Views\A_V_FILES_SEARCH_BY_SUBORDINATE.sql" />
     <Build Include="dbo\Views\A_V_FILES_WITH_SOURCE.sql" />
     <Build Include="dbo\Views\A_V_FILL_TASKS.sql" />
@@ -2491,17 +2104,6 @@
     <Build Include="dbo\Views\A_V_LOCATIONS_BY_APPROVED_ID.sql" />
     <Build Include="dbo\Views\A_V_LOCATIONS_DROP_DOWN_DATA.sql" />
     <Build Include="dbo\Views\A_V_LOGOS.sql" />
-    <Build Include="dbo\Views\A_V_MEETING_AGENDA_ITEM_GET_DOC_INFO.sql" />
-    <Build Include="dbo\Views\A_V_MEETING_EMAIL_DATA.sql" />
-    <Build Include="dbo\Views\A_V_MEETING_GET_AGENDA.sql" />
-    <Build Include="dbo\Views\A_V_MEETING_GET_BY_ID.sql" />
-    <Build Include="dbo\Views\A_V_MEETING_GET_HOST_NAME.sql" />
-    <Build Include="dbo\Views\A_V_MEETING_GET_SCRIBE_NAME.sql" />
-    <Build Include="dbo\Views\A_V_MEETING_GET_TKEEP_NAME.sql" />
-    <Build Include="dbo\Views\A_V_MEETING_LOC_WITH_NAMES.sql" />
-    <Build Include="dbo\Views\A_V_MEETING_REPONDANT_DATA.sql" />
-    <Build Include="dbo\Views\A_V_MEETING_SEARCH.sql" />
-    <Build Include="dbo\Views\A_V_MEETING_TASKS.sql" />
     <Build Include="dbo\Views\A_V_MENUS_WITH_ROLES.sql" />
     <Build Include="dbo\Views\A_V_MESSAGES_DATA.sql" />
     <Build Include="dbo\Views\A_V_MESSAGES_PARENT_MESSAGES.sql" />
@@ -2512,8 +2114,6 @@
     <Build Include="dbo\Views\A_V_MONITOR_LABEL_PURCHASE_ITEMS.sql" />
     <Build Include="dbo\Views\A_V_MONITOR_TEMPLATES_WITH_RESULTS.sql" />
     <Build Include="dbo\Views\A_V_MONITORS_WITH_TASK_AND_RESULT.sql" />
-    <Build Include="dbo\Views\A_V_NAV_HISTORY_WITH_NAMES.sql" />
-    <Build Include="dbo\Views\A_V_NEEDS_APPROVED_DATA.sql" />
     <Build Include="dbo\Views\A_V_NOTES_SEARCH_DATA.sql" />
     <Build Include="dbo\Views\A_V_NOUN_HIER_CHILDREN_EDITING_DATA.sql" />
     <Build Include="dbo\Views\A_V_OBJECT_REVISION_DATA.sql" />
@@ -2557,12 +2157,6 @@
     <Build Include="dbo\Views\A_V_PEOPLE_WITH_COMPANIES.sql" />
     <Build Include="dbo\Views\A_V_PEOPLE_WITH_EMAILS.sql" />
     <Build Include="dbo\Views\A_V_PERSON_ROLES_WITH_SECURITY.sql" />
-    <Build Include="dbo\Views\A_V_POP_FILL_DISCUSSION_INVITED_COMPANY.sql" />
-    <Build Include="dbo\Views\A_V_POP_FILL_DISCUSSION_INVITED_PEOPLE.sql" />
-    <Build Include="dbo\Views\A_V_POP_FILL_DISCUSSION_INVITED_ROLES.sql" />
-    <Build Include="dbo\Views\A_V_POP_FILL_MEETING_INVITED_COMPANY.sql" />
-    <Build Include="dbo\Views\A_V_POP_FILL_MEETING_INVITED_PEOPLE.sql" />
-    <Build Include="dbo\Views\A_V_POP_FILL_MEETING_INVITED_ROLES.sql" />
     <Build Include="dbo\Views\A_V_POP_FILL_SURVEY_INVITED_COMPANY.sql" />
     <Build Include="dbo\Views\A_V_POP_FILL_SURVEY_INVITED_PEOPLE.sql" />
     <Build Include="dbo\Views\A_V_POP_FILL_SURVEY_INVITED_ROLES.sql" />
@@ -2612,7 +2206,6 @@
     <Build Include="dbo\Views\A_V_PROJECT_ALLOWED_PEOPLE_DATA.sql" />
     <Build Include="dbo\Views\A_V_PROJECT_ALLOWED_ROLES_DATA.sql" />
     <Build Include="dbo\Views\A_V_PROJECT_DATA.sql" />
-    <Build Include="dbo\Views\A_V_PROJECT_ITEMS_AND_NAMES.sql" />
     <Build Include="dbo\Views\A_V_PROJECT_MEMBER_DATA.sql" />
     <Build Include="dbo\Views\A_V_PROJECT_SEARCH.sql" />
     <Build Include="dbo\Views\A_V_PROJECT_SEARCH_ALL_ALLOWED.sql" />
@@ -2640,26 +2233,6 @@
     <Build Include="dbo\Views\A_V_ROLES_APPROVED_WITH_PEOPLE_IDS.sql" />
     <Build Include="dbo\Views\A_V_ROLES_ASSIGNED_ROLES_TO_A_ROLE.sql" />
     <Build Include="dbo\Views\A_V_ROLES_WITH_ASSIGNEES.sql" />
-    <Build Include="dbo\Views\A_V_SERVICE_CALL_ACC_RECIEVABLE_PAYMENT_LOCATION_NAMES.sql" />
-    <Build Include="dbo\Views\A_V_SERVICE_CALL_ACC_RECIEVABLE_ROLE_NAMES.sql" />
-    <Build Include="dbo\Views\A_V_SERVICE_CALL_INVOICE_DATA.sql" />
-    <Build Include="dbo\Views\A_V_SERVICE_CALL_PAYMENT_LOCATIONS.sql" />
-    <Build Include="dbo\Views\A_V_SERVICE_CALL_PERSON_TIME_DATA.sql" />
-    <Build Include="dbo\Views\A_V_SERVICE_CALL_SEARCH_DATA.sql" />
-    <Build Include="dbo\Views\A_V_SERVICE_CALL_STATUS_HISTORY_DATA.sql" />
-    <Build Include="dbo\Views\A_V_SERVICE_CALL_TOTAL_HOURS.sql" />
-    <Build Include="dbo\Views\A_V_SERVICE_CALL_TOTAL_OT_HOURS.sql" />
-    <Build Include="dbo\Views\A_V_SERVICE_CALL_VIEW_DATA.sql" />
-    <Build Include="dbo\Views\A_V_SERVICE_CALL_WEEKLY_REPORT_DATA.sql" />
-    <Build Include="dbo\Views\A_V_SERVICE_CALL_WORK_TIME_WITH_DATE.sql" />
-    <Build Include="dbo\Views\A_V_SERVICE_CALL_WORK_TYPE_DATA.sql" />
-    <Build Include="dbo\Views\A_V_SERVICE_CALLS_ACC_RECEIVABLE_ROLE.sql" />
-    <Build Include="dbo\Views\A_V_SERVICE_CALLS_ATTACHMENT_DATA.sql" />
-    <Build Include="dbo\Views\A_V_SERVICE_CALLS_BASIC_DATA.sql" />
-    <Build Include="dbo\Views\A_V_SERVICE_CALLS_NORMAL_HOURS.sql" />
-    <Build Include="dbo\Views\A_V_SERVICE_CALLS_OT_HOURS.sql" />
-    <Build Include="dbo\Views\A_V_SERVICE_CALLS_WEEKLY_DATA.sql" />
-    <Build Include="dbo\Views\A_V_SERVICE_CALLS_WITH_NORMAL_HOURS.sql" />
     <Build Include="dbo\Views\A_V_SHIPPER_TASKS.sql" />
     <Build Include="dbo\Views\A_V_SHIPPING_TASK_FROM_BATCH.sql" />
     <Build Include="dbo\Views\A_V_SURVEY_BY_ID.sql" />
@@ -2709,17 +2282,6 @@
     <Build Include="dbo\Views\A_V_WORKER_SCREEN_TASKS.sql" />
     <Build Include="dbo\Views\A_V_WORKFLOWS_FOR_ACTIVITIES.sql" />
     <Build Include="dbo\Views\A_V_WORKFLOWS_WITH_STAGES.sql" />
-    <Build Include="dbo\Views\A_V_Z_FAV.sql" />
-    <Build Include="dbo\Views\A_V_Z_FAVORITES_DISCUSSIONS_ITEMS.sql" />
-    <Build Include="dbo\Views\A_V_Z_FAVORITES_MEETINGS_ITEMS.sql" />
-    <Build Include="dbo\Views\A_V_Z_FAVORITES_MENU_ITEMS.sql" />
-    <Build Include="dbo\Views\A_V_Z_FAVORITES_MESSAGES_ITEMS.sql" />
-    <Build Include="dbo\Views\A_V_Z_FAVORITES_NEEDS_ITEMS.sql" />
-    <Build Include="dbo\Views\A_V_Z_FAVORITES_PARTS_ITEMS.sql" />
-    <Build Include="dbo\Views\A_V_Z_FAVORITES_PROCEDURE_ITEMS.sql" />
-    <Build Include="dbo\Views\A_V_Z_FAVORITES_SERVICE_CALLS_ITEMS.sql" />
-    <Build Include="dbo\Views\A_V_Z_FAVORITES_SURVEYS_ITEMS.sql" />
-    <Build Include="dbo\Views\A_V_Z_FAVORITES_TASK_ITEMS.sql" />
     <Build Include="dbo\Views\A_Z_UNITS_BASE_UNIT_CONVERTER.sql" />
     <Build Include="dbo\Views\A_Z_UNITS_TIME_TO_SECS.sql" />
     <Build Include="dbo\Tables\AspNetUsers.sql" />
@@ -2798,7 +2360,6 @@
     <Build Include="dbo\Stored Procedures\Portal\Portal_GetMonitorLabelTsrDetails.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_GetTsrDetails.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_GetPartsAndKitsLabels.sql" />
-    <Build Include="dbo\Stored Procedures\Portal\Portal_DeleteNavHistoryForUser.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_ProcedureUpdate.sql" />
     <Build Include="dbo\Tables\AspNetUserLogins.sql" />
     <Build Include="dbo\Tables\AspNetUserClaims.sql" />
@@ -2836,6 +2397,30 @@
     <Build Include="dbo\Views\Portal\Portal_InvoicesView.sql" />
     <Build Include="dbo\Tables\Portal_Invoice.sql" />
     <Build Include="dbo\Views\Portal_InvoiceView.sql" />
+    <Build Include="dbo\Tables\A_DNR_PART_INFO.sql" />
+    <Build Include="dbo\Tables\A_DNR_TASK_NUM_MATCHING_CASES.sql" />
+    <Build Include="dbo\Tables\A_DNR_TASK_INFO.sql" />
+    <Build Include="dbo\Tables\A_DNR_PROC_INFO.sql" />
+    <Build Include="dbo\Views\A_DNR_TASKS_WITH_MONITOR_INFO.sql" />
+    <Build Include="dbo\Views\A_V_DNR_ACTUAL_PARTS_INFO.sql" />
+    <Build Include="dbo\Views\A_V_DNR_TASKS_WITH_CORRECTIVE_ACTIONS_INFO.sql" />
+    <Build Include="dbo\Views\A_V_DNR_TASKS_WITH_TEST_INFO.sql" />
+    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DNR_TELL_ME_NEXT_STEP.sql" />
+    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DNR_ADD_FREE_TEXT_PROCEDURE_TO_DNR.sql" />
+    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DNR_ADD_FREE_TXT_PROCEDURE_TO_DNR.sql" />
+    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DNR_ADD_PROCEDURE_AS_CHILD_TASK.sql" />
+    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DNR_CLOSE.sql" />
+    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DNR_FIND_ACTIONS_FROM_MATCHING_CASE.sql" />
+    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DNR_FIND_ACTIONS_FROM_SIMILAR_CASES.sql" />
+    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DNR_FIND_MATCHING_CASES.sql" />
+    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DNR_FIND_MATCHING_CASES_WITH_TASK_DATA.sql" />
+    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DNR_FIND_TESTS_FROM_MATCHING_CASE.sql" />
+    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DNR_FIND_TESTS_FROM_MATCHING_CASE_II.sql" />
+    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DNR_FIND_TESTS_FROM_SIMILAR_CASES.sql" />
+    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DNR_GET_PARTS_ON_THIS_CALL.sql" />
+    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DNR_PERMUTATION_FIND_MATCHING_CASES_PART_2.sql" />
+    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DNR_PERMUTATION_FIND_MATCHING_CASES_PART_2_RESTORE.sql" />
+    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DNR_TASK_UPDATE_CHILDREN.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Msr.Database.refactorlog" />
