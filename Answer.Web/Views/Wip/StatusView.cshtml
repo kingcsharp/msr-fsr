@@ -108,6 +108,7 @@
 
             eModal.confirm('Do you want to take ownership of this WO Item?')
                 .then(function () {
+                    eLoaderOpen()
                     $.ajax({
                         type: "POST",
                         url: "/wip/TakeTaskOwnersShip?taskId=" + id,
@@ -118,9 +119,10 @@
                             } else {
                                 alert(data.Message);
                             }
+                            eLoaderClose()
                         },
-                        error: function () {
-
+                        error: function (error) {
+                            eLoaderError(error)
                         }
                     });
                 }, null);

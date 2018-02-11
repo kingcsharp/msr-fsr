@@ -264,8 +264,8 @@
                     success: function (data) {
                         modal.find('.modal-body').html(data);
                     },
-                    error: function () {
-
+                    error: function (error) {
+                        eLoaderError(error)
                     }
                 });
             });
@@ -283,8 +283,8 @@
                     success: function (data) {
                         modal.find('.modal-body').html(data);
                     },
-                    error: function () {
-
+                    error: function (error) {
+                        eLoaderError(error)
                     }
                 });
 

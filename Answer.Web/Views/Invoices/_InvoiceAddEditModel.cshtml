@@ -43,7 +43,7 @@
                 @Html.DropDownListFor(model => model.Client, Model.ClientList, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Client, "", new { @class = "text-danger" })
             </td>
-            <th>Invoice Description :</th>
+            <th style="width:200px;">Invoice Description:</th>
             <td>@Html.EditorFor(model => model.InvoiceDescription, new { htmlAttributes = new { @class = "form-control" } })</td>
         </tr>
         <tr>
@@ -59,7 +59,7 @@
             </td>
         </tr>
         <tr>
-            <th align="right">Invoice Date</th>
+            <th align="right">Invoice Date:</th>
             <td>
                 <div class="input-group datepick">
                     @Html.EditorFor(model => model.InvoiceDate, new { htmlAttributes = new { @class = "form-control datepick" } })
@@ -102,7 +102,7 @@
                 <td>
                     <div class="input-group">
                         <span class="input-group-addon">$</span>
-                        @Html.EditorFor(model => model.SubTotal, new { htmlAttributes = new { @class = "form-control", @id = "totalAmount" } })
+                        @Html.EditorFor(model => model.SubTotal, new { htmlAttributes = new { @class = "form-control", @id = "totalAmount", @readonly = "readonly" } })
                     </div>
                 </td>
                 <th align="right">Tax %:</th>
@@ -117,7 +117,7 @@
                 <td>
                     <div class="input-group">
                         <span class="input-group-addon">$</span>
-                        @Html.EditorFor(model => model.Total, new { htmlAttributes = new { @class = "form-control", @id = "total" } })
+                        @Html.EditorFor(model => model.Total, new { htmlAttributes = new { @class = "form-control", @id = "total", @readonly = "readonly" } })
 
                     </div>
                 </td>
@@ -149,17 +149,18 @@
 <script src="~/assets/js/dataTables.bootstrap.min.js"></script>
 <script>
     $(document).ready(function () {
-        //$('.select').select2();
+        
         $('.datepick').datetimepicker();
         if ('@Model.CustPo' !== '') {
+            $('#invoicePo form').clearQueue();
                     $.ajax({
                         type: "POST",
                         url: "/Invoices/InvoiceModelDetail/" + '@Model.CustPo',
                         dataType: 'html',
+
                         success: function (data) {
                             console.log(data);
                             $('#invoicePo').html(data);
-
                             var values = '@Model.Items';
                             var items = values.split(",");
                             $("input:checkbox[class=checkAmount]").each(function () {
@@ -168,33 +169,29 @@
                                 }
                             });
                         }
-                    });
+            });
+
+
         }
 
         $('#CustPo').on('change', function () {
-            $('#itemId').val("");
             var po = $(this).val();
+
+            $('#itemId').val("");
+            $('#totalTaxAmount').val("");
+            $('#total').val("");
+            $('#totalAmount').val("0.00");
+
             $.ajax({
                 type: "POST",
                 url: "/Invoices/InvoiceModelDetail/" + po,
                 dataType: 'html',
                 success: function (data) {
-                    console.log(data);
                     $('#invoicePo').html(data);
                 }
             });
         });
 
-
-        $('#totalTaxAmount').on('keyup', function () {
-            var amount = $('#totalAmount').val();
-            var tax = $(this).val();
-            var totalTaxPerAmount = (amount * tax) / 100;
-
-            var totalAmount = parseFloat(totalTaxPerAmount) + parseFloat(amount);
-            $('#total').val(totalAmount);
-
-        });
 
     });
 </script>

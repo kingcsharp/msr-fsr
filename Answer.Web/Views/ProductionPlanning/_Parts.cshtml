@@ -272,8 +272,8 @@
                 success: function (data) {
                     modal.find('.modal-body').html(data);
                 },
-                error: function () {
-
+                error: function (error) {
+                    eLoaderError(error)
                 }
             });
 
@@ -301,8 +301,8 @@
                     var selectPart = $("#ProductPartId").select2();
                     selectPart.val(result.PartId).trigger("change");
                 },
-                error : function(error) {
-                    alert(error.Message);
+                error: function (error) {
+                    eLoaderError(error)
                 }
             });
         });

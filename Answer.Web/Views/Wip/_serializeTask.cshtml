@@ -45,6 +45,9 @@
         var partId = $(this).data('part-id');
         var serialNumber = $('div#' + partId).find('input').val();
         var taskId = @Model.STEP_ID;
+
+        eLoaderOpen()
+
         $.ajax({
             type: "POST",
             url: "/wip/UpdateRootPart?partId=" + partId + "&serialNumber=" + serialNumber + "&taskId=" + taskId,
@@ -53,9 +56,10 @@
                 if (data === "OK") {
                     $('div#' + partId).hide();
                 }
+                eLoaderClose()
             },
-            error: function() {
-
+            error: function (error) {
+                eLoaderError(error)
             }
         });
     });

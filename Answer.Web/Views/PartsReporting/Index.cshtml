@@ -7,39 +7,34 @@
         <div class="row">
             <h2 class="page-header">Parts Monitor Trending <button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button></h2>
             <div class="col-md-3 col-sm-12">
-                @using (Html.BeginForm("Index", "PartsReporting", FormMethod.Post, new { @class = "form form-horizontal", role = "form", id="report-form" }))
+                @using (Html.BeginForm("Index", "PartsReporting", FormMethod.Post, new { @class = "form form-horizontal", role = "form", id = "report-form" }))
                 {
                     <fieldset>
                         <legend>Monitor Criteria</legend>
-
                         <div class="form-group">
                             <label class="control-label col-md-4" for="search-type">Report Type<span class="error"></span></label>
                             <div class="col-md-8">
-                                @Html.DropDownListFor(m => m.ReportTypeId, Model.ReportTypes, new {@class = "form-control"})
+                                @Html.DropDownListFor(m => m.ReportTypeId, Model.ReportTypes, new { @class = "form-control" })
                             </div>
                         </div>
-
                         <div class="form-group">
                             <label class="control-label col-md-4" for="search-type">Report by<span class="error"></span></label>
                             <div class="col-md-8">
                                 @Html.DropDownListFor(m => m.SearchById, Model.ReportByItems, new { @class = "form-control" })
                             </div>
                         </div>
-
                         <div class="form-group" id="container-serial">
                             <label class="control-label col-md-4" for="serial">Serial<span class="error"></span></label>
                             <div class="col-md-8">
-                                @Html.DropDownListFor(m => m.Serial, Model.Serials, new {@class = "form-control"})
+                                @Html.DropDownListFor(m => m.Serial, Model.Serials, new { @class = "form-control" })
                             </div>
                         </div>
-
                         <div class="form-group" id="container-number">
                             <label class="control-label col-md-4" for="number">Part<span class="error"></span></label>
                             <div class="col-md-8">
                                 @Html.DropDownListFor(m => m.Number, Model.PartNumbers, new { @class = "form-control" })
                             </div>
                         </div>
-
                         <div class="form-group">
                             <label class="control-label col-md-6" for="monitors" data-toggle="tooltip" data-placement="right" data-html="true" title="" data-original-title="Updated dynamically based on your selections above">Select Monitor</label>
                             <div class="col-md-6">
@@ -64,17 +59,14 @@
         </div>
     </div>
 </div>
-
 @section scripts
 {
-
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script src="~/assets/js/monitor_chart.js"></script>
-
     <script type="text/javascript">
 
-        $(document).ready(function() {
+        $(document).ready(function () {
 
             $('#submit-report').prop('disabled', true);
 
@@ -102,36 +94,37 @@
 
             });
 
-            $('#ReportTypeId').on('change', function() {
+            $('#ReportTypeId').on('change', function () {
                 GetMonitors();
             });
 
-            $(".js-programmatic-set-val").on("click", function() {
+            $(".js-programmatic-set-val").on("click", function () {
                 $(this).val("CA").trigger("change");
             });
 
-            $("#MonitorId").on('change', function() {
+            $("#MonitorId").on('change', function () {
                 if ($(this).val().length > 0) {
                     $('#submit-report').prop('disabled', false);
                 }
             });
 
-            $('#submit-report').on('click', function(e) {
+            $('#submit-report').on('click', function (e) {
 
                 e.preventDefault();
 
                 var form = $('#report-form').serialize();
-
+                eLoaderOpen()
                 $.ajax({
                     type: "POST",
                     url: '/PartsReporting/Index',
                     data: form,
                     dataType: 'html',
-                    success: function(data) {
+                    success: function (data) {
                         $('#report-data').html(data);
+                        eLoaderClose()
                     },
-                    error: function() {
-
+                    error: function (error) {
+                        eLoaderError(error)
                     }
                 });
 
@@ -149,38 +142,38 @@
                 input = $('#Serial').val();
             }
 
-        var type = $('#SearchById').val();
-        var reportTypeId = $('#ReportTypeId').val();
+            var type = $('#SearchById').val();
+            var reportTypeId = $('#ReportTypeId').val();
 
-        var $monitor = $("#MonitorId");
-        $monitor.empty();
+            var $monitor = $("#MonitorId");
+            $monitor.empty();
 
-        $('#submit-report').prop('disabled', true);
+            $('#submit-report').prop('disabled', true);
 
-        if (input.length > 0) {
+            if (input.length > 0) {
+                eLoaderOpen()
+                $.ajax({
+                    type: "POST",
+                    url: '/PartsReporting/GetMonitors?input=' + input + '&type=' + type + '&reportTypeId=' + reportTypeId,
+                    dataType: 'json',
+                    success: function (response) {
 
-            $.ajax({
-                type: "POST",
-                url: '/PartsReporting/GetMonitors?input=' + input + '&type=' + type + '&reportTypeId=' + reportTypeId,
-                dataType: 'json',
-                success: function(response) {
+                        if (response.length > 0) {
 
-                    if (response.length > 0) {
-
-                        $monitor.select2({
-                            data: response
-                        });
+                            $monitor.select2({
+                                data: response
+                            });
+                        }
+                        eLoaderClose()
+                    },
+                    error: function (error) {
+                        eLoaderError(error)
                     }
-                },
-                error: function() {
-
-                }
-            });
-        } else {
+                });
+            } else {
+            }
         }
-    }
 
     </script>
-
 
 }

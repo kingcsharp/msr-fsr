@@ -211,6 +211,9 @@
                     success: function (resultData) {
                         //alert("Save Complete");
                         console.log("row with rowid=" + rowid + " is successfuly modified.")
+                    },
+                    error: function (error) {
+                        eLoaderError(error)
                     }
                 });
 

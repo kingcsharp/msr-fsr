@@ -10,11 +10,11 @@
         </div>
         <div class="row" id="maintenanceForm">
             <div class="col-lg-12">
-                @using (Html.BeginForm("Edit", "EquipmentMaintenance", FormMethod.Post, new {@class = "form-horizontal"}))
+                @using (Html.BeginForm("Edit", "EquipmentMaintenance", FormMethod.Post, new { @class = "form-horizontal" }))
                 {
-                    <input type="hidden" name="Id" value="@Model.Id"/>
-                    <input type="hidden" name="ObjectId" value="@Model.ObjectId"/>
-                    <input type="hidden" name="PrimaryLocationId" value="@Model.PrimaryLocationId"/>
+                    <input type="hidden" name="Id" value="@Model.Id" />
+                    <input type="hidden" name="ObjectId" value="@Model.ObjectId" />
+                    <input type="hidden" name="PrimaryLocationId" value="@Model.PrimaryLocationId" />
                     @Html.Partial("Message")
 
                     <fieldset>
@@ -25,7 +25,6 @@
         </div>
     </div>
 </div>
-
 @section scripts
 {
     <script src="~/assets/js/moment.min.js"></script>
@@ -62,6 +61,7 @@
             $("#PrimaryLocationId").change(function() {
 
                 var id = $("#PrimaryLocationId").val();
+                eLoaderOpen()
                 $.ajax({
                     type: 'POST',
                     url: "/EquipmentMaintenance/GetChildLocations/" + id,
@@ -83,10 +83,10 @@
                                         .append("<option value='" + row.Value + "'>" + row.Text + "</option>");
                                 });
                         }
-
+                        eLoaderClose()
                     },
-                    error: function() {
-                        alert("Something Went Wrong.");
+                    error: function (error) {
+                        eLoaderError(error)
                     }
                 });
 
@@ -96,7 +96,7 @@
             $("#SubLocationFirstId").change(function() {
 
                 var id = $("#SubLocationFirstId").val();
-
+                eLoaderOpen()
                 $.ajax({
                     type: 'POST',
                     url: "/EquipmentMaintenance/GetChildLocations/" + id,
@@ -114,11 +114,10 @@
                                         .append("<option value='" + row.Value + "'>" + row.Text + "</option>");
                                 });
                         }
-
-
+                        eLoaderClose()
                     },
-                    error: function() {
-                        alert("Something Went Wrong.");
+                    error: function (error) {
+                        eLoaderError(error)
                     }
                 });
 

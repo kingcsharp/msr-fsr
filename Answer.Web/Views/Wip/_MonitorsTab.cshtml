@@ -322,20 +322,12 @@
             dataType: 'json',
             data: { 'Id': value },
             success: function(data) {
-                if (data.TroubleState == "null") {
-                    eModal.alert('Equipment maintenance does not exist.');
+                if (data.CanUsed == false) {
+                    eModal.alert(data.ErrorMessage);
                     textbox.val('');
                 } else {
-                    if (data.TroubleState == false) {
-                        eModal.alert('Equipment maintenance troble state is false.');
-                        textbox.val('');
-                        console.log('false');
-                    } else {
-                        eModal.alert('Equipment maintenance troble state is true.');
-                        console.log('true');
-                    }
-                }
-                eLoaderClose()
+                    eLoaderClose()
+                }                
             },
             error: function(error) {
                 eLoaderError(error)

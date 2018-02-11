@@ -137,7 +137,8 @@
                             modal.find('.modal-body').html(data);
 
                         },
-                        error: function (data) {
+                        error: function (error) {
+                            eLoaderError(error)
                         }
                     });
                 });
@@ -156,7 +157,8 @@
                             modal.find('.modal-body').html(data);
 
                         },
-                        error: function (data) {
+                        error: function (error) {
+                            eLoaderError(error)
                         }
                     });
                 });

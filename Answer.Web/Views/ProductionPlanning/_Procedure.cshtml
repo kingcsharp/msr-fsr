@@ -102,10 +102,12 @@
 </div>
 
 
+
 <script type="text/javascript">
     $('#ProcedureSubmit').on('click',
         function() {
             var form = $('#AddProcedure').serialize();
+            eLoaderOpen()
             $.ajax({
                 type : "POST",
                 url : "@Url.Action("CreateProcedure","ProductionPlanning")",
@@ -128,11 +130,13 @@
                     $(".selectProcedure").next(".select2").remove();
                     var selectProcedure = $("#ProductProcedureId").select2();
                     selectProcedure.val(result.ProcedureId).trigger("change");
+                    eLoaderClose()
                 },
                 error : function(error) {
-                    alert(error.Message);
+                    eLoaderError(error)
                 }
             });
         });
-</script>
 
+
+</script>

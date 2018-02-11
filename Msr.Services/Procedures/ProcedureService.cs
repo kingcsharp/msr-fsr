@@ -316,7 +316,7 @@ namespace Msr.Services.Procedures
 
                 result.Entity = saveProcedureProcedure.NewObjId;
 
-                var deleteReferenceFileProcedure = new DeleteFileProcedure() { ObjID = saveProcedureProcedure.NewObjId, Type = DBNull.Value.ToString(CultureInfo.InvariantCulture), NTLogin = model.NTLogin };
+                var deleteReferenceFileProcedure = new DeleteFileProcedure() { ObjID = saveProcedureProcedure.NewObjId, Type = null, NTLogin = model.NTLogin };
 
                 _dbContext.Database.ExecuteStoredProcedure(deleteReferenceFileProcedure);
 
@@ -1086,6 +1086,37 @@ namespace Msr.Services.Procedures
 
                 return false;
             }
+        }
+
+        public bool DeleteProcedure(string id, string ntlogin)
+        {
+            try
+            {
+                var deleteProcedure = new DeleteProcedure() { ID = id, NTLogin = ntlogin };
+
+                _dbContext.Database.ExecuteStoredProcedure(deleteProcedure);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                var message = "Error occured:" + ex.Message;
+
+                return false;
+            }
+        }
+
+        public IList<ProcedureStepOtherStepListView> GetReorderSteps(string procObjectId)
+        {
+            var sql = $"SELECT * FROM A_PROCEDURE_STEPS WHERE PROCEDURE_ID = (SELECT ID FROM A_PROCEDURES_HISTORY WHERE OBJECT_ID = '" + procObjectId + "') ORDER BY PRINT_ORDER";
+
+            var result = _dbContext.Database.SqlQuery<ProcedureStepOtherStepListView>(sql).ToList();
+            var selectedIndex = 0;
+            foreach (var step in result)
+            {
+                step.print_Order = ++selectedIndex;
+            }
+            return result;
         }
     }
 }

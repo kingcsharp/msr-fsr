@@ -26,7 +26,6 @@
                                 <div id="error" class="alert alert-danger"></div>
                             </div>
                         </div>
-
                         <div class="form-group">
                             <label class="col-md-4 control-label" for="selectbasic">Primary Location</label>
                             <div class="col-md-4">
@@ -69,14 +68,14 @@
                                 </div>
                             </div>
                         </div>
-                     
-                     
+
+
                         @if (Model.Roles.Any(x => x.Role_Name == RoleConstants.ProductionManager || x.Role_Name == RoleConstants.MaintenanceTechnician))
                         {
                             <div class="form-group">
                                 <label class="col-md-4 control-label" for="comments">Comments</label>
                                 <div class="col-md-4">
-                                    @Html.TextAreaFor(model => model.Comments, new {@class = "form-control input-md"})
+                                    @Html.TextAreaFor(model => model.Comments, new { @class = "form-control input-md" })
                                 </div>
                             </div>
                         }
@@ -84,7 +83,6 @@
                         {
                             @Html.HiddenFor(model => model.Comments)
                         }
-
                         @if (Model.Roles.Any(x => x.Role_Name == RoleConstants.ProductionManager))
                         {
                             <div class="form-group">
@@ -113,8 +111,8 @@
                             @Html.HiddenFor(model => model.PemLastCompletedDate)
                             @Html.HiddenFor(model => model.FrequencyField)
                         }
-                          
-                       
+
+
                         <div class="form-group">
                             <label class="col-md-4 control-label" for="save"></label>
                             <div class="col-md-8">
@@ -128,14 +126,12 @@
         </div>
     </div>
 </div>
-
 @section scripts
 {
     <script src="~/assets/js/moment.min.js"></script>
     <script src="~/assets/js/bootstrap-datetimepicker.min.js"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
-
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -151,6 +147,7 @@
                 if ($(this).val().length > 3) {
 
                     var id = $(this).val();
+                    eLoaderOpen()
                     $.ajax({
                         type: "POST",
                         url: "/EquipmentMaintenance/GetChildLocations/" + id,
@@ -196,7 +193,7 @@
                                                     url: "/EquipmentMaintenance/GetParentLocations/" + id2,
                                                     success: function (data) {
                                                         var parentLocation = data.locations;
-                                                
+
                                                         var index;
                                                         $("#PrimaryLocationId option").each(function (i) {
                                                             if (this.text === parentLocation) {
@@ -209,25 +206,25 @@
                                                         $("#SubLocationFirstId").prop('disabled', false);
                                                         $("#SubLocationSecondId").prop('disabled', false);
                                                     },
-                                                    error: function () {
-                                                        $('#error').html('There is an error with the request');
+                                                    error: function (error) {
+                                                        eLoaderError(error)
                                                     }
                                                 });
                                             }
 
 
                                         },
-                                        error: function () {
-                                            $('#error').html('There is an error with  the request');
+                                        error: function (error) {
+                                            eLoaderError(error)
                                         }
                                     });
                                 }
 
                             }
-
+                            eLoaderClose()
                         },
-                        error: function () {
-                            $('#error').html('There is an error with the request');
+                        error: function (error) {
+                            eLoaderError(error)
                         }
                     });
                 }
@@ -238,6 +235,7 @@
         $("#PrimaryLocationId").change(function () {
 
             var id = $("#PrimaryLocationId").val();
+            eLoaderOpen()
             $.ajax({
                 type: 'POST',
                 url: "/EquipmentMaintenance/GetSecoundLocationsManually/" + id,
@@ -259,10 +257,10 @@
                                     .append("<option value='" + row.Value + "'>" + row.Text + "</option>");
                             });
                     }
-
+                    eLoaderClose()
                 },
-                error: function () {
-                    $('#error').html('There is an error with the request');
+                error: function (error) {
+                    eLoaderError(error)
                 }
             });
 
@@ -272,7 +270,7 @@
         $("#SubLocationFirstId").change(function () {
 
             var id = $("#SubLocationFirstId").val();
-
+            eLoaderOpen()
             $.ajax({
                 type: 'POST',
                 url: "/EquipmentMaintenance/GetthirdLocationsManually/" + id,
@@ -290,9 +288,10 @@
                                     .append("<option value='" + row.Value + "'>" + row.Text + "</option>");
                             });
                     }
+                    eLoaderClose()
                 },
-                error: function () {
-                    $('#error').html('There is an error with the request');
+                error: function (error) {
+                    eLoaderError(error)
                 }
             });
 
@@ -302,4 +301,3 @@
 
     </script>
 }
-

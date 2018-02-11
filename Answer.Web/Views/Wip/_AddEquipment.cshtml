@@ -130,6 +130,8 @@
             if ($(this).val().length > 3) {
 
                 var id = $(this).val();
+                eLoaderOpen()
+
                 $.ajax({
                     type: "POST",
                     url: "/EquipmentMaintenance/GetChildLocations/" + id,
@@ -173,14 +175,7 @@
                                                 url: "/EquipmentMaintenance/GetParentLocations/" + id2,
                                                 success: function (data) {
                                                     var parentLocation = data.locations;
-                                                    console.log(parentLocation);
-
-                                                    //$("#PrimaryLocationId option:selected").prop("selected", false);
-                                                    //$("#PrimaryLocationId option").filter(function () {
-                                                    //    console.log(this.text == parentLocation);
-                                                    //    console.log(parentLocation);
-                                                    //    return this.text == parentLocation;
-                                                    //}).attr('selected', true);
+                                           
                                                     var index;
                                                     $("#PrimaryLocationId option").each(function (i) {
                                                         if (this.text === parentLocation) {
@@ -193,16 +188,16 @@
                                                     $("#SubLocationFirstId").prop('disabled', false);
                                                     $("#SubLocationSecondId").prop('disabled', false);
                                                 },
-                                                error: function () {
-                                                    alert("Something Went Wrong.");
+                                                error: function (error) {
+                                                    eLoaderError(error)
                                                 }
                                             });
                                         }
 
 
                                     },
-                                    error: function () {
-                                        alert("Something Went Wrong.");
+                                    error: function (error) {
+                                        eLoaderError(error)
                                     }
                                 });
                             }
@@ -210,8 +205,8 @@
                         }
 
                     },
-                    error: function () {
-                        alert("Something Went Wrong.");
+                    error: function (error) {
+                        eLoaderError(error)
                     }
                 });
             }
@@ -222,6 +217,8 @@
     $("#PrimaryLocationId").change(function () {
 
         var id = $("#PrimaryLocationId").val();
+        eLoaderOpen()
+
         $.ajax({
             type: 'POST',
             url: "/EquipmentMaintenance/GetSecoundLocationsManually/" + id,
@@ -243,10 +240,10 @@
                                 .append("<option value='" + row.Value + "'>" + row.Text + "</option>");
                         });
                 }
-
+                eLoaderClose()
             },
-            error: function () {
-                alert("Something Went Wrong.");
+            error: function (error) {
+                eLoaderError(error)
             }
         });
 
@@ -256,6 +253,7 @@
     $("#SubLocationFirstId").change(function () {
 
         var id = $("#SubLocationFirstId").val();
+        eLoaderOpen()
 
         $.ajax({
             type: 'POST',
@@ -274,9 +272,11 @@
                                 .append("<option value='" + row.Value + "'>" + row.Text + "</option>");
                         });
                 }
+
+             eLoaderClose()
             },
-            error: function () {
-                alert("Something Went Wrong.");
+            error: function (error) {
+                eLoaderError(error)
             }
         });
 

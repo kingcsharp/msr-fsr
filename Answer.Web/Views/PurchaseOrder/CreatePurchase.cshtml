@@ -218,8 +218,9 @@
 
         });
 
-        $("#AddToPurchase").click(function () {
+       $("#AddToPurchase").click(function () {
             var NewPoId = $("#NewPo").val();
+            eLoaderOpen()
             $.ajax({
                 type: "POST",
                 url: '@Url.Action("AddPurchaseOrderItem", "PurchaseOrder")',
@@ -228,8 +229,8 @@
                 success: function (data) {
                     location.reload();
                 },
-                error: function (data) {
-                    console.log(data);
+                error: function (error) {
+                    eLoaderError(error)
                 }
             });
 

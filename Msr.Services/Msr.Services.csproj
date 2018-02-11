@@ -179,6 +179,7 @@
     <Compile Include="Invoices\ViewModel\InvoiceDetailListViewModel.cs" />
     <Compile Include="Invoices\ViewModel\InvoiceViewModel.cs" />
     <Compile Include="Orders\Messaging\TaskLogDto.cs" />
+    <Compile Include="Procedures\Procedures\DeleteProcedure.cs" />
     <Compile Include="Procedures\ViewModels\ProcedureStepMonitorsViewModel.cs" />
     <Compile Include="ProductionPlanning\ProductionPlanningService.cs" />
     <Compile Include="ProductionPlanning\ViewModels\RequirementStatusViewModel.cs" />
