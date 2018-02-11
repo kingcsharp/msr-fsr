@@ -1,5 +1,5 @@
 ﻿
-CREATE               PROCEDURE dbo.A_SP_TASK_ASSUME_CONTROL 
+               PROCEDURE dbo.A_SP_TASK_ASSUME_CONTROL 
 @RET_STATUS as varchar(500) OUTPUT,
 @MSGS as varchar(500) OUTPUT,
 @ID as varchar(50),
@@ -12,11 +12,11 @@ declare @roleRequestee as varchar(50)
 SELECT @requestee = REQUESTEE_ID,@roleRequestee = GROUP_REQUESTEE_ID FROM A_TASKS WHERE ID = @ID
 declare @tester as varchar(50),@taskStat varchar(50)
 SELECT @taskStat = STATUS FROM A_TASKS WHERE ID = @ID
-if @taskStat not in ('ACCEPTED')
-	begin
-	set @RET_STATUS = 'ERROR - Please start the task to take over this task.'
-	goto fin
-	end
+--if @taskStat not in ('ACCEPTED')
+--	begin
+--	set @RET_STATUS = 'ERROR - Please start the task to take over this task.'
+--	goto fin
+--	end
 
 if @roleRequestee is not null
 	begin

@@ -11,6 +11,7 @@
                 type: "GET",
                 url: '/doc/GetFileView?callBackId=' + callBackId + '&type=' + imageType,
                 dataType: 'html',
+                cache: false,
                 success: function (data) {
                     modal.find('.modal-body').html(data);
                 },

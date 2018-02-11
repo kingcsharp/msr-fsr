@@ -43,7 +43,7 @@ namespace Msr.Services.Orders.Procedures
 
         public string Text_Target { get; set; }
 
-        public string Task_Id { get; set; }
+        public string TASK_ID { get; set; }
 
         public string Roll_Up_Id { get; set; }
 
@@ -91,7 +91,7 @@ namespace Msr.Services.Orders.Procedures
 
         public List<SelectListItem> MonitorTemplateMultiChoices { get; set; }
 
-        public void Setup(EquipmentMaintenanceService equipmentMaintenanceService)
+        public void Setup(EquipmentMaintenanceService equipmentMaintenanceService, OrderService orderService)
         {
             ResultList = new List<SelectListItem>
             {
@@ -134,9 +134,15 @@ namespace Msr.Services.Orders.Procedures
 
             };
 
+            MonitorTemplateMultiChoices = orderService.GetMultiChoiceAnswers(id: Id).ToList().Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.Id.ToString()
+            }).OrderBy(o => o.Text).ToList();
+
             EquipmentMaintenanceList = equipmentMaintenanceService.GetEquipmentsQueryable().ToList().Select(x => new SelectListItem
             {
-                Text = x.ParentLocation + " (" +x.Id.ToString()+")",
+                Text = x.ParentLocation + " (" + x.Id.ToString() + ")",
                 Value = x.Id.ToString()
             }).OrderBy(o => o.Text).ToList();
         }

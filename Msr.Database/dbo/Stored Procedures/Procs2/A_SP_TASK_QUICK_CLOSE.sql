@@ -52,13 +52,13 @@ exec A_SP_TASK_CHECK_MONITORS_TO_GO_TO_DNR @ID
 
 
 declare @errMsg varchar(100)
-print 'Check to see if the task has children and should not be closed'
-if exists(SELECT * FROM A_TASKS WHERE
-	ID = @ID AND CHILD_STATUS = 'NOT_FINISHED')
-	begin
-	set @RET_STATUS = 'ERROR - Children tasks not completed'
-	goto fin
-	end
+--print 'Check to see if the task has children and should not be closed'
+--if exists(SELECT * FROM A_TASKS WHERE
+--	ID = @ID AND CHILD_STATUS = 'NOT_FINISHED')
+--	begin
+--	set @RET_STATUS = 'ERROR - Children tasks not completed'
+--	goto fin
+--	end
 
 
 print 'Check to see if the task has any monitors that can not be automatically closed'

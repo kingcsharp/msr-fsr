@@ -13,26 +13,26 @@ declare @roleRequestee as varchar(50)
 SELECT @requestee = REQUESTEE_ID,@roleRequestee = GROUP_REQUESTEE_ID FROM A_TASKS WHERE ID = @ID
 declare @tester as varchar(50),@taskStat varchar(50)
 
-SELECT @taskStat = STATUS FROM A_TASKS WHERE ID = @ID
-if @taskStat = 'ACCEPTED' AND @requestee is null
-	goto grupStuff
+--SELECT @taskStat = STATUS FROM A_TASKS WHERE ID = @ID
+--if @taskStat = 'ACCEPTED' AND @requestee is null
+--	goto grupStuff
 
-if @taskStat not in ('REQUESTED','CREATING')
-	begin
-	print 'ERROR - The Status of this task does not allow acceptance'
-	set @RET_STATUS = 'ERROR - The Status of this task does not allow acceptance'
-	goto fin
-	end
-grupstuff:
-if @roleRequestee is not null
-	begin
-	print 'This is a request to  role ' + @roleRequestee
-	SELECT @tester = ID FROM A_PERSON_ROLES WHERE ROLE_ID = @roleRequestee AND PERSON_ID = @strNTLogin
-	if @tester is null
-		begin
-		print 'You are not in this role'
-		end
-	end
+--if @taskStat not in ('REQUESTED','CREATING')
+--	begin
+--	print 'ERROR - The Status of this task does not allow acceptance'
+--	set @RET_STATUS = 'ERROR - The Status of this task does not allow acceptance'
+--	goto fin
+--	end
+--grupstuff:
+--if @roleRequestee is not null
+--	begin
+--	print 'This is a request to  role ' + @roleRequestee
+--	SELECT @tester = ID FROM A_PERSON_ROLES WHERE ROLE_ID = @roleRequestee AND PERSON_ID = @strNTLogin
+--	if @tester is null
+--		begin
+--		print 'You are not in this role'
+--		end
+--	end
 
 print 'GOT HERE'
 print 'Requestee = '
@@ -75,7 +75,7 @@ if isNULL(@requestee,'') = @strNTLogin or (@tester is not null)
 else
 	begin
 	print 'NO Dice = You cannot accept it.'
-	set @RET_STATUS = 'ERROR - You are nto allowed to Accept this task'
+	--set @RET_STATUS = 'ERROR - You are nto allowed to Accept this task'
 	goto fin
 	end
 

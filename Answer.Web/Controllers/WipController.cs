@@ -121,6 +121,8 @@ namespace Answer.Web.Controllers
                     else if (rule.field == nameof(WorkOrderView.CurStepText))
                     {
                         if (rule.data != "ALL")
+
+
                         {
                             var statusList = rule.data.Split(',').Select(x => x.Trim().ToLower());
 
@@ -448,7 +450,7 @@ namespace Answer.Web.Controllers
 
             foreach (var monitorTemplate in response.MonitorTemplateResult)
             {
-                monitorTemplate.Setup(_equipmentMaintenanceService);
+                monitorTemplate.Setup(_equipmentMaintenanceService, _orderService);
 
                 for (int i = 0; i < monitorTemplate.FailActionList.Count; i++)
                 {
@@ -469,29 +471,36 @@ namespace Answer.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult UpdateStepMonitor(MonitorTemplateResult monitorTemplate)
+        public ActionResult UpdateStepMonitor(List<MonitorTemplateResult> monitorTemplates)
         {
             if (ModelState.IsValid)
             {
                 var currentUser = GetCurrentUser();
 
-                monitorTemplate.StrNtLogin = currentUser.Id;
-                _orderService.UpdateStepMonitor(monitorTemplate);
+                foreach (var monitorTemplate in monitorTemplates)
+                {
+                    monitorTemplate.StrNtLogin = currentUser.Id;
+                    _orderService.UpdateStepMonitor(monitorTemplate);
+                }
             }
 
-            return RedirectToAction("Details", new { id = monitorTemplate.FillId });
+            return RedirectToAction("Details", new { id = monitorTemplates.FirstOrDefault().FillId });
         }
 
         [HttpPost]
-        public ActionResult UpdateStepMonitorAndClose(MonitorTemplateResult monitorTemplate)
+        public ActionResult UpdateStepMonitorAndClose(List<MonitorTemplateResult> monitorTemplates)
         {
             if (ModelState.IsValid)
             {
                 var loggedUserId = GetCurrentUser().Id;
 
-                _orderService.UpdateStepMonitor(monitorTemplate);
+                foreach (var monitorTemplate in monitorTemplates)
+                {
+                    monitorTemplate.StrNtLogin = loggedUserId;
+                    _orderService.UpdateStepMonitor(monitorTemplate);
+                }
 
-                var returnValue = _orderService.CloseTask(monitorTemplate.Task_Id, loggedUserId);
+                var returnValue = _orderService.CloseTask(monitorTemplates.FirstOrDefault().TASK_ID, loggedUserId);
 
                 if (!string.IsNullOrWhiteSpace(returnValue))
                 {
@@ -499,10 +508,10 @@ namespace Answer.Web.Controllers
                 }
 
                 if (returnValue == "NEW_TEXT")
-                    return RedirectToAction("Details", new { id = monitorTemplate.FillId });//"../monitors/addNewTextResults.asp?TASK_ID="
+                    return Json("OK", JsonRequestBehavior.AllowGet);
             }
 
-            return RedirectToAction("Details", new { id = monitorTemplate.FillId });//"asp/workerScreen/refreshProgress.asp"
+            return Json("OK", JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]

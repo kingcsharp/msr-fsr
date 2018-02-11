@@ -16,6 +16,7 @@ using Msr.Models.Tasks;
 using Msr.Services.Orders.Procedures;
 using Msr.Services.Orders.ViewModels;
 using RestSharp;
+using Msr.Models.Comman;
 
 namespace Msr.Services.Orders
 {
@@ -86,9 +87,9 @@ namespace Msr.Services.Orders
             return content;
         }
 
-        public WorkOrderDetailsResponse GetPurchaseItemDetails(int fillId,string ntlogin)
+        public WorkOrderDetailsResponse GetPurchaseItemDetails(int fillId, string ntlogin)
         {
-            var detailsResponse = new WorkOrderDetailsResponse {FillId = fillId};
+            var detailsResponse = new WorkOrderDetailsResponse { FillId = fillId };
 
             using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
             {
@@ -115,11 +116,11 @@ namespace Msr.Services.Orders
             return detailsResponse;
         }
 
-        public TsrDetailsResponse GetTsrDetails(int fillId,string ntlogin)
+        public TsrDetailsResponse GetTsrDetails(int fillId, string ntlogin)
         {
             try
             {
-                var detailsResponse = new TsrDetailsResponse { FillId = fillId};
+                var detailsResponse = new TsrDetailsResponse { FillId = fillId };
 
                 using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
                 {
@@ -290,7 +291,7 @@ namespace Msr.Services.Orders
                 var saveWorkItemQtyProcedure = new SaveWorkOrderItemQtyProcedure { ItemId = model.FillId, Quanitiy = model.Value, NTLogin = model.NTLogin };
 
                 _dbContext.Database.ExecuteStoredProcedure(saveWorkItemQtyProcedure);
-                
+
                 return true;
 
             }
@@ -454,7 +455,7 @@ namespace Msr.Services.Orders
 
         public WipStepDetailsResponse GetWipStepDetails(int stepId, int fillId, string login, int? phStepId)
         {
-            var detailsResponse = new WipStepDetailsResponse {StepId = stepId, FillId = fillId, LoginId = login};
+            var detailsResponse = new WipStepDetailsResponse { StepId = stepId, FillId = fillId, LoginId = login };
 
             using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
             {
@@ -472,7 +473,7 @@ namespace Msr.Services.Orders
 
                 var taskLog = _dbContext.TaskLogs.FirstOrDefault(x => x.TaskId == stepId && x.FillId == fillId);
 
-                detailsResponse.TaskRunningDto =  GetTotalTime(taskLog);
+                detailsResponse.TaskRunningDto = GetTotalTime(taskLog);
 
                 var p1 = new DynamicParameters();
 
@@ -539,7 +540,7 @@ namespace Msr.Services.Orders
                         var taskData =
                             conn.Query<GetTaskDetailResult>(
                                 "SELECT * FROM A_TASKS WHERE ID = @stepId",
-                                new {stepId = task.STEP_ID}, commandType: CommandType.Text).SingleOrDefault();
+                                new { stepId = task.STEP_ID }, commandType: CommandType.Text).SingleOrDefault();
 
                         if (taskData != null)
                         {
@@ -583,7 +584,14 @@ namespace Msr.Services.Orders
 
             p.Add("@id", request.Id, DbType.String, ParameterDirection.Input);
             p.Add("@failAction", request.Fail_Action, DbType.String, ParameterDirection.Input);
-            p.Add("@result", request.Print_Result, DbType.String, ParameterDirection.Input);
+            if (request.Monitor_Type == "MULTIPLE")
+            {
+                p.Add("@result", request.Mult_Choice_Answer, DbType.String, ParameterDirection.Input);
+            }
+            else
+            {
+                p.Add("@result", request.Print_Result, DbType.String, ParameterDirection.Input);
+            }
             p.Add("@comment", request.Comment, DbType.String, ParameterDirection.Input);
             p.Add("@target", request.Target, DbType.String, ParameterDirection.Input);
             p.Add("@tolerance", request.Tolerance, DbType.String, ParameterDirection.Input);
@@ -707,11 +715,11 @@ namespace Msr.Services.Orders
                         if (taskLog.StatusId == TimerStatuseConstants.InProgress)
                         {
                             taskLog.EndTime = DateTime.Now;
-                            taskLog.TotalTime =  TimeSpan.FromSeconds((taskLog.EndTime.Value - taskLog.StartTime).TotalSeconds);
+                            taskLog.TotalTime = TimeSpan.FromSeconds((taskLog.EndTime.Value - taskLog.StartTime).TotalSeconds);
                         }
-                        
+
                         taskLog.StatusId = TimerStatuseConstants.Stopped;
-                        
+
                         _dbContext.SaveChanges();
 
                         response.Entity = GetTotalTime(taskLog);
@@ -753,7 +761,7 @@ namespace Msr.Services.Orders
                 taskLog.EndTime = null;
                 _dbContext.SaveChanges();
             }
-            
+
             result.Entity = GetTotalTime(taskLog);
 
             return result;
@@ -845,7 +853,7 @@ namespace Msr.Services.Orders
 
         public ReferenceTheoryResponse GetTheoryData(int theoryId, string login)
         {
-            var detailsResponse = new ReferenceTheoryResponse {TheoryId = theoryId};
+            var detailsResponse = new ReferenceTheoryResponse { TheoryId = theoryId };
 
             var p = new DynamicParameters();
             p.Add("@ID", theoryId.ToString(), DbType.String, ParameterDirection.Input, size: 50);
@@ -859,8 +867,8 @@ namespace Msr.Services.Orders
                 p1.Add("@strID", objectId, DbType.String, ParameterDirection.Input, size: 50);
                 p1.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input, size: 50);
                 detailsResponse.TheoryGetInfoResult = conn.Query<TheoryGetInfoResult>("A_SP_THEORY_GET_EDIT_INFORMATION", p1, commandType: CommandType.StoredProcedure).FirstOrDefault();
-                
-                detailsResponse.ObjectInfoResult = conn.Query<ObjectInfoResult>("SELECT * FROM A_OBJECTS WHERE ID = @Id", new { Id = objectId}, commandType: CommandType.Text).FirstOrDefault();
+
+                detailsResponse.ObjectInfoResult = conn.Query<ObjectInfoResult>("SELECT * FROM A_OBJECTS WHERE ID = @Id", new { Id = objectId }, commandType: CommandType.Text).FirstOrDefault();
 
                 detailsResponse.WorkflowDataResult = conn.Query<WorkflowDataResult>("SELECT * FROM A_WORKFLOWS WHERE ID = (SELECT WF_ID FROM A_WORKFLOWS_STARTED WHERE ID = (SELECT WFS_ID FROM A_OBJECTS WHERE ID = @Id))", new { Id = objectId }, commandType: CommandType.Text).FirstOrDefault();
 
@@ -892,7 +900,7 @@ namespace Msr.Services.Orders
                 p6.Add("@ID", detailsResponse.TheoryGetInfoResult.Id, DbType.String, ParameterDirection.Input, size: 50);
                 p6.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input, size: 50);
                 detailsResponse.TheoryGetRolesResults = conn.Query<TheoryGetRolesResult>("A_SP_THEORY_GET_ROLES_TO_VIEW", p6, commandType: CommandType.StoredProcedure).ToList();
-                
+
                 detailsResponse.TheoryGetParagraphDataResults = conn.Query<TheoryGetParagraphDataResult>("A_SP_THEORY_PARAGRAPHS_GET_DATA", p2, commandType: CommandType.StoredProcedure).ToList();
 
                 var p7 = new DynamicParameters();
@@ -922,7 +930,7 @@ namespace Msr.Services.Orders
         public IEnumerable<NcrDataResult> SearchNcrs(int? partId, string login)
         {
             var p = new DynamicParameters();
-            
+
             p.Add("@fieldList", null, DbType.String, ParameterDirection.Input, size: 4000);
             p.Add("@alias", "S", DbType.String, ParameterDirection.Input, size: 50);
             p.Add("@strWHERE", @" PROCEDURE_ID in (SELECT DISTINCT p.ROOT FROM A_O_PROCEDURES p WHERE p.VERB_NAME = 'NCR') AND PROCEDURE_STEP_ID is null  ", DbType.String, ParameterDirection.Input, size: 4000);
@@ -943,7 +951,7 @@ namespace Msr.Services.Orders
 
         public string AddProcedureAsSubTask(string objId, string parentId, string login)
         {
-            
+
             using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
             {
                 var p = new DynamicParameters();
@@ -1015,6 +1023,12 @@ namespace Msr.Services.Orders
                         .Replace("<</bb>>", "</h4>")
                         .Replace("<<nl/>>", "<br/>");
             }
+        }
+        public List<SelectFile> GetMultiChoiceAnswers(string id)
+        {
+            var result = _dbContext.Database.SqlQuery<SelectFile>($"SELECT ID as Id,TXT AS Name from A_MONITOR_TEMPLATES_MULT_CHOICE WHERE MONITOR_ID = {id} order by ORD").ToList();
+
+            return result;
         }
     }
 }

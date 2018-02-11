@@ -52,6 +52,10 @@ namespace Answer.Web.Controllers
                         {
                             totalRows = totalRows.Where(x => x.IsPassing == value);
                         }
+                        else
+                        {
+                            totalRows = totalRows.Where(x => x.IsPassing.ToString().ToLower() == rule.data.ToLower());
+                        }
                     }
                     else if (rule.field == nameof(MonitorView.WorkerName))
                     {

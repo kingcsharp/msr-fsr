@@ -300,8 +300,7 @@ namespace Msr.Services.PrePro.ViewModel
                 //Labor = model,
                 StepText = model.StepText,
                 SystemTask = model.SystemTask,
-                //NumTestQuestion = model,
-                //ApplicationObjects = model,
+                Title = model.Title,
                 ReferenceVerb = model.ReferenceVerb,
                 ReferenceObject = model.ReferenceObject,
                 Comments = model.Comments
