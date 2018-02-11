@@ -137,6 +137,11 @@ namespace Answer.Web.Controllers
                     }
                 }
             }
+            else
+            {
+                totalRows = totalRows.Where(x => x.Status.ToLower() == "accepted");
+            }
+
 
             string orderDirection = "asc";
 
