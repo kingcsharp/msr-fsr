@@ -1187,6 +1187,7 @@
     <Content Include="Views\Invoices\Index.cshtml" />
     <Content Include="Views\Invoices\_InvoiceItemsList.cshtml" />
     <Content Include="Views\Invoices\PrintableInvoice.cshtml" />
+    <Content Include="Views\Wip\StatusView.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

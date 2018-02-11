@@ -339,6 +339,26 @@ namespace Answer.Web.Controllers
             return View(response);
         }
 
+        public ActionResult StatusView(int? id)
+        {
+            var currentUser = GetCurrentUser();
+
+            var viewModel = new WipListViewModel();
+            viewModel.CurrentUser = currentUser;
+
+            viewModel.WoItemsInprogress = _orderService.GetWorkOrderQueryable()
+                .Where(x => x.Status == WorkItemStatusConstants.Accepted && x.SupplierId == currentUser.Root_Company && x.RequesteeId != currentUser.Id)
+                .OrderByDescending(o => o.DueDate)
+                .ToList();
+
+            var procs = viewModel.WoItemsInprogress.Select(p => p.ProcName).ToList();
+
+            viewModel.WoItemsByProcedures = _orderService.GetWorkOrderQueryable().Where(x => procs.Contains(x.ProcName)).ToList();
+
+            return View(viewModel);
+        }
+
+
         public ActionResult PrintTraveler(int id)
         {
             var currentUser = GetCurrentUser();
