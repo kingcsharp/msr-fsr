@@ -16,7 +16,7 @@
                         <strong>Proc: @item.ProductName <br>@item.ProcName</strong>
                     </div>
 
-                    <div class="col-lg-6">
+                    <div class="col-lg-9">
                         @foreach (var proItem in Model.WoItemsByProcedures.Where(x => x.ProcName == item.ProcName).OrderBy(o => o.DueDate))
                         {
                             var statusText = "";
