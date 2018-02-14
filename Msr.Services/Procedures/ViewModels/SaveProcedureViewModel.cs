@@ -8,6 +8,7 @@ using Msr.Models.Comman;
 using Msr.Models.Procedures;
 using Msr.Services.ProcedureVerbs;
 using Msr.Services.Roles;
+using Msr.Services.Procedures.Messages;
 
 namespace Msr.Services.Procedures.ViewModels
 {
@@ -70,6 +71,8 @@ namespace Msr.Services.Procedures.ViewModels
         public int? Threshold { get; set; }
 
         public string Root { get; set; }
+
+        public GetStepDataResult GetStepDataResults { get; set; }
 
         public List<string> ReferenceFiles { get; set; }
 

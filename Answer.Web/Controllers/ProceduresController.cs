@@ -3,11 +3,13 @@ using Msr.Services.jqGrid;
 using Msr.Services.Procedures;
 using Msr.Web.ViewModel.Engineering;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using System.Xml;
 using System.Xml.Xsl;
+using Amazon.Runtime.Internal;
 using Answer.Web.ViewModel;
 using Msr.Models.ActualParts;
 using Msr.Services.Procedures.Messages;
@@ -84,6 +86,10 @@ namespace Answer.Web.Controllers
                         if (Int32.TryParse(rule.data, out value))
                         {
                             totalRows = totalRows.Where(x => x.Rev == value);
+                        }
+                        else
+                        {
+                            totalRows = totalRows.Where(x => x.Rev.ToString().ToLower() == rule.data.ToLower());
                         }
                     }
                     else if (rule.field == nameof(ProcedureView.Status))
@@ -182,6 +188,25 @@ namespace Answer.Web.Controllers
             return View(model);
         }
 
+
+        public ActionResult ProcedureDelete(string id)
+        {
+            var procedureService = new ProceduresService();
+
+            var response = procedureService.DeleteProcedure(id: id, ntlogin: GetCurrentUser().Id);
+
+            if (response)
+            {
+                TempData["SuccessMessage"] = "Procedure deleted successfully.";
+
+                return RedirectToAction("Index");
+            }
+
+            TempData["ErrorMessage"] = "Something went wrong.";
+            return RedirectToAction("Index");
+        }
+
+
         public ActionResult Edit(string id)
         {
             var vm = new SaveProcedureViewModel();
@@ -197,6 +222,21 @@ namespace Answer.Web.Controllers
 
             vm.MapToDto(model);
             vm.Setup(new ProceduresService(), new RoleService(), new ProcedureVerbsService(), currrentUser.Id);
+
+            var procedureName = _proceduresService.GetProceduresQueryable().Where(x => x.ObjectId == id).SingleOrDefault().Name;
+
+            var viewModel = new GetStepDataResult
+            {
+                GetStepDataResults = _proceduresService.GetStepsData(id, GetCurrentUser().Id)
+            };
+            viewModel.AddMonitorForProcedureViewModel.Setup(new EquipmentMaintenanceService());
+            viewModel.AddMonitorForProcedureViewModel.Related_Object_Id = id;
+            ViewBag.ProcObjectId = id;
+            ViewBag.ProdecureName = procedureName;
+
+            ViewBag.Procedure = new SelectList(_proceduresService.GetProcedurelist(), "Value", "Show");
+
+            vm.GetStepDataResults = viewModel;
             return View(vm);
         }
 
@@ -330,15 +370,51 @@ namespace Answer.Web.Controllers
 
             return View(viewModel);
         }
+        [HttpPost]
         public ActionResult SaveStep(string ProcObjectId, string Procedure)
         {
             var id = _proceduresService.PrePopSave(ProcObjectId, Procedure, GetCurrentUser().Id);
 
             ViewBag.Id = id;
             ViewBag.Procedure = Procedure;
+            var currentUser = GetCurrentUser();
 
-            return RedirectToAction("CreateStep", new { procedureObjectId = ProcObjectId, id = id, Procedure = Procedure });
+            var vm = new GetStepEditDataViewModel
+            {
+                NtLogin = currentUser.Login,
+                GetStepEditData =
+                {
+                    Start_On_Counter = 0,
+                    Duration_Type = "TIME_SYS_SECONDS",
+                    System_Task = "SYS_COMP_TEST"
+                }
+            };
+            vm.SetUp(new ProceduresService(), new ProcedureVerbsService(), ProcObjectId);
+
+            var singleOrDefault = _proceduresService.GetProcedurelist().SingleOrDefault(x => x.Value == Procedure);
+            if (singleOrDefault != null)
+            {
+                var value = singleOrDefault.Show;
+
+                vm.GetStepEditData.Step_Text = value;
+                vm.ProcObjId = ProcObjectId;
+            }
+            var response = _proceduresService.CreateStepData(vm);
+
+            if (response)
+            {
+                TempData["SuccessMessage"] = "Step has been Created successfully.";
+
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Something went wrong.";
+            }
+
+
+            return Json("Ok", JsonRequestBehavior.AllowGet);
         }
+     
 
         public ActionResult CreateStep(string procedureObjectId, string NewObjectId, string Procedure)
         {
@@ -374,7 +450,7 @@ namespace Answer.Web.Controllers
                 {
                     TempData["SuccessMessage"] = "Procedure has been assigned successfully.";
 
-                    return RedirectToAction("Steps", "Procedures", new { Id = model.ProcObjId });
+                    return RedirectToAction("Edit", "Procedures", new { Id = model.ProcObjId });
                 }
 
                 TempData["ErrorMessage"] = "Something went wrong.";
@@ -1025,6 +1101,27 @@ namespace Answer.Web.Controllers
             return RedirectToAction("Steps", "Procedures", new { id = procStepId, ProdecureName = ProdecureName });
         }
 
+        [AcceptVerbs(HttpVerbs.Get)]
+        public ActionResult ReorderCustom(string id)
+        {
+            var model = _proceduresService.GetReorderSteps(procObjectId: id);
+
+            ViewBag.procObjectId = id;
+
+            return View(model);
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult ReorderCustom(string procObjectId, IList<ProcedureStepOtherStepListView> steps)
+        {
+            var currentUser = GetCurrentUser();
+            var stringArray = steps.Select(item => item.print_Order + "," + item.Id).ToList();
+
+            _proceduresService.SaveReorderSteps(stringArray.ToArray(), procObjectId, currentUser.Id);
+
+            return RedirectToAction("Edit", new { id = procObjectId });
+        }
+
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult ReorderSteps(string procObjectId, string[] array)
         {
@@ -1037,12 +1134,6 @@ namespace Answer.Web.Controllers
 
         public ActionResult AddMonitor(string moniterType, string inputType, string failAction, string description, string objectId, string relatedObject, string stepId, string procedureName, string shouldBe, float? highestThreshold, float? highThreshold, float? target, float? lowThreshold, float? lowestThreshold, string targetObject)
         {
-            if (string.IsNullOrWhiteSpace(objectId)) {
-                inputType = "";
-                shouldBe = "";
-                targetObject = "";
-            }
-
             var model = new GetStepDataResult
             {
                 AddMonitorForProcedureViewModel =
@@ -1086,7 +1177,6 @@ namespace Answer.Web.Controllers
                     model.AddMonitorForProcedureViewModel.Target = null;
                     model.AddMonitorForProcedureViewModel.Low_Threshold = null;
                     model.AddMonitorForProcedureViewModel.Lowest_Threshold = null;
-                    ////model.AddMonitorForProcedureViewModel.Target_Object = null;
                 }
 
                 var response = proceduresService.AddMonitorForProcedure(model: model.AddMonitorForProcedureViewModel);
@@ -1098,22 +1188,20 @@ namespace Answer.Web.Controllers
                         : "Monitor has been Updated successfully.";
 
 
-                    return RedirectToAction(actionName: "Steps", routeValues: new { id = model.AddMonitorForProcedureViewModel.Related_Object_Id, ProdecureName = model.AddMonitorForProcedureViewModel.ProcedureName });
-                    //return Json(new {id = response.Entity.NewId }, JsonRequestBehavior.AllowGet);
+                    return RedirectToAction(actionName: "Edit", controllerName: "Procedures", routeValues: new { id = model.AddMonitorForProcedureViewModel.Related_Object_Id });
                 }
 
                 TempData["ErrorMessage"] = "Something went wrong.";
-                return RedirectToAction("Steps", "Procedures", new
+                return RedirectToAction("Edit", "Procedures", new
                 {
-                    id = model.AddMonitorForProcedureViewModel.Related_Object_Id,
-                    ProdecureName = model.AddMonitorForProcedureViewModel.ProcedureName
+                    id = model.AddMonitorForProcedureViewModel.Related_Object_Id
                 });
             }
 
-            return RedirectToAction("Steps", "Procedures", new
+            return RedirectToAction("Edit", "Procedures", new
             {
-                id = model.AddMonitorForProcedureViewModel.Related_Object_Id,
-                ProdecureName = model.AddMonitorForProcedureViewModel.ProcedureName
+                id = model.AddMonitorForProcedureViewModel.Related_Object_Id
+
             });
         }
     }

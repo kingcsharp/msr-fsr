@@ -49,11 +49,11 @@ namespace Msr.Services.PurchesOrder.ViewModels
         [Display(Name = "First Invoice Date")]
         public DateTime? FirstInvoiceDate { get; set; }
 
-        [Range(0, int.MaxValue, ErrorMessage = "Please enter valid integer Number")]
+        [Range(0, int.MaxValue, ErrorMessage = "Please enter valid number")]
         public int? GracePeriod { get; set; }
         public float? LatePaymentFee { get; set; }
 
-        [Range(0, int.MaxValue, ErrorMessage = "Please enter valid integer Number")]
+        [Range(0, int.MaxValue, ErrorMessage = "Please enter valid number")]
         public int? ReApplyFrequency { get; set; }
         public List<string> Products { get; set; }
         public string Save { get; set; }

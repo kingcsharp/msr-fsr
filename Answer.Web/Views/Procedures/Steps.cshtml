@@ -1,64 +1,45 @@
 ﻿@model Msr.Services.Procedures.Messages.GetStepDataResult
-
 @{
     ViewBag.Title = ViewBag.ProdecureName + " :Steps";
 }
-
-<div class="container-fluid">
-
-    <div class="side-body padding-top">
+<div class="row">
+    <h2 class="page-header">
+        Steps
+    </h2>
+    <div class="panel-body bio-graph-info">
 
         <div class="row">
-            <h2 class="page-header">
-                @ViewBag.ProdecureName :Steps
-            </h2>
-
-            <div class="panel-body bio-graph-info">
-                @Html.Partial("Message")
-
-                @using (Html.BeginForm("SaveStep", "procedures", FormMethod.Post, new { @class = "form form-horizontal" }))
-                {
-                    <div class="row">
-                        <div class="col-lg-10">
-                            <div class="form-horizontal">
-
-                                <input type="hidden" name="ProcObjectId" value="@ViewBag.ProcObjectId" />
-
-                                <div class="form-group">
-                                    <label class="control-label col-md-2">Template:</label>
-                                    <div class="col-md-5">
-                                        @Html.DropDownList("Procedure", (IEnumerable<SelectListItem>)ViewBag.Accounts, null, new { @class = "form-control", name = "Procedure" })
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="col-md-offset-2 col-md-10">
-                                        <button type="submit" class="btn btn-success">Add New Step</button>
-                                        <a href="@Url.Action("Edit", "Procedures", new{ id= ViewBag.ProcObjectId })" class="btn btn-warning">Cancel</a>
-
-                                    </div>
-                                </div>
-
-                            </div>
+            <div class="col-lg-10">
+                <div class="form-horizontal">
+                    <input type="hidden" id="ProcObjectId" name="ProcObjectId" value="@ViewBag.ProcObjectId" />
+                    <div class="form-group">
+                        <label class="control-label col-md-1">Template:</label>
+                        <div class="col-md-4">
+                            @Html.DropDownList("Procedure", (IEnumerable<SelectListItem>)ViewBag.Accounts, null, new { @class = "form-control", name = "Procedure" })
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-success addNewStep">Add New Step</button>
                         </div>
                     </div>
-                }
+                </div>
             </div>
-            <ul id="sortable" class="sortable-container">
-                @foreach (var step in Model.GetStepDataResults)
+        </div>
+
+    </div>
+    <ul id="sortable" class="sortable-container">
+        @foreach (var step in Model.GetStepDataResults)
+        {
+
+            <li id="@step.Print_Order,@step.Id" data-MainObjectId="@ViewBag.ProcObjectId" class="sortable-item">
+                <span class="fa fa-arrows handle sortable-fa" style="float: left;margin: -4px;"></span>
+                @using (Html.BeginForm("EditStep", "Procedures", FormMethod.Post, new { @class = "formPost" }))
                 {
 
-                    <li id="@step.Print_Order,@step.Id" data-MainObjectId="@ViewBag.ProcObjectId" class="sortable-item">
-                        <span class="fa fa-arrows handle sortable-fa" style="float: left;margin: -4px;"></span>
-
-                        @using (Html.BeginForm("EditStep", "Procedures", FormMethod.Post, new { @class = "formPost" }))
-                        {
-
-                            <input type="hidden" name="procstepId" value="@ViewBag.ProcObjectId" />
+                    <input type="hidden" name="procstepId" value="@ViewBag.ProcObjectId" />
                             <input type="hidden" id="StepId" name="Id" value="@step.Id" />
                             <div class="procedure-step row" id='step1'>
-
-                                <div class="col-lg-6 ">l
+                                <div class="col-lg-6 ">
+                                    l
 
                                     <table class="table table-condensed left-table">
                                         <tr>
@@ -107,73 +88,68 @@
                                     </table>
                                 </div>
                                 <div class="col-lg-3">
-                                    
                                     <ul class="nav nav-tabs">
                                         <li class="active"><a href="#">Monitors</a></li>
                                     </ul>
-
                                     <table style="width: 100%" class="table table-condensed">
                                         <thead>
-                                        <tr>
-                                            <th>Monitor Type</th>
-                                            <th>Description</th>
-                                            <th>Input Type</th>
-                                            <th></th>
-                                        </tr>
+                                            <tr>
+                                                <th>Monitor Type</th>
+                                                <th>Description</th>
+                                                <th>Input Type</th>
+                                                <th></th>
+                                            </tr>
                                         </thead>
                                         <tbody>
-                                        @foreach (var item in @step.GetMoniterViewModels)
-                                        {
-                                            <tr>                                               
-                                                <td>@item.Monitor_Type</td>
-                                                <td>@item.Description</td>
-                                                <td>@item.Input_Type</td>
+                                            @foreach (var item in @step.GetMoniterViewModels)
+                                            {
+                                                <tr>
+                                                    <td>@item.Monitor_Type</td>
+                                                    <td>@item.Description</td>
+                                                    <td>@item.Input_Type</td>
+                                                    <td>
+                                                        <span title="Edit Monitor" class="btn btn-xs btn-success" data-toggle="modal" data-procedure-name="@ViewBag.ProdecureName"
+                                                              data-moniter-type="@item.Monitor_Type"
+                                                              data-input-type="@item.Input_Type"
+                                                              data-fail-action="@item.Fail_Action"
+                                                              data-description="@item.Description"
+                                                              data-object-id="@item.Id"
+                                                              data-related-object="@item.Related_Object_Id"
+                                                              data-step-id="@item.Step_Id"
+                                                              data-step-shouldbe="@item.Should_Be"
+                                                              data-step-highestthreshold="@item.Highest_Threshold"
+                                                              data-step-highthreshold="@item.High_Threshold"
+                                                              data-step-target="@item.Target"
+                                                              data-step-lowthreshold="@item.Low_Threshold"
+                                                              data-step-lowestthreshold="@item.Lowest_Threshold"
+                                                              data-step-Target-Object="@item.Target_Object"
+                                                              data-target="#addMoniterModal"
+                                                              href="#monitor_@item.Id"><i class="fa fa-edit" aria-hidden="true"></i></span>
+                                                        <span title="Delete Monitor" style="cursor: pointer;" class="deleteMoniter btn btn-xs btn-danger" data-ProcedureName="@ViewBag.ProdecureName" data-ProcId="@item.Related_Object_Id" data-id="@item.Id">
+                                                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            }
+                                            <tr>
                                                 <td>
-                                                    <span title="Edit Monitor" class="btn btn-xs btn-success" data-toggle="modal" data-procedure-name="@ViewBag.ProdecureName" 
-                                                          data-moniter-type="@item.Monitor_Type"
-                                                          data-input-type="@item.Input_Type"
-                                                          data-fail-action="@item.Fail_Action" 
-                                                          data-description="@item.Description"
-                                                          data-object-id="@item.Id" 
-                                                          data-related-object="@item.Related_Object_Id"
-                                                          data-step-id="@item.Step_Id"
-                                                          data-step-shouldbe="@item.Should_Be"
-                                                          data-step-highestthreshold="@item.Highest_Threshold"
-                                                          data-step-highthreshold="@item.High_Threshold"
-                                                          data-step-target="@item.Target"
-                                                          data-step-lowthreshold="@item.Low_Threshold"
-                                                          data-step-lowestthreshold="@item.Lowest_Threshold"
-                                                          data-step-Target-Object="@item.Target_Object"
-                                                          data-target="#addMoniterModal" 
-                                                          href="#monitor_@item.Id"><i class="fa fa-edit" aria-hidden="true"></i></span> 
-                                                    <span title="Delete Monitor" style="cursor: pointer;" class="deleteMoniter btn btn-xs btn-danger" data-ProcedureName="@ViewBag.ProdecureName" data-ProcId="@item.Related_Object_Id" data-id="@item.Id">
-                                                        <i class="fa fa-trash-o" aria-hidden="true"></i>
-                                                    </span>
+                                                    <a data-procedure-name="@ViewBag.ProdecureName" data-moniter-type="@step.AddMonitorForProcedureViewModel.Monitor_Type" data-fail-action="@step.AddMonitorForProcedureViewModel.Fail_Action" data-description="@step.AddMonitorForProcedureViewModel.Description" data-object-id="@step.AddMonitorForProcedureViewModel.Id" data-related-object="@ViewBag.ProcObjectId" data-step-id="@step.Id" data-toggle="modal" data-target="#addMoniterModal" href="#" data-value="@step.Id" class="btn btn-xs btn-success add-monitor_@step.Id add-monitor " title="Add Monitor"> <i class="fa fa-plus" aria-hidden="true"></i> Add Monitor</a>
                                                 </td>
+                                                <td></td>
+                                                <td></td>
                                             </tr>
-                                        }
-                                        <tr>
-                                            <td>
-                                                <a data-procedure-name="@ViewBag.ProdecureName" data-moniter-type="@step.AddMonitorForProcedureViewModel.Monitor_Type" data-fail-action="@step.AddMonitorForProcedureViewModel.Fail_Action" data-description="@step.AddMonitorForProcedureViewModel.Description" data-object-id="@step.AddMonitorForProcedureViewModel.Id" data-related-object="@ViewBag.ProcObjectId" data-step-id="@step.Id" data-toggle="modal" data-target="#addMoniterModal" href="#" data-value="@step.Id" class="btn btn-xs btn-success add-monitor_@step.Id add-monitor " title="Add Monitor"> <i class="fa fa-plus" aria-hidden="true"></i> Add Monitor</a>
-                                            </td>
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
                                         </tbody>
                                     </table>
                                 </div>
-
                             </div>
                             <input type="submit" class="btn btn-success" value="Save" />
-                        }
-                    </li>
-
                 }
-            </ul>
-        </div>
-    </div>
+            </li>
 
+        }
+    </ul>
 </div>
+
 <div id="addMoniterModal" class="modal fade" role="dialog">
     <div class="modal-dialog" style="width: 50%;">
         <!-- Modal content-->
@@ -190,7 +166,6 @@
         </div>
     </div>
 </div>
-
 <style type="text/css">
     .sortable-container {
         padding: 0;
@@ -206,168 +181,3 @@
         background-color: #EFEFEF;
     }
 </style>
-@section scripts{
-    <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-    <script type="text/javascript">
-        var referenceMoniter;
-        $('#addMoniterModal').on('show.bs.modal',
-            function (event) {
-                var button = $(event.relatedTarget);
-                //var id = button.data('id');
-                var moniterType = button.data('moniter-type');
-                var inputType = button.data('input-type');
-                var failAction = button.data('fail-action');
-                var description = button.data('description');
-                var objectId = button.data('object-id');
-                var relatedObject = button.data('related-object');
-                var stepId = button.data('step-id');
-                var procedureName = button.data('procedure-name');
-
-                var shouldBe = button.data('step-shouldbe');
-                var highestThreshold = button.data('step-highestthreshold');
-                var highThreshold = button.data('step-highthreshold');
-                var target = button.data('step-target');
-                var lowThreshold = button.data('step-lowthreshold');
-                var lowestThreshold = button.data('step-lowestthreshold');
-                var targetObject = button.data('step-Target-Object');
-
-                var modal = $(this);
-                modal.find('.modal-body').html('');
-                $.ajax({
-                    type: "GET",
-                    url: '/Procedures/AddMonitor?moniterType=' + moniterType + '&inputType=' + inputType + '&failAction=' + failAction + '&description=' + description + '&objectId=' + objectId + '&relatedObject=' + relatedObject + '&stepId=' + stepId + '&procedureName=' + procedureName + '&shouldBe=' + shouldBe + '&highestThreshold=' + highestThreshold + '&highThreshold=' + highThreshold + '&target=' + target + '&lowThreshold=' + lowThreshold + '&lowestThreshold=' + lowestThreshold + '&targetObject=' + targetObject,
-                    dataType: 'html',
-                    success: function (data) {
-                        modal.find('.modal-body').html(data);
-                    },
-                    error: function () {
-
-                    }
-                });
-            });
-
-        $(document).ready(function () {
-            $('#submit-moniter-form').on('click',
-                function () {
-                    $('#moniter-form').submit();
-                });
-
-            $("#sortable").sortable({
-                handle: '.sortable-fa',
-                delay: 100,
-                cancel: "input,textarea,select",
-
-                placeholder: "highlight",
-                start: function (event, ui) {
-                    console.log("Start");
-                    //alert("Start");
-                },
-                change: function (event, ui) {
-                    console.log("Change");
-                },
-                update: function (event, ui) {
-                    console.log("Update");
-
-                    var productOrder = $(this).sortable('toArray');
-                    console.log(productOrder);
-
-                    var procObjectId = $(this).find('li').data("mainobjectid");
-
-                    $.ajax({
-                        type: "POST",
-                        url: "/Procedures/ReorderSteps",
-                        dataType: 'json',
-                        data: {
-                            array: productOrder, procObjectId: procObjectId
-
-                        },
-                        success: function (data) {
-                            location.reload();
-                        },
-                        error: function () {
-                            alert("something went wrong");
-                        }
-                    });
-                }
-
-            }).disableSelection();
-            $('#monitor1-switch').bootstrapSwitch();
-            $('#monitor1-switch').on('switchChange.bootstrapSwitch', function (e, state) {
-                e.preventDefault();
-                if (state) {
-                    $("#1a tr.on-off-row").show();
-                    console.log('on');
-                } else {
-                    $("#1a tr.on-off-row").hide();
-                    console.log('off');
-                }
-            });
-
-            $('#monitor2-switch').bootstrapSwitch();
-            $('#monitor2-switch').on('switchChange.bootstrapSwitch', function (e, state) {
-                e.preventDefault();
-                if (state) {
-                    $("#2a tr.on-off-row").show();
-                    console.log('on');
-                } else {
-                    $("#2a tr.on-off-row").hide();
-                    console.log('off');
-                }
-            });
-
-            $(".nav-tabs").on("click", "a", function (e) {
-                e.preventDefault();
-                if (!$(this).hasClass('add-monitor')) {
-                    $(this).tab('show');
-                }
-            });
-            $(".deleteMoniter").on("click", function () {
-                var clicked = $(this);
-                eModal.confirm(
-                        'Are you sure?')
-                    .then(confirmCallback, optionalCancelCallback);
-
-                function confirmCallback() {
-
-                    var id = clicked.data('id');
-                    var stepId = clicked.data('procid');
-                    var ProdecureName = clicked.data('ProcedureName');
-                    if (stepId == null && ProdecureName == null) {
-                        location.reload();
-                    }
-                    else {
-                        $.ajax({
-                            type: "POST",
-                            url: "/Procedures/DeleteStep",
-                            dataType: 'json',
-                            data: { id: id, procStepId: stepId, ProdecureName: ProdecureName },
-                            success: function (data) {
-                                location.reload();
-                            },
-                            error: function () {
-                                alert("something went wrong");
-                            }
-                        });
-                    }
-
-
-                }
-
-                function optionalCancelCallback() {
-                    console.log("Cancel");
-                }
-
-            });
-            $("form").submit(function (e) {
-                $('.submitselect option').prop('selected', true);
-            });
-
-            $('.deleteMoniter').click(function (e) {
-
-            });
-        });
-    </script>
-}
-
-
-

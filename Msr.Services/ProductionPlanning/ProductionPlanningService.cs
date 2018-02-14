@@ -100,7 +100,6 @@ namespace Msr.Services.ProductionPlanning
                 if (!string.IsNullOrWhiteSpace(submit))
                 {
                     var procedureObjectId = GetProceduretById(model.ProductProcedureId).Value;
-
                     var procedureSteps = _proceduresService.GetStepsData(procedureObjectId, model.LoginId);
 
                     foreach (var step in model.Steps)

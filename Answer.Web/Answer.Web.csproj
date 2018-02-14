@@ -599,6 +599,7 @@
     <Content Include="assets\js\Chart.min.js" />
     <Content Include="assets\js\chartjs.js" />
     <Content Include="assets\js\client_users.js" />
+    <Content Include="assets\js\comman.js" />
     <Content Include="assets\js\common\documentFile.js" />
     <Content Include="assets\js\common\documentFiles.js" />
     <Content Include="assets\js\dashboard.js" />
@@ -1186,7 +1187,6 @@
     <Content Include="Views\Invoices\_InvoiceAddEditModel.cshtml" />
     <Content Include="Views\Invoices\Index.cshtml" />
     <Content Include="Views\Invoices\_InvoiceItemsList.cshtml" />
-    <Content Include="Views\Invoices\PrintableInvoice.cshtml" />
     <Content Include="Views\Wip\StatusView.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
