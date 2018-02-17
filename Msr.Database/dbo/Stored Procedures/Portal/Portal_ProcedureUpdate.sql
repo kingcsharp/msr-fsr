@@ -1,5 +1,5 @@
 ﻿
-CREATE      PROCEDURE Portal_ProcedureUpdate
+CREATE      PROCEDURE [dbo].[Portal_ProcedureUpdate]
 @newObjID nvarchar(50) OUTPUT,
 @messages nvarchar(500) OUTPUT,
 @objID as nvarchar(50),
@@ -14,7 +14,8 @@ CREATE      PROCEDURE Portal_ProcedureUpdate
 @DURATION float,
 @DURATION_TYPE nvarchar(50),
 @strNTLogin nvarchar(50),
-@threshold int
+@threshold int,
+@IsActive bit
 
 AS
 
@@ -39,7 +40,9 @@ begin
 			DURATION = @DURATION,
 			DURATION_TYPE = @DURATION_TYPE,
 			Threshold = @threshold,
-			DRCM = getDate(), MODBY = @strNTLogin
+			DRCM = getDate(),
+			MODBY = @strNTLogin,
+			IsActive =@IsActive
 			WHERE OBJECT_ID = @objID
 		end
 	set @newObjID = @objID
@@ -49,8 +52,8 @@ else
 		set @messages = @messages + 'The object ID is null'
 		declare @newID as nvarchar(50)
 		exec sp_getUniqueID3 @newID OUTPUT
-		INSERT INTO A_PROCEDURES_HISTORY (ID,NAME,VERB,COMMENTS,STEPS_IN_AP,WIP_MSG,DRCM,MODBY,SECURITY_LEVEL,SYSTEM_ID)
-		VALUES(@newID,@NAME,@VERB,@COMMENTS,@STEPS_IN_AP,@WIP_MSG,getDate(),@strNTLogin,@SECURITY_LEVEL,@SYSTEM_ID)
+		INSERT INTO A_PROCEDURES_HISTORY (ID,NAME,VERB,COMMENTS,STEPS_IN_AP,WIP_MSG,DRCM,MODBY,SECURITY_LEVEL,SYSTEM_ID,IsActive)
+		VALUES(@newID,@NAME,@VERB,@COMMENTS,@STEPS_IN_AP,@WIP_MSG,getDate(),@strNTLogin,@SECURITY_LEVEL,@SYSTEM_ID,@IsActive)
 		declare @myObjID as nvarchar(50)
 		SELECT @myObjId = OBJECT_ID FROM A_PROCEDURES_HISTORY WHERE ID = @newID
 		set @newObjId = @myObjId

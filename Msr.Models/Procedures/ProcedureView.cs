@@ -37,5 +37,6 @@ namespace Msr.Models.Procedures
         public string DurationType { get; set; }
         public string SystemId { get; set; }
         public int? Threshold { get; set; }
+        public bool IsActive { get; set; }
     }
 }

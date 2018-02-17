@@ -1,5 +1,4 @@
-﻿
-               PROCEDURE dbo.A_SP_TASK_ASSUME_CONTROL 
+﻿Create PROCEDURE dbo.A_SP_TASK_ASSUME_CONTROL 
 @RET_STATUS as varchar(500) OUTPUT,
 @MSGS as varchar(500) OUTPUT,
 @ID as varchar(50),

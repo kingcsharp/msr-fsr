@@ -14,8 +14,11 @@ using Msr.Services.Procedures.Messages;
 using Msr.Services.ProductionPlanning.ViewModels;
 using Msr.Models.Common;
 using Msr.Models.Locations;
+using Msr.Services.CustomerRequirements.ViewModel;
+using Msr.Services.PrePro;
 using Msr.Services.Procedures.ViewModels;
 using Msr.Services.Quotes.ViewModels;
+using Msr.Services.Users.Messages;
 using Msr.Services.Workflows;
 using Msr.Services.Workflows.ViewModels;
 
@@ -26,12 +29,16 @@ namespace Msr.Services.ProductionPlanning
         private readonly MsrDbContext _dbContext;
         private ProceduresService _proceduresService;
         private readonly WorkflowService _workflowService;
+        private readonly PreProServices _preProServices;
+        private readonly ProceduresService _preProceduresService;
 
         public ProductionPlanningService()
         {
             _dbContext = new MsrDbContext();
             _proceduresService = new ProceduresService();
             _workflowService = new WorkflowService();
+            _preProServices = new PreProServices();
+            _preProceduresService = new ProceduresService();
         }
 
         public IQueryable<CustomerRequirementView> GetProductionPlaningQueryable()
@@ -77,7 +84,7 @@ namespace Msr.Services.ProductionPlanning
             _dbContext.SaveChanges();
         }
 
-        public ResultNotification<CustomerSubmittedRequirement> Save(RequirementStepsViewModel model, string submit)
+        public ResultNotification<CustomerSubmittedRequirement> Save(RequirementStepsViewModel model, string submit, LoggedUserIdResult currentUser)
         {
             var result = new ResultNotification<CustomerSubmittedRequirement>();
 
@@ -97,38 +104,69 @@ namespace Msr.Services.ProductionPlanning
                     CreateProduct(model, requirment, result);
                 }
 
-                if (!string.IsNullOrWhiteSpace(submit))
+                if (string.IsNullOrWhiteSpace(model.ProductProcedureId))
                 {
-                    var procedureObjectId = GetProceduretById(model.ProductProcedureId).Value;
-                    var procedureSteps = _proceduresService.GetStepsData(procedureObjectId, model.LoginId);
+                    var saveProcedureViewModel = new SaveProcedureViewModel { Name = requirment.ProductName, DurationType = "TIME_SYS_SECONDS", SecurityLevel = "1", StepInAp = 1, WipMsg = 0 };
 
-                    foreach (var step in model.Steps)
+                    var response = _preProceduresService.Create(saveProcedureViewModel);
+
+                    if (!response.HasErrors())
                     {
-                        var existingStep = procedureSteps.SingleOrDefault(x => x.Id == step.ObjectId && x.Print_Order == step.Step);
+                        var checkOutObject = _workflowService.CheckOutObject(response.Entity, model.LoginId);
 
-                        if (existingStep == null)
-                        {
-                            var vm = new GetStepEditDataViewModel();
-                            vm.GetStepEditData.Step_Text = "<h4>" + procedureSteps.FirstOrDefault(x => x.Id == step.ObjectId).StepTitle + "</h4>";
-                            vm.GetStepEditData.Print_Order = step.Step;
-                            vm.ProcObjId = model.ProductProcedureId;
-                            vm.ReplacementCost = step.ReplacementCost;
-                            vm.Utilization = step.Utilization;
-                            vm.UsefulLife = step.UsefulLife;
-                            vm.EquipExpensePerMinute = step.EquipExpensePerMinute;
-                            vm.AnnualRM = step.AnnualRM;
-                            vm.RMPerMinute = step.RMPerMinute;
+                        var submitWorkflow = new SubmitWorkflowViewModel();
+                        submitWorkflow.CompletionStart = "APPROVED";
+                        submitWorkflow.LoggedUserIdResult = currentUser;
+                        submitWorkflow.ObjectId = checkOutObject.Entity;
+                        submitWorkflow.ApprovalWorflowId = "37";
+                        submitWorkflow.Comment = "Procedure approved by system";
+                        submitWorkflow.LoginId = model.LoginId;
+                        _workflowService.SubmitWorkflow(submitWorkflow);
 
-                            _proceduresService.CreateStepData(vm);
-                        }
+                        requirment.ProcedureId = response.Entity;
+                        model.ProductProcedureId = response.Entity;
                     }
+                }
 
-                    requirment.Status = CustomerSubmittedRequirementConstants.Completed;
-                }
-                else
+                var procedureObjectId = GetProceduretById(requirment.ProcedureId).Value;
+
+                var procedureSteps = _proceduresService.GetStepsData(procedureObjectId, model.LoginId);
+
+                foreach (var step in model.Steps)
                 {
-                    requirment.Status = CustomerSubmittedRequirementConstants.InProgress;
+                    if (string.IsNullOrWhiteSpace(step.ObjectId))
+                    {
+                        step.ObjectId = "0";
+                    }
+                    var existingStep = procedureSteps.SingleOrDefault(x => x.Id == step.ObjectId);
+
+                    if (existingStep == null)
+                    {
+                        var template = _preProServices.GetById(step.Process);
+
+                        var vm = new GetStepEditDataViewModel
+                        {
+                            GetStepEditData =
+                            {
+                                Step_Text = template.StepText,
+                                Print_Order = step.Step
+                            },
+                            ProcObjId = model.ProductProcedureId,
+                            ReplacementCost = step.ReplacementCost,
+                            Utilization = step.Utilization,
+                            UsefulLife = step.UsefulLife,
+                            EquipExpensePerMinute = step.EquipExpensePerMinute,
+                            AnnualRM = step.AnnualRM,
+                            RMPerMinute = step.RMPerMinute
+                        };
+
+                        var newStepData = _proceduresService.CreateStepData(vm);
+                        step.ObjectId = newStepData.Entity;
+                    }
                 }
+
+
+                requirment.Status = !string.IsNullOrWhiteSpace(submit) ? CustomerSubmittedRequirementConstants.Completed : CustomerSubmittedRequirementConstants.InProgress;
 
                 foreach (var step in model.Steps)
                 {
@@ -289,26 +327,26 @@ namespace Msr.Services.ProductionPlanning
         }
         public List<SelectFile> GetProceduretList()
         {
-            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT DISTINCT SHOWNAME as Show,ID as Value   FROM A_V_PROCEDURES_APPROVED_DATA_DROP_DOWN WHERE ( CREATING_CO = '2'  ) AND ((NAME LIKE '%%' ) )    ORDER BY SHOWNAME").ToList();
+            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT DISTINCT SHOWNAME as Show,ID as Value   FROM A_V_PROCEDURES_APPROVED_DATA_DROP_DOWN  ORDER BY SHOWNAME").ToList();
 
             return result;
         }
         public List<SelectFile> GetPartList()
         {
-            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT DISTINCT NAME_COMBO as Show,ID as Value   FROM A_V_PARTS_APPROVED_DATA WHERE ( COMPANY = '2'  ) AND (( NAME_COMBO LIKE '%%' ) )    ORDER BY NAME_COMBO").ToList();
+            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT DISTINCT NAME_COMBO as Show,ID as Value   FROM A_V_PARTS_APPROVED_DATA ORDER BY NAME_COMBO").ToList();
 
             return result;
         }
 
         public List<SelectFile> GetSupplierList()
         {
-            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT DISTINCT NAME as Show,ID as Value FROM A_V_COMPANIES_DROP_SEARCH WHERE ( ROOT_CO_ID = '2' ) AND ((NAME LIKE '%%' ) ) ORDER BY NAME").ToList();
+            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT DISTINCT NAME as Show,ID as Value FROM A_V_COMPANIES_DROP_SEARCH WHERE ( ROOT_CO_ID = '2' )  ORDER BY NAME").ToList();
 
             return result;
         }
         public string GetSupplierIdByName(string name)
         {
-            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT DISTINCT NAME as Show,ID as Value FROM A_V_COMPANIES_DROP_SEARCH WHERE ( ROOT_CO_ID = '2' ) AND (( NAME LIKE '%%' AND NAME LIKE '%%' ) ) and (ROOT_NAME='" + name + "') ORDER BY NAME").SingleOrDefault();
+            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT DISTINCT NAME as Show,ID as Value FROM A_V_COMPANIES_DROP_SEARCH WHERE ( ROOT_CO_ID = '2' ) and (ROOT_NAME='" + name + "') ORDER BY NAME").SingleOrDefault();
 
             return result?.Value;
         }

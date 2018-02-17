@@ -72,6 +72,8 @@ namespace Msr.Services.Procedures.ViewModels
 
         public string Root { get; set; }
 
+        public bool IsActive { get; set; }
+
         public GetStepDataResult GetStepDataResults { get; set; }
 
         public List<string> ReferenceFiles { get; set; }

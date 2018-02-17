@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 using Dapper;
 using Msr.Services.jqGrid;
 using Msr.Services.ProductionPlanning;
@@ -13,11 +14,13 @@ using Msr.Services.Documents;
 using Msr.Services.Parts;
 using Msr.Services.Parts.ViewModels;
 using Msr.Services.PartTypes;
+using Msr.Services.PrePro;
 using Msr.Services.Procedures;
 using Msr.Services.Procedures.ViewModels;
 using Msr.Services.ProcedureVerbs;
 using Msr.Services.ProductionPlanning.ViewModels;
 using Msr.Services.Quotes;
+using Msr.Services.Quotes.ViewModels;
 using Msr.Services.Roles;
 using Msr.Services.Workflows;
 using Msr.Services.Workflows.ViewModels;
@@ -30,6 +33,7 @@ namespace Answer.Web.Controllers
         private readonly ProceduresService _proceduresService;
         private readonly QuoteService _quoteService;
         private readonly WorkflowService _workflowService;
+        private readonly PreProServices _preProServices;
 
         public ProductionPlanningController()
         {
@@ -37,6 +41,7 @@ namespace Answer.Web.Controllers
             _productionPlanService = new ProductionPlanningService();
             _quoteService = new QuoteService();
             _workflowService = new WorkflowService();
+            _preProServices = new PreProServices();
         }
 
         public ActionResult Index()
@@ -88,6 +93,10 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.Respresentative.ToLower().Contains(rule.data.ToLower()));
                     }
+                    ////else if (rule.field == nameof(CustomerSubmittedRequirement.Status))
+                    ////{
+                    ////    totalRows = totalRows.Where(x => x.Status.ToLower().Contains(rule.data.ToLower()));
+                    ////}
                 }
             }
 
@@ -132,9 +141,6 @@ namespace Answer.Web.Controllers
 
         public ActionResult Start(int id)
         {
-            var currentUser = GetCurrentUser();
-            var requirment = _quoteService.GetById(id);
-
             _productionPlanService.UpdateStatus(id, CustomerSubmittedRequirementConstants.InProgress);
 
             return RedirectToAction("Edit", "ProductionPlanning", new { id });
@@ -155,9 +161,10 @@ namespace Answer.Web.Controllers
                 }
             }
 
+            var quoteView = new JavaScriptSerializer().Deserialize<FreeFormQuoteViewModel>(requirment.QuoteJson);
+            ViewBag.QuoteProcedureName = quoteView.ExistingProcess;
             var vm = new RequirementStepsViewModel();
             vm.Read(_productionPlanService, requirment);
-
             var procedureObjectId = "";
 
             if (!string.IsNullOrWhiteSpace(vm.ProductProcedureId))
@@ -167,7 +174,7 @@ namespace Answer.Web.Controllers
             }
 
             var procedureSteps = _proceduresService.GetStepsData(procedureObjectId, currentUser.Id);
-            vm.Setup(_productionPlanService, procedureSteps);
+            vm.Setup(_productionPlanService, _preProServices, procedureSteps);
 
             if (!string.IsNullOrWhiteSpace(vm.ProductProcedureId) && !vm.Steps.Any())
             {
@@ -175,16 +182,17 @@ namespace Answer.Web.Controllers
                 {
                     vm.Steps.Add(new RequirementStepsDetailsViewModel
                     {
+                        Id = Convert.ToInt32(step.Id),
                         ObjectId = step.Id,
-                        Process = step.StepTitle,
+                        //Process = step.StepTitle,
                         Step = (int)step.Print_Order
                     });
                 }
             }
 
             vm.ProductName = requirment.ProductName;
-            vm.AddPartViewModel.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), GetCurrentUser().Company, GetCurrentUser().Id);
-            vm.SaveProcedureViewModel.Setup(new ProceduresService(), new RoleService(), new ProcedureVerbsService(), GetCurrentUser().Id);
+            vm.AddPartViewModel.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), currentUser.Company, currentUser.Id);
+            vm.SaveProcedureViewModel.Setup(_proceduresService, new RoleService(), new ProcedureVerbsService(), currentUser.Id);
 
             return View(vm);
         }
@@ -205,7 +213,7 @@ namespace Answer.Web.Controllers
 
             var procedureObjectId = _productionPlanService.GetProceduretById(viewModel.ProductProcedureId).Value;
             var procedureSteps = _proceduresService.GetStepsData(procedureObjectId, currentUser.Id);
-            viewModel.Setup(_productionPlanService, procedureSteps);
+            viewModel.Setup(_productionPlanService, _preProServices, procedureSteps);
 
             if (!string.IsNullOrWhiteSpace(viewModel.ProductProcedureId) && !viewModel.Steps.Any())
             {
@@ -213,8 +221,9 @@ namespace Answer.Web.Controllers
                 {
                     viewModel.Steps.Add(new RequirementStepsDetailsViewModel
                     {
+                        Id = Convert.ToInt32(step.Id),
                         ObjectId = step.Id,
-                        Process = step.StepTitle,
+                        //Process = step.StepTitle,
                         Step = (int)step.Print_Order
                     });
                 }
@@ -226,12 +235,18 @@ namespace Answer.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(string id, RequirementStepsViewModel vm, string saveSubmit, string saveDraft)
+        public ActionResult Edit(string id, RequirementStepsViewModel vm, string saveSubmit, string saveDraft, string newProcedure)
         {
             var currentUser = GetCurrentUser();
             ModelState.Clear();
 
-            if (vm.ProductProcedureId != vm.OldProductProcedureId)
+            if (!string.IsNullOrWhiteSpace(newProcedure))
+            {
+                vm.ProductProcedureId = null;
+                vm.Steps = new List<RequirementStepsDetailsViewModel> {new RequirementStepsDetailsViewModel()};
+            }
+
+            if (!string.IsNullOrWhiteSpace(vm.ProductProcedureId) && vm.ProductProcedureId != vm.OldProductProcedureId)
             {
                 vm.OldProductProcedureId = vm.ProductProcedureId;
 
@@ -245,12 +260,13 @@ namespace Answer.Web.Controllers
                 {
                     vm.Steps.Add(new RequirementStepsDetailsViewModel
                     {
+                        Id = Convert.ToInt32(step.Id),
                         ObjectId = step.Id,
-                        Process = step.StepTitle,
+                        //Process = step.StepTitle,
                         Step = (int)step.Print_Order
                     });
                 }
-                vm.Setup(_productionPlanService, procedureSteps);
+                vm.Setup(_productionPlanService, _preProServices, procedureSteps);
 
                 return View(vm);
             }
@@ -259,7 +275,7 @@ namespace Answer.Web.Controllers
             {
                 vm.LoginId = currentUser.Id;
 
-                var response = _productionPlanService.Save(vm, saveSubmit);
+                var response = _productionPlanService.Save(vm, saveSubmit, currentUser);
 
                 if (!response.HasErrors())
                 {
@@ -271,7 +287,7 @@ namespace Answer.Web.Controllers
                             new { objId = response.Entity.ProductId, returnUrl = Url.Content("~/ProductionPlanning") });
                     }
 
-                    vm.Setup(_productionPlanService, _proceduresService.GetStepsData(vm.ProductProcedureId, currentUser.Id));
+                    vm.Setup(_productionPlanService, _preProServices, _proceduresService.GetStepsData(vm.ProductProcedureId, currentUser.Id));
 
                     return RedirectToAction("Index");
 
@@ -280,7 +296,7 @@ namespace Answer.Web.Controllers
                 TempData["ErrorMessage"] = response.ErrorMessage;
             }
 
-            vm.Setup(_productionPlanService, _proceduresService.GetStepsData(vm.ProductProcedureId, currentUser.Id));
+            vm.Setup(_productionPlanService, _preProServices, _proceduresService.GetStepsData(vm.ProductProcedureId, currentUser.Id));
             vm.AddPartViewModel.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), GetCurrentUser().Company, GetCurrentUser().Id);
             vm.SaveProcedureViewModel.Setup(new ProceduresService(), new RoleService(), new ProcedureVerbsService(), GetCurrentUser().Id);
 
@@ -352,8 +368,9 @@ namespace Answer.Web.Controllers
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public JsonResult CreateProcedure(SaveProcedureViewModel model)
+        public JsonResult CreateProcedure(string procedureName, int productionPlanningId)
         {
+            var model = new SaveProcedureViewModel { Name = procedureName, DurationType = "TIME_SYS_SECONDS", SecurityLevel = "1", StepInAp = 1, WipMsg = 0, IsActive = false };
             var currentUser = GetCurrentUser();
             var procedureService = new ProceduresService();
             var result = new ResultNotification<string>();
@@ -374,6 +391,8 @@ namespace Answer.Web.Controllers
                 submitWorkflow.Comment = "Procedure approved by system";
                 submitWorkflow.LoginId = currentUser.Id;
                 _workflowService.SubmitWorkflow(submitWorkflow);
+
+                ///_productionPlanService.Update(productionPlanningId, response.Entity);
 
                 var procedureList = _productionPlanService.GetProceduretList();
 

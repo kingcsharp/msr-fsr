@@ -50,5 +50,8 @@ namespace Msr.Services.Procedures.Procedures
 
         [StoredProcedureParameter(SqlDbType.Int, ParameterName = "threshold")]
         public int? Threshold { get; set; }
+
+        [StoredProcedureParameter(SqlDbType.Bit, ParameterName = "IsActive")]
+        public bool IsActive { get; set; }
     }
 }

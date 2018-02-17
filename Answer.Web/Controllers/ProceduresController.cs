@@ -210,25 +210,24 @@ namespace Answer.Web.Controllers
         public ActionResult Edit(string id)
         {
             var vm = new SaveProcedureViewModel();
+
             vm.Id = id;
-
-            var procedureService = new ProceduresService();
-
 
             var currrentUser = GetCurrentUser();
             var result = _workflowService.CheckOutObject(id, currrentUser.Id);
             id = result.Entity;
-            var model = procedureService.GetProcedureById(id);
+            var model = _proceduresService.GetProcedureById(id);
 
             vm.MapToDto(model);
-            vm.Setup(new ProceduresService(), new RoleService(), new ProcedureVerbsService(), currrentUser.Id);
+            vm.Setup(_proceduresService, new RoleService(), new ProcedureVerbsService(), currrentUser.Id);
 
             var procedureName = _proceduresService.GetProceduresQueryable().Where(x => x.ObjectId == id).SingleOrDefault().Name;
 
             var viewModel = new GetStepDataResult
             {
-                GetStepDataResults = _proceduresService.GetStepsData(id, GetCurrentUser().Id)
+                GetStepDataResults = _proceduresService.GetStepsData(id, currrentUser.Id)
             };
+
             viewModel.AddMonitorForProcedureViewModel.Setup(new EquipmentMaintenanceService());
             viewModel.AddMonitorForProcedureViewModel.Related_Object_Id = id;
             ViewBag.ProcObjectId = id;
@@ -401,7 +400,7 @@ namespace Answer.Web.Controllers
             }
             var response = _proceduresService.CreateStepData(vm);
 
-            if (response)
+            if (!response.HasErrors())
             {
                 TempData["SuccessMessage"] = "Step has been Created successfully.";
 
@@ -446,7 +445,7 @@ namespace Answer.Web.Controllers
 
                 var response = _proceduresService.CreateStepData(model);
 
-                if (response)
+                if (!response.HasErrors())
                 {
                     TempData["SuccessMessage"] = "Procedure has been assigned successfully.";
 
@@ -475,16 +474,17 @@ namespace Answer.Web.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult EditStep(GetStepEditDataViewModel viewModel, string procstepId, string Step_Text, string Id)
+        public ActionResult EditStep(GetStepDataResult viewModel, string procstepId, string Step_Text, string Id)
         {
-            viewModel.StepId = Id;
-            viewModel.GetStepEditData.Step_Text = Step_Text;
+            viewModel.Id = Id;
+            viewModel.Step_Text = Step_Text;
             viewModel.ProcObjId = procstepId;
             _proceduresService.UpdateStepData(viewModel);
 
             TempData["SuccessMessage"] = "Procedure Step been updated successfully.";
-            return RedirectToAction("Steps", new { Id = procstepId });
+            return RedirectToAction("Edit", "Procedures", new { Id = procstepId });
         }
+
 
 
         public ActionResult editProcedureObject(string Pid, string relationship)

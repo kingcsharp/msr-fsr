@@ -1,26 +1,21 @@
 ﻿@model Msr.Services.ProductionPlanning.ViewModels.RequirementStepsViewModel
-
 @{
     ViewBag.Title = "Requirements Step Definition";
 }
-
 <div class="app-container">
     <div class="row content-container">
         <div class="container-fluid">
             <div class="side-body padding-top" style="visibility:hidden;">
                 <div class="row">
-
                     <div class="col-lg-12">
                         <table id="custReqsGrid"></table>
                     </div>
                     <div id=""></div>
                 </div>
             </div>
-
             <div class="container-fluid" style="margin-top:-10%;">
                 <div class="side-body padding-top">
                     <div class="" id="reqDetail">
-
                         <div class="row">
                             <div class="col-sm-9">
                                 <h2>New Product Definition</h2>
@@ -32,26 +27,26 @@
                                 </div>
                             }
                         </div>
-
-                        @using (Html.BeginForm("Edit", "ProductionPlanning", FormMethod.Post, new { @id = "production-planning-form", @class = "", role = "form"}))
+                        @using (Html.BeginForm("Edit", "ProductionPlanning", FormMethod.Post, new { @id = "production-planning-form", @class = "", role = "form" }))
                         {
-                            @Html.HiddenFor(x=>x.Id)
-                            @Html.HiddenFor(x=>x.OldProductProcedureId)
-                            @Html.HiddenFor(x=>x.HasQuote)
+                            <input type="hidden" id="QuoteProcedureName" name="QuoteProcedureName" value="@ViewBag.QuoteProcedureName" />
+                            @Html.HiddenFor(x => x.Id)
+                            @Html.HiddenFor(x => x.OldProductProcedureId)
+                            @Html.HiddenFor(x => x.HasQuote)
                             @Html.HiddenFor(x => x.SubmittedRequirement.Status)
 
                             @Html.Partial("_Product")
 
-                            @Html.Partial("_Steps")
+                            if (Model.Steps.Any())
+                            {
+                                @Html.Partial("_Steps")
+                            }
 
-                         
                         }
-
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
 </div>
 
@@ -72,34 +67,23 @@
         </div>
     </div>
 </div>
-<div id="proceduremodel" class="modal fade" role="dialog">
-    <div class="modal-dialog modal-lg">
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Procedure Details</h4>
-            </div>
-            <div class="modal-body"></div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close-o"></i> Close</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 @section scripts
 {
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
-    
     <script type="text/javascript" src="~/assets/js/ObjectAssign.js"></script>
     <script type="text/javascript" src="~/assets/js/grids/requirement-steps.js"></script>
-    
     <script src="~/assets/js/grids/comman.js"></script>
-
     <script type="text/javascript">
+        
         $(document).ready(function () {
+
+
+            var i = parseInt($('#totalRecords').val());
+            var myoptions = $('#defaultProcessList').html();
+            LoadSteps(i, myoptions);
+
             $('#Print').on('click', function () {
                 $('#printThis').printThis();
             });
@@ -138,34 +122,30 @@
 
                         },
                         error: function (error) {
-                            eLoaderError(error)
+                            eLoaderError(error);
                         }
                     });
                 });
 
-            $('#proceduremodel').on('show.bs.modal',
-                function (event) {
 
+            $('.deletefiles').click(function () {
 
-                    var modal = $(this);
+                var callBackId = $(this).data('call-back-id');
 
-                    $.ajax({
-                        type: "GET",
-                        url: '@Url.Action("Procedure", "ProductionPlanning")',
-                        dataType: 'html',
-                        success: function (data) {
-                            modal.find('.modal-body').html(data);
+                eModal.confirm('Do you really want to Remove ' + callBackId + ' ?', 'Confirmation delete')
+                    .then(confirmCallback, optionalCancelCallback);
 
-                        },
-                        error: function (error) {
-                            eLoaderError(error)
-                        }
-                    });
-                });
+                function confirmCallback() {
+                    console.log("ok");
+                    $('#' + callBackId + ' option:selected').remove();
+                }
+
+                function optionalCancelCallback() {
+                    console.log("cancel");
+                }
+            });
 
         });
     </script>
 }
-
-
 

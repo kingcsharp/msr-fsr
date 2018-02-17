@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using Msr.Services.Parts.ViewModels;
 using Msr.Models.CustomerRequirements;
+using Msr.Services.PrePro;
 using Msr.Services.Procedures.ViewModels;
 using Msr.Services.Procedures.Messages;
 using Msr.Services.Quotes.ViewModels;
@@ -29,7 +30,7 @@ namespace Msr.Services.ProductionPlanning.ViewModels
         public string LoginId { get; set; }
         public string ObjectId { get; set; }
         public string OldProductProcedureId { get; set; }
-        [Required]
+        
         public string ProductProcedureId { get; set; }
         [Required]
         public string ProductPartId { get; set; }
@@ -76,10 +77,11 @@ namespace Msr.Services.ProductionPlanning.ViewModels
         public List<SelectListItem> PartList { get; set; }
         public string ProductStatus { get; set; }
 
-        public void Setup(ProductionPlanningService productionPlanningService, List<GetStepDataResult> stepsdropdownDataResults)
+        public void Setup(ProductionPlanningService productionPlanningService, PreProServices preProServices, List<GetStepDataResult> stepsdropdownDataResults)
         {
             ProcedureList = productionPlanningService.GetProceduretList().Select(x => new SelectListItem
             {
+
                 Text = x.Show,
                 Value = x.Value.ToString()
             }).OrderBy(o => o.Text).ToList();
@@ -102,10 +104,10 @@ namespace Msr.Services.ProductionPlanning.ViewModels
                 Value = x.ObjId
             }).OrderBy(o => o.Text).ToList();
 
-            ProcessList = stepsdropdownDataResults.Select(x => new SelectListItem
+            ProcessList = preProServices.GetPreProQueryable().Where(x => x.Status == "APPROVED").Select(x => new SelectListItem
             {
-                Text = x.StepTitle,
-                Value = x.Id.ToString()
+                Text = x.Title,
+                Value = x.ObjectId.ToString()
             }).OrderBy(o => o.Text).ToList();
 
 
@@ -164,11 +166,9 @@ namespace Msr.Services.ProductionPlanning.ViewModels
                 if (jsondata != null && ProductStatus != "APPROVED")
                 {
                     FreeFormQuoteViewModel result = JsonConvert.DeserializeObject<FreeFormQuoteViewModel>(jsondata);
-
                     var name = result.Customer;
                     var procedureId = result.ExistingProcess;
                     var customerPartNo = result.QuoteItems.FirstOrDefault().CustomerPartNo;
-
                     if (string.IsNullOrWhiteSpace(ProductSupplierId))
                     {
                         ProductSupplierId = productionPlanService.GetSupplierIdByName(name: name);
