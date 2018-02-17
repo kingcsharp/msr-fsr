@@ -148,6 +148,8 @@ namespace Answer.Web.Controllers
 
         public ActionResult Edit(int id)
         {
+            var vm = new RequirementStepsViewModel();
+
             var currentUser = GetCurrentUser();
             var requirment = _quoteService.GetById(id);
 
@@ -157,13 +159,11 @@ namespace Answer.Web.Controllers
 
                 if (productView.ProductStatus != "CREATING")
                 {
-                    var result = _workflowService.CheckOutObject(productView.ProductId, currentUser.Id);
+                    _workflowService.CheckOutObject(productView.ProductId, currentUser.Id);
                 }
             }
 
-            var quoteView = new JavaScriptSerializer().Deserialize<FreeFormQuoteViewModel>(requirment.QuoteJson);
-            ViewBag.QuoteProcedureName = quoteView.ExistingProcess;
-            var vm = new RequirementStepsViewModel();
+
             vm.Read(_productionPlanService, requirment);
             var procedureObjectId = "";
 
@@ -174,7 +174,7 @@ namespace Answer.Web.Controllers
             }
 
             var procedureSteps = _proceduresService.GetStepsData(procedureObjectId, currentUser.Id);
-            vm.Setup(_productionPlanService, _preProServices, procedureSteps);
+            vm.Setup(_productionPlanService, _preProServices);
 
             if (!string.IsNullOrWhiteSpace(vm.ProductProcedureId) && !vm.Steps.Any())
             {
@@ -191,8 +191,8 @@ namespace Answer.Web.Controllers
             }
 
             vm.ProductName = requirment.ProductName;
-            vm.AddPartViewModel.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), currentUser.Company, currentUser.Id);
-            vm.SaveProcedureViewModel.Setup(_proceduresService, new RoleService(), new ProcedureVerbsService(), currentUser.Id);
+            ////vm.AddPartViewModel.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), currentUser.Company, currentUser.Id);
+            //vm.SaveProcedureViewModel.Setup(_proceduresService, new RoleService(), new ProcedureVerbsService(), currentUser.Id);
 
             return View(vm);
         }
@@ -213,7 +213,7 @@ namespace Answer.Web.Controllers
 
             var procedureObjectId = _productionPlanService.GetProceduretById(viewModel.ProductProcedureId).Value;
             var procedureSteps = _proceduresService.GetStepsData(procedureObjectId, currentUser.Id);
-            viewModel.Setup(_productionPlanService, _preProServices, procedureSteps);
+            viewModel.Setup(_productionPlanService, _preProServices);
 
             if (!string.IsNullOrWhiteSpace(viewModel.ProductProcedureId) && !viewModel.Steps.Any())
             {
@@ -244,6 +244,9 @@ namespace Answer.Web.Controllers
             {
                 vm.ProductProcedureId = null;
                 vm.Steps = new List<RequirementStepsDetailsViewModel> {new RequirementStepsDetailsViewModel()};
+                vm.Setup(_productionPlanService, _preProServices);
+
+                return View(vm);
             }
 
             if (!string.IsNullOrWhiteSpace(vm.ProductProcedureId) && vm.ProductProcedureId != vm.OldProductProcedureId)
@@ -266,7 +269,7 @@ namespace Answer.Web.Controllers
                         Step = (int)step.Print_Order
                     });
                 }
-                vm.Setup(_productionPlanService, _preProServices, procedureSteps);
+                vm.Setup(_productionPlanService, _preProServices);
 
                 return View(vm);
             }
@@ -287,7 +290,7 @@ namespace Answer.Web.Controllers
                             new { objId = response.Entity.ProductId, returnUrl = Url.Content("~/ProductionPlanning") });
                     }
 
-                    vm.Setup(_productionPlanService, _preProServices, _proceduresService.GetStepsData(vm.ProductProcedureId, currentUser.Id));
+                    vm.Setup(_productionPlanService, _preProServices);
 
                     return RedirectToAction("Index");
 
@@ -296,9 +299,9 @@ namespace Answer.Web.Controllers
                 TempData["ErrorMessage"] = response.ErrorMessage;
             }
 
-            vm.Setup(_productionPlanService, _preProServices, _proceduresService.GetStepsData(vm.ProductProcedureId, currentUser.Id));
-            vm.AddPartViewModel.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), GetCurrentUser().Company, GetCurrentUser().Id);
-            vm.SaveProcedureViewModel.Setup(new ProceduresService(), new RoleService(), new ProcedureVerbsService(), GetCurrentUser().Id);
+            vm.Setup(_productionPlanService, _preProServices);
+           /// vm.AddPartViewModel.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), GetCurrentUser().Company, GetCurrentUser().Id);
+          ///  vm.SaveProcedureViewModel.Setup(new ProceduresService(), new RoleService(), new ProcedureVerbsService(), GetCurrentUser().Id);
 
             return View(vm);
         }
@@ -331,41 +334,41 @@ namespace Answer.Web.Controllers
             return View(model);
         }
 
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult AddPart(RequirementStepsViewModel model)
-        {
-            var currentUser = GetCurrentUser();
+        ////[AcceptVerbs(HttpVerbs.Post)]
+        ////public ActionResult AddPart(RequirementStepsViewModel model)
+        ////{
+        ////    var currentUser = GetCurrentUser();
 
-            var result = new ResultNotification<string>();
-            var partservice = new PartsService();
-            model.AddPartViewModel.NTLogin = currentUser.Id;
-            model.AddPartViewModel.SubParts = null;
+        ////    var result = new ResultNotification<string>();
+        ////    var partservice = new PartsService();
+        ////    model.AddPartViewModel.NTLogin = currentUser.Id;
+        ////    model.AddPartViewModel.SubParts = null;
 
-            var response = partservice.Create(model.AddPartViewModel);
+        ////    var response = partservice.Create(model.AddPartViewModel);
 
-            if (!response.HasErrors())
-            {
-                TempData["SuccessMessage"] = "Part has been created successfully.";
+        ////    if (!response.HasErrors())
+        ////    {
+        ////        TempData["SuccessMessage"] = "Part has been created successfully.";
 
-                var checkOutObject = _workflowService.CheckOutObject(response.Entity, model.AddPartViewModel.NTLogin);
+        ////        var checkOutObject = _workflowService.CheckOutObject(response.Entity, model.AddPartViewModel.NTLogin);
 
-                var submitWorkflow = new SubmitWorkflowViewModel();
-                submitWorkflow.CompletionStart = "APPROVED";
-                submitWorkflow.LoggedUserIdResult = currentUser;
-                submitWorkflow.ObjectId = checkOutObject.Entity;
-                submitWorkflow.ApprovalWorflowId = "37";
-                submitWorkflow.Comment = "Part approved by system";
-                submitWorkflow.LoginId = currentUser.Id;
-                _workflowService.SubmitWorkflow(submitWorkflow);
+        ////        var submitWorkflow = new SubmitWorkflowViewModel();
+        ////        submitWorkflow.CompletionStart = "APPROVED";
+        ////        submitWorkflow.LoggedUserIdResult = currentUser;
+        ////        submitWorkflow.ObjectId = checkOutObject.Entity;
+        ////        submitWorkflow.ApprovalWorflowId = "37";
+        ////        submitWorkflow.Comment = "Part approved by system";
+        ////        submitWorkflow.LoginId = currentUser.Id;
+        ////        _workflowService.SubmitWorkflow(submitWorkflow);
 
-                var partList = _productionPlanService.GetPartList();
+        ////        var partList = _productionPlanService.GetPartList();
 
-                return Json(new { Message = result.SuccessMessage, data = partList, PartId = response.Entity }, JsonRequestBehavior.AllowGet);
-            }
+        ////        return Json(new { Message = result.SuccessMessage, data = partList, PartId = response.Entity }, JsonRequestBehavior.AllowGet);
+        ////    }
 
-            return Json(new { Message = result.ErrorMessage }, JsonRequestBehavior.AllowGet);
+        ////    return Json(new { Message = result.ErrorMessage }, JsonRequestBehavior.AllowGet);
 
-        }
+        ////}
 
         [AcceptVerbs(HttpVerbs.Post)]
         public JsonResult CreateProcedure(string procedureName, int productionPlanningId)
@@ -403,19 +406,10 @@ namespace Answer.Web.Controllers
         }
 
         [HttpGet]
-        public ActionResult Procedure()
-        {
-            var viewModel = new RequirementStepsViewModel();
-            viewModel.SaveProcedureViewModel.Setup(new ProceduresService(), new RoleService(), new ProcedureVerbsService(), GetCurrentUser().Id);
-
-            return PartialView("_Procedure", viewModel.SaveProcedureViewModel);
-        }
-
-        [HttpGet]
         public ActionResult Part()
         {
             var viewModel = new RequirementStepsViewModel();
-            viewModel.AddPartViewModel.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), GetCurrentUser().Company, GetCurrentUser().Id);
+          ////  viewModel.AddPartViewModel.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), GetCurrentUser().Company, GetCurrentUser().Id);
 
             return PartialView("_Parts", viewModel);
         }

@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Web.Mvc;
 using Msr.Models.CustomerRequirements;
+using Msr.Services.ProductionPlanning;
 
 namespace Msr.Services.Quotes.ViewModels
 {
@@ -12,6 +14,8 @@ namespace Msr.Services.Quotes.ViewModels
         public FreeFormQuoteViewModel()
         {
             QuoteItems = new List<QuoteItemsViewModel>();
+            Customers = new List<SelectListItem>();
+            Suppliers = new List<SelectListItem>();
         }
 
         [Required]
@@ -19,6 +23,9 @@ namespace Msr.Services.Quotes.ViewModels
 
         [Required]
         public string Customer { get; set; }
+
+        [Required]
+        public string Supplier { get; set; }
 
         public string Contact { get; set; }
 
@@ -55,12 +62,29 @@ namespace Msr.Services.Quotes.ViewModels
 
         public List<QuoteItemsViewModel> QuoteItems { get; set; }
 
-        public void Setup()
+        public List<SelectListItem> Suppliers { get; set; }
+
+        public List<SelectListItem> Customers { get; set; }
+
+        public void Setup(ProductionPlanningService productionPlanningService)
         {
             if (!QuoteItems.Any())
             {
                 QuoteItems.Add(new QuoteItemsViewModel());
             }
+
+            Suppliers = productionPlanningService.GetSupplierList().Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.Value.ToString()
+            }).OrderBy(o => o.Text).ToList();
+
+            Customers = productionPlanningService.GetCustomerList().Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.Value.ToString()
+            }).OrderBy(o => o.Text).ToList();
+
         }
 
     }

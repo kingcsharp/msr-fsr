@@ -1,7 +1,7 @@
 ﻿using System.Web.Mvc;
 using System.Web.Script.Serialization;
-using Msr.Services.CustomerRequirements;
 using Msr.Services.CustomerRequirements.ViewModel;
+using Msr.Services.ProductionPlanning;
 using Msr.Services.Quotes;
 using Msr.Services.Quotes.ViewModels;
 
@@ -10,17 +10,19 @@ namespace Answer.Web.Controllers
     public class QuoteController : BaseController
     {
         private QuoteService _quoteService;
+        private readonly ProductionPlanningService _productionPlanningService;
 
         public QuoteController()
         {
             _quoteService = new QuoteService();
+            _productionPlanningService = new ProductionPlanningService();
         }
 
         public ActionResult Create()
         {
             var model = new FreeFormQuoteViewModel();
 
-            model.Setup();
+            model.Setup(_productionPlanningService);
 
             return View(model);
         }

@@ -107,6 +107,7 @@
     <Compile Include="ApprovalWorkflows\WorkflowStagesView.cs" />
     <Compile Include="ApprovalWorkflows\ApprovalWorkflowsView.cs" />
     <Compile Include="Comman\SelectFile.cs" />
+    <Compile Include="Common\ListItem.cs" />
     <Compile Include="Companies\CompanyView.cs" />
     <Compile Include="Companies\EditCompanyView.cs" />
     <Compile Include="Companies\HeadPeopleView.cs" />

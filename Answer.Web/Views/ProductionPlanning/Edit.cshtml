@@ -41,7 +41,19 @@
                             {
                                 @Html.Partial("_Steps")
                             }
-
+                        
+                            <div>
+                                @if (Model.ProductStatus != "APPROVED")
+                                {
+                                    <button id="form-change" class="hidden" style="margin-left: 10px;" data-toggle="tooltip" data-placement="top" title="" data-original-title="Saves and Sends Quoation to Client" name="" value=""> Submit</button>
+                                    <button id="submit" class="pull-right btn btn-success" style="margin-left: 10px;" data-toggle="tooltip" data-placement="top" title="" data-original-title="Saves and Sends Quoation to Client" name="SaveSubmit" value="SaveSubmit"><i class="fa fa-send"></i> Save &amp; Submit</button>
+                                    <button id="save_draft" class="pull-right btn btn-info" style="margin-left: 10px;" data-toggle="tooltip" data-placement="top" title="" data-original-title="Saves with In Progress Status" type="submit" name="SaveDraft" value="SaveDraft"><i class="fa fa-save"></i> Save Draft</button>
+                                }
+                                @if (Model.HasQuote)
+                                {
+                                    <span class="pull-right btn btn-primary" style="margin-left: 10px;" data-id="@Model.Id" data-placement="top" title="" data-original-title="Generates a Quote Preview" data-toggle="modal" data-target="#quoteModal"><i class="fa fa-eye"></i>Preview Quote</span>
+                                }
+                            </div>
                         }
                     </div>
                 </div>
@@ -54,7 +66,6 @@
 
 <div id="partmodel" class="modal fade" role="dialog">
     <div class="modal-dialog modal-lg">
-        <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -78,7 +89,6 @@
     <script type="text/javascript">
         
         $(document).ready(function () {
-
 
             var i = parseInt($('#totalRecords').val());
             var myoptions = $('#defaultProcessList').html();

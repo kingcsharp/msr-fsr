@@ -4,7 +4,7 @@ CREATE TABLE [dbo].[Portal_CustomerSubmittedRequirement](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[SubmittedDate] [datetime] NOT NULL,
 	[SubmittedBy] [nvarchar](50) NOT NULL,
-	[Customer] [nvarchar](50) NULL,
+	[CustomerId] [nvarchar](50) NULL,
 	[Company] [nvarchar](50) NULL,
 	[Division] [nvarchar](50) NULL,
 	[PartKitNo] [nvarchar](50) NULL,

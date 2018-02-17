@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Mvc;
-using System.Web.Script.Serialization;
-using Msr.Services.Parts.ViewModels;
 using Msr.Models.CustomerRequirements;
 using Msr.Services.PrePro;
 using Msr.Services.Procedures.ViewModels;
@@ -18,22 +16,26 @@ namespace Msr.Services.ProductionPlanning.ViewModels
     {
         public RequirementStepsViewModel()
         {
-            AddPartViewModel = new AddPartViewModel();
-            SaveProcedureViewModel = new SaveProcedureViewModel();
             Steps = new List<RequirementStepsDetailsViewModel>();
         }
 
         public CustomerSubmittedRequirement SubmittedRequirement { get; set; }
+
         public bool HasQuote { get; set; }
 
         public int Id { get; set; }
+
         public string LoginId { get; set; }
+
         public string ObjectId { get; set; }
+
         public string OldProductProcedureId { get; set; }
         
         public string ProductProcedureId { get; set; }
+
         [Required]
         public string ProductPartId { get; set; }
+
         [Required]
         public string ProductName { get; set; }
 
@@ -43,7 +45,7 @@ namespace Msr.Services.ProductionPlanning.ViewModels
         public string ProductLocationId { get; set; }
 
         [Required]
-        public string ProductCustomerName { get; set; }
+        public string ProductCustomerId { get; set; }
 
         public string ProductCustomerDivision { get; set; }
 
@@ -67,17 +69,23 @@ namespace Msr.Services.ProductionPlanning.ViewModels
 
         public decimal TotalSalePrice { get; set; }
 
-        public AddPartViewModel AddPartViewModel { get; set; }
-        public SaveProcedureViewModel SaveProcedureViewModel { get; set; }
         public List<RequirementStepsDetailsViewModel> Steps { get; set; }
+
         public List<SelectListItem> ProcessList { get; set; }
-        public List<SelectListItem> ProductSupplierList { get; set; }
+
+        public List<SelectListItem> Suppliers { get; set; }
+
+        public List<SelectListItem> Customers { get; set; }
+
         public List<SelectListItem> ProductLocationList { get; set; }
+
         public List<SelectListItem> ProcedureList { get; set; }
+
         public List<SelectListItem> PartList { get; set; }
+
         public string ProductStatus { get; set; }
 
-        public void Setup(ProductionPlanningService productionPlanningService, PreProServices preProServices, List<GetStepDataResult> stepsdropdownDataResults)
+        public void Setup(ProductionPlanningService productionPlanningService, PreProServices preProServices)
         {
             ProcedureList = productionPlanningService.GetProceduretList().Select(x => new SelectListItem
             {
@@ -92,9 +100,15 @@ namespace Msr.Services.ProductionPlanning.ViewModels
                 Value = x.Value.ToString()
             }).OrderBy(o => o.Text).ToList();
 
-            ProductSupplierList = productionPlanningService.GetSupplierList().Select(x => new SelectListItem
+            Suppliers = productionPlanningService.GetSupplierList().Select(x => new SelectListItem
             {
-                Text = x.Show,
+                Text = x.Name,
+                Value = x.Value.ToString()
+            }).OrderBy(o => o.Text).ToList();
+
+            Customers = productionPlanningService.GetCustomerList().Select(x => new SelectListItem
+            {
+                Text = x.Name,
                 Value = x.Value.ToString()
             }).OrderBy(o => o.Text).ToList();
 
@@ -109,11 +123,7 @@ namespace Msr.Services.ProductionPlanning.ViewModels
                 Text = x.Title,
                 Value = x.ObjectId.ToString()
             }).OrderBy(o => o.Text).ToList();
-
-
-
         }
-
 
         public void Read(ProductionPlanningService productionPlanService, CustomerSubmittedRequirement requirment)
         {
@@ -122,7 +132,7 @@ namespace Msr.Services.ProductionPlanning.ViewModels
             ProductCustomerDivision = requirment.Division;
             ProductSupplierId = requirment.SupplierId;
             ProductLocationId = requirment.LocationId;
-            ProductCustomerName = requirment.Customer;
+            ProductCustomerId = requirment.CustomerId;
             ProductCustomerDivision = requirment.Division;
             ProductName = requirment.ProductName;
             ProductPartId = requirment.PartId;
@@ -161,22 +171,28 @@ namespace Msr.Services.ProductionPlanning.ViewModels
             }
             else
             {
-                var jsondata = productionPlanService.Getjsondata(id: Id).FirstOrDefault();
-
-                if (jsondata != null && ProductStatus != "APPROVED")
+                if (HasQuote)
                 {
-                    FreeFormQuoteViewModel result = JsonConvert.DeserializeObject<FreeFormQuoteViewModel>(jsondata);
-                    var name = result.Customer;
+                    var result = JsonConvert.DeserializeObject<FreeFormQuoteViewModel>(requirment.QuoteJson);
+
                     var procedureId = result.ExistingProcess;
                     var customerPartNo = result.QuoteItems.FirstOrDefault().CustomerPartNo;
+
                     if (string.IsNullOrWhiteSpace(ProductSupplierId))
                     {
-                        ProductSupplierId = productionPlanService.GetSupplierIdByName(name: name);
+                        ProductSupplierId = result.Supplier;
                     }
+
+                    if (string.IsNullOrWhiteSpace(ProductCustomerId))
+                    {
+                        ProductCustomerId = result.Customer;
+                    }
+
                     if (string.IsNullOrWhiteSpace(ProductProcedureId))
                     {
                         ProductProcedureId = productionPlanService.GetProceduretIdById(id: procedureId);
                     }
+
                     if (string.IsNullOrWhiteSpace(ProductPartId))
                     {
                         ProductPartId = productionPlanService.GetPartIdByCompanyPartNumber(companyPartNumber: customerPartNo);

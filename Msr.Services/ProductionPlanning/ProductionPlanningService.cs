@@ -91,9 +91,10 @@ namespace Msr.Services.ProductionPlanning
             try
             {
                 var requirment = _dbContext.CustomerSubmittedRequirements.Single(x => x.Id == model.Id);
+
                 requirment.SupplierId = model.ProductSupplierId;
                 requirment.LocationId = model.ProductLocationId;
-                requirment.Customer = model.ProductCustomerName;
+                requirment.CustomerId = model.ProductCustomerId;
                 requirment.ProductName = model.ProductName;
                 requirment.PartId = model.ProductPartId;
                 requirment.ProcedureId = model.ProductProcedureId;
@@ -327,23 +328,31 @@ namespace Msr.Services.ProductionPlanning
         }
         public List<SelectFile> GetProceduretList()
         {
-            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT DISTINCT SHOWNAME as Show,ID as Value   FROM A_V_PROCEDURES_APPROVED_DATA_DROP_DOWN  ORDER BY SHOWNAME").ToList();
+            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT DISTINCT SHOWNAME as Show,ID as Value   FROM A_V_PROCEDURES_APPROVED_DATA_DROP_DOWN WHERE SHOWNAME IS NOT NULL ORDER BY SHOWNAME").ToList();
 
             return result;
         }
         public List<SelectFile> GetPartList()
         {
-            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT DISTINCT NAME_COMBO as Show,ID as Value   FROM A_V_PARTS_APPROVED_DATA ORDER BY NAME_COMBO").ToList();
+            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT DISTINCT NAME_COMBO as Show,ID as Value   FROM A_V_PARTS_APPROVED_DATA  WHERE NAME_COMBO IS NOT NULL ORDER BY NAME_COMBO").ToList();
 
             return result;
         }
 
-        public List<SelectFile> GetSupplierList()
+        public List<ListItem> GetSupplierList()
         {
-            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT DISTINCT NAME as Show,ID as Value FROM A_V_COMPANIES_DROP_SEARCH WHERE ( ROOT_CO_ID = '2' )  ORDER BY NAME").ToList();
+            var result = _dbContext.Database.SqlQuery<ListItem>("SELECT DISTINCT NAME , ID AS Value FROM A_V_COMPANIES_DROP_SEARCH WHERE ( ROOT_CO_ID = '2' ) ORDER BY NAME").ToList();
 
             return result;
         }
+
+        public List<ListItem> GetCustomerList()
+        {
+            var result = _dbContext.Database.SqlQuery<ListItem>("SELECT DISTINCT TOP 500 NAME, ID AS Value FROM A_V_COMPANIES_DROP_SEARCH WHERE ( ROOT_CO_ID = ID OR ROOT_CO_ID = '2' ) ORDER BY NAME").ToList();
+
+            return result;
+        }
+
         public string GetSupplierIdByName(string name)
         {
             var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT DISTINCT NAME as Show,ID as Value FROM A_V_COMPANIES_DROP_SEARCH WHERE ( ROOT_CO_ID = '2' ) and (ROOT_NAME='" + name + "') ORDER BY NAME").SingleOrDefault();
@@ -361,11 +370,6 @@ namespace Msr.Services.ProductionPlanning
             var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT DISTINCT NAME_COMBO as Show, ID as Value   FROM A_V_PARTS_APPROVED_DATA WHERE(COMPANY = '2') AND((NAME_COMBO LIKE '%%')) and(COMPANY_PART_NUMBER = '" + companyPartNumber + "')    ORDER BY NAME_COMBO").SingleOrDefault();
 
             return result?.Value;
-        }
-        public List<string> Getjsondata(int? id)
-        {
-            var result = _dbContext.Database.SqlQuery<string>("select QuoteJson from Portal_CustomerSubmittedRequirement where Id = '" + id + "'").ToList();
-            return result;
         }
     }
 }
