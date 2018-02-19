@@ -33,13 +33,13 @@ namespace Msr.Services.CustomerRequirements.ViewModel
         public string CommercialTitle { get; set; }
         [Required]
         [Display(Name = "Phone")]
-        [Range(0, int.MaxValue, ErrorMessage = "Please enter valid Number")]
+        [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Please enter a valid phone number.")]
         public string CommercialPhone { get; set; }
         [EmailAddress]
         public string CommercialEmail { get; set; }
         public string TechnicalName { get; set; }
         public string TechnicalTitle { get; set; }
-        [Range(0, int.MaxValue, ErrorMessage = "Please enter valid Number")]
+        [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Please enter a valid phone number.")]
         public string TechnicalPhone { get; set; }
         [EmailAddress]
         public string TechnicalEmail { get; set; }

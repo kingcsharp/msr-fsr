@@ -26,7 +26,7 @@ namespace Answer.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                model.SubmittedBy = GetCurrentUser().Id;
+                model.SubmittedBy = GetCurrentUser().Login;
 
                 var response = customerRequirementService.Create(model);
 
@@ -34,7 +34,7 @@ namespace Answer.Web.Controllers
                 {
                     TempData["SuccessMessage"] = response.SuccessMessage;
 
-                    return RedirectToAction("Create", "CustomerRequirement");
+                    return RedirectToAction("Index", "ProductionPlanning");
                 }
 
                 TempData["ErrorMessage"] = response.ErrorMessage;

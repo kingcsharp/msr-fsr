@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web.Script.Serialization;
 using Msr.Models.CustomerRequirements;
 using Msr.Repositories;
@@ -43,7 +41,7 @@ namespace Msr.Services.CustomerRequirements
 
                 _dbContext.SaveChanges();
 
-                response.SuccessMessage = "Quote has been submitted successfully.";
+                response.SuccessMessage = "Customer Requirements has been submitted successfully.";
             }
             catch (Exception ex)
             {
