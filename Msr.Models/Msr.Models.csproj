@@ -113,6 +113,7 @@
     <Compile Include="Companies\HeadPeopleView.cs" />
     <Compile Include="CustomerRequirements\CustomerRequirementView.cs" />
     <Compile Include="CustomerRequirements\CustomerSubmittedRequirement.cs" />
+    <Compile Include="CustomerRequirements\CuTypes.cs" />
     <Compile Include="CustomerRequirements\PartInfoView.cs" />
     <Compile Include="CustomerRequirements\ProcessInfoView.cs" />
     <Compile Include="CustomerRequirements\CustomerSubmittedRequirementConstants.cs" />

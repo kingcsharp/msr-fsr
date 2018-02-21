@@ -27,7 +27,7 @@ namespace Msr.Services.ProductionPlanning
     public class ProductionPlanningService
     {
         private readonly MsrDbContext _dbContext;
-        private ProceduresService _proceduresService;
+        private readonly ProceduresService _proceduresService;
         private readonly WorkflowService _workflowService;
         private readonly PreProServices _preProServices;
         private readonly ProceduresService _preProceduresService;

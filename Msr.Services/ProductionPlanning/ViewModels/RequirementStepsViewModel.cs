@@ -185,7 +185,7 @@ namespace Msr.Services.ProductionPlanning.ViewModels
 
                     if (string.IsNullOrWhiteSpace(ProductCustomerId))
                     {
-                        ProductCustomerId = result.Customer;
+                        ProductCustomerId = result.CustomerId;
                     }
 
                     if (string.IsNullOrWhiteSpace(ProductProcedureId))

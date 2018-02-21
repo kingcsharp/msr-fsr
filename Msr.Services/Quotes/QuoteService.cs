@@ -38,7 +38,7 @@ namespace Msr.Services.Quotes
                 {
                     var entity = new CustomerSubmittedRequirement
                     {
-                        Company = model.Customer.Trim(),
+                        Company = model.CustomerId.Trim(),
                         LeadTime = item.LeadTime,
                         Price = item.Price,
                         Description = item.Description,

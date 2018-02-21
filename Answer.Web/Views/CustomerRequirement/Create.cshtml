@@ -7,10 +7,10 @@
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="row">
-        <h2 class="page-header">
-            <span class="icon fa fa-plus-circle"></span>
-            New Requirements <button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#reqHelpModal" data-intro="For more help click the Help button" data-position="bottom">Help</button>
-        </h2>
+            <h2 class="page-header">
+                <span class="icon fa fa-plus-circle"></span>
+                New Requirements <button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#reqHelpModal" data-intro="For more help click the Help button" data-position="bottom">Help</button>
+            </h2>
             <div class="col-lg-12 col-md-11">
                 <div>@Html.Partial("Message")</div>
             </div>
@@ -40,28 +40,20 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="control-label col-lg-2 col-md-3" for="location">Location:</label>
+                                    <label class="control-label col-lg-2 col-md-3" for="location">Submitted By:</label>
                                     <div class="controls col-lg-10 col-md-9">
-                                        @Html.EditorFor(model => model.Location, new { htmlAttributes = new { @class = "form-control input-lg" } })
+                                        @Html.EditorFor(model => model.SubmittedBy, new { htmlAttributes = new { @class = "form-control input-lg" } })
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="control-label col-lg-2 col-md-3" for="specAuthor">Representative:</label>
-                                    <div class="controls col-lg-10 col-md-9">
-                                        @Html.EditorFor(model => model.Respresentative, new { htmlAttributes = new { @class = "form-control input-lg" } })
-                                        @Html.ValidationMessageFor(model => model.Respresentative, "", new { @class = "text-danger" })
-                                    </div>
-                                </div>
-                            </div>
+
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="row" id="tab1" data-role="tab">
                                         <ul class="nav nav-tabs">
                                             <li class="active"><a href="#tabContent1" data-toggle="tab" id="tabLabel">Customer Information</a></li>
                                             <li class=""><a href="#tabContent2" data-toggle="tab" id="tabLabel2">General Information</a></li>
-                                            <li class=""><a href="#tabContent3" data-toggle="tab" id="tabLabel3">Process Information</a></li>
+                                            <li class=""><a href="#tabContent3" data-toggle="tab" id="tabLabel3">Contaminant Information</a></li>
                                             <li class=""><a href="#tabContent4" data-toggle="tab" id="tabLabel4">Kit Breakdown By Part</a></li>
                                             <li class=""><a href="#tabContent5" data-toggle="tab" id="tabLabel5">Additional Information / Comments</a></li>
                                         </ul>
@@ -273,22 +265,9 @@
                                                                     <th class="text-center">
                                                                         Contaminents By-Products
                                                                     </th>
-                                                                    <th class="text-center">
-                                                                        Non-CU or CU Risk
-                                                                    </th>
-                                                                    <th class="text-center">
-                                                                        Material
-                                                                    </th>
-                                                                    <th class="text-center">
-                                                                        Approx. Dimensions
-                                                                    </th>
-                                                                    <th class="text-center">
-                                                                        Existing Process Spec. # or New
-                                                                    </th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-
                                                                 @for (int i = 0; i < Model.Process.Count; i++)
                                                                 {
                                                                     <tr id='row0'>
@@ -299,25 +278,8 @@
                                                                             @Html.TextBoxFor(x => Model.Process[i].Contaminents, new { @class = "form-control", @placeholder = "Contaminents By-Products" })
                                                                             @Html.ValidationMessageFor(x => Model.Process[i].Contaminents, "", new { @class = "text-danger" })
                                                                         </td>
-                                                                        <td>
-                                                                            @Html.TextBoxFor(x => Model.Process[i].NonCU, new { @class = "form-control", @placeholder = "Non-CU or CU Risk" })
-                                                                            @Html.ValidationMessageFor(x => Model.Process[i].NonCU, "", new { @class = "text-danger" })
-                                                                        </td>
-                                                                        <td>
-                                                                            @Html.TextBoxFor(x => Model.Process[i].Material, new { @class = "form-control", @placeholder = "Material", @style = "width:200px;" })
-                                                                            @Html.ValidationMessageFor(x => Model.Process[i].Material, "", new { @class = "text-danger" })
-                                                                        </td>
-                                                                        <td>
-                                                                            @Html.TextBoxFor(x => Model.Process[i].ApproxDimensions, new { @class = "form-control", @placeholder = "Approx. Dimensions", @style = "width:200px;" })
-                                                                            @Html.ValidationMessageFor(x => Model.Process[i].ApproxDimensions, "", new { @class = "text-danger" })
-                                                                        </td>
-                                                                        <td>
-                                                                            @Html.TextBoxFor(x => Model.Process[i].ExistingProcess, new { @class = "form-control", @placeholder = "Process Spec. # or New", @style = "width:200px;" })
-                                                                            @Html.ValidationMessageFor(x => Model.Process[i].ExistingProcess, "", new { @class = "text-danger" })
-                                                                        </td>
                                                                     </tr>
                                                                 }
-
                                                                 <tr id='row1'></tr>
                                                             </tbody>
                                                         </table>
@@ -336,6 +298,12 @@
                                                                         Row #
                                                                     </th>
                                                                     <th class="text-center">
+                                                                        CU
+                                                                    </th>
+                                                                    <th class="text-center">
+                                                                        Non CU
+                                                                    </th>
+                                                                    <th class="text-center">
                                                                         Part Description
                                                                     </th>
                                                                     <th class="text-center">
@@ -343,6 +311,9 @@
                                                                     </th>
                                                                     <th class="text-center">
                                                                         Coating/Surface Treatment
+                                                                    </th>
+                                                                    <th class="text-center">
+                                                                        Dimensions
                                                                     </th>
                                                                     <th class="text-center">
                                                                         Cust. Part No.
@@ -356,12 +327,17 @@
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-
                                                                 @for (int i = 0; i < Model.Parts.Count; i++)
                                                                 {
                                                                     <tr id='rowa-0'>
                                                                         <td>
                                                                             @(i + 1)
+                                                                        </td>
+                                                                        <td>
+                                                                            @Html.RadioButtonFor(x => Model.Parts[i].NonCU, "Cu", new { @class = "", @placeholder = "CU" })
+                                                                        </td>
+                                                                        <td>
+                                                                            @Html.RadioButtonFor(x => Model.Parts[i].NonCU, "NonCu", new { @class = "", @placeholder = "NonCU" })
                                                                         </td>
                                                                         <td>
                                                                             @Html.TextBoxFor(x => Model.Parts[i].PartDescription, new { @class = "form-control", @placeholder = "Part Description" })
@@ -374,6 +350,10 @@
                                                                         <td>
                                                                             @Html.TextBoxFor(x => Model.Parts[i].CoatingSurface, new { @class = "form-control", @placeholder = "Coating/Surface Treatment" })
                                                                             @Html.ValidationMessageFor(x => Model.Parts[i].CoatingSurface, "", new { @class = "text-danger" })
+                                                                        </td>
+                                                                        <td>
+                                                                            @Html.TextBoxFor(x => Model.Parts[i].Dimensions, new { @class = "form-control", @placeholder = "Dimensions" })
+                                                                            @Html.ValidationMessageFor(x => Model.Parts[i].Dimensions, "", new { @class = "text-danger" })
                                                                         </td>
                                                                         <td>
                                                                             @Html.TextBoxFor(x => Model.Parts[i].CustPartNo, new { @class = "form-control", @placeholder = "Cust. Part No.", @style = "width:100px;" })
@@ -389,7 +369,6 @@
                                                                         </td>
                                                                     </tr>
                                                                 }
-
                                                                 <tr id='rowa-1'></tr>
                                                             </tbody>
                                                         </table>
@@ -424,15 +403,12 @@
                     </div>
                 }
             </div>
-
         </div>
     </div>
 </div>
-
 @section scripts
 {
     <script src="~/assets/js/requirements_form.js"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
 }
-

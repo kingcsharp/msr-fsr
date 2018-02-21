@@ -29,7 +29,6 @@ namespace Msr.Services.CustomerRequirements
                         Division = model.DivisionFab,
                         Description = model.ShortDescription,
                         PartKitNo = model.PartKitNo,
-                        Respresentative = model.Respresentative,
                         SubmittedBy = model.SubmittedBy,
                         Status = CustomerSubmittedRequirementConstants.Received,
                         SubmittedDate = DateTime.Now,
@@ -51,7 +50,7 @@ namespace Msr.Services.CustomerRequirements
 
             return response;
         }
- 
-       
+
+
     }
 }

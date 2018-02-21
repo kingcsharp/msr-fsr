@@ -22,7 +22,7 @@ namespace Msr.Services.Quotes.ViewModels
         public DateTime? Date { get; set; }
 
         [Required]
-        public string Customer { get; set; }
+        public string CustomerId { get; set; }
 
         [Required]
         public string Supplier { get; set; }

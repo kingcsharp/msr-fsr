@@ -20,8 +20,6 @@ namespace Msr.Services.CustomerRequirements.ViewModel
         [Display(Name = "Requirement Name")]
         public string RequirementName { get; set; }
         public string Location { get; set; }
-        [Required]
-        public string Respresentative { get; set; }
 
         public string Company { get; set; }
         public string DivisionFab { get; set; }
@@ -64,6 +62,7 @@ namespace Msr.Services.CustomerRequirements.ViewModel
 
         public string Status { get; set; }
 
+        [Required]
         public string SubmittedBy { get; set; }
 
         public IEnumerable<SelectListItem> ShippingMehtodList { get; set; }

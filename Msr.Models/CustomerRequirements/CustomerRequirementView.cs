@@ -7,7 +7,7 @@ namespace Msr.Models.CustomerRequirements
         public int Id { get; set; }
         public string Respresentative { get; set; }
         public string Description { get; set; }
-        public string Customer { get; set; }
+        public string CustomerId { get; set; }
         public string Company { get; set; }
         public string Division { get; set; }
         public string PartKitNo { get; set; }
@@ -22,6 +22,6 @@ namespace Msr.Models.CustomerRequirements
         public string ProductId { get; set; }
         public string ProductWorkflowId { get; set; }
         public string ProductStatus { get; set; }
- 
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Msr.Models.CustomerRequirements;
+using System.ComponentModel.DataAnnotations;
 
 namespace Msr.Services.CustomerRequirements.ViewModel
 {
@@ -6,9 +7,11 @@ namespace Msr.Services.CustomerRequirements.ViewModel
     {
         public int Id { get; set; }
         public string ObjectId { get; set; }
+        public CuTypes NonCU { get; set; }
         public string PartDescription { get; set; }
         public string Substrate { get; set; }
         public string CoatingSurface { get; set; }
+        public string Dimensions { get; set; }
         [Required]
         public string CustPartNo { get; set; }
         public string MfgPartNo { get; set; }

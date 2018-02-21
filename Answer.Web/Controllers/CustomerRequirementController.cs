@@ -13,7 +13,10 @@ namespace Answer.Web.Controllers
 
         public ActionResult Create()
         {
+            var loggedUser = GetCurrentUser();
+
             var model = new CustomerRequirementViewModel();
+            model.SubmittedBy = loggedUser.Name + " " + loggedUser.Last_Name;
             model.Setup();
 
             return View(model);
@@ -26,8 +29,6 @@ namespace Answer.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                model.SubmittedBy = GetCurrentUser().Login;
-
                 var response = customerRequirementService.Create(model);
 
                 if (!response.HasErrors())
