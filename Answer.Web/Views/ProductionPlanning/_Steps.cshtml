@@ -69,13 +69,8 @@
                                         @Html.HiddenFor(x => Model.Steps[i].Id)
                                         @Html.HiddenFor(x => Model.Steps[i].ObjectId)
                                         
-                                        @for (int j = 0; j < Model.ProcessList.Count; j++)
-                                        {
-                                            Model.ProcessList[j].Selected = Model.ProcessList[j].Value == Model.Steps[i].Process;
-                                        }
-
-                                        @Html.DropDownListFor(model => model.Steps[i].Process, Model.ProcessList,"Select Process", new { id = "proId", @class = "form-control" })
-                                        @Html.ValidationMessageFor(model => Model.Steps[i].Process, "", new { @class = "text-danger" })
+                                     
+                                        @Model.Steps[i].Process
                                     </td>
                                     <td>
                                         @Html.TextBoxFor(x => Model.Steps[i].Step, new { @class = "form-control", @onkeyup = "javascript:checkType(this)" })
@@ -188,8 +183,7 @@
         {
                 <a id="add_row" class="btn btn-primary pull-left" data-toggle="tooltip" data-placement="top" title="" data-original-title="Add a Step to the Definition"><i class="fa fa-plus-circle"></i> Add Step</a>
                 <a id="delete_row" class="pull-left btn btn-warning" style="margin-left: 10px;" data-toggle="tooltip" data-placement="top" title="" data-original-title="Removes Last Step from Definition"><i class="fa fa-minus-circle"></i> Remove Step</a>
-        }
-            <span data-toggle="tooltip" data-placement="top" title="" data-original-title="Back To Production Planning">&nbsp;&nbsp; @Html.ActionLink("Back", "Index", null, new { @class = "btn btn-warning back-step" })</span>
+        }            
 
       
         </div>

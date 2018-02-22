@@ -172,8 +172,9 @@ namespace Answer.Web.Controllers
                 procedureObjectId = _productionPlanService.GetProceduretById(vm.ProductProcedureId).Value;
             }
 
-            var procedureSteps = _proceduresService.GetStepsData(procedureObjectId, currentUser.Id);
             vm.Setup(_productionPlanService, _preProServices);
+
+            var procedureSteps = _proceduresService.GetStepsData(procedureObjectId, currentUser.Id);
 
             if (!string.IsNullOrWhiteSpace(vm.ProductProcedureId) && !vm.Steps.Any())
             {
@@ -183,9 +184,18 @@ namespace Answer.Web.Controllers
                     {
                         Id = Convert.ToInt32(step.Id),
                         ObjectId = step.Id,
-                        //Process = step.StepTitle,
+                        Process = step.StepTitle,
                         Step = (int)step.Print_Order
                     });
+                }
+            }
+            else
+            {
+                foreach (var item in vm.Steps)      
+                {
+                    var step = procedureSteps.Where(x => x.Id == item.ObjectId).FirstOrDefault();
+
+                    item.Process = step.StepTitle;
                 }
             }
 
@@ -222,7 +232,7 @@ namespace Answer.Web.Controllers
                     {
                         Id = Convert.ToInt32(step.Id),
                         ObjectId = step.Id,
-                        //Process = step.StepTitle,
+                        Process = step.StepTitle,
                         Step = (int)step.Print_Order
                     });
                 }
@@ -264,7 +274,7 @@ namespace Answer.Web.Controllers
                     {
                         Id = Convert.ToInt32(step.Id),
                         ObjectId = step.Id,
-                        //Process = step.StepTitle,
+                        Process = step.StepTitle,
                         Step = (int)step.Print_Order
                     });
                 }

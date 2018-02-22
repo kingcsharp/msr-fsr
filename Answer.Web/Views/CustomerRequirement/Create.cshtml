@@ -3,7 +3,15 @@
 @{
     ViewBag.Title = "New Requirements";
 }
+
+<style>
+    .tab-content th {
+        text-align: center; 
+        width: 30%;
+    }
+    </style>
 <link href="~/assets/css/select2.min.css" rel="stylesheet" />
+
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="row">
@@ -294,34 +302,34 @@
                                                         <table class="table table-bordered table-hover table-striped table-condensed" id="kit_parts">
                                                             <thead>
                                                                 <tr>
-                                                                    <th class="text-center">
+                                                                    <th class="text-center" style="width:10%;">
                                                                         Row #
                                                                     </th>
-                                                                    <th class="text-center">
+                                                                    <th class="text-center"  style="width:10%;">
                                                                         CU
                                                                     </th>
-                                                                    <th class="text-center">
+                                                                    <th class="text-center"  style="width:10%;">
                                                                         Non CU
                                                                     </th>
-                                                                    <th class="text-center">
+                                                                    <th class="text-center" style="width:10%;">
                                                                         Part Description
                                                                     </th>
-                                                                    <th class="text-center">
+                                                                    <th class="text-center" style="width:10%;">
                                                                         Substrate
                                                                     </th>
-                                                                    <th class="text-center">
+                                                                    <th class="text-center" style="width:10%;">
                                                                         Coating/Surface Treatment
                                                                     </th>
-                                                                    <th class="text-center">
+                                                                    <th class="text-center" style="width:10%;">
                                                                         Dimensions
                                                                     </th>
-                                                                    <th class="text-center">
+                                                                    <th class="text-center" style="width:10%;">
                                                                         Cust. Part No.
                                                                     </th>
-                                                                    <th class="text-center">
+                                                                    <th class="text-center" style="width:10%;">
                                                                         Mfg. Part No.
                                                                     </th>
-                                                                    <th class="text-center">
+                                                                    <th class="text-center" style="width:10%;">
                                                                         # Parts per Kit
                                                                     </th>
                                                                 </tr>
@@ -356,15 +364,15 @@
                                                                             @Html.ValidationMessageFor(x => Model.Parts[i].Dimensions, "", new { @class = "text-danger" })
                                                                         </td>
                                                                         <td>
-                                                                            @Html.TextBoxFor(x => Model.Parts[i].CustPartNo, new { @class = "form-control", @placeholder = "Cust. Part No.", @style = "width:100px;" })
+                                                                            @Html.TextBoxFor(x => Model.Parts[i].CustPartNo, new { @class = "form-control", @placeholder = "Cust. Part No.", })
                                                                             @Html.ValidationMessageFor(x => Model.Parts[i].CustPartNo, "", new { @class = "text-danger" })
                                                                         </td>
                                                                         <td>
-                                                                            @Html.TextBoxFor(x => Model.Parts[i].MfgPartNo, new { @class = "form-control", @placeholder = "Mfg. Part No.", @style = "width:100px;" })
+                                                                            @Html.TextBoxFor(x => Model.Parts[i].MfgPartNo, new { @class = "form-control", @placeholder = "Mfg. Part No."  })
                                                                             @Html.ValidationMessageFor(x => Model.Parts[i].MfgPartNo, "", new { @class = "text-danger" })
                                                                         </td>
                                                                         <td>
-                                                                            @Html.TextBoxFor(x => Model.Parts[i].PartsPerKit, new { @class = "form-control", @placeholder = "# Parts per Kit", @style = "width:100px;" })
+                                                                            @Html.TextBoxFor(x => Model.Parts[i].PartsPerKit, new { @class = "form-control", @placeholder = "# Parts per Kit"})
                                                                             @Html.ValidationMessageFor(x => Model.Parts[i].PartsPerKit, "", new { @class = "text-danger" })
                                                                         </td>
                                                                     </tr>
