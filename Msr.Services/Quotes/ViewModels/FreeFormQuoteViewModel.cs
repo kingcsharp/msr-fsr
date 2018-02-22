@@ -31,14 +31,10 @@ namespace Msr.Services.Quotes.ViewModels
 
         public string FOB { get; set; }
 
-        public string Address { get; set; }
-
         [Required]
         public string Title { get; set; }
 
         public string Terms { get; set; }
-
-        public string CityStateZip { get; set; }
 
         [Display(Name = "Phone")]
         [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Please enter valid phone number.")]
