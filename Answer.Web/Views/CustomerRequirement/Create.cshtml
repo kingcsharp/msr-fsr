@@ -267,10 +267,10 @@
                                                         <table class="table table-bordered table-hover table-striped table-condensed" id="process_steps">
                                                             <thead>
                                                                 <tr>
-                                                                    <th class="text-center">
+                                                                    <th class="text-center" style="width:10%">
                                                                         Row #
                                                                     </th>
-                                                                    <th class="text-center">
+                                                                    <th class="text-center"  style="width:90%">
                                                                         Contaminents By-Products
                                                                     </th>
                                                                 </tr>
@@ -306,11 +306,8 @@
                                                                         Row #
                                                                     </th>
                                                                     <th class="text-center"  style="width:10%;">
-                                                                        CU
-                                                                    </th>
-                                                                    <th class="text-center"  style="width:10%;">
-                                                                        Non CU
-                                                                    </th>
+                                                                        CU/Non CU
+                                                                    </th>                                                                    
                                                                     <th class="text-center" style="width:10%;">
                                                                         Part Description
                                                                     </th>
@@ -337,16 +334,14 @@
                                                             <tbody>
                                                                 @for (int i = 0; i < Model.Parts.Count; i++)
                                                                 {
-                                                                    <tr id='rowa-0'>
+                                                                    <tr id='rowa-0' class="text-center" >
                                                                         <td>
                                                                             @(i + 1)
                                                                         </td>
-                                                                        <td>
+                                                                        <td class="text-center" >
                                                                             @Html.RadioButtonFor(x => Model.Parts[i].NonCU, "Cu", new { @class = "", @placeholder = "CU" })
-                                                                        </td>
-                                                                        <td>
                                                                             @Html.RadioButtonFor(x => Model.Parts[i].NonCU, "NonCu", new { @class = "", @placeholder = "NonCU" })
-                                                                        </td>
+                                                                        </td>                                                                        
                                                                         <td>
                                                                             @Html.TextBoxFor(x => Model.Parts[i].PartDescription, new { @class = "form-control", @placeholder = "Part Description" })
                                                                             @Html.ValidationMessageFor(x => Model.Parts[i].PartDescription, "", new { @class = "text-danger" })

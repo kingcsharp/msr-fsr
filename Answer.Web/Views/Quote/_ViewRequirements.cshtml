@@ -234,18 +234,6 @@
                                                     <th class="text-center">
                                                         Contaminents By-Products
                                                     </th>
-                                                    <th class="text-center">
-                                                        Non-CU or CU Risk
-                                                    </th>
-                                                    <th class="text-center">
-                                                        Material
-                                                    </th>
-                                                    <th class="text-center">
-                                                        Approx. Dimensions
-                                                    </th>
-                                                    <th class="text-center">
-                                                        Existing Process Spec. # or New
-                                                    </th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -257,18 +245,6 @@
                                                         </td>
                                                         <td>
                                                             @Html.EditorFor(model => item.Contaminents, new { htmlAttributes = new { @class = "form-control", @value = "7" } })
-                                                        </td>
-                                                        <td>
-                                                            @Html.EditorFor(model => item.NonCU, new { htmlAttributes = new { @class = "form-control", @value = "7" } })
-                                                        </td>
-                                                        <td>
-                                                            @Html.EditorFor(model => item.Material, new { htmlAttributes = new { @class = "form-control", @value = "7" } })
-                                                        </td>
-                                                        <td>
-                                                            @Html.EditorFor(model => item.ApproxDimensions, new { htmlAttributes = new { @class = "form-control", @value = "7" } })
-                                                        </td>
-                                                        <td>
-                                                            @Html.EditorFor(model => item.ExistingProcess, new { htmlAttributes = new { @class = "form-control", @value = "7" } })
                                                         </td>
                                                     </tr>
                                                 }
@@ -290,6 +266,10 @@
                                                     <th class="text-center">
                                                         Row #
                                                     </th>
+                                                    
+                                                    <th class="text-center">
+                                                        CU/Non CU
+                                                    </th>
                                                     <th class="text-center">
                                                         Part Description
                                                     </th>
@@ -298,6 +278,9 @@
                                                     </th>
                                                     <th class="text-center">
                                                         Coating/Surface Treatment
+                                                    </th>
+                                                    <th class="text-center">
+                                                        Dimensions
                                                     </th>
                                                     <th class="text-center">
                                                         Cust. Part No.
@@ -318,6 +301,10 @@
                                                             @Html.EditorFor(model => item.Id, new { htmlAttributes = new { @class = "form-control", @value = "7" } })
                                                         </td>
                                                         <td>
+                                                            @Html.RadioButtonFor(x => item.NonCU, "Cu", new { @class = "", @placeholder = "CU" })
+                                                            @Html.RadioButtonFor(x => item.NonCU, "NonCu", new { @class = "", @placeholder = "NonCU" })
+                                                        </td>
+                                                        <td>
                                                             @Html.EditorFor(model => item.PartDescription, new { htmlAttributes = new { @class = "form-control", @value = "7" } })
                                                         </td>
                                                         <td>
@@ -325,6 +312,9 @@
                                                         </td>
                                                         <td>
                                                             @Html.EditorFor(model => item.CoatingSurface, new { htmlAttributes = new { @class = "form-control", @value = "7" } })
+                                                        </td>
+                                                        <td>
+                                                            @Html.EditorFor(model => item.Dimensions, new { htmlAttributes = new { @class = "form-control", @value = "7" } })
                                                         </td>
                                                         <td>
                                                             @Html.EditorFor(model => item.CustPartNo, new { htmlAttributes = new { @class = "form-control", @value = "7" } })
