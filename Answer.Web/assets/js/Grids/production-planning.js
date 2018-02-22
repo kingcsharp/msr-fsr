@@ -18,15 +18,6 @@ function LoadGrid(url, returnUrl) {
                     align: 'center'
                 },
                 {
-                    label: 'Procedure Name',
-                    name: 'ProcedureName',
-                    index: 'ProcedureName',
-                    colmenu: false,
-                    coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                    searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                    align: 'center'
-                },
-                {
                     label: 'Sumitted Date',
                     name: 'SubmittedDate',
                     index: 'SubmittedDate',
@@ -78,7 +69,15 @@ function LoadGrid(url, returnUrl) {
                     width: 350,
                     align: 'center'
                 },
-
+                {
+                    label: 'Procedure Name',
+                    name: 'ProcedureName',
+                    index: 'ProcedureName',
+                    colmenu: false,
+                    coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                    searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                    align: 'center'
+                },
                 {
                     label: 'Description',
                     name: 'Description',

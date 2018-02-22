@@ -93,6 +93,10 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.Respresentative.ToLower().Contains(rule.data.ToLower()));
                     }
+                    else if (rule.field == nameof(CustomerRequirementView.ProcedureName))
+                    {
+                        totalRows = totalRows.Where(x => x.ProcedureName.ToLower().Contains(rule.data.ToLower()));
+                    }
                     ////else if (rule.field == nameof(CustomerSubmittedRequirement.Status))
                     ////{
                     ////    totalRows = totalRows.Where(x => x.Status.ToLower().Contains(rule.data.ToLower()));
