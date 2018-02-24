@@ -48,7 +48,7 @@ namespace Answer.Web.Controllers
 
                 TempData["ErrorMessage"] = response.ErrorMessage;
             }
-
+            viewModel.Setup(_productionPlanningService);
             return View(viewModel);
         }
 
@@ -57,6 +57,8 @@ namespace Answer.Web.Controllers
             var requirment = _quoteService.GetById(id);
 
             var vm = new JavaScriptSerializer().Deserialize<FreeFormQuoteViewModel>(requirment.QuoteJson);
+
+            vm.Setup(_productionPlanningService);
 
             return PartialView("_ViewQuote", vm);
         }

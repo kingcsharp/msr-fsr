@@ -170,6 +170,8 @@
     <Compile Include="EquipmentMaintenances\ViewModels\EquipmentMaintainanceViewModel.cs" />
     <Compile Include="EquipmentMaintenances\ViewModels\GetNewIdModel.cs" />
     <Compile Include="Files\ViewModels\NewFile.cs" />
+    <Compile Include="Helps\HelpService.cs" />
+    <Compile Include="Helps\ViewModels\HelpViewModel.cs" />
     <Compile Include="Invoices\InvoicesService.cs" />
     <Compile Include="Invoices\Procedures\InvoiceAccountEditProcedure.cs" />
     <Compile Include="Invoices\Procedures\InvoiceDetailDeleteProcedure.cs" />

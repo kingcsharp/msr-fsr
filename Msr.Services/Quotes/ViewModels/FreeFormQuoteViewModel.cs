@@ -31,10 +31,14 @@ namespace Msr.Services.Quotes.ViewModels
 
         public string FOB { get; set; }
 
+        public string Address { get; set; }
+
         [Required]
         public string Title { get; set; }
 
         public string Terms { get; set; }
+
+        public string CityStateZip { get; set; }
 
         [Display(Name = "Phone")]
         [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Please enter valid phone number.")]
@@ -55,6 +59,10 @@ namespace Msr.Services.Quotes.ViewModels
 
         [Required]
         public string AddressSubmit { get; set; }
+
+        public string CustomerName { get; set; }
+
+        public string SupplierName { get; set; }
 
         public List<QuoteItemsViewModel> QuoteItems { get; set; }
 
@@ -81,6 +89,9 @@ namespace Msr.Services.Quotes.ViewModels
                 Value = x.Value.ToString()
             }).OrderBy(o => o.Text).ToList();
 
+            CustomerName = productionPlanningService.GetCustomerList().SingleOrDefault(x => x.Value == CustomerId)?.Name;
+
+            SupplierName = productionPlanningService.GetSupplierList().SingleOrDefault(x => x.Value == Supplier)?.Name;
         }
 
     }

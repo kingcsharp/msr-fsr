@@ -7,7 +7,9 @@
         <div class="row">
             <h2 class="page-header">
                 <span class="icon fa fa-cog"></span>
-                Parts <button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
+                Parts 
+                @Html.Partial("_HelpViewButton")
+                
             </h2>
             <div class="col-lg-12">
                 @Html.Partial("Message")
@@ -31,10 +33,7 @@
     
     <script src="~/assets/js/grids/parts.js"></script>
     <script>
-        //$.jgrid.defaults.responsive = true;
         $.jgrid.defaults.styleUI = 'Bootstrap';
-
-        
 
         $(document).ready(function () {
             SetUpGrid('@Request.Url.OriginalString');

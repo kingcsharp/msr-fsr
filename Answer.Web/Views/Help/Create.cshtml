@@ -1,0 +1,109 @@
+﻿@model Msr.Services.Helps.ViewModels.HelpViewModel
+
+@{
+    ViewBag.Title = "Create Help Page";
+}
+
+<div class="container-fluid">
+    <div class="side-body padding-top">
+        <div class="row">
+            <h2 class="page-header">
+                Create Help Page<button class="btn btn-info help-btn pull-right" data-call-back-id="@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString()/@HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString()" data-toggle="modal" data-target="#wipHelpModal">Help</button>
+            </h2>
+            <div class="col-lg-10">
+
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-horizontal">
+
+                        <hr />
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.FriendlyUrl, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.FriendlyUrl, new { htmlAttributes = new { @class= "form-control" , placeholder= "Url of the page e.g. Parts/Edit Or Parts" } })
+                                @Html.ValidationMessageFor(model => model.FriendlyUrl, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="control-label col-md-2" for="Content">Article Content</label>
+                            <div class="col-md-10 margin-right">
+                                @Html.TextBoxFor(model => model.Content, new { @class = "html",@style="height:200px;" })
+                                @Html.ValidationMessageFor(model => model.Content, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Roles, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10 margin-right">
+                                @Html.DropDownListFor(model => model.Roles, Model.RolesList, new { @class = "form-control select selectRoles", multiple = "multiple" })
+                                @Html.ValidationMessageFor(model => model.Roles, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Category, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.DropDownListFor(model => model.Category, Model.CategoryList, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Category, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                      
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-5">
+                                <input type="submit" value="Submit" class="btn btn-success" />
+                                @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-warning" })
+                            </div>
+                        </div>
+                    </div>
+                    <div id="status"></div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    @{
+        var role= string.Join(",", Model.Roles);
+    }
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+    <script src="~/assets/js/tinymce/jquery.tinymce.min.js"></script>
+    <script src="~/assets/js/tinymce/tinymce.min.js"></script>
+    <script src="~/assets/js/help-tinymce.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function (parameters) {
+            $('.select').select2();
+
+            var selectPeoples = $(".selectRoles").select2({
+                tags: [],
+                tokenSeparators: [','],
+                multiple: true,
+                allowClear: true,
+            
+                formatNoMatches: function () {
+                    return '';
+                }
+            });
+            var values = '@role';
+            var selectedRoles = values.split(",");
+
+            selectedRoles.val(selectedRoles).trigger("change");
+        });
+    </script>
+    
+}
+

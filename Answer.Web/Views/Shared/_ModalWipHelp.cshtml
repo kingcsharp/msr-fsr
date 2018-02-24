@@ -1,37 +1,4 @@
-﻿@using Msr.Models.Users
-<div id="wipHelpModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-
-        @if (User.IsInRole(RolesConstants.ClientEngineer))
-        {
-            @Html.Partial("Help/_Engineer")
-        }
-        else if (User.IsInRole(RolesConstants.ClientBuyer))
-        {
-            @Html.Partial("Help/_Buyer")
-        }
-        else if (User.IsInRole(RolesConstants.ClientAdmin))
-        {
-            @Html.Partial("Help/_ClientAdmin")
-        }
-        else if (User.IsInRole(RolesConstants.AnswerUser))
-        {
-            @Html.Partial("Help/_MasterUserAdmin")
-        }
-
-  </div>
-</div>
-
-@*<style>
-   @@media screen and (min-width: 768px) {
-	 .modal-dialog  {width:800px;}
-}
-</style>*@
-
-
-
-
-
+﻿
 
 
 

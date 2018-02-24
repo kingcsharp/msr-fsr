@@ -31,7 +31,7 @@ using Msr.Models.PrePro;
 using Msr.Models.ProductionPlanning;
 using Msr.Models.PurchesOrder;
 using Msr.Models.Invoices;
-
+using Msr.Models.Helps;
 
 namespace Msr.Repositories
 {
@@ -103,6 +103,8 @@ namespace Msr.Repositories
             modelBuilder.Entity<PurchaseView>().ToTable("Portal_PurchaseView");
             modelBuilder.Entity<InvoiceView>().ToTable("Portal_InvoiceView");
             modelBuilder.Entity<Invoice>().ToTable("Portal_Invoice");
+            modelBuilder.Entity<HelpPage>().ToTable("Portal_HelpPage");
+            modelBuilder.Entity<HelpView>().ToTable("Portal_HelpView");
 
         }
 
@@ -165,5 +167,7 @@ namespace Msr.Repositories
         public DbSet<PurchaseView> PurchaseViews { get; set; }
         public DbSet<InvoiceView> InvoicesViews { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
+        public DbSet<HelpPage> Helps { get; set; }
+        public DbSet<HelpView> HelpViews { get; set; }
     }
 }
