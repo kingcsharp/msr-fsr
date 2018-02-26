@@ -567,6 +567,13 @@
     <Content Include="assets\img\bg.jpg" />
     <Content Include="assets\img\clear.png" />
     <Content Include="assets\img\contact-us-bg.jpg" />
+    <Content Include="assets\img\default.png" />
+    <Content Include="assets\img\icon-doc.png" />
+    <Content Include="assets\img\icon-pdf.png" />
+    <Content Include="assets\img\icon-ppt.png" />
+    <Content Include="assets\img\icon-xls.png" />
+    <Content Include="assets\img\icon-zip.png" />
+    <Content Include="assets\img\jpg.png" />
     <Content Include="assets\img\loading.gif" />
     <Content Include="assets\img\msr-ccs.png" />
     <Content Include="assets\img\profile-avatar.jpg" />
