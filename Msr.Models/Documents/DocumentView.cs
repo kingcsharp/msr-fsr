@@ -47,5 +47,7 @@ namespace Msr.Models.Documents
         public DateTime? ApprovalDate { get; set; }
 
         public string Comments { get; set; }
+
+        public string ReferenceFiles { get; set; }
     }
 }

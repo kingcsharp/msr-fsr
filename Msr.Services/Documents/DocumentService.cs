@@ -33,7 +33,7 @@ namespace Msr.Services.Documents
             return GetDocumentsQueryable().Where(x => x.ObjectId == id).SingleOrDefault();
         }
 
-        public List<SelectFile> GetSelectedObjects(string id,string ntlogin)
+        public List<SelectFile> GetSelectedObjects(string id, string ntlogin)
         {
             var objID = new SqlParameter("@ID", id == null ? "0" : id);
 
@@ -44,7 +44,7 @@ namespace Msr.Services.Documents
             return result;
         }
 
-        public List<SelectRole> GetSelectedRoles(string id,string ntlogin)
+        public List<SelectRole> GetSelectedRoles(string id, string ntlogin)
         {
             var objID = new SqlParameter("@ID", id == null ? "0" : id);
 
@@ -57,32 +57,21 @@ namespace Msr.Services.Documents
 
         public List<SelectFile> GetSelectedTheories(string id, string ntlogin)
         {
-          
+
             var objID = new SqlParameter("@ID", id == null ? "0" : id);
 
             var NTLogin = new SqlParameter("@strNTLogin", ntlogin);
 
             var result = _dbContext.Database.SqlQuery<SelectFile>("EXEC A_SP_THEORY_GET_REF_THEORY  @ID, @strNTLogin", objID, NTLogin).ToList();
-            
+
             return result;
 
         }
-       
+
         public bool Save(SaveDocumentViewModel model)
         {
             try
             {
-                var deleteReferenceFileProcedure = new DeleteFileProcedure() { ObjID = model.Id, Type = null, NTLogin = model.NTLogin };
-
-                _dbContext.Database.ExecuteStoredProcedure(deleteReferenceFileProcedure);
-
-                foreach (var file in model.ReferenceFiles)
-                {
-                    var saveFileProcedure = new SaveFileProcedure() { ObjID = model.Id, DocID = file, Type = null, NTLogin = model.NTLogin };
-
-                    _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
-                }
-
                 var saveDocumentProcedure = new SaveDocumentProcedure
                 {
                     Id = model.Id,
@@ -100,6 +89,19 @@ namespace Msr.Services.Documents
 
                 _dbContext.Database.ExecuteStoredProcedure(saveDocumentProcedure);
 
+                var deleteReferenceFileProcedure = new DeleteFileProcedure() { ObjID = model.ObjectId, Type = null, NTLogin = model.NTLogin };
+
+                _dbContext.Database.ExecuteStoredProcedure(deleteReferenceFileProcedure);
+
+                var refrenceFile = string.Join(",", model.ReferenceFiles);
+                var nameOfRefrenceFile = refrenceFile.Split(',').ToList();
+                foreach (var file in nameOfRefrenceFile)
+                {
+                    var saveFileProcedure = new SaveFileProcedure() { ObjID = model.ObjectId, DocID = file.ToString(), Type = null, NTLogin = model.NTLogin };
+
+                    _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
+                }
+
                 return true;
             }
             catch (Exception ex)
@@ -116,16 +118,16 @@ namespace Msr.Services.Documents
             try
             {
                 if (model.ReferenceTheory.Count == 0)
-                    
+
                 {
                     theory = null;
                 }
                 else
                 {
-                     theory = model.ReferenceTheory != null ? string.Join(", ", model.ReferenceTheory) : null;
+                    theory = model.ReferenceTheory != null ? string.Join(", ", model.ReferenceTheory) : null;
 
                 }
-               
+
                 var saveDocumentProcedure = new SaveDocumentProcedure
                 {
 
@@ -139,7 +141,7 @@ namespace Msr.Services.Documents
                     ReferenceTheory = theory,
 
 
-                NTLogin = model.NTLogin
+                    NTLogin = model.NTLogin
 
                 };
 
@@ -151,7 +153,10 @@ namespace Msr.Services.Documents
 
                 _dbContext.Database.ExecuteStoredProcedure(deleteReferenceFileProcedure);
 
-                foreach (var file in model.ReferenceFiles)
+                var refrenceFile = string.Join(",", model.ReferenceFiles);
+                var nameOfRefrenceFile = refrenceFile.Split(',').ToList();
+
+                foreach (var file in nameOfRefrenceFile)
                 {
                     var saveFileProcedure = new SaveFileProcedure() { ObjID = createdDocument.ObjectId, DocID = file, Type = null, NTLogin = model.NTLogin };
 

@@ -14,11 +14,21 @@ using Msr.Services.Procedures;
 using Msr.Services.PrePro;
 using Msr.Services.S3;
 using Msr.Web.Controllers;
+using Msr.Services.Files;
+using System.Text;
 
 namespace Answer.Web.Controllers
 {
     public class DocController : BaseController
     {
+        private readonly FileService _fileService;
+        private readonly AWSFileHandler _cloudUploader;
+        public DocController()
+        {
+            _fileService = new FileService();
+            _cloudUploader = new AWSFileHandler();
+        }
+
         public ActionResult View(string filePath, string fileType, string fileName, int? height)
         {
             var orderService = new OrderService();
@@ -111,14 +121,14 @@ namespace Answer.Web.Controllers
 
             var response = orderService.DeleteOrderItemImageById(id, GetCurrentUser().Id);
 
-                if (response)
-                {
-                    var orderItemImages = orderService.GetOrderItemImagesById(taskId);
+            if (response)
+            {
+                var orderItemImages = orderService.GetOrderItemImagesById(taskId);
 
-                    return Json(new {Message = "Image deleted successfully.", files = orderItemImages.ToArray()}, JsonRequestBehavior.AllowGet);
-                }
+                return Json(new { Message = "Image deleted successfully.", files = orderItemImages.ToArray() }, JsonRequestBehavior.AllowGet);
+            }
 
-            return Json(new {Message = "Image upload failed."}, JsonRequestBehavior.AllowGet);
+            return Json(new { Message = "Image upload failed." }, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult GetFileView(string callBackId, string type)
@@ -132,6 +142,18 @@ namespace Answer.Web.Controllers
             return PartialView("_DocView", resultsFiles);
         }
 
+
+        public ActionResult GetFileResult(string callBackId, string itemId, string type)
+        {
+            ViewBag.CallBackId = callBackId;
+
+            var docService = new DocumentFilesService();
+
+            var resultsFile = docService.GetSelectedRefFile(itemId);
+
+            return Json(resultsFile, JsonRequestBehavior.AllowGet);
+        }
+
         public ActionResult GetFileProcedureView(string callBackId)
         {
             ViewBag.CallBackId = callBackId;
@@ -143,5 +165,56 @@ namespace Answer.Web.Controllers
             return PartialView("_DocView", resultsFiles);
         }
 
+
+        public FileResult Download(string Id)
+        {
+            var docService = new DocumentFilesService();
+            var resultsFile = docService.GetSelectedRefFile(Id);
+
+            string[] key = resultsFile.ServerPath.Split('/');
+            var buketName = ConfigurationManager.AppSettings.Get("AWSBuketName");
+            var streamCloud = _cloudUploader.DownloadFromCloud(buketName, key[3] + "/" + key[4]);
+
+            var byteArray = Encoding.ASCII.GetBytes(resultsFile.ServerPath.ToString());
+            var stream = new MemoryStream(byteArray);
+            var extention = resultsFile.Show.Split('.');
+            if (extention[1] == "pdf")
+            {
+                return File(streamCloud, "application/pdf", resultsFile.Show);
+            }
+            else if (extention[1] == "docx")
+            {
+                return File(streamCloud, "application/vnd.ms-word", string.Format(resultsFile.Show));
+            }
+            else if (extention[1] == "txt")
+            {
+                return File(streamCloud, "text/plain", string.Format(resultsFile.Show));
+            }
+            else if (extention[1] == "jpg" || extention[1] == "png" || extention[1] == "jpeg" || extention[1] == "gif")
+            {
+                return File(streamCloud, extention[1], string.Format(resultsFile.Show));
+            }
+            else if (extention[1] == "xls")
+            {
+                return File(streamCloud, "application/vnd.ms-excel", string.Format(resultsFile.Show));
+            }
+            else if (extention[1] == "xlsx")
+            {
+                return File(streamCloud, "application/vnd.ms-excel", string.Format(resultsFile.Show));
+            }
+            else if (extention[1] == "ppt")
+            {
+                return File(streamCloud, "application/vnd.ms-powerpoint", string.Format(resultsFile.Show));
+            }
+            else if (extention[1] == "zip")
+            {
+                return File(streamCloud, "application/zip", string.Format(resultsFile.Show));
+            }
+            else
+            {
+                return File(stream, "text/plain", string.Format(resultsFile.Show));
+            }
+
+        }
     }
 }

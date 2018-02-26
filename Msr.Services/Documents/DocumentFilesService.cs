@@ -16,7 +16,7 @@ namespace Msr.Services.Documents
         {
             _dbContext = new MsrDbContext();
         }
-        public List<SelectFile> GetSelectedFiles(string id, string type,string ntlogin)
+        public List<SelectFile> GetSelectedFiles(string id, string type, string ntlogin)
         {
             var objID = new SqlParameter("@objID", id == null ? "0" : id);
             var selecttype = new SqlParameter();
@@ -49,10 +49,16 @@ namespace Msr.Services.Documents
             {
                 selecttype = new SqlParameter("@type", type);
             }
-            
+
             var NTLogin = new SqlParameter("@strNTLogin", ntlogin);
 
             var result = _dbContext.Database.SqlQuery<DocFile>("EXEC Portal_SpFilesShowForObject  @objID, @type, @strNTLogin", objID, selecttype, NTLogin).ToList();
+
+            return result;
+        }
+        public DocFile GetSelectedRefFile(string id)
+        {
+            var result = _dbContext.Database.SqlQuery<DocFile>($"select NAME AS SHOW,DOC_ID AS VALUE,SERVER_PATH as ServerPath from A_DOCUMENTS where DOC_ID={id}").SingleOrDefault();
 
             return result;
         }

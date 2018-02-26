@@ -1,13 +1,9 @@
 ﻿@model Msr.Services.Documents.ViewModels.SaveDocumentViewModel
-
 @{
     ViewBag.Title = "Edit Document";
 }
-
 <link href="~/assets/textformater/general.css" rel="stylesheet" />
-
 <div class="container-fluid">
-
     <div class="side-body padding-top">
         <div class="row">
             <h2 class="page-header">
@@ -17,7 +13,6 @@
             <div class="col-lg-10">
                 <section class="panel">
                     <div class="panel-body bio-graph-info">
-
                         @using (Html.BeginForm("Edit", "Documents", FormMethod.Post, new { @class = "form form-horizontal", @onSubmit = "escapeAllSelects();;", @name = "editForm", @target = "", @action = "" }))
                         {
                             @Html.AntiForgeryToken()
@@ -25,6 +20,7 @@
                             <div class="form-horizontal">
                                 <input type="hidden" name="Id" value="@Model.Id" />
                                 <input type="hidden" name="ObjectId" value="@Model.ObjectId" />
+                                <input type="hidden" id="ReferenceFiles" name="ReferenceFiles" value="" />
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.Id, htmlAttributes: new { @class = "control-label col-md-2" })
                                     <div class="col-md-5">
@@ -32,7 +28,6 @@
                                         @Html.ValidationMessageFor(model => model.Id, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
-
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.Rev, htmlAttributes: new { @class = "control-label col-md-2" })
                                     <div class="col-md-5">
@@ -40,7 +35,6 @@
                                         @Html.ValidationMessageFor(model => model.Rev, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
-
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.Company, htmlAttributes: new { @class = "control-label col-md-2" })
                                     <div class="col-md-5">
@@ -48,7 +42,6 @@
                                         @Html.ValidationMessageFor(model => model.Company, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
-
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
                                     <div class="col-md-5">
@@ -56,63 +49,32 @@
                                         @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
-
-                                <div class="form-group">
-                                    @Html.LabelFor(model => model.ReferenceTheory, htmlAttributes: new { @class = "control-label col-md-2" })
-                                    <div class="col-md-5">
-                                        <div style="width: 96%; float: left;">
-                                            @Html.ListBoxFor(m => m.ReferenceTheory, Model.ListReferenceTheories, new { @class = "form-control submitselect", multiple = "multiple" })
-                                            @Html.ValidationMessageFor(model => model.ReferenceTheory, "", new { @class = "text-danger" })
-                                        </div>
-                                        <div style="width: 3%; float: right;">
-                                            <span class="data-toggle=" data-call-back-id="ReferenceTheory" data-toggle="modal" data-target="#select-theory"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceTheory"><i class="icon fa fa-trash"></i></span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    @Html.LabelFor(model => model.ReferenceObject, htmlAttributes: new { @class = "control-label col-md-2" })
-                                    <div class="col-md-5">
-                                        <div style="width: 96%; float: left;">
-                                            @Html.ListBoxFor(m => m.ReferenceObject, Model.ListReferenceObjects, new { @class = "form-control submitselect", multiple = "multiple" })
-                                            @Html.ValidationMessageFor(model => model.ReferenceObject, "", new { @class = "text-danger" })
-                                        </div>
-                                        <div style="width: 3%; float: right;">
-                                            <span class="data-toggle=" data-call-back-id="ReferenceObject" data-toggle="modal" data-target="#select-objects"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceObject"><i class="icon fa fa-trash"></i></span>
-                                        </div>
-                                    </div>
-                                </div>
-
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.ReferenceFiles, htmlAttributes: new { @class = "control-label col-md-2" })
                                     <div class="col-md-5">
                                         <div style="width: 96%; float: left;">
-                                            @Html.ListBoxFor(m => m.ReferenceFiles, Model.ListReferenceFiles, new { @class = "form-control submitselect", multiple = "multiple" })
-                                            @Html.ValidationMessageFor(model => model.ReferenceFiles, "", new { @class = "text-danger" })
+
+                                            <table id="tblRefrencefile" class="table table-bordered"></table>
                                         </div>
-                                        <div style="width: 3%; float: right;">
-                                            <span class="data-toggle=" data-call-back-id="ReferenceFiles" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceFiles"><i class="icon fa fa-trash"></i></span>
-                                            <span class="data-toggle=" data-call-back-id="@Model.ObjectId" data-file-type="" data-toggle="modal" data-target="#select-doc-view"><i class="icon fa fa-eye"></i></span>
+                                        <div style="width: 3%;">
+                                            <span class="btn btn-default" data-call-back-id="ReferenceFiles"  data-toggle="modal" data-target="#select-images">Upload File</span>
                                         </div>
                                     </div>
                                 </div>
-
-                                <div class="form-group" >
+                                <div class="form-group">
                                     @Html.LabelFor(model => model.Comments, htmlAttributes: new { @class = "control-label col-md-2" })
                                     <div class="col-md-5">
                                         @Html.Partial("_TextAdder")
-                                        @Html.TextAreaFor(model => model.Comments, new {onBlur = "checkMaxSize(this, 4000);;lastTextArea = 'document.editForm.Comments';", name = "Comments", rows = "10", cols = "80", @class = "text-formatter form-control",})
+                                        @Html.TextAreaFor(model => model.Comments, new { onBlur = "checkMaxSize(this, 4000);;lastTextArea = 'document.editForm.Comments';", name = "Comments", rows = "10", cols = "80", @class = "text-formatter form-control", })
                                     </div>
                                 </div>
-
-                                <div class="form-group" >
+                                <div class="form-group">
                                     @Html.LabelFor(model => model.ApprovalStatus, htmlAttributes: new { @class = "control-label col-md-2" })
                                     <div class="col-md-5">
                                         @Html.DropDownListFor(model => model.ApprovalStatus, Model.ApprovalStatusList, new { @class = "form-control" })
                                         @Html.ValidationMessageFor(model => model.ApprovalStatus, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
-
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.Roles, htmlAttributes: new { @class = "control-label col-md-2" })
                                     <div class="col-md-5">
@@ -120,7 +82,6 @@
                                         @Html.ValidationMessageFor(model => model.Roles, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
-
                                 <div class="form-group">
                                     <div class="col-md-offset-2 col-md-5">
                                         <input type="submit" value="Submit" class="btn btn-success" style="height: 35px;" />
@@ -129,7 +90,6 @@
                                 </div>
                             </div>
                         }
-
                     </div>
                 </section>
             </div>
@@ -137,56 +97,252 @@
     </div>
 </div>
 @section scripts
-{
+          {
     @{
         var roles = string.Join(",", Model.Roles);
     }
-
     <script src="~/assets/textformater/ValidateDocumentSubmit.js"></script>
     <script src="~/assets/textformater/textformatter.js"></script>
-    <script src="~/assets/js/grids/comman.js"></script>
-
     <script type="text/javascript">
+        var ary = [];
+        $(document).ready(function () {
+            var selectRoles = $(".selectroles").select2({
+                tags: [],
+                tokenSeparators: [','],
+                multiple: true,
+                allowClear: true,
+                placeholder: "Select Roles",
+                formatNoMatches: function () {
+                    return '';
+                }
+            });
 
-            $(document).ready(function () {
-
-
-                var selectRoles = $(".selectroles").select2({
-                    tags: [],
-                    tokenSeparators: [','],
-                    multiple: true,
-                    allowClear: true,
-                    placeholder: "Select Roles",
-                    formatNoMatches: function () {
-                        return '';
-                    }
-                });
-
-                var values = '@roles';
+            var values = '@roles';
 
                 var selectedRoles = values.split(",");
 
                 selectRoles.val(selectedRoles).trigger("change");
 
-                $('.deletefiles').click(function () {
 
-                    var callBackId = $(this).data('call-back-id');
+                $('#select-images').on('show.bs.modal',
+                    function (event) {
 
-                    eModal.confirm('Do you really want to Remove ' + callBackId + ' ?', 'Confirmation delete')
-                        .then(confirmCallback, optionalCancelCallback);
+                        var button = $(event.relatedTarget);
+                        var callBackId = button.data('call-back-id');
+                        var modal = $(this);
 
-                    function confirmCallback() {
-                        $('#' + callBackId + ' option:selected').remove();
+                        $.ajax({
+                            type: "GET",
+                            url: '/Files/GetFiles?callBackId=' + callBackId,
+                            dataType: 'html',
+                            success: function (data) {
+                                modal.find('.modal-body').html(data);
+                            },
+                            error: function () {
+
+                            }
+                        });
+
+                    });
+        });
+
+        function deletefile(element) {
+
+            var callBackId = element;
+           // alert(val);
+                eModal.confirm('Do you really want to Remove ' + callBackId + ' ?', 'Confirmation delete')
+                    .then(confirmCallback, optionalCancelCallback);
+
+            function confirmCallback() {
+                var row = $(element).closest("tr");
+                var name = $("td", row).eq(0).html();
+
+                var tblRefrencefile = $("#tblRefrencefile")[0];
+
+                tblRefrencefile.deleteRow(row[0].rowIndex);
+
+                ary.splice($.inArray(element, ary), 1);
+                $('#ReferenceFiles').val(ary);
+
+                }
+
+                function optionalCancelCallback() {
+                }
+        }
+
+        function SelectIds() {
+
+            $(".selected-file").each(function (index) {
+
+                if ($(this).is(":checked")) {
+                    var ids = $(this).val().split('|');
+
+                    var callBackId = $(this).closest(".modal-body").find('#target-control-id').val();
+
+                    if (ary.length > 0) {
+
+                        if ($.inArray(ids[0], ary) != -1) {
+
+                        }
+                        else {
+
+                            var tblRefrencefile = $("#tblRefrencefile");
+                            var imageUrl;
+                            var deleteUrl;
+
+                            ary.push(ids[0]);
+                            $('#ReferenceFiles').val(ary);
+                            var items = ids[1].split('.').pop();
+
+                            switch (items) {
+                                case 'xls':
+                                    imageUrl = '<a title="Download" href="/Doc/Download?Id=' + ids[0] + '"><img src="/assets/img/icon-xls.png" /></a>';
+                                    deleteUrl = '<span onclick="deletefile(this);" style="color:#ff0000"><i class="icon fa fa-trash-o"></i></span>';
+                                    break;
+
+                                case 'jpg':
+                                case 'png':
+                                case 'jpeg':
+                                case 'gif':
+                                    imageUrl = '<a title="Download" href="/Doc/Download?Id=' + ids[0] + '"><img src="/assets/img/jpg.png" /></a>';
+                                    deleteUrl = '<span onclick="deletefile(this);" style="color:#ff0000"><i class="icon fa fa-trash-o"></i></span>';
+                                    break;
+
+                                case 'docx':
+                                    imageUrl = '<a title="Download" href="/Doc/Download?Id=' + ids[0] + '"><img src="/assets/img/icon-doc.png" /></a>';
+                                    deleteUrl = '<span onclick="deletefile(this);" style="color:#ff0000"><i class="icon fa fa-trash-o"></i></span>';
+                                    break;
+
+                                case 'pdf':
+                                    imageUrl = '<a title="Download" href="/Doc/Download?Id=' + ids[0] + '"><img src="/assets/img/icon-pdf.png" /></a>';
+                                    deleteUrl = '<span onclick="deletefile(this);" style="color:#ff0000"><i class="icon fa fa-trash-o"></i></span>';
+                                    break;
+
+                                case 'xlsx':
+                                    imageUrl = '<a title="Download" href="/Doc/Download?Id=' + ids[0] + '"><img src="/assets/img/icon-xls.png" /></a>';
+                                    deleteUrl = '<span onclick="deletefile(this);" style="color:#ff0000"><i class="icon fa fa-trash-o"></i></span>';
+                                    break;
+
+                                case 'txt':
+                                    imageUrl = '<a title="Download" href="/Doc/Download?Id=' + ids[0] + '"><img src="/assets/img/txt.png" /></a>';
+                                    deleteUrl = '<span onclick="deletefile(this);" style="color:#ff0000"><i class="icon fa fa-trash-o"></i></span>';
+                                    break;
+
+                                case 'zip':
+                                    imageUrl = '<a title="Download" href="/Doc/Download?Id=' + ids[0] + '"><img src="/assets/img/icon-zip.png" /></a>';
+                                    deleteUrl = '<span onclick="deletefile(this);" style="color:#ff0000"><i class="icon fa fa-trash-o"></i></span>';
+                                    break;
+
+                                case 'ppt':
+                                    imageUrl = '<a title="Download" href="/Doc/Download?Id=' + ids[0] + '"><img src="/assets/img/icon-ppt.png" /></a>';
+                                    deleteUrl = '<span onclick="deletefile(this);" style="color:#ff0000"><i class="icon fa fa-trash-o"></i></span>';
+                                    break;
+
+                                default:
+                                    imageUrl = '<a title="Download" href="/Doc/Download?Id=' + ids[0] + '"><img src="/assets/img/default.png" /></a>';
+                                    deleteUrl = '<span onclick="deletefile(this);" style="color:#ff0000"><i class="icon fa fa-trash-o"></i></span>';
+                                     break;
+                            }
+
+                            var tr = $("<tr></tr>");
+                            tr.html(("<td class='hidden'>" + ids[0] + "</td>") + "" + ("<td>" + ids[1] + "</td>") + " " + ("<td>" + imageUrl + "</td>") + " " + ("<td>" + deleteUrl + "</td>"));
+                            tblRefrencefile.append(tr);
+
+                        }
                     }
 
-                    function optionalCancelCallback() {
+                    else {
+                        $('#' + callBackId + '').append($('<option></option>').val(ids[0]).html(ids[1]));
+                        ary.push(ids[0]);
+                        $('#ReferenceFiles').val(ary);
                     }
-
-                });
-
-
+                }
             });
+            $('.closeClick').click();
+
+        }
+
     </script>
+    <script>
+
+        $(document).ready(function () {
+        var tblRefrencefile = $("#tblRefrencefile");
+        var imageUrl;
+        var deleteUrl;
+         @for (var j = 0; j <Model.ListReferenceFiles.Count; j++)
+         {
+         <text>
+            var values = '@Model.ListReferenceFiles[j].Text';
+
+           var ref = '@Model.ListReferenceFiles[j].Value';
+           ary.push(ref);
+            $('#ReferenceFiles').val(ary);
+
+            var items = values.split('.').pop();
+
+    switch (items)
+    {
+
+        case 'xls': imageUrl = '<a title="Download" href="/Doc/Download?Id='+@Model.ListReferenceFiles[j].Value+'"><img src="~/assets/img/icon-xls.png" /></a>';
+
+            deleteUrl = '<span onclick="deletefile(this);" style="color:#ff0000"><i class="icon fa fa-trash-o"></i></span>';
+            break;
+
+        case 'jpg':
+        case 'png':
+        case 'jpeg':
+        case 'gif':
+            imageUrl = '<a title="Download" href="/Doc/Download?Id=' +@Model.ListReferenceFiles[j].Value+'"><img src="~/assets/img/jpg.png" /></a>';
+            deleteUrl = '<span onclick="deletefile(this);" style="color:#ff0000"><i class="icon fa fa-trash-o"></i></span>';
+            break;
+
+        case 'docx':
+            imageUrl = '<a title="Download" href="/Doc/Download?Id=' +@Model.ListReferenceFiles[j].Value+'"><img src="~/assets/img/icon-doc.png" /></a>';
+
+            deleteUrl = '<span onclick="deletefile(this);" style="color:#ff0000"><i class="icon fa fa-trash-o"></i></span>';
+            break;
+
+             case 'pdf':
+            imageUrl = '<a title="Download" href="/Doc/Download?Id=' +@Model.ListReferenceFiles[j].Value+'"><img src="~/assets/img/icon-pdf.png" /></a>';
+            deleteUrl = '<span onclick="deletefile(this);" style="color:#ff0000"><i class="icon fa fa-trash-o"></i></span>';
+            break;
+
+        case 'xlsx':
+            imageUrl = '<a title="Download" href="/Doc/Download?Id=' +@Model.ListReferenceFiles[j].Value+'"><img src="~/assets/img/icon-xls.png" /></a>';
+            deleteUrl = '<span onclick="deletefile(this);" style="color:#ff0000"><i class="icon fa fa-trash-o"></i></span>';
+            break;
+
+        case 'txt':
+            imageUrl = '<a title="Download" href="/Doc/Download?Id=' +@Model.ListReferenceFiles[j].Value+'"><img src="~/assets/img/txt.png" /></a>';
+            deleteUrl = '<span onclick="deletefile(this);" style="color:#ff0000"><i class="icon fa fa-trash-o"></i></span>';
+            break;
+
+        case 'zip':
+            imageUrl = '<a title="Download" href="/Doc/Download?Id=' +@Model.ListReferenceFiles[j].Value+'"><img src="/assets/img/icon-zip.png" /></a>';
+            deleteUrl = '<span onclick="deletefile(this);" style="color:#ff0000"><i class="icon fa fa-trash-o"></i></span>';
+            break;
+
+        case 'ppt':
+            imageUrl = '<a title="Download" href="/Doc/Download?Id=' +@Model.ListReferenceFiles[j].Value+'"><img src="/assets/img/icon-ppt.png" /></a>';
+            deleteUrl = '<span onclick="deletefile(this);" style="color:#ff0000"><i class="icon fa fa-trash-o"></i></span>';
+            break;
 
 
+
+        default:
+            imageUrl = '<a title="Download" href="/Doc/Download?Id=' +@Model.ListReferenceFiles[j].Value+'"><img src="~/assets/img/default.png" /></a>';
+            deleteUrl = '<span onclick="deletefile(this);" style="color:#ff0000"><i class="icon fa fa-trash-o"></i></span>';
+            break;
+         }
+
+            var tr = $("<tr class='deletefiles'></tr>");
+        tr.html(("<td class='hidden'>" + '@Model.ListReferenceFiles[j].Value' + "</td>") + "" + ("<td>" + '@Model.ListReferenceFiles[j].Text' + "</td>") + " " + ("<td>" + imageUrl + "</td>") + " " + ("<td>" + deleteUrl + "</td>"));
+
+        tblRefrencefile.append(tr);
+            </text>
+            }
+
+        });
+
+    </script>
 }
