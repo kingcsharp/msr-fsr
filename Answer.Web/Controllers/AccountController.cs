@@ -114,7 +114,7 @@ namespace Msr.Web.Controllers
                         return RedirectToLocal(returnUrl);
                     }
 
-                    return RedirectToAction("Index", "Wip");
+                    return RedirectToAction("statusview", "Wip");
                     
                 case SignInStatus.LockedOut:
                     return View("Lockout");
