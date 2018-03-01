@@ -3,6 +3,8 @@ using System.Linq;
 using Msr.Repositories;
 using Msr.Services.Helps.ViewModels;
 using Msr.Models.Helps;
+using Msr.Services.Roles;
+using Msr.Services.Users;
 
 namespace Msr.Services.Help
 {
@@ -10,9 +12,12 @@ namespace Msr.Services.Help
     {
         private readonly MsrDbContext _dbContext;
 
+        private readonly RoleService _roleService;
+
         public HelpService()
         {
             _dbContext = new MsrDbContext();
+            _roleService = new RoleService();
         }
 
         public IQueryable<HelpView> GetHelpQueryable()
@@ -102,6 +107,38 @@ namespace Msr.Services.Help
         {
             var result = _dbContext.Database.SqlQuery<HelpViewModel>($"SELECT * FROM Portal_HelpPage WHERE FriendlyUrl = '{friendlyUrl}'").SingleOrDefault();
             return result;
+        }
+
+        public ViewHelpPage CanViewHelpPage(string pageUrl, string userId)
+        {
+            var vm = new ViewHelpPage();
+
+            var userervice = new UserService();
+
+            var user = userervice.GetUserId(userId);
+
+            var result = _dbContext.Helps.Where(x => x.FriendlyUrl.Contains(pageUrl)).SingleOrDefault();
+
+            var roles = _roleService.GetAssignedRoles(user.Id);
+
+            vm.Roles = roles;
+
+            if (result != null)
+            {
+                var helpRoles = result.Roles.Split(',').ToList();
+
+                foreach (var role in roles)
+                {
+                    var hasRole = helpRoles.Where(x => x == role.Role_Id).Any();
+
+                    if (hasRole) {
+                        vm.CanView = true;
+                        return vm;
+                    }
+                }
+            }
+
+            return vm;
         }
     }
 }

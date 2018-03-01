@@ -10,7 +10,7 @@
             <h2 class="page-header">
                 <span class="icon fa fa-list"></span>
                 Wip Menu 
-                <button class="btn btn-info help-btn pull-right page-help" data-page-url="@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"]">Help</button>
+                @Html.Partial("_HelpViewButton")
             </h2>
             <div class="col-lg-12">
                 @Html.Partial("Message")

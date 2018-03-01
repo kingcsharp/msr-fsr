@@ -1,1 +1,17 @@
-﻿<button class="btn btn-info pull-right page-help" data-page-url="@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"]/@HttpContext.Current.Request.RequestContext.RouteData.Values["action"]">Help</button>
+﻿@using Msr.Services.Help
+
+@{
+
+    var helpUrl =  HttpContext.Current.Request.RequestContext.RouteData.Values["controller"] +"/"+ @HttpContext.Current.Request.RequestContext.RouteData.Values["action"];
+
+    helpUrl = helpUrl.ToLower().Replace("/index", "");
+
+    var helpService = new HelpService();
+    
+    var vm = helpService.CanViewHelpPage(helpUrl, HttpContext.Current.User.Identity.Name);
+ }
+
+@if(vm.CanView)
+{
+    <button class="btn btn-info pull-right page-help" data-page-url="@helpUrl">Help</button>
+}
