@@ -21,7 +21,6 @@ namespace Msr.Services.Documents.ViewModels
             ListReferenceTheories = new List<SelectListItem>();
             ListRoles = new List<SelectListItem>();
             Roles = new List<string>();
-            ReferenceFiles = new List<string>();
             ReferenceObject = new List<string>();
             ReferenceTheory = new List<string>();
         }
@@ -47,7 +46,7 @@ namespace Msr.Services.Documents.ViewModels
         public List<string> ReferenceObject { get; set; }
 
         [Display(Name = "Reference Files:")]
-        public List<string> ReferenceFiles { get; set; }
+        public string ReferenceFiles { get; set; }
         [AllowHtml]
         [Display(Name = "Header Comments (notes,warning, etc.):")]
         public string Comments { get; set; }
@@ -66,6 +65,7 @@ namespace Msr.Services.Documents.ViewModels
         public IList<SelectListItem> ListReferenceObjects { get; set; }
         public IList<SelectListItem> ListReferenceTheories { get; set; }
         public IList<SelectListItem> ListRoles { get; set; }
+        public List<DocLink> DocLinks { get; set; }
 
         public List<SelectListItem> ApprovalStatusList
         {
@@ -93,7 +93,7 @@ namespace Msr.Services.Documents.ViewModels
             };
             }
         }
-        public void Setup(RoleService roleService, PartsService partsService, DocumentService documentService,string ntlog)
+        public void Setup(RoleService roleService, PartsService partsService, DocumentFilesService documentFilesService, DocumentService documentService, string ntlog)
         {
             ListRoles = roleService.GetApprovedRoles().Select(x => new SelectListItem
             {
@@ -101,26 +101,16 @@ namespace Msr.Services.Documents.ViewModels
                 Value = x.Id
             }).OrderBy(o => o.Text).ToList();
 
-            ListReferenceFiles = partsService.GetSelectedFiles(id: ObjectId, type: null,ntlogin:ntlog).Select(x => new SelectListItem
+            ListReferenceFiles = partsService.GetSelectedFiles(id: ObjectId, type: null, ntlogin: ntlog).Select(x => new SelectListItem
             {
                 Text = x.Show,
                 Value = x.Value,
             }).OrderBy(o => o.Text).ToList();
 
-            ListReferenceObjects = documentService.GetSelectedObjects(id: Id,ntlogin:ntlog).Select(x => new SelectListItem
-            {
-                Text = x.Show,
-                Value = x.Value,
-            }).OrderBy(o => o.Text).ToList();
+            DocLinks = documentFilesService.GetDocByObjectId(ObjectId);
+       
 
-          ListReferenceTheories = documentService.GetSelectedTheories(id: Id, ntlogin: ntlog).Select(x => new SelectListItem
-                {
-                    Text = x.Show,
-                    Value = x.Value,
-                }).OrderBy(o => o.Text).ToList();
-           
-
-            Roles = documentService.GetSelectedRoles(id: Id,ntlogin:ntlog).Select(x => x.RoleId).ToList();
+            Roles = documentService.GetSelectedRoles(id: Id, ntlogin: ntlog).Select(x => x.RoleId).ToList();
         }
 
         public SaveDocumentViewModel MapToDto(DocumentView model)
@@ -133,7 +123,7 @@ namespace Msr.Services.Documents.ViewModels
                 Name = model.Name,
                 Rev = model.Rev,
                 ApprovalStatus = model.SecurityLevel,
-                Company = model.CreatingCoName 
+                Company = model.CreatingCoName
             };
         }
     }

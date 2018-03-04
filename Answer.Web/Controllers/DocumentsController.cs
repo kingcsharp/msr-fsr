@@ -1,4 +1,5 @@
-﻿using Msr.Models.Documents;
+﻿using Msr.Infrastructure.Common.Constansts;
+using Msr.Models.Documents;
 using Msr.Services.Documents;
 using Msr.Services.Documents.ViewModels;
 using Msr.Services.jqGrid;
@@ -10,16 +11,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 
 namespace Answer.Web.Controllers
 {
     public class DocumentsController : BaseController
     {
+        private readonly RoleService _roleService;
+
+        public DocumentsController()
+        {
+            _roleService = new RoleService();
+        }
         public ActionResult Index()
         {
             var viewModel = new EngineeringViewModel();
 
             ViewBag.ActiveClass = "Documents";
+
 
             return View(viewModel);
         }
@@ -125,11 +134,11 @@ namespace Answer.Web.Controllers
         {
             var location = new SaveDocumentViewModel();
 
-            location.Setup(new RoleService(), new PartsService(),new DocumentService(), GetCurrentUser().Id);
+            location.Setup(new RoleService(), new PartsService(), new DocumentFilesService(), new DocumentService(), GetCurrentUser().Id);
 
             location.Id = "NEW";
-            location.Rev = 1; 
-            
+            location.Rev = 1;
+
             return View(location);
         }
 
@@ -141,7 +150,7 @@ namespace Answer.Web.Controllers
             if (ModelState.IsValid)
             {
                 model.NTLogin = GetCurrentUser().Id;
-               
+
                 model.Company = GetCurrentUser().Company;
 
                 var response = documentService.Create(model: model);
@@ -174,8 +183,15 @@ namespace Answer.Web.Controllers
 
             location = location.MapToDto(model: model);
 
-            location.Setup(new RoleService(),new PartsService(), new DocumentService(), GetCurrentUser().Id);
+            location.Setup(new RoleService(), new PartsService(), new DocumentFilesService(), new DocumentService(), GetCurrentUser().Id);
 
+
+
+            var preview = string.Join(",", location.DocLinks.ToArray().Select(x => string.Format("{0}{1}{0}", "\'", x.SERVER_PATH)));
+            ViewBag.Preview = preview;
+            var jsonSerialiser = new JavaScriptSerializer();
+            var previewConfig = jsonSerialiser.Serialize(location.DocLinks.Select(x => new { caption = x.NAME, type = x.TYPE, size = 6666, url = Url.Action("DeletesingleReference", "Documents", new { linkDocId = x.LINKED_DOC_ID }), downloadUrl = x.SERVER_PATH, key = x.LINKED_DOC_ID }));
+            ViewBag.PreviewConfig = previewConfig;
             return View(location);
         }
 
@@ -186,9 +202,11 @@ namespace Answer.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                model.NTLogin = GetCurrentUser().Id;
-               
-                model.Company = GetCurrentUser().Company;
+                var currentUser = GetCurrentUser();
+
+                model.NTLogin = currentUser.Id;
+
+                model.Company = currentUser.Company;
 
                 var response = documentService.Save(model: model);
 
@@ -205,6 +223,27 @@ namespace Answer.Web.Controllers
             }
 
             return View(model);
+        }
+
+        public ActionResult DeletesingleReference(string linkDocId)
+        {
+            var documentService = new DocumentService();
+
+            var result = documentService.RemoveSingleFileReference(linkDocId);
+
+            return Json(result ? "Ok" : "error", JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult AddsingleReference(string linkDocId, string files)
+        {
+            var documentService = new DocumentService();
+            bool result = false;
+            foreach (var file in files.Split(','))
+            {
+                result = documentService.SaveSingleFileReference(linkDocId, file, GetCurrentUser().Id);
+            }
+
+
+            return Json(result ? "Ok" : "error", JsonRequestBehavior.AllowGet);
         }
     }
 }

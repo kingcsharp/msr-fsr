@@ -16,7 +16,7 @@
                 align: 'center',
             },
             {
-                label: 'Theory Name',
+                label: 'Name',
                 name: 'Name',
                 index: 'Name',
                 colmenu: false,

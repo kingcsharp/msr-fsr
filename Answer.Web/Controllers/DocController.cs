@@ -5,8 +5,10 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 using Msr.Models.Orders;
 using Msr.Services.Documents;
+using Msr.Services.Documents.ViewModels;
 using Msr.Services.Orders;
 using Msr.Services.Orders.ViewModels;
 using Msr.Services.Parts;
@@ -15,7 +17,7 @@ using Msr.Services.PrePro;
 using Msr.Services.S3;
 using Msr.Web.Controllers;
 using Msr.Services.Files;
-using System.Text;
+using Msr.Services.Files.ViewModels;
 
 namespace Answer.Web.Controllers
 {
@@ -164,57 +166,112 @@ namespace Answer.Web.Controllers
 
             return PartialView("_DocView", resultsFiles);
         }
-
-
-        public FileResult Download(string Id)
+        [AcceptVerbs(HttpVerbs.Post)]
+        public JsonResult FileUploaderBootstrap(string objectId)
         {
-            var docService = new DocumentFilesService();
-            var resultsFile = docService.GetSelectedRefFile(Id);
 
-            string[] key = resultsFile.ServerPath.Split('/');
-            var buketName = ConfigurationManager.AppSettings.Get("AWSBuketName");
-            var streamCloud = _cloudUploader.DownloadFromCloud(buketName, key[3] + "/" + key[4]);
 
-            var byteArray = Encoding.ASCII.GetBytes(resultsFile.ServerPath.ToString());
-            var stream = new MemoryStream(byteArray);
-            var extention = resultsFile.Show.Split('.');
-            if (extention[1] == "pdf")
+            var fileService = new FileService();
+            var documentService = new DocumentService();
+            List<NewFile> selectedfiles = new List<NewFile>();
+
+            var initialPreview = new List<string>();
+            var initialPreviewConfigs = new List<DocLink>();
+
+            var initialPreviewConfig = new object();
+            var responese = new NewFile();
+            foreach (string item in Request.Files)
             {
-                return File(streamCloud, "application/pdf", resultsFile.Show);
+                var file = Request.Files[item];
+                var imageModel = new SaveFileUploadViewModel();
+
+                imageModel.Name = file.FileName;
+
+                var cloudUploader = new AWSFileHandler();
+
+                var keyName = $"Answer2/{Guid.NewGuid()}-{file.FileName}";
+
+                var buketName = ConfigurationManager.AppSettings.Get("AWSBuketName");
+
+                cloudUploader.UploadToCloud(file, buketName, keyName);
+
+                var baseUrl = ConfigurationManager.AppSettings.Get("AWSURL");
+
+                var cloudUrl = $"{baseUrl}{keyName}";
+
+                imageModel.Path = cloudUrl;
+                imageModel.ContentType = file.ContentType;
+                imageModel.SrcId = null;
+                imageModel.SrcName = null;
+                imageModel.SrcDesc = null;
+                imageModel.SrcPath = null;
+                imageModel.SrcContentType = null;
+                imageModel.SrcChanged = null;
+                imageModel.DocChanged = null;
+                imageModel.Desc = null;
+                imageModel.DropSrc = "YES";
+                imageModel.NTLogin = GetCurrentUser().Id;
+
+                responese = fileService.SaveFileUpload(imageModel);
+
+                initialPreview.Add(imageModel.Path);
+                var docfiLink = new DocLink
+                {
+                    NAME = keyName,
+                    CONTENTTYPE = file.ContentType,
+                    LINKED_DOC_ID = responese.Id,
+                    TYPE = file.ContentType
+                };
+                initialPreviewConfigs.Add(docfiLink);
+
+                initialPreviewConfig = initialPreviewConfigs.Select(x => new
+                {
+                    caption = x.NAME,
+                    type = x.TYPE,
+                    size = 6666,
+                    url = Url.Action("DeletesingleReference", "Documents", new { linkDocId = x.LINKED_DOC_ID }),
+                    downloadUrl = cloudUrl,
+                    key = x.LINKED_DOC_ID
+                }).ToArray();
+
+                if (responese.Status)
+                {
+                    selectedfiles.Add(responese);
+                }
+                if (objectId != null)
+                    documentService.SaveSingleFileReference(objectId, responese.Id, GetCurrentUser().Id);
             }
-            else if (extention[1] == "docx")
+            return Json(new { initialPreview, initialPreviewConfig, responese.Id }, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult RefillUploader(string ids)
+        {
+            var documentService = new DocumentService();
+            var array = ids.Split(',');
+            array = array.Where(val => val != "0").ToArray();
+
+            var initialPreviewConfigs = array.Select(id => documentService.GetListFileReferences(string.IsNullOrWhiteSpace(id) ? "0" : id)).ToList();
+
+            foreach (var itemConfig in initialPreviewConfigs)
             {
-                return File(streamCloud, "application/vnd.ms-word", string.Format(resultsFile.Show));
-            }
-            else if (extention[1] == "txt")
-            {
-                return File(streamCloud, "text/plain", string.Format(resultsFile.Show));
-            }
-            else if (extention[1] == "jpg" || extention[1] == "png" || extention[1] == "jpeg" || extention[1] == "gif")
-            {
-                return File(streamCloud, extention[1], string.Format(resultsFile.Show));
-            }
-            else if (extention[1] == "xls")
-            {
-                return File(streamCloud, "application/vnd.ms-excel", string.Format(resultsFile.Show));
-            }
-            else if (extention[1] == "xlsx")
-            {
-                return File(streamCloud, "application/vnd.ms-excel", string.Format(resultsFile.Show));
-            }
-            else if (extention[1] == "ppt")
-            {
-                return File(streamCloud, "application/vnd.ms-powerpoint", string.Format(resultsFile.Show));
-            }
-            else if (extention[1] == "zip")
-            {
-                return File(streamCloud, "application/zip", string.Format(resultsFile.Show));
-            }
-            else
-            {
-                return File(stream, "text/plain", string.Format(resultsFile.Show));
+                itemConfig.TYPE = itemConfig.CONTENTTYPE;
             }
 
+            var initialPreview = initialPreviewConfigs.Select(itemConfig => itemConfig.SERVER_PATH).ToList();
+
+
+            object initialPreviewConfig = initialPreviewConfigs.Select(x => new
+            {
+                caption = x.NAME,
+                type = x.TYPE,
+                size = 6666,
+                url = Url.Action("DeletesingleReference", "Documents", new { linkDocId = x.LINKED_DOC_ID }),
+                downloadUrl = x.SERVER_PATH,
+                key = x.LINKED_DOC_ID
+            }).ToArray();
+
+            return Json(new { initialPreview, initialPreviewConfig }, JsonRequestBehavior.AllowGet);
         }
     }
+
 }

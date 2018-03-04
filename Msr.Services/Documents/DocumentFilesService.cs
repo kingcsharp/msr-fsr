@@ -74,5 +74,15 @@ namespace Msr.Services.Documents
 
             return result;
         }
+        public List<DocLink> GetDocByObjectId(string id)
+        {
+            if (id != null)
+            {
+                var result = _dbContext.Database.SqlQuery<DocLink>($"SELECT * FROM dbo.A_V_DOCUMENTS_WITH_LINKED_ITEM WHERE OBJECT_ID = {id}").ToList();
+
+                return result;
+            }
+            return new List<DocLink>();
+        }
     }
 }

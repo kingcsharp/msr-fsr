@@ -928,6 +928,7 @@
     <Content Include="assets\js\tinymce\themes\modern\theme.min.js" />
     <Content Include="assets\js\tinymce\tinymce.js" />
     <Content Include="assets\js\tinymce\tinymce.min.js" />
+    <Content Include="assets\js\uploader.js" />
     <Content Include="assets\js\vendor\jquery.ui.widget.js" />
     <Content Include="assets\js\wip-detail-print-other.js" />
     <Content Include="assets\js\wip-detail.js" />

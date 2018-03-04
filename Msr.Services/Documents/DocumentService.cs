@@ -4,6 +4,7 @@ using Msr.Models.Documents;
 using Msr.Repositories;
 using Msr.Services.Documents.Procedures;
 using Msr.Services.Documents.ViewModels;
+using Msr.Services.Files.ViewModels;
 using Msr.Services.Parts.Procedures;
 using System;
 using System.Collections.Generic;
@@ -72,6 +73,17 @@ namespace Msr.Services.Documents
         {
             try
             {
+                var deleteReferenceFileProcedure = new DeleteFileProcedure() { ObjID = model.Id, Type = null, NTLogin = model.NTLogin };
+
+                _dbContext.Database.ExecuteStoredProcedure(deleteReferenceFileProcedure);
+
+                foreach (var file in model.ReferenceFiles.Split(','))
+                {
+                    var saveFileProcedure = new SaveFileProcedure() { ObjID = model.Id, DocID = file, Type = null, NTLogin = model.NTLogin };
+
+                    _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
+                }
+
                 var saveDocumentProcedure = new SaveDocumentProcedure
                 {
                     Id = model.Id,
@@ -88,19 +100,6 @@ namespace Msr.Services.Documents
                 };
 
                 _dbContext.Database.ExecuteStoredProcedure(saveDocumentProcedure);
-
-                var deleteReferenceFileProcedure = new DeleteFileProcedure() { ObjID = model.ObjectId, Type = null, NTLogin = model.NTLogin };
-
-                _dbContext.Database.ExecuteStoredProcedure(deleteReferenceFileProcedure);
-
-                var refrenceFile = string.Join(",", model.ReferenceFiles);
-                var nameOfRefrenceFile = refrenceFile.Split(',').ToList();
-                foreach (var file in nameOfRefrenceFile)
-                {
-                    var saveFileProcedure = new SaveFileProcedure() { ObjID = model.ObjectId, DocID = file.ToString(), Type = null, NTLogin = model.NTLogin };
-
-                    _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
-                }
 
                 return true;
             }
@@ -153,10 +152,7 @@ namespace Msr.Services.Documents
 
                 _dbContext.Database.ExecuteStoredProcedure(deleteReferenceFileProcedure);
 
-                var refrenceFile = string.Join(",", model.ReferenceFiles);
-                var nameOfRefrenceFile = refrenceFile.Split(',').ToList();
-
-                foreach (var file in nameOfRefrenceFile)
+                foreach (var file in model.ReferenceFiles.Split(','))
                 {
                     var saveFileProcedure = new SaveFileProcedure() { ObjID = createdDocument.ObjectId, DocID = file, Type = null, NTLogin = model.NTLogin };
 
@@ -171,6 +167,56 @@ namespace Msr.Services.Documents
 
                 return false;
             }
+        }
+        public bool SaveSingleFileReference(string objectId, string file, string currentUserId)
+        {
+            try
+            {
+                var saveFileProcedure = new SaveFileProcedure() { ObjID = objectId, DocID = file, Type = null, NTLogin = currentUserId };
+
+                _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                var message = "Error occured:" + ex.Message;
+
+                return false;
+            }
+
+        }
+        public bool RemoveSingleFileReference(string file)
+        {
+            try
+            {
+                _dbContext.Database.ExecuteSqlCommand($"DELETE FROM A_DOCUMENT_LINK WHERE LINKED_DOC_ID = '{file}' AND TYPE is NULL");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                var message = "Error occured:" + ex.Message;
+
+                return false;
+            }
+
+
+        }
+        public DocLink GetListFileReferences(string id)
+        {
+            try
+            {
+                var doc = _dbContext.Database.SqlQuery<DocLink>($"select ID AS LINKED_DOC_ID, NAME ,SERVER_PATH ,CONTENTTYPE,DOC_TYPE,DELETED from  dbo.A_DOCUMENTS where id ={id}").SingleOrDefault();
+
+                return doc;
+            }
+            catch (Exception ex)
+            {
+                var message = "Error occured:" + ex.Message;
+
+                return new DocLink();
+            }
+
+
         }
     }
 }

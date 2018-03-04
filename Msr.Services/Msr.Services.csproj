@@ -162,6 +162,7 @@
     <Compile Include="CustomerRequirements\ViewModel\CustomerRequirementViewModel.cs" />
     <Compile Include="CustomerRequirements\ViewModel\PartInfoViewModel.cs" />
     <Compile Include="CustomerRequirements\ViewModel\ProcessInfoViewModel.cs" />
+    <Compile Include="Documents\ViewModels\DocLink.cs" />
     <Compile Include="EquipmentMaintenances\EquipmentMaintenanceService.cs" />
     <Compile Include="EquipmentMaintenances\Procedures\CreateEquipmaintenanceProcadure.cs" />
     <Compile Include="EquipmentMaintenances\Procedures\GetIdProcedure.cs" />

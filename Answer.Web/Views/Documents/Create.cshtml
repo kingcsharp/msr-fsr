@@ -1,13 +1,13 @@
 ﻿@model Msr.Services.Documents.ViewModels.SaveDocumentViewModel
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Add Document";
 }
 <link href="~/assets/textformater/general.css" rel="stylesheet" />
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="row">
             <h2 class="page-header">
-                Add Document @Html.Partial("_HelpViewButton")
+                Add Document<button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
             </h2>
             <div class="col-lg-10">
                 @using (Html.BeginForm("Create", "Documents", FormMethod.Post, new { @class = "form form-horizontal", @onSubmit = "escapeAllSelects();;", @name = "editForm", @target = "", @action = "" }))
@@ -46,10 +46,14 @@
                         <div class="form-group">
                             @Html.LabelFor(model => model.ReferenceFiles, htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-5">
-                                <div style="width: 100%; float: left;">
-                                    <table id="tblRefrencefile" class="table table-bordered"></table>
+                                <!-- Detailed preview for thumbs and iconic preview for zoom -->
+                                <div class="file-loading">
+                                    <input id="input-files" name="input-files[]" multiple type="file">
                                 </div>
-                                <span class="btn btn-success btn-default" data-call-back-id="ReferenceFiles"  data-toggle="modal" data-target="#select-images">Upload File</span>
+                                <div>
+                                    <input type="hidden" id="referenceFiles" name="referenceFiles" />
+                                    <span class="data-toggle=" style="float: right" data-call-back-id="ReferenceFiles" data-toggle="modal" data-target="#select-images"><button type="button" class="btn btn-success">Select existing files</button></span>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -69,7 +73,7 @@
                         <div class="form-group">
                             @Html.LabelFor(model => model.Roles, htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-5">
-                                @Html.DropDownListFor(model => model.Roles, Model.ListRoles, new { @class = "form-control", multiple = "multiple" })
+                                @Html.DropDownListFor(model => model.Roles, Model.ListRoles, new { @class = "form-control selectroles", multiple = "multiple" })
                                 @Html.ValidationMessageFor(model => model.Roles, "", new { @class = "text-danger" })
                             </div>
                         </div>
@@ -85,15 +89,24 @@
         </div>
     </div>
 </div>
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.7/css/fileinput.min.css">
+<link href="//cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css" rel="stylesheet" type="text/css" />
 @section scripts
 {
     <script src="~/assets/textformater/ValidateDocumentSubmit.js"></script>
     <script src="~/assets/textformater/textformatter.js"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.7/js/fileinput.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+    <script src="~/assets/js/uploader.js"></script>
     <script type="text/javascript">
         var ary = [];
         $(document).ready(function () {
+            var $el = $('#input-files');
+
+
+            initUploader($el, '@Url.Action("FileUploaderBootstrap", "Doc")', [ ],[]);
 
 
             $(".selectroles").select2({
@@ -101,6 +114,23 @@
                 multiple: true
             });
 
+            $('.deletefiles').click(function () {
+
+                var callBackId = $(this).data('call-back-id');
+
+                eModal.confirm('Do you really want to Remove ' + callBackId + ' ?', 'Confirmation delete')
+                    .then(confirmCallback, optionalCancelCallback);
+
+                function confirmCallback() {
+                    console.log("ok");
+                    $('#' + callBackId + ' option:selected').remove();
+                }
+
+                function optionalCancelCallback() {
+                    console.log("cancel");
+                }
+
+            });
             $('#select-images').on('show.bs.modal',
                 function (event) {
 
@@ -119,170 +149,57 @@
 
                         }
                     });
-
                 });
         });
-
-
-        function deletefile(element) {
-
-            var callBackId = element;
-            // alert(val);
-            eModal.confirm('Do you really want to Remove ' + callBackId + ' ?', 'Confirmation delete')
-                .then(confirmCallback, optionalCancelCallback);
-
-            function confirmCallback() {
-                var row = $(element).closest("tr");
-                var name = $("td", row).eq(0).html();
-
-                var tblRefrencefile = $("#tblRefrencefile")[0];
-
-                tblRefrencefile.deleteRow(row[0].rowIndex);
-
-
-                ary.splice($.inArray(element, ary), 1);
-                $('#ReferenceFiles').val(ary);
-
-            }
-
-            function optionalCancelCallback() {
-            }
-        }
-
         function SelectIds() {
-
+            var array = [];
+            var preSelected =[];
+            if ($('#referenceFiles').val().length > 0) {
+                preSelected = $('#referenceFiles').val().split(',').map(Number);
+            }
             $(".selected-file").each(function (index) {
 
                 if ($(this).is(":checked")) {
                     var ids = $(this).val().split('|');
-
-                    var callBackId = $(this).closest(".modal-body").find('#target-control-id').val();
-                    var tblRefrencefile = $("#tblRefrencefile");
-                    if (ary.length > 0) {
-
-                        if ($.inArray(ids[0], ary) != -1) {
-
-                        }
-                        else {
-                            var imageUrl;
-                            var deleteUrl;
-
-                            ary.push(ids[0]);
-                            $('#ReferenceFiles').val(ary);
-                            var items = ids[1].split('.').pop();
-
-                            switch (items) {
-
-                                case 'xls':
-                                    imageUrl = '<a title="Download" href="/Doc/Download?Id="' + ids[0] + '><img src="/assets/img/icon-xls.png" /></a>';
-                                    deleteUrl = '<span onclick="deletefile(this);" style="color:#ff0000"><i class="icon fa fa-trash-o"></i></span>';
-                                    break;
-
-                                case 'jpg':
-                                case 'png':
-                                case 'jpeg':
-                                case 'gif':
-                                    imageUrl = '<a title="Download" href="/Doc/Download?Id=' + ids[0] + '"><img src="/assets/img/jpg.png" /></a>';
-                                    deleteUrl = '<span onclick="deletefile(this);" style="color:#ff0000"><i class="icon fa fa-trash-o"></i></span>';
-                                    break;
-
-                                case 'docx':
-                                    imageUrl = '<a title="Download" href="/Doc/Download?Id=' + ids[0] + '"><img src="/assets/img/icon-doc.png" /></a>';
-                                    deleteUrl = '<span onclick="deletefile(this);" style="color:#ff0000"><i class="icon fa fa-trash-o"></i></span>';
-                                    break;
-
-                                case 'pdf':
-                                    imageUrl = '<a title="Download" href="/Doc/Download?Id=' + ids[0] + '"><img src="/assets/img/icon-pdf.png" /></a>';
-                                    deleteUrl = '<span onclick="deletefile(this);" style="color:#ff0000"><i class="icon fa fa-trash-o"></i></span>';
-                                    break;
-
-                                case 'xlsx':
-                                    imageUrl = '<a title="Download" href="/Doc/Download?Id=' + ids[0] + '"><img src="/assets/img/icon-xls.png" /></a>';
-                                    deleteUrl = '<span onclick="deletefile(this);" style="color:#ff0000"><i class="icon fa fa-trash-o"></i></span>';
-                                    break;
-
-                                case 'txt':
-                                    imageUrl = '<a title="Download" href="/Doc/Download?Id=' + ids[0] + '"><img src="/assets/img/txt.png" /></a>';
-                                    deleteUrl = '<span onclick="deletefile(this);" style="color:#ff0000"><i class="icon fa fa-trash-o"></i></span>';
-                                    break;
-
-                                default:
-                                    imageUrl = '<a title="Download" href="/Doc/Download?Id=' + ids[0] + '"><img src="/assets/img/default.png" /></a>';
-                                    deleteUrl = '<span onclick="deletefile(this);" style="color:#ff0000"><i class="icon fa fa-trash-o"></i></span>';
-                                    break;
-                            }
-
-                            var tr = $("<tr></tr>");
-                            tr.html(("<td class='hidden'>" + ids[0] + "</td>") + "" + ("<td>" + ids[1] + "</td>") + " " + ("<td>" + imageUrl + "</td>") + " " + ("<td>" + deleteUrl + "</td>"));
-                            tblRefrencefile.append(tr);
-
-                        }
+                    if ($.inArray(ids[0], array) !== -1) {
+                        // found it
+                    } else {
+                        array.push(parseInt(ids[0]));
                     }
 
-                    else {
-                        $('#' + callBackId + '').append($('<option></option>').val(ids[0]).html(ids[1]));
-                        var items = ids[1].split('.').pop();
+                }
 
-                        switch (items) {
-                            case 'xls':
-                                imageUrl = '<a title="Download" href="/Doc/Download?Id= ' + ids[0] + '"><img src="/assets/img/icon-xls.png" /></a>';
-                                deleteUrl = '<span onclick="deletefile(this);" style="color:#ff0000"><i class="icon fa fa-trash-o"></i></span>';
-                                break;
-
-                            case 'jpg':
-                            case 'png':
-                            case 'jpeg':
-                            case 'gif':
-                                imageUrl = '<a title="Download" href="/Doc/Download?Id=' + ids[0] + '"><img src="/assets/img/jpg.png" /></a>';
-                                deleteUrl = '<span onclick="deletefile(this);" style="color:#ff0000"><i class="icon fa fa-trash-o"></i></span>';
-                                break;
-
-                            case 'docx':
-                                imageUrl = '<a title="Download" href="/Doc/Download?Id=' + ids[0] + '"><img src="/assets/img/icon-doc.png" /></a>';
-                                deleteUrl = '<span onclick="deletefile(this);" style="color:#ff0000"><i class="icon fa fa-trash-o"></i></span>';
-                                break;
-
-                            case 'pdf':
-                                imageUrl = '<a title="Download" href="/Doc/Download?Id=' + ids[0] + '"><img src="/assets/img/icon-pdf.png" /></a>';
-                                deleteUrl = '<span onclick="deletefile(this);" style="color:#ff0000"><i class="icon fa fa-trash-o"></i></span>';
-                                break;
-
-                            case 'xlsx':
-                                imageUrl = '<a title="Download" href="/Doc/Download?Id=' + ids[0] + '"><img src="/assets/img/icon-xls.png" /></a>';
-                                deleteUrl = '<span onclick="deletefile(this);" style="color:#ff0000"><i class="icon fa fa-trash-o"></i></span>';
-                                break;
-
-                            case 'txt':
-                                imageUrl = '<a title="Download" href="/Doc/Download?Id=' + ids[0] + '"><img src="/assets/img/txt.png" /></a>';
-                                deleteUrl = '<span onclick="deletefile(this);" style="color:#ff0000"><i class="icon fa fa-trash-o"></i></span>';
-                                break;
-
-                            case 'zip':
-                                imageUrl = '<a title="Download" href="/Doc/Download?Id=' + ids[0] + '"><img src="/assets/img/icon-zip.png" /></a>';
-                                deleteUrl = '<span onclick="deletefile(this);" style="color:#ff0000"><i class="icon fa fa-trash-o"></i></span>';
-                                break;
-
-                            case 'ppt':
-                                imageUrl = '<a title="Download" href="/Doc/Download?Id=' + ids[0] + '"><img src="/assets/img/icon-ppt.png" /></a>';
-                                deleteUrl = '<span onclick="deletefile(this);" style="color:#ff0000"><i class="icon fa fa-trash-o"></i></span>';
-                                break;
-                            default:
-                                imageUrl = '<a title="Download" href="/Doc/Download?Id=' + ids[0] + '"><img src="/assets/img/default.png" /></a>';
-                                deleteUrl = '<span onclick="deletefile(this);" style="color:#ff0000"><i class="icon fa fa-trash-o"></i></span>';
-                                break;
-                        }
-
-                        var tr = $("<tr></tr>");
-                        tr.html(("<td class='hidden'>" + ids[0] + "</td>") + "" + ("<td>" + ids[1] + "</td>") + " " + ("<td>" + imageUrl + "</td>") + " " + ("<td>" + deleteUrl + "</td>"));
-                        tblRefrencefile.append(tr);
-                        ary.push(ids[0]);
-                        $('#ReferenceFiles').val(ary);
+            });
+            Array.prototype.unique = function() {
+                var a = this.concat();
+                for(var i=0; i<a.length; ++i) {
+                    for(var j=i+1; j<a.length; ++j) {
+                        if(a[i] === a[j])
+                            a.splice(j--, 1);
                     }
                 }
-            });
+
+                return a;
+            };
+            var finalArray = array.concat(preSelected).unique();
             $('.closeClick').click();
+            console.log(finalArray);
+            $('#referenceFiles').val(finalArray);
+            $.ajax({
+                type: "GET",
+                url: '/Doc/RefillUploader?ids=' + finalArray,
+                dataType: 'JSON',
+                success: function (data) {
+                    console.log(data.initialPreview);
+                    console.log(data.initialPreviewConfig);
+                    var $el = $('#input-files');
+                    $el.fileinput('destroy');
+                    initUploader($el, '@Url.Action("FileUploaderBootstrap", "Doc")', data.initialPreview, data.initialPreviewConfig);
+                },
+                error: function () {
 
+                }
+            });
         }
-
     </script>
 }
