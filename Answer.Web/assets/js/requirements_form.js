@@ -18,15 +18,15 @@ $(document).ready(function () {
     $("#add_rowa").click(function () {
         $('#rowa-' + j).html(
             "<td>" + (j + 1) + "</td>" +
-            "<td><input name='Parts[" + j + "].CU' type='checkbox' placeholder='CU' class='form-control input-md'  /> </td>" +
-            "<td><input name='Parts[" + j + "].NonCU' type='checkbox' placeholder='NonCU' class='form-control input-md'  /> </td>" +
+            "<td><input name='Parts[" + j + "].NonCU' type='radio' value='Cu' placeholder='CU' style='max-height:10px' class='form-control input-md'  /> </td>" +
+            "<td><input name='Parts[" + j + "].NonCU' type='radio' value='NonCu' placeholder='NonCU' style='max-height:10px' class='form-control input-md'  /> </td>" +
             "<td><input name='Parts[" + j + "].PartDescription' type='text' placeholder='Part Description' class='form-control input-md'  /> </td>" +
-            "<td><input name='Parts[" + j + "].Substrate' placeholder='Substrate' class='form-control input-md'  /> </td><td>" +
-            "<input  name='Parts[" + j + "].CoatingSurface' type='text' placeholder='Coating/Surface Treatment'  class='form-control input-md'></td>" +
-            "<input  name='Parts[" + j + "].Dimensions' type='text' placeholder='Dimensions'  class='form-control input-md'></td>" +
-            "<td><input  name='Parts[" + j + "].CustPartNo' type='text' placeholder='Cust. Part No.'  class='form-control input-md'></td>" +
-            "<td><input  name='Parts[" + j + "].MfgPartNo' type='text' placeholder='Mfg. Part No.'  class='form-control input-md'></td>" +
-            "<td><input  name='Parts[" + j + "].PartsPerKit' type='text' placeholder='# Parts per Kit'  class='form-control input-md'></td>");
+            "<td><input name='Parts[" + j + "].Substrate' placeholder='Substrate' class='form-control input-md'  /> </td>" +
+            "<td><input name='Parts[" + j + "].CoatingSurface' type='text' placeholder='Coating/Surface Treatment'  class='form-control input-md'></td>" +
+            "<td><input name='Parts[" + j + "].Dimensions' type='text' placeholder='Dimensions'  class='form-control input-md'></td>" +
+            "<td><input name='Parts[" + j + "].CustPartNo' type='text' placeholder='Cust. Part No.'  class='form-control input-md'></td>" +
+            "<td><input name='Parts[" + j + "].MfgPartNo' type='text' placeholder='Mfg. Part No.'  class='form-control input-md'></td>" +
+            "<td><input name='Parts[" + j + "].PartsPerKit' type='text' placeholder='# Parts per Kit'  class='form-control input-md'></td>");
 
         $('#kit_parts').append('<tr id="rowa-' + (j + 1) + '"></tr>');
         j++;

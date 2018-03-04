@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Msr.Services.Documents.ViewModels
 {
@@ -19,8 +15,8 @@ namespace Msr.Services.Documents.ViewModels
 
         public string TYPE
         {
-            get => SetType;
-            set => GetType(CONTENTTYPE);
+            get { return SetType; }
+            set { GetType(CONTENTTYPE); }
         }
 
         public void GetType(string value)
