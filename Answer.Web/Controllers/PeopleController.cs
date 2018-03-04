@@ -28,7 +28,7 @@ namespace Answer.Web.Controllers
             ViewBag.ActiveClass = "People";
 
             return View(viewModel);
-        }      
+        }
 
         public ActionResult PeopleData(JqGridParam param)
         {
@@ -76,7 +76,7 @@ namespace Answer.Web.Controllers
                     else if (rule.field == nameof(PeopleObjectView.LocationName))
                     {
                         totalRows = totalRows.Where(x => x.LocationName.ToLower().Contains(rule.data.ToLower()));
-                    }                    
+                    }
                     else if (rule.field == nameof(PeopleObjectView.PrimaryPhoneNumber))
                     {
                         totalRows = totalRows.Where(x => x.PrimaryPhoneNumber.ToLower().Contains(rule.data.ToLower()));
@@ -116,7 +116,7 @@ namespace Answer.Web.Controllers
                         {
                             totalRows = totalRows.Where(x => statusList.Contains(x.Status.ToLower()));
                         }
-                    }                  
+                    }
 
                 }
             }
@@ -167,15 +167,16 @@ namespace Answer.Web.Controllers
             if (ModelState.IsValid)
             {
                 model.NTLogin = GetCurrentUser().Id;
-                model.Password = AuthenticationHelper.PassWordEncrypt("test"); //pending to find password creation
-                
+
                 var response = _peopleService.Create(model: model);
 
-                if (response)
+                if (!response.HasErrors())
                 {
+
                     TempData["SuccessMessage"] = "People has been added successfully.";
                     return RedirectToAction("Index");
                 }
+
                 else
                 {
                     TempData["ErrorMessage"] = "Something went wrong.";
@@ -227,7 +228,7 @@ namespace Answer.Web.Controllers
         [AcceptVerbs(verbs: HttpVerbs.Post)]
         public ActionResult Edit(EditPeopleViewModel model)
         {
-          
+
             if (ModelState.IsValid)
             {
                 model.NTLogin = GetCurrentUser().Id;

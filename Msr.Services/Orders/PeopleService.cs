@@ -14,10 +14,14 @@ using Msr.Services.Orders.Messaging;
 using Msr.Services.Parts.Procedures;
 using Msr.Services.People.Procedures;
 using Msr.Services.People.ViewModels;
+using System.Configuration;
+using System.Security.Cryptography;
+using System.IO;
+using Msr.Infrastructure.Email;
 
 namespace Msr.Services.Orders
 {
-   public class PeopleService
+    public class PeopleService
     {
         private readonly MsrDbContext _dbContext;
 
@@ -26,72 +30,72 @@ namespace Msr.Services.Orders
             _dbContext = new MsrDbContext();
         }
 
-       public bool CheckUserExists(string login, string password)
-       {
-           var user = _dbContext.ApprovedPeoples.SingleOrDefault(x => x.Login == login && password == password);
+        public bool CheckUserExists(string login, string password)
+        {
+            var user = _dbContext.ApprovedPeoples.SingleOrDefault(x => x.Login == login && password == password);
 
-           if (user != null && user.SystemStatus != "ACTIVE")
-           {
-               return false;
-           }
+            if (user != null && user.SystemStatus != "ACTIVE")
+            {
+                return false;
+            }
 
-           return true;
+            return true;
 
-       }
+        }
 
-       public CheckLoginResult GetAnswerUser(string login, string password)
+        public CheckLoginResult GetAnswerUser(string login, string password)
         {
             var user = _dbContext.Peoples.SingleOrDefault(x => x.Login == login && x.Status.Contains("APPROVED"));
 
-           if (user == null) return null;
+            if (user == null) return null;
 
-           var loginParm = new SqlParameter("@Login", login);
-           var passwordParm = new SqlParameter("@Password", AuthenticationHelper.PassWordEncrypt(password));
-           var passwordNonEncParm = new SqlParameter("@PASSWORD_NON_ENCRYPT", password);
+            var loginParm = new SqlParameter("@Login", login);
+            var passwordParm = new SqlParameter("@Password", AuthenticationHelper.PassWordEncrypt(password));
+            var passwordNonEncParm = new SqlParameter("@PASSWORD_NON_ENCRYPT", password);
 
-           var result = _dbContext.Database.SqlQuery<CheckLoginResult>("Portal_Check_Login @Login, @Password,@PASSWORD_NON_ENCRYPT", loginParm,
-               passwordParm, passwordNonEncParm).SingleOrDefault();
+            var result = _dbContext.Database.SqlQuery<CheckLoginResult>("Portal_Check_Login @Login, @Password,@PASSWORD_NON_ENCRYPT", loginParm,
+                passwordParm, passwordNonEncParm).SingleOrDefault();
 
-           if (result != null)
-           {
-               var portalAccount = _dbContext.AspNetUsers.SingleOrDefault(x => x.UserName.ToLower() == login.ToLower());
+            if (result != null)
+            {
+                var portalAccount = _dbContext.AspNetUsers.SingleOrDefault(x => x.UserName.ToLower() == login.ToLower());
 
-               if (portalAccount == null)
-               {
-                   var context = new ApplicationDbContext();
+                if (portalAccount == null)
+                {
+                    var context = new ApplicationDbContext();
 
-                   var store = new UserStore<ApplicationUser>(context);
-                   var usermanager = new UserManager<ApplicationUser>(store);
-                   var id = Guid.NewGuid().ToString();
-                   var newUser = new ApplicationUser
-                   {
-                       UserName = login,
-                       Id = id,
-                       FirstName = result.Name,
-                       LastName = result.LastName,
-                       TimeZone = "10000", // dummy id for Answer Users
-                       IsActive = true,
-                       CreatedDate = DateTime.UtcNow,
-                       AnswerId = result.Id
+                    var store = new UserStore<ApplicationUser>(context);
+                    var usermanager = new UserManager<ApplicationUser>(store);
+                    var id = Guid.NewGuid().ToString();
+                    var newUser = new ApplicationUser
+                    {
+                        UserName = login,
+                        Id = id,
+                        FirstName = result.Name,
+                        LastName = result.LastName,
+                        TimeZone = "10000", // dummy id for Answer Users
+                        IsActive = true,
+                        CreatedDate = DateTime.UtcNow,
+                        AnswerId = result.Id
 
-                   };
+                    };
 
-                   usermanager.Create(newUser, "msr" + result.Id + "$");
-                   usermanager.AddToRole(id, RolesConstants.AnswerUser);
-                   context.SaveChanges();
-               }
-               else
-               {
-                   return new CheckLoginResult
-                   {
-                       Id = result.Id,
-                       Login = login
-                   };
-               }
+                    usermanager.Create(newUser, "msr" + result.Id + "$");
+                    usermanager.AddToRole(id, RolesConstants.AnswerUser);
+                    context.SaveChanges();
+                }
+                else
+                {
+                    return new CheckLoginResult
+                    {
+                        Id = result.Id,
+                        Login = login
+                    };
+                }
 
-           }
+            }
 
-           return result;
+            return result;
         }
         public IQueryable<PeopleObjectView> GetPeople()
         {
@@ -99,7 +103,7 @@ namespace Msr.Services.Orders
         }
         public IQueryable<PeopleObjectView> GetApprovedPeople()
         {
-            return _dbContext.PeopleObjectViews.Where(x=>x.Status =="APPROVED").AsQueryable();
+            return _dbContext.PeopleObjectViews.Where(x => x.Status == "APPROVED").AsQueryable();
         }
         public IQueryable<LanguagesView> GetLanguages()
         {
@@ -123,10 +127,13 @@ namespace Msr.Services.Orders
             var result = _dbContext.Database.SqlQuery<BossInfoView>("SELECT DISTINCT TOP 500 FULL_NAME as FullName,ID as Id,LAST_NAME,NAME FROM A_V_PEOPLE_DATA_QUICK ORDER BY LAST_NAME,NAME").ToList();
             return result;
         }
-        public bool Create(AddPeopleViewModel model)
+
+        public ResultNotification<string> Create(AddPeopleViewModel model)
         {
+            var responsePeople = new ResultNotification<string>();
             try
             {
+
                 var savePeopleProcedure = new SavePeopleProcedure
                 {
                     Name = model.FirstName,
@@ -143,8 +150,14 @@ namespace Msr.Services.Orders
                     StrNTlogin = model.NTLogin,
                     Company = model.CompanyEditPerson
                 };
-               
+
                 var result = _dbContext.Database.ExecuteStoredProcedure<SavePeopleProcedure>(savePeopleProcedure);
+
+                model.newID = savePeopleProcedure.NewObjId;
+
+                string strPassword = AuthenticationHelper.GetPassword(7).ToString();
+                model.Password = AuthenticationHelper.PassWordEncrypt(strPassword);
+
 
                 var savePasswrodProcedure = new SavePasswrodProcedure
                 {
@@ -186,15 +199,37 @@ namespace Msr.Services.Orders
                     "INSERT INTO A_LOCATIONS_OBJECT_LINK (ID,LOCATION_ID,[LOCATION_TYPE],MODBY,DRCM,OBJECT_ID)VALUES (newID(), '" +
                     model.AddressLocation + "', '" + model.AddressType + "', '" + model.NTLogin +
                     "', getDate(), '" + savePeopleProcedure.NewObjId + "')").SingleOrDefault();
-                return true;
+
+                SendEmail(model);
+
+                return responsePeople;
+
+
             }
             catch (Exception ex)
             {
                 var message = "Error occured:" + ex.Message;
 
-                return false;
+                return responsePeople;
             }
         }
+
+
+        private void SendEmail(AddPeopleViewModel model)
+        {
+            var from = ConfigurationManager.AppSettings["From"];
+            var websiteUrl = ConfigurationManager.AppSettings["WebsiteUrl"];
+
+            var lnkHref = $"<a href='{websiteUrl}/Account/ResetPassword?userId={model.LoginId}'>Reset Password</a>";
+
+            string body = "<b>Please set your password by clicking  </b><br/>" + lnkHref;
+
+            string subject = "Reset password";
+
+            EmailService.SendEmail(from, model.EmailPrimary, subject, body, null, true);
+        }
+
+
         public PeopleObjectView GetPeopleById(string id)
         {
             return _dbContext.PeopleObjectViews.Where(x => x.ObjectId == id).SingleOrDefault();
@@ -243,7 +278,7 @@ namespace Msr.Services.Orders
                     Status = model.StatusEditPerson,
                     StrNTlogin = model.NTLogin,
                     ////Company = model.CompanyEditPerson TODO timeout issue
-                }; 
+                };
                 var result = _dbContext.Database.ExecuteStoredProcedure<EditPeopleProcedure>(savePeopleProcedure);
 
                 var savePasswrodProcedure = new SavePasswrodProcedure
@@ -278,7 +313,7 @@ namespace Msr.Services.Orders
                     model.ExtPrimaryPhoneNumber + "', '" + model.PinPrimaryPhoneNumber + "', '" + model.NTLogin +
                     "', getDate(), '" + savePeopleProcedure.NewObjId + "')").SingleOrDefault();
                 _dbContext.Database.SqlQuery<EditPeopleViewModel>(
-                    "UPDATE A_EMAILS SET ADDY = '"+ model.EmailPrimary + "',[TYPE] = '" + model.EmailTypePrimary + "',EMAIL_TYPE = '" + model.EmailTextTypePrimary + "',MODBY = '" + model.NTLogin + "',DRCM = getDate() WHERE ID = '" + model.EmailIdPrimary + "'").SingleOrDefault();
+                    "UPDATE A_EMAILS SET ADDY = '" + model.EmailPrimary + "',[TYPE] = '" + model.EmailTypePrimary + "',EMAIL_TYPE = '" + model.EmailTextTypePrimary + "',MODBY = '" + model.NTLogin + "',DRCM = getDate() WHERE ID = '" + model.EmailIdPrimary + "'").SingleOrDefault();
                 _dbContext.Database.SqlQuery<EditPeopleViewModel>(
                     "INSERT INTO A_LOCATIONS_OBJECT_LINK (ID,LOCATION_ID,[LOCATION_TYPE],MODBY,DRCM,OBJECT_ID)VALUES (newID(), '" +
                     model.AddressLocation + "', '" + model.AddressType + "', '" + model.NTLogin +

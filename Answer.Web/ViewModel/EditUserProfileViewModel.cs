@@ -1,18 +1,21 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using Msr.Models.Orders;
-using Msr.Models.Users;
-using Msr.Services.Orders;
-using Msr.Services.Users;
+using System.ComponentModel.DataAnnotations;
 
 namespace Msr.Web.ViewModel
 {
     public class UserProfileViewModel
     {
-        public UserView UserSummary { get; set; }
+        public UserSummary UserSummary { get; set; }
+
+        [Required]
+        [DataType(DataType.Password)]
+        [Display(Name = "Current Password")]
+        public string Password { get; set; }
+
+        [Required]
+        [DataType(DataType.Password)]
+        [Display(Name = "New Password")]
+        public string NedwPassword { get; set; }
     }
 }

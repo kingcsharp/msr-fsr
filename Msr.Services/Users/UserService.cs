@@ -69,7 +69,9 @@ namespace Msr.Services.Users
 
         public UserSummary GetByUserName(string userId)
         {
-            var user = _dbContext.AspNetUsers.Where(x => x.UserName == userId).Select(s => new UserSummary
+            userId = userId.ToLower().Trim();
+
+            var user = _dbContext.AspNetUsers.Where(x => x.UserName.ToLower() == userId).Select(s => new UserSummary
             {
                 Id = s.Id,
                 FirstName = s.FirstName,
@@ -84,6 +86,46 @@ namespace Msr.Services.Users
                 CompanyId = s.CompanyId,
                 CreatedDate = s.CreatedDate,
                 RoleName = s.AspNetRoles.FirstOrDefault().Name
+            }).SingleOrDefault();
+
+            return user;
+        }
+
+
+        public UserSummary GetAnserByUserName(string userName)
+        {
+            userName = userName.ToLower().Trim();
+
+            var user = _dbContext.Peoples.Where(x => x.Login.ToLower() == userName).Select(s => new UserSummary
+            {
+                Id = s.Id,
+                FirstName = s.FirstName,
+                LastName = s.LastName,
+                FullName = s.FirstName + " " + s.LastName,
+                Email = s.Email,
+                UserName = s.Login,
+                Phone = s.PrimaryPhone,
+                CompanyName = s.CompanyName
+            }).SingleOrDefault();
+
+            return user;
+        }
+
+
+        public UserSummary GetAnswerUser(string userId)
+        {
+            userId = userId.ToLower().Trim();
+
+            var user = _dbContext.Peoples.Where(x => x.Id.ToLower() == userId).Select(s => new UserSummary
+            {
+                Id = s.Id,
+                FirstName = s.FirstName,
+                LastName = s.LastName,
+                FullName = s.FirstName + " " + s.LastName,
+                Email = s.Email,
+                UserName = s.Login,
+                Phone = s.PrimaryPhone,
+                CompanyName  = s.CompanyName
             }).SingleOrDefault();
 
             return user;
@@ -370,6 +412,11 @@ namespace Msr.Services.Users
             var result = _dbContext.Database.SqlQuery<LoggedUserIdResult>(sql).Single();
 
             return result;
+        }
+
+        public void UpdatePassword(string id, string password)
+        {
+            _dbContext.Database.ExecuteSqlCommand($"update A_PEOPLE_HISTORY set PASSWORD='{AuthenticationHelper.PassWordEncrypt(password)}' where OBJECT_ID='{id}'");
         }
 
         private bool HasAnswerUser(string userName)

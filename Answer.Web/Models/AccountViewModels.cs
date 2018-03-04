@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Msr.Models.Orders;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Msr.Web.Models
@@ -97,7 +98,10 @@ namespace Msr.Web.Models
         public string ConfirmPassword { get; set; }
 
         public string Code { get; set; }
+
+        public UserView UserSummary { get; set; }
     }
+
 
     public class ForgotPasswordViewModel
     {

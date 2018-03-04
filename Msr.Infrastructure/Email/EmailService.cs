@@ -54,6 +54,7 @@ namespace Msr.Infrastructure.Email
                 smtp.Port = int.Parse(ConfigurationManager.AppSettings["Port"]);
                 smtp.Host = ConfigurationManager.AppSettings["Host"].ToString(CultureInfo.InvariantCulture);
                 smtp.Credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["UserName"], ConfigurationManager.AppSettings["Password"]);
+                smtp.EnableSsl = bool.Parse(ConfigurationManager.AppSettings["EnableSsl"]);
 
                 smtp.Send(message);
                 return true;
