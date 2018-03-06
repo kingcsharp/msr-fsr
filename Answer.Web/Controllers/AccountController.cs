@@ -134,8 +134,6 @@ namespace Msr.Web.Controllers
             return View();
         }
 
-        //
-        // POST: /Account/ForgotPassword
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -154,13 +152,23 @@ namespace Msr.Web.Controllers
                 var from = ConfigurationManager.AppSettings["From"];
                 var websiteUrl = ConfigurationManager.AppSettings["WebsiteUrl"];
 
-                var lnkHref = $"<a href='{websiteUrl}/Account/ResetPassword?userId={user.Login}'>Reset Password</a>";
+                var lnkHref = $"<a href='{websiteUrl}/Account/ResetPassword?userId={EncryptionHelper.Encrypt(user.Login)}'>Reset Password</a>";
 
                 string body = "<b>Please reset your password by clicking  </b><br/>" + lnkHref;
 
                 string subject = "Reset password";
 
-                EmailService.SendEmail(from, user.Email, subject, body, null, true);
+                try
+                {
+                    EmailService.SendEmail(from, user.Email, subject, body, null, true);
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", ex.Message);
+                    ModelState.AddModelError("", ex.InnerException?.Message);
+
+                    return View(model);
+                }
 
                 return RedirectToAction("ForgotPasswordConfirmation", "Account");
             }
@@ -177,12 +185,22 @@ namespace Msr.Web.Controllers
         }
 
         [AllowAnonymous]
-        public ActionResult ResetPassword(string code, string userId)
+        public ActionResult ResetPassword(string userId)
         {
-            var viewModel = new ResetPasswordViewModel();
-            viewModel.UserId = userId;
+            var decPassword = EncryptionHelper.Decrypt(userId.Trim());
 
-            return code == null ? View("Error") : View(viewModel);
+            var user = _userService.GetAnserByUserName(decPassword);
+
+            if (user == null)
+            {
+                TempData["ErrorMessage"] = "Invalid token, Please reset password again";
+
+                return RedirectToAction("ResetPassword");
+            }
+
+            var viewModel = new ResetPasswordViewModel {UserId = user.Id };
+
+            return View(viewModel);
         }
 
         [HttpPost]
@@ -193,15 +211,6 @@ namespace Msr.Web.Controllers
             if (!ModelState.IsValid)
             {
                 return View(model);
-            }
-
-            var user = _userService.GetAnserByUserName(model.UserId);
-
-            if (user == null)
-            {
-                ModelState.AddModelError("", $"User not found with Id: '{model.UserId}'");
-
-                return RedirectToAction("ResetPassword");
             }
 
             _userService.UpdatePassword(model.UserId, model.Password);

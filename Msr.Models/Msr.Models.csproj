@@ -155,6 +155,7 @@
     <Compile Include="People\BossInfoView.cs" />
     <Compile Include="People\CompanyEditPersonView.cs" />
     <Compile Include="People\OfficialPositionView.cs" />
+    <Compile Include="People\PeopleStatusConstants.cs" />
     <Compile Include="People\TimeZonesView.cs" />
     <Compile Include="People\LanguagesView.cs" />
     <Compile Include="People\PeopleObjectView.cs" />

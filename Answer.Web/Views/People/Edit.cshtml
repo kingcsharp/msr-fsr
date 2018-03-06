@@ -159,56 +159,32 @@
             </div>
         </div>
     </div>
-    @*<div class="form-group">
-        <div class="col-md-4"></div>
-        <div class="col-md-5">
-            <div style="width: 96%; float: left; display: flex">
-            @Html.DropDownListFor(model => model.TypeSecondaryPhoneNumber, Model.ListPhoneTypes, new {@class = "form-control"})
-            @Html.ValidationMessageFor(model => model.SecondaryPhoneNumber, "", new {@class = "text-danger"})
-            @Html.EditorFor(model => model.SecondaryPhoneNumber, new {htmlAttributes = new {@class = "form-control"}})
-            @Html.ValidationMessageFor(model => model.SecondaryPhoneNumber, "", new {@class = "text-danger"})
-            </div>
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-4"></div>
-        <div class="col-md-5">
-            <div style="width: 96%; float: left; display: flex">
-                @Html.LabelFor(model => model.ExtSecondaryPhoneNumber, htmlAttributes: new { @class = "control-label col-md-5" })
-                @Html.EditorFor(model => model.ExtSecondaryPhoneNumber, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ExtSecondaryPhoneNumber, "", new { @class = "text-danger" })
-
-                @Html.LabelFor(model => model.PinSecondaryPhoneNumber, htmlAttributes: new { @class = "control-label col-md-4" })
-
-                @Html.EditorFor(model => model.PinSecondaryPhoneNumber, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.PinSecondaryPhoneNumber, "", new { @class = "text-danger" })
-            </div>
-            </div>
-        </div>*@
+ 
     <div class="form-group">
         @Html.LabelFor(model => model.EmailPrimary, htmlAttributes: new { @class = "control-label col-md-4" })
         <div class="col-md-5">
-            <div style="width: 96%; float: left; display: flex">
-                @Html.DropDownListFor(model => model.EmailTypePrimary, Model.ListEmailTypes, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.EmailTypePrimary, "", new { @class = "text-danger" })
-                @Html.DropDownListFor(model => model.EmailTextTypePrimary, Model.ListEmailTextTypes, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.EmailTextTypePrimary, "", new { @class = "text-danger" })
-                @Html.EditorFor(model => model.EmailPrimary, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.EmailPrimary, "", new { @class = "text-danger" })
-            </div>
+            <table style="width: 100%;">
+                <tr>
+                    <td>
+                        @Html.DropDownListFor(model => model.EmailTypePrimary, Model.ListEmailTypes, new {@class = "form-control", style = "width:120px;"})
+                        @Html.ValidationMessageFor(model => model.EmailTypePrimary, "", new {@class = "text-danger", style = "width:100px;"})
+                    </td>
+                    <td>
+                        @Html.DropDownListFor(model => model.EmailTextTypePrimary, Model.ListEmailTextTypes, new {@class = "form-control", style = "width:100px;"})
+                        @Html.ValidationMessageFor(model => model.EmailTextTypePrimary, "", new {@class = "text-danger", style = "width:100px;"})
+                    </td>
+                    <td>
+                        @Html.EditorFor(model => model.EmailPrimary, new {htmlAttributes = new {@class = "form-control", style = "width:180px;"}})
+                        @Html.ValidationMessageFor(model => model.EmailPrimary, "", new {@class = "text-danger"})
+                    </td>
+                    <td>
+                        <input type="submit" name="passowrdReminder" value="Password Reminder"  class="btn btn-success"/>
+                    </td>
+                </tr>
+            </table>
+           
         </div>
-    </div>@*
-    <div class="form-group">
-        <div class="col-md-4"></div>
-        <div class="col-md-5">
-            <div style="width: 96%; float: left; display: flex">
-                @Html.DropDownListFor(model => model.EmailPrimary, Model.ListEmailTypes, new { @class = "form-control" })
-                @Html.DropDownListFor(model => model.EmailPrimary, Model.ListEmailTextTypes, new { @class = "form-control" })
-                @Html.EditorFor(model => model.PinSecondaryPhoneNumber, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.PinSecondaryPhoneNumber, "", new { @class = "text-danger" })
-            </div>
-        </div>
-    </div>*@
+    </div>
     <div class="form-group">
         @Html.LabelFor(model => model.AddressType, htmlAttributes: new { @class = "control-label col-md-4" })
         <div class="col-md-5">
@@ -219,16 +195,7 @@
             </div>
         </div>
     </div>
-    @*<div class="form-group">
-                            <div class="col-md-4"></div>
-                            <div class="col-md-5">
-                                <div style="width: 96%; float: left; display: flex">
-                                    @Html.DropDownListFor(model => model.AddressType, Model.ListAddressTypes, new { @class = "form-control" })
-                                    @Html.ValidationMessageFor(model => model.AddressType, "", new { @class = "text-danger" })
-                                    @Html.DropDownListFor(model => model.AddressLocation, Model.Locations, new { @class = "form-control select" })
-                                </div>
-                            </div>
-                        </div>*@
+  
     <div class="form-group">
         <div class="col-md-offset-4 col-md-10">
             <input type="submit" value="Submit" class="btn btn-success" />

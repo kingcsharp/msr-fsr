@@ -2188,3 +2188,10 @@ input.pre-populated {
     font-size: 9px;
     padding-top: 2px !important;
 }
+
+.color-white {
+    color: #ffffff !important;
+}
+.color-red {
+    color: #ca0315 !important;
+}

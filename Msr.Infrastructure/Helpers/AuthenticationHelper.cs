@@ -5,7 +5,7 @@ namespace Msr.Infrastructure.Helpers
 {
     public class AuthenticationHelper
     {
-        public static string PassWordEncrypt(string password)
+        public static string PasswordEncrypt(string password)
         {
             var encryptPassword = string.Empty;
 

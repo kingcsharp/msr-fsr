@@ -96,7 +96,7 @@ namespace Msr.Services.People.ViewModels
         public string PinSecondaryPhoneNumber { get; set; }
 
         [Required]
-        [DisplayName("Emails :")]
+        [DisplayName("Email :")]
         public string EmailPrimary { get; set; }
 
         public string EmailTypePrimary { get; set; }

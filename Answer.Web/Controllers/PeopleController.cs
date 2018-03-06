@@ -168,7 +168,7 @@ namespace Answer.Web.Controllers
             {
                 model.NTLogin = GetCurrentUser().Id;
 
-                var response = _peopleService.Create(model: model);
+                var response = _peopleService.Create(model);
 
                 if (!response.HasErrors())
                 {
@@ -226,13 +226,30 @@ namespace Answer.Web.Controllers
         }
 
         [AcceptVerbs(verbs: HttpVerbs.Post)]
-        public ActionResult Edit(EditPeopleViewModel model)
+        public ActionResult Edit(EditPeopleViewModel model, string passowrdReminder)
         {
-
             if (ModelState.IsValid)
             {
-                model.NTLogin = GetCurrentUser().Id;
-                model.Password = AuthenticationHelper.PassWordEncrypt("test"); //pending to find password creation
+
+                if (!string.IsNullOrWhiteSpace(passowrdReminder))
+                {
+                  var result = _peopleService.PasswordReminderEmail(model.LoginId, model.EmailPrimary);
+
+                    if (result.HasErrors())
+                    {
+                        TempData["ErrorMessage"] = result.ErrorMessage;
+                    }
+                    else
+                    {
+                        TempData["SuccessMessage"] = "Password reminder email has been sent successfully.";
+                    }
+
+                    return RedirectToAction("Edit", new{ model.ObjectId});
+                }
+
+                var currentUser = GetCurrentUser();
+
+                model.NTLogin = currentUser.Id;
 
                 var response = _peopleService.Edit(model);
 
@@ -244,7 +261,7 @@ namespace Answer.Web.Controllers
                 else
                 {
                     TempData["ErrorMessage"] = "Something went wrong.";
-                    model.Setup(new DocumentFilesService(), new PeopleService(), new CompanyService(), GetCurrentUser().Id);
+                    model.Setup(new DocumentFilesService(), new PeopleService(), new CompanyService(), currentUser.Id);
 
                     return View(model);
                 }

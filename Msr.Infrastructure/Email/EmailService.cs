@@ -61,7 +61,7 @@ namespace Msr.Infrastructure.Email
             }
             catch (Exception exception)
             {
-                return false;
+                throw exception;
             }
         }
 

@@ -9,6 +9,7 @@ using Msr.Infrastructure.Email;
 using Msr.Infrastructure.Helpers;
 using Msr.Models.Companies;
 using Msr.Models.Orders;
+using Msr.Models.People;
 using Msr.Models.Users;
 using Msr.Repositories;
 using Msr.Resources.Templates;
@@ -27,23 +28,6 @@ namespace Msr.Services.Users
         {
             _dbContext = new MsrDbContext();
         }
-
-        public IQueryable<UserView> GetUserQueryable()
-        {
-            return _dbContext.UserViews;
-        }
-
-        public IQueryable<PeopleView> GetPeoplesQueryable()
-        {
-            return _dbContext.Peoples;
-        }
-
-
-        public List<AspNetRole> GetRoles()
-        {
-            return _dbContext.AspNetRoles.ToList();
-        }
-
 
         public UserSummary GetUser(string id)
         {
@@ -96,7 +80,7 @@ namespace Msr.Services.Users
         {
             userName = userName.ToLower().Trim();
 
-            var user = _dbContext.Peoples.Where(x => x.Login.ToLower() == userName).Select(s => new UserSummary
+            var user = _dbContext.Peoples.Where(x => x.Login.ToLower() == userName && (x.Status == PeopleStatusConstants.Approved || x.Status == PeopleStatusConstants.ApprovedButRevising)).Select(s => new UserSummary
             {
                 Id = s.Id,
                 FirstName = s.FirstName,
@@ -105,219 +89,13 @@ namespace Msr.Services.Users
                 Email = s.Email,
                 UserName = s.Login,
                 Phone = s.PrimaryPhone,
-                CompanyName = s.CompanyName
+                CompanyName = s.CompanyName,
+                Login = s.Login
             }).SingleOrDefault();
 
             return user;
         }
 
-
-        public UserSummary GetAnswerUser(string userId)
-        {
-            userId = userId.ToLower().Trim();
-
-            var user = _dbContext.Peoples.Where(x => x.Id.ToLower() == userId).Select(s => new UserSummary
-            {
-                Id = s.Id,
-                FirstName = s.FirstName,
-                LastName = s.LastName,
-                FullName = s.FirstName + " " + s.LastName,
-                Email = s.Email,
-                UserName = s.Login,
-                Phone = s.PrimaryPhone,
-                CompanyName  = s.CompanyName
-            }).SingleOrDefault();
-
-            return user;
-        }
-
-        public AddUserMessageResponse AddUser(UserSummary entity, string loggedUserId)
-        {
-            var response = new AddUserMessageResponse();
-            
-            try
-            {
-                if (HasAnswerUser(entity.UserName))
-                {
-                    response.AddError("Answer User already exists with UserName :" + entity.UserName);
-                    return response;
-                }
-
-                var existingUser = _dbContext.AspNetUsers.SingleOrDefault(x => x.UserName.ToLower() == entity.UserName.ToLower());
-
-                if (existingUser != null)
-                {
-                    response.AddError("User already exists with UserName :" + entity.UserName);
-
-                    return response;
-                }
-
-                var aspContext = new ApplicationDbContext();
-
-                var userId = Guid.NewGuid().ToString();
-                var store = new UserStore<ApplicationUser>(aspContext);
-                var usermanager = new UserManager<ApplicationUser>(store);
-
-                entity.PasswordHash = "MSa123@"; //// This will be reset once user created
-
-                var newAspUser = new ApplicationUser
-                {
-                    UserName = entity.UserName,
-                    Id = userId,
-                    FirstName = entity.FirstName,
-                    LastName = entity.LastName,
-                    TimeZone = entity.TimeZone,
-                    PhoneNumber = entity.Phone,
-                    Email = entity.Email,
-                    IsActive = entity.IsActive,
-                    CreatedDate = DateTime.UtcNow
-                };
-
-                usermanager.Create(newAspUser, entity.PasswordHash);
-                usermanager.AddToRole(userId, entity.RoleName);
-                aspContext.SaveChanges();
-
-                var newUser = _dbContext.AspNetUsers.SingleOrDefault(x => x.Id.ToLower() == newAspUser.Id);
-
-                newUser.TimeZone = entity.TimeZone;
-                newUser.Phone2 = entity.Phone2;
-                newUser.IsActive = entity.IsActive;
-                newUser.CompanyId = entity.CompanyId;
-                newUser.ParentId = loggedUserId;
-
-                _dbContext.SaveChanges();
-
-                response.UserId = newUser.Id;
-
-            }
-            catch (Exception ex)
-            {
-                response.AddError(ex.Message);
-            }
-
-            return response;
-        }
-
-        public AddUserMessageResponse UpdateUser(UserSummary entity)
-        {
-            var response = new AddUserMessageResponse();
-
-            try
-            {
-                if (HasAnswerUser(entity.UserName))
-                {
-                    response.AddError("Answer User already exists with UserName :"+ entity.UserName);
-                    return response;
-                }
-
-                var existingUser = _dbContext.AspNetUsers.SingleOrDefault(x => x.Id.ToLower() == entity.Id.ToLower());
-
-                existingUser.FirstName = entity.FirstName;
-                existingUser.LastName = entity.LastName;
-                existingUser.TimeZone = entity.TimeZone;
-                existingUser.PhoneNumber = entity.Phone;
-                existingUser.Phone2 = entity.Phone2;
-                existingUser.Email = entity.Email;
-                existingUser.UserName = entity.UserName;
-                existingUser.CompanyId = entity.CompanyId;
-                existingUser.IsActive = entity.IsActive;
-
-                var existingRole = existingUser.AspNetRoles.FirstOrDefault();
-
-                if (existingRole !=null && existingRole.Name != entity.RoleName)
-                {
-                    existingUser.AspNetRoles.Remove(existingRole);
-
-                 var newRole =  _dbContext.AspNetRoles.Single(x => x.Name == entity.RoleName);
-
-                    existingUser.AspNetRoles.Add(newRole);
-                }
-               else if (existingRole == null)
-               {
-                   var newRole = _dbContext.AspNetRoles.Single(x => x.Name == entity.RoleName);
-                   existingUser.AspNetRoles.Add(newRole);
-               }
-
-                _dbContext.SaveChanges();
-
-
-            }
-            catch (Exception ex)
-            {
-                response.AddError(ex.Message);
-            }
-
-            return response;
-        }
-
-        public AddUserMessageResponse UpdateClientUser(UserSummary entity)
-        {
-            var response = new AddUserMessageResponse();
-
-            try
-            {
-                var existingUser = _dbContext.AspNetUsers.SingleOrDefault(x => x.Id.ToLower() == entity.Id.ToLower());
-
-                existingUser.FirstName = entity.FirstName;
-                existingUser.LastName = entity.LastName;
-                existingUser.TimeZone = entity.TimeZone;
-                existingUser.PhoneNumber = entity.Phone;
-                existingUser.Phone2 = entity.Phone2;
-                existingUser.Email = entity.Email;
-                existingUser.UserName = entity.UserName;
-                existingUser.IsActive = entity.IsActive;
-
-                var existingRole = existingUser.AspNetRoles.FirstOrDefault();
-
-                if (existingRole != null && existingRole.Name != entity.RoleName)
-                {
-                    existingUser.AspNetRoles.Remove(existingRole);
-
-                    var newRole = _dbContext.AspNetRoles.Single(x => x.Name == entity.RoleName);
-
-                    existingUser.AspNetRoles.Add(newRole);
-                }
-                else if (existingRole == null)
-                {
-                    var newRole = _dbContext.AspNetRoles.Single(x => x.Name == entity.RoleName);
-                    existingUser.AspNetRoles.Add(newRole);
-                }
-
-                _dbContext.SaveChanges();
-
-
-            }
-            catch (Exception ex)
-            {
-                response.AddError(ex.Message);
-            }
-
-            return response;
-        }
-        public AddUserMessageResponse DeleteUser(string id)
-        {
-            var response = new AddUserMessageResponse();
-
-            try
-            {
-                var existingUser = _dbContext.AspNetUsers.SingleOrDefault(x => x.Id.ToLower() == id.ToLower());
-
-                _dbContext.AspNetUsers.Remove(existingUser);
-
-                _dbContext.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                response.AddError(ex.Message);
-            }
-
-            return response;
-        }
-
-        public List<string> GetClientUsers(string userId)
-        {
-            return _dbContext.ClientUsers.Where(x => x.UserId.ToLower() == userId.ToLower()).Select(x => x.ClientId).ToList();
-        }
 
         public CompanyView GetCompanyId(string id)
         {
@@ -326,73 +104,6 @@ namespace Msr.Services.Users
             return _dbContext.CompanyViews.SingleOrDefault(x => x.Id == compannyId);
         }
 
-        public CheckLoginResult CheckLogin(string login, string password)
-        {
-            var loginParm = new SqlParameter("@Login", login);
-            var passwordParm = new SqlParameter("@Password", AuthenticationHelper.PassWordEncrypt(password));
-
-            var result = _dbContext.Database.SqlQuery<CheckLoginResult>("Portal_Check_Login @Login, @Password", loginParm, passwordParm).Single();
-
-            return result;
-        }
-
-        public BaseNotification UpdateUserProfile(UserSummary entity)
-        {
-            var response = new BaseNotification();
-
-            var existingUser = _dbContext.AspNetUsers.SingleOrDefault(x => x.Id.ToLower() == entity.Id.ToLower());
-
-            existingUser.FirstName = entity.FirstName;
-            existingUser.LastName = entity.LastName;
-            existingUser.PhoneNumber = entity.Phone;
-            existingUser.Phone2 = entity.Phone2;
-            existingUser.Email = entity.Email;
-
-            _dbContext.SaveChanges();
-
-            return response;
-        }
-
-        public bool SendEmailToUser(string userId, string callBackUrl, string cc=null)
-        {
-            var user = GetUserView(userId);
-
-            var from = ConfigurationManager.AppSettings["From"];
-            var supportEmail = ConfigurationManager.AppSettings["SupportEmail"];
-            var body = string.Empty;
-
-            if (user.RoleName == RolesConstants.ClientBuyer)
-            {
-                var clientBuyerEmailTemplate = new ClientBuyerEmailTemplateViewModel();
-                clientBuyerEmailTemplate.CompanyName = user.CompanyName;
-                clientBuyerEmailTemplate.SupportEmail = supportEmail;
-                clientBuyerEmailTemplate.ResetPasswordUrl = callBackUrl;
-                body = Razor.Parse(Emails.ClientBuyer, clientBuyerEmailTemplate);
-            }
-            else if (user.RoleName == RolesConstants.ClientEngineer)
-            {
-                var clientEngineerEmailTemplate = new ClientEngineerEmailTemplateViewModel();
-                clientEngineerEmailTemplate.CompanyName = user.CompanyName;
-                clientEngineerEmailTemplate.SupportEmail = supportEmail;
-                clientEngineerEmailTemplate.ResetPasswordUrl = callBackUrl;
-                body = Razor.Parse(Emails.ClientEngineer, clientEngineerEmailTemplate);
-            }
-            else if (user.RoleName == RolesConstants.ClientAdmin)
-            {
-                var clientEngineerEmailTemplate = new ClientaAdminEmailTemplateViewModel();
-                clientEngineerEmailTemplate.CompanyName = user.CompanyName;
-                clientEngineerEmailTemplate.SupportEmail = supportEmail;
-                clientEngineerEmailTemplate.ResetPasswordUrl = callBackUrl;
-                body = Razor.Parse(Emails.ClientAdmin, clientEngineerEmailTemplate);
-            }
-
-            return EmailService.SendEmail(from, user.Email, "Portal Login", body, new List<string> {cc}, true);
-        }
-
-        public UserView GetUserView(string id)
-        {
-            return _dbContext.UserViews.SingleOrDefault(x => x.Id == id);
-        }
 
         public List<SearchPeopleResult> GetSearchUser()
         {
@@ -416,19 +127,8 @@ namespace Msr.Services.Users
 
         public void UpdatePassword(string id, string password)
         {
-            _dbContext.Database.ExecuteSqlCommand($"update A_PEOPLE_HISTORY set PASSWORD='{AuthenticationHelper.PassWordEncrypt(password)}' where OBJECT_ID='{id}'");
+            _dbContext.Database.ExecuteSqlCommand($"update A_PEOPLE_HISTORY set PASSWORD='{AuthenticationHelper.PasswordEncrypt(password)}' where OBJECT_ID='{id}'");
         }
 
-        private bool HasAnswerUser(string userName)
-        {
-            var answerUser = _dbContext.Peoples.SingleOrDefault(x => x.Login.ToLower() == userName.ToLower());
-
-            if (answerUser != null)
-            {
-                return true;
-            }
-
-            return false;
-        }
     }
 }

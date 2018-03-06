@@ -13,7 +13,7 @@ namespace Msr.Infrastructure.Tests.Helpers
         {
             var answerPassowrd = "abc";
 
-           var answerDecode = AuthenticationHelper.PassWordEncrypt(answerPassowrd);
+           var answerDecode = AuthenticationHelper.PasswordEncrypt(answerPassowrd);
 
             NUnit.Framework.Assert.IsTrue(answerDecode == "");
         }

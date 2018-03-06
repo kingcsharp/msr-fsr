@@ -15,9 +15,9 @@ using Msr.Services.Parts.Procedures;
 using Msr.Services.People.Procedures;
 using Msr.Services.People.ViewModels;
 using System.Configuration;
-using System.Security.Cryptography;
 using System.IO;
 using Msr.Infrastructure.Email;
+using Msr.Services.Users;
 
 namespace Msr.Services.Orders
 {
@@ -50,7 +50,7 @@ namespace Msr.Services.Orders
             if (user == null) return null;
 
             var loginParm = new SqlParameter("@Login", login);
-            var passwordParm = new SqlParameter("@Password", AuthenticationHelper.PassWordEncrypt(password));
+            var passwordParm = new SqlParameter("@Password", AuthenticationHelper.PasswordEncrypt(password));
             var passwordNonEncParm = new SqlParameter("@PASSWORD_NON_ENCRYPT", password);
 
             var result = _dbContext.Database.SqlQuery<CheckLoginResult>("Portal_Check_Login @Login, @Password,@PASSWORD_NON_ENCRYPT", loginParm,
@@ -156,8 +156,7 @@ namespace Msr.Services.Orders
                 model.newID = savePeopleProcedure.NewObjId;
 
                 string strPassword = AuthenticationHelper.GetPassword(7).ToString();
-                model.Password = AuthenticationHelper.PassWordEncrypt(strPassword);
-
+                model.Password = AuthenticationHelper.PasswordEncrypt(strPassword);
 
                 var savePasswrodProcedure = new SavePasswrodProcedure
                 {
@@ -200,8 +199,6 @@ namespace Msr.Services.Orders
                     model.AddressLocation + "', '" + model.AddressType + "', '" + model.NTLogin +
                     "', getDate(), '" + savePeopleProcedure.NewObjId + "')").SingleOrDefault();
 
-                SendEmail(model);
-
                 return responsePeople;
 
 
@@ -215,18 +212,40 @@ namespace Msr.Services.Orders
         }
 
 
-        private void SendEmail(AddPeopleViewModel model)
+        public ResultNotification<bool> PasswordReminderEmail(string userName, string email)
         {
-            var from = ConfigurationManager.AppSettings["From"];
-            var websiteUrl = ConfigurationManager.AppSettings["WebsiteUrl"];
+            var result = new ResultNotification<bool>();
 
-            var lnkHref = $"<a href='{websiteUrl}/Account/ResetPassword?userId={model.LoginId}'>Reset Password</a>";
+            try
+            {
+                var userService = new UserService();
 
-            string body = "<b>Please set your password by clicking  </b><br/>" + lnkHref;
+                var user = userService.GetAnserByUserName(userName);
 
-            string subject = "Reset password";
+                if (user == null)
+                {
+                    result.AddError("User status is not approved");
+                    return result;
+                }
 
-            EmailService.SendEmail(from, model.EmailPrimary, subject, body, null, true);
+                var from = ConfigurationManager.AppSettings["From"];
+                var websiteUrl = ConfigurationManager.AppSettings["WebsiteUrl"];
+
+                var lnkHref = $"<a href='{websiteUrl}/Account/ResetPassword?userId={EncryptionHelper.Encrypt(userName)}'>Reset Password</a>";
+
+                string body = "<b>Please set your password by clicking following link: </b><br/>" + lnkHref;
+
+                string subject = "Password reminder";
+
+                EmailService.SendEmail(from, email, subject, body, null, true);
+            }
+            catch (Exception ex)
+            {
+                ex.Data.Add("Error", "There was an error when sending password reminder email");
+                result.AddError(ex.Message);
+            }
+
+            return result;
         }
 
 
