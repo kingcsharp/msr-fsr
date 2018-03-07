@@ -73,17 +73,6 @@ namespace Msr.Services.Documents
         {
             try
             {
-                var deleteReferenceFileProcedure = new DeleteFileProcedure() { ObjID = model.Id, Type = null, NTLogin = model.NTLogin };
-
-                _dbContext.Database.ExecuteStoredProcedure(deleteReferenceFileProcedure);
-
-                foreach (var file in model.ReferenceFiles.Split(','))
-                {
-                    var saveFileProcedure = new SaveFileProcedure() { ObjID = model.Id, DocID = file, Type = null, NTLogin = model.NTLogin };
-
-                    _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
-                }
-
                 var saveDocumentProcedure = new SaveDocumentProcedure
                 {
                     Id = model.Id,
@@ -129,19 +118,14 @@ namespace Msr.Services.Documents
 
                 var saveDocumentProcedure = new SaveDocumentProcedure
                 {
-
                     Company = model.Company,
                     Name = model.Name,
                     Comments = model.Comments,
                     SecurityLevel = model.ApprovalStatus,
                     RolesToView = model.Roles != null ? string.Join(", ", model.Roles) : null,
                     ReferenceObjects = model.ReferenceObject != null ? string.Join(", ", model.ReferenceObject) : null,
-
                     ReferenceTheory = theory,
-
-
                     NTLogin = model.NTLogin
-
                 };
 
                 _dbContext.Database.ExecuteStoredProcedure(saveDocumentProcedure);

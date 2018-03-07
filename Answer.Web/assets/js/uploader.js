@@ -6,7 +6,9 @@ var getCount = function (id) {
 };
 
 initEditUploader = function (element, url, initialPreview, initialPreviewConfig, objectId) {
+
     element.fileinput({
+        showClose: false,
         uploadUrl: url,
         uploadAsync: true,
         minFileCount: 1,
@@ -50,6 +52,7 @@ initEditUploader = function (element, url, initialPreview, initialPreviewConfig,
             //element.fileinput("upload");
         });
 };
+
 initUploader = function (element, url, initialPreview, initialPreviewConfig) {
     element.fileinput({
         uploadUrl: url,

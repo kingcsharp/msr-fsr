@@ -2,7 +2,9 @@
 @{
     ViewBag.Title = "Add Document";
 }
-<link href="~/assets/textformater/general.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.7/css/fileinput.min.css">
+    <link href="//cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css" rel="stylesheet" type="text/css" />
+
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="row">
@@ -17,35 +19,35 @@
                     <div class="form-horizontal">
                         <div class="form-group">
                             @Html.LabelFor(model => model.Id, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-5">
+                            <div class="col-md-8">
                                 @Html.EditorFor(model => model.Id, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
                                 @Html.ValidationMessageFor(model => model.Id, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(model => model.Rev, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-5">
+                            <div class="col-md-8">
                                 @Html.EditorFor(model => model.Rev, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
                                 @Html.ValidationMessageFor(model => model.Rev, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(model => model.Company, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-5">
+                            <div class="col-md-8">
                                 @Html.EditorFor(model => model.Company, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
                                 @Html.ValidationMessageFor(model => model.Company, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-5">
+                            <div class="col-md-8">
                                 @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(model => model.ReferenceFiles, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-5">
+                            <div class="col-md-8">
                                 <!-- Detailed preview for thumbs and iconic preview for zoom -->
                                 <div class="file-loading">
                                     <input id="input-files" name="input-files[]" multiple type="file">
@@ -58,27 +60,27 @@
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(model => model.Comments, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-5">
+                            <div class="col-md-8">
                                 @Html.Partial("_TextAdder")
                                 @Html.TextAreaFor(model => model.Comments, new { onBlur = "checkMaxSize(this, 4000);;lastTextArea = 'document.editForm.Comments';", name = "Comments", rows = "10", cols = "80", @class = "text-formatter form-control", })
                             </div>
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(model => model.ApprovalStatus, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-5">
+                            <div class="col-md-8">
                                 @Html.DropDownListFor(model => model.ApprovalStatus, Model.ApprovalStatusList, new { @class = "form-control" })
                                 @Html.ValidationMessageFor(model => model.ApprovalStatus, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(model => model.Roles, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-5">
+                            <div class="col-md-8">
                                 @Html.DropDownListFor(model => model.Roles, Model.ListRoles, new { @class = "form-control selectroles", multiple = "multiple" })
                                 @Html.ValidationMessageFor(model => model.Roles, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="col-md-offset-2 col-md-5">
+                            <div class="col-md-offset-2 col-md-8">
                                 <input type="submit" value="Submit" class="btn btn-success" style="height: 35px;" />
                                 @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-warning" })
                             </div>
@@ -89,8 +91,8 @@
         </div>
     </div>
 </div>
-<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.7/css/fileinput.min.css">
-<link href="//cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css" rel="stylesheet" type="text/css" />
+
+
 @section scripts
 {
     <script src="~/assets/textformater/ValidateDocumentSubmit.js"></script>

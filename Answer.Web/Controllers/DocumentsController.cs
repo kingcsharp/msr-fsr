@@ -153,7 +153,7 @@ namespace Answer.Web.Controllers
 
                 model.Company = GetCurrentUser().Company;
 
-                var response = documentService.Create(model: model);
+                var response = documentService.Create(model);
 
                 if (response)
                 {
