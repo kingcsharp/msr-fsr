@@ -137,6 +137,7 @@
         colMenu: true,
         gridComplete: function () {
 
+            UnLockWorkflow(returnUrl);
         }
 
     });

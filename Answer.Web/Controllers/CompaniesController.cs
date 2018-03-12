@@ -9,6 +9,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Msr.Services.Documents;
+using Msr.Services.Workflows;
 
 namespace Answer.Web.Controllers
 {
@@ -162,9 +163,13 @@ namespace Answer.Web.Controllers
         }
         public ActionResult Edit(string id)
         {
+            var currrentUser = GetCurrentUser();
+            var workflowService = new WorkflowService();
+            var checkoutEntity = workflowService.CheckOutObject(id, currrentUser.Id);
+
             var taskService = new CompanyService();
 
-            var model = taskService.GetCompanyByObjId(id);
+            var model = taskService.GetCompanyByObjId(checkoutEntity.Entity);
 
             model.Setup(new DocumentFilesService(), new CompanyService(), GetCurrentUser().Id);
 
