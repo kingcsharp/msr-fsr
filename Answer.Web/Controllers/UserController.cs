@@ -1,48 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Net;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Security;
+﻿using System.Web.Mvc;
 using Answer.Web.ViewModel;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using Msr.Infrastructure.Email;
-using Msr.Models.Orders;
-using Msr.Models.Users;
-using Msr.Services.jqGrid;
-using Msr.Services.Orders;
-using Msr.Services.TimeZones;
 using Msr.Services.Users;
-using Msr.Services.Users.ViewModels;
-using Msr.Web.ViewModel;
-using Msr.Services.Companies;
-using Answer.Web.Controllers;
-using Msr.Web.Models;
 
-namespace Msr.Web.Controllers
+namespace Answer.Web.Controllers
 {
     public class UserController : BaseController
     {
         public UserController()
         {
             ViewBag.ActiveClass = "USER";
-        }
-
-        private ApplicationUserManager _userManager;
-
-        public ApplicationUserManager UserManager
-        {
-            get
-            {
-                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            }
-            private set
-            {
-                _userManager = value;
-            }
         }
 
         public ActionResult Profile()
@@ -56,6 +22,7 @@ namespace Msr.Web.Controllers
             var userService = new UserService();
 
             viewModel.UserSummary = userService.GetAnserByUserName(currentUser.Login);
+            viewModel.Id = viewModel.UserSummary.Id;
 
             return View(viewModel);
         }
@@ -73,9 +40,20 @@ namespace Msr.Web.Controllers
                 return View(viewModel);
             }
 
-            userService.UpdatePassword(currentUser.Id, viewModel.NedwPassword);
+            var result = userService.ValidatePassword(viewModel.Id, viewModel.Password);
 
-            TempData["SuccessMessage"] = "Profile has been updated successfully.";
+            if (!result)
+            {
+                TempData["ErrorMessage"] = "Current password is not valid";
+
+                viewModel.UserSummary = userService.GetAnserByUserName(currentUser.Login);
+
+                return View(viewModel);
+            }
+
+            userService.UpdatePassword(viewModel.Id, viewModel.NewPassword);
+
+            TempData["SuccessMessage"] = "Password has been updated successfully.";
 
             return RedirectToAction("Profile");
         }

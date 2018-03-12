@@ -1,19 +1,20 @@
-﻿create VIEW [dbo].[Portal_PeopleView]
+﻿CREATE VIEW [dbo].[Portal_PeopleView]
 AS
-
-SELECT
-ID As Id,
-OBJ_ID AS ObjectId,
-NAME AS FirstName,
-LAST_NAME AS LastName,
-FULL_NAME AS FullName,
-TIME_ZONE AS TimeZone,
-PRIMARY_PHONE_NUMBER AS PrimaryPhone,
-WORK_EMAIL_ADDRESS AS Email,
-LOGIN AS Login,
-STATUS AS Status,
-COMPANY_NAME AS CompanyName,
-POSITION_NAME AS TItle,
+select
+pb.ID as Id,
+pb.OBJ_ID AS ObjectId,
+pb.NAME AS FirstName,
+p.PASSWORD as Password,
+pb.LAST_NAME AS LastName,
+pb.FULL_NAME AS FullName,
+pb.TIME_ZONE AS TimeZone,
+pb.PRIMARY_PHONE_NUMBER AS PrimaryPhone,
+pb.WORK_EMAIL_ADDRESS AS Email,
+pb.LOGIN as Login,
+pb.STATUS as Status, 
+pb.COMPANY_NAME AS CompanyName,
+pb.POSITION_NAME AS TItle,
 'ClientAdmin' AS RoleName,
-Create_date AS CreatedDate
-FROM A_V_PEOPLE_OBJECT_SEARCH
+pb.CREATE_DATE AS CreatedDate
+FROM dbo.A_V_PEOPLE_OBJECT_SEARCH AS pb 
+INNER JOIN A_PEOPLE_HISTORY AS p on p.OBJECT_ID=pb.OBJ_ID

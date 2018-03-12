@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Linq;
+using Msr.Models.Helps;
 using Msr.Repositories;
 using Msr.Services.Helps.ViewModels;
-using Msr.Models.Helps;
 using Msr.Services.Roles;
 using Msr.Services.Users;
 
-namespace Msr.Services.Help
+namespace Msr.Services.Helps
 {
    public class HelpService
     {
@@ -36,12 +36,23 @@ namespace Msr.Services.Help
 
             try
             {
-                var help = new Models.Helps.HelpPage();
+                model.FriendlyUrl = model.FriendlyUrl.ToLower().Trim();
+
+                var pageExists = _dbContext.Helps.Any(x => x.FriendlyUrl.ToLower() == model.FriendlyUrl);
+
+                if (pageExists)
+                {
+                    result.AddError($"Page already exist with this url{model.FriendlyUrl}");
+
+                    return result;
+                }
+
+                var help = new HelpPage();
                 help.Title = model.Title;
                 help.FriendlyUrl = model.FriendlyUrl;
                 help.Content = model.Content;
-                help.Roles = String.Join(",", model.Roles);
-                help.Category = model.Category;                
+                help.Roles = string.Join(",", model.Roles);
+                help.Category = model.Category;
                 _dbContext.Helps.Add(help);
                 _dbContext.SaveChanges();
 
@@ -49,7 +60,7 @@ namespace Msr.Services.Help
             }
             catch (Exception ex)
             {
-                result.AddError(ex.Message);
+                result.AddError("There is an error with the request");
 
                 return result;
             }
@@ -60,7 +71,17 @@ namespace Msr.Services.Help
             var result = new ResultNotification<string>();
             try
             {
-                var help = _dbContext.Helps.Where(x => x.Id == model.Id).Single();
+                var pageExists = _dbContext.Helps.Any(x => x.FriendlyUrl.ToLower() == model.FriendlyUrl && x.Id != model.Id);
+
+                if (pageExists)
+                {
+                    result.AddError($"Page already exist with this url{model.FriendlyUrl}");
+
+                    return result;
+                }
+
+                var help = _dbContext.Helps.Single(x => x.Id == model.Id);
+
                 help.Title = model.Title;
                 help.FriendlyUrl = model.FriendlyUrl;
                 help.Content = model.Content;

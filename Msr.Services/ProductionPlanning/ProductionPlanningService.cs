@@ -63,6 +63,7 @@ namespace Msr.Services.ProductionPlanning
         {
             var step = _dbContext.RequirementSteps.SingleOrDefault(x => x.Id == model.Id);
             step.Process = model.Process;
+            step.ObjectId = model.ObjectId;
             step.Step = model.Step;
             step.StandardDirectLaborMinutes = model.StandardDirectLaborMinutes;
             step.StandardMachineMinutes = model.StandardMachineMinutes;
@@ -132,8 +133,9 @@ namespace Msr.Services.ProductionPlanning
                 var procedureObjectId = GetProceduretById(requirment.ProcedureId).Value;
 
                 var procedureSteps = _proceduresService.GetStepsData(procedureObjectId, model.LoginId);
-
-                foreach (var step in model.Steps)
+                if (!string.IsNullOrWhiteSpace(submit))
+                {
+                    foreach (var step in model.Steps)
                 {
                     if (string.IsNullOrWhiteSpace(step.ObjectId))
                     {
@@ -165,9 +167,12 @@ namespace Msr.Services.ProductionPlanning
                         step.ObjectId = newStepData.Entity;
                     }
                 }
-
-
-                requirment.Status = !string.IsNullOrWhiteSpace(submit) ? CustomerSubmittedRequirementConstants.Completed : CustomerSubmittedRequirementConstants.InProgress;
+                    requirment.Status = CustomerSubmittedRequirementConstants.Completed;
+                }
+                else
+                {
+                    requirment.Status = CustomerSubmittedRequirementConstants.InProgress;
+                }
 
                 foreach (var step in model.Steps)
                 {

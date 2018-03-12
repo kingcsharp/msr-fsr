@@ -1,22 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data.SqlClient;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using Msr.Infrastructure.Email;
 using Msr.Infrastructure.Helpers;
 using Msr.Models.Companies;
 using Msr.Models.Orders;
 using Msr.Models.People;
-using Msr.Models.Users;
 using Msr.Repositories;
-using Msr.Resources.Templates;
-using Msr.Services.Orders.Messaging;
 using Msr.Services.Users.Messages;
-using Msr.Services.Users.ViewModels;
-using RazorEngine;
 
 namespace Msr.Services.Users
 {
@@ -51,6 +40,26 @@ namespace Msr.Services.Users
             return user;
         }
 
+        public UserSummary GetAnserByUserName(string userName)
+        {
+            userName = userName.ToLower().Trim();
+
+            var user = _dbContext.Peoples.Where(x => x.Login.ToLower() == userName && (x.Status == PeopleStatusConstants.Approved || x.Status == PeopleStatusConstants.ApprovedButRevising)).Select(s => new UserSummary
+            {
+                Id = s.Id,
+                FirstName = s.FirstName,
+                LastName = s.LastName,
+                FullName = s.FirstName + " " + s.LastName,
+                Email = s.Email,
+                UserName = s.Login,
+                Phone = s.PrimaryPhone,
+                CompanyName = s.CompanyName,
+                Login = s.Login
+            }).SingleOrDefault();
+
+            return user;
+        }
+
         public UserSummary GetByUserName(string userId)
         {
             userId = userId.ToLower().Trim();
@@ -70,27 +79,6 @@ namespace Msr.Services.Users
                 CompanyId = s.CompanyId,
                 CreatedDate = s.CreatedDate,
                 RoleName = s.AspNetRoles.FirstOrDefault().Name
-            }).SingleOrDefault();
-
-            return user;
-        }
-
-
-        public UserSummary GetAnserByUserName(string userName)
-        {
-            userName = userName.ToLower().Trim();
-
-            var user = _dbContext.Peoples.Where(x => x.Login.ToLower() == userName && (x.Status == PeopleStatusConstants.Approved || x.Status == PeopleStatusConstants.ApprovedButRevising)).Select(s => new UserSummary
-            {
-                Id = s.Id,
-                FirstName = s.FirstName,
-                LastName = s.LastName,
-                FullName = s.FirstName + " " + s.LastName,
-                Email = s.Email,
-                UserName = s.Login,
-                Phone = s.PrimaryPhone,
-                CompanyName = s.CompanyName,
-                Login = s.Login
             }).SingleOrDefault();
 
             return user;
@@ -127,7 +115,17 @@ namespace Msr.Services.Users
 
         public void UpdatePassword(string id, string password)
         {
-            _dbContext.Database.ExecuteSqlCommand($"update A_PEOPLE_HISTORY set PASSWORD='{AuthenticationHelper.PasswordEncrypt(password)}' where OBJECT_ID='{id}'");
+            _dbContext.Database.ExecuteSqlCommand($"update A_PEOPLE_HISTORY set PASSWORD='{AuthenticationHelper.PasswordEncrypt(password)}' WHERE id='{id}' AND SYSTEM_STATUS='ACTIVE'");
+        }
+
+        public bool ValidatePassword(string id, string password)
+        {
+            var curentPassword = _dbContext.Peoples.Where(x => x.Id == id).Select(x => x.Password)
+                .SingleOrDefault();
+
+            var encryptedPasswod = AuthenticationHelper.PasswordEncrypt(password);
+
+            return curentPassword == encryptedPasswod;
         }
 
     }

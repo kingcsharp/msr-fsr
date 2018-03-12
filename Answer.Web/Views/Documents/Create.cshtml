@@ -15,7 +15,7 @@
                 @using (Html.BeginForm("Create", "Documents", FormMethod.Post, new { @class = "form form-horizontal", @onSubmit = "escapeAllSelects();;", @name = "editForm", @target = "", @action = "" }))
                 {
                     @Html.AntiForgeryToken()
-                    <input type="hidden" id="ReferenceFiles" name="ReferenceFiles" value="" />
+                    
                     <div class="form-horizontal">
                         <div class="form-group">
                             @Html.LabelFor(model => model.Id, htmlAttributes: new { @class = "control-label col-md-2" })

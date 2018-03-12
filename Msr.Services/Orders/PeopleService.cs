@@ -25,8 +25,11 @@ namespace Msr.Services.Orders
     {
         private readonly MsrDbContext _dbContext;
 
+        private readonly UserService _userService;
+
         public PeopleService()
         {
+            _userService = new UserService();
             _dbContext = new MsrDbContext();
         }
 
@@ -43,59 +46,62 @@ namespace Msr.Services.Orders
 
         }
 
-        public CheckLoginResult GetAnswerUser(string login, string password)
+        public ResultNotification<CheckLoginResult> GetAnswerUser(string login, string password)
         {
+            var notificationResult = new ResultNotification<CheckLoginResult>();
+
+            login = login.Trim().ToLower();
+
             var user = _dbContext.Peoples.SingleOrDefault(x => x.Login == login && x.Status.Contains("APPROVED"));
 
-            if (user == null) return null;
-
-            var loginParm = new SqlParameter("@Login", login);
-            var passwordParm = new SqlParameter("@Password", AuthenticationHelper.PasswordEncrypt(password));
-            var passwordNonEncParm = new SqlParameter("@PASSWORD_NON_ENCRYPT", password);
-
-            var result = _dbContext.Database.SqlQuery<CheckLoginResult>("Portal_Check_Login @Login, @Password,@PASSWORD_NON_ENCRYPT", loginParm,
-                passwordParm, passwordNonEncParm).SingleOrDefault();
-
-            if (result != null)
+            if (user == null)
             {
-                var portalAccount = _dbContext.AspNetUsers.SingleOrDefault(x => x.UserName.ToLower() == login.ToLower());
+                notificationResult.AddError($"User not found with UserName: {login}");
 
-                if (portalAccount == null)
-                {
-                    var context = new ApplicationDbContext();
-
-                    var store = new UserStore<ApplicationUser>(context);
-                    var usermanager = new UserManager<ApplicationUser>(store);
-                    var id = Guid.NewGuid().ToString();
-                    var newUser = new ApplicationUser
-                    {
-                        UserName = login,
-                        Id = id,
-                        FirstName = result.Name,
-                        LastName = result.LastName,
-                        TimeZone = "10000", // dummy id for Answer Users
-                        IsActive = true,
-                        CreatedDate = DateTime.UtcNow,
-                        AnswerId = result.Id
-
-                    };
-
-                    usermanager.Create(newUser, "msr" + result.Id + "$");
-                    usermanager.AddToRole(id, RolesConstants.AnswerUser);
-                    context.SaveChanges();
-                }
-                else
-                {
-                    return new CheckLoginResult
-                    {
-                        Id = result.Id,
-                        Login = login
-                    };
-                }
-
+                return notificationResult;
             }
 
-            return result;
+            var validatePassword = _userService.ValidatePassword(user.Id, password);
+
+            if (!validatePassword)
+            {
+                notificationResult.AddError("Invalid password");
+                return notificationResult;
+            }
+
+            notificationResult.Entity = new CheckLoginResult();
+
+            var portalAccount = _dbContext.AspNetUsers.SingleOrDefault(x => x.UserName.ToLower() == login);
+
+            if (portalAccount == null)
+            {
+                var context = new ApplicationDbContext();
+
+                var store = new UserStore<ApplicationUser>(context);
+                var usermanager = new UserManager<ApplicationUser>(store);
+                var id = Guid.NewGuid().ToString();
+                var newUser = new ApplicationUser
+                {
+                    UserName = login,
+                    Id = id,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    TimeZone = "10000",
+                    IsActive = true,
+                    CreatedDate = DateTime.UtcNow,
+                    AnswerId = user.Id
+                };
+
+                usermanager.Create(newUser, "msr" + login + "$");
+                usermanager.AddToRole(id, RolesConstants.AnswerUser);
+                context.SaveChanges();
+            }
+
+            notificationResult.Entity.Id = user.Id;
+            notificationResult.Entity.Login = login;
+            notificationResult.Entity.Password = user.Password;
+
+            return notificationResult;
         }
         public IQueryable<PeopleObjectView> GetPeople()
         {
@@ -211,7 +217,6 @@ namespace Msr.Services.Orders
             }
         }
 
-
         public ResultNotification<bool> PasswordReminderEmail(string userName, string email)
         {
             var result = new ResultNotification<bool>();
@@ -231,7 +236,7 @@ namespace Msr.Services.Orders
                 var from = ConfigurationManager.AppSettings["From"];
                 var websiteUrl = ConfigurationManager.AppSettings["WebsiteUrl"];
 
-                var lnkHref = $"<a href='{websiteUrl}/Account/ResetPassword?userId={EncryptionHelper.Encrypt(userName)}'>Reset Password</a>";
+                var lnkHref = $"<a href='{websiteUrl}/Account/ResetPassword?token={EncryptionHelper.Encrypt(userName)}'>Reset Password</a>";
 
                 string body = "<b>Please set your password by clicking following link: </b><br/>" + lnkHref;
 

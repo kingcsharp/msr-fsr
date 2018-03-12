@@ -8,5 +8,6 @@ namespace Msr.Services.Orders.Messaging
         public string Name { get; set; }
         public string LastName { get; set; }
         public string Login { get; set; }
+        public string Password { get; set; }
     }
 }

@@ -145,7 +145,7 @@ namespace Msr.Services.ProductionPlanning.ViewModels
                 HasQuote = true;
             }
 
-            var attachedSteps = productionPlanService.GetStepsByObjectId(requirment.Id);
+            var attachedSteps = productionPlanService.GetStepsByObjectId(requirment.Id).OrderBy(x => x.Step);
 
             if (attachedSteps.Any())
             {
@@ -156,6 +156,7 @@ namespace Msr.Services.ProductionPlanning.ViewModels
                         Id = step.Id,
                         ObjectId = step.ObjectId,
                         Process = step.Process,
+                        StepTitle = step.Process,
                         Step = step.Step,
                         StandardDirectLaborMinutes = step.StandardDirectLaborMinutes,
                         StandardMachineMinutes = step.StandardMachineMinutes,

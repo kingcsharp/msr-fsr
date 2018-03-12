@@ -9,6 +9,8 @@ namespace Msr.Services.ProductionPlanning.ViewModels
 
         public string Process { get; set; }
 
+        public string StepTitle { get; set; }
+
         [Range(0, double.MaxValue, ErrorMessage = "Please enter numaric value only")]
         public int Step { get; set; }
 

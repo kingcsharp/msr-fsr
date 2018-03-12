@@ -339,8 +339,8 @@
                                                                             @(i + 1)
                                                                         </td>
                                                                         <td class="text-center" >
-                                                                            @Html.RadioButtonFor(x => Model.Parts[i].NonCU, "Cu", new { @class = "", @placeholder = "CU" })
-                                                                            @Html.RadioButtonFor(x => Model.Parts[i].NonCU, "NonCu", new { @class = "", @placeholder = "NonCU" })
+                                                                            @Html.RadioButtonFor(x => Model.Parts[i].NonCU, "Cu")
+                                                                            @Html.RadioButtonFor(x => Model.Parts[i].NonCU, "NonCu")
                                                                         </td>                                                                        
                                                                         <td>
                                                                             @Html.TextBoxFor(x => Model.Parts[i].PartDescription, new { @class = "form-control", @placeholder = "Part Description" })

@@ -17,9 +17,9 @@ $(document).ready(function () {
     var j = 1;
     $("#add_rowa").click(function () {
         $('#rowa-' + j).html(
-            "<td>" + (j + 1) + "</td>" +
-            "<td><input name='Parts[" + j + "].NonCU' type='radio' value='Cu' placeholder='CU' style='max-height:10px' class='form-control input-md'  /> </td>" +
-            "<td><input name='Parts[" + j + "].NonCU' type='radio' value='NonCu' placeholder='NonCU' style='max-height:10px' class='form-control input-md'  /> </td>" +
+            "<td class='text-center'>" + (j + 1) + "</td>" +
+            "<td class='text-center'><input name='Parts[" + j + "].NonCU' type='radio' value='Cu'/> " +
+            "<input name='Parts[" + j + "].NonCU' type='radio' value='NonCu' /></td>" +
             "<td><input name='Parts[" + j + "].PartDescription' type='text' placeholder='Part Description' class='form-control input-md'  /> </td>" +
             "<td><input name='Parts[" + j + "].Substrate' placeholder='Substrate' class='form-control input-md'  /> </td>" +
             "<td><input name='Parts[" + j + "].CoatingSurface' type='text' placeholder='Coating/Surface Treatment'  class='form-control input-md'></td>" +

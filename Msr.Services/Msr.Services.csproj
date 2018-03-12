@@ -431,9 +431,6 @@
     <Compile Include="Users\Messages\LoggedUserIdResult.cs" />
     <Compile Include="Users\Messages\SearchPeopleResult.cs" />
     <Compile Include="Users\UserService.cs" />
-    <Compile Include="Users\ViewModels\ClientaAdminEmailTemplateViewModel.cs" />
-    <Compile Include="Users\ViewModels\ClientEngineerEmailTemplateViewModel.cs" />
-    <Compile Include="Users\ViewModels\ClientBuyerEmailTemplateViewModel.cs" />
     <Compile Include="Workflows\ViewModels\SubmitWorkflowViewModel.cs" />
     <Compile Include="Workflows\WorkflowService.cs" />
   </ItemGroup>
@@ -473,6 +470,7 @@
     <Folder Include="Quotes\Procedures\" />
     <Folder Include="TheoryParagraph\Procedures\" />
     <Folder Include="TheoryParagraph\ViewModels\" />
+    <Folder Include="Users\ViewModels\" />
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\AWSSDK.S3.3.3.11.4\analyzers\dotnet\cs\AWSSDK.S3.CodeAnalysis.dll" />

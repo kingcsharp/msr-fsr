@@ -1,20 +1,14 @@
 ﻿using System;
 using System.Configuration;
-using System.Globalization;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Msr.Infrastructure.Email;
 using Msr.Infrastructure.Helpers;
-using Msr.Models.Orders;
-using Msr.Models.Users;
-using Msr.Repositories;
 using Msr.Services.Orders;
 using Msr.Services.Users;
 using Msr.Web.Models;
@@ -71,8 +65,6 @@ namespace Msr.Web.Controllers
             return View();
         }
 
-        //
-        // POST: /Account/Login
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -85,26 +77,19 @@ namespace Msr.Web.Controllers
                 return View(model);
             }
 
-            var userService = new UserService();
             var peopleService = new PeopleService();
-            UserSummary user;
 
             var answerUser = peopleService.GetAnswerUser(model.User, model.Password);
 
-            if (answerUser != null)
+            if (answerUser.HasErrors())
             {
-                model.Password = "msr" + answerUser.Id + "$";
+                ModelState.AddModelError("", answerUser.ErrorMessage);
+                return View(model);
             }
 
-            user = userService.GetByUserName(model.User);
+            model.Password = "msr" + model.User + "$";
 
-            if (user != null && !user.IsActive)
-            {
-                TempData["WarningMessage"] = "Account has been disabled";
-                return RedirectToAction("Login", "Account");
-            }
-
-            var result = await SignInManager.PasswordSignInAsync(model.User, model.Password, model.RememberMe, shouldLockout: false);
+            var result = await SignInManager.PasswordSignInAsync(model.User, model.Password, model.RememberMe, false);
 
             switch (result)
             {
@@ -146,26 +131,26 @@ namespace Msr.Web.Controllers
                 if (user == null)
                 {
                     ModelState.AddModelError("", $"User not found with Id: '{model.UserName}'");
+
                     return View(model);
                 }
 
                 var from = ConfigurationManager.AppSettings["From"];
                 var websiteUrl = ConfigurationManager.AppSettings["WebsiteUrl"];
 
-                var lnkHref = $"<a href='{websiteUrl}/Account/ResetPassword?userId={EncryptionHelper.Encrypt(user.Login)}'>Reset Password</a>";
+                var lnkHref = $"<a href='{websiteUrl}/Account/ResetPassword?token={EncryptionHelper.Encrypt(user.Login)}'>Reset Password</a>";
 
-                string body = "<b>Please reset your password by clicking  </b><br/>" + lnkHref;
+                var body = "<b>Please reset your password by clicking  </b><br/>" + lnkHref;
 
-                string subject = "Reset password";
+                var subject = "Reset password";
 
                 try
                 {
                     EmailService.SendEmail(from, user.Email, subject, body, null, true);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    ModelState.AddModelError("", ex.Message);
-                    ModelState.AddModelError("", ex.InnerException?.Message);
+                    ModelState.AddModelError("", "There is an error when sending email");
 
                     return View(model);
                 }
@@ -176,8 +161,6 @@ namespace Msr.Web.Controllers
             return View(model);
         }
 
-        //
-        // GET: /Account/ForgotPasswordConfirmation
         [AllowAnonymous]
         public ActionResult ForgotPasswordConfirmation()
         {
@@ -185,9 +168,9 @@ namespace Msr.Web.Controllers
         }
 
         [AllowAnonymous]
-        public ActionResult ResetPassword(string userId)
+        public ActionResult ResetPassword(string token)
         {
-            var decPassword = EncryptionHelper.Decrypt(userId.Trim());
+            var decPassword = EncryptionHelper.Decrypt(token.Trim());
 
             var user = _userService.GetAnserByUserName(decPassword);
 

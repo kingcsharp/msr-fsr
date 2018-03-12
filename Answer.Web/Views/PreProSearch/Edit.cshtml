@@ -180,7 +180,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-offset-4 col-md-10">
+                                <div class="col-md-offset-2 col-md-10">
                                     <input type="submit" value="Submit" class="btn btn-success" />
                                     @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-warning" }) | @Html.ActionLink("Add-Edit Applicable Objects", "ApplicableObjects", new { id = Model.ProcObjId }, new { @class = "btn btn-success" }) |  @Html.ActionLink("Add Labor to step", "Labors", new { id = Model.ObjectId, procStepId = Model.ProcObjId, relationship = @"LABOR_PROVIDE_TAKE_BACK" }, new { @class = "btn btn-success" })
                                 </div>

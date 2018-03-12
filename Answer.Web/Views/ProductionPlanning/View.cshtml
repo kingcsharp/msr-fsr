@@ -1,7 +1,9 @@
 ﻿@model Msr.Services.ProductionPlanning.ViewModels.RequirementStepsViewModel
+
 @{
     ViewBag.Title = "Requirements Step Definition";
 }
+
 <div class="app-container">
     <div class="row content-container">
         <div class="container-fluid">
@@ -20,6 +22,7 @@
                             <div class="col-sm-9">
                                 <h2>View Product Definition</h2>
                             </div>
+
                             @if (!Model.HasQuote)
                             {
                                 <div class="col-sm-3" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="View Orginally Submitted Requirements from Customer">
@@ -27,6 +30,7 @@
                                 </div>
                             }
                         </div>
+
                         @using (Html.BeginForm("Edit", "ProductionPlanning", FormMethod.Post, new { @id = "production-planning-form", @class = "", role = "form" }))
                         {
                             @Html.HiddenFor(x => x.Id)
@@ -37,8 +41,6 @@
                             @Html.Partial("_Product")
 
                             @Html.Partial("_Steps")
-
-
                         }
                     </div>
                 </div>
@@ -46,7 +48,9 @@
         </div>
     </div>
 </div>
+
 @Html.Partial("_Models")
+
 @section scripts
 {
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
@@ -56,9 +60,15 @@
     <script type="text/javascript" src="~/assets/js/grids/requirement-steps.js"></script>
 
     <script src="~/assets/js/grids/comman.js"></script>
+
     <script type="text/javascript">
         $(document).ready(function () {
-
+        @if (Model.Steps.Count > 0)
+            {
+                <text>
+                    $('.preDefinedStep').css("display", "none");
+                </text>
+            }
             var i = parseInt($('#totalRecords').val());
             var myoptions = $('#defaultProcessList').html();
             LoadSteps(i, myoptions);

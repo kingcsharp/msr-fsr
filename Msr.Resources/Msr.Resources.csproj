@@ -60,25 +60,9 @@
   <ItemGroup>
     <Compile Include="Class1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Templates\Emails.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Emails.resx</DependentUpon>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Templates\Emails.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Emails.Designer.cs</LastGenOutput>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Templates\RazorFIles\ClientAdmin.txt" />
-    <Content Include="Templates\RazorFIles\SubmitRequest.txt" />
-    <Content Include="Templates\RazorFIles\ClientEngineer.txt" />
-    <Content Include="Templates\RazorFIles\ClientBuyer.txt" />
+    <Folder Include="Templates\RazorFIles\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

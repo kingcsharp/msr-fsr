@@ -1,12 +1,13 @@
-﻿using System.Web.Mvc;
+﻿using System.ComponentModel.DataAnnotations;
 using Msr.Models.Orders;
-using System.ComponentModel.DataAnnotations;
 
-namespace Msr.Web.ViewModel
+namespace Answer.Web.ViewModel
 {
     public class UserProfileViewModel
     {
         public UserSummary UserSummary { get; set; }
+
+        public string Id { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
@@ -16,6 +17,12 @@ namespace Msr.Web.ViewModel
         [Required]
         [DataType(DataType.Password)]
         [Display(Name = "New Password")]
-        public string NedwPassword { get; set; }
+        public string NewPassword { get; set; }
+
+        [Required]
+        [DataType(DataType.Password)]
+        [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
+        [Display(Name = "Confirm Password")]
+        public string ConfirmPassword { get; set; }
     }
 }

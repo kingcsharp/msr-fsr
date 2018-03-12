@@ -69,8 +69,26 @@
                                         @Html.HiddenFor(x => Model.Steps[i].Id)
                                         @Html.HiddenFor(x => Model.Steps[i].ObjectId)
                                         
-                                     
-                                        @Model.Steps[i].Process
+                                        @Html.HiddenFor(x => Model.Steps[i].StepTitle)
+                                        @{ int num;}
+                                        @if (int.TryParse(Model.Steps[i].Process, out num))
+                                        {
+
+                                            for (int j = 0; j < Model.ProcessList.Count; j++)
+                                            {
+                                                Model.ProcessList[j].Selected = Model.ProcessList[j].Value == Model.Steps[i].Process;
+                                            }
+                                            @Html.DropDownListFor(model => model.Steps[i].Process, Model.ProcessList, "Select Process", new { id = "proId", @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => Model.Steps[i].Process, "", new { @class = "text-danger" })
+                                        }
+                                        else
+                                        {
+                                            @Html.DisplayTextFor(x => Model.Steps[i].Process)
+                                        }
+                                        @Html.DropDownListFor(model => model.Steps[i].Process, Model.ProcessList, "Select Process", new { id = "proId", @class = "form-control preDefinedStep" })
+                                        @Html.ValidationMessageFor(model => Model.Steps[i].Process, "", new { @class = "text-danger" })
+
+
                                     </td>
                                     <td>
                                         @Html.TextBoxFor(x => Model.Steps[i].Step, new { @class = "form-control", @onkeyup = "javascript:checkType(this)" })
@@ -133,7 +151,7 @@
                             @{
                             var trows = "row" + Model.Steps.Count;
                             }
-                            <tr id="@trows"></tr>
+                            <tr id="@trows" data-value=""></tr>
                         </tbody>
                         <tfoot>
                             <tr>

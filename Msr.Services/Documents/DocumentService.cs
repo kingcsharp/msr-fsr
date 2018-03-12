@@ -136,11 +136,14 @@ namespace Msr.Services.Documents
 
                 _dbContext.Database.ExecuteStoredProcedure(deleteReferenceFileProcedure);
 
-                foreach (var file in model.ReferenceFiles.Split(','))
+                if (!string.IsNullOrWhiteSpace(model.ReferenceFiles))
                 {
-                    var saveFileProcedure = new SaveFileProcedure() { ObjID = createdDocument.ObjectId, DocID = file, Type = null, NTLogin = model.NTLogin };
+                    foreach (var file in model.ReferenceFiles.Split(','))
+                    {
+                        var saveFileProcedure = new SaveFileProcedure() { ObjID = createdDocument.ObjectId, DocID = file, Type = null, NTLogin = model.NTLogin };
 
-                    _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
+                        _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
+                    }
                 }
 
                 return true;

@@ -187,7 +187,6 @@ namespace Answer.Web.Controllers
                     vm.Steps.Add(new RequirementStepsDetailsViewModel
                     {
                         Id = Convert.ToInt32(step.Id),
-                        ObjectId = step.Id,
                         Process = step.StepTitle,
                         Step = (int)step.Print_Order
                     });
@@ -290,6 +289,14 @@ namespace Answer.Web.Controllers
             if (ModelState.IsValid)
             {
                 vm.LoginId = currentUser.Id;
+
+                foreach (var item in vm.Steps)
+                {
+                    if (string.IsNullOrWhiteSpace(item.Process))
+                    {
+                        item.Process = item.StepTitle;
+                    }
+                }
 
                 var response = _productionPlanService.Save(vm, saveSubmit, currentUser);
 

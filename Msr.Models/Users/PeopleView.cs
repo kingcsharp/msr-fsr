@@ -17,6 +17,7 @@ namespace Msr.Models.Users
         public string CompanyName { get; set; }
         public string RoleName { get; set; }
         public string Title { get; set; }
+        public string Password { get; set; }
         public DateTime? CreatedDate { get; set; }
     }
 }
