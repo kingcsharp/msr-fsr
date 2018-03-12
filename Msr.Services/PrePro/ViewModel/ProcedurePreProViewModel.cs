@@ -4,6 +4,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Mvc;
 using Msr.Models.PrePro;
+using Msr.Services.Orders.Messaging;
+using Msr.Services.Users.Messages;
 
 namespace Msr.Services.PrePro.ViewModel
 {
@@ -104,7 +106,7 @@ namespace Msr.Services.PrePro.ViewModel
 
         public IList<SelectListItem> ReferenceTheoriesList { get; set; }
 
-        public void Setup(PreProServices preProServices, string ntlogin)
+        public void Setup(PreProServices preProServices, LoggedUserIdResult currentUser)
         {
             BaseStartOnCounterList = new List<SelectListItem>
             {
@@ -244,14 +246,14 @@ namespace Msr.Services.PrePro.ViewModel
 
             };
 
-            ReferenceProceduresList = preProServices.GetSelectedRefProcedures(id: Id, ntlogin: ntlogin).Select(x => new SelectListItem
+            ReferenceProceduresList = preProServices.GetSelectedRefProcedures(id: Id, ntlogin: currentUser.Id).Select(x => new SelectListItem
             {
                 Text = x.Show,
                 Value = x.Value.ToString()
             }).OrderBy(o => o.Text).ToList();
 
 
-            ReferenceFilesList = preProServices.GetSelectedRefFiles(id: Id, ntlogin: ntlogin).Select(x => new SelectListItem
+            ReferenceFilesList = preProServices.GetSelectedRefFiles(id: Id, ntlogin: currentUser.Id).Select(x => new SelectListItem
             {
                 Text = x.Show,
                 Value = x.Value.ToString(),
@@ -266,7 +268,7 @@ namespace Msr.Services.PrePro.ViewModel
 
             ReferenceVerbList.Add(new SelectListItem { Value = "", Text = @"--Select--" });
 
-            ReferenceVerbList.AddRange(preProServices.GetApprovedVerbsByCreatingCo(CreatingCo).Select(x => new SelectListItem
+            ReferenceVerbList.AddRange(preProServices.GetApprovedVerbsByCreatingCo(currentUser.Id).Select(x => new SelectListItem
             {
                 Text = x.Show,
                 Value = x.Value.ToString(),
@@ -274,13 +276,13 @@ namespace Msr.Services.PrePro.ViewModel
 
             ReferenceObjectsList.Add(new SelectListItem { Value = "", Text = @"--Select--" });
 
-            ReferenceObjectsList.AddRange(preProServices.GetReferenceObjectsByCreatingCo(CreatingCo).Select(x => new SelectListItem
+            ReferenceObjectsList.AddRange(preProServices.GetReferenceObjectsByCreatingCo(currentUser.Id).Select(x => new SelectListItem
             {
                 Text = x.Show,
                 Value = x.Value.ToString(),
             }).OrderBy(o => o.Text).ToList());
 
-            Labors.AddRange(preProServices.GetProcedureStepLaborList(ProcObjId, CreatingCo).Select(x => new LaborObjectsView
+            Labors.AddRange(preProServices.GetProcedureStepLaborList(ProcObjId, currentUser.Id).Select(x => new LaborObjectsView
             {
                 RoleName = x.RoleName,
                 ObjDesc = x.Qty + " " + x.QtyType

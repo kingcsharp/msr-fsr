@@ -32,5 +32,6 @@ namespace Msr.Models.People
         public string LoginId { get; set; }
         public string Company { get; set; }
         public string LockedByName { get; set; }
+        public string Root { get; set; }
     }
 }

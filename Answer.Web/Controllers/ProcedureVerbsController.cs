@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Msr.Models.ProcedureVerbs;
 using Msr.Services.ProcedureVerbs;
 using Msr.Services.ProcedureVerbs.ViewModels;
+using Msr.Services.Workflows;
 
 namespace Answer.Web.Controllers
 {
@@ -136,10 +137,14 @@ namespace Answer.Web.Controllers
 
         public ActionResult Edit(string id)
         {
+            var currrentUser = GetCurrentUser();
+            var workflowService = new WorkflowService();
+            var checkoutEntity = workflowService.CheckOutObject(id, currrentUser.Id);
+
             var saveProcedureVerbsViewModel = new SaveProcedureVerbsViewModel();
             var procedureVerbsService = new ProcedureVerbsService();
 
-            var model = procedureVerbsService.GetVerbTypeById(id);
+            var model = procedureVerbsService.GetVerbTypeById(checkoutEntity.Entity);
 
             saveProcedureVerbsViewModel = saveProcedureVerbsViewModel.MapToDto(model);
             saveProcedureVerbsViewModel.Setup(new ProcedureVerbsService());

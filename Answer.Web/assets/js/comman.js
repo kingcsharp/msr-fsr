@@ -31,4 +31,26 @@ $('.page-help').on('click', function () {
     eModal.ajax(options);
 }
 );
-  
+
+
+function UnLockWorkflow(returnUrl) {
+
+    $('.unlock').on('click',
+        function (e) {
+            e.preventDefault();
+
+            var callBackId = $(this).data('call-back-id');
+
+            eModal.confirm('If you proceed you will lose any edits you made.  Are you sure?')
+                .then(confirmCallback, optionalCancelCallback);
+
+            function confirmCallback() {
+                window.location.href =
+                    "/workflow/UnlockAndDelete?objId=" + callBackId + '&returnUrl=' + returnUrl;
+            }
+
+            function optionalCancelCallback() {
+
+            }
+        });
+}

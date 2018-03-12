@@ -136,7 +136,7 @@ namespace Answer.Web.Controllers
 
             model.CreatingCo = GetCurrentUser().Company;
 
-            model.Setup(new PreProServices(), GetCurrentUser().Id);
+            model.Setup(new PreProServices(), GetCurrentUser());
 
             return View(model);
         }
@@ -163,14 +163,14 @@ namespace Answer.Web.Controllers
                 {
                     TempData["ErrorMessage"] = "Something went wrong.";
 
-                    model.Setup(new PreProServices(), GetCurrentUser().Id);
+                    model.Setup(new PreProServices(), GetCurrentUser());
 
                     return View(model);
                 }
 
             }
 
-            model.Setup(new PreProServices(), GetCurrentUser().Id);
+            model.Setup(new PreProServices(), GetCurrentUser());
 
             return View(model);
         }
@@ -185,13 +185,15 @@ namespace Answer.Web.Controllers
 
             part = part.MapToDto(model);
 
-            part.Setup(new PreProServices(), GetCurrentUser().Id);
+            part.Setup(new PreProServices(), GetCurrentUser());
 
             return View(part);
         }
 
         public ActionResult Edit(string id)
         {
+            var currentUser = GetCurrentUser();
+
             var preProServices = new PreProServices();
 
             var model = preProServices.GetById(id);
@@ -200,9 +202,9 @@ namespace Answer.Web.Controllers
 
             procedurePreProView = procedurePreProView.MapToDto(model);
 
-            procedurePreProView.CreatingCo = GetCurrentUser().Company;
+            procedurePreProView.CreatingCo = currentUser.Company;
 
-            procedurePreProView.Setup(new PreProServices(), GetCurrentUser().Id);
+            procedurePreProView.Setup(new PreProServices(), currentUser);
 
             var labors = _preProServices.GetLaborStepsList().Where(x => x.StepId == procedurePreProView.ProcObjId).ToList();
 
@@ -232,12 +234,12 @@ namespace Answer.Web.Controllers
 
                 TempData["ErrorMessage"] = "Something went wrong.";
 
-                model.Setup(new PreProServices(), GetCurrentUser().Id);
+                model.Setup(new PreProServices(), GetCurrentUser());
 
                 return View(model);
             }
 
-            model.Setup(new PreProServices(), GetCurrentUser().Id);
+            model.Setup(new PreProServices(), GetCurrentUser());
 
             return View(model);
         }

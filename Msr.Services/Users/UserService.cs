@@ -95,13 +95,15 @@ namespace Msr.Services.Users
 
         public List<SearchPeopleResult> GetSearchUser()
         {
-            var sql = @"exec A_SP_PEOPLE_SEARCH ' (FULL_NAME LIKE ''%%'' OR FULL_NAME is NULL ) AND  (ROOT LIKE ''%%'' OR ROOT is NULL ) AND  (POSITION_NAME LIKE ''%%'' OR POSITION_NAME is NULL ) AND 
- (BOSS_NAME LIKE ''%%'' OR BOSS_NAME is NULL ) AND  (COMPANY_NAME LIKE ''%%'' OR COMPANY_NAME is NULL ) AND (( ROOT_CO_ID LIKE ''%2%'' ) ) 
- AND  STATUS LIKE ''APPROVED%'' AND  (LOGIN IS NOT NULL) AND  (LOCATION_NAME LIKE ''%%'' OR LOCATION_NAME is NULL )',' ORDER BY LAST_NAME,NAME',NULL,NULL,'1618'";
+          var users = _dbContext.PeopleObjectViews.Where(x=>x.Status == "APPROVED") .Select(x => new SearchPeopleResult
+            {
+                Id = x.Id,
+                Full_Name = x.FirstName + " " + x.LastName,
+                Obj_Id = x.ObjectId,
+                Root = x.Root
+            }).ToList();
 
-            var result = _dbContext.Database.SqlQuery<SearchPeopleResult>(sql).ToList();
-
-            return result;
+            return users;
         }
 
         public LoggedUserIdResult GetUserId(string userId)

@@ -98,6 +98,8 @@
                     }
 
                 });
+
+            UnLockWorkflow(returnUrl);
         }
     });
     $('#jqGrid').navGrid("#jqGridPager", {

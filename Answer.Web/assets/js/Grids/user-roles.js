@@ -107,22 +107,45 @@
         autowidth: true,
         colMenu: true,
         gridComplete: function () {
-            $('.deleterole').on('click', function (e) {
-                e.preventDefault();
 
-                var callBackId = $(this).data('call-back-id');
-                var callBackName = $(this).data('call-back-name');
+            $('.deleterole').on('click',
+                function(e) {
+                    e.preventDefault();
 
-                eModal.confirm('Do you really want to delete ' + callBackName + ' ?', 'Confirmation delete')
-                    .then(confirmCallback, optionalCancelCallback);
+                    var callBackId = $(this).data('call-back-id');
+                    var callBackName = $(this).data('call-back-name');
 
-                function confirmCallback() {
-                    window.location.href = "/Roles/RoleDelete/" + callBackId;
-                }
-                function optionalCancelCallback() {
-                }
+                    eModal.confirm('Do you really want to delete ' + callBackName + ' ?', 'Confirmation delete')
+                        .then(confirmCallback, optionalCancelCallback);
 
-            })
+                    function confirmCallback() {
+                        window.location.href = "/Roles/RoleDelete/" + callBackId;
+                    }
+
+                    function optionalCancelCallback() {
+                    }
+
+                });
+
+            $('.unlock').on('click',
+                function(e) {
+                    e.preventDefault();
+
+                    var callBackId = $(this).data('call-back-id');
+
+                    eModal.confirm('If you proceed you will lose any edits you made.  Are you sure?')
+                        .then(confirmCallback, optionalCancelCallback);
+
+                    function confirmCallback() {
+                        window.location.href =
+                            "/workflow/UnlockAndDelete?objId=" + callBackId + '&returnUrl=' + returnUrl;
+                    }
+
+                    function optionalCancelCallback() {
+
+                    }
+
+                });
         },
 
     });

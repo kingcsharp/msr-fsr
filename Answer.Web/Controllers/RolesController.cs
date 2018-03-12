@@ -181,7 +181,7 @@ namespace Answer.Web.Controllers
             var saveRoleViewModel = new SaveRoleViewModel();
 
             saveRoleViewModel = saveRoleViewModel.MapToDto(model);
-            saveRoleViewModel.Setup(new RoleService(), new UserService(), GetCurrentUser(), GetCurrentUser().Id);
+            saveRoleViewModel.Setup(new RoleService(), new UserService(), currrentUser, currrentUser.Id);
 
             return View(saveRoleViewModel);
         }
@@ -189,11 +189,13 @@ namespace Answer.Web.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Edit(SaveRoleViewModel model)
         {
+            var currrentUser = GetCurrentUser();
+
             var roleService = new RoleService();
 
             if (ModelState.IsValid)
             {
-                model.NTLogin = GetCurrentUser().Id;
+                model.NTLogin = currrentUser.Id;
 
                 var response = roleService.Save(model: model);
 
@@ -207,13 +209,13 @@ namespace Answer.Web.Controllers
                 {
                     TempData["ErrorMessage"] = "Something went wrong.";
 
-                    model.Setup(new RoleService(), new UserService(), GetCurrentUser(), GetCurrentUser().Id);
+                    model.Setup(new RoleService(), new UserService(), currrentUser, currrentUser.Id);
 
                     return View(model);
                 }
             }
 
-            model.Setup(new RoleService(), new UserService(), GetCurrentUser(), GetCurrentUser().Id);
+            model.Setup(new RoleService(), new UserService(), currrentUser, currrentUser.Id);
 
             return View(model);
         }

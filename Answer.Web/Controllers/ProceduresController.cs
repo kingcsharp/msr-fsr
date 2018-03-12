@@ -210,12 +210,12 @@ namespace Answer.Web.Controllers
         public ActionResult Edit(string id)
         {
             var vm = new SaveProcedureViewModel();
-
             vm.Id = id;
 
             var currrentUser = GetCurrentUser();
             var result = _workflowService.CheckOutObject(id, currrentUser.Id);
             id = result.Entity;
+
             var model = _proceduresService.GetProcedureById(id);
 
             vm.MapToDto(model);

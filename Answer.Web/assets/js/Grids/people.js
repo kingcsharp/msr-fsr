@@ -337,6 +337,7 @@
 
                 });
 
+            UnLockWorkflow(returnUrl);
         }
 
     });

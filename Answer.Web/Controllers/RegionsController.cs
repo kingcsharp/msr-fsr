@@ -6,16 +6,21 @@ using Msr.Web.ViewModel.Engineering;
 using System;
 using System.Linq;
 using System.Web.Mvc;
+using Msr.Services.Workflows;
 
 namespace Answer.Web.Controllers
 {
+    [Authorize]
     public class RegionsController : BaseController
     {
         private readonly RegionService _regionService;
 
+        private WorkflowService _workflowService;
+
         public RegionsController()
         {
             _regionService = new RegionService();
+            _workflowService = new WorkflowService();
         }
 
         public ActionResult Index()
@@ -143,9 +148,10 @@ namespace Answer.Web.Controllers
 
         public ActionResult Edit(string id)
         {
-            var regionService = new RegionService();
-
-            var model = regionService.GetById(id);
+            var currentUser = GetCurrentUser();
+            var checkOut = _workflowService.CheckOutObject(id, currentUser.Id);
+            
+            var model = _regionService.GetById(checkOut.Entity);
 
             var region = new SaveRegionViewModel();
 

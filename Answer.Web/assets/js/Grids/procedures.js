@@ -125,6 +125,7 @@
 
                 });
 
+            UnLockWorkflow(returnUrl);
         }
 
     });

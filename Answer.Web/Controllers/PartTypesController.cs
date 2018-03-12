@@ -7,12 +7,20 @@ using Msr.Models.Parts;
 using Msr.Services.jqGrid;
 using Msr.Services.PartTypes;
 using Msr.Services.PartTypes.ViewModels;
+using Msr.Services.Workflows;
 using Msr.Web.ViewModel.Engineering;
 
 namespace Answer.Web.Controllers
 {
     public class PartTypesController : BaseController
     {
+        private PartTypeService _partTypeService;
+
+        public PartTypesController()
+        {
+            _partTypeService = new PartTypeService();
+        }
+
         public ActionResult Index()
         {
             var viewModel = new EngineeringViewModel();
@@ -24,9 +32,8 @@ namespace Answer.Web.Controllers
 
         public ActionResult PartTypesData(JqGridParam param)
         {
-            var taskService = new PartTypeService();
 
-            var totalRows = taskService.GetPartTypesQueryable();
+            var totalRows = _partTypeService.GetPartTypesQueryable();
 
             var defaultStatusList = "CREATING,DENIED,APPROVED,APPROVED_BUT_REVISING,APPROVED_BUT_DELETING".Split(',');
 
@@ -125,13 +132,12 @@ namespace Answer.Web.Controllers
         [AcceptVerbs(verbs: HttpVerbs.Post)]
         public ActionResult Create(AddPartTypesViewModel parttype)
         {
-            var partTypeservice = new PartTypeService();
             if (ModelState.IsValid)
             {
                 //need to de dynamic
                 parttype.NTLogin = GetCurrentUser().Id;
 
-                var response = partTypeservice.Create(parttype);
+                var response = _partTypeService.Create(parttype);
 
                 if (response)
                 {
@@ -156,9 +162,11 @@ namespace Answer.Web.Controllers
         }
         public ActionResult Edit(string id)
         {
-            var partTypeservice = new PartTypeService();
+            var currrentUser = GetCurrentUser();
+            var workflowService = new WorkflowService();
+            var checkoutEntity = workflowService.CheckOutObject(id, currrentUser.Id);
 
-            var model = partTypeservice.GetById(id: id);
+            var model = _partTypeService.GetById(checkoutEntity.Entity);
 
             var parttype = new AddPartTypesViewModel();
             parttype.MapToDto(model);
@@ -170,13 +178,12 @@ namespace Answer.Web.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Edit(AddPartTypesViewModel parttype)
         {
-            var partTypeservice = new PartTypeService();
             if (ModelState.IsValid)
             {
                 //need to de dynamic
                 parttype.NTLogin = GetCurrentUser().Id;
 
-                var response = partTypeservice.Edit(parttype);
+                var response = _partTypeService.Edit(parttype);
                 if (response)
                 {
                     TempData["SuccessMessage"] = "PartType has been edited successfully.";
@@ -201,9 +208,7 @@ namespace Answer.Web.Controllers
 
         public ActionResult Delete(string id,string ntlogin)
         {
-            var taskService = new PartTypeService();
-
-            var response = taskService.Delete(id: id,ntlogin:ntlogin);
+            var response = _partTypeService.Delete(id: id,ntlogin:ntlogin);
 
             if (response)
             {

@@ -124,6 +124,7 @@ function SetUpGrid(returnUrl) {
         colMenu: true,
         gridComplete: function () {
 
+            UnLockWorkflow(returnUrl);
         }
     });
     $('#jqGrid').navGrid("#jqGridPager", {

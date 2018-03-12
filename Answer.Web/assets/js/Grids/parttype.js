@@ -122,8 +122,8 @@
 
         gridComplete: function () {
 
+            UnLockWorkflow(returnUrl);
         }
-
     });
     $('#jqGrid').navGrid("#jqGridPager", {
             search: false, // show search button on the toolbar

@@ -9,6 +9,7 @@ using Msr.Services.People.ViewModels;
 using Msr.Services.Companies;
 using Msr.Infrastructure.Helpers;
 using Msr.Services.Documents;
+using Msr.Services.Workflows;
 
 namespace Answer.Web.Controllers
 {
@@ -16,9 +17,12 @@ namespace Answer.Web.Controllers
     {
         private readonly PeopleService _peopleService;
 
+        private WorkflowService _workflowService;
+
         public PeopleController()
         {
             _peopleService = new PeopleService();
+            _workflowService = new WorkflowService();
         }
 
         public ActionResult Index()
@@ -191,7 +195,11 @@ namespace Answer.Web.Controllers
 
         public ActionResult Edit(string id)
         {
-            var model = _peopleService.GetPeopleById(id);
+            var currentUser = GetCurrentUser();
+            var result = _workflowService.CheckOutObject(id, currentUser.Id);
+
+            var model = _peopleService.GetPeopleById(result.Entity);
+
             var phoneInfo = _peopleService.GetPhoneInfoByObjId(id);
             var emailInfo = _peopleService.GetEmailInfoByObjId(id);
             var locationInfo = _peopleService.GetLocationInfoByObjId(id);
@@ -200,7 +208,7 @@ namespace Answer.Web.Controllers
 
             people.MapToDto(model);
 
-            people.Setup(new DocumentFilesService(), new PeopleService(), new CompanyService(), GetCurrentUser().Id);
+            people.Setup(new DocumentFilesService(), new PeopleService(), new CompanyService(), currentUser.Id);
 
             if (phoneInfo != null)
             {

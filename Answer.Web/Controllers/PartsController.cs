@@ -13,6 +13,7 @@ using Msr.Services.PartTypes;
 using Msr.Services.Locations;
 using Msr.Services.Roles;
 using Msr.Services.Roles.Messages;
+using Msr.Services.Workflows;
 
 namespace Answer.Web.Controllers
 {
@@ -206,9 +207,11 @@ namespace Answer.Web.Controllers
         }
         public ActionResult Edit(string id)
         {
-            var taskService = new PartsService();
+            var currrentUser = GetCurrentUser();
+            var workflowService = new WorkflowService();
+            var checkoutEntity = workflowService.CheckOutObject(id, currrentUser.Id);
 
-            var model = taskService.GetById(id);
+            var model = _partsService.GetById(checkoutEntity.Entity);
 
             var part = new AddPartViewModel();
 
@@ -216,7 +219,7 @@ namespace Answer.Web.Controllers
 
             part.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), GetCurrentUser().Company, GetCurrentUser().Id);
 
-            part.InternalEqualParts = taskService.GetInternalEqualPartByPartId(part.Id);
+            part.InternalEqualParts = _partsService.GetInternalEqualPartByPartId(part.Id);
             return View(part);
         }
 
