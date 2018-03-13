@@ -52,7 +52,7 @@ namespace Msr.Services.Orders
 
             login = login.Trim().ToLower();
 
-            var user = _dbContext.Peoples.SingleOrDefault(x => x.Login == login && x.Status.Contains("APPROVED"));
+            var user = _dbContext.Peoples.SingleOrDefault(x => x.Login == login && x.Status == "APPROVED");
 
             if (user == null)
             {

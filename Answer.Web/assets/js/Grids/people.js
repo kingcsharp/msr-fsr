@@ -323,7 +323,7 @@
                     var callBackName = $(this).data('call-back-name');
 
                     eModal.confirm(
-                            'Are You Sure? Locking prevents others from editing. Checking out create the next revision for you to edit ' + callBackName + ' ?', 'Confirmation Edit')
+                            'Are You Sure? Locking prevents others from editing. Checking out create the next revision for you to edit?', 'Confirmation Edit')
                         .then(confirmCallback, optionalCancelCallback);
 
                     function confirmCallback() {
@@ -332,7 +332,6 @@
                     }
 
                     function optionalCancelCallback() {
-                        console.log("cancel");
                     }
 
                 });
@@ -383,6 +382,12 @@
         if (rowObject.Status == 'APPROVED') {
             subordinate = '<a  title="SubOrdinate" href="/People/Add/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-list-alt"></i></a>';
         }
+
+        if (rowObject.Status == 'APPROVED_BUT_REVISING') {
+            editButton = '';
+            deleteButton = '';
+        }
+
         return editButton + deleteButton + buttonWorkflowLeft + buttonWorkflowRight + subordinate;
 
     }

@@ -44,7 +44,7 @@ namespace Msr.Services.Users
         {
             userName = userName.ToLower().Trim();
 
-            var user = _dbContext.Peoples.Where(x => x.Login.ToLower() == userName && (x.Status == PeopleStatusConstants.Approved || x.Status == PeopleStatusConstants.ApprovedButRevising)).Select(s => new UserSummary
+            var user = _dbContext.Peoples.Where(x => x.Login.ToLower() == userName && (x.Status == PeopleStatusConstants.Approved)).Select(s => new UserSummary
             {
                 Id = s.Id,
                 FirstName = s.FirstName,

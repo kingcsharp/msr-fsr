@@ -170,6 +170,8 @@ namespace Msr.Web.Controllers
         [AllowAnonymous]
         public ActionResult ResetPassword(string token)
         {
+            token = Request.Url.Query.Replace("?token=", "");
+
             var decPassword = EncryptionHelper.Decrypt(token.Trim());
 
             var user = _userService.GetAnserByUserName(decPassword);
