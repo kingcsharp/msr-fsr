@@ -129,15 +129,15 @@
   <textString id="Assign Role To Job" value="Assign roles to jobs" />
   <textString id="Assign to people:" value="Assign to people:" />
   <textString id="assignCompaniesToViewMe" value="ASSIGN COMPANIES TO VIEW ME" />
-  <textString id="assignCompaniesToViewMe_Save and Close" value="Save and Close" />
-  <textString id="assignCompaniesToViewMe_Save and Submit" value="Save and Submit to WF" />
-  <textString id="assignCompaniesToViewMe_Save_Changes" value="Save Changes" />
+  <textString id="assignCompaniesToViewMe_Update and Close" value="Update and Close" />
+  <textString id="assignCompaniesToViewMe_Update and Submit" value="Update and Submit to WF" />
+  <textString id="assignCompaniesToViewMe_Update_Changes" value="Update Changes" />
   <textString id="Assignee" value="Asignee" />
   <textString id="Assignee Name" value="Assignee:" />
   <textString id="Assignee Status" value="Assigned User Status:" />
   <textString id="Assignee:" value="Assignee:" />
   <textString id="assignNewsProcedure" value="ASSIGN NEW PRODCEDURE" />
-  <textString id="assignNewsProcedure_Save and Submit" value="Save and Submit" />
+  <textString id="assignNewsProcedure_Update and Submit" value="Update and Submit" />
   <textString id="assignRoleToJob" value="ASSIGN ROLES TO JOBS" />
   <textString id="AttachFile" value="Files" />
   <textString id="Attaching File Directions" value="Files must be &lt; 10MB.  There are 3 upload areas so you can move on to the next file without waiting for a large file to finish uploading." />
@@ -313,35 +313,35 @@
   <textString id="Update this Item" value="Update" />
   <textString id="Update Time Sheet" value="TIME CARD" />
   <textString id="editAccount" value="ACCOUNT" />
-  <textString id="editAccount_Save and Submit" value="Save &amp; Submit to Approval Workflow" />
+  <textString id="editAccount_Update and Submit" value="Update &amp; Submit to Approval Workflow" />
   <textString id="editAccountPayment" value="EDIT ACCOUNT PAYMENT" />
   <textString id="editActualParts" value="EDIT ACTUAL PARTS" />
   <textString id="editEquipExp" value="EDIT EQUIPMENT EXPERIENCE" />
-  <textString id="editEquipExp_Save and Submit" value="Save &amp; Submit to Workflow" />
+  <textString id="editEquipExp_Update and Submit" value="Update &amp; Submit to Workflow" />
   <textString id="editGroup" value="EDIT GROUP" />
   <textString id="editLocation" value="EDIT LOCATION" />
   <textString id="editNeeds" value="EDIT NEEDS" />
   <textString id="editNeeds_Finished_Viewing" value="Finished Viewing" />
-  <textString id="editNeeds_Save and Close" value="Save &amp; Close" />
-  <textString id="editNeeds_Save and Submit" value="Save &amp; Submit" />
-  <textString id="editNeeds_Save_Changes" value="Save Changes" />
+  <textString id="editNeeds_Update and Close" value="Update &amp; Close" />
+  <textString id="editNeeds_Update and Submit" value="Update &amp; Submit" />
+  <textString id="editNeeds_Update_Changes" value="Update Changes" />
   <textString id="editNote" value="EDIT NOTE" />
   <textString id="editParts" value="EDIT PARTS" />
   <textString id="editPartType" value="EDIT PART TYE" />
-  <textString id="editPartType_Save and Submit" value="Save and Submit" />
+  <textString id="editPartType_Update and Submit" value="Update and Submit" />
   <textString id="editPerson" value="EDIT PERSON" />
   <textString id="editProcedure" value="PROCEDURE" />
   <textString id="editProducts" value="EDIT PRODUCT" />
   <textString id="editProposal" value="PROPOSAL" />
   <textString id="UpdateQuestionsStatementsSurvey" value="Add / Update Questions" />
   <textString id="editRegion" value="Update Region" />
-  <textString id="editRegion_Save and Close" value="Save and Close" />
-  <textString id="editRegion_Save and Submit" value="Save and Submit to Workflow" />
-  <textString id="editRegion_Save_Changes" value="Save" />
+  <textString id="editRegion_Update and Close" value="Update and Close" />
+  <textString id="editRegion_Update and Submit" value="Update and Submit to Workflow" />
+  <textString id="editRegion_Update_Changes" value="Update" />
   <textString id="editRole" value="ROLE" />
   <textString id="editTheory" value="EDIT HEADER" />
   <textString id="editVolumnDiscounts" value="EDIT VOLUME DISCOUNTS" />
-  <textString id="editVolumnDiscounts_Save and Submit" value="Save &amp; Submit" />
+  <textString id="editVolumnDiscounts_Update and Submit" value="Update &amp; Submit" />
   <textString id="editWorkFlow" value="EDIT WORKFLOW" />
   <textString id="EDUCATION_SHORT" value="Education:" />
   <textString id="EMAIL" value="Email:" />
@@ -394,7 +394,7 @@
   <textString id="FILLED WITH" value="Filled With" />
   <textString id="Final Inspection Role - Leave blank for no final inspection" value="Final Inspection Role - Leave blank for no final inspection" />
   <textString id="FINISHED" value="Closed" />
-  <textString id="Finished - Close Task" value="Save &amp; Complete Task" />
+  <textString id="Finished - Close Task" value="Update &amp; Complete Task" />
   <textString id="FlowChartViewOfWorkFlow" value="FLOW CHART VIEW OF WORKFLOW" />
   <textString id="FM__1" value="FM 1" />
   <textString id="Forecast Item Purchased Items" value="FORECAST ITEM PURCHASED ITEMS" />
@@ -778,18 +778,18 @@
   <textString id="ROLES_SECURITY_LEVEL_SOME_WHAT_CONFIDENTIAL" value="2 View What Managers &amp; Below Are Allowed to View" />
   <textString id="Root Company Name:" value="Root Company Name:" />
   <textString id="SALARY" value="Desired Salary (hourly)" />
-  <textString id="Save" value="Save" />
-  <textString id="Save add children" value="Save add children" />
-  <textString id="Save add similar" value="Save add similar" />
-  <textString id="Save and close" value="Save and close" />
-  <textString id="Save and Close" value="Save and Close" />
-  <textString id="Save and Schedule Meeting" value="Save and Schedule Meeting" />
-  <textString id="Save and submit to workflow" value="Save &amp; Submit to Workflow" />
-  <textString id="Save and View Children" value="Save and View Children" />
-  <textString id="Save Note" value="Save Note" />
-  <textString id="SaveAndCloseUpdateStep" value="Save &amp; Return to Step List" />
-  <textString id="SaveUpdateStep" value="Save" />
-  <textString id="saveSearch" value="Save Search" />
+  <textString id="Update" value="Update" />
+  <textString id="Update add children" value="Update add children" />
+  <textString id="Update add similar" value="Update add similar" />
+  <textString id="Update and close" value="Update and close" />
+  <textString id="Update and Close" value="Update and Close" />
+  <textString id="Update and Schedule Meeting" value="Update and Schedule Meeting" />
+  <textString id="Update and submit to workflow" value="Update &amp; Submit to Workflow" />
+  <textString id="Update and View Children" value="Update and View Children" />
+  <textString id="Update Note" value="Update Note" />
+  <textString id="UpdateAndCloseUpdateStep" value="Update &amp; Return to Step List" />
+  <textString id="UpdateUpdateStep" value="Update" />
+  <textString id="saveSearch" value="Update Search" />
   <textString id="Saving Item with serial/kit #" value="Saving item with serial/kit #:" />
   <textString id="Screen for Engineers" value="WIP" />
   <textString id="Search Actual Parts" value="ACTUAL PARTS" />
@@ -1070,6 +1070,6 @@
   <textString id="You need to pick a Role or Person to forward to." value="You need to pick a Role or Person to forward to." />
   <textString id="You will be marking this task Closed" value="This will mark task closed" />
   <textString id="YouCanNotAssignBothAPersonAndARole" value="You cannot assign both a Person and a Role" />
-  <textString id="Your Saved Searches" value="Your Saved Searches" />
+  <textString id="Your Updated Searches" value="Your Updated Searches" />
   <textString id="Your stop date must be greater than your start date." value="Your stop date must be greater than your start date.	" />
 </txt>

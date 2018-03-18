@@ -630,7 +630,7 @@
 				</td>
 			</tr>
 		</table>
-		<div id="AjaxSaveData" style="font-size: x-small;color:silver;"></div>
+		<div id="AjaxUpdateData" style="font-size: x-small;color:silver;"></div>
     <div id="tip_popUp" class="tip_popUp" style="display:none;position:absolute;">
     </div>
 		<xsl:if test="/Doc_Webpage/ROLES/ARole[@name = $adminRole]">

@@ -16,6 +16,7 @@ namespace Msr.Services.Roles.ViewModels
             ChildRoles = new List<string>();
             PeopleAssigned = new List<string>();
         }
+
         public string Id { get; set; }
 
         [Required]
@@ -30,6 +31,7 @@ namespace Msr.Services.Roles.ViewModels
 
         public string ObjectId { get; set; }
 
+        public string WfId { get; set; }
 
         public IEnumerable<SelectListItem> SecurityLevels { get; set; }
 
@@ -49,7 +51,7 @@ namespace Msr.Services.Roles.ViewModels
 
         public List<SelectListItem> ListPeopleAssigned { get; set; }
 
-        public void Setup(RoleService roleService, UserService userService, LoggedUserIdResult getCurrentUser, string ntlog)
+        public void Setup(RoleService roleService, UserService userService, LoggedUserIdResult getCurrentUser)
         {
             SecurityLevels = new List<SelectListItem>
             {
@@ -81,7 +83,8 @@ namespace Msr.Services.Roles.ViewModels
                 }
             };
 
-            ListChildRoles = roleService.GetActiveRoles().ToList().Select(x => new SelectListItem
+
+            ListChildRoles = roleService.GetActiveRoles().Select(x => new SelectListItem
             {
                 Text = x.Name,
                 Value = x.Id.ToString()
@@ -93,27 +96,17 @@ namespace Msr.Services.Roles.ViewModels
                 Value = x.Root
             }).OrderBy(o => o.Text).ToList();
 
-            //ListPeopleAssigned = roleService.GetApprovedPersons().Select(x => new SelectListItem
-            //{
-            //    Text = x.Full_Name,
-            //    Value = x.Id
-            //}).OrderBy(o => o.Text).ToList();
-
-
-            ChildRoles = roleService.GetChildRoles(Id, ntlogin: ntlog).Select(x => x.Value).ToList();
-
-            PeopleAssigned = roleService.GetAssignedPeople(Id, ntlogin: ntlog).Select(x => x.Value).ToList();
+            ChildRoles = roleService.GetChildRoles(Id, getCurrentUser.Id).Select(x => x.Value).ToList();
+            PeopleAssigned = roleService.GetAssignedPeople(Id, getCurrentUser.Id).Select(x => x.Value).ToList();
         }
 
-        public SaveRoleViewModel MapToDto(RolesView model)
+        public void Read(RolesView role)
         {
-            return new SaveRoleViewModel
-            {
-                Id = model.Id,
-                Name = model.RoleName,
-                SecurityLevel = model.SecurityLevel,
-                ObjectId = model.ObjectId
-            };
+            Id = role.Id;
+            WfId = role.Id;
+            Name = role.RoleName;
+            SecurityLevel = role.SecurityLevel;
+            ObjectId = role.ObjectId;
         }
     }
 }

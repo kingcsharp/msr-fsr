@@ -3132,7 +3132,7 @@ and then check to see if the tree node has a child with the same name as the sho
 							</xsl:call-template>						
 						</xsl:otherwise>
 					</xsl:choose>');
-					ajaxSaveToFile('<xsl:value-of select="$obj/attribute[@name='ajax']/@value"/>','USING_AJAX=true&amp;' + myPost.substr(1));
+					ajaxUpdateToFile('<xsl:value-of select="$obj/attribute[@name='ajax']/@value"/>','USING_AJAX=true&amp;' + myPost.substr(1));
 					if(hideTogDiv('ROW_ACTION_<xsl:value-of select="$position"/>')){};
 					}
 				</xsl:if>

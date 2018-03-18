@@ -133,11 +133,10 @@
 
 @section scripts
 {
-
+    @Scripts.Render("~/bundles/js/jqueryval")
 
     <script src="//rawgit.com/saribe/eModal/master/dist/eModal.min.js"></script>
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+
     <script type="text/javascript">
         $("form").submit(function (e) {
             $('.selectitem option').prop('selected', true);

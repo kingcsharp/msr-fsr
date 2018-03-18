@@ -121,11 +121,11 @@ namespace Msr.Services.Workflows
 
                 using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
                 {
-                    int i = conn.Execute("A_SP_OBJECT_CHECKOUT", p, commandType: CommandType.StoredProcedure);
+                    var i = conn.Execute("A_SP_OBJECT_CHECKOUT", p, commandType: CommandType.StoredProcedure);
 
-                    var newObjID = p.Get<string>("newObjID");
+                    var newObjId = p.Get<string>("newObjID");
 
-                    result.Entity = newObjID;
+                    result.Entity = newObjId;
 
                     var sqlMainData = string.Format("exec A_SP_OBJECT_GET_MAIN_DATA '{0}','{1}'", objectId, loginId);
                     _dbContext.Database.SqlQuery<ObjectDataResult>(sqlMainData).Single();

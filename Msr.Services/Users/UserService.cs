@@ -44,7 +44,7 @@ namespace Msr.Services.Users
         {
             userName = userName.ToLower().Trim();
 
-            var user = _dbContext.Peoples.Where(x => x.Login.ToLower() == userName && (x.Status == PeopleStatusConstants.Approved)).Select(s => new UserSummary
+            var user = _dbContext.Peoples.Where(x => x.Login.ToLower() == userName && (x.Status == PeopleStatusConstants.Approved || x.Status == PeopleStatusConstants.ApprovedButRevising)).Select(s => new UserSummary
             {
                 Id = s.Id,
                 FirstName = s.FirstName,
@@ -95,7 +95,7 @@ namespace Msr.Services.Users
 
         public List<SearchPeopleResult> GetSearchUser()
         {
-          var users = _dbContext.PeopleObjectViews.Where(x=>x.Status == "APPROVED") .Select(x => new SearchPeopleResult
+          var users = _dbContext.PeopleObjectViews.Where(x=> x.Status == PeopleStatusConstants.Approved || x.Status == PeopleStatusConstants.ApprovedButRevising) .Select(x => new SearchPeopleResult
             {
                 Id = x.Id,
                 Full_Name = x.FirstName + " " + x.LastName,
@@ -117,7 +117,7 @@ namespace Msr.Services.Users
 
         public void UpdatePassword(string id, string password)
         {
-            _dbContext.Database.ExecuteSqlCommand($"update A_PEOPLE_HISTORY set PASSWORD='{AuthenticationHelper.PasswordEncrypt(password)}' WHERE id='{id}' AND SYSTEM_STATUS='ACTIVE'");
+            _dbContext.Database.ExecuteSqlCommand($"update A_PEOPLE_HISTORY set PASSWORD='{AuthenticationHelper.PasswordEncrypt(password)}' WHERE id='{id}'");
         }
 
         public bool ValidatePassword(string id, string password)

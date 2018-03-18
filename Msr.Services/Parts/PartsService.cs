@@ -82,7 +82,7 @@ namespace Msr.Services.Parts
             return result;
         }
 
-        public bool Edit(AddPartViewModel model)
+        public bool Update(AddPartViewModel model)
         {
             try
             {

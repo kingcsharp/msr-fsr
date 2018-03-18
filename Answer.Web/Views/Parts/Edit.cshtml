@@ -19,8 +19,10 @@
                         @using (Html.BeginForm("Edit", "Parts", FormMethod.Post, new { @class = "form form-horizontal partEdit", enctype = "multipart/form-data" }))
                         {
                             @Html.AntiForgeryToken()
-                            <input type="hidden" id="Id" name="Id" value="@Model.Id" />
-                            <input type="hidden" id="ObjectId" name="ObjID" value="@Model.ObjID" />
+                            @Html.HiddenFor(x => x.Id)
+                            @Html.HiddenFor(x => x.ObjID)
+                            @Html.HiddenFor(x => x.WfId)
+
                             <div class="form-group">
                                 @Html.LabelFor(model => model.CompanyPartNumber, htmlAttributes: new { @class = "control-label col-md-2" })
                                 <div class="col-md-8">
@@ -194,7 +196,7 @@
                             <div class="form-group">
                                 <div class="col-md-offset-2 col-md-10">
                                     <input type="submit" value="Submit" class="btn btn-success" />
-                                    @Html.ActionLink("Save & Update Min/Max Inventory Levels", "EditSafetyStock", new { id = Model.ObjID }, new { @class = "btn btn-success" })
+                                    @Html.ActionLink("Update & Update Min/Max Inventory Levels", "EditSafetyStock", new { id = Model.ObjID }, new { @class = "btn btn-success" })
                                     @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-warning" })
                                 </div>
                             </div>

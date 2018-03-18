@@ -149,7 +149,7 @@ namespace Answer.Web.Controllers
             if (ModelState.IsValid)
             {
                 model.NTLogin = GetCurrentUser().Id;
-                //  model.SubParts = null;
+                //  role.SubParts = null;
 
                 var response = taskService.Create(model: model);
 
@@ -406,12 +406,12 @@ namespace Answer.Web.Controllers
         {
             var preProServices = new PreProServices();
 
-            //var model = preProServices.GetById(id);
+            //var role = preProServices.GetById(id);
 
             var applicableObjectsView = new ApplicableObjectsView();
 
             applicableObjectsView.StepId = id;
-            //applicableObjectsView = procedurePreProView.MapToDto(model);
+            //applicableObjectsView = procedurePreProView.Read(role);
 
             //applicableObjectsView.CreatingCo = GetCurrentUser().Company;
 

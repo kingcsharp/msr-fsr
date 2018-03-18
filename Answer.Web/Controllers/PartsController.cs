@@ -261,7 +261,7 @@ namespace Answer.Web.Controllers
                 model.NTLogin = GetCurrentUser().Id;
                 model.SubParts = null;
 
-                var response = _partsService.Edit(model);
+                var response = _partsService.Update(model);
 
                 if (response)
                 {

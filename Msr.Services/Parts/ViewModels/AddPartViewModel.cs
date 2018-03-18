@@ -28,6 +28,8 @@ namespace Msr.Services.Parts.ViewModels
 
         public string Id { get; set; }
 
+        public string WfId { get; set; }
+
         public string ObjID { get; set; }
 
         public string Company { get; set; }
@@ -302,6 +304,7 @@ namespace Msr.Services.Parts.ViewModels
             return new AddPartViewModel
             {
                 Id = model.Id,
+                WfId = model.Id,
                 ObjID = model.ObjectId,
                 Company = model.CompanyName,
                 CompanyPartNumber = model.CompanyPartNumber,

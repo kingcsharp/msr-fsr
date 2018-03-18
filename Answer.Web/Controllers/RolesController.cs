@@ -1,5 +1,4 @@
-﻿
-using Msr.Models.Roles;
+﻿using Msr.Models.Roles;
 using Msr.Services.jqGrid;
 using Msr.Services.Roles;
 using Msr.Services.Roles.ViewModels;
@@ -7,7 +6,6 @@ using Msr.Web.ViewModel.Engineering;
 using System;
 using System.Linq;
 using System.Web.Mvc;
-using Msr.Services.Orders;
 using Msr.Services.Users;
 using Msr.Services.Workflows;
 
@@ -16,10 +14,14 @@ namespace Answer.Web.Controllers
     public class RolesController : BaseController
     {
         private WorkflowService _workflowService;
+        private readonly RoleService _roleService;
+        private readonly UserService _userService;
 
         public RolesController()
         {
             _workflowService = new WorkflowService();
+            _roleService = new RoleService();
+            _userService = new UserService();
         }
 
         public ActionResult Index()
@@ -33,11 +35,9 @@ namespace Answer.Web.Controllers
 
         public ActionResult UserRolesData(JqGridParam param)
         {
-            var roleService = new RoleService();
-
             var defaultStatusList = new[] { "CREATING", "DENIED", "APPROVED", "APPROVED_BUT_REVISING", "APPROVED_BUT_DELETING" };
 
-            var totalRows = roleService.GetUserRolesQueryable();
+            var totalRows = _roleService.GetUserRolesQueryable();
 
             totalRows = totalRows.Where(x => defaultStatusList.Contains(x.Status));
 
@@ -128,24 +128,25 @@ namespace Answer.Web.Controllers
         }
         public ActionResult Create()
         {
-            var saveRoleViewModel = new SaveRoleViewModel();
+            var currentUser = GetCurrentUser();
 
-            saveRoleViewModel.Setup(new RoleService(), new UserService(),GetCurrentUser(),GetCurrentUser().Id);
+            var vm = new SaveRoleViewModel();
 
-            return View(saveRoleViewModel);
+            vm.Setup(_roleService, _userService, currentUser);
+
+            return View(vm);
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Create(SaveRoleViewModel model)
+        public ActionResult Create(SaveRoleViewModel vm)
         {
-            var roleService = new RoleService();
+            var currentUser = GetCurrentUser();
 
             if (ModelState.IsValid)
             {
-                //Need to dynamic 
-                model.NTLogin = GetCurrentUser().Id;
+                vm.NTLogin = currentUser.Id;
 
-                var response = roleService.Create(model: model);
+                var response = _roleService.Create(model: vm);
 
                 if (response)
                 {
@@ -157,65 +158,57 @@ namespace Answer.Web.Controllers
                 {
                     TempData["ErrorMessage"] = "Something went wrong.";
 
-                    model.Setup(new RoleService(), new UserService(), GetCurrentUser(), GetCurrentUser().Id);
+                    vm.Setup(_roleService, _userService, currentUser);
 
-                    return View(model);
+                    return View(vm);
                 }
             }
 
-            model.Setup(new RoleService(), new UserService(), GetCurrentUser(), GetCurrentUser().Id);
+            vm.Setup(_roleService, _userService, currentUser);
 
-            return View(model);
+            return View(vm);
         }
 
         public ActionResult Edit(string id)
         {
-            var currrentUser = GetCurrentUser();
+            var vm = new SaveRoleViewModel();
 
-            var roleService = new RoleService();
+            var currentUser = GetCurrentUser();
 
-            var result = _workflowService.CheckOutObject(id, currrentUser.Id);
+            var result = _workflowService.CheckOutObject(id, currentUser.Id);
 
-            var model = roleService.GetRoleByid(result.Entity);
+            var role = _roleService.GetRoleById(result.Entity);
+            vm.Read(role);
+            vm.Setup(_roleService, _userService, currentUser);
 
-            var saveRoleViewModel = new SaveRoleViewModel();
-
-            saveRoleViewModel = saveRoleViewModel.MapToDto(model);
-            saveRoleViewModel.Setup(new RoleService(), new UserService(), currrentUser, currrentUser.Id);
-
-            return View(saveRoleViewModel);
+            return View(vm);
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Edit(SaveRoleViewModel model)
         {
-            var currrentUser = GetCurrentUser();
-
-            var roleService = new RoleService();
+            var currentUser = GetCurrentUser();
 
             if (ModelState.IsValid)
             {
-                model.NTLogin = currrentUser.Id;
+                model.NTLogin = currentUser.Id;
 
-                var response = roleService.Save(model: model);
+                var response = _roleService.Update(model);
 
                 if (response)
                 {
                     TempData["SuccessMessage"] = "User Role has been Updated successfully.";
-
                     return RedirectToAction("Index");
                 }
-                else
-                {
-                    TempData["ErrorMessage"] = "Something went wrong.";
 
-                    model.Setup(new RoleService(), new UserService(), currrentUser, currrentUser.Id);
+                TempData["ErrorMessage"] = "Something went wrong.";
 
-                    return View(model);
-                }
+                model.Setup(_roleService, _userService, currentUser);
+
+                return View(model);
             }
 
-            model.Setup(new RoleService(), new UserService(), currrentUser, currrentUser.Id);
+            model.Setup(_roleService, _userService, currentUser);
 
             return View(model);
         }
@@ -223,13 +216,11 @@ namespace Answer.Web.Controllers
 
         public ActionResult RoleDelete(string id,string ntlogin)
         {
-            var taskService = new RoleService();
-
-            var response = taskService.Delete(id: id,ntlogin:ntlogin);
+            var response = _roleService.Delete(id: id,ntlogin:ntlogin);
 
             if (response)
             {
-                TempData["SuccessMessage"] = "Location deleted successfully.";
+                TempData["SuccessMessage"] = "Role deleted successfully.";
 
                 return RedirectToAction("Index");
             }
@@ -241,14 +232,14 @@ namespace Answer.Web.Controllers
 
         public ActionResult Detail(string id)
         {
-            var roleService = new RoleService();
+            var currentUser = GetCurrentUser();
 
-            var model = roleService.GetRoleByid(id: id);
+            var model = _roleService.GetRoleById(id: id);
 
             var saveRoleViewModel = new SaveRoleViewModel();
 
-            saveRoleViewModel = saveRoleViewModel.MapToDto(model);
-            saveRoleViewModel.Setup(new RoleService(), new UserService(), GetCurrentUser(), GetCurrentUser().Id);
+            saveRoleViewModel.Read(model);
+            saveRoleViewModel.Setup(_roleService, _userService, currentUser);
 
             return View(saveRoleViewModel);
         }
