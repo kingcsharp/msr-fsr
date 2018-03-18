@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text;
 using Msr.Repositories;
-using System.Threading.Tasks;
 using Msr.Models.ActualParts;
 using System.Data.SqlClient;
 using System.Web;
@@ -25,6 +23,7 @@ namespace Msr.Services.ActualParts
         {
             _dbContext = new MsrDbContext();
         }
+
         public IQueryable<ActualPartsView> GetActualPartsQueryable()
         {
             return _dbContext.ActualPartsViews;
@@ -34,10 +33,12 @@ namespace Msr.Services.ActualParts
         {
             return _dbContext.ActualPartViewHistoryViews;
         }
+
         public ActualPartsView GetActualPartById(string id)
         {
             return GetActualPartsQueryable().SingleOrDefault(x => x.ObjectId == id);
         }
+
         public List<SelectFile> GetActualParts(string status)
         {
             var result = GetActualPartsQueryable().Where(x => x.Status.StartsWith(status) & !(x.SysName == null || x.SysName.Trim() == string.Empty))
@@ -65,6 +66,7 @@ namespace Msr.Services.ActualParts
 
             return result;
         }
+
         public bool Edit(SaveActualPartsViewModel model)
         {
             try
@@ -98,6 +100,7 @@ namespace Msr.Services.ActualParts
                 return false;
             }
         }
+
         public bool Create(SaveActualPartsViewModel model)
         {
             try

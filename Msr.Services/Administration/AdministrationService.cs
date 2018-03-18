@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Security.Permissions;
 using System.Web;
 using System.Web.Mvc;
 using System.Xml;
@@ -94,11 +92,9 @@ namespace Msr.Services.Administration
 
                     _dbContext.Database.ExecuteSqlCommand(sql);
                 }
-
             }
             catch (Exception ex)
             {
-
             }
 
             return result;
@@ -116,11 +112,9 @@ namespace Msr.Services.Administration
 
                     _dbContext.Database.ExecuteSqlCommand(sql);
                 }
-
             }
             catch (Exception ex)
             {
-               
             }
 
             return result;
@@ -155,11 +149,9 @@ namespace Msr.Services.Administration
 
                     _dbContext.Database.ExecuteSqlCommand(sql);
                 }
-
             }
             catch (Exception ex)
             {
-
             }
 
             return result;
@@ -289,7 +281,6 @@ namespace Msr.Services.Administration
                     result.SuccessMessage = "Reassigned the 0 people that worked for " + model.Id + " to " +
                                             model.ToBossId;
                 }
-
             }
             catch (Exception ex)
             {
