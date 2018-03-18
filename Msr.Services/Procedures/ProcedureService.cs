@@ -321,6 +321,26 @@ namespace Msr.Services.Procedures
 
                 result.Entity = saveProcedureProcedure.NewObjId;
 
+                //var deleteReferenceFileProcedure = new DeleteFileProcedure() { ObjID = saveProcedureProcedure.NewObjId, Type = null, NTLogin = model.NTLogin };
+                //_dbContext.Database.ExecuteStoredProcedure(deleteReferenceFileProcedure);
+
+                if (model.ReferenceFiles != null)
+                {
+                    foreach (var file in model.ReferenceFiles.Split(','))
+                    {
+                        var saveFileProcedure =
+                            new SaveFileProcedure
+                            {
+                                ObjId = saveProcedureProcedure.NewObjId,
+                                DocId = file,
+                                Type = null,
+                                NTLogin = model.NTLogin
+                            };
+
+                        _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
+                    }
+                }
+
                 var deleteProcedureRolesProcedure = new DeleteProcedureRolesProcedure() { ObjId = saveProcedureProcedure.NewObjId, NTLogin = model.NTLogin };
 
                 _dbContext.Database.ExecuteStoredProcedure(deleteProcedureRolesProcedure);

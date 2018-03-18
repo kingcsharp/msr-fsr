@@ -86,6 +86,9 @@
             key: true,
             ajaxCellOptions: {},
             gridComplete: function () {
+
+                UnLockWorkflow(returnUrl);
+
                 $('.editlocation').on('click',
                     function (e) {
                         e.preventDefault();

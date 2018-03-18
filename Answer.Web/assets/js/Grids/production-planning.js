@@ -128,7 +128,7 @@ function LoadGrid(url, returnUrl) {
             key: true,
             ajaxCellOptions: {},
             gridComplete: function () {
-
+                UnLockWorkflow(returnUrl);
             },
 
         });

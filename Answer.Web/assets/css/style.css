@@ -2195,3 +2195,9 @@ input.pre-populated {
 .color-red {
     color: #ca0315 !important;
 }
+.file-caption {
+    margin-top: 6px;
+}
+.file-caption-main {
+    width: 88% !important;
+}

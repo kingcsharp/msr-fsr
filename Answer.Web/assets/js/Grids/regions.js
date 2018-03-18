@@ -76,25 +76,7 @@ function SetUpRegionGrid(returnUrl) {
         ajaxCellOptions: {},
         gridComplete: function () {
 
-            $('.unlock').on('click',
-                function (e) {
-                    e.preventDefault();
-
-                    var callBackId = $(this).data('call-back-id');
-                    var callBackName = $(this).data('call-back-name');
-
-                    eModal.confirm('Pressing OK will delete revision "' + callBackName + '"', 'Confirmation delete')
-                        .then(confirmCallback, optionalCancelCallback);
-
-                    function confirmCallback() {
-                        window.location.href = "/workflow/UnlockAndDelete?objId=" + callBackId + '&returnUrl=' + returnUrl;
-                    }
-
-                    function optionalCancelCallback() {
-
-                    }
-
-                });
+            UnLockWorkflow(returnUrl);
         }
     });
 

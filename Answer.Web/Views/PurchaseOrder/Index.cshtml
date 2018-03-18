@@ -28,11 +28,8 @@
 
 @section scripts
 {
-    <script src="~/assets/js/plugins/bootstrap3/bootstrap-dialog.min.js"></script>
-    <script type="text/javascript" src="~/assets/js/i18n/grid.locale-en.js"></script>
-    <script type="text/javascript" src="~/assets/js/jquery.jqGrid.min.js"></script>
-    <script type="text/javascript" src="~/assets/js/Grids/purchase-order.js"></script>
-    <script type="text/javascript" src="~/assets/js/Grids/purchase-order.js"></script>
+    @Scripts.Render("~/bundles/js/jqgrid")
+    @Scripts.Render("~/bundles/js/jqgrid-purchase-order")
 
     <script type="text/javascript">
         $(document).ready(function () {

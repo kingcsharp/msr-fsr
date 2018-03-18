@@ -1,17 +1,18 @@
 ﻿@model IEnumerable<Msr.Services.Companies.ViewModels.CompanyImportViewModel>
 @{
-    ViewBag.Title = "Companies Import";
+    ViewBag.Title = "Part Import";
 }
 <style>
     .validation-summary-errors {
         color: red;
     }
 </style>
+
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="row">
             <h2 class="page-header">
-                Add File<button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
+                Part Import @Html.Partial("_HelpViewButton")
             </h2>
             <div class="col-lg-10">
                 <div class="form-horizontal">
@@ -39,20 +40,30 @@
                             PHONE_OF_CO<br />
                             LINKED_ID_OF_CO<br />
                         </div>
-                        <div class="alert alert-info">
-                            <a class="btn btn-link" href="https://ra2.s3.amazonaws.com/Answer2/51029aae-b96f-46e5-bf04-b7ac1e9dffbc-Part.xlsx" target="_blank">Download excel file sample </a>
-                        </div>
                     </div>
-                    @using (Html.BeginForm("Import", "Companies", FormMethod.Post, new { enctype = "multipart/form-data" }))
+
+                    @using (Html.BeginForm("Import", "Parts", FormMethod.Post, new
+                    { enctype = "multipart/form-data" }))
                     {
                         @Html.AntiForgeryToken()
                         @Html.ValidationSummary()
-                        <label class="btn btn-primary" for="postedFile">
-                            <input id="postedFile" type="file" name="postedFile" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" style="display:none" onchange="$('#upload-file-info').html(this.files[0].name)" />
-                            Browse...
-                        </label>
-                        <span class='label label-info' id="upload-file-info"></span><br />
-                        <input type="submit" class="btn btn-success" value="Process Import" />
+
+                        <table>
+                            <tr>
+                                <td>
+                                    <label class="btn btn-primary" for="postedFile">
+                                        <input id="postedFile" type="file" name="postedFile" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" style="display:none" onchange="$('#upload-file-info').html(this.files[0].name)" />
+                                        Browse...
+                                    </label>
+                                </td>
+                                <td style="padding-left: 5px;">
+                                    <input type="submit" class="btn btn-success" value="Process Import"/>
+                                </td>
+                                <td style="padding-left: 5px;">
+                                    <a class="btn btn-link" href="" target="_blank">Download excel file sample </a>
+                                </td>
+                            </tr>
+                        </table>
                     }
                 </div>
                 @*will delete it when implement save just for testing propuse*@

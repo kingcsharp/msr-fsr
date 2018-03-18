@@ -179,24 +179,22 @@ namespace Answer.Web.Controllers
                         Id = Convert.ToInt32(step.Id),
                         ObjectId = step.Id,
                         Process = step.StepTitle,
+                        StepTitle = step.StepTitle,
                         Step = (int)step.Print_Order
                     });
                 }
             }
             else
             {
-                foreach (var item in vm.Steps)      
+                foreach (var item in vm.Steps)
                 {
-                    var step = procedureSteps.Where(x => x.Id == item.ObjectId).FirstOrDefault();
+                    var step = procedureSteps.FirstOrDefault(x => x.Id == item.ObjectId);
 
-                    item.Process = step.StepTitle;
+                    if (step != null) item.Process = step.StepTitle;
                 }
             }
 
             vm.ProductName = requirment.ProductName;
-            ////vm.AddPartViewModel.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), currentUser.Company, currentUser.Id);
-            //vm.SaveProcedureViewModel.Setup(_proceduresService, new RoleService(), new ProcedureVerbsService(), currentUser.Id);
-
             return View(vm);
         }
 
@@ -227,6 +225,7 @@ namespace Answer.Web.Controllers
                         Id = Convert.ToInt32(step.Id),
                         ObjectId = step.Id,
                         Process = step.StepTitle,
+                        StepTitle = step.StepTitle,
                         Step = (int)step.Print_Order
                     });
                 }
@@ -246,7 +245,7 @@ namespace Answer.Web.Controllers
             if (!string.IsNullOrWhiteSpace(newProcedure))
             {
                 vm.ProductProcedureId = null;
-                vm.Steps = new List<RequirementStepsDetailsViewModel> {new RequirementStepsDetailsViewModel()};
+                vm.Steps = new List<RequirementStepsDetailsViewModel> { new RequirementStepsDetailsViewModel() };
                 vm.Setup(_productionPlanService, _preProServices);
 
                 return View(vm);
@@ -269,7 +268,6 @@ namespace Answer.Web.Controllers
                         Id = Convert.ToInt32(step.Id),
                         ObjectId = step.Id,
                         Process = step.StepTitle,
-                        StepTitle = step.StepTitle,
                         Step = (int)step.Print_Order
                     });
                 }
@@ -312,9 +310,7 @@ namespace Answer.Web.Controllers
             }
 
             vm.Setup(_productionPlanService, _preProServices);
-           /// vm.AddPartViewModel.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), GetCurrentUser().Company, GetCurrentUser().Id);
-          ///  vm.SaveProcedureViewModel.Setup(new ProceduresService(), new RoleService(), new ProcedureVerbsService(), GetCurrentUser().Id);
-
+            
             return View(vm);
         }
 
@@ -372,8 +368,6 @@ namespace Answer.Web.Controllers
                 submitWorkflow.LoginId = currentUser.Id;
                 _workflowService.SubmitWorkflow(submitWorkflow);
 
-                ///_productionPlanService.Update(productionPlanningId, response.Entity);
-
                 var procedureList = _productionPlanService.GetProceduretList();
 
                 return Json(new { Message = result.SuccessMessage, data = procedureList, ProcedureId = response.Entity }, JsonRequestBehavior.AllowGet);
@@ -386,7 +380,6 @@ namespace Answer.Web.Controllers
         public ActionResult Part()
         {
             var viewModel = new RequirementStepsViewModel();
-          ////  viewModel.AddPartViewModel.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), GetCurrentUser().Company, GetCurrentUser().Id);
 
             return PartialView("_Parts", viewModel);
         }

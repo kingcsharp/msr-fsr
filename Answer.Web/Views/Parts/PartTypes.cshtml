@@ -22,20 +22,12 @@
 
 @section scripts
 {
-    <script src="~/assets/js/plugins/bootstrap3/bootstrap-dialog.min.js"></script>
-    <script type="text/javascript" src="~/assets/js/i18n/grid.locale-en.js"></script>
-    <script type="text/javascript" src="~/assets/js/jquery.jqGrid.min.js"></script>
+    @Scripts.Render("~/bundles/js/jqgrid")
     
-    <script src="//cdn.rawgit.com/noelboss/featherlight/1.6.1/release/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
-    
-    <script>
-        //$.jgrid.defaults.responsive = true;
+    <script type="text/javascript">
+        
         $.jgrid.defaults.styleUI = 'Bootstrap';
 
-        
-
-    </script>
-    <script>
         $("#jqGrid").jqGrid({
             url: '/Parts/PartTypesData',
             mtype: "GET",
@@ -179,12 +171,12 @@
 
         });
         $('#jqGrid').navGrid("#jqGridPager", {
-            search: false, // show search button on the toolbar
-            add: false,
-            edit: false,
-            del: false,
-            refresh: true
-        },
+                search: false, // show search button on the toolbar
+                add: false,
+                edit: false,
+                del: false,
+                refresh: true
+            },
             {},  // edit options
             {}, // add options
             {}, // delete options

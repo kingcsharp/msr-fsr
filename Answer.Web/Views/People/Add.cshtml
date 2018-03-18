@@ -188,12 +188,11 @@
     <script type="text/javascript">
 
         var fileUploaderGrid = new FileUploaderGrid();
+        var fileUploader = new FileUploader();
 
         $(document).ready(function () {
 
             var $el = $('#input-files');
-
-            var fileUploader = new FileUploader();
 
             fileUploader.InitUploader($el,
                 '@Url.Action("FileUploaderBootstrap", "Doc")',
@@ -240,7 +239,7 @@
         };
 
         function SelectIds() {
-             fileUploaderGrid.SelectIdsForAdd(fileUploaderGrid, '@Url.Action("FileUploaderBootstrap", "Doc")');
+            fileUploaderGrid.SelectIdsForAdd(fileUploader, '@Url.Action("FileUploaderBootstrap", "Doc")');
         }
     </script>
 }

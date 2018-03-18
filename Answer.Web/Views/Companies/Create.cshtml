@@ -114,23 +114,22 @@
 
     <script type="text/javascript">
 
-        fileUploaderGrid = new FileUploaderGrid();
+        var fileUploaderGrid = new FileUploaderGrid();
+        var fileUploader = new FileUploader();
 
         $(document).ready(function () {
 
-            var fileUploader = new FileUploader();
             fileUploader.InitUploader($('#input-files'), '@Url.Action("FileUploaderBootstrap", "Doc")', [],[]);
             fileUploaderGrid.SetupSelectImage();
 
             $("form").submit(function(e) {
                 $('.selectitem option').prop('selected', true);
-
             });
 
         });
 
         function SelectIds() {
-            fileUploaderGrid.SelectIdsForAdd(fileUploaderGrid, '@Url.Action("FileUploaderBootstrap", "Doc")');
+            fileUploaderGrid.SelectIdsForAdd(fileUploader, '@Url.Action("FileUploaderBootstrap", "Doc")');
         }
     </script>
 }

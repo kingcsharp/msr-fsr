@@ -294,7 +294,7 @@ namespace Msr.Services.Parts.ViewModels
 
             SpecialCustomers = partsService.GetPartSpecialCustomers(id: Id).ToList();
 
-            DocLinks = documentFilesService.GetDocByObjectId(Id);
+            DocLinks = documentFilesService.GetDocByObjectId(ObjID);
         }
 
         public AddPartViewModel MapToDto(PartsView model)

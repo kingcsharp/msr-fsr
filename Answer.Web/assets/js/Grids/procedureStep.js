@@ -117,8 +117,8 @@
                     }
 
                 });
-        },
-
+            UnLockWorkflow(returnUrl);
+        }
     });
     $('#jqGrid').navGrid("#jqGridPager", {
             refresh: true,

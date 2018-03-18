@@ -49,6 +49,7 @@
                 //element.fileinput("upload");
             });
 
+        $('.file-caption-main').append('<div style="float: right;width:10px" data-call-back-id="ReferenceFiles" data-toggle="modal" data-target="#select-images"> <button type="button" class="btn btn-success btn-sm">Select existing files</button></div>')
 
     };
 

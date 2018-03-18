@@ -1,5 +1,4 @@
-﻿@using Msr.Models.CustomerRequirements
-@model Msr.Services.ProductionPlanning.ViewModels.RequirementStepsViewModel
+﻿@model Msr.Services.ProductionPlanning.ViewModels.RequirementStepsViewModel
 
 <div id="add-steps">
 
@@ -64,7 +63,7 @@
                             @for (int i = 0; i < Model.Steps.Count; i++)
                         {
                             var rowid = "row" + i;
-                                <tr id="@rowid" data-toggle="tooltip" data-placement="top" title="">
+                            <tr id="@rowid" data-value="@Model.Steps[i].ObjectId" data-toggle="tooltip" data-placement="top" title="">
                                     <td>
                                         @Html.HiddenFor(x => Model.Steps[i].Id)
                                         @Html.HiddenFor(x => Model.Steps[i].ObjectId)

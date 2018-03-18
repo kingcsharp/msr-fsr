@@ -322,28 +322,6 @@
         autowidth: true,
         colMenu: true,
         gridComplete: function () {
-
-            $('.unlock').on('click',
-                function (e) {
-                    e.preventDefault();
-
-                    var callBackId = $(this).data('call-back-id');
-                    var callBackName = $(this).data('call-back-name');
-
-                    eModal.confirm('Pressing OK will delete revision "' + callBackName + '"', 'Confirmation delete')
-                        .then(confirmCallback, optionalCancelCallback);
-
-                    function confirmCallback() {
-                        window.location.href = "/workflow/UnlockAndDelete?objId=" + callBackId + '&returnUrl=' + returnUrl;
-                    }
-
-                    function optionalCancelCallback() {
-
-                    }
-
-                });
-
-
             $('.editpurchaseorder').on('click',
                 function (e) {
                     e.preventDefault();
@@ -352,7 +330,7 @@
                     var callBackName = $(this).data('call-back-name');
 
                     eModal.confirm(
-                            'Are you sure?')
+                        'Are you sure?')
                         .then(confirmCallback, optionalCancelCallback);
 
                     function confirmCallback() {
@@ -363,17 +341,17 @@
                     }
 
                 });
-
+            UnLockWorkflow(returnUrl);
         }
 
     });
     $('#jqGrid').navGrid("#jqGridPager", {
-            search: false,
-            add: false,
-            edit: false,
-            del: false,
-            refresh: true
-        },
+        search: false,
+        add: false,
+        edit: false,
+        del: false,
+        refresh: true
+    },
         {},  // edit options
         {}, // add options
         {}, // delete options

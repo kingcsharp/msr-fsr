@@ -580,9 +580,6 @@
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_ADMIN_GET_ADMIN_ROLE_ID.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_ADMIN_GET_COMPANIES_TO_VIEW_MY_COMPANY.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_ADMIN_GET_NEWS_PROCEDURE.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_ADMIN_GET_PEOPLE_PAGE_HIT_DATA.sql">
-      <QuotedIdentifier>Off</QuotedIdentifier>
-    </Build>
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_ADMIN_GET_QUOTE_HANDLER_DATA.sql">
       <QuotedIdentifier>Off</QuotedIdentifier>
     </Build>

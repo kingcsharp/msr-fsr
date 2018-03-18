@@ -146,37 +146,37 @@ namespace Msr.Services.ProductionPlanning
                 if (!string.IsNullOrWhiteSpace(submit))
                 {
                     foreach (var step in model.Steps)
-                {
-                    if (string.IsNullOrWhiteSpace(step.ObjectId))
                     {
-                        step.ObjectId = "0";
-                    }
-                    var existingStep = procedureSteps.SingleOrDefault(x => x.Id == step.ObjectId);
-
-                    if (existingStep == null)
-                    {
-                        var template = _preProServices.GetById(step.Process);
-
-                        var vm = new GetStepEditDataViewModel
+                        if (string.IsNullOrWhiteSpace(step.ObjectId))
                         {
-                            GetStepEditData =
-                            {
-                                Step_Text = template.StepText,
-                                Print_Order = step.Step
-                            },
-                            ProcObjId = model.ProductProcedureId,
-                            ReplacementCost = step.ReplacementCost,
-                            Utilization = step.Utilization,
-                            UsefulLife = step.UsefulLife,
-                            EquipExpensePerMinute = step.EquipExpensePerMinute,
-                            AnnualRM = step.AnnualRM,
-                            RMPerMinute = step.RMPerMinute
-                        };
+                            step.ObjectId = "0";
+                        }
+                        var existingStep = procedureSteps.SingleOrDefault(x => x.Id == step.ObjectId);
 
-                        var newStepData = _proceduresService.CreateStepData(vm);
-                        step.ObjectId = newStepData.Entity;
+                        if (existingStep == null)
+                        {
+                            var template = _preProServices.GetById(step.Process);
+
+                            var vm = new GetStepEditDataViewModel
+                            {
+                                GetStepEditData =
+                                {
+                                    Step_Text = template.StepText,
+                                    Print_Order = step.Step
+                                },
+                                ProcObjId = model.ProductProcedureId,
+                                ReplacementCost = step.ReplacementCost,
+                                Utilization = step.Utilization,
+                                UsefulLife = step.UsefulLife,
+                                EquipExpensePerMinute = step.EquipExpensePerMinute,
+                                AnnualRM = step.AnnualRM,
+                                RMPerMinute = step.RMPerMinute
+                            };
+
+                            var newStepData = _proceduresService.CreateStepData(vm);
+                            step.ObjectId = newStepData.Entity;
+                        }
                     }
-                }
                     requirment.Status = CustomerSubmittedRequirementConstants.Completed;
                 }
                 else

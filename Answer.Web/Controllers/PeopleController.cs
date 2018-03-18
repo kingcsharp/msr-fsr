@@ -180,7 +180,7 @@ namespace Answer.Web.Controllers
             return View(people);
         }
 
-        [AcceptVerbs(verbs: HttpVerbs.Post)]
+        [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Add(AddPeopleViewModel model)
         {
             if (ModelState.IsValid)
@@ -298,7 +298,7 @@ namespace Answer.Web.Controllers
 
             if (response)
             {
-                TempData["SuccessMessage"] = "People has been updated successfully.";
+                TempData["SuccessMessage"] = "User has been updated successfully.";
                 return RedirectToAction("Index");
             }
 

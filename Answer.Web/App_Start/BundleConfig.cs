@@ -21,6 +21,18 @@ namespace Answer.Web
                 .Include("~/assets/js/msr/fileupload/uploader-grid.js")
             );
 
+            bundles.Add(new ScriptBundle("~/bundles/js/jqgrid")
+                .Include("~/assets/js/plugins/bootstrap3/bootstrap-dialog.min.js")
+                .Include("~/assets/js/jquery.jqGrid.min.js")
+                .Include("~/assets/js/i18n/grid.locale-en.js")
+                .Include("~/assets/js/msr/grid-common.js")
+            );
+
+            bundles.Add(new ScriptBundle("~/bundles/js/jqgrid-purchase-order")
+                .Include("~/assets/js/Grids/purchase-order.js")
+            );
+
+
             // Use the development version of Modernizr to develop with and learn from. Then, when you're
             // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
