@@ -5,7 +5,9 @@ using Msr.Web.ViewModel.Engineering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 using Answer.Web.ViewModel;
 using Msr.Services.Documents;
 using Msr.Services.Parts.ViewModels;
@@ -22,12 +24,16 @@ namespace Answer.Web.Controllers
         private readonly LocationService _locationService;
         private readonly PartsService _partsService;
         private readonly RoleService _roleService;
+        private readonly PartTypeService _partTypeService;
+        private readonly DocumentFilesService _documentFilesService;
 
         public PartsController()
         {
             _locationService = new LocationService();
             _partsService = new PartsService();
             _roleService = new RoleService();
+            _partTypeService = new PartTypeService();
+            _documentFilesService = new DocumentFilesService();
         }
 
         public ActionResult Index()
@@ -96,6 +102,7 @@ namespace Answer.Web.Controllers
                     else if (rule.field == nameof(PartsView.Status))
                     {
                         var statusList = rule.data.Split(',').Select(x => x.Trim().ToLower());
+
                         if (statusList.Any())
                         {
                             totalRows = totalRows.Where(x => statusList.Contains(x.Status.ToLower()));
@@ -138,6 +145,7 @@ namespace Answer.Web.Controllers
 
             return Json(json, JsonRequestBehavior.AllowGet);
         }
+
         public ActionResult Details(string id)
         {
             var taskService = new PartsService();
@@ -168,20 +176,21 @@ namespace Answer.Web.Controllers
 
             return View(part);
         }
+
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult AddPart(AddPartViewModel model)
         {
-            var taskService = new PartsService();
+            var partsService = new PartsService();
+
+            var curerntUser = GetCurrentUser();
 
             if (ModelState.IsValid)
             {
-                var curerntUser = GetCurrentUser();
-
                 model.NTLogin = curerntUser.Id;
                 model.SubParts = null;
                 model.Company = curerntUser.Company;
 
-                var response = taskService.Create(model);
+                var response = partsService.Create(model);
 
                 if (!response.HasErrors())
                 {
@@ -193,14 +202,14 @@ namespace Answer.Web.Controllers
                 {
                     TempData["ErrorMessage"] = "Something went wrong.";
 
-                    model.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), GetCurrentUser().Company,GetCurrentUser().Id);
+                    model.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), curerntUser.Company,curerntUser.Id);
 
                     return View(model);
                 }
 
             }
 
-            model.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), GetCurrentUser().Company, GetCurrentUser().Id);
+            model.Setup(new DocumentFilesService(), _partsService,_partTypeService, curerntUser.Company, curerntUser.Id);;
 
             return View(model);
 
@@ -217,23 +226,42 @@ namespace Answer.Web.Controllers
 
             part = part.MapToDto(model);
 
-            part.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), GetCurrentUser().Company, GetCurrentUser().Id);
+            part.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), currrentUser.Company, currrentUser.Id);
 
             part.InternalEqualParts = _partsService.GetInternalEqualPartByPartId(part.Id);
+
+            part.InternalEqualParts = _partsService.GetInternalEqualPartByPartId(part.Id);
+
+            var preview = string.Join(",", part.DocLinks.ToArray().Select(x => string.Format("{0}{1}{0}", "\'", x.SERVER_PATH)));
+            ViewBag.Preview = preview;
+
+            var jsonSerialiser = new JavaScriptSerializer();
+            var previewConfig = jsonSerialiser.Serialize(part.DocLinks.Select(x => new
+            {
+                caption = x.NAME,
+                type = x.TYPE,
+                size = 6666,
+                url = Url.Action("DeletesingleReference", "Documents", new {file = x.LINKED_DOC_ID}),
+                downloadUrl = x.SERVER_PATH,
+                key = x.LINKED_DOC_ID
+            }));
+
+            ViewBag.PreviewConfig = previewConfig;
+
             return View(part);
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Edit(AddPartViewModel model)
         {
-            var taskService = new PartsService();
+            var currentUser = GetCurrentUser();
 
             if (ModelState.IsValid)
             {
                 model.NTLogin = GetCurrentUser().Id;
                 model.SubParts = null;
 
-                var response = taskService.Edit(model);
+                var response = _partsService.Edit(model);
 
                 if (response)
                 {
@@ -244,12 +272,12 @@ namespace Answer.Web.Controllers
 
                 TempData["ErrorMessage"] = "Something went wrong.";
 
-                model.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), GetCurrentUser().Company, GetCurrentUser().Id);
+                model.Setup(_documentFilesService, _partsService, _partTypeService, currentUser.Company, currentUser.Id);
 
                 return View(model);
             }
 
-            model.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), GetCurrentUser().Company, GetCurrentUser().Id);
+            model.Setup(_documentFilesService, _partsService, _partTypeService, currentUser.Company, currentUser.Id);
 
             return View(model);
         }
@@ -319,9 +347,41 @@ namespace Answer.Web.Controllers
                 _partsService.UpdatePartsSafetyStocks(safetyStock, partObjectId, user.Id);
             }
 
-            TempData["SuccessMessage"] = "Edit Safety Stock updated successfully.";
+            TempData["SuccessMessage"] = "Update Safety Stock updated successfully.";
 
             return RedirectToAction("EditSafetyStock");
+        }
+
+        public ActionResult Import()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Import(HttpPostedFileBase postedFile)
+        {
+            if (ModelState.IsValid)
+            {
+
+                if (postedFile != null && postedFile.ContentLength > 0)
+                {
+                    var response = _partsService.ImportParts(postedFile, GetCurrentUser().Id);
+
+                    if (!response.HasErrors())
+                    {
+                        TempData["SuccessMessage"] = response.SuccessMessage;
+                        return RedirectToAction("Index");
+                    }
+
+                    TempData["ErrorMessage"] = response.ErrorMessage;
+                    return View();
+                }
+
+                ModelState.AddModelError("File", "Please Upload Your file");
+                return View();
+            }
+            ModelState.AddModelError("File", "Please Upload Your file");
+            return View();
         }
     }
 }

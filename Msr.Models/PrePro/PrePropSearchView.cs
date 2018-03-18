@@ -2,7 +2,7 @@
 
 namespace Msr.Models.PrePro
 {
-   public class PrePropSearchView
+    public class PrePropSearchView
     {
         public string Title { get; set; }
         public string Id { get; set; }
@@ -32,5 +32,6 @@ namespace Msr.Models.PrePro
         public string ReferenceVerb { get; set; }
         public string SystemTask { get; set; }
         public int? StartOnCounter { get; set; }
+        public string ReferenceFiles { get; set; }
     }
 }

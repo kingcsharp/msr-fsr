@@ -1,16 +1,16 @@
 ﻿using Msr.Models.Parts;
 using Msr.Repositories;
-using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Web;
 using Msr.Services.Parts.Procedures;
 using EntityFrameworkExtras.EF6;
 using Msr.Services.Parts.ViewModels;
-using System.Data;
 using Msr.Models.Common;
-using Msr.Models.People;
+using ExcelDataReader;
 
 namespace Msr.Services.Parts
 {
@@ -27,10 +27,12 @@ namespace Msr.Services.Parts
         {
             return _dbContext.PartsViews;
         }
-        public PartsView GetById(string Id)
+
+        public PartsView GetById(string id)
         {
-            return GetPartsQueryable().Where(x => x.ObjectId == Id).SingleOrDefault();
+            return GetPartsQueryable().SingleOrDefault(x => x.ObjectId == id);
         }
+
         public List<SelectFile> GetSelectedFiles(string id, string type, string ntlogin)
         {
             var objID = new SqlParameter("@objID", id == null ? "0" : id);
@@ -50,6 +52,7 @@ namespace Msr.Services.Parts
 
             return result;
         }
+
         public SelectInternalPart GetInternalPart(string id, string ntlogin)
         {
             var strID = new SqlParameter("@strID", id == null ? "0" : id);
@@ -60,6 +63,7 @@ namespace Msr.Services.Parts
 
             return result;
         }
+
         public List<SelectPartCustomerExecptions> GetPartCustomerExceptions(string id)
         {
             var partId = new SqlParameter("@ProductPartId", id == null ? "0" : id);
@@ -68,6 +72,7 @@ namespace Msr.Services.Parts
 
             return result;
         }
+
         public List<string> GetPartSpecialCustomers(string id)
         {
             var partId = new SqlParameter("@ProductPartId", id == null ? "0" : id);
@@ -76,44 +81,11 @@ namespace Msr.Services.Parts
 
             return result;
         }
+
         public bool Edit(AddPartViewModel model)
         {
             try
             {
-                var deletePictureFileProcedure = new DeleteFileProcedure() { ObjID = model.Id, Type = "PICTURE", NTLogin = model.NTLogin };
-
-                _dbContext.Database.ExecuteStoredProcedure(deletePictureFileProcedure);
-
-
-                var deleteReferenceFileProcedure = new DeleteFileProcedure() { ObjID = model.Id, Type = null, NTLogin = model.NTLogin };
-
-                _dbContext.Database.ExecuteStoredProcedure(deleteReferenceFileProcedure);
-
-                var deleteTheoryFileProcedure = new DeleteFileProcedure() { ObjID = model.Id, Type = "THEORY", NTLogin = model.NTLogin };
-
-                _dbContext.Database.ExecuteStoredProcedure(deleteTheoryFileProcedure);
-
-
-                foreach (var file in model.PictureFiles)
-                {
-                    var saveFileProcedure = new SaveFileProcedure() { ObjID = model.Id, DocID = file, Type = "PICTURE", NTLogin = model.NTLogin };
-
-                    _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
-                }
-
-                foreach (var file in model.ReferenceFiles)
-                {
-                    var saveFileProcedure = new SaveFileProcedure() { ObjID = model.Id, DocID = file, Type = null, NTLogin = model.NTLogin };
-
-                    _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
-                }
-
-                foreach (var file in model.ReferenceTheories)
-                {
-                    var saveFileProcedure = new SaveFileProcedure() { ObjID = model.Id, DocID = file, Type = "THEORY", NTLogin = model.NTLogin };
-
-                    _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
-                }
                 var savePartProcedure = new SavePartProcedure()
                 {
                     ObjID = model.ObjID,
@@ -153,6 +125,7 @@ namespace Msr.Services.Parts
                 return false;
             }
         }
+
         public ResultNotification<string> Create(AddPartViewModel model)
         {
             var result = new ResultNotification<string>();
@@ -190,40 +163,24 @@ namespace Msr.Services.Parts
                 result.Entity = savePartProcedure.NewObjID;
                 var singlePart = GetById(savePartProcedure.NewObjID);
 
-
-                var deletePictureFileProcedure = new DeleteFileProcedure() { ObjID = singlePart.Id, Type = "PICTURE", NTLogin = model.NTLogin };
-
-                _dbContext.Database.ExecuteStoredProcedure(deletePictureFileProcedure);
-
-
                 var deleteReferenceFileProcedure = new DeleteFileProcedure() { ObjID = singlePart.Id, Type = null, NTLogin = model.NTLogin };
 
                 _dbContext.Database.ExecuteStoredProcedure(deleteReferenceFileProcedure);
 
-                var deleteTheoryFileProcedure = new DeleteFileProcedure() { ObjID = singlePart.Id, Type = "THEORY", NTLogin = model.NTLogin };
+                if (model.ReferenceFiles != null)
+                    foreach (var file in model.ReferenceFiles.Split(','))
+                    {
+                        var saveFileProcedure =
+                            new SaveFileProcedure()
+                            {
+                                ObjID = singlePart.Id,
+                                DocID = file,
+                                Type = null,
+                                NTLogin = model.NTLogin
+                            };
 
-                _dbContext.Database.ExecuteStoredProcedure(deleteTheoryFileProcedure);
-
-                foreach (var file in model.PictureFiles)
-                {
-                    var saveFileProcedure = new SaveFileProcedure() { ObjID = singlePart.Id, DocID = file, Type = "PICTURE", NTLogin = model.NTLogin };
-
-                    _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
-                }
-
-                foreach (var file in model.ReferenceFiles)
-                {
-                    var saveFileProcedure = new SaveFileProcedure() { ObjID = singlePart.Id, DocID = file, Type = null, NTLogin = model.NTLogin };
-
-                    _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
-                }
-
-                foreach (var file in model.ReferenceTheories)
-                {
-                    var saveFileProcedure = new SaveFileProcedure() { ObjID = singlePart.Id, DocID = file, Type = "THEORY", NTLogin = model.NTLogin };
-
-                    _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
-                }
+                        _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
+                    }
 
                 return result;
             }
@@ -234,6 +191,7 @@ namespace Msr.Services.Parts
                 return result;
             }
         }
+
         public bool Delete(string id, string ntlogin)
         {
             try
@@ -356,10 +314,98 @@ namespace Msr.Services.Parts
 
             return result;
         }
+
         public List<ProductSupplierView> GetProductSuppliersByCreatingCo(string id)
         {
             var result = _dbContext.Database.SqlQuery<ProductSupplierView>("SELECT DISTINCT TOP 500 NAME,ID FROM A_V_COMPANIES_DROP_SEARCH WHERE ROOT_CO_ID = '" + id + "'").ToList();
             return result;
+        }
+
+        public ResultNotification<string> ImportParts(HttpPostedFileBase postedFile, string ntLogin)
+        {
+            var result = new ResultNotification<string>();
+
+            try
+            {
+                var stream = postedFile.InputStream;
+
+                IExcelDataReader reader;
+
+                if (postedFile.FileName.EndsWith(".xls"))
+                {
+                    reader = ExcelReaderFactory.CreateBinaryReader(stream);
+                }
+                else if (postedFile.FileName.EndsWith(".xlsx"))
+                {
+                    reader = ExcelReaderFactory.CreateOpenXmlReader(stream);
+                }
+                else
+                {
+                    result.AddError("This file format is not supported");
+                    return result;
+                }
+                var resultAsDataSet = reader.AsDataSet(new ExcelDataSetConfiguration()
+                {
+                    ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+                    {
+                        UseHeaderRow = true
+                    }
+                });
+
+                reader.Close();
+
+                var columnNames = (from dc in resultAsDataSet.Tables[0].Columns.Cast<DataColumn>()
+                                   select dc.ColumnName).ToList();
+                string[] primes = { "PartId", "Name" };
+
+                var results = primes.Where(m => !columnNames.Contains(m));
+                bool isSubset = primes.Intersect(columnNames).Count() == primes.Count();
+                if (!isSubset)
+                {
+                    result.AddError("Coloums missing : (" + string.Join(",", results) + ") to create Part");
+                    return result;
+                }
+
+                var modelList = Enumerable.Select(resultAsDataSet.Tables[0].AsEnumerable(), item => new AddPartViewModel
+                {
+                    CompanyPartNumber = item["PartId"].ToString(),
+                    Name = item["Name"].ToString()
+                }).ToList();
+
+
+                if (modelList.Count > 0)
+                {
+                    foreach (var model in modelList)
+                    {
+                        var partsImportAndUpdateExternalPartProcedure = new PartsImportAndUpdateExternalPartProcedure {ExternalPartId = model.CompanyPartNumber};
+
+                        if (!string.IsNullOrWhiteSpace(model.Name))
+                        {
+                            partsImportAndUpdateExternalPartProcedure.PartName = model.Name;
+                            partsImportAndUpdateExternalPartProcedure.StrNtLogin = ntLogin;
+                            _dbContext.Database.ExecuteStoredProcedure(partsImportAndUpdateExternalPartProcedure);
+
+                            result.SuccessMessage = partsImportAndUpdateExternalPartProcedure.NewId;
+                        }
+                        else
+                        {
+                            result.AddError("Name is empty");
+                        }
+                    }
+                }
+                else
+                {
+                    result.AddError("Nothing to upload file is empty");
+                }
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                result.AddError(ex.Message);
+
+                return result;
+            }
         }
     }
 }

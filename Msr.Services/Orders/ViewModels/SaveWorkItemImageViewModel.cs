@@ -1,5 +1,4 @@
-﻿
-namespace Msr.Services.Orders.ViewModels
+﻿namespace Msr.Services.Orders.ViewModels
 {
     public class SaveWorkItemImageViewModel
     {

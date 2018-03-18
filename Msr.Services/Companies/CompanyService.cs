@@ -8,8 +8,12 @@ using Msr.Services.Companies.ViewModels;
 using System.Data.SqlClient;
 using Msr.Models.Documents;
 using System.Collections.Generic;
+using System.Data;
+using System.Web;
+using ExcelDataReader;
 using Msr.Models.Locations;
 using Msr.Models.Companies;
+using Msr.Services.Users.Messages;
 
 namespace Msr.Services.Companies
 {
@@ -81,7 +85,7 @@ namespace Msr.Services.Companies
             }
         }
 
-        public bool Edit(EditCompanyViewModel model)
+        public bool Update(EditCompanyViewModel model)
         {
             try
             {
@@ -132,6 +136,7 @@ namespace Msr.Services.Companies
         {            
                 return _dbContext.LocationViews;            
         }
+
         public bool Delete(string objectId, string loginId)
         {
             try
@@ -152,6 +157,118 @@ namespace Msr.Services.Companies
                 var message = "Error occured:" + ex.Message;
 
                 return false;
+            }
+        }
+
+        public ResultNotification<string> ImportCompanies(HttpPostedFileBase postedFile, LoggedUserIdResult ntLogin)
+        {
+            var result = new ResultNotification<string>();
+            try
+            {
+                var stream = postedFile.InputStream;
+
+                IExcelDataReader reader;
+
+
+                if (postedFile.FileName.EndsWith(".xls"))
+                {
+                    reader = ExcelReaderFactory.CreateBinaryReader(stream);
+                }
+                else if (postedFile.FileName.EndsWith(".xlsx"))
+                {
+                    reader = ExcelReaderFactory.CreateOpenXmlReader(stream);
+                }
+                else
+                {
+                    result.AddError("This file format is not supported");
+                    return result;
+                }
+                var resultAsDataSet = reader.AsDataSet(new ExcelDataSetConfiguration()
+                {
+                    ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+                    {
+                        UseHeaderRow = true
+                    }
+                });
+                reader.Close();
+
+                var columnNames = (from dc in resultAsDataSet.Tables[0].Columns.Cast<DataColumn>()
+                                   select dc.ColumnName).ToList();
+                string[] primes = { "Id", "Name", "Address", "City", "State", "Zip", "Country", "ShipName", "ShipAddress", "ShipCity", "ShipState", "ShipZip", "ShipCountry", "Phone", "LinkedId" };
+
+                var results = primes.Where(m => !columnNames.Contains(m));
+                bool isSubset = primes.Intersect(columnNames).Count() == primes.Count();
+                if (!isSubset)
+                {
+                    result.AddError("Coloums missing : (" + string.Join(",", results) + ") to create Company");
+                    return result;
+                }
+
+                var modelList = Enumerable.Select(resultAsDataSet.Tables[0].AsEnumerable(), item => new CompanyImportViewModel()
+                {
+                    Id = item["Id"].ToString(),
+                    Name = item["Name"].ToString(),
+                    Address = item["Address"].ToString(),
+                    City = item["City"].ToString(),
+                    State = item["State"].ToString(),
+                    Zip = item["Zip"].ToString(),
+                    Country = item["Country"].ToString(),
+                    ShipName = item["ShipName"].ToString(),
+                    ShipAddress = item["ShipAddress"].ToString(),
+                    ShipCity = item["ShipCity"].ToString(),
+                    ShipState = item["ShipState"].ToString(),
+                    ShipZip = item["ShipZip"].ToString(),
+                    ShipCountry = item["ShipCountry"].ToString(),
+                    Phone = item["Phone"].ToString(),
+                    LinkedId = item["LinkedId"].ToString(),
+
+                }).ToList();
+
+                if (modelList.Count > 0)
+                {
+                    foreach (var model in modelList)
+                    {
+                        var companiesImportExternalProcedure = new CompaniesImportExternalProcedure();
+                        if (!string.IsNullOrWhiteSpace(model.Name))
+                        {
+                            companiesImportExternalProcedure.Id = model.Id;
+                            companiesImportExternalProcedure.Name = model.Name;
+                            companiesImportExternalProcedure.Address = model.Address;
+                            companiesImportExternalProcedure.City = model.City;
+                            companiesImportExternalProcedure.State = model.State;
+                            companiesImportExternalProcedure.Zip = model.Zip;
+                            companiesImportExternalProcedure.Country = model.Country;
+                            companiesImportExternalProcedure.ShipName = model.ShipName;
+                            companiesImportExternalProcedure.ShipAddress = model.ShipAddress;
+                            companiesImportExternalProcedure.ShipCity = model.ShipCity;
+                            companiesImportExternalProcedure.ShipState = model.ShipState;
+                            companiesImportExternalProcedure.ShipZip = model.ShipZip;
+                            companiesImportExternalProcedure.ShipCountry = model.ShipCountry;
+                            companiesImportExternalProcedure.Phone = model.Phone;
+                            companiesImportExternalProcedure.SupplierId = ntLogin.Root_Company;
+                            companiesImportExternalProcedure.LinkedId = model.LinkedId;
+                            companiesImportExternalProcedure.StrNtLogin = ntLogin.Id;
+                            _dbContext.Database.ExecuteStoredProcedure(companiesImportExternalProcedure);
+
+                            result.SuccessMessage = companiesImportExternalProcedure.NewId;
+                        }
+                        else
+                        {
+                            result.AddError("Part Name is empty");
+                        }
+                    }
+                }
+                else
+                {
+                    result.AddError("Nothing to upload file is empty");
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                result.AddError(ex.Message);
+
+                return result;
             }
         }
     }

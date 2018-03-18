@@ -26,7 +26,6 @@ namespace Answer.Web.Controllers
             vm.ReturnUrl = returnUrl;
 
             var workflows = _workflowService.GetSpObjectShowApplicableWorkflows(objId, user.Id);
-
             vm.SetUp(workflows);
 
             return View(vm);
@@ -35,23 +34,25 @@ namespace Answer.Web.Controllers
         [HttpPost]
         public ActionResult Submit(SubmitWorkflowViewModel vm)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                vm.LoggedUserIdResult = GetCurrentUser();
-                vm.CompletionStart = "APPROVED";
-                vm.LoginId = vm.LoggedUserIdResult.Id;
-
-                var result = _workflowService.SubmitWorkflow(vm);
-
-                if (!result.HasErrors())
-                {
-                    TempData["SuccessMessage"] = result.SuccessMessage;
-
-                    return RedirectPermanent(vm.ReturnUrl);
-                }
-
-                TempData["ErrorMessage"] = result.ErrorMessage();
+                return View(vm);
             }
+
+            vm.LoggedUserIdResult = GetCurrentUser();
+            vm.CompletionStart = "APPROVED";
+            vm.LoginId = vm.LoggedUserIdResult.Id;
+
+            var result = _workflowService.SubmitWorkflow(vm);
+
+            if (!result.HasErrors())
+            {
+                TempData["SuccessMessage"] = result.SuccessMessage;
+
+                return RedirectPermanent(vm.ReturnUrl);
+            }
+
+            TempData["ErrorMessage"] = result.ErrorMessage();
 
             return View(vm);
         }
@@ -81,6 +82,7 @@ namespace Answer.Web.Controllers
             {
                 vm.LoggedUserIdResult = GetCurrentUser();
                 vm.CompletionStart = "DELETED";
+                vm.LoginId = vm.LoggedUserIdResult.Id;
 
                 var result = _workflowService.SubmitWorkflow(vm);
 
@@ -114,6 +116,5 @@ namespace Answer.Web.Controllers
 
             return RedirectPermanent(returnUrl);
         }
-
     }
 }

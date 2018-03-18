@@ -1,27 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-
-using System.Data.SqlClient;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
-using System.Web.Script.Serialization;
-using Dapper;
 using Msr.Services.jqGrid;
 using Msr.Services.ProductionPlanning;
 using Msr.Models.CustomerRequirements;
 using Msr.Services;
-using Msr.Services.Documents;
-using Msr.Services.Parts;
-using Msr.Services.Parts.ViewModels;
-using Msr.Services.PartTypes;
 using Msr.Services.PrePro;
 using Msr.Services.Procedures;
 using Msr.Services.Procedures.ViewModels;
-using Msr.Services.ProcedureVerbs;
 using Msr.Services.ProductionPlanning.ViewModels;
 using Msr.Services.Quotes;
-using Msr.Services.Quotes.ViewModels;
-using Msr.Services.Roles;
 using Msr.Services.Workflows;
 using Msr.Services.Workflows.ViewModels;
 
@@ -187,6 +177,7 @@ namespace Answer.Web.Controllers
                     vm.Steps.Add(new RequirementStepsDetailsViewModel
                     {
                         Id = Convert.ToInt32(step.Id),
+                        ObjectId = step.Id,
                         Process = step.StepTitle,
                         Step = (int)step.Print_Order
                     });
@@ -278,6 +269,7 @@ namespace Answer.Web.Controllers
                         Id = Convert.ToInt32(step.Id),
                         ObjectId = step.Id,
                         Process = step.StepTitle,
+                        StepTitle = step.StepTitle,
                         Step = (int)step.Print_Order
                     });
                 }
@@ -354,41 +346,6 @@ namespace Answer.Web.Controllers
             return View(model);
         }
 
-        ////[AcceptVerbs(HttpVerbs.Post)]
-        ////public ActionResult AddPart(RequirementStepsViewModel model)
-        ////{
-        ////    var currentUser = GetCurrentUser();
-
-        ////    var result = new ResultNotification<string>();
-        ////    var partservice = new PartsService();
-        ////    model.AddPartViewModel.NTLogin = currentUser.Id;
-        ////    model.AddPartViewModel.SubParts = null;
-
-        ////    var response = partservice.Create(model.AddPartViewModel);
-
-        ////    if (!response.HasErrors())
-        ////    {
-        ////        TempData["SuccessMessage"] = "Part has been created successfully.";
-
-        ////        var checkOutObject = _workflowService.CheckOutObject(response.Entity, model.AddPartViewModel.NTLogin);
-
-        ////        var submitWorkflow = new SubmitWorkflowViewModel();
-        ////        submitWorkflow.CompletionStart = "APPROVED";
-        ////        submitWorkflow.LoggedUserIdResult = currentUser;
-        ////        submitWorkflow.ObjectId = checkOutObject.Entity;
-        ////        submitWorkflow.ApprovalWorflowId = "37";
-        ////        submitWorkflow.Comment = "Part approved by system";
-        ////        submitWorkflow.LoginId = currentUser.Id;
-        ////        _workflowService.SubmitWorkflow(submitWorkflow);
-
-        ////        var partList = _productionPlanService.GetPartList();
-
-        ////        return Json(new { Message = result.SuccessMessage, data = partList, PartId = response.Entity }, JsonRequestBehavior.AllowGet);
-        ////    }
-
-        ////    return Json(new { Message = result.ErrorMessage }, JsonRequestBehavior.AllowGet);
-
-        ////}
 
         [AcceptVerbs(HttpVerbs.Post)]
         public JsonResult CreateProcedure(string procedureName, int productionPlanningId)
@@ -432,6 +389,37 @@ namespace Answer.Web.Controllers
           ////  viewModel.AddPartViewModel.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), GetCurrentUser().Company, GetCurrentUser().Id);
 
             return PartialView("_Parts", viewModel);
+        }
+
+        public ActionResult Import()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Import(HttpPostedFileBase postedFile)
+        {
+            if (ModelState.IsValid)
+            {
+
+                if (postedFile != null && postedFile.ContentLength > 0)
+                {
+                    var response = _productionPlanService.ImportProducts(postedFile, GetCurrentUser());
+                    if (!response.HasErrors())
+                    {
+                        TempData["SuccessMessage"] = response.SuccessMessage;
+                        return RedirectToAction("Index");
+                    }
+
+                    TempData["ErrorMessage"] = response.ErrorMessage;
+                    return View();
+                }
+
+                ModelState.AddModelError("File", "Please Upload Your file");
+                return View();
+            }
+            ModelState.AddModelError("File", "Please Upload Your file");
+            return View();
         }
 
     }

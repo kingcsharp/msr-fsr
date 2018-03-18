@@ -115,7 +115,8 @@ namespace Msr.Services.ProductionPlanning.ViewModels
             ProductLocationList = productionPlanningService.GetLocationsQueryable().Where(x => x.Status == "APPROVED").Select(x => new SelectListItem
             {
                 Text = x.Name,
-                Value = x.ObjId
+                Value = x.ObjId,
+                Selected = false
             }).OrderBy(o => o.Text).ToList();
 
             ProcessList = preProServices.GetPreProQueryable().Where(x => x.Status == "APPROVED").Select(x => new SelectListItem

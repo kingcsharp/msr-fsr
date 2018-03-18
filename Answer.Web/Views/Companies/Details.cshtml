@@ -2,11 +2,8 @@
 @{
     ViewBag.Title = "Company Details";
 }
-
 <h2>Detail</h2>
-
 @model Msr.Services.Companies.ViewModels.EditCompanyViewModel
-
 @{
     ViewBag.Title = "Company Details";
 }
@@ -47,40 +44,12 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(model => model.ReferenceFiles, htmlAttributes: new { @class = "control-label col-md-4" })
-                            <div class="col-md-5">
-                                <div style="width: 96%; float: left;">
-                                    @Html.ListBoxFor(m => m.ReferenceFiles, Model.ListReferenceFiles, new { @class = "form-control selectitem", multiple = "multiple" })
-                                    @Html.ValidationMessageFor(model => model.ReferenceFiles, "", new { @class = "text-danger" })
-                                </div>
-                                </div>
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.PictureFiles, htmlAttributes: new { @class = "control-label col-md-4" })
-                            <div class="col-md-5">
-                                <div style="width: 96%; float: left;">
-                                    @Html.ListBoxFor(m => m.PictureFiles, Model.ListPictureFiles, new { @class = "form-control selectitem" })
-                                    @Html.ValidationMessageFor(model => model.PictureFiles, "", new { @class = "text-danger" })
-                                </div>
-                               </div>
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.LogoFiles, htmlAttributes: new { @class = "control-label col-md-4" })
-                            <div class="col-md-5">
-                                <div style="width: 96%; float: left;">
-                                    @Html.ListBoxFor(m => m.LogoFiles, Model.ListLogoFiles, new { @class = "form-control selectitem", multiple = "multiple" })
-                                    @Html.ValidationMessageFor(model => model.LogoFiles, "", new { @class = "text-danger" })
-                                </div>
-                                  </div>
-                        </div>
-                        <div class="form-group">
                             @Html.LabelFor(model => model.HeadPeople, htmlAttributes: new { @class = "control-label col-md-4" })
                             <div class="col-md-5">
                                 @Html.DropDownListFor(model => model.HeadPeople, Model.HeadPeoples, new { @class = "form-control select" })
                                 @Html.ValidationMessageFor(model => model.HeadPeople, "", new { @class = "text-danger" })
                             </div>
                         </div>
-
                         <div class="form-group">
                             @Html.LabelFor(model => model.Phone, htmlAttributes: new { @class = "control-label col-md-4" })
                             <div class="col-md-5">
@@ -97,7 +66,7 @@
                         </div>
                         <div class="form-group">
                             <div class="col-md-offset-4 col-md-10">
-                                
+
                                 @Html.ActionLink("Back", "Index", null, new { @class = "btn btn-warning" })
                             </div>
                         </div>
@@ -111,7 +80,6 @@
 {
     <script src="~/assets/js/common/documentFile.js"></script>
     <script src="~/assets/js/common/documentFiles.js"></script>
-
     <script src="~/assets/js/grids/files-dialog-single-selection.js"></script>
     <script src="//rawgit.com/saribe/eModal/master/dist/eModal.min.js"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
@@ -122,10 +90,10 @@
 
         });
     </script>
-<script type="text/javascript">
-         $(document).ready(function () {
-             $('#test :input').attr('disabled', true);
-         });
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#test :input').attr('disabled', true);
+        });
 
-</script>
+    </script>
 }

@@ -3,8 +3,9 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using Msr.Repositories;
 using Msr.Services.jqGrid;
+using Msr.Web;
 
-namespace Msr.Web
+namespace Answer.Web
 {
     public class MvcApplication : System.Web.HttpApplication
     {

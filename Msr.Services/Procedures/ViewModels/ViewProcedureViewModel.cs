@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
-using Msr.Models.Comman;
 using Msr.Models.Procedures;
 using Msr.Services.ProcedureVerbs;
 using Msr.Services.Roles;
@@ -53,8 +52,6 @@ namespace Msr.Services.Procedures.ViewModels
 
         public string NTLogin { get; set; }
 
-        public List<string> ReferenceFiles { get; set; }
-
         public List<SelectListItem> VerbList { get; set; }
 
         public List<SelectListItem> SystemList { get; set; }
@@ -73,173 +70,12 @@ namespace Msr.Services.Procedures.ViewModels
 
         public void Setup(ProceduresService proceduresService, RoleService roleService, ProcedureVerbsService procedureTypesService,string ntlogin)
         {
-            SystemList = new List<SelectListItem>
-            {
-                new SelectListItem
-                {
-                    Text = @"",
-                    Value = ""
-                },
-                new SelectListItem
-                {
-                    Text = @"SYS_COMP_TEST",
-                    Value = "SYS_COMP_TEST",
-                },
-                new SelectListItem
-                {
-                    Text = @"SYS_CONSUME",
-                    Value = "SYS_CONSUME"
-                },
-                new SelectListItem
-                {
-                    Text = @"SYS_CREATE",
-                    Value = "SYS_CREATE"
-                },
-                new SelectListItem
-                {
-                    Text = @"SYS_DNR",
-                    Value = "SYS_DNR"
-                },
-                new SelectListItem
-                {
-                    Text = @"SYS_E_ACCESS",
-                    Value = "SYS_E_ACCESS"
-                },
-                new SelectListItem
-                {
-                    Text = @"SYS_INSTALL",
-                    Value = "SYS_INSTALL"
-                },
-                new SelectListItem
-                {
-                    Text = @"SYS_PROVIDE_AND_CONSUMED",
-                    Value = "SYS_PROVIDE_AND_CONSUMED"
-                },
-                new SelectListItem
-                {
-                    Text = @"SYS_PROVIDE_AND_STAY",
-                    Value = "SYS_PROVIDE_AND_STAY"
-                },
-                new SelectListItem
-                {
-                    Text = @"SYS_PROVIDE_TAKE_BACK",
-                    Value = "SYS_PROVIDE_TAKE_BACK"
-                },
-                new SelectListItem
-                {
-                    Text = @"SYS_RECEIVE",
-                    Value = "SYS_RECEIVE"
-                },
-                new SelectListItem
-                {
-                    Text = @"SYS_REMOVE",
-                    Value = "SYS_REMOVE"
-                },
-                new SelectListItem
-                {
-                    Text = @"SYS_SEND",
-                    Value = "SYS_SEND"
-                },
-                new SelectListItem
-                {
-                    Text = @"SYS_SERIALIZE",
-                    Value = "SYS_SERIALIZE"
-                },
-                new SelectListItem
-                {
-                    Text = @"SYS_SHIPPING",
-                    Value = "SYS_SHIPPING"
-                }
-            };
-            SecurityLevelList = new List<SelectListItem>
-            {
-                new SelectListItem
-                {
-                    Text = @"SECURITY_LEVEL_PUBLIC",
-                    Value = "1",
-                    Selected = true
-                },
-                new SelectListItem
-                {
-                    Text = @"SECURITY_LEVEL_SOME_WHAT_CONFIDENTIAL",
-                    Value = "2"
-                },
-                new SelectListItem
-                {
-                    Text = @"SECURITY_LEVEL_CONFIDENTIAL",
-                    Value = "3"
-                },
-                new SelectListItem
-                {
-                    Text = @"SECURITY_LEVEL_EXTREMELY_CONFIDENTIAL",
-                    Value = "4"
-                },
-                new SelectListItem
-                {
-                    Text = @"SYSTEM",
-                    Value = "5"
-                }
-            };
+            SystemList = LookupItems.System();
+            SecurityLevelList = LookupItems.SecurityLevel();
+            SetpInApList = LookupItems.YesNo();
+            WipMsgList = LookupItems.YesNo();
+            DurationTypeList = LookupItems.DurationType();
 
-            SetpInApList = new List<SelectListItem>
-            {
-                new SelectListItem
-                {
-                    Text = @"Yes",
-                    Value = "1",
-                    Selected = true
-                },
-                new SelectListItem
-                {
-                    Text = @"No",
-                    Value = "0"
-                }
-
-            };
-            WipMsgList = new List<SelectListItem>
-            {
-                new SelectListItem
-                {
-                    Text = @"No",
-                    Value = "0",
-                    Selected = true
-                },
-                new SelectListItem
-                {
-                    Text = @"Yes",
-                    Value = "1"
-                }
-            };
-
-            DurationTypeList = new List<SelectListItem>
-            {
-                new SelectListItem
-                {
-                    Text = @"SYS_SECONDS",
-                    Value = "TIME_SYS_SECONDS",
-                    Selected = true
-                },
-                new SelectListItem
-                {
-                    Text = @"SYS_MINUTES",
-                    Value = "TIME_SYS_MINUTES"
-                },
-                new SelectListItem
-                {
-                    Text = @"SYS_HOURS",
-                    Value = "TIME_SYS_HOURS"
-                },
-                new SelectListItem
-                {
-                    Text = @"SYS_DAYS",
-                    Value = "TIME_SYS_DAYS"
-                },
-                new SelectListItem
-                {
-                    Text = @"SYS_WEEKS",
-                    Value = "TIME_SYS_WEEKS"
-                }
-            };
             RolesList = roleService.GetActiveRoles().Select(x => new SelectListItem
             {
                 Text = x.Name,

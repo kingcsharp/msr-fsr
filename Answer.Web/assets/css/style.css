@@ -1449,13 +1449,13 @@ color: black;
     height: 400px !important;
 }
 
-.part button.btn.collapsed:before {
+.part button.info.collapsed:before {
     content: 'Show Advance Items';
     display: block;
     width: 100%;
 }
 
-.part button.btn:before {
+.part button.info:before {
     content: 'Hide Advance Items';
     display: block;
     width: 100%;

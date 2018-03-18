@@ -38,5 +38,6 @@ namespace Msr.Models.Procedures
         public string SystemId { get; set; }
         public int? Threshold { get; set; }
         public bool IsActive { get; set; }
+        public string ReferenceFiles { get; set; }
     }
 }

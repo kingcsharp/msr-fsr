@@ -15,15 +15,11 @@ namespace Msr.Services.People.ViewModels
     {
         public AddPeopleViewModel()
         {
-            ListReferenceFiles = new List<SelectListItem>();
-            ListPictureFiles = new List<SelectListItem>();
             ListLanguages = new List<SelectListItem>();
             ListIsDepartmentHead = new List<SelectListItem>();
             ListStatusEditPerson = new List<SelectListItem>();
             ListTimeZones = new List<SelectListItem>();
             ListPhoneTypes = new List<SelectListItem>();
-            ReferenceFiles = new List<string>();
-            PictureFiles = new List<string>();
             Locations = new List<SelectListItem>();
             ListCompanyEditPerson = new List<SelectListItem>();
             ListOfficialPosition = new List<SelectListItem>();
@@ -51,10 +47,8 @@ namespace Msr.Services.People.ViewModels
 
         [DisplayName("Screen Type :")]
         public string ScreenType { get; set; }
-        [DisplayName("Language :")]
-        public string LanguageCode { get; set; }
 
-        [DisplayName("Company Edit Person :")]
+        [DisplayName("Company Update Person :")]
         public string CompanyEditPerson { get; set; }
 
         [DisplayName("Is Department Head :")]
@@ -70,9 +64,10 @@ namespace Msr.Services.People.ViewModels
         public string TimeZone { get; set; }
 
         [DisplayName("Hire Date :")]
-        public DateTime HireDate { get; set; }
+        [Required]
+        public DateTime? HireDate { get; set; }
 
-        [DisplayName("Status Edit Person :")]
+        [DisplayName("Status Update Person :")]
         public string StatusEditPerson { get; set; }
 
         [DisplayName("Phones :")]
@@ -117,14 +112,6 @@ namespace Msr.Services.People.ViewModels
         public string Password { get; set; }
         public string ObjId { get; set; }
         public string newID { get; set; }
-        [DisplayName("Reference Files :")]
-        public List<string> ReferenceFiles { get; set; }
-
-        [DisplayName("Picture Files :")]
-        public List<string> PictureFiles { get; set; }
-
-        public IList<SelectListItem> ListReferenceFiles { get; set; }
-        public IList<SelectListItem> ListPictureFiles { get; set; }
         public IEnumerable<SelectListItem> ListRealUserTypes { get; set; }
         public IEnumerable<SelectListItem> ListScreenTypes { get; set; }
         public IEnumerable<SelectListItem> ListLanguages { get; set; }
@@ -139,6 +126,9 @@ namespace Msr.Services.People.ViewModels
         public IEnumerable<SelectListItem> ListCompanyEditPerson { get; set; }
         public IEnumerable<SelectListItem> ListOfficialPosition { get; set; }
         public IEnumerable<SelectListItem> ListBossInfo { get; set; }
+        [DisplayName("Reference Files :")]
+        public string ReferenceFiles { get; set; }
+
         public void Setup(DocumentFilesService documentFilesService, PeopleService peopleService, CompanyService companyService)
         {
             ListStatusEditPerson = new List<SelectListItem>
@@ -242,70 +232,13 @@ namespace Msr.Services.People.ViewModels
                     Value = "ADMIN_SCREEN"
                 }
             };
-          
-            ListPhoneTypes = new List<SelectListItem>
-            {
-                new SelectListItem{ Text = "Choose Type", Value ="ChooseType",Selected = true},
-                new SelectListItem{ Text = "SYS-PHONE-1", Value ="SYS-PHONE-1"},
-                new SelectListItem{ Text = "SYS-PHONE-2", Value ="SYS-PHONE-2"},
-                new SelectListItem{ Text = "SYS-PHONE-3", Value ="SYS-PHONE-3"},
-                new SelectListItem{ Text = "SYS-PHONE-4", Value ="SYS-PHONE-4"},
-                new SelectListItem{ Text = "SYS-PHONE-5", Value ="SYS-PHONE-5"},
-                new SelectListItem{ Text = "SYS-PHONE-6", Value ="SYS-PHONE-6"},
-                new SelectListItem{ Text = "SYS-PHONE-7", Value ="SYS-PHONE-7"},
-                new SelectListItem{ Text = "SYS-PHONE-8", Value ="SYS-PHONE-8"},
-                new SelectListItem{ Text = "SYS-PHONE-9", Value ="SYS-PHONE-9"},
-                new SelectListItem{ Text = "SYS-PHONE-10", Value ="SYS-PHONE-10"},
-                new SelectListItem{ Text = "SYS-PHONE-11", Value ="SYS-PHONE-11"},
-                new SelectListItem{ Text = "SYS-PHONE-12", Value ="SYS-PHONE-12"},
-                new SelectListItem{ Text = "SYS-PHONE-13", Value ="SYS-PHONE-13"},
-                new SelectListItem{ Text = "SYS-PHONE-14", Value ="SYS-PHONE-14"},
-                new SelectListItem{ Text = "SYS-PHONE-15", Value ="SYS-PHONE-15"}
-            };
-            ListEmailTypes = new List<SelectListItem>
-            {
-                new SelectListItem{ Text = "Choose Type", Value ="ChooseType",Selected = true},
-                new SelectListItem{ Text = "SYS-EMAIL-1", Value ="SYS-EMAIL-1"},
-                new SelectListItem{ Text = "SYS-EMAIL-2", Value ="SYS-EMAIL-2"},
-                new SelectListItem{ Text = "SYS-EMAIL-3", Value ="SYS-EMAIL-3"},
-                new SelectListItem{ Text = "SYS-EMAIL-4", Value ="SYS-EMAIL-4"},
-                new SelectListItem{ Text = "SYS-EMAIL-5", Value ="SYS-EMAIL-5"},
-                new SelectListItem{ Text = "SYS-EMAIL-6", Value ="SYS-EMAIL-6"},
-                new SelectListItem{ Text = "SYS-EMAIL-7", Value ="SYS-EMAIL-7"},
-                new SelectListItem{ Text = "SYS-EMAIL-8", Value ="SYS-EMAIL-8"},
-                new SelectListItem{ Text = "SYS-EMAIL-9", Value ="SYS-EMAIL-9"},
-                new SelectListItem{ Text = "SYS-EMAIL-10", Value ="SYS-EMAIL-10"},
-                new SelectListItem{ Text = "SYS-EMAIL-11", Value ="SYS-EMAIL-11"},
-                new SelectListItem{ Text = "SYS-EMAIL-12", Value ="SYS-EMAIL-12"},
-                new SelectListItem{ Text = "SYS-EMAIL-13", Value ="SYS-EMAIL-13"},
-                new SelectListItem{ Text = "SYS-EMAIL-14", Value ="SYS-EMAIL-14"},
-                new SelectListItem{ Text = "SYS-EMAIL-15", Value ="SYS-EMAIL-15"}
-            };
-            ListAddressTypes = new List<SelectListItem>
-            {
-                new SelectListItem{ Text = "Choose Type", Value ="ChooseType",Selected = true},
-                new SelectListItem{ Text = "SYS-ADDRESS-1", Value ="SYS-ADDRESS-1"},
-                new SelectListItem{ Text = "SYS-ADDRESS-2", Value ="SYS-ADDRESS-2"},
-                new SelectListItem{ Text = "SYS-ADDRESS-3", Value ="SYS-ADDRESS-3"},
-                new SelectListItem{ Text = "SYS-ADDRESS-4", Value ="SYS-ADDRESS-4"},
-                new SelectListItem{ Text = "SYS-ADDRESS-5", Value ="SYS-ADDRESS-5"},
-                new SelectListItem{ Text = "SYS-ADDRESS-6", Value ="SYS-ADDRESS-6"},
-                new SelectListItem{ Text = "SYS-ADDRESS-7", Value ="SYS-ADDRESS-7"},
-                new SelectListItem{ Text = "SYS-ADDRESS-8", Value ="SYS-ADDRESS-8"},
-                new SelectListItem{ Text = "SYS-ADDRESS-9", Value ="SYS-ADDRESS-9"},
-                new SelectListItem{ Text = "SYS-ADDRESS-10", Value ="SYS-ADDRESS-10"},
-                new SelectListItem{ Text = "SYS-ADDRESS-11", Value ="SYS-ADDRESS-11"},
-                new SelectListItem{ Text = "SYS-ADDRESS-12", Value ="SYS-ADDRESS-12"},
-                new SelectListItem{ Text = "SYS-ADDRESS-13", Value ="SYS-ADDRESS-13"},
-                new SelectListItem{ Text = "SYS-ADDRESS-14", Value ="SYS-ADDRESS-14"},
-                new SelectListItem{ Text = "SYS-ADDRESS-15", Value ="SYS-ADDRESS-15"}
-            };
-            string RootCoId = "2"; // need to find out from where it comes in case of add people
-            ListLanguages = peopleService.GetLanguages().Select(x => new SelectListItem
-            {
-                Text = x.Language,
-                Value = x.LanguageCode
-            }).OrderBy(o => o.Text).ToList();
+
+            ListPhoneTypes = LookupItems.PhoneTypes();
+            ListEmailTypes = LookupItems.EmailTypes();
+            ListAddressTypes = LookupItems.AddressTypes();
+
+            string RootCoId = "2"; 
+    
             ListTimeZones = peopleService.GetTimeZones().Select(x => new SelectListItem
             {
                 Text = x.Description,

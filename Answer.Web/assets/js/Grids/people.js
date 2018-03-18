@@ -2,8 +2,6 @@
 
     $.jgrid.defaults.styleUI = 'Bootstrap';
 
-
-
     $("#jqGrid").jqGrid({
         url: url,
         mtype: "GET",
@@ -52,6 +50,25 @@
                 label: 'Last Name',
                 name: 'LastName',
                 index: 'LastName',
+                colmenu: false,
+                editable: true,
+                coloptions: {
+                    sorting: false,
+                    columns: true,
+                    filtering: false,
+                    seraching: true,
+                    grouping: false,
+                    freeze: false
+                },
+                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                align: 'left',
+                width: 150,
+                hidedlg: false
+            },
+            {
+                label: 'User Name',
+                name: 'LoginId',
+                index: 'LoginId',
                 colmenu: false,
                 editable: true,
                 coloptions: {
@@ -279,6 +296,16 @@
                 align: 'left'
             },
             {
+                label: 'Reference Files',
+                name: 'ReferenceFiles',
+                index: 'ReferenceFiles',
+                colmenu: false,
+                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                formatter: FilePreviewFormatter,
+                align: 'center'
+            },
+            {
                 name: 'Actions',
                 index: 'ObjectId',
                 key: true,
@@ -358,6 +385,10 @@
         searchOperators: true
     });
 
+
+    function FilePreviewFormatter(cellvalue, options, rowObject) {
+        return FilePreview(cellvalue, options, rowObject);
+    }
 
     function peopleEditFormatter(cellvalue, options, rowObject) {
 

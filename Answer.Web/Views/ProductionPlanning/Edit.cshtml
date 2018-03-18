@@ -27,6 +27,7 @@
                                 </div>
                             }
                         </div>
+                        @Html.Partial("Message")
                         @using (Html.BeginForm("Edit", "ProductionPlanning", FormMethod.Post, new { @id = "production-planning-form", @class = "", role = "form" }))
                         {
                             <input type="hidden" id="QuoteProcedureName" name="QuoteProcedureName" value="@ViewBag.QuoteProcedureName" />

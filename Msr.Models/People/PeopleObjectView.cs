@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Msr.Models.People
 {
@@ -33,5 +29,6 @@ namespace Msr.Models.People
         public string Company { get; set; }
         public string LockedByName { get; set; }
         public string Root { get; set; }
+        public string ReferenceFiles { get; set; }
     }
 }

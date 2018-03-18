@@ -5,16 +5,31 @@ using Msr.Services.jqGrid;
 using Msr.Web.ViewModel.Engineering;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 using Msr.Services.Documents;
-using Msr.Services.Workflows;
+using Msr.Infrastructure.Common.Constansts;
+using Msr.Services.Roles;
 
 namespace Answer.Web.Controllers
 {
     public class CompaniesController : BaseController
     {
+        private readonly RoleService _roleService;
+        private readonly CompanyService _companyService;
+        private readonly DocumentFilesService _documentFilesService;
+
+        public CompaniesController()
+        {
+            _roleService = new RoleService();
+            _companyService = new CompanyService();
+            _documentFilesService = new DocumentFilesService();
+        }
+
         public ActionResult Index()
         {
             var viewModel = new EngineeringViewModel();
@@ -33,9 +48,7 @@ namespace Answer.Web.Controllers
 
         public ActionResult CompaniesData(JqGridParam param)
         {
-            var companyService = new CompanyService();
-
-            var totalRows = companyService.GetCompaniesQueryable();
+            var totalRows = _companyService.GetCompaniesQueryable();
 
             var defaultStatusList = base.GetDefaultStatus();
 
@@ -126,25 +139,24 @@ namespace Answer.Web.Controllers
 
             return Json(json, JsonRequestBehavior.AllowGet);
         }
+
         public ActionResult Create()
         {
             var company = new AddCompanyViewModel();
 
-            company.Setup(new DocumentFilesService(), new CompanyService());
+            company.Setup(_documentFilesService, _companyService);
 
             return View(company);
         }
 
-        [AcceptVerbs(verbs: HttpVerbs.Post)]
+        [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Create(AddCompanyViewModel model)
         {
-            var userService = new CompanyService();
-
             if (ModelState.IsValid)
             {
                 model.NTLogin = GetCurrentUser().Id;
 
-                var response = userService.Create(model: model);
+                var response = _companyService.Create(model);
 
                 if (response)
                 {
@@ -161,19 +173,23 @@ namespace Answer.Web.Controllers
 
             return View();
         }
+
         public ActionResult Edit(string id)
         {
-            var currrentUser = GetCurrentUser();
-            var workflowService = new WorkflowService();
-            var checkoutEntity = workflowService.CheckOutObject(id, currrentUser.Id);
-
             var taskService = new CompanyService();
 
-            var model = taskService.GetCompanyByObjId(checkoutEntity.Entity);
+            var model = taskService.GetCompanyByObjId(id);
 
-            model.Setup(new DocumentFilesService(), new CompanyService(), GetCurrentUser().Id);
+            model.Setup(_documentFilesService, _companyService, GetCurrentUser().Id);
 
-            return View(model);            
+            var preview = string.Join(",", model.DocLinks.ToArray().Select(x => string.Format("{0}{1}{0}", "\'", x.SERVER_PATH)));
+            ViewBag.Preview = preview;
+
+            var jsonSerialiser = new JavaScriptSerializer();
+            var previewConfig = jsonSerialiser.Serialize(model.DocLinks.Select(x => new { caption = x.NAME, type = x.TYPE, size = 6666, url = Url.Action("DeletesingleReference", "Documents", new { file = x.LINKED_DOC_ID }), downloadUrl = x.SERVER_PATH, key = x.LINKED_DOC_ID }));
+            ViewBag.PreviewConfig = previewConfig;
+
+            return View(model);
         }
 
         [AcceptVerbs(verbs: HttpVerbs.Post)]
@@ -185,7 +201,7 @@ namespace Answer.Web.Controllers
             {
                 model.NTLogin = GetCurrentUser().Id;
 
-                var response = companyService.Edit(model: model);
+                var response = companyService.Update(model: model);
 
                 if (response)
                 {
@@ -201,10 +217,11 @@ namespace Answer.Web.Controllers
 
             return View(model);
         }
+
         public ActionResult Delete(string id)
         {
             var taskService = new CompanyService();
-           
+
             string ntLogin = GetCurrentUser().Id;
 
             var response = taskService.Delete(id, ntLogin);
@@ -220,6 +237,7 @@ namespace Answer.Web.Controllers
 
             return RedirectToAction("Index");
         }
+
         public ActionResult Details(string id)
         {
             var taskService = new CompanyService();
@@ -229,6 +247,38 @@ namespace Answer.Web.Controllers
             model.Setup(new DocumentFilesService(), new CompanyService(), GetCurrentUser().Id);
 
             return View(model);
+        }
+
+        public ActionResult Import()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Import(HttpPostedFileBase postedFile)
+        {
+            if (ModelState.IsValid)
+            {
+                var companyService = new CompanyService();
+
+                if (postedFile != null && postedFile.ContentLength > 0)
+                {
+                    var response = companyService.ImportCompanies(postedFile, GetCurrentUser());
+                    if (!response.HasErrors())
+                    {
+                        TempData["SuccessMessage"] = response.SuccessMessage;
+                        return RedirectToAction("Index");
+                    }
+
+                    TempData["ErrorMessage"] = response.ErrorMessage;
+                    return View();
+                }
+
+                ModelState.AddModelError("File", "Please Upload Your file");
+                return View();
+            }
+            ModelState.AddModelError("File", "Please Upload Your file");
+            return View();
         }
     }
 }

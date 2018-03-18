@@ -1,5 +1,4 @@
-﻿using Msr.Infrastructure.Common.Constansts;
-using Msr.Models.Documents;
+﻿using Msr.Models.Documents;
 using Msr.Services.Documents;
 using Msr.Services.Documents.ViewModels;
 using Msr.Services.jqGrid;
@@ -7,9 +6,7 @@ using Msr.Services.Parts;
 using Msr.Services.Roles;
 using Msr.Web.ViewModel.Engineering;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 
@@ -17,18 +14,17 @@ namespace Answer.Web.Controllers
 {
     public class DocumentsController : BaseController
     {
-        private readonly RoleService _roleService;
+        private readonly DocumentService _documentService;
 
         public DocumentsController()
         {
-            _roleService = new RoleService();
+            _documentService = new DocumentService();
         }
         public ActionResult Index()
         {
             var viewModel = new EngineeringViewModel();
 
             ViewBag.ActiveClass = "Documents";
-
 
             return View(viewModel);
         }
@@ -175,23 +171,33 @@ namespace Answer.Web.Controllers
 
         public ActionResult Edit(string id)
         {
-            var documentService = new DocumentService();
-
-            var model = documentService.GetById(id);
+            var model = _documentService.GetById(id);
 
             var location = new SaveDocumentViewModel();
 
-            location = location.MapToDto(model: model);
+            location = location.MapToDto(model);
 
-            location.Setup(new RoleService(), new PartsService(), new DocumentFilesService(), new DocumentService(), GetCurrentUser().Id);
-
-
+            location.Setup(new RoleService(), new PartsService(), new DocumentFilesService(), _documentService, GetCurrentUser().Id);
 
             var preview = string.Join(",", location.DocLinks.ToArray().Select(x => string.Format("{0}{1}{0}", "\'", x.SERVER_PATH)));
+
             ViewBag.Preview = preview;
+
             var jsonSerialiser = new JavaScriptSerializer();
-            var previewConfig = jsonSerialiser.Serialize(location.DocLinks.Select(x => new { caption = x.NAME, type = x.TYPE, size = 6666, url = Url.Action("DeletesingleReference", "Documents", new { linkDocId = x.LINKED_DOC_ID }), downloadUrl = x.SERVER_PATH, key = x.LINKED_DOC_ID }));
+
+            var previewConfig = jsonSerialiser.Serialize(location.DocLinks
+                .Select(x => new
+                {
+                    caption = x.NAME,
+                    type = x.TYPE,
+                    size = 6666,
+                    url = Url.Action("DeletesingleReference", "Documents", new {linkDocId = x.LINKED_DOC_ID}),
+                    downloadUrl = x.SERVER_PATH,
+                    key = x.LINKED_DOC_ID
+                }));
+
             ViewBag.PreviewConfig = previewConfig;
+
             return View(location);
         }
 
@@ -225,23 +231,23 @@ namespace Answer.Web.Controllers
             return View(model);
         }
 
-        public ActionResult DeletesingleReference(string linkDocId)
+        public ActionResult DeletesingleReference(string file)
         {
             var documentService = new DocumentService();
 
-            var result = documentService.RemoveSingleFileReference(linkDocId);
+            var result = documentService.RemoveSingleFileReference(file);
 
             return Json(result ? "Ok" : "error", JsonRequestBehavior.AllowGet);
         }
+
         public ActionResult AddsingleReference(string linkDocId, string files)
         {
-            var documentService = new DocumentService();
-            bool result = false;
+            var result = false;
+
             foreach (var file in files.Split(','))
             {
-                result = documentService.SaveSingleFileReference(linkDocId, file, GetCurrentUser().Id);
+                result = _documentService.SaveSingleFileReference(linkDocId, file, GetCurrentUser().Id);
             }
-
 
             return Json(result ? "Ok" : "error", JsonRequestBehavior.AllowGet);
         }

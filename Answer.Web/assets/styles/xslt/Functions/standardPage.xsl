@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+﻿<?xml version="1.0" encoding="UTF-8" ?>
 <xsl:stylesheet	version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" >
 <xsl:include href="standardPage_TEA_supplement.xsl"/>
 
@@ -551,7 +551,7 @@ Test
 		</xsl:when>
 	</xsl:choose>
 </input>
-<xsl:if test="$stringEdit = 'yes' and not($obj/attribute[@name = 'noPutText'])">
+<xsl:if test="$stringUpdate = 'yes' and not($obj/attribute[@name = 'noPutText'])">
 	<xsl:call-template name="putText"><xsl:with-param name="key"><xsl:value-of select="$obj/attribute[@name = 'value']/@value"/></xsl:with-param></xsl:call-template>
 </xsl:if>
 </xsl:template>
@@ -598,7 +598,7 @@ Test
 	<xsl:attribute name="onBlur"><xsl:value-of select="$obj/attribute[@name = 'onBlur']/@value"/></xsl:attribute>
 	<xsl:attribute name="onChange"><xsl:value-of select="$obj/attribute[@name = 'onChange']/@value"/></xsl:attribute>
 
-	<xsl:if test="$obj/attribute[@name = 'notEditable'] or $obj/ancestor::obj[@type='form']/readOnly">
+	<xsl:if test="$obj/attribute[@name = 'notUpdateable'] or $obj/ancestor::obj[@type='form']/readOnly">
 		<xsl:attribute name="readOnly">true</xsl:attribute>
 	</xsl:if>
 </input>
@@ -632,7 +632,7 @@ Test
 				<xsl:attribute name="onBlur">if(!(validateDate(document.<xsl:value-of select="$obj/ancestor::obj[@type='form']/attribute[@name='name']/@value"/>.<xsl:value-of select="$obj/attribute[@name = 'name']/@value"/>))){alert('<xsl:call-template name="jPutText"><xsl:with-param name="key">DateErrMsg</xsl:with-param></xsl:call-template>');
 				document.<xsl:value-of select="$obj/ancestor::obj[@type='form']/attribute[@name='name']/@value"/>.<xsl:value-of select="$obj/attribute[@name = 'name']/@value"/>.focus()}</xsl:attribute>
 
-				<xsl:if test="$obj/attribute[@name = 'notEditable'] or $obj/ancestor::obj[@type='form']/readOnly">
+				<xsl:if test="$obj/attribute[@name = 'notUpdateable'] or $obj/ancestor::obj[@type='form']/readOnly">
 					<xsl:attribute name="style">background-color: #EEEEEE;color: #555555;font-style: italic;margin-right: 1;margin-left: 1;
 					<xsl:value-of select="$obj/attribute[@name = 'style']/@value"/>
 					</xsl:attribute>
@@ -661,7 +661,7 @@ Test
 				</input>
 			</td>
 		</xsl:if>
-		<xsl:if test="not($obj/attribute[@name = 'notEditable'] or $obj/ancestor::obj[@type='form']/readOnly)">
+		<xsl:if test="not($obj/attribute[@name = 'notUpdateable'] or $obj/ancestor::obj[@type='form']/readOnly)">
 			<td class="tight">
 				<xsl:call-template name="putCurDate">
 					<xsl:with-param name="form"><xsl:value-of select="$obj/ancestor::obj[@type='form']/attribute[@name='name']/@value"/></xsl:with-param>
@@ -882,7 +882,7 @@ Test
 <textarea ondblclick="storeCaret(this)"
 	onselect="storeCaret(this);" onclick="storeCaret(this)" onkeyup="storeCaret(this)" onmouseup="storeCaret(this)"> 
 	<xsl:attribute name="onBlur">lastTextArea =  'document.<xsl:value-of select="$obj/ancestor::obj[@type='form']/attribute[@name='name']/@value"/>.<xsl:value-of select="$obj/attribute[@name = 'name']/@value"/>';</xsl:attribute>
-	<xsl:if test="$obj/attribute[@name = 'notEditable']  or $obj/ancestor::obj[@type='form']/readOnly">
+	<xsl:if test="$obj/attribute[@name = 'notUpdateable']  or $obj/ancestor::obj[@type='form']/readOnly">
 		<xsl:attribute name="readOnly">true</xsl:attribute>
 	</xsl:if>
 	<xsl:if test="$obj/attribute[@name = 'ondblclick']">
@@ -902,7 +902,7 @@ Test
 	<xsl:attribute name="cols"><xsl:value-of select="$obj/attribute[@name = 'cols']/@value"/></xsl:attribute>
 	<xsl:attribute name="class"><xsl:value-of select="$obj/attribute[@name = 'class']/@value"/></xsl:attribute>
 	<xsl:choose>
-		<xsl:when test="$obj/attribute[@name = 'notEditable']/@value or $obj/ancestor::obj[@type='form']/readOnly">
+		<xsl:when test="$obj/attribute[@name = 'notUpdateable']/@value or $obj/ancestor::obj[@type='form']/readOnly">
 			<xsl:attribute name="style"><xsl:value-of select="$obj/attribute[@name='style']/@value"/>;background-color: #EEEEEE;</xsl:attribute>
 		</xsl:when>
 		<xsl:otherwise>
@@ -961,12 +961,12 @@ so = so & closeobj()
 	var boolHide<xsl:value-of select="$obj/attribute[@name = 'name']/@value"/>=true;
 </script>
 <xsl:choose>
-	<xsl:when test="$obj/attribute[@name = 'notEditable']/@value  or $obj/ancestor::obj[@type='form']/readOnly">
+	<xsl:when test="$obj/attribute[@name = 'notUpdateable']/@value  or $obj/ancestor::obj[@type='form']/readOnly">
 				<select>
 					<xsl:call-template name="putCommonAttributes">
 						<xsl:with-param name="obj" select="$obj" />
 					</xsl:call-template>
-					<xsl:if test="$obj/attribute[@name = 'notEditable']  or $obj/ancestor::obj[@type='form']/readOnly">
+					<xsl:if test="$obj/attribute[@name = 'notUpdateable']  or $obj/ancestor::obj[@type='form']/readOnly">
 						<xsl:attribute name="disabled">true</xsl:attribute>
 						<xsl:attribute name="style">background-color:#EEEEEE</xsl:attribute>
 					</xsl:if>
@@ -1039,7 +1039,7 @@ so = so & closeobj()
 					<xsl:call-template name="putCommonAttributes">
 						<xsl:with-param name="obj" select="$obj" />
 					</xsl:call-template>
-					<xsl:if test="$obj/attribute[@name = 'notEditable']  or $obj/ancestor::obj[@type='form']/readOnly">
+					<xsl:if test="$obj/attribute[@name = 'notUpdateable']  or $obj/ancestor::obj[@type='form']/readOnly">
 						<xsl:attribute name="disabled">true</xsl:attribute>
 						<xsl:attribute name="style">background-color:#EEEEEE</xsl:attribute>
 					</xsl:if>
@@ -1168,7 +1168,7 @@ so = so & closeobj()
 			<xsl:attribute name="onDoubleClick"><xsl:value-of select="$obj/attribute[@name = 'onDoubleClick']/@value"/></xsl:attribute>			
 		</xsl:if>
 		<xsl:if test="$obj/attribute[@name='multiple']"><xsl:attribute name="multiple">multiple</xsl:attribute></xsl:if>
-		<xsl:if test="$obj/attribute[@name = 'notEditable']  or $obj/ancestor::obj[@type='form']/readOnly">
+		<xsl:if test="$obj/attribute[@name = 'notUpdateable']  or $obj/ancestor::obj[@type='form']/readOnly">
 			<xsl:attribute name="disabled">true</xsl:attribute>
 			<xsl:attribute name="style">background-color:#EEEEEE</xsl:attribute>
 		</xsl:if>
@@ -3621,14 +3621,14 @@ and then check to see if the tree node has a child with the same name as the sho
 						<xsl:attribute name="class"><xsl:value-of select="$obj/attribute[@name = 'class']/@value"/></xsl:attribute>
 					</xsl:if>
 					<xsl:choose>
-						<xsl:when test="$obj/attribute[@name = 'notEditable']/@value  or $obj/ancestor::obj[@type='form']/readOnly">
+						<xsl:when test="$obj/attribute[@name = 'notUpdateable']/@value  or $obj/ancestor::obj[@type='form']/readOnly">
 							<xsl:attribute name="style"><xsl:value-of select="$obj/attribute[@name='style']/@value"/>;background-color: #EEEEEE;</xsl:attribute>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:attribute name="style"><xsl:value-of select="$obj/attribute[@name='style']/@value"/></xsl:attribute>
 						</xsl:otherwise>		
 					</xsl:choose>
-					<xsl:if test="$obj/attribute[@name = 'notEditable'  or $obj/ancestor::obj[@type='form']/readOnly]">
+					<xsl:if test="$obj/attribute[@name = 'notUpdateable'  or $obj/ancestor::obj[@type='form']/readOnly]">
 						<xsl:attribute name="readOnly">true</xsl:attribute>
 					</xsl:if>
 					<!--name-->
@@ -3830,7 +3830,7 @@ and then check to see if the tree node has a child with the same name as the sho
 						</xsl:if>
 						<!--Style-->
 						<xsl:choose>
-							<xsl:when test="$obj/attribute[@name = 'notEditable']/@value or $obj/ancestor::obj[@type='form']/readOnly">
+							<xsl:when test="$obj/attribute[@name = 'notUpdateable']/@value or $obj/ancestor::obj[@type='form']/readOnly">
 								<xsl:attribute name="style"><xsl:value-of select="$obj/attribute[@name='style']/@value"/>;background-color: #EEEEEE;</xsl:attribute>
 							</xsl:when>
 							<xsl:otherwise>
@@ -3920,7 +3920,7 @@ and then check to see if the tree node has a child with the same name as the sho
 					<xsl:if test="$boolDebug = 'true'"><xsl:value-of select="$obj/attribute[@name='name']/@value"/></xsl:if>
 				</span>
 			</td>
-			<xsl:if test="not($obj/attribute[@name = 'notEditable'] or $obj/ancestor::obj[@type='form']/readOnly) and $obj/attribute[@name='popUpURL']">
+			<xsl:if test="not($obj/attribute[@name = 'notUpdateable'] or $obj/ancestor::obj[@type='form']/readOnly) and $obj/attribute[@name='popUpURL']">
 				<td class="tight">
 					<div class="tight">
 						<xsl:attribute name="id"><xsl:value-of select="$obj/ancestor::obj[@type='form']/attribute[@name='name']/@value"/>_<xsl:value-of select="$obj/attribute[@name='name']/@value"/>_Add</xsl:attribute>
@@ -3982,7 +3982,7 @@ and then check to see if the tree node has a child with the same name as the sho
 			</xsl:if>
 		</tr>
 		<tr>
-			<xsl:if test="(not($obj/attribute[@name = 'notEditable'])  or $obj/ancestor::obj[@type='form']/readOnly) and ($obj/attribute[@name = 'orderButtons'])">
+			<xsl:if test="(not($obj/attribute[@name = 'notUpdateable'])  or $obj/ancestor::obj[@type='form']/readOnly) and ($obj/attribute[@name = 'orderButtons'])">
 				<xsl:call-template name="putOrderButtons">
 						<xsl:with-param name="field"><xsl:value-of select="$obj/attribute[@name='name']/@value"/></xsl:with-param>
 						<xsl:with-param name="form"><xsl:value-of select="$obj/ancestor::obj[@type='form']/attribute[@name='name']/@value"/></xsl:with-param>					
@@ -4100,7 +4100,7 @@ and then check to see if the tree node has a child with the same name as the sho
 		<tr>
 			<td class="tight">
 				<select>
-					<xsl:if test="$obj/attribute[@name = 'notEditable'] or $obj/ancestor::obj[@type='form']/readOnly">
+					<xsl:if test="$obj/attribute[@name = 'notUpdateable'] or $obj/ancestor::obj[@type='form']/readOnly">
 						<xsl:attribute name="style">color:#000000;font-style:italic;background-color:#EEEEEE;</xsl:attribute>
 					</xsl:if>
 					<xsl:choose>
@@ -4159,7 +4159,7 @@ and then check to see if the tree node has a child with the same name as the sho
 			<td class="tight">
 				<table class="tight">
 					<tr>
-						<xsl:if test="not($obj/attribute[@name = 'notEditable'] or $obj/ancestor::obj[@type='form']/readOnly)">
+						<xsl:if test="not($obj/attribute[@name = 'notUpdateable'] or $obj/ancestor::obj[@type='form']/readOnly)">
 							<td class="tight">
 								<xsl:call-template name="putLinkButton">
 									<xsl:with-param name="obj" select="$obj" />
@@ -5691,7 +5691,7 @@ window.opener.AddToOptionBox(
 		<xsl:attribute name="onClick">window.close();</xsl:attribute>
  	</input>
 </div>
-<xsl:if test="$stringEdit='yes'">
+<xsl:if test="$stringUpdate='yes'">
 <xsl:call-template name="putText"><xsl:with-param name="key"><xsl:value-of select="@val"/></xsl:with-param></xsl:call-template>
 <xsl:call-template name="putText"><xsl:with-param name="key">Added to List</xsl:with-param></xsl:call-template>
 </xsl:if>
@@ -6042,10 +6042,10 @@ hello
 <!--##################################################
     ##                                             ##
 	################################################## -->
-<xsl:template match="fillEditWords">
+<xsl:template match="fillUpdateWords">
 <xsl:variable name="f"><xsl:value-of select="/Doc_Webpage/queryString/item[@name='formName']/@value"/></xsl:variable>
 <xsl:variable name="i"><xsl:value-of select="/Doc_Webpage/queryString/item[@name='itemName']/@value"/></xsl:variable>
-Filling an Edit Word
+Filling an Update Word
 window.opener.fillTextBox('<xsl:value-of select="$f"/>','<xsl:value-of select="$i"/>',jXMLDecode('<xsl:value-of select="//general/txt/textString[@id=//lookup]/@value"/>'));
 	<script language="JavaScript" type="text/javascript">
 		window.opener.fillTextBox('<xsl:value-of select="$f"/>','<xsl:value-of select="$i"/>',escape(jXMLDecode('<xsl:value-of select="//general/txt/textString[@id=//lookup]/@value"/>')));

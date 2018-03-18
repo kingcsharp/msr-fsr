@@ -2,7 +2,6 @@
 @{
     ViewBag.Title = "Create Procedure Step Template";
 }
-<link href="~/assets/textformater/general.css" rel="stylesheet" />
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="row">
@@ -16,42 +15,42 @@
                     <div class="form-horizontal">
                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                         <div class="form-group">
-                            @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.LabelFor(model => model.Title, new { @class = "control-label col-md-2" })
                             <div class="col-md-5">
                                 @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(model => model.StartOnCounter, htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.LabelFor(model => model.StartOnCounter, new { @class = "control-label col-md-2" })
                             <div class="col-md-5">
                                 @Html.DropDownListFor(model => model.StartOnCounter, Model.BaseStartOnCounterList, new { @class = "form-control select" })
                                 @Html.ValidationMessageFor(model => model.StartOnCounter, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(model => model.Duration, htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.LabelFor(model => model.Duration, new { @class = "control-label col-md-2" })
                             <div class="col-md-5">
                                 @Html.EditorFor(model => model.Duration, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.Duration, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(model => model.DurationType, htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.LabelFor(model => model.DurationType, new { @class = "control-label col-md-2" })
                             <div class="col-md-5">
                                 @Html.DropDownListFor(model => model.DurationType, Model.StepDurationTypeList, new { @class = "form-control select" })
                                 @Html.ValidationMessageFor(model => model.DurationType, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(model => model.Labor, htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.LabelFor(model => model.Labor, new { @class = "control-label col-md-2" })
                             <div class="col-md-5">
                                 @Html.TextBoxFor(model => model.Labor, new { @class = "form-control", @readonly = "readonly" })
                                 @Html.ValidationMessageFor(model => model.Labor, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(model => model.StepText, htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.LabelFor(model => model.StepText, new { @class = "control-label col-md-2" })
                             <div class="col-md-5">
                                 @Html.Partial("_TextAdder")
                                 @Html.TextAreaFor(model => model.StepText, new { onBlur = "checkMaxSize(this, 4000);;lastTextArea = 'document.editForm.StepText';", name = "StepText", rows = "10", cols = "80", @class = "text-formatter form-control", style = "height:150px;" })
@@ -80,7 +79,6 @@
                                     @Html.TextBoxFor(m => m.ApplicationObjects, new { @class = "form-control submitselect", @readonly = "readonly" })
                                     @Html.ValidationMessageFor(model => model.ApplicationObjects, "", new { @class = "text-danger" })
                                 </div>
-                                @*<div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="REFERENCE_OBJECT" data-toggle="modal" data-target="#select-objects"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="REFERENCE_OBJECT"><i class="icon fa fa-trash"></i></span> </div>*@
                             </div>
                         </div>
                         <div class="form-group">
@@ -100,7 +98,6 @@
                                     @Html.DropDownListFor(m => m.ReferenceVerb, Model.ReferenceVerbList, new { @class = "form-control select" })
                                     @Html.ValidationMessageFor(model => model.ReferenceVerb, "", new { @class = "text-danger" })
                                 </div>
-                                @*<div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="REFERENCE_OBJECT" data-toggle="modal" data-target="#select-objects"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="REFERENCE_OBJECT"><i class="icon fa fa-trash"></i></span> </div>*@
                             </div>
                         </div>
                         <div class="form-group">
@@ -110,7 +107,6 @@
                                     @Html.DropDownListFor(m => m.ReferenceObject, Model.ReferenceObjectsList, new { @class = "form-control  select" })
                                     @Html.ValidationMessageFor(model => model.ReferenceObject, "", new { @class = "text-danger" })
                                 </div>
-                                @*<div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="REFERENCE_OBJECT" data-toggle="modal" data-target="#select-objects"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="REFERENCE_OBJECT"><i class="icon fa fa-trash"></i></span> </div>*@
                             </div>
                         </div>
                         <div class="form-group">

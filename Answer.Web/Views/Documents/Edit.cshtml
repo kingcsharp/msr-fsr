@@ -1,10 +1,9 @@
 ﻿@model Msr.Services.Documents.ViewModels.SaveDocumentViewModel
 @{
-    ViewBag.Title = "Edit Document";
+    ViewBag.Title = "Update Document";
 }
 
-<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.7/css/fileinput.min.css">
-<link href="//cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css" rel="stylesheet" type="text/css" />
+@Styles.Render("~/bundles/css/fileinput")
 
 <div class="container-fluid">
     <div class="side-body padding-top">
@@ -54,10 +53,7 @@
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.ReferenceFiles, htmlAttributes: new {@class = "control-label col-md-2"})
                                     <div class="col-md-8">
-                                        <div class="file-loading">
-                                            <input id="input-files" name="input-files[]" type="file" multiple>
-                                        </div>
-                                        <span class="data-toggle=" style="float: right" data-call-back-id="ReferenceFiles" data-toggle="modal" data-target="#select-images"><button type="button" class="btn btn-success">Select existing files</button></span>
+                                        @Html.Partial("_FileUpload")
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -103,20 +99,19 @@
     }
     <script src="~/assets/textformater/ValidateDocumentSubmit.js"></script>
     <script src="~/assets/textformater/textformatter.js"></script>
-    <!-- sortable.min.js is only needed if you wish to sort / rearrange files in initial preview.
-    This must be loaded before fileinput.min.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.5/js/plugins/sortable.min.js" type="text/javascript"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.7/js/fileinput.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bluebird/3.3.5/bluebird.min.js"></script>
-    <script src="~/assets/js/uploader.js"></script>
 
+    @Scripts.Render("~/bundles/js/jqueryval")
+    @Scripts.Render("~/bundles/js/fileinput")
+    
     <script type="text/javascript">
+
+        var fileUploaderGrid = new FileUploaderGrid();
+
         $(document).ready(function () {
 
-            var $el = $('#input-files');
-
-            initEditUploader($el, '@Url.Action("FileUploaderBootstrap", "Doc")', [@Html.Raw(ViewBag.Preview)],@Html.Raw(ViewBag.PreviewConfig), '@Model.ObjectId');
+            var fileUploader = new FileUploader();
+            fileUploader.InitEditUploader($('#input-files'), '@Url.Action("FileUploaderBootstrap", "Doc")', [@Html.Raw(ViewBag.Preview)], @Html.Raw(ViewBag.PreviewConfig),'@Model.ObjectId');
+            fileUploaderGrid.SetupSelectImage();
 
             var selectRoles = $(".selectroles").select2({
                 tags: [],
@@ -131,57 +126,16 @@
 
             var values = '@roles';
 
-                var selectedRoles = values.split(",");
+            var selectedRoles = values.split(",");
 
-                selectRoles.val(selectedRoles).trigger("change");
+            selectRoles.val(selectedRoles).trigger("change");
 
-                $('#select-images').on('show.bs.modal',
-                    function (event) {
-
-                        var button = $(event.relatedTarget);
-                        var callBackId = button.data('call-back-id');
-                        var modal = $(this);
-
-                        $.ajax({
-                            type: "GET",
-                            url: '/Files/GetFiles?callBackId=' + callBackId,
-                            dataType: 'html',
-                            success: function (data) {
-                                modal.find('.modal-body').html(data);
-                            },
-                            error: function () {
-
-                            }
-                        });
-
-                    });
         });
+
         function SelectIds() {
-            var array = [];
-            var objectId = $('#ObjectId').val();
-            $(".selected-file").each(function (index) {
-
-                if ($(this).is(":checked")) {
-                    var ids = $(this).val().split('|');
-                    array.push(ids[0]);
-                }
-
-            });
-
-            $('.closeClick').click();
-
-            $.ajax({
-                type: "GET",
-                url: '/Documents/AddsingleReference?linkDocId=' + objectId + "&files=" + array,
-                dataType: 'html',
-                success: function (data) {
-                    location.reload();
-                },
-                error: function () {
-
-                }
-            });
+            fileUploaderGrid.SelectIds();
         }
+
     </script>
 
 }

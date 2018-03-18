@@ -6,12 +6,15 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 using System.Xml;
 using System.Xml.Xsl;
 using Amazon.Runtime.Internal;
 using Answer.Web.ViewModel;
 using Msr.Models.ActualParts;
+using Msr.Services.Documents;
 using Msr.Services.Procedures.Messages;
 using Msr.Services.Procedures.ViewModels;
 using Msr.Services.ProcedureVerbs;
@@ -27,15 +30,18 @@ namespace Answer.Web.Controllers
         private readonly ProceduresService _proceduresService;
         private readonly UserService _userService;
         private readonly WorkflowService _workflowService;
-
-        const string AppDataGlobalsettingsXml = @"/App_Data//procedureFolder/";
-        const string XSLTPath = @"/assets//styles//xslt//procedures.xsl";
+        private readonly RoleService _roleService;
+        private readonly ProcedureVerbsService _procedureVerbsService;
+        private readonly DocumentFilesService _documentFilesService;
 
         public ProceduresController()
         {
             _proceduresService = new ProceduresService();
             _userService = new UserService();
             _workflowService = new WorkflowService();
+            _roleService = new RoleService();
+            _procedureVerbsService = new ProcedureVerbsService();
+            _documentFilesService = new DocumentFilesService();;
         }
 
 
@@ -56,9 +62,7 @@ namespace Answer.Web.Controllers
 
         public ActionResult ProceduresData(JqGridParam param)
         {
-            var procedureService = new ProceduresService();
-
-            var totalRows = procedureService.GetProceduresQueryable().Where(x => x.Status != "DELETED" && x.Status != "OLD");
+            var totalRows = _proceduresService.GetProceduresQueryable().Where(x => x.Status != "DELETED" && x.Status != "OLD");
 
             if (param.where != null && param.where.rules.Any())
             {
@@ -150,7 +154,7 @@ namespace Answer.Web.Controllers
         {
             var saveProcedureViewModel = new SaveProcedureViewModel();
 
-            saveProcedureViewModel.Setup(new ProceduresService(), new RoleService(), new ProcedureVerbsService(), GetCurrentUser().Id);
+            saveProcedureViewModel.Setup(_proceduresService, _roleService, _procedureVerbsService, _documentFilesService, GetCurrentUser().Id);
 
             return View(saveProcedureViewModel);
         }
@@ -158,6 +162,8 @@ namespace Answer.Web.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Create(SaveProcedureViewModel model)
         {
+            var currentUser = GetCurrentUser();
+
             var procedureService = new ProceduresService();
 
             model.NTLogin = GetCurrentUser().Id;
@@ -176,14 +182,13 @@ namespace Answer.Web.Controllers
                 {
                     TempData["ErrorMessage"] = "Something went wrong.";
 
-                    model.Setup(new ProceduresService(), new RoleService(), new ProcedureVerbsService(), GetCurrentUser().Id);
+                    model.Setup(_proceduresService, _roleService, _procedureVerbsService, _documentFilesService, currentUser.Id);
 
                     return View(model);
                 }
             }
 
-
-            model.Setup(new ProceduresService(), new RoleService(), new ProcedureVerbsService(), GetCurrentUser().Id);
+            model.Setup(_proceduresService, _roleService, _procedureVerbsService, _documentFilesService, currentUser.Id);
 
             return View(model);
         }
@@ -191,9 +196,8 @@ namespace Answer.Web.Controllers
 
         public ActionResult ProcedureDelete(string id)
         {
-            var procedureService = new ProceduresService();
 
-            var response = procedureService.DeleteProcedure(id: id, ntlogin: GetCurrentUser().Id);
+            var response = _proceduresService.DeleteProcedure(id: id, ntlogin: GetCurrentUser().Id);
 
             if (response)
             {
@@ -212,20 +216,21 @@ namespace Answer.Web.Controllers
             var vm = new SaveProcedureViewModel();
             vm.Id = id;
 
-            var currrentUser = GetCurrentUser();
-            var result = _workflowService.CheckOutObject(id, currrentUser.Id);
+            var currentUser = GetCurrentUser();
+            var result = _workflowService.CheckOutObject(id, currentUser.Id);
             id = result.Entity;
 
             var model = _proceduresService.GetProcedureById(id);
 
             vm.MapToDto(model);
-            vm.Setup(_proceduresService, new RoleService(), new ProcedureVerbsService(), currrentUser.Id);
+            
+            vm.Setup(_proceduresService, _roleService, _procedureVerbsService, _documentFilesService, currentUser.Id);
 
             var procedureName = _proceduresService.GetProceduresQueryable().Where(x => x.ObjectId == id).SingleOrDefault().Name;
 
             var viewModel = new GetStepDataResult
             {
-                GetStepDataResults = _proceduresService.GetStepsData(id, currrentUser.Id)
+                GetStepDataResults = _proceduresService.GetStepsData(id, currentUser.Id)
             };
 
             viewModel.AddMonitorForProcedureViewModel.Setup(new EquipmentMaintenanceService());
@@ -236,6 +241,24 @@ namespace Answer.Web.Controllers
             ViewBag.Procedure = new SelectList(_proceduresService.GetProcedurelist(), "Value", "Show");
 
             vm.GetStepDataResults = viewModel;
+
+
+            var preview = string.Join(",", vm.DocLinks.ToArray().Select(x => string.Format("{0}{1}{0}", "\'", x.SERVER_PATH)));
+            ViewBag.Preview = preview;
+
+            var jsonSerialiser = new JavaScriptSerializer();
+            var previewConfig = jsonSerialiser.Serialize(vm.DocLinks.Select(x => new
+            {
+                caption = x.NAME,
+                type = x.TYPE,
+                size = 6666,
+                url = Url.Action("DeletesingleReference", "Documents", new {file = x.LINKED_DOC_ID}),
+                downloadUrl = x.SERVER_PATH,
+                key = x.LINKED_DOC_ID
+            }));
+
+            ViewBag.PreviewConfig = previewConfig;
+
             return View(vm);
         }
 
@@ -243,10 +266,11 @@ namespace Answer.Web.Controllers
         [ValidateInput(false)]
         public ActionResult Edit(SaveProcedureViewModel model, string command)
         {
+            var currentUser = GetCurrentUser();
 
             var procedureService = new ProceduresService();
 
-            model.NTLogin = GetCurrentUser().Id;
+            model.NTLogin = currentUser.Id;
 
             if (ModelState.IsValid)
             {
@@ -263,12 +287,13 @@ namespace Answer.Web.Controllers
                     {
                         TempData["ErrorMessage"] = "Something went wrong.";
 
-                        model.Setup(new ProceduresService(), new RoleService(), new ProcedureVerbsService(), GetCurrentUser().Id);
+                        model.Setup(_proceduresService, _roleService, _procedureVerbsService, _documentFilesService, currentUser.Id);
 
                         return View("Edit", model);
                     }
                 }
-                else if (command == "Cancel And Roll Back")
+
+                if (command == "Cancel And Roll Back")
                 {
                     var response = procedureService.RollBack(model);
                     if (response)
@@ -281,8 +306,7 @@ namespace Answer.Web.Controllers
                     {
                         TempData["ErrorMessage"] = "Something went wrong.";
 
-                        model.Setup(new ProceduresService(), new RoleService(), new ProcedureVerbsService(),
-                            GetCurrentUser().Id);
+                        model.Setup(_proceduresService, _roleService, _procedureVerbsService, _documentFilesService, currentUser.Id);
 
                         return View("Edit", model);
                     }
@@ -290,7 +314,7 @@ namespace Answer.Web.Controllers
 
             }
 
-            model.Setup(new ProceduresService(), new RoleService(), new ProcedureVerbsService(), GetCurrentUser().Id);
+            model.Setup(_proceduresService, _roleService, _procedureVerbsService, _documentFilesService, currentUser.Id);
 
             return View("Edit", model);
 
@@ -703,7 +727,6 @@ namespace Answer.Web.Controllers
                     return View(model);
                 }
             }
-
 
             model.Setup(new ProceduresService());
 
@@ -1203,6 +1226,39 @@ namespace Answer.Web.Controllers
                 id = model.AddMonitorForProcedureViewModel.Related_Object_Id
 
             });
+        }
+
+        public ActionResult Import()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Import(HttpPostedFileBase postedFile)
+        {
+            if (ModelState.IsValid)
+            {
+
+                if (postedFile != null && postedFile.ContentLength > 0)
+                {
+
+                    var response = _proceduresService.ImportProcedures(postedFile, GetCurrentUser());
+                    if (!response.HasErrors())
+                    {
+                        TempData["SuccessMessage"] = response.SuccessMessage;
+                        return RedirectToAction("Index");
+                    }
+
+                    TempData["ErrorMessage"] = response.ErrorMessage;
+                    return View();
+
+                }
+
+                ModelState.AddModelError("File", "Please Upload Your file");
+                return View();
+            }
+            ModelState.AddModelError("File", "Please Upload Your file");
+            return View();
         }
     }
 

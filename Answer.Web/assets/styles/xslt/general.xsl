@@ -24,15 +24,15 @@
 	<xsl:param name="nobr" />
 	<xsl:if test="$key != ''">
 		<xsl:choose>
-			<xsl:when test="$stringEdit = 'yes'">
-				<EditableString>
+			<xsl:when test="$stringUpdate = 'yes'">
+				<UpdateableString>
 					<xsl:attribute name="key"><xsl:value-of select="$key"/></xsl:attribute>
 					<xsl:attribute name="filename"><xsl:value-of select="/Doc_Webpage/languageStrings/lang/txt/textString[@id = $key]/../../@filename"/></xsl:attribute>
 					<xsl:choose>	
 						<xsl:when test="/Doc_Webpage/languageStrings/lang/txt/textString[@id = $key]"><xsl:attribute name="value"><xsl:value-of select="/Doc_Webpage/languageStrings/lang/txt/textString[@id = $key]/@value"/></xsl:attribute></xsl:when>
 						<xsl:otherwise><xsl:attribute name="value"></xsl:attribute></xsl:otherwise>
 					</xsl:choose>					
-				</EditableString>
+				</UpdateableString>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:choose>
@@ -40,14 +40,14 @@
 						<nobr>
 							<xsl:choose>
 								<xsl:when test="/Doc_Webpage/languageStrings/lang/txt/textString[@id = $key]"><xsl:value-of select="/Doc_Webpage/languageStrings/lang/txt/textString[@id = $key]/@value"/></xsl:when>
-								<xsl:otherwise><xsl:value-of select="$key"/>***<xsl:if test="$stringEdit = 'yes'"><stringMissing><xsl:attribute name="id"><xsl:value-of select="$key"/></xsl:attribute></stringMissing></xsl:if></xsl:otherwise>
+								<xsl:otherwise><xsl:value-of select="$key"/>***<xsl:if test="$stringUpdate = 'yes'"><stringMissing><xsl:attribute name="id"><xsl:value-of select="$key"/></xsl:attribute></stringMissing></xsl:if></xsl:otherwise>
 							</xsl:choose>
 						</nobr>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:choose>
 							<xsl:when test="/Doc_Webpage/languageStrings/lang/txt/textString[@id = $key]"><xsl:value-of select="/Doc_Webpage/languageStrings/lang/txt/textString[@id = $key]/@value"/></xsl:when>
-							<xsl:otherwise><xsl:value-of select="$key"/>***<xsl:if test="$stringEdit = 'yes'"><stringMissing><xsl:attribute name="id"><xsl:value-of select="$key"/></xsl:attribute></stringMissing></xsl:if></xsl:otherwise>
+							<xsl:otherwise><xsl:value-of select="$key"/>***<xsl:if test="$stringUpdate = 'yes'"><stringMissing><xsl:attribute name="id"><xsl:value-of select="$key"/></xsl:attribute></stringMissing></xsl:if></xsl:otherwise>
 						</xsl:choose>
 					</xsl:otherwise>
 				</xsl:choose>
@@ -382,10 +382,10 @@
 							</xsl:call-template>
 							<td class="tight">
 								<input class="extraSmall" type="submit">
-									<xsl:attribute name="value"><xsl:call-template name="putText"><xsl:with-param name="key">Edit Strings</xsl:with-param></xsl:call-template></xsl:attribute>
+									<xsl:attribute name="value"><xsl:call-template name="putText"><xsl:with-param name="key">Update Strings</xsl:with-param></xsl:call-template></xsl:attribute>
 								</input>			
 								<div style="display:none" class="hiddenForWords">
-                                	<xsl:call-template name="putText"><xsl:with-param name="key">Edit Strings</xsl:with-param></xsl:call-template>
+                                	<xsl:call-template name="putText"><xsl:with-param name="key">Update Strings</xsl:with-param></xsl:call-template>
                                 </div>
 							</td>
 						</form>
@@ -408,10 +408,10 @@
 							</xsl:call-template>
 							<td class="tight">
 								<input class="extraSmall" type="submit" style="padding:0">
-									<xsl:attribute name="value"><xsl:call-template name="putText"><xsl:with-param name="key">Edit Permissions</xsl:with-param></xsl:call-template></xsl:attribute>
+									<xsl:attribute name="value"><xsl:call-template name="putText"><xsl:with-param name="key">Update Permissions</xsl:with-param></xsl:call-template></xsl:attribute>
 								</input>			
 								<div style="display:none" class="hiddenForWords">
-                                	<xsl:call-template name="putText"><xsl:with-param name="key">Edit Permissions</xsl:with-param></xsl:call-template>
+                                	<xsl:call-template name="putText"><xsl:with-param name="key">Update Permissions</xsl:with-param></xsl:call-template>
                                 </div>
 							</td>
 						</form>
@@ -544,15 +544,15 @@
 <xsl:param name="key" />
 <xsl:param name="nobr" />
 <xsl:choose>
-	<xsl:when test="$stringEdit = 'yes'">
-		<EditableString>
+	<xsl:when test="$stringUpdate = 'yes'">
+		<UpdateableString>
 			<xsl:attribute name="key"><xsl:value-of select="$key"/></xsl:attribute>
 			<xsl:attribute name="filename"><xsl:value-of select="/Doc_Webpage/languageStrings/lang/txt/textString[@id = $key]/../../@filename"/></xsl:attribute>
 			<xsl:choose>	
 				<xsl:when test="/Doc_Webpage/languageStrings/lang/txt/textString[@id = $key]"><xsl:attribute name="value"><xsl:value-of select="/Doc_Webpage/languageStrings/lang/txt/textString[@id = $key]/@value"/></xsl:attribute></xsl:when>
 				<xsl:otherwise><xsl:attribute name="value"></xsl:attribute></xsl:otherwise>
 			</xsl:choose>					
-		</EditableString>
+		</UpdateableString>
 	</xsl:when>
 	<xsl:otherwise>
 		<xsl:variable name="val"><xsl:call-template name="putText"><xsl:with-param name="key"><xsl:value-of select="$key"/></xsl:with-param></xsl:call-template></xsl:variable>
@@ -858,7 +858,7 @@
 					<xsl:call-template name="putText"><xsl:with-param name="key">No View</xsl:with-param></xsl:call-template>
 				</th>
 				<th class="standard">
-					<xsl:call-template name="putText"><xsl:with-param name="key">Edit</xsl:with-param></xsl:call-template>
+					<xsl:call-template name="putText"><xsl:with-param name="key">Update</xsl:with-param></xsl:call-template>
 				</th>
 			</tr>
 			<form name="pagePermissionForm" method="post" onSubmit="escapeAllSelects();">
@@ -1567,7 +1567,7 @@
 		<br />
 		<a>
 			<xsl:attribute name="href"><xsl:value-of select="$http_Root"/>asp/administration/editGlobalWords.asp</xsl:attribute>
-			<xsl:call-template name="putText"><xsl:with-param name="key">Edit Global Words</xsl:with-param></xsl:call-template>
+			<xsl:call-template name="putText"><xsl:with-param name="key">Update Global Words</xsl:with-param></xsl:call-template>
 		</a>
 	</xsl:when>
 

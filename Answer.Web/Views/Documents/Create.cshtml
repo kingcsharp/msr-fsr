@@ -2,8 +2,8 @@
 @{
     ViewBag.Title = "Add Document";
 }
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.7/css/fileinput.min.css">
-    <link href="//cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css" rel="stylesheet" type="text/css" />
+    
+@Styles.Render("~/bundles/css/fileinput")
 
 <div class="container-fluid">
     <div class="side-body padding-top">
@@ -48,14 +48,7 @@
                         <div class="form-group">
                             @Html.LabelFor(model => model.ReferenceFiles, htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-8">
-                                <!-- Detailed preview for thumbs and iconic preview for zoom -->
-                                <div class="file-loading">
-                                    <input id="input-files" name="input-files[]" multiple type="file">
-                                </div>
-                                <div>
-                                    <input type="hidden" id="referenceFiles" name="referenceFiles" />
-                                    <span class="data-toggle=" style="float: right" data-call-back-id="ReferenceFiles" data-toggle="modal" data-target="#select-images"><button type="button" class="btn btn-success">Select existing files</button></span>
-                                </div>
+                                @Html.Partial("_FileUpload")
                             </div>
                         </div>
                         <div class="form-group">
@@ -97,111 +90,30 @@
 {
     <script src="~/assets/textformater/ValidateDocumentSubmit.js"></script>
     <script src="~/assets/textformater/textformatter.js"></script>
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.7/js/fileinput.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
-    <script src="~/assets/js/uploader.js"></script>
+    
+    @Scripts.Render("~/bundles/js/jqueryval")
+    @Scripts.Render("~/bundles/js/fileinput")
+
     <script type="text/javascript">
         var ary = [];
+
+        fileUploaderGrid = new FileUploaderGrid();
+
         $(document).ready(function () {
-            var $el = $('#input-files');
 
-
-            initUploader($el, '@Url.Action("FileUploaderBootstrap", "Doc")', [ ],[]);
-
+            var fileUploader = new FileUploader();
+            fileUploader.InitUploader($('#input-files'), '@Url.Action("FileUploaderBootstrap", "Doc")', [],[]);
+            fileUploaderGrid.SetupSelectImage();
 
             $(".selectroles").select2({
                 tags: true,
                 multiple: true
             });
 
-            $('.deletefiles').click(function () {
-
-                var callBackId = $(this).data('call-back-id');
-
-                eModal.confirm('Do you really want to Remove ' + callBackId + ' ?', 'Confirmation delete')
-                    .then(confirmCallback, optionalCancelCallback);
-
-                function confirmCallback() {
-                    console.log("ok");
-                    $('#' + callBackId + ' option:selected').remove();
-                }
-
-                function optionalCancelCallback() {
-                    console.log("cancel");
-                }
-
-            });
-            $('#select-images').on('show.bs.modal',
-                function (event) {
-
-                    var button = $(event.relatedTarget);
-                    var callBackId = button.data('call-back-id');
-                    var modal = $(this);
-
-                    $.ajax({
-                        type: "GET",
-                        url: '/Files/GetFiles?callBackId=' + callBackId,
-                        dataType: 'html',
-                        success: function (data) {
-                            modal.find('.modal-body').html(data);
-                        },
-                        error: function () {
-
-                        }
-                    });
-                });
         });
+
         function SelectIds() {
-            var array = [];
-            var preSelected =[];
-            if ($('#referenceFiles').val().length > 0) {
-                preSelected = $('#referenceFiles').val().split(',').map(Number);
-            }
-            $(".selected-file").each(function (index) {
-
-                if ($(this).is(":checked")) {
-                    var ids = $(this).val().split('|');
-                    if ($.inArray(ids[0], array) !== -1) {
-                        // found it
-                    } else {
-                        array.push(parseInt(ids[0]));
-                    }
-
-                }
-
-            });
-            Array.prototype.unique = function() {
-                var a = this.concat();
-                for(var i=0; i<a.length; ++i) {
-                    for(var j=i+1; j<a.length; ++j) {
-                        if(a[i] === a[j])
-                            a.splice(j--, 1);
-                    }
-                }
-
-                return a;
-            };
-            var finalArray = array.concat(preSelected).unique();
-            $('.closeClick').click();
-            console.log(finalArray);
-            $('#referenceFiles').val(finalArray);
-            $.ajax({
-                type: "GET",
-                url: '/Doc/RefillUploader?ids=' + finalArray,
-                dataType: 'JSON',
-                success: function (data) {
-                    console.log(data.initialPreview);
-                    console.log(data.initialPreviewConfig);
-                    var $el = $('#input-files');
-                    $el.fileinput('destroy');
-                    initUploader($el, '@Url.Action("FileUploaderBootstrap", "Doc")', data.initialPreview, data.initialPreviewConfig);
-                },
-                error: function () {
-
-                }
-            });
+            fileUploaderGrid.SelectIdsForAdd(fileUploaderGrid, '@Url.Action("FileUploaderBootstrap", "Doc")');
         }
     </script>
 }

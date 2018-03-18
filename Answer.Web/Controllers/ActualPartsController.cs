@@ -9,6 +9,7 @@ using Msr.Services.Users;
 using Msr.Web.ViewModel.Engineering;
 using System;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using Msr.Services.Companies;
 using Msr.Services.Orders;
@@ -26,6 +27,7 @@ namespace Answer.Web.Controllers
             ViewBag.Serial = serial;
             return View(viewModel);
         }
+
         public ActionResult ActualPartsData(JqGridParam param)
         {
             var actualPartsService = new ActualPartsService();
@@ -130,6 +132,7 @@ namespace Answer.Web.Controllers
             };
             return Json(json, JsonRequestBehavior.AllowGet);
         }
+
         public ActionResult Create()
         {
             var approvalGroup = new SaveActualPartsViewModel();
@@ -206,6 +209,7 @@ namespace Answer.Web.Controllers
 
             return View(model);
         }
+
         public ActionResult ActualPartDelete(string id, string ntlogin)
         {
             var taskService = new PartsService();
@@ -335,6 +339,7 @@ namespace Answer.Web.Controllers
             return View(actualPart);
 
         }
+
         [AcceptVerbs(verbs: HttpVerbs.Post)]
         public ActionResult ReassignTask(ReassignTaskViewModel model)
         {
@@ -360,6 +365,7 @@ namespace Answer.Web.Controllers
 
             return View(model);
         }
+
         public ActionResult DeleteHistory(string id)
         {
 
@@ -384,6 +390,40 @@ namespace Answer.Web.Controllers
             }
 
             return RedirectToAction(actionName: "ViewHistory", routeValues: new { id = actualPartId });
+        }
+
+        public ActionResult Import()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Import(HttpPostedFileBase postedFile)
+        {
+            if (ModelState.IsValid)
+            {
+
+                if (postedFile != null && postedFile.ContentLength > 0)
+                {
+                    var actualPartsService = new ActualPartsService();
+
+                    var response = actualPartsService.ImportActualParts(postedFile, GetCurrentUser());
+
+                    if (!response.HasErrors())
+                    {
+                        TempData["SuccessMessage"] = response.SuccessMessage;
+                        return RedirectToAction("Index");
+                    }
+
+                    TempData["ErrorMessage"] = response.ErrorMessage;
+                    return View();
+                }
+
+                ModelState.AddModelError("File", "Please Upload Your file");
+                return View();
+            }
+            ModelState.AddModelError("File", "Please Upload Your file");
+            return View();
         }
     }
 }

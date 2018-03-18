@@ -52,7 +52,7 @@ namespace Msr.Services.Orders
 
             login = login.Trim().ToLower();
 
-            var user = _dbContext.Peoples.SingleOrDefault(x => x.Login == login && x.Status == "APPROVED");
+            var user = _dbContext.Peoples.FirstOrDefault(x => x.Login == login && (x.Status == PeopleStatusConstants.Approved || x.Status == PeopleStatusConstants.ApprovedButRevising));
 
             if (user == null)
             {
@@ -111,10 +111,7 @@ namespace Msr.Services.Orders
         {
             return _dbContext.PeopleObjectViews.Where(x => x.Status == "APPROVED").AsQueryable();
         }
-        public IQueryable<LanguagesView> GetLanguages()
-        {
-            return _dbContext.LanguagesViews;
-        }
+       
         public IQueryable<TimeZonesView> GetTimeZones()
         {
             return _dbContext.TimeZonesViews.OrderBy(x => x.Num);
@@ -146,12 +143,12 @@ namespace Msr.Services.Orders
                     Login = model.LoginId,
                     LastName = model.LastName,
                     ScreenType = model.ScreenType,
-                    Language = model.LanguageCode,
+                    Language = "en",
                     IsHead = model.IsDepartmentHead,
                     Position = model.OfficialPosition,
                     Boss = model.BossName,
                     TimeZone = model.TimeZone,
-                    HireDate = model.HireDate,
+                    HireDate = model.HireDate.Value,
                     Status = model.StatusEditPerson,
                     StrNTlogin = model.NTLogin,
                     Company = model.CompanyEditPerson
@@ -172,26 +169,23 @@ namespace Msr.Services.Orders
                 };
                 _dbContext.Database.ExecuteStoredProcedure<SavePasswrodProcedure>(savePasswrodProcedure);
 
-                var deletePictureFileProcedure = new DeleteFileProcedure() { ObjID = savePeopleProcedure.NewObjId, Type = "PICTURE", NTLogin = model.NTLogin };
-                _dbContext.Database.ExecuteStoredProcedure(deletePictureFileProcedure);
-
-                foreach (var file in model.PictureFiles)
+                if (model.ReferenceFiles != null)
                 {
-                    var saveFileProcedure = new SaveFileProcedure() { ObjID = savePeopleProcedure.NewObjId, DocID = file, Type = "PICTURE", NTLogin = model.NTLogin };
+                    foreach (var file in model.ReferenceFiles.Split(','))
+                    {
+                        var saveFileProcedure = new SaveFileProcedure()
+                            {
+                                ObjID = savePeopleProcedure.NewObjId,
+                                DocID = file,
+                                Type = null,
+                                NTLogin = model.NTLogin
+                            };
 
-                    _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
+                        _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
+                    }
                 }
-                var deleteReferenceFileProcedure = new DeleteFileProcedure() { ObjID = savePeopleProcedure.NewObjId, Type = null, NTLogin = model.NTLogin };
-                _dbContext.Database.ExecuteStoredProcedure(deleteReferenceFileProcedure);
 
-                foreach (var file in model.ReferenceFiles)
-                {
-                    var saveFileProcedure = new SaveFileProcedure() { ObjID = savePeopleProcedure.NewObjId, DocID = file, Type = null, NTLogin = model.NTLogin };
-
-                    _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
-                }
-                _dbContext.Database.SqlQuery<AddPeopleViewModel>(
-                    "INSERT INTO A_PHONE_NUMBERS(ID, PHONE_NUMBER, PHONE_TYPE, PHONE_PIN, PHONE_EXTENSION, MODBY, DRCM, OBJECT_ID)VALUES(newID(), '" +
+                _dbContext.Database.SqlQuery<AddPeopleViewModel>("INSERT INTO A_PHONE_NUMBERS(ID, PHONE_NUMBER, PHONE_TYPE, PHONE_PIN, PHONE_EXTENSION, MODBY, DRCM, OBJECT_ID)VALUES(newID(), '" +
                     model.PrimaryPhoneNumber + "', '" + model.TypePrimaryPhoneNumber + "', '" +
                     model.ExtPrimaryPhoneNumber + "', '" + model.PinPrimaryPhoneNumber + "', '" + model.NTLogin +
                     "', getDate(), '" + savePeopleProcedure.NewObjId + "')").SingleOrDefault();
@@ -206,12 +200,10 @@ namespace Msr.Services.Orders
                     "', getDate(), '" + savePeopleProcedure.NewObjId + "')").SingleOrDefault();
 
                 return responsePeople;
-
-
             }
             catch (Exception ex)
             {
-                var message = "Error occured:" + ex.Message;
+                responsePeople.AddError("There is an error when creating user");
 
                 return responsePeople;
             }
@@ -282,7 +274,7 @@ namespace Msr.Services.Orders
                 .FirstOrDefault();
             return result;
         }
-        public bool Edit(EditPeopleViewModel model)
+        public bool Update(EditPeopleViewModel model)
         {
             try
             {
@@ -293,7 +285,7 @@ namespace Msr.Services.Orders
                     Login = model.LoginId,
                     LastName = model.LastName,
                     ScreenType = model.ScreenType,
-                    Language = model.LanguageCode,
+                    Language = "en",
                     IsHead = model.IsDepartmentHead,
                     Position = model.OfficialPosition,
                     Boss = model.BossName,
@@ -301,8 +293,9 @@ namespace Msr.Services.Orders
                     HireDate = model.HireDate,
                     Status = model.StatusEditPerson,
                     StrNTlogin = model.NTLogin,
-                    ////Company = model.CompanyEditPerson TODO timeout issue
+                    Company = model.CompanyEditPerson
                 };
+
                 var result = _dbContext.Database.ExecuteStoredProcedure<EditPeopleProcedure>(savePeopleProcedure);
 
                 var savePasswrodProcedure = new SavePasswrodProcedure
@@ -311,26 +304,9 @@ namespace Msr.Services.Orders
                     Password = model.Password,
                     StrNTlogin = model.NTLogin
                 };
+
                 _dbContext.Database.ExecuteStoredProcedure<SavePasswrodProcedure>(savePasswrodProcedure);
 
-                var deletePictureFileProcedure = new DeleteFileProcedure() { ObjID = savePeopleProcedure.NewObjId, Type = "PICTURE", NTLogin = model.NTLogin };
-                _dbContext.Database.ExecuteStoredProcedure(deletePictureFileProcedure);
-
-                foreach (var file in model.PictureFiles)
-                {
-                    var saveFileProcedure = new SaveFileProcedure() { ObjID = savePeopleProcedure.NewObjId, DocID = file, Type = "PICTURE", NTLogin = model.NTLogin };
-
-                    _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
-                }
-                var deleteReferenceFileProcedure = new DeleteFileProcedure() { ObjID = savePeopleProcedure.NewObjId, Type = null, NTLogin = model.NTLogin };
-                _dbContext.Database.ExecuteStoredProcedure(deleteReferenceFileProcedure);
-
-                foreach (var file in model.ReferenceFiles)
-                {
-                    var saveFileProcedure = new SaveFileProcedure() { ObjID = savePeopleProcedure.NewObjId, DocID = file, Type = null, NTLogin = model.NTLogin };
-
-                    _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
-                }
                 _dbContext.Database.SqlQuery<EditPeopleViewModel>(
                     "INSERT INTO A_PHONE_NUMBERS(ID, PHONE_NUMBER, PHONE_TYPE, PHONE_PIN, PHONE_EXTENSION, MODBY, DRCM, OBJECT_ID)VALUES(newID(), '" +
                     model.PrimaryPhoneNumber + "', '" + model.TypePrimaryPhoneNumber + "', '" +

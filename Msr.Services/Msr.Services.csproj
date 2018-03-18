@@ -70,6 +70,12 @@
       <HintPath>..\packages\EntityFrameworkExtras.EF6.1.0.0\lib\net45\EntityFrameworkExtras.EF6.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="ExcelDataReader, Version=3.4.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelDataReader.3.4.0\lib\net45\ExcelDataReader.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelDataReader.DataSet, Version=3.4.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelDataReader.DataSet.3.4.0\lib\net45\ExcelDataReader.DataSet.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
@@ -94,6 +100,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
@@ -115,11 +122,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActualParts\ActualPartsService.cs" />
+    <Compile Include="ActualParts\Procedures\ActualPartsImportUpdateExternalProcedure.cs" />
     <Compile Include="ActualParts\Procedures\CloseViewHistoryTaskProcedure.cs" />
     <Compile Include="ActualParts\Procedures\DeleteActualPartProcedure.cs" />
     <Compile Include="ActualParts\Procedures\DeleteHistoryProcedure.cs" />
     <Compile Include="ActualParts\Procedures\ReAssignTaskProcedure.cs" />
     <Compile Include="ActualParts\Procedures\SaveActualPartsProcedure.cs" />
+    <Compile Include="ActualParts\ViewModels\ActualPartImportViewModel.cs" />
     <Compile Include="ActualParts\ViewModels\ReassignTaskViewModel.cs" />
     <Compile Include="ActualParts\ViewModels\SaveActualPartsViewModel.cs" />
     <Compile Include="Administration\AdministrationService.cs" />
@@ -158,6 +167,8 @@
     <Compile Include="ApprovalWorkflows\Procedures\HideApprovalWorkflowProcedure.cs" />
     <Compile Include="ApprovalWorkflows\ViewModels\ApprovalWorkflowsViewModel.cs" />
     <Compile Include="ApprovalWorkflows\ViewModels\EditApprovalStagesViewModel.cs" />
+    <Compile Include="Companies\Procedures\CompaniesImportExternalProcedure.cs" />
+    <Compile Include="Companies\ViewModels\CompanyImportViewModel.cs" />
     <Compile Include="CustomerRequirements\CustomerRequirementService.cs" />
     <Compile Include="CustomerRequirements\ViewModel\CustomerRequirementViewModel.cs" />
     <Compile Include="CustomerRequirements\ViewModel\PartInfoViewModel.cs" />
@@ -183,9 +194,14 @@
     <Compile Include="Invoices\ViewModel\InvoiceDetailListViewModel.cs" />
     <Compile Include="Invoices\ViewModel\InvoiceViewModel.cs" />
     <Compile Include="Orders\Messaging\TaskLogDto.cs" />
+    <Compile Include="Parts\Procedures\PartsImportAndUpdateExternalPartProcedure.cs" />
     <Compile Include="Procedures\Procedures\DeleteProcedure.cs" />
+    <Compile Include="Procedures\Procedures\ProcedureImportExternalProcedure.cs" />
+    <Compile Include="Procedures\ViewModels\ProcedureImportViewModel.cs" />
     <Compile Include="Procedures\ViewModels\ProcedureStepMonitorsViewModel.cs" />
+    <Compile Include="ProductionPlanning\Procedures\ProductImportUpdateExternalProcedure.cs" />
     <Compile Include="ProductionPlanning\ProductionPlanningService.cs" />
+    <Compile Include="ProductionPlanning\ViewModels\ProductImportViewModel.cs" />
     <Compile Include="ProductionPlanning\ViewModels\RequirementStatusViewModel.cs" />
     <Compile Include="ProductionPlanning\ViewModels\RequirementStepsDetailsViewModel.cs" />
     <Compile Include="ProductionPlanning\ViewModels\RequirementStepsViewModel.cs" />
@@ -313,7 +329,6 @@
     <Compile Include="Parts\Messages\AddPartTypesTaskRequest.cs" />
     <Compile Include="Parts\PartsService.cs" />
     <Compile Include="Parts\Procedures\PartSaveSafetyLevelSettingProcedure.cs" />
-    <Compile Include="Parts\ViewModels\AddPartTypesViewModel.cs" />
     <Compile Include="Parts\Procedures\DeleteFileProcedure.cs" />
     <Compile Include="Parts\Procedures\DeletePartProcedure.cs" />
     <Compile Include="Parts\Procedures\SaveFileProcedure.cs" />
@@ -435,6 +450,10 @@
     <Compile Include="Workflows\WorkflowService.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Msr.Commons\Msr.Commons.csproj">
+      <Project>{9E9CAA52-0E5E-4E73-AA21-BD2F89D4DF8C}</Project>
+      <Name>Msr.Commons</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Msr.Infrastructure\Msr.Infrastructure.csproj">
       <Project>{9DD1FA43-9B92-4694-98A5-D75B672CFD67}</Project>
       <Name>Msr.Infrastructure</Name>

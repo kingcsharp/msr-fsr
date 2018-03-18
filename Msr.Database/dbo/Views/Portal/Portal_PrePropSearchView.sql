@@ -8,7 +8,12 @@ o.CREATE_DATE AS CreatedDate, o.ROOT, o.REV_INFO AS RevInfo,
                          p.PROC_STEP_ID AS ProcStepId, dbo.A_PROCEDURE_STEPS.STEP_TEXT AS StepText, dbo.A_PROCEDURE_STEPS.COMMENTS, dbo.A_PROCEDURE_STEPS.DURATION, 
                          dbo.A_PROCEDURE_STEPS.DURATION_TYPE AS DurationType, dbo.A_PROCEDURE_STEPS.REFERENCE_OBJECT AS ReferenceObject, dbo.A_PROCEDURE_STEPS.REFERENCE_VERB AS ReferenceVerb, 
                          dbo.A_PROCEDURE_STEPS.SYSTEM_TASK AS SystemTask, dbo.A_PROCEDURE_STEPS.START_ON_COUNTER AS StartOnCounter,
-						 dbo.A_PROCEDURE_STEPS.TITLE
+						 dbo.A_PROCEDURE_STEPS.TITLE,
+						 isnull(STUFF((
+SELECT +','+ DL.NAME+'|'+DL.LINKED_DOC_ID 
+FROM A_V_DOCUMENTS_WITH_LINKED_ITEM AS DL 
+WHERE DL.OBJECT_ID = o.OBJ_DESC
+    FOR XML PATH('')), 1, 1,''),'') AS ReferenceFiles
 						 
 FROM            dbo.A_OBJECTS AS o INNER JOIN
                          dbo.A_PREPOP_HISTORY AS p ON o.ID = p.OBJECT_ID INNER JOIN

@@ -1,10 +1,4 @@
-﻿
-
-
-
-
-
-CREATE    PROCEDURE A_SP_PEOPLE_SET_ROOT_COMPANY
+﻿CREATE    PROCEDURE A_SP_PEOPLE_SET_ROOT_COMPANY
 @ID nvarchar(50)
 as
 print 'Setting Root Company for  ' + @ID

@@ -105,6 +105,16 @@ function SetUpGrid(returnUrl) {
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 align: 'left'
             },
+            {
+                label: 'Reference Files',
+                name: 'ReferenceFiles',
+                index: 'ReferenceFiles',
+                colmenu: false,
+                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                formatter: FilePreviewFormatter,
+                align: 'center'
+            },
             { name: 'Actions', index: 'ID', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: PartEditFormatter, width: 200, align: 'center' }
         ],
 
@@ -144,6 +154,11 @@ function SetUpGrid(returnUrl) {
         searchOnEnter: true,
         searchOperators: true
     });
+
+
+    function FilePreviewFormatter(cellvalue, options, rowObject) {
+        return FilePreview(cellvalue, options, rowObject);
+    }
 
     function PartEditFormatter(cellvalue, options, rowObject) {
 

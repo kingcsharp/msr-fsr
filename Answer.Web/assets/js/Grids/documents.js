@@ -99,7 +99,7 @@
                 colmenu: false,
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                formatter: documentRefFilesFormatter,
+                formatter: FilePreviewFormatter,
                 align: 'center'
             },
             { name: 'Actions', index: 'ID', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: documentEditFormatter, width: 100, align: 'center' }
@@ -119,9 +119,15 @@
         autowidth: true,
         colMenu: true,
         key: true,
-        ajaxCellOptions: {}
+        ajaxCellOptions: {},
+        gridComplete: function () {
+
+            UnLockWorkflow(returnUrl);
+        }
 
     });
+
+
     $('#jqGrid').navGrid("#jqGridPager", {
         refresh: true,
         search: false, // show search button on the toolbar
@@ -161,71 +167,18 @@
             deleteButton = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-danger" title="Proceed to delete." style="margin:2px;font-size: .8em;"><i class="fa fa fa-trash-o"></i></a>';
         }
 
+        if (rowObject.Status == 'APPROVED_BUT_REVISING') {
+            editButton = '';
+            deleteButton = '';
+        }
+
         return editButton + deleteButton + buttonWorkflowLeft + buttonWorkflowRight;
 
     };
-    function documentRefFilesFormatter(cellvalue, options, rowObject) {
-        var imageUrl = "";
-        var imageUrls = "";
-        if (cellvalue != null) {
 
-            var items = cellvalue.split(',');
+    function FilePreviewFormatter(cellvalue, options, rowObject) {
+        return FilePreview(cellvalue, options, rowObject);
+    }
 
-            for (var i = 0; i <= items.length - 1; i++) {
-
-                var valueId = items[i].split('|')
-
-                switch (valueId[0].split('.').pop()) {
-
-                    case 'xls': imageUrl = '<a  title="Download" href="/Doc/Download?Id=' + valueId[1] + '"><img src="/assets/img/icon-xls.png" /></a>&nbsp';
-                        break;
-
-                    case 'jpg':
-                    case 'png':
-                    case 'jpeg':
-                    case 'gif':
-                        imageUrl = '<a title="Download" href="/Doc/Download?Id=' + valueId[1] + '"><img src="/assets/img/jpg.png" /></a>&nbsp';
-                        break;
-
-                    case 'docx':
-                        imageUrl = '<a title="Download" href="/Doc/Download?Id=' + valueId[1] + '"><img src="/assets/img/icon-doc.png" /></a>&nbsp';
-                        break;
-
-                    case 'xlsx':
-                        imageUrl = '<a title="Download" href="/Doc/Download?Id=' + valueId[1] + '"><img src="/assets/img/icon-xls.png" /></a>&nbsp';
-                        break;
-
-                    case 'ppt':
-                        imageUrl = '<a title="Download" href="/Doc/Download?Id=' + valueId[1] + '"><img src="/assets/img/icon-ppt.png" /></a>&nbsp';
-                        break;
-
-                    case 'pdf':
-                        imageUrl = '<a title="Download" href="/Doc/Download?Id=' + valueId[1] + '"><img src="/assets/img/icon-pdf.png" /></a>&nbsp';
-                        break;
-
-                    case 'txt':
-                        imageUrl = '<a title="Download" href="/Doc/Download?Id=' + valueId[1] + '"><img src="/assets/img/txt.png" /></a>&nbsp';
-                        break;
-
-                    case 'zip':
-                        imageUrl = '<a title="Download" href="/Doc/Download?Id=' + valueId[1] + '"><img src="/assets/img/icon-zip.png" /></a>&nbsp';
-                        break;
-
-                    default: imageUrl = '<a title="Download" href="/Doc/Download?Id=' + valueId[1] + '"><img src="/assets/img/default.png" /></a>&nbsp';
-                        break;
-
-                }
-
-                imageUrls += imageUrl;
-            }
-            return imageUrls;
-
-        }
-        else {
-            imageUrls = '';
-            return imageUrls;
-        }
-
-    };
 
 }

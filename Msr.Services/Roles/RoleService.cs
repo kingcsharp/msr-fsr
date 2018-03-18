@@ -102,28 +102,28 @@ namespace Msr.Services.Roles
         {
             try
             {
-                var saveUserRoleProcedure = new SaveUserRoleProcedure { Id = model.Id, Name = model.Name, SecurityLevel = model.SecurityLevel, NTLogin = model.NTLogin };
+                var saveUserRoleProcedure = new SaveUserRoleProcedure { Id = model.ObjectId, Name = model.Name, SecurityLevel = model.SecurityLevel, NTLogin = model.NTLogin };
 
                 _dbContext.Database.ExecuteStoredProcedure(saveUserRoleProcedure);
 
-                var deleteRoleParentSaveProcedure = new DeleteRoleParentProcedure() { ObjId = model.Id, NTLogin = model.NTLogin };
+                var deleteRoleParentSaveProcedure = new DeleteRoleParentProcedure() { ObjId = model.ObjectId, NTLogin = model.NTLogin };
 
                 _dbContext.Database.ExecuteStoredProcedure(deleteRoleParentSaveProcedure);
 
-                var deleteRolePeopleAssignedProcedure = new DeleteRoleAssignedProcedure() { ObjId = model.Id, NTLogin = model.NTLogin };
+                var deleteRolePeopleAssignedProcedure = new DeleteRoleAssignedProcedure() { ObjId = model.ObjectId, NTLogin = model.NTLogin };
 
                 _dbContext.Database.ExecuteStoredProcedure(deleteRolePeopleAssignedProcedure);
 
                 foreach (var file in model.ChildRoles)
                 {
-                    var saveFileProcedure = new SaveRoleToRoleProcedure() { Child = file, StrId = model.Id, NTLogin = model.NTLogin };
+                    var saveFileProcedure = new SaveRoleToRoleProcedure() { Child = file, StrId = model.ObjectId, NTLogin = model.NTLogin };
 
                     _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
                 }
 
                 foreach (var file in model.PeopleAssigned)
                 {
-                    var saveFileProcedure = new SaveRoleAssignPersonRoleProcedure() { Child = file, StrId = model.Id, NTLogin = model.NTLogin };
+                    var saveFileProcedure = new SaveRoleAssignPersonRoleProcedure() { Child = file, StrId = model.ObjectId, NTLogin = model.NTLogin };
 
                     _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
                 }

@@ -2,6 +2,7 @@
 @{
     ViewBag.Title = "Add People";
 }
+@Styles.Render("~/bundles/css/fileinput")
 
 <div class="container-fluid">
     <div class="side-body padding-top">
@@ -13,220 +14,161 @@
                 @Html.Partial("Message")
                 @using (Html.BeginForm())
                 {
-                @Html.AntiForgeryToken()
+                    @Html.AntiForgeryToken()
 
-                <div class="form-horizontal">
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                <div class="form-group">
-                    @Html.LabelFor(model => model.RealUser, htmlAttributes: new { @class = "control-label col-md-4" })
-                    <div class="col-md-5">
-                        @Html.DropDownListFor(model => model.RealUser, Model.ListRealUserTypes, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.RealUser, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.LoginId, htmlAttributes: new { @class = "control-label col-md-4" })
-                    <div class="col-md-5">
-                        @Html.EditorFor(model => model.LoginId, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.LoginId, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label col-md-4" })
-                        <div class="col-md-5">
-                            @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label col-md-4" })
-                        <div class="col-md-5">
-                            @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control loginInsert" } })
-                            @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.ScreenType, htmlAttributes: new { @class = "control-label col-md-4" })
-                        <div class="col-md-5">
-                            @Html.DropDownListFor(model => model.ScreenType, Model.ListScreenTypes, new { @class = "form-control" })
-                            @Html.ValidationMessageFor(model => model.ScreenType, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.LanguageCode, htmlAttributes: new { @class = "control-label col-md-4" })
-                        <div class="col-md-5">
-                            @Html.DropDownListFor(model => model.LanguageCode, Model.ListLanguages, new { @class = "form-control" })
-                            @Html.ValidationMessageFor(model => model.LanguageCode, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                   
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.CompanyEditPerson, htmlAttributes: new { @class = "control-label col-md-4" })
-                        <div class="col-md-5">
-                            @Html.DropDownListFor(model => model.CompanyEditPerson, Model.ListCompanyEditPerson, new { @class = "form-control select" })
-                            @Html.ValidationMessageFor(model => model.CompanyEditPerson, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.IsDepartmentHead, htmlAttributes: new { @class = "control-label col-md-4" })
-                        <div class="col-md-5">
-                            @Html.DropDownListFor(model => model.IsDepartmentHead, Model.ListIsDepartmentHead, new { @class = "form-control" })
-                            @Html.ValidationMessageFor(model => model.IsDepartmentHead, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.OfficialPosition, htmlAttributes: new { @class = "control-label col-md-4" })
-                    <div class="col-md-5">
-                        @Html.DropDownListFor(model => model.OfficialPosition, Model.ListOfficialPosition, new { @class = "form-control select" })
-                        @Html.ValidationMessageFor(model => model.OfficialPosition, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.ReferenceFiles, htmlAttributes: new { @class = "control-label col-md-4" })
-                        <div class="col-md-5">
-                            <div style="width: 96%; float: left;">
-                                @Html.ListBoxFor(m => m.ReferenceFiles, Model.ListReferenceFiles, new { @class = "form-control selectitem", multiple = "multiple" })
-                                @Html.ValidationMessageFor(model => model.ReferenceFiles, "", new { @class = "text-danger" })
+                    <div class="form-horizontal">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.RealUser,  new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(model => model.RealUser, Model.ListRealUserTypes, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.RealUser, "", new { @class = "text-danger" })
                             </div>
-                            <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceFiles" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceFiles"><i class="icon fa fa-trash-o"></i></span> </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.PictureFiles, htmlAttributes: new { @class = "control-label col-md-4" })
-                        <div class="col-md-5">
-                            <div style="width: 96%; float: left;">
-                                @Html.ListBoxFor(m => m.PictureFiles, Model.ListPictureFiles, new { @class = "form-control selectitem" })
-                                @Html.ValidationMessageFor(model => model.PictureFiles, "", new { @class = "text-danger" })
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.LoginId,  new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.LoginId, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.LoginId, "", new { @class = "text-danger" })
                             </div>
-                            <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="PictureFiles" data-toggle="modal" data-target="#select-pic"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="PictureFiles"><i class="icon fa fa-trash-o"></i></span> </div>
                         </div>
-                    </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.BossName, htmlAttributes: new { @class = "control-label col-md-4" })
-                    <div class="col-md-5">
-                        @Html.DropDownListFor(model => model.BossName, Model.ListBossInfo, new { @class = "form-control select" })
-                        @Html.ValidationMessageFor(model => model.BossName, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.TimeZone, htmlAttributes: new { @class = "control-label col-md-4" })
-                    <div class="col-md-5">
-                        @Html.DropDownListFor(model => model.TimeZone, Model.ListTimeZones, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.TimeZone, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.HireDate, htmlAttributes: new { @class = "control-label col-md-4" })
-                    <div class="col-md-5">
-                        @Html.EditorFor(model => model.HireDate, new { htmlAttributes = new { @class = "form-control datepicker" } })
-                        @Html.ValidationMessageFor(model => model.HireDate, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.StatusEditPerson, htmlAttributes: new { @class = "control-label col-md-4" })
-                        <div class="col-md-5">
-                            @Html.DropDownListFor(model => model.StatusEditPerson, Model.ListStatusEditPerson, new { @class = "form-control" })
-                            @Html.ValidationMessageFor(model => model.StatusEditPerson, "", new { @class = "text-danger" })
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.FirstName,  new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                            </div>
                         </div>
-                    </div>
-               <div class="form-group">
-        @Html.LabelFor(model => model.PrimaryPhoneNumber, htmlAttributes: new { @class = "control-label col-md-4" })
-        <div class="col-md-5">
-            <div style="width: 96%; float: left; display: flex">
-                @Html.DropDownListFor(model => model.TypePrimaryPhoneNumber, Model.ListPhoneTypes, new {@class = "form-control"})
-                @Html.ValidationMessageFor(model => model.PrimaryPhoneNumber, "", new {@class = "text-danger"})
-                @Html.EditorFor(model => model.PrimaryPhoneNumber, new {htmlAttributes = new {@class = "form-control"}})
-                @Html.ValidationMessageFor(model => model.PrimaryPhoneNumber, "", new {@class = "text-danger"})
-            </div>
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-4"></div>
-        <div class="col-md-5">
-            <div style="width: 96%; float: left; display: flex">
-                @Html.LabelFor(model => model.ExtPrimaryPhoneNumber, htmlAttributes: new {@class = "control-label col-md-5"})
-                @Html.EditorFor(model => model.ExtPrimaryPhoneNumber, new {htmlAttributes = new {@class = "form-control"}})
-                @Html.ValidationMessageFor(model => model.ExtPrimaryPhoneNumber, "", new {@class = "text-danger"})
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.LastName,  new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control loginInsert" } })
+                                @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ScreenType,  new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(model => model.ScreenType, Model.ListScreenTypes, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.ScreenType, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
 
-                @Html.LabelFor(model => model.PinPrimaryPhoneNumber, htmlAttributes: new {@class = "control-label col-md-4"})
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.CompanyEditPerson,  new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(model => model.CompanyEditPerson, Model.ListCompanyEditPerson, new { @class = "form-control select" })
+                                @Html.ValidationMessageFor(model => model.CompanyEditPerson, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.IsDepartmentHead,  new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(model => model.IsDepartmentHead, Model.ListIsDepartmentHead, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.IsDepartmentHead, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.OfficialPosition,  new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(model => model.OfficialPosition, Model.ListOfficialPosition, new { @class = "form-control select" })
+                                @Html.ValidationMessageFor(model => model.OfficialPosition, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ReferenceFiles,  new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
+                                <!-- Detailed preview for thumbs and iconic preview for zoom -->
+                                <div class="file-loading">
+                                    <input id="input-files" name="input-files[]" multiple type="file">
+                                </div>
+                                <div>
+                                    <input type="hidden" id="referenceFiles" name="referenceFiles" />
+                                    <span class="data-toggle=" style="float: right" data-call-back-id="ReferenceFiles" data-toggle="modal" data-target="#select-images"><button type="button" class="btn btn-success">Select existing files</button></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.BossName,  new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(model => model.BossName, Model.ListBossInfo, new { @class = "form-control select" })
+                                @Html.ValidationMessageFor(model => model.BossName, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.TimeZone,  new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(model => model.TimeZone, Model.ListTimeZones, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.TimeZone, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.HireDate,  new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.HireDate, new { htmlAttributes = new { @class = "form-control datepicker" } })
+                                @Html.ValidationMessageFor(model => model.HireDate, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.StatusEditPerson,  new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(model => model.StatusEditPerson, Model.ListStatusEditPerson, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.StatusEditPerson, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.PrimaryPhoneNumber,  new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
+                                <div style="width: 96%; float: left; display: flex">
+                                    @Html.DropDownListFor(model => model.TypePrimaryPhoneNumber, Model.ListPhoneTypes, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.PrimaryPhoneNumber, "", new { @class = "text-danger" })
+                                    @Html.EditorFor(model => model.PrimaryPhoneNumber, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.PrimaryPhoneNumber, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-8">
+                                <div style="width: 96%; float: left; display: flex">
+                                    @Html.LabelFor(model => model.ExtPrimaryPhoneNumber,  new { @class = "control-label col-md-8" })
+                                    @Html.EditorFor(model => model.ExtPrimaryPhoneNumber, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.ExtPrimaryPhoneNumber, "", new { @class = "text-danger" })
 
-                @Html.EditorFor(model => model.PinPrimaryPhoneNumber, new {htmlAttributes = new {@class = "form-control"}})
-                @Html.ValidationMessageFor(model => model.PinPrimaryPhoneNumber, "", new {@class = "text-danger"})
-            </div>
-        </div>
-    </div>
-    @*<div class="form-group">
-        <div class="col-md-4"></div>
-        <div class="col-md-5">
-            <div style="width: 96%; float: left; display: flex">
-            @Html.DropDownListFor(model => model.TypeSecondaryPhoneNumber, Model.ListPhoneTypes, new {@class = "form-control"})
-            @Html.ValidationMessageFor(model => model.SecondaryPhoneNumber, "", new {@class = "text-danger"})
-            @Html.EditorFor(model => model.SecondaryPhoneNumber, new {htmlAttributes = new {@class = "form-control"}})
-            @Html.ValidationMessageFor(model => model.SecondaryPhoneNumber, "", new {@class = "text-danger"})
-            </div>
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-4"></div>
-        <div class="col-md-5">
-            <div style="width: 96%; float: left; display: flex">
-                @Html.LabelFor(model => model.ExtSecondaryPhoneNumber, htmlAttributes: new { @class = "control-label col-md-5" })
-                @Html.EditorFor(model => model.ExtSecondaryPhoneNumber, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ExtSecondaryPhoneNumber, "", new { @class = "text-danger" })
+                                    @Html.LabelFor(model => model.PinPrimaryPhoneNumber,  new { @class = "control-label col-md-2" })
 
-                @Html.LabelFor(model => model.PinSecondaryPhoneNumber, htmlAttributes: new { @class = "control-label col-md-4" })
-
-                @Html.EditorFor(model => model.PinSecondaryPhoneNumber, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.PinSecondaryPhoneNumber, "", new { @class = "text-danger" })
-            </div>
-            </div>
-        </div>*@
-   <div class="form-group">
-        @Html.LabelFor(model => model.EmailPrimary, htmlAttributes: new { @class = "control-label col-md-4" })
-        <div class="col-md-5">
-            <div style="width: 96%; float: left; display: flex">
-                @Html.DropDownListFor(model => model.EmailTypePrimary, Model.ListEmailTypes, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.EmailTypePrimary, "", new { @class = "text-danger" })
-                @Html.DropDownListFor(model => model.EmailTextTypePrimary, Model.ListEmailTextTypes, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.EmailTextTypePrimary, "", new { @class = "text-danger" })
-                @Html.EditorFor(model => model.EmailPrimary, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.EmailPrimary, "", new { @class = "text-danger" })
-            </div>
-        </div>
-    </div>@*
-    <div class="form-group">
-        <div class="col-md-4"></div>
-        <div class="col-md-5">
-            <div style="width: 96%; float: left; display: flex">
-                @Html.DropDownListFor(model => model.EmailPrimary, Model.ListEmailTypes, new { @class = "form-control" })
-                @Html.DropDownListFor(model => model.EmailPrimary, Model.ListEmailTextTypes, new { @class = "form-control" })
-                @Html.EditorFor(model => model.PinSecondaryPhoneNumber, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.PinSecondaryPhoneNumber, "", new { @class = "text-danger" })
-            </div>
-        </div>
-    </div>*@
-    <div class="form-group">
-        @Html.LabelFor(model => model.AddressType, htmlAttributes: new { @class = "control-label col-md-4" })
-        <div class="col-md-5">
-            <div style="width: 96%; float: left; display: flex">
-                @Html.DropDownListFor(model => model.AddressType, Model.ListAddressTypes, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.AddressType, "", new { @class = "text-danger" })
-                @Html.DropDownListFor(model => model.AddressLocation, Model.Locations, new { @class = "form-control select" })
-            </div>
-        </div>
-    </div>
-                        @*<div class="form-group">
-                            <div class="col-md-4"></div>
-                            <div class="col-md-5">
+                                    @Html.EditorFor(model => model.PinPrimaryPhoneNumber, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.PinPrimaryPhoneNumber, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                     
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.EmailPrimary,  new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
+                                <div style="width: 96%; float: left; display: flex">
+                                    @Html.DropDownListFor(model => model.EmailTypePrimary, Model.ListEmailTypes, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.EmailTypePrimary, "", new { @class = "text-danger" })
+                                    @Html.DropDownListFor(model => model.EmailTextTypePrimary, Model.ListEmailTextTypes, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.EmailTextTypePrimary, "", new { @class = "text-danger" })
+                                    @Html.EditorFor(model => model.EmailPrimary, new { htmlAttributes = new { @class = "form-control", PlaceHolder = "Email" } })
+                                    @Html.ValidationMessageFor(model => model.EmailPrimary, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                           
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.AddressType,  new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
                                 <div style="width: 96%; float: left; display: flex">
                                     @Html.DropDownListFor(model => model.AddressType, Model.ListAddressTypes, new { @class = "form-control" })
                                     @Html.ValidationMessageFor(model => model.AddressType, "", new { @class = "text-danger" })
                                     @Html.DropDownListFor(model => model.AddressLocation, Model.Locations, new { @class = "form-control select" })
                                 </div>
                             </div>
-                        </div>*@
+                        </div>
                         <div class="form-group">
-                            <div class="col-md-offset-4 col-md-10">
+                            <div class="col-md-offset-2 col-md-8">
                                 <input type="submit" value="Submit" class="btn btn-success" />
                                 @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-warning" })
                             </div>
@@ -237,54 +179,73 @@
         </div>
     </div>
 </div>
+
 @section scripts
-{
-    <script src="~/assets/js/common/documentFile.js"></script>
-    <script src="~/assets/js/common/documentFiles.js"></script>
-    <script src="~/assets/js/grids/files-dialog-single-selection.js"></script>
-    <script src="//rawgit.com/saribe/eModal/master/dist/eModal.min.js"></script>
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+{   
+    @Scripts.Render("~/bundles/js/jqueryval")
+    @Scripts.Render("~/bundles/js/fileinput")
+    
     <script type="text/javascript">
-        $('#LastName').on('blur change', fillLoginId);
-        $('#RealUser').on('change', EnableDisableLogin);
-        function fillLoginId () {
-            var logId = $('#LoginId').val();
-            var fname = $('#FirstName').val();
-            var lname = $('#LastName').val();
-           
-            if (logId == "") {
-                var fullName = fname + lname;
-                $('#LoginId').val(fullName); 
-            }
-        };
-        function EnableDisableLogin() {
-            var SelectedValue = $('#RealUser').val();
-            if (SelectedValue == "ANSWER_USER") {
-                $('#LoginId').prop('disabled', false);
-            } else {
-                $('#LoginId').prop('disabled', true);
-            }
-        };
-        $(function() { // will trigger when the document is ready
-           
+
+        var fileUploaderGrid = new FileUploaderGrid();
+
+        $(document).ready(function () {
+
+            var $el = $('#input-files');
+
+            var fileUploader = new FileUploader();
+
+            fileUploader.InitUploader($el,
+                '@Url.Action("FileUploaderBootstrap", "Doc")',
+                [],
+                []);
+
+            fileUploaderGrid.SetupSelectImage();
+
+            $('#LastName').on('blur change', fillLoginId);
+            $('#RealUser').on('change', EnableDisableLogin);
+
             $('.datepicker').datepicker({
                 format: 'mm/dd/yyyy',
                 todayHighlight: 'TRUE',
                 autoclose: true
             });
             $('.datepicker').val('');
-        });
-        $("form").submit(function(e) {
-            $('.selectitem option').prop('selected', true);
+
+            $("form").submit(function(e) {
+                $('.selectitem option').prop('selected', true);
+
+            });
 
         });
+
+        function fillLoginId() {
+            var logId = $('#LoginId').val();
+            var fname = $('#FirstName').val();
+            var lname = $('#LastName').val();
+
+            if (logId === "") {
+                var fullName = fname + lname;
+                $('#LoginId').val(fullName);
+            }
+        };
+
+        function EnableDisableLogin() {
+            var SelectedValue = $('#RealUser').val();
+            if (SelectedValue === "ANSWER_USER") {
+                $('#LoginId').prop('disabled', false);
+            } else {
+                $('#LoginId').prop('disabled', true);
+            }
+        };
+
+        function SelectIds() {
+             fileUploaderGrid.SelectIdsForAdd(fileUploaderGrid, '@Url.Action("FileUploaderBootstrap", "Doc")');
+        }
     </script>
 }
 <style>
     .Address {
-       
         width: 50% !important;
-       
     }
 </style>

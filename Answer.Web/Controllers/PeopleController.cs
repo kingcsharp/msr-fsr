@@ -3,11 +3,11 @@ using Msr.Web.ViewModel.Engineering;
 using System;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 using Msr.Models.People;
 using Msr.Services.Orders;
 using Msr.Services.People.ViewModels;
 using Msr.Services.Companies;
-using Msr.Infrastructure.Helpers;
 using Msr.Services.Documents;
 using Msr.Services.Workflows;
 
@@ -17,12 +17,18 @@ namespace Answer.Web.Controllers
     {
         private readonly PeopleService _peopleService;
 
+        private readonly CompanyService _companyService;
+
+        private readonly DocumentFilesService _documentFilesService;
+
         private WorkflowService _workflowService;
 
         public PeopleController()
         {
             _peopleService = new PeopleService();
             _workflowService = new WorkflowService();
+            _companyService = new CompanyService();
+            _documentFilesService = new DocumentFilesService();
         }
 
         public ActionResult Index()
@@ -56,6 +62,10 @@ namespace Answer.Web.Controllers
                     else if (rule.field == nameof(PeopleObjectView.LastName))
                     {
                         totalRows = totalRows.Where(x => x.LastName.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(PeopleObjectView.LoginId))
+                    {
+                        totalRows = totalRows.Where(x => x.LoginId.ToLower().Contains(rule.data.ToLower()));
                     }
                     else if (rule.field == nameof(PeopleObjectView.PicRecord))
                     {
@@ -104,6 +114,10 @@ namespace Answer.Web.Controllers
                     else if (rule.field == nameof(PeopleObjectView.LockedByName))
                     {
                         totalRows = totalRows.Where(x => x.LockedByName.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(PeopleObjectView.ReferenceFiles))
+                    {
+                        totalRows = totalRows.Where(x => x.ReferenceFiles.ToLower().Contains(rule.data.ToLower()));
                     }
                     else if (rule.field == nameof(PeopleObjectView.Rev))
                     {
@@ -156,6 +170,7 @@ namespace Answer.Web.Controllers
 
             return Json(json, JsonRequestBehavior.AllowGet);
         }
+
         public ActionResult Add()
         {
             var people = new AddPeopleViewModel();
@@ -176,18 +191,15 @@ namespace Answer.Web.Controllers
 
                 if (!response.HasErrors())
                 {
-
                     TempData["SuccessMessage"] = "People has been added successfully.";
                     return RedirectToAction("Index");
                 }
 
-                else
-                {
-                    TempData["ErrorMessage"] = "Something went wrong.";
-                    model.Setup(new DocumentFilesService(), new PeopleService(), new CompanyService());
+                TempData["ErrorMessage"] = response.ErrorMessage;
 
-                    return View(model);
-                }
+                model.Setup(_documentFilesService, _peopleService, _companyService);
+
+                return View(model);
             }
 
             return View();
@@ -195,6 +207,8 @@ namespace Answer.Web.Controllers
 
         public ActionResult Edit(string id)
         {
+            var people = new EditPeopleViewModel();
+
             var currentUser = GetCurrentUser();
             var result = _workflowService.CheckOutObject(id, currentUser.Id);
 
@@ -204,11 +218,10 @@ namespace Answer.Web.Controllers
             var emailInfo = _peopleService.GetEmailInfoByObjId(id);
             var locationInfo = _peopleService.GetLocationInfoByObjId(id);
 
-            var people = new EditPeopleViewModel();
 
             people.MapToDto(model);
 
-            people.Setup(new DocumentFilesService(), new PeopleService(), new CompanyService(), currentUser.Id);
+            people.Setup(_documentFilesService, _peopleService, _companyService, currentUser.Id);
 
             if (phoneInfo != null)
             {
@@ -230,53 +243,70 @@ namespace Answer.Web.Controllers
                 people.AddressType = locationInfo.AddressType;
 
             }
+
+            var preview = string.Join(",", people.DocLinks.ToArray().Select(x => string.Format("{0}{1}{0}", "\'", x.SERVER_PATH)));
+
+            ViewBag.Preview = preview;
+
+            var jsonSerialiser = new JavaScriptSerializer();
+
+            var previewConfig = jsonSerialiser.Serialize(people.DocLinks.Select(x => new
+            {
+                caption = x.NAME,
+                type = x.TYPE,
+                size = 6666,
+                url = Url.Action("DeletesingleReference", "Documents", new {file = x.LINKED_DOC_ID}),
+                downloadUrl = x.SERVER_PATH,
+                key = x.LINKED_DOC_ID
+            }));
+
+            ViewBag.PreviewConfig = previewConfig;
+
             return View(people);
         }
 
-        [AcceptVerbs(verbs: HttpVerbs.Post)]
+        [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Edit(EditPeopleViewModel model, string passowrdReminder)
         {
-            if (ModelState.IsValid)
+            var currentUser = GetCurrentUser();
+
+            if (!ModelState.IsValid)
             {
+                model.Setup(_documentFilesService, _peopleService, _companyService, currentUser.Id);
+                return View(model);
+            }
 
-                if (!string.IsNullOrWhiteSpace(passowrdReminder))
+            if (!string.IsNullOrWhiteSpace(passowrdReminder))
+            {
+                var result = _peopleService.PasswordReminderEmail(model.LoginId, model.EmailPrimary);
+
+                if (result.HasErrors())
                 {
-                  var result = _peopleService.PasswordReminderEmail(model.LoginId, model.EmailPrimary);
-
-                    if (result.HasErrors())
-                    {
-                        TempData["ErrorMessage"] = result.ErrorMessage;
-                    }
-                    else
-                    {
-                        TempData["SuccessMessage"] = "Password reminder email has been sent successfully.";
-                    }
-
-                    return RedirectToAction("Edit", new{ model.ObjectId});
-                }
-
-                var currentUser = GetCurrentUser();
-
-                model.NTLogin = currentUser.Id;
-
-                var response = _peopleService.Edit(model);
-
-                if (response)
-                {
-                    TempData["SuccessMessage"] = "People has been updated successfully.";
-                    return RedirectToAction("Index");
+                    TempData["ErrorMessage"] = result.ErrorMessage;
                 }
                 else
                 {
-                    TempData["ErrorMessage"] = "Something went wrong.";
-                    model.Setup(new DocumentFilesService(), new PeopleService(), new CompanyService(), currentUser.Id);
-
-                    return View(model);
+                    TempData["SuccessMessage"] = "Password reminder email has been sent successfully.";
                 }
+
+                return RedirectToAction("Edit", new {model.ObjectId});
             }
 
-            return View();
+            model.NTLogin = currentUser.Id;
+
+            var response = _peopleService.Update(model);
+
+            if (response)
+            {
+                TempData["SuccessMessage"] = "People has been updated successfully.";
+                return RedirectToAction("Index");
+            }
+
+            TempData["ErrorMessage"] = "Something went wrong.";
+
+            return View(model);
         }
+
         public ActionResult Delete(string id)
         {
 

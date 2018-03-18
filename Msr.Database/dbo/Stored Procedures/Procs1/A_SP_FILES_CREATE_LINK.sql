@@ -1,12 +1,4 @@
-﻿
-
-
-
-
-
-
-
-CREATE      PROCEDURE A_SP_FILES_CREATE_LINK 
+﻿CREATE      PROCEDURE A_SP_FILES_CREATE_LINK 
 @objID nvarchar(50),
 @docID nvarchar(50),
 @type char(20),

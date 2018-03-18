@@ -86,7 +86,16 @@
                 searchoptions: { value: ":[All];CREATING, DENIED, APPROVED, APPROVED_BUT_REVISING:Creating or Approved;CREATING, DENIED: Creating;IN_WORKFLOW:In Approval Workflow;APPROVED, APPROVED_BUT_REVISING, APPROVED_BUT_DELETING:Approved;DENIED:Denied;APPROVED_BUT_REVISING:Approved But Being Revised;APPROVED_BUT_DELETING:Approved But Being Deleted;DENIED:Denied;DELETED:Deleted;OLD:Obsolete" },
                 align: 'center'
             },
-
+            {
+                label: 'Reference Files',
+                name: 'ReferenceFiles',
+                index: 'ReferenceFiles',
+                colmenu: false,
+                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                formatter: FilePreviewFormatter,
+                align: 'center'
+            },
             { name: 'Actions', index: 'Id', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: procedureEditFormatter, width: 100, align: 'center' }
         ],
 
@@ -146,6 +155,11 @@
         searchOnEnter: true,
         searchOperators: true
     });
+
+    function FilePreviewFormatter(cellvalue, options, rowObject) {
+        return FilePreview(cellvalue, options, rowObject);
+    }
+
     function procedureEditFormatter(cellvalue, options, rowObject) {
         var viewButton = '<a href="/Procedures/view/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" title="View" style="margin:2px;font-size: .8em;"><i class="fa fa-eye"></i></a>';
 

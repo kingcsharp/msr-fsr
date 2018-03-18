@@ -60,6 +60,16 @@
                 align: 'center'
             },
             {
+                label: 'Reference Files',
+                name: 'ReferenceFiles',
+                index: 'ReferenceFiles',
+                colmenu: false,
+                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                formatter: FilePreviewFormatter,
+                align: 'center'
+            },
+            {
                 label: 'Checked Out To',
                 name: 'LockedByName',
                 index: 'LockedByName',
@@ -128,6 +138,12 @@
         searchOnEnter: true,
         searchOperators: true
     });
+
+
+    function FilePreviewFormatter(cellvalue, options, rowObject) {
+        return FilePreview(cellvalue, options, rowObject);
+    }
+
     function procedureStepEditFormatter(cellvalue, options, rowObject) {
 
         var editButton = '<a  title="Edit" href="/PreProSearch/edit/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';

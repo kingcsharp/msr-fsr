@@ -1,0 +1,49 @@
+﻿@model IEnumerable<Msr.Services.Parts.ViewModels.AddPartViewModel>
+@{
+    ViewBag.Title = "Parts Import";
+}
+<style>
+    .validation-summary-errors {
+        color: red;
+    }
+</style>
+<div class="container-fluid">
+    <div class="side-body padding-top">
+        <div class="row">
+            <h2 class="page-header">
+                Add File<button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
+            </h2>
+            <div class="col-lg-10">
+                <div class="form-horizontal">
+                    @Html.Partial("Message")
+                    <div class="row">
+                        <div class="alert alert-warning">
+                            The Import File must be a Excel file<br />
+                            It must have these columns in any order PartId, Name<br />
+                            If the PartId already exists it will be updated with the new name. If it does not it will be created.<br />
+                            The file must have the column names as the first row capitalized and spelled like above<br />
+                            The field definitions are<br />
+                            partID = unique ID in the external database for the part.<br />
+                            partName = the part name or description you want in this database<br />
+                        </div>
+                        <div class="alert alert-info">
+                            <a class="btn btn-link" href="https://ra2.s3.amazonaws.com/Answer2/51029aae-b96f-46e5-bf04-b7ac1e9dffbc-Part.xlsx" target="_blank">Download excel file sample </a>
+                        </div>
+                    </div>
+
+                    @using (Html.BeginForm("Import", "Parts", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary()
+                        <label class="btn btn-primary" for="postedFile">
+                            <input id="postedFile" type="file" name="postedFile" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" style="display:none" onchange="$('#upload-file-info').html(this.files[0].name)" />
+                            Browse...
+                        </label>
+                        <span class='label label-info' id="upload-file-info"></span><br />
+                        <input type="submit" class="btn btn-success" value="Process Import" />
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

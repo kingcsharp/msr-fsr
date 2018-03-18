@@ -27,8 +27,10 @@
     <script type="text/javascript" src="~/assets/js/jquery.jqGrid.min.js"></script>
     
     <script src="//cdn.rawgit.com/noelboss/featherlight/1.6.1/release/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+    
     <script src="https://cdn.smooch.io/smooch.min.js"></script>
     <script type="text/javascript" src="~/assets/js/grids/documents.js"></script>
+
     <script> $(document).ready(function () {
             LoadDocumentsGrid('@Url.Action("DocumentsData", "Documents")','@Request.Url.OriginalString');
     });

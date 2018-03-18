@@ -1,17 +1,4 @@
-﻿
-
-
-
-
-
-
-
-
-
-
-
-
-CREATE               PROCEDURE dbo.A_SP_COMPANIES_UPDATE_ONE_COMPANY
+﻿CREATE               PROCEDURE dbo.A_SP_COMPANIES_UPDATE_ONE_COMPANY
 @newID nvarchar(50) OUTPUT,
 @messages nvarchar(500) OUTPUT,
 @objID nvarchar(50),

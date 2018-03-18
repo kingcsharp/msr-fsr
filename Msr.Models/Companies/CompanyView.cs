@@ -49,5 +49,7 @@ namespace Msr.Models.Companies
         public string Location { get; set; }
 
         public string LocationName { get; set; }
+
+        public string ReferenceFiles { get; set; }
     }
 }

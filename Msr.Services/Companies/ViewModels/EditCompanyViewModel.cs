@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
-using Msr.Models.Companies;
-using Msr.Models.Documents;
 using Msr.Services.Documents;
+using Msr.Services.Documents.ViewModels;
 
 namespace Msr.Services.Companies.ViewModels
 {
@@ -17,12 +12,6 @@ namespace Msr.Services.Companies.ViewModels
     {
         public EditCompanyViewModel()
         {
-            ListReferenceFiles = new List<SelectListItem>();
-            ListPictureFiles = new List<SelectListItem>();
-            ListLogoFiles = new List<SelectListItem>();
-            ReferenceFiles = new List<string>();
-            PictureFiles = new List<string>();
-            LogoFiles = new List<string>();
             CompanyTypes = new List<SelectListItem>();
             HeadPeoples = new List<SelectListItem>();
             Locations = new List<SelectListItem>();
@@ -84,7 +73,7 @@ namespace Msr.Services.Companies.ViewModels
         public string LogoFile { get; set; }
 
         [DisplayName("Reference Files :")]
-        public List<string> ReferenceFiles { get; set; }
+        public string ReferenceFiles { get; set; }
 
         [DisplayName("Picture Files :")]
         public List<string> PictureFiles { get; set; }
@@ -92,54 +81,34 @@ namespace Msr.Services.Companies.ViewModels
         [DisplayName("Logo Files :")]
         public List<string> LogoFiles { get; set; }
 
-        public IList<SelectListItem> ListReferenceFiles { get; set; }
-        public IList<SelectListItem> ListPictureFiles { get; set; }
-        public IList<SelectListItem> ListLogoFiles { get; set; }
         public IEnumerable<SelectListItem> HeadPeoples { get; set; }
         public IEnumerable<SelectListItem> Locations { get; set; }
         public IEnumerable<SelectListItem> ListParents { get; set; }
+
+        public List<DocLink> DocLinks { get; set; }
 
         [DisplayName("Head People :")]
         public string HeadPeople { get; set; }
 
         public IEnumerable<SelectListItem> CompanyTypes { get; set; }
 
-        public void Setup(DocumentFilesService documentFilesService, CompanyService companyService,string ntlog)
+        public void Setup(DocumentFilesService documentFilesService, CompanyService companyService, string ntlog)
         {
             CompanyTypes = new List<SelectListItem>
             {
                new SelectListItem
                 {
-                    Text = "Company",
+                    Text = @"Company",
                     Value = "COMPANY",
                     Selected = true
                 },
                 new SelectListItem
                 {
-                    Text = "Department",
+                    Text = @"Department",
                     Value = "DEPARTMENT"
                 }
 
             };
-
-            ListReferenceFiles = documentFilesService.GetSelectedFiles(id: ObjectId, type: null, ntlogin: ntlog).Select(x => new SelectListItem
-            {
-                Text = x.Show,
-                Value = x.Value.ToString()
-                //Selected = true
-            }).OrderBy(o => o.Text).ToList();
-
-            ListPictureFiles = documentFilesService.GetSelectedFiles(id: ObjectId, type: "PICTURE", ntlogin: ntlog).Select(x => new SelectListItem
-            {
-                Text = x.Show,
-                Value = x.Value.ToString()
-            }).OrderBy(o => o.Text).ToList();
-
-            ListLogoFiles = documentFilesService.GetSelectedFiles(id: ObjectId, type: "LOGO", ntlogin: ntlog).Select(x => new SelectListItem
-            {
-                Text = x.Show,
-                Value = x.Value.ToString()               
-            }).OrderBy(o => o.Text).ToList();
 
             HeadPeoples = companyService.GetHeadPeople().ToList().Select(x => new SelectListItem
             {
@@ -153,13 +122,15 @@ namespace Msr.Services.Companies.ViewModels
                 Value = x.Id
             }).OrderBy(o => o.Text).ToList();
 
-            ListParents = companyService.GetCompaniesQueryable().Where(x=>x.Status =="APPROVED").Select(x => new SelectListItem
+            ListParents = companyService.GetCompaniesQueryable().Where(x => x.Status == "APPROVED").Select(x => new SelectListItem
             {
                 Text = x.Name,
                 Value = x.Id
             }).OrderBy(o => o.Text).ToList();
+
+            DocLinks = documentFilesService.GetDocByObjectId(ObjectId);
         }
-       
+
     }
 }
 

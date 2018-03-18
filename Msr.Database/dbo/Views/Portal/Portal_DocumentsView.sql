@@ -1,10 +1,29 @@
 ﻿CREATE VIEW dbo.Portal_DocumentsView
 AS
 SELECT DISTINCT 
-                         tp.SPECIAL_ROOT AS SpecialRoot, tp.SPECIAL_ID AS SpecialID, tp.ID, tp.OBJECT_ID AS ObjectId, tp.SECURITY_LEVEL AS SecurityLevel, tp.CREATING_DEPT AS CreatingDept, tp.OBJ_ID AS ObjId, tp.LOCKED_BY AS LockedBy, 
-                         tp.CREATED_BY AS CreatedBy, tp.ROOT, tp.CREATING_CO AS CreatingCo, tp.NAME, tp.CREATING_CO_NAME AS CreatingCoName, tp.DEPT_NAME AS DeptName, tp.REV, tp.STATUS, tp.LOCKED_BY_NAME AS LockedByName, 
-                         tp.SECURITY_NAME AS SecurityName, tp.APPROVAL_DATE AS ApprovalDate, t.COMMENTS,(SELECT +','+ DL.NAME+'|'+DL.LINKED_DOC_ID FROM A_V_DOCUMENTS_WITH_LINKED_ITEM AS DL WHERE DL.OBJECT_ID = tp.OBJECT_ID for xml path(''), type).value('substring(text()[1], 2)', 'varchar(max)') AS ReferenceFiles
-FROM            dbo.A_O_THEORY_WITH_PARAGRAPHS AS tp INNER JOIN
-                         dbo.A_O_THEORY AS t ON tp.OBJ_ID = t.OBJ_ID
+tp.SPECIAL_ROOT AS SpecialRoot,
+tp.SPECIAL_ID AS SpecialID,
+tp.ID, tp.OBJECT_ID AS ObjectId,
+tp.SECURITY_LEVEL AS SecurityLevel,
+tp.CREATING_DEPT AS CreatingDept,
+tp.OBJ_ID AS ObjId, tp.LOCKED_BY AS LockedBy, 
+tp.CREATED_BY AS CreatedBy, 
+tp.ROOT,
+tp.CREATING_CO AS CreatingCo,
+tp.NAME, tp.CREATING_CO_NAME AS CreatingCoName,
+tp.DEPT_NAME AS DeptName,
+tp.REV,
+tp.STATUS, 
+tp.LOCKED_BY_NAME AS LockedByName, 
+tp.SECURITY_NAME AS SecurityName,
+tp.APPROVAL_DATE AS ApprovalDate, 
+t.COMMENTS,
+isnull(STUFF((
+SELECT +','+ DL.NAME+'|'+DL.LINKED_DOC_ID 
+FROM A_V_DOCUMENTS_WITH_LINKED_ITEM AS DL 
+WHERE DL.OBJECT_ID = tp.OBJECT_ID
+FOR XML PATH('')), 1, 1,''),'') AS ReferenceFiles
+FROM dbo.A_O_THEORY_WITH_PARAGRAPHS AS tp 
+INNER JOIN dbo.A_O_THEORY AS t ON tp.OBJ_ID = t.OBJ_ID
 
 GO

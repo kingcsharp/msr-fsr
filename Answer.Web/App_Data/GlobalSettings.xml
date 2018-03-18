@@ -59,7 +59,7 @@
   <textString id="addChildLocationButton" value="Add Child Location" />
   <textString id="AddDocumentsFromYourPC" value="Upload a file from your PC" />
   <textString id="Added By" value="Add Date" />
-  <textString id="Add-Edit Applicable objects" value="Add Applicable Objects" />
+  <textString id="Add-Update Applicable objects" value="Add Applicable Objects" />
   <textString id="AddNewNote" value="Create Note:" />
   <textString id="AddProcedure" value="NCR" />
   <textString id="Admin Screen" value="Admin" />
@@ -300,18 +300,18 @@
   <textString id="DurATion Type" value="DURATION TYPE:" />
   <textString id="Earliest Actual Start Date" value="Earliest Actual Start Date:" />
   <textString id="Earliest Actual Stop Date" value="Earliest Actual Stop Date:" />
-  <textString id="Edit Email Words" value="EDIT EMAIL WORDS" />
-  <textString id="edit files" value="Edit Note" />
-  <textString id="Edit Fill" value="Edit Fill" />
-  <textString id="Edit Forecast Item" value="EDIT FORECAST ITEM" />
-  <textString id="Edit Global Words" value="Edit global words" />
-  <textString id="Edit Permissions" value="Edit Page Access" />
-  <textString id="Edit Prepop Step" value="EDIT PREPOP STEP" />
-  <textString id="Edit Steps" value="EDIT STEPS" />
-  <textString id="Edit Strings" value="Edit Words" />
-  <textString id="Edit This" value="Continue to edit." />
-  <textString id="Edit this Item" value="Edit" />
-  <textString id="Edit Time Sheet" value="TIME CARD" />
+  <textString id="Update Email Words" value="EDIT EMAIL WORDS" />
+  <textString id="edit files" value="Update Note" />
+  <textString id="Update Fill" value="Update Fill" />
+  <textString id="Update Forecast Item" value="EDIT FORECAST ITEM" />
+  <textString id="Update Global Words" value="Update global words" />
+  <textString id="Update Permissions" value="Update Page Access" />
+  <textString id="Update Prepop Step" value="EDIT PREPOP STEP" />
+  <textString id="Update Steps" value="EDIT STEPS" />
+  <textString id="Update Strings" value="Update Words" />
+  <textString id="Update This" value="Continue to edit." />
+  <textString id="Update this Item" value="Update" />
+  <textString id="Update Time Sheet" value="TIME CARD" />
   <textString id="editAccount" value="ACCOUNT" />
   <textString id="editAccount_Save and Submit" value="Save &amp; Submit to Approval Workflow" />
   <textString id="editAccountPayment" value="EDIT ACCOUNT PAYMENT" />
@@ -333,8 +333,8 @@
   <textString id="editProcedure" value="PROCEDURE" />
   <textString id="editProducts" value="EDIT PRODUCT" />
   <textString id="editProposal" value="PROPOSAL" />
-  <textString id="EditQuestionsStatementsSurvey" value="Add / Edit Questions" />
-  <textString id="editRegion" value="Edit Region" />
+  <textString id="UpdateQuestionsStatementsSurvey" value="Add / Update Questions" />
+  <textString id="editRegion" value="Update Region" />
   <textString id="editRegion_Save and Close" value="Save and Close" />
   <textString id="editRegion_Save and Submit" value="Save and Submit to Workflow" />
   <textString id="editRegion_Save_Changes" value="Save" />
@@ -386,7 +386,7 @@
   <textString id="File to Upload:" value="File to Upload:" />
   <textString id="FILE_NAME" value="File Name" />
   <textString id="FILES" value="FILES" />
-  <textString id="Files - Edit A File" value="EDIT FILE" />
+  <textString id="Files - Update A File" value="EDIT FILE" />
   <textString id="Files:" value="Files:" />
   <textString id="FILL ID" value="Fill ID" />
   <textString id="Fill in the Monitors" value="Enter the monitor results." />
@@ -514,7 +514,7 @@
   <textString id="Name" value="Inovice Description:" />
   <textString id="NAME" value="NAME:" />
   <textString id="navAddRemExisting" value="ADD / REMOVE EXISTING ITEM" />
-  <textString id="navHistEditMeeting" value="NAV HISTORY EDIT MEETING" />
+  <textString id="navHistUpdateMeeting" value="NAV HISTORY EDIT MEETING" />
   <textString id="navHistPartTypeSearchPage" value="PART TYPE SEARCH" />
   <textString id="navHistProject" value="PROJECT HISTORY" />
   <textString id="navHistSearchMeeting" value="NAV HISTORY SEARCH MEETING" />
@@ -787,8 +787,8 @@
   <textString id="Save and submit to workflow" value="Save &amp; Submit to Workflow" />
   <textString id="Save and View Children" value="Save and View Children" />
   <textString id="Save Note" value="Save Note" />
-  <textString id="SaveAndCloseEditStep" value="Save &amp; Return to Step List" />
-  <textString id="SaveEditStep" value="Save" />
+  <textString id="SaveAndCloseUpdateStep" value="Save &amp; Return to Step List" />
+  <textString id="SaveUpdateStep" value="Save" />
   <textString id="saveSearch" value="Save Search" />
   <textString id="Saving Item with serial/kit #" value="Saving item with serial/kit #:" />
   <textString id="Screen for Engineers" value="WIP" />
@@ -988,7 +988,7 @@
   <textString id="Type of Object" value="Type of Object" />
   <textString id="underline" value="Underline" />
   <textString id="Unit Price" value="Unit Price" />
-  <textString id="unlock and delete this copy." value="Cancel creation.  Edits will be lost." />
+  <textString id="unlock and delete this copy." value="Cancel creation.  Updates will be lost." />
   <textString id="Upcoming" value="Upcoming" />
   <textString id="Update Root" value="Submit" />
   <textString id="Use Prev List" value="Use Prev List" />

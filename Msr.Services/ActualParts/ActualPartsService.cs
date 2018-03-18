@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using Msr.Repositories;
 using System.Threading.Tasks;
 using Msr.Models.ActualParts;
 using System.Data.SqlClient;
+using System.Web;
 using Msr.Services.ActualParts.ViewModels;
 using EntityFrameworkExtras.EF6;
+using ExcelDataReader;
 using Msr.Services.ActualParts.Procedures;
 using Msr.Models.Common;
+using Msr.Services.Users.Messages;
 
 namespace Msr.Services.ActualParts
 {
@@ -146,6 +150,7 @@ namespace Msr.Services.ActualParts
                 return false;
             }
         }
+
         public bool ReAssignTask(ReassignTaskViewModel model)
         {
             try
@@ -193,6 +198,103 @@ namespace Msr.Services.ActualParts
                 var message = "Error occured:" + ex.Message;
 
                 return false;
+            }
+        }
+
+        public ResultNotification<string> ImportActualParts(HttpPostedFileBase postedFile, LoggedUserIdResult ntLogin)
+        {
+            var result = new ResultNotification<string>();
+            try
+            {
+                var stream = postedFile.InputStream;
+
+                IExcelDataReader reader;
+
+
+                if (postedFile.FileName.EndsWith(".xls"))
+                {
+                    reader = ExcelReaderFactory.CreateBinaryReader(stream);
+                }
+                else if (postedFile.FileName.EndsWith(".xlsx"))
+                {
+                    reader = ExcelReaderFactory.CreateOpenXmlReader(stream);
+                }
+                else
+                {
+                    result.AddError("This file format is not supported");
+                    return result;
+                }
+                var datatableAsDataSet = reader.AsDataSet(new ExcelDataSetConfiguration()
+                {
+                    ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+                    {
+                        UseHeaderRow = true
+                    }
+                });
+                reader.Close();
+
+                var columnNames = (from dc in datatableAsDataSet.Tables[0].Columns.Cast<DataColumn>()
+                                   select dc.ColumnName).ToList();
+                string[] primes = { "Id", "SN", "NickName", "Owner", "PartId", "Qty", "LocationId", "ParentId" };
+
+                var results = primes.Where(m => !columnNames.Contains(m));
+                bool isSubset = primes.Intersect(columnNames).Count() == primes.Count();
+                if (!isSubset)
+                {
+                    result.AddError("Coloums missing : (" + string.Join(",", results) + ") to create Part");
+                    return result;
+                }
+
+                var modelList = Enumerable.Select(datatableAsDataSet.Tables[0].AsEnumerable(), item => new ActualPartImportViewModel
+                {
+                    Id = item["Id"].ToString(),
+                    Sn = item["SN"].ToString(),
+                    NickName = item["NickName"].ToString(),
+                    Owner = item["Owner"].ToString(),
+                    PartId = item["PartId"].ToString(),
+                    Qty = item["Qty"].ToString(),
+                    LocationId = item["LocationId"].ToString(),
+                    ParentId = item["ParentId"].ToString()
+                }).ToList();
+
+
+                if (modelList.Count > 0)
+                {
+                    foreach (var model in modelList)
+                    {
+                        var actualPartsImportUpdateExternalProcedure = new ActualPartsImportUpdateExternalProcedure();
+                        if (!string.IsNullOrWhiteSpace(model.NickName))
+                        {
+                            actualPartsImportUpdateExternalProcedure.Id = model.Id;
+                            actualPartsImportUpdateExternalProcedure.PartId = model.PartId;
+                            actualPartsImportUpdateExternalProcedure.PartOwner = model.Owner;
+                            actualPartsImportUpdateExternalProcedure.PartSN = model.Sn;
+                            actualPartsImportUpdateExternalProcedure.PartNickName = model.NickName;
+                            actualPartsImportUpdateExternalProcedure.PartQty = model.Qty;
+                            actualPartsImportUpdateExternalProcedure.LocationId = model.LocationId;
+                            actualPartsImportUpdateExternalProcedure.ParentId = model.ParentId;
+                            actualPartsImportUpdateExternalProcedure.NtLogin = ntLogin.Id;
+                            _dbContext.Database.ExecuteStoredProcedure(actualPartsImportUpdateExternalProcedure);
+
+                            result.SuccessMessage = actualPartsImportUpdateExternalProcedure.NewId;
+                        }
+                        else
+                        {
+                            result.AddError("Actual Part Name is empty");
+                        }
+                    }
+                }
+                else
+                {
+                    result.AddError("Nothing to upload file is empty");
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                result.AddError(ex.Message);
+
+                return result;
             }
         }
     }

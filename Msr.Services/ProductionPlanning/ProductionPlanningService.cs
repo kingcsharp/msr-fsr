@@ -6,18 +6,20 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Web;
 using System.Web.Script.Serialization;
 using Dapper;
+using EntityFrameworkExtras.EF6;
+using ExcelDataReader;
 using Msr.Models.CustomerRequirements;
 using Msr.Services.Procedures;
 using Msr.Services.Procedures.Messages;
 using Msr.Services.ProductionPlanning.ViewModels;
 using Msr.Models.Common;
 using Msr.Models.Locations;
-using Msr.Services.CustomerRequirements.ViewModel;
 using Msr.Services.PrePro;
 using Msr.Services.Procedures.ViewModels;
-using Msr.Services.Quotes.ViewModels;
+using Msr.Services.ProductionPlanning.Procedures;
 using Msr.Services.Users.Messages;
 using Msr.Services.Workflows;
 using Msr.Services.Workflows.ViewModels;
@@ -108,7 +110,15 @@ namespace Msr.Services.ProductionPlanning
 
                 if (string.IsNullOrWhiteSpace(model.ProductProcedureId))
                 {
-                    var saveProcedureViewModel = new SaveProcedureViewModel { Name = requirment.ProductName, DurationType = "TIME_SYS_SECONDS", SecurityLevel = "1", StepInAp = 1, WipMsg = 0 };
+                    var saveProcedureViewModel = new SaveProcedureViewModel
+                    {
+                        Name = requirment.ProductName,
+                        DurationType = "TIME_SYS_SECONDS",
+                        SecurityLevel = "1",
+                        StepInAp = 1,
+                        WipMsg = 0,
+                        NTLogin = model.LoginId
+                    };
 
                     var response = _preProceduresService.Create(saveProcedureViewModel);
 
@@ -375,6 +385,136 @@ namespace Msr.Services.ProductionPlanning
             var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT DISTINCT NAME_COMBO as Show, ID as Value   FROM A_V_PARTS_APPROVED_DATA WHERE(COMPANY = '2') AND((NAME_COMBO LIKE '%%')) and(COMPANY_PART_NUMBER = '" + companyPartNumber + "')    ORDER BY NAME_COMBO").SingleOrDefault();
 
             return result?.Value;
+        }
+
+        public ResultNotification<string> ImportProducts(HttpPostedFileBase postedFile, LoggedUserIdResult ntLogin)
+        {
+            var result = new ResultNotification<string>();
+            try
+            {
+                var stream = postedFile.InputStream;
+
+                IExcelDataReader reader;
+
+
+                if (postedFile.FileName.EndsWith(".xls"))
+                {
+                    reader = ExcelReaderFactory.CreateBinaryReader(stream);
+                }
+                else if (postedFile.FileName.EndsWith(".xlsx"))
+                {
+                    reader = ExcelReaderFactory.CreateOpenXmlReader(stream);
+                }
+                else
+                {
+                    result.AddError("This file format is not supported");
+                    return result;
+                }
+                var resultAsDataSet = reader.AsDataSet(new ExcelDataSetConfiguration()
+                {
+                    ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+                    {
+                        UseHeaderRow = true
+                    }
+                });
+                reader.Close();
+
+                var columnNames = (from dc in resultAsDataSet.Tables[0].Columns.Cast<DataColumn>()
+                                   select dc.ColumnName).ToList();
+                string[] primes = { "ExternalProductId", "ExternalCustId", "ExternalPartId", "ExternalProcedureId", "ExternalProductSupplierId", "ExternalAccountSupplierId", "InternalCustomerId", "InternalProductSupplierId", "InternalAccountSupplierId", "InternalRoleId", "InternalPartId", "ProductName", "Oem", "Model", "Area", "Cu", "Mm", "Price", "ResponseTime", "SalesTax", "InternalProcedureId", "IsKit", "KitId", "KitQty" };
+
+                var results = primes.Where(m => !columnNames.Contains(m));
+                bool isSubset = primes.Intersect(columnNames).Count() == primes.Count();
+                if (!isSubset)
+                {
+                    result.AddError("Coloums missing : (" + string.Join(",", results) + ") to create Product");
+                    return result;
+                }
+
+                var modelList = Enumerable.Select(resultAsDataSet.Tables[0].AsEnumerable(), item => new ProductImportViewModel
+                {
+                    ExternalProductId = item["ExternalProductId"].ToString(),
+                    ExternalCustId = item["ExternalCustId"].ToString(),
+                    ExternalPartId = item["ExternalPartId"].ToString(),
+                    ExternalProcedureId = item["ExternalProcedureId"].ToString(),
+                    ExternalProductSupplierId = item["ExternalProductSupplierId"].ToString(),
+                    ExternalAccountSupplierId = item["ExternalAccountSupplierId"].ToString(),
+                    InternalCustomerId = item["InternalCustomerId"].ToString(),
+                    InternalProductSupplierId = item["InternalProductSupplierId"].ToString(),
+                    InternalAccountSupplierId = item["InternalAccountSupplierId"].ToString(),
+                    InternalRoleId = item["InternalRoleId"].ToString(),
+                    InternalPartId = item["InternalPartId"].ToString(),
+                    ProductName = item["ProductName"].ToString(),
+                    Oem = item["Oem"].ToString(),
+                    Model = item["Model"].ToString(),
+                    Area = item["Area"].ToString(),
+                    Cu = item["Cu"].ToString(),
+                    Mm = item["Mm"].ToString(),
+                    Price = item["Price"].ToString(),
+                    ResponseTime = item["ResponseTime"].ToString(),
+                    SalesTax = item["SalesTax"].ToString(),
+                    InternalProcedureId = item["InternalProcedureId"].ToString(),
+                    IsKit = item["IsKit"].ToString(),
+                    KitId = item["KitId"].ToString(),
+                    KitQty = item["KitQty"].ToString()
+                }).ToList();
+
+                if (modelList.Count > 0)
+                {
+                    foreach (var model in modelList)
+                    {
+                        var productImportUpdateExternalProcedure = new ProductImportUpdateExternalProcedure();
+
+                        if (!string.IsNullOrWhiteSpace(model.ProductName))
+                        {
+                            productImportUpdateExternalProcedure.ExternalProductId = model.ExternalProductId;
+                            productImportUpdateExternalProcedure.ExternalCustomerId = model.ExternalCustId;
+                            productImportUpdateExternalProcedure.ExternalPartId = model.ExternalPartId;
+                            productImportUpdateExternalProcedure.ExternalProcedureId = model.ExternalProcedureId;
+                            productImportUpdateExternalProcedure.ExternalProductSupplierId = model.ExternalProductSupplierId;
+                            productImportUpdateExternalProcedure.ExternalAccountSupplierId = model.ExternalAccountSupplierId;
+                            productImportUpdateExternalProcedure.InternalCustomerId = model.InternalCustomerId;
+                            productImportUpdateExternalProcedure.InternalProductSupplierId = model.InternalProductSupplierId;
+                            productImportUpdateExternalProcedure.InternalAccountSupplierId = model.InternalAccountSupplierId;
+                            productImportUpdateExternalProcedure.InternalRoleId = model.InternalRoleId;
+                            productImportUpdateExternalProcedure.InternalPartId = model.InternalPartId;
+                            productImportUpdateExternalProcedure.ProductName = model.ProductName;
+                            productImportUpdateExternalProcedure.Oem = model.Oem;
+                            productImportUpdateExternalProcedure.Area = model.Area;
+                            productImportUpdateExternalProcedure.Cu = model.Cu;
+                            productImportUpdateExternalProcedure.Mm = model.Mm;
+                            productImportUpdateExternalProcedure.Price = model.Price;
+                            productImportUpdateExternalProcedure.ResponseTime = model.ResponseTime;
+                            productImportUpdateExternalProcedure.SalesTax = model.SalesTax;
+                            productImportUpdateExternalProcedure.InternalProcedureId = model.InternalProcedureId;
+                            productImportUpdateExternalProcedure.IsKit = model.IsKit;
+                            productImportUpdateExternalProcedure.KitId = model.KitId;
+                            productImportUpdateExternalProcedure.KitQty = model.KitQty;
+                            productImportUpdateExternalProcedure.StrNtLogin = ntLogin.Id;
+
+                            _dbContext.Database.ExecuteStoredProcedure(productImportUpdateExternalProcedure);
+
+                            result.SuccessMessage = productImportUpdateExternalProcedure.NewId;
+                        }
+                        else
+                        {
+                            result.AddError("Name is empty");
+                        }
+                    }
+                }
+                else
+                {
+                    result.AddError("Nothing to upload file is empty");
+                }
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                result.AddError(ex.Message);
+
+                return result;
+            }
         }
     }
 }

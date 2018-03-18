@@ -8,7 +8,9 @@ using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Web;
 using System.Web.Mvc;
+using ExcelDataReader;
 using Msr.Models.Common;
 using Msr.Services.Documents;
 using Msr.Services.Objects;
@@ -18,6 +20,7 @@ using Msr.Services.Procedures.Procedures;
 using Msr.Services.Procedures.ViewModels;
 using Msr.Services.ProcedureVerbs;
 using Msr.Services.PurchesOrder.ViewModels;
+using Msr.Services.Users.Messages;
 
 namespace Msr.Services.Procedures
 {
@@ -318,17 +321,6 @@ namespace Msr.Services.Procedures
 
                 result.Entity = saveProcedureProcedure.NewObjId;
 
-                var deleteReferenceFileProcedure = new DeleteFileProcedure() { ObjID = saveProcedureProcedure.NewObjId, Type = null, NTLogin = model.NTLogin };
-
-                _dbContext.Database.ExecuteStoredProcedure(deleteReferenceFileProcedure);
-
-                foreach (var file in model.ReferenceFiles)
-                {
-                    var saveFileProcedure = new SaveFileProcedure() { ObjId = saveProcedureProcedure.NewObjId, DocId = file, Type = null, NTLogin = model.NTLogin };
-
-                    _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
-                }
-
                 var deleteProcedureRolesProcedure = new DeleteProcedureRolesProcedure() { ObjId = saveProcedureProcedure.NewObjId, NTLogin = model.NTLogin };
 
                 _dbContext.Database.ExecuteStoredProcedure(deleteProcedureRolesProcedure);
@@ -355,17 +347,6 @@ namespace Msr.Services.Procedures
 
             try
             {
-                var deleteReferenceFileProcedure = new DeleteFileProcedure() { ObjID = model.ObjectId, Type = DBNull.Value.ToString(CultureInfo.InvariantCulture), NTLogin = model.NTLogin };
-
-                _dbContext.Database.ExecuteStoredProcedure(deleteReferenceFileProcedure);
-
-                foreach (var file in model.ReferenceFiles)
-                {
-                    var saveFileProcedure = new SaveFileProcedure() { ObjId = model.ObjectId, DocId = file, Type = null, NTLogin = model.NTLogin };
-
-                    _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
-                }
-
                 var deleteProcedureRolesProcedure = new DeleteProcedureRolesProcedure() { ObjId = model.ObjectId, NTLogin = model.NTLogin };
 
                 _dbContext.Database.ExecuteStoredProcedure(deleteProcedureRolesProcedure);
@@ -1124,6 +1105,96 @@ namespace Msr.Services.Procedures
                 step.print_Order = ++selectedIndex;
             }
             return result;
+        }
+
+        public ResultNotification<string> ImportProcedures(HttpPostedFileBase postedFile, LoggedUserIdResult ntLogin)
+        {
+            var result = new ResultNotification<string>();
+            try
+            {
+                var stream = postedFile.InputStream;
+
+                IExcelDataReader reader;
+
+
+                if (postedFile.FileName.EndsWith(".xls"))
+                {
+                    reader = ExcelReaderFactory.CreateBinaryReader(stream);
+                }
+                else if (postedFile.FileName.EndsWith(".xlsx"))
+                {
+                    reader = ExcelReaderFactory.CreateOpenXmlReader(stream);
+                }
+                else
+                {
+                    result.AddError("This file format is not supported");
+                    return result;
+                }
+                var resultAsDataSet = reader.AsDataSet(new ExcelDataSetConfiguration()
+                {
+                    ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+                    {
+                        UseHeaderRow = true
+                    }
+                });
+                reader.Close();
+
+                var columnNames = (from dc in resultAsDataSet.Tables[0].Columns.Cast<DataColumn>()
+                                   select dc.ColumnName).ToList();
+                string[] primes = { "ProcedureId", "ProcedureName", "AnsId", "ProcType" };
+
+                var results = primes.Where(m => !columnNames.Contains(m));
+                bool isSubset = primes.Intersect(columnNames).Count() == primes.Count();
+                if (!isSubset)
+                {
+                    result.AddError("Coloums missing : (" + string.Join(",", results) + ") to create Procedure");
+                    return result;
+                }
+
+                var modelList = Enumerable.Select(resultAsDataSet.Tables[0].AsEnumerable(), item => new ProcedureImportViewModel
+                {
+                    ProcedureId = item["ProcedureId"].ToString(),
+                    ProcedureName = item["ProcedureName"].ToString(),
+                    AnsId = item["AnsId"].ToString(),
+                    ProcType = item["ProcType"].ToString()
+                }).ToList();
+
+                if (modelList.Count > 0)
+                {
+                    foreach (var model in modelList)
+                    {
+                        var procedureImportExternalProcedure = new ProcedureImportExternalProcedure();
+                        if (!string.IsNullOrWhiteSpace(model.ProcedureName))
+                        {
+                            procedureImportExternalProcedure.Id = model.ProcedureId;
+                            procedureImportExternalProcedure.Name = model.ProcedureName;
+                            procedureImportExternalProcedure.AnsId = model.AnsId;
+                            procedureImportExternalProcedure.ProcType = model.ProcType;
+                            procedureImportExternalProcedure.NtLogin = ntLogin.Id;
+                            _dbContext.Database.ExecuteStoredProcedure(procedureImportExternalProcedure);
+
+                            result.SuccessMessage = procedureImportExternalProcedure.NewId;
+
+                        }
+                        else
+                        {
+                            result.AddError("Actual Part Name is empty");
+                        }
+
+                    }
+                }
+                else
+                {
+                    result.AddError("Nothing to upload file is empty");
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                result.AddError(ex.Message);
+
+                return result;
+            }
         }
     }
 }

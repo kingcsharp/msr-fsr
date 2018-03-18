@@ -110,6 +110,17 @@
                 width: 200,
                 align: 'left'
             },
+            {
+                label: 'Reference Files',
+                name: 'ReferenceFiles',
+                index: 'ReferenceFiles',
+                colmenu: false,
+                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                formatter: FilePreviewFormatter,
+                align: 'center'
+            },
+
             { name: 'Actions', index: 'ID', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: CompaniesEditFormatter, width: 200, align: 'center' }
         ],
 
@@ -158,6 +169,12 @@
         searchOnEnter: true,
         searchOperators: true
     });
+
+
+    function FilePreviewFormatter(cellvalue, options, rowObject) {
+        return FilePreview(cellvalue, options, rowObject);
+    }
+
     function CompaniesEditFormatter(cellvalue, options, rowObject) {
 
         var editButton = '<a href="/Companies/Details/' + rowObject.ObjectId + '" title="View Company" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-eye"></i> </a>';

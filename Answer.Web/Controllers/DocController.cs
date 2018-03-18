@@ -3,19 +3,16 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.Script.Serialization;
+using Msr.Commons.Files;
 using Msr.Models.Orders;
 using Msr.Services.Documents;
 using Msr.Services.Documents.ViewModels;
 using Msr.Services.Orders;
 using Msr.Services.Orders.ViewModels;
-using Msr.Services.Parts;
-using Msr.Services.Procedures;
-using Msr.Services.PrePro;
 using Msr.Services.S3;
-using Msr.Web.Controllers;
 using Msr.Services.Files;
 using Msr.Services.Files.ViewModels;
 
@@ -25,16 +22,22 @@ namespace Answer.Web.Controllers
     {
         private readonly FileService _fileService;
         private readonly AWSFileHandler _cloudUploader;
+        private readonly DocumentFilesService _documentFilesService;
+        private readonly DocumentService _documentService;
+        private readonly OrderService _orderService;
+
         public DocController()
         {
             _fileService = new FileService();
             _cloudUploader = new AWSFileHandler();
+            _documentFilesService = new DocumentFilesService();
+            _documentService = new DocumentService();
+            _orderService = new OrderService();
         }
 
         public ActionResult View(string filePath, string fileType, string fileName, int? height)
         {
-            var orderService = new OrderService();
-            var img = orderService.GetDocumentBase64(filePath, height);
+            var img = _orderService.GetDocumentBase64(filePath, height);
 
             var cd = new System.Net.Mime.ContentDisposition
             {
@@ -49,8 +52,6 @@ namespace Answer.Web.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public JsonResult FileUploader(List<HttpPostedFileBase> files, string taskId)
         {
-            var orderService = new OrderService();
-
             foreach (HttpPostedFileBase file in files)
             {
                 var imageModel = new SaveWorkItemImageViewModel();
@@ -82,10 +83,10 @@ namespace Answer.Web.Controllers
                 imageModel.NTLogin = "1618";
                 imageModel.TaskId = taskId;
 
-                orderService.SaveOrderItemImages(imageModel);
+                _orderService.SaveOrderItemImages(imageModel);
             }
 
-            var orderItemImages = orderService.GetOrderItemImagesById(taskId);
+            var orderItemImages = _orderService.GetOrderItemImagesById(taskId);
 
             var images = new UploadedImageView();
 
@@ -105,9 +106,7 @@ namespace Answer.Web.Controllers
 
         public JsonResult GetImagesById(string taskId)
         {
-            var orderService = new OrderService();
-
-            var images = orderService.GetOrderItemImagesById(taskId);
+            var images = _orderService.GetOrderItemImagesById(taskId);
 
             var imageView = new UploadedImageView();
 
@@ -119,13 +118,11 @@ namespace Answer.Web.Controllers
         [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult DeleteImageById(string id, string taskId)
         {
-            var orderService = new OrderService();
-
-            var response = orderService.DeleteOrderItemImageById(id, GetCurrentUser().Id);
+            var response = _orderService.DeleteOrderItemImageById(id, GetCurrentUser().Id);
 
             if (response)
             {
-                var orderItemImages = orderService.GetOrderItemImagesById(taskId);
+                var orderItemImages = _orderService.GetOrderItemImagesById(taskId);
 
                 return Json(new { Message = "Image deleted successfully.", files = orderItemImages.ToArray() }, JsonRequestBehavior.AllowGet);
             }
@@ -137,21 +134,16 @@ namespace Answer.Web.Controllers
         {
             ViewBag.CallBackId = callBackId;
 
-            var docService = new DocumentFilesService();
-
-            var resultsFiles = docService.GetSelectedRefFiles(callBackId, type, GetCurrentUser().Id).AsQueryable();
+            var resultsFiles = _documentFilesService.GetSelectedRefFiles(callBackId, type, GetCurrentUser().Id).AsQueryable();
 
             return PartialView("_DocView", resultsFiles);
         }
-
 
         public ActionResult GetFileResult(string callBackId, string itemId, string type)
         {
             ViewBag.CallBackId = callBackId;
 
-            var docService = new DocumentFilesService();
-
-            var resultsFile = docService.GetSelectedRefFile(itemId);
+            var resultsFile = _documentFilesService.GetSelectedRefFile(itemId);
 
             return Json(resultsFile, JsonRequestBehavior.AllowGet);
         }
@@ -160,19 +152,14 @@ namespace Answer.Web.Controllers
         {
             ViewBag.CallBackId = callBackId;
 
-            var docService = new DocumentFilesService();
-
-            var resultsFiles = docService.GetProcedureSelectedRefFiles(callBackId, GetCurrentUser().Id).AsQueryable();
+            var resultsFiles = _documentFilesService.GetProcedureSelectedRefFiles(callBackId, GetCurrentUser().Id).AsQueryable();
 
             return PartialView("_DocView", resultsFiles);
         }
+
         [AcceptVerbs(HttpVerbs.Post)]
         public JsonResult FileUploaderBootstrap(string objectId)
         {
-
-
-            var fileService = new FileService();
-            var documentService = new DocumentService();
             List<NewFile> selectedfiles = new List<NewFile>();
 
             var initialPreview = new List<string>();
@@ -212,7 +199,7 @@ namespace Answer.Web.Controllers
                 imageModel.DropSrc = "YES";
                 imageModel.NTLogin = GetCurrentUser().Id;
 
-                responese = fileService.SaveFileUpload(imageModel);
+                responese = _fileService.SaveFileUpload(imageModel);
 
                 initialPreview.Add(imageModel.Path);
                 var docfiLink = new DocLink
@@ -238,19 +225,21 @@ namespace Answer.Web.Controllers
                 {
                     selectedfiles.Add(responese);
                 }
+
                 if (objectId != null)
-                    documentService.SaveSingleFileReference(objectId, responese.Id, GetCurrentUser().Id);
+                {
+                    _documentService.SaveSingleFileReference(objectId, responese.Id, GetCurrentUser().Id);
+                }
             }
             return Json(new { initialPreview, initialPreviewConfig, responese.Id }, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult RefillUploader(string ids)
         {
-            var documentService = new DocumentService();
             var array = ids.Split(',');
             array = array.Where(val => val != "0").ToArray();
 
-            var initialPreviewConfigs = array.Select(id => documentService.GetListFileReferences(string.IsNullOrWhiteSpace(id) ? "0" : id)).ToList();
+            var initialPreviewConfigs = array.Select(id => _documentService.GetListFileReferences(string.IsNullOrWhiteSpace(id) ? "0" : id)).ToList();
 
             foreach (var itemConfig in initialPreviewConfigs)
             {
@@ -271,6 +260,23 @@ namespace Answer.Web.Controllers
             }).ToArray();
 
             return Json(new { initialPreview, initialPreviewConfig }, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult Download(string id)
+        {
+            var resultsFile = _documentFilesService.GetSelectedRefFile(id);
+
+            var key = resultsFile.ServerPath.Split('/');
+
+            var buketName = ConfigurationManager.AppSettings.Get("AWSBuketName");
+
+            var streamCloud = _cloudUploader.DownloadFromCloud(buketName, key[3] + "/" + key[4]);
+
+            var extention = resultsFile.Show.Split('.');
+
+            var mimeType = MimeTypes.GetTypes(extention[1]);
+
+            return File(streamCloud, mimeType, resultsFile.Show);
         }
     }
 

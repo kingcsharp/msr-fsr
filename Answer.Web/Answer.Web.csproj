@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
   <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
   <Import Project="..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -28,6 +29,7 @@
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
     <Use64BitIISExpress />
+    <TypeScriptToolsVersion>2.3</TypeScriptToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -591,6 +593,7 @@
     <Content Include="assets\js\admin_users.js" />
     <Content Include="assets\js\alert.js" />
     <Content Include="assets\js\app.js" />
+    <Content Include="assets\js\bluebird.min.js" />
     <Content Include="assets\js\bootbox.min.js" />
     <Content Include="assets\js\bootstrap-datetimepicker.min.js" />
     <Content Include="assets\js\bootstrap-editable.min.js" />
@@ -599,6 +602,8 @@
     <Content Include="assets\js\bootstrap-switch.min.js" />
     <Content Include="assets\js\bootstrap.js" />
     <Content Include="assets\js\bootstrap.min.js" />
+    <Content Include="assets\js\BootstrapFileInput\css\fileinput.min.css" />
+    <Content Include="assets\js\BootstrapFileInput\js\fileinput.min.js" />
     <Content Include="assets\js\button.js" />
     <Content Include="assets\js\buyer.js" />
     <Content Include="assets\js\card.js" />
@@ -665,7 +670,11 @@
     <Content Include="assets\js\grids\purchase-order.js" />
     <Content Include="assets\js\grids\regions.js" />
     <Content Include="assets\js\grids\requirement-steps.js" />
+    <Content Include="assets\js\JqueryConfirm\jquery-confirm.min.css" />
+    <Content Include="assets\js\JqueryConfirm\jquery-confirm.min.js" />
     <Content Include="assets\js\JsBarcode.all.min.js" />
+    <Content Include="assets\js\msr\fileupload\uploader-grid.js" />
+    <Content Include="assets\js\msr\grid-common.js" />
     <Content Include="assets\js\printThis.js" />
     <Content Include="assets\js\procedure-steps.js" />
     <Content Include="assets\js\requirements_form.js" />
@@ -928,7 +937,7 @@
     <Content Include="assets\js\tinymce\themes\modern\theme.min.js" />
     <Content Include="assets\js\tinymce\tinymce.js" />
     <Content Include="assets\js\tinymce\tinymce.min.js" />
-    <Content Include="assets\js\uploader.js" />
+    <Content Include="assets\js\msr\fileupload\uploader.js" />
     <Content Include="assets\js\vendor\jquery.ui.widget.js" />
     <Content Include="assets\js\wip-detail-print-other.js" />
     <Content Include="assets\js\wip-detail.js" />
@@ -1319,6 +1328,12 @@
     <Content Include="Views\Shared\Help\_MasterUserAdmin.cshtml" />
     <Content Include="Views\Shared\Help\_HelpView.cshtml" />
     <Content Include="Views\Shared\_HelpViewButton.cshtml" />
+    <Content Include="Views\Shared\_FileUpload.cshtml" />
+    <Content Include="Views\ProductionPlanning\Import.cshtml" />
+    <Content Include="Views\Procedures\Import.cshtml" />
+    <Content Include="Views\Parts\Import.cshtml" />
+    <Content Include="Views\Companies\Import.cshtml" />
+    <Content Include="Views\ActualParts\Import.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1357,6 +1372,10 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Msr.Commons\Msr.Commons.csproj">
+      <Project>{9E9CAA52-0E5E-4E73-AA21-BD2F89D4DF8C}</Project>
+      <Name>Msr.Commons</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Msr.Infrastructure\Msr.Infrastructure.csproj">
       <Project>{9DD1FA43-9B92-4694-98A5-D75B672CFD67}</Project>
       <Name>Msr.Infrastructure</Name>
@@ -1376,6 +1395,9 @@
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\AWSSDK.S3.3.3.11.4\analyzers\dotnet\cs\AWSSDK.S3.CodeAnalysis.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -1400,6 +1422,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
   <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
@@ -1437,7 +1460,7 @@
     <Error Condition="!Exists('..\packages\OctoPack.3.6.0\tools\OctoPack.targets') And ('$(RunOctoPack)' != '' And $(RunOctoPack))" Text="You are trying to build with OctoPack, but the NuGet targets file that OctoPack depends on is not available on this computer. This is probably because the OctoPack package has not been committed to source control, or NuGet Package Restore is not enabled. Please enable NuGet Package Restore to download them. For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
     <Error Condition="Exists('..\packages\OctoPack.3.6.0\tools\OctoPack.targets') And ('$(RunOctoPack)' != '' And $(RunOctoPack))" Text="OctoPack cannot be run because NuGet packages were restored prior to the build running, and the targets file was unavailable when the build started. Please build the project again to include these packages in the build. You may also need to make sure that your build server does not delete packages prior to each build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
   </Target>
-    <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>

@@ -42,5 +42,6 @@ namespace Msr.Models.Parts
         public string ProductType { get; set; }
         public string ProcVerb { get; set; }
         public decimal? Price { get; set; }
+        public string ReferenceFiles { get; set; }
     }
 }

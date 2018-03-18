@@ -31,5 +31,7 @@ namespace Msr.Models.PrePro
         public string ObjId { get; set; }
 
         public string ObjDesc { get; set; }
+
+        public string ReferenceFiles { get; set; }
     }
 }

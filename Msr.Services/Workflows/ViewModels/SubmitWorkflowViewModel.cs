@@ -25,6 +25,7 @@ namespace Msr.Services.Workflows.ViewModels
         public string Comment { get; set; }
 
         [Display(Name = "Approval Workflow")]
+        [Required]
         public string ApprovalWorflowId { get; set; }
 
         public IList<SelectListItem> WorkflowsList { get; set; }
@@ -39,16 +40,7 @@ namespace Msr.Services.Workflows.ViewModels
         public void SetUp(List<ShowApplicableWorkflowsResult> workflows)
         {
             WorkflowsList = workflows.Select(x => new SelectListItem {Text = x.WF_Name, Value = x.Wf_Id}).ToList();
-            DeleteAllRevisionsList = GetDeleteAllRevisions();
-        }
-
-        private List<SelectListItem> GetDeleteAllRevisions()
-        {
-            return new List<SelectListItem>
-            {
-                new SelectListItem {Text = "Yes", Value = "1"},
-                new SelectListItem {Text = "No", Value = "0"}
-            };
+            DeleteAllRevisionsList = LookupItems.YesNo();
         }
     }
 }

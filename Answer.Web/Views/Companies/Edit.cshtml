@@ -1,8 +1,11 @@
 ﻿@model Msr.Services.Companies.ViewModels.EditCompanyViewModel
- 
+
 @{
-    ViewBag.Title = "Edit Company";
+    ViewBag.Title = "Update Company";
 }
+
+@Styles.Render("~/bundles/css/fileinput")
+
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="row">
@@ -15,7 +18,7 @@
                 {
                     @Html.AntiForgeryToken()
                     <input type="hidden" name="Id" value="@Model.Id" />
-                    <input type="hidden" name="ObjectId" value="@Model.ObjectId" />
+                    <input type="hidden" id="ObjectId" name="ObjectId" value="@Model.ObjectId" />
                     <div class="form-horizontal">
                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                         <div class="form-group">
@@ -42,34 +45,7 @@
                         <div class="form-group">
                             @Html.LabelFor(model => model.ReferenceFiles, htmlAttributes: new { @class = "control-label col-md-4" })
                             <div class="col-md-5">
-                                <div style="width: 96%; float: left;">
-                                    @Html.ListBoxFor(m => m.ReferenceFiles, Model.ListReferenceFiles, new { @class = "form-control selectitem", multiple = "multiple" })
-                                    @Html.ValidationMessageFor(model => model.ReferenceFiles, "", new { @class = "text-danger" })
-                                </div>
-                                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceFiles" data-toggle="modal" data-target="#select-images"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceFiles"><i class="icon fa fa-minus-circle"></i></span>
-                               <span class="data-toggle=" data-call-back-id="@Model.ObjectId" data-file-type="" data-toggle="modal" data-target="#select-doc-view"><i class="icon fa fa-eye"></i></span></div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.PictureFiles, htmlAttributes: new { @class = "control-label col-md-4" })
-                            <div class="col-md-5">
-                                <div style="width: 96%; float: left;">
-                                    @Html.ListBoxFor(m => m.PictureFiles, Model.ListPictureFiles, new { @class = "form-control selectitem" })
-                                    @Html.ValidationMessageFor(model => model.PictureFiles, "", new { @class = "text-danger" })
-                                    </div>
-                                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="PictureFiles" data-toggle="modal" data-target="#select-pic"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="PictureFiles"><i class="icon fa fa-minus-circle"></i></span>
-                                    <span class="data-toggle=" data-call-back-id="@Model.ObjectId" data-file-type="PICTURE" data-toggle="modal" data-target="#select-doc-view"><i class="icon fa fa-eye"></i></span></div>
-                                </div>
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.LogoFiles, htmlAttributes: new { @class = "control-label col-md-4" })
-                            <div class="col-md-5">
-                                <div style="width: 96%; float: left;">
-                                    @Html.ListBoxFor(m => m.LogoFiles, Model.ListLogoFiles, new { @class = "form-control selectitem", multiple = "multiple" })
-                                    @Html.ValidationMessageFor(model => model.LogoFiles, "", new { @class = "text-danger" })
-                                </div>
-                                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="LogoFiles" data-toggle="modal" data-target="#select-pic"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="LogoFiles"><i class="icon fa fa-minus-circle"></i></span>
-                                    <span class="data-toggle=" data-call-back-id="@Model.ObjectId" data-file-type="LOGO" data-toggle="modal" data-target="#select-doc-view"><i class="icon fa fa-eye"></i></span></div>
+                                @Html.Partial("_FileUpload")
                             </div>
                         </div>
                         <div class="form-group">
@@ -79,7 +55,7 @@
                                 @Html.ValidationMessageFor(model => model.HeadPeople, "", new { @class = "text-danger" })
                             </div>
                         </div>
-                       
+
                         <div class="form-group">
                             @Html.LabelFor(model => model.Phone, htmlAttributes: new { @class = "control-label col-md-4" })
                             <div class="col-md-5">
@@ -90,7 +66,7 @@
                         <div class="form-group">
                             @Html.LabelFor(model => model.Location, htmlAttributes: new { @class = "control-label col-md-4" })
                             <div class="col-md-5">
-                               @Html.DropDownListFor(model => model.Location, Model.Locations, new { @class = "form-control select" })
+                                @Html.DropDownListFor(model => model.Location, Model.Locations, new { @class = "form-control select" })
                                 @Html.ValidationMessageFor(model => model.Location, "", new { @class = "text-danger" })
                             </div>
                         </div>
@@ -109,19 +85,30 @@
 
 @section scripts
 {
- <script src="~/assets/js/common/documentFile.js"></script>
-<script src="~/assets/js/common/documentFiles.js"></script>
-<script src="~/assets/js/grids/comman.js"></script>
-<script src="~/assets/js/grids/files-dialog-single-selection.js"></script>
-<script src="//rawgit.com/saribe/eModal/master/dist/eModal.min.js"></script>
-<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
-<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+
+    @Scripts.Render("~/bundles/js/jqueryval")
+    @Scripts.Render("~/bundles/js/fileinput")
 
     <script type="text/javascript">
-        
-        $("form").submit(function (e) {
-            $('.selectitem option').prop('selected', true);
 
+        var fileUploaderGrid = new FileUploaderGrid();
+
+        $(document).ready(function () {
+
+            var fileUploader = new FileUploader();
+            fileUploader.InitEditUploader($('#input-files'), '@Url.Action("FileUploaderBootstrap", "Doc")', [@Html.Raw(ViewBag.Preview)], @Html.Raw(ViewBag.PreviewConfig),'@Model.ObjectId');
+            fileUploaderGrid.SetupSelectImage();
+
+            $("form").submit(function(e) {
+                $('.selectitem option').prop('selected', true);
+
+            });
+           
         });
+       
+        function SelectIds() {
+            fileUploaderGrid.SelectIds();
+        }
+
     </script>
 }

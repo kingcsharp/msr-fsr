@@ -158,23 +158,9 @@ namespace Msr.Services.Procedures.ViewModels
                 new SelectListItem {Text = "BETWEEN", Value = "BETWEEN"}
             };
 
-            BasedOPionList = new List<SelectListItem>
-            {
-                new SelectListItem {Text = "NO", Value = "0"},
-                new SelectListItem {Text = "YES", Value = "1"}
-            };
-
-            UseResultList = new List<SelectListItem>
-            {
-                new SelectListItem {Text = "NO", Value = "0"},
-                new SelectListItem {Text = "YES", Value = "1"}
-            };
-
-            HideTargetList = new List<SelectListItem>
-            {
-                new SelectListItem {Text = "NO", Value = "0"},
-                new SelectListItem {Text = "YES", Value = "1"}
-            };
+            BasedOPionList = LookupItems.YesNo();
+            UseResultList = LookupItems.YesNo();
+            HideTargetList = LookupItems.YesNo();
 
             FailNextActionList = new List<SelectListItem>
             {
