@@ -610,6 +610,7 @@
     <Content Include="assets\js\bootstrap.js" />
     <Content Include="assets\js\bootstrap.min.js" />
     <Content Include="assets\js\BootstrapFileInput\css\fileinput.min.css" />
+    <Content Include="assets\js\BootstrapFileInput\js\fileinput-custom.js" />
     <Content Include="assets\js\BootstrapFileInput\js\fileinput.min.js" />
     <Content Include="assets\js\button.js" />
     <Content Include="assets\js\buyer.js" />

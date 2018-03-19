@@ -3,6 +3,7 @@
     var initEditUploader = function (element, url, initialPreview, initialPreviewConfig, objectId) {
 
         element.fileinput({
+            showSelect:true,
             showClose: false,
             uploadUrl: url,
             uploadAsync: true,
@@ -49,14 +50,11 @@
                 //element.fileinput("upload");
             });
 
-        $('.file-caption-main')
-            .append(
-            '<div style="float:left;width:10px;height:40px;" data-call-back-id="ReferenceFiles" data-toggle="modal" data-target="#select-images"><button type="button" class="btn btn-success btn-sm">Select existing files</button></div>');
-
     };
 
     var initUploader = function (element, url, initialPreview, initialPreviewConfig) {
         element.fileinput({
+            showSelect: true,
             showClose: false,
             uploadUrl: url,
             uploadAsync: true,
@@ -127,9 +125,6 @@
                 console.log('Key = ' + key);
             });;
 
-        $('.file-caption-main')
-            .append(
-            '<div style="float:left;width:10px;height:40px;" data-call-back-id="ReferenceFiles" data-toggle="modal" data-target="#select-images"><button type="button" class="btn btn-success btn-sm">Select existing files</button></div>');
     };
 
     var setupSelectImage = function (parameters) {

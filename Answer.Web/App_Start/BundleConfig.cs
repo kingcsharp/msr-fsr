@@ -14,7 +14,7 @@ namespace Answer.Web
                         "~/Scripts/jquery.validate*"));
 
             bundles.Add(new ScriptBundle("~/bundles/js/fileinput")
-                .Include("~/assets/js/BootstrapFileInput/js/fileinput.min.js")
+                .Include("~/assets/js/BootstrapFileInput/js/fileinput-custom.js")
                 .Include("~/assets/js/JqueryConfirm/jquery-confirm.min.js")
                 .Include("~/assets/js/bluebird.min.js")
                 .Include("~/assets/js/msr/fileupload/uploader.js")
