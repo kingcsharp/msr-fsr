@@ -166,7 +166,7 @@ namespace Answer.Web.Controllers
                 else
                 {
                     TempData["ErrorMessage"] = "Something went wrong.";
-                    model.Setup(new DocumentFilesService(), new CompanyService());
+                    model.Setup(_documentFilesService, _companyService);
                     return View(model);
                 }
             }
@@ -176,9 +176,7 @@ namespace Answer.Web.Controllers
 
         public ActionResult Edit(string id)
         {
-            var taskService = new CompanyService();
-
-            var model = taskService.GetCompanyByObjId(id);
+            var model = _companyService.GetCompanyByObjId(id);
 
             model.Setup(_documentFilesService, _companyService, GetCurrentUser().Id);
 
@@ -186,7 +184,16 @@ namespace Answer.Web.Controllers
             ViewBag.Preview = preview;
 
             var jsonSerialiser = new JavaScriptSerializer();
-            var previewConfig = jsonSerialiser.Serialize(model.DocLinks.Select(x => new { caption = x.NAME, type = x.TYPE, size = 6666, url = Url.Action("DeletesingleReference", "Documents", new { file = x.LINKED_DOC_ID }), downloadUrl = x.SERVER_PATH, key = x.LINKED_DOC_ID }));
+            var previewConfig = jsonSerialiser.Serialize(model.DocLinks.Select(x => new
+            {
+                caption = x.NAME,
+                type = x.TYPE,
+                size = 6666,
+                url = Url.Action("DeletesingleReference", "Documents", new {file = x.LINKED_DOC_ID}),
+                downloadUrl = x.SERVER_PATH,
+                key = x.LINKED_DOC_ID
+            }));
+
             ViewBag.PreviewConfig = previewConfig;
 
             return View(model);

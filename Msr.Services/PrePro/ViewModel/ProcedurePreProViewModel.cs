@@ -122,14 +122,6 @@ namespace Msr.Services.PrePro.ViewModel
                 Value = x.Value.ToString()
             }).OrderBy(o => o.Text).ToList();
 
-
-            ReferenceFilesList = preProServices.GetSelectedRefFiles(id: Id, ntlogin: currentUser.Id).Select(x => new SelectListItem
-            {
-                Text = x.Show,
-                Value = x.Value.ToString(),
-            }).OrderBy(o => o.Text).ToList();
-
-
             ReferenceTheoriesList = preProServices.GetSelectedRefTheories(id: Id).Select(x => new SelectListItem
             {
                 Text = x.Show,
