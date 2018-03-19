@@ -4,7 +4,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Mvc;
 using Msr.Models.PrePro;
-using Msr.Services.Orders.Messaging;
+using Msr.Services.Documents;
+using Msr.Services.Documents.ViewModels;
 using Msr.Services.Users.Messages;
 
 namespace Msr.Services.PrePro.ViewModel
@@ -19,7 +20,6 @@ namespace Msr.Services.PrePro.ViewModel
             ReferenceObjectsList = new List<SelectListItem>();
             ReferenceTheoriesList = new List<SelectListItem>();
             ReferenceVerbList = new List<SelectListItem>();
-            ReferenceFiles = new List<string>();
             Labors = new List<LaborObjectsView>();
         }
 
@@ -81,7 +81,7 @@ namespace Msr.Services.PrePro.ViewModel
         public string NumTestQuestion { get; set; }
 
         [DisplayName("Reference Files :")]
-        public List<string> ReferenceFiles { get; set; }
+        public string ReferenceFiles { get; set; }
 
         public string NTLogin { get; set; }
 
@@ -106,23 +106,11 @@ namespace Msr.Services.PrePro.ViewModel
 
         public IList<SelectListItem> ReferenceTheoriesList { get; set; }
 
-        public void Setup(PreProServices preProServices, LoggedUserIdResult currentUser)
+        public List<DocLink> DocLinks { get; set; }
+
+        public void Setup(PreProServices preProServices, DocumentFilesService documentFilesService, LoggedUserIdResult currentUser)
         {
-            BaseStartOnCounterList = new List<SelectListItem>
-            {
-                new SelectListItem
-                { Text = @"NO",
-                    Value = "0",
-                    Selected = true
-                },
-                new SelectListItem
-                {
-                    Text = @"YES",
-                    Value = "1"
-
-                }
-
-            };
+            BaseStartOnCounterList = LookupItems.YesNo();
 
             StepDurationTypeList = LookupItems.DurationType();
 
@@ -169,6 +157,8 @@ namespace Msr.Services.PrePro.ViewModel
                 RoleName = x.RoleName,
                 ObjDesc = x.Qty + " " + x.QtyType
             }).OrderBy(o => o.RoleName).ToList());
+
+            DocLinks = documentFilesService.GetDocByObjectId(id: ObjectId);
         }
 
         public ProcedurePreProViewModel MapToDto(PrePropSearchView model)

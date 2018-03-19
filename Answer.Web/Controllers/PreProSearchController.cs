@@ -5,17 +5,21 @@ using Msr.Web.ViewModel.Engineering;
 using System;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 using Msr.Models.PrePro;
+using Msr.Services.Documents;
 
 namespace Answer.Web.Controllers
 {
     public class PreProSearchController : BaseController
     {
         private readonly PreProServices _preProServices;
+        private readonly DocumentFilesService _documentFilesService;
 
         public PreProSearchController()
         {
             _preProServices = new PreProServices();
+            _documentFilesService = new DocumentFilesService();
         }
 
         public ActionResult Index()
@@ -29,9 +33,7 @@ namespace Answer.Web.Controllers
 
         public ActionResult PreProData(JqGridParam param)
         {
-            var preproService = new PreProServices();
-
-            var totalRows = preproService.GetPreProQueryable().Where(x => x.Status != "DELETED");
+            var totalRows = _preProServices.GetPreProQueryable().Where(x => x.Status != "DELETED");
 
             if (param.where != null && param.where.rules.Any())
             {
@@ -115,9 +117,7 @@ namespace Answer.Web.Controllers
 
         public ActionResult PreProDelete(string id, string ntlogin)
         {
-            var taskService = new PreProServices();
-
-            var response = taskService.Delete(id: id, ntlogin: ntlogin);
+            var response = _preProServices.Delete(id: id, ntlogin: ntlogin);
 
             if (response)
             {
@@ -132,14 +132,16 @@ namespace Answer.Web.Controllers
 
         public ActionResult Create()
         {
-            var model = new ProcedurePreProViewModel();
+            var currentUser = GetCurrentUser();
 
-            model.CreatingCo = GetCurrentUser().Company;
+            var model = new ProcedurePreProViewModel {CreatingCo = currentUser.Company};
 
-            model.Setup(new PreProServices(), GetCurrentUser());
+
+            model.Setup(new PreProServices(), new DocumentFilesService(), currentUser);
 
             return View(model);
         }
+
         [AcceptVerbs(HttpVerbs.Post)]
         [ValidateInput(false)]
         public ActionResult Create(ProcedurePreProViewModel model)
@@ -163,67 +165,82 @@ namespace Answer.Web.Controllers
                 {
                     TempData["ErrorMessage"] = "Something went wrong.";
 
-                    model.Setup(new PreProServices(), GetCurrentUser());
+                    model.Setup(new PreProServices(), new DocumentFilesService(), GetCurrentUser());
 
                     return View(model);
                 }
 
             }
 
-            model.Setup(new PreProServices(), GetCurrentUser());
+            model.Setup(new PreProServices(), new DocumentFilesService(), GetCurrentUser());
 
             return View(model);
         }
 
         public ActionResult Details(string id)
         {
-            var taskService = new PreProServices();
+            var currentUser = GetCurrentUser();
 
-            var model = taskService.GetById(id);
+            var model = _preProServices.GetById(id);
 
-            var part = new ProcedurePreProViewModel();
+            var vm = new ProcedurePreProViewModel();
 
-            part = part.MapToDto(model);
+            vm = vm.MapToDto(model);
 
-            part.Setup(new PreProServices(), GetCurrentUser());
+            vm.Setup(_preProServices, _documentFilesService, currentUser);
 
-            return View(part);
+            return View(vm);
         }
 
         public ActionResult Edit(string id)
         {
             var currentUser = GetCurrentUser();
 
-            var preProServices = new PreProServices();
+            var model = _preProServices.GetById(id);
 
-            var model = preProServices.GetById(id);
+            var vm = new ProcedurePreProViewModel();
 
-            var procedurePreProView = new ProcedurePreProViewModel();
+            vm = vm.MapToDto(model);
 
-            procedurePreProView = procedurePreProView.MapToDto(model);
+            vm.CreatingCo = currentUser.Company;
 
-            procedurePreProView.CreatingCo = currentUser.Company;
+            vm.Setup(_preProServices, _documentFilesService, currentUser);
 
-            procedurePreProView.Setup(new PreProServices(), currentUser);
+            var labors = _preProServices.GetLaborStepsList().Where(x => x.StepId == vm.ProcObjId).ToList();
 
-            var labors = _preProServices.GetLaborStepsList().Where(x => x.StepId == procedurePreProView.ProcObjId).ToList();
+            vm.Labor = labors;
+            vm.ApplicationObjects = "Object Description";
 
-            procedurePreProView.Labor = labors;
-            procedurePreProView.ApplicationObjects = "Object Description";
+            var preview = string.Join(",", vm.DocLinks.ToArray().Select(x => string.Format("{0}{1}{0}", "\'", x.SERVER_PATH)));
+            ViewBag.Preview = preview;
 
-            return View(procedurePreProView);
+            var jsonSerialiser = new JavaScriptSerializer();
+
+            var previewConfig = jsonSerialiser.Serialize(vm.DocLinks.Select(x => new
+            {
+                caption = x.NAME,
+                type = x.TYPE,
+                size = 6666,
+                url = Url.Action("DeletesingleReference", "Documents", new { file = x.LINKED_DOC_ID }),
+                downloadUrl = x.SERVER_PATH,
+                key = x.LINKED_DOC_ID
+            }));
+
+            ViewBag.PreviewConfig = previewConfig;
+
+            return View(vm);
         }
         [AcceptVerbs(HttpVerbs.Post)]
         [ValidateInput(false)]
         public ActionResult Edit(ProcedurePreProViewModel model)
         {
-            var preProServices = new PreProServices();
+            var currentUser = GetCurrentUser();
 
             if (ModelState.IsValid)
             {
-                model.NTLogin = GetCurrentUser().Id;
+                model.NTLogin = currentUser.Id;
 
-                var response = preProServices.Save(model: model);
+                var response = _preProServices.Save(model: model);
 
                 if (response)
                 {
@@ -234,12 +251,12 @@ namespace Answer.Web.Controllers
 
                 TempData["ErrorMessage"] = "Something went wrong.";
 
-                model.Setup(new PreProServices(), GetCurrentUser());
+                model.Setup(_preProServices, _documentFilesService, currentUser);
 
                 return View(model);
             }
 
-            model.Setup(new PreProServices(), GetCurrentUser());
+            model.Setup(_preProServices, _documentFilesService, currentUser);
 
             return View(model);
         }
@@ -404,20 +421,10 @@ namespace Answer.Web.Controllers
 
         public ActionResult ApplicableObjects(string id)
         {
-            var preProServices = new PreProServices();
-
-            //var role = preProServices.GetById(id);
-
             var applicableObjectsView = new ApplicableObjectsView();
 
             applicableObjectsView.StepId = id;
-            //applicableObjectsView = procedurePreProView.Read(role);
-
-            //applicableObjectsView.CreatingCo = GetCurrentUser().Company;
-
             applicableObjectsView.Setup(new PreProServices(), GetCurrentUser().Company);
-
-
 
             return View(applicableObjectsView);
 

@@ -1,5 +1,4 @@
 ﻿using EntityFrameworkExtras.EF6;
-using Msr.Models;
 using Msr.Models.Common;
 using Msr.Repositories;
 using Msr.Services.Parts.Procedures;
@@ -10,8 +9,6 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Msr.Models.PrePro;
 using Msr.Services.Documents.ViewModels;
 
@@ -38,10 +35,9 @@ namespace Msr.Services.PrePro
         public List<SelectFile> GetSelectedRefProcedures(string id, string ntlogin)
         {
             var objId = new SqlParameter("@ID", id ?? "0");
+            var ntLogin = new SqlParameter("@strNTLogin", ntlogin);
 
-            var NTLogin = new SqlParameter("@strNTLogin", ntlogin);
-
-            var result = _dbContext.Database.SqlQuery<SelectFile>("EXEC Portal_ProcedureStepGetRefProcedures @ID, @strNTLogin", objId, NTLogin).ToList();
+            var result = _dbContext.Database.SqlQuery<SelectFile>("EXEC Portal_ProcedureStepGetRefProcedures @ID, @strNTLogin", objId, ntLogin).ToList();
 
             return result;
         }
@@ -50,10 +46,9 @@ namespace Msr.Services.PrePro
         public List<SelectFile> GetSelectedRefFiles(string id, string ntlogin)
         {
             var objId = new SqlParameter("@procStepID", id ?? "0");
+            var ntLogin = new SqlParameter("@strNTLogin", ntlogin);
 
-            var NTLogin = new SqlParameter("@strNTLogin", ntlogin);
-
-            var result = _dbContext.Database.SqlQuery<SelectFile>("EXEC Portal_ProcedureStepGetRefFiles @procStepID, @strNTLogin", objId, NTLogin).ToList();
+            var result = _dbContext.Database.SqlQuery<SelectFile>("EXEC Portal_ProcedureStepGetRefFiles @procStepID, @strNTLogin", objId, ntLogin).ToList();
 
             return result;
         }
@@ -62,9 +57,9 @@ namespace Msr.Services.PrePro
         {
             var objId = new SqlParameter("@procStepID", id ?? "0");
 
-            var NTLogin = new SqlParameter("@strNTLogin", ntlogin);
+            var ntLogin = new SqlParameter("@strNTLogin", ntlogin);
 
-            var result = _dbContext.Database.SqlQuery<DocFile>("EXEC Portal_ProcedureStepGetRefFilesDialog @procStepID, @strNTLogin", objId, NTLogin).ToList();
+            var result = _dbContext.Database.SqlQuery<DocFile>("EXEC Portal_ProcedureStepGetRefFilesDialog @procStepID, @strNTLogin", objId, ntLogin).ToList();
 
             return result;
         }
@@ -88,9 +83,9 @@ namespace Msr.Services.PrePro
         {
             var objId = new SqlParameter("@ID", id ?? "0");
 
-            var NTLogin = new SqlParameter("@strNTLogin", ntlogin);
+            var ntLogin = new SqlParameter("@strNTLogin", ntlogin);
 
-            var result = _dbContext.Database.SqlQuery<LaborObjectsView>("EXEC Portal_GetProcedureStepLabors @ID, @strNTLogin", objId, NTLogin).ToList();
+            var result = _dbContext.Database.SqlQuery<LaborObjectsView>("EXEC Portal_GetProcedureStepLabors @ID, @strNTLogin", objId, ntLogin).ToList();
 
             return result;
         }
@@ -98,8 +93,8 @@ namespace Msr.Services.PrePro
         {
             try
             {
-                var NTLogin = ntlogin;
-                var deletePreproProcedure = new DeleteProcedureStepProcedure() { Objid = id, NTLogin = NTLogin };
+                var ntLogin = ntlogin;
+                var deletePreproProcedure = new DeleteProcedureStepProcedure() { Objid = id, NTLogin = ntLogin };
 
                 _dbContext.Database.ExecuteStoredProcedure(deletePreproProcedure);
 
@@ -107,8 +102,6 @@ namespace Msr.Services.PrePro
             }
             catch (Exception ex)
             {
-                var message = "Error occured:" + ex.Message;
-
                 return false;
             }
         }
@@ -153,23 +146,10 @@ namespace Msr.Services.PrePro
 
                 _dbContext.Database.ExecuteStoredProcedure(savePrePopProcedure);
 
-                var deletePictureFileProcedure = new DeleteProcedureStepFileLinkProcedure() { id = model.Id, NTLogin = model.NTLogin };
-
-                _dbContext.Database.ExecuteStoredProcedure(deletePictureFileProcedure);
-
-                foreach (var file in model.ReferenceFiles)
-                {
-                    var saveFileProcedure = new SaveProcedureStepFileLinkProcedure() { ObjId = model.Id, DocId = file, NTLogin = model.NTLogin };
-
-                    _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
-                }
-
                 return true;
             }
             catch (Exception ex)
             {
-                var message = "Error occured:" + ex.Message;
-
                 return false;
             }
         }
@@ -213,27 +193,32 @@ namespace Msr.Services.PrePro
 
                 _dbContext.Database.ExecuteStoredProcedure(savePartProcedure);
 
-                var savePrePopProcedure = new SavePrePopProcedure() { ObjId = null, ProcStepId = savePartProcedure.NewId, NTLogin = model.NTLogin };
+                var deleteReferenceFileProcedure = new DeleteFileProcedure() { ObjID = savePartProcedure.NewId, Type = null, NTLogin = model.NTLogin };
 
-                _dbContext.Database.ExecuteStoredProcedure(savePrePopProcedure);
+                _dbContext.Database.ExecuteStoredProcedure(deleteReferenceFileProcedure);
 
                 var deletePictureFileProcedure = new DeleteProcedureStepFileLinkProcedure() { id = savePartProcedure.NewId, NTLogin = model.NTLogin };
 
                 _dbContext.Database.ExecuteStoredProcedure(deletePictureFileProcedure);
 
-                foreach (var file in model.ReferenceFiles)
-                {
-                    var saveFileProcedure = new SaveProcedureStepFileLinkProcedure() { ObjId = savePartProcedure.NewId, DocId = file, NTLogin = model.NTLogin };
+                if (model.ReferenceFiles != null)
+                    foreach (var file in model.ReferenceFiles.Split(','))
+                    {
+                        var saveFileProcedure = new SaveFileProcedure()
+                        {
+                            ObjID = savePartProcedure.NewId,
+                            DocID = file,
+                            Type = null,
+                            NTLogin = model.NTLogin
+                        };
 
-                    _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
-                }
+                        _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
+                    }
 
                 return true;
             }
             catch (Exception ex)
             {
-                var message = "Error occured:" + ex.Message;
-
                 return false;
             }
         }
@@ -309,8 +294,6 @@ namespace Msr.Services.PrePro
             }
             catch (Exception ex)
             {
-                var message = "Error occured:" + ex.Message;
-
                 return false;
             }
         }
@@ -341,8 +324,6 @@ namespace Msr.Services.PrePro
             }
             catch (Exception ex)
             {
-                var message = "Error occured:" + ex.Message;
-
                 return false;
             }
         }

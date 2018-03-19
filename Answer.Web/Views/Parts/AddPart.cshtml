@@ -41,14 +41,7 @@
                         <div class="form-group">
                             @Html.LabelFor(model => model.ReferenceFiles, htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-8">
-                                <!-- Detailed preview for thumbs and iconic preview for zoom -->
-                                <div class="file-loading">
-                                    <input id="input-files" name="input-files[]" multiple type="file">
-                                </div>
-                                <div>
-                                    <input type="hidden" id="referenceFiles" name="referenceFiles" />
-                                    <span class="data-toggle=" style="float: right" data-call-back-id="ReferenceFiles" data-toggle="modal" data-target="#select-images"><button type="button" class="btn btn-success">Select existing files</button></span>
-                                </div>
+                                @Html.Partial("_FileUpload")
                             </div>
                         </div>
                         <button type="button" class="btn btn-info info collapsed" data-toggle="collapse" data-target="#AdvanceItems"></button>

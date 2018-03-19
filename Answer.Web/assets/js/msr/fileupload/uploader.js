@@ -11,7 +11,7 @@
             overwriteInitial: false,
             initialPreview: initialPreview,
             initialPreviewAsData: true,
-            initialPreviewFileType: 'image', 
+            initialPreviewFileType: 'image',
             initialPreviewConfig: initialPreviewConfig,
             uploadExtraData: {
                 objectId: objectId
@@ -49,7 +49,9 @@
                 //element.fileinput("upload");
             });
 
-        $('.file-caption-main').append('<div style="float: right;width:10px" data-call-back-id="ReferenceFiles" data-toggle="modal" data-target="#select-images"> <button type="button" class="btn btn-success btn-sm">Select existing files</button></div>')
+        $('.file-caption-main')
+            .append(
+            '<div style="float:left;width:10px;height:40px;" data-call-back-id="ReferenceFiles" data-toggle="modal" data-target="#select-images"><button type="button" class="btn btn-success btn-sm">Select existing files</button></div>');
 
     };
 
@@ -124,9 +126,13 @@
             }).on('filepredelete', function (event, key) {
                 console.log('Key = ' + key);
             });;
+
+        $('.file-caption-main')
+            .append(
+            '<div style="float:left;width:10px;height:40px;" data-call-back-id="ReferenceFiles" data-toggle="modal" data-target="#select-images"><button type="button" class="btn btn-success btn-sm">Select existing files</button></div>');
     };
 
-    var setupSelectImage = function(parameters) {
+    var setupSelectImage = function (parameters) {
 
         $('#select-images').on('show.bs.modal',
             function (event) {
@@ -170,7 +176,7 @@ function SelectIds(parameters) {
     var array = [];
     var objectId = $('#ObjectId').val();
 
-    $(".selected-file").each(function(index) {
+    $(".selected-file").each(function (index) {
 
         if ($(this).is(":checked")) {
             var ids = $(this).val().split('|');
@@ -184,10 +190,10 @@ function SelectIds(parameters) {
         type: "GET",
         url: '/Documents/AddsingleReference?linkDocId=' + objectId + "&files=" + array,
         dataType: 'html',
-        success: function(data) {
+        success: function (data) {
             location.reload();
         },
-        error: function() {
+        error: function () {
 
         }
     });

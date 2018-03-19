@@ -172,7 +172,7 @@
 
 
     function FilePreviewFormatter(cellvalue, options, rowObject) {
-        return FilePreview(cellvalue, options, rowObject);
+        return Msr.JqGridCommon.FilePreview(cellvalue, options, rowObject);
     }
 
     function CompaniesEditFormatter(cellvalue, options, rowObject) {

@@ -156,7 +156,7 @@
         $('.submitselect option').prop('selected', true);
     });
 })
-function SelectIds() {
+function SelectOldIds() {
 
     $(".selected-file").each(function (index) {
 
