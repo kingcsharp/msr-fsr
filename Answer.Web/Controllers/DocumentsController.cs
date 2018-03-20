@@ -31,9 +31,7 @@ namespace Answer.Web.Controllers
 
         public ActionResult DocumentsData(JqGridParam param)
         {
-            var documentService = new DocumentService();
-
-            var totalRows = documentService.GetDocumentsQueryable().Where(x => x.Status != "DELETED");
+            var totalRows = _documentService.GetDocumentsQueryable().Where(x => x.Status != "DELETED");
 
             if (param.where != null && param.where.rules.Any())
             {
@@ -141,15 +139,15 @@ namespace Answer.Web.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Create(SaveDocumentViewModel model)
         {
-            var documentService = new DocumentService();
+            var currentUser = GetCurrentUser();
 
             if (ModelState.IsValid)
             {
-                model.NTLogin = GetCurrentUser().Id;
+                model.NTLogin = currentUser.Id;
 
-                model.Company = GetCurrentUser().Company;
+                model.Company = currentUser.Company;
 
-                var response = documentService.Create(model);
+                var response = _documentService.Create(model);
 
                 if (response)
                 {

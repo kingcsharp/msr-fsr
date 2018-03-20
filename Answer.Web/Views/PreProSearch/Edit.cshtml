@@ -2,7 +2,8 @@
 @{
     ViewBag.Title = "Update Procedure Step Template";
 }
-@Styles.Render("~/bundles/css/fileinput")
+    @Styles.Render("~/bundles/css/fileinput")
+
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="row">
@@ -16,42 +17,43 @@
                         @using (Html.BeginForm("Edit", "PreProSearch", FormMethod.Post, new { @class = "form form-horizontal", @onSubmit = "escapeAllSelects();;", @name = "editForm", @target = "", @action = "" }))
                         {
                             @Html.AntiForgeryToken()
-                            <input type="hidden" id="Id" name="Id" value="@Model.Id" />
-                            <input type="hidden" id="ObjectId" name="ObjectId" value="@Model.ObjectId" />
-                            <input type="hidden" name="ProcObjId" value="@Model.ProcObjId" />
+                            @Html.HiddenFor(x=>x.Id)
+                            @Html.HiddenFor(x => x.ObjectId)
+                            @Html.HiddenFor(x => x.ProcObjId)
+
                             <div class="form-horizontal">
                                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
-                                    <div class="col-md-5">
+                                    <div class="col-md-8">
                                         @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
                                         @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.StartOnCounter, htmlAttributes: new { @class = "control-label col-md-2" })
-                                    <div class="col-md-5">
+                                    <div class="col-md-8">
                                         @Html.DropDownListFor(model => model.StartOnCounter, Model.BaseStartOnCounterList, new { @class = "form-control select" })
                                         @Html.ValidationMessageFor(model => model.StartOnCounter, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.Duration, htmlAttributes: new { @class = "control-label col-md-2" })
-                                    <div class="col-md-5">
+                                    <div class="col-md-8">
                                         @Html.EditorFor(model => model.Duration, new { htmlAttributes = new { @class = "form-control" } })
                                         @Html.ValidationMessageFor(model => model.Duration, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.DurationType, htmlAttributes: new { @class = "control-label col-md-2" })
-                                    <div class="col-md-5">
+                                    <div class="col-md-8">
                                         @Html.DropDownListFor(model => model.DurationType, Model.StepDurationTypeList, new { @class = "form-control select" })
                                         @Html.ValidationMessageFor(model => model.DurationType, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.Labor, htmlAttributes: new { @class = "control-label col-md-2" })
-                                    <div class="col-md-5">
+                                    <div class="col-md-8">
                                         @if (Model.Labors != null)
                                         {
                                             <table class="table table-bordered table-responsive">
@@ -77,14 +79,14 @@
                                 </div>
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.StepText, htmlAttributes: new { @class = "control-label col-md-2" })
-                                    <div class="col-md-5">
+                                    <div class="col-md-8">
                                         @Html.Partial("_TextAdder")
                                         @Html.TextAreaFor(model => model.StepText, new { onBlur = "checkMaxSize(this, 4000);;lastTextArea = 'document.editForm.StepText';", name = "StepText", rows = "10", cols = "80", @class = "text-formatter form-control", })
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.SystemTask, htmlAttributes: new { @class = "control-label col-md-2" })
-                                    <div class="col-md-5">
+                                    <div class="col-md-8">
                                         @Html.DropDownListFor(model => model.SystemTask, Model.SystemTaskList, new { @class = "form-control select" })
                                         @Html.ValidationMessageFor(model => model.SystemTask, "", new { @class = "text-danger" })
                                     </div>
@@ -92,7 +94,7 @@
                                 <div class="systemcomptest">
                                     <div class="form-group">
                                         @Html.LabelFor(model => model.NumTestQuestion, htmlAttributes: new { @class = "control-label col-md-2" })
-                                        <div class="col-md-5">
+                                        <div class="col-md-8">
                                             @Html.EditorFor(model => model.NumTestQuestion, new { htmlAttributes = new { @class = "form-control" } })
                                             @Html.ValidationMessageFor(model => model.NumTestQuestion, "", new { @class = "text-danger" })
                                         </div>
@@ -100,17 +102,16 @@
                                 </div>
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.ApplicationObjects, htmlAttributes: new { @class = "control-label col-md-2" })
-                                    <div class="col-md-5">
+                                    <div class="col-md-8">
                                         <div style="width: 96%; float: left;">
                                             @Html.TextBoxFor(m => m.ApplicationObjects, new { @class = "form-control submitselect", @readonly = "readonly" })
                                             @Html.ValidationMessageFor(model => model.ApplicationObjects, "", new { @class = "text-danger" })
                                         </div>
-                                        @*<div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="REFERENCE_OBJECT" data-toggle="modal" data-target="#select-objects"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="REFERENCE_OBJECT"><i class="icon fa fa-trash"></i></span> </div>*@
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.ReferenceProcedures, htmlAttributes: new { @class = "control-label col-md-2" })
-                                    <div class="col-md-5">
+                                    <div class="col-md-8">
                                         <div style="width: 96%; float: left;">
                                             @Html.ListBoxFor(m => m.ReferenceProcedures, Model.ReferenceProceduresList, new { @class = "form-control  submitselect" })
                                             @Html.ValidationMessageFor(model => model.ReferenceProcedures, "", new { @class = "text-danger" })
@@ -123,35 +124,33 @@
                             </div>
                             <div class="form-group">
                                 @Html.LabelFor(model => model.ReferenceVerb, htmlAttributes: new { @class = "control-label col-md-2" })
-                                <div class="col-md-5">
+                                <div class="col-md-8">
                                     <div>
                                         @Html.DropDownListFor(m => m.ReferenceVerb, Model.ReferenceVerbList, new { @class = "form-control select" })
                                         @Html.ValidationMessageFor(model => model.ReferenceVerb, "", new { @class = "text-danger" })
                                     </div>
-                                    @*<div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="REFERENCE_OBJECT" data-toggle="modal" data-target="#select-objects"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="REFERENCE_OBJECT"><i class="icon fa fa-trash"></i></span> </div>*@
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 @Html.LabelFor(model => model.ReferenceObject, htmlAttributes: new { @class = "control-label col-md-2" })
-                                <div class="col-md-5">
+                                <div class="col-md-8">
                                     <div>
                                         @Html.DropDownListFor(m => m.ReferenceObject, Model.ReferenceObjectsList, new { @class = "form-control  select" })
                                         @Html.ValidationMessageFor(model => model.ReferenceObject, "", new { @class = "text-danger" })
                                     </div>
-                                    @*<div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="REFERENCE_OBJECT" data-toggle="modal" data-target="#select-objects"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="REFERENCE_OBJECT"><i class="icon fa fa-trash"></i></span> </div>*@
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 @Html.LabelFor(model => model.ReferenceFiles, htmlAttributes: new { @class = "control-label col-md-2" })
-                                <div class="col-md-5">
+                                <div class="col-md-8">
                                     @Html.Partial("_FileUpload")
                                 </div>
                             </div>
                             <div class="form-group">
                                 @Html.LabelFor(model => model.ReferenceTheories, htmlAttributes: new { @class = "control-label col-md-2" })
-                                <div class="col-md-5">
+                                <div class="col-md-8">
                                     <div style="width: 96%; float: left;">
                                         @Html.ListBoxFor(m => m.ReferenceTheories, Model.ReferenceTheoriesList, new { @class = "form-control submitselect", multiple = "multiple" })
                                     </div>
@@ -162,8 +161,8 @@
                             </div>
                             <div class="form-group">
                                 @Html.LabelFor(model => model.Comments, htmlAttributes: new { @class = "control-label col-md-2" })
-                                <div class="col-md-5">
-                                    @Html.TextAreaFor(model => model.Comments, new { onBlur = "checkMaxSize(this, 4000);;lastTextArea = 'document.editForm.Comments';", name = "Comments", rows = "10", cols = "80", @class = "text-formatter", style = "height:150px;" })
+                                <div class="col-md-8">
+                                    @Html.TextAreaFor(model => model.Comments, new { onBlur = "checkMaxSize(this, 4000);;lastTextArea = 'document.editForm.Comments';", name = "Comments", rows = "10", cols = "80", @class = "text-formatter", style = "height:150px;width:100%;" })
                                     @Html.ValidationMessageFor(model => model.Comments, "", new { @class = "text-danger" })
                                 </div>
                             </div>
@@ -187,6 +186,7 @@
     @Scripts.Render("~/bundles/js/jqueryval")
     @Scripts.Render("~/bundles/js/fileinput")
     <script src="~/assets/js/grids/comman.js"></script>
+
     <script type="text/javascript">
 
         $(document).ready(function () {

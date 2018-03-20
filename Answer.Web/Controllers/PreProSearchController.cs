@@ -117,7 +117,7 @@ namespace Answer.Web.Controllers
 
         public ActionResult PreProDelete(string id, string ntlogin)
         {
-            var response = _preProServices.Delete(id: id, ntlogin: ntlogin);
+            var response = _preProServices.Delete(id, ntlogin);
 
             if (response)
             {

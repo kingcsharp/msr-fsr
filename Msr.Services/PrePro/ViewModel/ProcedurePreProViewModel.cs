@@ -56,6 +56,7 @@ namespace Msr.Services.PrePro.ViewModel
         [DisplayName("Reference Object:")]
         public string ReferenceObject { get; set; }
 
+        [DisplayName("Reference Theories:")]
         public List<string> ReferenceTheories { get; set; }
 
         [DisplayName("Reference Procedure:")]
