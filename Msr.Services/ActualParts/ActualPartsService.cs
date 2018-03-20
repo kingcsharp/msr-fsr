@@ -6,6 +6,7 @@ using Msr.Repositories;
 using Msr.Models.ActualParts;
 using System.Data.SqlClient;
 using System.Web;
+using Amazon.Runtime.Internal;
 using Msr.Services.ActualParts.ViewModels;
 using EntityFrameworkExtras.EF6;
 using ExcelDataReader;
@@ -204,41 +205,37 @@ namespace Msr.Services.ActualParts
             }
         }
 
-        public ResultNotification<string> ImportActualParts(HttpPostedFileBase postedFile, LoggedUserIdResult ntLogin)
+        public ResultNotification<List<ActualPartImportViewModel>> ImportActualParts(HttpPostedFileBase postedFile, LoggedUserIdResult ntLogin)
         {
-            var result = new ResultNotification<string>();
+            var result = new ResultNotification<List<ActualPartImportViewModel>>
+            {
+                Entity = new AutoConstructedList<ActualPartImportViewModel>()
+            };
+
             try
             {
-                var stream = postedFile.InputStream;
-
-                IExcelDataReader reader;
-
-
-                if (postedFile.FileName.EndsWith(".xls"))
+                if (!postedFile.FileName.EndsWith(".csv"))
                 {
-                    reader = ExcelReaderFactory.CreateBinaryReader(stream);
-                }
-                else if (postedFile.FileName.EndsWith(".xlsx"))
-                {
-                    reader = ExcelReaderFactory.CreateOpenXmlReader(stream);
-                }
-                else
-                {
-                    result.AddError("This file format is not supported");
+                    result.AddError("The import file must be a tab delimited text file");
                     return result;
                 }
-                var datatableAsDataSet = reader.AsDataSet(new ExcelDataSetConfiguration()
+
+                var reader = ExcelReaderFactory.CreateCsvReader(postedFile.InputStream);
+
+                var ds = reader.AsDataSet(new ExcelDataSetConfiguration()
                 {
                     ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
                     {
                         UseHeaderRow = true
                     }
                 });
+
                 reader.Close();
 
-                var columnNames = (from dc in datatableAsDataSet.Tables[0].Columns.Cast<DataColumn>()
+                var columnNames = (from dc in ds.Tables[0].Columns.Cast<DataColumn>()
                                    select dc.ColumnName).ToList();
-                string[] primes = { "Id", "SN", "NickName", "Owner", "PartId", "Qty", "LocationId", "ParentId" };
+
+                var primes = ActualPartImportViewModel.GetHeaderColumns();
 
                 var results = primes.Where(m => !columnNames.Contains(m));
                 bool isSubset = primes.Intersect(columnNames).Count() == primes.Count();
@@ -248,7 +245,7 @@ namespace Msr.Services.ActualParts
                     return result;
                 }
 
-                var modelList = Enumerable.Select(datatableAsDataSet.Tables[0].AsEnumerable(), item => new ActualPartImportViewModel
+                var modelList = Enumerable.Select(ds.Tables[0].AsEnumerable(), item => new ActualPartImportViewModel
                 {
                     Id = item["Id"].ToString(),
                     Sn = item["SN"].ToString(),
@@ -261,36 +258,46 @@ namespace Msr.Services.ActualParts
                 }).ToList();
 
 
-                if (modelList.Count > 0)
+                foreach (var model in modelList)
                 {
-                    foreach (var model in modelList)
-                    {
-                        var actualPartsImportUpdateExternalProcedure = new ActualPartsImportUpdateExternalProcedure();
-                        if (!string.IsNullOrWhiteSpace(model.NickName))
-                        {
-                            actualPartsImportUpdateExternalProcedure.Id = model.Id;
-                            actualPartsImportUpdateExternalProcedure.PartId = model.PartId;
-                            actualPartsImportUpdateExternalProcedure.PartOwner = model.Owner;
-                            actualPartsImportUpdateExternalProcedure.PartSN = model.Sn;
-                            actualPartsImportUpdateExternalProcedure.PartNickName = model.NickName;
-                            actualPartsImportUpdateExternalProcedure.PartQty = model.Qty;
-                            actualPartsImportUpdateExternalProcedure.LocationId = model.LocationId;
-                            actualPartsImportUpdateExternalProcedure.ParentId = model.ParentId;
-                            actualPartsImportUpdateExternalProcedure.NtLogin = ntLogin.Id;
-                            _dbContext.Database.ExecuteStoredProcedure(actualPartsImportUpdateExternalProcedure);
 
-                            result.SuccessMessage = actualPartsImportUpdateExternalProcedure.NewId;
-                        }
-                        else
-                        {
-                            result.AddError("Actual Part Name is empty");
-                        }
+                    if (string.IsNullOrWhiteSpace(model.Id))
+                    {
+                        model.Messages.Add("Id is required");
                     }
+
+                    if (string.IsNullOrWhiteSpace(model.Sn))
+                    {
+                        model.Messages.Add("SN is required");
+                    }
+                    if (string.IsNullOrWhiteSpace(model.NickName))
+                    {
+                        model.Messages.Add("NickName is required");
+                    }
+                    if (model.Messages.Any())
+                    {
+                        result.Entity.Add(model);
+                        continue;
+                    }
+
+                    var actualPartsImportUpdateExternalProcedure = new ActualPartsImportUpdateExternalProcedure();
+
+                    actualPartsImportUpdateExternalProcedure.Id = model.Id;
+                    actualPartsImportUpdateExternalProcedure.PartId = model.PartId;
+                    actualPartsImportUpdateExternalProcedure.PartOwner = model.Owner;
+                    actualPartsImportUpdateExternalProcedure.PartSN = model.Sn;
+                    actualPartsImportUpdateExternalProcedure.PartNickName = model.NickName;
+                    actualPartsImportUpdateExternalProcedure.PartQty = model.Qty;
+                    actualPartsImportUpdateExternalProcedure.LocationId = model.LocationId;
+                    actualPartsImportUpdateExternalProcedure.ParentId = model.ParentId;
+                    actualPartsImportUpdateExternalProcedure.NtLogin = ntLogin.Id;
+                    _dbContext.Database.ExecuteStoredProcedure(actualPartsImportUpdateExternalProcedure);
+
+                    model.Processed = true;
+                    model.Messages.Add(actualPartsImportUpdateExternalProcedure.NewId);
+                    result.Entity.Add(model);
                 }
-                else
-                {
-                    result.AddError("Nothing to upload file is empty");
-                }
+
                 return result;
             }
             catch (Exception ex)

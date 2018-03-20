@@ -11,6 +11,7 @@ using System;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Msr.Infrastructure.Common.Constansts;
 using Msr.Services.Companies;
 using Msr.Services.Orders;
 using Msr.Services.Roles;
@@ -400,30 +401,46 @@ namespace Answer.Web.Controllers
         [HttpPost]
         public ActionResult Import(HttpPostedFileBase postedFile)
         {
-            if (ModelState.IsValid)
+
+            if (postedFile != null && postedFile.ContentLength > 0)
             {
+                var currentUser = GetCurrentUser();
 
-                if (postedFile != null && postedFile.ContentLength > 0)
+                var actualPartsService = new ActualPartsService();
+
+                var response = actualPartsService.ImportActualParts(postedFile, currentUser);
+
+                if (response.HasErrors())
                 {
-                    var actualPartsService = new ActualPartsService();
-
-                    var response = actualPartsService.ImportActualParts(postedFile, GetCurrentUser());
-
-                    if (!response.HasErrors())
+                    TempData[NotificationConstants.ErrrorMessage] = response.ErrorMessage;
+                }
+                else
+                {
+                    if (response.Entity.Any(x => !x.Processed))
                     {
-                        TempData["SuccessMessage"] = response.SuccessMessage;
-                        return RedirectToAction("Index");
+                        TempData[NotificationConstants.WarningMessage] = "File has been processed with errors";
                     }
-
-                    TempData["ErrorMessage"] = response.ErrorMessage;
-                    return View();
+                    else
+                    {
+                        TempData[NotificationConstants.SuccessMessage] = "File has been processed successfully";
+                    }
                 }
 
-                ModelState.AddModelError("File", "Please Upload Your file");
-                return View();
+                return View(response.Entity);
             }
-            ModelState.AddModelError("File", "Please Upload Your file");
+
+            TempData[NotificationConstants.ErrrorMessage] = "Please upload a file";
+
             return View();
+        }
+
+        public void ImportSampleFile()
+        {
+            Response.Clear();
+            Response.ContentType = "text/csv";
+            Response.AddHeader("Content-Disposition", "attachment;filename=actual-parts-upload.csv");
+            Response.Write(string.Join(",", ActualPartImportViewModel.GetHeaderColumns()));
+            Response.End();
         }
     }
 }

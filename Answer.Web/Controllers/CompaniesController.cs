@@ -298,7 +298,7 @@ namespace Answer.Web.Controllers
         {
             Response.Clear();
             Response.ContentType = "text/csv";
-            Response.AddHeader("Content-Disposition", "attachment;filename=parts-upload.csv");
+            Response.AddHeader("Content-Disposition", "attachment;filename=companies-upload.csv");
             Response.Write(string.Join(",", CompanyImportViewModel.GetHeaderColumns()));
             Response.End();
         }

@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<Msr.Services.ActualParts.ViewModels.ActualPartImportViewModel>
 @{
-    ViewBag.Title = "Actual Parts Upload";
+    ViewBag.Title = "Actual Parts Import";
 }
 <style>
     .validation-summary-errors {
@@ -11,13 +11,13 @@
     <div class="side-body padding-top">
         <div class="row">
             <h2 class="page-header">
-                Add File<button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
+                Import File @Html.Partial("_HelpViewButton")
             </h2>
             <div class="col-lg-10">
                 <div class="form-horizontal">
                     @Html.Partial("Message")
                     <div class="row">
-                        <div class="alert alert-warning">
+                        <div >
                             The Import File must be a Excel file<br />
                             It must have these columns in any order id, sn, nickname, owner, partID, qty<br />
                             The file must have the column names as the first row capitalized and spelled like above<br />
@@ -30,22 +30,83 @@
                             qty = the qty of this actual part.<br />
                             locationID = the unique ID of the location of this actual part in the external database or ANSWER database.<br />
                         </div>
-                        <div class="alert alert-info">
-                            <a class="btn btn-link" href="https://ra2.s3.amazonaws.com/Answer2/51029aae-b96f-46e5-bf04-b7ac1e9dffbc-Part.xlsx" target="_blank">Download excel file sample </a>
-                        </div>
+                       
                     </div>
                     @using (Html.BeginForm("Import", "ActualParts", FormMethod.Post, new { enctype = "multipart/form-data" }))
                     {
                         @Html.AntiForgeryToken()
                         @Html.ValidationSummary()
-                        <label class="btn btn-primary" for="postedFile">
-                            <input id="postedFile" type="file" name="postedFile" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" style="display:none" onchange="$('#upload-file-info').html(this.files[0].name)" />
-                            Browse...
-                        </label>
-                        <span class='label label-info' id="upload-file-info"></span><br />
-                        <input type="submit" class="btn btn-success" value="Process Import" />
+                        <table>
+                            <tr>
+                                <td>
+                                    <label class="btn btn-primary" for="postedFile">
+                                        <input id="postedFile" type="file" name="postedFile" accept=".csv" style="display:none" onchange="$('#upload-file-info').html(this.files[0].name)" />
+                                        Browse...
+                                    </label>
+                                </td>
+                                <td style="padding-left: 5px;">
+                                    <input type="submit" class="btn btn-success" value="Process Import" />
+                                </td>
+                                <td style="padding-left: 5px;">
+                                    <a class="btn btn-link" href="~/ActualParts/ImportSampleFile" target="_blank">Download sample file </a>
+                                </td>
+                            </tr>
+                        </table>
                     }
                 </div>
+                
+                @if (Model != null && Model.Any())
+                {
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Id)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Sn)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.NickName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Processed)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Messages)
+                            </th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Id)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Sn)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.NickName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Processed)
+                                </td>
+                                <td>
+                                    @foreach (var message in item.Messages)
+                                    {
+                                        @message <br />
+                                    }
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                }
+                
+
             </div>
         </div>
     </div>
