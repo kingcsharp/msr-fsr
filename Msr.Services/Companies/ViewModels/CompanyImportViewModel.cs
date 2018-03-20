@@ -1,10 +1,15 @@
-﻿namespace Msr.Services.Companies.ViewModels
+﻿using System.Collections.Generic;
+
+namespace Msr.Services.Companies.ViewModels
 {
     public class CompanyImportViewModel
     {
+        public CompanyImportViewModel()
+        {
+            Messages = new List<string>();
+        }
+        
         public string NewId { get; set; }
-
-        public string Messages { get; set; }
 
         public string Id { get; set; }
 
@@ -39,5 +44,14 @@
         public string LinkedId { get; set; }
 
         public string StrNtLogin { get; set; }
+
+        public bool Processed { get; set; }
+
+        public List<string> Messages { get; set; }
+
+        public static List<string> GetHeaderColumns()
+        {
+            return new List<string> { "Id", "Name", "Address", "City", "State", "Zip", "Country", "ShipName", "ShipAddress", "ShipCity", "ShipState", "ShipZip", "ShipCountry", "Phone", "LinkedId" };
+        }
     }
 }

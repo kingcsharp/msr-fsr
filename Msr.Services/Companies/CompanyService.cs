@@ -160,29 +160,23 @@ namespace Msr.Services.Companies
             }
         }
 
-        public ResultNotification<string> ImportCompanies(HttpPostedFileBase postedFile, LoggedUserIdResult ntLogin)
+        public ResultNotification<List<CompanyImportViewModel>> ImportCompanies(HttpPostedFileBase postedFile, LoggedUserIdResult ntLogin)
         {
-            var result = new ResultNotification<string>();
+            var result = new ResultNotification<List<CompanyImportViewModel>>
+            {
+                Entity = new List<CompanyImportViewModel>()
+            };
+
             try
             {
-                var stream = postedFile.InputStream;
-
-                IExcelDataReader reader;
-
-
-                if (postedFile.FileName.EndsWith(".xls"))
+                if (!postedFile.FileName.EndsWith(".csv"))
                 {
-                    reader = ExcelReaderFactory.CreateBinaryReader(stream);
-                }
-                else if (postedFile.FileName.EndsWith(".xlsx"))
-                {
-                    reader = ExcelReaderFactory.CreateOpenXmlReader(stream);
-                }
-                else
-                {
-                    result.AddError("This file format is not supported");
+                    result.AddError("The import file must be a tab delimited text file");
                     return result;
                 }
+
+                var reader = ExcelReaderFactory.CreateCsvReader(postedFile.InputStream);
+
                 var resultAsDataSet = reader.AsDataSet(new ExcelDataSetConfiguration()
                 {
                     ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
@@ -190,21 +184,25 @@ namespace Msr.Services.Companies
                         UseHeaderRow = true
                     }
                 });
+
                 reader.Close();
 
                 var columnNames = (from dc in resultAsDataSet.Tables[0].Columns.Cast<DataColumn>()
                                    select dc.ColumnName).ToList();
-                string[] primes = { "Id", "Name", "Address", "City", "State", "Zip", "Country", "ShipName", "ShipAddress", "ShipCity", "ShipState", "ShipZip", "ShipCountry", "Phone", "LinkedId" };
+
+               var primes = CompanyImportViewModel.GetHeaderColumns();
 
                 var results = primes.Where(m => !columnNames.Contains(m));
+
                 bool isSubset = primes.Intersect(columnNames).Count() == primes.Count();
+
                 if (!isSubset)
                 {
                     result.AddError("Coloums missing : (" + string.Join(",", results) + ") to create Company");
                     return result;
                 }
 
-                var modelList = Enumerable.Select(resultAsDataSet.Tables[0].AsEnumerable(), item => new CompanyImportViewModel()
+                var list = Enumerable.Select(resultAsDataSet.Tables[0].AsEnumerable(), item => new CompanyImportViewModel()
                 {
                     Id = item["Id"].ToString(),
                     Name = item["Name"].ToString(),
@@ -224,44 +222,49 @@ namespace Msr.Services.Companies
 
                 }).ToList();
 
-                if (modelList.Count > 0)
+                foreach (var item in list)
                 {
-                    foreach (var model in modelList)
+                    if (string.IsNullOrWhiteSpace(item.Id))
                     {
-                        var companiesImportExternalProcedure = new CompaniesImportExternalProcedure();
-                        if (!string.IsNullOrWhiteSpace(model.Name))
-                        {
-                            companiesImportExternalProcedure.Id = model.Id;
-                            companiesImportExternalProcedure.Name = model.Name;
-                            companiesImportExternalProcedure.Address = model.Address;
-                            companiesImportExternalProcedure.City = model.City;
-                            companiesImportExternalProcedure.State = model.State;
-                            companiesImportExternalProcedure.Zip = model.Zip;
-                            companiesImportExternalProcedure.Country = model.Country;
-                            companiesImportExternalProcedure.ShipName = model.ShipName;
-                            companiesImportExternalProcedure.ShipAddress = model.ShipAddress;
-                            companiesImportExternalProcedure.ShipCity = model.ShipCity;
-                            companiesImportExternalProcedure.ShipState = model.ShipState;
-                            companiesImportExternalProcedure.ShipZip = model.ShipZip;
-                            companiesImportExternalProcedure.ShipCountry = model.ShipCountry;
-                            companiesImportExternalProcedure.Phone = model.Phone;
-                            companiesImportExternalProcedure.SupplierId = ntLogin.Root_Company;
-                            companiesImportExternalProcedure.LinkedId = model.LinkedId;
-                            companiesImportExternalProcedure.StrNtLogin = ntLogin.Id;
-                            _dbContext.Database.ExecuteStoredProcedure(companiesImportExternalProcedure);
-
-                            result.SuccessMessage = companiesImportExternalProcedure.NewId;
-                        }
-                        else
-                        {
-                            result.AddError("Part Name is empty");
-                        }
+                        item.Messages.Add("Id is required");
                     }
+
+                    if (string.IsNullOrWhiteSpace(item.Name))
+                    {
+                        item.Messages.Add("Name is required");
+                    }
+                 
+                    if (item.Messages.Any())
+                    {
+                        result.Entity.Add(item);
+                        continue;
+                    }
+
+                    var importProcedure = new CompaniesImportExternalProcedure();
+                    importProcedure.Id = item.Id;
+                    importProcedure.Name = item.Name;
+                    importProcedure.Address = item.Address;
+                    importProcedure.City = item.City;
+                    importProcedure.State = item.State;
+                    importProcedure.Zip = item.Zip;
+                    importProcedure.Country = item.Country;
+                    importProcedure.ShipName = item.ShipName;
+                    importProcedure.ShipAddress = item.ShipAddress;
+                    importProcedure.ShipCity = item.ShipCity;
+                    importProcedure.ShipState = item.ShipState;
+                    importProcedure.ShipZip = item.ShipZip;
+                    importProcedure.ShipCountry = item.ShipCountry;
+                    importProcedure.Phone = item.Phone;
+                    importProcedure.SupplierId = ntLogin.Root_Company;
+                    importProcedure.LinkedId = item.LinkedId;
+                    importProcedure.StrNtLogin = ntLogin.Id;
+                    _dbContext.Database.ExecuteStoredProcedure(importProcedure);
+
+                    item.Processed = true;
+                    item.Messages.Add(importProcedure.NewId);
+                    result.Entity.Add(item);
                 }
-                else
-                {
-                    result.AddError("Nothing to upload file is empty");
-                }
+
                 return result;
             }
             catch (Exception ex)
