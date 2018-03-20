@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using Answer.Web.ViewModel;
+using Msr.Infrastructure.Common.Constansts;
 using Msr.Services.Documents;
 using Msr.Services.Parts.ViewModels;
 using Msr.Services.PartTypes;
@@ -360,28 +361,45 @@ namespace Answer.Web.Controllers
         [HttpPost]
         public ActionResult Import(HttpPostedFileBase postedFile)
         {
-            if (ModelState.IsValid)
+            if (postedFile != null && postedFile.ContentLength > 0)
             {
+                var currentUser = GetCurrentUser();
 
-                if (postedFile != null && postedFile.ContentLength > 0)
+                var response = _partsService.ImportParts(postedFile, currentUser.Id);
+
+                if (response.HasErrors())
                 {
-                    var response = _partsService.ImportParts(postedFile, GetCurrentUser().Id);
-
-                    if (!response.HasErrors())
+                    TempData[NotificationConstants.ErrrorMessage] = response.ErrorMessage;
+                }
+                else
+                {
+                    if (response.Entity.Any(x => !x.Processed))
                     {
-                        TempData["SuccessMessage"] = response.SuccessMessage;
-                        return RedirectToAction("Index");
+                        TempData[NotificationConstants.WarningMessage] = "File has been processed with errors";
                     }
-
-                    TempData["ErrorMessage"] = response.ErrorMessage;
-                    return View();
+                    else
+                    {
+                        TempData[NotificationConstants.SuccessMessage] = "File has been processed successfully";
+                    }
                 }
 
-                ModelState.AddModelError("File", "Please Upload Your file");
-                return View();
+                return View(response.Entity);
             }
-            ModelState.AddModelError("File", "Please Upload Your file");
+
+            TempData[NotificationConstants.ErrrorMessage] = "Please upload a file";
+
             return View();
         }
+
+        public void ImportSampleFile()
+        {
+            var cols = new List<string> {"PartId", "Name"};
+            Response.Clear();
+            Response.ContentType = "text/csv";
+            Response.AddHeader("Content-Disposition", "attachment;filename=parts-upload.csv");
+            Response.Write(string.Join(",", cols));
+            Response.End();
+        }
+
     }
 }

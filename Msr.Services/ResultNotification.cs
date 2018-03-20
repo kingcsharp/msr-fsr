@@ -23,5 +23,7 @@ namespace Msr.Services
         }
 
         public string ErrorMessage => string.Join(",", _errors);
+
+        public List<string> ErrorList => _errors;
     }
 }

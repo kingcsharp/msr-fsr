@@ -321,29 +321,23 @@ namespace Msr.Services.Parts
             return result;
         }
 
-        public ResultNotification<string> ImportParts(HttpPostedFileBase postedFile, string ntLogin)
+        public ResultNotification<List<ImportPartViewModel>> ImportParts(HttpPostedFileBase postedFile, string ntLogin)
         {
-            var result = new ResultNotification<string>();
+            var result = new ResultNotification<List<ImportPartViewModel>>
+            {
+                Entity = new List<ImportPartViewModel>()
+            };
 
             try
             {
-                var stream = postedFile.InputStream;
-
-                IExcelDataReader reader;
-
-                if (postedFile.FileName.EndsWith(".xls"))
+                if (!postedFile.FileName.EndsWith(".csv"))
                 {
-                    reader = ExcelReaderFactory.CreateBinaryReader(stream);
-                }
-                else if (postedFile.FileName.EndsWith(".xlsx"))
-                {
-                    reader = ExcelReaderFactory.CreateOpenXmlReader(stream);
-                }
-                else
-                {
-                    result.AddError("This file format is not supported");
+                    result.AddError("The import file must be a tab delimited text file");
                     return result;
                 }
+
+                var reader = ExcelReaderFactory.CreateCsvReader(postedFile.InputStream);
+
                 var resultAsDataSet = reader.AsDataSet(new ExcelDataSetConfiguration()
                 {
                     ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
@@ -354,49 +348,27 @@ namespace Msr.Services.Parts
 
                 reader.Close();
 
-                var columnNames = (from dc in resultAsDataSet.Tables[0].Columns.Cast<DataColumn>()
-                                   select dc.ColumnName).ToList();
-                string[] primes = { "PartId", "Name" };
+                var columnNames = (from dc in resultAsDataSet.Tables[0].Columns.Cast<DataColumn>() select dc.ColumnName)
+                    .ToList();
+                string[] primes = {"PartId", "Name"};
 
                 var results = primes.Where(m => !columnNames.Contains(m));
+
                 bool isSubset = primes.Intersect(columnNames).Count() == primes.Count();
+
                 if (!isSubset)
                 {
                     result.AddError("Coloums missing : (" + string.Join(",", results) + ") to create Part");
                     return result;
                 }
 
-                var modelList = Enumerable.Select(resultAsDataSet.Tables[0].AsEnumerable(), item => new AddPartViewModel
+                var parts = resultAsDataSet.Tables[0].AsEnumerable().Select(item => new ImportPartViewModel
                 {
-                    CompanyPartNumber = item["PartId"].ToString(),
+                    PartId = item["PartId"].ToString(),
                     Name = item["Name"].ToString()
                 }).ToList();
 
-
-                if (modelList.Count > 0)
-                {
-                    foreach (var model in modelList)
-                    {
-                        var partsImportAndUpdateExternalPartProcedure = new PartsImportAndUpdateExternalPartProcedure {ExternalPartId = model.CompanyPartNumber};
-
-                        if (!string.IsNullOrWhiteSpace(model.Name))
-                        {
-                            partsImportAndUpdateExternalPartProcedure.PartName = model.Name;
-                            partsImportAndUpdateExternalPartProcedure.StrNtLogin = ntLogin;
-                            _dbContext.Database.ExecuteStoredProcedure(partsImportAndUpdateExternalPartProcedure);
-
-                            result.SuccessMessage = partsImportAndUpdateExternalPartProcedure.NewId;
-                        }
-                        else
-                        {
-                            result.AddError("Name is empty");
-                        }
-                    }
-                }
-                else
-                {
-                    result.AddError("Nothing to upload file is empty");
-                }
+                ProcessRow(ntLogin, parts, result);
 
                 return result;
             }
@@ -405,6 +377,41 @@ namespace Msr.Services.Parts
                 result.AddError(ex.Message);
 
                 return result;
+            }
+        }
+
+        private void ProcessRow(string ntLogin, List<ImportPartViewModel> parts, ResultNotification<List<ImportPartViewModel>> result)
+        {
+            foreach (var part in parts)
+            {
+                if (string.IsNullOrWhiteSpace(part.PartId))
+                {
+                    part.Messages.Add("PartId is required");
+                }
+
+                if (string.IsNullOrWhiteSpace(part.Name))
+                {
+                    part.Messages.Add("Name is required");
+                }
+
+                if (part.Messages.Any())
+                {
+                    result.Entity.Add(part);
+                    continue;
+                }
+
+                var partsImportAndUpdateExternalPartProcedure = new PartsImportAndUpdateExternalPartProcedure
+                {
+                    ExternalPartId = part.PartId,
+                    PartName = part.Name,
+                    StrNtLogin = ntLogin
+                };
+
+                _dbContext.Database.ExecuteStoredProcedure(partsImportAndUpdateExternalPartProcedure);
+                part.Processed = true;
+                part.Messages.Add(partsImportAndUpdateExternalPartProcedure.NewId);
+
+                result.Entity.Add(part);
             }
         }
     }

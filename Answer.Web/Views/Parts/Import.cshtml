@@ -1,6 +1,7 @@
-﻿@model IEnumerable<Msr.Services.Companies.ViewModels.CompanyImportViewModel>
+﻿@model IEnumerable<Msr.Services.Parts.ViewModels.ImportPartViewModel>
+
 @{
-    ViewBag.Title = "Part Import";
+    ViewBag.Title = "Parts Import";
 }
 <style>
     .validation-summary-errors {
@@ -12,33 +13,20 @@
     <div class="side-body padding-top">
         <div class="row">
             <h2 class="page-header">
-                Part Import @Html.Partial("_HelpViewButton")
+                Parts Import @Html.Partial("_HelpViewButton")
             </h2>
             <div class="col-lg-10">
                 <div class="form-horizontal">
-                    @Html.Partial("Message")
                     <div class="row">
-                        <div class="alert alert-warning">
-                            The Import File must be an Excel<br />
-                            The file must have the column names as the first row capitalized and spelled like above<br />
-                            The field definitions are<br />
-                            ParentID = unique ID in the external database for the Parent Company. It can be blank<br />
-                            ParentName = The name of theparent company. It can be blank<br />
-                            ID = unique ID in the external database for the company. It can not be blank<br />
-                            NAME_OF_CO<br />
-                            ADDRESS_OF_CO<br />
-                            CITY_OF_CO<br />
-                            STATE_OF_CO<br />
-                            ZIP_OF_CO<br />
-                            COUNTRY_OF_CO<br />
-                            SHIP_NAME_OF_CO<br />
-                            SHIP_ADDRESS_OF_CO<br />
-                            SHIP_CITY_OF_CO<br />
-                            SHIP_STATE_OF_CO<br />
-                            SHIP_ZIP_OF_CO<br />
-                            SHIP_COUNTRY_OF_CO<br />
-                            PHONE_OF_CO<br />
-                            LINKED_ID_OF_CO<br />
+                        @Html.Partial("Message")
+                        <div class="alert ">
+                            The import file must be a tab delimited text file (.csv)<br/>
+                            The file must have these columns in any order: PartId, PartName<br/>
+                            If the partID already exists it will be updated with the new name. If it does not it will be created.<br/>
+                            The file must have the column names as the first row capitalized and spelled like above.<br/>
+                            The field defiitions are:<br/>
+                            partID = The unique ID of the part in your external database.<br/>
+                            partName = The parts name or description.
                         </div>
                     </div>
 
@@ -52,7 +40,7 @@
                             <tr>
                                 <td>
                                     <label class="btn btn-primary" for="postedFile">
-                                        <input id="postedFile" type="file" name="postedFile" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" style="display:none" onchange="$('#upload-file-info').html(this.files[0].name)" />
+                                        <input id="postedFile" type="file" name="postedFile" accept=".csv" style="display:none" onchange="$('#upload-file-info').html(this.files[0].name)" />
                                         Browse...
                                     </label>
                                 </td>
@@ -60,68 +48,31 @@
                                     <input type="submit" class="btn btn-success" value="Process Import"/>
                                 </td>
                                 <td style="padding-left: 5px;">
-                                    <a class="btn btn-link" href="" target="_blank">Download excel file sample </a>
+                                    <a class="btn btn-link" href="~/Parts/ImportSampleFile" target="_blank">Download sample file </a>
                                 </td>
                             </tr>
                         </table>
                     }
                 </div>
-                @*will delete it when implement save just for testing propuse*@
 
-                @*@if (Model != null)
+                @if (Model!= null && Model.Any())
                     {
                         <table class="table">
                             <thead>
                                 <tr>
                                     <th>
-                                        @Html.DisplayNameFor(model => model.Id)
+                                        @Html.DisplayNameFor(model => model.PartId)
                                     </th>
                                     <th>
                                         @Html.DisplayNameFor(model => model.Name)
                                     </th>
                                     <th>
-                                        @Html.DisplayNameFor(model => model.Address)
+                                        @Html.DisplayNameFor(model => model.Processed)
                                     </th>
                                     <th>
-                                        @Html.DisplayNameFor(model => model.City)
+                                        @Html.DisplayNameFor(model => model.Messages)
                                     </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.State)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.Zip)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.Country)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.ShipName)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.ShipAddress)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.ShipCity)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.ShipState)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.ShipZip)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.ShipCountry)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.Phone)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.SupplierId)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.LinkedId)
-                                    </th>
-                                    <th></th>
+                                  
                                 </tr>
                             </thead>
                             <tbody>
@@ -129,58 +80,25 @@
                                 {
                                     <tr>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.Id)
+                                            @Html.DisplayFor(modelItem => item.PartId)
                                         </td>
                                         <td>
                                             @Html.DisplayFor(modelItem => item.Name)
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.Address)
+                                            @Html.DisplayFor(modelItem => item.Processed)
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.City)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.State)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Zip)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Country)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.ShipName)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.ShipAddress)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.ShipCity)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.ShipState)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.ShipZip)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.ShipCountry)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Phone)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.SupplierId)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.LinkedId)
+                                            @foreach (var message in item.Messages)
+                                            {
+                                                @message <br/>
+                                            }
                                         </td>
                                     </tr>
                                 }
                             </tbody>
                         </table>
-                    }*@
+                    }
             </div>
         </div>
     </div>

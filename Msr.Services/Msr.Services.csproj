@@ -195,6 +195,7 @@
     <Compile Include="Invoices\ViewModel\InvoiceViewModel.cs" />
     <Compile Include="Orders\Messaging\TaskLogDto.cs" />
     <Compile Include="Parts\Procedures\PartsImportAndUpdateExternalPartProcedure.cs" />
+    <Compile Include="Parts\ViewModels\ImportPartViewModel.cs" />
     <Compile Include="Procedures\Procedures\DeleteProcedure.cs" />
     <Compile Include="Procedures\Procedures\ProcedureImportExternalProcedure.cs" />
     <Compile Include="Procedures\ViewModels\ProcedureImportViewModel.cs" />
