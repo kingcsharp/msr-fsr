@@ -6,6 +6,8 @@
 
 <!-- [[$wip-detail-sidenav?]] -->
 
+@Styles.Render("~/bundles/css/fileinput")
+
 <div class="container-fluid">
     <div class="side-body padding-top">
         @Html.Partial("Message")
@@ -254,6 +256,8 @@
 
 @section scripts
 {
+    
+
     <script type="text/javascript" src="~/assets/js/jquery.flexslider.js"></script>
     <script type="text/javascript" src="~/assets/js/bootstrap-select.js"></script>
     <script type="text/javascript" src="~/assets/js/finger.min.js"></script>
@@ -264,6 +268,7 @@
     <script type="text/javascript" src="~/assets/js/docviewer.js"></script>
     <script type="text/javascript" src="~/assets/js/printThis.js"></script>
     <script type="text/javascript" src="~/assets/js/timer.jquery.min.js"></script>
+    @Scripts.Render("~/bundles/js/fileinput")
 
     <script type="text/javascript">
 

@@ -337,7 +337,7 @@ namespace Msr.Services.Orders
                 return false;
             }
         }
-        public bool SaveOrderItemImages(SaveWorkItemImageViewModel model)
+        public string SaveOrderItemImages(SaveWorkItemImageViewModel model)
         {
             try
             {
@@ -345,11 +345,11 @@ namespace Msr.Services.Orders
 
                 _dbContext.Database.ExecuteStoredProcedure(saveWorkItemImagesProcedure);
 
-                return true;
+                return saveWorkItemImagesProcedure.NewId;
             }
             catch (Exception ex)
             {
-                return false;
+                return "";
             }
 
         }

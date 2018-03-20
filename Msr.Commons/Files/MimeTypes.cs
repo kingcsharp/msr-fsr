@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Msr.Commons.Files
 {
@@ -22,9 +23,40 @@ namespace Msr.Commons.Files
                 {"gif", "gif"}
             };
 
-            var value = mimeTypes[fileExtension.ToLower()];
+            var mimeType = mimeTypes.SingleOrDefault(x => x.Key == fileExtension.ToLower());
+            
+            return mimeType.Value;
+        }
 
-            return value;
+        public static string GetContentType(string value)
+        {
+            var contentType = "";
+
+            switch (value)
+            {
+                case "image/jpeg":
+                    contentType = "image";
+                    break;
+                case "application/pdf":
+                    contentType = "pdf";
+                    break;
+                case "text/plain":
+                    contentType = "text";
+                    break;
+                case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+
+                case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+
+                case "application/vnd.ms-excel":
+                    contentType = "office";
+                    break;
+                default:
+                    contentType = "other";
+                    break;
+            }
+
+            return contentType;
         }
     }
+
 }

@@ -115,19 +115,12 @@ namespace Answer.Web.Controllers
             return Json(new { files = imagesList.ToArray() }, JsonRequestBehavior.AllowGet);
         }
 
-        [AcceptVerbs(HttpVerbs.Get)]
+        [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult DeleteImageById(string id, string taskId)
         {
-            var response = _orderService.DeleteOrderItemImageById(id, GetCurrentUser().Id);
+            var result = _orderService.DeleteOrderItemImageById(id, GetCurrentUser().Id);
 
-            if (response)
-            {
-                var orderItemImages = _orderService.GetOrderItemImagesById(taskId);
-
-                return Json(new { Message = "Image deleted successfully.", files = orderItemImages.ToArray() }, JsonRequestBehavior.AllowGet);
-            }
-
-            return Json(new { Message = "Image upload failed." }, JsonRequestBehavior.AllowGet);
+            return Json(result ? "Ok" : "error", JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult GetFileView(string callBackId, string type)
@@ -232,6 +225,76 @@ namespace Answer.Web.Controllers
                 }
             }
             return Json(new { initialPreview, initialPreviewConfig, responese.Id }, JsonRequestBehavior.AllowGet);
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public JsonResult FileUploaderForWipTask(string objectId)
+        {
+            var initialPreview = new List<string>();
+            var initialPreviewConfigs = new List<DocLink>();
+
+            var initialPreviewConfig = new object();
+            string newId = "";
+
+            foreach (string item in Request.Files)
+            {
+                var file = Request.Files[item];
+
+                var imageModel = new SaveWorkItemImageViewModel();
+
+                imageModel.Name = file.FileName;
+                imageModel.Desc = null;
+
+                var _cloudUploader = new AWSFileHandler();
+
+                var keyName = string.Format("Answer2/{0}-{1}", Guid.NewGuid(), file.FileName);
+                var buketName = ConfigurationManager.AppSettings.Get("AWSBuketName");
+
+                _cloudUploader.UploadToCloud(file, buketName, keyName);
+
+                var baseUrl = ConfigurationManager.AppSettings.Get("AWSURL");
+
+                var cloudUrl = $"{baseUrl}{keyName}";
+
+                imageModel.Path = cloudUrl;
+                imageModel.ContentType = file.ContentType;
+                imageModel.SrcId = null;
+                imageModel.SrcName = null;
+                imageModel.SrcDesc = null;
+                imageModel.SrcPath = null;
+                imageModel.SrcContentType = null;
+                imageModel.SrcChanged = null;
+                imageModel.DocChanged = null;
+                imageModel.DropSrc = "YES";
+                imageModel.NTLogin = "1618";
+                imageModel.TaskId = objectId;
+
+                newId = _orderService.SaveOrderItemImages(imageModel);
+
+                initialPreview.Add(imageModel.Path);
+
+                var docfiLink = new DocLink
+                {
+                    NAME = keyName,
+                    CONTENTTYPE = file.ContentType,
+                    LINKED_DOC_ID = newId,
+                    TYPE = file.ContentType
+                };
+
+                initialPreviewConfigs.Add(docfiLink);
+
+                initialPreviewConfig = initialPreviewConfigs.Select(x => new
+                {
+                    caption = x.NAME,
+                    type = x.TYPE,
+                    size = 6666,
+                    url = "/doc/DeleteImageById?Id=" + newId + "&taskId=" + objectId,
+                    downloadUrl = cloudUrl,
+                    key = x.LINKED_DOC_ID
+                }).ToArray();
+            }
+
+            return Json(new { initialPreview, initialPreviewConfig, newId }, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult RefillUploader(string ids)

@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 using Answer.Web.ViewModel.Wip;
 using Microsoft.AspNet.Identity;
+using Msr.Commons.Files;
 using Msr.Infrastructure.Common.Constansts;
 using Msr.Models.Orders;
 using Msr.Models.Parts;
@@ -21,6 +23,8 @@ using Msr.Services.Procedures;
 using Msr.Services.Procedures.Messages;
 using Msr.Services.Roles;
 using Msr.Web.ViewModel.Engineering;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace Answer.Web.Controllers
 {
@@ -466,6 +470,22 @@ namespace Answer.Web.Controllers
                 FillId = fillId,
                 TaskId = stepId
             };
+
+            var images = _orderService.GetOrderItemImagesById(stepId.ToString());
+            
+            var jsonSerialiser = new JavaScriptSerializer();
+            var previewConfig = jsonSerialiser.Serialize(images.Select(x => new
+            {
+                caption = x.FILE_NAME,
+                type = MimeTypes.GetContentType(x.ContentType),
+                size = 6666,
+                url = Url.Action("DeleteImageById", "Doc", new { id= x.Id, taskId = x.Task_Id }),
+                downloadUrl = x.Path,
+                key = x.Id
+            }));
+
+            response.Images.PreviewConfig = previewConfig;
+            response.Images.Preview = jsonSerialiser.Serialize(images.Select(x => x.Path));
 
             return PartialView("_InitialInspection", response);
         }

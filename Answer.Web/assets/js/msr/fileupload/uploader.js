@@ -1,9 +1,9 @@
 ﻿var FileUploader = function () {
 
-    var initEditUploader = function (element, url, initialPreview, initialPreviewConfig, objectId) {
+    var initEditUploader = function (element, url, initialPreview, initialPreviewConfig, objectId, showSelect = true) {
 
         element.fileinput({
-            showSelect:true,
+            showSelect: showSelect,
             showClose: false,
             uploadUrl: url,
             uploadAsync: true,
