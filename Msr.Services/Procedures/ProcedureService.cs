@@ -1127,51 +1127,48 @@ namespace Msr.Services.Procedures
             return result;
         }
 
-        public ResultNotification<string> ImportProcedures(HttpPostedFileBase postedFile, LoggedUserIdResult ntLogin)
+        public ResultNotification<List<ProcedureImportViewModel>> ImportProcedures(HttpPostedFileBase postedFile, LoggedUserIdResult ntLogin)
         {
-            var result = new ResultNotification<string>();
+            var result = new ResultNotification<List<ProcedureImportViewModel>>
+            {
+                Entity = new List<ProcedureImportViewModel>()
+            };
+
             try
             {
-                var stream = postedFile.InputStream;
-
-                IExcelDataReader reader;
-
-
-                if (postedFile.FileName.EndsWith(".xls"))
+                if (!postedFile.FileName.EndsWith(".csv"))
                 {
-                    reader = ExcelReaderFactory.CreateBinaryReader(stream);
-                }
-                else if (postedFile.FileName.EndsWith(".xlsx"))
-                {
-                    reader = ExcelReaderFactory.CreateOpenXmlReader(stream);
-                }
-                else
-                {
-                    result.AddError("This file format is not supported");
+                    result.AddError("The import file must be a tab delimited text file");
                     return result;
                 }
-                var resultAsDataSet = reader.AsDataSet(new ExcelDataSetConfiguration()
+
+                var reader = ExcelReaderFactory.CreateCsvReader(postedFile.InputStream);
+
+                var ds = reader.AsDataSet(new ExcelDataSetConfiguration()
                 {
                     ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
                     {
                         UseHeaderRow = true
                     }
                 });
+
                 reader.Close();
 
-                var columnNames = (from dc in resultAsDataSet.Tables[0].Columns.Cast<DataColumn>()
+                var columnNames = (from dc in ds.Tables[0].Columns.Cast<DataColumn>()
                                    select dc.ColumnName).ToList();
-                string[] primes = { "ProcedureId", "ProcedureName", "AnsId", "ProcType" };
+
+                var primes = ProcedureImportViewModel.GetHeaderColumns();
 
                 var results = primes.Where(m => !columnNames.Contains(m));
-                bool isSubset = primes.Intersect(columnNames).Count() == primes.Count();
+                var isSubset = primes.Intersect(columnNames).Count() == primes.Count();
+
                 if (!isSubset)
                 {
                     result.AddError("Coloums missing : (" + string.Join(",", results) + ") to create Procedure");
                     return result;
                 }
 
-                var modelList = Enumerable.Select(resultAsDataSet.Tables[0].AsEnumerable(), item => new ProcedureImportViewModel
+                var modelList = Enumerable.Select(ds.Tables[0].AsEnumerable(), item => new ProcedureImportViewModel
                 {
                     ProcedureId = item["ProcedureId"].ToString(),
                     ProcedureName = item["ProcedureName"].ToString(),
@@ -1179,34 +1176,8 @@ namespace Msr.Services.Procedures
                     ProcType = item["ProcType"].ToString()
                 }).ToList();
 
-                if (modelList.Count > 0)
-                {
-                    foreach (var model in modelList)
-                    {
-                        var procedureImportExternalProcedure = new ProcedureImportExternalProcedure();
-                        if (!string.IsNullOrWhiteSpace(model.ProcedureName))
-                        {
-                            procedureImportExternalProcedure.Id = model.ProcedureId;
-                            procedureImportExternalProcedure.Name = model.ProcedureName;
-                            procedureImportExternalProcedure.AnsId = model.AnsId;
-                            procedureImportExternalProcedure.ProcType = model.ProcType;
-                            procedureImportExternalProcedure.NtLogin = ntLogin.Id;
-                            _dbContext.Database.ExecuteStoredProcedure(procedureImportExternalProcedure);
+                ProcessRow(ntLogin, modelList, result);
 
-                            result.SuccessMessage = procedureImportExternalProcedure.NewId;
-
-                        }
-                        else
-                        {
-                            result.AddError("Actual Part Name is empty");
-                        }
-
-                    }
-                }
-                else
-                {
-                    result.AddError("Nothing to upload file is empty");
-                }
                 return result;
             }
             catch (Exception ex)
@@ -1214,6 +1185,51 @@ namespace Msr.Services.Procedures
                 result.AddError(ex.Message);
 
                 return result;
+            }
+        }
+
+        private void ProcessRow(LoggedUserIdResult ntLogin, List<ProcedureImportViewModel> modelList, ResultNotification<List<ProcedureImportViewModel>> result)
+        {
+            foreach (var model in modelList)
+            {
+                if (string.IsNullOrWhiteSpace(model.ProcedureId))
+                {
+                    model.Messages.Add("Id is required");
+                }
+
+                if (string.IsNullOrWhiteSpace(model.ProcedureName))
+                {
+                    model.Messages.Add("ProcedureName is required");
+                }
+
+                if (string.IsNullOrWhiteSpace(model.AnsId))
+                {
+                    model.Messages.Add("AnsId is required");
+                }
+
+                if (string.IsNullOrWhiteSpace(model.ProcType))
+                {
+                    model.Messages.Add("ProcType is required");
+                }
+
+
+                if (model.Messages.Any())
+                {
+                    result.Entity.Add(model);
+                    continue;
+                }
+
+                var procedureImportExternalProcedure = new ProcedureImportExternalProcedure();
+                procedureImportExternalProcedure.Id = model.ProcedureId;
+                procedureImportExternalProcedure.Name = model.ProcedureName;
+                procedureImportExternalProcedure.AnsId = model.AnsId;
+                procedureImportExternalProcedure.ProcType = model.ProcType;
+                procedureImportExternalProcedure.NtLogin = ntLogin.Id;
+                _dbContext.Database.ExecuteStoredProcedure(procedureImportExternalProcedure);
+
+                model.Processed = true;
+                model.Messages.Add(procedureImportExternalProcedure.NewId);
+                result.Entity.Add(model);
             }
         }
     }

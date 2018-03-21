@@ -1,4 +1,6 @@
-﻿namespace Msr.Services.Procedures.ViewModels
+﻿using System.Collections.Generic;
+
+namespace Msr.Services.Procedures.ViewModels
 {
     public class ProcedureImportViewModel
     {
@@ -11,5 +13,14 @@
         public string ProcType { get; set; }
 
         public string NtLogin { get; set; }
+
+        public bool Processed { get; set; }
+
+        public List<string> Messages { get; set; }
+
+        public static List<string> GetHeaderColumns()
+        {
+            return new List<string> { "ProcedureId", "ProcedureName", "AnsId", "ProcType" };
+        }
     }
 }

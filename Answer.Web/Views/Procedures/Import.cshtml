@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<Msr.Services.Procedures.ViewModels.ProcedureImportViewModel>
 @{
-    ViewBag.Title = "Parts Import";
+    ViewBag.Title = "Import Procedures";
 }
 <style>
     .validation-summary-errors {
@@ -11,14 +11,14 @@
     <div class="side-body padding-top">
         <div class="row">
             <h2 class="page-header">
-                Add File<button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
+                Uploade File @Html.Partial("_HelpViewButton")
             </h2>
             <div class="col-lg-10">
                 <div class="form-horizontal">
                     @Html.Partial("Message")
                     <div class="row">
-                        <div class="alert alert-warning">
-                            The Import File must be an Excel document<br />
+                        <div>
+                            The import file must be a tab delimited text file (.csv)<br/>
                             It must have these columns in any order: ProcedureId,ProcedureName,AnsId,ProcType<br />
                             The file must have the column names as the first row capitalized and spelled like above<br />
                             The field definitions are: * means required<br />
@@ -40,23 +40,75 @@
                                 Final Inspection Role - Leave blank for no final inspection***
                                 Procedure Type - This will add a procedure type to your procedure - Leave blank for no procedure type****@
                         </div>
-                        <div class="alert alert-info">
-                            <a class="btn btn-link" href="https://ra2.s3.amazonaws.com/Answer2/51029aae-b96f-46e5-bf04-b7ac1e9dffbc-Part.xlsx" target="_blank">Download excel file sample </a>
-                        </div>
+                       
                     </div>
 
                     @using (Html.BeginForm("Import", "Procedures", FormMethod.Post, new { enctype = "multipart/form-data" }))
                     {
                         @Html.AntiForgeryToken()
                         @Html.ValidationSummary()
-                        <label class="btn btn-primary" for="postedFile">
-                            <input id="postedFile" type="file" name="postedFile" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" style="display:none" onchange="$('#upload-file-info').html(this.files[0].name)" />
-                            Browse...
-                        </label>
-                        <span class='label label-info' id="upload-file-info"></span><br />
-                        <input type="submit" class="btn btn-success" value="Process Import" />
+                        <table>
+                            <tr>
+                                <td>
+                                    <label class="btn btn-primary" for="postedFile">
+                                        <input id="postedFile" type="file" name="postedFile" accept=".csv" style="display:none" onchange="$('#upload-file-info').html(this.files[0].name)" />
+                                        Browse...
+                                    </label>
+                                </td>
+                                <td style="padding-left: 5px;">
+                                    <input type="submit" class="btn btn-success" value="Process Import" />
+                                </td>
+                                <td style="padding-left: 5px;">
+                                    <a class="btn btn-link" href="~/Procedures/ImportSampleFile" target="_blank">Download sample file </a>
+                                </td>
+                            </tr>
+                        </table>
                     }
                 </div>
+                @if (Model != null && Model.Any())
+                {
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ProcedureId)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ProcedureName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Processed)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Messages)
+                            </th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ProcedureId)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ProcedureName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Processed)
+                                </td>
+                                <td>
+                                    @foreach (var message in item.Messages)
+                                    {
+                                        @message <br />
+                                    }
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                }
             </div>
         </div>
     </div>

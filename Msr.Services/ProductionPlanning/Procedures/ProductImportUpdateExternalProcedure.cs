@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using EntityFrameworkExtras.EF6;
+using Msr.Services.ProductionPlanning.ViewModels;
 
 namespace Msr.Services.ProductionPlanning.Procedures
 {
@@ -89,5 +90,37 @@ namespace Msr.Services.ProductionPlanning.Procedures
 
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "strNTLogin")]
         public string StrNtLogin { get; set; }
+
+        public ProductImportUpdateExternalProcedure()
+        {
+        }
+
+        public ProductImportUpdateExternalProcedure(ProductImportViewModel model)
+        {
+            ExternalProductId = model.ExternalProductId;
+            ExternalCustomerId = model.ExternalCustId;
+            ExternalPartId = model.ExternalPartId;
+            ExternalProcedureId = model.ExternalProcedureId;
+            ExternalProductSupplierId = model.ExternalProductSupplierId;
+            ExternalAccountSupplierId = model.ExternalAccountSupplierId;
+            InternalCustomerId = model.InternalCustomerId;
+            InternalProductSupplierId = model.InternalProductSupplierId;
+            InternalAccountSupplierId = model.InternalAccountSupplierId;
+            InternalRoleId = model.InternalRoleId;
+            InternalPartId = model.InternalPartId;
+            ProductName = model.ProductName;
+            Oem = model.Oem;
+            Area = model.Area;
+            Cu = model.Cu;
+            Mm = model.Mm;
+            Price = model.Price;
+            ResponseTime = model.ResponseTime;
+            SalesTax = model.SalesTax;
+            InternalProcedureId = model.InternalProcedureId;
+            IsKit = model.IsKit;
+            KitId = model.KitId;
+            KitQty = model.KitQty;
+            StrNtLogin = model.LoginId;
+        }
     }
 }

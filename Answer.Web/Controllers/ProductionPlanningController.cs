@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Msr.Infrastructure.Common.Constansts;
 using Msr.Services.jqGrid;
 using Msr.Services.ProductionPlanning;
 using Msr.Models.CustomerRequirements;
@@ -43,7 +44,8 @@ namespace Answer.Web.Controllers
         public ActionResult ProductionPlanningData(JqGridParam param)
         {
 
-            var totalRows = _productionPlanService.GetProductionPlaningQueryable().Where(x => x.ProductStatus != "DELETED" && x.ProductStatus != "OLD" && x.ProductStatus != "APPROVED_BUT_REVISING");
+            var totalRows = _productionPlanService.GetProductionPlaningQueryable().Where(x =>
+                x.ProductStatus != "DELETED" && x.ProductStatus != "OLD" && x.ProductStatus != "APPROVED_BUT_REVISING");
 
             if (param.where != null && param.where.rules.Any())
             {
@@ -87,6 +89,7 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.ProcedureName.ToLower().Contains(rule.data.ToLower()));
                     }
+
                     ////else if (rule.field == nameof(CustomerSubmittedRequirement.Status))
                     ////{
                     ////    totalRows = totalRows.Where(x => x.Status.ToLower().Contains(rule.data.ToLower()));
@@ -100,6 +103,7 @@ namespace Answer.Web.Controllers
             {
                 orderBy = param.sortColumn;
             }
+
             if (param.sortOrder == "desc")
             {
                 totalRows = totalRows.OrderByDescending(orderBy);
@@ -113,7 +117,7 @@ namespace Answer.Web.Controllers
             totalRows = totalRows.Skip(param.pageSize * (param.pageIndex - 1));
 
             totalRows = totalRows.Take(param.pageSize);
-            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)param.pageSize);
+            var totalPages = (int) Math.Ceiling((float) totalRecords / (float) param.pageSize);
 
             var results = totalRows.ToList();
 
@@ -137,7 +141,7 @@ namespace Answer.Web.Controllers
         {
             _productionPlanService.UpdateStatus(id, CustomerSubmittedRequirementConstants.InProgress);
 
-            return RedirectToAction("Edit", "ProductionPlanning", new { id });
+            return RedirectToAction("Edit", "ProductionPlanning", new {id});
         }
 
         public ActionResult Edit(int id)
@@ -149,7 +153,8 @@ namespace Answer.Web.Controllers
 
             if (!string.IsNullOrWhiteSpace(requirment.ProductId))
             {
-                var productView = _productionPlanService.GetProductionPlaningQueryable().SingleOrDefault(x => x.ProductId == requirment.ProductId && x.ProductStatus == "CREATING");
+                var productView = _productionPlanService.GetProductionPlaningQueryable().SingleOrDefault(x =>
+                    x.ProductId == requirment.ProductId && x.ProductStatus == "CREATING");
 
                 if (productView.ProductStatus != "CREATING")
                 {
@@ -180,7 +185,7 @@ namespace Answer.Web.Controllers
                         ObjectId = step.Id,
                         Process = step.StepTitle,
                         StepTitle = step.StepTitle,
-                        Step = (int)step.Print_Order
+                        Step = (int) step.Print_Order
                     });
                 }
             }
@@ -198,13 +203,13 @@ namespace Answer.Web.Controllers
             return View(vm);
         }
 
-
         public ActionResult View(int id)
         {
             var currentUser = GetCurrentUser();
             var requirment = _quoteService.GetById(id);
 
-            var productView = _productionPlanService.GetProductionPlaningQueryable().FirstOrDefault(x => x.Id == id && x.ProductStatus == "APPROVED");
+            var productView = _productionPlanService.GetProductionPlaningQueryable()
+                .FirstOrDefault(x => x.Id == id && x.ProductStatus == "APPROVED");
 
             var viewModel = new RequirementStepsViewModel();
             viewModel.ProductStatus = productView.ProductStatus;
@@ -226,7 +231,7 @@ namespace Answer.Web.Controllers
                         ObjectId = step.Id,
                         Process = step.StepTitle,
                         StepTitle = step.StepTitle,
-                        Step = (int)step.Print_Order
+                        Step = (int) step.Print_Order
                     });
                 }
             }
@@ -237,7 +242,8 @@ namespace Answer.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(string id, RequirementStepsViewModel vm, string saveSubmit, string saveDraft, string newProcedure)
+        public ActionResult Edit(string id, RequirementStepsViewModel vm, string saveSubmit, string saveDraft,
+            string newProcedure)
         {
             var currentUser = GetCurrentUser();
             ModelState.Clear();
@@ -245,7 +251,7 @@ namespace Answer.Web.Controllers
             if (!string.IsNullOrWhiteSpace(newProcedure))
             {
                 vm.ProductProcedureId = null;
-                vm.Steps = new List<RequirementStepsDetailsViewModel> { new RequirementStepsDetailsViewModel() };
+                vm.Steps = new List<RequirementStepsDetailsViewModel> {new RequirementStepsDetailsViewModel()};
                 vm.Setup(_productionPlanService, _preProServices);
 
                 return View(vm);
@@ -268,9 +274,10 @@ namespace Answer.Web.Controllers
                         Id = Convert.ToInt32(step.Id),
                         ObjectId = step.Id,
                         Process = step.StepTitle,
-                        Step = (int)step.Print_Order
+                        Step = (int) step.Print_Order
                     });
                 }
+
                 vm.Setup(_productionPlanService, _preProServices);
 
                 return View(vm);
@@ -297,7 +304,7 @@ namespace Answer.Web.Controllers
                     if (!string.IsNullOrWhiteSpace(saveSubmit))
                     {
                         return RedirectToAction("Submit", "Workflow",
-                            new { objId = response.Entity.ProductId, returnUrl = Url.Content("~/ProductionPlanning") });
+                            new {objId = response.Entity.ProductId, returnUrl = Url.Content("~/ProductionPlanning")});
                     }
 
                     vm.Setup(_productionPlanService, _preProServices);
@@ -310,7 +317,7 @@ namespace Answer.Web.Controllers
             }
 
             vm.Setup(_productionPlanService, _preProServices);
-            
+
             return View(vm);
         }
 
@@ -342,11 +349,18 @@ namespace Answer.Web.Controllers
             return View(model);
         }
 
-
         [AcceptVerbs(HttpVerbs.Post)]
         public JsonResult CreateProcedure(string procedureName, int productionPlanningId)
         {
-            var model = new SaveProcedureViewModel { Name = procedureName, DurationType = "TIME_SYS_SECONDS", SecurityLevel = "1", StepInAp = 1, WipMsg = 0, IsActive = false };
+            var model = new SaveProcedureViewModel
+            {
+                Name = procedureName,
+                DurationType = "TIME_SYS_SECONDS",
+                SecurityLevel = "1",
+                StepInAp = 1,
+                WipMsg = 0,
+                IsActive = false
+            };
             var currentUser = GetCurrentUser();
             var procedureService = new ProceduresService();
             var result = new ResultNotification<string>();
@@ -370,10 +384,11 @@ namespace Answer.Web.Controllers
 
                 var procedureList = _productionPlanService.GetProceduretList();
 
-                return Json(new { Message = result.SuccessMessage, data = procedureList, ProcedureId = response.Entity }, JsonRequestBehavior.AllowGet);
+                return Json(new {Message = result.SuccessMessage, data = procedureList, ProcedureId = response.Entity},
+                    JsonRequestBehavior.AllowGet);
             }
 
-            return Json(new { Message = result.ErrorMessage }, JsonRequestBehavior.AllowGet);
+            return Json(new {Message = result.ErrorMessage}, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]
@@ -392,28 +407,43 @@ namespace Answer.Web.Controllers
         [HttpPost]
         public ActionResult Import(HttpPostedFileBase postedFile)
         {
-            if (ModelState.IsValid)
+            if (postedFile != null && postedFile.ContentLength > 0)
             {
+                var currentUser = GetCurrentUser();
 
-                if (postedFile != null && postedFile.ContentLength > 0)
+                var response = _productionPlanService.ImportProducts(postedFile, currentUser);
+
+                if (response.HasErrors())
                 {
-                    var response = _productionPlanService.ImportProducts(postedFile, GetCurrentUser());
-                    if (!response.HasErrors())
+                    TempData[NotificationConstants.ErrrorMessage] = response.ErrorMessage;
+                }
+                else
+                {
+                    if (response.Entity.Any(x => !x.Processed))
                     {
-                        TempData["SuccessMessage"] = response.SuccessMessage;
-                        return RedirectToAction("Index");
+                        TempData[NotificationConstants.WarningMessage] = "File has been processed with errors";
                     }
-
-                    TempData["ErrorMessage"] = response.ErrorMessage;
-                    return View();
+                    else
+                    {
+                        TempData[NotificationConstants.SuccessMessage] = "File has been processed successfully";
+                    }
                 }
 
-                ModelState.AddModelError("File", "Please Upload Your file");
-                return View();
+                return View(response.Entity);
             }
-            ModelState.AddModelError("File", "Please Upload Your file");
+
+            TempData[NotificationConstants.ErrrorMessage] = "Please upload a file";
+
             return View();
         }
 
+        public void ImportSampleFile()
+        {
+            Response.Clear();
+            Response.ContentType = "text/csv";
+            Response.AddHeader("Content-Disposition", "attachment;filename=products-upload.csv");
+            Response.Write(string.Join(",", ProductImportViewModel.GetHeaderColumns()));
+
+        }
     }
 }

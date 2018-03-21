@@ -387,51 +387,48 @@ namespace Msr.Services.ProductionPlanning
             return result?.Value;
         }
 
-        public ResultNotification<string> ImportProducts(HttpPostedFileBase postedFile, LoggedUserIdResult ntLogin)
+        public ResultNotification<List<ProductImportViewModel>> ImportProducts(HttpPostedFileBase postedFile, LoggedUserIdResult ntLogin)
         {
-            var result = new ResultNotification<string>();
+            var result = new ResultNotification<List<ProductImportViewModel>>
+            {
+                Entity = new List<ProductImportViewModel>()
+            };
+
             try
             {
-                var stream = postedFile.InputStream;
-
-                IExcelDataReader reader;
-
-
-                if (postedFile.FileName.EndsWith(".xls"))
+                if (!postedFile.FileName.EndsWith(".csv"))
                 {
-                    reader = ExcelReaderFactory.CreateBinaryReader(stream);
-                }
-                else if (postedFile.FileName.EndsWith(".xlsx"))
-                {
-                    reader = ExcelReaderFactory.CreateOpenXmlReader(stream);
-                }
-                else
-                {
-                    result.AddError("This file format is not supported");
+                    result.AddError("The import file must be a tab delimited text file");
                     return result;
                 }
-                var resultAsDataSet = reader.AsDataSet(new ExcelDataSetConfiguration()
+
+                var reader = ExcelReaderFactory.CreateCsvReader(postedFile.InputStream);
+
+                var ds = reader.AsDataSet(new ExcelDataSetConfiguration()
                 {
                     ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
                     {
                         UseHeaderRow = true
                     }
                 });
+
                 reader.Close();
 
-                var columnNames = (from dc in resultAsDataSet.Tables[0].Columns.Cast<DataColumn>()
+                var columnNames = (from dc in ds.Tables[0].Columns.Cast<DataColumn>()
                                    select dc.ColumnName).ToList();
-                string[] primes = { "ExternalProductId", "ExternalCustId", "ExternalPartId", "ExternalProcedureId", "ExternalProductSupplierId", "ExternalAccountSupplierId", "InternalCustomerId", "InternalProductSupplierId", "InternalAccountSupplierId", "InternalRoleId", "InternalPartId", "ProductName", "Oem", "Model", "Area", "Cu", "Mm", "Price", "ResponseTime", "SalesTax", "InternalProcedureId", "IsKit", "KitId", "KitQty" };
+
+                var primes = ProductImportViewModel.GetHeaderColumns();
 
                 var results = primes.Where(m => !columnNames.Contains(m));
-                bool isSubset = primes.Intersect(columnNames).Count() == primes.Count();
+                var isSubset = primes.Intersect(columnNames).Count() == primes.Count();
+
                 if (!isSubset)
                 {
                     result.AddError("Coloums missing : (" + string.Join(",", results) + ") to create Product");
                     return result;
                 }
 
-                var modelList = Enumerable.Select(resultAsDataSet.Tables[0].AsEnumerable(), item => new ProductImportViewModel
+                var modelList = Enumerable.Select(ds.Tables[0].AsEnumerable(), item => new ProductImportViewModel
                 {
                     ExternalProductId = item["ExternalProductId"].ToString(),
                     ExternalCustId = item["ExternalCustId"].ToString(),
@@ -459,53 +456,7 @@ namespace Msr.Services.ProductionPlanning
                     KitQty = item["KitQty"].ToString()
                 }).ToList();
 
-                if (modelList.Count > 0)
-                {
-                    foreach (var model in modelList)
-                    {
-                        var productImportUpdateExternalProcedure = new ProductImportUpdateExternalProcedure();
-
-                        if (!string.IsNullOrWhiteSpace(model.ProductName))
-                        {
-                            productImportUpdateExternalProcedure.ExternalProductId = model.ExternalProductId;
-                            productImportUpdateExternalProcedure.ExternalCustomerId = model.ExternalCustId;
-                            productImportUpdateExternalProcedure.ExternalPartId = model.ExternalPartId;
-                            productImportUpdateExternalProcedure.ExternalProcedureId = model.ExternalProcedureId;
-                            productImportUpdateExternalProcedure.ExternalProductSupplierId = model.ExternalProductSupplierId;
-                            productImportUpdateExternalProcedure.ExternalAccountSupplierId = model.ExternalAccountSupplierId;
-                            productImportUpdateExternalProcedure.InternalCustomerId = model.InternalCustomerId;
-                            productImportUpdateExternalProcedure.InternalProductSupplierId = model.InternalProductSupplierId;
-                            productImportUpdateExternalProcedure.InternalAccountSupplierId = model.InternalAccountSupplierId;
-                            productImportUpdateExternalProcedure.InternalRoleId = model.InternalRoleId;
-                            productImportUpdateExternalProcedure.InternalPartId = model.InternalPartId;
-                            productImportUpdateExternalProcedure.ProductName = model.ProductName;
-                            productImportUpdateExternalProcedure.Oem = model.Oem;
-                            productImportUpdateExternalProcedure.Area = model.Area;
-                            productImportUpdateExternalProcedure.Cu = model.Cu;
-                            productImportUpdateExternalProcedure.Mm = model.Mm;
-                            productImportUpdateExternalProcedure.Price = model.Price;
-                            productImportUpdateExternalProcedure.ResponseTime = model.ResponseTime;
-                            productImportUpdateExternalProcedure.SalesTax = model.SalesTax;
-                            productImportUpdateExternalProcedure.InternalProcedureId = model.InternalProcedureId;
-                            productImportUpdateExternalProcedure.IsKit = model.IsKit;
-                            productImportUpdateExternalProcedure.KitId = model.KitId;
-                            productImportUpdateExternalProcedure.KitQty = model.KitQty;
-                            productImportUpdateExternalProcedure.StrNtLogin = ntLogin.Id;
-
-                            _dbContext.Database.ExecuteStoredProcedure(productImportUpdateExternalProcedure);
-
-                            result.SuccessMessage = productImportUpdateExternalProcedure.NewId;
-                        }
-                        else
-                        {
-                            result.AddError("Name is empty");
-                        }
-                    }
-                }
-                else
-                {
-                    result.AddError("Nothing to upload file is empty");
-                }
+                ProcessRows(ntLogin, modelList, result);
 
                 return result;
             }
@@ -514,6 +465,47 @@ namespace Msr.Services.ProductionPlanning
                 result.AddError(ex.Message);
 
                 return result;
+            }
+        }
+
+        private void ProcessRows(LoggedUserIdResult ntLogin, List<ProductImportViewModel> modelList, ResultNotification<List<ProductImportViewModel>> result)
+        {
+            foreach (var model in modelList)
+            {
+                if (string.IsNullOrWhiteSpace(model.ExternalProductId))
+                {
+                    model.Messages.Add($"{nameof(ProductImportViewModel.ExternalProductId)} is required");
+                }
+
+                if (string.IsNullOrWhiteSpace(model.ExternalCustId))
+                {
+                    model.Messages.Add($"{nameof(ProductImportViewModel.ExternalCustId)} is required");
+                }
+
+                if (string.IsNullOrWhiteSpace(model.ExternalPartId))
+                {
+                    model.Messages.Add($"{nameof(ProductImportViewModel.ExternalPartId)} is required");
+                }
+
+                if (string.IsNullOrWhiteSpace(model.ExternalProcedureId))
+                {
+                    model.Messages.Add($"{nameof(ProductImportViewModel.ExternalProcedureId)} is required");
+                }
+
+                if (model.Messages.Any())
+                {
+                    result.Entity.Add(model);
+                    continue;
+                }
+
+                model.LoginId = ntLogin.Id;
+                var productImportUpdateExternalProcedure = new ProductImportUpdateExternalProcedure(model);
+
+                _dbContext.Database.ExecuteStoredProcedure(productImportUpdateExternalProcedure);
+
+                model.Processed = true;
+                model.Messages.Add(productImportUpdateExternalProcedure.NewId);
+                result.Entity.Add(model);
             }
         }
     }

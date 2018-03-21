@@ -1,4 +1,6 @@
-﻿namespace Msr.Services.ProductionPlanning.ViewModels
+﻿using System.Collections.Generic;
+
+namespace Msr.Services.ProductionPlanning.ViewModels
 {
     public class ProductImportViewModel
     {
@@ -27,6 +29,42 @@
         public string IsKit { get; set; }
         public string KitId { get; set; }
         public string KitQty { get; set; }
+
+        public bool Processed { get; set; }
+
+        public List<string> Messages { get; set; }
+        public string LoginId { get; set; }
+
+        public static List<string> GetHeaderColumns()
+        {
+            return new List<string>
+            {
+                "ExternalProductId",
+                "ExternalCustId",
+                "ExternalPartId",
+                "ExternalProcedureId",
+                "ExternalProductSupplierId",
+                "ExternalAccountSupplierId",
+                "InternalCustomerId",
+                "InternalProductSupplierId",
+                "InternalAccountSupplierId",
+                "InternalRoleId",
+                "InternalPartId",
+                "ProductName",
+                "Oem",
+                "Model",
+                "Area",
+                "Cu",
+                "Mm",
+                "Price",
+                "ResponseTime",
+                "SalesTax",
+                "InternalProcedureId",
+                "IsKit",
+                "KitId",
+                "KitQty"
+            };
+        }
     }
 }
 

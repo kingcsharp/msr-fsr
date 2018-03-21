@@ -13,6 +13,7 @@ using System.Xml;
 using System.Xml.Xsl;
 using Amazon.Runtime.Internal;
 using Answer.Web.ViewModel;
+using Msr.Infrastructure.Common.Constansts;
 using Msr.Models.ActualParts;
 using Msr.Services.Documents;
 using Msr.Services.Procedures.Messages;
@@ -486,9 +487,10 @@ namespace Answer.Web.Controllers
 
         public ActionResult EditStep(string stepId, string procedureObjectId)
         {
-            var vm = _proceduresService.GetStepData(stepId, procedureObjectId, GetCurrentUser().Id);
-
             var currentUser = GetCurrentUser();
+
+            var vm = _proceduresService.GetStepData(stepId, procedureObjectId, currentUser.Id);
+
             vm.NtLogin = currentUser.Login;
 
             vm.SetUp(new ProceduresService(), new ProcedureVerbsService(), procedureObjectId);
@@ -508,7 +510,6 @@ namespace Answer.Web.Controllers
             TempData["SuccessMessage"] = "Procedure Step been updated successfully.";
             return RedirectToAction("Edit", "Procedures", new { Id = procstepId });
         }
-
 
 
         public ActionResult editProcedureObject(string Pid, string relationship)
@@ -563,9 +564,7 @@ namespace Answer.Web.Controllers
 
         public ActionResult ShowProcedureView(string Pid, string relation, JqGridParam param)
         {
-            var ProceduresService = new ProceduresService();
-
-            var totalRows = ProceduresService.GetSelectedProcedureObject(Pid, null, relation, GetCurrentUser().Id).AsQueryable();
+            var totalRows = _proceduresService.GetSelectedProcedureObject(Pid, null, relation, GetCurrentUser().Id).AsQueryable();
 
             var orderBy = nameof(ActualPartsView.PartDesc);
             if (!string.IsNullOrWhiteSpace(param.sortColumn))
@@ -1236,29 +1235,43 @@ namespace Answer.Web.Controllers
         [HttpPost]
         public ActionResult Import(HttpPostedFileBase postedFile)
         {
-            if (ModelState.IsValid)
+            if (postedFile != null && postedFile.ContentLength > 0)
             {
+                var currentUser = GetCurrentUser();
 
-                if (postedFile != null && postedFile.ContentLength > 0)
+                var response = _proceduresService.ImportProcedures(postedFile, currentUser);
+
+                if (response.HasErrors())
                 {
-
-                    var response = _proceduresService.ImportProcedures(postedFile, GetCurrentUser());
-                    if (!response.HasErrors())
+                    TempData[NotificationConstants.ErrrorMessage] = response.ErrorMessage;
+                }
+                else
+                {
+                    if (response.Entity.Any(x => !x.Processed))
                     {
-                        TempData["SuccessMessage"] = response.SuccessMessage;
-                        return RedirectToAction("Index");
+                        TempData[NotificationConstants.WarningMessage] = "File has been processed with errors";
                     }
-
-                    TempData["ErrorMessage"] = response.ErrorMessage;
-                    return View();
-
+                    else
+                    {
+                        TempData[NotificationConstants.SuccessMessage] = "File has been processed successfully";
+                    }
                 }
 
-                ModelState.AddModelError("File", "Please Upload Your file");
-                return View();
+                return View(response.Entity);
             }
-            ModelState.AddModelError("File", "Please Upload Your file");
+
+            TempData[NotificationConstants.ErrrorMessage] = "Please upload a file";
+
             return View();
+        }
+
+        public void ImportSampleFile()
+        {
+            Response.Clear();
+            Response.ContentType = "text/csv";
+            Response.AddHeader("Content-Disposition", "attachment;filename=procedures-upload.csv");
+            Response.Write(string.Join(",", ProcedureImportViewModel.GetHeaderColumns()));
+            Response.End();
         }
     }
 
