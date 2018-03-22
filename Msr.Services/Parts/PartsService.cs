@@ -161,9 +161,8 @@ namespace Msr.Services.Parts
 
                 _dbContext.Database.ExecuteStoredProcedure(savePartProcedure);
                 result.Entity = savePartProcedure.NewObjID;
-                var singlePart = GetById(savePartProcedure.NewObjID);
 
-                var deleteReferenceFileProcedure = new DeleteFileProcedure() { ObjID = singlePart.Id, Type = null, NTLogin = model.NTLogin };
+                var deleteReferenceFileProcedure = new DeleteFileProcedure() { ObjID = savePartProcedure.NewObjID, Type = null, NTLogin = model.NTLogin };
 
                 _dbContext.Database.ExecuteStoredProcedure(deleteReferenceFileProcedure);
 
@@ -173,7 +172,7 @@ namespace Msr.Services.Parts
                         var saveFileProcedure =
                             new SaveFileProcedure()
                             {
-                                ObjID = singlePart.Id,
+                                ObjID = savePartProcedure.NewObjID,
                                 DocID = file,
                                 Type = null,
                                 NTLogin = model.NTLogin
@@ -350,7 +349,7 @@ namespace Msr.Services.Parts
 
                 var columnNames = (from dc in resultAsDataSet.Tables[0].Columns.Cast<DataColumn>() select dc.ColumnName)
                     .ToList();
-                string[] primes = {"PartId", "Name"};
+                string[] primes = { "PartId", "Name" };
 
                 var results = primes.Where(m => !columnNames.Contains(m));
 

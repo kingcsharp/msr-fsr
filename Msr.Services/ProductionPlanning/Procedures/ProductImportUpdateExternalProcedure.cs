@@ -7,7 +7,7 @@ namespace Msr.Services.ProductionPlanning.Procedures
     [StoredProcedure("A_SP_PRODUCTS_IMPORT_AND_UPDATE_AN_EXTERNAL_PRODUCT")]
     public class ProductImportUpdateExternalProcedure
     {
-        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "newID", Direction = ParameterDirection.Output)]
+        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 500, ParameterName = "newID", Direction = ParameterDirection.Output)]
         public string NewId { get; set; }
 
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 500, ParameterName = "msgs", Direction = ParameterDirection.Output)]
@@ -90,10 +90,6 @@ namespace Msr.Services.ProductionPlanning.Procedures
 
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "strNTLogin")]
         public string StrNtLogin { get; set; }
-
-        public ProductImportUpdateExternalProcedure()
-        {
-        }
 
         public ProductImportUpdateExternalProcedure(ProductImportViewModel model)
         {

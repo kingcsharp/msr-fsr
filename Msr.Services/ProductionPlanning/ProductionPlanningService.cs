@@ -430,10 +430,11 @@ namespace Msr.Services.ProductionPlanning
 
                 var modelList = Enumerable.Select(ds.Tables[0].AsEnumerable(), item => new ProductImportViewModel
                 {
-                    ExternalProductId = item["ExternalProductId"].ToString(),
                     ExternalCustId = item["ExternalCustId"].ToString(),
-                    ExternalPartId = item["ExternalPartId"].ToString(),
                     ExternalProcedureId = item["ExternalProcedureId"].ToString(),
+                    ExternalPartId = item["ExternalPartId"].ToString(),
+                    ExternalProductId = item["ExternalProductId"].ToString(),
+                    ProductName = item["ProductName"].ToString(),
                     ExternalProductSupplierId = item["ExternalProductSupplierId"].ToString(),
                     ExternalAccountSupplierId = item["ExternalAccountSupplierId"].ToString(),
                     InternalCustomerId = item["InternalCustomerId"].ToString(),
@@ -441,7 +442,6 @@ namespace Msr.Services.ProductionPlanning
                     InternalAccountSupplierId = item["InternalAccountSupplierId"].ToString(),
                     InternalRoleId = item["InternalRoleId"].ToString(),
                     InternalPartId = item["InternalPartId"].ToString(),
-                    ProductName = item["ProductName"].ToString(),
                     Oem = item["Oem"].ToString(),
                     Model = item["Model"].ToString(),
                     Area = item["Area"].ToString(),
@@ -503,8 +503,13 @@ namespace Msr.Services.ProductionPlanning
 
                 _dbContext.Database.ExecuteStoredProcedure(productImportUpdateExternalProcedure);
 
-                model.Processed = true;
+                if (!productImportUpdateExternalProcedure.NewId.Contains("ERROR"))
+                {
+                    model.Processed = true;
+                }
+
                 model.Messages.Add(productImportUpdateExternalProcedure.NewId);
+
                 result.Entity.Add(model);
             }
         }

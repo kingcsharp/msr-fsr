@@ -1,5 +1,4 @@
 ﻿@model IEnumerable<Msr.Services.ProductionPlanning.ViewModels.ProductImportViewModel>
-
 @{
     ViewBag.Title = "Products Import";
 }
@@ -19,26 +18,24 @@
                     @Html.Partial("Message")
                     <div class="row">
                         <div>
-                            The import file must be a tab delimited text file (.csv)<br/>
-                            It must have these columns in any order PRODUCT_ID,COMPANY_ID,RESPONSE_TIME,PRODUCT_NAME,PRICE,PART_ID,PROCEDURE_ID,SALES_TAX,SUPPLIER_ID<br />
+                            The import file must be a tab delimited text file (.csv)<br />
+                            It must have these columns in any order ExternalProductId,ExternalCustId,ExternalPartId,ExternalProcedureId,ExternalProductSupplierId,ExternalAccountSupplierId,InternalCustomerId,InternalProductSupplierId,</br>
+                            InternalAccountSupplierId,InternalRoleId,InternalPartId,ProductName,Oem,Model,Area,Cu,Mm,Price,ResponseTime,SalesTax,InternalProcedureId,IsKit,KitId,KitQty<br />
                             If PRODUCT_ID exists - update, not create, blank always makes a new one.<br />
                             The file must have the column names as the first row capitalized and spelled like above<br />
                             The field definitions are<br />
-                            PRODUCT_ID = unique ID in the external database or ANSWER for the part.<br />
-                            COMPANY_ID = unique ID in the external database or ANSWER for the CUSTOMER company.<br />
-                            RESPONSE_TIME = number of days for the response time.<br />
-                            PRODUCT_NAME = the name for the product.<br />
-                            PRICE = the price of the product.<br />
-                            PART_ID = unique ID in the external database or ANSWER for the part.<br />
-                            PROCEDURE_ID = unique ID in the external database or ANSWER for the procedure.<br />
-                            SALES_TAX = 1 or 0 1 for yes sales tax and 2 for no sales tax<br />
-                            SUPPLIER_ID = unique ID in the external database or ANSWER for the Supplier DEpartment or Company.<br />
-                            ROLE_ID = unique ID in the external database or ANSWER for the Role that does the Default Step of the procedure.<br />
-                            PROCEDURE_NAME = The Name of the procedure if the system has to create it.<br />
-                            PART_NAME = The Name of the part if the system has to create it.<br />
+                            ExternalProductId = unique ID in the external database or ANSWER for the part.<br />
+                            ExternalCustId = unique ID in the external database or ANSWER for the CUSTOMER company.<br />
+                            ResponseTime = number of days for the response time.<br />
+                            ProductName = the name for the product.<br />
+                            Price = the price of the product.<br />
+                            ExternalPartId = unique ID in the external database or ANSWER for the part.<br />
+                            ExternalProcedureId = unique ID in the external database or ANSWER for the procedure.<br />
+                            SalesTax = 1 or 0 1 for yes sales tax and 2 for no sales tax<br />
+                            ExternalProductSupplierId = unique ID in the external database or ANSWER for the Supplier Department or Company.<br />
+                            InternalRoleId = unique ID in the external database or ANSWER for the Role that does the Default Step of the procedure.<br />
                         </div>
                     </div>
-
                     @using (Html.BeginForm("Import", "ProductionPlanning", FormMethod.Post, new { enctype = "multipart/form-data" }))
                     {
                         @Html.AntiForgeryToken()
@@ -52,58 +49,62 @@
                                     </label>
                                 </td>
                                 <td style="padding-left: 5px;">
-                                    <input type="submit" class="btn btn-success" value="Process Import"/>
+                                    <input type="submit" class="btn btn-success" value="Process Import" />
                                 </td>
                                 <td style="padding-left: 5px;">
                                     <a class="btn btn-link" href="~/ProductionPlanning/ImportSampleFile" target="_blank">Download sample file </a>
-
                                 </td>
                             </tr>
                         </table>
                     }
                 </div>
-                
                 @if (Model != null && Model.Any())
                 {
                     <table class="table">
                         <thead>
-                        <tr>
-                            <th>
-                                @Html.DisplayNameFor(model => model.ExternalProductId)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.ProductName)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Processed)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Messages)
-                            </th>
-
-                        </tr>
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.ExternalProductId)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.ProductName)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Processed)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Messages)
+                                </th>
+                            </tr>
                         </thead>
                         <tbody>
-                        @foreach (var item in Model)
-                        {
-                            <tr>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.ExternalProductId)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.ProductName)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Processed)
-                                </td>
-                                <td>
-                                    @foreach (var message in item.Messages)
-                                    {
-                                        @message <br />
-                                    }
-                                </td>
-                            </tr>
-                        }
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ExternalProductId)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ProductName)
+                                    </td>
+                                    <td>
+                                        @if (item.Processed)
+                                        {
+                                            <span class="btn btn-xs btn-success"> <i class="fa fa fa-check"></i> </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="btn btn-xs btn-danger"> <i class="fa fa fa-exclamation-circle"></i> </span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @foreach (var message in item.Messages)
+                                        {
+                                            @message <br />
+                                        }
+                                    </td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 }

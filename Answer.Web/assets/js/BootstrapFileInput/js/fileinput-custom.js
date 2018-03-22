@@ -633,7 +633,6 @@
                 '      {browse}\n' +
                 '      {select}\n' + // added by Mike H
                 '    </div>\n' +
-                '    <input type="hidden" id="referenceFiles" name="referenceFiles">\n' + // added by Mike H
                 '</div>';
             tMain2 = '{preview}\n<div class="kv-upload-progress kv-hidden"></div>\n<div class="clearfix"></div>\n{remove}\n{cancel}\n{upload}\n{browse}\n';
             tPreview = '<div class="file-preview {class}">\n' +

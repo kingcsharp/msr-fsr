@@ -4,6 +4,10 @@ namespace Msr.Services.ProductionPlanning.ViewModels
 {
     public class ProductImportViewModel
     {
+        public ProductImportViewModel()
+        {
+            Messages = new List<string>();
+        }
         public string ExternalProductId { get; set; }
         public string ExternalCustId { get; set; }
         public string ExternalPartId { get; set; }

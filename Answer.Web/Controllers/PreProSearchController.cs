@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using Msr.Models.PrePro;
 using Msr.Services.Documents;
+using Msr.Services.Workflows;
 
 namespace Answer.Web.Controllers
 {
@@ -15,11 +16,13 @@ namespace Answer.Web.Controllers
     {
         private readonly PreProServices _preProServices;
         private readonly DocumentFilesService _documentFilesService;
-
+        private WorkflowService _workflowService;
+        
         public PreProSearchController()
         {
             _preProServices = new PreProServices();
             _documentFilesService = new DocumentFilesService();
+            _workflowService = new WorkflowService();
         }
 
         public ActionResult Index()
@@ -196,7 +199,9 @@ namespace Answer.Web.Controllers
         {
             var currentUser = GetCurrentUser();
 
-            var model = _preProServices.GetById(id);
+            var result = _workflowService.CheckOutObject(id, currentUser.Id);
+
+            var model = _preProServices.GetById(result.Entity);
 
             var vm = new ProcedurePreProViewModel();
 

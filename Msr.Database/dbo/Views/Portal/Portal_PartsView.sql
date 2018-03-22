@@ -1,4 +1,4 @@
-CREATE VIEW dbo.Portal_PartsView
+﻿CREATE VIEW dbo.Portal_PartsView
 AS
 SELECT       
 o.LOCKED_BY AS LockedBy,
