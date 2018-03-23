@@ -105,9 +105,9 @@ namespace Msr.Services.Workflows
             {
                 var checkIfObjectInCreatingSql = $"select status from A_OBJECTS where id ='{objectId}'";
 
-                var status = _dbContext.Database.SqlQuery<string>(checkIfObjectInCreatingSql).Single();
+                var status = _dbContext.Database.SqlQuery<string>(checkIfObjectInCreatingSql).FirstOrDefault();
 
-                if (status == "CREATING")
+                if (status !=null && status == "CREATING")
                 {
                     result.Entity = objectId;
                     return result;

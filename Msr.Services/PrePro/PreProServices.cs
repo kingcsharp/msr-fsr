@@ -111,7 +111,7 @@ namespace Msr.Services.PrePro
             {
                 var savePartProcedure = new SaveProcedureStepProcedure()
                 {
-                    Id = model.Id,
+                    Id = model.PkId,
                     StepText = model.StepText,
                     ProcObjId = model.ProcObjId,
                     Comments = model.Comments,
@@ -142,7 +142,7 @@ namespace Msr.Services.PrePro
 
                 _dbContext.Database.ExecuteStoredProcedure(savePartProcedure);
 
-                var savePrePopProcedure = new SavePrePopProcedure() { ObjId = model.ObjectId, ProcStepId = model.Id, NTLogin = model.NTLogin };
+                var savePrePopProcedure = new SavePrePopProcedure() { ObjId = model.ObjectId, ProcStepId = model.PkId, NTLogin = model.NTLogin };
 
                 _dbContext.Database.ExecuteStoredProcedure(savePrePopProcedure);
 
@@ -161,52 +161,29 @@ namespace Msr.Services.PrePro
             try
             {
 
-                var savePartProcedure = new SaveProcedureStepProcedure()
+                var procedureStepProcedure = new SaveProcedureStepProcedure(model);
+                _dbContext.Database.ExecuteStoredProcedure(procedureStepProcedure);
+
+                var prepopUpdateOnePrepop = new PrepopUpdateOnePrepop
                 {
-                    StepText = model.StepText,
-                    ProcObjId = model.ProcObjId,
-                    Comments = model.Comments,
-                    StartOnCounter = model.StartOnCounter.ToString(),
-                    CounterValue = null,
-                    CounterUnit = null,
-                    FromStartOrStop = null,
-                    RelOrAbs = null,
-                    SystemTask = model.SystemTask,
-                    Destination = model.Destination,
-                    SpecificLocation = null,
-                    ReferenceVerb = model.ReferenceVerb,
-                    ReferenceObject = model.ReferenceObject != null ? string.Join(", ", model.ReferenceObject) : DBNull.Value.ToString(CultureInfo.InvariantCulture),
-                    ReferenceTheories = model.ReferenceTheories != null ? string.Join(", ", model.ReferenceTheories) : DBNull.Value.ToString(CultureInfo.InvariantCulture),
-                    GotoStep = null,
-                    GotoStepId = null,
-                    Cycles = null,
-                    CycleOnCounter = null,
-                    CycleCount = null,
-                    CycleUnit = null,
-                    ReferenceProcs = model.ReferenceProcedures != null ? string.Join(", ", model.ReferenceProcedures) : DBNull.Value.ToString(CultureInfo.InvariantCulture),
-                    PrecedingSteps = null,
-                    Duration = model.Duration.ToString(),
-                    DurationType = model.DurationType,
-                    NTLogin = model.NTLogin,
-                    Title = model.Title
+                    StrNTLogin = model.NTLogin,
+                    ProcStepID = procedureStepProcedure.NewId
                 };
+                _dbContext.Database.ExecuteStoredProcedure(prepopUpdateOnePrepop);
 
-                _dbContext.Database.ExecuteStoredProcedure(savePartProcedure);
-
-                var deleteReferenceFileProcedure = new DeleteFileProcedure() { ObjID = savePartProcedure.NewId, Type = null, NTLogin = model.NTLogin };
-
+                var deleteReferenceFileProcedure = new DeleteFileProcedure() { ObjID = procedureStepProcedure.NewId, Type = null, NTLogin = model.NTLogin };
                 _dbContext.Database.ExecuteStoredProcedure(deleteReferenceFileProcedure);
 
-                var deletePictureFileProcedure = new DeleteProcedureStepFileLinkProcedure() { id = savePartProcedure.NewId, NTLogin = model.NTLogin };
-
+                var deletePictureFileProcedure = new DeleteProcedureStepFileLinkProcedure() { id = procedureStepProcedure.NewId, NTLogin = model.NTLogin };
                 _dbContext.Database.ExecuteStoredProcedure(deletePictureFileProcedure);
+
 
                 if (model.ReferenceFiles != null)
                     foreach (var file in model.ReferenceFiles.Split(','))
                     {
                         var saveFileProcedure = new SaveFileProcedure()
                         {
-                            ObjID = savePartProcedure.NewId,
+                            ObjID = procedureStepProcedure.NewId,
                             DocID = file,
                             Type = null,
                             NTLogin = model.NTLogin

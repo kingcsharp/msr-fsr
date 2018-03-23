@@ -26,7 +26,7 @@ namespace Msr.Services.PrePro.ViewModel
         [Required]
         public string Title { get; set; }
 
-        public string Id { get; set; }
+        public string PkId { get; set; }
 
         public string ObjectId { get; set; }
 
@@ -117,13 +117,13 @@ namespace Msr.Services.PrePro.ViewModel
 
             SystemTaskList = LookupItems.System();
 
-            ReferenceProceduresList = preProServices.GetSelectedRefProcedures(id: Id, ntlogin: currentUser.Id).Select(x => new SelectListItem
+            ReferenceProceduresList = preProServices.GetSelectedRefProcedures(id: PkId, ntlogin: currentUser.Id).Select(x => new SelectListItem
             {
                 Text = x.Show,
                 Value = x.Value.ToString()
             }).OrderBy(o => o.Text).ToList();
 
-            ReferenceTheoriesList = preProServices.GetSelectedRefTheories(id: Id).Select(x => new SelectListItem
+            ReferenceTheoriesList = preProServices.GetSelectedRefTheories(id: PkId).Select(x => new SelectListItem
             {
                 Text = x.Show,
                 Value = x.Value.ToString(),
@@ -151,14 +151,14 @@ namespace Msr.Services.PrePro.ViewModel
                 ObjDesc = x.Qty + " " + x.QtyType
             }).OrderBy(o => o.RoleName).ToList());
 
-            DocLinks = documentFilesService.GetDocByObjectId(id: ObjectId);
+            DocLinks = documentFilesService.GetDocByObjectId(PkId);
         }
 
         public ProcedurePreProViewModel MapToDto(PrePropSearchView model)
         {
             return new ProcedurePreProViewModel
             {
-                Id = model.Id,
+                PkId = model.Id,
                 ObjectId = model.ObjectId,
                 ProcObjId = model.ProcStepId,
                 StartOnCounter = model.StartOnCounter,

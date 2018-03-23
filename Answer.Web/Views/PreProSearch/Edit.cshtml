@@ -17,7 +17,7 @@
                         @using (Html.BeginForm("Edit", "PreProSearch", FormMethod.Post, new { @class = "form form-horizontal", @onSubmit = "escapeAllSelects();;", @name = "editForm", @target = "", @action = "" }))
                         {
                             @Html.AntiForgeryToken()
-                            @Html.HiddenFor(x=>x.Id)
+                            @Html.HiddenFor(x=>x.PkId)
                             @Html.HiddenFor(x => x.ObjectId)
                             @Html.HiddenFor(x => x.ProcObjId)
 
@@ -197,7 +197,7 @@
                 '@Url.Action("FileUploaderBootstrap", "Doc")',
                 [@Html.Raw(ViewBag.Preview)],
                 @Html.Raw(ViewBag.PreviewConfig),
-                '@Model.Id');
+                '@Model.PkId');
 
             fileUploader.SetupSelectImage();
 

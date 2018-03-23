@@ -19,8 +19,8 @@
             },
             {
                 label: ' #',
-                name: 'Id',
-                index: 'Id',
+                name: 'Root',
+                index: 'Root',
                 key: true,
                 colmenu: false,
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
@@ -162,6 +162,11 @@
         } else {
             url = '/workflow/delete?objId=' + rowObject.ObjectId + '&returnUrl=' + returnUrl;
             deleteButton = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '"  class="btn btn-xs btn-danger" title="Proceed to delete." style="margin:2px;font-size: .8em;"><i class="fa fa fa-trash-o"></i></a>';
+        }
+
+        if (rowObject.Status == 'APPROVED_BUT_REVISING') {
+            editButton = '';
+            deleteButton = '';
         }
 
         return editButton + deleteButton + buttonWorkflowLeft + buttonWorkflowRight + detailButton;

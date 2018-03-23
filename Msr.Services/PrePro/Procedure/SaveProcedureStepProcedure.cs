@@ -1,11 +1,52 @@
 ﻿using EntityFrameworkExtras.EF6;
 using System.Data;
+using Msr.Services.PrePro.ViewModel;
+using System;
+using System.Globalization;
 
 namespace Msr.Services.PrePro.Procedure
 {
     [StoredProcedure("Portal_ProcedureStepUpdateOneStep")]
     public class SaveProcedureStepProcedure
     {
+        public SaveProcedureStepProcedure()
+        {
+        }
+        public SaveProcedureStepProcedure(ProcedurePreProViewModel model)
+        {
+            StepText = model.StepText;
+            ProcObjId = model.ProcObjId;
+            Comments = model.Comments;
+            StartOnCounter = model.StartOnCounter.HasValue ? model.StartOnCounter.Value.ToString() : null;
+            CounterValue = null;
+            CounterUnit = null;
+            FromStartOrStop = null;
+            RelOrAbs = null;
+            SystemTask = model.SystemTask;
+            Destination = model.Destination;
+            SpecificLocation = null;
+            ReferenceVerb = model.ReferenceVerb;
+            ReferenceObject = model.ReferenceObject != null
+                ? string.Join(", ", model.ReferenceObject)
+                : DBNull.Value.ToString(CultureInfo.InvariantCulture);
+            ReferenceTheories = model.ReferenceTheories != null
+                ? string.Join(", ", model.ReferenceTheories)
+                : DBNull.Value.ToString(CultureInfo.InvariantCulture);
+            GotoStep = null;
+            GotoStepId = null;
+            Cycles = null;
+            CycleOnCounter = null;
+            CycleCount = null;
+            CycleUnit = null;
+            ReferenceProcs = model.ReferenceProcedures != null
+                ? string.Join(", ", model.ReferenceProcedures)
+                : DBNull.Value.ToString(CultureInfo.InvariantCulture);
+            PrecedingSteps = null;
+            Duration = model.Duration.HasValue ? model.Duration.Value.ToString() : null;
+            DurationType = model.DurationType;
+            NTLogin = model.NTLogin;
+            Title = model.Title;
+        }
 
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "newID", Direction = ParameterDirection.Output)]
         public string NewId { get; set; }

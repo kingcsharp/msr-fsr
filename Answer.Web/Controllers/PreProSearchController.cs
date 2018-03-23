@@ -149,18 +149,17 @@ namespace Answer.Web.Controllers
         [ValidateInput(false)]
         public ActionResult Create(ProcedurePreProViewModel model)
         {
-            var taskService = new PreProServices();
+            var currentUser = GetCurrentUser();
 
             if (ModelState.IsValid)
             {
-                model.NTLogin = GetCurrentUser().Id;
-                //  role.SubParts = null;
+                model.NTLogin = currentUser.Id;
 
-                var response = taskService.Create(model: model);
+                var response = _preProServices.Create(model);
 
                 if (response)
                 {
-                    TempData["SuccessMessage"] = "Procedure Step has been created successfully.";
+                    TempData["SuccessMessage"] = "Procedure template has been created successfully.";
 
                     return RedirectToAction("Index");
                 }
@@ -168,14 +167,14 @@ namespace Answer.Web.Controllers
                 {
                     TempData["ErrorMessage"] = "Something went wrong.";
 
-                    model.Setup(new PreProServices(), new DocumentFilesService(), GetCurrentUser());
+                    model.Setup(new PreProServices(), new DocumentFilesService(), currentUser);
 
                     return View(model);
                 }
 
             }
 
-            model.Setup(new PreProServices(), new DocumentFilesService(), GetCurrentUser());
+            model.Setup(new PreProServices(), new DocumentFilesService(), currentUser);
 
             return View(model);
         }
