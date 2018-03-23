@@ -217,7 +217,7 @@ namespace Msr.Services.People.ViewModels
                 },
                 new SelectListItem
                 {
-                    Text = "Delivary Screen",
+                    Text = "Delivery Screen",
                     Value = "DELIVERY_SCREEN"
                 },
                 new SelectListItem
