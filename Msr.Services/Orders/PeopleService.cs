@@ -48,7 +48,7 @@ namespace Msr.Services.Orders
 
         public ResultNotification<CheckLoginResult> GetAnswerUser(string login, string password)
         {
-            var notificationResult = new ResultNotification<CheckLoginResult>();
+            var result = new ResultNotification<CheckLoginResult>();
 
             login = login.Trim().ToLower();
 
@@ -56,24 +56,29 @@ namespace Msr.Services.Orders
 
             if (user == null)
             {
-                notificationResult.AddError($"User not found with UserName: {login}");
+                result.AddError($"User not found with UserName: {login}");
 
-                return notificationResult;
+                return result;
+            }
+            var aspNetUser = _dbContext.AspNetUsers.SingleOrDefault(x => x.UserName.ToLower() == login);
+
+            if (aspNetUser !=null && aspNetUser.PortalUser)
+            {
+                result.AddError($"You do not have permissions.");
+                return result;
             }
 
             var validatePassword = _userService.ValidatePassword(user.Id, password);
 
             if (!validatePassword)
             {
-                notificationResult.AddError("Invalid password");
-                return notificationResult;
+                result.AddError("Invalid password");
+                return result;
             }
 
-            notificationResult.Entity = new CheckLoginResult();
+            result.Entity = new CheckLoginResult();
 
-            var portalAccount = _dbContext.AspNetUsers.SingleOrDefault(x => x.UserName.ToLower() == login);
-
-            if (portalAccount == null)
+            if (aspNetUser == null)
             {
                 var context = new ApplicationDbContext();
 
@@ -97,11 +102,11 @@ namespace Msr.Services.Orders
                 context.SaveChanges();
             }
 
-            notificationResult.Entity.Id = user.Id;
-            notificationResult.Entity.Login = login;
-            notificationResult.Entity.Password = user.Password;
+            result.Entity.Id = user.Id;
+            result.Entity.Login = login;
+            result.Entity.Password = user.Password;
 
-            return notificationResult;
+            return result;
         }
         public IQueryable<PeopleObjectView> GetPeople()
         {

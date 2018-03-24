@@ -78,7 +78,8 @@ namespace Msr.Services.Users
                 TimeZone = s.TimeZone,
                 CompanyId = s.CompanyId,
                 CreatedDate = s.CreatedDate,
-                RoleName = s.AspNetRoles.FirstOrDefault().Name
+                RoleName = s.AspNetRoles.FirstOrDefault().Name,
+                PortalUser = s.PortalUser
             }).SingleOrDefault();
 
             return user;

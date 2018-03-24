@@ -1,9 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
-
-namespace Msr.Models.Users
+namespace Msr.Models.Users
 {
     public partial class AspNetUser
     {
@@ -23,9 +22,7 @@ using System;
         public string CompanyId { get; set; }
         public string AnswerId { get; set; }
         public string ParentId { get; set; }
-
-        //public virtual ICollection<AspNetUserClaim> AspNetUserClaims { get; set; }
-        //public virtual ICollection<AspNetUserLogin> AspNetUserLogins { get; set; }
+        public bool PortalUser { get; set; }
         public virtual ICollection<AspNetRole> AspNetRoles { get; set; }
     }
 }

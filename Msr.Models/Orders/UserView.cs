@@ -28,5 +28,6 @@ namespace Msr.Models.Orders
         public string FullName { get; set; }
         public string CompanyId { get; set; }
         public string CompanyName { get; set; }
+        public bool PortalUser { get; set; }
     }
 }

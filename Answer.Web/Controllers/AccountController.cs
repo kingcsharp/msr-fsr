@@ -21,9 +21,11 @@ namespace Msr.Web.Controllers
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
         private readonly UserService _userService;
+        private readonly PeopleService _peopleService;
         public AccountController()
         {
             _userService = new UserService();
+            _peopleService = new PeopleService();
         }
 
         public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
@@ -77,9 +79,7 @@ namespace Msr.Web.Controllers
                 return View(model);
             }
 
-            var peopleService = new PeopleService();
-
-            var answerUser = peopleService.GetAnswerUser(model.User, model.Password);
+            var answerUser = _peopleService.GetAnswerUser(model.User, model.Password);
 
             if (answerUser.HasErrors())
             {
@@ -126,12 +126,11 @@ namespace Msr.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = _userService.GetAnserByUserName(model.UserName);
+                var user = _userService.GetByUserName(model.UserName);
 
-                if (user == null)
+                if (user == null || user.PortalUser)
                 {
                     ModelState.AddModelError("", $"User not found with Id: '{model.UserName}'");
-
                     return View(model);
                 }
 
