@@ -1,0 +1,15 @@
+﻿
+
+
+
+/*
+
+STORED PROCEDURE CALLED IN meeting/saveAgendaMeeting.asp
+*/
+
+CREATE  PROCEDURE A_SP_MEETING_AGENDA_DELETE_FILE_LINKS 
+@agendaID nvarchar(50),
+@strNTLogin nvarchar(50)
+AS
+DELETE FROM A_MEETING_AGENDA_ITEM_DOC_LINK WHERE 
+AGENDA_ID = @agendaID AND CREATOR_ID = @strNTLogin

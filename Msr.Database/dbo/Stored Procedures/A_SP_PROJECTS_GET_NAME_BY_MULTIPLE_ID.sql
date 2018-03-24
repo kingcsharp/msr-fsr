@@ -1,0 +1,17 @@
+﻿
+
+
+
+
+
+CREATE      PROCEDURE DBO.A_SP_PROJECTS_GET_NAME_BY_MULTIPLE_ID
+	@ID varchar(8000),
+	@strNTLogin varchar(50)
+AS
+CREATE TABLE #TempItems	(IT varchar(50))
+INSERT INTO #TempItems Exec A_SP_Z_SPLIT @ID,', '
+UPDATE #TempItems set IT = Ltrim(IT)
+
+
+SELECT ID AS ID,NAME AS NAME 
+FROM A_PROJECTS WHERE ID in (SELECT IT FROM #TempItems)

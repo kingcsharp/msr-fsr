@@ -47,7 +47,7 @@ else
 	end
 print 'Now update all the values with the data passed in'
 UPDATE A_PROCEDURE_STEPS SET
-STEP_TEXT = @STEP_TEXT,
+STEP_TEXT = @title,
 COMMENTS = @COMMENTS,
 PROCEDURE_ID = @pID,
 START_ON_COUNTER = @START_ON_COUNTER,

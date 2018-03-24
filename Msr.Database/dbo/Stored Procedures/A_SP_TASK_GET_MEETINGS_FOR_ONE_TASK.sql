@@ -1,0 +1,8 @@
+﻿create    PROCEDURE A_SP_TASK_GET_MEETINGS_FOR_ONE_TASK
+@ID nvarchar(50),
+@strNTLogin varchar(50)
+AS
+print 'Getting meetings'
+SELECT p.ID AS [ID],p.MEETING_NAME AS NAME 
+FROM A_MEETINGS P, A_TASK_MEETING_LINK r 
+WHERE p.ID = r.MEETING_ID AND r.TASK_ID = @ID

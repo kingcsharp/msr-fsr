@@ -1,0 +1,33 @@
+﻿
+
+
+
+
+
+
+
+
+/*
+STORED PROCEDURE CALLED IN serviceCallsWorkType/editServiceCall.asp
+*/
+CREATE          PROCEDURE A_SP_SERVICE_CALL_GET_WORK_TYPE_LIST 
+@strNTLogin varchar(50),
+@startDate dateTime
+AS
+print 'getting my company because those are the only work types i can see'
+
+declare @myCo as varchar(50)
+SELECT @myCo = ROOT_COMPANY 
+FROM A_APPROVED_PEOPLE 
+WHERE ID=@strNTLogin
+print 'my company is' + @myCo + ''
+
+SELECT ID, CUSTOMER_NAME + '--' + WORK_TYPE_NAME AS WORK_TYPE_NAME
+FROM A_V_SERVICE_CALL_WORK_TYPE_DATA sc
+WHERE STATUS = 'ACTIVE'
+AND (SUPPLIER_ID IN (SELECT CHILD_COMPANY FROM A_COMPANIES_CHILD_LOOKUP_TABLE WHERE COMPANY =@myCo)
+or SUPPLIER_ID = @myCo)
+AND NOT (exists(SELECT WORK_TYPE FROM A_SERVICE_CALLS_WEEKLY_REPORTS WHERE 
+	WORKER_ID = @strNTLogin AND ACTUAL_START_DATE = @startDate AND WORK_TYPE IS NOT NULL 
+	and WORK_TYPE = sc.ID))
+ORDER BY CUSTOMER_NAME, WORK_TYPE_NAME

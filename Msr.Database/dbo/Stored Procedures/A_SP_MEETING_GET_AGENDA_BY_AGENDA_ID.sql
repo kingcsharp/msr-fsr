@@ -1,0 +1,9 @@
+﻿/*
+STORED PROCEDURE CALLED IN meeting/listAgendaMeeting.asp
+*/
+CREATE  PROCEDURE A_SP_MEETING_GET_AGENDA_BY_AGENDA_ID
+@agendaID nvarchar(50),
+@strNTLogin nvarchar(50)
+AS
+SELECT * FROM A_V_MEETING_GET_AGENDA 
+WHERE A_ID=@agendaID

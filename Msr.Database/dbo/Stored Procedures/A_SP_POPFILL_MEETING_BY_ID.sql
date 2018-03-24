@@ -1,0 +1,8 @@
+﻿
+create    PROCEDURE A_SP_POPFILL_MEETING_BY_ID
+@meetingID varchar(50),
+@strNTLogin varchar(50)
+AS
+SELECT ID, MEETING_NAME AS NAME  
+FROM A_MEETINGS
+WHERE @meetingID = ID
