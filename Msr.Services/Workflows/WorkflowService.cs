@@ -80,7 +80,7 @@ namespace Msr.Services.Workflows
             try
             {
                 var p = new DynamicParameters();
-                
+
                 p.Add("@objID", objectId, DbType.String, ParameterDirection.Input, size: 50);
                 p.Add("@strNTLogin", loginId, DbType.String, ParameterDirection.Input, size: 50);
 
@@ -107,7 +107,7 @@ namespace Msr.Services.Workflows
 
                 var status = _dbContext.Database.SqlQuery<string>(checkIfObjectInCreatingSql).FirstOrDefault();
 
-                if (status !=null && status == "CREATING")
+                if (status != null && status == "CREATING")
                 {
                     result.Entity = objectId;
                     return result;
@@ -127,10 +127,10 @@ namespace Msr.Services.Workflows
 
                     result.Entity = newObjId;
 
-                    var sqlMainData = string.Format("exec A_SP_OBJECT_GET_MAIN_DATA '{0}','{1}'", objectId, loginId);
+                    var sqlMainData = string.Format("exec A_SP_OBJECT_GET_MAIN_DATA '{0}','{1}'", newObjId, loginId);
                     _dbContext.Database.SqlQuery<ObjectDataResult>(sqlMainData).Single();
 
-                    var sqlCheckoutData = string.Format("exec A_SP_OBJECT_CHECKED_TO_ME '{0}','{1}'", objectId, loginId);
+                    var sqlCheckoutData = string.Format("exec A_SP_OBJECT_CHECKED_TO_ME '{0}','{1}'", newObjId, loginId);
                     _dbContext.Database.SqlQuery<ObjectDataResult>(sqlCheckoutData).Single();
 
                 }
