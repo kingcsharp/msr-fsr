@@ -104,7 +104,7 @@ namespace Msr.Services.Procedures.ViewModels
             RolesList = roleService.GetActiveRoles().Select(x => new SelectListItem
             {
                 Text = x.Name,
-                Value = x.ObJect_Id.ToString()
+                Value = x.Id.ToString()
             }).OrderBy(o => o.Text).ToList();
 
             VerbList = procedureTypesService.ProceduresVerbsList().Select(x => new SelectListItem
@@ -114,12 +114,13 @@ namespace Msr.Services.Procedures.ViewModels
             }).OrderBy(o => o.Text).ToList();
             VerbList.Insert(0, new SelectListItem { Text = @"--Select--", Value = "" });
 
-            DocLinks = documentFilesService.GetDocByObjectId(id: Id);
-            Roles = proceduresService.GetSelectedRoles(id: Id, ntlogin: ntlogin);
+            DocLinks = documentFilesService.GetDocByObjectId(ObjectId);
+            Roles = proceduresService.GetSelectedRoles(Id, ntlogin).Select(x=>x.Role_Id).ToList();
         }
 
         public void MapToDto(ProcedureView model)
         {
+            Id = model.Id;
             ObjectId = model.ObjectId;
             Name = model.Name;
             CreatingCompany = model.CreatingCo;

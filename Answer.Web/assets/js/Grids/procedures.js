@@ -96,7 +96,7 @@
                 formatter: FilePreviewFormatter,
                 align: 'center'
             },
-            { name: 'Actions', index: 'Id', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: procedureEditFormatter, width: 100, align: 'center' }
+            { name: 'Actions', index: 'Id', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: ActionsFormatter, width: 100, align: 'center' }
         ],
 
         viewrecords: true,
@@ -115,26 +115,8 @@
         autowidth: true,
         colMenu: true,
         gridComplete: function () {
-
-            $('.editprocedure').on('click',
-                function (e) {
-                    e.preventDefault();
-
-                    var callBackId = $(this).data('call-back-id');
-
-                    eModal.confirm('Are you sure? Locking prevents others from editing. Checking out creates the next revision for you to edit?')
-                        .then(confirmCallback, optionalCancelCallback);
-
-                    function confirmCallback() {
-                        window.location.href = "/Procedures/Edit/" + callBackId;
-                    }
-
-                    function optionalCancelCallback() {
-                    }
-
-                });
-
-            UnLockWorkflow(returnUrl);
+            Msr.JqGridCommon.SetupGridLock("/Procedures/Edit/");
+            Msr.JqGridCommon.UnLockWorkflow(returnUrl);
         }
 
     });
@@ -160,41 +142,12 @@
         return Msr.JqGridCommon.FilePreview(cellvalue, options, rowObject);
     }
 
-    function procedureEditFormatter(cellvalue, options, rowObject) {
+    function ActionsFormatter(cellvalue, options, rowObject) {
 
         var viewButton = '<a href="/Procedures/view/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" title="View" style="margin:2px;font-size: .8em;"><i class="fa fa-eye"></i></a>';
+        var actions = Msr.JqGridCommon.ActionFormtter(cellvalue, options, rowObject, returnUrl, '/Procedures/Edit/');
 
-        var editButton = '';
-        if (rowObject.Status !== 'APPROVED_BUT_REVISING') {
-            editButton = '<a  title="Edit" href="/Procedures/edit/' + rowObject.ObjId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
-        }
-
-        var deleteButton = '';
-        var buttonWorkflowLeft = '';
-        var buttonWorkflowRight = '';
-        var url = '';
-
-        if (rowObject.Status === 'CREATING') {
-
-            url = '/workflow/submit?objId=' + rowObject.ObjId + '&returnUrl=' + returnUrl;
-            buttonWorkflowLeft = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '"  data-call-back-id="' + rowObject.ObjId + '" class="btn btn-xs btn-success unlock" title="Cancel Creation. Edit will be lost" style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-left"></i></a>';
-
-            buttonWorkflowRight = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-success" title="Proceed to approval workflow for release." style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-right"></i></a>';
-        } else {
-            url = '/workflow/delete?objId=' + rowObject.ObjId + '&returnUrl=' + returnUrl;
-            if (rowObject.Status !== 'APPROVED_BUT_REVISING') {
-
-                deleteButton = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-danger" title="Proceed to Delete." style="margin:2px;font-size: .8em;"><i class="fa fa fa-trash-o"></i></a>';
-            }
-        }
-        var assignProcedureButton = '<a href="/Procedures/assignProcedure/' + rowObject.ObjId + '" class="btn btn-xs btn-success" title="Assign this procedure" style="margin:2px;font-size: .8em;"> <i class="fa fa-users"></i></a>';
-
-        if (rowObject.Status == 'APPROVED_BUT_REVISING') {
-            editButton = '';
-            deleteButton = '';
-        }
-
-        return viewButton + editButton + deleteButton + buttonWorkflowLeft + buttonWorkflowRight + assignProcedureButton;
+        return actions;
     }
 
     $('#search').click(function () {

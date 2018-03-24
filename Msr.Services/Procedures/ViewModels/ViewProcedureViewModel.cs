@@ -95,7 +95,7 @@ namespace Msr.Services.Procedures.ViewModels
                 Value = x.Show.ToString()
             }).OrderBy(o => o.Text).ToList();
 
-            Roles = proceduresService.GetSelectedRoles(id: Id,ntlogin:ntlogin);
+            Roles = proceduresService.GetSelectedRoles(Id,ntlogin).Select(x => x.Role_Id).ToList(); ;
         }
 
         public SaveProcedureViewModel MapToDto(ProcedureView model)

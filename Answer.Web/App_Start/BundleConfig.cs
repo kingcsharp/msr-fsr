@@ -28,10 +28,78 @@ namespace Answer.Web
                 .Include("~/assets/js/msr/grid-common.js")
             );
 
+            bundles.Add(new ScriptBundle("~/bundles/js/jqgrid-wip")
+               .Include("~/assets/js/grids/engineer.js")
+           );
+            bundles.Add(new ScriptBundle("~/bundles/js/jqgrid-parts")
+                .Include("~/assets/js/grids/parts.js")
+            );
+            bundles.Add(new ScriptBundle("~/bundles/js/jqgrid-parttype")
+                .Include("~/assets/js/grids/parttype.js")
+            );
+            bundles.Add(new ScriptBundle("~/bundles/js/jqgrid-actualparts")
+                .Include("~/assets/js/grids/actualparts.js")
+            );
+            bundles.Add(new ScriptBundle("~/bundles/js/jqgrid-procedures")
+                .Include("~/assets/js/grids/procedures.js")
+            );
+            bundles.Add(new ScriptBundle("~/bundles/js/jqgrid-procedureverbs")
+                .Include("~/assets/js/grids/procedureverbs.js")
+            );
+            bundles.Add(new ScriptBundle("~/bundles/js/jqgrid-procedurestep")
+                .Include("~/assets/js/grids/procedurestep.js")
+            );
+            bundles.Add(new ScriptBundle("~/bundles/js/jqgrid-people")
+                .Include("~/assets/js/grids/people.js")
+            );
+            bundles.Add(new ScriptBundle("~/bundles/js/jqgrid-roles")
+                .Include("~/assets/js/grids/user-roles.js")
+            );
+            bundles.Add(new ScriptBundle("~/bundles/js/jqgrid-companies")
+                .Include("~/assets/js/grids/companies.js")
+            );
+            bundles.Add(new ScriptBundle("~/bundles/js/jqgrid-locations")
+                .Include("~/assets/js/grids/locations.js")
+            );
+            bundles.Add(new ScriptBundle("~/bundles/js/jqgrid-regions")
+                .Include("~/assets/js/grids/regions.js")
+            );
+            bundles.Add(new ScriptBundle("~/bundles/js/jqgrid-Monitors")
+                .Include("~/assets/js/grids/Monitors.js")
+            );
+            bundles.Add(new ScriptBundle("~/bundles/js/jqgrid-production-planning")
+                .Include("~/assets/js/Grids/production-planning.js")
+            );
             bundles.Add(new ScriptBundle("~/bundles/js/jqgrid-purchase-order")
                 .Include("~/assets/js/Grids/purchase-order.js")
             );
-
+            bundles.Add(new ScriptBundle("~/bundles/js/jqgrid-invoices")
+                .Include("~/assets/js/grids/invoices.js")
+            );
+            bundles.Add(new ScriptBundle("~/bundles/js/jqgrid-purchases")
+                .Include("~/assets/js/Grids/purchases.js")
+            );
+            bundles.Add(new ScriptBundle("~/bundles/js/jqgrid-approval-workflows")
+                .Include("~/assets/js/grids/approval-workflows.js")
+            );
+            bundles.Add(new ScriptBundle("~/bundles/js/jqgrid-approvalstages")
+                .Include("~/assets/js/grids/approvalstages.js")
+            );
+            bundles.Add(new ScriptBundle("~/bundles/js/jqgrid-approvalgroups")
+                .Include("~/assets/js/grids/approvalgroups.js")
+            );
+            bundles.Add(new ScriptBundle("~/bundles/js/jqgrid-equipment-maintenance")
+                .Include("~/assets/js/grids/equipment-maintenance.js")
+            );
+            bundles.Add(new ScriptBundle("~/bundles/js/jqgrid-delivery")
+                .Include("~/assets/js/grids/delivery.js")
+            );
+            bundles.Add(new ScriptBundle("~/bundles/js/jqgrid-documents")
+                .Include("~/assets/js/grids/documents.js")
+            );
+            bundles.Add(new ScriptBundle("~/bundles/js/jqgrid-help")
+                .Include("~/assets/js/grids/help.js")
+            );
 
             // Use the development version of Modernizr to develop with and learn from. Then, when you're
             // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.

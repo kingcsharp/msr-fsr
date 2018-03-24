@@ -20,6 +20,7 @@ using Msr.Services.Procedures.Procedures;
 using Msr.Services.Procedures.ViewModels;
 using Msr.Services.ProcedureVerbs;
 using Msr.Services.PurchesOrder.ViewModels;
+using Msr.Services.Roles.Messages;
 using Msr.Services.Users.Messages;
 
 namespace Msr.Services.Procedures
@@ -53,14 +54,12 @@ namespace Msr.Services.Procedures
 
             return result;
         }
-        public List<string> GetSelectedRoles(string id, string ntlogin)
+        public List<RoleResult> GetSelectedRoles(string id, string ntlogin)
         {
             var objId = new SqlParameter("@strID", id ?? "0");
+            var ntLogin = new SqlParameter("@strNTLogin", ntlogin);
 
-            //need to be dynamic
-            var NTLogin = new SqlParameter("@strNTLogin", ntlogin);
-
-            var result = _dbContext.Database.SqlQuery<string>("EXEC Portal_GetProcedureRoles  @strID, @strNTLogin", objId, NTLogin).ToList();
+            var result = _dbContext.Database.SqlQuery<RoleResult>("EXEC A_SP_PROCEDURES_GET_ROLES_TO_VIEW  @strID, @strNTLogin", objId, ntLogin).ToList();
 
             return result;
         }

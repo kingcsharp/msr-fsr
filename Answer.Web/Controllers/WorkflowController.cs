@@ -116,5 +116,13 @@ namespace Answer.Web.Controllers
 
             return RedirectPermanent(returnUrl);
         }
+
+        public JsonResult CheckOutObject(string id)
+        {
+            var user = GetCurrentUser();
+            var checkoutEntity = _workflowService.CheckOutObject(id, user.Id);
+
+            return Json(new { ObjectId = checkoutEntity.Entity }, JsonRequestBehavior.AllowGet);
+        }
     }
 }
