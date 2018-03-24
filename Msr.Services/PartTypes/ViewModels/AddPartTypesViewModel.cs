@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
-using Msr.Models.Parts;
+using Msr.Models.PartTypes;
 
 namespace Msr.Services.PartTypes.ViewModels
 {

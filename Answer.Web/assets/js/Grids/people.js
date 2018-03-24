@@ -313,7 +313,7 @@
                 hidden: false,
                 colmenu: false,
                 editable: false,
-                formatter: PeopleEditFormatter,
+                formatter: ActionFormtter,
                 width: 200,
                 align: 'center'
             }
@@ -370,7 +370,7 @@
         return Msr.JqGridCommon.FilePreview(cellvalue, options, rowObject);
     }
 
-    function PeopleEditFormatter(cellvalue, options, rowObject) {
+    function ActionFormtter(cellvalue, options, rowObject) {
 
         var actions = Msr.JqGridCommon.ActionFormtter(cellvalue, options, rowObject, returnUrl, '/People/Edit/');
 

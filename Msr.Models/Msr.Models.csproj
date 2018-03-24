@@ -108,9 +108,11 @@
     <Compile Include="ApprovalWorkflows\ApprovalWorkflowsView.cs" />
     <Compile Include="Comman\SelectFile.cs" />
     <Compile Include="Common\ListItem.cs" />
+    <Compile Include="Companies\ApprovedCompaniesView.cs" />
     <Compile Include="Companies\CompanyView.cs" />
     <Compile Include="Companies\EditCompanyView.cs" />
     <Compile Include="Companies\HeadPeopleView.cs" />
+    <Compile Include="Companies\PersonRootCompanyTreeView.cs" />
     <Compile Include="CustomerRequirements\CustomerRequirementView.cs" />
     <Compile Include="CustomerRequirements\CustomerSubmittedRequirement.cs" />
     <Compile Include="CustomerRequirements\CuTypes.cs" />
@@ -144,9 +146,11 @@
     <Compile Include="Orders\WorkOrderImageView.cs" />
     <Compile Include="Orders\WorkOrderView.cs" />
     <Compile Include="Parts\Part.cs" />
+    <Compile Include="Parts\PartApprovedView.cs" />
     <Compile Include="Parts\PartsView.cs" />
     <Compile Include="Parts\PartsWithTaskAndResult.cs" />
     <Compile Include="Parts\PartsSafetyStock.cs" />
+    <Compile Include="PartTypes\PartTypesApproved.cs" />
     <Compile Include="PartTypes\PartTypesView.cs" />
     <Compile Include="Parts\SelectInternalPart.cs" />
     <Compile Include="Parts\SelectPartCustomerExecptions.cs" />

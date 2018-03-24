@@ -2,8 +2,6 @@
     //$.jgrid.defaults.responsive = true;
     $.jgrid.defaults.styleUI = 'Bootstrap';
 
-
-
     $("#jqGrid").jqGrid({
         url: url,
         mtype: "GET",
@@ -13,8 +11,8 @@
         colModel: [
             {
                 label: 'Database ID',
-                name: 'Id',
-                index: 'Id',
+                name: 'Root',
+                index: 'Root',
                 key: true,
                 colmenu: false,
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
@@ -145,7 +143,7 @@
                 width: 200,
                 align: 'left'
             },
-            { name: 'Actions', index: 'Id', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: actualPartsEditFormatter, width: 250, align: 'center' }
+            { name: 'Actions', index: 'Id', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: ActionFormatter, width: 250, align: 'center' }
         ],
         ajaxRowOptions: {
             type: "POST",
@@ -177,6 +175,11 @@
                 searchOnEnter: true,
                 searchOperators: true
             });
+        },
+        gridComplete: function () {
+
+            Msr.JqGridCommon.SetupGridLock("/Actualparts/Edit/");
+            Msr.JqGridCommon.UnLockWorkflow(returnUrl);
         }
     });
     $('#jqGrid').navGrid("#jqGridPager", {
@@ -192,28 +195,11 @@
         { multipleSearch: true }
     );
 
-    function actualPartsEditFormatter(cellvalue, options, rowObject) {
+    function ActionFormatter(cellvalue, options, rowObject) {
 
-        var editButton = '<a  title="Edit" href="/Actualparts/edit/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
-        var viewHistory = '<a href="/ActualParts/ViewHistory/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" title="History" style="margin:2px;font-size: .8em;"><i class="fa fa-history" aria-hidden="true"></i> History</a>';
+        var actions = Msr.JqGridCommon.ActionFormtter(cellvalue, options, rowObject, returnUrl, '/Actualparts/Edit/');
 
-        var deleteButton = '';
-        var buttonWorkflowLeft = '';
-        var buttonWorkflowRight = '';
-        var url = '';
-
-        if (rowObject.Status === 'CREATING') {
-
-            url = '/workflow/submit?objId=' + rowObject.ObjectId + '&returnUrl=' + returnUrl;
-            buttonWorkflowLeft = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '"  data-call-back-id="' + rowObject.ObjectId + '" class="btn btn-xs btn-success unlock" title="Cancel Creation. Edit will be lost" style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-left"></i></a>';
-
-            buttonWorkflowRight = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-success" title="Proceed to approval workflow for release." style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-right"></i></a>';
-        } else {
-            url = '/workflow/delete?objId=' + rowObject.ObjectId + '&returnUrl=' + returnUrl;
-            deleteButton = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-danger" title="Proceed to delete." style="margin:2px;font-size: .8em;"><i class="fa fa fa-trash-o"></i></a>';
-        }
-
-        return editButton + viewHistory + deleteButton + buttonWorkflowLeft + buttonWorkflowRight;
+        return actions;
     }
     function serialFormatter(cellvalue, options, rowObject) {
 

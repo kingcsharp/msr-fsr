@@ -2831,6 +2831,9 @@
       <QuotedIdentifier>Off</QuotedIdentifier>
     </Build>
     <Build Include="dbo\Stored Procedures\A_MEETINGS_REORDER_AGENDA_TOPICS.sql" />
+    <Build Include="dbo\Views\Portal\Portal_ApprovedCompaniesView.sql" />
+    <Build Include="dbo\Views\Portal\Portal_PartsApprovedView.sql" />
+    <Build Include="dbo\Views\Portal\Portal_PartTypesApprovedView.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Msr.Database.refactorlog" />

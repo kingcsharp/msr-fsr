@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using Msr.Services.Parts.Procedures;
@@ -27,15 +28,19 @@ namespace Msr.Services.Parts
         {
             return _dbContext.PartsViews;
         }
-
-        public PartsView GetById(string id)
+        public IQueryable<PartApprovedView> GetPartsApprovedQueryable(string co)
         {
-            return GetPartsQueryable().SingleOrDefault(x => x.ObjectId == id);
+            return _dbContext.PartApprovedViews.Where(x => x.Status.Contains("APPROVED") && x.CreatingCo == co);
+        }
+
+        public PartsView GetByObjectId(string objectId)
+        {
+            return GetPartsQueryable().SingleOrDefault(x => x.ObjectId == objectId);
         }
 
         public List<SelectFile> GetSelectedFiles(string id, string type, string ntlogin)
         {
-            var objID = new SqlParameter("@objID", id == null ? "0" : id);
+            var objID = new SqlParameter("@objID", id ?? "0");
             var selecttype = new SqlParameter();
             if (type == null)
             {
@@ -55,7 +60,7 @@ namespace Msr.Services.Parts
 
         public SelectInternalPart GetInternalPart(string id, string ntlogin)
         {
-            var strID = new SqlParameter("@strID", id == null ? "0" : id);
+            var strID = new SqlParameter("@strID", id ?? "0");
             //need to be dynamic
             var NTLogin = new SqlParameter("@strNTLogin", ntlogin);
 
@@ -66,7 +71,7 @@ namespace Msr.Services.Parts
 
         public List<SelectPartCustomerExecptions> GetPartCustomerExceptions(string id)
         {
-            var partId = new SqlParameter("@ProductPartId", id == null ? "0" : id);
+            var partId = new SqlParameter("@ProductPartId", id ?? "0");
 
             var result = _dbContext.Database.SqlQuery<SelectPartCustomerExecptions>("SELECT c.ID AS ID, c.NAME AS NAME FROM A_PARTS_FUTURE_EXCEPTIONS f,A_V_COMPANIES_APPROVED_DATA c WHERE c.ID = f.CUST_ID AND f.PART_ID = @ProductPartId", partId).ToList();
 
@@ -75,15 +80,16 @@ namespace Msr.Services.Parts
 
         public List<string> GetPartSpecialCustomers(string id)
         {
-            var partId = new SqlParameter("@ProductPartId", id == null ? "0" : id);
+            var partId = new SqlParameter("@ProductPartId", id ?? "0");
 
             var result = _dbContext.Database.SqlQuery<string>("SELECT SPEC_ID FROM A_PARTS_FUTURE_SPECIAL_DISTRIBUTIONS WHERE PART_ID = @ProductPartId", partId).ToList();
 
             return result;
         }
 
-        public bool Update(AddPartViewModel model)
+        public ResultNotification<string> Update(AddPartViewModel model)
         {
+            var result = new ResultNotification<string>();
             try
             {
                 var savePartProcedure = new SavePartProcedure()
@@ -107,8 +113,8 @@ namespace Msr.Services.Parts
                     SupplierCo = model.SupplierCo,
                     ProductType = model.ProductType,
                     ProcVerb = model.ProcVerb,
-                    SpecialCustomers = model.SpecialCustomers != null ? string.Join(", ", model.SpecialCustomers) : DBNull.Value.ToString(),
-                    CustomerExceptions = model.CustomerExceptions != null ? string.Join(", ", model.CustomerExceptions) : DBNull.Value.ToString(),
+                    SpecialCustomers = model.SpecialCustomers != null ? string.Join(", ", model.SpecialCustomers) : DBNull.Value.ToString(CultureInfo.InvariantCulture),
+                    CustomerExceptions = model.CustomerExceptions != null ? string.Join(", ", model.CustomerExceptions) : DBNull.Value.ToString(CultureInfo.InvariantCulture),
                     Customers = model.Customers,
                     Price = model.Price,
                     NTLogin = model.NTLogin
@@ -116,13 +122,13 @@ namespace Msr.Services.Parts
 
                 _dbContext.Database.ExecuteStoredProcedure(savePartProcedure);
 
-                return true;
+                return result;
             }
             catch (Exception ex)
             {
-                var message = "Error occured:" + ex.Message;
+                result.AddError(ex.Message);
 
-                return false;
+                return result;
             }
         }
 
@@ -152,8 +158,8 @@ namespace Msr.Services.Parts
                     SupplierCo = model.SupplierCo,
                     ProductType = model.ProductType,
                     ProcVerb = model.ProcVerb,
-                    SpecialCustomers = model.SpecialCustomers != null ? string.Join(", ", model.SpecialCustomers) : DBNull.Value.ToString(),
-                    CustomerExceptions = model.CustomerExceptions != null ? string.Join(", ", model.CustomerExceptions) : DBNull.Value.ToString(),
+                    SpecialCustomers = model.SpecialCustomers != null ? string.Join(", ", model.SpecialCustomers) : DBNull.Value.ToString(CultureInfo.InvariantCulture),
+                    CustomerExceptions = model.CustomerExceptions != null ? string.Join(", ", model.CustomerExceptions) : DBNull.Value.ToString(CultureInfo.InvariantCulture),
                     Customers = model.Customers,
                     Price = model.Price,
                     NTLogin = model.NTLogin
@@ -314,9 +320,9 @@ namespace Msr.Services.Parts
             return result;
         }
 
-        public List<ProductSupplierView> GetProductSuppliersByCreatingCo(string id)
+        public List<ProductSupplierView> GetProductSuppliersByCreatingCo(string co)
         {
-            var result = _dbContext.Database.SqlQuery<ProductSupplierView>("SELECT DISTINCT TOP 500 NAME,ID FROM A_V_COMPANIES_DROP_SEARCH WHERE ROOT_CO_ID = '" + id + "'").ToList();
+            var result = _dbContext.Database.SqlQuery<ProductSupplierView>($"SELECT DISTINCT TOP 500 NAME,ID FROM A_V_COMPANIES_DROP_SEARCH WHERE ROOT_CO_ID = '{co}'").ToList();
             return result;
         }
 

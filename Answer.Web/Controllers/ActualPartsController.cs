@@ -45,9 +45,9 @@ namespace Answer.Web.Controllers
             {
                 foreach (var rule in param.where.rules)
                 {
-                    if (rule.field == nameof(ActualPartsView.Id))
+                    if (rule.field == nameof(ActualPartsView.Root))
                     {
-                        totalRows = totalRows.Where(x => x.Id == rule.data.ToLower());
+                        totalRows = totalRows.Where(x => x.Root == rule.data.ToLower());
                     }
                     else if (rule.field == nameof(ActualPartsView.Serial))
                     {

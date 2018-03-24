@@ -89,7 +89,7 @@ namespace Msr.Services.Parts.ViewModels
 
         public string ProductType { get; set; }
 
-        [DisplayName("Procedure Type :")]
+        [DisplayName("Procedure Verb :")]
         public string ProcVerb { get; set; }
 
         [DisplayName("Special Customer List :")]
@@ -266,17 +266,17 @@ namespace Msr.Services.Parts.ViewModels
             {
                 Text = x.Name,
                 Value = x.Id.ToString()
-            }).OrderBy(o => o.Text).ToList());
+            }).ToList());
 
-            ListInternalEqualParts = partsService.GetPartsQueryable().ToList().Select(x => new SelectListItem
+            ListInternalEqualParts = partsService.GetPartsApprovedQueryable(creatingCo).ToList().Select(x => new SelectListItem
             {
                 Text = x.Name,
                 Value = x.ObjectId.ToString()
-            }).OrderBy(o => o.Text).ToList();
+            }).ToList();
 
             ListPartsTypes.Add(new SelectListItem { Value = "", Text = "" });
 
-            ListPartsTypes.AddRange(partTypeService.GetPartTypesQueryable().ToList().Select(x => new SelectListItem
+            ListPartsTypes.AddRange(partTypeService.GetPartTypesApproved(creatingCo).ToList().Select(x => new SelectListItem
             {
                 Text = x.Name,
                 Value = x.Id.ToString()
@@ -296,7 +296,7 @@ namespace Msr.Services.Parts.ViewModels
 
             SpecialCustomers = partsService.GetPartSpecialCustomers(id: Id).ToList();
 
-            DocLinks = documentFilesService.GetDocByObjectId(Id);
+            DocLinks = documentFilesService.GetDocByObjectId(ObjID);
         }
 
         public AddPartViewModel MapToDto(PartsView model)

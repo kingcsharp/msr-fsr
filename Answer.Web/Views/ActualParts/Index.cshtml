@@ -24,8 +24,8 @@
 @section scripts
 {
     @Scripts.Render("~/bundles/js/jqgrid")
+    @Scripts.Render("~/bundles/js/jqgrid-actualparts")
 
-    <script type="text/javascript" src="~/assets/js/grids/actualparts.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             LoadActualPartsGrid('@Url.Action("ActualPartsData", "ActualParts")', '@ViewBag.Serial','@Request.Url.OriginalString');

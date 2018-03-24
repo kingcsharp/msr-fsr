@@ -297,7 +297,9 @@
 <script>
     $(".monitor-save-close").on('click', function () {
         var form = $(this).parents('form:first');
-        eLoaderOpen()
+        
+        eLoaderOpen();
+
         $.ajax({
             type: "POST",
             url: "/wip/UpdateStepMonitorAndClose",
@@ -307,15 +309,17 @@
                 location.reload();
             },
             error: function (error) {
-                eLoaderError(error)
+
+                eLoaderError(error);
             }
         });
     });
     $(".monitorTemplate_Target").on('change', function () {
         var textbox = $(this);
         var value = $(this).val();
-        //alert(value);
-        eLoaderOpen()
+
+        eLoaderOpen();
+
         $.ajax({
             type: "POST",
             url: "@Url.Action("CheckEquipmentStatusById", "Wip")",
@@ -326,11 +330,11 @@
                     eModal.alert(data.ErrorMessage);
                     textbox.val('');
                 } else {
-                    eLoaderClose()
+                    eLoaderClose();
                 }                
             },
             error: function(error) {
-                eLoaderError(error)
+                eLoaderError(error);
             }
     });
     });

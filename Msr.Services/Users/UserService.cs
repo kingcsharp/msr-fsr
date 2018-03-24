@@ -20,7 +20,7 @@ namespace Msr.Services.Users
 
         public UserSummary GetUser(string id)
         {
-            var user = _dbContext.AspNetUsers.Where(x => x.Id == id).Select(s => new UserSummary
+            var user = _dbContext.AspNetUsers.Where(x => x.Id.ToLower() == id.ToLower()).Select(s => new UserSummary
             {
                 Id = s.Id,
                 FirstName = s.FirstName,
@@ -35,7 +35,7 @@ namespace Msr.Services.Users
                 CompanyId = s.CompanyId,
                 CreatedDate = s.CreatedDate,
                 RoleName = s.AspNetRoles.FirstOrDefault().Name
-            }).Single();
+            }).SingleOrDefault();
 
             return user;
         }

@@ -82,7 +82,7 @@
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 align: 'center'
             },
-            { name: 'Actions', index: 'ObjectId', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: RolesEditFormatter, width: 150, align: 'center' }
+            { name: 'Actions', index: 'ObjectId', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: ActionFormtter, width: 150, align: 'center' }
         ],
         ajaxRowOptions: {
             type: "POST",
@@ -108,45 +108,9 @@
         colMenu: true,
         gridComplete: function () {
 
-            $('.deleterole').on('click',
-                function(e) {
-                    e.preventDefault();
-
-                    var callBackId = $(this).data('call-back-id');
-                    var callBackName = $(this).data('call-back-name');
-
-                    eModal.confirm('Do you really want to delete ' + callBackName + ' ?', 'Confirmation delete')
-                        .then(confirmCallback, optionalCancelCallback);
-
-                    function confirmCallback() {
-                        window.location.href = "/Roles/RoleDelete/" + callBackId;
-                    }
-
-                    function optionalCancelCallback() {
-                    }
-
-                });
-
-            $('.unlock').on('click',
-                function(e) {
-                    e.preventDefault();
-
-                    var callBackId = $(this).data('call-back-id');
-
-                    eModal.confirm('If you proceed you will lose any edits you made.  Are you sure?')
-                        .then(confirmCallback, optionalCancelCallback);
-
-                    function confirmCallback() {
-                        window.location.href =
-                            "/workflow/UnlockAndDelete?objId=" + callBackId + '&returnUrl=' + returnUrl;
-                    }
-
-                    function optionalCancelCallback() {
-
-                    }
-
-                });
-        },
+            Msr.JqGridCommon.SetupGridLock("/Roles/Edit/");
+            Msr.JqGridCommon.UnLockWorkflow(returnUrl);
+        }
 
     });
     $('#jqGrid').navGrid("#jqGridPager", {
@@ -166,33 +130,15 @@
         searchOnEnter: true,
         searchOperators: true
     });
-    function RolesEditFormatter(cellvalue, options, rowObject) {
 
-        var editButton = '';
+    function ActionFormtter(cellvalue, options, rowObject) {
 
-        if (rowObject.Status !== 'APPROVED_BUT_REVISING') {
-            editButton = '<a  title="Edit" href="/Roles/Edit/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
-        }
+        var actions = Msr.JqGridCommon.ActionFormtter(cellvalue, options, rowObject, returnUrl, '/Roles/Edit/');
 
-        var detailbutton = '<a title="Detail" href="/Roles/Detail/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-eye"></i></a>';
-        var deleteButton = '';
-        var buttonWorkflowLeft = '';
-        var buttonWorkflowRight = '';
-        var url = '';
-
-        if (rowObject.Status === 'CREATING') {
-
-            url = '/workflow/submit?objId=' + rowObject.ObjectId + '&returnUrl=' + returnUrl;
-            buttonWorkflowLeft = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '"  data-call-back-id="' + rowObject.ObjectId + '" class="btn btn-xs btn-success unlock" title="Cancel Creation. Edit will be lost" style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-left"></i></a>';
-
-            buttonWorkflowRight = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-success" title="Proceed to approval workflow for release." style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-right"></i></a>';
-        } else {
-            url = '/workflow/delete?objId=' + rowObject.ObjectId + '&returnUrl=' + returnUrl;
-            deleteButton = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-danger" title="Proceed to delete." style="margin:2px;font-size: .8em;"><i class="fa fa fa-trash-o"></i></a>';
-        }
-
-        return editButton + deleteButton + buttonWorkflowLeft + buttonWorkflowRight + detailbutton;
+        return actions;
     }
+
+    
     $('#search').click(function () {
 
         jQuery("#jqGrid").setGridParam({

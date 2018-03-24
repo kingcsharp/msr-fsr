@@ -2,9 +2,7 @@
 @{
     ViewBag.Title = "Update Part";
 }
-
 @Styles.Render("~/bundles/css/fileinput")
-
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="row">
@@ -19,8 +17,7 @@
                         @using (Html.BeginForm("Edit", "Parts", FormMethod.Post, new { @class = "form form-horizontal partEdit", enctype = "multipart/form-data" }))
                         {
                             @Html.AntiForgeryToken()
-                            @Html.HiddenFor(x => x.Id)
-                            @Html.HiddenFor(x => x.ObjID)
+                            @Html.HiddenFor(x => x.ObjID, new { id = "ObjectId" })
                             @Html.HiddenFor(x => x.WfId)
 
                             <div class="form-group">
@@ -210,9 +207,8 @@
 </div>
 @section scripts
 {
-   @Scripts.Render("~/bundles/js/jqueryval")
-   @Scripts.Render("~/bundles/js/fileinput")
-
+    @Scripts.Render("~/bundles/js/jqueryval")
+    @Scripts.Render("~/bundles/js/fileinput")
     <script>
         $(document).ready(function () {
 
@@ -222,7 +218,7 @@
                 '@Url.Action("FileUploaderBootstrap", "Doc")',
                 [@Html.Raw(ViewBag.Preview)],
                 @Html.Raw(ViewBag.PreviewConfig),
-                '@Model.Id');
+                '@Model.ObjID');
 
             fileUploader.SetupSelectImage();
 
@@ -242,6 +238,22 @@
             });
             $("form").submit(function () {
                 $('.partEdit .submitselect option').prop('selected', true);
+            });
+            $('.deletefiles').click(function () {
+
+                var callBackId = $(this).data('call-back-id');
+
+                eModal.confirm('Do you really want to delete ' + callBackId + ' ?', 'Confirmation delete')
+                    .then(confirmCallback, optionalCancelCallback);
+
+                function confirmCallback() {
+                    console.log("ok");
+                    $('#' + callBackId + ' option:selected').remove();
+                }
+
+                function optionalCancelCallback() {
+                    console.log("cancel");
+                }
             });
         });
 
@@ -264,7 +276,7 @@
                         }
                     });
                 });
-          
+
             function SelectCompaniesIds() {
 
                 $(".selected-file").each(function () {
@@ -302,5 +314,4 @@
             }
 
     </script>
-
 }

@@ -12,6 +12,14 @@ namespace Answer.Web.Controllers
 {
     public class LocationsController : BaseController
     {
+        private readonly LocationService _locationService;
+        private readonly RegionService _regionService;
+
+        public LocationsController()
+        {
+            _locationService = new LocationService();
+            _regionService = new RegionService();
+        }
         public ActionResult Index()
         {
             var viewModel = new EngineeringViewModel();
@@ -30,11 +38,11 @@ namespace Answer.Web.Controllers
 
         public ActionResult LocationsData(JqGridParam param)
         {
-            var locationService = new LocationService();
+            var myCo = GetCurrentUser();
 
-            var totalRows = locationService.GetLocationsQueryable();
+            var totalRows = _locationService.GetLocationsQueryable().Where(x => x.CreatingCo == myCo.Root_Company);
 
-            var defaultStatusList = "CREATING,DENIED,APPROVED,APPROVED_BUT_REVISING,APPROVED_BUT_DELETING".Split(',');
+            var defaultStatusList = GetDefaultStatus();
 
             totalRows = totalRows.Where(x => defaultStatusList.Contains(x.Status));
 
@@ -123,7 +131,9 @@ namespace Answer.Web.Controllers
         {
             var location = new SaveLocationViewModel();
 
-            location.Setup(new RegionService(), new LocationService());
+            var currentUser = GetCurrentUser();
+
+            location.Setup(_regionService, _locationService, currentUser.Id);
 
             return View(location);
         }
@@ -131,13 +141,11 @@ namespace Answer.Web.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Create(SaveLocationViewModel model)
         {
-            var locationService = new LocationService();
-
             if (ModelState.IsValid)
             {
                 model.LoggedUserIdResult = GetCurrentUser();
 
-                var response = locationService.Create(model: model);
+                var response = _locationService.Create(model);
 
                 if (response)
                 {
@@ -159,15 +167,15 @@ namespace Answer.Web.Controllers
 
         public ActionResult Edit(string id)
         {
-            var locationService = new LocationService();
+            var currentUser = GetCurrentUser();
 
-            var model = locationService.GetById(id);
+            var model = _locationService.GetById(id);
 
             var location = new SaveLocationViewModel();
 
-            location = location.MapToDto(model: model);
+            location = location.MapToDto(model);
 
-            location.Setup(new RegionService(), locationService);
+            location.Setup(_regionService, _locationService, currentUser.Id);
 
             return View(location);
         }
@@ -175,13 +183,11 @@ namespace Answer.Web.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Edit(SaveLocationViewModel model)
         {
-            var locationService = new LocationService();
-
             if (ModelState.IsValid)
             {
                 model.LoggedUserIdResult = GetCurrentUser();
 
-                var response = locationService.Save(model: model);
+                var response = _locationService.Save(model);
 
                 if (response)
                 {
@@ -195,16 +201,14 @@ namespace Answer.Web.Controllers
                 return View(model);
             }
 
-            model.Setup(new RegionService(), locationService);
+            model.Setup(_regionService, _locationService, GetCurrentUser().Id);
 
             return View(model);
         }
 
-        public ActionResult LocationDelete(string id,string ntlogin)
+        public ActionResult LocationDelete(string id, string ntlogin)
         {
-            var taskService = new LocationService();
-
-            var response = taskService.Delete(id: id,ntlogin:ntlogin);
+            var response = _locationService.Delete(id: id, ntlogin: ntlogin);
 
             if (response)
             {
@@ -219,9 +223,7 @@ namespace Answer.Web.Controllers
 
         public ActionResult Details(string id)
         {
-            var taskService = new LocationService();
-
-            var model = taskService.GetById(id);
+            var model = _locationService.GetById(id);
 
             var location = new SaveLocationViewModel();
 

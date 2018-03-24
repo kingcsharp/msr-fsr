@@ -10,6 +10,13 @@ namespace Answer.Web.Controllers
 {
     public class MonitorsController : BaseController
     {
+        private readonly MonitorService _monitorService;
+
+        public MonitorsController()
+        {
+            _monitorService = new MonitorService();
+        }
+
         public ActionResult Index()
         {
             var viewModel = new EngineeringViewModel();
@@ -21,9 +28,9 @@ namespace Answer.Web.Controllers
 
         public ActionResult MonitorsData(JqGridParam param)
         {
-            var monitorService = new MonitorService();
+            var defaultStatusList = "FINISHED,CLOSED".Split(',');
 
-            var totalRows = monitorService.GetMonitorsQueryable();
+            var totalRows = _monitorService.GetMonitorsQueryable().Where(x => defaultStatusList.Contains(x.taskStatus));
 
             if (param.where != null && param.where.rules.Any())
             {

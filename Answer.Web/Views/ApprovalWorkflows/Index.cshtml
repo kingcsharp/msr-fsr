@@ -24,13 +24,11 @@
 @section scripts
 {
     @Scripts.Render("~/bundles/js/jqgrid")
-       
-<script src="~/assets/js/grids/approval-workflows.js"></script>
+    @Scripts.Render("~/bundles/js/jqgrid-approval-workflows")
+
     <script>
         //$.jgrid.defaults.responsive = true;
         $.jgrid.defaults.styleUI = 'Bootstrap';
-
-        
 
     </script>
 }

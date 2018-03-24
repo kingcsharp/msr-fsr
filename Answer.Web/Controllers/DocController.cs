@@ -153,7 +153,7 @@ namespace Answer.Web.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public JsonResult FileUploaderBootstrap(string objectId)
         {
-            List<NewFile> selectedfiles = new List<NewFile>();
+            var currentUser = GetCurrentUser();
 
             var initialPreview = new List<string>();
             var initialPreviewConfigs = new List<DocLink>();
@@ -190,7 +190,7 @@ namespace Answer.Web.Controllers
                 imageModel.DocChanged = null;
                 imageModel.Desc = null;
                 imageModel.DropSrc = "YES";
-                imageModel.NTLogin = GetCurrentUser().Id;
+                imageModel.NTLogin = currentUser.Id;
 
                 responese = _fileService.SaveFileUpload(imageModel);
 
@@ -214,14 +214,9 @@ namespace Answer.Web.Controllers
                     key = x.LINKED_DOC_ID
                 }).ToArray();
 
-                if (responese.Status)
-                {
-                    selectedfiles.Add(responese);
-                }
-
                 if (objectId != null)
                 {
-                    _documentService.SaveSingleFileReference(objectId, responese.Id, GetCurrentUser().Id);
+                    _documentService.SaveSingleFileReference(objectId, responese.Id, currentUser.Id);
                 }
             }
             return Json(new { initialPreview, initialPreviewConfig, responese.Id }, JsonRequestBehavior.AllowGet);
@@ -230,6 +225,8 @@ namespace Answer.Web.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public JsonResult FileUploaderForWipTask(string objectId)
         {
+            var currentUser = GetCurrentUser();
+
             var initialPreview = new List<string>();
             var initialPreviewConfigs = new List<DocLink>();
 
@@ -266,7 +263,7 @@ namespace Answer.Web.Controllers
                 imageModel.SrcChanged = null;
                 imageModel.DocChanged = null;
                 imageModel.DropSrc = "YES";
-                imageModel.NTLogin = "1618";
+                imageModel.NTLogin = currentUser.Id;
                 imageModel.TaskId = objectId;
 
                 newId = _orderService.SaveOrderItemImages(imageModel);

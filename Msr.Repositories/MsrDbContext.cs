@@ -32,6 +32,7 @@ using Msr.Models.ProductionPlanning;
 using Msr.Models.PurchesOrder;
 using Msr.Models.Invoices;
 using Msr.Models.Helps;
+using Msr.Models.PartTypes;
 
 namespace Msr.Repositories
 {
@@ -105,6 +106,9 @@ namespace Msr.Repositories
             modelBuilder.Entity<Invoice>().ToTable("Portal_Invoice");
             modelBuilder.Entity<HelpPage>().ToTable("Portal_HelpPage");
             modelBuilder.Entity<HelpView>().ToTable("Portal_HelpView");
+            modelBuilder.Entity<PartTypesApproved>().ToTable("Portal_PartTypesApprovedView");
+            modelBuilder.Entity<ApprovedCompaniesView>().ToTable("Portal_ApprovedCompaniesView");
+            modelBuilder.Entity<PartApprovedView>().ToTable("Portal_PartsApprovedView");
 
         }
 
@@ -113,6 +117,7 @@ namespace Msr.Repositories
         public DbSet<ClientUser> ClientUsers { get; set; }
         public DbSet<UserView> UserViews { get; set; }
         public DbSet<CompanyView> CompanyViews { get; set; }
+        public DbSet<ApprovedCompaniesView> ApprovedCompaniesViews { get; set; }
         public DbSet<WorkOrderView> WorkOrders { get; set; }
         public DbSet<BuyerView> BuyerViews { get; set; }
         public DbSet<ApprovedPeopleView> ApprovedPeoples { get; set; }
@@ -123,6 +128,7 @@ namespace Msr.Repositories
         public DbSet<TimeZoneView> TimeZoneView { get; set; }
         public DbSet<MonitorsWithTaskAndResult> MonitorsWithTaskAndResults { get; set; }
         public DbSet<PartsView> PartsViews { get; set; }
+        public DbSet<PartApprovedView> PartApprovedViews { get; set; }
         public DbSet<RegionsView> RegionsViews { get; set; }
         public DbSet<PartTypesView> PartTypesViews { get; set; }
         public DbSet<ProcedureVerbsView> ProcedureVerbs { get; set; }
@@ -169,5 +175,6 @@ namespace Msr.Repositories
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<HelpPage> Helps { get; set; }
         public DbSet<HelpView> HelpViews { get; set; }
+        public DbSet<PartTypesApproved> PartTypesApproveds { get; set; }
     }
 }

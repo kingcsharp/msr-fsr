@@ -122,9 +122,9 @@ namespace Msr.Services.Locations
             }
         }
 
-        public List<LocationResult> GetActiveLocations()
+        public List<LocationResult> GetActiveLocations(string ntLogin)
         {
-            var sql = @"EXEC A_SP_LOCATIONS_SELECT ' (NAME LIKE ''%%'' OR NAME is NULL ) AND  (OBJECT_ID LIKE ''%%'' OR OBJECT_ID is NULL ) AND  (FULL_ADDRESS LIKE ''%%'' OR FULL_ADDRESS is NULL ) AND  (REGION_NAME LIKE ''%%'' OR REGION_NAME is NULL )',' ORDER BY NAME','1618'";
+            var sql = $"EXEC A_SP_LOCATIONS_SELECT ' (NAME LIKE ''%%'' OR NAME is NULL ) AND  (OBJECT_ID LIKE ''%%'' OR OBJECT_ID is NULL ) AND  (FULL_ADDRESS LIKE ''%%'' OR FULL_ADDRESS is NULL ) AND  (REGION_NAME LIKE ''%%'' OR REGION_NAME is NULL )',' ORDER BY NAME','{ntLogin}'";
 
             var result = _dbContext.Database.SqlQuery<LocationResult>(sql).ToList();
 

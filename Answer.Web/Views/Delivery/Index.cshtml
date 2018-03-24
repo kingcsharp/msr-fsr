@@ -20,16 +20,11 @@
 @section scripts
 {
     @Scripts.Render("~/bundles/js/jqgrid")
+    @Scripts.Render("~/bundles/js/jqgrid-delivery")
 
-    <script src="~/assets/js/grids/delivery.js"></script>
-    <script>
-        //$.jgrid.defaults.responsive = true;
+    <script type="text/javascript">
         $.jgrid.defaults.styleUI = 'Bootstrap';
 
-
-
-    </script>
-    <script type="text/javascript">
         $(document).ready(function () {
             LoadDeliveryGrid('@Url.Action("DeliveryScreenData", "Delivery")','@Request.Url.OriginalString');
         });

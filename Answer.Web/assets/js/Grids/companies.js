@@ -2,8 +2,6 @@
     //$.jgrid.defaults.responsive = true;
     $.jgrid.defaults.styleUI = 'Bootstrap';
 
-
-
     $("#jqGrid").jqGrid({
         url: url,
         mtype: "GET",
@@ -121,7 +119,7 @@
                 align: 'center'
             },
 
-            { name: 'Actions', index: 'ID', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: CompaniesEditFormatter, width: 200, align: 'center' }
+            { name: 'Actions', index: 'ID', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: ActionFormtter, width: 200, align: 'center' }
         ],
 
         ajaxRowOptions: {
@@ -148,7 +146,8 @@
         colMenu: true,
         gridComplete: function () {
 
-            UnLockWorkflow(returnUrl);
+            Msr.JqGridCommon.SetupGridLock("/Companies/Edit/");
+            Msr.JqGridCommon.UnLockWorkflow(returnUrl);
         }
 
     });
@@ -175,29 +174,13 @@
         return Msr.JqGridCommon.FilePreview(cellvalue, options, rowObject);
     }
 
-    function CompaniesEditFormatter(cellvalue, options, rowObject) {
+    function ActionFormtter(cellvalue, options, rowObject) {
 
-        var editButton = '<a href="/Companies/Details/' + rowObject.ObjectId + '" title="View Company" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-eye"></i> </a>';
-        editButton = editButton + '<a  title="Edit" href="/Companies/Edit/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
-        var deleteButton = '';
-        var buttonWorkflowLeft = '';
-        var buttonWorkflowRight = '';
-        var url = '';
+        var actions = Msr.JqGridCommon.ActionFormtter(cellvalue, options, rowObject, returnUrl, '/Companies/Edit/');
 
-        if (rowObject.Status === 'CREATING') {
-
-            url = '/workflow/submit?objId=' + rowObject.ObjectId + '&returnUrl=' + returnUrl;
-            buttonWorkflowLeft = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '"  data-call-back-id="' + rowObject.ObjectId + '" class="btn btn-xs btn-success unlock" title="Cancel Creation. Edit will be lost" style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-left"></i></a>';
-
-            buttonWorkflowRight = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-success" title="Proceed to approval workflow for release." style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-right"></i></a>';
-        } else {
-            url = '/workflow/delete?objId=' + rowObject.ObjectId + '&returnUrl=' + returnUrl;
-            deleteButton = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-danger" title="Proceed to delete." style="margin:2px;font-size: .8em;"><i class="fa fa fa-trash-o"></i></a>';
-        }
-
-        return editButton + deleteButton + buttonWorkflowLeft + buttonWorkflowRight;
-
+        return actions;
     }
+
     $('#search').click(function () {
 
         jQuery("#jqGrid").setGridParam({

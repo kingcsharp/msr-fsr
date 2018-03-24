@@ -1,11 +1,8 @@
 ﻿using Msr.Models.Locations;
 using Msr.Services.Regions;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Mvc;
 
 namespace Msr.Services.Locations.ViewModels
@@ -55,18 +52,18 @@ namespace Msr.Services.Locations.ViewModels
 
         public List<SelectListItem> Regions { get; set; }
 
-        public void Setup(RegionService regionService, LocationService locationService)
+        public void Setup(RegionService regionService, LocationService locationService, string ntLogin)
         {
-            Regions = regionService.RegionsQueryable.Where(x=>x.Status == "APPROVED").Select(x => new SelectListItem
+            Regions = regionService.GetActiveRegions(ntLogin).Select(x => new SelectListItem
             {
                 Text = x.Name,
-                Value = x.ObjectId.ToString()
+                Value = x.Id.ToString()
             }).OrderBy(o => o.Text).ToList();
 
-            ParentsLocations = locationService.GetLocationsQueryable().Where(x=> x.Status == "APPROVED").Select(x => new SelectListItem
+            ParentsLocations = locationService.GetActiveLocations(ntLogin).Select(x => new SelectListItem
             {
                 Text = x.Name,
-                Value = x.ObjId
+                Value = x.Id
             }).OrderBy(o => o.Text).ToList();
 
             Countries = GetCountries();

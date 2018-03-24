@@ -15,12 +15,9 @@ namespace Answer.Web.Controllers
     {
         private readonly RegionService _regionService;
 
-        private WorkflowService _workflowService;
-
         public RegionsController()
         {
             _regionService = new RegionService();
-            _workflowService = new WorkflowService();
         }
 
         public ActionResult Index()
@@ -38,7 +35,7 @@ namespace Answer.Web.Controllers
 
             var totalRows = regionService.RegionsQueryable;
 
-            var defaultStatusList = "CREATING,DENIED,APPROVED,APPROVED_BUT_REVISING,APPROVED_BUT_DELETING".Split(',');
+            var defaultStatusList = GetDefaultStatus();
 
             totalRows = totalRows.Where(x => defaultStatusList.Contains(x.Status));
 
@@ -119,14 +116,12 @@ namespace Answer.Web.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Create(SaveRegionViewModel model)
         {
-            var regionService = new RegionService();
-
             if (ModelState.IsValid)
             {
                 //Need to dynamic 
                 model.LogId = GetCurrentUser().Id;
 
-                var response = regionService.Create(model: model);
+                var response = _regionService.Create(model);
 
                 if (response)
                 {
@@ -148,10 +143,7 @@ namespace Answer.Web.Controllers
 
         public ActionResult Edit(string id)
         {
-            var currentUser = GetCurrentUser();
-            var checkOut = _workflowService.CheckOutObject(id, currentUser.Id);
-            
-            var model = _regionService.GetById(checkOut.Entity);
+            var model = _regionService.GetById(id);
 
             var region = new SaveRegionViewModel();
 
@@ -186,9 +178,7 @@ namespace Answer.Web.Controllers
 
         public ActionResult Delete(string id)
         {
-            var regionService = new RegionService();
-
-            var model = regionService.GetById(id);
+            var model = _regionService.GetById(id);
 
             var vm = new DeleteRegionViewModel();
 

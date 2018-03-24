@@ -31,7 +31,9 @@ namespace Answer.Web.Controllers
 
         public ActionResult DocumentsData(JqGridParam param)
         {
-            var totalRows = _documentService.GetDocumentsQueryable().Where(x => x.Status != "DELETED");
+            var defaultStatusList = GetDefaultStatus();
+
+            var totalRows = _documentService.GetDocumentsQueryable().Where(x => defaultStatusList.Contains(x.Status));
 
             if (param.where != null && param.where.rules.Any())
             {

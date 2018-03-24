@@ -4,6 +4,11 @@ namespace Msr.Services.Procedures.ViewModels
 {
     public class ProcedureImportViewModel
     {
+        public ProcedureImportViewModel()
+        {
+            Messages = new List<string>();
+        }
+
         public string ProcedureId { get; set; }
 
         public string ProcedureName { get; set; }

@@ -16,7 +16,6 @@ using Msr.Services.PartTypes;
 using Msr.Services.Locations;
 using Msr.Services.Roles;
 using Msr.Services.Roles.Messages;
-using Msr.Services.Workflows;
 
 namespace Answer.Web.Controllers
 {
@@ -48,9 +47,7 @@ namespace Answer.Web.Controllers
 
         public ActionResult PartsData(JqGridParam param)
         {
-            var taskService = new PartsService();
-
-            var totalRows = taskService.GetPartsQueryable();
+            var totalRows = _partsService.GetPartsQueryable();
 
             var defaultStatusList = new[] { "CREATING", "DENIED", "APPROVED", "APPROVED_BUT_REVISING", "APPROVED_BUT_DELETING" };
 
@@ -119,14 +116,7 @@ namespace Answer.Web.Controllers
                 orderBy = param.sortColumn;
             }
 
-            if (param.sortOrder == "desc")
-            {
-                totalRows = totalRows.OrderByDescending(orderBy);
-            }
-            else
-            {
-                totalRows = totalRows.OrderBy(orderBy);
-            }
+            totalRows = param.sortOrder == "desc" ? totalRows.OrderByDescending(orderBy) : totalRows.OrderBy(orderBy);
 
             var totalRecords = totalRows.Count();
             totalRows = totalRows.Skip(param.pageSize * (param.pageIndex - 1));
@@ -149,15 +139,15 @@ namespace Answer.Web.Controllers
 
         public ActionResult Details(string id)
         {
-            var taskService = new PartsService();
+            var getCurrentUser = GetCurrentUser();
 
-            var model = taskService.GetById(id);
+            var model = _partsService.GetByObjectId(id);
 
             var part = new AddPartViewModel();
 
             part = part.MapToDto(model);
 
-            part.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), GetCurrentUser().Company, GetCurrentUser().Id);
+            part.Setup(_documentFilesService, _partsService, _partTypeService, getCurrentUser.Company, getCurrentUser.Id);
 
             return View(part);
         }
@@ -169,11 +159,14 @@ namespace Answer.Web.Controllers
 
             return PartialView("_ViewFile");
         }
+
         public ActionResult AddPart()
         {
+            var getCurrentUser = GetCurrentUser();
+
             var part = new AddPartViewModel();
 
-            part.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), GetCurrentUser().Company, GetCurrentUser().Id);
+            part.Setup(_documentFilesService, _partsService, _partTypeService, getCurrentUser.Company, getCurrentUser.Id);
 
             return View(part);
         }
@@ -181,17 +174,16 @@ namespace Answer.Web.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult AddPart(AddPartViewModel model)
         {
-            var partsService = new PartsService();
 
-            var curerntUser = GetCurrentUser();
+            var getCurrentUser = GetCurrentUser();
 
             if (ModelState.IsValid)
             {
-                model.NTLogin = curerntUser.Id;
+                model.NTLogin = getCurrentUser.Id;
                 model.SubParts = null;
-                model.Company = curerntUser.Company;
+                model.Company = getCurrentUser.Company;
 
-                var response = partsService.Create(model);
+                var response = _partsService.Create(model);
 
                 if (!response.HasErrors())
                 {
@@ -199,36 +191,31 @@ namespace Answer.Web.Controllers
 
                     return RedirectToAction("Index");
                 }
-                else
-                {
-                    TempData["ErrorMessage"] = "Something went wrong.";
 
-                    model.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), curerntUser.Company,curerntUser.Id);
+                TempData["ErrorMessage"] = $"<strong>Something went wrong :</strong> {response.ErrorMessage}";
 
-                    return View(model);
-                }
+                model.Setup(_documentFilesService, _partsService, _partTypeService, getCurrentUser.Company, getCurrentUser.Id);
 
+                return View(model);
             }
 
-            model.Setup(new DocumentFilesService(), _partsService,_partTypeService, curerntUser.Company, curerntUser.Id);;
+            model.Setup(_documentFilesService, _partsService, _partTypeService, getCurrentUser.Company, getCurrentUser.Id);
 
             return View(model);
 
         }
-        [Route("edit/{objectId}")]
-        public ActionResult Edit(string objectId)
-        {
-            var currrentUser = GetCurrentUser();
-            var workflowService = new WorkflowService();
-            var checkoutEntity = workflowService.CheckOutObject(objectId, currrentUser.Id);
 
-            var model = _partsService.GetById(checkoutEntity.Entity);
+        public ActionResult Edit(string id)
+        {
+            var getCurrentUser = GetCurrentUser();
+
+            var model = _partsService.GetByObjectId(id);
 
             var part = new AddPartViewModel();
 
             part = part.MapToDto(model);
 
-            part.Setup(new DocumentFilesService(), new PartsService(), new PartTypeService(), currrentUser.Company, currrentUser.Id);
+            part.Setup(_documentFilesService, _partsService, _partTypeService, getCurrentUser.Company, getCurrentUser.Id);
 
             part.InternalEqualParts = _partsService.GetInternalEqualPartByPartId(part.Id);
 
@@ -243,7 +230,7 @@ namespace Answer.Web.Controllers
                 caption = x.NAME,
                 type = x.TYPE,
                 size = 6666,
-                url = Url.Action("DeletesingleReference", "Documents", new {file = x.LINKED_DOC_ID}),
+                url = Url.Action("DeletesingleReference", "Documents", new { file = x.LINKED_DOC_ID }),
                 downloadUrl = x.SERVER_PATH,
                 key = x.LINKED_DOC_ID
             }));
@@ -256,7 +243,7 @@ namespace Answer.Web.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Edit(AddPartViewModel model)
         {
-            var currentUser = GetCurrentUser();
+            var getCurrentUser = GetCurrentUser();
 
             if (ModelState.IsValid)
             {
@@ -265,29 +252,30 @@ namespace Answer.Web.Controllers
 
                 var response = _partsService.Update(model);
 
-                if (response)
+                if (!response.HasErrors())
                 {
                     TempData["SuccessMessage"] = "Part has been updated successfully.";
 
                     return RedirectToAction("Index");
                 }
 
-                TempData["ErrorMessage"] = "Something went wrong.";
+                TempData["ErrorMessage"] = "Something went wrong";
 
-                model.Setup(_documentFilesService, _partsService, _partTypeService, currentUser.Company, currentUser.Id);
+
+                model.Setup(_documentFilesService, _partsService, _partTypeService, getCurrentUser.Company, getCurrentUser.Id);
 
                 return View(model);
             }
 
-            model.Setup(_documentFilesService, _partsService, _partTypeService, currentUser.Company, currentUser.Id);
+            model.Setup(_documentFilesService, _partsService, _partTypeService, getCurrentUser.Company, getCurrentUser.Id);
 
             return View(model);
         }
-        public ActionResult PartDelete(string id,string ntlog)
-        {
-            var taskService = new PartsService();
 
-            var response = taskService.Delete(id: id,ntlogin:ntlog);
+        public ActionResult PartDelete(string id, string ntlog)
+        {
+
+            var response = _partsService.Delete(id: id, ntlogin: ntlog);
 
             if (response)
             {
@@ -302,16 +290,16 @@ namespace Answer.Web.Controllers
 
         public ActionResult EditSafetyStock(string id)
         {
-            EditSafetyStockViewModel viewModel = new EditSafetyStockViewModel()
+            var viewModel = new EditSafetyStockViewModel()
             {
                 PartObjectId = id
             };
 
-            var currentUser = GetCurrentUser();
-            var locations = _locationService.GetLocationsForSafetyStock(currentUser.Root_Company);
+            var getCurrentUser = GetCurrentUser();
+            var locations = _locationService.GetLocationsForSafetyStock(getCurrentUser.Root_Company);
 
-            List<PartsSafetyStock> partSafetyStocks = _partsService.GetPartSafetyStocksByLocation(locations.Select(x => x.Id), id);
-            List<RoleResult> roles = _roleService.GetActiveRoles();
+            var partSafetyStocks = _partsService.GetPartSafetyStocksByLocation(locations.Select(x => x.Id), id);
+            var roles = _roleService.GetActiveRoles();
 
             viewModel.Roles.Add(new SelectListItem { Value = "", Text = "--Select Role--" });
 
@@ -342,11 +330,11 @@ namespace Answer.Web.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult EditSafetyStock(string partObjectId, List<PartsSafetyStock> partsSafetyStocks)
         {
-            var user = GetCurrentUser();
+            var getCurrentUser = GetCurrentUser();
 
             foreach (var safetyStock in partsSafetyStocks)
             {
-                _partsService.UpdatePartsSafetyStocks(safetyStock, partObjectId, user.Id);
+                _partsService.UpdatePartsSafetyStocks(safetyStock, partObjectId, getCurrentUser.Id);
             }
 
             TempData["SuccessMessage"] = "Update Safety Stock updated successfully.";
@@ -364,9 +352,9 @@ namespace Answer.Web.Controllers
         {
             if (postedFile != null && postedFile.ContentLength > 0)
             {
-                var currentUser = GetCurrentUser();
+                var getCurrentUser = GetCurrentUser();
 
-                var response = _partsService.ImportParts(postedFile, currentUser.Id);
+                var response = _partsService.ImportParts(postedFile, getCurrentUser.Id);
 
                 if (response.HasErrors())
                 {
@@ -394,7 +382,7 @@ namespace Answer.Web.Controllers
 
         public void ImportSampleFile()
         {
-            var cols = new List<string> {"PartId", "Name"};
+            var cols = new List<string> { "PartId", "Name" };
             Response.Clear();
             Response.ContentType = "text/csv";
             Response.AddHeader("Content-Disposition", "attachment;filename=parts-upload.csv");

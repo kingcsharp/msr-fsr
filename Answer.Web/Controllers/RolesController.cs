@@ -13,13 +13,11 @@ namespace Answer.Web.Controllers
 {
     public class RolesController : BaseController
     {
-        private WorkflowService _workflowService;
         private readonly RoleService _roleService;
         private readonly UserService _userService;
 
         public RolesController()
         {
-            _workflowService = new WorkflowService();
             _roleService = new RoleService();
             _userService = new UserService();
         }
@@ -174,10 +172,8 @@ namespace Answer.Web.Controllers
             var vm = new SaveRoleViewModel();
 
             var currentUser = GetCurrentUser();
+            var role = _roleService.GetRoleById(id);
 
-            var result = _workflowService.CheckOutObject(id, currentUser.Id);
-
-            var role = _roleService.GetRoleById(result.Entity);
             vm.Read(role);
             vm.Setup(_roleService, _userService, currentUser);
 

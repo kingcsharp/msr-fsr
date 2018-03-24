@@ -23,14 +23,10 @@
 @section scripts
 {
     @Scripts.Render("~/bundles/js/jqgrid")
-
-    <script src="~/assets/js/grids/user-roles.js"></script>
+    @Scripts.Render("~/bundles/js/jqgrid-roles")
 
     <script>
-        //$.jgrid.defaults.responsive = true;
         $.jgrid.defaults.styleUI = 'Bootstrap';
-
-
 
         $(document).ready(function () {
             LoadRolesTypesGrid('@Url.Action("UserRolesData", "Roles")','@Request.Url.OriginalString');

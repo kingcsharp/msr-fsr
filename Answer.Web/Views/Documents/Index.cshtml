@@ -23,8 +23,7 @@
 @section scripts
 {
     @Scripts.Render("~/bundles/js/jqgrid")
-    
-    <script type="text/javascript" src="~/assets/js/grids/documents.js"></script>
+    @Scripts.Render("~/bundles/js/jqgrid-documents")
 
     <script> $(document).ready(function () {
             LoadDocumentsGrid('@Url.Action("DocumentsData", "Documents")','@Request.Url.OriginalString');

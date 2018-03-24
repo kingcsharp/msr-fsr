@@ -23,8 +23,8 @@
 @section scripts
 {
     @Scripts.Render("~/bundles/js/jqgrid")
+    @Scripts.Render("~/bundles/js/jqgrid-approvalstages")
 
-    <script type="text/javascript" src="~/assets/js/grids/approvalstages.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             LoadApprovalStagesGrid('@Url.Action("ApprovalStagesData", "ApprovalStages")');

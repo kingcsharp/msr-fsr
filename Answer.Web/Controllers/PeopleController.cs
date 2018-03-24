@@ -21,12 +21,9 @@ namespace Answer.Web.Controllers
 
         private readonly DocumentFilesService _documentFilesService;
 
-        private WorkflowService _workflowService;
-
         public PeopleController()
         {
             _peopleService = new PeopleService();
-            _workflowService = new WorkflowService();
             _companyService = new CompanyService();
             _documentFilesService = new DocumentFilesService();
         }
@@ -210,14 +207,12 @@ namespace Answer.Web.Controllers
             var people = new EditPeopleViewModel();
 
             var currentUser = GetCurrentUser();
-            var result = _workflowService.CheckOutObject(id, currentUser.Id);
 
-            var model = _peopleService.GetPeopleById(result.Entity);
+            var model = _peopleService.GetPeopleById(id);
 
             var phoneInfo = _peopleService.GetPhoneInfoByObjId(id);
             var emailInfo = _peopleService.GetEmailInfoByObjId(id);
             var locationInfo = _peopleService.GetLocationInfoByObjId(id);
-
 
             people.MapToDto(model);
 

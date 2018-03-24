@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using EntityFrameworkExtras.EF6;
 using Msr.Models.Parts;
+using Msr.Models.PartTypes;
 using Msr.Repositories;
 using Msr.Services.Parts.Procedures;
 using Msr.Services.Parts.ViewModels;
@@ -79,6 +81,11 @@ namespace Msr.Services.PartTypes
 
                 return false;
             }
+        }
+
+        public List<PartTypesApproved> GetPartTypesApproved(string co)
+        {
+            return _dbContext.PartTypesApproveds.Where(x => x.CreatingCo == co).ToList();
         }
     }
 }

@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using Msr.Models.Parts;
+using Msr.Models.PartTypes;
 using Msr.Services.jqGrid;
 using Msr.Services.PartTypes;
 using Msr.Services.PartTypes.ViewModels;
@@ -206,9 +204,9 @@ namespace Answer.Web.Controllers
         }
 
 
-        public ActionResult Delete(string id,string ntlogin)
+        public ActionResult Delete(string id, string ntlogin)
         {
-            var response = _partTypeService.Delete(id: id,ntlogin:ntlogin);
+            var response = _partTypeService.Delete(id: id, ntlogin: ntlogin);
 
             if (response)
             {

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Msr.Models.Comman;
 
 namespace Msr.Services.Regions
 {
@@ -65,14 +66,12 @@ namespace Msr.Services.Regions
                 return false;
             }
         }
+
         public bool Delete(DeleteRegionViewModel model)
         {
             try
             {
-                ////var saveRegionProcedure = new SaveRegionProcedure() { Name = model.Name, NTLogin = model.NTLogin };
-
-                ////_dbContext.Database.ExecuteStoredProcedure(saveRegionProcedure);
-               
+                //TODO
                 return true;
             }
             catch (Exception ex)
@@ -81,6 +80,14 @@ namespace Msr.Services.Regions
 
                 return false;
             }
+        }
+        public List<SelectFile> GetActiveRegions(string ntLogin)
+        {
+            var sql = $"EXEC A_SP_REGIONS_SELECT_PAGE ' (NAME LIKE ''%%'' OR NAME is NULL ) AND  (OBJECT_ID LIKE ''%%'' OR OBJECT_ID is NULL )',' ORDER BY NAME','{ntLogin}'";
+
+            var result = _dbContext.Database.SqlQuery<SelectFile>(sql).ToList();
+
+            return result;
         }
     }
 }

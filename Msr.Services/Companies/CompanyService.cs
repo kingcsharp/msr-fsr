@@ -31,6 +31,11 @@ namespace Msr.Services.Companies
             return _dbContext.CompanyViews;
         }
 
+        public IQueryable<ApprovedCompaniesView> GetCompaniesApprovedQueryable(string co)
+        {
+            return _dbContext.ApprovedCompaniesViews.Where(x => x.CoType == "DEPARTMENT" && x.CreatingCo == co || x.CoType == "COMPANY");
+        }
+
         public CompanyView GetCompanyById(string Id)
         {
             return _dbContext.CompanyViews.Where(x => x.ObjectId == Id).SingleOrDefault();
@@ -94,20 +99,21 @@ namespace Msr.Services.Companies
                     ObjID = model.ObjectId,
                     Name = model.Name,
                     Type = model.CoType,
-                    ParentType = model.Parent,                    
+                    ParentType = model.Parent,
                     Phone = model.Phone,
-                    HeadPeople =model.HeadPeople,
-                    LocationId =model.Location,
-                    CoSupProds =model.RootCoID,
+                    HeadPeople = model.HeadPeople,
+                    LocationId = model.Location,
+                    CoSupProds = model.RootCoID,
                     PicFiles = model.PictureFiles != null ? string.Join(", ", model.PictureFiles) : "",
                     LogoFiles = model.LogoFiles != null ? string.Join(", ", model.LogoFiles) : "",
-                    ReferenceFiles = model.ReferenceFiles !=null ? string.Join(", ", model.ReferenceFiles) : "",
+                    ReferenceFiles = model.ReferenceFiles != null ? string.Join(", ", model.ReferenceFiles) : "",
                     NewPersonLogin = model.NewPersonLogin,
-                    NewPersonPassword = model.NewPersonPassword, 
+                    NewPersonPassword = model.NewPersonPassword,
                     NewPersonFirstName = model.NewPersonFirstName,
-                    NewPersonLastName = model.NewPersonLastName, 
+                    NewPersonLastName = model.NewPersonLastName,
                     NewPersonEmail = model.NewPersonEmail,
-                    StrNTlogin = model.NTLogin };
+                    StrNTlogin = model.NTLogin
+                };
 
                 _dbContext.Database.ExecuteStoredProcedure(saveCompanyProcedure);
 
