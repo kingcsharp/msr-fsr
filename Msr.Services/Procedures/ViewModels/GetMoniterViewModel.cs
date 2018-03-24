@@ -139,67 +139,20 @@ namespace Msr.Services.Procedures.ViewModels
 
         public void Setup()
         {
-
-            MonitorTypesList = new List<SelectListItem>
-            {
-                new SelectListItem {Text = "NUMBER", Value = "NUMBER"},
-                new SelectListItem {Text = "USER_NUMBER", Value = "USER_NUMBER"},
-                new SelectListItem {Text = "YES_NO", Value = "YES_NO"},
-                new SelectListItem {Text = "MULTIPLE", Value = "MULTIPLE"},
-                new SelectListItem {Text = "TEXT", Value = "TEXT"},
-                new SelectListItem {Text = "OBJECT", Value = "OBJECT"}
-            };
-
-            ShouldBeList = new List<SelectListItem>
-            {
-                new SelectListItem {Text = "EQUAL", Value = "EQUAL"},
-                new SelectListItem {Text = "ABOVE", Value = "ABOVE"},
-                new SelectListItem {Text = "BELOW", Value = "BELOW"},
-                new SelectListItem {Text = "BETWEEN", Value = "BETWEEN"}
-            };
-
+            MonitorTypesList = LookupItems.MonitorTypesList();
+            ShouldBeList = LookupItems.ShouldBeList();
             BasedOPionList = LookupItems.YesNo();
             UseResultList = LookupItems.YesNo();
             HideTargetList = LookupItems.YesNo();
-
-            FailNextActionList = new List<SelectListItem>
-            {
-                new SelectListItem {Text = "CONTINUE", Value = "CONTINUE"},
-                new SelectListItem {Text = "DONOTCLOSE", Value = "DONOTCLOSE"},
-                new SelectListItem {Text = "DNR", Value = "DNR"},
-                new SelectListItem {Text = "DNR", Value = "DNR"}
-            };
-
-            ForceEndActionList = new List<SelectListItem>
-            {
-                new SelectListItem {Text = "NO", Value = "0"},
-                new SelectListItem {Text = "YES", Value = "1"}
-            };
-
-            AlwaysPassList = new List<SelectListItem>
-            {
-                new SelectListItem {Text = "NO", Value = "0"},
-                new SelectListItem {Text = "YES", Value = "1"}
-            };
-
+            FailNextActionList = LookupItems.FailNextActionList();
+            ForceEndActionList = LookupItems.YesNo();
+            AlwaysPassList = LookupItems.YesNo();
         }
         public AddMonitorForProcedureViewModel MapToDto(AddMonitorForProcedureViewModel model)
         {
             return new AddMonitorForProcedureViewModel
             {
                 Id = model.Id,
-                //ObjectId = model.ObjectId,
-                //Name = model.Name,
-                //CreatingCompany = model.CreatingCo,
-                //Verb = model.Verb,
-                //SystemId = model.SystemId,
-                //Comments = model.Comments,
-                //SecurityLevel = model.SecurityLevel,
-                //StepInAp = model.StepInAp,
-                //Duration = model.Duration,
-                //DurationType = model.DurationType,
-                //WipMsg = model.WipMsg,
-                //Threshold = model.Threshold
             };
         }
     }

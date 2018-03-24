@@ -107,7 +107,7 @@ namespace Msr.Services.Invoices.ViewModel
                 },
                 new SelectListItem
                 {
-                    Text = "CREADIT",
+                    Text = "CREDIT",
                     Value = "INV_ITEM_CREDIT"
                 },
 

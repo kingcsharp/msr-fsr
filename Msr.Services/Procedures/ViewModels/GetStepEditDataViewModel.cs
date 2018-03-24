@@ -43,19 +43,7 @@ namespace Msr.Services.Procedures.ViewModels
             GetStepEditData = new GetStepEditDataResult();
             ReferenceFiles = new List<string>();
 
-            BaseCounterList = new List<SelectListItem>()
-            {
-                new SelectListItem()
-                {
-                    Text = @"NO***",
-                    Value = "0"
-                },
-                new SelectListItem()
-                {
-                    Text = @"YES***",
-                    Value = "1"
-                }
-            };
+            BaseCounterList = LookupItems.YesNo();
 
             RelativeOrAbsoluteList = new List<SelectListItem>()
             {

@@ -1364,6 +1364,7 @@
     <Folder Include="assets\js\tinymce\plugins\textpattern\" />
     <Folder Include="assets\js\tinymce\plugins\toc\" />
     <Folder Include="assets\js\tinymce\themes\inlite\" />
+    <Folder Include="Helpers\" />
     <Folder Include="ViewModel\Images\" />
     <Folder Include="Views\Objects\" />
     <Folder Include="Views\Templates\" />

@@ -153,46 +153,14 @@ namespace Msr.Services.Procedures.ViewModels
                 new SelectListItem {Text = "Sensor", Value = "SENSOR"}
             };
 
-            MonitorTypesList = new List<SelectListItem>
-            {
-                new SelectListItem {Text = "EQUIPMENT", Value = "EQUIPMENT"},
-                new SelectListItem {Text = "NUMBER", Value = "NUMBER"},
-                new SelectListItem {Text = "YES_NO", Value = "YES_NO"},
-                new SelectListItem {Text = "TEXT", Value = "TEXT"},
-                new SelectListItem {Text = "PASS_FAIL", Value = "PASS_FAIL"}
-            };
-
-            ShouldBeList = new List<SelectListItem>
-            {
-                new SelectListItem {Text = "EQUAL", Value = "EQUAL"},
-                new SelectListItem {Text = "ABOVE", Value = "ABOVE"},
-                new SelectListItem {Text = "BELOW", Value = "BELOW"},
-                new SelectListItem {Text = "BETWEEN", Value = "BETWEEN"}
-            };
-
+            MonitorTypesList = LookupItems.MonitorTypesList();
+            ShouldBeList = LookupItems.ShouldBeList();
             BasedOPionList = LookupItems.YesNo();
             UseResultList = LookupItems.YesNo();
             HideTargetList = LookupItems.YesNo();
-
-            FailNextActionList = new List<SelectListItem>
-            {
-                new SelectListItem {Text = @"CONTINUE", Value = "CONTINUE"},
-                new SelectListItem {Text = @"DO NOT CLOSE", Value = "DONOTCLOSE"},
-                new SelectListItem {Text = @"START DNR", Value = "DNR"},
-                new SelectListItem {Text = @"END PROCEDURE", Value = "ENDPROCEDURE"}
-            };
-
-            ForceEndActionList = new List<SelectListItem>
-            {
-                new SelectListItem {Text = "NO", Value = "0"},
-                new SelectListItem {Text = "YES", Value = "1"}
-            };
-
-            AlwaysPassList = new List<SelectListItem>
-            {
-                new SelectListItem {Text = "NO", Value = "0"},
-                new SelectListItem {Text = "YES", Value = "1"}
-            };
+            FailNextActionList = LookupItems.FailNextActionList();
+            ForceEndActionList = LookupItems.YesNo();
+            AlwaysPassList = LookupItems.YesNo();
         }
         public AddMonitorForProcedureViewModel MapToDto(GetMoniterViewModel model)
         {

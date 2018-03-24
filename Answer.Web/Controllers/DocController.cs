@@ -327,19 +327,34 @@ namespace Answer.Web.Controllers
 
         public ActionResult Download(string id)
         {
-            var resultsFile = _documentFilesService.GetSelectedRefFile(id);
+            try
+            {
+                var resultsFile = _documentFilesService.GetSelectedRefFile(id);
 
-            var key = resultsFile.ServerPath.Split('/');
+                var key = resultsFile.ServerPath.Split('/');
 
-            var buketName = ConfigurationManager.AppSettings.Get("AWSBuketName");
+                var buketName = ConfigurationManager.AppSettings.Get("AWSBuketName");
 
-            var streamCloud = _cloudUploader.DownloadFromCloud(buketName, key[3] + "/" + key[4]);
+                var streamCloud = _cloudUploader.DownloadFromCloud(buketName, key[3] + "/" + key[4]);
 
-            var extention = resultsFile.Show.Split('.');
+                var extention = resultsFile.Show.Split('.');
 
-            var mimeType = MimeTypes.GetTypes(extention[1]);
+                var mimeType = MimeTypes.GetTypes(extention[1]);
 
-            return File(streamCloud, mimeType, resultsFile.Show);
+                return File(streamCloud, mimeType, resultsFile.Show);
+            }
+            catch (IndexOutOfRangeException)
+            {
+                AddErrorNotification($"File not found with Id : {id}");
+
+                return View("Error");
+            }
+            catch (Exception)
+            {
+                AddErrorNotification("There is an error with download");
+
+                return View("Error");
+            }
         }
     }
 

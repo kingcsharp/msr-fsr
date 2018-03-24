@@ -150,27 +150,7 @@ namespace Msr.Services.People.ViewModels
                 }
 
             };
-            ListEmailTextTypes = new List<SelectListItem>
-            {
-                new SelectListItem
-                {
-                    Text = "Choose Type",
-                    Value = "ChooseType",
-                    Selected = true
-                },
-                new SelectListItem
-                {
-                    Text = "HTML",
-                    Value = "HTML"
-                },
-                new SelectListItem
-                {
-                    Text = "Text",
-                    Value = "Text"
-                }
-
-            };
-
+            ListEmailTextTypes = LookupItems.ListEmailTextTypes();
             ListIsDepartmentHead = LookupItems.YesNo();
 
             ListRealUserTypes = new List<SelectListItem>
@@ -188,40 +168,8 @@ namespace Msr.Services.People.ViewModels
                 }
 
             };
-            ListScreenTypes = new List<SelectListItem>
-            {
-                new SelectListItem
-                {
-                    Text = "Normal",
-                    Value = "NORMAL_SCREEN"
-                },
-                new SelectListItem
-                {
-                    Text = "Work Screen",
-                    Value = "WORK_SCREEN"
-                },
-                new SelectListItem
-                {
-                    Text = "Shipper Screen",
-                    Value = "SHIP_SCREEN"
-                },
-                new SelectListItem
-                {
-                    Text = "Delivery Screen",
-                    Value = "DELIVERY_SCREEN"
-                },
-                new SelectListItem
-                {
-                    Text = "Order Entry Screen",
-                    Value = "ORDER_ENTRY_SCREEN"
-                },
-                new SelectListItem
-                {
-                    Text = "Admin Screen",
-                    Value = "ADMIN_SCREEN"
-                }
-            };
 
+            ListScreenTypes = LookupItems.ListScreenTypes();
             ListPhoneTypes = LookupItems.PhoneTypes();
             ListEmailTypes = LookupItems.EmailTypes();
             ListAddressTypes = LookupItems.AddressTypes();

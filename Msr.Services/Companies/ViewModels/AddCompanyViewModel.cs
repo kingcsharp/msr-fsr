@@ -91,21 +91,7 @@ namespace Msr.Services.Companies.ViewModels
 
         public void Setup(DocumentFilesService documentFilesService, CompanyService companyService)
         {
-            CompanyTypes = new List<SelectListItem>
-            {
-               new SelectListItem
-                {
-                    Text = "Company",
-                    Value = "COMPANY",
-                    Selected = true
-                },
-                new SelectListItem
-                {
-                    Text = "Department",
-                    Value = "DEPARTMENT"
-                }
-
-            };
+            CompanyTypes = LookupItems.CompanyTypes();
             ListParents = companyService.GetCompaniesQueryable().ToList().Select(x => new SelectListItem
             {
                 Text = x.Name,

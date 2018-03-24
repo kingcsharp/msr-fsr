@@ -20,8 +20,22 @@ namespace Answer.Web.Controllers
 
         public List<string> GetDefaultStatus()
         {
-            return new[] { "CREATING", "DENIED", "APPROVED", "APPROVED_BUT_REVISING", "APPROVED_BUT_DELETING" }.ToList();
+            return new[] {"CREATING", "DENIED", "APPROVED", "APPROVED_BUT_REVISING", "APPROVED_BUT_DELETING"}.ToList();
         }
 
+        public void AddErrorNotification(string message)
+        {
+            TempData["ErrorMessage"] = message;
+        }
+
+        public void AddSuccessNotification(string message)
+        {
+            TempData["SuccessMessage"] = message;
+        }
+
+        public void AddWarningNotification(string message)
+        {
+            TempData["WarningMessage"] = message;
+        }
     }
 }

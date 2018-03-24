@@ -36,7 +36,11 @@ namespace Answer.Web.Controllers
 
         public ActionResult PreProData(JqGridParam param)
         {
-            var totalRows = _preProServices.GetPreProQueryable().Where(x => x.Status != "DELETED");
+            var totalRows = _preProServices.GetPreProQueryable();
+
+            var defaultStatusList = base.GetDefaultStatus();
+
+            totalRows = totalRows.Where(x => defaultStatusList.Contains(x.Status));
 
             if (param.where != null && param.where.rules.Any())
             {

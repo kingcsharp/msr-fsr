@@ -6,9 +6,9 @@
         datatype: "json",
         colModel: [
             {
-                label: 'Id',
-                name: 'Id',
-                index: 'Id',
+                label: 'Root',
+                name: 'Root',
+                index: 'Root',
                 key: true,
                 colmenu: false,
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
@@ -161,11 +161,12 @@
     }
 
     function procedureEditFormatter(cellvalue, options, rowObject) {
+
         var viewButton = '<a href="/Procedures/view/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" title="View" style="margin:2px;font-size: .8em;"><i class="fa fa-eye"></i></a>';
 
         var editButton = '';
         if (rowObject.Status !== 'APPROVED_BUT_REVISING') {
-            editButton = '<a  title="Edit" href="/Procedures/edit/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
+            editButton = '<a  title="Edit" href="/Procedures/edit/' + rowObject.ObjId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
         }
 
         var deleteButton = '';
@@ -175,18 +176,23 @@
 
         if (rowObject.Status === 'CREATING') {
 
-            url = '/workflow/submit?objId=' + rowObject.ObjectId + '&returnUrl=' + returnUrl;
-            buttonWorkflowLeft = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '"  data-call-back-id="' + rowObject.ObjectId + '" class="btn btn-xs btn-success unlock" title="Cancel Creation. Edit will be lost" style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-left"></i></a>';
+            url = '/workflow/submit?objId=' + rowObject.ObjId + '&returnUrl=' + returnUrl;
+            buttonWorkflowLeft = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '"  data-call-back-id="' + rowObject.ObjId + '" class="btn btn-xs btn-success unlock" title="Cancel Creation. Edit will be lost" style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-left"></i></a>';
 
             buttonWorkflowRight = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-success" title="Proceed to approval workflow for release." style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-right"></i></a>';
         } else {
-            url = '/workflow/delete?objId=' + rowObject.ObjectId + '&returnUrl=' + returnUrl;
+            url = '/workflow/delete?objId=' + rowObject.ObjId + '&returnUrl=' + returnUrl;
             if (rowObject.Status !== 'APPROVED_BUT_REVISING') {
 
                 deleteButton = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-danger" title="Proceed to Delete." style="margin:2px;font-size: .8em;"><i class="fa fa fa-trash-o"></i></a>';
             }
         }
-        var assignProcedureButton = '<a href="/Procedures/assignProcedure/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" title="Assign this procedure" style="margin:2px;font-size: .8em;"> <i class="fa fa-users"></i></a>';
+        var assignProcedureButton = '<a href="/Procedures/assignProcedure/' + rowObject.ObjId + '" class="btn btn-xs btn-success" title="Assign this procedure" style="margin:2px;font-size: .8em;"> <i class="fa fa-users"></i></a>';
+
+        if (rowObject.Status == 'APPROVED_BUT_REVISING') {
+            editButton = '';
+            deleteButton = '';
+        }
 
         return viewButton + editButton + deleteButton + buttonWorkflowLeft + buttonWorkflowRight + assignProcedureButton;
     }

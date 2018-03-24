@@ -215,11 +215,12 @@ namespace Answer.Web.Controllers
             return View(model);
 
         }
-        public ActionResult Edit(string id)
+        [Route("edit/{objectId}")]
+        public ActionResult Edit(string objectId)
         {
             var currrentUser = GetCurrentUser();
             var workflowService = new WorkflowService();
-            var checkoutEntity = workflowService.CheckOutObject(id, currrentUser.Id);
+            var checkoutEntity = workflowService.CheckOutObject(objectId, currrentUser.Id);
 
             var model = _partsService.GetById(checkoutEntity.Entity);
 

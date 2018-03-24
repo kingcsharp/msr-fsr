@@ -94,21 +94,7 @@ namespace Msr.Services.Companies.ViewModels
 
         public void Setup(DocumentFilesService documentFilesService, CompanyService companyService, string ntlog)
         {
-            CompanyTypes = new List<SelectListItem>
-            {
-               new SelectListItem
-                {
-                    Text = @"Company",
-                    Value = "COMPANY",
-                    Selected = true
-                },
-                new SelectListItem
-                {
-                    Text = @"Department",
-                    Value = "DEPARTMENT"
-                }
-
-            };
+            CompanyTypes = LookupItems.CompanyTypes();
 
             HeadPeoples = companyService.GetHeadPeople().ToList().Select(x => new SelectListItem
             {

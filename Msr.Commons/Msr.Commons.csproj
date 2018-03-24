@@ -79,11 +79,17 @@
   <ItemGroup>
     <Compile Include="Files\MimeTypes.cs" />
     <Compile Include="Lookups\AddressTypes.cs" />
+    <Compile Include="Lookups\CompanyTypes.cs" />
     <Compile Include="Lookups\EmailTypes.cs" />
+    <Compile Include="Lookups\FailNextActionList.cs" />
+    <Compile Include="Lookups\ListEmailTextTypes.cs" />
+    <Compile Include="Lookups\ListScreenTypes.cs" />
+    <Compile Include="Lookups\MonitorTypesList.cs" />
     <Compile Include="Lookups\OrderingUnits.cs" />
     <Compile Include="Lookups\PhoneTypes.cs" />
     <Compile Include="Lookups\SecurityLevel.cs" />
     <Compile Include="Lookups\DurationType.cs" />
+    <Compile Include="Lookups\ShouldBeList.cs" />
     <Compile Include="Lookups\SystemList.cs" />
     <Compile Include="Lookups\YesNo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

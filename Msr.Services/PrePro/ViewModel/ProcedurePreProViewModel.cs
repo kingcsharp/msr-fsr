@@ -151,7 +151,7 @@ namespace Msr.Services.PrePro.ViewModel
                 ObjDesc = x.Qty + " " + x.QtyType
             }).OrderBy(o => o.RoleName).ToList());
 
-            DocLinks = documentFilesService.GetDocByObjectId(PkId);
+            DocLinks = documentFilesService.GetDocByObjectId(ObjectId);
         }
 
         public ProcedurePreProViewModel MapToDto(PrePropSearchView model)
