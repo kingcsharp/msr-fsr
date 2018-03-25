@@ -342,7 +342,7 @@ namespace Answer.Web.Controllers
             }
             catch (IndexOutOfRangeException)
             {
-                AddErrorNotification($"File not found with Id : {id}");
+                AddErrorNotification($"Sorry. The document could not be found. Please contact support.");
 
                 return View("Error");
             }

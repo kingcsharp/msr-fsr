@@ -137,12 +137,40 @@
 
     @Scripts.Render("~/bundles/js/jqueryval")
     @Scripts.Render("~/bundles/js/fileinput")
+    <script src="~/assets/js/common/documentFiles.js"></script>
+    <script src="~/assets/js/grids/comman.js"></script>
+    <script src="~/assets/js/comman.js"></script>
+    <script src="~/assets/js/procedure-steps.js"></script>
+    <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 
     <script type="text/javascript">
 
         var fileUploaderGrid = new FileUploaderGrid();
 
         $(document).ready(function () {
+
+            $("form").submit(function (e) {
+                $('.formPostStep .submitselect option').prop('selected', true);
+            });
+
+            $('.addNewStep').click(function (parameters) {
+                eLoaderOpen();
+                var procObjectId = $('#ProcObjectId').val();
+                var procedure = $('#Procedure').val();
+                $.ajax({
+                    type: "POST",
+                    url: '/Procedures/SaveStep',
+                    data: { ProcObjectId: procObjectId, Procedure: procedure },
+                    dataType: 'html',
+                    success: function (data) {
+                        location.reload();
+                    },
+                    error: function (error) {
+                        eLoaderError(error);
+                    }
+                });
+
+            });
 
             var fileUploader = new FileUploader();
             fileUploader.InitEditUploader($('#input-files'), '@Url.Action("FileUploaderBootstrap", "Doc")', [@Html.Raw(ViewBag.Preview)], @Html.Raw(ViewBag.PreviewConfig),'@Model.ObjectId');

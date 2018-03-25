@@ -107,15 +107,15 @@ namespace Msr.Services.Procedures.ViewModels
                 Value = x.Id.ToString()
             }).OrderBy(o => o.Text).ToList();
 
-            VerbList = procedureTypesService.ProceduresVerbsList().Select(x => new SelectListItem
+            VerbList = procedureTypesService.ProcVerbsList(ntlogin).Select(x => new SelectListItem
             {
                 Text = x.Name,
-                Value = x.ObjectId.ToString()
+                Value = x.Id.ToString()
             }).OrderBy(o => o.Text).ToList();
             VerbList.Insert(0, new SelectListItem { Text = @"--Select--", Value = "" });
 
             DocLinks = documentFilesService.GetDocByObjectId(ObjectId);
-            Roles = proceduresService.GetSelectedRoles(Id, ntlogin).Select(x=>x.Role_Id).ToList();
+            Roles = proceduresService.GetSelectedRoles(Id, ntlogin).Select(x => x.Role_Id).ToList();
         }
 
         public void MapToDto(ProcedureView model)

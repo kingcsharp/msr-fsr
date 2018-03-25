@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using EntityFrameworkExtras.EF6;
+using Msr.Models.Comman;
 using Msr.Models.Procedures;
 using Msr.Models.ProcedureVerbs;
 using Msr.Repositories;
@@ -39,6 +41,13 @@ namespace Msr.Services.ProcedureVerbs
         public IQueryable<ProcedureVerbsView> ProceduresVerbsList()
         {
             return _dbContext.ProcedureVerbs.Where(x => x.Status == "APPROVED");
+        }
+
+        public List<SelectFile> ProcVerbsList(string ntLogin)
+        {
+            var result = _dbContext.Database.SqlQuery<SelectFile>($"EXEC A_SP_TT_VERBS_SELECT ' (NAME LIKE ''%%'' OR NAME is NULL ) AND  (ROOT LIKE ''%%'' OR ROOT is NULL )',' ORDER BY NAME','{ntLogin}'").ToList();
+
+            return result;
         }
 
         public bool Save(SaveProcedureVerbsViewModel model)

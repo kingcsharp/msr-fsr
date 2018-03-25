@@ -40,7 +40,7 @@ namespace Answer.Web.Controllers
             _userService = new UserService();
             _roleService = new RoleService();
             _procedureVerbsService = new ProcedureVerbsService();
-            _documentFilesService = new DocumentFilesService();;
+            _documentFilesService = new DocumentFilesService(); ;
         }
 
         public ActionResult Index()
@@ -163,13 +163,11 @@ namespace Answer.Web.Controllers
         {
             var currentUser = GetCurrentUser();
 
-            var procedureService = new ProceduresService();
-
             model.NTLogin = GetCurrentUser().Id;
 
             if (ModelState.IsValid)
             {
-                var response = procedureService.Create(model);
+                var response = _proceduresService.Create(model);
 
                 if (!response.HasErrors())
                 {
@@ -217,7 +215,7 @@ namespace Answer.Web.Controllers
             var model = _proceduresService.GetProcedureById(id);
 
             vm.MapToDto(model);
-            
+
             vm.Setup(_proceduresService, _roleService, _procedureVerbsService, _documentFilesService, currentUser.Id);
 
             var procedureName = _proceduresService.GetProceduresQueryable().Where(x => x.ObjectId == id).SingleOrDefault().Name;
@@ -247,7 +245,7 @@ namespace Answer.Web.Controllers
                 caption = x.NAME,
                 type = x.TYPE,
                 size = 6666,
-                url = Url.Action("DeletesingleReference", "Documents", new {file = x.LINKED_DOC_ID}),
+                url = Url.Action("DeletesingleReference", "Documents", new { file = x.LINKED_DOC_ID }),
                 downloadUrl = x.SERVER_PATH,
                 key = x.LINKED_DOC_ID
             }));
@@ -327,7 +325,7 @@ namespace Answer.Web.Controllers
         {
             var vm = new AssignProcedureViewModel();
 
-            vm.Setup(new UserService());
+            vm.Setup(_userService);
 
             var procedureName = _proceduresService.GetProcedureName(id);
 
@@ -401,7 +399,7 @@ namespace Answer.Web.Controllers
                     System_Task = "SYS_COMP_TEST"
                 }
             };
-            vm.SetUp(new ProceduresService(), new ProcedureVerbsService(), ProcObjectId);
+            vm.SetUp(_proceduresService, _procedureVerbsService, ProcObjectId);
 
             var singleOrDefault = _proceduresService.GetProcedurelist().SingleOrDefault(x => x.Value == Procedure);
             if (singleOrDefault != null)
@@ -426,7 +424,7 @@ namespace Answer.Web.Controllers
 
             return Json("Ok", JsonRequestBehavior.AllowGet);
         }
-     
+
         public ActionResult CreateStep(string procedureObjectId, string NewObjectId, string Procedure)
         {
             var currentUser = GetCurrentUser();
@@ -434,7 +432,7 @@ namespace Answer.Web.Controllers
             var vm = new GetStepEditDataViewModel();
             vm.NtLogin = currentUser.Login;
 
-            vm.SetUp(new ProceduresService(), new ProcedureVerbsService(), procedureObjectId);
+            vm.SetUp(_proceduresService, _procedureVerbsService, procedureObjectId);
 
             var singleOrDefault = _proceduresService.GetProcedurelist().SingleOrDefault(x => x.Value == Procedure);
             if (singleOrDefault != null)
@@ -480,7 +478,7 @@ namespace Answer.Web.Controllers
 
             vm.NtLogin = currentUser.Login;
 
-            vm.SetUp(new ProceduresService(), new ProcedureVerbsService(), procedureObjectId);
+            vm.SetUp(_proceduresService, _procedureVerbsService, procedureObjectId);
 
             return View(vm);
         }
@@ -511,14 +509,13 @@ namespace Answer.Web.Controllers
         [HttpPost]
         public ActionResult EditProcedureObject(string pid, string relationship, EditProcedureObjectViewModel model)
         {
-            var procedureService = new ProceduresService();
             //need to be dynamic
             model.NTLogin = GetCurrentUser().Id;
             model.PROCEDURE_ID = pid;
             model.RELATIONSHIP = relationship;
             if (ModelState.IsValid)
             {
-                var response = procedureService.CreateProcedureObject(model);
+                var response = _proceduresService.CreateProcedureObject(model);
                 if (response)
                 {
                     TempData["SuccessMessage"] = "Procedure Object has been created successfully.";
@@ -529,7 +526,7 @@ namespace Answer.Web.Controllers
                 {
                     TempData["ErrorMessage"] = "Something went wrong.";
 
-                    model.Setup(new ProceduresService());
+                    model.Setup(_proceduresService);
 
                     return View(model);
                 }
@@ -588,9 +585,8 @@ namespace Answer.Web.Controllers
             string ID = data[0];
             string Pid = data[1];
             string relationship = data[2];
-            var taskService = new ProceduresService();
 
-            var response = taskService.Delete(id: ID, ntlogin: GetCurrentUser().Id);
+            var response = _proceduresService.Delete(id: ID, ntlogin: GetCurrentUser().Id);
 
             if (response)
             {
@@ -615,15 +611,14 @@ namespace Answer.Web.Controllers
             ViewBag.ObjId = objid;
             ViewBag.relation = relationship;
             ViewBag.id = Pid;
-            var procedureservices = new ProceduresService();
 
             var procedureObjectViewModel = new EditProcedureObjectViewModel();
 
-            var model = procedureservices.EditProcedureObject(id: objid, ntlogin: GetCurrentUser().Id);
+            var model = _proceduresService.EditProcedureObject(id: objid, ntlogin: GetCurrentUser().Id);
 
             procedureObjectViewModel = procedureObjectViewModel.MapToDto(model);
 
-            procedureObjectViewModel.Setup(new ProceduresService());
+            procedureObjectViewModel.Setup(_proceduresService);
 
             return View(procedureObjectViewModel);
         }
@@ -631,7 +626,6 @@ namespace Answer.Web.Controllers
         [HttpPost]
         public ActionResult EditProcedureObjectEdit(string Pid, string relationship, string ObjId, EditProcedureObjectViewModel model)
         {
-            var procedureService = new ProceduresService();
             //need to be dynamic
             model.NTLogin = GetCurrentUser().Id;
             model.PROCEDURE_ID = Pid;
@@ -639,7 +633,7 @@ namespace Answer.Web.Controllers
             model.RELATIONSHIP = relationship;
             if (ModelState.IsValid)
             {
-                var response = procedureService.SaveProcedureObject(model);
+                var response = _proceduresService.SaveProcedureObject(model);
                 if (response)
                 {
                     TempData["SuccessMessage"] = "Procedure Object has been created successfully.";
@@ -650,14 +644,14 @@ namespace Answer.Web.Controllers
                 {
                     TempData["ErrorMessage"] = "Something went wrong.";
 
-                    model.Setup(new ProceduresService());
+                    model.Setup(_proceduresService);
 
                     return View(model);
                 }
             }
 
 
-            model.Setup(new ProceduresService());
+            model.Setup(_proceduresService);
 
             return View(model);
         }
@@ -674,15 +668,14 @@ namespace Answer.Web.Controllers
             ViewBag.ObjId = objid;
             ViewBag.relation = relationship;
             ViewBag.id = Pid;
-            var preProServices = new ProceduresService();
 
             var procedureObjectViewModel = new PartsProvideTakeBackViewModel();
 
-            var model = preProServices.EditProcedureObject(id: objid, ntlogin: GetCurrentUser().Id);
+            var model = _proceduresService.EditProcedureObject(id: objid, ntlogin: GetCurrentUser().Id);
 
             procedureObjectViewModel = procedureObjectViewModel.MapToDto(model);
 
-            procedureObjectViewModel.Setup(new ProceduresService());
+            procedureObjectViewModel.Setup(_proceduresService);
 
             return View(procedureObjectViewModel);
         }
@@ -690,7 +683,6 @@ namespace Answer.Web.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult EditPartsProvideTakeBack(string Pid, string relationship, string ObjId, PartsProvideTakeBackViewModel model)
         {
-            var procedureService = new ProceduresService();
             model.NTLogin = GetCurrentUser().Id;
             model.PROCEDURE_ID = Pid;
             model.ID = ObjId;
@@ -698,7 +690,7 @@ namespace Answer.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                var response = procedureService.SavePartsProvideTakeBack(model);
+                var response = _proceduresService.SavePartsProvideTakeBack(model);
                 if (response)
                 {
                     TempData["SuccessMessage"] = "Procedure Object has been created successfully.";
@@ -709,7 +701,7 @@ namespace Answer.Web.Controllers
                 {
                     TempData["ErrorMessage"] = "Something went wrong.";
 
-                    model.Setup(new ProceduresService());
+                    model.Setup(_proceduresService);
 
                     return View(model);
                 }
@@ -725,7 +717,7 @@ namespace Answer.Web.Controllers
             var part = new PartsProvideTakeBackViewModel();
             ViewBag.ProcObjectId = Pid;
             ViewBag.relationships = relationship;
-            part.Setup(new ProceduresService());
+            part.Setup(_proceduresService);
 
             return View(part);
         }
@@ -733,14 +725,13 @@ namespace Answer.Web.Controllers
         [HttpPost]
         public ActionResult CreatePartsProvideTakeBack(string Pid, string relationship, PartsProvideTakeBackViewModel model)
         {
-            var procedureService = new ProceduresService();
             //need to be dynamic
             model.NTLogin = GetCurrentUser().Id;
             model.PROCEDURE_ID = Pid;
             model.RELATIONSHIP = relationship;
             if (ModelState.IsValid)
             {
-                var response = procedureService.CreatePartsProvideTakeBack(model);
+                var response = _proceduresService.CreatePartsProvideTakeBack(model);
                 if (response)
                 {
                     TempData["SuccessMessage"] = "Procedure Object has been created successfully.";
@@ -751,7 +742,7 @@ namespace Answer.Web.Controllers
                 {
                     TempData["ErrorMessage"] = "Something went wrong.";
 
-                    model.Setup(new ProceduresService());
+                    model.Setup(_proceduresService);
 
                     return View(model);
                 }
@@ -768,7 +759,7 @@ namespace Answer.Web.Controllers
             var part = new EditProcedureObjectViewModel();
             ViewBag.ProcObjectId = Pid;
             ViewBag.relationships = relationship;
-            part.Setup(new ProceduresService());
+            part.Setup(_proceduresService);
 
             return View(part);
         }
@@ -776,14 +767,12 @@ namespace Answer.Web.Controllers
         [HttpPost]
         public ActionResult ProcedureConsumedCreate(string Pid, string relationship, EditProcedureObjectViewModel model)
         {
-            var procedureService = new ProceduresService();
-            //need to be dynamic
             model.NTLogin = GetCurrentUser().Id;
             model.PROCEDURE_ID = Pid;
             model.RELATIONSHIP = relationship;
             if (ModelState.IsValid)
             {
-                var response = procedureService.CreateProcedureObject(model);
+                var response = _proceduresService.CreateProcedureObject(model);
                 if (response)
                 {
                     TempData["SuccessMessage"] = "Procedure Consumed has been created successfully.";
@@ -794,18 +783,18 @@ namespace Answer.Web.Controllers
                 {
                     TempData["ErrorMessage"] = "Something went wrong.";
 
-                    model.Setup(new ProceduresService());
+                    model.Setup(_proceduresService);
 
                     return View(model);
                 }
             }
 
 
-            model.Setup(new ProceduresService());
+            model.Setup(_proceduresService);
 
             return View(model);
         }
-        
+
         public ActionResult ShowProcedureConsumed(string Pid, string relationship)
         {
             var viewModel = new EngineeringViewModel();
@@ -816,9 +805,7 @@ namespace Answer.Web.Controllers
 
         public ActionResult ShowProcedureCondumedView(string Pid, string relation, JqGridParam param)
         {
-            var ProceduresService = new ProceduresService();
-
-            var totalRows = ProceduresService.GetSelectedProcedureObject(Pid, null, relation, GetCurrentUser().Id).AsQueryable();
+            var totalRows = _proceduresService.GetSelectedProcedureObject(Pid, null, relation, GetCurrentUser().Id).AsQueryable();
 
             var orderBy = nameof(ActualPartsView.PartDesc);
             if (!string.IsNullOrWhiteSpace(param.sortColumn))
@@ -855,9 +842,8 @@ namespace Answer.Web.Controllers
             string ID = data[0];
             string Pid = data[1];
             string relationship = data[2];
-            var taskService = new ProceduresService();
 
-            var response = taskService.Delete(id: ID, ntlogin: GetCurrentUser().Id);
+            var response = _proceduresService.Delete(id: ID, ntlogin: GetCurrentUser().Id);
 
             if (response)
             {
@@ -882,15 +868,14 @@ namespace Answer.Web.Controllers
             ViewBag.ObjId = objid;
             ViewBag.relation = relationship;
             ViewBag.id = Pid;
-            var procedureservices = new ProceduresService();
 
             var procedureObjectViewModel = new EditProcedureObjectViewModel();
 
-            var model = procedureservices.EditProcedureObject(id: objid, ntlogin: GetCurrentUser().Id);
+            var model = _proceduresService.EditProcedureObject(id: objid, ntlogin: GetCurrentUser().Id);
 
             procedureObjectViewModel = procedureObjectViewModel.MapToDto(model);
 
-            procedureObjectViewModel.Setup(new ProceduresService());
+            procedureObjectViewModel.Setup(_proceduresService);
 
             return View(procedureObjectViewModel);
         }
@@ -898,9 +883,7 @@ namespace Answer.Web.Controllers
         [HttpPost]
         public ActionResult ProcedureConsumedEdit(string Pid, string relationship, string ObjId, EditProcedureObjectViewModel model)
         {
-            var preProServices = new ProceduresService();
 
-            var procedureService = new ProceduresService();
             //need to be dynamic
             model.NTLogin = GetCurrentUser().Id;
             model.PROCEDURE_ID = Pid;
@@ -908,7 +891,7 @@ namespace Answer.Web.Controllers
             model.RELATIONSHIP = relationship;
             if (ModelState.IsValid)
             {
-                var response = procedureService.SaveProcedureObject(model);
+                var response = _proceduresService.SaveProcedureObject(model);
                 if (response)
                 {
                     TempData["SuccessMessage"] = "Procedure Object has been created successfully.";
@@ -919,13 +902,13 @@ namespace Answer.Web.Controllers
                 {
                     TempData["ErrorMessage"] = "Something went wrong.";
 
-                    model.Setup(new ProceduresService());
+                    model.Setup(_proceduresService);
 
                     return View(model);
                 }
             }
 
-            model.Setup(new ProceduresService());
+            model.Setup(_proceduresService);
 
             return View(model);
         }
@@ -935,21 +918,19 @@ namespace Answer.Web.Controllers
             var part = new EditProcedureObjectViewModel();
             ViewBag.ProcObjectId = Pid;
             ViewBag.relationships = relationship;
-            part.Setup(new ProceduresService());
+            part.Setup(_proceduresService);
 
             return View(part);
         }
         [HttpPost]
         public ActionResult CreatePartsProductactivity(string Pid, string relationship, EditProcedureObjectViewModel model)
         {
-            var procedureService = new ProceduresService();
-            //need to be dynamic
             model.NTLogin = GetCurrentUser().Id;
             model.PROCEDURE_ID = Pid;
             model.RELATIONSHIP = relationship;
             if (ModelState.IsValid)
             {
-                var response = procedureService.CreateProcedureObject(model);
+                var response = _proceduresService.CreateProcedureObject(model);
                 if (response)
                 {
                     TempData["SuccessMessage"] = "Procedure Part Stay has been created successfully.";
@@ -960,14 +941,14 @@ namespace Answer.Web.Controllers
                 {
                     TempData["ErrorMessage"] = "Something went wrong.";
 
-                    model.Setup(new ProceduresService());
+                    model.Setup(_proceduresService);
 
                     return View(model);
                 }
             }
 
 
-            model.Setup(new ProceduresService());
+            model.Setup(_proceduresService);
 
             return View(model);
         }
@@ -982,9 +963,7 @@ namespace Answer.Web.Controllers
 
         public ActionResult ShowProductPartStayView(string Pid, string relation, JqGridParam param)
         {
-            var ProceduresService = new ProceduresService();
-
-            var totalRows = ProceduresService.GetSelectedProcedureObject(Pid, null, relation, GetCurrentUser().Id).AsQueryable();
+            var totalRows = _proceduresService.GetSelectedProcedureObject(Pid, null, relation, GetCurrentUser().Id).AsQueryable();
 
             var orderBy = nameof(ActualPartsView.PartDesc);
             if (!string.IsNullOrWhiteSpace(param.sortColumn))
@@ -1021,9 +1000,8 @@ namespace Answer.Web.Controllers
             string ID = data[0];
             string Pid = data[1];
             string relationship = data[2];
-            var taskService = new ProceduresService();
 
-            var response = taskService.Delete(id: ID, ntlogin: GetCurrentUser().Id);
+            var response = _proceduresService.Delete(id: ID, ntlogin: GetCurrentUser().Id);
 
             if (response)
             {
@@ -1048,30 +1026,27 @@ namespace Answer.Web.Controllers
             ViewBag.ObjId = objid;
             ViewBag.relation = relationship;
             ViewBag.id = Pid;
-            var preProServices = new ProceduresService();
 
             var procedureObjectViewModel = new EditProcedureObjectViewModel();
 
-            var model = preProServices.EditProcedureObject(id: objid, ntlogin: GetCurrentUser().Id);
+            var model = _proceduresService.EditProcedureObject(id: objid, ntlogin: GetCurrentUser().Id);
 
             procedureObjectViewModel = procedureObjectViewModel.MapToDto(model);
 
-            procedureObjectViewModel.Setup(new ProceduresService());
+            procedureObjectViewModel.Setup(_proceduresService);
 
             return View(procedureObjectViewModel);
         }
         [HttpPost]
         public ActionResult EditProductPartStay(string Pid, string relationship, string ObjId, EditProcedureObjectViewModel model)
         {
-            var procedureService = new ProceduresService();
-            //need to be dynamic
             model.NTLogin = GetCurrentUser().Id;
             model.PROCEDURE_ID = Pid;
             model.ID = ObjId;
             model.RELATIONSHIP = relationship;
             if (ModelState.IsValid)
             {
-                var response = procedureService.SaveProcedureObject(model);
+                var response = _proceduresService.SaveProcedureObject(model);
                 if (response)
                 {
                     TempData["SuccessMessage"] = "Procedure Part Stay has been edited successfully.";
@@ -1082,13 +1057,13 @@ namespace Answer.Web.Controllers
                 {
                     TempData["ErrorMessage"] = "Something went wrong.";
 
-                    model.Setup(new ProceduresService());
+                    model.Setup(_proceduresService);
 
                     return View(model);
                 }
             }
 
-            model.Setup(new ProceduresService());
+            model.Setup(_proceduresService);
 
             return View(model);
         }
@@ -1096,9 +1071,7 @@ namespace Answer.Web.Controllers
         [AcceptVerbs(verbs: HttpVerbs.Post)]
         public ActionResult DeleteStep(string id, string procStepId, string ProdecureName)
         {
-            var proceduresService = new ProceduresService();
-
-            var result = proceduresService.DeleteStep(id, GetCurrentUser().Id);
+            var result = _proceduresService.DeleteStep(id, GetCurrentUser().Id);
             if (result)
             {
                 TempData["SuccessMessage"] = "Step has been deleted successfully.";
@@ -1174,7 +1147,6 @@ namespace Answer.Web.Controllers
         [AcceptVerbs(verbs: HttpVerbs.Post)]
         public ActionResult SaveMonitor(GetStepDataResult model)
         {
-            var proceduresService = new ProceduresService();
             if (ModelState.IsValid)
             {
                 model.AddMonitorForProcedureViewModel.StrNTLogin = GetCurrentUser().Id;
@@ -1189,7 +1161,7 @@ namespace Answer.Web.Controllers
                     model.AddMonitorForProcedureViewModel.Lowest_Threshold = null;
                 }
 
-                var response = proceduresService.AddMonitorForProcedure(model: model.AddMonitorForProcedureViewModel);
+                var response = _proceduresService.AddMonitorForProcedure(model: model.AddMonitorForProcedureViewModel);
 
                 if (!response.HasErrors())
                 {

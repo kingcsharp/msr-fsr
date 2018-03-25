@@ -151,7 +151,7 @@
                                 }
                                 <tr>
                                     <td>
-                                        <a      data-step-Target-Object="@Model.GetStepDataResults[i].AddMonitorForProcedureViewModel.Target_Object" data-procedure-name="@ViewBag.ProdecureName" data-moniter-type="@Model.GetStepDataResults[i].AddMonitorForProcedureViewModel.Monitor_Type" data-fail-action="@Model.GetStepDataResults[i].AddMonitorForProcedureViewModel.Fail_Action" data-description="@Model.GetStepDataResults[i].AddMonitorForProcedureViewModel.Description" data-object-id="@Model.GetStepDataResults[i].AddMonitorForProcedureViewModel.Id" data-related-object="@ViewBag.ProcObjectId" data-step-id="@Model.GetStepDataResults[i].Id" data-toggle="modal" data-target="#addMoniterModal" href="#" data-value="@Model.GetStepDataResults[i].Id" class="btn btn-xs btn-success add-monitor_@Model.GetStepDataResults[i].Id add-monitor " title="Add Monitor"> <i class="fa fa-plus" aria-hidden="true"></i> Add Monitor</a>
+                                        <a data-step-Target-Object="@Model.GetStepDataResults[i].AddMonitorForProcedureViewModel.Target_Object" data-procedure-name="@ViewBag.ProdecureName" data-moniter-type="@Model.GetStepDataResults[i].AddMonitorForProcedureViewModel.Monitor_Type" data-fail-action="@Model.GetStepDataResults[i].AddMonitorForProcedureViewModel.Fail_Action" data-description="@Model.GetStepDataResults[i].AddMonitorForProcedureViewModel.Description" data-object-id="@Model.GetStepDataResults[i].AddMonitorForProcedureViewModel.Id" data-related-object="@ViewBag.ProcObjectId" data-step-id="@Model.GetStepDataResults[i].Id" data-toggle="modal" data-target="#addMoniterModal" href="#" data-value="@Model.GetStepDataResults[i].Id" class="btn btn-xs btn-success add-monitor_@Model.GetStepDataResults[i].Id add-monitor " title="Add Monitor"> <i class="fa fa-plus" aria-hidden="true"></i> Add Monitor</a>
                                     </td>
                                     <td></td>
                                     <td></td>
@@ -203,7 +203,5 @@
 </style>
 
 <script type="text/javascript">
-    $("form").submit(function (e) {
-        $('.formPostStep .submitselect option').prop('selected', true);
-    });
+   
 </script>
