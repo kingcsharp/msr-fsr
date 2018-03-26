@@ -179,12 +179,13 @@ namespace Answer.Web.Controllers
             {
                 foreach (var step in procedureSteps)
                 {
+                    //TODO
                     vm.Steps.Add(new RequirementStepsDetailsViewModel
                     {
                         Id = Convert.ToInt32(step.Id),
                         ObjectId = step.Id,
-                        Process = step.StepTitle,
-                        StepTitle = step.StepTitle,
+                        Process = !string.IsNullOrWhiteSpace(step.Step_Text) ? step.Step_Text : step.StepTitle,
+                        StepTitle = !string.IsNullOrWhiteSpace(step.Step_Text) ? step.Step_Text : step.StepTitle,
                         Step = (int) step.Print_Order
                     });
                 }
@@ -195,7 +196,11 @@ namespace Answer.Web.Controllers
                 {
                     var step = procedureSteps.FirstOrDefault(x => x.Id == item.ObjectId);
 
-                    if (step != null) item.Process = step.StepTitle;
+                    if (step != null)
+                    {
+                        //TODO
+                        item.Process = !string.IsNullOrWhiteSpace(step.Step_Text) ? step.Step_Text : step.StepTitle;
+                    }
                 }
             }
 
