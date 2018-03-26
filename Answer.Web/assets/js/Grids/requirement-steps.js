@@ -35,7 +35,7 @@
                 $("#row" + (i - 1)).html('');
                 i--;
             } else {
-                alert("Unable to delete");
+                eModal.confirm('Existing step can not be deleted');
             }
 
             if (i === 0) {

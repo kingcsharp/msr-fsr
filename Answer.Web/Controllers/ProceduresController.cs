@@ -67,9 +67,9 @@ namespace Answer.Web.Controllers
             {
                 foreach (var rule in param.where.rules)
                 {
-                    if (rule.field == nameof(ProcedureView.Id))
+                    if (rule.field == nameof(ProcedureView.Root))
                     {
-                        totalRows = totalRows.Where(x => x.Id == rule.data.ToLower());
+                        totalRows = totalRows.Where(x => x.Root == rule.data.ToLower());
                     }
                     else if (rule.field == nameof(ProcedureView.Name))
                     {
@@ -86,7 +86,8 @@ namespace Answer.Web.Controllers
                     else if (rule.field == nameof(ProcedureView.Rev))
                     {
                         int value;
-                        if (Int32.TryParse(rule.data, out value))
+
+                        if (int.TryParse(rule.data, out value))
                         {
                             totalRows = totalRows.Where(x => x.Rev == value);
                         }

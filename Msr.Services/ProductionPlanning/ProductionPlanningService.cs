@@ -7,13 +7,11 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
-using System.Web.Script.Serialization;
 using Dapper;
 using EntityFrameworkExtras.EF6;
 using ExcelDataReader;
 using Msr.Models.CustomerRequirements;
 using Msr.Services.Procedures;
-using Msr.Services.Procedures.Messages;
 using Msr.Services.ProductionPlanning.ViewModels;
 using Msr.Models.Common;
 using Msr.Models.Locations;
@@ -47,10 +45,7 @@ namespace Msr.Services.ProductionPlanning
         {
             return _dbContext.CustomerRequirementViews;
         }
-        public IQueryable<PartInfoView> GetProductionPartInfoViewQueryable()
-        {
-            return _dbContext.PartInfoViews;
-        }
+      
         public List<RequirementStep> GetStepsByObjectId(int id)
         {
             return _dbContext.RequirementSteps.Where(x => x.CustomerSubmittedRequirementId == id).OrderBy(x => x.Id).ToList();
@@ -94,7 +89,6 @@ namespace Msr.Services.ProductionPlanning
             try
             {
                 var requirment = _dbContext.CustomerSubmittedRequirements.Single(x => x.Id == model.Id);
-
                 requirment.SupplierId = model.ProductSupplierId;
                 requirment.LocationId = model.ProductLocationId;
                 requirment.CustomerId = model.ProductCustomerId;
@@ -143,14 +137,9 @@ namespace Msr.Services.ProductionPlanning
                 var procedureObjectId = GetProceduretById(requirment.ProcedureId).Value;
 
                 var procedureSteps = _proceduresService.GetStepsData(procedureObjectId, model.LoginId);
-                if (!string.IsNullOrWhiteSpace(submit))
-                {
+              
                     foreach (var step in model.Steps)
                     {
-                        if (string.IsNullOrWhiteSpace(step.ObjectId))
-                        {
-                            step.ObjectId = "0";
-                        }
                         var existingStep = procedureSteps.SingleOrDefault(x => x.Id == step.ObjectId);
 
                         if (existingStep == null)
@@ -161,7 +150,7 @@ namespace Msr.Services.ProductionPlanning
                             {
                                 GetStepEditData =
                                 {
-                                    Step_Text = template.StepText,
+                                    Step_Text = template.Title,
                                     Print_Order = step.Step
                                 },
                                 ProcObjId = model.ProductProcedureId,
@@ -177,12 +166,8 @@ namespace Msr.Services.ProductionPlanning
                             step.ObjectId = newStepData.Entity;
                         }
                     }
-                    requirment.Status = CustomerSubmittedRequirementConstants.Completed;
-                }
-                else
-                {
-                    requirment.Status = CustomerSubmittedRequirementConstants.InProgress;
-                }
+                
+                requirment.Status = !string.IsNullOrWhiteSpace(submit) ? CustomerSubmittedRequirementConstants.Completed : CustomerSubmittedRequirementConstants.InProgress;
 
                 foreach (var step in model.Steps)
                 {
@@ -193,7 +178,7 @@ namespace Msr.Services.ProductionPlanning
                     if (record == null)
                     {
                         requirementStep.CustomerSubmittedRequirementId = model.Id;
-
+                        requirementStep.ObjectId = step.ObjectId;
                         _dbContext.RequirementSteps.Add(requirementStep);
                     }
                     else
@@ -258,21 +243,6 @@ namespace Msr.Services.ProductionPlanning
             }
         }
 
-        private void SubmitProductToWorkflow(RequirementStepsViewModel model, ResultNotification<string> result, string newId)
-        {
-            var workflow = _workflowService.CheckOutObject(newId, model.LoginId);
-
-            var submitWorkflow = new SubmitWorkflowViewModel();
-            submitWorkflow.CompletionStart = "APPROVED";
-            submitWorkflow.ObjectId = workflow.Entity;
-            submitWorkflow.ApprovalWorflowId = "37";
-            submitWorkflow.Comment = "Product approved by system";
-            submitWorkflow.LoginId = model.LoginId;
-            var workflowResponse = _workflowService.SubmitWorkflow(submitWorkflow);
-
-            result.SuccessMessage = workflowResponse.SuccessMessage;
-        }
-
         public RequirementStep StepMapping(RequirementStepsDetailsViewModel model)
         {
             var step = new RequirementStep
@@ -292,22 +262,6 @@ namespace Msr.Services.ProductionPlanning
             };
 
             return step;
-        }
-
-        public List<RequirementStep> GetStepsByRequirementId(int id)
-        {
-            var result = _dbContext.RequirementSteps.Where(x => x.CustomerSubmittedRequirementId == id).ToList();
-
-            return result;
-        }
-
-
-        public void DeleteStep(int id)
-        {
-            var result = _dbContext.RequirementSteps.Single(x => x.Id == id);
-
-            _dbContext.RequirementSteps.Remove(result);
-            _dbContext.SaveChanges();
         }
 
         public ResultNotification<string> ChangeStatus(int id, string status)
@@ -374,12 +328,14 @@ namespace Msr.Services.ProductionPlanning
 
             return result?.Value;
         }
+
         public string GetProceduretIdById(string id)
         {
             var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT DISTINCT SHOWNAME as Show,ID as Value   FROM A_V_PROCEDURES_APPROVED_DATA_DROP_DOWN WHERE ( CREATING_CO = '2'  ) AND (( NAME LIKE '%%' AND NAME LIKE '%%' ) ) and(ID='" + id + "')   ORDER BY SHOWNAME").SingleOrDefault();
 
             return result?.Value;
         }
+
         public string GetPartIdByCompanyPartNumber(string companyPartNumber)
         {
             var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT DISTINCT NAME_COMBO as Show, ID as Value   FROM A_V_PARTS_APPROVED_DATA WHERE(COMPANY = '2') AND((NAME_COMBO LIKE '%%')) and(COMPANY_PART_NUMBER = '" + companyPartNumber + "')    ORDER BY NAME_COMBO").SingleOrDefault();
