@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    // process specs table
+
     var i = 1;
     $("#add_row").click(function () {
         $('#row' + i).html("<td>" + (i + 1) + "</td> <td><input name='Process[" + i + "].Contaminents' type='text' placeholder='Contaminents By-Products' class='form-control input-md'  /> </td>");
@@ -13,7 +13,6 @@ $(document).ready(function () {
         }
     });
 
-    //kit table
     var j = 1;
     $("#add_rowa").click(function () {
         $('#rowa-' + j).html(
