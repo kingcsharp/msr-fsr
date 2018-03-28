@@ -8,6 +8,7 @@ using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Msr.Services.Documents;
 using Msr.Services.Files.ViewModels;
 using Msr.Services.S3;
 
@@ -15,11 +16,16 @@ namespace Answer.Web.Controllers
 {
     public class FilesController : BaseController
     {
-        private FileService _fileService;
+        private readonly FileService _fileService;
+
+        private readonly DocumentFilesService _documentFilesService;
+        private readonly string _awsBaseUrl;
 
         public FilesController()
         {
+            _awsBaseUrl = ConfigurationManager.AppSettings.Get("AWSURL");
             _fileService = new FileService();
+            _documentFilesService = new DocumentFilesService();
         }
         public ActionResult Index()
         {
@@ -153,12 +159,26 @@ namespace Answer.Web.Controllers
             return Json(selectedfiles, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult ViewFile(string callBackitem)
+        public JsonResult ViewFile(string id)
         {
-            var callBackUrl = "http://docs.google.com/gview?url=" + callBackitem + "&embedded=true";
-            ViewBag.callBackitem = callBackUrl;
+            try
+            {
+                var resultsFile = _documentFilesService.GetSelectedRefFile(id);
 
-            return PartialView("_ViewFile");
+                var cloudUrl = $"{_awsBaseUrl}{resultsFile.FileKey}";
+
+                var data = new
+                {
+                    FileUrl = cloudUrl,
+                    FileName = resultsFile.Name
+                };
+
+                return Json(data, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception)
+            {
+                return Json(string.Empty, JsonRequestBehavior.AllowGet);
+            }
         }
 
         public ActionResult Edit(string id)

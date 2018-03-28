@@ -19,40 +19,40 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
 
                 switch (valueId[0].split('.').pop().toLowerCase()) {
 
-                    case 'xls': imageUrl = '<a  title="Download" href="/Doc/Download?Id=' + valueId[1] + '"><img src="/assets/img/icon-xls.png" /></a>&nbsp';
+                    case 'xls': imageUrl = '<span class="data-toggle file-preview" data-call-back-item="' + valueId[1] + '"  data-target="#view-images" title="View File"><img src="/assets/img/icon-xls.png" /></span>&nbsp';
                         break;
                     case 'jpg':
                     case 'png':
                     case 'jpeg':
                     case 'gif':
-                        imageUrl = '<a title="Download" href="/Doc/Download?Id=' + valueId[1] + '"><img src="/assets/img/jpg.png" /></a>&nbsp';
+                        imageUrl = '<span class="data-toggle  file-preview" data-call-back-item="' + valueId[1] + '"  data-target="#view-images" title="View File"><img src="/assets/img/jpg.png" /></span>&nbsp';
                         break;
 
                     case 'docx':
-                        imageUrl = '<a title="Download" href="/Doc/Download?Id=' + valueId[1] + '"><img src="/assets/img/icon-doc.png" /></a>&nbsp';
+                        imageUrl = '<span class="data-toggle  file-preview" data-call-back-item="' + valueId[1] + '"  data-target="#view-images" title="View File"><img src="/assets/img/icon-doc.png" /></span>&nbsp';
                         break;
 
                     case 'xlsx':
-                        imageUrl = '<a title="Download" href="/Doc/Download?Id=' + valueId[1] + '"><img src="/assets/img/icon-xls.png" /></a>&nbsp';
+                        imageUrl = '<span class="data-toggle  file-preview" data-call-back-item="' + valueId[1] + '"  data-target="#view-images" title="View File"><img src="/assets/img/icon-xls.png" /></span>&nbsp';
                         break;
 
                     case 'ppt':
-                        imageUrl = '<a title="Download" href="/Doc/Download?Id=' + valueId[1] + '"><img src="/assets/img/icon-ppt.png" /></a>&nbsp';
+                        imageUrl = '<span class="data-toggle  file-preview" data-call-back-item="' + valueId[1] + '"  data-target="#view-images" title="View File"><img src="/assets/img/icon-ppt.png" /></span>&nbsp';
                         break;
 
                     case 'pdf':
-                        imageUrl = '<a title="Download" href="/Doc/Download?Id=' + valueId[1] + '"><img src="/assets/img/icon-pdf.png" /></a>&nbsp';
+                        imageUrl = '<span class="data-toggle  file-preview" data-call-back-item="' + valueId[1] + '"  data-target="#view-images" title="View File"><img src="/assets/img/icon-pdf.png" /></span>&nbsp';
                         break;
 
                     case 'txt':
-                        imageUrl = '<a title="Download" href="/Doc/Download?Id=' + valueId[1] + '"><img src="/assets/img/txt.png" /></a>&nbsp';
+                        imageUrl = '<span class="data-toggle  file-preview" data-call-back-item="' + valueId[1] + '"  data-target="#view-images" title="View File"><img src="/assets/img/txt.png" /></span>&nbsp';
                         break;
 
                     case 'zip':
-                        imageUrl = '<a title="Download" href="/Doc/Download?Id=' + valueId[1] + '"><img src="/assets/img/icon-zip.png" /></a>&nbsp';
+                        imageUrl = '<span class="data-toggle  file-preview" data-call-back-item="' + valueId[1] + '"  data-target="#view-images" title="View File"><img src="/assets/img/icon-zip.png" /></span>&nbsp';
                         break;
 
-                    default: imageUrl = '<a title="Download" href="/Doc/Download?Id=' + valueId[1] + '"><img src="/assets/img/default.png" /></a>&nbsp';
+                    default: imageUrl = '<span class="data-toggle  file-preview" data-call-back-item="' + valueId[1] + '"  data-target="#view-images" title="View File"><img src="/assets/img/default.png" /></span>&nbsp';
                         break;
 
                 }
@@ -144,5 +144,27 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                     }
 
                 });
+        },
+
+        DocPreview: function () {
+
+            $('.file-preview').on('click', function (event) {
+
+                var callBackitem = $(this).data('call-back-item');
+
+                $.ajax({
+                    type: "GET",
+                    url: '/Files/ViewFile?id=' + callBackitem,
+                    dataType: 'json',
+                    cache: false,
+                    success: function (data) {
+                        viewerLoad(data.FileUrl, data.FileName);
+                    },
+                    error: function(error) {
+                        eLoaderError(error);
+                    }
+                });
+
+            });
         }
     }

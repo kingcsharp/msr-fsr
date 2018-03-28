@@ -65,7 +65,6 @@ function viewerLoad(url, flobwicket) {
         viewSrc = encoder + encodeURIComponent(file);
         return eModal.iframe(viewSrc, title);
     }
-    console.log('Viewer Source : ' + viewSrc);
 };
 
 var pageEmbedsUpdate = function () {

@@ -123,6 +123,7 @@
         gridComplete: function () {
             Msr.JqGridCommon.SetupGridLock("/Documents/Edit/");
             Msr.JqGridCommon.UnLockWorkflow(returnUrl);
+            Msr.JqGridCommon.DocPreview();
         }
 
     });

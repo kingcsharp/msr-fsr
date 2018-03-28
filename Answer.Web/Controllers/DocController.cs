@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Web;
 using System.Web.Mvc;
-using Msr.Commons.Files;
 using Msr.Models.Orders;
 using Msr.Services.Documents;
 using Msr.Services.Documents.ViewModels;
