@@ -1,16 +1,35 @@
 ﻿using EntityFrameworkExtras.EF6;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
+using Msr.Services.Orders.ViewModels;
 
 namespace Msr.Services.Orders.Procedures
 {
     [StoredProcedure("Portal_Save_FileUpload")]
     public class SaveWorkItemImagesProcedure
     {
+        public SaveWorkItemImagesProcedure(SaveWorkItemImageViewModel model)
+        {
+            DocId = model.DocId;
+            OldDocId = model.OldDocId;
+            Name = model.Name;
+            Desc = model.Desc;
+            Path = model.Path;
+            ContentType = model.ContentType;
+            SrcId = model.SrcId;
+            SrcName = model.SrcName;
+            SrcDesc = model.SrcDesc;
+            SrcPath = model.SrcPath;
+            SrcContentType = model.SrcContentType;
+            SrcChanged = model.SrcChanged;
+            DocChanged = model.DocChanged;
+            DropSrc = model.DropSrc;
+            NtLogin = model.NTLogin;
+            TaskId = model.TaskId;
+            FileKey = model.FileKey;
+            FileUrl = model.FileUrl;
+        }
+        
         [StoredProcedureParameter(SqlDbType.VarChar, Size = 50, ParameterName = "newID", Direction = ParameterDirection.Output)]
         public string NewId { get; set; }
 
@@ -60,9 +79,15 @@ namespace Msr.Services.Orders.Procedures
         public string DropSrc { get; set; }
 
         [StoredProcedureParameter(SqlDbType.VarChar, Size = 50, ParameterName = "strNTLogin")]
-        public string NTLogin { get; set; }
+        public string NtLogin { get; set; }
 
         [StoredProcedureParameter(SqlDbType.VarChar, Size = 50, ParameterName = "taskId")]
         public string TaskId { get; set; }
+
+        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "FileUrl")]
+        public string FileUrl { get; set; }
+
+        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "FileKey")]
+        public string FileKey { get; set; }
     }
 }

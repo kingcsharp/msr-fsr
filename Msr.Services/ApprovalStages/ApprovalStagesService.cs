@@ -7,8 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Mvc;
 
 namespace Msr.Services.ApprovalStages
@@ -50,19 +48,19 @@ namespace Msr.Services.ApprovalStages
                 var saveApprovalStagesProcedure = new SaveApprovalStagesProcedure
                 {
                     Name = model.Name,
-                    NTLogin = model.NTLogin
+                    NTLogin = model.NtLogin
                 };
 
                 _dbContext.Database.ExecuteStoredProcedure(saveApprovalStagesProcedure);
 
 
-                var deleteApprovalGroupsProcedure = new DeleteApprovalGroupsProcedure() { Id = saveApprovalStagesProcedure.NewId, NTLogin = model.NTLogin };
+                var deleteApprovalGroupsProcedure = new DeleteApprovalGroupsProcedure() { Id = saveApprovalStagesProcedure.NewId, NTLogin = model.NtLogin };
 
                 _dbContext.Database.ExecuteStoredProcedure(deleteApprovalGroupsProcedure);
 
                 foreach (var file in model.Groups)
                 {
-                    var saveFileProcedure = new SaveStageGroupProcedure() { GroupId = file, StageId = saveApprovalStagesProcedure.NewId, NTLogin = model.NTLogin };
+                    var saveFileProcedure = new SaveStageGroupProcedure() { GroupId = file, StageId = saveApprovalStagesProcedure.NewId, NTLogin = model.NtLogin };
 
                     _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
                 }
@@ -77,17 +75,17 @@ namespace Msr.Services.ApprovalStages
             }
         }
 
-        public bool Edit(EditApprovalStagesViewModel model)
+        public bool Update(EditApprovalStagesViewModel model)
         {
             try
             {
-                var deleteApprovalGroupsProcedure = new DeleteApprovalGroupsProcedure() { Id = model.Id, NTLogin = model.NTLogin };
+                var deleteApprovalGroupsProcedure = new DeleteApprovalGroupsProcedure() { Id = model.Id, NTLogin = model.NtLogin };
 
                 _dbContext.Database.ExecuteStoredProcedure(deleteApprovalGroupsProcedure);
 
                 foreach (var file in model.Groups)
                 {
-                    var saveFileProcedure = new SaveStageGroupProcedure() { GroupId = file, StageId = model.Id, NTLogin = model.NTLogin };
+                    var saveFileProcedure = new SaveStageGroupProcedure() { GroupId = file, StageId = model.Id, NTLogin = model.NtLogin };
 
                     _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
                 }
@@ -96,7 +94,7 @@ namespace Msr.Services.ApprovalStages
                 {
                     Id = model.Id,
                     Name = model.Name,
-                    NTLogin = model.NTLogin
+                    NTLogin = model.NtLogin
                 };
 
                 _dbContext.Database.ExecuteStoredProcedure(saveApprovalStagesProcedure);

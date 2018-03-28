@@ -25,7 +25,9 @@ namespace Answer.Web.Controllers
         private readonly DocumentFilesService _documentFilesService;
         private readonly DocumentService _documentService;
         private readonly OrderService _orderService;
-
+        private readonly string _bucketName;
+        private readonly string _awsBaseUrl;
+        
         public DocController()
         {
             _fileService = new FileService();
@@ -33,6 +35,8 @@ namespace Answer.Web.Controllers
             _documentFilesService = new DocumentFilesService();
             _documentService = new DocumentService();
             _orderService = new OrderService();
+            _bucketName = ConfigurationManager.AppSettings.Get("AWSBuketName");
+            _awsBaseUrl = ConfigurationManager.AppSettings.Get("AWSURL");
         }
 
         public ActionResult View(string filePath, string fileType, string fileName, int? height)
@@ -57,28 +61,15 @@ namespace Answer.Web.Controllers
                 var imageModel = new SaveWorkItemImageViewModel();
 
                 imageModel.Name = file.FileName;
-                imageModel.Desc = null;
-
-                var _cloudUploader = new AWSFileHandler();
 
                 var keyName = string.Format("Answer2/{0}-{1}", Guid.NewGuid(), file.FileName);
-                var buketName = ConfigurationManager.AppSettings.Get("AWSBuketName");
 
-                _cloudUploader.UploadToCloud(file, buketName, keyName);
+                _cloudUploader.UploadToCloud(file, _bucketName, keyName);
 
-                var baseUrl = ConfigurationManager.AppSettings.Get("AWSURL");
-
-                var cloudUrl = $"{baseUrl}{keyName}";
+                var cloudUrl = $"{_awsBaseUrl}{keyName}";
 
                 imageModel.Path = cloudUrl;
                 imageModel.ContentType = file.ContentType;
-                imageModel.SrcId = null;
-                imageModel.SrcName = null;
-                imageModel.SrcDesc = null;
-                imageModel.SrcPath = null;
-                imageModel.SrcContentType = null;
-                imageModel.SrcChanged = null;
-                imageModel.DocChanged = null;
                 imageModel.DropSrc = "YES";
                 imageModel.NTLogin = "1618";
                 imageModel.TaskId = taskId;
@@ -157,38 +148,22 @@ namespace Answer.Web.Controllers
 
             var initialPreview = new List<string>();
             var initialPreviewConfigs = new List<DocLink>();
-
             var initialPreviewConfig = new object();
             var responese = new NewFile();
+
             foreach (string item in Request.Files)
             {
                 var file = Request.Files[item];
-                var imageModel = new SaveFileUploadViewModel();
-
-                imageModel.Name = file.FileName;
-
-                var cloudUploader = new AWSFileHandler();
-
                 var keyName = $"Answer2/{Guid.NewGuid()}-{file.FileName}";
 
-                var buketName = ConfigurationManager.AppSettings.Get("AWSBuketName");
+                _cloudUploader.UploadToCloud(file, _bucketName, keyName);
 
-                cloudUploader.UploadToCloud(file, buketName, keyName);
+                var cloudUrl = $"{_awsBaseUrl}{keyName}";
 
-                var baseUrl = ConfigurationManager.AppSettings.Get("AWSURL");
-
-                var cloudUrl = $"{baseUrl}{keyName}";
-
+                var imageModel = new SaveFileUploadViewModel();
+                imageModel.Name = file.FileName;
                 imageModel.Path = cloudUrl;
                 imageModel.ContentType = file.ContentType;
-                imageModel.SrcId = null;
-                imageModel.SrcName = null;
-                imageModel.SrcDesc = null;
-                imageModel.SrcPath = null;
-                imageModel.SrcContentType = null;
-                imageModel.SrcChanged = null;
-                imageModel.DocChanged = null;
-                imageModel.Desc = null;
                 imageModel.DropSrc = "YES";
                 imageModel.NTLogin = currentUser.Id;
 
@@ -236,35 +211,24 @@ namespace Answer.Web.Controllers
             foreach (string item in Request.Files)
             {
                 var file = Request.Files[item];
+                
+                var keyName = $"Answer2/{Guid.NewGuid()}-{file.FileName}";
 
-                var imageModel = new SaveWorkItemImageViewModel();
+                _cloudUploader.UploadToCloud(file, _bucketName, keyName);
 
-                imageModel.Name = file.FileName;
-                imageModel.Desc = null;
+                var cloudUrl = $"{_awsBaseUrl}{keyName}";
 
-                var _cloudUploader = new AWSFileHandler();
-
-                var keyName = string.Format("Answer2/{0}-{1}", Guid.NewGuid(), file.FileName);
-                var buketName = ConfigurationManager.AppSettings.Get("AWSBuketName");
-
-                _cloudUploader.UploadToCloud(file, buketName, keyName);
-
-                var baseUrl = ConfigurationManager.AppSettings.Get("AWSURL");
-
-                var cloudUrl = $"{baseUrl}{keyName}";
-
-                imageModel.Path = cloudUrl;
-                imageModel.ContentType = file.ContentType;
-                imageModel.SrcId = null;
-                imageModel.SrcName = null;
-                imageModel.SrcDesc = null;
-                imageModel.SrcPath = null;
-                imageModel.SrcContentType = null;
-                imageModel.SrcChanged = null;
-                imageModel.DocChanged = null;
-                imageModel.DropSrc = "YES";
-                imageModel.NTLogin = currentUser.Id;
-                imageModel.TaskId = objectId;
+                var imageModel = new SaveWorkItemImageViewModel
+                {
+                    Name = file.FileName,
+                    Path = cloudUrl,
+                    ContentType = file.ContentType,
+                    DropSrc = "YES",
+                    NTLogin = currentUser.Id,
+                    TaskId = objectId,
+                    FileUrl = cloudUrl,
+                    FileKey = keyName
+                };
 
                 newId = _orderService.SaveOrderItemImages(imageModel);
 
@@ -328,17 +292,9 @@ namespace Answer.Web.Controllers
             {
                 var resultsFile = _documentFilesService.GetSelectedRefFile(id);
 
-                var key = resultsFile.ServerPath.Split('/');
+                var streamCloud = _cloudUploader.DownloadFromCloud(_bucketName, resultsFile.FileKey);
 
-                var buketName = ConfigurationManager.AppSettings.Get("AWSBuketName");
-
-                var streamCloud = _cloudUploader.DownloadFromCloud(buketName, key[3] + "/" + key[4]);
-
-                var extention = resultsFile.Show.Split('.');
-
-                var mimeType = MimeTypes.GetTypes(extention[1]);
-
-                return File(streamCloud, mimeType, resultsFile.Show);
+                return File(streamCloud, resultsFile.ContentType, resultsFile.Show);
             }
             catch (IndexOutOfRangeException)
             {

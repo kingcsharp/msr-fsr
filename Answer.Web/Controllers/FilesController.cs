@@ -8,7 +8,6 @@ using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using Msr.Models.Orders;
 using Msr.Services.Files.ViewModels;
 using Msr.Services.S3;
 
@@ -139,15 +138,10 @@ namespace Answer.Web.Controllers
 
                 imageModel.Path = cloudUrl;
                 imageModel.ContentType = file.ContentType;
-                imageModel.SrcId = null;
-                imageModel.SrcName = null;
-                imageModel.SrcDesc = null;
-                imageModel.SrcPath = null;
-                imageModel.SrcContentType = null;
-                imageModel.SrcChanged = null;
-                imageModel.DocChanged = null;
                 imageModel.DropSrc = "YES";
                 imageModel.NTLogin = GetCurrentUser().Id;
+                imageModel.FileUrl = cloudUrl;
+                imageModel.FileKey = keyName;
 
                 var responese = fileService.SaveFileUpload(imageModel);
 

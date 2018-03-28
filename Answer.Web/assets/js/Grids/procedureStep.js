@@ -99,6 +99,8 @@
         key: true,
         ajaxCellOptions: {},
         gridComplete: function () {
+
+
             $('.deleteprepro').on('click',
                 function (e) {
                     e.preventDefault();
@@ -117,7 +119,8 @@
                     }
 
                 });
-            UnLockWorkflow(returnUrl);
+
+            Msr.JqGridCommon.UnLockWorkflow(returnUrl);
         }
     });
     $('#jqGrid').navGrid("#jqGridPager", {

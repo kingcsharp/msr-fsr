@@ -1,6 +1,7 @@
 ﻿using EntityFrameworkExtras.EF6;
 using Msr.Models.ApprovalGroups;
 using Msr.Models.Common;
+using Msr.Models.People;
 using Msr.Repositories;
 using Msr.Services.ApprovalGroups.Procedures;
 using Msr.Services.ApprovalGroups.ViewModels;
@@ -8,9 +9,8 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Mvc;
+using Msr.Services.Roles.Messages;
 
 namespace Msr.Services.ApprovalGroups
 {
@@ -22,14 +22,17 @@ namespace Msr.Services.ApprovalGroups
         {
             _dbContext = new MsrDbContext();
         }
+
         public IQueryable<ApprovalGroupsView> GetApprovalGroupsQueryable()
         {
             return _dbContext.ApprovalGroupsViews;
         }
+
         public ApprovalGroupsView GetApprovalGroupById(string id)
         {
             return GetApprovalGroupsQueryable().Where(x => x.Id == id).SingleOrDefault();
         }
+
         public List<string> GetGroupMembers(string id, string ntlogin)
         {
             var strID = new SqlParameter("@ID", id == null ? "0" : id);
@@ -40,6 +43,7 @@ namespace Msr.Services.ApprovalGroups
 
             return result;
         }
+
         public List<SelectFile> GetGroupRoles(string id)
         {
             var strID = new SqlParameter("@ID", id == null ? "0" : id);
@@ -48,6 +52,7 @@ namespace Msr.Services.ApprovalGroups
 
             return result;
         }
+
         public List<SelectFile> GetGroupSpecialMembers(string id)
         {
             var strID = new SqlParameter("@ID", id == null ? "0" : id);
@@ -56,6 +61,19 @@ namespace Msr.Services.ApprovalGroups
 
             return result;
         }
+
+        public List<PeopleApprovedSearch> GetApprovedMember(string ntlogin, string co)
+        {
+            return _dbContext.Database.SqlQuery<PeopleApprovedSearch>($"exec A_SP_PEOPLE_SEARCH ' (FULL_NAME LIKE ''%%'' OR FULL_NAME is NULL ) AND  (ROOT LIKE ''%%'' OR ROOT is NULL ) AND  (POSITION_NAME LIKE ''%%'' OR POSITION_NAME is NULL ) AND  (BOSS_NAME LIKE ''%%'' OR BOSS_NAME is NULL ) AND  (COMPANY_NAME LIKE ''%%'' OR COMPANY_NAME is NULL ) AND (( ROOT_CO_ID LIKE ''%{co}%'' ) ) AND  STATUS LIKE ''APPROVED%'' AND  (LOGIN IS NOT NULL) AND  (LOCATION_NAME LIKE ''%%'' OR LOCATION_NAME is NULL )',' ORDER BY LAST_NAME,NAME',NULL,NULL,'{ntlogin}'").ToList();
+        }
+
+        public List<RoleResult> GetGroupMemberRoles(string ntLogin)
+        {
+            var result = _dbContext.Database.SqlQuery<RoleResult>($"EXEC A_SP_ROLE_SELECT NULL, NULL, NULL,NULL, '{ntLogin}',' ORDER BY NAME'").ToList();
+
+            return result;
+        }
+
         public bool Edit(EditApprovalGroupsViewModel model)
         {
             try
@@ -105,6 +123,7 @@ namespace Msr.Services.ApprovalGroups
                 return false;
             }
         }
+
         public bool Create(EditApprovalGroupsViewModel model)
         {
             try
@@ -147,8 +166,6 @@ namespace Msr.Services.ApprovalGroups
             }
             catch (Exception ex)
             {
-                var message = "Error occured:" + ex.Message;
-
                 return false;
             }
         }

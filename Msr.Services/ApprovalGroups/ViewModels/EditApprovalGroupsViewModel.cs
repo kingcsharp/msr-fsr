@@ -1,12 +1,7 @@
 ﻿using Msr.Models.ApprovalGroups;
-using Msr.Services.Roles;
-using Msr.Services.Users;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Mvc;
 
 namespace Msr.Services.ApprovalGroups.ViewModels
@@ -45,26 +40,26 @@ namespace Msr.Services.ApprovalGroups.ViewModels
 
         public string NTLogin { get; set; }
 
-        public void Setup(UserService userService, RoleService roleService, ApprovalGroupsService approvalGroupsService, string ntlogin)
+        public void Setup(ApprovalGroupsService approvalGroupsService, string ntlogin, string co)
         {
             ////EXEC A_SP_ROLE_SELECT NULL, NULL, NULL,NULL, '1618',' ORDER BY NAME'
-            ListMemberPeoples = userService.GetSearchUser().Select(x => new SelectListItem
+            ListMemberPeoples = approvalGroupsService.GetApprovedMember(ntlogin, co).Select(x => new SelectListItem
             {
                 Text = x.Full_Name,
                 Value = x.Root
             }).OrderBy(o => o.Text).ToList();
 
-            ListMemberRoles = roleService.GetActiveRoles().Select(x => new SelectListItem
+            ListMemberRoles = approvalGroupsService.GetGroupMemberRoles(ntlogin).Select(x => new SelectListItem
             {
                 Text = x.Name,
                 Value = x.Id.ToString()
             }).OrderBy(o => o.Text).ToList();
 
-            MemberPeoples = approvalGroupsService.GetGroupMembers(id: Id, ntlogin: ntlogin).ToList();
+            MemberPeoples = approvalGroupsService.GetGroupMembers(Id, ntlogin).ToList();
 
-            MemberRoles = approvalGroupsService.GetGroupRoles(id: Id).Select(x => x.Value).ToList();
+            MemberRoles = approvalGroupsService.GetGroupRoles(Id).Select(x => x.Value).ToList();
 
-            SpecialMembers = approvalGroupsService.GetGroupSpecialMembers(id: Id).Select(x => x.Value).ToList();
+            SpecialMembers = approvalGroupsService.GetGroupSpecialMembers(Id).Select(x => x.Value).ToList();
         }
 
         public EditApprovalGroupsViewModel MapToDto(ApprovalGroupsView model)

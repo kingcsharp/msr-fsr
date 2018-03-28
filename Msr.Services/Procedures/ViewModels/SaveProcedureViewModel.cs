@@ -94,12 +94,12 @@ namespace Msr.Services.Procedures.ViewModels
 
         public void Setup(ProceduresService proceduresService, RoleService roleService, ProcedureVerbsService procedureTypesService, DocumentFilesService documentFilesService, string ntlogin)
         {
-            SystemList = LookupItems.System();
-            SecurityLevelList = LookupItems.SecurityLevel();
-            SetpInApList = LookupItems.YesNo();
-            WipMsgList = LookupItems.YesNo();
+            SystemList = Commons.Lookups.LookupItems.System();
+            SecurityLevelList = Commons.Lookups.LookupItems.SecurityLevel();
+            SetpInApList = Commons.Lookups.LookupItems.YesNo();
+            WipMsgList = Commons.Lookups.LookupItems.YesNo();
 
-            DurationTypeList = LookupItems.DurationType();
+            DurationTypeList = Commons.Lookups.LookupItems.DurationType();
 
             RolesList = roleService.GetActiveRoles().Select(x => new SelectListItem
             {
@@ -133,6 +133,7 @@ namespace Msr.Services.Procedures.ViewModels
             DurationType = model.DurationType;
             WipMsg = model.WipMsg;
             Threshold = model.Threshold;
+            IsActive = model.IsActive;
         }
     }
 }

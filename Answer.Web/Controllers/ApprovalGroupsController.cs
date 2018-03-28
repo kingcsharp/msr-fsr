@@ -2,8 +2,6 @@
 using Msr.Services.ApprovalGroups;
 using Msr.Services.ApprovalGroups.ViewModels;
 using Msr.Services.jqGrid;
-using Msr.Services.Roles;
-using Msr.Services.Users;
 using Msr.Web.ViewModel.Engineering;
 using System;
 using System.Linq;
@@ -13,20 +11,27 @@ namespace Answer.Web.Controllers
 {
     public class ApprovalGroupsController : BaseController
     {
+        private readonly ApprovalGroupsService _approvalGroupsService;
+
+        public ApprovalGroupsController()
+        {
+            _approvalGroupsService = new ApprovalGroupsService();
+        }
+
         public ActionResult Index()
         {
             var viewModel = new EngineeringViewModel();
 
             ViewBag.ActiveClass = "ApprovalGroups";
 
-            return View(viewModel); 
+            return View(viewModel);
         }
 
         public ActionResult ApprovalGroupsData(JqGridParam param)
         {
-            var approvalGroupsService = new ApprovalGroupsService();
+            var currentUser = GetCurrentUser();
 
-            var totalRows = approvalGroupsService.GetApprovalGroupsQueryable().Where(x=>x.Hide!=true);
+            var totalRows = _approvalGroupsService.GetApprovalGroupsQueryable().Where(x => x.Hide == null && x.CreatingCo == currentUser.Company);
 
             if (param.where != null && param.where.rules.Any())
             {
@@ -79,7 +84,9 @@ namespace Answer.Web.Controllers
         {
             var approvalGroup = new EditApprovalGroupsViewModel();
 
-            approvalGroup.Setup(new UserService(), new RoleService(), new ApprovalGroupsService(),GetCurrentUser().Id);
+            var currentUser = GetCurrentUser();
+
+            approvalGroup.Setup(_approvalGroupsService, currentUser.Id, currentUser.Company);
 
             return View(approvalGroup);
         }
@@ -87,13 +94,13 @@ namespace Answer.Web.Controllers
         [AcceptVerbs(verbs: HttpVerbs.Post)]
         public ActionResult Create(EditApprovalGroupsViewModel model)
         {
-            var approvalGroupsService = new ApprovalGroupsService();
-
             if (ModelState.IsValid)
             {
-                model.NTLogin = GetCurrentUser().Id;
+                var currentUser = GetCurrentUser();
 
-                var response = approvalGroupsService.Create(model: model);
+                model.NTLogin = currentUser.Id;
+
+                var response = _approvalGroupsService.Create(model);
 
                 if (response)
                 {
@@ -104,7 +111,7 @@ namespace Answer.Web.Controllers
                 {
                     TempData["ErrorMessage"] = "Something went wrong.";
 
-                    model.Setup(new UserService(), new RoleService(), new ApprovalGroupsService(), GetCurrentUser().Id);
+                    model.Setup(_approvalGroupsService, currentUser.Id, currentUser.Company);
                     return View(model);
                 }
             }
@@ -114,15 +121,15 @@ namespace Answer.Web.Controllers
 
         public ActionResult Edit(string id)
         {
-            var approvalGroupsService = new ApprovalGroupsService();
+            var currentUser = GetCurrentUser();
 
-            var model = approvalGroupsService.GetApprovalGroupById(id);
+            var model = _approvalGroupsService.GetApprovalGroupById(id);
 
             var approvalStage = new EditApprovalGroupsViewModel();
 
             approvalStage = approvalStage.MapToDto(model);
 
-            approvalStage.Setup(new UserService(), new RoleService(), new ApprovalGroupsService(), GetCurrentUser().Id);
+            approvalStage.Setup(_approvalGroupsService, currentUser.Id, currentUser.Company);
 
             return View(approvalStage);
         }
@@ -130,13 +137,13 @@ namespace Answer.Web.Controllers
         [AcceptVerbs(verbs: HttpVerbs.Post)]
         public ActionResult Edit(EditApprovalGroupsViewModel model)
         {
-
-            var approvalGroupsService = new ApprovalGroupsService();
             if (ModelState.IsValid)
             {
-                model.NTLogin = GetCurrentUser().Id;
+                var currentUser = GetCurrentUser();
 
-                var response = approvalGroupsService.Edit(model: model);
+                model.NTLogin = currentUser.Id;
+
+                var response = _approvalGroupsService.Edit(model);
 
                 if (response)
                 {
@@ -155,9 +162,7 @@ namespace Answer.Web.Controllers
 
         public ActionResult Hide(string id)
         {
-            var taskService = new ApprovalGroupsService();
-
-            var response = taskService.HideGroupWorkFlow(id);
+            var response = _approvalGroupsService.HideGroupWorkFlow(id);
 
             if (response != null)
             {

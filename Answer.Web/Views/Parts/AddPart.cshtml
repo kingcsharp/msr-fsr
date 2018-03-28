@@ -234,38 +234,20 @@
             else {
                 $('.hiddenpart').show();
             }
-            $('#CreateProd').on('change', function () {
+
+            $('#CreateProd').change(function() {
                 $('.hiddenpart').toggle();
-            })
+            });
+
             $(".select").select2({
                 placeholder: "Select",
                 allowClear: true
             });
+
             $("form").submit(function (e) {
                 $('.partCreate .submitselect option').prop('selected', true);
             });
         });
-
-        $('#select-companies').on('show.bs.modal',
-            function (event) {
-
-                var button = $(event.relatedTarget);
-                var callBackId = button.data('call-back-id');
-                var modal = $(this);
-
-                $.ajax({
-                    type: "GET",
-                    url: '/Companies/GetCompanies?callBackId=' + callBackId,
-                    dataType: 'html',
-                    success: function (data) {
-                        modal.find('.modal-body').html(data);
-                    },
-                    error: function (error) {
-                        eLoaderError(error);
-                    }
-                });
-            });
-
 
         function SelectIds() {
             fileUploaderGrid.SelectIdsForAdd(fileUploader, '@Url.Action("FileUploaderBootstrap", "Doc")');

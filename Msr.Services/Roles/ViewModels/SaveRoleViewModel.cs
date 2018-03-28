@@ -84,13 +84,13 @@ namespace Msr.Services.Roles.ViewModels
             };
 
 
-            ListChildRoles = roleService.GetActiveRoles().Select(x => new SelectListItem
+            ListChildRoles = roleService.GetRolesList(getCurrentUser.Id).Select(x => new SelectListItem
             {
                 Text = x.Name,
                 Value = x.Id.ToString()
             }).OrderBy(o => o.Text).ToList();
 
-            ListPeopleAssigned = userService.GetSearchUser().Select(x => new SelectListItem
+            ListPeopleAssigned = roleService.GetPeopleAssigned(getCurrentUser.Id, getCurrentUser.Company).Select(x => new SelectListItem
             {
                 Text = x.Full_Name,
                 Value = x.Root

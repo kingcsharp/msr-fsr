@@ -91,7 +91,7 @@ namespace Msr.Services.Companies.ViewModels
 
         public void Setup(DocumentFilesService documentFilesService, CompanyService companyService)
         {
-            CompanyTypes = LookupItems.CompanyTypes();
+            CompanyTypes = Commons.Lookups.LookupItems.CompanyTypes();
             ListParents = companyService.GetCompaniesQueryable().ToList().Select(x => new SelectListItem
             {
                 Text = x.Name,

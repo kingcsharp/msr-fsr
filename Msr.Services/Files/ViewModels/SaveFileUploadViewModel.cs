@@ -29,6 +29,8 @@ namespace Msr.Services.Files.ViewModels
         public string DocChanged { get; set; }
         public string DropSrc { get; set; }
         public string NTLogin { get; set; }
+        public string FileUrl { get; set; }
+        public string FileKey { get; set; }
 
         public SaveFileUploadViewModel MapToDto(FileView model)
         {

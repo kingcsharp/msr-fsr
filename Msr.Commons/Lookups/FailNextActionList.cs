@@ -1,20 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Web.Mvc;
 
-public static partial class LookupItems
+namespace Msr.Commons.Lookups
 {
-    public static List<SelectListItem> FailNextActionList()
+    public static partial class LookupItems
     {
-        return new List<SelectListItem>
+        public static List<SelectListItem> FailNextActionList()
         {
-            new SelectListItem {Text = "CONTINUE", Value = "CONTINUE"},
-            new SelectListItem {Text = "DONOTCLOSE", Value = "DONOTCLOSE"},
-            new SelectListItem {Text = "DNR", Value = "DNR"},
-            new SelectListItem {Text = "DNR", Value = "DNR"}
-        };
+            return new List<SelectListItem>
+            {
+                new SelectListItem {Text = "CONTINUE", Value = "CONTINUE"},
+                new SelectListItem {Text = "DONOTCLOSE", Value = "DONOTCLOSE"},
+                new SelectListItem {Text = "DNR", Value = "DNR"},
+                new SelectListItem {Text = "DNR", Value = "DNR"}
+            };
+        }
     }
 }

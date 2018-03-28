@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
 
-public static partial class LookupItems
+namespace Msr.Commons.Lookups
 {
-    public static List<SelectListItem> System()
+    public static partial class LookupItems
     {
-        return new List<SelectListItem>
+        public static List<SelectListItem> System()
         {
-            new SelectListItem
+            return new List<SelectListItem>
+            {
+                new SelectListItem
                 {
                     Text = @"",
                     Value = ""
@@ -82,6 +84,7 @@ public static partial class LookupItems
                     Text = @"SYS_SHIPPING",
                     Value = "SYS_SHIPPING"
                 }
-        };
+            };
+        }
     }
 }

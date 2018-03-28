@@ -18,5 +18,7 @@
         public string DropSrc { get; set; }
         public string NTLogin { get; set; }
         public string TaskId { get; set; }
+        public string FileUrl { get; set; }
+        public string FileKey { get; set; }
     }
 }

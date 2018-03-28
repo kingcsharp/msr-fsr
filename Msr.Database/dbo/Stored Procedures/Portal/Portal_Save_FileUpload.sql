@@ -17,7 +17,9 @@
 	@docChanged varchar(50),
 	@dropSRC varchar(50),
 	@strNTLogin varchar(50),
-	@taskId varchar(50)
+	@taskId varchar(50),
+	@FileUrl nvarchar(4000)=null,
+	@FileKey nvarchar(4000)=null
 
 AS
 BEGIN

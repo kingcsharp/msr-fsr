@@ -1,14 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
 
-public static partial class LookupItems
+namespace Msr.Commons.Lookups
 {
-    public static List<SelectListItem> YesNo()
+    public static partial class LookupItems
     {
-        return new List<SelectListItem>
+        public static List<SelectListItem> YesNo()
         {
-            new SelectListItem {Text = "Yes", Value = "1"},
-            new SelectListItem {Text = "No", Value = "0"}
-        };
+            return new List<SelectListItem>
+            {
+                new SelectListItem {Text = "Yes", Value = "1"},
+                new SelectListItem {Text = "No", Value = "0"}
+            };
+        }
     }
 }

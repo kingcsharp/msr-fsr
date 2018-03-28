@@ -174,7 +174,7 @@ namespace Msr.Services.PurchesOrder.ViewModels
                 SupplierDepartment = model.SupplierCo,
                 AccountType = model.AccType,
                 RefCustPO = model.ReferencePo,
-                CustRefNum = model.CustomerBill,
+                CustRefNum = model.ReferenceName,
                 OpenDate = model.OpenDate,
                 CloseDate = model.CloseDate,
                 TotalPurchaseLimit = model.TotalPurchaseLimit,

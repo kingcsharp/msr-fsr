@@ -1,28 +1,31 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
 
-public static partial class LookupItems
+namespace Msr.Commons.Lookups
 {
-    public static List<SelectListItem> ListEmailTextTypes()
+    public static partial class LookupItems
     {
-        return new List<SelectListItem>
+        public static List<SelectListItem> ListEmailTextTypes()
         {
-            new SelectListItem
+            return new List<SelectListItem>
             {
-                Text = "Choose Type",
-                Value = "ChooseType",
-                Selected = true
-            },
-            new SelectListItem
-            {
-                Text = "HTML",
-                Value = "HTML"
-            },
-            new SelectListItem
-            {
-                Text = "Text",
-                Value = "Text"
-            }
-        };
+                new SelectListItem
+                {
+                    Text = "Choose Type",
+                    Value = "ChooseType",
+                    Selected = true
+                },
+                new SelectListItem
+                {
+                    Text = "HTML",
+                    Value = "HTML"
+                },
+                new SelectListItem
+                {
+                    Text = "Text",
+                    Value = "Text"
+                }
+            };
+        }
     }
 }

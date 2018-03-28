@@ -40,7 +40,7 @@ namespace Msr.Services.Workflows.ViewModels
         public void SetUp(List<ShowApplicableWorkflowsResult> workflows)
         {
             WorkflowsList = workflows.Select(x => new SelectListItem {Text = x.WF_Name, Value = x.Wf_Id}).ToList();
-            DeleteAllRevisionsList = LookupItems.YesNo();
+            DeleteAllRevisionsList = Commons.Lookups.LookupItems.YesNo();
         }
     }
 }

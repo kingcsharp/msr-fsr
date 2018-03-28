@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Msr.Models.ApprovalWorkflows;
 using Msr.Services.ApprovalWorkflows;
@@ -14,7 +12,13 @@ namespace Answer.Web.Controllers
 {
     public class ApprovalWorkflowsController : BaseController
     {
-        
+        private readonly ApprovalWorkflowsService _approvalWorkflowsService;
+
+        public ApprovalWorkflowsController()
+        {
+            _approvalWorkflowsService = new ApprovalWorkflowsService();
+        }
+
         public ActionResult Index()
         {
             var viewModel = new EngineeringViewModel();
@@ -23,11 +27,12 @@ namespace Answer.Web.Controllers
 
             return View(viewModel);
         }
+
         public ActionResult ApprovalWorkflowsData(JqGridParam param)
         {
-            var taskService = new ApprovalWorkflowsService();
+            var myCo = GetCurrentUser();
 
-            var totalRows = taskService.GetApprovalWorkflowsQueryable();
+            var totalRows = _approvalWorkflowsService.GetApprovalWorkflowsQueryable().Where(x => x.Creating_Co == myCo.Root_Company);
 
             if (param.where != null && param.where.rules.Any())
             {
@@ -41,7 +46,7 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.Name.ToLower().Contains(rule.data.ToLower()));
                     }
-                    
+
                 }
             }
 
@@ -80,23 +85,25 @@ namespace Answer.Web.Controllers
 
             return Json(json, JsonRequestBehavior.AllowGet);
         }
+
         public ActionResult Edit(string id)
         {
-            var taskService = new ApprovalWorkflowsService();
-            var model = taskService.GetApprovalWorkflowsById(id);
-            var Workflow = new ApprovalWorkflowsViewModel();
-            Workflow = Workflow.MapToDto(model);
-            Workflow.Setup(new DocumentFilesService(), new ApprovalWorkflowsService());           
-            return View(Workflow);
+            var model = _approvalWorkflowsService.GetApprovalWorkflowsById(id);
+
+            var vm = new ApprovalWorkflowsViewModel();
+            vm = vm.MapToDto(model);
+            vm.Setup(new DocumentFilesService(), _approvalWorkflowsService);
+            return View(vm);
         }
-        [AcceptVerbs(verbs: HttpVerbs.Post)]
+
+        [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Edit(ApprovalWorkflowsViewModel model)
         {
-            var approvalWorkflowsService = new ApprovalWorkflowsService();
             if (ModelState.IsValid)
             {
                 model.NTLogin = GetCurrentUser().Id;
-                var response = approvalWorkflowsService.Edit(model: model);
+                var response = _approvalWorkflowsService.Edit(model);
+
                 if (response)
                 {
                     TempData["SuccessMessage"] = "Approval Workflows has been updated successfully.";
@@ -110,21 +117,22 @@ namespace Answer.Web.Controllers
 
             return View(model);
         }
+
         public ActionResult Add()
         {
-            var taskService = new ApprovalWorkflowsService();
-            var Workflow = new ApprovalWorkflowsViewModel();
-            Workflow.Setup(new DocumentFilesService(), new ApprovalWorkflowsService());
-            return View(Workflow);
+            var vm = new ApprovalWorkflowsViewModel();
+            vm.Setup(new DocumentFilesService(), _approvalWorkflowsService);
+
+            return View(vm);
         }
-        [AcceptVerbs(verbs: HttpVerbs.Post)]
+
+        [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Add(ApprovalWorkflowsViewModel model)
         {
-            var approvalWorkflowsService = new ApprovalWorkflowsService();
             if (ModelState.IsValid)
             {
                 model.NTLogin = GetCurrentUser().Id;
-                var response = approvalWorkflowsService.Add(model: model);
+                var response = _approvalWorkflowsService.Add(model);
                 if (response)
                 {
                     TempData["SuccessMessage"] = "Approval Workflow has been added successfully.";
@@ -138,12 +146,10 @@ namespace Answer.Web.Controllers
 
             return View(model);
         }
-      
+
         public ActionResult Hide(string id)
         {
-            var taskService = new ApprovalWorkflowsService();  
-            
-            var response = taskService.HideApplrovalWorkflow(id);
+            var response = _approvalWorkflowsService.HideApplrovalWorkflow(id);
 
             if (response)
             {

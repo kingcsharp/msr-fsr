@@ -1,6 +1,6 @@
 ﻿var FileUploader = function () {
 
-    var initEditUploader = function (element, url, initialPreview, initialPreviewConfig, objectId, showSelect = true) {
+    var initEditUploader = function (element, url, initialPreview, initialPreviewConfig, objectId, showSelect) {
 
         element.fileinput({
             showSelect: showSelect,

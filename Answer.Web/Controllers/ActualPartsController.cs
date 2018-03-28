@@ -20,6 +20,22 @@ namespace Answer.Web.Controllers
 {
     public class ActualPartsController : BaseController
     {
+        private readonly LocationService _locationService;
+        private readonly ActualPartsService _actualPartsService;
+        private readonly PartsService _partsService;
+        private readonly PeopleService _peopleService;
+        private readonly ProductService _productService;
+        private readonly CompanyService _companyService;
+
+        public ActualPartsController()
+        {
+            _locationService = new LocationService();
+            _actualPartsService = new ActualPartsService();
+            _partsService = new PartsService();
+            _peopleService = new PeopleService();
+            _productService = new ProductService();
+            _companyService = new CompanyService();
+        }
         public ActionResult Index(string serial)
         {
             var viewModel = new EngineeringViewModel();
@@ -31,15 +47,12 @@ namespace Answer.Web.Controllers
 
         public ActionResult ActualPartsData(JqGridParam param)
         {
-            var actualPartsService = new ActualPartsService();
 
-            var totalRows = actualPartsService.GetActualPartsQueryable();
+            var totalRows = _actualPartsService.GetActualPartsQueryable();
 
             var defaultStatusList = GetDefaultStatus();
 
-            ////EXEC A_SP_ACTUAL_PARTS_SEARCH ' (ROOT LIKE ''%%'' OR ROOT is NULL ) AND  (COMPANY_PART_NUMBER LIKE ''%%'' OR COMPANY_PART_NUMBER is NULL ) AND  (PART_DESC LIKE ''%%'' OR PART_DESC is NULL ) AND  (PART_TYPE_NAME LIKE ''%%'' OR PART_TYPE_NAME is NULL ) AND  (SERIAL LIKE ''%%'' OR SERIAL is NULL ) AND  (NICK_NAME LIKE ''%%'' OR NICK_NAME is NULL ) AND  (LOCATION_NAME LIKE ''%%'' OR LOCATION_NAME is NULL ) AND  (CURRENT_OWNER_NAME LIKE ''%%'' OR CURRENT_OWNER_NAME is NULL ) AND  (AP_STATUS LIKE ''%%'' OR AP_STATUS is NULL ) AND  (PARENT_NAME LIKE ''%%'' OR PARENT_NAME is NULL ) AND  (RESP_PERSON_FULL_NAME LIKE ''%%'' OR RESP_PERSON_FULL_NAME is NULL ) AND  (LOCATION LIKE ''%%'' OR LOCATION is NULL ) AND  PARENT_ID IS NULL AND STATUS IN (''CREATING'',''DENIED'',''APPROVED'',''APPROVED_BUT_REVISING'',''APPROVED_BUT_DELETING'')',' ORDER BY PART_DESC,NICK_NAME','1618'
-
-            totalRows = totalRows.Where(x => defaultStatusList.Contains(x.Status) && x.ParentId == null);
+            totalRows = totalRows.Where(x => defaultStatusList.Contains(x.Status));
 
             if (param.where != null && param.where.rules.Any())
             {
@@ -138,7 +151,8 @@ namespace Answer.Web.Controllers
         {
             var approvalGroup = new SaveActualPartsViewModel();
 
-            approvalGroup.SetUp(new ActualPartsService(), new PartsService(), new LocationService(), new UserService(), new ProductService(), new CompanyService(), GetCurrentUser());
+            approvalGroup.SetUp(_actualPartsService, _partsService, _locationService, _peopleService, _productService,
+                _companyService, GetCurrentUser());
 
             return View(approvalGroup);
         }
@@ -164,7 +178,8 @@ namespace Answer.Web.Controllers
             }
             TempData["ErrorMessage"] = "Something went wrong.";
 
-            model.SetUp(new ActualPartsService(), new PartsService(), new LocationService(), new UserService(), new ProductService(), new CompanyService(), GetCurrentUser());
+            model.SetUp(_actualPartsService, _partsService, _locationService, _peopleService, _productService,
+                _companyService, GetCurrentUser());
             return View(model);
         }
 
@@ -178,7 +193,8 @@ namespace Answer.Web.Controllers
 
             actualPart = actualPart.MapToDto(model);
 
-            actualPart.SetUp(new ActualPartsService(), new PartsService(), new LocationService(), new UserService(), new ProductService(), new CompanyService(), GetCurrentUser());
+            actualPart.SetUp(_actualPartsService, _partsService, _locationService, _peopleService, _productService,
+                _companyService, GetCurrentUser());
 
             return View(actualPart);
         }
@@ -240,9 +256,7 @@ namespace Answer.Web.Controllers
 
         public ActionResult ActualPartsViewHistoryData(JqGridParam param, string id)
         {
-            var actualPartsService = new ActualPartsService();
-
-            var totalRows = actualPartsService.GetActualPartViewHistoryQueryable().Where(x => x.ActualPartId == id & x.TaskStetTitle != "PENDING_PARENT_ACCEPTANCE").OrderBy(x => x.ColourCode).ThenBy(x => x.ActualStopDate).ThenBy(x => x.ActualStartDate).ThenBy(x => x.CurPlannedStopDate).ThenBy(x => x.CurPlannerStartDate).AsQueryable();
+            var totalRows = _actualPartsService.GetActualPartViewHistoryQueryable().Where(x => x.ActualPartId == id & x.TaskStetTitle != "PENDING_PARENT_ACCEPTANCE").OrderBy(x => x.ColourCode).ThenBy(x => x.ActualStopDate).ThenBy(x => x.ActualStartDate).ThenBy(x => x.CurPlannedStopDate).ThenBy(x => x.CurPlannerStartDate).AsQueryable();
 
             if (param.where != null && param.where.rules.Any())
             {
@@ -314,9 +328,8 @@ namespace Answer.Web.Controllers
 
         public ActionResult ViewHistoryClose(string id, string ntlog)
         {
-            var taskService = new ActualPartsService();
 
-            var response = taskService.Close(id: id, ntlogin: ntlog);
+            var response = _actualPartsService.Close(id: id, ntlogin: ntlog);
 
             if (response)
             {
@@ -344,13 +357,12 @@ namespace Answer.Web.Controllers
         [AcceptVerbs(verbs: HttpVerbs.Post)]
         public ActionResult ReassignTask(ReassignTaskViewModel model)
         {
-            var actualPartsService = new ActualPartsService();
 
             if (ModelState.IsValid)
             {
                 model.NTLogin = GetCurrentUser().Id;
 
-                var response = actualPartsService.ReAssignTask(model);
+                var response = _actualPartsService.ReAssignTask(model);
 
                 if (response)
                 {
@@ -372,11 +384,10 @@ namespace Answer.Web.Controllers
 
             string actualPartId = TempData["actualPartId"].ToString();
 
-            var actualPartsService = new ActualPartsService();
 
             if (ModelState.IsValid)
             {
-                var response = actualPartsService.DeleteViewHistory(id, GetCurrentUser().Id);
+                var response = _actualPartsService.DeleteViewHistory(id, GetCurrentUser().Id);
 
                 if (response)
                 {
@@ -406,9 +417,7 @@ namespace Answer.Web.Controllers
             {
                 var currentUser = GetCurrentUser();
 
-                var actualPartsService = new ActualPartsService();
-
-                var response = actualPartsService.ImportActualParts(postedFile, currentUser);
+                var response = _actualPartsService.ImportActualParts(postedFile, currentUser);
 
                 if (response.HasErrors())
                 {

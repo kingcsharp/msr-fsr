@@ -28,7 +28,7 @@ namespace Answer.Web.Controllers
 
         public ActionResult PurchaseOrderData(JqGridParam param)
         {
-            var totalRows = _purchesOrderService.GetPurchesOrderQueryable().Where(x => x.Status != "DELETED");
+            var totalRows = _purchesOrderService.GetPurchesOrderQueryable().Where(x => x.Status != "DELETED" && x.Status != "OLD");
 
             if (param.where != null && param.where.rules.Any())
             {
@@ -202,7 +202,7 @@ namespace Answer.Web.Controllers
 
             purchaseOrder = purchaseOrder.MaptoDto(model);
 
-            purchaseOrder.Setup(new PurchesOrderService());
+            purchaseOrder.Setup(_purchesOrderService);
 
             return View(purchaseOrder);
         }
@@ -212,11 +212,9 @@ namespace Answer.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var purchaseOrderService = new PurchesOrderService();
-
                 model.NTLogin = GetCurrentUser().Id;
 
-                var response = purchaseOrderService.Create(model);
+                var response = _purchesOrderService.Create(model);
 
                 if (!response.HasErrors())
                 {
@@ -243,16 +241,14 @@ namespace Answer.Web.Controllers
                 TempData[NotificationConstants.ErrrorMessage] = response.ErrorMessage;
             }
 
-            model.Setup(new PurchesOrderService());
+            model.Setup(_purchesOrderService);
 
             return View(model);
         }
 
         public JsonResult ProductsList(string id, string supplierCo)
         {
-            var purchaseOrderService = new PurchesOrderService();
-
-            var products = purchaseOrderService.GetCompinesProducts(id, supplierCo).Select(x => new SelectListItem
+            var products = _purchesOrderService.GetCompinesProducts(id, supplierCo).Select(x => new SelectListItem
             {
                 Text = x.Name,
                 Value = x.Order_id.ToString()
@@ -266,11 +262,9 @@ namespace Answer.Web.Controllers
         {
             var newPurchaseOrderViewModel = new NewPurchaseOrderViewModel();
 
-            newPurchaseOrderViewModel.Setup(new PurchesOrderService());
+            newPurchaseOrderViewModel.Setup(_purchesOrderService);
 
-            var purchaseOrderService = new PurchesOrderService();
-
-            var totalRows = purchaseOrderService.GetCompinesProducts(id, clientValue).AsQueryable();
+            var totalRows = _purchesOrderService.GetCompinesProducts(id, clientValue).AsQueryable();
 
             if (param.where != null && param.where.rules.Any())
             {
@@ -347,7 +341,7 @@ namespace Answer.Web.Controllers
                 purchaseOrder = new PurchaseFormAccountViewModel();
             }
 
-            purchaseOrder.Setup(new PurchesOrderService());
+            purchaseOrder.Setup(_purchesOrderService);
 
             return View(purchaseOrder);
         }
@@ -401,7 +395,7 @@ namespace Answer.Web.Controllers
                     return RedirectToAction("Submit", "Workflow", new { objId = model.OBJECT_ID, returnUrl = url });
 
                 }
-                modelpo.Setup(new PurchesOrderService());
+                modelpo.Setup(_purchesOrderService);
             }
 
             return RedirectToAction("CreatePurchase", "PurchaseOrder", new { id = model.OBJECT_ID, oldId = model.oldId });

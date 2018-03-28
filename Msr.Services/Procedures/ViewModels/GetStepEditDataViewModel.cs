@@ -43,7 +43,7 @@ namespace Msr.Services.Procedures.ViewModels
             GetStepEditData = new GetStepEditDataResult();
             ReferenceFiles = new List<string>();
 
-            BaseCounterList = LookupItems.YesNo();
+            BaseCounterList = Commons.Lookups.LookupItems.YesNo();
 
             RelativeOrAbsoluteList = new List<SelectListItem>()
             {
@@ -59,8 +59,8 @@ namespace Msr.Services.Procedures.ViewModels
                 }
             };
 
-            DurationTypeList = LookupItems.DurationType();
-            SystemTasks = LookupItems.System();
+            DurationTypeList = Commons.Lookups.LookupItems.DurationType();
+            SystemTasks = Commons.Lookups.LookupItems.System();
 
             GetStepListOfOtherSteps = proceduresService.GetProcedureStepOtherStepsList(procedureObjectId, NtLogin).Select(x => new SelectListItem
             {

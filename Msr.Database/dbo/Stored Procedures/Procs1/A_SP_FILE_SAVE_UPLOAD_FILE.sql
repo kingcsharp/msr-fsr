@@ -1,9 +1,4 @@
-﻿
-
-
-
-
-CREATE              PROCEDURE A_SP_FILE_SAVE_UPLOAD_FILE
+﻿CREATE              PROCEDURE A_SP_FILE_SAVE_UPLOAD_FILE
 	@newID varchar(50) OUTPUT,
 	@msg nvarchar(1000) OUTPUT,
 	@docID varchar(50),
@@ -20,7 +15,9 @@ CREATE              PROCEDURE A_SP_FILE_SAVE_UPLOAD_FILE
 	@srcChanged varchar(50),
 	@docChanged varchar(50),
 	@dropSRC varchar(50),
-	@strNTLogin varchar(50)
+	@strNTLogin varchar(50),
+	@FileUrl nvarchar(4000) = null,
+	@FileKey nvarchar(4000) = null
 as
 if @oldDocID is null
 	begin
@@ -34,9 +31,8 @@ if @oldDocID is null
 		@srcPath,@srcDesc,@srcContentType)
 		end
 	exec sp_GetUniqueID3 @docID OUTPUT
-	INSERT INTO A_DOCUMENTS (ID, DOC_ID, NAME,SOURCE_ID,DRCM,MODBY,SERVER_PATH,
-	DESCRIPTION,CONTENTTYPE)
-	values(@docID,@docID,@NAME,@srcID,getDate(),@strNTLogin,@path,@Desc,@contentType)
+	INSERT INTO A_DOCUMENTS (ID, DOC_ID, NAME,SOURCE_ID,DRCM,MODBY,SERVER_PATH,DESCRIPTION,CONTENTTYPE,FileUrl,FileKey)
+	values(@docID,@docID,@NAME,@srcID,getDate(),@strNTLogin,@path,@Desc,@contentType,@FileUrl,@FileKey)
 	set @newID = @docID
 	end
 else

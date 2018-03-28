@@ -1,23 +1,26 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
 
-public static partial class LookupItems
+namespace Msr.Commons.Lookups
 {
-    public static List<SelectListItem> CompanyTypes()
+    public static partial class LookupItems
     {
-        return new List<SelectListItem>
+        public static List<SelectListItem> CompanyTypes()
         {
-            new SelectListItem
+            return new List<SelectListItem>
             {
-                Text = "Company",
-                Value = "COMPANY",
-                Selected = true
-            },
-            new SelectListItem
-            {
-                Text = "Department",
-                Value = "DEPARTMENT"
-            }
-        };
+                new SelectListItem
+                {
+                    Text = "Company",
+                    Value = "COMPANY",
+                    Selected = true
+                },
+                new SelectListItem
+                {
+                    Text = "Department",
+                    Value = "DEPARTMENT"
+                }
+            };
+        }
     }
 }

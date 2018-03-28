@@ -58,7 +58,7 @@ namespace Msr.Services.Documents
         }
         public DocFile GetSelectedRefFile(string id)
         {
-            var result = _dbContext.Database.SqlQuery<DocFile>($"select NAME AS SHOW,DOC_ID AS VALUE,SERVER_PATH as ServerPath from A_DOCUMENTS where DOC_ID={id}").SingleOrDefault();
+            var result = _dbContext.Database.SqlQuery<DocFile>($"select NAME AS SHOW,DOC_ID AS VALUE,SERVER_PATH as ServerPath, Name, FileUrl, FileKey,ContentType from A_DOCUMENTS where DOC_ID={id}").SingleOrDefault();
 
             return result;
         }

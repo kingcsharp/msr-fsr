@@ -13,6 +13,15 @@ namespace Answer.Web.Controllers
 {
     public class ApprovalStagesController : BaseController
     {
+        private readonly ApprovalStagesService _approvalStagesService;
+        private readonly ApprovalGroupsService _approvalGroupsService;
+
+        public ApprovalStagesController()
+        {
+            _approvalStagesService = new ApprovalStagesService();
+            _approvalGroupsService = new ApprovalGroupsService();
+        }
+
         public ActionResult Index()
         {
             var viewModel = new EngineeringViewModel();
@@ -26,12 +35,10 @@ namespace Answer.Web.Controllers
         {
             var user = GetCurrentUser();
 
-            var approvalStagesService = new ApprovalStagesService();
-
-            var totalStages = approvalStagesService.GetApprovalStagesQueryable()
+            var totalStages = _approvalStagesService.GetApprovalStagesQueryable()
                 .Where(x => (x.Hide != true && x.Hide == null) && x.CreatingCo == user.Company);
 
-          var  totalRows = totalStages.DistinctBy(x=> new{ x.Id, x.StageName}).ToList().AsQueryable();
+            var totalRows = totalStages.DistinctBy(x => new { x.Id, x.StageName }).ToList().AsQueryable();
 
             if (param.where != null && param.where.rules.Any())
             {
@@ -83,21 +90,23 @@ namespace Answer.Web.Controllers
         public ActionResult Create()
         {
             var approvalStage = new EditApprovalStagesViewModel();
+            var currentUser = GetCurrentUser();
 
-            approvalStage.Setup(new ApprovalGroupsService(), new ApprovalStagesService(), GetCurrentUser().Id);
+            approvalStage.Setup(_approvalGroupsService, _approvalStagesService, currentUser.Id, currentUser.Company);
 
             return View(approvalStage);
         }
 
-        [AcceptVerbs(verbs: HttpVerbs.Post)]
+        [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Create(EditApprovalStagesViewModel model)
         {
-            var approvalStagesService = new ApprovalStagesService();
             if (ModelState.IsValid)
             {
-             
-                model.NTLogin = GetCurrentUser().Id;
-                var response = approvalStagesService.Create(model: model);
+                var currentUser = GetCurrentUser();
+                model.NtLogin = currentUser.Id;
+
+                var response = _approvalStagesService.Create(model);
+
                 if (response)
                 {
                     TempData["SuccessMessage"] = "Approval Stage has been created successfully.";
@@ -106,7 +115,7 @@ namespace Answer.Web.Controllers
                 else
                 {
                     TempData["ErrorMessage"] = "Something went wrong.";
-                    model.Setup(new ApprovalGroupsService(), new ApprovalStagesService(), GetCurrentUser().Id);
+                    model.Setup(_approvalGroupsService, _approvalStagesService, currentUser.Id, currentUser.Company);
                     return View(model);
                 }
             }
@@ -115,29 +124,27 @@ namespace Answer.Web.Controllers
 
         public ActionResult Edit(string id)
         {
-            var approvalStagesService = new ApprovalStagesService();
-
-            var model = approvalStagesService.GetApprovalStageById(id);
+            var currentUser = GetCurrentUser();
+            var model = _approvalStagesService.GetApprovalStageById(id);
 
             var approvalStage = new EditApprovalStagesViewModel();
 
             approvalStage = approvalStage.MapToDto(model);
 
-            approvalStage.Setup(new ApprovalGroupsService(), new ApprovalStagesService(), GetCurrentUser().Id);
+            approvalStage.Setup(_approvalGroupsService, _approvalStagesService, currentUser.Id, currentUser.Company);
 
             return View(approvalStage);
         }
 
-        [AcceptVerbs(verbs: HttpVerbs.Post)]
+        [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Edit(EditApprovalStagesViewModel model)
         {
-            var approvalStagesService = new ApprovalStagesService();
             if (ModelState.IsValid)
             {
-                //Need to dynamic 
-                model.NTLogin = GetCurrentUser().Id;
+                model.NtLogin = GetCurrentUser().Id;
 
-                var response = approvalStagesService.Edit(model: model);
+
+                var response = _approvalStagesService.Update(model);
                 if (response)
                 {
                     TempData["SuccessMessage"] = "Approval Stage has been updated successfully.";
@@ -154,9 +161,7 @@ namespace Answer.Web.Controllers
 
         public ActionResult Hide(string id)
         {
-            var taskService = new ApprovalStagesService();
-
-            var response = taskService.HideStageWorkFlow(id);
+            var response = _approvalStagesService.HideStageWorkFlow(id);
 
             if (response != null)
             {

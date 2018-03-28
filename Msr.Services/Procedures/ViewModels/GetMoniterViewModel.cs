@@ -139,14 +139,14 @@ namespace Msr.Services.Procedures.ViewModels
 
         public void Setup()
         {
-            MonitorTypesList = LookupItems.MonitorTypesList();
-            ShouldBeList = LookupItems.ShouldBeList();
-            BasedOPionList = LookupItems.YesNo();
-            UseResultList = LookupItems.YesNo();
-            HideTargetList = LookupItems.YesNo();
-            FailNextActionList = LookupItems.FailNextActionList();
-            ForceEndActionList = LookupItems.YesNo();
-            AlwaysPassList = LookupItems.YesNo();
+            MonitorTypesList = Commons.Lookups.LookupItems.MonitorTypesList();
+            ShouldBeList = Commons.Lookups.LookupItems.ShouldBeList();
+            BasedOPionList = Commons.Lookups.LookupItems.YesNo();
+            UseResultList = Commons.Lookups.LookupItems.YesNo();
+            HideTargetList = Commons.Lookups.LookupItems.YesNo();
+            FailNextActionList = Commons.Lookups.LookupItems.FailNextActionList();
+            ForceEndActionList = Commons.Lookups.LookupItems.YesNo();
+            AlwaysPassList = Commons.Lookups.LookupItems.YesNo();
         }
         public AddMonitorForProcedureViewModel MapToDto(AddMonitorForProcedureViewModel model)
         {

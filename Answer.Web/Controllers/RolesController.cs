@@ -33,7 +33,7 @@ namespace Answer.Web.Controllers
 
         public ActionResult UserRolesData(JqGridParam param)
         {
-            var defaultStatusList = new[] { "CREATING", "DENIED", "APPROVED", "APPROVED_BUT_REVISING", "APPROVED_BUT_DELETING" };
+            var defaultStatusList = new[] { "CREATING", "DENIED", "APPROVED", "APPROVED_BUT_REVISING", "APPROVED_BUT_DELETING", "OLD" };
 
             var totalRows = _roleService.GetUserRolesQueryable();
 

@@ -60,7 +60,7 @@ namespace Msr.Services.PrePro.ViewModel
                 }
             };
 
-            QtyTypeList = LookupItems.DurationType();
+            QtyTypeList = Commons.Lookups.LookupItems.DurationType();
 
             ApprovedObjectList = preProServices.GetApprovedObjectList().Select(x => new SelectListItem
             {

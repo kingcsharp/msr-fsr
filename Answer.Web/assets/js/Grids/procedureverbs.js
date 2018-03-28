@@ -99,7 +99,7 @@
 
                 });
 
-            UnLockWorkflow(returnUrl);
+            Msr.JqGridCommon.UnLockWorkflow(returnUrl);
         }
     });
     $('#jqGrid').navGrid("#jqGridPager", {

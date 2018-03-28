@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Linq;
 using EntityFrameworkExtras.EF6;
-using Msr.Models.Users;
 using Msr.Repositories;
 using Msr.Services.Companies.Procedures;
 using Msr.Services.Companies.ViewModels;
-using System.Data.SqlClient;
 using Msr.Models.Documents;
 using System.Collections.Generic;
 using System.Data;
@@ -279,6 +277,11 @@ namespace Msr.Services.Companies
 
                 return result;
             }
+        }
+
+        public List<PersonRootCompanyTreeView> GetPersonRootCompanyTreeViews(string ntlogin)
+        {
+            return _dbContext.Database.SqlQuery<PersonRootCompanyTreeView>($"Exec A_SP_COMPANIES_SHOW_PERSONS_ROOT_COMPANY_TREE '{ntlogin}','{ntlogin}'").ToList();
         }
     }
 }

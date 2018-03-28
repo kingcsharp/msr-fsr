@@ -94,7 +94,7 @@ namespace Msr.Services.Companies.ViewModels
 
         public void Setup(DocumentFilesService documentFilesService, CompanyService companyService, string ntlog)
         {
-            CompanyTypes = LookupItems.CompanyTypes();
+            CompanyTypes = Commons.Lookups.LookupItems.CompanyTypes();
 
             HeadPeoples = companyService.GetHeadPeople().ToList().Select(x => new SelectListItem
             {

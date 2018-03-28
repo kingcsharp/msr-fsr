@@ -5,27 +5,27 @@
     datatype: "json",
     colModel: [
         {
-            label: 'Id',
-            name: 'Id',
-            index: 'Id',
+            label: 'Approval Workflow Name',
+            name: 'Name',
+            index: 'Name',
             key: true,
             colmenu: false,
             coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
             searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
             width: 100,
-            align: 'left'
-        },        
+            align: 'center'
+        },
         {
-            label: 'Approval Workflow Name',
-            name: 'Name',
-            index: 'Name',
+            label: 'Approval Stamp Name',
+            name: 'Stamp_Name',
+            index: 'Stamp_Name',
             colmenu: true,
             editable: true, // must set editable to true if you want to make the field editable
             editrules: { required: true },
             coloptions: { sorting: false, columns: true, filtering: false, seraching: true, grouping: false, freeze: false },
             searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
             width: 200,
-            align: 'left'
+            align: 'center'
         },
         { name: 'Actions', index: 'Id', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: WFEditFormatter, width: 200, align: 'center' }
     ],
@@ -45,26 +45,10 @@
     autowidth: true,
     colMenu: true,
     gridComplete: function () {
-        $('.deletepart').on('click', function (e) {
-            e.preventDefault();
 
-            var callBackId = $(this).data('call-back-id');
-            var callBackName = $(this).data('call-back-name');
-
-            eModal.confirm('Do you really want to delete ' + callBackName + ' ?', 'Confirmation delete')
-                .then(confirmCallback, optionalCancelCallback);
-
-            function confirmCallback() {
-                console.log("ok")
-                window.location.href = "/parts/PartDelete/" + callBackId
-            }
-            function optionalCancelCallback() {
-                console.log("cancel")
-            }
-
-        })
-    },
+    }
 });
+
 $('#jqGrid').navGrid("#jqGridPager", {
     search: false, // show search button on the toolbar
     add: false,
@@ -77,16 +61,19 @@ $('#jqGrid').navGrid("#jqGridPager", {
     {}, // delete options
     { multipleSearch: true }
 );
+
 $('#jqGrid').jqGrid('filterToolbar', {
     stringResult: true,
     searchOnEnter: true,
     searchOperators: true
 });
+
 function WFEditFormatter(cellvalue, options, rowObject) {
     thisCellVal = '<a href="/ApprovalWorkflows/edit/' + rowObject.Id + '" title="Edit" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i> Edit</a>';
     thisCellVal = thisCellVal + '<a href="/ApprovalWorkflows/Hide/' + rowObject.Id + '" title="Hide Workflow" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i> Hide</a>';
     return thisCellVal;
 }
+
 $('#search').click(function () {
 
     jQuery("#jqGrid").setGridParam({

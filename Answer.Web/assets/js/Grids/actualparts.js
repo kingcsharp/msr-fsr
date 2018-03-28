@@ -34,6 +34,18 @@
                 formatter: serialFormatter
             },
             {
+                label: 'Nick Name',
+                name: 'NickName',
+                index: 'NickName',
+                colmenu: false,
+                editable: true, // must set editable to true if you want to make the field editable
+                editrules: { required: true },
+                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'], defaultValue: search },
+                width: 200,
+                align: 'left'
+            },
+            {
                 label: 'Part Description',
                 name: 'PartDesc',
                 index: 'PartDesc',
@@ -183,12 +195,12 @@
         }
     });
     $('#jqGrid').navGrid("#jqGridPager", {
-            search: false, // show search button on the toolbar
-            add: false,
-            edit: false,
-            del: false,
-            refresh: true
-        },
+        search: false, // show search button on the toolbar
+        add: false,
+        edit: false,
+        del: false,
+        refresh: true
+    },
         {},  // edit options
         {}, // add options
         {}, // delete options

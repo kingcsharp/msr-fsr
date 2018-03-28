@@ -150,8 +150,8 @@ namespace Msr.Services.People.ViewModels
                 }
 
             };
-            ListEmailTextTypes = LookupItems.ListEmailTextTypes();
-            ListIsDepartmentHead = LookupItems.YesNo();
+            ListEmailTextTypes = Commons.Lookups.LookupItems.ListEmailTextTypes();
+            ListIsDepartmentHead = Commons.Lookups.LookupItems.YesNo();
 
             ListRealUserTypes = new List<SelectListItem>
             {
@@ -169,10 +169,10 @@ namespace Msr.Services.People.ViewModels
 
             };
 
-            ListScreenTypes = LookupItems.ListScreenTypes();
-            ListPhoneTypes = LookupItems.PhoneTypes();
-            ListEmailTypes = LookupItems.EmailTypes();
-            ListAddressTypes = LookupItems.AddressTypes();
+            ListScreenTypes = Commons.Lookups.LookupItems.ListScreenTypes();
+            ListPhoneTypes = Commons.Lookups.LookupItems.PhoneTypes();
+            ListEmailTypes = Commons.Lookups.LookupItems.EmailTypes();
+            ListAddressTypes = Commons.Lookups.LookupItems.AddressTypes();
 
             string RootCoId = "2"; 
             ListTimeZones = peopleService.GetTimeZones().Select(x => new SelectListItem

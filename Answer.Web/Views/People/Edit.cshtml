@@ -209,7 +209,8 @@
                 '@Url.Action("FileUploaderBootstrap", "Doc")',
                 [@Html.Raw(ViewBag.Preview)],
                 @Html.Raw(ViewBag.PreviewConfig),
-                '@Model.ObjectId');
+                '@Model.ObjectId',
+                true);
 
             fileUploaderGrid.SetupSelectImage();
 

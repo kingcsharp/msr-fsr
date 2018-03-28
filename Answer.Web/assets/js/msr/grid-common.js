@@ -129,6 +129,7 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                             type: "GET",
                             url: '/WorkFlow/CheckOutObject/' + callBackId,
                             dataType: 'JSON',
+                            cache: false,
                             success: function (data) {
                                 window.location.href = editUrl + data.ObjectId;
                             },

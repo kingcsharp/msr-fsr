@@ -146,7 +146,7 @@ namespace Msr.Services.People.ViewModels
                 }
 
             };
-            ListEmailTextTypes = LookupItems.ListEmailTextTypes();
+            ListEmailTextTypes = Commons.Lookups.LookupItems.ListEmailTextTypes();
             ListIsDepartmentHead = new List<SelectListItem>
             {
                 new SelectListItem
@@ -177,11 +177,11 @@ namespace Msr.Services.People.ViewModels
                 }
 
             };
-            ListScreenTypes = LookupItems.ListScreenTypes();
+            ListScreenTypes = Commons.Lookups.LookupItems.ListScreenTypes();
 
-            ListPhoneTypes = LookupItems.PhoneTypes();
-            ListEmailTypes = LookupItems.EmailTypes();
-            ListAddressTypes = LookupItems.AddressTypes();
+            ListPhoneTypes = Commons.Lookups.LookupItems.PhoneTypes();
+            ListEmailTypes = Commons.Lookups.LookupItems.EmailTypes();
+            ListAddressTypes = Commons.Lookups.LookupItems.AddressTypes();
 
             string RootCoId = "2"; 
     

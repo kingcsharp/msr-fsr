@@ -62,7 +62,7 @@ namespace Msr.Services.Orders
             }
             var aspNetUser = _dbContext.AspNetUsers.SingleOrDefault(x => x.UserName.ToLower() == login);
 
-            if (aspNetUser !=null && aspNetUser.PortalUser)
+            if (aspNetUser != null && aspNetUser.PortalUser)
             {
                 result.AddError($"You do not have permissions.");
                 return result;
@@ -116,7 +116,7 @@ namespace Msr.Services.Orders
         {
             return _dbContext.PeopleObjectViews.Where(x => x.Status == "APPROVED").AsQueryable();
         }
-       
+
         public IQueryable<TimeZonesView> GetTimeZones()
         {
             return _dbContext.TimeZonesViews.OrderBy(x => x.Num);
@@ -179,12 +179,12 @@ namespace Msr.Services.Orders
                     foreach (var file in model.ReferenceFiles.Split(','))
                     {
                         var saveFileProcedure = new SaveFileProcedure()
-                            {
-                                ObjID = savePeopleProcedure.NewObjId,
-                                DocID = file,
-                                Type = null,
-                                NTLogin = model.NTLogin
-                            };
+                        {
+                            ObjID = savePeopleProcedure.NewObjId,
+                            DocID = file,
+                            Type = null,
+                            NTLogin = model.NTLogin
+                        };
 
                         _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
                     }
@@ -354,6 +354,10 @@ namespace Msr.Services.Orders
 
                 return false;
             }
+        }
+        public List<PeopleApprovedSearch> GetPeopleApprovedSearch(string ntlogin, string co)
+        {
+            return _dbContext.Database.SqlQuery<PeopleApprovedSearch>($"exec A_SP_PEOPLE_SEARCH ' (FULL_NAME LIKE ''%%'' OR FULL_NAME is NULL ) AND  (ROOT LIKE ''%%'' OR ROOT is NULL ) AND  (POSITION_NAME LIKE ''%%'' OR POSITION_NAME is NULL ) AND  (BOSS_NAME LIKE ''%%'' OR BOSS_NAME is NULL ) AND  (COMPANY_NAME LIKE ''%%'' OR COMPANY_NAME is NULL ) AND (( ROOT_CO_ID LIKE ''%{co}%'' ) ) AND  STATUS LIKE ''APPROVED%'' AND  (LOGIN IS NOT NULL) AND  (LOCATION_NAME LIKE ''%%'' OR LOCATION_NAME is NULL )',' ORDER BY LAST_NAME,NAME',NULL,NULL,'{ntlogin}'").ToList();
         }
     }
 }

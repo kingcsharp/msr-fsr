@@ -94,6 +94,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActualParts\ActualPartApprovedView.cs" />
     <Compile Include="ActualParts\ActualPartsView.cs" />
     <Compile Include="ActualParts\ActualPartViewHistoryView.cs" />
     <Compile Include="ActualParts\RootCompanyTree.cs" />
@@ -159,6 +160,7 @@
     <Compile Include="People\BossInfoView.cs" />
     <Compile Include="People\CompanyEditPersonView.cs" />
     <Compile Include="People\OfficialPositionView.cs" />
+    <Compile Include="People\PeopleApprovedSearch.cs" />
     <Compile Include="People\PeopleStatusConstants.cs" />
     <Compile Include="People\TimeZonesView.cs" />
     <Compile Include="People\LanguagesView.cs" />

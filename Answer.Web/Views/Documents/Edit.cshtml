@@ -110,7 +110,13 @@
         $(document).ready(function () {
 
             var fileUploader = new FileUploader();
-            fileUploader.InitEditUploader($('#input-files'), '@Url.Action("FileUploaderBootstrap", "Doc")', [@Html.Raw(ViewBag.Preview)], @Html.Raw(ViewBag.PreviewConfig),'@Model.ObjectId');
+            fileUploader.InitEditUploader($('#input-files'),
+                '@Url.Action("FileUploaderBootstrap", "Doc")',
+                [@Html.Raw(ViewBag.Preview)],
+                @Html.Raw(ViewBag.PreviewConfig),
+                '@Model.ObjectId',
+                true);
+
             fileUploaderGrid.SetupSelectImage();
 
             var selectRoles = $(".selectroles").select2({

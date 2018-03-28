@@ -1,11 +1,8 @@
 ﻿using Msr.Models.ApprovalStages;
 using Msr.Services.ApprovalGroups;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Mvc;
 
 namespace Msr.Services.ApprovalStages.VIewModels
@@ -27,17 +24,17 @@ namespace Msr.Services.ApprovalStages.VIewModels
 
         public List<SelectListItem> ListGroups { get; set; }
 
-        public string NTLogin { get; set; }
+        public string NtLogin { get; set; }
 
-        public void Setup(ApprovalGroupsService approvalGroupsService, ApprovalStagesService approvalStagesService,string ntlogin)
+        public void Setup(ApprovalGroupsService approvalGroupsService, ApprovalStagesService approvalStagesService, string ntlogin, string company)
         {
-            ListGroups = approvalGroupsService.GetApprovalGroupsQueryable().Select(x => new SelectListItem
+            ListGroups = approvalGroupsService.GetApprovalGroupsQueryable().Where(x => (x.Hide != true && x.Hide == null) && x.CreatingCo == company).Select(x => new SelectListItem
             {
                 Text = x.Name,
                 Value = x.Id
             }).OrderBy(o => o.Text).ToList();
 
-            Groups = approvalStagesService.GetStageMemberGroups(id: Id,ntlog:ntlogin).Select(x => x.Id).ToList();
+            Groups = approvalStagesService.GetStageMemberGroups(Id, ntlogin).Select(x => x.Id).ToList();
         }
 
         public EditApprovalStagesViewModel MapToDto(ApprovalStagesView model)

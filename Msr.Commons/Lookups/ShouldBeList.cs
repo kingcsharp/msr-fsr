@@ -1,16 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
 
-public static partial class LookupItems
+namespace Msr.Commons.Lookups
 {
-    public static List<SelectListItem> ShouldBeList()
+    public static partial class LookupItems
     {
-        return new List<SelectListItem>
+        public static List<SelectListItem> ShouldBeList()
         {
-            new SelectListItem {Text = "EQUAL", Value = "EQUAL"},
-            new SelectListItem {Text = "ABOVE", Value = "ABOVE"},
-            new SelectListItem {Text = "BELOW", Value = "BELOW"},
-            new SelectListItem {Text = "BETWEEN", Value = "BETWEEN"}
-        };
+            return new List<SelectListItem>
+            {
+                new SelectListItem {Text = "EQUAL", Value = "EQUAL"},
+                new SelectListItem {Text = "ABOVE", Value = "ABOVE"},
+                new SelectListItem {Text = "BELOW", Value = "BELOW"},
+                new SelectListItem {Text = "BETWEEN", Value = "BETWEEN"}
+            };
+        }
     }
 }

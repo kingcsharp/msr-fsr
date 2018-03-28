@@ -109,7 +109,7 @@ namespace Msr.Repositories
             modelBuilder.Entity<PartTypesApproved>().ToTable("Portal_PartTypesApprovedView");
             modelBuilder.Entity<ApprovedCompaniesView>().ToTable("Portal_ApprovedCompaniesView");
             modelBuilder.Entity<PartApprovedView>().ToTable("Portal_PartsApprovedView");
-
+            modelBuilder.Entity<ActualPartApprovedView>().ToTable("Portal_ActualPartApprovedView");
         }
 
         public DbSet<AspNetUser> AspNetUsers { get; set; }
@@ -176,5 +176,6 @@ namespace Msr.Repositories
         public DbSet<HelpPage> Helps { get; set; }
         public DbSet<HelpView> HelpViews { get; set; }
         public DbSet<PartTypesApproved> PartTypesApproveds { get; set; }
+        public DbSet<ActualPartApprovedView> ActualPartApprovedViews { get; set; }
     }
 }

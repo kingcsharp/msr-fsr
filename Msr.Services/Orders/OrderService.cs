@@ -341,7 +341,7 @@ namespace Msr.Services.Orders
         {
             try
             {
-                var saveWorkItemImagesProcedure = new SaveWorkItemImagesProcedure { DocId = model.DocId, OldDocId = model.OldDocId, Name = model.Name, Desc = model.Desc, Path = model.Path, ContentType = model.ContentType, SrcId = model.SrcId, SrcName = model.SrcName, SrcDesc = model.SrcDesc, SrcPath = model.SrcPath, SrcContentType = model.SrcContentType, SrcChanged = model.SrcChanged, DocChanged = model.DocChanged, DropSrc = model.DropSrc, NTLogin = model.NTLogin, TaskId = model.TaskId };
+                var saveWorkItemImagesProcedure = new SaveWorkItemImagesProcedure(model);
 
                 _dbContext.Database.ExecuteStoredProcedure(saveWorkItemImagesProcedure);
 
@@ -349,7 +349,7 @@ namespace Msr.Services.Orders
             }
             catch (Exception ex)
             {
-                return "";
+                throw ex;
             }
 
         }

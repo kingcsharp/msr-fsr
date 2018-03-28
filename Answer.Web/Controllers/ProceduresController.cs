@@ -219,8 +219,6 @@ namespace Answer.Web.Controllers
 
             vm.Setup(_proceduresService, _roleService, _procedureVerbsService, _documentFilesService, currentUser.Id);
 
-            var procedureName = _proceduresService.GetProceduresQueryable().Where(x => x.ObjectId == id).SingleOrDefault().Name;
-
             var viewModel = new GetStepDataResult
             {
                 GetStepDataResults = _proceduresService.GetStepsData(id, currentUser.Id)
@@ -230,12 +228,10 @@ namespace Answer.Web.Controllers
             viewModel.AddMonitorForProcedureViewModel.Related_Object_Id = id;
 
             ViewBag.ProcObjectId = id;
-            ViewBag.ProdecureName = procedureName;
-
+            ViewBag.ProdecureName = model.Name;
             ViewBag.Procedure = new SelectList(_proceduresService.GetProcedurelist(), "Value", "Show");
 
             vm.GetStepDataResults = viewModel;
-
 
             var preview = string.Join(",", vm.DocLinks.ToArray().Select(x => string.Format("{0}{1}{0}", "\'", x.SERVER_PATH)));
             ViewBag.Preview = preview;

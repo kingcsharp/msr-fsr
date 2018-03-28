@@ -30,6 +30,11 @@ namespace Msr.Services.ActualParts
             return _dbContext.ActualPartsViews;
         }
 
+        public IQueryable<ActualPartApprovedView> GetActualPartsApprovedQueryable()
+        {
+            return _dbContext.ActualPartApprovedViews;
+        }
+
         public IQueryable<ActualPartViewHistoryView> GetActualPartViewHistoryQueryable()
         {
             return _dbContext.ActualPartViewHistoryViews;
@@ -48,7 +53,7 @@ namespace Msr.Services.ActualParts
             return result;
         }
 
-        public List<string> GetActualpartProductsInstalled(string id,string ntlogin)
+        public List<string> GetActualpartProductsInstalled(string id, string ntlogin)
         {
             var strID = new SqlParameter("@ID", id == null ? "0" : id);
             var NTLogin = new SqlParameter("@strNTLogin", ntlogin);
@@ -136,7 +141,7 @@ namespace Msr.Services.ActualParts
             }
         }
 
-        public bool Close(string id,string ntlogin)
+        public bool Close(string id, string ntlogin)
         {
             try
             {
@@ -161,7 +166,7 @@ namespace Msr.Services.ActualParts
             {
                 var reAssignTaskProcedure = new ReAssignTaskProcedure
                 {
-                   
+
                     Id = model.Id,
                     Requestee_Id = model.PersonToReAssign,
                     Group_Requestee_Id = model.GroupToReassign,
@@ -181,7 +186,7 @@ namespace Msr.Services.ActualParts
                 return false;
             }
         }
-      
+
         public bool DeleteViewHistory(string id, string loginId)
         {
             try

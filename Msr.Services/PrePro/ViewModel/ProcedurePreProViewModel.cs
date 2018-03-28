@@ -111,11 +111,11 @@ namespace Msr.Services.PrePro.ViewModel
 
         public void Setup(PreProServices preProServices, DocumentFilesService documentFilesService, LoggedUserIdResult currentUser)
         {
-            BaseStartOnCounterList = LookupItems.YesNo();
+            BaseStartOnCounterList = Commons.Lookups.LookupItems.YesNo();
 
-            StepDurationTypeList = LookupItems.DurationType();
+            StepDurationTypeList = Commons.Lookups.LookupItems.DurationType();
 
-            SystemTaskList = LookupItems.System();
+            SystemTaskList = Commons.Lookups.LookupItems.System();
 
             ReferenceProceduresList = preProServices.GetSelectedRefProcedures(id: PkId, ntlogin: currentUser.Id).Select(x => new SelectListItem
             {

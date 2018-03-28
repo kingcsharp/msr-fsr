@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using Msr.Models.Common;
+using Msr.Models.People;
 using Msr.Services.Roles.Messages;
 
 namespace Msr.Services.Roles
@@ -212,6 +213,17 @@ namespace Msr.Services.Roles
             var result = _dbContext.Database.SqlQuery<GetMyRolesResult>($"SELECT distinct ROLE_ID, ROLE, PERSON, STATUS, ROLE_NAME FROM A_APPROVED_ROLE_ASSIGNEES WHERE PERSON = {personId}").ToList();
 
             return result.Where(x => x.Status == "ACTIVE").ToList();
+        }
+
+        public List<RoleResult> GetRolesList(string ntLogin)
+        {
+            var result = _dbContext.Database.SqlQuery<RoleResult>($"EXEC A_SP_ROLE_SELECT NULL, NULL, NULL,NULL, '{ntLogin}',' ORDER BY NAME'").ToList();
+            return result;
+        }
+
+        public List<PeopleApprovedSearch> GetPeopleAssigned(string ntlogin, string co)
+        {
+            return _dbContext.Database.SqlQuery<PeopleApprovedSearch>($"exec A_SP_PEOPLE_SEARCH ' (FULL_NAME LIKE ''%%'' OR FULL_NAME is NULL ) AND  (ROOT LIKE ''%%'' OR ROOT is NULL ) AND  (POSITION_NAME LIKE ''%%'' OR POSITION_NAME is NULL ) AND  (BOSS_NAME LIKE ''%%'' OR BOSS_NAME is NULL ) AND  (COMPANY_NAME LIKE ''%%'' OR COMPANY_NAME is NULL ) AND (( ROOT_CO_ID LIKE ''%{co}%'' ) ) AND  STATUS LIKE ''APPROVED%'' AND  (LOGIN IS NOT NULL) AND  (LOCATION_NAME LIKE ''%%'' OR LOCATION_NAME is NULL )',' ORDER BY LAST_NAME,NAME',NULL,NULL,'{ntlogin}'").ToList();
         }
 
     }

@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using Msr.Models.ActualParts;
 using Msr.Services.Companies;
 using Msr.Services.Locations;
+using Msr.Services.Orders;
 using Msr.Services.Users;
 using Msr.Services.Products;
 using Msr.Services.Users.Messages;
@@ -84,117 +85,57 @@ namespace Msr.Services.ActualParts.ViewModels
 
         public List<SelectListItem> ListSubPartActions { get; set; }
 
-        public void SetUp(ActualPartsService actualPartsService, PartsService partsService, LocationService locationService, UserService userService, ProductService productService, CompanyService companyService, LoggedUserIdResult getCurrentUser)
+        public void SetUp(ActualPartsService actualPartsService, PartsService partsService, LocationService locationService, PeopleService peopleService, ProductService productService, CompanyService companyService, LoggedUserIdResult getCurrentUser)
         {
-            ListSubPartActions = new List<SelectListItem>
-            {
-                new SelectListItem
-                {
-                    Text = @"Create New",
-                    Value = "CREATE_NEW",
-                    Selected = true
-                },
-                new SelectListItem
-                {
-                    Text = @"Grab From Location and sub locations",
-                    Value = "GET_AT_LOC"
-                }
-            };
+            ListSubPartActions = Commons.Lookups.LookupItems.ListSubPartActions();
 
-            ListParents = actualPartsService.GetActualParts("APPROVED").Select(x => new SelectListItem
-            {
-                Text = x.Show,
-                Value = x.Value.ToString()
-            }).OrderBy(o => o.Text).ToList();
-            ListParents.Insert(0, new SelectListItem { Text = @"Select Actual Part", Value = "" });
-
-            ListParts = partsService.GetPartsQueryable().Where(x => x.Name != null).Select(x => new SelectListItem
+            ListParents = actualPartsService.GetActualPartsApprovedQueryable().OrderBy(x => x.ComapnyPartNumber).Select(x => new SelectListItem
             {
                 Text = x.Name,
-                Value = x.ObjectId.ToString()
-            }).OrderBy(o => o.Text).ToList();
+                Value = x.Id.ToString()
+            }).ToList();
+            ListParents.Insert(0, new SelectListItem { Text = @"Select Actual Part", Value = "" });
+
+            ListParts = partsService.GetPartsApprovedQueryable(getCurrentUser.Root_Company).Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.Id.ToString()
+            }).ToList();
 
             ListParts.Insert(0, new SelectListItem { Text = @"Select Part", Value = "" });
 
-            ListLocations = locationService.GetLocationsQueryable().Select(x => new SelectListItem
+            ListLocations = locationService.GetActiveLocations(getCurrentUser.Id).Select(x => new SelectListItem
             {
                 Text = x.Name,
-                Value = x.ObjectId.ToString()
+                Value = x.Id.ToString()
             }).OrderBy(o => o.Text).ToList();
             ListLocations.Insert(0, new SelectListItem { Text = @"Select Location", Value = "" });
 
             ListCurOwners.Insert(0, new SelectListItem { Text = @"Select Owner", Value = "" });
 
-            ListCurOwners.AddRange(companyService.GetCompaniesQueryable().Where(x=>x.Status == "APPROVED") .Select(x => new SelectListItem
+            ListCurOwners.AddRange(companyService.GetPersonRootCompanyTreeViews(getCurrentUser.Id).Select(x => new SelectListItem
             {
                 Text = x.Name,
-                Value = x.ObjectId
-            }).OrderBy(o => o.Text).ToList());
+                Value = x.Id,
+                Selected = x.Id == getCurrentUser.Root_Company
+            }).ToList());
 
             ListPersons.Insert(0, new SelectListItem { Text = @"Select Responsible Person", Value = "" });
-            ListPersons.AddRange(userService.GetSearchUser().ToList().Select(x => new SelectListItem
+            ListPersons.AddRange(peopleService.GetPeopleApprovedSearch(getCurrentUser.Id, getCurrentUser.Root_Company).ToList().Select(x => new SelectListItem
             {
                 Text = x.Full_Name,
-                Value = x.Obj_Id.ToString()
-            }).OrderBy(o => o.Text).ToList());
+                Value = x.Root.ToString()
+            }).ToList());
 
             ListProducts.AddRange(productService.GetProductsQueryable().Select(x => new SelectListItem
             {
                 Text = x.Name,
-                Value = x.ObjectId.ToString()
-            }).OrderBy(o => o.Text).ToList());
+                Value = x.Id.ToString()
+            }).ToList());
 
             Products = actualPartsService.GetActualpartProductsInstalled(Id, getCurrentUser.Id).ToList();
 
-            ListAPStatus = new List<SelectListItem>
-            {
-                new SelectListItem
-                {
-                    Text = @"Available",
-                    Value = "ap_available",
-                    Selected = true
-                },
-                new SelectListItem
-                {
-                    Text = @"Consumed",
-                    Value = "ap_consumed"
-                },
-                new SelectListItem
-                {
-                    Text = @"Filled",
-                    Value = "ap_filled"
-                },
-                new SelectListItem
-                {
-                    Text = @"Held For Pickup",
-                    Value = "ap_held"
-                },
-                new SelectListItem
-                {
-                    Text = @"In Call",
-                    Value = "ap_in_call"
-                },
-                new SelectListItem
-                {
-                    Text = @"In Fill",
-                    Value = "ap_in_fill"
-                },
-                new SelectListItem
-                {
-                    Text = @"In Transit",
-                    Value = "ap_in_transit"
-                },
-                new SelectListItem
-                {
-                    Text = @"Installed",
-                    Value = "ap_installed"
-                },
-                new SelectListItem
-                {
-                    Text = @"Received",
-                    Value = "ap_received"
-                }
-            };
+            ListAPStatus = Commons.Lookups.LookupItems.ListAPStatus();
         }
 
         public SaveActualPartsViewModel MapToDto(ActualPartsView model)
@@ -212,7 +153,7 @@ namespace Msr.Services.ActualParts.ViewModels
                 APStatus = model.ApStatus,
                 ParentId = model.ParentId,
                 SubpartAction = null,
-                ResponsiblePerson = model.RespPersonFullName
+                ResponsiblePerson = model.ResponsibleName
             };
         }
     }

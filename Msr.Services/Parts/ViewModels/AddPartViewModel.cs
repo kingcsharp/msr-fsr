@@ -24,6 +24,7 @@ namespace Msr.Services.Parts.ViewModels
             ListCustomerExceptions = new List<SelectListItem>();
             ListPartsTypes = new List<SelectListItem>();
             ListSupplierCompany = new List<SelectListItem>();
+            PartsTypes = new List<SelectListItem>();
         }
 
         public string Id { get; set; }
@@ -114,7 +115,7 @@ namespace Msr.Services.Parts.ViewModels
         [DisplayName("Reference Theories :")]
         public List<string> ReferenceTheories { get; set; }
 
-        public IList<SelectListItem> ListInternalEqualParts { get; set; }
+        public List<SelectListItem> ListInternalEqualParts { get; set; }
 
         public IList<SelectListItem> ListExternalEqualParts { get; set; }
 
@@ -130,7 +131,7 @@ namespace Msr.Services.Parts.ViewModels
 
         public IEnumerable<SelectListItem> Availabilities { get; set; }
 
-        public IEnumerable<SelectListItem> PartsTypes { get; set; }
+        public List<SelectListItem> PartsTypes { get; set; }
 
         public List<SelectListItem> ListPartsTypes { get; set; }
 
@@ -147,7 +148,7 @@ namespace Msr.Services.Parts.ViewModels
 
         public void Setup(DocumentFilesService documentFilesService, PartsService partsService, PartTypeService partTypeService, string creatingCo, string ntlog)
         {
-            OrderingUnits = LookupItems.OrderingUnits();
+            OrderingUnits = Commons.Lookups.LookupItems.OrderingUnits();
 
             ShippingWeightTypes = new List<SelectListItem>
             {
@@ -224,7 +225,7 @@ namespace Msr.Services.Parts.ViewModels
                 }
             };
 
-            Availabilities = LookupItems.YesNo();
+            Availabilities = Commons.Lookups.LookupItems.YesNo();
 
             ProductTypes = new List<SelectListItem>
             {
@@ -268,31 +269,32 @@ namespace Msr.Services.Parts.ViewModels
                 Value = x.Id.ToString()
             }).ToList());
 
-            ListInternalEqualParts = partsService.GetPartsApprovedQueryable(creatingCo).ToList().Select(x => new SelectListItem
+            ListInternalEqualParts.Add(new SelectListItem { Value = "", Text = @"Select Internal Part" });
+            ListInternalEqualParts.AddRange(partsService.GetPartsApprovedQueryable(creatingCo).ToList().Select(x => new SelectListItem
             {
                 Text = x.Name,
                 Value = x.ObjectId.ToString()
-            }).ToList();
+            }).ToList());
 
             ListPartsTypes.Add(new SelectListItem { Value = "", Text = "" });
-
             ListPartsTypes.AddRange(partTypeService.GetPartTypesApproved(creatingCo).ToList().Select(x => new SelectListItem
             {
                 Text = x.Name,
                 Value = x.Id.ToString()
             }).OrderBy(o => o.Text).ToList());
 
-            PartsTypes = partTypeService.GetPartTypesQueryable().ToList().Select(x => new SelectListItem
+            PartsTypes.Add(new SelectListItem { Value = "", Text = "" });
+            PartsTypes.AddRange(partTypeService.GetPartTypesQueryable().ToList().Select(x => new SelectListItem
             {
                 Text = x.Name,
                 Value = x.Id.ToString()
-            }).OrderBy(o => o.Text).ToList();
+            }).ToList());
 
             ListCustomerExceptions = partsService.GetPartCustomerExceptions(id: Id).Select(x => new SelectListItem
             {
                 Text = x.Name,
-                Value = x.Id.ToString(),
-            }).OrderBy(o => o.Text).ToList();
+                Value = x.Id.ToString()
+            }).ToList();
 
             SpecialCustomers = partsService.GetPartSpecialCustomers(id: Id).ToList();
 

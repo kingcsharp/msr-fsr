@@ -1,38 +1,41 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
 
-public static partial class LookupItems
+namespace Msr.Commons.Lookups
 {
-    public static List<SelectListItem> OrderingUnits()
+    public static partial class LookupItems
     {
-        return new List<SelectListItem>
+        public static List<SelectListItem> OrderingUnits()
         {
-            new SelectListItem
+            return new List<SelectListItem>
             {
-                Text = @"Item",
-                Value = "UNIT",
-                Selected = true
-            },
-            new SelectListItem
-            {
-                Text = @"Ounces",
-                Value = "WT_OZ"
-            },
-            new SelectListItem
-            {
-                Text = @"Pounds",
-                Value = "WT_LBS"
-            },
-            new SelectListItem
-            {
-                Text = @"Kilograms",
-                Value = "WT_KG"
-            },
-            new SelectListItem
-            {
-                Text = @"Gallons",
-                Value = "VOL_GALLONS"
-            }
-        };
+                new SelectListItem
+                {
+                    Text = @"Item",
+                    Value = "UNIT",
+                    Selected = true
+                },
+                new SelectListItem
+                {
+                    Text = @"Ounces",
+                    Value = "WT_OZ"
+                },
+                new SelectListItem
+                {
+                    Text = @"Pounds",
+                    Value = "WT_LBS"
+                },
+                new SelectListItem
+                {
+                    Text = @"Kilograms",
+                    Value = "WT_KG"
+                },
+                new SelectListItem
+                {
+                    Text = @"Gallons",
+                    Value = "VOL_GALLONS"
+                }
+            };
+        }
     }
 }
