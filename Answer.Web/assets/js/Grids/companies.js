@@ -11,8 +11,8 @@
         colModel: [
             {
                 label: 'Id',
-                name: 'Id',
-                index: 'Id',
+                name: 'Root',
+                index: 'Root',
                 key: true,
                 colmenu: false,
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
@@ -148,6 +148,7 @@
 
             Msr.JqGridCommon.SetupGridLock("/Companies/Edit/");
             Msr.JqGridCommon.UnLockWorkflow(returnUrl);
+            Msr.JqGridCommon.DocPreview();
         }
 
     });

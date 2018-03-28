@@ -1,0 +1,132 @@
+﻿@model Msr.Services.Procedures.Messages.GetStepDataResult
+
+<li id="@Model.Print_Order,@Model.Id" data-MainObjectId="@ViewBag.ProcObjectId" class="sortable-item">
+    <span class="fa fa-arrows handle sortable-fa" style="float: left; margin: -4px;"></span>
+    @using (Html.BeginForm("EditStep", "Procedures", FormMethod.Post, new { @class = "step-form", id = "step-form-" + Model.Index }))
+    {
+
+        <input type="hidden" class="step-action" name="UpdateAction" value="" />
+        <input type="hidden" name="ProcedureId" value="@ViewBag.ProcObjectId" />
+        <input type="hidden" id="StepId" name="Id" value="@Model.Id" />
+        <div class="procedure-step row" id='step1'>
+            <div class="col-lg-6 ">
+                <table class="table table-condensed left-table">
+                    <tr>
+                        <th style='width: 95px'>Step Number:</th>
+                        <td class='step-number'>@Model.Print_Order</td>
+                        <th style='width: 95px'>Predecessor:</th>
+                        <td><input type='text' name='a0' class='form-control' value='@Model.Id' /></td>
+                    </tr>
+                    <tr>
+                        <th>Step Title:</th>
+                        <td colspan=5><input type='text' name='c0' class='form-control pre-populated' value='@Model.StepTitle' disabled="disabled" /></td>
+                    </tr>
+                    <tr>
+                        <th>Step Text:</th>
+                        <td colspan="5">@Html.TextAreaFor(model => Model.Step_Text, new { @class = "form-control" })</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <th colspan="2" align='right'>Estimated Step Duration:</th>
+                        <td>
+                            <div class="input-group">
+                                @Html.TextBoxFor(model => Model.Duration, new { @class = "form-control pre-populated" })
+                                <span class="input-group-addon">mins.</span>
+                            </div>
+                        </td>
+                        <th align='right'>Equipment Time:</th>
+                        <td>
+                            <div class="input-group">
+                                <input type='number' name='f0' class='form-control pre-populated' value='' />
+                                <span class="input-group-addon">mins.</span>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-lg-2">
+                <table class="table">
+                    <tr>
+                        <th>Auth Roles:</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.ListBox("GetStepLabors", Model.GetStepLaborsList, new { @class = "form-control submitselect" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Reference Object:</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.DropDownListFor(m => Model.REFERENCE_OBJECT, Model.ListReferenceObjects, new { id = "ReferenceObject_" + Model.Index, @class = "form-control submitselect selectReferenceObject", size = 1 })
+                            @Html.ValidationMessageFor(model => Model.REFERENCE_OBJECT, "", new { @class = "text-danger" })
+                            <div style="float: right;">
+                                <span class="data-toggle=" data-call-back-id="ReferenceObject_@Model.Index" data-toggle="modal" data-target="#select-objects"><i class="icon fa fa-file"></i></span>
+                                <span class="deletefiles" data-call-back-id="ReferenceObject_@Model.Index"><i class="icon fa fa-trash-o"></i></span>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-lg-4">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#">Monitors</a></li>
+                </ul>
+                <table style="width: 100%" class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Monitor Type</th>
+                            <th>Description</th>
+                            <th>Input Type</th>
+                            <th>Target Object</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.GetMoniterViewModels)
+                        {
+                            <tr>
+                                <td>@item.Monitor_Type</td>
+                                <td>@item.Description</td>
+                                <td>@item.Input_Type</td>
+                                <td>@item.Target</td>
+                                <td>
+                                    <span title="Edit Monitor" class="btn btn-xs btn-success" data-toggle="modal" data-procedure-name="@ViewBag.ProdecureName"
+                                          data-moniter-type="@item.Monitor_Type"
+                                          data-input-type="@item.Input_Type"
+                                          data-fail-action="@item.Fail_Action"
+                                          data-description="@item.Description"
+                                          data-object-id="@item.Id"
+                                          data-related-object="@item.Related_Object_Id"
+                                          data-step-id="@item.Step_Id"
+                                          data-step-shouldbe="@item.Should_Be"
+                                          data-step-highestthreshold="@item.Highest_Threshold"
+                                          data-step-highthreshold="@item.High_Threshold"
+                                          data-step-target="@item.Target"
+                                          data-step-lowthreshold="@item.Low_Threshold"
+                                          data-step-lowestthreshold="@item.Lowest_Threshold"
+                                          data-step-Target-Object="@item.Target_Object"
+                                          data-target="#addMoniterModal"
+                                          href="#monitor_@item.Id"><i class="fa fa-edit" aria-hidden="true"></i></span>
+                                    <span title="Delete Monitor" style="cursor: pointer;" class="deleteMoniter btn btn-xs btn-danger" data-ProcedureName="@ViewBag.ProdecureName" data-ProcId="@item.Related_Object_Id" data-id="@item.Id">
+                                        <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                        <tr>
+                            <td>
+                                <a data-step-Target-Object="@Model.AddMonitorForProcedureViewModel.Target_Object" data-procedure-name="@ViewBag.ProdecureName" data-moniter-type="@Model.AddMonitorForProcedureViewModel.Monitor_Type" data-fail-action="@Model.AddMonitorForProcedureViewModel.Fail_Action" data-description="@Model.AddMonitorForProcedureViewModel.Description" data-object-id="@Model.AddMonitorForProcedureViewModel.Id" data-related-object="@ViewBag.ProcObjectId" data-step-id="@Model.Id" data-toggle="modal" data-target="#addMoniterModal" href="#" data-value="@Model.Id" class="btn btn-xs btn-success add-monitor_@Model.Id add-monitor " title="Add Monitor"> <i class="fa fa-plus" aria-hidden="true"></i> Add Monitor</a>
+                            </td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <input type="submit" class="btn btn-success" value="Save" />
+        <button type="submit" class="btn btn-danger delete-step" value="Delete" name="DeleteStep" value="DeleteStep">Delete</button>
+    }
+</li>

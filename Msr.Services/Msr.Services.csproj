@@ -198,6 +198,7 @@
     <Compile Include="Parts\ViewModels\ImportPartViewModel.cs" />
     <Compile Include="Procedures\Procedures\DeleteProcedure.cs" />
     <Compile Include="Procedures\Procedures\ProcedureImportExternalProcedure.cs" />
+    <Compile Include="Procedures\Procedures\ProcedureStepDelete.cs" />
     <Compile Include="Procedures\ViewModels\ProcedureImportViewModel.cs" />
     <Compile Include="Procedures\ViewModels\ProcedureStepMonitorsViewModel.cs" />
     <Compile Include="ProductionPlanning\Procedures\ProductImportUpdateExternalProcedure.cs" />

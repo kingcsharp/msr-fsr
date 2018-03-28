@@ -343,6 +343,7 @@
         gridComplete: function () {
             Msr.JqGridCommon.SetupGridLock("/People/Edit/");
             Msr.JqGridCommon.UnLockWorkflow(returnUrl);
+            Msr.JqGridCommon.DocPreview();
         }
 
     });

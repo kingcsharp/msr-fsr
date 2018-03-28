@@ -55,7 +55,8 @@ a.TOTAL_CREDITS as TotalCredits,
 a.TOTAL_DEBITS as TotalDebits,
 a.BILLING_EMAIL as BillingEmail,
 TOTAL_PURCHASE_LIMIT-TOTAL_DEBITS AS UnusedAmount,
-a.TAX_RATE AS TaxRate
+a.TAX_RATE AS TaxRate,
+(SELECT +','+ po.ORDER_ID FROM A_ACCOUNT_PURCHASABLE_ORDERS_LINK AS po WHERE po.ACCOUNT_ID = a.OBJECT_ID for xml path(''), type).value('substring(text()[1], 2)', 'varchar(max)') AS Product
 FROM dbo.A_ACCOUNTS_HISTORY a INNER JOIN
 dbo.A_OBJECTS o ON a.OBJECT_ID = o.ID LEFT OUTER JOIN
 dbo.A_V_COMPANIES_APPROVED_DATA sup ON a.SUPPLIER_CO = sup.ID LEFT OUTER JOIN

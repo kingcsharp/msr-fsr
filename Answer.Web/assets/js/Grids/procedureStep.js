@@ -121,6 +121,7 @@
                 });
 
             Msr.JqGridCommon.UnLockWorkflow(returnUrl);
+            Msr.JqGridCommon.DocPreview();
         }
     });
     $('#jqGrid').navGrid("#jqGridPager", {

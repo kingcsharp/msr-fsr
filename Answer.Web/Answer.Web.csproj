@@ -1342,6 +1342,7 @@
     <Content Include="Views\Parts\Import.cshtml" />
     <Content Include="Views\Companies\Import.cshtml" />
     <Content Include="Views\ActualParts\Import.cshtml" />
+    <Content Include="Views\Procedures\Partials\_InnerStep.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

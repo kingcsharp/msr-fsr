@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web.Mvc;
 using Msr.Services.Documents;
 using Msr.Services.Documents.ViewModels;
+using Msr.Services.Locations;
 
 namespace Msr.Services.Companies.ViewModels
 {
@@ -83,7 +84,7 @@ namespace Msr.Services.Companies.ViewModels
 
         public IEnumerable<SelectListItem> HeadPeoples { get; set; }
         public IEnumerable<SelectListItem> Locations { get; set; }
-        public IEnumerable<SelectListItem> ListParents { get; set; }
+        public List<SelectListItem> ListParents { get; set; }
 
         public List<DocLink> DocLinks { get; set; }
 
@@ -92,7 +93,7 @@ namespace Msr.Services.Companies.ViewModels
 
         public IEnumerable<SelectListItem> CompanyTypes { get; set; }
 
-        public void Setup(DocumentFilesService documentFilesService, CompanyService companyService, string ntlog)
+        public void Setup(DocumentFilesService documentFilesService, CompanyService companyService, LocationService locationService, string ntlog, string co)
         {
             CompanyTypes = Commons.Lookups.LookupItems.CompanyTypes();
 
@@ -102,17 +103,18 @@ namespace Msr.Services.Companies.ViewModels
                 Value = x.Id
             }).OrderBy(o => o.Text).ToList();
 
-            Locations = companyService.GetLocationsQueryable().Where(x => x.Status == "APPROVED").ToList().Select(x => new SelectListItem
+            Locations = locationService.GetActiveLocations(ntlog).ToList().Select(x => new SelectListItem
             {
                 Text = x.Name,
                 Value = x.Id
             }).OrderBy(o => o.Text).ToList();
 
-            ListParents = companyService.GetCompaniesQueryable().Where(x => x.Status == "APPROVED").Select(x => new SelectListItem
+            ListParents.Add(new SelectListItem { Text = "", Value = "" });
+            ListParents.AddRange(companyService.GetCompaniesApprovedQueryable(co: co).ToList().Select(x => new SelectListItem
             {
                 Text = x.Name,
                 Value = x.Id
-            }).OrderBy(o => o.Text).ToList();
+            }).ToList());
 
             DocLinks = documentFilesService.GetDocByObjectId(ObjectId);
         }

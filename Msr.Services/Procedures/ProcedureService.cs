@@ -642,41 +642,41 @@ namespace Msr.Services.Procedures
             var updateOneStep = new UpdateOneStepProcedure();
 
             updateOneStep.Id = viewModel.Id;
-            updateOneStep.StepText = viewModel.GetStepDataResults.First().Step_Text;
+            updateOneStep.StepText = viewModel.Step_Text;
             updateOneStep.ProcObjId = viewModel.ProcObjId;
-            updateOneStep.Comments = viewModel.GetStepDataResults.First().Comments;
-            updateOneStep.StartOnCounter = viewModel.GetStepDataResults.First().Start_On_Counter?.ToString();
-            updateOneStep.CounterValue = viewModel.GetStepDataResults.First().Counter_Value?.ToString();
-            updateOneStep.CounterUnit = viewModel.GetStepDataResults.First().Counter_Unit;
-            updateOneStep.FromStartOrStop = viewModel.GetStepDataResults.First().FROM_START_OR_STOP;
-            updateOneStep.RelOrAbs = viewModel.GetStepDataResults.First().REL_OR_ABS;
-            updateOneStep.SystemTask = viewModel.GetStepDataResults.First().System_Task;
-            updateOneStep.Destination = viewModel.GetStepDataResults.First().Destination;
-            updateOneStep.SpecificLocation = viewModel.GetStepDataResults.First().Specific_Location;
-            updateOneStep.ReferenceVerb = viewModel.GetStepDataResults.First().REFERENCE_VERB;
-            updateOneStep.ReferenceObject = viewModel.GetStepDataResults.First().REFERENCE_OBJECT;
-            updateOneStep.ReferenceTheories = viewModel.GetStepDataResults.First().REFERENCE_THEORIES;
-            updateOneStep.GoToStep = viewModel.GetStepDataResults.First().GOTO_STEP?.ToString();
-            updateOneStep.GoToStepId = viewModel.GetStepDataResults.First().GOTO_STEP_ID;
-            updateOneStep.Cycles = viewModel.GetStepDataResults.First().Cycles;
-            updateOneStep.CycleOnCounter = viewModel.GetStepDataResults.First().Cycle_On_Counter?.ToString();
-            updateOneStep.CycleCount = viewModel.GetStepDataResults.First().Cycle_Count?.ToString();
-            updateOneStep.CycleUnit = viewModel.GetStepDataResults.First().Cycle_Unit;
+            updateOneStep.Comments = viewModel.Comments;
+            updateOneStep.StartOnCounter = viewModel.Start_On_Counter?.ToString();
+            updateOneStep.CounterValue = viewModel.Counter_Value?.ToString();
+            updateOneStep.CounterUnit = viewModel.Counter_Unit;
+            updateOneStep.FromStartOrStop = viewModel.FROM_START_OR_STOP;
+            updateOneStep.RelOrAbs = viewModel.REL_OR_ABS;
+            updateOneStep.SystemTask = viewModel.System_Task;
+            updateOneStep.Destination = viewModel.Destination;
+            updateOneStep.SpecificLocation = viewModel.Specific_Location;
+            updateOneStep.ReferenceVerb = viewModel.REFERENCE_VERB;
+            updateOneStep.ReferenceObject = viewModel.REFERENCE_OBJECT;
+            updateOneStep.ReferenceTheories = viewModel.REFERENCE_THEORIES;
+            updateOneStep.GoToStep = viewModel.GOTO_STEP?.ToString();
+            updateOneStep.GoToStepId = viewModel.GOTO_STEP_ID;
+            updateOneStep.Cycles = viewModel.Cycles;
+            updateOneStep.CycleOnCounter = viewModel.Cycle_On_Counter?.ToString();
+            updateOneStep.CycleCount = viewModel.Cycle_Count?.ToString();
+            updateOneStep.CycleUnit = viewModel.Cycle_Unit;
 
-            if (viewModel.GetStepDataResults.First().SelectedReferenceProcedureTypes != null && viewModel.GetStepDataResults.First().SelectedReferenceProcedureTypes.Count > 0)
+            if (viewModel.SelectedReferenceProcedureTypes != null && viewModel.SelectedReferenceProcedureTypes.Count > 0)
             {
-                updateOneStep.ReferenceProcs = String.Join(",", viewModel.GetStepDataResults.First().SelectedReferenceProcedureTypes);
+                updateOneStep.ReferenceProcs = String.Join(",", viewModel.SelectedReferenceProcedureTypes);
             }
 
-            if (viewModel.GetStepDataResults.First().SelectedPrecedingSteps != null && viewModel.GetStepDataResults.First().SelectedPrecedingSteps.Count > 0)
+            if (viewModel.SelectedPrecedingSteps != null && viewModel.SelectedPrecedingSteps.Count > 0)
             {
-                updateOneStep.PrecedingSteps = String.Join(",", viewModel.GetStepDataResults.First().SelectedPrecedingSteps);
+                updateOneStep.PrecedingSteps = String.Join(",", viewModel.SelectedPrecedingSteps);
             }
 
-            updateOneStep.Duration = viewModel.GetStepDataResults.First().Duration;
-            updateOneStep.DurationType = viewModel.GetStepDataResults.First().Duration_Type;
+            updateOneStep.Duration = viewModel.Duration;
+            updateOneStep.DurationType = viewModel.Duration_Type;
 
-            _dbContext.Database.ExecuteStoredProcedure(updateOneStep);
+         ////   _dbContext.Database.ExecuteStoredProcedure(updateOneStep);
         }
 
         public bool RollBack(SaveProcedureViewModel model)
@@ -1183,6 +1183,26 @@ namespace Msr.Services.Procedures
             {
                 result.AddError(ex.Message);
 
+                return result;
+            }
+        }
+
+        public ResultNotification<string> DeleteProcedureStep(string id, string ntLogin)
+        {
+            var result = new ResultNotification<string>();
+
+            try
+            {
+                var deleteProcedureStep = new ProcedureStepDelete() {Id = id, NtLogin = ntLogin};
+
+                _dbContext.Database.ExecuteStoredProcedure(deleteProcedureStep);
+
+                return result;
+
+            }
+            catch (Exception ex)
+            {
+                result.AddError("There is an error deleting procedure step");
                 return result;
             }
         }

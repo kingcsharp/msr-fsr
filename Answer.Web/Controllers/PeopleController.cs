@@ -9,7 +9,7 @@ using Msr.Services.Orders;
 using Msr.Services.People.ViewModels;
 using Msr.Services.Companies;
 using Msr.Services.Documents;
-using Msr.Services.Workflows;
+using Msr.Services.Locations;
 
 namespace Answer.Web.Controllers
 {
@@ -21,11 +21,14 @@ namespace Answer.Web.Controllers
 
         private readonly DocumentFilesService _documentFilesService;
 
+        private readonly LocationService _locationService;
+
         public PeopleController()
         {
             _peopleService = new PeopleService();
             _companyService = new CompanyService();
             _documentFilesService = new DocumentFilesService();
+            _locationService = new LocationService();
         }
 
         public ActionResult Index()
@@ -172,7 +175,7 @@ namespace Answer.Web.Controllers
         {
             var people = new AddPeopleViewModel();
 
-            people.Setup(new DocumentFilesService(), new PeopleService(), new CompanyService());
+            people.Setup(_documentFilesService, _peopleService, _locationService, GetCurrentUser().Id);
 
             return View(people);
         }
@@ -194,7 +197,7 @@ namespace Answer.Web.Controllers
 
                 TempData["ErrorMessage"] = response.ErrorMessage;
 
-                model.Setup(_documentFilesService, _peopleService, _companyService);
+                model.Setup(_documentFilesService, _peopleService, _locationService, GetCurrentUser().Id);
 
                 return View(model);
             }
@@ -250,7 +253,7 @@ namespace Answer.Web.Controllers
                 caption = x.NAME,
                 type = x.TYPE,
                 size = 6666,
-                url = Url.Action("DeletesingleReference", "Documents", new {file = x.LINKED_DOC_ID}),
+                url = Url.Action("DeletesingleReference", "Documents", new { file = x.LINKED_DOC_ID }),
                 downloadUrl = x.SERVER_PATH,
                 key = x.LINKED_DOC_ID
             }));
@@ -284,7 +287,7 @@ namespace Answer.Web.Controllers
                     TempData["SuccessMessage"] = "Password reminder email has been sent successfully.";
                 }
 
-                return RedirectToAction("Edit", new {model.ObjectId});
+                return RedirectToAction("Edit", new { model.ObjectId });
             }
 
             model.NTLogin = currentUser.Id;

@@ -31,8 +31,12 @@
 function viewerLoad(url, flobwicket) {
     var encoder = '';
     var viewSrc = '';
+    var fileType = '';
 
-    var fileType = flobwicket.split('.')[1];
+    if (typeof flobwicket !== 'undefined' && flobwicket !==null) {
+        fileType = flobwicket.split('.')[1];
+    }
+    
     var file = url;
 
     var linkDescription = flobwicket;

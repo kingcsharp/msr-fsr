@@ -4,30 +4,27 @@ using Msr.Services.Companies.ViewModels;
 using Msr.Services.jqGrid;
 using Msr.Web.ViewModel.Engineering;
 using System;
-using System.Collections.Generic;
-using System.Data;
-using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using Msr.Services.Documents;
 using Msr.Infrastructure.Common.Constansts;
-using Msr.Services.Roles;
+using Msr.Services.Locations;
 
 namespace Answer.Web.Controllers
 {
     public class CompaniesController : BaseController
     {
-        private readonly RoleService _roleService;
         private readonly CompanyService _companyService;
         private readonly DocumentFilesService _documentFilesService;
+        private readonly LocationService _locationService;
 
         public CompaniesController()
         {
-            _roleService = new RoleService();
             _companyService = new CompanyService();
             _documentFilesService = new DocumentFilesService();
+            _locationService = new LocationService();
         }
 
         public ActionResult Index()
@@ -144,7 +141,7 @@ namespace Answer.Web.Controllers
         {
             var company = new AddCompanyViewModel();
 
-            company.Setup(_documentFilesService, _companyService);
+            company.Setup(_documentFilesService, _companyService, GetCurrentUser().Root_Company);
 
             return View(company);
         }
@@ -166,7 +163,7 @@ namespace Answer.Web.Controllers
                 else
                 {
                     TempData["ErrorMessage"] = "Something went wrong.";
-                    model.Setup(_documentFilesService, _companyService);
+                    model.Setup(_documentFilesService, _companyService, GetCurrentUser().Root_Company);
                     return View(model);
                 }
             }
@@ -176,9 +173,11 @@ namespace Answer.Web.Controllers
 
         public ActionResult Edit(string id)
         {
+            var getCurrentUser = GetCurrentUser();
+
             var model = _companyService.GetCompanyByObjId(id);
 
-            model.Setup(_documentFilesService, _companyService, GetCurrentUser().Id);
+            model.Setup(_documentFilesService, _companyService, new LocationService(), getCurrentUser.Id, getCurrentUser.Root_Company);
 
             var preview = string.Join(",", model.DocLinks.ToArray().Select(x => string.Format("{0}{1}{0}", "\'", x.SERVER_PATH)));
             ViewBag.Preview = preview;
@@ -189,7 +188,7 @@ namespace Answer.Web.Controllers
                 caption = x.NAME,
                 type = x.TYPE,
                 size = 6666,
-                url = Url.Action("DeletesingleReference", "Documents", new {file = x.LINKED_DOC_ID}),
+                url = Url.Action("DeletesingleReference", "Documents", new { file = x.LINKED_DOC_ID }),
                 downloadUrl = x.SERVER_PATH,
                 key = x.LINKED_DOC_ID
             }));
@@ -247,11 +246,13 @@ namespace Answer.Web.Controllers
 
         public ActionResult Details(string id)
         {
+            var getCurrentUser = GetCurrentUser();
             var taskService = new CompanyService();
 
             var model = taskService.GetCompanyByObjId(id);
 
-            model.Setup(new DocumentFilesService(), new CompanyService(), GetCurrentUser().Id);
+            model.Setup(new DocumentFilesService(), new CompanyService(), _locationService, getCurrentUser.Id,
+                getCurrentUser.Root_Company);
 
             return View(model);
         }

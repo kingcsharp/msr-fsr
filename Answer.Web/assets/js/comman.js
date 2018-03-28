@@ -47,7 +47,7 @@ function SelectOldIds() {
 
             if (optionsArray.length > 0) {
 
-                if ($.inArray(ids[0], optionsArray) != -1) {
+                if ($.inArray(ids[0], optionsArray) !== -1) {
                     // found it
                 }
                 else {

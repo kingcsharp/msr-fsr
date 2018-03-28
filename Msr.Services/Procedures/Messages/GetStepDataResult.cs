@@ -97,7 +97,7 @@ namespace Msr.Services.Procedures.Messages
         }
 
         public string ProcObjId { get; set; }
-
+        public int? Index { get; set; }
         public AddMonitorForProcedureViewModel AddMonitorForProcedureViewModel { get; set; }
         public List<GetStepDataResult> GetStepDataResults { get; set; }
         public IList<SelectListItem> GetStepLabors { get; set; }

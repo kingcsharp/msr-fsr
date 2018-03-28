@@ -109,13 +109,13 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.InvoiceTrigger.ToLower().Contains(rule.data.ToLower()));
                     }
-                    else if (rule.field == nameof(PurchesOrderView.UnusedAmount))
+                    else if (rule.field == nameof(PurchesOrderView.UnusedAmmount))
                     {
                         decimal value;
 
                         if (decimal.TryParse(rule.data, out value))
                         {
-                            totalRows = totalRows.Where(x => x.UnusedAmount == value);
+                            totalRows = totalRows.Where(x => x.UnusedAmmount == value);
                         }
                     }
                     else if (rule.field == nameof(PurchesOrderView.Rev))

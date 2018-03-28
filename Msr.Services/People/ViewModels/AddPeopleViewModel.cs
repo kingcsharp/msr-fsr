@@ -7,6 +7,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Web.Mvc;
 using Msr.Services.Companies;
 using Msr.Services.Documents;
+using Msr.Services.Locations;
 using Msr.Services.Orders;
 
 namespace Msr.Services.People.ViewModels
@@ -129,7 +130,7 @@ namespace Msr.Services.People.ViewModels
         [DisplayName("Reference Files :")]
         public string ReferenceFiles { get; set; }
 
-        public void Setup(DocumentFilesService documentFilesService, PeopleService peopleService, CompanyService companyService)
+        public void Setup(DocumentFilesService documentFilesService, PeopleService peopleService, LocationService locationService, string ntLogin)
         {
             ListStatusEditPerson = new List<SelectListItem>
             {
@@ -183,8 +184,8 @@ namespace Msr.Services.People.ViewModels
             ListEmailTypes = Commons.Lookups.LookupItems.EmailTypes();
             ListAddressTypes = Commons.Lookups.LookupItems.AddressTypes();
 
-            string RootCoId = "2"; 
-    
+            string RootCoId = "2";
+
             ListTimeZones = peopleService.GetTimeZones().Select(x => new SelectListItem
             {
                 Text = x.Description,
@@ -195,11 +196,12 @@ namespace Msr.Services.People.ViewModels
                 Text = x.Name,
                 Value = x.Id
             }).ToList();
-            Locations = companyService.GetLocationsQueryable().Select(x => new SelectListItem
+            Locations = locationService.GetActiveLocations(ntLogin).Select(x => new SelectListItem
             {
                 Text = x.Name,
                 Value = x.Id
-            }).OrderBy(o => o.Text).ToList();
+            }).ToList();
+
             //ListCompanyEditPerson = peopleService.GetCompanyEditPersons().Where(x => x.RootCoId == RootCoId)
             ListCompanyEditPerson = peopleService.GetCompanyEditPersons()
                 .Select(x => new SelectListItem

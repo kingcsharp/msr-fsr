@@ -145,15 +145,32 @@
 
     <script type="text/javascript">
 
+     
         var fileUploaderGrid = new FileUploaderGrid();
 
-        $(document).ready(function () {
+        $(document).ready(function() {
 
-            $("form").submit(function (e) {
+
+            $('.delete-step').on('click', function(e) {
+                    e.preventDefault();
+
+                    var formId = $(this).closest('form').attr('id');
+
+                    eModal.confirm('Are you sure?').then(confirmCallback);
+
+                    function confirmCallback() {
+                        $('.step-action').val('delete');
+                        $('#' + formId + '').submit();
+                    }
+
+                });
+
+
+            $("step-form").submit(function(e) {
                 $('.formPostStep .submitselect option').prop('selected', true);
             });
 
-            $('.addNewStep').click(function (parameters) {
+            $('.addNewStep').click(function(parameters) {
                 eLoaderOpen();
                 var procObjectId = $('#ProcObjectId').val();
                 var procedure = $('#Procedure').val();
@@ -162,10 +179,10 @@
                     url: '/Procedures/SaveStep',
                     data: { ProcObjectId: procObjectId, Procedure: procedure },
                     dataType: 'html',
-                    success: function (data) {
+                    success: function(data) {
                         location.reload();
                     },
-                    error: function (error) {
+                    error: function(error) {
                         eLoaderError(error);
                     }
                 });
@@ -190,7 +207,7 @@
                 multiple: true,
                 allowClear: true,
                 placeholder: "Select Roles",
-                formatNoMatches: function () {
+                formatNoMatches: function() {
                     return '';
                 }
             });

@@ -482,15 +482,30 @@ namespace Answer.Web.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult EditStep(GetStepDataResult viewModel, string procstepId, string Step_Text, string Id)
+        public ActionResult EditStep(GetStepDataResult viewModel, string procedureId, string stepText, string id, string updateAction)
         {
-            viewModel.Id = Id;
-            viewModel.Step_Text = Step_Text;
-            viewModel.ProcObjId = procstepId;
+            if (!string.IsNullOrWhiteSpace(updateAction) && updateAction == "delete")
+            {
+                var response = _proceduresService.DeleteProcedureStep(id, GetCurrentUser().Id);
+
+                if (!response.HasErrors())
+                {
+                    AddSuccessNotification("Step deleted successfully.");
+                }
+                else
+                {
+                    AddErrorNotification("Something went wrong.");
+                }
+
+                return RedirectToAction("Edit", "Procedures", new { Id = procedureId });
+            }
+
+            viewModel.Id = id;
+            viewModel.ProcObjId = procedureId;
             _proceduresService.UpdateStepData(viewModel);
 
             TempData["SuccessMessage"] = "Procedure Step been updated successfully.";
-            return RedirectToAction("Edit", "Procedures", new { Id = procstepId });
+            return RedirectToAction("Edit", "Procedures", new { Id = procedureId });
         }
 
         public ActionResult EditProcedureObject(string pid, string relationship)

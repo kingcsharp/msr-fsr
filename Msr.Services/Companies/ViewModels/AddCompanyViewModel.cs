@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
-using Msr.Models.Companies;
+using Msr.Commons.Lookups;
 using Msr.Services.Documents;
 
 namespace Msr.Services.Companies.ViewModels
@@ -86,18 +82,20 @@ namespace Msr.Services.Companies.ViewModels
         public IList<SelectListItem> ListReferenceFiles { get; set; }
         public IList<SelectListItem> ListPictureFiles { get; set; }
         public IList<SelectListItem> ListLogoFiles { get; set; }
-        public IEnumerable<SelectListItem> ListParents { get; set; }
+        public List<SelectListItem> ListParents { get; set; }
         public IEnumerable<SelectListItem> CompanyTypes { get; set; }
 
-        public void Setup(DocumentFilesService documentFilesService, CompanyService companyService)
+        public void Setup(DocumentFilesService documentFilesService, CompanyService companyService, string co)
         {
-            CompanyTypes = Commons.Lookups.LookupItems.CompanyTypes();
-            ListParents = companyService.GetCompaniesQueryable().ToList().Select(x => new SelectListItem
+            CompanyTypes = LookupItems.CompanyTypes();
+
+            ListParents.Add(new SelectListItem { Text = "", Value = "" });
+            ListParents.AddRange(companyService.GetCompaniesApprovedQueryable(co: co).ToList().Select(x => new SelectListItem
             {
                 Text = x.Name,
                 Value = x.Id
-            }).OrderBy(o => o.Text).ToList();
-        }      
+            }).ToList());
+        }
     }
 }
 

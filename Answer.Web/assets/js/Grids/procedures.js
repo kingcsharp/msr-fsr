@@ -117,6 +117,7 @@
         gridComplete: function () {
             Msr.JqGridCommon.SetupGridLock("/Procedures/Edit/");
             Msr.JqGridCommon.UnLockWorkflow(returnUrl);
+            Msr.JqGridCommon.DocPreview();
         }
 
     });

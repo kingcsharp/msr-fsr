@@ -135,6 +135,7 @@ function SetUpGrid(returnUrl) {
         gridComplete: function () {
             Msr.JqGridCommon.SetupGridLock("/Parts/Edit/");
             Msr.JqGridCommon.UnLockWorkflow(returnUrl);
+            Msr.JqGridCommon.DocPreview();
         }
     });
     $('#jqGrid').navGrid("#jqGridPager", {
