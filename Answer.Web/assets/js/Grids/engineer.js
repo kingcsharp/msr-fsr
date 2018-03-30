@@ -181,7 +181,6 @@ $(document).ready(function () {
                 width: 180,
                 align: 'center',
                 formatter: dispositionFormatter,
-                align: 'center'
             },
 
 
@@ -324,7 +323,7 @@ $(document).ready(function () {
         }
 
         InstructionsCellVal = notes + '<br/><button id="add-button' + rowObject.FillId + '" onclick="toggleInstructions(' + rowObject.FillId + ',0)" class="btn support-btn btn-xs btn-danger show">Add Instructions</button><div id="instruction' + rowObject.FillId + '" class="hidden" ><textarea style="width: 95%;" rows=4 placeholder="Add disposition Instructions" id="note-' + rowObject.FillId + '"></textarea><button class="btn support-btn btn-xs btn-primary" onclick="toggleInstructions(' + rowObject.FillId + ',1)">Save</button>';
-        thisCellVal = (rowObject.HasNcr == 1) ? InstructionsCellVal : 'N/A';
+        thisCellVal = (rowObject.HasNcr === 1) ? InstructionsCellVal : 'N/A';
         return thisCellVal;
     }
 

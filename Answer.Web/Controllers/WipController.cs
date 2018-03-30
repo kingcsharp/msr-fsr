@@ -89,14 +89,16 @@ namespace Answer.Web.Controllers
                     }
                     else if (rule.field == nameof(WorkOrderView.Qty))
                     {
-                        if (double.TryParse(rule.data, out var value))
+                        double value;
+                        if (double.TryParse(rule.data, out value))
                         {
                             totalRows = totalRows.Where(x => x.Qty == value);
                         }
                     }
                     else if (rule.field == nameof(WorkOrderView.StDate))
                     {
-                        if (DateTime.TryParse(rule.data, out var value))
+                        DateTime value;
+                        if (DateTime.TryParse(rule.data, out value))
                         {
                             totalRows = totalRows.Where(q => q.StDate.HasValue && q.StDate.Value.Day == value.Day &&
                                                              q.StDate.Value.Month == value.Month && q.StDate.Value.Year == value.Year);
@@ -104,7 +106,8 @@ namespace Answer.Web.Controllers
                     }
                     else if (rule.field == nameof(WorkOrderView.DueDate))
                     {
-                        if (DateTime.TryParse(rule.data, out var value))
+                        DateTime value;
+                        if (DateTime.TryParse(rule.data, out value))
                         {
                             totalRows = totalRows.Where(q => q.DueDate.HasValue && q.DueDate.Value.Day == value.Day &&
                                                              q.DueDate.Value.Month == value.Month && q.DueDate.Value.Year == value.Year);
@@ -308,26 +311,6 @@ namespace Answer.Web.Controllers
             noteService.AddNote(id, message, 1, loggedUserId);
 
             return Json("OK", JsonRequestBehavior.AllowGet);
-        }
-
-        public ActionResult WipListModel()
-        {
-            var currentUser = GetCurrentUser();
-
-            var viewModel = new WipListViewModel();
-            viewModel.CurrentUser = currentUser;
-
-            viewModel.WoItemsInprogress = _orderService.GetWorkOrderQueryable()
-                .Where(x => x.Status == WorkItemStatusConstants.Accepted && x.SupplierId == currentUser.Root_Company && x.RequesteeId != currentUser.Id)
-                .OrderByDescending(o => o.DueDate)
-                .ToList();
-
-            var procs = viewModel.WoItemsInprogress.Select(p => p.ProcName).ToList();
-
-            viewModel.WoItemsByProcedures = _orderService.GetWorkOrderQueryable().Where(x => procs.Contains(x.ProcName)).ToList();
-
-
-            return PartialView("_WipListModal", viewModel);
         }
 
         public ActionResult Details(int? id)
@@ -677,8 +660,7 @@ namespace Answer.Web.Controllers
 
             ViewBag.FillId = id;
 
-            var model = new CreateEquipmentMaintenanceViewModel();
-            model.NTLogin = loggedUser.Id;
+            var model = new CreateEquipmentMaintenanceViewModel {NTLogin = loggedUser.Id};
 
             model.Setup(new EquipmentMaintenanceService(), _roleService);
 
@@ -688,8 +670,6 @@ namespace Answer.Web.Controllers
         [HttpPost]
         public ActionResult AddEquipmentMaintenance(FormCollection form, int id)
         {
-            EquipmentMaintenanceService equipmentMaintenanceService = new EquipmentMaintenanceService();
-
             var model = new CreateEquipmentMaintenanceViewModel();
             var loggedUser = GetCurrentUser();
             model.NTLogin = loggedUser.Id;
@@ -716,7 +696,7 @@ namespace Answer.Web.Controllers
             {
                 model.Id = 0;
 
-                var response = equipmentMaintenanceService.Create(model);
+                var response = _equipmentMaintenanceService.Create(model);
 
                 if (!response.HasErrors())
                 {
@@ -729,7 +709,7 @@ namespace Answer.Web.Controllers
             }
 
             model.NTLogin = loggedUser.Id;
-            model.Setup(equipmentMaintenanceService, _roleService);
+            model.Setup(_equipmentMaintenanceService, _roleService);
 
             return RedirectToAction("Details", "Wip", new { id = id });
         }
