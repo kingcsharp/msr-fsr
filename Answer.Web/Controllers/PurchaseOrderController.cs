@@ -38,6 +38,10 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.Name.ToLower().Contains(rule.data.ToLower()));
                     }
+                    else if (rule.field == nameof(PurchesOrderView.Root))
+                    {
+                        totalRows = totalRows.Where(x => x.Root.ToLower().Contains(rule.data.ToLower()));
+                    }
                     else if (rule.field == nameof(PurchesOrderView.ReferencePo))
                     {
                         totalRows = totalRows.Where(x => x.ReferencePo.ToLower().Contains(rule.data.ToLower()));

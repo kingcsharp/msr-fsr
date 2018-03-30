@@ -50,6 +50,18 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.Id == rule.data);
                     }
+                    else if (rule.field == nameof(PrePropSearchView.Root))
+                    {
+                        totalRows = totalRows.Where(x => x.Root.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(PrePropSearchView.Title))
+                    {
+                        totalRows = totalRows.Where(x => x.Title.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(PrePropSearchView.Title))
+                    {
+                        totalRows = totalRows.Where(x => x.Title.ToLower().Contains(rule.data.ToLower()));
+                    }
                     else if (rule.field == nameof(PrePropSearchView.Title))
                     {
                         totalRows = totalRows.Where(x => x.Title.ToLower().Contains(rule.data.ToLower()));

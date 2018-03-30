@@ -61,6 +61,10 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.ObjectId == rule.data.ToLower());
                     }
+                    else if (rule.field == nameof(PartsView.Root))
+                    {
+                        totalRows = totalRows.Where(x => x.Root.ToLower().Contains(rule.data.ToLower()));
+                    }
                     else if (rule.field == nameof(PartsView.Name))
                     {
                         totalRows = totalRows.Where(x => x.Name.ToLower().Contains(rule.data.ToLower()));
