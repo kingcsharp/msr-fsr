@@ -164,7 +164,7 @@ $(document).ready(function () {
                 stype: "select",
                 searchoptions: {
                     value: ":[All];ACCEPTED:In Progress;PENDING_PARENT_ACCEPTANCE:Waiting to Start;CLOSED,FINISHED:Completed",
-                    defaultValue: 'All'
+                    defaultValue: 'In Progress'
                 },
                 formatter: currentStepFormatter,
                 align: 'center'
