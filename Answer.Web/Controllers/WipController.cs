@@ -5,11 +5,9 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using Answer.Web.ViewModel.Wip;
-using Microsoft.AspNet.Identity;
 using Msr.Commons.Files;
 using Msr.Infrastructure.Common.Constansts;
 using Msr.Models.Orders;
-using Msr.Models.Parts;
 using Msr.Services.EquipmentMaintenances;
 using Msr.Services.EquipmentMaintenances.ViewModels;
 using Msr.Services.jqGrid;
@@ -18,13 +16,10 @@ using Msr.Services.Orders;
 using Msr.Services.Orders.Messaging;
 using Msr.Services.Orders.Procedures;
 using Msr.Services.Orders.ViewModels;
-using Msr.Services.PartTypes;
 using Msr.Services.Procedures;
 using Msr.Services.Procedures.Messages;
 using Msr.Services.Roles;
 using Msr.Web.ViewModel.Engineering;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace Answer.Web.Controllers
 {
@@ -94,16 +89,14 @@ namespace Answer.Web.Controllers
                     }
                     else if (rule.field == nameof(WorkOrderView.Qty))
                     {
-                        double value;
-                        if (double.TryParse(rule.data, out value))
+                        if (double.TryParse(rule.data, out var value))
                         {
                             totalRows = totalRows.Where(x => x.Qty == value);
                         }
                     }
                     else if (rule.field == nameof(WorkOrderView.StDate))
                     {
-                        DateTime value;
-                        if (DateTime.TryParse(rule.data, out value))
+                        if (DateTime.TryParse(rule.data, out var value))
                         {
                             totalRows = totalRows.Where(q => q.StDate.HasValue && q.StDate.Value.Day == value.Day &&
                                                              q.StDate.Value.Month == value.Month && q.StDate.Value.Year == value.Year);
@@ -111,8 +104,7 @@ namespace Answer.Web.Controllers
                     }
                     else if (rule.field == nameof(WorkOrderView.DueDate))
                     {
-                        DateTime value;
-                        if (DateTime.TryParse(rule.data, out value))
+                        if (DateTime.TryParse(rule.data, out var value))
                         {
                             totalRows = totalRows.Where(q => q.DueDate.HasValue && q.DueDate.Value.Day == value.Day &&
                                                              q.DueDate.Value.Month == value.Month && q.DueDate.Value.Year == value.Year);
@@ -141,6 +133,15 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.Notes.ToLower().Contains(rule.data.ToLower()));
                     }
+                    else if (rule.field == nameof(WorkOrderView.Status))
+                    {
+                        var statusList = rule.data.Split(',').Select(x => x.Trim().ToLower());
+
+                        if (statusList.Any())
+                        {
+                            totalRows = totalRows.Where(x => statusList.Contains(x.Status.ToLower()));
+                        }
+                    }
                 }
             }
             else
@@ -149,7 +150,7 @@ namespace Answer.Web.Controllers
             }
 
 
-            string orderDirection = "asc";
+            var orderDirection = "asc";
 
             if (param.sortOrder == "desc")
             {

@@ -48,7 +48,6 @@ $(document).ready(function () {
             ToDate: function () { return $('#to-date').val(); }
         },
         colModel: [
-            { name: 'PurchaseItemId', index: 'PurchaseItemId', width: 60, align: 'center', hidden: true, edittype: 'text', editable: true, editrules: { edithidden: true } },
             { name: 'FillId', index: 'FillId', width: 60, align: 'center', hidden: true, edittype: 'text', editable: true, editrules: { edithidden: true } },
             {
                 label: 'WO Item #',
@@ -165,7 +164,7 @@ $(document).ready(function () {
                 stype: "select",
                 searchoptions: {
                     value: ":[All];ACCEPTED:In Progress;PENDING_PARENT_ACCEPTANCE:Waiting to Start;CLOSED,FINISHED:Completed",
-                    defaultValue: 'In Progress'
+                    defaultValue: 'All'
                 },
                 formatter: currentStepFormatter,
                 align: 'center'
@@ -195,7 +194,7 @@ $(document).ready(function () {
         gridview: true,
         sortname: 'DueDate',
         sortable: true,
-        sortorder: 'asc',
+        sortorder: 'Desc',
         cellEdit: true,
         cellsubmit: 'clientArray',
         editurl: 'clientArray',

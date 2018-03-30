@@ -34,7 +34,6 @@ namespace Answer.Web.Controllers
             {
                 foreach (var rule in param.where.rules)
                 {
-
                     if (rule.field == nameof(PurchesOrderView.Name))
                     {
                         totalRows = totalRows.Where(x => x.Name.ToLower().Contains(rule.data.ToLower()));
@@ -109,13 +108,13 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.InvoiceTrigger.ToLower().Contains(rule.data.ToLower()));
                     }
-                    else if (rule.field == nameof(PurchesOrderView.UnusedAmmount))
+                    else if (rule.field == nameof(PurchesOrderView.UnusedAmount))
                     {
                         decimal value;
 
                         if (decimal.TryParse(rule.data, out value))
                         {
-                            totalRows = totalRows.Where(x => x.UnusedAmmount == value);
+                            totalRows = totalRows.Where(x => x.UnusedAmount == value);
                         }
                     }
                     else if (rule.field == nameof(PurchesOrderView.Rev))
@@ -139,7 +138,7 @@ namespace Answer.Web.Controllers
 
                 }
             }
-            var orderBy = nameof(PurchesOrderView.Name);
+            var orderBy = nameof(PurchesOrderView.CreateDate);
 
 
             if (!string.IsNullOrWhiteSpace(param.sortColumn))

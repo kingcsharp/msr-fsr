@@ -327,7 +327,7 @@
         gridview: true,
         sortname: 'Id',
         sortable: true,
-        sortorder: 'asc',
+        sortorder: 'Desc',
         cellEdit: false,
         cellsubmit: 'clientArray',
         editurl: 'clientArray',

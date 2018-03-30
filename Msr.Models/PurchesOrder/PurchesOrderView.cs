@@ -106,7 +106,7 @@ namespace Msr.Models.PurchesOrder
 
         public string BillingEmail { get; set; }
 
-        public decimal? UnusedAmmount { get; set; }
+        public decimal? UnusedAmount { get; set; }
 
         public Double? TaxRate { get; set; }
 

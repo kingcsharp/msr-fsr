@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
 
 namespace Msr.Services.ProductionPlanning.ViewModels
 {
@@ -9,6 +10,7 @@ namespace Msr.Services.ProductionPlanning.ViewModels
 
         public string Process { get; set; }
 
+        [AllowHtml]
         public string StepTitle { get; set; }
 
         [Range(0, double.MaxValue, ErrorMessage = "Please enter numaric value only")]
