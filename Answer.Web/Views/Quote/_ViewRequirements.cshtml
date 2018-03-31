@@ -1,5 +1,4 @@
 ﻿@model Msr.Services.CustomerRequirements.ViewModel.CustomerRequirementViewModel
-
 <style>
     .form-horizontal .control-label {
         text-align: right !important;
@@ -33,7 +32,6 @@
                                 </div>
                             </div>
                         </div>
-                     
                     </div>
                     <div class="row">
                         <div class="panel panel-primary">
@@ -64,7 +62,6 @@
                                             @Html.EditorFor(model => model.CityStateZIP, new { htmlAttributes = new { @class = "form-control", @value = "7" } })
                                         </div>
                                     </div>
-
                                 </div>
                                 <div class="col-md-6" style="width:50%;float: left">
                                     <div id="panel15" class="panel panel-default" data-role="panel" style="display: block;">
@@ -237,14 +234,14 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach (var item in Model.Process)
+                                                @for (var index = 0; index < Model.Process.Count; index++)
                                                 {
                                                     <tr id="row0">
                                                         <td>
-                                                            @Html.EditorFor(model => item.Id, new { htmlAttributes = new { @class = "form-control", @value = "7" } })
+                                                            @(index + 1)
                                                         </td>
                                                         <td>
-                                                            @Html.EditorFor(model => item.Contaminents, new { htmlAttributes = new { @class = "form-control", @value = "7" } })
+                                                            @Html.EditorFor(model => Model.Process[index].Contaminents, new { htmlAttributes = new { @class = "form-control", @value = "7" } })
                                                         </td>
                                                     </tr>
                                                 }
@@ -266,7 +263,6 @@
                                                     <th class="text-center">
                                                         Row #
                                                     </th>
-                                                    
                                                     <th class="text-center">
                                                         CU/Non CU
                                                     </th>
@@ -294,36 +290,36 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach (var item in Model.Parts)
+                                                @for (var index = 0; index < Model.Parts.Count; index++)
                                                 {
                                                     <tr id="row0">
                                                         <td>
-                                                            @Html.EditorFor(model => item.Id, new { htmlAttributes = new { @class = "form-control", @value = "7" } })
+                                                            @(index + 1)
                                                         </td>
                                                         <td>
-                                                            @Html.RadioButtonFor(x => item.NonCU, "Cu", new { @class = "", @placeholder = "CU" })
-                                                            @Html.RadioButtonFor(x => item.NonCU, "NonCu", new { @class = "", @placeholder = "NonCU" })
+                                                            @Html.RadioButtonFor(x => Model.Parts[index].NonCU, "Cu", new { @class = "", @placeholder = "CU" })
+                                                            @Html.RadioButtonFor(x => Model.Parts[index].NonCU, "NonCu", new { @class = "", @placeholder = "NonCU" })
                                                         </td>
                                                         <td>
-                                                            @Html.EditorFor(model => item.PartDescription, new { htmlAttributes = new { @class = "form-control", @value = "7" } })
+                                                            @Html.EditorFor(model => Model.Parts[index].PartDescription, new { htmlAttributes = new { @class = "form-control", @value = "7" } })
                                                         </td>
                                                         <td>
-                                                            @Html.EditorFor(model => item.Substrate, new { htmlAttributes = new { @class = "form-control", @value = "7" } })
+                                                            @Html.EditorFor(model => Model.Parts[index].Substrate, new { htmlAttributes = new { @class = "form-control", @value = "7" } })
                                                         </td>
                                                         <td>
-                                                            @Html.EditorFor(model => item.CoatingSurface, new { htmlAttributes = new { @class = "form-control", @value = "7" } })
+                                                            @Html.EditorFor(model => Model.Parts[index].CoatingSurface, new { htmlAttributes = new { @class = "form-control", @value = "7" } })
                                                         </td>
                                                         <td>
-                                                            @Html.EditorFor(model => item.Dimensions, new { htmlAttributes = new { @class = "form-control", @value = "7" } })
+                                                            @Html.EditorFor(model => Model.Parts[index].Dimensions, new { htmlAttributes = new { @class = "form-control", @value = "7" } })
                                                         </td>
                                                         <td>
-                                                            @Html.EditorFor(model => item.CustPartNo, new { htmlAttributes = new { @class = "form-control", @value = "7" } })
+                                                            @Html.EditorFor(model => Model.Parts[index].CustPartNo, new { htmlAttributes = new { @class = "form-control", @value = "7" } })
                                                         </td>
                                                         <td>
-                                                            @Html.EditorFor(model => item.MfgPartNo, new { htmlAttributes = new { @class = "form-control", @value = "7" } })
+                                                            @Html.EditorFor(model => Model.Parts[index].MfgPartNo, new { htmlAttributes = new { @class = "form-control", @value = "7" } })
                                                         </td>
                                                         <td>
-                                                            @Html.EditorFor(model => item.PartsPerKit, new { htmlAttributes = new { @class = "form-control", @value = "7" } })
+                                                            @Html.EditorFor(model => Model.Parts[index].PartsPerKit, new { htmlAttributes = new { @class = "form-control", @value = "7" } })
                                                         </td>
                                                     </tr>
                                                 }
