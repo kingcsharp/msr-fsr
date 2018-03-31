@@ -92,7 +92,7 @@ function SetUpGrid(returnUrl) {
                 colmenu: false,
                 stype: "select",
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                searchoptions: { value: ":[All];APPROVED:Approved;CREATING:Creating;APPROVED_BUT_REVISING:Approved But Revising" },
+                searchoptions: { value: Msr.JqGridCommon.GetStatusFilters() },
                 align: 'center'
             },
 
