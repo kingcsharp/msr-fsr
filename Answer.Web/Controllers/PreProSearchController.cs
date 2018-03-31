@@ -6,6 +6,7 @@ using System;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
+using Msr.Commons.Files;
 using Msr.Models.PrePro;
 using Msr.Services.Documents;
 using Msr.Services.ProcedureVerbs;
@@ -222,7 +223,7 @@ namespace Answer.Web.Controllers
             var previewConfig = jsonSerialiser.Serialize(vm.DocLinks.Select(x => new
             {
                 caption = x.Name,
-                type = x.TYPE,
+                type = MimeTypes.GetContentType(x.Contenttype),
                 size = 6666,
                 url = Url.Action("DeletePreProImageById", "Doc", new { id = vm.PkId, fileId = x.Value }),
                 downloadUrl = x.Server_Path,
