@@ -1,113 +1,107 @@
 ﻿@using Msr.Infrastructure.Common.Constansts
 @model Msr.Services.EquipmentMaintenances.ViewModels.CreateEquipmentMaintenanceViewModel
+@using (Html.BeginForm("AddEquipmentMaintenance", "Wip", FormMethod.Post, new { @class = "form-horizontal add-equipment-maintenace" }))
+{
+    @Html.Partial("Message")
 
-        @using (Html.BeginForm("AddEquipmentMaintenance", "Wip", FormMethod.Post, new { @class = "form-horizontal add-equipment-maintenace" }))
+    <fieldset>
+        <input type="hidden" name="id" value="@ViewBag.FillId " />
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="scancode">Scan Barcode</label>
+            <div class="col-md-8">
+                @Html.EditorFor(model => model.ScanBarcode, new { htmlAttributes = new { @class = "form-control input-md", @placeholder = "Put cursor here to scan" } })
+                @Html.ValidationMessageFor(model => model.ScanBarcode, "", new { @class = "text-danger" })
+                <span class="help-block">Or Manually select Location beolow</span>
+                <div class="alert alert-info">Entry of barcode above will update the select values below on match</div>
+                <div id="error" class="alert alert-danger"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="selectbasic">Primary Location</label>
+            <div class="col-md-8">
+                @Html.DropDownListFor(model => model.PrimaryLocationId, Model.PrimaryLocationList, "Please Select", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.PrimaryLocationId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="Sublocation1">Select Sublocation 1</label>
+            <div class="col-md-8">
+                @Html.DropDownListFor(model => model.SubLocationFirstId, Model.SubLocationFirstList, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.SubLocationFirstId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="Sublocation2">Select Sublocation 2</label>
+            <div class="col-md-8">
+                @Html.DropDownListFor(model => model.SubLocationSecondId, Model.SubLocationSecondList, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.SubLocationSecondId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="DateTime">Created On</label>
+            <div class="col-md-8">
+                <div style="width: 70%; float: left">
+                    @Html.EditorFor(model => model.DateTime, new { htmlAttributes = new { @class = "form-control datepick ", @placeholder = "Current Date Time", @style = "", } })
+                </div>
+                <div style="width: 30%; height: 35px; float: left">
+                    <span class="input-group-addon"><i class="fa fa-calendar" style="height: 19px;"></i></span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="EquipmentTroubleState">Trouble State</label>
+            <div class="col-md-8">
+                <div class="checkbox">
+                    <label for="EquipmentState-0">
+                        @Html.CheckBoxFor(model => model.TroubleState, new { @class = "checkbox" })
+                        @Html.ValidationMessageFor(model => model.TroubleState, "", new { @class = "text-danger" })
+                        Yes
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        @if (Model.Roles.Any(x => x.Role_Name == RoleConstants.ProductionManager || x.Role_Name == RoleConstants.MaintenanceTechnician))
+                {
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="comments">Comments</label>
+                <div class="col-md-4">
+                    @Html.TextAreaFor(model => model.Comments, new { @class = "form-control input-md" })
+                </div>
+            </div>
+        }
+        else
         {
-            @Html.Partial("Message")
-
-            <fieldset>
-                <input type="hidden" name="id" value="@ViewBag.FillId " />
-                <div class="form-group">
-                    <label class="col-md-4 control-label" for="scancode">Scan Barcode</label>
-                    <div class="col-md-4">
-                        @Html.EditorFor(model => model.ScanBarcode, new {htmlAttributes = new {@class = "form-control input-md", @placeholder = "Put cursor here to scan"}})
-                        @Html.ValidationMessageFor(model => model.ScanBarcode, "", new {@class = "text-danger"})
-                        <span class="help-block">Or Manually select Location beolow</span>
-                        <div class="alert alert-info">Entry of barcode above will update the select values below on match</div>
-                        <div id="error" class="alert alert-danger"></div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="col-md-4 control-label" for="selectbasic">Primary Location</label>
-                    <div class="col-md-4">
-                        @Html.DropDownListFor(model => model.PrimaryLocationId, Model.PrimaryLocationList, "Please Select", new {@class = "form-control"})
-                        @Html.ValidationMessageFor(model => model.PrimaryLocationId, "", new {@class = "text-danger"})
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-4 control-label" for="Sublocation1">Select Sublocation 1</label>
-                    <div class="col-md-4">
-                        @Html.DropDownListFor(model => model.SubLocationFirstId, Model.SubLocationFirstList, new {@class = "form-control"})
-                        @Html.ValidationMessageFor(model => model.SubLocationFirstId, "", new {@class = "text-danger"})
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-4 control-label" for="Sublocation2">Select Sublocation 2</label>
-                    <div class="col-md-4">
-                        @Html.DropDownListFor(model => model.SubLocationSecondId, Model.SubLocationSecondList, new {@class = "form-control"})
-                        @Html.ValidationMessageFor(model => model.SubLocationSecondId, "", new {@class = "text-danger"})
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-4 control-label" for="DateTime">Created On</label>
-                    <div class="col-md-4">
-                        <div style="width: 70%; float: left">
-                            @Html.EditorFor(model => model.DateTime, new {htmlAttributes = new {@class = "form-control datepick ", @placeholder = "Current Date Time", @style = "",}})
-                        </div>
-                        <div style="width: 30%; height: 35px; float: left">
-                            <span class="input-group-addon"><i class="fa fa-calendar" style="height: 19px;"></i></span>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-4 control-label" for="EquipmentTroubleState">Trouble State</label>
-                    <div class="col-md-4">
-                        <div class="checkbox">
-                            <label for="EquipmentState-0">
-                                @Html.CheckBoxFor(model => model.TroubleState, new {@class = "checkbox"})
-                                @Html.ValidationMessageFor(model => model.TroubleState, "", new {@class = "text-danger"})
-                                Yes
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-
-                @if (Model.Roles.Any(x => x.Role_Name == RoleConstants.ProductionManager || x.Role_Name == RoleConstants.MaintenanceTechnician))
+            @Html.HiddenFor(model => model.Comments)
+        }
+        @if (Model.Roles.Any(x => x.Role_Name == RoleConstants.ProductionManager))
                 {
-                    <div class="form-group">
-                        <label class="col-md-4 control-label" for="comments">Comments</label>
-                        <div class="col-md-4">
-                            @Html.TextAreaFor(model => model.Comments, new {@class = "form-control input-md"})
-                        </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="PMLastCompletedDate">PM Last Completed Date</label>
+                <div class="col-md-8">
+                    <div style="width: 91%; float: left">
+                        @Html.EditorFor(model => model.PemLastCompletedDate, new { htmlAttributes = new { @class = "form-control datepick lastcompletedate", @placeholder = "PM Last Completed Date", @style = "", } })
+                        @Html.ValidationMessageFor(model => model.PemLastCompletedDate, "", new { @class = "text-danger" })
                     </div>
-                }
-                else
-                {
-                    @Html.HiddenFor(model => model.Comments)
-                }
-
-                @if (Model.Roles.Any(x => x.Role_Name == RoleConstants.ProductionManager))
-                {
-                    <div class="form-group">
-                        <label class="col-md-4 control-label" for="PMLastCompletedDate">PM Last Completed Date</label>
-                        <div class="col-md-4">
-                            <div style="width: 91%; float: left">
-                                @Html.EditorFor(model => model.PemLastCompletedDate, new {htmlAttributes = new {@class = "form-control datepick lastcompletedate", @placeholder = "PM Last Completed Date", @style = "",}})
-                                @Html.ValidationMessageFor(model => model.PemLastCompletedDate, "", new {@class = "text-danger"})
-                            </div>
-                            <div style="width: 9%; height: 35px; float: left">
-                                <span class="input-group-addon"><i class="fa fa-calendar" style="height: 19px;"></i></span>
-                            </div>
-                        </div>
+                    <div style="width: 9%; height: 35px; float: left">
+                        <span class="input-group-addon"><i class="fa fa-calendar" style="height: 19px;"></i></span>
                     </div>
+                </div>
+            </div>
 
                     <div class="form-group">
-                        <label class="col-md-4 control-label" for="scancode">Frequency Field:</label>
-                        <div class="col-md-4">
-                            @Html.EditorFor(model => model.FrequencyField, new {htmlAttributes = new {@class = "form-control input-md", @placeholder = ""}})
-                            @Html.ValidationMessageFor(model => model.FrequencyField, "", new {@class = "text-danger"})
+                        <label class="col-md-2 control-label" for="scancode">Frequency Field:</label>
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.FrequencyField, new { htmlAttributes = new { @class = "form-control input-md", @placeholder = "" } })
+                            @Html.ValidationMessageFor(model => model.FrequencyField, "", new { @class = "text-danger" })
                         </div>
                     </div>
-                }
-               
-
-
-             
-            </fieldset>
         }
 
+
+
+    </fieldset>
+}
 <script src="~/assets/js/moment.min.js"></script>
 <script src="~/assets/js/bootstrap-datetimepicker.min.js"></script>
 <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
@@ -117,8 +111,8 @@
     $(document).ready(function () {
 
         $('#add-equipment-maintenace').on('click', function () {
-                    $('.add-equipment-maintenace').submit();
-            });
+            $('.add-equipment-maintenace').submit();
+        });
 
         $('#error').hide();
         $('.datepick').datetimepicker();
@@ -175,7 +169,7 @@
                                                 url: "/EquipmentMaintenance/GetParentLocations/" + id2,
                                                 success: function (data) {
                                                     var parentLocation = data.locations;
-                                           
+
                                                     var index;
                                                     $("#PrimaryLocationId option").each(function (i) {
                                                         if (this.text === parentLocation) {
@@ -273,7 +267,7 @@
                         });
                 }
 
-             eLoaderClose()
+                eLoaderClose()
             },
             error: function (error) {
                 eLoaderError(error)

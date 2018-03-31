@@ -21,54 +21,54 @@
 
                     <div class="form-horizontal addpart">
                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                        @Html.HiddenFor(x=>x.Id)
+                        @Html.HiddenFor(x => x.Id)
                         @Html.HiddenFor(x => x.ObjectId)
                         @Html.HiddenFor(x => x.WfId)
-                        
+
                         <div class="form-group">
-                            @Html.LabelFor(model => model.ParentRoles, htmlAttributes: new { @class = "control-label col-md-4" })
-                            <div class="col-md-5">
+                            @Html.LabelFor(model => model.ParentRoles, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
                                 @Html.TextBoxFor(model => model.ParentRoles, null, new { @class = "form-control", @readonly = "readonly" })
                                 @Html.ValidationMessageFor(model => model.ParentRoles, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-4" })
-                            <div class="col-md-5">
+                            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
                                 @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(model => model.SecurityLevel, htmlAttributes: new { @class = "control-label col-md-4" })
-                            <div class="col-md-5">
+                            @Html.LabelFor(model => model.SecurityLevel, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
                                 @Html.DropDownListFor(model => model.SecurityLevel, Model.SecurityLevels, new { @class = "form-control select" })
                                 @Html.ValidationMessageFor(model => model.SecurityLevel, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(model => model.ChildRoles, htmlAttributes: new { @class = "control-label col-md-4" })
-                            <div class="col-md-5">
+                            @Html.LabelFor(model => model.ChildRoles, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
                                 @Html.DropDownListFor(model => model.ChildRoles, Model.ListChildRoles, new { @class = "form-control select selectchildRoles", multiple = "multiple" })
                                 @Html.ValidationMessageFor(model => model.ChildRoles, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(model => model.PeopleAssigned, htmlAttributes: new { @class = "control-label col-md-4" })
-                            <div class="col-md-5">
+                            @Html.LabelFor(model => model.PeopleAssigned, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
                                 @Html.DropDownListFor(model => model.PeopleAssigned, Model.ListPeopleAssigned, new { @class = "form-control select selectassignedpeoples", multiple = "multiple" })
                                 @Html.ValidationMessageFor(model => model.PeopleAssigned, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(model => model.PeoplePosAssigned, htmlAttributes: new { @class = "control-label col-md-4" })
-                            <div class="col-md-5">
+                            @Html.LabelFor(model => model.PeoplePosAssigned, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
                                 @Html.TextBoxFor(model => model.PeoplePosAssigned, null, new { @class = "form-control", @readonly = "readonly" })
                                 @Html.ValidationMessageFor(model => model.PeoplePosAssigned, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="col-md-offset-4 col-md-5">
+                            <div class="col-md-offset-2 col-md-8">
                                 <input type="submit" value="Submit" class="btn btn-success" />
                                 @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-warning" })
                             </div>
@@ -85,9 +85,8 @@
         var childRoles = string.Join(",", Model.ChildRoles);
         var selectedPeoples = string.Join(",", Model.PeopleAssigned);
     }
-    
-    @Scripts.Render("~/bundles/js/jqueryval")
 
+    @Scripts.Render("~/bundles/js/jqueryval")
     <script type="text/javascript">
         $(document).ready(function (parameters) {
             $('.select').select2();
@@ -118,7 +117,7 @@
             });
             var valuePeople = '@selectedPeoples';
             var selectedPeoplesList = valuePeople.split(",");
-            
+
             $(".selectassignedpeoples").val(selectedPeoplesList).trigger("change");
         });
     </script>

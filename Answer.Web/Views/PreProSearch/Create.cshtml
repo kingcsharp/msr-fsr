@@ -17,49 +17,49 @@
                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                         <div class="form-group">
                             @Html.LabelFor(model => model.Title, new { @class = "control-label col-md-2" })
-                            <div class="col-md-5">
+                            <div class="col-md-8">
                                 @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(model => model.StartOnCounter, new { @class = "control-label col-md-2" })
-                            <div class="col-md-5">
+                            <div class="col-md-8">
                                 @Html.DropDownListFor(model => model.StartOnCounter, Model.BaseStartOnCounterList, new { @class = "form-control select" })
                                 @Html.ValidationMessageFor(model => model.StartOnCounter, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(model => model.Duration, new { @class = "control-label col-md-2" })
-                            <div class="col-md-5">
+                            <div class="col-md-8">
                                 @Html.EditorFor(model => model.Duration, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.Duration, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(model => model.DurationType, new { @class = "control-label col-md-2" })
-                            <div class="col-md-5">
+                            <div class="col-md-8">
                                 @Html.DropDownListFor(model => model.DurationType, Model.StepDurationTypeList, new { @class = "form-control select" })
                                 @Html.ValidationMessageFor(model => model.DurationType, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(model => model.Labor, new { @class = "control-label col-md-2" })
-                            <div class="col-md-5">
+                            <div class="col-md-8">
                                 @Html.TextBoxFor(model => model.Labor, new { @class = "form-control", @readonly = "readonly" })
                                 @Html.ValidationMessageFor(model => model.Labor, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(model => model.StepText, new { @class = "control-label col-md-2" })
-                            <div class="col-md-5">
+                            <div class="col-md-8">
                                 @Html.Partial("_TextAdder")
                                 @Html.TextAreaFor(model => model.StepText, new { onBlur = "checkMaxSize(this, 4000);;lastTextArea = 'document.editForm.StepText';", name = "StepText", rows = "10", cols = "80", @class = "text-formatter form-control", style = "height:150px;" })
                             </div>
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(model => model.SystemTask, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-5">
+                            <div class="col-md-8">
                                 @Html.DropDownListFor(model => model.SystemTask, Model.SystemTaskList, new { @class = "form-control select" })
                                 @Html.ValidationMessageFor(model => model.SystemTask, "", new { @class = "text-danger" })
                             </div>
@@ -67,7 +67,7 @@
                         <div class="systemcomptest">
                             <div class="form-group">
                                 @Html.LabelFor(model => model.NumTestQuestion, htmlAttributes: new { @class = "control-label col-md-2" })
-                                <div class="col-md-5">
+                                <div class="col-md-8">
                                     @Html.EditorFor(model => model.NumTestQuestion, new { htmlAttributes = new { @class = "form-control" } })
                                     @Html.ValidationMessageFor(model => model.NumTestQuestion, "", new { @class = "text-danger" })
                                 </div>
@@ -75,7 +75,7 @@
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(model => model.ApplicationObjects, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-5">
+                            <div class="col-md-8">
                                 <div style="width: 96%; float: left;">
                                     @Html.TextBoxFor(m => m.ApplicationObjects, new { @class = "form-control submitselect", @readonly = "readonly" })
                                     @Html.ValidationMessageFor(model => model.ApplicationObjects, "", new { @class = "text-danger" })
@@ -84,7 +84,7 @@
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(model => model.ReferenceProcedures, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-5">
+                            <div class="col-md-8">
                                 <div style="width: 96%; float: left;">
                                     @Html.ListBoxFor(m => m.ReferenceProcedures, Model.ReferenceProceduresList, new { @class = "form-control  submitselect" })
                                     @Html.ValidationMessageFor(model => model.ReferenceProcedures, "", new { @class = "text-danger" })
@@ -94,7 +94,7 @@
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(model => model.ReferenceVerb, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-5">
+                            <div class="col-md-8">
                                 <div>
                                     @Html.DropDownListFor(m => m.ReferenceVerb, Model.ReferenceVerbList, new { @class = "form-control select" })
                                     @Html.ValidationMessageFor(model => model.ReferenceVerb, "", new { @class = "text-danger" })
@@ -103,7 +103,7 @@
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(model => model.ReferenceObject, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-5">
+                            <div class="col-md-8">
                                 <div>
                                     @Html.DropDownListFor(m => m.ReferenceObject, Model.ReferenceObjectsList, new { @class = "form-control  select" })
                                     @Html.ValidationMessageFor(model => model.ReferenceObject, "", new { @class = "text-danger" })
@@ -112,13 +112,13 @@
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(model => model.ReferenceFiles, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-5">
+                            <div class="col-md-8">
                                 @Html.Partial("_FileUpload")
                             </div>
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(model => model.ReferenceTheories, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-5">
+                            <div class="col-md-8">
                                 <div style="width: 96%; float: left;">
                                     @Html.ListBoxFor(m => m.ReferenceTheories, Model.ReferenceTheoriesList, new { @class = "form-control submitselect", multiple = "multiple" })
                                 </div>
@@ -127,13 +127,13 @@
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(model => model.Comments, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-5">
+                            <div class="col-md-8">
                                 @Html.TextAreaFor(model => model.Comments, new { onBlur = "checkMaxSize(this, 4000);lastTextArea = 'document.editForm.Comments';", name = "Comments", rows = "10", cols = "80", @class = "text-formatter", style = "height:150px;" })
                                 @Html.ValidationMessageFor(model => model.Comments, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="col-md-offset-2 col-md-10">
+                            <div class="col-md-offset-2 col-md-8">
                                 <input type="submit" value="Create " class="btn btn-success" style="height: 35px;" />
                                 @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-warning" })
                             </div>
@@ -151,7 +151,6 @@
     @Scripts.Render("~/bundles/js/jqueryval")
     @Scripts.Render("~/bundles/js/fileinput")
     <script src="~/assets/js/grids/comman.js"></script>
-
     <script type="text/javascript">
 
         var fileUploaderGrid = new FileUploaderGrid();
@@ -159,7 +158,7 @@
 
         $(document).ready(function () {
 
-            fileUploader.InitUploader($('#input-files'), '@Url.Action("FileUploaderForPrePro", "Doc")', [], []);
+            fileUploader.InitUploader($('#input-files'), '@Url.Action("FileUploaderBootstrap", "Doc")', [],[]);
             fileUploaderGrid.SetupSelectImage();
 
             $(".select").select2();
@@ -239,4 +238,3 @@
 
     </script>
 }
-

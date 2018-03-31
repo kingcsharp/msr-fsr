@@ -7,7 +7,7 @@
         <div class="row">
             <h2 class="page-header">
                 Edit Approval Group
-                
+
             </h2>
             <div class="col-lg-10">
                 <section class="panel">
@@ -20,42 +20,41 @@
                             <div class="form-horizontal">
                                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                                 <div class="form-group">
-                                    @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-4" })
-                                    <div class="col-md-5">
+                                    @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-8">
                                         @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
                                         @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    @Html.LabelFor(model => model.MemberPeoples, htmlAttributes: new { @class = "control-label col-md-4" })
-                                    <div class="col-md-5">
+                                    @Html.LabelFor(model => model.MemberPeoples, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-8">
                                         @Html.DropDownListFor(model => model.MemberPeoples, Model.ListMemberPeoples, new { @class = "form-control select selectpeoples", multiple = "multiple" })
                                         @Html.ValidationMessageFor(model => model.MemberPeoples, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    @Html.LabelFor(model => model.MemberRoles, htmlAttributes: new { @class = "control-label col-md-4" })
-                                    <div class="col-md-5">
+                                    @Html.LabelFor(model => model.MemberRoles, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-8">
                                         @Html.DropDownListFor(model => model.MemberRoles, Model.ListMemberRoles, new { @class = "form-control select selectroles", multiple = "multiple" })
                                         @Html.ValidationMessageFor(model => model.MemberRoles, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    @Html.LabelFor(model => model.SpecialMembers, htmlAttributes: new { @class = "control-label col-md-4" })
-                                    <div class="col-md-5">
+                                    @Html.LabelFor(model => model.SpecialMembers, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-8">
                                         @Html.DropDownListFor(model => model.SpecialMembers, Model.ListSpecialMembers, new { @class = "form-control select selectMembers", multiple = "multiple" })
                                         @Html.ValidationMessageFor(model => model.SpecialMembers, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <div class="col-md-offset-4 col-md-10">
+                                    <div class="col-md-offset-2 col-md-8">
                                         <input type="submit" value="Submit" class="btn btn-success" />
                                         @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-warning" })
                                     </div>
                                 </div>
                             </div>
                         }
-
                     </div>
                 </section>
             </div>
@@ -69,8 +68,9 @@
         var memberRoles = string.Join(",", Model.MemberRoles);
         var specialMembers = string.Join(",", Model.SpecialMembers);
     }
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+    
+    @Scripts.Render("~/bundles/js/jqueryval")
+
     <script type="text/javascript">
         $(document).ready(function () {
             var selectPeoples = $(".selectpeoples").select2({

@@ -29,8 +29,8 @@
 {
     <script src="~/assets/js/moment.min.js"></script>
     <script src="~/assets/js/bootstrap-datetimepicker.min.js"></script>
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+    @Scripts.Render("~/bundles/js/jqueryval")
+
     <script type="text/javascript">
 
         $(document).ready(function () {

@@ -1,9 +1,7 @@
 ﻿@model Msr.Services.Locations.ViewModels.SaveLocationViewModel
-
 @{
     ViewBag.Title = "Update Location";
 }
-
 
 <div class="container-fluid">
     <div class="side-body padding-top">
@@ -19,92 +17,80 @@
                         {
                             @Html.AntiForgeryToken()
                             <div class="form-horizontal addpart">
-
                                 @Html.HiddenFor(model => model.ObjectId)
-
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
-                                    <div class="col-md-5">
+                                    <div class="col-md-8">
                                         @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
                                         @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
-
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.Parent, htmlAttributes: new { @class = "control-label col-md-2" })
-                                    <div class="col-md-5">
-                                        <div style="width: 96%; float: left;">
-                                            @Html.DropDownListFor(model => model.Parent, Model.ParentsLocations, "Select Parent", new { @class = "form-control" })
-                                            @Html.ValidationMessageFor(model => model.Parent, "", new { @class = "text-danger" })
-                                        </div>
-                                </div>
+                                    <div class="col-md-8">
+                                        @Html.DropDownListFor(model => model.Parent, Model.ParentsLocations, "Select Parent", new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.Parent, "", new { @class = "text-danger" })
                                     </div>
+                                </div>
+
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.Address1, htmlAttributes: new { @class = "control-label col-md-2" })
-                                    <div class="col-md-5">
+                                    <div class="col-md-8">
                                         @Html.EditorFor(model => model.Address1, new { htmlAttributes = new { @class = "form-control" } })
                                         @Html.ValidationMessageFor(model => model.Address1, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
-
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.Address2, htmlAttributes: new { @class = "control-label col-md-2" })
-                                    <div class="col-md-5">
+                                    <div class="col-md-8">
                                         @Html.EditorFor(model => model.Address2, new { htmlAttributes = new { @class = "form-control" } })
                                         @Html.ValidationMessageFor(model => model.Address2, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
-
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.City, htmlAttributes: new { @class = "control-label col-md-2" })
-                                    <div class="col-md-5">
+                                    <div class="col-md-8">
                                         @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control" } })
                                         @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
-
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.State, htmlAttributes: new { @class = "control-label col-md-2" })
-                                    <div class="col-md-5">
+                                    <div class="col-md-8">
                                         @Html.EditorFor(model => model.State, new { htmlAttributes = new { @class = "form-control" } })
                                         @Html.ValidationMessageFor(model => model.State, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
-
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.Country, htmlAttributes: new { @class = "control-label col-md-2" })
-                                    <div class="col-md-5">
+                                    <div class="col-md-8">
                                         @Html.DropDownListFor(model => model.Country, Model.Countries, "Select Country", new { @class = "form-control" })
                                         @Html.ValidationMessageFor(model => model.Country, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
-
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.PostalCode, htmlAttributes: new { @class = "control-label col-md-2" })
-                                    <div class="col-md-5">
+                                    <div class="col-md-8">
                                         @Html.EditorFor(model => model.PostalCode, new { htmlAttributes = new { @class = "form-control" } })
                                         @Html.ValidationMessageFor(model => model.PostalCode, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
-
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.Region, htmlAttributes: new { @class = "control-label col-md-2" })
-                                    <div class="col-md-5">
+                                    <div class="col-md-8">
                                         @Html.DropDownListFor(model => model.Region, Model.Regions, "Select Region", new { @class = "form-control" })
                                         @Html.ValidationMessageFor(model => model.Region, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
-
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.InternalAddress, htmlAttributes: new { @class = "control-label col-md-2" })
-                                    <div class="col-md-5">
+                                    <div class="col-md-8">
                                         @Html.EditorFor(model => model.InternalAddress, new { htmlAttributes = new { @class = "form-control" } })
                                         @Html.ValidationMessageFor(model => model.InternalAddress, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
-
                                 <div class="form-group">
-                                    <div class="col-md-offset-2 col-md-5">
+                                    <div class="col-md-offset-2 col-md-8">
                                         <input type="submit" value="Submit" class="btn btn-success" />
                                         @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-warning" })
                                     </div>
@@ -118,13 +104,9 @@
     </div>
 </div>
 
-
 @section scripts
 {
-
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
-
+    @Scripts.Render("~/bundles/js/jqueryval")
     <script>
 
 
@@ -176,7 +158,7 @@
             });
             $('.closeClick').click();
 
-        } 
+        }
 
         $('.deletefiles').click(function () {
 
@@ -194,8 +176,5 @@
 
         })
     </script>
-
 }
-
-
 

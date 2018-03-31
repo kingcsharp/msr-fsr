@@ -12,43 +12,43 @@
                     <fieldset>
                         <legend>Monitor Criteria</legend>
                         <div class="form-group">
-                            <label class="control-label col-md-4" for="search-type">Report Type<span class="error"></span></label>
+                            <label class="control-label col-md-2" for="search-type">Report Type<span class="error"></span></label>
                             <div class="col-md-8">
                                 @Html.DropDownListFor(m => m.ReportTypeId, Model.ReportTypes, new { @class = "form-control" })
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-md-4" for="search-type">Report by<span class="error"></span></label>
+                            <label class="control-label col-md-2" for="search-type">Report by<span class="error"></span></label>
                             <div class="col-md-8">
                                 @Html.DropDownListFor(m => m.SearchById, Model.ReportByItems, new { @class = "form-control" })
                             </div>
                         </div>
                         <div class="form-group" id="container-serial">
-                            <label class="control-label col-md-4" for="serial">Serial<span class="error"></span></label>
+                            <label class="control-label col-md-2" for="serial">Serial<span class="error"></span></label>
                             <div class="col-md-8">
                                 @Html.DropDownListFor(m => m.Serial, Model.Serials, new { @class = "form-control" })
                             </div>
                         </div>
                         <div class="form-group" id="container-number">
-                            <label class="control-label col-md-4" for="number">Part<span class="error"></span></label>
+                            <label class="control-label col-md-2" for="number">Part<span class="error"></span></label>
                             <div class="col-md-8">
                                 @Html.DropDownListFor(m => m.Number, Model.PartNumbers, new { @class = "form-control" })
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-md-6" for="monitors" data-toggle="tooltip" data-placement="right" data-html="true" title="" data-original-title="Updated dynamically based on your selections above">Select Monitor</label>
-                            <div class="col-md-6">
+                            <label class="control-label col-md-2" for="monitors" data-toggle="tooltip" data-placement="right" data-html="true" title="" data-original-title="Updated dynamically based on your selections above">Select Monitor</label>
+                            <div class="col-md-8">
                                 @Html.DropDownListFor(m => m.MonitorId, new List<SelectListItem>(), new { @class = "form-control" })
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-md-6" for="range">Date Range</label>
-                            <div class="col-md-6">
+                            <label class="control-label col-md-2" for="range">Date Range</label>
+                            <div class="col-md-8">
                                 @Html.DropDownListFor(m => m.DateRangeId, Model.DateRangeItems, new { @class = "form-control" })
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="col-md-12">
+                            <div class="col-md-8">
                                 <input type="button" name="orgeditsubmit" class="btn btn-primary pull-right" id="submit-report" value="Submit">
                             </div>
                         </div>
@@ -175,5 +175,4 @@
         }
 
     </script>
-
 }

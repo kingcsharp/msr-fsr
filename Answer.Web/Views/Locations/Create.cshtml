@@ -2,7 +2,6 @@
 @{
     ViewBag.Title = "Create Location";
 }
-
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="row">
@@ -11,98 +10,85 @@
             </h2>
             <div class="col-lg-10">
                 @Html.Partial("Message")
-               @using (Html.BeginForm("Create", "Locations", FormMethod.Post, new { @class = "form form-horizontal partCreate" }))
-               {
+                @using (Html.BeginForm("Create", "Locations", FormMethod.Post, new { @class = "form form-horizontal partCreate" }))
+                {
                     @Html.AntiForgeryToken()
 
                     <div class="form-horizontal addpart">
-
                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
                         <div class="form-group">
                             @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-5">
+                            <div class="col-md-8">
                                 @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
                             </div>
                         </div>
-
                         <div class="form-group">
                             @Html.LabelFor(model => model.Parent, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-5">
-                                <div style="width: 96%; float: left;">
-                                    @Html.DropDownListFor(model => model.Parent, Model.ParentsLocations, "Select Parent", new { @class = "form-control" })
-                                    @Html.ValidationMessageFor(model => model.Parent, "", new { @class = "text-danger" })
-                                </div>
-                            
-                        </div>
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(model => model.Parent, Model.ParentsLocations, "Select Parent", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Parent, "", new { @class = "text-danger" })
                             </div>
+                        </div>
+
                         <div class="form-group">
                             @Html.LabelFor(model => model.Address1, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-5">
+                            <div class="col-md-8">
                                 @Html.EditorFor(model => model.Address1, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.Address1, "", new { @class = "text-danger" })
                             </div>
                         </div>
-
                         <div class="form-group">
                             @Html.LabelFor(model => model.Address2, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-5">
+                            <div class="col-md-8">
                                 @Html.EditorFor(model => model.Address2, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.Address2, "", new { @class = "text-danger" })
                             </div>
                         </div>
-
                         <div class="form-group">
                             @Html.LabelFor(model => model.City, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-5">
+                            <div class="col-md-8">
                                 @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
                             </div>
                         </div>
-
                         <div class="form-group">
                             @Html.LabelFor(model => model.State, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-5">
+                            <div class="col-md-8">
                                 @Html.EditorFor(model => model.State, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.State, "", new { @class = "text-danger" })
                             </div>
                         </div>
-
                         <div class="form-group">
                             @Html.LabelFor(model => model.Country, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-5">
+                            <div class="col-md-8">
                                 @Html.DropDownListFor(model => model.Country, Model.Countries, "Select Country", new { @class = "form-control" })
                                 @Html.ValidationMessageFor(model => model.Country, "", new { @class = "text-danger" })
                             </div>
                         </div>
-
                         <div class="form-group">
                             @Html.LabelFor(model => model.PostalCode, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-5">
+                            <div class="col-md-8">
                                 @Html.EditorFor(model => model.PostalCode, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.PostalCode, "", new { @class = "text-danger" })
                             </div>
                         </div>
-
                         <div class="form-group">
                             @Html.LabelFor(model => model.Region, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-5">
+                            <div class="col-md-8">
                                 @Html.DropDownListFor(model => model.Region, Model.Regions, "Select Region", new { @class = "form-control" })
                                 @Html.ValidationMessageFor(model => model.Region, "", new { @class = "text-danger" })
                             </div>
                         </div>
-
                         <div class="form-group">
                             @Html.LabelFor(model => model.InternalAddress, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-5">
+                            <div class="col-md-8">
                                 @Html.EditorFor(model => model.InternalAddress, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.InternalAddress, "", new { @class = "text-danger" })
                             </div>
                         </div>
-
                         <div class="form-group">
-                            <div class="col-md-offset-2 col-md-5">
+                            <div class="col-md-offset-2 col-md-8">
                                 <input type="submit" value="Submit" class="btn btn-success" />
                                 @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-warning" })
                             </div>
@@ -113,92 +99,88 @@
         </div>
     </div>
 </div>
-
 @section scripts
 {
+    @Scripts.Render("~/bundles/js/jqueryval")
+    <script>
 
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+        $('#select-location').on('show.bs.modal',
+            function (event) {
 
-<script>
+                var button = $(event.relatedTarget);
+                var callBackId = button.data('call-back-id');
+                var modal = $(this);
 
-    $('#select-location').on('show.bs.modal',
-        function (event) {
-
-            var button = $(event.relatedTarget);
-            var callBackId = button.data('call-back-id');
-            var modal = $(this);
-
-            $.ajax({
-                type: "GET",
-                url: '/Locations/GetLocations?callBackId=' + callBackId,
-                dataType: 'html',
-                success: function (data) {
-                    modal.find('.modal-body').html(data);
-                },
-                error: function (error) {
-                    eLoaderError(error)
-                }
-            });
-
-        });
-
-  
-    function removeOldFile(e) {
-
-        var control = $(e).closest(".modal-body").find('#target-control-id').val();
-        $('#' + control).empty();
-    };
-    function getRecord(e) {
-        removeOldFile(e);
-        SelectlocationID();
-        $('.closeClick').click();
-    }
-
-    function SelectlocationID() {
-
-        $(".selected-file").each(function (Index) {
-
-            if ($(this).is(":checked")) {
-
-                var ids = $(this).val().split('|');
-
-                var callBackId = $(this).closest(".modal-body").find('#target-control-id').val();
-                var options = $('#' + callBackId + '')[0].options;
-
-                var optionsArray = $.map(options, function (elem) {
-                    return (elem.value);
+                $.ajax({
+                    type: "GET",
+                    url: '/Locations/GetLocations?callBackId=' + callBackId,
+                    dataType: 'html',
+                    success: function (data) {
+                        modal.find('.modal-body').html(data);
+                    },
+                    error: function (error) {
+                        eLoaderError(error)
+                    }
                 });
 
-                if (optionsArray.length > 0) {
+            });
 
-                    if ($.inArray(ids[0], optionsArray) != -1) {
-                        // found it
+
+        function removeOldFile(e) {
+
+            var control = $(e).closest(".modal-body").find('#target-control-id').val();
+            $('#' + control).empty();
+        };
+        function getRecord(e) {
+            removeOldFile(e);
+            SelectlocationID();
+            $('.closeClick').click();
+        }
+
+        function SelectlocationID() {
+
+            $(".selected-file").each(function (Index) {
+
+                if ($(this).is(":checked")) {
+
+                    var ids = $(this).val().split('|');
+
+                    var callBackId = $(this).closest(".modal-body").find('#target-control-id').val();
+                    var options = $('#' + callBackId + '')[0].options;
+
+                    var optionsArray = $.map(options, function (elem) {
+                        return (elem.value);
+                    });
+
+                    if (optionsArray.length > 0) {
+
+                        if ($.inArray(ids[0], optionsArray) != -1) {
+                            // found it
+                        }
+                        else {
+
+                            $('#' + callBackId + '').append($('<option></option>').val(ids[0]).html(ids[1]));
+                            $('#' + callBackId + ' option').prop('selected', true);
+
+                        }
+
                     }
                     else {
-
                         $('#' + callBackId + '').append($('<option></option>').val(ids[0]).html(ids[1]));
                         $('#' + callBackId + ' option').prop('selected', true);
-
                     }
-
                 }
-                else {
-                    $('#' + callBackId + '').append($('<option></option>').val(ids[0]).html(ids[1]));
-                    $('#' + callBackId + ' option').prop('selected', true);
-                }
-            }
 
-        });
-        $('.closeClick').click();
+            });
+            $('.closeClick').click();
 
-    } 
+        }
 
 
 
 
-    
-       
+
+
         $('.deletefiles').click(function () {
 
             var callBackId = $(this).data('call-back-id');
@@ -215,8 +197,6 @@
             }
 
         })
-</script>
-
+    </script>
 
 }
-

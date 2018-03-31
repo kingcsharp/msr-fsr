@@ -3,15 +3,13 @@
 @{
     ViewBag.Title = "New Requirements";
 }
-
 <style>
     .tab-content th {
-        text-align: center; 
+        text-align: center;
         width: 30%;
     }
-    </style>
+</style>
 <link href="~/assets/css/select2.min.css" rel="stylesheet" />
-
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="row">
@@ -37,24 +35,23 @@
                             <div id="valOk" class="row viewerror clearfix hidden">
                                 <div class="alert alert-success">Yay! ..</div>
                             </div>
-                            <div class="col-md-12">
+                            <div class="col-md-8">
                                 <div class="form-group">
-                                    <label class="control-label col-lg-1 col-md-2" for="requirementName">Requirement Name:</label>
-                                    <div class="controls col-lg-11 col-md-10">
+                                    <label class="control-label col-sm-2" for="requirementName">Requirement Name:</label>
+                                    <div class="controls col-md-8">
                                         @Html.EditorFor(model => model.RequirementName, new { htmlAttributes = new { @class = "form-control input-lg", @placeholder = "Enter a name you will use to Identify this requirement" } })
                                         @Html.ValidationMessageFor(model => model.RequirementName, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-8">
                                 <div class="form-group">
-                                    <label class="control-label col-lg-2 col-md-3" for="location">Submitted By:</label>
-                                    <div class="controls col-lg-10 col-md-9">
+                                    <label class="control-label col-sm-2" for="location">Submitted By:</label>
+                                    <div class="controls col-md-8">
                                         @Html.EditorFor(model => model.SubmittedBy, new { htmlAttributes = new { @class = "form-control input-lg" } })
                                     </div>
                                 </div>
                             </div>
-
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="row" id="tab1" data-role="tab">
@@ -73,16 +70,16 @@
                                                             <div class="row">
                                                                 <div class="col-md-6">
                                                                     <div class="form-group" style="display: block;">
-                                                                        <label class="control-label control-label-right col-sm-3" for="field7">Company:</label>
-                                                                        <div class="controls col-sm-9">
+                                                                        <label class="control-label control-label-right col-sm-2" for="field7">Company:</label>
+                                                                        <div class="controls col-sm-8">
                                                                             @Html.EditorFor(model => model.Company, new { htmlAttributes = new { @class = "form-control" } })
                                                                             @Html.ValidationMessageFor(x => x.Company, "", new { @class = "text-danger" })
                                                                             <span id="errId1" class="error"></span>
                                                                         </div>
                                                                     </div>
                                                                     <div class="form-group" style="display: block;">
-                                                                        <label class="control-label  col-sm-3" for="field9">Street Address:</label>
-                                                                        <div class="controls col-sm-9">
+                                                                        <label class="control-label  col-sm-2" for="field9">Street Address:</label>
+                                                                        <div class="controls col-sm-8">
                                                                             @Html.EditorFor(model => model.StreetAddress, new { htmlAttributes = new { @class = "form-control" } })
                                                                             @Html.ValidationMessageFor(x => x.StreetAddress, "", new { @class = "text-danger" })
                                                                         </div>
@@ -91,32 +88,32 @@
                                                                         <div class="panel-heading">Commercial Contact Info</div>
                                                                         <div class="panel-body">
                                                                             <div class="form-group">
-                                                                                <label class=" col-sm-3" for="field17">Name</label>
-                                                                                <div class="controls col-sm-9">
+                                                                                <label class=" col-sm-2" for="field17">Name</label>
+                                                                                <div class="controls col-sm-8">
                                                                                     @Html.EditorFor(model => model.CommercialName, new { htmlAttributes = new { @class = "form-control", @required = "" } })
                                                                                     @Html.ValidationMessageFor(x => x.CommercialName, "", new { @class = "text-danger" })
                                                                                     <span id="errId3" class="error"></span>
                                                                                 </div>
                                                                             </div>
                                                                             <div class="form-group">
-                                                                                <label class=" col-sm-3" for="field18">Title</label>
-                                                                                <div class="controls col-sm-9">
+                                                                                <label class=" col-sm-2" for="field18">Title</label>
+                                                                                <div class="controls col-sm-8">
                                                                                     @Html.EditorFor(model => model.CommercialTitle, new { htmlAttributes = new { @class = "form-control" } })
                                                                                     @Html.ValidationMessageFor(x => x.CommercialTitle, "", new { @class = "text-danger" })
                                                                                     <span id="errId4" class="error"></span>
                                                                                 </div>
                                                                             </div>
                                                                             <div class="form-group">
-                                                                                <label class=" col-sm-3" for="field19">Phone</label>
-                                                                                <div class="controls col-sm-9">
+                                                                                <label class=" col-sm-2" for="field19">Phone</label>
+                                                                                <div class="controls col-sm-8">
                                                                                     @Html.EditorFor(model => model.CommercialPhone, new { htmlAttributes = new { @class = "form-control", @required = "" } })
                                                                                     @Html.ValidationMessageFor(model => model.CommercialPhone, "", new { @class = "text-danger" })
                                                                                     <span id="errId5" class="error"></span>
                                                                                 </div>
                                                                             </div>
                                                                             <div class="form-group">
-                                                                                <label class=" col-sm-3" for="field20">Email</label>
-                                                                                <div class="controls col-sm-9">
+                                                                                <label class=" col-sm-2" for="field20">Email</label>
+                                                                                <div class="controls col-sm-8">
                                                                                     @Html.EditorFor(model => model.CommercialEmail, new { htmlAttributes = new { @class = "form-control" } })
                                                                                     @Html.ValidationMessageFor(model => model.CommercialEmail, "", new { @class = "text-danger" })
                                                                                 </div>
@@ -126,14 +123,14 @@
                                                                 </div>
                                                                 <div class="col-md-6">
                                                                     <div class="form-group">
-                                                                        <label class="control-label  col-sm-3" for="field21">Division / Fab #:</label>
-                                                                        <div class="controls col-sm-9">
+                                                                        <label class="control-label  col-sm-2" for="field21">Division / Fab #:</label>
+                                                                        <div class="controls col-sm-8">
                                                                             @Html.EditorFor(model => model.DivisionFab, new { htmlAttributes = new { @class = "form-control" } })
                                                                         </div>
                                                                     </div>
                                                                     <div class="form-group">
-                                                                        <label class="control-label  col-sm-3" for="field22">City, State, ZIP:</label>
-                                                                        <div class="controls col-sm-9">
+                                                                        <label class="control-label  col-sm-2" for="field22">City, State, ZIP:</label>
+                                                                        <div class="controls col-sm-8">
                                                                             @Html.EditorFor(model => model.CityStateZIP, new { htmlAttributes = new { @class = "form-control" } })
                                                                         </div>
                                                                     </div>
@@ -141,27 +138,27 @@
                                                                         <div class="panel-heading">Technical Contact Info:</div>
                                                                         <div class="panel-body">
                                                                             <div class="form-group">
-                                                                                <label class=" col-sm-3" for="field24">Name</label>
-                                                                                <div class="controls col-sm-9">
+                                                                                <label class=" col-sm-2" for="field24">Name</label>
+                                                                                <div class="controls col-sm-8">
                                                                                     @Html.EditorFor(model => model.TechnicalName, new { htmlAttributes = new { @class = "form-control" } })
                                                                                 </div>
                                                                             </div>
                                                                             <div class="form-group">
-                                                                                <label class=" col-sm-3" for="field26">Title</label>
-                                                                                <div class="controls col-sm-9">
+                                                                                <label class=" col-sm-2" for="field26">Title</label>
+                                                                                <div class="controls col-sm-8">
                                                                                     @Html.EditorFor(model => model.TechnicalTitle, new { htmlAttributes = new { @class = "form-control" } })
                                                                                 </div>
                                                                             </div>
                                                                             <div class="form-group">
-                                                                                <label class=" col-sm-3" for="field25">Phone</label>
-                                                                                <div class="controls col-sm-9">
+                                                                                <label class=" col-sm-2" for="field25">Phone</label>
+                                                                                <div class="controls col-sm-8">
                                                                                     @Html.EditorFor(model => model.TechnicalPhone, new { htmlAttributes = new { @class = "form-control" } })
                                                                                     @Html.ValidationMessageFor(model => model.TechnicalPhone, "", new { @class = "text-danger" })
                                                                                 </div>
                                                                             </div>
                                                                             <div class="form-group">
-                                                                                <label class=" col-sm-3" for="field27">Email</label>
-                                                                                <div class="controls col-sm-9">
+                                                                                <label class=" col-sm-2" for="field27">Email</label>
+                                                                                <div class="controls col-sm-8">
                                                                                     @Html.EditorFor(model => model.TechnicalEmail, new { htmlAttributes = new { @class = "form-control" } })
                                                                                     @Html.ValidationMessageFor(model => model.TechnicalEmail, "", new { @class = "text-danger" })
                                                                                 </div>
@@ -180,8 +177,8 @@
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <div class="form-group">
-                                                                <label class="control-label  col-sm-3" for="field28">Short Description:</label>
-                                                                <div class="controls col-sm-9">
+                                                                <label class="control-label  col-sm-2" for="field28">Short Description:</label>
+                                                                <div class="controls col-sm-8">
                                                                     @Html.EditorFor(model => model.ShortDescription, new { htmlAttributes = new { @class = "form-control" } })
                                                                     @Html.ValidationMessageFor(model => model.ShortDescription, "", new { @class = "text-danger" })
                                                                 </div>
@@ -189,70 +186,70 @@
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="form-group">
-                                                                <label class="control-label  col-sm-3" for="field29">Part /Kit No:</label>
-                                                                <div class="controls col-sm-9">
+                                                                <label class="control-label  col-sm-2" for="field29">Part /Kit No:</label>
+                                                                <div class="controls col-sm-8">
                                                                     @Html.EditorFor(model => model.PartKitNo, new { htmlAttributes = new { @class = "form-control" } })
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div><div class="form-group" style="display: block;">
-                                                        <label class="control-label  col-sm-3" for="field33">Customer Specifications (if any):</label>
-                                                        <div class="controls col-sm-9">
+                                                        <label class="control-label  col-sm-2" for="field33">Customer Specifications (if any):</label>
+                                                        <div class="controls col-sm-8">
                                                             @Html.TextAreaFor(model => model.CustomerSpecifications, new { @class = "form-control", style = "width:100", @rows = 3 })
                                                         </div>
                                                     </div><div class="form-group" style="display: block;">
-                                                        <label class="control-label  col-sm-3" for="field37">In-Process Analytical Requirements:</label>
-                                                        <div class="controls col-sm-9">
+                                                        <label class="control-label  col-sm-2" for="field37">In-Process Analytical Requirements:</label>
+                                                        <div class="controls col-sm-8">
                                                             @Html.TextAreaFor(model => model.InProcessAnalyticalRequirements, new { @class = "form-control", style = "width:100", @rows = 3 })
                                                         </div>
                                                     </div><div class="form-group" style="display: block;">
-                                                        <label class="control-label  col-sm-3" for="field30">Detailed Description of Requested Service(s):</label>
-                                                        <div class="controls col-sm-9">
+                                                        <label class="control-label  col-sm-2" for="field30">Detailed Description of Requested Service(s):</label>
+                                                        <div class="controls col-sm-8">
                                                             @Html.TextAreaFor(model => model.DetailedDescription, new { @class = "form-control", style = "width:100", @rows = 3 })
                                                         </div>
                                                     </div><div class="form-group" style="display: block;">
-                                                        <label class="control-label  col-sm-3" for="field36">Critical-to-Function Attributes:</label>
-                                                        <div class="controls col-sm-9">
+                                                        <label class="control-label  col-sm-2" for="field36">Critical-to-Function Attributes:</label>
+                                                        <div class="controls col-sm-8">
                                                             @Html.TextAreaFor(model => model.CriticalToFunction, new { @class = "form-control", style = "width:100", @rows = 3 })
                                                         </div>
                                                     </div><div class="form-group" style="display: block;">
-                                                        <label class="control-label  col-sm-3" for="field35">Specific Customer Qualification Requirements:</label>
-                                                        <div class="controls col-sm-9">
+                                                        <label class="control-label  col-sm-2" for="field35">Specific Customer Qualification Requirements:</label>
+                                                        <div class="controls col-sm-8">
                                                             @Html.TextAreaFor(model => model.SpecificCustomerQualification, new { @class = "form-control", style = "width:100", @rows = 3 })
                                                         </div>
                                                     </div><div class="form-group" style="display: block;">
-                                                        <label class="control-label  col-sm-3" for="field34">Forecasted Volumes &amp; Start Dates:</label>
-                                                        <div class="controls col-sm-9">
+                                                        <label class="control-label  col-sm-2" for="field34">Forecasted Volumes &amp; Start Dates:</label>
+                                                        <div class="controls col-sm-8">
                                                             @Html.TextAreaFor(model => model.ForecastedVolumes, new { @class = "form-control", style = "width:100", @rows = 3 })
                                                         </div>
                                                     </div><div class="form-group" style="display: block;">
-                                                        <label class="control-label  col-sm-3" for="field38">Special Packaging/Shipping:</label>
-                                                        <div class="controls col-sm-9">
+                                                        <label class="control-label  col-sm-2" for="field38">Special Packaging/Shipping:</label>
+                                                        <div class="controls col-sm-8">
                                                             @Html.TextAreaFor(model => model.SpecialPackagingShipping, new { @class = "form-control", style = "width:100", @rows = 3 })
                                                         </div>
                                                     </div><div class="row" style="display: block;">
                                                         <div class="col-md-6">
                                                             <div class="form-group">
-                                                                <label class="control-label  col-sm-3" for="field40">Expected Quote Date:</label>
-                                                                <div class="controls col-sm-9">
+                                                                <label class="control-label  col-sm-2" for="field40">Expected Quote Date:</label>
+                                                                <div class="controls col-sm-8">
                                                                     @Html.EditorFor(model => model.ExpectedQuoteDate, new { htmlAttributes = new { @id = "quoteDate", @class = "form-control", @placeholder = "mm/dd/yyyy" } })
                                                                 </div>
                                                             </div><div class="form-group">
-                                                                <label class="control-label  col-sm-3" for="field41">Pickup Notification:</label>
-                                                                <div class="controls col-sm-9">
+                                                                <label class="control-label  col-sm-2" for="field41">Pickup Notification:</label>
+                                                                <div class="controls col-sm-8">
                                                                     @Html.EditorFor(model => model.PickupNotification, new { htmlAttributes = new { @class = "form-control" } })
                                                                 </div>
                                                             </div>
                                                         </div><div class="col-md-6">
                                                             <div class="form-group">
-                                                                <label class="control-label  col-sm-3" for="field42">Expected Cycle Time:</label>
-                                                                <div class="controls col-sm-9">
+                                                                <label class="control-label  col-sm-2" for="field42">Expected Cycle Time:</label>
+                                                                <div class="controls col-sm-8">
                                                                     @Html.EditorFor(model => model.ExpectedCycleTime, new { htmlAttributes = new { @class = "form-control" } })
                                                                     @Html.ValidationMessageFor(model => model.ExpectedCycleTime, "", new { @class = "text-danger" })
                                                                 </div>
                                                             </div><div class="form-group">
-                                                                <label class="control-label  col-sm-3" for="field43">Shipping Method:</label>
-                                                                <div class="controls col-sm-2">
+                                                                <label class="control-label  col-sm-2" for="field43">Shipping Method:</label>
+                                                                <div class="controls col-sm-8">
                                                                     @Html.DropDownListFor(model => model.ShippingMethod, Model.ShippingMehtodList, new { @id = "shippingMethod", @class = "form-control select2" })
                                                                 </div>
                                                             </div>
@@ -263,14 +260,14 @@
                                             <!-- End Tab 2 -->
                                             <div class="tab-pane" id="tabContent3">
                                                 <div class="row clearfix">
-                                                    <div class="col-md-12 column">
+                                                    <div class="col-md-8 column">
                                                         <table class="table table-bordered table-hover table-striped table-condensed" id="process_steps">
                                                             <thead>
                                                                 <tr>
                                                                     <th class="text-center" style="width:10%">
                                                                         Row #
                                                                     </th>
-                                                                    <th class="text-center"  style="width:90%">
+                                                                    <th class="text-center" style="width:90%">
                                                                         Contaminents By-Products
                                                                     </th>
                                                                 </tr>
@@ -305,9 +302,9 @@
                                                                     <th class="text-center" style="width:10%;">
                                                                         Row #
                                                                     </th>
-                                                                    <th class="text-center"  style="width:10%;">
+                                                                    <th class="text-center" style="width:10%;">
                                                                         CU/Non CU
-                                                                    </th>                                                                    
+                                                                    </th>
                                                                     <th class="text-center" style="width:10%;">
                                                                         Part Description
                                                                     </th>
@@ -334,14 +331,14 @@
                                                             <tbody>
                                                                 @for (int i = 0; i < Model.Parts.Count; i++)
                                                                 {
-                                                                    <tr id='rowa-0' class="text-center" >
+                                                                    <tr id='rowa-0' class="text-center">
                                                                         <td>
                                                                             @(i + 1)
                                                                         </td>
-                                                                        <td class="text-center" >
+                                                                        <td class="text-center">
                                                                             @Html.RadioButtonFor(x => Model.Parts[i].NonCU, "Cu")
                                                                             @Html.RadioButtonFor(x => Model.Parts[i].NonCU, "NonCu")
-                                                                        </td>                                                                        
+                                                                        </td>
                                                                         <td>
                                                                             @Html.TextBoxFor(x => Model.Parts[i].PartDescription, new { @class = "form-control", @placeholder = "Part Description" })
                                                                             @Html.ValidationMessageFor(x => Model.Parts[i].PartDescription, "", new { @class = "text-danger" })
@@ -363,11 +360,11 @@
                                                                             @Html.ValidationMessageFor(x => Model.Parts[i].CustPartNo, "", new { @class = "text-danger" })
                                                                         </td>
                                                                         <td>
-                                                                            @Html.TextBoxFor(x => Model.Parts[i].MfgPartNo, new { @class = "form-control", @placeholder = "Mfg. Part No."  })
+                                                                            @Html.TextBoxFor(x => Model.Parts[i].MfgPartNo, new { @class = "form-control", @placeholder = "Mfg. Part No." })
                                                                             @Html.ValidationMessageFor(x => Model.Parts[i].MfgPartNo, "", new { @class = "text-danger" })
                                                                         </td>
                                                                         <td>
-                                                                            @Html.TextBoxFor(x => Model.Parts[i].PartsPerKit, new { @class = "form-control", @placeholder = "# Parts per Kit"})
+                                                                            @Html.TextBoxFor(x => Model.Parts[i].PartsPerKit, new { @class = "form-control", @placeholder = "# Parts per Kit" })
                                                                             @Html.ValidationMessageFor(x => Model.Parts[i].PartsPerKit, "", new { @class = "text-danger" })
                                                                         </td>
                                                                     </tr>
@@ -382,7 +379,7 @@
                                             <!-- End Tab 4 -->
                                             <div class="tab-pane" id="tabContent5">
                                                 <div class="">
-                                                    <div class="form-group controls col-md-12">
+                                                    <div class="form-group controls col-md-8">
                                                         <label class="" for="field63">Additional Information or Comments</label>
                                                         <div>
                                                             @Html.TextAreaFor(model => model.AdditionalInformation, new { @class = "form-control", @style = "width:100", @rows = 3 })
@@ -412,6 +409,5 @@
 @section scripts
 {
     <script src="~/assets/js/requirements_form.js"></script>
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+    @Scripts.Render("~/bundles/js/jqueryval")
 }

@@ -1132,19 +1132,11 @@
     <Content Include="Views\Shared\_ModalWipWindows.cshtml" />
     <Content Include="Views\Shared\_SupportForm.cshtml" />
     <Content Include="Views\Buyer\Index.cshtml" />
-    <Content Include="Views\User\Master.cshtml" />
     <Content Include="Views\Shared\_LoginLayout.cshtml" />
-    <Content Include="Views\User\Client.cshtml" />
     <Content Include="Views\Wip\_NcrModel.cshtml" />
     <Content Include="Views\Wip\_Photos.cshtml" />
     <Content Include="Views\Wip\_Monitors.cshtml" />
-    <Content Include="Views\User\AddUser.cshtml" />
-    <Content Include="Views\User\EditUser.cshtml" />
-    <Content Include="Views\User\DeleteUser.cshtml" />
-    <Content Include="Views\User\AddClientUser.cshtml" />
     <Content Include="Views\User\Profile.cshtml" />
-    <Content Include="Views\User\EditClientUser.cshtml" />
-    <Content Include="Views\User\EditProfile.cshtml" />
     <Content Include="Views\Account\Login - Copy.cshtml" />
     <Content Include="Views\Shared\Message.cshtml" />
     <Content Include="Views\Shared\Help\_ClientAdmin.cshtml" />
@@ -1316,7 +1308,6 @@
     <Content Include="Views\Wip\_AddEquipment.cshtml" />
     <Content Include="Views\Procedures\_Monitor.cshtml" />
     <Content Include="Views\ProductionPlanning\_Parts.cshtml" />
-    <Content Include="Views\ProductionPlanning\_Procedure.cshtml" />
     <Content Include="Views\ProductionPlanning\_Product.cshtml" />
     <Content Include="Views\ProductionPlanning\_Models.cshtml" />
     <Content Include="Views\ProductionPlanning\_Steps.cshtml" />

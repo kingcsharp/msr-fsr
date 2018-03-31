@@ -1,31 +1,29 @@
 ﻿@using Msr.Infrastructure.Common.Constansts
 @model Msr.Services.EquipmentMaintenances.ViewModels.BaseEquipmentMaintainanceViewModel
-
 <div class="form-group">
-    <label class="col-md-4 control-label" for="selectbasic">Primary Location</label>
-    <div class="col-md-4">
-
+    <label class="col-md-2 control-label" for="selectbasic">Primary Location</label>
+    <div class="col-md-8">
         @Html.DropDownListFor(model => model.PrimaryLocationId, Model.PrimaryLocationList, "Please Select", new { @class = "form-control readonly" })
         @Html.ValidationMessageFor(model => model.PrimaryLocationId, "", new { @class = "text-danger" })
     </div>
 </div>
 <div class="form-group">
-    <label class="col-md-4 control-label" for="Sublocation1">Select Sublocation 1</label>
-    <div class="col-md-4">
+    <label class="col-md-2 control-label" for="Sublocation1">Select Sublocation 1</label>
+    <div class="col-md-8">
         @Html.DropDownListFor(model => model.SubLocationFirstId, Model.SubLocationFirstList, new { @class = "form-control readonly" })
         @Html.ValidationMessageFor(model => model.SubLocationFirstId, "", new { @class = "text-danger" })
     </div>
 </div>
 <div class="form-group">
-    <label class="col-md-4 control-label" for="Sublocation2">Select Sublocation 2</label>
-    <div class="col-md-4">
+    <label class="col-md-2 control-label" for="Sublocation2">Select Sublocation 2</label>
+    <div class="col-md-8">
         @Html.DropDownListFor(model => model.SubLocationSecondId, Model.SubLocationSecondList, new { @class = "form-control readonly" })
         @Html.ValidationMessageFor(model => model.SubLocationSecondId, "", new { @class = "text-danger" })
     </div>
 </div>
 <div class="form-group">
-    <label class="col-md-4 control-label" for="DateTime">Created On</label>
-    <div class="input-group date  col-md-4">
+    <label class="col-md-2 control-label" for="DateTime">Created On</label>
+    <div class="input-group date  col-md-8">
         @Html.EditorFor(model => model.DateTime, new { htmlAttributes = new { @class = "form-control datepick readonly", @placeholder = "Current Date Time", @style = "width:530px; margin-left:13px;", } })
         @Html.HiddenFor(model => model.DateTime)
         <div style="width:80px; height:35px;margin-left:515px;">
@@ -34,8 +32,8 @@
     </div>
 </div>
 <div class="form-group">
-    <label class="col-md-4 control-label" for="EquipmentTroubleState">Trouble State</label>
-    <div class="col-md-4">
+    <label class="col-md-2 control-label" for="EquipmentTroubleState">Trouble State</label>
+    <div class="col-md-8">
         <div class="checkbox">
             <label for="EquipmentState-0">
                 @Html.CheckBoxFor(model => model.TroubleState, new { @class = "checkbox readonly" })
@@ -46,27 +44,25 @@
     </div>
 </div>
 <div class="form-group">
-    <label class="col-md-4 control-label" for="maintrenancetask">Maintenance Task</label>
-    <div class="col-md-4">
+    <label class="col-md-2 control-label" for="maintrenancetask">Maintenance Task</label>
+    <div class="col-md-8">
         @Html.DropDownListFor(model => model.MaintenanceTask, Model.MaintenanceTaskList, new { @class = "form-control readonly" })
         @Html.ValidationMessageFor(model => model.MaintenanceTask, "", new { @class = "text-danger" })
     </div>
 </div>
-
 <div class="form-group">
-    <label class="col-md-4 control-label" for="maintrenancetask">Status</label>
-    <div class="col-md-4">
+    <label class="col-md-2 control-label" for="maintrenancetask">Status</label>
+    <div class="col-md-8">
         @Html.DropDownListFor(model => model.Status, Model.StatusList, new { @class = "form-control readonly" })
         @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
     </div>
 </div>
-
 @if (Model.Roles.Any(x => x.Role_Name == RoleConstants.ProductionManager || x.Role_Name == RoleConstants.MaintenanceTechnician))
 {
     <div class="form-group">
-        <label class="col-md-4 control-label" for="comments">Comments</label>
-        <div class="col-md-4">
-            @Html.TextAreaFor(model => model.Comments, new {@class = "form-control input-md"})
+        <label class="col-md-2 control-label" for="comments">Comments</label>
+        <div class="col-md-8">
+            @Html.TextAreaFor(model => model.Comments, new { @class = "form-control input-md" })
         </div>
     </div>
 }
@@ -74,11 +70,10 @@ else
 {
     @Html.HiddenFor(model => model.Comments)
 }
-
 @if (Model.Roles.Any(x => x.Role_Name == RoleConstants.ProductionManager))
 {
     <div class="form-group">
-        <label class="col-md-4 control-label" for="PMLastCompletedDate">PM Last Completed Date</label>
+        <label class="col-md-2 control-label" for="PMLastCompletedDate">PM Last Completed Date</label>
         <div class="col-md-4">
             <div style="width: 91%;float: left">
                 @Html.EditorFor(model => model.PemLastCompletedDate, new { htmlAttributes = new { @class = "form-control datepick lastcompletedate", @placeholder = "PM Last Completed Date", @style = "", } })
@@ -91,8 +86,8 @@ else
     </div>
 
     <div class="form-group">
-        <label class="col-md-4 control-label" for="scancode">Frequency Field:</label>
-        <div class="col-md-4">
+        <label class="col-md-2 control-label" for="scancode">Frequency Field:</label>
+        <div class="col-md-8">
             @Html.EditorFor(model => model.FrequencyField, new { htmlAttributes = new { @class = "form-control input-md", @placeholder = "" } })
             @Html.ValidationMessageFor(model => model.FrequencyField, "", new { @class = "text-danger" })
         </div>
@@ -104,12 +99,12 @@ else
     @Html.HiddenFor(model => model.FrequencyField)
 }
 <div class="form-group">
-    <label class="col-md-4 control-label" for="save"></label>
+    <label class="col-md-2 control-label" for="save"></label>
     <div class="col-md-8">
-    
-       
-        <input type="submit" name="btn" value="Submit" class="btn btn-success submit-form-equipment"/>
-    
-        @Html.ActionLink("Cancel", "Index", null, new {@class = "btn btn-danger"})
+
+
+        <input type="submit" name="btn" value="Submit" class="btn btn-success submit-form-equipment" />
+
+        @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-danger" })
     </div>
 </div>

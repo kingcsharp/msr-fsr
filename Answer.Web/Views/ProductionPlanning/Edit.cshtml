@@ -83,8 +83,7 @@
 
 @section scripts
 {
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+    @Scripts.Render("~/bundles/js/jqueryval")
     <script type="text/javascript" src="~/assets/js/ObjectAssign.js"></script>
     <script type="text/javascript" src="~/assets/js/grids/requirement-steps.js"></script>
     <script src="~/assets/js/grids/comman.js"></script>
