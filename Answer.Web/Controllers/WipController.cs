@@ -120,15 +120,12 @@ namespace Answer.Web.Controllers
                     else if (rule.field == nameof(WorkOrderView.CurStepText))
                     {
                         if (rule.data != "ALL")
-
-
                         {
                             var statusList = rule.data.Split(',').Select(x => x.Trim().ToLower());
 
                             if (statusList.Any())
                             {
                                 totalRows = totalRows.Where(x => statusList.Contains(x.Status.ToLower()));
-
                             }
                         }
                     }
@@ -358,9 +355,11 @@ namespace Answer.Web.Controllers
         {
             var currentUser = GetCurrentUser();
 
-            var response = _orderService.GetTsrDetails(id, currentUser.Id);
+            var model = _orderService.GetTsrDetails(id, currentUser.Id);
 
-            return PartialView("_ViewTsr", response);
+            model.WorkOrderDetailsResponse = _orderService.GetPurchaseItemDetails(id, currentUser.Id);
+
+            return PartialView("_ViewTsr", model);
         }
 
         public ActionResult PrintOther(int id)

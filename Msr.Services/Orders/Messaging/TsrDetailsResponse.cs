@@ -5,12 +5,15 @@ namespace Msr.Services.Orders.Messaging
 {
     public class TsrDetailsResponse
     {
-        public int FillId { get; set; }
-        public List<TsrTaskResult> TsrTaskResults { get; set; }
-
         public TsrDetailsResponse()
         {
-           TsrTaskResults = new List<TsrTaskResult>();
+            TsrTaskResults = new List<TsrTaskResult>();
         }
+
+        public int FillId { get; set; }
+
+        public List<TsrTaskResult> TsrTaskResults { get; set; }
+
+        public WorkOrderDetailsResponse WorkOrderDetailsResponse { get; set; }
     }
 }

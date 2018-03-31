@@ -3,19 +3,54 @@
     string baseUrl = string.Format("{0}://{1}{2}", HttpContext.Current.Request.Url.Scheme, HttpContext.Current.Request.Url.Authority, Url.Content("~"));
 }
 
-<div id="print-traveler-container">
-    <div id="qrcodeTable" style="margin-right: 35px;margin-left: 299px;margin-top: 35px;margin-bottom: 35px;text-align: center;"></div>
-    <div id="qrcodeCanvas">
+<div class="col-lg-12">
+    <div class="row">
+        <div id="print-traveler-container">
+            <div id="qrcodeTable" style="margin-right: 35px;margin-left: 299px;margin-top: 35px;margin-bottom: 35px;text-align: center;"></div>
+            <div id="qrcodeCanvas">
+            </div>
+        </div>
     </div>
 
-    @foreach (var task in Model.TsrTaskResults.Where(x => x.Level == 2))
-    {
-        @Html.Raw(task.Des)
-    }
+    <div class="row">
+        <h4>Purchase Item Info</h4>
+        <table class="table border-table">
+            <tr><td style="font-weight: bold;">Customer:</td><td>@Model.WorkOrderDetailsResponse.FileSearchResult.CustomerName</td> </tr>
+            <tr><td style="font-weight: bold;">Product:</td><td>@Model.WorkOrderDetailsResponse.FileSearchResult.ProductName</td> </tr>
+            <tr><td style="font-weight: bold;">Procedure:</td><td>@Model.WorkOrderDetailsResponse.FileSearchResult.ProcedureName</td> </tr>
+            <tr><td style="font-weight: bold;">PurchaseItem:</td><td>@Model.WorkOrderDetailsResponse.FileSearchResult.PurchItemId</td> </tr>
+        </table>
+    </div>
+    
+    <div class="row">
+        <h4>Parts Info</h4>
+        <table class="table table-responsive table-condensed table-bordered">
+            <tbody>
+            @if (Model.WorkOrderDetailsResponse.FileSearchResult != null)
+            {
+                <tr><td>@Model.WorkOrderDetailsResponse.FileSearchResult.FillObjDesc. qty:@Model.WorkOrderDetailsResponse.FileSearchResult.Qty</td></tr>
+            }
+
+            @foreach (var part in Model.WorkOrderDetailsResponse.Parts)
+            {
+                <tr><td>@part</td></tr>
+            }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="row">
+        @foreach (var task in Model.TsrTaskResults.Where(x => x.Level == 2))
+        {
+            @Html.Raw(task.Des)
+        }
+    </div>
+
 </div>
 
 <script src="~/assets/js/qrcode.js"></script>
 <script src="~/assets/js/jquery.qrcode.js"></script>
+
 <script>
     jQuery('#qrcodeTable').qrcode({ width: 130, height: 130, text: '@baseUrl' + 'wip/details/' + '@Model.FillId' });
 </script>
