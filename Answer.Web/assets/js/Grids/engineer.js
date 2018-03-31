@@ -163,7 +163,7 @@ $(document).ready(function () {
                 },
                 stype: "select",
                 searchoptions: {
-                    value: ":[All];ACCEPTED:In Progress;PENDING_PARENT_ACCEPTANCE:Waiting to Start;CLOSED,FINISHED:Completed",
+                    value: "All:[All];ACCEPTED:In Progress;PENDING_PARENT_ACCEPTANCE,REQUESTED:Waiting to Start;CLOSED,FINISHED:Completed",
                     defaultValue: 'In Progress'
                 },
                 formatter: currentStepFormatter,

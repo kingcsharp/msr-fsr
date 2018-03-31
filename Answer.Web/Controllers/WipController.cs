@@ -51,9 +51,7 @@ namespace Answer.Web.Controllers
 
         public ActionResult EngineeringData(JqGridParam param)
         {
-            var orderService = new OrderService();
-
-            var totalRows = orderService.GetWorkOrderQueryable();
+            var totalRows = _orderService.GetWorkOrderQueryable();
 
             if (param.where != null && param.where.rules.Any())
             {
@@ -117,9 +115,13 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.ProcName.ToLower().Contains(rule.data.ToLower()));
                     }
+                    else if (rule.field == nameof(WorkOrderView.Notes))
+                    {
+                        totalRows = totalRows.Where(x => x.Notes.ToLower().Contains(rule.data.ToLower()));
+                    }
                     else if (rule.field == nameof(WorkOrderView.CurStepText))
                     {
-                        if (rule.data != "ALL")
+                        if (rule.data != "All")
                         {
                             var statusList = rule.data.Split(',').Select(x => x.Trim().ToLower());
 
@@ -127,19 +129,6 @@ namespace Answer.Web.Controllers
                             {
                                 totalRows = totalRows.Where(x => statusList.Contains(x.Status.ToLower()));
                             }
-                        }
-                    }
-                    else if (rule.field == nameof(WorkOrderView.Notes))
-                    {
-                        totalRows = totalRows.Where(x => x.Notes.ToLower().Contains(rule.data.ToLower()));
-                    }
-                    else if (rule.field == nameof(WorkOrderView.Status))
-                    {
-                        var statusList = rule.data.Split(',').Select(x => x.Trim().ToLower());
-
-                        if (statusList.Any())
-                        {
-                            totalRows = totalRows.Where(x => statusList.Contains(x.Status.ToLower()));
                         }
                     }
                 }
