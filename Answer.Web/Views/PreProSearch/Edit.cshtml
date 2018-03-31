@@ -194,7 +194,7 @@
             var fileUploader = new FileUploader();
 
             fileUploader.InitEditUploader($('#input-files'),
-                '@Url.Action("FileUploaderBootstrap", "Doc")',
+                '@Url.Action("FileUploaderForPrePro", "Doc")',
                 [@Html.Raw(ViewBag.Preview)],
                 @Html.Raw(ViewBag.PreviewConfig),
                 '@Model.PkId',

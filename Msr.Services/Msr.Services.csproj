@@ -353,7 +353,6 @@
     <Compile Include="PrePro\Procedure\SaveProcedureObjectLink.cs" />
     <Compile Include="PrePro\Procedure\SaveProcedurePreProFileProcedure.cs" />
     <Compile Include="PrePro\Procedure\SavePreProProcedure.cs" />
-    <Compile Include="PrePro\Procedure\SaveProcedureStepFileLinkProcedure.cs" />
     <Compile Include="PrePro\Procedure\SaveProcedureStepProcedure.cs" />
     <Compile Include="PrePro\Procedure\SaveTheoryProcedure.cs" />
     <Compile Include="PrePro\Procedure\SaveUpdateApplicableObjectsProcedure.cs" />

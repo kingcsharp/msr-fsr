@@ -107,7 +107,7 @@ $('.deletefiles').click(function () {
 
 function SelectCompaniesIds() {
 
-    $(".selected-file").each(function () {
+    $(".selected-company").each(function () {
 
         if ($(this).is(":checked")) {
             var ids = $(this).val().split('|');

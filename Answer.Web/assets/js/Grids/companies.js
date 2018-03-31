@@ -286,7 +286,7 @@ function selectFormatter(cellvalue, options, rowObject) {
 
     var html = "";
 
-    html = '<input class="selected-file" type="checkbox" value="' + cellvalue + '|' + rowObject.Name + '" />';
+    html = '<input class="selected-company" type="checkbox" value="' + cellvalue + '|' + rowObject.Name + '" />';
 
     return html;
 }

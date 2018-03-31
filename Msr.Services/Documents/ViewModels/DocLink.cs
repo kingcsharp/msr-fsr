@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 namespace Msr.Services.Documents.ViewModels
 {
     public class DocLink

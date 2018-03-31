@@ -6,6 +6,8 @@ using System.Web.Mvc;
 using Msr.Models.PrePro;
 using Msr.Services.Documents;
 using Msr.Services.Documents.ViewModels;
+using Msr.Services.Procedures;
+using Msr.Services.ProcedureVerbs;
 using Msr.Services.Users.Messages;
 
 namespace Msr.Services.PrePro.ViewModel
@@ -30,11 +32,13 @@ namespace Msr.Services.PrePro.ViewModel
 
         public string ObjectId { get; set; }
 
+        [AllowHtml]
         [DisplayName("Text :")]
         public string StepText { get; set; }
 
         public string ProcObjId { get; set; }
 
+        [AllowHtml]
         [DisplayName("Comments :")]
         public string Comments { get; set; }
 
@@ -47,7 +51,7 @@ namespace Msr.Services.PrePro.ViewModel
         [DisplayName("DESTINATION :")]
         public string Destination { get; set; }
 
-        [DisplayName("Reference Procedure Type:")]
+        [DisplayName("Reference Verb:")]
         public string ReferenceVerb { get; set; }
 
         [DisplayName("Application Objects:")]
@@ -107,9 +111,9 @@ namespace Msr.Services.PrePro.ViewModel
 
         public IList<SelectListItem> ReferenceTheoriesList { get; set; }
 
-        public List<DocLink> DocLinks { get; set; }
+        public List<PreProDockLink> DocLinks { get; set; }
 
-        public void Setup(PreProServices preProServices, DocumentFilesService documentFilesService, LoggedUserIdResult currentUser)
+        public void Setup(PreProServices preProServices, DocumentFilesService documentFilesService, ProcedureVerbsService procedureVerbsService, LoggedUserIdResult currentUser)
         {
             BaseStartOnCounterList = Commons.Lookups.LookupItems.YesNo();
 
@@ -131,15 +135,15 @@ namespace Msr.Services.PrePro.ViewModel
 
             ReferenceVerbList.Add(new SelectListItem { Value = "", Text = @"--Select--" });
 
-            ReferenceVerbList.AddRange(preProServices.GetApprovedVerbsByCreatingCo(currentUser.Id).Select(x => new SelectListItem
+            ReferenceVerbList.AddRange(procedureVerbsService.ProcVerbsList(currentUser.Id).Select(x => new SelectListItem
             {
-                Text = x.Show,
-                Value = x.Value.ToString(),
+                Text = x.Name,
+                Value = x.Id.ToString(),
             }).OrderBy(o => o.Text).ToList());
 
             ReferenceObjectsList.Add(new SelectListItem { Value = "", Text = @"--Select--" });
 
-            ReferenceObjectsList.AddRange(preProServices.GetReferenceObjectsByCreatingCo(currentUser.Id).Select(x => new SelectListItem
+            ReferenceObjectsList.AddRange(preProServices.GetReferenceObjectsByCreatingCo(currentUser.Root_Company).Select(x => new SelectListItem
             {
                 Text = x.Show,
                 Value = x.Value.ToString(),
@@ -151,7 +155,7 @@ namespace Msr.Services.PrePro.ViewModel
                 ObjDesc = x.Qty + " " + x.QtyType
             }).OrderBy(o => o.RoleName).ToList());
 
-            DocLinks = documentFilesService.GetDocByObjectId(ObjectId);
+            DocLinks = documentFilesService.GetPreProRefFileDocLinks(PkId, currentUser.Id);
         }
 
         public ProcedurePreProViewModel MapToDto(PrePropSearchView model)

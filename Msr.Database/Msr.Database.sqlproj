@@ -2835,6 +2835,7 @@
     <Build Include="dbo\Views\Portal\Portal_PartsApprovedView.sql" />
     <Build Include="dbo\Views\Portal\Portal_PartTypesApprovedView.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_ActualPartApprovedView.sql" />
+    <Build Include="dbo\Views\Portal\Portal_HelpView.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Msr.Database.refactorlog" />

@@ -4,14 +4,10 @@ using Msr.Services.Procedures;
 using Msr.Web.ViewModel.Engineering;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
-using System.Xml;
-using System.Xml.Xsl;
-using Amazon.Runtime.Internal;
 using Answer.Web.ViewModel;
 using Msr.Infrastructure.Common.Constansts;
 using Msr.Models.ActualParts;
@@ -21,7 +17,6 @@ using Msr.Services.Procedures.ViewModels;
 using Msr.Services.ProcedureVerbs;
 using Msr.Services.Roles;
 using Msr.Services.Users;
-using Msr.Services.Workflows;
 using Msr.Services.EquipmentMaintenances;
 
 namespace Answer.Web.Controllers
@@ -40,7 +35,7 @@ namespace Answer.Web.Controllers
             _userService = new UserService();
             _roleService = new RoleService();
             _procedureVerbsService = new ProcedureVerbsService();
-            _documentFilesService = new DocumentFilesService(); ;
+            _documentFilesService = new DocumentFilesService();
         }
 
         public ActionResult Index()
@@ -57,6 +52,64 @@ namespace Answer.Web.Controllers
             ViewBag.CallBackId = callBackId;
 
             return PartialView("_Procedures");
+        }
+
+        public ActionResult ProceduresApprovedData(JqGridParam param)
+        {
+            var totalRows = _proceduresService.GetProcedureApprovedQueryable(GetCurrentUser().Id);
+
+            if (param.where != null && param.where.rules.Any())
+            {
+                foreach (var rule in param.where.rules)
+                {
+                    if (rule.field == nameof(ProcedureApprovedView.ROOT))
+                    {
+                        totalRows = totalRows.Where(x => x.ROOT == rule.data.ToLower());
+                    }
+                    else if (rule.field == nameof(ProcedureApprovedView.Name))
+                    {
+                        totalRows = totalRows.Where(x => x.Name.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(ProcedureApprovedView.Creating_co_Name))
+                    {
+                        totalRows = totalRows.Where(x => x.Creating_co_Name.ToLower().Contains(rule.data.ToLower()));
+                    }
+                }
+            }
+
+            var orderBy = nameof(ProcedureApprovedView.Name);
+
+            if (!string.IsNullOrWhiteSpace(param.sortColumn))
+            {
+                orderBy = param.sortColumn;
+            }
+
+            if (param.sortOrder == "desc")
+            {
+                totalRows = totalRows.OrderByDescending(orderBy);
+            }
+            else
+            {
+                totalRows = totalRows.OrderBy(orderBy);
+            }
+
+            var totalRecords = totalRows.Count();
+            totalRows = totalRows.Skip(param.pageSize * (param.pageIndex - 1));
+            totalRows = totalRows.Take(param.pageSize);
+
+            var totalPages = (int)Math.Ceiling(totalRecords / (float)param.pageSize);
+
+            var results = totalRows.ToList();
+
+            var json = new
+            {
+                total = totalPages,
+                page = param.pageIndex,
+                records = totalRecords,
+                rows = results
+            };
+
+            return Json(json, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult ProceduresData(JqGridParam param)
@@ -122,20 +175,13 @@ namespace Answer.Web.Controllers
                 orderBy = param.sortColumn;
             }
 
-            if (param.sortOrder == "desc")
-            {
-                totalRows = totalRows.OrderByDescending(orderBy);
-            }
-            else
-            {
-                totalRows = totalRows.OrderBy(orderBy);
-            }
+            totalRows = param.sortOrder == "desc" ? totalRows.OrderByDescending(orderBy) : totalRows.OrderBy(orderBy);
 
             var totalRecords = totalRows.Count();
             totalRows = totalRows.Skip(param.pageSize * (param.pageIndex - 1));
             totalRows = totalRows.Take(param.pageSize);
 
-            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)param.pageSize);
+            var totalPages = (int)Math.Ceiling(totalRecords / (float)param.pageSize);
 
             var results = totalRows.ToList();
 
@@ -361,7 +407,7 @@ namespace Answer.Web.Controllers
 
         public ActionResult Steps(string id)
         {
-            var procedureName = _proceduresService.GetProceduresQueryable().Where(x => x.ObjectId == id).SingleOrDefault().Name;
+            var procedureName = _proceduresService.GetProceduresQueryable().SingleOrDefault(x => x.ObjectId == id)?.Name;
 
             var viewModel = new GetStepDataResult
             {
@@ -534,14 +580,12 @@ namespace Answer.Web.Controllers
 
                     return RedirectToAction("ShowProcedureObject", new { Pid = pid, relationship = relationship });
                 }
-                else
-                {
-                    TempData["ErrorMessage"] = "Something went wrong.";
 
-                    model.Setup(_proceduresService);
+                TempData["ErrorMessage"] = "Something went wrong.";
 
-                    return View(model);
-                }
+                model.Setup(_proceduresService);
+
+                return View(model);
             }
 
 
@@ -567,18 +611,12 @@ namespace Answer.Web.Controllers
             {
                 orderBy = param.sortColumn;
             }
-            if (param.sortOrder == "desc")
-            {
-                totalRows = totalRows.OrderByDescending(orderBy);
-            }
-            else
-            {
-                totalRows = totalRows.OrderBy(orderBy);
-            }
+            totalRows = param.sortOrder == "desc" ? totalRows.OrderByDescending(orderBy) : totalRows.OrderBy(orderBy);
+
             var totalRecords = totalRows.Count();
             totalRows = totalRows.Skip(param.pageSize * (param.pageIndex - 1));
             totalRows = totalRows.Take(param.pageSize);
-            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)param.pageSize);
+            var totalPages = (int)Math.Ceiling(totalRecords / (float)param.pageSize);
             var results = totalRows.ToList();
             var json = new
             {
@@ -592,11 +630,11 @@ namespace Answer.Web.Controllers
 
         public ActionResult DeleteProcedureObject(string id)
         {
-            string value = id;
-            string[] data = value.Split(',');
-            string ID = data[0];
-            string Pid = data[1];
-            string relationship = data[2];
+            var value = id;
+            var data = value.Split(',');
+            var ID = data[0];
+            var pid = data[1];
+            var relationship = data[2];
 
             var response = _proceduresService.Delete(id: ID, ntlogin: GetCurrentUser().Id);
 
@@ -604,7 +642,7 @@ namespace Answer.Web.Controllers
             {
                 TempData["SuccessMessage"] = "Procedure Object deleted successfully.";
 
-                return RedirectToAction("editProcedureObject", new { Pid = Pid, relationship = relationship });
+                return RedirectToAction("editProcedureObject", new { Pid = pid, relationship = relationship });
             }
 
             TempData["ErrorMessage"] = "Something went wrong.";
@@ -614,15 +652,15 @@ namespace Answer.Web.Controllers
         [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult EditProcedureObjectEdit(string id)
         {
-            string value = id;
-            string[] words = value.Split(',');
-            string objid = words[0];
-            string relationship = words[1];
-            string Pid = words[2];
+            var value = id;
+            var words = value.Split(',');
+            var objid = words[0];
+            var relationship = words[1];
+            var pid = words[2];
 
             ViewBag.ObjId = objid;
             ViewBag.relation = relationship;
-            ViewBag.id = Pid;
+            ViewBag.id = pid;
 
             var procedureObjectViewModel = new EditProcedureObjectViewModel();
 
@@ -652,14 +690,12 @@ namespace Answer.Web.Controllers
 
                     return RedirectToAction("ShowProcedureObject", new { Pid = Pid, relationship = relationship });
                 }
-                else
-                {
-                    TempData["ErrorMessage"] = "Something went wrong.";
 
-                    model.Setup(_proceduresService);
+                TempData["ErrorMessage"] = "Something went wrong.";
 
-                    return View(model);
-                }
+                model.Setup(_proceduresService);
+
+                return View(model);
             }
 
 
@@ -670,16 +706,16 @@ namespace Answer.Web.Controllers
 
         public ActionResult EditPartsProvideTakeBack(string id)
         {
-            string value = id;
-            string[] words = value.Split(',');
-            string objid = words[0];
+            var value = id;
+            var words = value.Split(',');
+            var objid = words[0];
 
-            string relationship = words[1];
-            string Pid = words[2];
+            var relationship = words[1];
+            var pId = words[2];
 
             ViewBag.ObjId = objid;
             ViewBag.relation = relationship;
-            ViewBag.id = Pid;
+            ViewBag.id = pId;
 
             var procedureObjectViewModel = new PartsProvideTakeBackViewModel();
 
@@ -709,14 +745,12 @@ namespace Answer.Web.Controllers
 
                     return RedirectToAction("ShowPartsProvidedTakeBack", new { Pid, relationship });
                 }
-                else
-                {
-                    TempData["ErrorMessage"] = "Something went wrong.";
 
-                    model.Setup(_proceduresService);
+                TempData["ErrorMessage"] = "Something went wrong.";
 
-                    return View(model);
-                }
+                model.Setup(_proceduresService);
+
+                return View(model);
             }
 
             model.Setup(new ProceduresService());
@@ -737,7 +771,6 @@ namespace Answer.Web.Controllers
         [HttpPost]
         public ActionResult CreatePartsProvideTakeBack(string Pid, string relationship, PartsProvideTakeBackViewModel model)
         {
-            //need to be dynamic
             model.NTLogin = GetCurrentUser().Id;
             model.PROCEDURE_ID = Pid;
             model.RELATIONSHIP = relationship;
@@ -750,14 +783,12 @@ namespace Answer.Web.Controllers
 
                     return RedirectToAction("ShowProcedureObject", new { Pid = Pid, relationship = relationship });
                 }
-                else
-                {
-                    TempData["ErrorMessage"] = "Something went wrong.";
 
-                    model.Setup(_proceduresService);
+                TempData["ErrorMessage"] = "Something went wrong.";
 
-                    return View(model);
-                }
+                model.Setup(_proceduresService);
+
+                return View(model);
             }
 
 
@@ -791,14 +822,12 @@ namespace Answer.Web.Controllers
 
                     return RedirectToAction("ShowProcedureConsumed", new { Pid = Pid, relationship = relationship });
                 }
-                else
-                {
-                    TempData["ErrorMessage"] = "Something went wrong.";
 
-                    model.Setup(_proceduresService);
+                TempData["ErrorMessage"] = "Something went wrong.";
 
-                    return View(model);
-                }
+                model.Setup(_proceduresService);
+
+                return View(model);
             }
 
 
@@ -824,18 +853,12 @@ namespace Answer.Web.Controllers
             {
                 orderBy = param.sortColumn;
             }
-            if (param.sortOrder == "desc")
-            {
-                totalRows = totalRows.OrderByDescending(orderBy);
-            }
-            else
-            {
-                totalRows = totalRows.OrderBy(orderBy);
-            }
+            totalRows = param.sortOrder == "desc" ? totalRows.OrderByDescending(orderBy) : totalRows.OrderBy(orderBy);
+
             var totalRecords = totalRows.Count();
             totalRows = totalRows.Skip(param.pageSize * (param.pageIndex - 1));
             totalRows = totalRows.Take(param.pageSize);
-            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)param.pageSize);
+            var totalPages = (int)Math.Ceiling(totalRecords / (float)param.pageSize);
             var results = totalRows.ToList();
             var json = new
             {
@@ -849,11 +872,11 @@ namespace Answer.Web.Controllers
 
         public ActionResult DeleteProcedureConsumed(string id)
         {
-            string value = id;
-            string[] data = value.Split(',');
-            string ID = data[0];
-            string Pid = data[1];
-            string relationship = data[2];
+            var value = id;
+            var data = value.Split(',');
+            var ID = data[0];
+            var Pid = data[1];
+            var relationship = data[2];
 
             var response = _proceduresService.Delete(id: ID, ntlogin: GetCurrentUser().Id);
 
@@ -871,11 +894,11 @@ namespace Answer.Web.Controllers
         [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult ProcedureConsumedEdit(string ID)
         {
-            string value = ID;
-            string[] words = value.Split(',');
-            string objid = words[0];
-            string relationship = words[1];
-            string Pid = words[2];
+            var value = ID;
+            var words = value.Split(',');
+            var objid = words[0];
+            var relationship = words[1];
+            var Pid = words[2];
 
             ViewBag.ObjId = objid;
             ViewBag.relation = relationship;
@@ -993,7 +1016,7 @@ namespace Answer.Web.Controllers
             var totalRecords = totalRows.Count();
             totalRows = totalRows.Skip(param.pageSize * (param.pageIndex - 1));
             totalRows = totalRows.Take(param.pageSize);
-            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)param.pageSize);
+            var totalPages = (int)Math.Ceiling(totalRecords / (float)param.pageSize);
             var results = totalRows.ToList();
             var json = new
             {
@@ -1007,11 +1030,11 @@ namespace Answer.Web.Controllers
 
         public ActionResult DeleteProductPartStay(string id)
         {
-            string value = id;
-            string[] data = value.Split(',');
-            string ID = data[0];
-            string Pid = data[1];
-            string relationship = data[2];
+            var value = id;
+            var data = value.Split(',');
+            var ID = data[0];
+            var Pid = data[1];
+            var relationship = data[2];
 
             var response = _proceduresService.Delete(id: ID, ntlogin: GetCurrentUser().Id);
 
@@ -1029,11 +1052,11 @@ namespace Answer.Web.Controllers
         [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult EditProductPartStay(string ID)
         {
-            string value = ID;
-            string[] words = value.Split(',');
-            string objid = words[0];
-            string relationship = words[1];
-            string Pid = words[2];
+            var value = ID;
+            var words = value.Split(',');
+            var objid = words[0];
+            var relationship = words[1];
+            var Pid = words[2];
 
             ViewBag.ObjId = objid;
             ViewBag.relation = relationship;
@@ -1065,14 +1088,12 @@ namespace Answer.Web.Controllers
 
                     return RedirectToAction("ShowProductPartStay", new { Pid = Pid, relationship = relationship });
                 }
-                else
-                {
-                    TempData["ErrorMessage"] = "Something went wrong.";
 
-                    model.Setup(_proceduresService);
+                TempData["ErrorMessage"] = "Something went wrong.";
 
-                    return View(model);
-                }
+                model.Setup(_proceduresService);
+
+                return View(model);
             }
 
             model.Setup(_proceduresService);

@@ -9,8 +9,8 @@
         colModel: [
             {
                 label: ' #',
-                name: 'ObjId',
-                index: 'ObjId',
+                name: 'RootId',
+                index: 'RootId',
                 key: true,
                 colmenu: false,
                 search: false,
@@ -21,9 +21,9 @@
                 formatter: selectFormatter
             },
             {
-                label: 'Id',
-                name: 'Id',
-                index: 'Id',
+                label: 'ROOT',
+                name: 'ROOT',
+                index: 'ROOT',
                 key: true,
                 colmenu: false,
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
@@ -32,7 +32,18 @@
                 align: 'left'
             },
             {
-                label: 'Name',
+                label: 'Creating co Name',
+                name: 'Creating_co_Name',
+                index: 'Creating_co_Name',
+                key: true,
+                colmenu: false,
+                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                width: 50,
+                align: 'left'
+            },
+            {
+                label: 'Procedure Name',
                 name: 'Name',
                 index: 'Name',
                 colmenu: true,

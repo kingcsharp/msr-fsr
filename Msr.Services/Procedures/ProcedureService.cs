@@ -577,6 +577,14 @@ namespace Msr.Services.Procedures
             var result = new ResultNotification<string>();
             try
             {
+                var stepsList = GetStepsData(viewModel.ProcObjId, viewModel.NtLogin);
+                var selectedPrecedingStep = "";
+
+                if (stepsList != null)
+                {
+                    selectedPrecedingStep = stepsList.LastOrDefault()?.Id;
+                }
+
                 var updateOneStep = new UpdateOneStepProcedure()
                 {
                     StepText = viewModel.GetStepEditData.Step_Text,
@@ -600,7 +608,7 @@ namespace Msr.Services.Procedures
                     CycleCount = viewModel.GetStepEditData.Cycle_Count?.ToString(),
                     CycleUnit = viewModel.GetStepEditData.Cycle_Unit,
                     ReferenceProcs = String.Join(",", viewModel.SelectedReferenceProcedures),
-                    PrecedingSteps = String.Join(",", viewModel.SelectedPrecedingSteps),
+                    PrecedingSteps = selectedPrecedingStep,
                     Duration = viewModel.GetStepEditData.Duration,
                     DurationType = viewModel.GetStepEditData.Duration_Type,
                     ReplacementCost = viewModel.ReplacementCost,
@@ -662,6 +670,7 @@ namespace Msr.Services.Procedures
             updateOneStep.CycleOnCounter = viewModel.Cycle_On_Counter?.ToString();
             updateOneStep.CycleCount = viewModel.Cycle_Count?.ToString();
             updateOneStep.CycleUnit = viewModel.Cycle_Unit;
+            updateOneStep.PrecedingSteps = viewModel.Pre_Step;
 
             if (viewModel.SelectedReferenceProcedureTypes != null && viewModel.SelectedReferenceProcedureTypes.Count > 0)
             {
@@ -676,7 +685,7 @@ namespace Msr.Services.Procedures
             updateOneStep.Duration = viewModel.Duration;
             updateOneStep.DurationType = viewModel.Duration_Type;
 
-         ////   _dbContext.Database.ExecuteStoredProcedure(updateOneStep);
+            _dbContext.Database.ExecuteStoredProcedure(updateOneStep);
         }
 
         public bool RollBack(SaveProcedureViewModel model)
@@ -1193,7 +1202,7 @@ namespace Msr.Services.Procedures
 
             try
             {
-                var deleteProcedureStep = new ProcedureStepDelete() {Id = id, NtLogin = ntLogin};
+                var deleteProcedureStep = new ProcedureStepDelete() { Id = id, NtLogin = ntLogin };
 
                 _dbContext.Database.ExecuteStoredProcedure(deleteProcedureStep);
 
@@ -1250,6 +1259,16 @@ namespace Msr.Services.Procedures
                 model.Messages.Add(procedureImportExternalProcedure.NewId);
                 result.Entity.Add(model);
             }
+        }
+
+        public IQueryable<ProcedureApprovedView> GetProcedureApprovedQueryable(string ntLogin)
+        {
+            var sql =
+                $"EXEC A_SP_PROCEDURES_SELECT_FOR_PROCEDURE_STEPS ' (NAME LIKE ''%%'' OR NAME is NULL ) AND  (ROOT LIKE ''%%'' OR ROOT is NULL ) AND  (CREATING_CO LIKE ''%%'' OR CREATING_CO is NULL )',NULL,' ORDER BY NAME','{ntLogin}'";
+
+            var result = _dbContext.Database.SqlQuery<ProcedureApprovedView>(sql).ToList().AsQueryable();
+
+            return result;
         }
     }
 }

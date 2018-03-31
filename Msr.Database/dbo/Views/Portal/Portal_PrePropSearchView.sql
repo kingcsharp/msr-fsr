@@ -1,4 +1,4 @@
-﻿CREATE VIEW dbo.Portal_PrePropSearchView
+﻿CREATE VIEW [dbo].[Portal_PrePropSearchView]
 AS
 SELECT        dbo.A_PROCEDURE_STEPS.ID, p.OBJECT_ID AS ObjectId,
 o.LOCKED_BY AS LockedBy, o.UNLOCKED_BY AS UnlockedBy, o.CREATED_BY AS CreatedBy, 
@@ -10,14 +10,13 @@ o.CREATE_DATE AS CreatedDate, o.ROOT, o.REV_INFO AS RevInfo,
                          dbo.A_PROCEDURE_STEPS.SYSTEM_TASK AS SystemTask, dbo.A_PROCEDURE_STEPS.START_ON_COUNTER AS StartOnCounter,
 						 dbo.A_PROCEDURE_STEPS.TITLE,
 						 isnull(STUFF((
-SELECT +','+ DL.NAME+'|'+DL.LINKED_DOC_ID 
-FROM A_V_DOCUMENTS_WITH_LINKED_ITEM AS DL 
-WHERE DL.OBJECT_ID = o.OBJ_DESC
+SELECT +','+ DL.NAME+'|'+DL.DOC_ID 
+FROM A_V_PROCEDURE_STEP_DOCUMENT_DATA AS DL 
+WHERE DL.STEP_ID = o.OBJ_DESC
     FOR XML PATH('')), 1, 1,''),'') AS ReferenceFiles
-						 
 FROM            dbo.A_OBJECTS AS o INNER JOIN
                          dbo.A_PREPOP_HISTORY AS p ON o.ID = p.OBJECT_ID INNER JOIN
                          dbo.A_PROCEDURE_STEPS ON p.PROC_STEP_ID = dbo.A_PROCEDURE_STEPS.ID
-GO
 
+GO
 

@@ -12,6 +12,7 @@ using Msr.Services.Orders.ViewModels;
 using Msr.Services.S3;
 using Msr.Services.Files;
 using Msr.Services.Files.ViewModels;
+using Msr.Services.PrePro;
 
 namespace Answer.Web.Controllers
 {
@@ -22,9 +23,10 @@ namespace Answer.Web.Controllers
         private readonly DocumentFilesService _documentFilesService;
         private readonly DocumentService _documentService;
         private readonly OrderService _orderService;
+        private readonly PreProServices _preProServices;
         private readonly string _bucketName;
         private readonly string _awsBaseUrl;
-        
+
         public DocController()
         {
             _fileService = new FileService();
@@ -32,6 +34,7 @@ namespace Answer.Web.Controllers
             _documentFilesService = new DocumentFilesService();
             _documentService = new DocumentService();
             _orderService = new OrderService();
+            _preProServices = new PreProServices();
             _bucketName = ConfigurationManager.AppSettings.Get("AWSBuketName");
             _awsBaseUrl = ConfigurationManager.AppSettings.Get("AWSURL");
         }
@@ -208,7 +211,7 @@ namespace Answer.Web.Controllers
             foreach (string item in Request.Files)
             {
                 var file = Request.Files[item];
-                
+
                 var keyName = $"Answer2/{Guid.NewGuid()}-{file.FileName}";
 
                 _cloudUploader.UploadToCloud(file, _bucketName, keyName);
@@ -253,6 +256,76 @@ namespace Answer.Web.Controllers
             }
 
             return Json(new { initialPreview, initialPreviewConfig, newId }, JsonRequestBehavior.AllowGet);
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public JsonResult FileUploaderForPrePro(string objectId)
+        {
+            var currentUser = GetCurrentUser();
+
+            var initialPreview = new List<string>();
+            var initialPreviewConfigs = new List<DocLink>();
+
+            var initialPreviewConfig = new object();
+
+            NewFile responese = null;
+            foreach (string item in Request.Files)
+            {
+                var file = Request.Files[item];
+
+                var keyName = $"Answer2/{Guid.NewGuid()}-{file.FileName}";
+
+                _cloudUploader.UploadToCloud(file, _bucketName, keyName);
+
+                var cloudUrl = $"{_awsBaseUrl}{keyName}";
+
+                var imageModel = new SaveFileUploadViewModel
+                {
+                    Name = file.FileName,
+                    Path = cloudUrl,
+                    ContentType = file.ContentType,
+                    DropSrc = "YES",
+                    NTLogin = currentUser.Id
+                };
+
+                responese = _fileService.SaveFileUpload(imageModel);
+
+                initialPreview.Add(imageModel.Path);
+
+                var docfiLink = new DocLink
+                {
+                    NAME = keyName,
+                    CONTENTTYPE = file.ContentType,
+                    LINKED_DOC_ID = responese.Id,
+                    TYPE = file.ContentType
+                };
+
+                initialPreviewConfigs.Add(docfiLink);
+
+                initialPreviewConfig = initialPreviewConfigs.Select(x => new
+                {
+                    caption = x.NAME,
+                    type = x.TYPE,
+                    size = 6666,
+                    url = "/doc/DeletePreProImageById?Id=" + responese.Id + "&fileId=" + objectId,
+                    downloadUrl = cloudUrl,
+                    key = x.LINKED_DOC_ID
+                }).ToArray();
+                if (objectId != null)
+                {
+                    _preProServices.SavePreProSingleFileReference(objectId, responese.Id, currentUser.Id);
+                }
+            }
+
+            return Json(new { initialPreview, initialPreviewConfig, responese?.Id }, JsonRequestBehavior.AllowGet);
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult DeletePreProImageById(string id, string fileId)
+        {
+            var result = _preProServices.DeletePreProRefLinkImageById(id, fileId);
+
+            return Json(result ? "Ok" : "error", JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult RefillUploader(string ids)

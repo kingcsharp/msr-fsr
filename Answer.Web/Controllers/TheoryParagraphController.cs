@@ -25,7 +25,10 @@ namespace Answer.Web.Controllers
         public ActionResult TheoryParagraphsData(JqGridParam param)
         {
             var theoryParagraphService = new TheoryParagraphService();
-            var totalRows = theoryParagraphService.GetTheoryParagraphsQueryable();
+
+            var totalRows = theoryParagraphService.GetTheoryApprovedQueryable(GetCurrentUser().Id);
+
+
             if (param.where != null && param.where.rules.Any())
             {
                 foreach (var rule in param.where.rules)

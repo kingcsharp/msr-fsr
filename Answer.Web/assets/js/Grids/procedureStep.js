@@ -7,17 +7,6 @@
         datatype: "json",
         colModel: [
             {
-                label: 'Title',
-                name: 'Title',
-                index: 'Title',
-                key: true,
-                colmenu: false,
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                width: 100,
-                align: 'center'
-            },
-            {
                 label: ' #',
                 name: 'Root',
                 index: 'Root',
@@ -26,6 +15,17 @@
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 width: 30,
+                align: 'center'
+            },
+            {
+                label: 'Title',
+                name: 'Title',
+                index: 'Title',
+                key: true,
+                colmenu: false,
+                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                width: 100,
                 align: 'center'
             },
             {
@@ -68,15 +68,6 @@
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 formatter: FilePreviewFormatter,
                 align: 'center'
-            },
-            {
-                label: 'Checked Out To',
-                name: 'LockedByName',
-                index: 'LockedByName',
-                colmenu: false,
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                align: 'center'
             }
             ,
             { name: 'Actions', index: 'ID', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: procedureStepEditFormatter, width: 100, align: 'center' }
@@ -99,39 +90,19 @@
         key: true,
         ajaxCellOptions: {},
         gridComplete: function () {
-
-
-            $('.deleteprepro').on('click',
-                function (e) {
-                    e.preventDefault();
-
-                    var callBackId = $(this).data('call-back-id');
-                    var callBackName = $(this).data('call-back-name');
-
-                    eModal.confirm('Do you really want to delete ' + callBackName + ' ?', 'Confirmation delete')
-                        .then(confirmCallback, optionalCancelCallback);
-
-                    function confirmCallback() {
-                        window.location.href = "/PreProSearch/PreProDelete/" + callBackId
-                    }
-
-                    function optionalCancelCallback() {
-                    }
-
-                });
-
+            Msr.JqGridCommon.SetupGridLock("/PreProSearch/Edit/");
             Msr.JqGridCommon.UnLockWorkflow(returnUrl);
             Msr.JqGridCommon.DocPreview();
         }
     });
     $('#jqGrid').navGrid("#jqGridPager", {
-            refresh: true,
-            search: false, // show search button on the toolbar
-            add: false,
-            edit: false,
-            del: false,
+        refresh: true,
+        search: false, // show search button on the toolbar
+        add: false,
+        edit: false,
+        del: false,
 
-        },
+    },
         {}, // edit options
         {}, // add options
         {}, // delete options
@@ -150,30 +121,9 @@
 
     function procedureStepEditFormatter(cellvalue, options, rowObject) {
 
-        var editButton = '<a  title="Edit" href="/PreProSearch/edit/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
-        var detailButton = '<a href="/PreProSearch/Details/' + rowObject.ObjectId + '" title="Details" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-eye"></i></a>';
-        var deleteButton = '';
-        var buttonWorkflowLeft = '';
-        var buttonWorkflowRight = '';
-        var url = '';
 
-        if (rowObject.Status === 'CREATING') {
-
-            url = '/workflow/submit?objId=' + rowObject.ObjectId + '&returnUrl=' + returnUrl;
-            buttonWorkflowLeft = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '"  data-call-back-id="' + rowObject.ObjectId + '" class="btn btn-xs btn-success unlock" title="Cancel Creation. Edit will be lost" style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-left"></i></a>';
-
-            buttonWorkflowRight = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-success" title="Proceed to approval workflow for release." style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-right"></i></a>';
-        } else {
-            url = '/workflow/delete?objId=' + rowObject.ObjectId + '&returnUrl=' + returnUrl;
-            deleteButton = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '"  class="btn btn-xs btn-danger" title="Proceed to delete." style="margin:2px;font-size: .8em;"><i class="fa fa fa-trash-o"></i></a>';
-        }
-
-        if (rowObject.Status == 'APPROVED_BUT_REVISING') {
-            editButton = '';
-            deleteButton = '';
-        }
-
-        return editButton + deleteButton + buttonWorkflowLeft + buttonWorkflowRight + detailButton;
+        var actions = Msr.JqGridCommon.ActionFormtter(cellvalue, options, rowObject, returnUrl, '/PreProSearch/Edit/');
+        return actions;
 
     }
 }

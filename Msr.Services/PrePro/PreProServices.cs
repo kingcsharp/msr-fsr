@@ -181,12 +181,11 @@ namespace Msr.Services.PrePro
                 if (model.ReferenceFiles != null)
                     foreach (var file in model.ReferenceFiles.Split(','))
                     {
-                        var saveFileProcedure = new SaveFileProcedure()
+                        var saveFileProcedure = new SaveProcedurePreProFileProcedure()
                         {
-                            ObjID = procedureStepProcedure.NewId,
-                            DocID = file,
-                            Type = null,
-                            NTLogin = model.NTLogin
+                            ObjId = procedureStepProcedure.NewId,
+                            DocId = file,
+                            NtLogin = model.NTLogin
                         };
 
                         _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
@@ -301,6 +300,41 @@ namespace Msr.Services.PrePro
             }
             catch (Exception ex)
             {
+                return false;
+            }
+        }
+
+        public bool SavePreProSingleFileReference(string objectId, string file, string currentUserId)
+        {
+            try
+            {
+                var saveFileProcedure = new SaveProcedurePreProFileProcedure() { ObjId = objectId, DocId = file, NtLogin = currentUserId };
+
+                _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                var message = "Error occured:" + ex.Message;
+
+                return false;
+            }
+
+        }
+
+        public bool DeletePreProRefLinkImageById(string id, string fileId)
+        {
+            try
+            {
+                var result =
+                    _dbContext.Database.ExecuteSqlCommand(
+                        $"delete from dbo.A_PROCEDURE_STEP_FILE_LINK  where STEP_ID ={id} and  FILE_ID ={fileId}");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                var message = "Error occured:" + ex.Message;
+
                 return false;
             }
         }

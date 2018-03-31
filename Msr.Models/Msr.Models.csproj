@@ -166,9 +166,11 @@
     <Compile Include="People\LanguagesView.cs" />
     <Compile Include="People\PeopleObjectView.cs" />
     <Compile Include="PrePro\LaborObjectsView.cs" />
+    <Compile Include="PrePro\PreProDockLink.cs" />
     <Compile Include="PrePro\PrePropSearchView.cs" />
     <Compile Include="PrePro\ProcedureObjectsLaborStepView.cs" />
     <Compile Include="Procedures\EditProcedureObjestFile.cs" />
+    <Compile Include="Procedures\ProcedureApprovedView.cs" />
     <Compile Include="Procedures\ProcedureEditFile.cs" />
     <Compile Include="Procedures\ProcedureEditObjectView.cs" />
     <Compile Include="Procedures\ProcedureStepOtherStepListView.cs" />

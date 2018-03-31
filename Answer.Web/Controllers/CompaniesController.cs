@@ -201,13 +201,11 @@ namespace Answer.Web.Controllers
         [AcceptVerbs(verbs: HttpVerbs.Post)]
         public ActionResult Edit(EditCompanyViewModel model)
         {
-            var companyService = new CompanyService();
-
             if (ModelState.IsValid)
             {
                 model.NTLogin = GetCurrentUser().Id;
 
-                var response = companyService.Update(model: model);
+                var response = _companyService.Update(model);
 
                 if (response)
                 {
@@ -226,11 +224,9 @@ namespace Answer.Web.Controllers
 
         public ActionResult Delete(string id)
         {
-            var taskService = new CompanyService();
-
             string ntLogin = GetCurrentUser().Id;
 
-            var response = taskService.Delete(id, ntLogin);
+            var response = _companyService.Delete(id, ntLogin);
 
             if (response)
             {
@@ -247,11 +243,10 @@ namespace Answer.Web.Controllers
         public ActionResult Details(string id)
         {
             var getCurrentUser = GetCurrentUser();
-            var taskService = new CompanyService();
 
-            var model = taskService.GetCompanyByObjId(id);
+            var model = _companyService.GetCompanyByObjId(id);
 
-            model.Setup(new DocumentFilesService(), new CompanyService(), _locationService, getCurrentUser.Id,
+            model.Setup(_documentFilesService, _companyService, _locationService, getCurrentUser.Id,
                 getCurrentUser.Root_Company);
 
             return View(model);

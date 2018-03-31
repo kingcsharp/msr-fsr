@@ -11,6 +11,7 @@ using System.Web;
 using ExcelDataReader;
 using Msr.Models.Locations;
 using Msr.Models.Companies;
+using Msr.Services.Documents;
 using Msr.Services.Users.Messages;
 
 namespace Msr.Services.Companies
@@ -92,6 +93,10 @@ namespace Msr.Services.Companies
         {
             try
             {
+                var documentFilesService = new DocumentFilesService();
+
+                var refFile = string.Join(", ", documentFilesService.GetDocByObjectId(model.ObjectId).Select(x => x.LINKED_DOC_ID).ToList());
+
                 var saveCompanyProcedure = new AddCompanyProcedure
                 {
                     ObjID = model.ObjectId,
@@ -104,7 +109,7 @@ namespace Msr.Services.Companies
                     CoSupProds = model.RootCoID,
                     PicFiles = model.PictureFiles != null ? string.Join(", ", model.PictureFiles) : "",
                     LogoFiles = model.LogoFiles != null ? string.Join(", ", model.LogoFiles) : "",
-                    ReferenceFiles = model.ReferenceFiles != null ? string.Join(", ", model.ReferenceFiles) : "",
+                    ReferenceFiles = refFile,
                     NewPersonLogin = model.NewPersonLogin,
                     NewPersonPassword = model.NewPersonPassword,
                     NewPersonFirstName = model.NewPersonFirstName,

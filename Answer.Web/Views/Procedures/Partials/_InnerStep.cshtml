@@ -1,5 +1,4 @@
 ﻿@model Msr.Services.Procedures.Messages.GetStepDataResult
-
 <li id="@Model.Print_Order,@Model.Id" data-MainObjectId="@ViewBag.ProcObjectId" class="sortable-item">
     <span class="fa fa-arrows handle sortable-fa" style="float: left; margin: -4px;"></span>
     @using (Html.BeginForm("EditStep", "Procedures", FormMethod.Post, new { @class = "step-form", id = "step-form-" + Model.Index }))
@@ -8,6 +7,7 @@
         <input type="hidden" class="step-action" name="UpdateAction" value="" />
         <input type="hidden" name="ProcedureId" value="@ViewBag.ProcObjectId" />
         <input type="hidden" id="StepId" name="Id" value="@Model.Id" />
+        <input type="hidden" id="Pre_Step" name="Pre_Step" value="@Model.Pre_Step" />
         <div class="procedure-step row" id='step1'>
             <div class="col-lg-6 ">
                 <table class="table table-condensed left-table">
@@ -15,7 +15,7 @@
                         <th style='width: 95px'>Step Number:</th>
                         <td class='step-number'>@Model.Print_Order</td>
                         <th style='width: 95px'>Predecessor:</th>
-                        <td><input type='text' name='a0' class='form-control' value='@Model.Id' /></td>
+                        <td><input type='text' name='a0' class='form-control' value='@Model.Pre_Step' disabled="disabled" /></td>
                     </tr>
                     <tr>
                         <th>Step Title:</th>

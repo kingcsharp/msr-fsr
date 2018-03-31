@@ -159,7 +159,7 @@
 
         $(document).ready(function () {
 
-            fileUploader.InitUploader($('#input-files'), '@Url.Action("FileUploaderBootstrap", "Doc")', [],[]);
+            fileUploader.InitUploader($('#input-files'), '@Url.Action("FileUploaderForPrePro", "Doc")', [], []);
             fileUploaderGrid.SetupSelectImage();
 
             $(".select").select2();

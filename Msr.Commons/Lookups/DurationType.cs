@@ -12,13 +12,13 @@ namespace Msr.Commons.Lookups
                 new SelectListItem
                 {
                     Text = @"SYS_SECONDS",
-                    Value = "TIME_SYS_SECONDS",
-                    Selected = true
+                    Value = "TIME_SYS_SECONDS"
                 },
                 new SelectListItem
                 {
                     Text = @"SYS_MINUTES",
-                    Value = "TIME_SYS_MINUTES"
+                    Value = "TIME_SYS_MINUTES",
+                    Selected = true
                 },
                 new SelectListItem
                 {

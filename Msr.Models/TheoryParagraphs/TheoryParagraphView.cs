@@ -10,8 +10,8 @@ namespace Msr.Models.TheoryParagraphs
     {
         public string Id { get; set; }
         public string Name { get; set; }
-        public string CreatingCoName { get; set; }
-        public string SendId { get; set; }
+        public string Creating_Co_Name { get; set; }
+        public string Send_Id { get; set; }
         public string Root { get; set; }
         public string Status { get; set; }
     }

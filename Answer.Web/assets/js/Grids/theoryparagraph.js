@@ -22,8 +22,8 @@
             },
             {
                 label: 'Id',
-                name: 'Id',
-                index: 'Id',
+                name: 'Root',
+                index: 'Root',
                 key: true,
                 colmenu: false,
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
@@ -45,8 +45,8 @@
             },
             {
                 label: 'Creating Co',
-                name: 'CreatingCoName',
-                index: 'CreatingCoName',
+                name: 'Creating_Co_Name',
+                index: 'Creating_Co_Name',
                 colmenu: true,
                 editable: true, // must set editable to true if you want to make the field editable
                 editrules: { required: true },
