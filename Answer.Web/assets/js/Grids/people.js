@@ -270,9 +270,7 @@
                     grouping: false,
                     freeze: false
                 },
-                searchoptions: {
-                    searchoptions: { value: Msr.JqGridCommon.GetStatusFilters() },
-                },
+                searchoptions: { value: Msr.JqGridCommon.GetStatusFilters() },
                 align: 'left'
             },
             {

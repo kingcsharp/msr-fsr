@@ -1,16 +1,19 @@
 ﻿@model Msr.Services.Orders.ViewModels.ImageViewModel
 
-@Html.Partial("_FileUpload")
+<div id="file-tab-@Model.TaskId">
+    @Html.Partial("_FileUpload")
+</div>
+
 
 <script type="text/javascript">
 
     var fileUploaderGrid = new FileUploaderGrid();
 
     $(function () {
-     
         var fileUploader = new FileUploader();
+        var fileId = $('#file-tab-@Model.TaskId' +' #input-files');
 
-        fileUploader.InitEditUploader($('#input-files'),
+        fileUploader.InitEditUploader(fileId,
             '@Url.Action("FileUploaderForWipTask", "Doc")',
             @Html.Raw(Model.Preview),
             @Html.Raw(Model.PreviewConfig),
@@ -18,7 +21,7 @@
             false);
     });
 
-    function SelectIds(parameters) {
+    function SelectIds() {
         fileUploaderGrid.SelectIds();
     }
 
