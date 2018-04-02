@@ -51,8 +51,8 @@ $(document).ready(function () {
             { name: 'FillId', index: 'FillId', width: 60, align: 'center', hidden: true, edittype: 'text', editable: true, editrules: { edithidden: true } },
             {
                 label: 'WO Item #',
-                name: 'PurchaseItemId',
-                index: 'PurchaseItemId',
+                name: 'WoItem',
+                index: 'WoItem',
                 key: true,
                 colmenu: false,
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },

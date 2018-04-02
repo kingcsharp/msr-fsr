@@ -57,9 +57,9 @@ namespace Answer.Web.Controllers
             {
                 foreach (var rule in param.where.rules)
                 {
-                    if (rule.field == nameof(WorkOrderView.PurchaseItemId))
+                    if (rule.field == nameof(WorkOrderView.WoItem))
                     {
-                        totalRows = totalRows.Where(x => x.PurchaseItemId == rule.data);
+                        totalRows = totalRows.Where(x => x.WoItem.ToLower().Contains(rule.data.ToLower()));
                     }
                     else if (rule.field == nameof(WorkOrderView.SupplierName))
                     {
