@@ -1,7 +1,9 @@
 ﻿namespace Msr.Models.Orders
 {
-    public class WorkItemStatusConstants
+    public static class WorkItemStatusConstants
     {
         public static readonly string Accepted = "ACCEPTED";
+        public static readonly string WaitingToStart = "PENDING_PARENT_ACCEPTANCE";
+        public static readonly string Requested = "REQUESTED";
     }
 }

@@ -9,7 +9,7 @@ namespace Answer.Web.ViewModel.Wip
 {
     public class WipListViewModel
     {
-        public List<WorkOrderView> WoItemsInprogress { get; set; }
+        public List<ProcedureInProgressViewModel> WoItemsInprogress { get; set; }
 
         public List<WorkOrderView> WoItemsByProcedures { get; set; }
         public LoggedUserIdResult CurrentUser { get; set; }

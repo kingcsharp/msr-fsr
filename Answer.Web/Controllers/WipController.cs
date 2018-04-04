@@ -328,13 +328,23 @@ namespace Answer.Web.Controllers
             viewModel.CurrentUser = currentUser;
 
             viewModel.WoItemsInprogress = _orderService.GetWorkOrderQueryable()
-                .Where(x => x.Status == WorkItemStatusConstants.Accepted && x.SupplierId == currentUser.Root_Company && x.RequesteeId != currentUser.Id)
+                .Where(x => (x.Status == WorkItemStatusConstants.Accepted || x.Status == WorkItemStatusConstants.WaitingToStart || x.Status == WorkItemStatusConstants.Requested))
                 .OrderByDescending(o => o.DueDate)
-                .ToList();
+                .Select(x=> new ProcedureInProgressViewModel
+                {
+                    ProductName = x.ProductName,
+                    ProcedureName = x.ProcName
+                }).Distinct().ToList();
 
-            var procs = viewModel.WoItemsInprogress.Select(p => p.ProcName).ToList();
+            var procs = viewModel.WoItemsInprogress.Select(p => p.ProcedureName).ToList();
 
-            viewModel.WoItemsByProcedures = _orderService.GetWorkOrderQueryable().Where(x => procs.Contains(x.ProcName)).ToList();
+            viewModel.WoItemsByProcedures = _orderService
+                .GetWorkOrderQueryable()
+                .Distinct()
+                .Where(x => procs.Contains(x.ProcName))
+                .Where(x => x.Status == WorkItemStatusConstants.Accepted ||
+                            x.Status == WorkItemStatusConstants.WaitingToStart ||
+                            x.Status == WorkItemStatusConstants.Requested).ToList();
 
             return View(viewModel);
         }

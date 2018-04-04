@@ -17,11 +17,11 @@
             {
                 <div class="row">
                     <div class="col-lg-3">
-                        <strong>Proc: @item.ProductName <br>@item.ProcName</strong>
+                        <strong>Proc: @item.ProductName <br>@item.ProcedureName</strong>
                     </div>
 
                     <div class="col-lg-9">
-                        @foreach (var proItem in Model.WoItemsByProcedures.Where(x => x.ProcName == item.ProcName).OrderBy(o => o.DueDate))
+                        @foreach (var proItem in Model.WoItemsByProcedures.Where(x => x.ProcName == item.ProcedureName && x.ProductName == item.ProductName).OrderBy(o => o.DueDate))
                         {
                             var statusText = "";
                             var cssIconButton = "";
