@@ -57,7 +57,7 @@ $(document).ready(function () {
                 colmenu: false,
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                width: 100,
+                width: 144,
                 align: 'center',
                 formatter: workItemFormatter
             },

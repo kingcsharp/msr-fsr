@@ -329,12 +329,13 @@ namespace Answer.Web.Controllers
 
             viewModel.WoItemsInprogress = _orderService.GetWorkOrderQueryable()
                 .Where(x => (x.Status == WorkItemStatusConstants.Accepted || x.Status == WorkItemStatusConstants.WaitingToStart || x.Status == WorkItemStatusConstants.Requested))
-                .OrderByDescending(o => o.DueDate)
+                .OrderByDescending(x => x.DueDate)
                 .Select(x=> new ProcedureInProgressViewModel
                 {
                     ProductName = x.ProductName,
-                    ProcedureName = x.ProcName
-                }).Distinct().ToList();
+                    ProcedureName = x.ProcName,
+                    DueDate = x.DueDate
+                }).ToList();
 
             var procs = viewModel.WoItemsInprogress.Select(p => p.ProcedureName).ToList();
 

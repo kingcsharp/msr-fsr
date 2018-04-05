@@ -13,15 +13,15 @@
                 <div>No records to view</div>
             }
 
-            @foreach (var item in Model.WoItemsInprogress)
+            @foreach (var item in Model.WoItemsInprogress.OrderByDescending(x=>x.DueDate).GroupBy(g=> new { g.ProcedureName , g.ProductName}))
             {
                 <div class="row">
                     <div class="col-lg-3">
-                        <strong>Proc: @item.ProductName <br>@item.ProcedureName</strong>
+                        <strong>Proc: @item.Key.ProductName <br>@item.Key.ProcedureName</strong>
                     </div>
 
                     <div class="col-lg-9">
-                        @foreach (var proItem in Model.WoItemsByProcedures.Where(x => x.ProcName == item.ProcedureName && x.ProductName == item.ProductName).OrderBy(o => o.DueDate))
+                        @foreach (var proItem in Model.WoItemsByProcedures.Where(x => x.ProcName == item.Key.ProcedureName && x.ProductName == item.Key.ProductName).OrderBy(o => o.DueDate))
                         {
                             var statusText = "";
                             var cssIconButton = "";
@@ -60,7 +60,7 @@
                             if (string.IsNullOrWhiteSpace(proItem.RequesteeName))
                             {
                                 cssIconButton = "fa fa-ban fa-stack-2x";
-                                cssButton = "btn-success";
+                               cssButton = "btn-success";
                             }
 
                             var daysTillDueDate = proItem.DueDate?.Subtract(DateTime.Now).Days;
