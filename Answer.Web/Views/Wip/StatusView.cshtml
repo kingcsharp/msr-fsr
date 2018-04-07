@@ -13,7 +13,7 @@
                 <div>No records to view</div>
             }
 
-            @foreach (var item in Model.WoItemsInprogress.OrderByDescending(x=>x.DueDate).GroupBy(g=> new { g.ProcedureName , g.ProductName}))
+            @foreach (var item in Model.WoItemsInprogress.OrderBy(x=>x.DueDate).GroupBy(g=> new { g.ProcedureName , g.ProductName}))
             {
                 <div class="row">
                     <div class="col-lg-3">
