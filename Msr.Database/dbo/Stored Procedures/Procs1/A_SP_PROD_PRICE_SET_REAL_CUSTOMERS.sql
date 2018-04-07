@@ -7,6 +7,7 @@ CREATE   PROCEDURE dbo.A_SP_PROD_PRICE_SET_REAL_CUSTOMERS
 @ppID nvarchar(50),
 @strNTLogin nvarchar(50)
 AS
+print 'A_SP_PROD_PRICE_SET_REAL_CUSTOMERS called' + @ppID
 DELETE FROM A_PROD_PRICE_LIST_REAL_CUSTOMERS WHERE PP_LIST_ID = @ppID
 Declare @curs Cursor,
 		@it varchar(50), 
@@ -19,11 +20,10 @@ SELECT @prod = PRODUCT FROM A_PROD_PRICE_LIST_HISTORY WHERE ID = @ppID
 SELECT @supDept = SUPPLIER_ID FROM A_V_PRODUCTS_APPROVED_DATA WHERE ID = @prod
 declare @tRoot as varchar(50)
 set @tRoot = @supDept
-while @tRoot is not null
-	begin
-	set @supRootCo = @tRoot
-	SELECT @tRoot = PARENT FROM A_V_COMPANIES_APPROVED_DATA WHERE ID = @supRootCo
-	end
+
+set @supRootCo = @tRoot
+SELECT @tRoot = PARENT FROM A_V_COMPANIES_APPROVED_DATA WHERE ID = @supRootCo
+
 print 'The Supplying Dept = ' + @supDept
 print 'The Supplying Root Co = ' + @supRootCo
 
