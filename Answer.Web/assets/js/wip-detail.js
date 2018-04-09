@@ -1,7 +1,5 @@
 
-//document ready
 $(function () {
-
 
     // The slider being synced must be initialized first
     $('#carousel').flexslider({
@@ -87,27 +85,11 @@ $(function () {
 
     $('#showCompletedSwitch').on('switchChange.bootstrapSwitch', function (e, state) {
         e.preventDefault();
-        var containerUl = $('#wip-item-select').siblings('div.dropdown-menu').find('ul.dropdown-menu');
-
-        if (state) {
-
-            containerUl.find('li').each(function (index, value) {
-                if ($(this).find('a span.label').html() === "FINISHED") {
-                    $(this).hide();
-                }
-            });
-            
-        } else {
-
-            containerUl.find('li').each(function (index, value) {
-                if ($(this).find('a span.label').html() === "FINISHED" || $(this).find('a span.label').html() === "CLOSED") {
-                    $(this).show();
-                }
-            });
-            
-        }
-
+        LoadMyItems(state);
     });
+
+    
+    LoadMyItems(true);
 
     $('[data-toggle="tooltip"]').tooltip();
 
@@ -384,4 +366,27 @@ function handleNCRButtonPush() {
 
         }
     });
+}
+
+function LoadMyItems(state) {
+
+    var containerUl = $('#wip-item-select').siblings('div.dropdown-menu').find('ul.dropdown-menu');
+
+    if (state) {
+
+        containerUl.find('li').each(function (index, value) {
+            if ($(this).find('a span.label').html() === "FINISHED") {
+                $(this).hide();
+            }
+        });
+
+    } else {
+
+        containerUl.find('li').each(function (index, value) {
+            if ($(this).find('a span.label').html() === "FINISHED" || $(this).find('a span.label').html() === "CLOSED") {
+                $(this).show();
+            }
+        });
+
+    }
 }
