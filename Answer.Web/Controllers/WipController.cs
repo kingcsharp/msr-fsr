@@ -351,6 +351,37 @@ namespace Answer.Web.Controllers
         }
 
 
+        public ActionResult WipListModel()
+        {
+            var currentUser = GetCurrentUser();
+
+            var viewModel = new WipListViewModel();
+            viewModel.CurrentUser = currentUser;
+
+            viewModel.WoItemsInprogress = _orderService.GetWorkOrderQueryable()
+               .Where(x => (x.Status == WorkItemStatusConstants.Accepted || x.Status == WorkItemStatusConstants.WaitingToStart || x.Status == WorkItemStatusConstants.Requested))
+               .OrderByDescending(x => x.DueDate)
+               .Select(x => new ProcedureInProgressViewModel
+               {
+                   ProductName = x.ProductName,
+                   ProcedureName = x.ProcName,
+                   DueDate = x.DueDate
+               }).ToList();
+
+            var procs = viewModel.WoItemsInprogress.Select(p => p.ProcedureName).ToList();
+
+            viewModel.WoItemsByProcedures = _orderService
+                .GetWorkOrderQueryable()
+                .Distinct()
+                .Where(x => procs.Contains(x.ProcName))
+                .Where(x => x.Status == WorkItemStatusConstants.Accepted ||
+                            x.Status == WorkItemStatusConstants.WaitingToStart ||
+                            x.Status == WorkItemStatusConstants.Requested).ToList();
+
+            return PartialView("_WipListModal", viewModel);
+        }
+
+
         public ActionResult PrintTraveler(int id)
         {
             var currentUser = GetCurrentUser();

@@ -1335,6 +1335,7 @@
     <Content Include="Views\Companies\Import.cshtml" />
     <Content Include="Views\ActualParts\Import.cshtml" />
     <Content Include="Views\Procedures\Partials\_InnerStep.cshtml" />
+    <Content Include="Views\Wip\_WipListModal.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

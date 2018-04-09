@@ -1,0 +1,126 @@
+﻿@model Answer.Web.ViewModel.Wip.WipListViewModel
+
+@{
+    ViewBag.Title = "WIP Status";
+}
+
+            @if (!Model.WoItemsInprogress.Any())
+            {
+                <div>No records to view</div>
+            }
+
+            @foreach (var item in Model.WoItemsInprogress.OrderBy(x => x.DueDate).GroupBy(g => new { g.ProcedureName, g.ProductName }))
+            {
+                <div class="row">
+                    <div class="col-lg-4">
+                        <strong>Proc: @item.Key.ProductName <br>@item.Key.ProcedureName</strong>
+                    </div>
+
+                    <div class="col-lg-8">
+                        @foreach (var proItem in Model.WoItemsByProcedures.Where(x => x.ProcName == item.Key.ProcedureName && x.ProductName == item.Key.ProductName).OrderBy(o => o.DueDate))
+                        {
+                            var statusText = "";
+                            var cssIconButton = "";
+                            var cssButton = "";
+                            var acceptedButton = "";
+
+                            if (proItem.Status == "CLOSED" || proItem.Status == "FINISHED")
+                            {
+                                cssButton = "step-complete";
+                            }
+                            else if (proItem.Status == "ACCEPTED")
+                            {
+                                cssIconButton = "fa fa-cog fa-spin fa-2x";
+                                cssButton = "btn-success";
+
+                                if (proItem.RequesteeId != Model.CurrentUser.Id)
+                                {
+                                    acceptedButton = "btn-accepted";
+                                }
+
+                                statusText = "In Progress";
+                            }
+                            else if (proItem.Status == "PENDING_PARENT_ACCEPTANCE")
+                            {
+                                cssIconButton = "fa-cog";
+                                cssButton = "btn btn-sq btn-success wip-button";
+                                statusText = "Waiting to Start";
+                            }
+
+                            if (DateTime.Now > proItem.DueDate)
+                            {
+                                cssIconButton = "fa fa-exclamation-circle fa-2x";
+                                cssButton = "btn-danger";
+                            }
+
+                            if (string.IsNullOrWhiteSpace(proItem.RequesteeName))
+                            {
+                                cssIconButton = "fa fa-ban fa-stack-2x";
+                                cssButton = "btn-success";
+                            }
+
+                            var daysTillDueDate = proItem.DueDate?.Subtract(DateTime.Now).Days;
+                            if (daysTillDueDate <= proItem.Threshold)
+                            {
+                                cssIconButton = "fa fa-clock-o fa-2x";
+                                cssButton = "btn-warning";
+                            }
+
+                            <button data-toggle="tooltip" data-task-id="@proItem.TaskId" data-fill-id="@proItem.FillId" data-placement="bottom" data-html="true"
+                                    title="<strong>Serial #:</strong>@proItem.Serial<br />
+                                       <strong>Status:</strong> @statusText <br />
+                                       <strong>Assigned To:</strong> @proItem.RequesteeName <br/>
+                                        @if (proItem.DueDate.HasValue)
+                                        {
+                                            <strong>Due Date:</strong> @proItem.DueDate.Value.ToShortDateString() <br />
+                                        }
+                                        "
+                                            class="btn btn-sq @cssButton wip-button @acceptedButton">
+                                        <i class="@cssIconButton"></i>
+                </button>
+                        }
+                    </div>
+
+                </div>
+            }
+
+@section scripts
+{
+    <script>
+        $('[data-toggle="tooltip"]').tooltip();
+
+        $('.wip-button').on('click', function () {
+
+            var fillId = $(this).data('fill-id');
+
+            if ($(this).hasClass('btn-accepted')) {
+
+                var id = $(this).data('task-id');
+
+
+                eModal.confirm('Do you want to take ownership of this WO Item?')
+                    .then(function () {
+                        eLoaderOpen()
+                        $.ajax({
+                            type: "POST",
+                            url: "/wip/TakeTaskOwnersShip?taskId=" + id,
+                            dataType: 'json',
+                            success: function (data) {
+                                if (data.Code === "OK") {
+                                    window.location.href = '/wip/Details/' + fillId;
+                                } else {
+                                    alert(data.Message);
+                                }
+                                eLoaderClose()
+                            },
+                            error: function (error) {
+                                eLoaderError(error)
+                            }
+                        });
+                    }, null);
+            } else {
+                window.location.href = '/wip/Details/' + fillId;
+            }
+        });
+    </script>
+}
