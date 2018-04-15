@@ -29,6 +29,10 @@
                                     <button type="button" class="btn btn-primary pull-right" id="view-requirment" data-call-back-id="@Model.Id" data-toggle="modal" data-target="#userRequirementsModal"><i class="fa fa-eye"></i> View Requirements</button>
                                 </div>
                             }
+                            else
+                            {
+                                <span class="pull-right btn btn-primary" style="margin-left: 10px;" data-id="@Model.Id" data-placement="top" title="" data-original-title="Generates a Quote Preview" data-toggle="modal" data-target="#quoteModal"><i class="fa fa-eye"></i> Preview Quote</span>
+                            }
                         </div>
 
                         @using (Html.BeginForm("Edit", "ProductionPlanning", FormMethod.Post, new { @id = "production-planning-form", @class = "", role = "form" }))
@@ -53,8 +57,6 @@
 
 @section scripts
 {
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
 
     <script type="text/javascript" src="~/assets/js/ObjectAssign.js"></script>
     <script type="text/javascript" src="~/assets/js/grids/requirement-steps.js"></script>

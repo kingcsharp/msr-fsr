@@ -2,7 +2,7 @@
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[CustomerSubmittedRequirementId] [int] NOT NULL,
 	[ObjectId] [nvarchar](50) NOT NULL,
-	[Process] [nvarchar](50) NULL,
+	[Process] [nvarchar](MAX) NULL,
 	[Step] [int] NULL,
 	[StandardDirectLaborMinutes] [decimal](10, 2) NOT NULL,
 	[StandardMachineMinutes] [decimal](10, 2) NOT NULL,

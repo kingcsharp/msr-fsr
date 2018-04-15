@@ -14,7 +14,7 @@
                     <div class="form-group">
                         <label class="control-label col-md-1">Template:</label>
                         <div class="col-md-4">
-                            @Html.DropDownList("Procedure", (IEnumerable<SelectListItem>) ViewBag.Accounts, null, new {@class = "form-control", name = "Procedure"})
+                            @Html.DropDownList("Procedure", null, null, new {@class = "form-control", name = "Procedure"})
                         </div>
                         <div class="col-md-2">
                             <button type="button" class="btn btn-success addNewStep">Add New Step</button>
@@ -68,7 +68,3 @@
         background-color: #EFEFEF;
     }
 </style>
-
-<script type="text/javascript">
-   
-</script>

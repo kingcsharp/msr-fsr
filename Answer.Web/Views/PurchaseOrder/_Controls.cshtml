@@ -128,7 +128,7 @@
         <th align="right">Products:</th>
         <td>
             <div>
-                @Html.DropDownListFor(m => m.Products, Model.ProductsList, new { @class = "form-control selectproducts submitselect select", multiple = "multiple" })
+                @Html.DropDownListFor(m => m.Products, Model.ProductsList, new { @class = "form-control select-products select" })
             </div>
             <div id="product-message" class="alert-info">
             </div>
@@ -169,35 +169,3 @@
         </div>
     </div>
 </div>
-
-@section scripts
-{
-    <script type="text/javascript">
-        @{
-            var productsJoin = string.Join(",", Model.Products);
-        }
-
-        $(document).ready(function() {
-            $('.select').select2();
-
-            var selectProducts = $(".selectproducts").select2({
-                tags: [],
-                tokenSeparators: [','],
-                multiple: true,
-                allowClear: true,
-                placeholder: "Select Products",
-                formatNoMatches: function() {
-                    return '';
-                }
-            });
-
-            var values = '@productsJoin';
-            var selectedProducts = values.split(",");
-
-            selectProducts.val(selectedProducts).trigger("change");
-
-        });
-
-    </script>
-
-}

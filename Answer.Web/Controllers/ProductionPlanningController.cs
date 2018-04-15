@@ -184,8 +184,8 @@ namespace Answer.Web.Controllers
                     {
                         Id = Convert.ToInt32(step.Id),
                         ObjectId = step.Id,
-                        Process = !string.IsNullOrWhiteSpace(step.Step_Text) ? step.Step_Text : step.StepTitle,
-                        StepTitle = !string.IsNullOrWhiteSpace(step.Step_Text) ? step.Step_Text : step.StepTitle,
+                        Process = !string.IsNullOrWhiteSpace(step.StepTitle) ? step.StepTitle : step.Step_Text,
+                        StepTitle = !string.IsNullOrWhiteSpace(step.StepTitle) ? step.StepTitle : step.Step_Text,
                         Step = (int) step.Print_Order
                     });
                 }
@@ -198,8 +198,7 @@ namespace Answer.Web.Controllers
 
                     if (step != null)
                     {
-                        //TODO
-                        item.Process = !string.IsNullOrWhiteSpace(step.Step_Text) ? step.Step_Text : step.StepTitle;
+                        item.Process = !string.IsNullOrWhiteSpace(step.StepTitle) ? step.StepTitle : step.Step_Text;
                     }
                 }
             }

@@ -67,6 +67,7 @@ namespace Msr.Services.Procedures
         public List<SelectFile> GetProcedurelist()
         {
             var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT ID as Value, Title as Show FROM A_V_PREPOP_QUICK WHERE CREATING_CO = '2' ").ToList();
+            result.Insert(0, new SelectFile { Show = "None", Value = "" });
 
             return result;
         }
@@ -616,7 +617,7 @@ namespace Msr.Services.Procedures
                     UsefulLife = viewModel.UsefulLife,
                     EquipExpensePerMinute = viewModel.EquipExpensePerMinute,
                     AnnualRM = viewModel.AnnualRM,
-                    RMPerMinute = viewModel.RMPerMinute
+                    RMPerMinute = viewModel.RMPerMinute,
                 };
 
                 _dbContext.Database.ExecuteStoredProcedure(updateOneStep);

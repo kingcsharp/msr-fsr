@@ -424,12 +424,12 @@ namespace Answer.Web.Controllers
             return View(viewModel);
         }
         [HttpPost]
-        public ActionResult SaveStep(string ProcObjectId, string Procedure)
+        public ActionResult SaveStep(string ProcObjectId, string procedure)
         {
-            var id = _proceduresService.PrePopSave(ProcObjectId, Procedure, GetCurrentUser().Id);
+            var id = _proceduresService.PrePopSave(ProcObjectId, procedure, GetCurrentUser().Id);
 
             ViewBag.Id = id;
-            ViewBag.Procedure = Procedure;
+            ViewBag.Procedure = procedure;
             var currentUser = GetCurrentUser();
 
             var vm = new GetStepEditDataViewModel
@@ -444,19 +444,21 @@ namespace Answer.Web.Controllers
             };
             vm.SetUp(_proceduresService, _procedureVerbsService, ProcObjectId);
 
-            var singleOrDefault = _proceduresService.GetProcedurelist().SingleOrDefault(x => x.Value == Procedure);
+            var singleOrDefault = _proceduresService.GetProcedurelist().SingleOrDefault(x => x.Value == procedure);
+
             if (singleOrDefault != null)
             {
                 var value = singleOrDefault.Show;
 
                 vm.GetStepEditData.Step_Text = value;
                 vm.ProcObjId = ProcObjectId;
+                ////vm.GetStepEditData.StepTitle = 
             }
             var response = _proceduresService.CreateStepData(vm);
 
             if (!response.HasErrors())
             {
-                TempData["SuccessMessage"] = "Step has been Created successfully.";
+                TempData["SuccessMessage"] = "Step has been created successfully.";
 
             }
             else
@@ -468,7 +470,7 @@ namespace Answer.Web.Controllers
             return Json("Ok", JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult CreateStep(string procedureObjectId, string NewObjectId, string Procedure)
+        public ActionResult CreateStep(string procedureObjectId, string Procedure)
         {
             var currentUser = GetCurrentUser();
 

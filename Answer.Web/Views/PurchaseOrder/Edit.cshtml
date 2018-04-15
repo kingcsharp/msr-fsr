@@ -28,16 +28,18 @@
     <script src="~/assets/js/bootstrap-datetimepicker.min.js"></script>
     <script src="~/assets/js/grids/add-purchase-order.js"></script>
     <script src="~/assets/js/dataTables.bootstrap.min.js"></script>
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+    
+    @Scripts.Render("~/bundles/js/jqueryval")
+
     <script src="~/assets/js/grids/add-purchase-order.js"></script>
 
     <script type="text/javascript">
         
         $(document).ready(function () {
+
             $('.select').select2();
 
-            var selectProducts = $(".selectproducts").select2({
+            var selectProducts = $(".select-products").select2({
                 tags: [],
                 tokenSeparators: [','],
                 multiple: true,

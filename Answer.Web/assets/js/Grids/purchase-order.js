@@ -250,6 +250,7 @@
                 colmenu: false,
                 width: 220,
                 editable: true,
+                stype: "select",
                 coloptions: {
                     sorting: false,
                     columns: true,
@@ -258,7 +259,7 @@
                     grouping: false,
                     freeze: false
                 },
-                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                searchoptions: { value: ":[All];CUSTOMER_ACCOUNT:Customer Account;PRODUCT_ACCOUNT:Product Account;PURCHASING_ACCOUNT:Purchasing Account" },
                 align: 'left'
             },
             {

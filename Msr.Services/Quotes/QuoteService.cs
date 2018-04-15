@@ -90,7 +90,7 @@ namespace Msr.Services.Quotes
 
                     model.ExistingProcess = model.ExistingProcess.Trim();
 
-                    var procedure = _dbContext.Procedures.FirstOrDefault(x => x.Id == model.ExistingProcess && x.Status == "APPROVED");
+                    var procedure = _dbContext.Procedures.FirstOrDefault(x => x.Root == model.ExistingProcess && x.Status == "APPROVED");
 
                     if (procedure != null)
                     {

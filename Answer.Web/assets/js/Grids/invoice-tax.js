@@ -3,7 +3,6 @@ inVoiceTax.values = [];
 inVoiceTax.total = 0;
 
 function CheckBoxSelection(id, element, value) {
-    debugger;
     if (id !== '') {
         //for edit
         var editTotalAmount = $('#totalAmount').val();
@@ -58,7 +57,9 @@ function CheckBoxSelection(id, element, value) {
 
 $('#totalTaxAmount').on('change', function () {
 
-    if ($(this).val() === '') {
+    if (isNaN($(this).val())) {
+        $(this).val(0);
+    } else {
         $(this).val(0);
     }
 

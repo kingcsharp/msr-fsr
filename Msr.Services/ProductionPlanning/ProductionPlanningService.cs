@@ -235,6 +235,7 @@ namespace Msr.Services.ProductionPlanning
                     var messages = p.Get<string>("messages");
 
                     requirment.ProductId = newId;
+                    _dbContext.SaveChanges();
                 }
             }
             catch (Exception ex)
