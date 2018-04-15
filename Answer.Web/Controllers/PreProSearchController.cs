@@ -203,11 +203,8 @@ namespace Answer.Web.Controllers
             var model = _preProServices.GetById(id);
 
             var vm = new ProcedurePreProViewModel();
-
             vm = vm.MapToDto(model);
-
             vm.CreatingCo = currentUser.Company;
-
             vm.Setup(_preProServices, _documentFilesService, _procedureVerbsService, currentUser);
 
             var labors = _preProServices.GetLaborStepsList().Where(x => x.StepId == vm.ProcObjId).ToList();
@@ -244,7 +241,7 @@ namespace Answer.Web.Controllers
             {
                 model.NTLogin = currentUser.Id;
 
-                var response = _preProServices.Save(model: model);
+                var response = _preProServices.Save(model);
 
                 if (response)
                 {

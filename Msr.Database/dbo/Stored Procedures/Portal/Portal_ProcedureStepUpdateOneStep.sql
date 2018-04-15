@@ -47,7 +47,8 @@ else
 	end
 print 'Now update all the values with the data passed in'
 UPDATE A_PROCEDURE_STEPS SET
-STEP_TEXT = @title,
+STEP_TEXT = @STEP_TEXT,
+TITLE = @title
 COMMENTS = @COMMENTS,
 PROCEDURE_ID = @pID,
 START_ON_COUNTER = @START_ON_COUNTER,
@@ -69,8 +70,7 @@ CYCLE_UNIT = @CYCLE_UNIT,
 DURATION = @DURATION,
 DURATION_TYPE = @DURATION_TYPE,
 DRCM = getDate(),
-MODBY = @strNTLogin,
-TITLE = @title
+MODBY = @strNTLogin
 WHERE ID = @newID
 
 print 'Adding links to the reference Theories'

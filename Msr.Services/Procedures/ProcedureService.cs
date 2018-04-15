@@ -651,6 +651,7 @@ namespace Msr.Services.Procedures
             var updateOneStep = new UpdateOneStepProcedure();
 
             updateOneStep.Id = viewModel.Id;
+            updateOneStep.Title = viewModel.StepTitle;
             updateOneStep.StepText = viewModel.Step_Text;
             updateOneStep.ProcObjId = viewModel.ProcObjId;
             updateOneStep.Comments = viewModel.Comments;
