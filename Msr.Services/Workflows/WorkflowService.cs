@@ -20,6 +20,11 @@ namespace Msr.Services.Workflows
             _dbContext = new MsrDbContext();
         }
 
+        public void SpRunAdminSql()
+        {
+            _dbContext.Database.ExecuteSqlCommand("exec A_SP_ADMIN_SQL_TO_RUN_EXECUTE");
+        }
+
         public ObjectDataResult GetSpObjectGetData(string id, string loginId)
         {
             var sql = string.Format("exec A_SP_OBJECT_GET_DATA '{0}','{1}'", id, loginId);
@@ -65,6 +70,8 @@ namespace Msr.Services.Workflows
 
                     result.SuccessMessage = msg;
                 }
+
+                SpRunAdminSql();
             }
             catch (Exception e)
             {
@@ -88,6 +95,8 @@ namespace Msr.Services.Workflows
                 {
                     conn.Execute("A_SP_OBJECT_UNLOCK_AND_DELETE", p, commandType: CommandType.StoredProcedure);
                 }
+
+                SpRunAdminSql();
             }
             catch (Exception e)
             {
@@ -134,6 +143,8 @@ namespace Msr.Services.Workflows
                     _dbContext.Database.SqlQuery<ObjectDataResult>(sqlCheckoutData).Single();
 
                 }
+
+                SpRunAdminSql();
             }
             catch (Exception e)
             {
