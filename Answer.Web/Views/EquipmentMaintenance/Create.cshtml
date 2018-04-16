@@ -68,7 +68,6 @@
                                 </div>
                             </div>
                         </div>
-
                         @if (Model.Roles.Any(x => x.Role_Name == RoleConstants.ProductionManager || x.Role_Name == RoleConstants.MaintenanceTechnician))
                         {
                             <div class="form-group">
@@ -110,7 +109,6 @@
                             @Html.HiddenFor(model => model.PemLastCompletedDate)
                             @Html.HiddenFor(model => model.FrequencyField)
                         }
-
                         <div class="form-group">
                             <label class="col-md-2 control-label" for="save"></label>
                             <div class="col-md-8">
@@ -140,11 +138,10 @@
             });
 
             $('#ScanBarcode').on('keyup', function () {
-                debugger;
                 if ($(this).val().length > 3) {
 
                     var id = $(this).val();
-                    eLoaderOpen()
+                    eLoaderOpen();
                     $.ajax({
                         type: "POST",
                         url: "/EquipmentMaintenance/GetChildLocations/" + id,
@@ -204,7 +201,7 @@
                                                         $("#SubLocationSecondId").prop('disabled', false);
                                                     },
                                                     error: function (error) {
-                                                        eLoaderError(error)
+                                                        eLoaderError(error);
                                                     }
                                                 });
                                             }
@@ -212,16 +209,16 @@
 
                                         },
                                         error: function (error) {
-                                            eLoaderError(error)
+                                            eLoaderError(error);
                                         }
                                     });
                                 }
 
                             }
-                            eLoaderClose()
+                            eLoaderClose();
                         },
                         error: function (error) {
-                            eLoaderError(error)
+                            eLoaderError(error);
                         }
                     });
                 }
@@ -232,7 +229,7 @@
         $("#PrimaryLocationId").change(function () {
 
             var id = $("#PrimaryLocationId").val();
-            eLoaderOpen()
+            eLoaderOpen();
             $.ajax({
                 type: 'POST',
                 url: "/EquipmentMaintenance/GetSecoundLocationsManually/" + id,
@@ -254,10 +251,10 @@
                                     .append("<option value='" + row.Value + "'>" + row.Text + "</option>");
                             });
                     }
-                    eLoaderClose()
+                    eLoaderClose();
                 },
                 error: function (error) {
-                    eLoaderError(error)
+                    eLoaderError(error);
                 }
             });
 
@@ -267,7 +264,7 @@
         $("#SubLocationFirstId").change(function () {
 
             var id = $("#SubLocationFirstId").val();
-            eLoaderOpen()
+            eLoaderOpen();
             $.ajax({
                 type: 'POST',
                 url: "/EquipmentMaintenance/GetthirdLocationsManually/" + id,
@@ -285,10 +282,10 @@
                                     .append("<option value='" + row.Value + "'>" + row.Text + "</option>");
                             });
                     }
-                    eLoaderClose()
+                    eLoaderClose();
                 },
                 error: function (error) {
-                    eLoaderError(error)
+                    eLoaderError(error);
                 }
             });
 

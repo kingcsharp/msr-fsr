@@ -273,6 +273,8 @@
     <Compile Include="ViewModel\EditUserViewModel.cs" />
     <Compile Include="ViewModel\AddUserViewModel.cs" />
     <Compile Include="ViewModel\Wip\PrintViewModel.cs" />
+    <Compile Include="ViewModel\Wip\WipStatusViewModel.cs" />
+    <Compile Include="ViewModel\Wip\WipStatusViewItem.cs" />
     <Compile Include="ViewModel\Wip\WipDetails.cs" />
     <Compile Include="ViewModel\Wip\ProcedureInProgressViewModel.cs" />
     <Compile Include="ViewModel\Wip\WipListViewModel.cs" />

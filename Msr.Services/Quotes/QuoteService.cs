@@ -50,11 +50,11 @@ namespace Msr.Services.Quotes
 
                     item.CustomerPartNo = item.CustomerPartNo.Trim();
 
-                    var part = _dbContext.PartsViews.Where(x => x.CompanyPartNumber == item.CustomerPartNo && x.Status == "APPROVED").OrderByDescending(x => x.CreateDate).FirstOrDefault();
+                    var part = _dbContext.PartsViews.Where(x => x.Id == item.CustomerPartNo && x.Status == "APPROVED").OrderByDescending(x => x.CreateDate).FirstOrDefault();
 
                     if (part != null)
                     {
-                        entity.PartId = part.ObjectId;
+                        entity.PartId = part.Id;
                     }
                     else
                     {

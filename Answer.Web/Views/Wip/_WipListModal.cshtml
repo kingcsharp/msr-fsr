@@ -1,4 +1,5 @@
-﻿@model Answer.Web.ViewModel.Wip.WipListViewModel
+﻿@using Msr.Models.Orders
+@model Answer.Web.ViewModel.Wip.WipListViewModel
 
 @{
     ViewBag.Title = "WIP Status";
@@ -40,10 +41,10 @@
 
                                 statusText = "In Progress";
                             }
-                            else if (proItem.Status == "PENDING_PARENT_ACCEPTANCE")
+                            else if (proItem.Status == "PENDING_PARENT_ACCEPTANCE" || proItem.Status == WorkItemStatusConstants.Requested)
                             {
-                                cssIconButton = "fa-cog";
-                                cssButton = "btn btn-sq btn-success wip-button";
+                                cssIconButton = "fa fa-hourglass fa-2x";
+                                cssButton = "btn btn-sq btn-info wip-button";
                                 statusText = "Waiting to Start";
                             }
 

@@ -324,20 +324,20 @@ namespace Answer.Web.Controllers
         {
             var currentUser = GetCurrentUser();
 
-            var viewModel = new WipListViewModel();
+            var viewModel = new WipStatusViewModel();
             viewModel.CurrentUser = currentUser;
 
-            viewModel.WoItemsInprogress = _orderService.GetWorkOrderQueryable()
+            viewModel.WipStatusViewItems = _orderService.GetWorkOrderQueryable()
                 .Where(x => (x.Status == WorkItemStatusConstants.Accepted || x.Status == WorkItemStatusConstants.WaitingToStart || x.Status == WorkItemStatusConstants.Requested))
                 .OrderByDescending(x => x.DueDate)
-                .Select(x=> new ProcedureInProgressViewModel
+                .Select(x=> new WipStatusViewItem
                 {
                     ProductName = x.ProductName,
                     ProcedureName = x.ProcName,
                     DueDate = x.DueDate
                 }).ToList();
 
-            var procs = viewModel.WoItemsInprogress.Select(p => p.ProcedureName).ToList();
+            var procs = viewModel.WipStatusViewItems.Select(p => p.ProcedureName).ToList();
 
             viewModel.WoItemsByProcedures = _orderService
                 .GetWorkOrderQueryable()
