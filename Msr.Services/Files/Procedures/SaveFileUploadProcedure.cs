@@ -62,10 +62,10 @@ namespace Msr.Services.Files.Procedures
         [StoredProcedureParameter(SqlDbType.VarChar, Size = 50, ParameterName = "strNTLogin")]
         public string NTLogin { get; set; }
 
-        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "FileUrl")]
+        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 5000, ParameterName = "FileUrl")]
         public string FileUrl { get; set; }
 
-        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "FileKey")]
+        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 5000, ParameterName = "FileKey")]
         public string FileKey { get; set; }
     }
 }

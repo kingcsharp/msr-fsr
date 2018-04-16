@@ -56,23 +56,26 @@ namespace Answer.Web.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public JsonResult FileUploader(List<HttpPostedFileBase> files, string taskId)
         {
-            foreach (HttpPostedFileBase file in files)
+            var getCurrentUser = GetCurrentUser();
+            foreach (var file in files)
             {
-                var imageModel = new SaveWorkItemImageViewModel();
-
-                imageModel.Name = file.FileName;
-
-                var keyName = string.Format("Answer2/{0}-{1}", Guid.NewGuid(), file.FileName);
+                var keyName = $"Answer2/{Guid.NewGuid()}-{file.FileName}";
 
                 _cloudUploader.UploadToCloud(file, _bucketName, keyName);
 
                 var cloudUrl = $"{_awsBaseUrl}{keyName}";
+                var imageModel = new SaveWorkItemImageViewModel
+                {
+                    Name = file.FileName,
+                    Path = cloudUrl,
+                    ContentType = file.ContentType,
+                    DropSrc = "YES",
+                    NTLogin = getCurrentUser.Id,
+                    TaskId = taskId,
+                    FileUrl = cloudUrl,
+                    FileKey = keyName
+                };
 
-                imageModel.Path = cloudUrl;
-                imageModel.ContentType = file.ContentType;
-                imageModel.DropSrc = "YES";
-                imageModel.NTLogin = "1618";
-                imageModel.TaskId = taskId;
 
                 _orderService.SaveOrderItemImages(imageModel);
             }
@@ -88,9 +91,11 @@ namespace Answer.Web.Controllers
 
         public ActionResult GetImages(int fillId, int taskId)
         {
-            var viewModel = new ImageViewModel();
-            viewModel.FillId = fillId;
-            viewModel.TaskId = taskId;
+            var viewModel = new ImageViewModel
+            {
+                FillId = fillId,
+                TaskId = taskId
+            };
 
             return PartialView("_Images", viewModel);
         }
@@ -160,12 +165,16 @@ namespace Answer.Web.Controllers
 
                 var cloudUrl = $"{_awsBaseUrl}{keyName}";
 
-                var imageModel = new SaveFileUploadViewModel();
-                imageModel.Name = file.FileName;
-                imageModel.Path = cloudUrl;
-                imageModel.ContentType = file.ContentType;
-                imageModel.DropSrc = "YES";
-                imageModel.NTLogin = currentUser.Id;
+                var imageModel = new SaveFileUploadViewModel
+                {
+                    Name = file.FileName,
+                    Path = cloudUrl,
+                    ContentType = file.ContentType,
+                    DropSrc = "YES",
+                    NTLogin = currentUser.Id,
+                    FileUrl = cloudUrl,
+                    FileKey = keyName
+                };
 
                 responese = _fileService.SaveFileUpload(imageModel);
 
@@ -285,7 +294,9 @@ namespace Answer.Web.Controllers
                     Path = cloudUrl,
                     ContentType = file.ContentType,
                     DropSrc = "YES",
-                    NTLogin = currentUser.Id
+                    NTLogin = currentUser.Id,
+                    FileUrl = cloudUrl,
+                    FileKey = keyName
                 };
 
                 responese = _fileService.SaveFileUpload(imageModel);
