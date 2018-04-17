@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Msr.Commons.Files;
 using Msr.Models.Orders;
 using Msr.Services.Documents;
 using Msr.Services.Documents.ViewModels;
@@ -191,7 +192,7 @@ namespace Answer.Web.Controllers
                 initialPreviewConfig = initialPreviewConfigs.Select(x => new
                 {
                     caption = x.NAME,
-                    type = x.TYPE,
+                    type = MimeTypes.GetContentType(x.CONTENTTYPE),
                     size = 6666,
                     url = Url.Action("DeletesingleReference", "Documents", new { linkDocId = x.LINKED_DOC_ID }),
                     downloadUrl = cloudUrl,
@@ -256,7 +257,7 @@ namespace Answer.Web.Controllers
                 initialPreviewConfig = initialPreviewConfigs.Select(x => new
                 {
                     caption = x.NAME,
-                    type = x.TYPE,
+                    type = MimeTypes.GetContentType(x.CONTENTTYPE),
                     size = 6666,
                     url = "/doc/DeleteImageById?Id=" + newId + "&taskId=" + objectId,
                     downloadUrl = cloudUrl,
@@ -316,7 +317,7 @@ namespace Answer.Web.Controllers
                 initialPreviewConfig = initialPreviewConfigs.Select(x => new
                 {
                     caption = x.NAME,
-                    type = x.TYPE,
+                    type = MimeTypes.GetContentType(x.CONTENTTYPE),
                     size = 6666,
                     url = "/doc/DeletePreProImageById?Id=" + responese.Id + "&fileId=" + objectId,
                     downloadUrl = cloudUrl,
@@ -357,7 +358,7 @@ namespace Answer.Web.Controllers
             object initialPreviewConfig = initialPreviewConfigs.Select(x => new
             {
                 caption = x.NAME,
-                type = x.TYPE,
+                type = MimeTypes.GetContentType(x.CONTENTTYPE),
                 size = 6666,
                 url = Url.Action("DeletesingleReference", "Documents", new { linkDocId = x.LINKED_DOC_ID }),
                 downloadUrl = x.SERVER_PATH,

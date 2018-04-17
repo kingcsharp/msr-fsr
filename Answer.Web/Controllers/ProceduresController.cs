@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using Answer.Web.ViewModel;
+using Msr.Commons.Files;
 using Msr.Infrastructure.Common.Constansts;
 using Msr.Models.ActualParts;
 using Msr.Services.Documents;
@@ -286,7 +287,7 @@ namespace Answer.Web.Controllers
             var previewConfig = jsonSerialiser.Serialize(vm.DocLinks.Select(x => new
             {
                 caption = x.NAME,
-                type = x.TYPE,
+                type = MimeTypes.GetContentType(x.CONTENTTYPE),
                 size = 6666,
                 url = Url.Action("DeletesingleReference", "Documents", new { file = x.LINKED_DOC_ID }),
                 downloadUrl = x.SERVER_PATH,

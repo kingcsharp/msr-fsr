@@ -37,6 +37,15 @@ namespace Msr.Commons.Files
                 case "image/jpeg":
                     contentType = "image";
                     break;
+                case "image/png":
+                    contentType = "image";
+                    break;
+                case "image/gif":
+                    contentType = "image";
+                    break;
+                case "image/bitmap":
+                    contentType = "image";
+                    break;
                 case "application/pdf":
                     contentType = "pdf";
                     break;

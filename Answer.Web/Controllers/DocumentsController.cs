@@ -9,6 +9,7 @@ using System;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
+using Msr.Commons.Files;
 
 namespace Answer.Web.Controllers
 {
@@ -189,7 +190,7 @@ namespace Answer.Web.Controllers
                 .Select(x => new
                 {
                     caption = x.NAME,
-                    type = x.TYPE,
+                    type = MimeTypes.GetContentType(x.CONTENTTYPE),
                     size = 6666,
                     url = Url.Action("DeletesingleReference", "Documents", new {linkDocId = x.LINKED_DOC_ID}),
                     downloadUrl = x.SERVER_PATH,
