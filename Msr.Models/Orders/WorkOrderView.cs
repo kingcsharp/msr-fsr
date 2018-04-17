@@ -34,6 +34,7 @@ namespace Msr.Models.Orders
         public DateTime? OrigDueDate { get; set; }
         public string ActualPartId { get; set; }
         public string ActPartObjId { get; set; }
+        public string CompanyPartNumber { get; set; }
         public DateTime? StDate { get; set; }
         public string ProcId { get; set; }
         public string CustId { get; set; }

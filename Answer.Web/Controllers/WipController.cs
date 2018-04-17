@@ -334,14 +334,14 @@ namespace Answer.Web.Controllers
                 {
                     ProductName = x.ProductName,
                     ProcedureName = x.ProcName,
+                    CompanyPartNumber = x.CompanyPartNumber,
                     DueDate = x.DueDate
-                }).ToList();
+                }).Distinct().ToList();
 
             var procs = viewModel.WipStatusViewItems.Select(p => p.ProcedureName).ToList();
 
             viewModel.WoItemsByProcedures = _orderService
                 .GetWorkOrderQueryable()
-                .Distinct()
                 .Where(x => procs.Contains(x.ProcName))
                 .Where(x => x.Status == WorkItemStatusConstants.Accepted ||
                             x.Status == WorkItemStatusConstants.WaitingToStart ||
