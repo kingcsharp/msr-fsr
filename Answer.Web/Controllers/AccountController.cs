@@ -126,7 +126,7 @@ namespace Msr.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = _userService.GetByUserName(model.UserName);
+                var user = _userService.GetAnserByUserName(model.UserName);
 
                 if (user == null || user.PortalUser)
                 {
@@ -171,9 +171,9 @@ namespace Msr.Web.Controllers
         {
             token = Request.Url.Query.Replace("?token=", "");
 
-            var decPassword = EncryptionHelper.Decrypt(token.Trim());
+            var decUser = EncryptionHelper.Decrypt(token.Trim());
 
-            var user = _userService.GetAnserByUserName(decPassword);
+            var user = _userService.GetAnserByUserName(decUser);
 
             if (user == null)
             {

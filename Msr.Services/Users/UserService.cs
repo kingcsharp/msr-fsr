@@ -71,7 +71,7 @@ namespace Msr.Services.Users
                 LastName = s.LastName,
                 FullName = s.FirstName + " " + s.LastName,
                 Phone = s.PhoneNumber,
-                Phone2 = s.UserName,
+                Phone2 = s.Phone2,
                 Email = s.Email,
                 UserName = s.UserName,
                 IsActive = s.IsActive,
@@ -79,7 +79,8 @@ namespace Msr.Services.Users
                 CompanyId = s.CompanyId,
                 CreatedDate = s.CreatedDate,
                 RoleName = s.AspNetRoles.FirstOrDefault().Name,
-                PortalUser = s.PortalUser
+                PortalUser = s.PortalUser,
+                Login = s.UserName
             }).SingleOrDefault();
 
             return user;
