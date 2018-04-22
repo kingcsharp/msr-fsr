@@ -92,9 +92,14 @@ namespace Msr.Services.Procedures.ViewModels
 
         public List<DocLink> DocLinks { get; set; }
 
-        public void Setup(ProceduresService proceduresService, RoleService roleService, ProcedureVerbsService procedureTypesService, DocumentFilesService documentFilesService, string ntlogin)
+        public void Setup(ProceduresService proceduresService, RoleService roleService, ProcedureVerbsService procedureTypesService, DocumentFilesService documentFilesService, string ntlogin, string co)
         {
-            SystemList = Commons.Lookups.LookupItems.System();
+            SystemList = proceduresService.GetSystemList(co).Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.System_Id.ToString()
+            }).OrderBy(o => o.Text).ToList();
+
             SecurityLevelList = Commons.Lookups.LookupItems.SecurityLevel();
             SetpInApList = Commons.Lookups.LookupItems.YesNo();
             WipMsgList = Commons.Lookups.LookupItems.YesNo();

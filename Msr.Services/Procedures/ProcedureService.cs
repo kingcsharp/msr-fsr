@@ -64,12 +64,20 @@ namespace Msr.Services.Procedures
             return result;
         }
 
-        public List<SelectFile> GetProcedurelist()
+        public List<PreProFile> GetProcedurelist(string co)
         {
-            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT ID as Value, Title as Show FROM A_V_PREPOP_QUICK WHERE CREATING_CO = '2' ").ToList();
-            result.Insert(0, new SelectFile { Show = "None", Value = "" });
+            var result = _dbContext.Database.SqlQuery<PreProFile>($"SELECT ID as Value, StepTitle as Show,STEP_TEXT as StepText FROM A_V_PREPOP_QUICK WHERE CREATING_CO = '{co}'").ToList();
+            result.Insert(0, new PreProFile { Show = "NONE", Value = "", StepText = "" });
 
             return result;
+        }
+
+        public List<GetSystemTasksResult> GetSystemList(string co)
+        {
+            var result = _dbContext.Database.SqlQuery<GetSystemTasksResult>($"SELECT NAME as Name,SYSTEM_ID as System_Id FROM A_V_PROCEDURES_APPROVED_DATA WHERE IS_SYSTEM = 1 and CREATING_CO = {co} ORDER BY NAME").ToList();
+
+            return result;
+
         }
 
         public List<ProcedureStepOtherStepListView> GetProcedureStepOtherStepsList(string procObjectId, string curStepID)
@@ -444,14 +452,9 @@ namespace Msr.Services.Procedures
             {
                 var sql = $"EXEC A_SP_PROCEDURE_ASSIGN_TO_PEOPLE '{model.Id}', '{people}', null, '{model.DatetimeToStart}'";
 
-                //_dbContext.Database.SqlQuery<string>(sql).SingleOrDefault();
-
-                var finalSql = $"EXEC A_SP_ADMIN_SQL_TO_RUN_QUE_UP {sql}, {model.LoginId}";
                 var adminSqlToRunQueUpProcedure = new AdminSqlToRunQueUpProcedure() { MySql = sql, NTLogin = model.LoginId };
 
                 _dbContext.Database.ExecuteStoredProcedure(adminSqlToRunQueUpProcedure);
-
-                //_dbContext.Database.SqlQuery<string>(finalSql).SingleOrDefault();
             }
 
             return new BaseNotification();
@@ -618,6 +621,7 @@ namespace Msr.Services.Procedures
                     EquipExpensePerMinute = viewModel.EquipExpensePerMinute,
                     AnnualRM = viewModel.AnnualRM,
                     RMPerMinute = viewModel.RMPerMinute,
+                    StepTitle = viewModel.GetStepEditData.StepTitle
                 };
 
                 _dbContext.Database.ExecuteStoredProcedure(updateOneStep);
@@ -651,7 +655,6 @@ namespace Msr.Services.Procedures
             var updateOneStep = new UpdateOneStepProcedure();
 
             updateOneStep.Id = viewModel.Id;
-            updateOneStep.Title = viewModel.StepTitle;
             updateOneStep.StepText = viewModel.Step_Text;
             updateOneStep.ProcObjId = viewModel.ProcObjId;
             updateOneStep.Comments = viewModel.Comments;
@@ -673,6 +676,7 @@ namespace Msr.Services.Procedures
             updateOneStep.CycleCount = viewModel.Cycle_Count?.ToString();
             updateOneStep.CycleUnit = viewModel.Cycle_Unit;
             updateOneStep.PrecedingSteps = viewModel.Pre_Step;
+            updateOneStep.StepTitle = viewModel.StepTitle;
 
             if (viewModel.SelectedReferenceProcedureTypes != null && viewModel.SelectedReferenceProcedureTypes.Count > 0)
             {
@@ -1274,3 +1278,4 @@ namespace Msr.Services.Procedures
         }
     }
 }
+

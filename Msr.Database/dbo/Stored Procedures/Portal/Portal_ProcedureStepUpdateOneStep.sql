@@ -27,7 +27,7 @@
 @DURATION float,
 @DURATION_TYPE nvarchar(50),
 @strNTLogin nvarchar(50),
-@title nvarchar(50)
+@StepTitle nvarchar(50)
 AS
 print 'Starting procedure A_SP_PROCEDURE_STEP_UPDATE_ONE_STEP'
 print 'Get the value of the Procedure ID for this Procedure Object ID'
@@ -48,7 +48,7 @@ else
 print 'Now update all the values with the data passed in'
 UPDATE A_PROCEDURE_STEPS SET
 STEP_TEXT = @STEP_TEXT,
-TITLE = @title
+StepTitle = @StepTitle,
 COMMENTS = @COMMENTS,
 PROCEDURE_ID = @pID,
 START_ON_COUNTER = @START_ON_COUNTER,

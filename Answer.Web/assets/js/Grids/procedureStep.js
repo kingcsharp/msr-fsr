@@ -19,8 +19,8 @@
             },
             {
                 label: 'Title',
-                name: 'Title',
-                index: 'Title',
+                name: 'StepTitle',
+                index: 'StepTitle',
                 key: true,
                 colmenu: false,
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },

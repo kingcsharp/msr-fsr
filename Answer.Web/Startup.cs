@@ -25,7 +25,7 @@ namespace Msr.Web
             app.UseHangfireDashboard("/hangfire",options);
             app.UseHangfireServer();
 
-            RecurringJob.AddOrUpdate("A_SP_ADMIN_SQL_TO_RUN_EXECUTE", () => SpAdminJob.Run(), "*/1 * * * *");
+           //// RecurringJob.AddOrUpdate("A_SP_ADMIN_SQL_TO_RUN_EXECUTE", () => SpAdminJob.Run(), "*/1 * * * *");
         }
     }
 }

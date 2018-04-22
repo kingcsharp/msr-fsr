@@ -1,30 +1,30 @@
 ﻿@model Msr.Services.Procedures.Messages.GetStepDataResult
-
 <div class="row">
-    
+
     <h2 class="page-header">
         Steps
     </h2>
-
     <div class="panel-body bio-graph-info">
         <div class="row">
             <div class="col-lg-10">
                 <div class="form-horizontal">
-                    <input type="hidden" id="ProcObjectId" name="ProcObjectId" value="@ViewBag.ProcObjectId"/>
-                    <div class="form-group">
-                        <label class="control-label col-md-1">Template:</label>
-                        <div class="col-md-4">
-                            @Html.DropDownList("Procedure", null, null, new {@class = "form-control", name = "Procedure"})
+                    @using (Html.BeginForm("SaveStep", "Procedures", FormMethod.Post, new { @class = "form form-horizontal" }))
+                    {
+                        <input type="hidden" id="ProcObjectId" name="ProcObjectId" value="@ViewBag.ProcObjectId" />
+                        <div class="form-group">
+                            <label class="control-label col-md-1">Template:</label>
+                            <div class="col-md-4">
+                                @Html.DropDownList("Procedure", null, null, new {@class = "form-control", name = "Procedure"})
+                            </div>
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-success">Add New Step</button>
+                            </div>
                         </div>
-                        <div class="col-md-2">
-                            <button type="button" class="btn btn-success addNewStep">Add New Step</button>
-                        </div>
-                    </div>
+                    }
                 </div>
             </div>
         </div>
     </div>
-
     <ul id="sortable" class="sortable-container">
         @for (var index = 0; index < Model.GetStepDataResults.Count; index++)
         {
@@ -35,7 +35,6 @@
         }
     </ul>
 </div>
-
 <div id="addMoniterModal" class="modal fade" role="dialog">
     <div class="modal-dialog" style="width: 50%;">
         <!-- Modal content-->
@@ -52,7 +51,6 @@
         </div>
     </div>
 </div>
-
 <style type="text/css">
     .sortable-container {
         padding: 0;

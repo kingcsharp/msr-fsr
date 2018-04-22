@@ -4,6 +4,7 @@ CREATE                 procedure dbo.A_SP_PROCEDURE_IMPORT_STEP_FROM_EXTERNAL_SO
 @msgs varchar(2000)OUTPUT,
 @PROCEDURE_HIST_ID varchar(50),
 @STEP_TEXT varchar(4000),
+@StepTitle nvarchar(2000),
 @PRINT_ORDER varchar(50),
 @REF_DOC_ID varchar(50),
 @COMMENT varchar(2000),
@@ -25,7 +26,7 @@ set @sText = isNull(@STEP_TEXT,'') + '<<nl/>>' + isNull(@COMMENT + '<<nl/>><<nl/
 declare @stepID varchar(50)
 exec sp_getUniqueID3 @stepID output
 INSERT INTO A_PROCEDURE_STEPS
-	(ID,PROCEDURE_ID,STEP_TEXT,PRINT_ORDER,DRCM,MODBY,DURATION,DURATION_TYPE)
+	(ID,PROCEDURE_ID,STEP_TEXT,PRINT_ORDER,DRCM,MODBY,DURATION,DURATION_TYPE,TITLE)
 VALUES
 	(
 	@stepID,
@@ -35,7 +36,8 @@ VALUES
 	getDate(),
 	@strNTLogin,
 	@STEP_TIME,
-	'TIME_SYS_HOURS'
+	'TIME_SYS_HOURS',
+	@StepTitle
 	)
 
 INSERT INTO A_PROCEDURE_OBJECT_LINK

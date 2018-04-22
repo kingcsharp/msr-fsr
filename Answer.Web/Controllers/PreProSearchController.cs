@@ -51,9 +51,9 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.Id == rule.data);
                     }
-                    else if (rule.field == nameof(PrePropSearchView.Title))
+                    else if (rule.field == nameof(PrePropSearchView.StepTitle))
                     {
-                        totalRows = totalRows.Where(x => x.Title.ToLower().Contains(rule.data.ToLower()));
+                        totalRows = totalRows.Where(x => x.StepTitle.ToLower().Contains(rule.data.ToLower()));
                     }
                     else if (rule.field == nameof(PrePropSearchView.ObjId))
                     {
@@ -203,8 +203,11 @@ namespace Answer.Web.Controllers
             var model = _preProServices.GetById(id);
 
             var vm = new ProcedurePreProViewModel();
+
             vm = vm.MapToDto(model);
+
             vm.CreatingCo = currentUser.Company;
+
             vm.Setup(_preProServices, _documentFilesService, _procedureVerbsService, currentUser);
 
             var labors = _preProServices.GetLaborStepsList().Where(x => x.StepId == vm.ProcObjId).ToList();

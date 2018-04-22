@@ -22,3 +22,4 @@ SELECT *,@firstPrevStep as FIRST_PREV_STEP,@stepsAllowed as STEPS_IN_AP FROM A_V
 
 
 
+whi

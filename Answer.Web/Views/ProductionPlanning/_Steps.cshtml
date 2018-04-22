@@ -72,7 +72,6 @@
 
                                         @if (Model.Steps[i].Id==0)
                                         {
-
                                             for (int j = 0; j < Model.ProcessList.Count; j++)
                                             {
                                                 Model.ProcessList[j].Selected = Model.ProcessList[j].Value == Model.Steps[i].Process;
@@ -83,6 +82,7 @@
                                         else
                                         {
                                             @Html.DisplayTextFor(x => Model.Steps[i].Process)
+                                            @Html.HiddenFor(x => Model.Steps[i].Process)
                                         }
                                         @Html.DropDownListFor(model => model.Steps[i].Process, Model.ProcessList, "Select Process", new { id = "proId", @class = "form-control preDefinedStep" })
                                         @Html.ValidationMessageFor(model => Model.Steps[i].Process, "", new { @class = "text-danger" })

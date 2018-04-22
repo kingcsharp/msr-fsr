@@ -11,6 +11,7 @@ using System.Data.SqlClient;
 using System.Data;
 using Msr.Models.Orders;
 using Msr.Models.Tasks;
+using Msr.Services.Users.Messages;
 
 namespace Msr.Services.PurchesOrder
 {
@@ -167,9 +168,9 @@ namespace Msr.Services.PurchesOrder
 
             return result;
         }
-        public List<SelectFile> PurchasedOrderPoAcctForAllList()
+        public List<SelectFile> PurchasedOrderPoAcctForAllList(LoggedUserIdResult currentUser)
         {
-            var result = _dbContext.Database.SqlQuery<SelectFile>($"SELECT DISTINCT TOP 500 NAME as Name,ID as Id FROM A_V_ACCOUNTS_APPROVED_DATA WHERE ACCT_TYPE IN ('PURCHASING_ACCOUNT','WARRANTY_ACCOUNT') AND (CUSTOMER_CO = '1566' OR CUSTOMER_CO in (SELECT COMPANY FROM A_COMPANIES_CHILD_LOOKUP_TABLE WHERE CHILD_COMPANY = '1566')) AND (( NAME LIKE '%%' AND NAME LIKE '%%' ) ) ORDER BY NAME").ToList();
+            var result = _dbContext.Database.SqlQuery<SelectFile>($"SELECT DISTINCT TOP 500 NAME as Name,ID as Id FROM A_V_ACCOUNTS_APPROVED_DATA WHERE ACCT_TYPE IN ('PURCHASING_ACCOUNT','WARRANTY_ACCOUNT') AND (( NAME LIKE '%%' AND NAME LIKE '%%' ) ) ORDER BY NAME").ToList();
 
             return result;
         }
@@ -452,7 +453,7 @@ namespace Msr.Services.PurchesOrder
         public string GetHistId(string loginId, string objectId)
         {
             var sql =
-                $"SELECT PURCHASE_HIST_ID FROM A_TASK_ORDER_INFORMATION WHERE TASK_ID IN(SELECT  TOP 1 TASK_ID FROM A_V_FILL_TASKS WHERE PURCH_ITEM_ID IN(SELECT ID FROM A_ORDER_ITEMS WHERE PURCHASE_HIST_ID IN(SELECT OBJ_ID FROM A_OBJECTS WHERE ID = '{objectId}')) AND REQUESTEE_ID IS NOT NULL AND REQUESTEE_ID={loginId})";
+                $"SELECT PURCHASE_HIST_ID FROM A_TASK_ORDER_INFORMATION WHERE TASK_ID IN(SELECT  TOP 1 TASK_ID FROM A_V_FILL_TASKS WHERE PURCH_ITEM_ID IN(SELECT ID FROM A_ORDER_ITEMS WHERE PURCHASE_HIST_ID IN(SELECT OBJ_ID FROM A_OBJECTS WHERE ID = '{objectId}')))";
             var result = _dbContext.Database.SqlQuery<string>(sql).FirstOrDefault();
 
             return result;

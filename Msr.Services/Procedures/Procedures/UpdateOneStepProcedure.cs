@@ -19,9 +19,6 @@ namespace Msr.Services.Procedures.Procedures
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 2000, ParameterName = "STEP_TEXT")]
         public string StepText { get; set; }
 
-        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 2000, ParameterName = "TITLE")]
-        public string Title { get; set; }
-
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "PROC_OBJ_ID")]
         public string ProcObjId { get; set; }
 
@@ -111,5 +108,8 @@ namespace Msr.Services.Procedures.Procedures
 
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "RMPerMinute")]
         public decimal? RMPerMinute { get; set; }
+
+        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 5000, ParameterName = "StepTitle")]
+        public string StepTitle { get; set; }
     }
 }

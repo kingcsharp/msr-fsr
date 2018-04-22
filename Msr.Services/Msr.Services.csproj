@@ -463,6 +463,7 @@
     <Compile Include="Users\Messages\LoggedUserIdResult.cs" />
     <Compile Include="Users\Messages\SearchPeopleResult.cs" />
     <Compile Include="Users\UserService.cs" />
+    <Compile Include="Workflows\ViewModels\CheckoutView.cs" />
     <Compile Include="Workflows\ViewModels\SubmitWorkflowViewModel.cs" />
     <Compile Include="Workflows\WorkflowService.cs" />
   </ItemGroup>

@@ -56,20 +56,7 @@ namespace Msr.Services.Procedures.Messages
         public double? Print_Order { get; set; }
         public string Pre_Step { get; set; }
 
-        public string StepTitle
-        {
-            get
-            {
-                try
-                {
-                    return Step_Text.Substring(Step_Text.IndexOf("<h4>"), Step_Text.IndexOf("</h4>")).Replace("<h4>", "").Replace("</h4>", "");
-                }
-                catch
-                {
-                    return "";
-                }
-            }
-        }
+        public string StepTitle { get; set; }
         public string Duration_Type
         {
             get { return DurationType; }
@@ -84,15 +71,15 @@ namespace Msr.Services.Procedures.Messages
             switch (value)
             {
                 case "TIME_SYS_HOURS":
-                {
-                    DurationType = "Hours";
-                    break;
-                }
+                    {
+                        DurationType = "Hours";
+                        break;
+                    }
                 default:
-                {
-                    DurationType = String.Empty;
-                    break;
-                }
+                    {
+                        DurationType = String.Empty;
+                        break;
+                    }
             }
         }
 

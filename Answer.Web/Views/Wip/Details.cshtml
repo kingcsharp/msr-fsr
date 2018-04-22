@@ -136,9 +136,18 @@
                                 stepCss = "requested";
                             }
 
-                            <li class="step-task step @stepCss" data-stepId="@step.StepId" data-phStepId="@step.PhStepId" data-fill-id="@Model.FillId" title="@step.Description">
-                                <div>@step.Description</div>
-                            </li>
+                            if (!string.IsNullOrWhiteSpace(step.StepTitle))
+                             {
+                                 <li class="step-task step @stepCss" data-stepId="@step.StepId" data-phStepId="@step.PhStepId" data-fill-id="@Model.FillId" title="@step.StepTitle">
+                                     <div>@step.StepTitle</div>
+                                 </li>
+                             }
+                             else
+                             {
+                                 <li class="step-task step @stepCss" data-stepId="@step.StepId" data-phStepId="@step.PhStepId" data-fill-id="@Model.FillId" title="@step.Description">
+                                     <div>@step.Description</div>
+                                 </li>
+                             }
 
                         }
                     </ul>

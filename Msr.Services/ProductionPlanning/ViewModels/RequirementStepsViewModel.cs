@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web.Mvc;
 using Msr.Models.CustomerRequirements;
 using Msr.Services.PrePro;
+using Msr.Services.Procedures;
 using Msr.Services.Procedures.ViewModels;
 using Msr.Services.Procedures.Messages;
 using Msr.Services.Quotes.ViewModels;
@@ -121,12 +122,13 @@ namespace Msr.Services.ProductionPlanning.ViewModels
 
             ProcessList = preProServices.GetPreProQueryable().Where(x => x.Status == "APPROVED").Select(x => new SelectListItem
             {
-                Text = x.Title,
+                Text = x.StepTitle,
                 Value = x.ObjectId.ToString()
             }).OrderBy(o => o.Text).ToList();
         }
 
-        public void Read(ProductionPlanningService productionPlanService, CustomerSubmittedRequirement requirment)
+        public void Read(ProductionPlanningService productionPlanService, CustomerSubmittedRequirement requirment,
+            ProceduresService proceduresService)
         {
             Id = requirment.Id;
             SubmittedRequirement = requirment;
@@ -150,14 +152,20 @@ namespace Msr.Services.ProductionPlanning.ViewModels
 
             if (attachedSteps.Any())
             {
+                var procedureObjectId = productionPlanService.GetProceduretById(requirment.ProcedureId).Value;
+
+                var procedureSteps = proceduresService.GetStepsData(procedureObjectId, LoginId);
+
                 foreach (var step in attachedSteps)
                 {
+                    var procStep = procedureSteps.Where(x => x.Id == step.ObjectId).SingleOrDefault();
+
                     Steps.Add(new RequirementStepsDetailsViewModel
                     {
                         Id = step.Id,
                         ObjectId = step.ObjectId,
                         Process = step.Process,
-                        StepTitle = step.Process,
+                        StepTitle = procStep?.StepTitle,
                         Step = step.Step,
                         StandardDirectLaborMinutes = step.StandardDirectLaborMinutes,
                         StandardMachineMinutes = step.StandardMachineMinutes,

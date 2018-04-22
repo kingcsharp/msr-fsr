@@ -112,13 +112,20 @@ namespace Msr.Services.Workflows
 
             try
             {
-                var checkIfObjectInCreatingSql = $"select status from A_OBJECTS where id ='{objectId}'";
+                var checkIfObjectInCreatingSql = $"select status, root from A_OBJECTS where id ='{objectId}'";
 
-                var status = _dbContext.Database.SqlQuery<string>(checkIfObjectInCreatingSql).FirstOrDefault();
+                var checkoutView = _dbContext.Database.SqlQuery<CheckoutView>(checkIfObjectInCreatingSql).FirstOrDefault();
 
-                if (status != null && status == "CREATING")
+                if (checkoutView.Status != null && checkoutView.Status == "CREATING")
                 {
                     result.Entity = objectId;
+                    return result;
+                }
+
+                if (checkoutView.Status != null && checkoutView.Status == "APPROVED_BUT_REVISING")
+                {
+                    var id = _dbContext.Database.SqlQuery<string>($"select Id from A_OBJECTS where root ='{checkoutView.Root}' AND STATUS='CREATING'").FirstOrDefault();
+                    result.Entity = id;
                     return result;
                 }
 

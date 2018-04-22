@@ -3,6 +3,7 @@
 @messages nvarchar(500) OUTPUT,
 @ID nvarchar(50),
 @STEP_TEXT nvarchar(2000),
+@StepTitle nvarchar(2000),
 @PROC_OBJ_ID nvarchar(50),
 @COMMENTS nvarchar(2000),
 @START_ON_COUNTER nvarchar(50),
@@ -69,7 +70,8 @@ CYCLE_UNIT = @CYCLE_UNIT,
 DURATION = @DURATION,
 DURATION_TYPE = @DURATION_TYPE,
 DRCM = getDate(),
-MODBY = @strNTLogin
+MODBY = @strNTLogin,
+StepTitle =@StepTitle
 WHERE ID = @newID
 
 print 'Adding links to the reference Theories'

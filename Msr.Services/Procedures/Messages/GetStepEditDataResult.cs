@@ -29,9 +29,12 @@ namespace Msr.Services.Procedures.Messages
         public int? Cycle_Count { get; set; }
         public string Cycle_Unit { get; set; }
         public double? Duration { get; set; }
-        public string Duration_Type {
+        public string StepTitle { get; set; }
+        public string Duration_Type
+        {
             get { return DurationType; }
-            set {
+            set
+            {
                 SetDurationType(value);
             }
         }

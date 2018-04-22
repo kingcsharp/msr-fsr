@@ -8,9 +8,7 @@
 <link rel="stylesheet" type="text/css" href="/assets/css/ui.jqgrid.css">
 <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
 <link rel="stylesheet" type="text/css" href="/assets/css/hopscotch.css">
-
 @Styles.Render("~/bundles/css/fileinput")
-
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="row">
@@ -118,7 +116,6 @@
                             <div class="col-md-offset-1 col-md-8">
                                 <input type="submit" id="rollBackButton" value="Update" name="command" class="btn btn-success" />
                                 <a href="@Url.Action("Index", "Procedures")" class="btn btn-warning">Cancel</a>
-
                             </div>
                         </div>
                     </div>
@@ -128,13 +125,11 @@
         </div>
     </div>
 </div>
-
 @section scripts
 {
     @{
         var selectRoles = string.Join(",", Model.Roles);
     }
-
     @Scripts.Render("~/bundles/js/jqueryval")
     @Scripts.Render("~/bundles/js/fileinput")
     <script src="~/assets/js/common/documentFiles.js"></script>
@@ -142,10 +137,9 @@
     <script src="~/assets/js/comman.js"></script>
     <script src="~/assets/js/procedure-steps.js"></script>
     <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-
     <script type="text/javascript">
 
-     
+
         var fileUploaderGrid = new FileUploaderGrid();
 
         $(document).ready(function() {
@@ -168,25 +162,6 @@
 
             $("step-form").submit(function(e) {
                 $('.formPostStep .submitselect option').prop('selected', true);
-            });
-
-            $('.addNewStep').click(function(parameters) {
-                eLoaderOpen();
-                var procObjectId = $('#ProcObjectId').val();
-                var procedure = $('#Procedure').val();
-                $.ajax({
-                    type: "POST",
-                    url: '/Procedures/SaveStep',
-                    data: { ProcObjectId: procObjectId, Procedure: procedure },
-                    dataType: 'html',
-                    success: function(data) {
-                        location.reload();
-                    },
-                    error: function(error) {
-                        eLoaderError(error);
-                    }
-                });
-
             });
 
             var fileUploader = new FileUploader();

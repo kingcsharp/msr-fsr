@@ -26,7 +26,7 @@ namespace Msr.Services.PrePro.ViewModel
         }
 
         [Required]
-        public string Title { get; set; }
+        public string StepTitle { get; set; }
 
         public string PkId { get; set; }
 
@@ -171,7 +171,7 @@ namespace Msr.Services.PrePro.ViewModel
                 //Labor = model,
                 StepText = model.StepText,
                 SystemTask = model.SystemTask,
-                Title = model.Title,
+                StepTitle = model.StepTitle,
                 ReferenceVerb = model.ReferenceVerb,
                 ReferenceObject = model.ReferenceObject,
                 Comments = model.Comments

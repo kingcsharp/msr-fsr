@@ -162,7 +162,7 @@ namespace Answer.Web.Controllers
                 }
             }
 
-            vm.Read(_productionPlanService, requirment);
+            vm.Read(_productionPlanService, requirment, _proceduresService);
             var procedureObjectId = "";
 
             if (!string.IsNullOrWhiteSpace(vm.ProductProcedureId))
@@ -184,8 +184,8 @@ namespace Answer.Web.Controllers
                     {
                         Id = Convert.ToInt32(step.Id),
                         ObjectId = step.Id,
-                        Process = !string.IsNullOrWhiteSpace(step.StepTitle) ? step.StepTitle : step.Step_Text,
-                        StepTitle = !string.IsNullOrWhiteSpace(step.StepTitle) ? step.StepTitle : step.Step_Text,
+                        Process = step.StepTitle,
+                        StepTitle = step.StepTitle,
                         Step = (int) step.Print_Order
                     });
                 }
@@ -198,7 +198,7 @@ namespace Answer.Web.Controllers
 
                     if (step != null)
                     {
-                        item.Process = !string.IsNullOrWhiteSpace(step.StepTitle) ? step.StepTitle : step.Step_Text;
+                        item.Process = step.StepTitle;
                     }
                 }
             }
@@ -218,7 +218,7 @@ namespace Answer.Web.Controllers
             var viewModel = new RequirementStepsViewModel();
             viewModel.ProductStatus = productView.ProductStatus;
 
-            viewModel.Read(_productionPlanService, requirment);
+            viewModel.Read(_productionPlanService, requirment, _proceduresService);
 
 
             var procedureObjectId = _productionPlanService.GetProceduretById(viewModel.ProductProcedureId).Value;

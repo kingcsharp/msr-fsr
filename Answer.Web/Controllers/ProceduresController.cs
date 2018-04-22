@@ -199,9 +199,10 @@ namespace Answer.Web.Controllers
 
         public ActionResult Create()
         {
+            var currentUser = GetCurrentUser();
             var saveProcedureViewModel = new SaveProcedureViewModel();
 
-            saveProcedureViewModel.Setup(_proceduresService, _roleService, _procedureVerbsService, _documentFilesService, GetCurrentUser().Id);
+            saveProcedureViewModel.Setup(_proceduresService, _roleService, _procedureVerbsService, _documentFilesService, currentUser.Id, currentUser.Root_Company);
 
             return View(saveProcedureViewModel);
         }
@@ -223,17 +224,14 @@ namespace Answer.Web.Controllers
 
                     return RedirectToAction("Index");
                 }
-                else
-                {
-                    TempData["ErrorMessage"] = "Something went wrong.";
+                TempData["ErrorMessage"] = "Something went wrong.";
 
-                    model.Setup(_proceduresService, _roleService, _procedureVerbsService, _documentFilesService, currentUser.Id);
+                model.Setup(_proceduresService, _roleService, _procedureVerbsService, _documentFilesService, currentUser.Id, currentUser.Root_Company);
 
-                    return View(model);
-                }
+                return View(model);
             }
 
-            model.Setup(_proceduresService, _roleService, _procedureVerbsService, _documentFilesService, currentUser.Id);
+            model.Setup(_proceduresService, _roleService, _procedureVerbsService, _documentFilesService, currentUser.Id, currentUser.Root_Company);
 
             return View(model);
         }
@@ -264,7 +262,7 @@ namespace Answer.Web.Controllers
 
             vm.MapToDto(model);
 
-            vm.Setup(_proceduresService, _roleService, _procedureVerbsService, _documentFilesService, currentUser.Id);
+            vm.Setup(_proceduresService, _roleService, _procedureVerbsService, _documentFilesService, currentUser.Id, currentUser.Root_Company);
 
             var viewModel = new GetStepDataResult
             {
@@ -276,7 +274,7 @@ namespace Answer.Web.Controllers
 
             ViewBag.ProcObjectId = id;
             ViewBag.ProdecureName = model.Name;
-            ViewBag.Procedure = new SelectList(_proceduresService.GetProcedurelist(), "Value", "Show");
+            ViewBag.Procedure = new SelectList(_proceduresService.GetProcedurelist(currentUser.Root_Company), "Value", "Show");
 
             vm.GetStepDataResults = viewModel;
 
@@ -322,7 +320,7 @@ namespace Answer.Web.Controllers
 
                     AddErrorNotification("Something went wrong.");
 
-                    model.Setup(_proceduresService, _roleService, _procedureVerbsService, _documentFilesService, currentUser.Id);
+                    model.Setup(_proceduresService, _roleService, _procedureVerbsService, _documentFilesService, currentUser.Id, currentUser.Root_Company);
 
                     return View("Edit", model);
                 }
@@ -339,14 +337,14 @@ namespace Answer.Web.Controllers
 
                     AddErrorNotification("Something went wrong.");
 
-                    model.Setup(_proceduresService, _roleService, _procedureVerbsService, _documentFilesService, currentUser.Id);
+                    model.Setup(_proceduresService, _roleService, _procedureVerbsService, _documentFilesService, currentUser.Id, currentUser.Root_Company);
 
                     return View("Edit", model);
                 }
 
             }
 
-            model.Setup(_proceduresService, _roleService, _procedureVerbsService, _documentFilesService, currentUser.Id);
+            model.Setup(_proceduresService, _roleService, _procedureVerbsService, _documentFilesService, currentUser.Id, currentUser.Root_Company);
 
             return View("Edit", model);
         }
@@ -408,26 +406,28 @@ namespace Answer.Web.Controllers
 
         public ActionResult Steps(string id)
         {
+            var getCurrentUser = GetCurrentUser();
             var procedureName = _proceduresService.GetProceduresQueryable().SingleOrDefault(x => x.ObjectId == id)?.Name;
 
             var viewModel = new GetStepDataResult
             {
-                GetStepDataResults = _proceduresService.GetStepsData(id, GetCurrentUser().Id)
+                GetStepDataResults = _proceduresService.GetStepsData(id, getCurrentUser.Id)
             };
             viewModel.AddMonitorForProcedureViewModel.Setup(new EquipmentMaintenanceService());
             viewModel.AddMonitorForProcedureViewModel.Related_Object_Id = id;
             ViewBag.ProcObjectId = id;
             ViewBag.ProdecureName = procedureName;
 
-            ViewBag.Procedure = new SelectList(_proceduresService.GetProcedurelist(), "Value", "Show");
+            ViewBag.Procedure = new SelectList(_proceduresService.GetProcedurelist(getCurrentUser.Root_Company), "Value", "Show");
 
 
             return View(viewModel);
         }
+
         [HttpPost]
-        public ActionResult SaveStep(string ProcObjectId, string procedure)
+        public ActionResult SaveStep(string procObjectId, string procedure)
         {
-            var id = _proceduresService.PrePopSave(ProcObjectId, procedure, GetCurrentUser().Id);
+            var id = _proceduresService.PrePopSave(procObjectId, procedure, GetCurrentUser().Id);
 
             ViewBag.Id = id;
             ViewBag.Procedure = procedure;
@@ -443,17 +443,14 @@ namespace Answer.Web.Controllers
                     System_Task = "SYS_COMP_TEST"
                 }
             };
-            vm.SetUp(_proceduresService, _procedureVerbsService, ProcObjectId);
+            vm.SetUp(_proceduresService, _procedureVerbsService, procObjectId);
 
-            var singleOrDefault = _proceduresService.GetProcedurelist().SingleOrDefault(x => x.Value == procedure);
-
+            var singleOrDefault = _proceduresService.GetProcedurelist(currentUser.Root_Company).SingleOrDefault(x => x.Value == procedure);
             if (singleOrDefault != null)
             {
-                var value = singleOrDefault.Show;
-
-                vm.GetStepEditData.Step_Text = value;
-                vm.ProcObjId = ProcObjectId;
-                ////vm.GetStepEditData.StepTitle = 
+                vm.GetStepEditData.Step_Text = singleOrDefault.StepText;
+                vm.GetStepEditData.StepTitle = singleOrDefault.Show;
+                vm.ProcObjId = procObjectId;
             }
             var response = _proceduresService.CreateStepData(vm);
 
@@ -468,33 +465,33 @@ namespace Answer.Web.Controllers
             }
 
 
-            return Json("Ok", JsonRequestBehavior.AllowGet);
+            return RedirectToAction("Edit", "Procedures", new { Id = procObjectId });
         }
 
-        public ActionResult CreateStep(string procedureObjectId, string Procedure)
+        public ActionResult CreateStep(string procedureObjectId, string procedure)
         {
             var currentUser = GetCurrentUser();
 
-            var vm = new GetStepEditDataViewModel();
-            vm.NtLogin = currentUser.Login;
+            var vm = new GetStepEditDataViewModel { NtLogin = currentUser.Login };
 
             vm.SetUp(_proceduresService, _procedureVerbsService, procedureObjectId);
 
-            var singleOrDefault = _proceduresService.GetProcedurelist().SingleOrDefault(x => x.Value == Procedure);
-            if (singleOrDefault != null)
-            {
-                var value = singleOrDefault.Show;
+            var singleOrDefault = _proceduresService.GetProcedurelist(currentUser.Root_Company).SingleOrDefault(x => x.Value == procedure);
+            if (singleOrDefault == null) return View(vm);
 
-                vm.GetStepEditData.Step_Text = value;
-                vm.ProcObjId = procedureObjectId;
+            if (singleOrDefault.Show != "NONE")
+            {
+                vm.GetStepEditData.Step_Text = singleOrDefault.StepText;
             }
+
+            vm.ProcObjId = procedureObjectId;
 
             return View(vm);
         }
+
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult CreateStep(GetStepEditDataViewModel model)
         {
-
             if (ModelState.IsValid)
             {
                 model.NtLogin = GetCurrentUser().Id;

@@ -4,7 +4,7 @@ namespace Msr.Models.PrePro
 {
     public class PrePropSearchView
     {
-        public string Title { get; set; }
+        public string StepTitle { get; set; }
         public string Id { get; set; }
         public string ObjectId { get; set; }
         public string LockedBy { get; set; }

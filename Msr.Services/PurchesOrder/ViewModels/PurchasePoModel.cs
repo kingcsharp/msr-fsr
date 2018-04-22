@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Msr.Services.Users.Messages;
 
 namespace Msr.Services.PurchesOrder.ViewModels
 {
-  public class PurchasePoModel
+    public class PurchasePoModel
     {
         public PurchasePoModel()
         {
@@ -15,6 +16,7 @@ namespace Msr.Services.PurchesOrder.ViewModels
             AcctForAllList = new List<SelectListItem>();
             OrderItems = new List<PurchasePoModel>();
         }
+
         public string ID { get; set; }
 
         public DateTime? DATE_CREATED { get; set; }
@@ -93,13 +95,13 @@ namespace Msr.Services.PurchesOrder.ViewModels
 
         public DateTime? all_date { get; set; }
 
-       public List<PurchasePoModel> OrderItems { get; set; }
+        public List<PurchasePoModel> OrderItems { get; set; }
 
         public List<SelectListItem> NewPoList { get; set; }
 
         public List<SelectListItem> AcctForAllList { get; set; }
 
-        public void Setup(PurchesOrderService purchesOrderService)
+        public void Setup(PurchesOrderService purchesOrderService, LoggedUserIdResult currentUser)
         {
 
             NewPoList = purchesOrderService.PurchasedOrderPoDropDownList().Select(x => new SelectListItem
@@ -108,7 +110,7 @@ namespace Msr.Services.PurchesOrder.ViewModels
                 Value = x.Id.ToString()
             }).OrderBy(o => o.Text).ToList();
 
-            AcctForAllList = purchesOrderService.PurchasedOrderPoAcctForAllList().Select(x => new SelectListItem
+            AcctForAllList = purchesOrderService.PurchasedOrderPoAcctForAllList(currentUser).Select(x => new SelectListItem
             {
                 Text = x.Name,
                 Value = x.Id.ToString()
@@ -116,7 +118,5 @@ namespace Msr.Services.PurchesOrder.ViewModels
 
             ACCT_FOR_ALL = oldId;
         }
-
-
-        }
     }
+}

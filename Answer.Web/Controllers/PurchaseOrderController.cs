@@ -373,7 +373,9 @@ namespace Answer.Web.Controllers
             model.oldId = oldId;
             model.newId = model.ID;
 
-            model.Setup(new PurchesOrderService());
+            var currentUser = GetCurrentUser();
+
+            model.Setup(_purchesOrderService, currentUser);
 
             return View(model);
         }
@@ -398,7 +400,7 @@ namespace Answer.Web.Controllers
                     return RedirectToAction("Submit", "Workflow", new { objId = model.OBJECT_ID, returnUrl = url });
 
                 }
-                modelpo.Setup(_purchesOrderService);
+                modelpo.Setup(_purchesOrderService, currentUser);
             }
 
             return RedirectToAction("CreatePurchase", "PurchaseOrder", new { id = model.OBJECT_ID, oldId = model.oldId });

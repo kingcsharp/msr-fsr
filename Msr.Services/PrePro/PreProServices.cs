@@ -137,7 +137,7 @@ namespace Msr.Services.PrePro
                     Duration = model.Duration.ToString(),
                     DurationType = model.DurationType,
                     NTLogin = model.NTLogin,
-                    Title = model.Title
+                    StepTitle = model.StepTitle
                 };
 
                 _dbContext.Database.ExecuteStoredProcedure(savePartProcedure);

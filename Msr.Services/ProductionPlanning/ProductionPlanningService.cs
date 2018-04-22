@@ -142,18 +142,21 @@ namespace Msr.Services.ProductionPlanning
                     {
                         var existingStep = procedureSteps.SingleOrDefault(x => x.Id == step.ObjectId);
 
-                        if (existingStep == null)
+                        if (step.ObjectId == null && existingStep == null)
                         {
+                            var checkOutProcedure = _workflowService.CheckOutObject(procedureObjectId, model.LoginId);
+
                             var template = _preProServices.GetById(step.Process);
 
                             var vm = new GetStepEditDataViewModel
                             {
                                 GetStepEditData =
                                 {
-                                    Step_Text = template.Title,
+                                    Step_Text = template.StepText,
+                                    StepTitle = template.StepTitle,
                                     Print_Order = step.Step
                                 },
-                                ProcObjId = model.ProductProcedureId,
+                                ProcObjId = checkOutProcedure.Entity,
                                 ReplacementCost = step.ReplacementCost,
                                 Utilization = step.Utilization,
                                 UsefulLife = step.UsefulLife,
@@ -163,6 +166,17 @@ namespace Msr.Services.ProductionPlanning
                             };
 
                             var newStepData = _proceduresService.CreateStepData(vm);
+
+                            var submitWorkflow = new SubmitWorkflowViewModel(); 
+                            submitWorkflow.CompletionStart = "APPROVED";
+                            submitWorkflow.LoggedUserIdResult = currentUser;
+                            submitWorkflow.ObjectId = checkOutProcedure.Entity;
+                            submitWorkflow.ApprovalWorflowId = "37";
+                            submitWorkflow.Comment = "Procedure step approved by system";
+                            submitWorkflow.LoginId = model.LoginId;
+                            _workflowService.SubmitWorkflow(submitWorkflow);
+
+                            step.Process = template.StepTitle;
                             step.ObjectId = newStepData.Entity;
                         }
                     }
@@ -339,7 +353,7 @@ namespace Msr.Services.ProductionPlanning
 
         public string GetPartIdByCompanyPartNumber(string companyPartNumber)
         {
-            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT DISTINCT NAME_COMBO as Show, ID as Value   FROM A_V_PARTS_APPROVED_DATA WHERE(COMPANY = '2') AND((NAME_COMBO LIKE '%%')) and(COMPANY_PART_NUMBER = '" + companyPartNumber + "')    ORDER BY NAME_COMBO").SingleOrDefault();
+            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT DISTINCT NAME_COMBO as Show, ID as Value   FROM A_V_PARTS_APPROVED_DATA WHERE(COMPANY = '2') AND((NAME_COMBO LIKE '%%')) and(COMPANY_PART_NUMBER = '" + companyPartNumber + "')    ORDER BY NAME_COMBO").FirstOrDefault();
 
             return result?.Value;
         }

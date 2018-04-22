@@ -8,7 +8,7 @@ o.CREATE_DATE AS CreatedDate, o.ROOT, o.REV_INFO AS RevInfo,
                          p.PROC_STEP_ID AS ProcStepId, dbo.A_PROCEDURE_STEPS.STEP_TEXT AS StepText, dbo.A_PROCEDURE_STEPS.COMMENTS, dbo.A_PROCEDURE_STEPS.DURATION, 
                          dbo.A_PROCEDURE_STEPS.DURATION_TYPE AS DurationType, dbo.A_PROCEDURE_STEPS.REFERENCE_OBJECT AS ReferenceObject, dbo.A_PROCEDURE_STEPS.REFERENCE_VERB AS ReferenceVerb, 
                          dbo.A_PROCEDURE_STEPS.SYSTEM_TASK AS SystemTask, dbo.A_PROCEDURE_STEPS.START_ON_COUNTER AS StartOnCounter,
-						 dbo.A_PROCEDURE_STEPS.TITLE,
+						 dbo.A_PROCEDURE_STEPS.StepTitle,
 						 isnull(STUFF((
 SELECT +','+ DL.NAME+'|'+DL.DOC_ID 
 FROM A_V_PROCEDURE_STEP_DOCUMENT_DATA AS DL 
