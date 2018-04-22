@@ -449,7 +449,7 @@ namespace Answer.Web.Controllers
             if (singleOrDefault != null)
             {
                 vm.GetStepEditData.Step_Text = singleOrDefault.StepText;
-                vm.GetStepEditData.StepTitle = singleOrDefault.Show;
+                vm.GetStepEditData.Title = singleOrDefault.Show;
                 vm.ProcObjId = procObjectId;
             }
             var response = _proceduresService.CreateStepData(vm);

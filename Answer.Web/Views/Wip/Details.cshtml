@@ -136,10 +136,10 @@
                                 stepCss = "requested";
                             }
 
-                            if (!string.IsNullOrWhiteSpace(step.StepTitle))
+                            if (!string.IsNullOrWhiteSpace(step.Title))
                              {
-                                 <li class="step-task step @stepCss" data-stepId="@step.StepId" data-phStepId="@step.PhStepId" data-fill-id="@Model.FillId" title="@step.StepTitle">
-                                     <div>@step.StepTitle</div>
+                                 <li class="step-task step @stepCss" data-stepId="@step.StepId" data-phStepId="@step.PhStepId" data-fill-id="@Model.FillId" title="@step.Title">
+                                     <div>@step.Title</div>
                                  </li>
                              }
                              else

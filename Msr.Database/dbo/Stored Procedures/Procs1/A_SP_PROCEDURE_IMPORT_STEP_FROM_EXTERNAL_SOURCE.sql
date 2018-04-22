@@ -4,7 +4,7 @@ CREATE                 procedure dbo.A_SP_PROCEDURE_IMPORT_STEP_FROM_EXTERNAL_SO
 @msgs varchar(2000)OUTPUT,
 @PROCEDURE_HIST_ID varchar(50),
 @STEP_TEXT varchar(4000),
-@StepTitle nvarchar(2000),
+@Title nvarchar(2000),
 @PRINT_ORDER varchar(50),
 @REF_DOC_ID varchar(50),
 @COMMENT varchar(2000),
@@ -37,7 +37,7 @@ VALUES
 	@strNTLogin,
 	@STEP_TIME,
 	'TIME_SYS_HOURS',
-	@StepTitle
+	@Title
 	)
 
 INSERT INTO A_PROCEDURE_OBJECT_LINK

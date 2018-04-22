@@ -109,7 +109,7 @@ namespace Msr.Services.Procedures.Procedures
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "RMPerMinute")]
         public decimal? RMPerMinute { get; set; }
 
-        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 5000, ParameterName = "StepTitle")]
-        public string StepTitle { get; set; }
+        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 5000, ParameterName = "Title")]
+        public string Title { get; set; }
     }
 }

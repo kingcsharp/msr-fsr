@@ -153,7 +153,7 @@ namespace Msr.Services.ProductionPlanning
                                 GetStepEditData =
                                 {
                                     Step_Text = template.StepText,
-                                    StepTitle = template.StepTitle,
+                                    Title = template.Title,
                                     Print_Order = step.Step
                                 },
                                 ProcObjId = checkOutProcedure.Entity,
@@ -176,7 +176,7 @@ namespace Msr.Services.ProductionPlanning
                             submitWorkflow.LoginId = model.LoginId;
                             _workflowService.SubmitWorkflow(submitWorkflow);
 
-                            step.Process = template.StepTitle;
+                            step.Process = template.Title;
                             step.ObjectId = newStepData.Entity;
                         }
                     }

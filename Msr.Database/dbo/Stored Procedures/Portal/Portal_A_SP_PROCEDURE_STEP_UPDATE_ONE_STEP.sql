@@ -1,4 +1,4 @@
-﻿CREATE          PROCEDURE [dbo].[Portal_A_SP_PROCEDURE_STEP_UPDATE_ONE_STEP]
+﻿CREATE          PROCEDURE Portal_A_SP_PROCEDURE_STEP_UPDATE_ONE_STEP
 @newID nvarchar(50) OUTPUT,
 @messages nvarchar(500) OUTPUT,
 @ID nvarchar(50),
@@ -33,7 +33,7 @@
 @EquipExpensePerMinute nvarchar(50),
 @AnnualRM nvarchar(50),
 @RMPerMinute nvarchar(50),
-@StepTitle nvarchar(MAX)
+@TITLE nvarchar(Max)
 AS
 print 'Starting procedure A_SP_PROCEDURE_STEP_UPDATE_ONE_STEP'
 print 'Get the value of the Procedure ID for this Procedure Object ID'
@@ -54,6 +54,7 @@ else
 print 'Now update all the values with the data passed in'
 UPDATE A_PROCEDURE_STEPS SET
 STEP_TEXT = @STEP_TEXT,
+TITLE = @TITLE,
 COMMENTS = @COMMENTS,
 PROCEDURE_ID = @pID,
 START_ON_COUNTER = @START_ON_COUNTER,
@@ -81,8 +82,7 @@ Utilization =@Utilization,
 UsefulLife =@UsefulLife,
 EquipExpensePerMinute =@EquipExpensePerMinute,
 AnnualRM =@AnnualRM,
-RMPerMinute =@RMPerMinute,
-StepTitle =@StepTitle
+RMPerMinute =@RMPerMinute
 WHERE ID = @newID
 
 print 'Adding links to the reference Theories'

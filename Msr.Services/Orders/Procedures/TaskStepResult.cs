@@ -12,6 +12,6 @@ namespace Msr.Services.Orders.Procedures
         public string Has_Child { get; set; }
 
         public string RawDescription { get; set; }
-        public string StepTitle { get; set; }
+        public string Title { get; set; }
     }
 }

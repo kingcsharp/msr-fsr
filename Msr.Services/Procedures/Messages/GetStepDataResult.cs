@@ -56,7 +56,7 @@ namespace Msr.Services.Procedures.Messages
         public double? Print_Order { get; set; }
         public string Pre_Step { get; set; }
 
-        public string StepTitle { get; set; }
+        public string Title { get; set; }
         public string Duration_Type
         {
             get { return DurationType; }

@@ -122,7 +122,7 @@ namespace Msr.Services.ProductionPlanning.ViewModels
 
             ProcessList = preProServices.GetPreProQueryable().Where(x => x.Status == "APPROVED").Select(x => new SelectListItem
             {
-                Text = x.StepTitle,
+                Text = x.Title,
                 Value = x.ObjectId.ToString()
             }).OrderBy(o => o.Text).ToList();
         }
@@ -165,7 +165,7 @@ namespace Msr.Services.ProductionPlanning.ViewModels
                         Id = step.Id,
                         ObjectId = step.ObjectId,
                         Process = step.Process,
-                        StepTitle = procStep?.StepTitle,
+                        StepTitle = procStep?.Title,
                         Step = step.Step,
                         StandardDirectLaborMinutes = step.StandardDirectLaborMinutes,
                         StandardMachineMinutes = step.StandardMachineMinutes,

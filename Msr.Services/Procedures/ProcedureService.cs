@@ -66,7 +66,7 @@ namespace Msr.Services.Procedures
 
         public List<PreProFile> GetProcedurelist(string co)
         {
-            var result = _dbContext.Database.SqlQuery<PreProFile>($"SELECT ID as Value, StepTitle as Show,STEP_TEXT as StepText FROM A_V_PREPOP_QUICK WHERE CREATING_CO = '{co}'").ToList();
+            var result = _dbContext.Database.SqlQuery<PreProFile>($"SELECT ID as Value, Title as Show,STEP_TEXT as StepText FROM A_V_PREPOP_QUICK WHERE CREATING_CO = '{co}'").ToList();
             result.Insert(0, new PreProFile { Show = "NONE", Value = "", StepText = "" });
 
             return result;
@@ -621,7 +621,7 @@ namespace Msr.Services.Procedures
                     EquipExpensePerMinute = viewModel.EquipExpensePerMinute,
                     AnnualRM = viewModel.AnnualRM,
                     RMPerMinute = viewModel.RMPerMinute,
-                    StepTitle = viewModel.GetStepEditData.StepTitle
+                    Title = viewModel.GetStepEditData.Title
                 };
 
                 _dbContext.Database.ExecuteStoredProcedure(updateOneStep);
@@ -676,7 +676,7 @@ namespace Msr.Services.Procedures
             updateOneStep.CycleCount = viewModel.Cycle_Count?.ToString();
             updateOneStep.CycleUnit = viewModel.Cycle_Unit;
             updateOneStep.PrecedingSteps = viewModel.Pre_Step;
-            updateOneStep.StepTitle = viewModel.StepTitle;
+            updateOneStep.Title = viewModel.Title;
 
             if (viewModel.SelectedReferenceProcedureTypes != null && viewModel.SelectedReferenceProcedureTypes.Count > 0)
             {

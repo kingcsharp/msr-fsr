@@ -51,9 +51,9 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.Id == rule.data);
                     }
-                    else if (rule.field == nameof(PrePropSearchView.StepTitle))
+                    else if (rule.field == nameof(PrePropSearchView.Title))
                     {
-                        totalRows = totalRows.Where(x => x.StepTitle.ToLower().Contains(rule.data.ToLower()));
+                        totalRows = totalRows.Where(x => x.Title.ToLower().Contains(rule.data.ToLower()));
                     }
                     else if (rule.field == nameof(PrePropSearchView.ObjId))
                     {

@@ -184,8 +184,8 @@ namespace Answer.Web.Controllers
                     {
                         Id = Convert.ToInt32(step.Id),
                         ObjectId = step.Id,
-                        Process = step.StepTitle,
-                        StepTitle = step.StepTitle,
+                        Process = step.Title,
+                        StepTitle = step.Title,
                         Step = (int) step.Print_Order
                     });
                 }
@@ -198,7 +198,7 @@ namespace Answer.Web.Controllers
 
                     if (step != null)
                     {
-                        item.Process = step.StepTitle;
+                        item.Process = step.Title;
                     }
                 }
             }
@@ -233,8 +233,8 @@ namespace Answer.Web.Controllers
                     {
                         Id = Convert.ToInt32(step.Id),
                         ObjectId = step.Id,
-                        Process = step.StepTitle,
-                        StepTitle = step.StepTitle,
+                        Process = step.Title,
+                        StepTitle = step.Title,
                         Step = (int) step.Print_Order
                     });
                 }
@@ -277,7 +277,7 @@ namespace Answer.Web.Controllers
                     {
                         Id = Convert.ToInt32(step.Id),
                         ObjectId = step.Id,
-                        Process = step.StepTitle,
+                        Process = step.Title,
                         Step = (int) step.Print_Order
                     });
                 }

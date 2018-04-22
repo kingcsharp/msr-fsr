@@ -45,7 +45,7 @@ namespace Msr.Services.PrePro.Procedure
             Duration = model.Duration.HasValue ? model.Duration.Value.ToString() : null;
             DurationType = model.DurationType;
             NTLogin = model.NTLogin;
-            StepTitle = model.StepTitle;
+            Title = model.Title;
         }
 
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "newID", Direction = ParameterDirection.Output)]
@@ -132,7 +132,7 @@ namespace Msr.Services.PrePro.Procedure
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "strNTLogin")]
         public string NTLogin { get; set; }
 
-        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "StepTitle")]
-        public string StepTitle { get; set; }
+        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "Title")]
+        public string Title { get; set; }
     }
 }
