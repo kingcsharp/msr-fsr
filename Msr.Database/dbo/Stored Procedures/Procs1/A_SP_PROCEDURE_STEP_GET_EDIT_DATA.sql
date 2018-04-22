@@ -18,8 +18,3 @@ SELECT @stepsAllowed = STEPS_IN_AP FROM A_PROCEDURES_HISTORY WHERE ID = @myProcI
 
 SELECT *,@firstPrevStep as FIRST_PREV_STEP,@stepsAllowed as STEPS_IN_AP FROM A_V_PROCEDURE_STEPS WHERE ID = @ID
 
-
-
-
-
-whi
