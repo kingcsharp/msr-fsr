@@ -301,6 +301,8 @@ namespace Answer.Web.Controllers
 
         public ActionResult Details(int? id)
         {
+            var vm =new WorkOrderDetailsResponse();
+
             var currentUser = GetCurrentUser();
 
             var workItems = _orderService.GetWorkOrderQueryable()
@@ -308,16 +310,23 @@ namespace Answer.Web.Controllers
                 .OrderByDescending(o => o.DueDate)
                 .ToList();
 
-            if (!id.HasValue)
+            if (workItems.Any())
             {
-                id = int.Parse(workItems.First().FillId);
+                if (!id.HasValue)
+                {
+                    id = int.Parse(workItems.First().FillId);
+                }
+
+                vm = _orderService.GetPurchaseItemDetails(id.Value, currentUser.Id);
+
+                vm.MyWoItems = workItems;
+            }
+            else
+            {
+                AddWarningNotification("There is no work item assigned to this account.");
             }
 
-            var response = _orderService.GetPurchaseItemDetails(id.Value, currentUser.Id);
-
-            response.MyWoItems = workItems;
-
-            return View(response);
+            return View(vm);
         }
 
         public ActionResult StatusView(int? id)

@@ -37,5 +37,10 @@ namespace Answer.Web.Controllers
         {
             TempData["WarningMessage"] = message;
         }
+
+        public void AddInfoNotification(string message)
+        {
+            TempData["InfoMessage"] = message;
+        }
     }
 }

@@ -10,254 +10,253 @@
 <div class="container-fluid">
     <div class="side-body padding-top">
         @Html.Partial("Message")
-        <div class="row wip-detail-header">
-            <div class="col-lg-6 col-md-6 col-sm-6 wip-detail-header-left">
-                <div class="form-group">
-                    <div style="display: inline-block; float: right;">
-                        <label>Hide Completed </label>
-                        <div class="make-switch switch-small" data-on="success" data-off="warning" style="display: inline-block">
-                            <input id="showCompletedSwitch" type="checkbox" name="completed-switch" checked>
+        
+        @if (Model.WorkItems!=null && Model.WorkItems.Any())
+        {
+            <div class="row wip-detail-header">
+                <div class="col-lg-6 col-md-6 col-sm-6 wip-detail-header-left">
+                    <div class="form-group">
+                        <div style="display: inline-block; float: right;">
+                            <label>Hide Completed </label>
+                            <div class="make-switch switch-small" data-on="success" data-off="warning" style="display: inline-block">
+                                <input id="showCompletedSwitch" type="checkbox" name="completed-switch" checked>
+                            </div>
+                            <button type="button" data-toggle="modal" data-target="#wipListModal" class="btn btn-info cancel-btn pull-right wip-view-button"><i class="fa fa-list" aria-hidden="true"></i> WIP List</button>
                         </div>
-                        <button type="button" data-toggle="modal" data-target="#wipListModal" class="btn btn-info cancel-btn pull-right wip-view-button"><i class="fa fa-list" aria-hidden="true"></i> WIP List</button>
-                    </div>
 
-                    <label>My WO Items</label>
-                    <select id="wip-item-select" class="selectpicker form-control" name="wo-item">
-                        <option data-content="<strong>Select an Item...</strong>">Select an Item</option>
-                        <optgroup label="Items Assigned to Me">
-                            @if (Model.MyWoItems.Any())
-                            {
-                                foreach (var item in Model.MyWoItems)
+                        <label>My WO Items</label>
+                        <select id="wip-item-select" class="selectpicker form-control" name="wo-item">
+                            <option data-content="<strong>Select an Item...</strong>">Select an Item</option>
+                            <optgroup label="Items Assigned to Me">
+                                @if (Model.MyWoItems.Any())
                                 {
-                                    <option data-content="<strong>@item.PurchaseItemId</strong><br>Proc: @item.ProcName<br>Serial: @item.Serial<span class='label label-success pull-right'>@item.Status</span>" data-status="@item.Status" data-fill-id="@Model.FillId">@item.FillId</option>
+                                    foreach (var item in Model.MyWoItems)
+                                    {
+                                        <option data-content="<strong>@item.PurchaseItemId</strong><br>Proc: @item.ProcName<br>Serial: @item.Serial<span class='label label-success pull-right'>@item.Status</span>" data-status="@item.Status" data-fill-id="@Model.FillId">@item.FillId</option>
+                                    }
                                 }
-                            }
-                            else
-                            {
-                                <option>No Search Filter Defined</option>
-                            }
-
-                        </optgroup>
-                    </select>
-                </div>
-
-                @if (Model.TaskStepResults.Any(x => !status.Contains(x.Status)))
-                {
-                    <div class="">
-                        <button id="btn-cancel-steps" data-id="@Model.FillId" class="btn btn-danger btn-sm cancel-btn pull-right" data-toggle="modal" data-target="#widDetailCancelStepsModal"><i class="fa fa-close"></i> Cancel Remaining Steps</button>
-                        @*<button data-id="@Model.FillId" class="btn btn-warning btn-sm cancel-btn pull-right instruction-tooltip" data-toggle="modal" data-target="#widDetailTakeOver"
-                            data-toggle="tooltip" data-placement="top" data-html="true" id="btn-take-over-task"
-                            title="This button only displays when the currently viewed item is not owened by current technician">
-                        <i class="fa fa-user"></i> Take Over this Task
-                    </button>*@
-                    </div>
-                }
-
-            </div>
-            <div class="col-lg-6 col-md-6 col-sm-6 ">
-                <ul class="nav nav-tabs">
-                    <li class="active"><a data-toggle="tab" href="#parts">Parts Info:</a></li>
-                    <li><a data-toggle="tab" href="#purchase">Purchase Item Info:</a></li>
-                </ul>
-                <div class="tab-content">
-                    <div id="parts" class="tab-pane fade in active">
-                        <div id="part-tab-controls" class="col-sm-12">
-                            <button class="btn btn-info btn-xs print-btn pull-right" data-toggle="modal" data-id="@Model.FillId" data-target="#wioDetailPrintOther"><i class="fa fa-print"></i> Print Other</button>
-                            <button class="btn btn-info btn-xs print-btn pull-right" data-toggle="modal" data-id="@Model.FillId" data-target="#wioDetailPrintTraveler"><i class="fa fa-print"></i> Print Traveler</button>
-                        </div>
-                        <div id="parts-table" class="col-sm-12">
-                            <table class="table table-responsive table-condensed table-bordered">
-                                <tbody>
-                                @if (Model.FileSearchResult != null)
+                                else
                                 {
-                                    <tr><td>@Model.FileSearchResult.FillObjDesc qty:@Model.FileSearchResult.Qty </td></tr>
+                                    <option>No Search Filter Defined</option>
                                 }
 
-                                @foreach (var part in Model.Parts)
-                                {
-                                    <tr><td>@part</td></tr>
-                                }
-                                </tbody>
-                            </table>
-                        </div>
+                            </optgroup>
+                        </select>
                     </div>
-                    @if (Model.FileSearchResult != null)
+
+                    @if (Model.TaskStepResults.Any(x => !status.Contains(x.Status)))
                     {
-                        <div id="purchase" class="tab-pane fade">
-                            <table class="table table-responsive table-condensed table-bordered">
-                                <tbody>
-                                <tr>
-                                    <th nowrap style="text-align: right">Customer:</th>
-                                    <td>@Model.FileSearchResult.CustomerName</td>
-                                </tr>
-                                <tr>
-                                    <th nowrap style="text-align: right">Product:</th>
-                                    <td>@Model.FileSearchResult.ProductName</td>
-                                </tr>
-                                <tr>
-                                    <th nowrap style="text-align: right">Procedure:</th>
-                                    <td>@Model.FileSearchResult.ProcedureName</td>
-                                </tr>
-                                <tr>
-                                    <th nowrap style="text-align: right">Purchase Item #:</th>
-                                    <td>@Model.FileSearchResult.PurchItemId</td>
-                                </tr>
-                                </tbody>
-                            </table>
+                        <div class="">
+                            <button id="btn-cancel-steps" data-id="@Model.FillId" class="btn btn-danger btn-sm cancel-btn pull-right" data-toggle="modal" data-target="#widDetailCancelStepsModal"><i class="fa fa-close"></i> Cancel Remaining Steps</button>
                         </div>
                     }
+
                 </div>
-            </div>
-            <!-- <div class="col-lg-2 col-md-2"><button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button></div> -->
-        </div>
-        <div class="row">
-            <div class="col-lg-12">
-                <!-- Step Navigation -->
-                <div id="carousel" class="flexslider">
-                    <ul class="slides">
-                        @foreach (var step in Model.TaskStepResults)
-                        {
-                            var stepCss = "";
-
-                            if (step.Status == "CLOSED" || step.Status == "FINISHED")
-                            {
-                                stepCss = "step-complete";
-                            }
-                            else if (step.Status == "ACCEPTED" || step.Status == "REQUESTED")
-                            {
-                                stepCss = "step-inprogress";
-                            }
-                            else if (step.Status == "PENDING_PARENT_ACCEPTANCE")
-                            {
-                                stepCss = "waiting";
-                            }
-                            else
-                            {
-                                stepCss = "requested";
-                            }
-
-                            if (!string.IsNullOrWhiteSpace(step.Title))
-                             {
-                                 <li class="step-task step @stepCss" data-stepId="@step.StepId" data-phStepId="@step.PhStepId" data-fill-id="@Model.FillId" title="@step.Title">
-                                     <div>@step.Title</div>
-                                 </li>
-                             }
-                             else
-                             {
-                                 <li class="step-task step @stepCss" data-stepId="@step.StepId" data-phStepId="@step.PhStepId" data-fill-id="@Model.FillId" title="@step.Description">
-                                     <div>@step.Description</div>
-                                 </li>
-                             }
-
-                        }
+                <div class="col-lg-6 col-md-6 col-sm-6 ">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" href="#parts">Parts Info:</a></li>
+                        <li><a data-toggle="tab" href="#purchase">Purchase Item Info:</a></li>
                     </ul>
-                </div>
-                <div id="slider" class="flexslider step-container">
-                    <ul class="slides">
+                    <div class="tab-content">
+                        <div id="parts" class="tab-pane fade in active">
+                            <div id="part-tab-controls" class="col-sm-12">
+                                <button class="btn btn-info btn-xs print-btn pull-right" data-toggle="modal" data-id="@Model.FillId" data-target="#wioDetailPrintOther"><i class="fa fa-print"></i> Print Other</button>
+                                <button class="btn btn-info btn-xs print-btn pull-right" data-toggle="modal" data-id="@Model.FillId" data-target="#wioDetailPrintTraveler"><i class="fa fa-print"></i> Print Traveler</button>
+                            </div>
+                            <div id="parts-table" class="col-sm-12">
+                                <table class="table table-responsive table-condensed table-bordered">
+                                    <tbody>
+                                    @if (Model.FileSearchResult != null)
+                                    {
+                                        <tr><td>@Model.FileSearchResult.FillObjDesc qty:@Model.FileSearchResult.Qty </td></tr>
+                                    }
 
-                        @foreach (var step in Model.TaskStepResults)
+                                    @foreach (var part in Model.Parts)
+                                    {
+                                        <tr><td>@part</td></tr>
+                                    }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        @if (Model.FileSearchResult != null)
                         {
-                            <li id="step-@step.StepId">
-                            </li>
+                            <div id="purchase" class="tab-pane fade">
+                                <table class="table table-responsive table-condensed table-bordered">
+                                    <tbody>
+                                    <tr>
+                                        <th nowrap style="text-align: right">Customer:</th>
+                                        <td>@Model.FileSearchResult.CustomerName</td>
+                                    </tr>
+                                    <tr>
+                                        <th nowrap style="text-align: right">Product:</th>
+                                        <td>@Model.FileSearchResult.ProductName</td>
+                                    </tr>
+                                    <tr>
+                                        <th nowrap style="text-align: right">Procedure:</th>
+                                        <td>@Model.FileSearchResult.ProcedureName</td>
+                                    </tr>
+                                    <tr>
+                                        <th nowrap style="text-align: right">Purchase Item #:</th>
+                                        <td>@Model.FileSearchResult.PurchItemId</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         }
+                    </div>
+                </div>
+                <!-- <div class="col-lg-2 col-md-2"><button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button></div> -->
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <!-- Step Navigation -->
+                    <div id="carousel" class="flexslider">
+                        <ul class="slides">
+                            @foreach (var step in Model.TaskStepResults)
+                            {
+                                var stepCss = "";
 
-                    </ul>
+                                if (step.Status == "CLOSED" || step.Status == "FINISHED")
+                                {
+                                    stepCss = "step-complete";
+                                }
+                                else if (step.Status == "ACCEPTED" || step.Status == "REQUESTED")
+                                {
+                                    stepCss = "step-inprogress";
+                                }
+                                else if (step.Status == "PENDING_PARENT_ACCEPTANCE")
+                                {
+                                    stepCss = "waiting";
+                                }
+                                else
+                                {
+                                    stepCss = "requested";
+                                }
+
+                                if (!string.IsNullOrWhiteSpace(step.Title))
+                                {
+                                    <li class="step-task step @stepCss" data-stepId="@step.StepId" data-phStepId="@step.PhStepId" data-fill-id="@Model.FillId" title="@step.Title">
+                                        <div>@step.Title</div>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="step-task step @stepCss" data-stepId="@step.StepId" data-phStepId="@step.PhStepId" data-fill-id="@Model.FillId" title="@step.Description">
+                                        <div>@step.Description</div>
+                                    </li>
+                                }
+
+                            }
+                        </ul>
+                    </div>
+                    <div id="slider" class="flexslider step-container">
+                        <ul class="slides">
+
+                            @foreach (var step in Model.TaskStepResults)
+                            {
+                                <li id="step-@step.StepId">
+                                </li>
+                            }
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        }
+    </div >
+</div>
+
+@if (Model.WorkItems != null && Model.WorkItems.Any())
+{
+    <div id="wipListModal" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">WIP List</h4>
+                </div>
+                <div class="modal-body"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-close-o"></i> Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="wioDetailPrintTraveler" class="modal fade" role="dialog">
+        <div class="modal-dialog" style="width: 900px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Print Traveler Report</h4>
+                </div>
+                <div class="modal-body" id="print-traveler-container"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info" onclick="PrintReport('print-traveler-container')"><i class="fa fa-print"></i> Print Report</button>
+                    <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close-o"></i> Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="wioDetailPrintOther" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Print Other</h4>
+                </div>
+                <div class="modal-body" id="print-other-container"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info" id="display-report"><i class="fa fa-print"></i> Display</button>
+                    <button type="button" class="btn btn-info" id="print-other-report" style="display: none"><i class="fa fa-print"></i> Print Report</button>
+                    <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close-o"></i> Cancel</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="relatedDocument" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body"></div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="add-new-equipment-model" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Add Maintenance Task</h4>
+                </div>
+                <div class="modal-body" style="width: 100%;"></div>
+                <div class="modal-footer">
+                    <button id="add-equipment-maintenace" type="button" class="btn btn-success">Submit</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-close-o"></i> Cancel</button>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-
-<div id="wipListModal" class="modal fade" role="dialog">
-    <div class="modal-dialog modal-lg">
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">WIP List</h4>
-            </div>
-            <div class="modal-body"></div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-close-o"></i> Close</button>
-            </div>
-        </div>
-
-    </div>
-</div>
-
-<div id="wioDetailPrintTraveler" class="modal fade" role="dialog">
-    <div class="modal-dialog" style="width: 900px;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Print Traveler Report</h4>
-            </div>
-            <div class="modal-body" id="print-traveler-container"></div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-info" onclick="PrintReport('print-traveler-container')"><i class="fa fa-print"></i> Print Report</button>
-                <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close-o"></i> Close</button>
-            </div>
-        </div>
-
-    </div>
-</div>
-
-<div id="wioDetailPrintOther" class="modal fade" role="dialog">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Print Other</h4>
-            </div>
-            <div class="modal-body" id="print-other-container"></div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-info" id="display-report"><i class="fa fa-print"></i> Display</button>
-                <button type="button" class="btn btn-info" id="print-other-report" style="display: none"><i class="fa fa-print"></i> Print Report</button>
-                <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close-o"></i> Cancel</button>
-            </div>
-        </div>
-
-    </div>
-</div>
-
-<div id="relatedDocument" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title"></h4>
-            </div>
-            <div class="modal-body"></div>
-            <div class="modal-footer">
-
-            </div>
-        </div>
-
-    </div>
-</div>
-
-<div id="add-new-equipment-model" class="modal fade" role="dialog">
-    <div class="modal-dialog modal-lg" >
-        <!-- Modal content-->
-        <div class="modal-content" >
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Add Maintenance Task</h4>
-            </div>
-            <div class="modal-body" style="width: 100%;"></div>
-            <div class="modal-footer">
-                <button id="add-equipment-maintenace" type="button" class="btn btn-success" >Submit</button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-close-o"></i> Cancel</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
+}
 <input type="hidden" value="@Model.NcrCount" id="ncr-count" />
-<input type="hidden" value="@Model.FileSearchResult.FillObjectId" id="fill-obj-id" />
+<input type="hidden" value="@Model.FileSearchResult?.FillObjectId" id="fill-obj-id" />
 <input type="hidden" value="@Model.FillId" id="fill-id" />
 
 @section scripts
