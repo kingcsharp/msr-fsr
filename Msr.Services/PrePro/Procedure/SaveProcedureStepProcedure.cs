@@ -132,7 +132,7 @@ namespace Msr.Services.PrePro.Procedure
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "strNTLogin")]
         public string NTLogin { get; set; }
 
-        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "Title")]
+        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 8000, ParameterName = "Title")]
         public string Title { get; set; }
     }
 }
