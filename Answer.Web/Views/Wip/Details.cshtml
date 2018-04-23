@@ -11,7 +11,7 @@
     <div class="side-body padding-top">
         @Html.Partial("Message")
         
-        @if (Model.WorkItems!=null && Model.WorkItems.Any())
+        @if (Model.MyWoItems != null && Model.MyWoItems.Any())
         {
             <div class="row wip-detail-header">
                 <div class="col-lg-6 col-md-6 col-sm-6 wip-detail-header-left">
@@ -167,7 +167,7 @@
     </div >
 </div>
 
-@if (Model.WorkItems != null && Model.WorkItems.Any())
+@if (Model.MyWoItems != null && Model.MyWoItems.Any())
 {
     <div id="wipListModal" class="modal fade" role="dialog">
         <div class="modal-dialog modal-lg">
