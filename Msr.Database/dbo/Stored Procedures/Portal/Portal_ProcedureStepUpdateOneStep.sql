@@ -2,7 +2,7 @@
 @newID nvarchar(50) OUTPUT,
 @messages nvarchar(500) OUTPUT,
 @ID nvarchar(50),
-@STEP_TEXT nvarchar(2000),
+@STEP_TEXT nvarchar(4000),
 @PROC_OBJ_ID nvarchar(50),
 @COMMENTS nvarchar(2000),
 @START_ON_COUNTER nvarchar(50),

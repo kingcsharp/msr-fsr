@@ -57,7 +57,7 @@ namespace Msr.Services.PrePro.Procedure
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "ID")]
         public string Id { get; set; }
 
-        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "STEP_TEXT")]
+        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 4000, ParameterName = "STEP_TEXT")]
         public string StepText { get; set; }
 
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "PROC_OBJ_ID")]
