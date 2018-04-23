@@ -56,8 +56,8 @@
             },
             {
                 label: 'Root Company Name',
-                name: 'Root',
-                index: 'Root',
+                name: 'RootCoName',
+                index: 'RootCoName',
                 colmenu: false,
                 editable: true,
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },

@@ -60,6 +60,22 @@
                     align: 'center'
                 },
                 {
+                    label: 'PARENTS',
+                    name: 'ParentLocationName',
+                    index: 'ParentLocationName',
+                    colmenu: false,
+                    coloptions: {
+                        sorting: false,
+                        columns: true,
+                        filtering: false,
+                        seraching: false,
+                        grouping: false,
+                        freeze: false
+                    },
+                    searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                    align: 'center'
+                },
+                {
                     label: 'Revision',
                     name: 'Revision',
                     index: 'Revision',

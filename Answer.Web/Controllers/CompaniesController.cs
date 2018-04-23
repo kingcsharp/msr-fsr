@@ -72,6 +72,10 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.PicRecord.ToLower().Contains(rule.data.ToLower()));
                     }
+                    else if (rule.field == nameof(CompanyView.RootCoName))
+                    {
+                        totalRows = totalRows.Where(x => x.RootCoName.ToLower().Contains(rule.data.ToLower()));
+                    }
                     else if (rule.field == nameof(CompanyView.Root))
                     {
                         totalRows = totalRows.Where(x => x.Root.ToLower().Contains(rule.data.ToLower()));

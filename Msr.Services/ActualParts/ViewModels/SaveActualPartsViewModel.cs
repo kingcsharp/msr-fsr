@@ -1,16 +1,12 @@
 ﻿using Msr.Services.Parts;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Mvc;
 using Msr.Models.ActualParts;
 using Msr.Services.Companies;
 using Msr.Services.Locations;
 using Msr.Services.Orders;
-using Msr.Services.Users;
 using Msr.Services.Products;
 using Msr.Services.Users.Messages;
 
@@ -34,7 +30,7 @@ namespace Msr.Services.ActualParts.ViewModels
         public string ObjectId { get; set; }
 
         [Required]
-        [Display(Name = "Part Id:")]
+        [Display(Name = "This Actual Part is a:")]
         public string PartId { get; set; }
 
         [Display(Name = "QTY :")]
@@ -58,7 +54,7 @@ namespace Msr.Services.ActualParts.ViewModels
         [Display(Name = "Products Installed :")]
         public List<string> Products { get; set; }
 
-        [Display(Name = "Actual Part This Actual Part Is Installed In:")]
+        [Display(Name = "This Part installed in:")]
         public string ParentId { get; set; }
 
         [Display(Name = "Sub Parts Action :")]

@@ -31,9 +31,9 @@ namespace Answer.Web.Controllers
             {
                 foreach (var rule in param.where.rules)
                 {
-                    if (rule.field == nameof(ProcedureVerbsView.Id))
+                    if (rule.field == nameof(ProcedureVerbsView.Root))
                     {
-                        totalRows = totalRows.Where(x => x.Id == rule.data.ToLower());
+                        totalRows = totalRows.Where(x => x.Root == rule.data.ToLower());
                     }
                     else if (rule.field == nameof(ProcedureVerbsView.Name))
                     {
@@ -45,8 +45,11 @@ namespace Answer.Web.Controllers
                     }
                     else if (rule.field == nameof(ProcedureVerbsView.Revision))
                     {
-                        var rev = Convert.ToInt32(rule.data);
-                        totalRows = totalRows.Where(x => x.Revision == rev);
+                        var val = -1;
+
+                        int.TryParse(rule.data.ToLower(), out val);
+
+                        totalRows = totalRows.Where(x => x.Revision == val);
                     }
                     else if (rule.field == nameof(ProcedureVerbsView.Status))
                     {

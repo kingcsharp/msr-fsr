@@ -86,6 +86,10 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.CompanyName.ToLower().Contains(rule.data.ToLower()));
                     }
+                    else if (rule.field == nameof(PartsView.PartTypeName))
+                    {
+                        totalRows = totalRows.Where(x => x.PartTypeName.ToLower().Contains(rule.data.ToLower()));
+                    }
                     else if (rule.field == nameof(PartsView.Consumable))
                     {
                         totalRows = totalRows.Where(x => x.Consumable.ToLower().Contains(rule.data.ToLower()));
@@ -93,6 +97,10 @@ namespace Answer.Web.Controllers
                     else if (rule.field == nameof(PartsView.LockedByName))
                     {
                         totalRows = totalRows.Where(x => x.LockedByName.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(PartsView.UnitShippingWeight))
+                    {
+                        totalRows = totalRows.Where(x => x.UnitShippingWeight.ToString().Contains(rule.data.ToLower()));
                     }
                     else if (rule.field == nameof(PartsView.Rev))
                     {

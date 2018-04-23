@@ -72,12 +72,12 @@ namespace Msr.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
-            model.User = model.User.Trim().ToLower();
-
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
+
+            model.User = model.User.Trim().ToLower();
 
             var answerUser = _peopleService.GetAnswerUser(model.User, model.Password);
 
