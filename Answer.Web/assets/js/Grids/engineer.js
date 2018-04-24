@@ -29,24 +29,11 @@ function toggleInstructions(theID, action) {
 
 $(document).ready(function () {
 
-
-    $('#search').click(function () {
-
-        jQuery("#jqGrid").setGridParam({
-            page: 1
-        }).trigger("reloadGrid");
-
-    });
-
     $("#jqGrid").jqGrid({
         url: '/wip/EngineeringData',
         mtype: "GET",
         styleUI: 'Bootstrap',
         datatype: "json",
-        postData: {
-            FromDate: function () { return $('#from-date').val(); },
-            ToDate: function () { return $('#to-date').val(); }
-        },
         colModel: [
             { name: 'FillId', index: 'FillId', width: 60, align: 'center', hidden: true, edittype: 'text', editable: true, editrules: { edithidden: true } },
             {
@@ -163,7 +150,7 @@ $(document).ready(function () {
                 },
                 stype: "select",
                 searchoptions: {
-                    value: "All:[All];ACCEPTED:In Progress;PENDING_PARENT_ACCEPTANCE,REQUESTED:Waiting to Start;CLOSED,FINISHED:Completed",
+                    value: "All:[All];REQUESTED,ACCEPTED:In Progress;PENDING_PARENT_ACCEPTANCE,REQUESTED:Waiting to Start;CLOSED,FINISHED:Completed",
                     defaultValue: 'In Progress'
                 },
                 formatter: currentStepFormatter,
@@ -180,10 +167,8 @@ $(document).ready(function () {
                 edittype: "textarea",
                 width: 180,
                 align: 'center',
-                formatter: dispositionFormatter,
+                formatter: dispositionFormatter
             },
-
-
         ],
         viewrecords: true, // show the current page, data rang and total records on the toolbar
         rowNum: 10, rowList: [10, 20, 50, 100],

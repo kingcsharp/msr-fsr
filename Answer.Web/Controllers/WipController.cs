@@ -135,9 +135,9 @@ namespace Answer.Web.Controllers
             }
             else
             {
-                totalRows = totalRows.Where(x => x.Status.ToLower() == "accepted");
+                totalRows = totalRows.Where(x => x.Status.ToLower() == WorkItemStatusConstants.Requested
+                    || x.Status.ToLower() == WorkItemStatusConstants.Accepted);
             }
-
 
             var orderDirection = "asc";
 
