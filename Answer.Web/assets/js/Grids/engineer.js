@@ -281,14 +281,18 @@ $(document).ready(function () {
     function currentStepFormatter(cellvalue, options, rowObject) {
         var thisCellVal = '';
 
-        if (cellvalue !== 'NULL' && cellvalue !== null && cellvalue !== '') {
-            var thisVal = cellvalue;
-            thisCellVal = '<strong>' + thisVal + '</strong><br /> <div class="meter">' + rowObject.TimeComplete + '</div> <div class="meter">' + rowObject.PercComplete + '</div> ';
+        if (rowObject.Status !== 'ACCEPTED') {
+            if (rowObject.Status === 'REQUESTED') {
+                thisCellVal = 'Waiting Start';
+            } else {
+                thisCellVal = 'Completed';
+            }
+        } else {
+            if (cellvalue !== 'NULL' && cellvalue !== null && cellvalue !== '') {
+                thisCellVal = '<strong>' + cellvalue + '</strong><br /> <div class="meter">' + rowObject.TimeComplete + '</div> <div class="meter">' + rowObject.PercComplete + '</div> ';
+            }
         }
-        else {
-            thisCellVal = rowObject.Status;
-        }
-
+      
         return thisCellVal;
     }
 
@@ -304,11 +308,10 @@ $(document).ready(function () {
                 notes = notes + '<div class="disp-label">' + value.Date + ' ' + value.Name + '</div>';
                 notes = notes + '<div class="disp-instruction"><div class="disp-text">' + value.Message + '</div></div>';
             });
-
         }
 
-        InstructionsCellVal = notes + '<br/><button id="add-button' + rowObject.FillId + '" onclick="toggleInstructions(' + rowObject.FillId + ',0)" class="btn support-btn btn-xs btn-danger show">Add Instructions</button><div id="instruction' + rowObject.FillId + '" class="hidden" ><textarea style="width: 95%;" rows=4 placeholder="Add disposition Instructions" id="note-' + rowObject.FillId + '"></textarea><button class="btn support-btn btn-xs btn-primary" onclick="toggleInstructions(' + rowObject.FillId + ',1)">Save</button>';
-        thisCellVal = (rowObject.HasNcr === 1) ? InstructionsCellVal : 'N/A';
+        instructionsCellVal = notes + '<br/><button id="add-button' + rowObject.FillId + '" onclick="toggleInstructions(' + rowObject.FillId + ',0)" class="btn support-btn btn-xs btn-danger show">Add Instructions</button><div id="instruction' + rowObject.FillId + '" class="hidden" ><textarea style="width: 95%;" rows=4 placeholder="Add disposition Instructions" id="note-' + rowObject.FillId + '"></textarea><button class="btn support-btn btn-xs btn-primary" onclick="toggleInstructions(' + rowObject.FillId + ',1)">Save</button>';
+        thisCellVal = (rowObject.HasNcr === 1) ? instructionsCellVal : 'N/A';
         return thisCellVal;
     }
 
