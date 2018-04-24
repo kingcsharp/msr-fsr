@@ -310,7 +310,6 @@ namespace Answer.Web.Controllers
                 .OrderByDescending(o => o.DueDate)
                 .ToList();
 
-
             if (!id.HasValue)
             {
                 if (workItems.Any())
@@ -327,6 +326,7 @@ namespace Answer.Web.Controllers
             vm = _orderService.GetPurchaseItemDetails(id.Value, currentUser.Id);
 
             vm.MyWoItems = workItems;
+
             return View(vm);
         }
 
