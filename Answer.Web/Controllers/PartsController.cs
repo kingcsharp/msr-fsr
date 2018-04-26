@@ -16,7 +16,6 @@ using Msr.Services.Parts.ViewModels;
 using Msr.Services.PartTypes;
 using Msr.Services.Locations;
 using Msr.Services.Roles;
-using Msr.Services.Roles.Messages;
 
 namespace Answer.Web.Controllers
 {
@@ -167,7 +166,7 @@ namespace Answer.Web.Controllers
 
         public ActionResult ViewFile(string callBackitem)
         {
-            var callBackUrl = "http://docs.google.com/gview?url=" + "http://infolab.stanford.edu/pub/papers/google.pdf&embedded=true";//callBackitem url need to be dynamic
+            var callBackUrl = "http://docs.google.com/gview?url=" + "http://infolab.stanford.edu/pub/papers/google.pdf&embedded=true";
             ViewBag.callBackitem = callBackUrl;
 
             return PartialView("_ViewFile");
@@ -350,7 +349,7 @@ namespace Answer.Web.Controllers
                 _partsService.UpdatePartsSafetyStocks(safetyStock, partObjectId, getCurrentUser.Id);
             }
 
-            TempData["SuccessMessage"] = "Update Safety Stock updated successfully.";
+            TempData["SuccessMessage"] = "Safety Stock updated successfully.";
 
             return RedirectToAction("EditSafetyStock");
         }
@@ -395,13 +394,11 @@ namespace Answer.Web.Controllers
 
         public void ImportSampleFile()
         {
-            var cols = new List<string> { "PartId", "Name" };
             Response.Clear();
             Response.ContentType = "text/csv";
             Response.AddHeader("Content-Disposition", "attachment;filename=parts-upload.csv");
-            Response.Write(string.Join(",", cols));
+            Response.Write(string.Join(",", ImportPartViewModel.GetHeaderColumns()));
             Response.End();
         }
-
     }
 }

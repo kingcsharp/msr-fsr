@@ -67,16 +67,13 @@
                                         @Html.DisplayNameFor(model => model.Name)
                                     </th>
                                     <th>
-                                        @Html.DisplayNameFor(model => model.Processed)
-                                    </th>
-                                    <th>
                                         @Html.DisplayNameFor(model => model.Messages)
                                     </th>
                                   
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var item in Model)
+                                @foreach (var item in Model.Where(x=> x.Processed == false))
                                 {
                                     <tr>
                                         <td>
@@ -84,9 +81,6 @@
                                         </td>
                                         <td>
                                             @Html.DisplayFor(modelItem => item.Name)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Processed)
                                         </td>
                                         <td>
                                             @foreach (var message in item.Messages)

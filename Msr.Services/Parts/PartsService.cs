@@ -355,22 +355,23 @@ namespace Msr.Services.Parts
 
                 var columnNames = (from dc in resultAsDataSet.Tables[0].Columns.Cast<DataColumn>() select dc.ColumnName)
                     .ToList();
-                string[] primes = { "PartId", "Name" };
+
+                var primes = ImportPartViewModel.GetHeaderColumns();
 
                 var results = primes.Where(m => !columnNames.Contains(m));
 
-                bool isSubset = primes.Intersect(columnNames).Count() == primes.Count();
+                var isSubset = primes.Intersect(columnNames).Count() == primes.Count();
 
                 if (!isSubset)
                 {
-                    result.AddError("Coloums missing : (" + string.Join(",", results) + ") to create Part");
+                    result.AddError("Columns missing : (" + string.Join(",", results) + ") to create Part");
                     return result;
                 }
 
                 var parts = resultAsDataSet.Tables[0].AsEnumerable().Select(item => new ImportPartViewModel
                 {
-                    PartId = item["PartId"].ToString(),
-                    Name = item["Name"].ToString()
+                    PartId = item[nameof(ImportPartViewModel.PartId)].ToString(),
+                    Name = item[nameof(ImportPartViewModel.Name)].ToString()
                 }).ToList();
 
                 ProcessRow(ntLogin, parts, result);
@@ -389,34 +390,44 @@ namespace Msr.Services.Parts
         {
             foreach (var part in parts)
             {
-                if (string.IsNullOrWhiteSpace(part.PartId))
+                try
                 {
-                    part.Messages.Add("PartId is required");
-                }
+                    if (string.IsNullOrWhiteSpace(part.PartId))
+                    {
+                        part.Messages.Add("PartId is required");
+                    }
 
-                if (string.IsNullOrWhiteSpace(part.Name))
-                {
-                    part.Messages.Add("Name is required");
-                }
+                    if (string.IsNullOrWhiteSpace(part.Name))
+                    {
+                        part.Messages.Add("Name is required");
+                    }
 
-                if (part.Messages.Any())
+                    if (part.Messages.Any())
+                    {
+                        result.Entity.Add(part);
+                        continue;
+                    }
+
+                    var partsImportAndUpdateExternalPartProcedure = new PartsImportAndUpdateExternalPartProcedure
+                    {
+                        ExternalPartId = part.PartId,
+                        PartName = part.Name,
+                        StrNtLogin = ntLogin
+                    };
+
+                    _dbContext.Database.ExecuteStoredProcedure(partsImportAndUpdateExternalPartProcedure);
+
+                    if (string.IsNullOrWhiteSpace(partsImportAndUpdateExternalPartProcedure.ExternalPartId))
+                    {
+                        part.Messages.Add(partsImportAndUpdateExternalPartProcedure.NewId);
+                        result.Entity.Add(part);
+                    }
+                }
+                catch (Exception)
                 {
+                    part.Messages.Add($"Unable to process part, PartName:'{part.Name}' PartId:'{part.PartId}' ");
                     result.Entity.Add(part);
-                    continue;
                 }
-
-                var partsImportAndUpdateExternalPartProcedure = new PartsImportAndUpdateExternalPartProcedure
-                {
-                    ExternalPartId = part.PartId,
-                    PartName = part.Name,
-                    StrNtLogin = ntLogin
-                };
-
-                _dbContext.Database.ExecuteStoredProcedure(partsImportAndUpdateExternalPartProcedure);
-                part.Processed = true;
-                part.Messages.Add(partsImportAndUpdateExternalPartProcedure.NewId);
-
-                result.Entity.Add(part);
             }
         }
     }

@@ -15,5 +15,10 @@ namespace Msr.Services.Parts.ViewModels
         public bool Processed { get; set; }
 
         public List<string> Messages { get; set; }
+
+        public static List<string> GetHeaderColumns()
+        {
+            return new List<string> {nameof(PartId), nameof(Name)};
+        }
     }
 }
