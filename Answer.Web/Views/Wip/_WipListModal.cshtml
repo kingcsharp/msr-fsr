@@ -85,8 +85,7 @@
                 </div>
             }
 
-@section scripts
-{
+
     <script>
         $('[data-toggle="tooltip"]').tooltip();
 
@@ -98,10 +97,9 @@
 
                 var id = $(this).data('task-id');
 
-
                 eModal.confirm('Do you want to take ownership of this WO Item?')
                     .then(function () {
-                        eLoaderOpen()
+                        eLoaderOpen();
                         $.ajax({
                             type: "POST",
                             url: "/wip/TakeTaskOwnersShip?taskId=" + id,
@@ -112,10 +110,10 @@
                                 } else {
                                     alert(data.Message);
                                 }
-                                eLoaderClose()
+                                eLoaderClose();
                             },
                             error: function (error) {
-                                eLoaderError(error)
+                                eLoaderError(error);
                             }
                         });
                     }, null);
@@ -124,4 +122,3 @@
             }
         });
     </script>
-}
