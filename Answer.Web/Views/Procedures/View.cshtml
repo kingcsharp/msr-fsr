@@ -7,15 +7,16 @@
     <div class="side-body padding-top">
         <div class="row">
             <h2 class="page-header">
-                Procedure : @Model.ProcedureView.Name <button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
+                Procedure: @Model.ProcedureView.Name <button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
             </h2>
 
             <div class="col-lg-12">
                 @Html.Partial("Message")
 
-                <h3>@Model.ProcedureView.Name</h3>
-                procedureViewAPPROVED (procedure number : @Model.ProcedureView.ObjectId,rev number :@Model.ProcedureView.Rev)<br />
-                Security clearance level : @Model.ProcedureView.SecurityName
+                Procedure Status: @Model.ProcedureView.Status <br/>
+                Procedure number: @Model.ProcedureView.ObjectId <br />
+                Rev number: @Model.ProcedureView.Rev<br />
+                Security clearance level: @Model.ProcedureView.SecurityName
             </div>
 
         </div>
@@ -25,6 +26,7 @@
                 <tr>
                     <th>Number</th>
                     <th>Id</th>
+                    <th>Title</th>
                     <th>Text</th>
                     <th>Duration Type</th>
                 </tr>
@@ -37,6 +39,7 @@
                     <tr>
                         <td>@Model.StepDataList[i].Print_Order</td>
                         <td>@Model.StepDataList[i].Id</td>
+                        <td>@Model.StepDataList[i].Title</td>
                         <td>@Html.Raw(Model.StepDataList[i].Step_Text)</td>
                         <td>@Model.StepDataList[i].Duration @Model.StepDataList[i].Duration_Type</td>
                     </tr>
