@@ -24,14 +24,14 @@
     <div class="col-sm-3">
         <div class="form-group">
             <label class="sr-only">Division/Fab # </label>
-            @Html.TextBoxFor(x => Model.ProductCustomerDivision, new { @class = "form-control", placeholder = "Division/Fab #", data_toggle = "tooltip", data_placement = "bottom", title = "Prepopulate from Customer Reqs if available" })
+            @Html.TextBoxFor(x => Model.ProductCustomerDivision, new { @class = "form-control", placeholder = "Division/Fab #", data_toggle = "tooltip", data_placement = "bottom"})
             @Html.ValidationMessageFor(model => model.ProductCustomerDivision, "", new { @class = "text-danger" })
         </div>
     </div>
     <div class="col-sm-3">
         <div class="form-group">
             <label class="sr-only">Product Name </label>
-            @Html.TextBoxFor(x => Model.ProductName, new { @class = "form-control", placeholder = "Product Name", data_toggle = "tooltip", data_placement = "bottom", title = "Prepopulate from Customer Reqs if available" })
+            @Html.TextBoxFor(x => Model.ProductName, new { @class = "form-control",  data_toggle = "tooltip", data_placement = "bottom"})
             @Html.ValidationMessageFor(model => model.ProductName, "", new { @class = "text-danger" })
         </div>
     </div>

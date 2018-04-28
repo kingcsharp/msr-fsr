@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Mvc;
 using Msr.Models.CustomerRequirements;
+using Msr.Services.CustomerRequirements.ViewModel;
 using Msr.Services.PrePro;
 using Msr.Services.Procedures;
-using Msr.Services.Procedures.ViewModels;
-using Msr.Services.Procedures.Messages;
 using Msr.Services.Quotes.ViewModels;
 using Newtonsoft.Json;
 
@@ -158,7 +156,7 @@ namespace Msr.Services.ProductionPlanning.ViewModels
 
                 foreach (var step in attachedSteps)
                 {
-                    var procStep = procedureSteps.Where(x => x.Id == step.ObjectId).SingleOrDefault();
+                    var procStep = procedureSteps.SingleOrDefault(x => x.Id == step.ObjectId);
 
                     Steps.Add(new RequirementStepsDetailsViewModel
                     {
@@ -186,7 +184,7 @@ namespace Msr.Services.ProductionPlanning.ViewModels
                     var result = JsonConvert.DeserializeObject<FreeFormQuoteViewModel>(requirment.QuoteJson);
 
                     var procedureId = result.ExistingProcess;
-                    var customerPartNo = result.QuoteItems.FirstOrDefault().CustomerPartNo;
+                    var customerPartNo = result.QuoteItems?.FirstOrDefault().CustomerPartNo;
 
                     if (string.IsNullOrWhiteSpace(ProductSupplierId))
                     {
@@ -200,12 +198,25 @@ namespace Msr.Services.ProductionPlanning.ViewModels
 
                     if (string.IsNullOrWhiteSpace(ProductProcedureId))
                     {
-                        ProductProcedureId = productionPlanService.GetProceduretIdById(id: procedureId);
+                        ProductProcedureId = productionPlanService.GetProceduretIdById(procedureId);
                     }
 
                     if (string.IsNullOrWhiteSpace(ProductPartId))
                     {
-                        ProductPartId = productionPlanService.GetPartIdByCompanyPartNumber(companyPartNumber: customerPartNo);
+                        ProductPartId = productionPlanService.GetPartIdByCompanyPartNumber(customerPartNo);
+                    }
+                    if (string.IsNullOrWhiteSpace(ProductName))
+                    {
+                        ProductName = result.QuoteItems?.FirstOrDefault().Description;
+                    }
+                }
+                else
+                {
+                    var result = JsonConvert.DeserializeObject<CustomerRequirementViewModel>(requirment.CustomerRequirementJson);
+
+                    if (string.IsNullOrWhiteSpace(ProductName))
+                    {
+                        ProductName = result.RequirementName;
                     }
                 }
             }

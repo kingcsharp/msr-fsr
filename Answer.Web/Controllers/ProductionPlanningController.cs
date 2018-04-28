@@ -203,7 +203,6 @@ namespace Answer.Web.Controllers
                 }
             }
 
-            vm.ProductName = requirment.ProductName;
             return View(vm);
         }
 
