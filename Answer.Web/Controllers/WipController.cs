@@ -401,6 +401,8 @@ namespace Answer.Web.Controllers
 
             model.WorkOrderDetailsResponse = _orderService.GetPurchaseItemDetails(id, currentUser.Id);
 
+            model.FillUrl = Request.Url.GetLeftPart(UriPartial.Authority) + Url.Action("Details", "Wip", new {id = model.FillId});
+
             return PartialView("_ViewTsr", model);
         }
 

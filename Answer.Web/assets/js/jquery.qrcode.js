@@ -4,11 +4,10 @@
 		if( typeof options === 'string' ){
 			options	= { text: options };
 		}
-
 		// set default values
 		// typeNumber < 1 for automatic calculation
 		options	= $.extend( {}, {
-			render		: "image",
+            render: "canvas",
 			width		: 256,
 			height		: 256,
 			typeNumber	: -1,

@@ -15,5 +15,7 @@ namespace Msr.Services.Orders.Messaging
         public List<TsrTaskResult> TsrTaskResults { get; set; }
 
         public WorkOrderDetailsResponse WorkOrderDetailsResponse { get; set; }
+
+        public string FillUrl { get; set; }
     }
 }
