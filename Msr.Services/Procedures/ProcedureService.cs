@@ -33,14 +33,17 @@ namespace Msr.Services.Procedures
         {
             _dbContext = new MsrDbContext();
         }
+
         public IQueryable<ProcedureView> GetProceduresQueryable()
         {
             return _dbContext.Procedures;
         }
+
         public ProcedureView GetProcedureById(string id)
         {
             return GetProceduresQueryable().SingleOrDefault(x => x.ObjectId == id);
         }
+
         public List<SelectFile> GetSelectedFiles(string id, string type, string ntlogin)
         {
             var objId = new SqlParameter("@objID", id ?? "0");
@@ -54,6 +57,7 @@ namespace Msr.Services.Procedures
 
             return result;
         }
+
         public List<RoleResult> GetSelectedRoles(string id, string ntlogin)
         {
             var objId = new SqlParameter("@strID", id ?? "0");
@@ -92,6 +96,7 @@ namespace Msr.Services.Procedures
 
             return result;
         }
+
         public ResultNotification<AddPurchaseResponse> AddMonitorForProcedure(AddMonitorForProcedureViewModel model)
         {
             var responsePurchase = new ResultNotification<AddPurchaseResponse> { Entity = new AddPurchaseResponse() };
@@ -181,89 +186,7 @@ namespace Msr.Services.Procedures
                 return responsePurchase;
             }
         }
-        public bool EditMonitorForProcedure(AddMonitorForProcedureViewModel model)
-        {
-            try
-            {
-                var addProcedureMonitorProcedure = new AddProcedureMonitorProcedure()
-                {
 
-                    Id = model.Id,
-
-                    Monitor_Type = model.Monitor_Type,
-
-                    Description = model.Description,
-
-                    Start_System_Task = model.Start_System_Task,
-
-                    Start_Type = model.Start_Type,
-
-                    Stop_System_Task = model.Stop_System_Task,
-
-                    Stop_Type = model.Stop_Type,
-
-                    Counter_Or_Clock = model.Counter_Or_Clock,
-
-                    Clock_Unit = model.Clock_Unit,
-
-                    Highest_Threshold = model.Highest_Threshold,
-
-                    High_Threshold = model.High_Threshold,
-
-                    Target = model.Target,
-
-                    Low_Threshold = model.Low_Threshold,
-
-                    Lowest_Threshold = model.Lowest_Threshold,
-
-                    Should_Be = model.Should_Be,
-
-                    Opinion = model.Opinion,
-
-                    Hide_Target = model.Hide_Target,
-
-                    Use_Result = model.Use_Result,
-
-                    Fail_Stop = model.Fail_Stop,
-
-                    Step_Id = model.Step_Id,
-
-                    Correct_Answer = model.Correct_Answer,
-
-                    Text_Target = model.Text_Target,
-
-                    Task_Id = model.Task_Id,
-
-                    Tolerance = model.Tolerance,
-
-                    Related_Object_Id = model.Related_Object_Id,
-
-                    Fail_Action = model.Fail_Action,
-
-                    Target_Object_Type = model.Target_Object_Type,
-
-                    Target_Object = model.Target_Object,
-
-                    Skip_Mode = model.Skip_Mode,
-
-                    Cant_Change = model.Cant_Change,
-
-                    Always_Pass = model.Always_Pass,
-
-                    StrNTLogin = model.StrNTLogin
-                };
-
-                _dbContext.Database.ExecuteStoredProcedure(addProcedureMonitorProcedure);
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                var message = "Error occured:" + ex.Message;
-
-                return false;
-            }
-        }
         public string PrePopSave(string procObjId, string prevStepId, string ntlogin)
         {
             try
@@ -286,6 +209,7 @@ namespace Msr.Services.Procedures
                 return string.Empty;
             }
         }
+
         public List<ProcedureEditObjectView> GetSelectedProcedureObject(string procobjid, string sid, string relationship, string ntlogin)
         {
             string ss = null;
@@ -298,12 +222,14 @@ namespace Msr.Services.Procedures
 
             return result;
         }
+
         public List<EditProcedureObjestFile> GetProcedureEditObjects()
         {
             var result = _dbContext.Database.SqlQuery<EditProcedureObjestFile>("SELECT DISTINCT TOP 500 OBJ_DESC,ID as Id FROM A_V_APPROVED_OBJECTS WHERE CREATING_CO = '2' AND OBJ_TABLE = 'A_PARTS_HISTORY' AND (( OBJ_DESC LIKE '%m%' ) ) ORDER BY OBJ_DESC").ToList();
 
             return result;
         }
+
         public ResultNotification<string> Create(SaveProcedureViewModel model)
         {
             var result = new ResultNotification<string>();
@@ -416,27 +342,6 @@ namespace Msr.Services.Procedures
             }
         }
 
-        public List<SelectFile> GetSelectedRefProcedures(string id, string ntlogin)
-        {
-            var objId = new SqlParameter("@ID", id ?? "0");
-
-            //need to be dynamic
-            var NTLogin = new SqlParameter("@strNTLogin", ntlogin);
-
-            var result = _dbContext.Database.SqlQuery<SelectFile>("EXEC Portal_ProcedureStepGetRefProcedures @ID, @strNTLogin", objId, NTLogin).ToList();
-
-            return result;
-        }
-
-        public ProceduresApprovedDataResult GetApprovedData(string id)
-        {
-            var sql = $"SELECT * FROM A_OBJECTS WHERE ID = '{id}' AND STATUS LIKE 'APPROVED%'";
-
-            var result = _dbContext.Database.SqlQuery<ProceduresApprovedDataResult>(sql).SingleOrDefault();
-
-            return result;
-        }
-
         public string GetProcedureName(string id)
         {
             var sql = $"SELECT NAME FROM A_V_PROCEDURES_APPROVED_DATA WHERE ID ={id}";
@@ -499,6 +404,7 @@ namespace Msr.Services.Procedures
             var getStepLaborProcedure = new GetStepLaborProcedure() { Id = stepId, NTLogin = loginId };
             return _dbContext.Database.ExecuteStoredProcedure<GetStepLaborResult>(getStepLaborProcedure).ToList();
         }
+
         public GetStepEditDataViewModel GetStepData(string stepId, string procedureObjectId, string loginId)
         {
             GetStepEditDataViewModel getStepEditDataViewModel = new GetStepEditDataViewModel
@@ -785,6 +691,7 @@ namespace Msr.Services.Procedures
                 return new List<GetMoniterViewModel>();
             }
         }
+
         public IQueryable<GetMoniterViewModel> GetMonitors(GetMoniterViewModel model, bool reorderByLatestMonitor)
         {
             var objId = new SqlParameter("@RELATED_OBJECT_ID", model.Related_Object_Id);
@@ -864,6 +771,7 @@ namespace Msr.Services.Procedures
 
             return resultWithNumbers.AsQueryable();
         }
+
         public GetMoniterViewModel GetMonitorById(string id, string loginId)
         {
             var MonitorId = new SqlParameter("@ID", id);
@@ -877,8 +785,6 @@ namespace Msr.Services.Procedures
 
             return result;
         }
-
-
 
         public bool CreateProcedureObject(EditProcedureObjectViewModel model)
         {
@@ -909,6 +815,7 @@ namespace Msr.Services.Procedures
                 return false;
             }
         }
+
         public bool SaveProcedureObject(EditProcedureObjectViewModel model)
         {
 
@@ -935,6 +842,7 @@ namespace Msr.Services.Procedures
                 return false;
             }
         }
+
         public bool CreatePartsProvideTakeBack(PartsProvideTakeBackViewModel model)
         {
 
@@ -961,6 +869,7 @@ namespace Msr.Services.Procedures
                 return false;
             }
         }
+
         public bool SavePartsProvideTakeBack(PartsProvideTakeBackViewModel model)
         {
 
@@ -987,6 +896,7 @@ namespace Msr.Services.Procedures
                 return false;
             }
         }
+
         public bool Delete(string id, string ntlogin)
         {
             try
@@ -1005,6 +915,7 @@ namespace Msr.Services.Procedures
                 return false;
             }
         }
+
         public ProcedureEditObjectView EditProcedureObject(string id, string ntlogin)
         {
             var objId = new SqlParameter("@ID", id);
@@ -1033,6 +944,7 @@ namespace Msr.Services.Procedures
                 return false;
             }
         }
+
         public void UpdatePrintOrder(string id, string printOrder)
         {
             try
@@ -1073,6 +985,7 @@ namespace Msr.Services.Procedures
                 return false;
             }
         }
+
         public bool SaveReorderSteps(string[] formCollection, string id, string currentUserId)
         {
             try

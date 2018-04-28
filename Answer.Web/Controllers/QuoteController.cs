@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System.Linq;
+using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using Msr.Services.CustomerRequirements.ViewModel;
 using Msr.Services.ProductionPlanning;
@@ -20,9 +21,11 @@ namespace Answer.Web.Controllers
 
         public ActionResult Create()
         {
+            var currentUser = GetCurrentUser();
+
             var model = new FreeFormQuoteViewModel();
 
-            model.Setup(_productionPlanningService);
+            model.Setup(_productionPlanningService, currentUser);
 
             return View(model);
         }
@@ -31,10 +34,10 @@ namespace Answer.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(FreeFormQuoteViewModel viewModel)
         {
+            var currentUser = GetCurrentUser();
+
             if (ModelState.IsValid)
             {
-                var currentUser = GetCurrentUser();
-
                 viewModel.CreatedBy = currentUser.Login;
 
                 var response = _quoteService.Create(viewModel, currentUser);
@@ -48,17 +51,25 @@ namespace Answer.Web.Controllers
 
                 TempData["ErrorMessage"] = response.ErrorMessage;
             }
-            viewModel.Setup(_productionPlanningService);
+
+            viewModel.Setup(_productionPlanningService, currentUser);
+
             return View(viewModel);
         }
 
         public ActionResult ViewQuote(int id)
         {
+            var currentUser = GetCurrentUser();
+
             var requirment = _quoteService.GetById(id);
 
             var vm = new JavaScriptSerializer().Deserialize<FreeFormQuoteViewModel>(requirment.QuoteJson);
 
-            vm.Setup(_productionPlanningService);
+            vm.CustomerName = vm.Customers.SingleOrDefault(x => x.Value == vm.CustomerId).Text;
+
+            vm.SupplierName = vm.Suppliers.SingleOrDefault(x => x.Value == vm.Supplier).Text;
+
+            vm.Setup(_productionPlanningService, currentUser);
 
             return PartialView("_ViewQuote", vm);
         }

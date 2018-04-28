@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Mvc;
-using Msr.Models.CustomerRequirements;
 using Msr.Services.ProductionPlanning;
+using Msr.Services.Users.Messages;
 
 namespace Msr.Services.Quotes.ViewModels
 {
@@ -31,14 +30,10 @@ namespace Msr.Services.Quotes.ViewModels
 
         public string FOB { get; set; }
 
-        public string Address { get; set; }
-
         [Required]
         public string Title { get; set; }
 
         public string Terms { get; set; }
-
-        public string CityStateZip { get; set; }
 
         [Display(Name = "Phone")]
         [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Please enter valid phone number.")]
@@ -70,29 +65,24 @@ namespace Msr.Services.Quotes.ViewModels
 
         public List<SelectListItem> Customers { get; set; }
 
-        public void Setup(ProductionPlanningService productionPlanningService)
+        public void Setup(ProductionPlanningService productionPlanningService, LoggedUserIdResult currentUser)
         {
             if (!QuoteItems.Any())
             {
                 QuoteItems.Add(new QuoteItemsViewModel());
             }
 
-            Suppliers = productionPlanningService.GetSupplierList().Select(x => new SelectListItem
+            Suppliers = productionPlanningService.GetSupplierList(currentUser).Select(x => new SelectListItem
             {
                 Text = x.Name,
                 Value = x.Value.ToString()
             }).OrderBy(o => o.Text).ToList();
 
-            Customers = productionPlanningService.GetCustomerList().Select(x => new SelectListItem
+            Customers = productionPlanningService.GetCustomerList(currentUser).Select(x => new SelectListItem
             {
                 Text = x.Name,
                 Value = x.Value.ToString()
             }).OrderBy(o => o.Text).ToList();
-
-            CustomerName = productionPlanningService.GetCustomerList().SingleOrDefault(x => x.Value == CustomerId)?.Name;
-
-            SupplierName = productionPlanningService.GetSupplierList().SingleOrDefault(x => x.Value == Supplier)?.Name;
         }
-
     }
 }

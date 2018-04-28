@@ -323,25 +323,22 @@ namespace Msr.Services.ProductionPlanning
             return result;
         }
 
-        public List<ListItem> GetSupplierList()
+        public List<ListItem> GetSupplierList(LoggedUserIdResult currentUser)
         {
-            var result = _dbContext.Database.SqlQuery<ListItem>("SELECT DISTINCT NAME , ID AS Value FROM A_V_COMPANIES_DROP_SEARCH WHERE ( ROOT_CO_ID = '2' ) ORDER BY NAME").ToList();
+            var sql = $"SELECT DISTINCT NAME , ID AS Value FROM A_V_COMPANIES_DROP_SEARCH WHERE ( ROOT_CO_ID = '{currentUser.Root_Company}' ) ORDER BY NAME";
+
+            var result = _dbContext.Database.SqlQuery<ListItem>(sql).ToList();
 
             return result;
         }
 
-        public List<ListItem> GetCustomerList()
+        public List<ListItem> GetCustomerList(LoggedUserIdResult currentUser)
         {
-            var result = _dbContext.Database.SqlQuery<ListItem>("SELECT DISTINCT TOP 500 NAME, ID AS Value FROM A_V_COMPANIES_DROP_SEARCH WHERE ( ROOT_CO_ID = ID OR ROOT_CO_ID = '2' ) ORDER BY NAME").ToList();
+            var sql = $"SELECT DISTINCT TOP 500 NAME, ID AS Value FROM A_V_COMPANIES_DROP_SEARCH WHERE ( ROOT_CO_ID = ID OR ROOT_CO_ID = '{currentUser.Root_Company}' ) ORDER BY NAME";
+
+            var result = _dbContext.Database.SqlQuery<ListItem>(sql).ToList();
 
             return result;
-        }
-
-        public string GetSupplierIdByName(string name)
-        {
-            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT DISTINCT NAME as Show,ID as Value FROM A_V_COMPANIES_DROP_SEARCH WHERE ( ROOT_CO_ID = '2' ) and (ROOT_NAME='" + name + "') ORDER BY NAME").SingleOrDefault();
-
-            return result?.Value;
         }
 
         public string GetProceduretIdById(string id)

@@ -4,7 +4,8 @@ using System.Linq;
 using System.Web.Mvc;
 using Msr.Models.PurchesOrder;
 using System.ComponentModel.DataAnnotations;
-
+using Msr.Services.ProductionPlanning;
+using Msr.Services.Users.Messages;
 
 namespace Msr.Services.PurchesOrder.ViewModels
 {
@@ -73,20 +74,20 @@ namespace Msr.Services.PurchesOrder.ViewModels
         public List<SelectListItem> InvoiceTriggerList { get; set; }
         public List<SelectListItem> InvoicePeriodTypeList { get; set; }
 
-        public void Setup(PurchesOrderService purchesOrderService)
+        public void Setup(PurchesOrderService purchesOrderService, ProductionPlanningService productionPlanningService, LoggedUserIdResult currentUser)
         {
-            ClientList = purchesOrderService.GetCompaniesList().Select(x => new SelectListItem
+            ClientList = productionPlanningService.GetCustomerList(currentUser).Select(x => new SelectListItem
             {
                 Text = x.Name,
-                Value = x.Id.ToString()
+                Value = x.Value.ToString()
             }).OrderBy(o => o.Text).ToList();
             ClientList.Insert(0, new SelectListItem() { Value = "", Text = @"Select Client" });
 
 
-            SupplierDepartmentList = purchesOrderService.GetCompaniesList().Select(x => new SelectListItem
+            SupplierDepartmentList = productionPlanningService.GetSupplierList(currentUser).Select(x => new SelectListItem
             {
                 Text = x.Name,
-                Value = x.Id.ToString()
+                Value = x.Value.ToString()
             }).OrderBy(o => o.Text).ToList();
             SupplierDepartmentList.Insert(0, new SelectListItem() { Value = "", Text = @"Select Supplier Department" });
 

@@ -7,16 +7,19 @@ using Msr.Services.jqGrid;
 using Msr.Services.PurchesOrder;
 using Msr.Models.PurchesOrder;
 using Msr.Services.PurchesOrder.ViewModels;
+using Msr.Services.ProductionPlanning;
 
 namespace Answer.Web.Controllers
 {
     public class PurchaseOrderController : BaseController
     {
         private readonly PurchesOrderService _purchesOrderService;
+        private readonly ProductionPlanningService _productionPlanningService;
 
         public PurchaseOrderController()
         {
             _purchesOrderService = new PurchesOrderService();
+            _productionPlanningService = new ProductionPlanningService();
         }
 
         public ActionResult Index()
@@ -189,9 +192,11 @@ namespace Answer.Web.Controllers
         [HttpGet]
         public ActionResult Create()
         {
+            var currentUser = GetCurrentUser();
+
             var vm = new NewPurchaseOrderViewModel();
 
-            vm.Setup(_purchesOrderService);
+            vm.Setup(_purchesOrderService, _productionPlanningService, currentUser);
 
             return View(vm);
         }
@@ -199,13 +204,15 @@ namespace Answer.Web.Controllers
         [HttpGet]
         public ActionResult Edit(string id)
         {
+            var currentUser = GetCurrentUser();
+
             var purchaseOrder = new NewPurchaseOrderViewModel();
 
             var model = _purchesOrderService.GetById(id);
 
             purchaseOrder = purchaseOrder.MaptoDto(model);
 
-            purchaseOrder.Setup(_purchesOrderService);
+            purchaseOrder.Setup(_purchesOrderService, _productionPlanningService, currentUser);
 
             return View(purchaseOrder);
         }
@@ -213,9 +220,11 @@ namespace Answer.Web.Controllers
         [HttpPost]
         public ActionResult Create(NewPurchaseOrderViewModel model)
         {
+            var currentUser = GetCurrentUser();
+
             if (ModelState.IsValid)
             {
-                model.NTLogin = GetCurrentUser().Id;
+                model.NTLogin = currentUser.Id;
 
                 var response = _purchesOrderService.Create(model);
 
@@ -244,11 +253,15 @@ namespace Answer.Web.Controllers
                 TempData[NotificationConstants.ErrrorMessage] = response.ErrorMessage;
             }
 
-            model.Setup(_purchesOrderService);
+            model.Setup(_purchesOrderService, _productionPlanningService, currentUser);
 
             return View(model);
         }
-
+        public JsonResult GetCurresntUser()
+        {
+            var currentUser = GetCurrentUser();
+            return Json(currentUser.Root_Company, JsonRequestBehavior.AllowGet);
+        }
         public JsonResult ProductsList(string id, string supplierCo)
         {
             var products = _purchesOrderService.GetCompinesProducts(id, supplierCo).Select(x => new SelectListItem
@@ -263,9 +276,11 @@ namespace Answer.Web.Controllers
         [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult ProductsData(JqGridParam param, string id, string clientValue)
         {
+            var currentUser = GetCurrentUser();
+
             var newPurchaseOrderViewModel = new NewPurchaseOrderViewModel();
 
-            newPurchaseOrderViewModel.Setup(_purchesOrderService);
+            newPurchaseOrderViewModel.Setup(_purchesOrderService, _productionPlanningService, currentUser);
 
             var totalRows = _purchesOrderService.GetCompinesProducts(id, clientValue).AsQueryable();
 
@@ -367,13 +382,13 @@ namespace Answer.Web.Controllers
         [HttpGet]
         public ActionResult CreatePurchase(string id, string oldId)
         {
+            var currentUser = GetCurrentUser();
+
             var model = _purchesOrderService.PurchasedOrderById(id);
             model.OrderItems = _purchesOrderService.PurchasedOrderOrderItems(model.ID);
 
             model.oldId = oldId;
             model.newId = model.ID;
-
-            var currentUser = GetCurrentUser();
 
             model.Setup(_purchesOrderService, currentUser);
 

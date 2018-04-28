@@ -3,8 +3,8 @@
     <div class="col-sm-3">
         <div class="form-group">
             <label class="sr-only">Supplier </label>
-            @Html.DropDownListFor(model => model.ProductSupplierId, Model.Suppliers, "Select Supplier", new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.ProductSupplierId, "", new { @class = "text-danger" })
+            @Html.DropDownListFor(model => model.ProductCustomerId, Model.Customers, "Select Customer", new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.ProductCustomerId, "", new { @class = "text-danger" })
         </div>
     </div>
     <div class="col-sm-3">
@@ -17,8 +17,8 @@
     <div class="col-sm-3">
         <div class="form-group">
             <label class="sr-only">Customer Name </label>
-            @Html.DropDownListFor(model => model.ProductCustomerId, Model.Customers, "Select Customer", new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.ProductCustomerId, "", new { @class = "text-danger" })
+            @Html.DropDownListFor(model => model.ProductSupplierId, Model.Suppliers, "Select Supplier", new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.ProductSupplierId, "", new { @class = "text-danger" })
         </div>
     </div>
     <div class="col-sm-3">

@@ -7,6 +7,7 @@ using Msr.Services.CustomerRequirements.ViewModel;
 using Msr.Services.PrePro;
 using Msr.Services.Procedures;
 using Msr.Services.Quotes.ViewModels;
+using Msr.Services.Users.Messages;
 using Newtonsoft.Json;
 
 namespace Msr.Services.ProductionPlanning.ViewModels
@@ -84,7 +85,8 @@ namespace Msr.Services.ProductionPlanning.ViewModels
 
         public string ProductStatus { get; set; }
 
-        public void Setup(ProductionPlanningService productionPlanningService, PreProServices preProServices)
+        public void Setup(ProductionPlanningService productionPlanningService, PreProServices preProServices,
+            LoggedUserIdResult currentUser)
         {
             ProcedureList = productionPlanningService.GetProceduretList().Select(x => new SelectListItem
             {
@@ -99,13 +101,13 @@ namespace Msr.Services.ProductionPlanning.ViewModels
                 Value = x.Value.ToString()
             }).OrderBy(o => o.Text).ToList();
 
-            Suppliers = productionPlanningService.GetSupplierList().Select(x => new SelectListItem
+            Suppliers = productionPlanningService.GetSupplierList(currentUser).Select(x => new SelectListItem
             {
                 Text = x.Name,
                 Value = x.Value.ToString()
             }).OrderBy(o => o.Text).ToList();
 
-            Customers = productionPlanningService.GetCustomerList().Select(x => new SelectListItem
+            Customers = productionPlanningService.GetCustomerList(currentUser).Select(x => new SelectListItem
             {
                 Text = x.Name,
                 Value = x.Value.ToString()

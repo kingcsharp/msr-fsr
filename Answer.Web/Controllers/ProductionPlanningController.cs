@@ -149,6 +149,7 @@ namespace Answer.Web.Controllers
             var vm = new RequirementStepsViewModel();
 
             var currentUser = GetCurrentUser();
+
             var requirment = _quoteService.GetById(id);
 
             if (!string.IsNullOrWhiteSpace(requirment.ProductId))
@@ -171,7 +172,7 @@ namespace Answer.Web.Controllers
                 procedureObjectId = _productionPlanService.GetProceduretById(vm.ProductProcedureId).Value;
             }
 
-            vm.Setup(_productionPlanService, _preProServices);
+            vm.Setup(_productionPlanService, _preProServices, currentUser);
 
             var procedureSteps = _proceduresService.GetStepsData(procedureObjectId, currentUser.Id);
 
@@ -222,7 +223,7 @@ namespace Answer.Web.Controllers
 
             var procedureObjectId = _productionPlanService.GetProceduretById(viewModel.ProductProcedureId).Value;
             var procedureSteps = _proceduresService.GetStepsData(procedureObjectId, currentUser.Id);
-            viewModel.Setup(_productionPlanService, _preProServices);
+            viewModel.Setup(_productionPlanService, _preProServices, currentUser);
 
             if (!string.IsNullOrWhiteSpace(viewModel.ProductProcedureId) && !viewModel.Steps.Any())
             {
@@ -255,7 +256,7 @@ namespace Answer.Web.Controllers
             {
                 vm.ProductProcedureId = null;
                 vm.Steps = new List<RequirementStepsDetailsViewModel> {new RequirementStepsDetailsViewModel()};
-                vm.Setup(_productionPlanService, _preProServices);
+                vm.Setup(_productionPlanService, _preProServices, currentUser);
 
                 return View(vm);
             }
@@ -281,7 +282,7 @@ namespace Answer.Web.Controllers
                     });
                 }
 
-                vm.Setup(_productionPlanService, _preProServices);
+                vm.Setup(_productionPlanService, _preProServices, currentUser);
 
                 return View(vm);
             }
@@ -310,7 +311,7 @@ namespace Answer.Web.Controllers
                             new {objId = response.Entity.ProductId, returnUrl = Url.Content("~/ProductionPlanning")});
                     }
 
-                    vm.Setup(_productionPlanService, _preProServices);
+                    vm.Setup(_productionPlanService, _preProServices, currentUser);
 
                     return RedirectToAction("Index");
 
@@ -319,7 +320,7 @@ namespace Answer.Web.Controllers
                 TempData["ErrorMessage"] = response.ErrorMessage;
             }
 
-            vm.Setup(_productionPlanService, _preProServices);
+            vm.Setup(_productionPlanService, _preProServices, currentUser);
 
             return View(vm);
         }
@@ -350,48 +351,6 @@ namespace Answer.Web.Controllers
             model.Setup();
 
             return View(model);
-        }
-
-        [AcceptVerbs(HttpVerbs.Post)]
-        public JsonResult CreateProcedure(string procedureName, int productionPlanningId)
-        {
-            var model = new SaveProcedureViewModel
-            {
-                Name = procedureName,
-                DurationType = "TIME_SYS_SECONDS",
-                SecurityLevel = "1",
-                StepInAp = 1,
-                WipMsg = 0,
-                IsActive = false
-            };
-            var currentUser = GetCurrentUser();
-            var procedureService = new ProceduresService();
-            var result = new ResultNotification<string>();
-            model.NTLogin = currentUser.Id;
-            var response = procedureService.Create(model);
-
-            TempData["SuccessMessage"] = "Procedure has been created successfully.";
-
-            if (!response.HasErrors())
-            {
-                var checkOutObject = _workflowService.CheckOutObject(response.Entity, model.NTLogin);
-
-                var submitWorkflow = new SubmitWorkflowViewModel();
-                submitWorkflow.CompletionStart = "APPROVED";
-                submitWorkflow.LoggedUserIdResult = currentUser;
-                submitWorkflow.ObjectId = checkOutObject.Entity;
-                submitWorkflow.ApprovalWorflowId = "37";
-                submitWorkflow.Comment = "Procedure approved by system";
-                submitWorkflow.LoginId = currentUser.Id;
-                _workflowService.SubmitWorkflow(submitWorkflow);
-
-                var procedureList = _productionPlanService.GetProceduretList();
-
-                return Json(new {Message = result.SuccessMessage, data = procedureList, ProcedureId = response.Entity},
-                    JsonRequestBehavior.AllowGet);
-            }
-
-            return Json(new {Message = result.ErrorMessage}, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]
