@@ -13,17 +13,17 @@ namespace Msr.Web
         {
             ConfigureAuth(app);
 
-            var options = new DashboardOptions
-            {
-                AuthorizationFilters = new[]
-                {
-                    new LocalRequestsOnlyAuthorizationFilter()
-                }
-            };
+            ////var options = new DashboardOptions
+            ////{
+            ////    AuthorizationFilters = new[]
+            ////    {
+            ////        new LocalRequestsOnlyAuthorizationFilter()
+            ////    }
+            ////};
 
-            GlobalConfiguration.Configuration.UseSqlServerStorage("MsrPortal");
-            app.UseHangfireDashboard("/hangfire",options);
-            app.UseHangfireServer();
+            ////GlobalConfiguration.Configuration.UseSqlServerStorage("MsrPortal");
+            ////app.UseHangfireDashboard("/hangfire",options);
+            ////app.UseHangfireServer();
 
            //// RecurringJob.AddOrUpdate("A_SP_ADMIN_SQL_TO_RUN_EXECUTE", () => SpAdminJob.Run(), "*/1 * * * *");
         }

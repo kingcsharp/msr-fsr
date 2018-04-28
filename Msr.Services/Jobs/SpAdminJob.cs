@@ -11,7 +11,7 @@ namespace Msr.Services.Jobs
         {
             var workflowService = new WorkflowService();
 
-            workflowService.SpRunAdminSql();
+            ////workflowService.SpRunAdminSql();
         }
     }
 }
