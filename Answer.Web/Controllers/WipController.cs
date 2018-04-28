@@ -299,7 +299,7 @@ namespace Answer.Web.Controllers
             return Json("OK", JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult Details(int? id)
+        public ActionResult Details(int id)
         {
             var vm = new WorkOrderDetailsResponse();
 
@@ -309,21 +309,8 @@ namespace Answer.Web.Controllers
                 .Where(x => x.RequesteeId == currentUser.Id)
                 .OrderByDescending(o => o.DueDate)
                 .ToList();
-
-            if (!id.HasValue)
-            {
-                if (workItems.Any())
-                {
-                    id = int.Parse(workItems.First().FillId);
-                }
-                else
-                {
-                    AddWarningNotification("There is no work item assigned to this account.");
-                    return View(vm);
-                }
-            }
             
-            vm = _orderService.GetPurchaseItemDetails(id.Value, currentUser.Id);
+            vm = _orderService.GetPurchaseItemDetails(id, currentUser.Id);
 
             vm.MyWoItems = workItems;
 
