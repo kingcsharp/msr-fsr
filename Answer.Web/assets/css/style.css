@@ -1450,13 +1450,13 @@ color: black;
 }
 
 .part button.info.collapsed:before {
-    content: 'Show Advance Items';
+    content: 'Show Advanced Items';
     display: block;
     width: 100%;
 }
 
 .part button.info:before {
-    content: 'Hide Advance Items';
+    content: 'Hide Advanced Items';
     display: block;
     width: 100%;
 }
