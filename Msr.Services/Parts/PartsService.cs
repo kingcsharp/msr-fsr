@@ -2,16 +2,19 @@
 using Msr.Repositories;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
 using System.Web;
+using Dapper;
 using Msr.Services.Parts.Procedures;
 using EntityFrameworkExtras.EF6;
 using Msr.Services.Parts.ViewModels;
 using Msr.Models.Common;
 using ExcelDataReader;
+using Msr.Services.Orders.Procedures;
 
 namespace Msr.Services.Parts
 {
@@ -408,22 +411,30 @@ namespace Msr.Services.Parts
                         continue;
                     }
 
-                    var partsImportAndUpdateExternalPartProcedure = new PartsImportAndUpdateExternalPartProcedure
-                    {
-                        ExternalPartId = part.PartId,
-                        PartName = part.Name,
-                        StrNtLogin = ntLogin
-                    };
+                    var p = new DynamicParameters();
 
-                    _dbContext.Database.ExecuteStoredProcedure(partsImportAndUpdateExternalPartProcedure);
+                    p.Add("@newID", dbType: DbType.String, direction: ParameterDirection.Output, size: 500);
+                    p.Add("@retPartID", dbType: DbType.String, direction: ParameterDirection.Output, size: 500);
+                    p.Add("@externalPartID", part.PartId.Trim(), DbType.String, ParameterDirection.Input, size: 50);
+                    p.Add("@partName", part.Name.Trim(), DbType.String, ParameterDirection.Input, size: 50);
+                    p.Add("@strNTLogin", ntLogin, DbType.String, ParameterDirection.Input, size: 50);
 
-                    if (string.IsNullOrWhiteSpace(partsImportAndUpdateExternalPartProcedure.ExternalPartId))
+                    using (IDbConnection conn =
+                        new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
                     {
-                        part.Messages.Add(partsImportAndUpdateExternalPartProcedure.NewId);
-                        result.Entity.Add(part);
+                        conn.Query("A_SP_PARTS_IMPORT_AND_UPDATE_AN_EXTERNAL_PART", p, commandType: CommandType.StoredProcedure);
+
+                        var newId = p.Get<string>("newID");
+                        var externalPartId = p.Get<string>("externalPartID");
+
+                        if (string.IsNullOrWhiteSpace(externalPartId))
+                        {
+                            part.Messages.Add(newId);
+                            result.Entity.Add(part);
+                        }
                     }
                 }
-                catch (Exception)
+                catch (Exception ex) 
                 {
                     part.Messages.Add($"Unable to process part, PartName:'{part.Name}' PartId:'{part.PartId}' ");
                     result.Entity.Add(part);
