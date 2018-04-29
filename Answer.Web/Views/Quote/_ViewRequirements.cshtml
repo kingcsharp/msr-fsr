@@ -130,88 +130,78 @@
                         <div class="panel panel-primary">
                             <div class="panel-heading">General Information</div>
                             <div class="panel-body">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label  col-sm-3" for="field28">Short Description:</label>
-                                        <div class="controls col-sm-9">
-                                            @Html.EditorFor(model => model.ShortDescription, new { htmlAttributes = new { @class = "form-control", @value = "7" } })
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <div class="form-group">
                                         <label class="control-label  col-sm-3" for="field29">Part /Kit No:</label>
                                         <div class="controls col-sm-9">
                                             @Html.EditorFor(model => model.PartKitNo, new { htmlAttributes = new { @class = "form-control", @value = "7" } })
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-md-12">
                                     <div class="form-group">
                                         <label class="control-label  col-sm-3" for="field33">Customer Specifications (if any):</label>
                                         <div class="controls col-sm-9">
-                                            @Html.TextAreaFor(model => model.CustomerSpecifications, new { @class = "form-control", style = "width:580", @rows = 3 })
+                                            @Html.TextAreaFor(model => model.CustomerSpecifications, new {@class = "form-control", style = "width:580", @rows = 3})
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label  col-sm-3" for="field37">In-Process Analytical Requirements:</label>
                                         <div class="controls col-sm-9">
-                                            @Html.TextAreaFor(model => model.InProcessAnalyticalRequirements, new { @class = "form-control", style = "width:580", @rows = 3 })
+                                            @Html.TextAreaFor(model => model.InProcessAnalyticalRequirements, new {@class = "form-control", style = "width:580", @rows = 3})
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label  col-sm-3" for="field30">Detailed Description of Requested Service(s):</label>
                                         <div class="controls col-sm-9">
-                                            @Html.TextAreaFor(model => model.DetailedDescription, new { @class = "form-control", style = "width:580", @rows = 3 })
+                                            @Html.TextAreaFor(model => model.DetailedDescription, new {@class = "form-control", style = "width:580", @rows = 3})
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label  col-sm-3" for="field36">Critical-to-Function Attributes:</label>
                                         <div class="controls col-sm-9">
-                                            @Html.TextAreaFor(model => model.CriticalToFunction, new { @class = "form-control", style = "width:580", @rows = 3 })
+                                            @Html.TextAreaFor(model => model.CriticalToFunction, new {@class = "form-control", style = "width:580", @rows = 3})
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label  col-sm-3" for="field35">Specific Customer Qualification Requirements:</label>
                                         <div class="controls col-sm-9">
-                                            @Html.TextAreaFor(model => model.SpecificCustomerQualification, new { @class = "form-control", style = "width:580", @rows = 3 })
+                                            @Html.TextAreaFor(model => model.SpecificCustomerQualification, new {@class = "form-control", style = "width:580", @rows = 3})
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label  col-sm-3" for="field34">Forecasted Volumes &amp; Start Dates:</label>
                                         <div class="controls col-sm-9">
-                                            @Html.TextAreaFor(model => model.ForecastedVolumes, new { @class = "form-control", style = "width:580", @rows = 3 })
+                                            @Html.TextAreaFor(model => model.ForecastedVolumes, new {@class = "form-control", style = "width:580", @rows = 3})
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label  col-sm-3" for="field38">Special Packaging/Shipping:</label>
                                         <div class="controls col-sm-9">
-                                            @Html.TextAreaFor(model => model.SpecialPackagingShipping, new { @class = "form-control", style = "width:580", @rows = 3 })
+                                            @Html.TextAreaFor(model => model.SpecialPackagingShipping, new {@class = "form-control", style = "width:580", @rows = 3})
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label  col-sm-3" for="field40">Expected Quote Date:</label>
                                         <div class="controls col-sm-9">
                                             @*<input id="field40" class="form-control" value="2/21/2017" type="date">*@
-                                            @Html.EditorFor(model => model.ExpectedQuoteDate, new { htmlAttributes = new { @class = "form-control", @value = "7" } })
+                                            @Html.EditorFor(model => model.ExpectedQuoteDate, new {htmlAttributes = new {@class = "form-control", @value = "7"}})
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label  col-sm-3" for="field41">Pickup Notification:</label>
                                         <div class="controls col-sm-9">
-                                            @Html.EditorFor(model => model.PickupNotification, new { htmlAttributes = new { @class = "form-control", @value = "7" } })
+                                            @Html.EditorFor(model => model.PickupNotification, new {htmlAttributes = new {@class = "form-control", @value = "7"}})
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label  col-sm-3" for="field42">Expected Cycle Time:</label>
                                         <div class="controls col-sm-9">
-                                            @Html.EditorFor(model => model.ExpectedCycleTime, new { htmlAttributes = new { @class = "form-control", @value = "7" } })
+                                            @Html.EditorFor(model => model.ExpectedCycleTime, new {htmlAttributes = new {@class = "form-control", @value = "7"}})
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label  col-sm-3" for="field43">Shipping Method:</label>
                                         <div class="controls col-sm-9">
-                                            @Html.DropDownListFor(model => model.ShippingMethod, Model.ShippingMehtodList, "--Select Shipping Method--", new { @class = "form-control no-radius" })
+                                            @Html.DropDownListFor(model => model.ShippingMethod, Model.ShippingMehtodList, "--Select Shipping Method--", new {@class = "form-control no-radius"})
                                         </div>
                                     </div>
                                 </div>

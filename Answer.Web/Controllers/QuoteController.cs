@@ -65,11 +65,10 @@ namespace Answer.Web.Controllers
 
             var vm = new JavaScriptSerializer().Deserialize<FreeFormQuoteViewModel>(requirment.QuoteJson);
 
-            vm.CustomerName = vm.Customers.SingleOrDefault(x => x.Value == vm.CustomerId).Text;
-
-            vm.SupplierName = vm.Suppliers.SingleOrDefault(x => x.Value == vm.Supplier).Text;
-
             vm.Setup(_productionPlanningService, currentUser);
+
+            vm.CustomerName = vm.Customers.SingleOrDefault(x => x.Value == vm.CustomerId)?.Text;
+            vm.SupplierName = vm.Suppliers.SingleOrDefault(x => x.Value == vm.Supplier)?.Text;
 
             return PartialView("_ViewQuote", vm);
         }

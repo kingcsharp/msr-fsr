@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Mvc;
-using Amazon.Runtime.Internal;
 
 namespace Msr.Services.CustomerRequirements.ViewModel
 {
@@ -41,10 +40,6 @@ namespace Msr.Services.CustomerRequirements.ViewModel
         public string TechnicalPhone { get; set; }
         [EmailAddress]
         public string TechnicalEmail { get; set; }
-
-        [Required(ErrorMessage = "Short Description field is required under General Information Tab")]
-        [Display(Name = "Short Description")]
-        public string ShortDescription { get; set; }
         public string PartKitNo { get; set; }
         public string CustomerSpecifications { get; set; }
         public string InProcessAnalyticalRequirements { get; set; }

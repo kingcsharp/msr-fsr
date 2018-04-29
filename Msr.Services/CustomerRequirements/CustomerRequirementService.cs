@@ -27,7 +27,6 @@ namespace Msr.Services.CustomerRequirements
                     {
                         Company = model.Company,
                         Division = model.DivisionFab,
-                        Description = model.ShortDescription,
                         PartKitNo = model.PartKitNo,
                         SubmittedBy = model.SubmittedBy,
                         Status = CustomerSubmittedRequirementConstants.Received,
