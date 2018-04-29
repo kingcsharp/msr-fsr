@@ -33,7 +33,8 @@
 @EquipExpensePerMinute nvarchar(50),
 @AnnualRM nvarchar(50),
 @RMPerMinute nvarchar(50),
-@TITLE nvarchar(Max)
+@TITLE nvarchar(Max),
+@EquipmentTime float
 AS
 print 'Starting procedure A_SP_PROCEDURE_STEP_UPDATE_ONE_STEP'
 print 'Get the value of the Procedure ID for this Procedure Object ID'
@@ -82,7 +83,8 @@ Utilization =@Utilization,
 UsefulLife =@UsefulLife,
 EquipExpensePerMinute =@EquipExpensePerMinute,
 AnnualRM =@AnnualRM,
-RMPerMinute =@RMPerMinute
+RMPerMinute =@RMPerMinute,
+EquipmentTime = @EquipmentTime
 WHERE ID = @newID
 
 print 'Adding links to the reference Theories'

@@ -1,0 +1,39 @@
+﻿@model List<Msr.Services.Procedures.ViewModels.GetMoniterViewModel>
+
+@foreach (var item in Model)
+{
+    <tr>
+        <td>@item.Monitor_Type</td>
+        <td>@item.Description</td>
+        <td>@item.Input_Type</td>
+        <td>@item.Target</td>
+        <td>
+            <span title="Edit Monitor" class="btn btn-xs btn-success" data-toggle="modal" data-procedure-name="@ViewBag.ProdecureName"
+                  data-moniter-type="@item.Monitor_Type"
+                  data-input-type="@item.Input_Type"
+                  data-fail-action="@item.Fail_Action"
+                  data-description="@item.Description"
+                  data-object-id="@item.Id"
+                  data-related-object="@item.Related_Object_Id"
+                  data-step-id="@item.Step_Id"
+                  data-step-shouldbe="@item.Should_Be"
+                  data-step-highestthreshold="@item.Highest_Threshold"
+                  data-step-highthreshold="@item.High_Threshold"
+                  data-step-target="@item.Target"
+                  data-step-lowthreshold="@item.Low_Threshold"
+                  data-step-lowestthreshold="@item.Lowest_Threshold"
+                  data-step-Target-Object="@item.Target_Object"
+                  data-target="#addMoniterModal"
+                  href="#monitor_@item.Id"><i class="fa fa-edit" aria-hidden="true"></i></span>
+            <span title="Delete Monitor" style="cursor: pointer;" class="deleteMoniter btn btn-xs btn-danger" data-ProcedureName="@ViewBag.ProdecureName" data-step-id="@item.Step_Id" data-id="@item.Id">
+                <i class="fa fa-trash-o" aria-hidden="true"></i>
+            </span>
+        </td>
+    </tr>
+}
+
+<script type="text/javascript">
+    DeleteMonitor();
+
+    AddMonitor();
+</script>

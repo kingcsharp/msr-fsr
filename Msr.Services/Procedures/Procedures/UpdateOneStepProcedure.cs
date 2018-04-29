@@ -7,10 +7,12 @@ namespace Msr.Services.Procedures.Procedures
     [StoredProcedure("Portal_A_SP_PROCEDURE_STEP_UPDATE_ONE_STEP")]
     public class UpdateOneStepProcedure
     {
-        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "newID", Direction = ParameterDirection.Output)]
+        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "newID",
+            Direction = ParameterDirection.Output)]
         public string NewId { get; set; }
 
-        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 500, ParameterName = "messages", Direction = ParameterDirection.Output)]
+        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 500, ParameterName = "messages",
+            Direction = ParameterDirection.Output)]
         public string Messages { get; set; }
 
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "ID")]
@@ -111,5 +113,8 @@ namespace Msr.Services.Procedures.Procedures
 
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 5000, ParameterName = "Title")]
         public string Title { get; set; }
+
+        [StoredProcedureParameter(SqlDbType.Float, ParameterName = "EquipmentTime")]
+        public double? EquipmentTime { get; set; }
     }
 }

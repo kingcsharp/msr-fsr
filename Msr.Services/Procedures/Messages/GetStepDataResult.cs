@@ -52,7 +52,7 @@ namespace Msr.Services.Procedures.Messages
         public int? Cycle_Count { get; set; }
         public string Cycle_Unit { get; set; }
         public double? Duration { get; set; }
-
+        public double? EquipmentTime { get; set; }
         public double? Print_Order { get; set; }
         public string Pre_Step { get; set; }
 

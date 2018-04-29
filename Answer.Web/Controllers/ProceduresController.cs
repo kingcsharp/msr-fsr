@@ -271,6 +271,7 @@ namespace Answer.Web.Controllers
 
             viewModel.AddMonitorForProcedureViewModel.Setup(new EquipmentMaintenanceService());
             viewModel.AddMonitorForProcedureViewModel.Related_Object_Id = id;
+            viewModel.AddMonitorForProcedureViewModel.Step_Id = viewModel.GetMoniterViewModels.FirstOrDefault()?.Step_Id;
 
             ViewBag.ProcObjectId = id;
             ViewBag.ProdecureName = model.Name;
@@ -1101,20 +1102,19 @@ namespace Answer.Web.Controllers
             return View(model);
         }
 
-        [AcceptVerbs(verbs: HttpVerbs.Post)]
-        public ActionResult DeleteStep(string id, string procStepId, string ProdecureName)
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult DeleteMonitor(string id, string stepId)
         {
-            var result = _proceduresService.DeleteStep(id, GetCurrentUser().Id);
+            var result = _proceduresService.DeleteMonitor(id, GetCurrentUser().Id);
+
             if (result)
             {
-                TempData["SuccessMessage"] = "Step has been deleted successfully.";
+                var moniter = _proceduresService.GetMoniterByStepId(stepId, GetCurrentUser().Id);
 
-                return Json("Ok", JsonRequestBehavior.AllowGet);
+                return PartialView("Partials/_InnerMoniter", moniter);
             }
 
-            TempData["ErrorMessage"] = "Something went wrong.";
-
-            return RedirectToAction("Steps", "Procedures", new { id = procStepId, ProdecureName = ProdecureName });
+            return Content("error");
         }
 
         [AcceptVerbs(HttpVerbs.Get)]
@@ -1177,7 +1177,7 @@ namespace Answer.Web.Controllers
             return PartialView("_Monitor", model);
         }
 
-        [AcceptVerbs(verbs: HttpVerbs.Post)]
+        [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult SaveMonitor(GetStepDataResult model)
         {
             if (ModelState.IsValid)
@@ -1194,7 +1194,7 @@ namespace Answer.Web.Controllers
                     model.AddMonitorForProcedureViewModel.Lowest_Threshold = null;
                 }
 
-                var response = _proceduresService.AddMonitorForProcedure(model: model.AddMonitorForProcedureViewModel);
+                var response = _proceduresService.AddMonitorForProcedure(model.AddMonitorForProcedureViewModel);
 
                 if (!response.HasErrors())
                 {
@@ -1202,22 +1202,12 @@ namespace Answer.Web.Controllers
                         ? "Monitor has been added successfully."
                         : "Monitor has been Updated successfully.";
 
-
-                    return RedirectToAction(actionName: "Edit", controllerName: "Procedures", routeValues: new { id = model.AddMonitorForProcedureViewModel.Related_Object_Id });
+                    var moniter = _proceduresService.GetMoniterByStepId(model.AddMonitorForProcedureViewModel.Step_Id, GetCurrentUser().Id);
+                    return PartialView("Partials/_InnerMoniter", moniter);
                 }
-
-                TempData["ErrorMessage"] = "Something went wrong.";
-                return RedirectToAction("Edit", "Procedures", new
-                {
-                    id = model.AddMonitorForProcedureViewModel.Related_Object_Id
-                });
             }
 
-            return RedirectToAction("Edit", "Procedures", new
-            {
-                id = model.AddMonitorForProcedureViewModel.Related_Object_Id
-
-            });
+            return Content("error");
         }
 
         public ActionResult Import()

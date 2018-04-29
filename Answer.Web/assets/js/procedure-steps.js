@@ -1,45 +1,6 @@
-﻿$('#addMoniterModal').on('show.bs.modal',
-    function (event) {
-        var button = $(event.relatedTarget);
-        //var id = button.data('id');
-        var moniterType = button.data('moniter-type');
-        var inputType = button.data('input-type');
-        var failAction = button.data('fail-action');
-        var description = button.data('description');
-        var objectId = button.data('object-id');
-        var relatedObject = button.data('related-object');
-        var stepId = button.data('step-id');
-        var procedureName = button.data('procedure-name');
-
-        var shouldBe = button.data('step-shouldbe');
-        var highestThreshold = button.data('step-highestthreshold');
-        var highThreshold = button.data('step-highthreshold');
-        var target = button.data('step-target');
-        var lowThreshold = button.data('step-lowthreshold');
-        var lowestThreshold = button.data('step-lowestthreshold');
-        var targetObject = button.data('step-Target-Object');
-
-        var modal = $(this);
-        modal.find('.modal-body').html('');
-        $.ajax({
-            type: "GET",
-            url: '/Procedures/AddMonitor?moniterType=' + moniterType + '&inputType=' + inputType + '&failAction=' + failAction + '&description=' + description + '&objectId=' + objectId + '&relatedObject=' + relatedObject + '&stepId=' + stepId + '&procedureName=' + procedureName + '&shouldBe=' + shouldBe + '&highestThreshold=' + highestThreshold + '&highThreshold=' + highThreshold + '&target=' + target + '&lowThreshold=' + lowThreshold + '&lowestThreshold=' + lowestThreshold + '&targetObject=' + targetObject,
-            dataType: 'html',
-            success: function (data) {
-                modal.find('.modal-body').html(data);
-            },
-            error: function (error) {
-                eLoaderError(error);
-
-            }
-        });
-    });
+﻿
 
 $(document).ready(function () {
-    $('#submit-moniter-form').on('click',
-        function () {
-            $('#moniter-form').submit();
-        });
 
     $("#sortable").sortable({
         handle: '.sortable-fa',
@@ -55,7 +16,6 @@ $(document).ready(function () {
             console.log("Change");
         },
         update: function (event, ui) {
-            console.log("Update");
 
             var productOrder = $(this).sortable('toArray');
             console.log(productOrder);
@@ -110,50 +70,121 @@ $(document).ready(function () {
             $(this).tab('show');
         }
     });
+
+    $("form").submit(function (e) {
+        $('.submitselect option').prop('selected', true);
+    });
+
+    UpdateMonitor();
+
+    DeleteMonitor();
+
+    AddMonitor();
+
+});
+
+function UpdateMonitor() {
+    $('#submit-moniter-form').on('click',
+
+        function () {
+
+            var stepId = $('#AddMonitorForProcedureViewModel_Step_Id').val();
+            var moniter = $('#moniter-form').serialize();
+
+            eLoaderOpen();
+
+            $.ajax({
+                type: "POST",
+                url: "/Procedures/SaveMonitor",
+                dataType: 'HTML',
+                data: moniter,
+                success: function (data) {
+                    $('#' + stepId + ' tbody').html('');
+                    $('#' + stepId + ' tbody').append(data);
+                    eLoaderClose();
+
+                    $('#addMoniterModal').modal('toggle');
+                },
+                error: function (error) {
+                    eLoaderError(error);
+                }
+            });
+        });
+}
+
+function AddMonitor() {
+    $('#addMoniterModal').on('show.bs.modal',
+        function (event) {
+            var button = $(event.relatedTarget);
+            //var id = button.data('id');
+            var moniterType = button.data('moniter-type');
+            var inputType = button.data('input-type');
+            var failAction = button.data('fail-action');
+            var description = button.data('description');
+            var objectId = button.data('object-id');
+            var relatedObject = button.data('related-object');
+            var stepId = button.data('step-id');
+            var procedureName = button.data('procedure-name');
+
+            var shouldBe = button.data('step-shouldbe');
+            var highestThreshold = button.data('step-highestthreshold');
+            var highThreshold = button.data('step-highthreshold');
+            var target = button.data('step-target');
+            var lowThreshold = button.data('step-lowthreshold');
+            var lowestThreshold = button.data('step-lowestthreshold');
+            var targetObject = button.data('step-Target-Object');
+
+            var modal = $(this);
+            modal.find('.modal-body').html('');
+            $.ajax({
+                type: "GET",
+                url: '/Procedures/AddMonitor?moniterType=' + moniterType + '&inputType=' + inputType + '&failAction=' + failAction + '&description=' + description + '&objectId=' + objectId + '&relatedObject=' + relatedObject + '&stepId=' + stepId + '&procedureName=' + procedureName + '&shouldBe=' + shouldBe + '&highestThreshold=' + highestThreshold + '&highThreshold=' + highThreshold + '&target=' + target + '&lowThreshold=' + lowThreshold + '&lowestThreshold=' + lowestThreshold + '&targetObject=' + targetObject,
+                dataType: 'html',
+                success: function (data) {
+                    modal.find('.modal-body').html(data);
+                },
+                error: function (error) {
+                    eLoaderError(error);
+
+                }
+            });
+        });
+}
+
+function DeleteMonitor() {
+
     $(".deleteMoniter").on("click", function () {
         var clicked = $(this);
         eModal.confirm(
-            'Are you sure?')
+                'Are you sure?')
             .then(confirmCallback, optionalCancelCallback);
 
         function confirmCallback() {
 
             var id = clicked.data('id');
-            var stepId = clicked.data('procid');
-            var ProdecureName = clicked.data('ProcedureName');
-            if (stepId == null && ProdecureName == null) {
-                location.reload();
-            }
-            else {
-                eLoaderOpen();
-                $.ajax({
-                    type: "POST",
-                    url: "/Procedures/DeleteStep",
-                    dataType: 'json',
-                    data: { id: id, procStepId: stepId, ProdecureName: ProdecureName },
-                    success: function (data) {
-                        location.reload();
-                    },
-                    error: function (error) {
-                        eLoaderError(error);
-                    }
-                });
-                eLoaderClose();
-            }
+            var stepId = clicked.data('step-id');
 
+            eLoaderOpen();
 
+            $.ajax({
+                type: "POST",
+                url: "/Procedures/DeleteMonitor",
+                dataType: 'html',
+                data: { id: id, stepId: stepId },
+                success: function (data) {
+                    $('#' + stepId + ' tbody').html('');
+                    $('#' + stepId + ' tbody').append(data);
+                },
+                error: function (error) {
+                    eLoaderError(error);
+                }
+            });
+
+            eLoaderClose();
         }
 
         function optionalCancelCallback() {
-            console.log("Cancel");
         }
 
     });
-    $("form").submit(function (e) {
-        $('.submitselect option').prop('selected', true);
-    });
-
-    $('.deleteMoniter').click(function (e) {
-
-    });
-});
+}

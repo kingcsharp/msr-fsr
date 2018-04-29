@@ -400,7 +400,6 @@ namespace Msr.Services.Procedures
 
         public List<GetStepLaborResult> GetLaborsById(string stepId, string loginId)
         {
-
             var getStepLaborProcedure = new GetStepLaborProcedure() { Id = stepId, NTLogin = loginId };
             return _dbContext.Database.ExecuteStoredProcedure<GetStepLaborResult>(getStepLaborProcedure).ToList();
         }
@@ -583,6 +582,7 @@ namespace Msr.Services.Procedures
             updateOneStep.CycleUnit = viewModel.Cycle_Unit;
             updateOneStep.PrecedingSteps = viewModel.Pre_Step;
             updateOneStep.Title = viewModel.Title;
+            updateOneStep.EquipmentTime = viewModel.EquipmentTime;
 
             if (viewModel.SelectedReferenceProcedureTypes != null && viewModel.SelectedReferenceProcedureTypes.Count > 0)
             {
@@ -970,7 +970,7 @@ namespace Msr.Services.Procedures
             return result;
         }
 
-        public bool DeleteStep(string id, string ntLogin)
+        public bool DeleteMonitor(string id, string ntLogin)
         {
             try
             {
@@ -980,8 +980,6 @@ namespace Msr.Services.Procedures
             }
             catch (Exception ex)
             {
-                var message = "Error occured:" + ex.Message;
-
                 return false;
             }
         }
