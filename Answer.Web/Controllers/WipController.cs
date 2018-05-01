@@ -77,9 +77,9 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.ProductName.ToLower().Contains(rule.data.ToLower()));
                     }
-                    else if (rule.field == nameof(WorkOrderView.SupplierName))
+                    else if (rule.field == nameof(WorkOrderView.CustomerName))
                     {
-                        totalRows = totalRows.Where(x => x.SupplierName.ToLower().Contains(rule.data.ToLower()));
+                        totalRows = totalRows.Where(x => x.CustomerName.ToLower().Contains(rule.data.ToLower()));
                     }
                     else if (rule.field == nameof(WorkOrderView.ProductName))
                     {
