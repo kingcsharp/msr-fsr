@@ -232,15 +232,14 @@ namespace Msr.Services.ProductionPlanning
 
                 p.Add("@newID", dbType: DbType.String, direction: ParameterDirection.Output, size: 50);
                 p.Add("@messages", dbType: DbType.String, direction: ParameterDirection.Output, size: 500);
-
-                p.Add("@productName", model.ProductName, DbType.String, ParameterDirection.Input, size: 50);
-                p.Add("@supplierId", model.ProductSupplierId, DbType.String, ParameterDirection.Input, size: 50);
-                p.Add("@partId", requirment.PartId, DbType.String, ParameterDirection.Input, size: 50);
-                p.Add("@procedureId", requirment.ProcedureId, DbType.String, ParameterDirection.Input, size: 50);
-                p.Add("@loginId", model.LoginId, DbType.String, ParameterDirection.Input, size: 50);
-                p.Add("@leadTime", requirment.LeadTime, DbType.Double, ParameterDirection.Input, size: 50);
-                p.Add("@price", requirment.Price, DbType.Double, ParameterDirection.Input, size: 50);
-
+                p.Add("@productName", model.ProductName, DbType.String, ParameterDirection.Input, 50);
+                p.Add("@custId", model.ProductCustomerId, DbType.String, ParameterDirection.Input, 50);
+                p.Add("@supplierId", model.ProductSupplierId, DbType.String, ParameterDirection.Input, 50);
+                p.Add("@partId", requirment.PartId, DbType.String, ParameterDirection.Input, 50);
+                p.Add("@procedureId", requirment.ProcedureId, DbType.String, ParameterDirection.Input, 50);
+                p.Add("@loginId", model.LoginId, DbType.String, ParameterDirection.Input, 50);
+                p.Add("@leadTime", requirment.LeadTime, DbType.Double, ParameterDirection.Input, 50);
+                p.Add("@price", requirment.Price, DbType.Double, ParameterDirection.Input, 50);
 
                 using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
                 {

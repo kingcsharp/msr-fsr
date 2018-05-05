@@ -1,19 +1,4 @@
-﻿
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-CREATE                PROCEDURE DBO.A_SP_ORDERS_FINISH_WF
+﻿CREATE                PROCEDURE DBO.A_SP_ORDERS_FINISH_WF
 	@myID nvarchar(50),
 	@objID nvarchar(50),
 	@strNTLogin nvarchar(50)

@@ -5,6 +5,7 @@
 @procedureId varchar(50),
 @partId varchar(50),
 @supplierId varchar(50),
+@custId varchar(50),
 @productName varchar(50),
 @leadTime float,
 @price float
@@ -32,7 +33,7 @@ BEGIN TRY
 	SELECT @productHistoryId=ID FROM A_PRODUCTS_HISTORY WHERE OBJECT_ID = @newID
 
 	INSERT INTO A_PRODUCTS_QUICK_PRICE (ID,PROD_HIST_ID,CUST_ID,PRICE,DRCM,MODBY,CREATE_PRICE_LIST,PROD_TIME,PROD_TIME_UNIT,CAPACITY,CAPACITY_UNITS) 
-	VALUES (newID(),@productHistoryId,@supplierId,@price,getDate(),@loginId,'1',@leadTime,'TIME_SYS_DAYS',NULL,'minute')
+	VALUES (newID(),@productHistoryId,@custId, @price,getDate(),@loginId,'1',@leadTime,'TIME_SYS_DAYS',NULL,'minute')
 
 	----exec A_SP_OBJECT_GET_DATA @newID,@loginId
 	----declare @p1 varchar(4000)
