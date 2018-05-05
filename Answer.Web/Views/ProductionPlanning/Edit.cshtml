@@ -71,7 +71,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">part Details</h4>
+                <h4 class="modal-title">Add Part</h4>
             </div>
             <div class="modal-body"></div>
             <div class="modal-footer">
@@ -84,6 +84,8 @@
 @section scripts
 {
     @Scripts.Render("~/bundles/js/jqueryval")
+    @Scripts.Render("~/bundles/js/fileinput")
+
     <script type="text/javascript" src="~/assets/js/ObjectAssign.js"></script>
     <script type="text/javascript" src="~/assets/js/grids/requirement-steps.js"></script>
     <script src="~/assets/js/grids/comman.js"></script>
@@ -127,12 +129,11 @@
             $('#partmodel').on('show.bs.modal',
                 function (event) {
 
-
                     var modal = $(this);
 
                     $.ajax({
                         type: "GET",
-                        url: '@Url.Action("Part", "ProductionPlanning")',
+                        url: '@Url.Action("AddPart", "ProductionPlanning")',
                         dataType: 'html',
                         success: function (data) {
                             modal.find('.modal-body').html(data);
@@ -143,25 +144,6 @@
                         }
                     });
                 });
-
-
-            $('.deletefiles').click(function () {
-
-                var callBackId = $(this).data('call-back-id');
-
-                eModal.confirm('Do you really want to Remove ' + callBackId + ' ?', 'Confirmation delete')
-                    .then(confirmCallback, optionalCancelCallback);
-
-                function confirmCallback() {
-                    console.log("ok");
-                    $('#' + callBackId + ' option:selected').remove();
-                }
-
-                function optionalCancelCallback() {
-                    console.log("cancel");
-                }
-            });
-
         });
     </script>
 }

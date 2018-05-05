@@ -8,11 +8,16 @@ using Msr.Services.jqGrid;
 using Msr.Services.ProductionPlanning;
 using Msr.Models.CustomerRequirements;
 using Msr.Services;
+using Msr.Services.Documents;
+using Msr.Services.Parts;
+using Msr.Services.Parts.ViewModels;
+using Msr.Services.PartTypes;
 using Msr.Services.PrePro;
 using Msr.Services.Procedures;
 using Msr.Services.Procedures.ViewModels;
 using Msr.Services.ProductionPlanning.ViewModels;
 using Msr.Services.Quotes;
+using Msr.Services.Roles;
 using Msr.Services.Workflows;
 using Msr.Services.Workflows.ViewModels;
 
@@ -25,6 +30,10 @@ namespace Answer.Web.Controllers
         private readonly QuoteService _quoteService;
         private readonly WorkflowService _workflowService;
         private readonly PreProServices _preProServices;
+        private readonly PartsService _partsService;
+        private readonly RoleService _roleService;
+        private readonly PartTypeService _partTypeService;
+        private readonly DocumentFilesService _documentFilesService;
 
         public ProductionPlanningController()
         {
@@ -33,6 +42,9 @@ namespace Answer.Web.Controllers
             _quoteService = new QuoteService();
             _workflowService = new WorkflowService();
             _preProServices = new PreProServices();
+            _partsService = new PartsService();
+            _partTypeService = new PartTypeService();
+            _documentFilesService = new DocumentFilesService();
         }
 
         public ActionResult Index()
@@ -354,13 +366,49 @@ namespace Answer.Web.Controllers
         }
 
         [HttpGet]
-        public ActionResult Part()
+        public ActionResult AddPart()
         {
-            var viewModel = new RequirementStepsViewModel();
+            var currentUser = GetCurrentUser();
 
-            return PartialView("_Parts", viewModel);
+            var vm = new AddPartViewModel();
+            vm.Setup(_documentFilesService, _partsService, _partTypeService, currentUser.Company, currentUser.Id);
+
+            return PartialView("_Parts", vm);
         }
 
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult AddPart(AddPartViewModel model)
+        {
+            var currentUser = GetCurrentUser();
+
+            var result = new ResultNotification<string>();
+            var partservice = new PartsService();
+
+            var response = partservice.Create(model);
+
+            if (!response.HasErrors())
+            {
+                TempData["SuccessMessage"] = "Part has been created successfully.";
+
+                var checkOutObject = _workflowService.CheckOutObject(response.Entity, currentUser.Id);
+
+                var submitWorkflow = new SubmitWorkflowViewModel();
+                submitWorkflow.CompletionStart = "APPROVED";
+                submitWorkflow.LoggedUserIdResult = currentUser;
+                submitWorkflow.ObjectId = checkOutObject.Entity;
+                submitWorkflow.ApprovalWorflowId = "37";
+                submitWorkflow.Comment = "Part approved by system";
+                submitWorkflow.LoginId = currentUser.Id;
+                _workflowService.SubmitWorkflow(submitWorkflow);
+
+                var partList = _productionPlanService.GetPartList();
+
+                return Json(new { Message = result.SuccessMessage, data = partList, PartId = response.Entity }, JsonRequestBehavior.AllowGet);
+            }
+
+            return Json(new { Message = result.ErrorMessage }, JsonRequestBehavior.AllowGet);
+
+        }
         public ActionResult Import()
         {
             return View();
