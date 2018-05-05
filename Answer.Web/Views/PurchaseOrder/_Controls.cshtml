@@ -1,6 +1,7 @@
 ﻿@model Msr.Services.PurchesOrder.ViewModels.NewPurchaseOrderViewModel
 @Html.AntiForgeryToken()
 @Html.HiddenFor(x => x.ObjId)
+
 <table class="table quote-header" width="100%">
     <tr>
         <th width="20%">Client:</th>
@@ -128,7 +129,7 @@
         <th align="right">Products:</th>
         <td>
             <div>
-                @Html.DropDownListFor(m => m.Products, Model.ProductsList, new { @class = "form-control select-products select" })
+                @Html.DropDownListFor(m => m.Products, Model.ProductsList, new { @class = "form-control select select-products" })
             </div>
             <div id="product-message" class="alert-info">
             </div>
@@ -152,20 +153,3 @@
         </td>
     </tr>
 </table>
-
-<div id="select-products" class="modal fade" role="dialog">
-    <div class="modal-dialog modal-lg">
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Products Account Can Purchase (Check All that Apply)</h4>
-            </div>
-            <div class="modal-body"></div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-info" onclick="SelectIds()"> Select</button>
-                <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close-o"></i> Close</button>
-            </div>
-        </div>
-    </div>
-</div>

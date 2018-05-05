@@ -1,86 +1,68 @@
-﻿$(document).ready(function () {
-    $('.datepick').datetimepicker();
+﻿var Msr = Msr || {};
 
-    $('.dateSelecter').click(function (parameters) {
-        $(this).closest('td').find('.datepick').focus();
-    });
+Msr.AddPurchaseOrder = Msr.AddPurchaseOrder ||
+    {
+        SetUp: function (productJson) {
 
+            $('.datepick').datetimepicker();
 
-    $('#select-products').on('show.bs.modal',
-        function (event) {
-
-            var button = $(event.relatedTarget);
-            var callBackId = button.data('call-back-id');
-            var modal = $(this);
-            var supplierDepartmentValue = $('#SupplierDepartment option:selected').val();
-            var clientValue = $('#Client option:selected').val();
-
-            $.ajax({
-                type: "GET",
-                url: '/PurchaseOrder/GetProducts?callBackId=' + callBackId + '&client=' + clientValue + '&supplierdepartment=' + supplierDepartmentValue,
-                dataType: 'html',
-                success: function (data) {
-                    modal.find('.modal-body').html(data);
-                },
-                error: function () {
-
-                }
+            $('.dateSelecter').click(function (parameters) {
+                $(this).closest('td').find('.datepick').focus();
             });
-        });
 
-    $('.deletefiles').click(function () {
+            $(".select").select2({
+                allowClear: false
+            });
 
-        var callBackId = $(this).data('call-back-id');
+            $('#Client,#SupplierDepartment').on('change',
+                function (parameters) {
 
-        eModal.confirm('Do you really want to Remove ' + callBackId + ' ?', 'Confirmation delete')
-            .then(confirmCallback, optionalCancelCallback);
+                    var clientValue = $('#Client').val();
+                    var supplierCoValue = $('#SupplierDepartment').val();
 
-        function confirmCallback() {
-            $('#' + callBackId + ' option:selected').remove();
-        }
+                    $.ajax({
+                        type: "GET",
+                        url: '/PurchaseOrder/ProductsList/' + clientValue + '?supplierCo=' + supplierCoValue,
+                        dataType: 'JSON',
+                        success: function (data) {
 
-        function optionalCancelCallback() {
-        }
+                            $("#Products").select2("val", "");
+                            $('#Products').html('');
+                            $.each(data,
+                                function (index, item) {
+                                    var products = $('#Products');
+                                    products.append("<option value='" + item.Value + "'>" + item.Text + "</option>");
 
-    });
+                                    $('#product-message').html('');
+                                });
 
-    $(".select").select2({
-        allowClear: false
-    });
+                            if (data.length === 0) {
+                                $('#product-message').html('No products found');
+                            }
 
-    $('#Client,#SupplierDepartment').on('change',
-
-        function (parameters) {
-            var clientValue = $('#Client').val();
-            var supplierCoValue = $('#SupplierDepartment').val();
-
-            $.ajax({
-                type: "GET",
-                url: '/PurchaseOrder/ProductsList/' + clientValue + '?supplierCo=' + supplierCoValue,
-                dataType: 'JSON',
-                success: function (data) {
-
-                    $("#Products").select2("val", "");
-                    $('#Products').html('');
-                    $.each(data, function (index, item) {
-                        var products = $('#Products');
-                        products.append("<option value='" + item.Value + "'>" + item.Text + "</option>");
-
-                        $('#product-message').html('');
+                        },
+                        error: function () {
+                            $('#product-message').html('There is an error with the request.');
+                        }
                     });
+                });
 
-                    if (data.length === 0) {
-                        $('#product-message').html('No products found');
-                    }
-
-                },
-                error: function () {
-                    $('#product-message').html('There is an error with the request.');
+            var selectProducts = $(".select-products").select2({
+                tags: [],
+                tokenSeparators: [','],
+                multiple: true,
+                allowClear: true,
+                placeholder: "Select Products",
+                formatNoMatches: function () {
+                    return '';
                 }
             });
-        });
-});
 
+            var selectedProducts = productJson.split(",");
+
+            selectProducts.val(selectedProducts).trigger("change");
+        }
+    }
 
 function SaveCloseFun() {
     $('#SaveClose').val('true');
@@ -100,39 +82,3 @@ function SaveSubmitApprovalFun() {
     $('#SaveClose').val('');
     return true;
 }
-
-
-function SelectIds() {
-
-    $(".selected-file").each(function (index) {
-
-        if ($(this).is(":checked")) {
-            var ids = $(this).val().split('|');
-
-            var callBackId = $(this).closest(".modal-body").find('#target-control-id').val();
-            var options = $('#' + callBackId + '')[0].options;
-
-            var optionsArray = $.map(options, function (elem) {
-                return (elem.value);
-            });
-
-            if (optionsArray.length > 0) {
-
-                if ($.inArray(ids[0], optionsArray) != -1) {
-                }
-                else {
-                    $('#' + callBackId + '').append($('<option></option>').val(ids[0]).html(ids[1]));
-                    $('#' + callBackId + ' option').prop('selected', true);
-                }
-
-            }
-            else {
-                $('#' + callBackId + '').append($('<option></option>').val(ids[0]).html(ids[1]));
-                $('#' + callBackId + ' option').prop('selected', true);
-            }
-        }
-
-    });
-
-}
-

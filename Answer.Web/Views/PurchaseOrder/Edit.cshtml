@@ -21,9 +21,6 @@
 </div>
 @section scripts
 {
-    @{
-        var productsJoin = string.Join(",", Model.Products);
-    }
     <script src="~/assets/js/moment.min.js"></script>
     <script src="~/assets/js/bootstrap-datetimepicker.min.js"></script>
     <script src="~/assets/js/grids/add-purchase-order.js"></script>
@@ -35,27 +32,11 @@
 
     <script type="text/javascript">
         
-        $(document).ready(function () {
-
-            $('.select').select2();
-
-            var selectProducts = $(".select-products").select2({
-                tags: [],
-                tokenSeparators: [','],
-                multiple: true,
-                allowClear: true,
-                placeholder: "Select Products",
-                formatNoMatches: function () {
-                    return '';
-                }
-            });
-
-            var values = '@productsJoin';
-            var selectedProducts = values.split(",");
-
-            selectProducts.val(selectedProducts).trigger("change");
-
+        @{
+            var productsJoin = string.Join(",", Model.Products);
+        }
+        $(document).ready(function() {
+            Msr.AddPurchaseOrder.SetUp('@productsJoin');
         });
-
     </script>
 }

@@ -24,7 +24,16 @@
     <script src="~/assets/js/moment.min.js"></script>
     <script src="~/assets/js/bootstrap-datetimepicker.min.js"></script>
     <script src="~/assets/js/dataTables.bootstrap.min.js"></script>
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
     <script src="~/assets/js/grids/add-purchase-order.js"></script>
+    
+    @Scripts.Render("~/bundles/js/jqueryval")
+
+    <script type="text/javascript">
+        @{
+            var productsJoin = string.Join(",", Model.Products);
+        }
+        $(document).ready(function() {
+            Msr.AddPurchaseOrder.SetUp('@productsJoin');
+        });
+    </script>
 }
