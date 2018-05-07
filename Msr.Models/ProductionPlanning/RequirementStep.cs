@@ -7,7 +7,7 @@
         public string ObjectId { get; set; }
         public string Process { get; set; }
         public int Step { get; set; }
-        public decimal StandardDirectLaborMinutes { get; set; }
+        public double? StandardDirectLaborMinutes { get; set; }
         public double? StandardMachineMinutes { get; set; }
         public decimal? ReplacementCost { get; set; }
         public decimal? Utilization { get; set; }

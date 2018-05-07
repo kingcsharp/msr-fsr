@@ -18,7 +18,7 @@ namespace Msr.Services.ProductionPlanning.ViewModels
 
         [Display(Name = "Standard Direct Labor Minutes")]
         [Range(0, double.MaxValue, ErrorMessage = "Please enter numaric value only")]
-        public decimal? StandardDirectLaborMinutes { get; set; }
+        public double? StandardDirectLaborMinutes { get; set; }
 
         [Display(Name = "Standard Machine Minutes")]
         [Range(0, double.MaxValue, ErrorMessage = "Please enter numaric value only")]
