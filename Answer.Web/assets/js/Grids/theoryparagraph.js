@@ -9,8 +9,8 @@
         colModel: [
             {
                 label: ' #',
-                name: 'SendId',
-                index: 'SendId',
+                name: 'Root',
+                index: 'Root',
                 key: true,
                 colmenu: false,
                 search: false,
@@ -104,7 +104,7 @@ function selectFormatter(cellvalue, options, rowObject) {
 
     var html = "";
 
-    html = '<input class="selected-file" type="checkbox" value="' + cellvalue + '|' + rowObject.Name + '" />';
+    html = '<input class="selected-document-id" type="checkbox" value="' + cellvalue + '|' + rowObject.Name + '" />';
 
     return html;
 }
