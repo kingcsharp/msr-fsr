@@ -21,32 +21,31 @@ namespace Msr.Services.PurchesOrder.ViewModels
         public string Id { get; set; }
         public string ObjId { get; set; }
 
-        [Required]
         public string Client { get; set; }
-        [Required]
+
         [Display(Name = "PO Name")]
         public string POName { get; set; }
-        [Required]
+        
         public string AccountType { get; set; }
-        [Required]
+
         [Display(Name = "Reference Cust PO")]
         public string RefCustPO { get; set; }
-        //   [Required]
+        
         public string SupplierDepartment { get; set; }
         public string CustRefNum { get; set; }
-        [Required]
+        
         [Display(Name = "Open Date")]
         public string OpenDate { get; set; }
-        [Required]
+        
         [Display(Name = "Close Date")]
         public string CloseDate { get; set; }
-        [Required]
+        
         public decimal? TotalPurchaseLimit { get; set; }
         public double? Tax { get; set; }
         public string InvoiceTrigger { get; set; }
         public string InvoicePeriod { get; set; }
         public string InvoicePeriodType { get; set; }
-        [Required]
+
         [Display(Name = "First Invoice Date")]
         public DateTime? FirstInvoiceDate { get; set; }
 
@@ -60,12 +59,7 @@ namespace Msr.Services.PurchesOrder.ViewModels
         public string Save { get; set; }
         public string SaveClose { get; set; }
         public string SaveWorkflow { get; set; }
-
-        public DateTime? FromDate { get; set; }
-        public DateTime? ToDate { get; set; }
-        public string ClientName { get; set; }
         public string NTLogin { get; set; }
-        public string HISTORY_REF_ID { get; set; }
 
         public List<SelectListItem> ProductsList { get; set; }
         public List<SelectListItem> ClientList { get; set; }
@@ -83,12 +77,12 @@ namespace Msr.Services.PurchesOrder.ViewModels
             }).OrderBy(o => o.Text).ToList();
             ClientList.Insert(0, new SelectListItem() { Value = "", Text = @"Select Client" });
 
-
             SupplierDepartmentList = productionPlanningService.GetSupplierList(currentUser).Select(x => new SelectListItem
             {
                 Text = x.Name,
                 Value = x.Value.ToString()
             }).OrderBy(o => o.Text).ToList();
+
             SupplierDepartmentList.Insert(0, new SelectListItem() { Value = "", Text = @"Select Supplier Department" });
 
             ProductsList = purchesOrderService.GetCompinesProducts(Client, SupplierDepartment).Select(x => new SelectListItem
@@ -97,7 +91,7 @@ namespace Msr.Services.PurchesOrder.ViewModels
                 Value = x.Order_id.ToString()
             }).OrderBy(o => o.Text).ToList();
 
-            Products = purchesOrderService.GetProductsById(accountObjId: ObjId);
+            Products = purchesOrderService.GetProductsById(ObjId);
 
             AccountTypeList = new List<SelectListItem>
             {
