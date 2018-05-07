@@ -79,9 +79,9 @@ function LoadGrid(url, returnUrl) {
                     align: 'center'
                 },
                 {
-                    label: 'Description',
-                    name: 'Description',
-                    index: 'Description',
+                    label: 'Product Name',
+                    name: 'ProductName',
+                    index: 'ProductName',
                     colmenu: false,
                     coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                     searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },

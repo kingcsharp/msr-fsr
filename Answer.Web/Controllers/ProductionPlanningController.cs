@@ -101,11 +101,15 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.ProcedureName.ToLower().Contains(rule.data.ToLower()));
                     }
+                    else if (rule.field == nameof(CustomerRequirementView.Status))
+                    { 
+                        var statusList = rule.data.Split(',').Select(x => x.Trim().ToLower());
 
-                    ////else if (rule.field == nameof(CustomerSubmittedRequirement.Status))
-                    ////{
-                    ////    totalRows = totalRows.Where(x => x.Status.ToLower().Contains(rule.data.ToLower()));
-                    ////}
+                        if (statusList.Any())
+                        {
+                            totalRows = totalRows.Where(x => statusList.Contains(x.ProductStatus.ToLower()));
+                        }
+                    }
                 }
             }
 
