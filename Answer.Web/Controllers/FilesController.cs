@@ -36,10 +36,12 @@ namespace Answer.Web.Controllers
             return View(viewModel);
         }
 
-        public ActionResult GetFiles(string callBackId)
+        public ActionResult GetFiles(string callBackId, string targetCallBackId, string targetSection, string targetUplaodUrl)
         {
             ViewBag.CallBackId = callBackId;
-
+            ViewBag.TargetCallBackId = targetCallBackId;
+            ViewBag.TargetSection = targetSection;
+            ViewBag.TargetUplaodUrl = targetUplaodUrl;
             return PartialView("_Files");
         }
 

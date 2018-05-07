@@ -116,7 +116,6 @@
         $(document).ready(function () {
 
             fileUploader.InitUploader($('#input-files'), '@Url.Action("FileUploaderBootstrap", "Doc")', [],[]);
-            fileUploaderGrid.SetupSelectImage();
 
             $("form").submit(function(e) {
                 $('.selectitem option').prop('selected', true);

@@ -2216,7 +2216,6 @@ input.pre-populated {
     top: 225px;
 }
 
-
 .file-drop-zone {
     margin: 1px !important;
     padding: 1px !important;
@@ -2225,6 +2224,11 @@ input.pre-populated {
     width: 150px !important;
     height: 50px !important;
 }
+.krajee-default.file-preview-frame {
+    padding: 2px !important;
+    margin: 2px !important;
+}
+
 
 
 span.fa.fa-arrows.handle.sortable-fa {
@@ -2265,4 +2269,7 @@ span.fa.fa-arrows.handle.sortable-fa {
 
 .file-drop-zone {
     margin: inherit;
+}
+.validation-summary-errors {
+    color: #a94442;
 }

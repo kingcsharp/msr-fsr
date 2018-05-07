@@ -197,12 +197,13 @@
 
         $(document).ready(function() {
 
-            fileUploader.InitEditUploader($('#input-files'),
+            fileUploader.InitEditUploader('input-files',
                 '@Url.Action("FileUploaderForPrePro", "Doc")',
                 [@Html.Raw(ViewBag.Preview)],
                 @Html.Raw(ViewBag.PreviewConfig),
                 '@Model.PkId',
-                true);
+                true,
+                'TEMPLATE_STEP');
 
             $('.remove-files').click(Msr.FileComman.RemoveSelectItem);
 
@@ -231,7 +232,7 @@
         });
 
         function SelectIds() {
-            var fileUploaderGrid = new FileUploaderGrid().SelectIds('TEMPLATE_STEP');
+            new FileUploaderGrid().SelectIds();
         }
 
     </script>

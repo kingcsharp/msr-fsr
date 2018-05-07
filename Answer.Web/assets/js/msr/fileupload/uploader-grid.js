@@ -2,33 +2,38 @@
 
     var setupSelectImage = function(parameters) {
 
-        $('#select-images').on('show.bs.modal',
-            function (event) {
+        //$('#select-images').on('show.bs.modal',
+        //    function (event) {
 
-                var button = $(event.relatedTarget);
-                var callBackId = button.data('call-back-id');
-                var modal = $(this);
+        //        var button = $(event.relatedTarget);
+        //        var callBackId = button.data('call-back-id');
+        //        var targetCallBackId = button.data('file-select-target-id');
+        //        var targetSection = button.data('target-section');
+        //        var modal = $(this);
 
-                $.ajax({
-                    type: "GET",
-                    url: '/Files/GetFiles?callBackId=' + callBackId,
-                    dataType: 'html',
-                    success: function (data) {
-                        modal.find('.modal-body').html(data);
-                    },
-                    error: function () {
+        //        $.ajax({
+        //            type: "GET",
+        //            url: '/Files/GetFiles?callBackId=' + callBackId + '&targetCallBackId=' + targetCallBackId + '&targetSection=' + targetSection,
+        //            dataType: 'html',
+        //            success: function (data) {
+        //                modal.find('.modal-body').html(data);
+        //            },
+        //            error: function () {
 
-                    }
-                });
+        //            }
+        //        });
 
-            });
+        //    });
     }
 
-    var selectIdsForEdit = function (section ='') {
-        
+    var selectIdsForEdit = function () {
+
         var array = [];
         var objectId = $('#target-control-id').val();
-        
+        var elementId = $('#file-select-target-id').val();
+        var section = $('#target-section').val();
+        var uplaodUrl = $('#target-upload-url').val();
+
         $(".selected-file").each(function (index) {
 
             if ($(this).is(":checked")) {
@@ -42,17 +47,19 @@
         $.ajax({
             type: "GET",
             url: '/Documents/AddsingleReference?linkDocId=' + objectId + '&files=' + array + '&section=' + section,
-            dataType: 'html',
+            dataType: 'JSON',
             success: function (data) {
-                location.reload();
+                var $el = $('#' + elementId);
+                $el.fileinput('destroy');
+                
+                new FileUploader().InitEditUploader(elementId, uplaodUrl, data.initialPreview, data.initialPreviewConfig, objectId, true, elementId);
             },
             error: function () {
-
             }
         });
     }
 
-    var selectIdsForAdd = function (fileUploader, fileUploaderUrl) {
+    var selectIdsForAdd = function (fileUploaderUrl) {
         var array = [];
         var preSelected = [];
 
@@ -95,13 +102,10 @@
             url: '/Doc/RefillUploader?ids=' + finalArray,
             dataType: 'JSON',
             success: function (data) {
-                //console.log(data.initialPreview);
-                //console.log(data.initialPreviewConfig);
-
                 var $el = $('#input-files');
                 $el.fileinput('destroy');
 
-                fileUploader.InitUploader($el, fileUploaderUrl, data.initialPreview, data.initialPreviewConfig);
+                new FileUploader().InitUploader($el, fileUploaderUrl, data.initialPreview, data.initialPreviewConfig);
             },
             error: function () {
 

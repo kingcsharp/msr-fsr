@@ -23,15 +23,6 @@
                             @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
                         </div>
                     </div>
-                   
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.SubParts, htmlAttributes: new { @class = "control-label col-md-3" })
-                        <div class="col-md-5">
-                            @Html.TextBoxFor(model => model.SubParts, new { @class = "form-control", @Value = "NONE", @readonly = "readonly" })
-                            @Html.ValidationMessageFor(model => model.SubParts, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
                     <div class="form-group">
                         <div class="col-md-offset-2 col-md-5">
                             <input id="PartSubmit" type="button" value="Submit" class="btn btn-success" />

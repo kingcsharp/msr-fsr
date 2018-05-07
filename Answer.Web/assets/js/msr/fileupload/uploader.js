@@ -21,11 +21,14 @@ Msr.FileComman = Msr.FileComman ||
 
 var FileUploader = function () {
 
-    var initEditUploader = function (element, url, initialPreview, initialPreviewConfig, objectId, showSelect) {
+    var initEditUploader = function (elementId, url, initialPreview, initialPreviewConfig, objectId, showSelect, section) {
+        var element = $('#' + elementId);
 
         element.fileinput({
             referenceId: objectId,
             showSelect: showSelect,
+            selectElement: elementId,
+            section: section,
             showClose: false,
             uploadUrl: url,
             uploadAsync: true,
@@ -151,26 +154,26 @@ var FileUploader = function () {
 
     var setupSelectImage = function (parameters) {
 
-        $('#select-images').on('show.bs.modal',
-            function (event) {
+        //$('#select-images').on('show.bs.modal',
+        //    function (event) {
 
-                var button = $(event.relatedTarget);
-                var callBackId = button.data('call-back-id');
-                var modal = $(this);
+        //        var button = $(event.relatedTarget);
+        //        var callBackId = button.data('call-back-id');
+        //        var modal = $(this);
 
-                $.ajax({
-                    type: "GET",
-                    url: '/Files/GetFiles?callBackId=' + callBackId,
-                    dataType: 'html',
-                    success: function (data) {
-                        modal.find('.modal-body').html(data);
-                    },
-                    error: function () {
+        //        $.ajax({
+        //            type: "GET",
+        //            url: '/Files/GetFiles?callBackId=' + callBackId,
+        //            dataType: 'html',
+        //            success: function (data) {
+        //                modal.find('.modal-body').html(data);
+        //            },
+        //            error: function () {
 
-                    }
-                });
+        //            }
+        //        });
 
-            });
+        //    });
     }
 
     var getCount = function (id) {

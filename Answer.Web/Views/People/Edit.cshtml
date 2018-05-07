@@ -203,7 +203,7 @@
 
             var fileUploader = new FileUploader();
 
-            fileUploader.InitEditUploader($('#input-files'),
+            fileUploader.InitEditUploader('input-files',
                 '@Url.Action("FileUploaderBootstrap", "Doc")',
                 [@Html.Raw(ViewBag.Preview)],
                 @Html.Raw(ViewBag.PreviewConfig),
@@ -222,7 +222,7 @@
             });
         });
 
-        function SelectIds(parameters) {
+        function SelectIds() {
             new FileUploaderGrid().SelectIds();
         }
 

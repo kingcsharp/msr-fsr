@@ -64,7 +64,18 @@ namespace Answer.Web.Controllers
                     {
                        totalRows = totalRows.Where(x => x.InvoiceNumber.ToLower().Contains(rule.data.ToLower()));
                     }
-
+                    else if (rule.field == nameof(InvoiceView.Total))
+                    {
+                        decimal value;
+                        if (decimal.TryParse(rule.data, out value))
+                        {
+                            totalRows = totalRows.Where(x => x.Total == value);
+                        }
+                        else
+                        {
+                            totalRows = totalRows.Where(x => x.Total == -1);
+                        }
+                    }
                     else if (rule.field == nameof(InvoiceView.InvoiceDate))
                     {
                         DateTime value;

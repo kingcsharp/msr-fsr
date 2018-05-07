@@ -271,11 +271,13 @@ $(document).ready(function () {
 
             var button = $(event.relatedTarget);
             var callBackId = button.data('call-back-id');
+            var targetCallBackId = button.data('file-select-target-id');
+            var targetSection = button.data('target-section');
+            var uplaodUrl = button.data('select-url');
             var modal = $(this);
-
             $.ajax({
                 type: "GET",
-                url: '/Files/GetFiles?callBackId=' + callBackId,
+                url: '/Files/GetFiles?callBackId=' + callBackId + '&targetSection=' + targetSection + '&targetUplaodUrl=' + uplaodUrl + '&targetCallBackId=' + encodeURIComponent(targetCallBackId),
                 dataType: 'html',
                 success: function (data) {
                     modal.find('.modal-body').html(data);

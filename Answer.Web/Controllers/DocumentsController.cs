@@ -6,6 +6,7 @@ using Msr.Services.Parts;
 using Msr.Services.Roles;
 using Msr.Web.ViewModel.Engineering;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
@@ -252,8 +253,13 @@ namespace Answer.Web.Controllers
 
         public ActionResult AddsingleReference(string linkDocId, string files, string section)
         {
+            var jsonSerialiser = new JavaScriptSerializer();
+
             var result = false;
             var currentUser = GetCurrentUser();
+
+            var initialPreview = new List<string>();
+            object initialPreviewConfig = null;
 
             foreach (var file in files.Split(','))
             {
@@ -279,11 +285,60 @@ namespace Answer.Web.Controllers
                 }
                 else
                 {
-                    result = _documentService.SaveSingleFileReference(linkDocId, file, currentUser.Id);
+                    _documentService.SaveSingleFileReference(linkDocId, file, currentUser.Id);
                 }
             }
 
-            return Json(result ? "Ok" : "error", JsonRequestBehavior.AllowGet);
+            if (section == "WIP_TASK_STEP")
+            {
+                var images = _orderService.GetOrderItemImagesById(linkDocId);
+
+                initialPreview = images.Select(x => x.Path).ToList();
+
+                initialPreviewConfig = images.Select(x => new
+                {
+                    caption = x.FILE_NAME,
+                    type = MimeTypes.GetContentType(x.ContentType),
+                    size = 6666,
+                    url = Url.Action("DeleteImageById", "Doc", new { id = x.Id, taskId = x.Task_Id }),
+                    downloadUrl = x.Path,
+                    key = x.Id
+                });
+            }
+            else if (section == "TEMPLATE_STEP")
+            {
+                var proDockLinks = _documentFilesService.GetPreProRefFileDocLinks(linkDocId, currentUser.Id);
+
+                initialPreview = proDockLinks.ToArray().Select(x => x.Server_Path).ToList();
+
+                initialPreviewConfig = proDockLinks.Select(x => new
+                {
+                    caption = x.Name,
+                    type = MimeTypes.GetContentType(x.Contenttype),
+                    size = 6666,
+                    url = Url.Action("DeletePreProImageById", "Doc", new { id = linkDocId, fileId = x.Value }),
+                    downloadUrl = x.Server_Path,
+                    key = x.Value
+                });
+            }
+            else
+            {
+                var proDockLinks = _documentFilesService.GetDocByObjectId(linkDocId);
+
+                initialPreview = proDockLinks.ToArray().Select(x => x.SERVER_PATH).ToList();
+
+                initialPreviewConfig = proDockLinks.Select(x => new
+                {
+                    caption = x.NAME,
+                    type = MimeTypes.GetContentType(x.CONTENTTYPE),
+                    size = 6666,
+                    url = Url.Action("DeletesingleReference", "Documents", new { file = x.LINKED_DOC_ID }),
+                    downloadUrl = x.SERVER_PATH,
+                    key = x.LINKED_DOC_ID
+                });
+            }
+
+            return Json(new { initialPreview, initialPreviewConfig }, JsonRequestBehavior.AllowGet);
         }
     }
 }

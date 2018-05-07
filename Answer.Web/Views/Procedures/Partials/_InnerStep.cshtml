@@ -77,7 +77,7 @@
                 <table id="@Model.Id" style="width: 100%" class="table table-condensed table-bordered table-striped table-responsive monitor-table">
                     <thead>
                         <tr>
-                            <th>Monitor Type</th>
+                            <th>Type</th>
                             <th>Description</th>
                             <th>Input Type</th>
                             <th>Target Value</th>
@@ -106,7 +106,7 @@
 </li>
 
 <script type="text/javascript">
-    
+
     $(document).ready(function () {
         
         $('.remove-files').click(Msr.FileComman.RemoveSelectItem);
@@ -114,16 +114,14 @@
         $('.select').select2();
 
         var fileUploader = new FileUploader();
-        fileUploader.InitEditUploader($('#input-files_@Model.Index'),
-            '@Url.Action("FileUploaderBootstrap", "Doc")',
+
+        fileUploader.InitEditUploader('input-files_@Model.Index',
+            '@Url.Action("FileUploaderForPrePro", "Doc")',
             [@Html.Raw(Model.Preview)],
             @Html.Raw(Model.PreviewConfig),
             '@Model.Id',
-            true);
+            true,
+            'TEMPLATE_STEP');
     });
-
-    function SelectIds() {
-        var fileUploaderGrid = new FileUploaderGrid().SelectIds();
-    }
 
 </script>
