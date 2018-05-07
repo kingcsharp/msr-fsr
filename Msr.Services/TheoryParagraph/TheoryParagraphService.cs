@@ -33,5 +33,14 @@ namespace Msr.Services.TheoryParagraph
 
             return result;
         }
+
+        public List<SelectFile> GetStepTheories(string procestepId)
+        {
+            var sql = $"SELECT t.NAME AS Name,t.ID AS Id FROM A_PROCEDURE_STEP_THEORY_LINK l, A_V_THEORY_APPROVED_DATA t  where l.PROC_STEP_ID = '{procestepId}' and t.ID = l.THEORY_ID ";
+
+            var result = _dbContext.Database.SqlQuery<SelectFile>(sql).ToList();
+
+            return result;
+        }
     }
 }

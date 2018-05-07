@@ -1,43 +1,22 @@
 ﻿@model Msr.Services.Procedures.Messages.GetStepDataResult
-<div class="row">
 
-    <h2 class="page-header">
-        Steps
-    </h2>
-    <div class="panel-body bio-graph-info">
-        <div class="row">
-            <div class="col-lg-10">
-                <div class="form-horizontal">
-                    @using (Html.BeginForm("SaveStep", "Procedures", FormMethod.Post, new { @class = "form form-horizontal" }))
-                    {
-                        <input type="hidden" id="ProcObjectId" name="ProcObjectId" value="@ViewBag.ProcObjectId" />
-                        <div class="form-group">
-                            <label class="control-label col-md-1">Template:</label>
-                            <div class="col-md-4">
-                                @Html.DropDownList("Procedure", null, null, new {@class = "form-control", name = "Procedure"})
-                            </div>
-                            <div class="col-md-2">
-                                <button type="submit" class="btn btn-success">Add New Step</button>
-                            </div>
-                        </div>
-                    }
-                </div>
-            </div>
-        </div>
-    </div>
-    <ul id="sortable" class="sortable-container">
-        @for (var index = 0; index < Model.GetStepDataResults.Count; index++)
-        {
-            var item = Model.GetStepDataResults[index];
-            item.Index = index;
+<script src="~/assets/js/jquery.min.js"></script>
 
-            @Html.Partial("Partials/_InnerStep", item)
-        }
-    </ul>
+<h2 class="page-header">
+    Steps
+</h2>
+<div class="col-lg-12">
+<ul id="sortable" class="sortable-container">
+    @for (var index = 0; index < Model.GetStepDataResults.Count; index++)
+    {
+        var item = Model.GetStepDataResults[index];
+        item.Index = index;
+        @Html.Partial("Partials/_InnerStep", item)
+    }
+</ul>
 </div>
 <div id="addMoniterModal" class="modal fade" role="dialog">
     <div class="modal-dialog" style="width: 50%;">
-        <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -51,18 +30,3 @@
         </div>
     </div>
 </div>
-<style type="text/css">
-    .sortable-container {
-        padding: 0;
-    }
-
-    .sortable-item {
-        list-style-type: none;
-        padding: 10px;
-        margin: 10px 0;
-        border: 1px solid #1ABC9C;
-        border-left-width: 5px;
-        border-radius: 3px;
-        background-color: #EFEFEF;
-    }
-</style>

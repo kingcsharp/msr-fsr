@@ -105,8 +105,6 @@
     
     <script type="text/javascript">
 
-        var fileUploaderGrid = new FileUploaderGrid();
-
         $(document).ready(function () {
 
             var fileUploader = new FileUploader();
@@ -116,8 +114,6 @@
                 @Html.Raw(ViewBag.PreviewConfig),
                 '@Model.ObjectId',
                 true);
-
-            fileUploaderGrid.SetupSelectImage();
 
             var selectRoles = $(".selectroles").select2({
                 tags: [],
@@ -139,7 +135,7 @@
         });
 
         function SelectIds() {
-            fileUploaderGrid.SelectIds();
+            new FileUploaderGrid().SelectIds();
         }
 
     </script>

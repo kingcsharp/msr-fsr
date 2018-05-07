@@ -193,7 +193,7 @@ namespace Msr.Services.Roles
 
         public List<RoleResult> GetApprovedRoles()
         {
-            var result = _dbContext.Database.SqlQuery<RoleResult>("select ID as Id, NAME as Name from A_APPROVED_ROLES where STATUS='APPROVED'").ToList();
+            var result = _dbContext.Database.SqlQuery<RoleResult>("select ID as Id, NAME as Name from A_APPROVED_ROLES where STATUS LIKE '%APPROVED%'").ToList();
 
             return result;
         }

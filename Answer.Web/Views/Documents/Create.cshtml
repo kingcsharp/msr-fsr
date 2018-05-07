@@ -97,13 +97,11 @@
     <script type="text/javascript">
         var ary = [];
 
-        var fileUploaderGrid = new FileUploaderGrid();
         var fileUploader = new FileUploader();
 
         $(document).ready(function () {
 
             fileUploader.InitUploader($('#input-files'), '@Url.Action("FileUploaderBootstrap", "Doc")', [],[]);
-            fileUploaderGrid.SetupSelectImage();
 
             $(".selectroles").select2({
                 tags: true,
@@ -113,7 +111,10 @@
         });
 
         function SelectIds() {
-            fileUploaderGrid.SelectIdsForAdd(fileUploader, '@Url.Action("FileUploaderBootstrap", "Doc")');
+            new FileUploaderGrid().SelectIds();
+        }
+        function SelectIds() {
+            FileUploaderGrid().SelectIdsForAdd(fileUploader, '@Url.Action("FileUploaderBootstrap", "Doc")');
         }
     </script>
 }

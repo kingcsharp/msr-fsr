@@ -43,9 +43,9 @@
                         <td>@Html.Raw(Model.StepDataList[i].Step_Text)</td>
                         <td>@Model.StepDataList[i].Duration @Model.StepDataList[i].Duration_Type</td>
                     </tr>
-                    <tr><td colspan="6">LABOR_ROLE_LABOR_OWNER :@if (@Model.StepDataList[i].GetStepLaborsList.Count > 0)
+                    <tr><td colspan="6">LABOR_ROLE_LABOR_OWNER :@if (@Model.StepDataList[i].StepLaborsList.Count > 0)
                                                                 {
-                                                                    @Model.StepDataList[i].GetStepLaborsList.SingleOrDefault().Text
+                                                                    @Model.StepDataList[i].StepLaborsList.SingleOrDefault().Text
                                                                 } @Model.StepDataList[i].Duration @Model.StepDataList[i].Duration_Type</td>
                     </tr>
                 }

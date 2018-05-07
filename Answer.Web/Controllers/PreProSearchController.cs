@@ -51,6 +51,10 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.Id == rule.data);
                     }
+                    if (rule.field == nameof(PrePropSearchView.Root))
+                    {
+                        totalRows = totalRows.Where(x => x.Root == rule.data);
+                    }
                     else if (rule.field == nameof(PrePropSearchView.Title))
                     {
                         totalRows = totalRows.Where(x => x.Title.ToLower().Contains(rule.data.ToLower()));
@@ -234,6 +238,7 @@ namespace Answer.Web.Controllers
 
             return View(vm);
         }
+
         [AcceptVerbs(HttpVerbs.Post)]
         [ValidateInput(false)]
         public ActionResult Edit(ProcedurePreProViewModel model)

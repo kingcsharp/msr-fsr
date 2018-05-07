@@ -10,16 +10,25 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using Msr.Commons.Files;
+using Msr.Services.Orders;
+using Msr.Services.Orders.ViewModels;
+using Msr.Services.PrePro;
 
 namespace Answer.Web.Controllers
 {
     public class DocumentsController : BaseController
     {
         private readonly DocumentService _documentService;
+        private readonly DocumentFilesService _documentFilesService;
+        private readonly OrderService _orderService;
+        private readonly PreProServices _preProServices;
 
         public DocumentsController()
         {
             _documentService = new DocumentService();
+            _documentFilesService = new DocumentFilesService();
+            _orderService = new OrderService();
+            _preProServices = new PreProServices();
         }
         public ActionResult Index()
         {
@@ -192,7 +201,7 @@ namespace Answer.Web.Controllers
                     caption = x.NAME,
                     type = MimeTypes.GetContentType(x.CONTENTTYPE),
                     size = 6666,
-                    url = Url.Action("DeletesingleReference", "Documents", new {linkDocId = x.LINKED_DOC_ID}),
+                    url = Url.Action("DeletesingleReference", "Documents", new {file = x.LINKED_DOC_ID}),
                     downloadUrl = x.SERVER_PATH,
                     key = x.LINKED_DOC_ID
                 }));
@@ -241,13 +250,37 @@ namespace Answer.Web.Controllers
             return Json(result ? "Ok" : "error", JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult AddsingleReference(string linkDocId, string files)
+        public ActionResult AddsingleReference(string linkDocId, string files, string section)
         {
             var result = false;
+            var currentUser = GetCurrentUser();
 
             foreach (var file in files.Split(','))
             {
-                result = _documentService.SaveSingleFileReference(linkDocId, file, GetCurrentUser().Id);
+                if (section == "WIP_TASK_STEP")
+                {
+                    var docFile = _documentFilesService.GetSelectedRefFile(file);
+                    var imageModel = new SaveWorkItemImageViewModel
+                    {
+                        Name = docFile.Name,
+                        Path = docFile.ServerPath,
+                        ContentType = docFile.ContentType,
+                        DropSrc = "YES",
+                        NTLogin = currentUser.Id,
+                        TaskId = linkDocId,
+                        FileUrl = docFile.FileUrl,
+                        FileKey = docFile.FileKey
+                    };
+                    _orderService.SaveOrderItemImages(imageModel);
+                }
+                else if (section == "TEMPLATE_STEP")
+                {
+                    _preProServices.SavePreProSingleFileReference(linkDocId, file, currentUser.Id);
+                }
+                else
+                {
+                    result = _documentService.SaveSingleFileReference(linkDocId, file, currentUser.Id);
+                }
             }
 
             return Json(result ? "Ok" : "error", JsonRequestBehavior.AllowGet);

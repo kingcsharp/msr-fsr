@@ -18,11 +18,11 @@
             @Html.Raw(Model.Preview),
             @Html.Raw(Model.PreviewConfig),
             '@Model.TaskId',
-            false);
+            true);
     });
 
     function SelectIds() {
-        fileUploaderGrid.SelectIds();
+        fileUploaderGrid.SelectIds('WIP_TASK_STEP');
     }
 
 </script>

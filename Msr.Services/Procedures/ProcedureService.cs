@@ -21,6 +21,7 @@ using Msr.Services.Procedures.ViewModels;
 using Msr.Services.ProcedureVerbs;
 using Msr.Services.PurchesOrder.ViewModels;
 using Msr.Services.Roles.Messages;
+using Msr.Services.TheoryParagraph;
 using Msr.Services.Users.Messages;
 
 namespace Msr.Services.Procedures
@@ -28,10 +29,14 @@ namespace Msr.Services.Procedures
     public class ProceduresService
     {
         private readonly MsrDbContext _dbContext;
+        private DocumentService documentService;
+        private PartsService _partsService;
 
         public ProceduresService()
         {
             _dbContext = new MsrDbContext();
+            documentService = new DocumentService();
+            _partsService = new PartsService();
         }
 
         public IQueryable<ProcedureView> GetProceduresQueryable()
@@ -68,10 +73,9 @@ namespace Msr.Services.Procedures
             return result;
         }
 
-        public List<PreProFile> GetProcedurelist(string co)
+        public List<PreProFile> GetStepTemplateList(string co)
         {
-            var result = _dbContext.Database.SqlQuery<PreProFile>($"SELECT ID as Value, Title as Show,STEP_TEXT as StepText FROM A_V_PREPOP_QUICK WHERE CREATING_CO = '{co}'").ToList();
-            result.Insert(0, new PreProFile { Show = "NONE", Value = "", StepText = "" });
+            var result = _dbContext.Database.SqlQuery<PreProFile>($"SELECT ID as Value, Title as Show,STEP_TEXT as StepText FROM A_V_PREPOP_QUICK WHERE TITLE <> '' AND CREATING_CO = '{co}'").ToList();
 
             return result;
         }
@@ -187,15 +191,14 @@ namespace Msr.Services.Procedures
             }
         }
 
-        public string PrePopSave(string procObjId, string prevStepId, string ntlogin)
+        public string PrePopSave(string procedureId, string preProId, string ntlogin)
         {
             try
             {
                 var saveProcedureStepPreProStepProcedure = new SaveProcedureStepPreProStepProcedure()
                 {
-                    ProcObjId = procObjId,
-                    Preproid = null,
-                    prevStepId = prevStepId,
+                    ProcObjId = procedureId,
+                    PreProId = preProId,
                     NtLogin = ntlogin
                 };
                 _dbContext.Database.ExecuteStoredProcedure(saveProcedureStepPreProStepProcedure);
@@ -385,14 +388,14 @@ namespace Msr.Services.Procedures
                     var preStepMatch = regex.Match(stepData.Pre_Step);
                     stepData.Pre_Step = preStepMatch.Groups[1].ToString();
                 }
-                stepData.GetStepLaborsList = GetLaborsById(stepData.Id, loginId).Select(x => new SelectListItem
+                stepData.StepLaborsList = GetLaborsById(stepData.Id, loginId).Select(x => new SelectListItem
                 {
                     Text = x.Role_Name,
                     Value = x.Role_id.ToString(),
                 }).OrderBy(o => o.Text).ToList();
 
                 stepData.GetMoniterViewModels = GetMoniterByStepId(stepData.Id, loginId);
-                stepData.SetUp(new ProceduresService(), new ProcedureVerbsService(), new ObjectsService());
+                stepData.SetUp(new ProcedureVerbsService(), new ObjectsService(),new DocumentFilesService(), new TheoryParagraphService());
             }
 
             return result.OrderBy(x => x.Print_Order).ToList();
@@ -457,10 +460,7 @@ namespace Msr.Services.Procedures
                 Value = x.ObjectId
             }).ToList();
 
-            PartsService partsService = new PartsService();
-            DocumentService documentService = new DocumentService();
-
-            getStepEditDataViewModel.ListReferenceFiles = partsService.GetSelectedFiles(id: stepId, type: null, ntlogin: loginId).Select(x => new SelectListItem
+            getStepEditDataViewModel.ListReferenceFiles = _partsService.GetSelectedFiles(id: stepId, type: null, ntlogin: loginId).Select(x => new SelectListItem
             {
                 Text = x.Show,
                 Value = x.Value,
@@ -472,7 +472,8 @@ namespace Msr.Services.Procedures
                 Value = x.Value.ToString(),
             }).OrderBy(o => o.Text).ToList();
 
-            getStepEditDataViewModel.ListReferenceTheories = documentService.GetSelectedTheories(id: stepId, ntlogin: loginId).Select(x => new SelectListItem
+
+            getStepEditDataViewModel.ListReferenceTheories = documentService.GetSelectedTheories(stepId, loginId).Select(x => new SelectListItem
             {
                 Text = x.Show,
                 Value = x.Value.ToString(),
@@ -496,6 +497,7 @@ namespace Msr.Services.Procedures
 
                 var updateOneStep = new UpdateOneStepProcedure()
                 {
+                    Title = viewModel.GetStepEditData.Title,
                     StepText = viewModel.GetStepEditData.Step_Text,
                     ProcObjId = viewModel.ProcObjId,
                     Comments = viewModel.GetStepEditData.Comments,
@@ -509,7 +511,7 @@ namespace Msr.Services.Procedures
                     SpecificLocation = viewModel.GetStepEditData.Specific_Location,
                     ReferenceVerb = viewModel.GetStepEditData.REFERENCE_VERB,
                     ReferenceObject = viewModel.GetStepEditData.REFERENCE_OBJECT,
-                    ReferenceTheories = viewModel.GetStepEditData.REFERENCE_THEORIES,
+                    ReferenceTheories = string.Join(", ", viewModel.ReferenceTheories),
                     GoToStep = viewModel.GetStepEditData.GOTO_STEP?.ToString(),
                     GoToStepId = viewModel.GetStepEditData.GOTO_STEP_ID,
                     Cycles = viewModel.GetStepEditData.Cycles,
@@ -525,8 +527,7 @@ namespace Msr.Services.Procedures
                     UsefulLife = viewModel.UsefulLife,
                     EquipExpensePerMinute = viewModel.EquipExpensePerMinute,
                     AnnualRM = viewModel.AnnualRM,
-                    RMPerMinute = viewModel.RMPerMinute,
-                    Title = viewModel.GetStepEditData.Title
+                    RMPerMinute = viewModel.RMPerMinute
                 };
 
                 _dbContext.Database.ExecuteStoredProcedure(updateOneStep);
@@ -573,7 +574,7 @@ namespace Msr.Services.Procedures
             updateOneStep.SpecificLocation = viewModel.Specific_Location;
             updateOneStep.ReferenceVerb = viewModel.REFERENCE_VERB;
             updateOneStep.ReferenceObject = viewModel.REFERENCE_OBJECT;
-            updateOneStep.ReferenceTheories = viewModel.REFERENCE_THEORIES;
+            updateOneStep.ReferenceTheories = string.Join(", ", viewModel.ReferenceTheories);
             updateOneStep.GoToStep = viewModel.GOTO_STEP?.ToString();
             updateOneStep.GoToStepId = viewModel.GOTO_STEP_ID;
             updateOneStep.Cycles = viewModel.Cycles;
@@ -984,7 +985,7 @@ namespace Msr.Services.Procedures
             }
         }
 
-        public bool SaveReorderSteps(string[] formCollection, string id, string currentUserId)
+        public bool SaveReorderSteps(Dictionary<string, double?> formCollection, string id, string currentUserId)
         {
             try
             {
@@ -992,11 +993,17 @@ namespace Msr.Services.Procedures
 
                 _dbContext.Database.ExecuteSqlCommand("DELETE FROM A_PROCEDURE_STEP_PRECEDING_STEPS WHERE MY_STEP IN (SELECT ID FROM A_PROCEDURE_STEPS WHERE PROCEDURE_ID =" + procedureId + ")");
 
-                for (var index = 0; index < formCollection.Length; index++)
+                foreach (var step in formCollection)
                 {
-                    var step = formCollection[index];
-                    var split = step.Split(',');
-                    var sql = "UPDATE A_PROCEDURE_STEPS SET PRINT_ORDER =" + (index + 1) + " WHERE ID = " + split[1] + "";
+                    var order = step.Value;
+
+                    if (!step.Value.HasValue)
+                    {
+                        order = formCollection.OrderByDescending(x => x.Value).FirstOrDefault().Value + 1;
+                    }
+
+                    var sql = "UPDATE A_PROCEDURE_STEPS SET PRINT_ORDER =" + order + " WHERE ID = " + step.Key + "";
+
                     _dbContext.Database.ExecuteSqlCommand(sql);
                 }
 

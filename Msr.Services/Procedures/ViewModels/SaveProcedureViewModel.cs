@@ -24,6 +24,8 @@ namespace Msr.Services.Procedures.ViewModels
             WipMsgList = new List<SelectListItem>();
             RolesList = new List<SelectListItem>();
             Roles = new List<string>();
+            RolesList = new List<SelectListItem>();
+            StepTemplateList = new List<SelectListItem>();
         }
         public string Id { get; set; }
 
@@ -89,6 +91,9 @@ namespace Msr.Services.Procedures.ViewModels
         public List<SelectListItem> WipMsgList { get; set; }
 
         public List<SelectListItem> RolesList { get; set; }
+
+        public string AddStepTemplateId { get; set; }
+        public List<SelectListItem> StepTemplateList { get; set; }
 
         public List<DocLink> DocLinks { get; set; }
 

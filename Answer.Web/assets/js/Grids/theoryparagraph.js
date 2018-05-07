@@ -14,7 +14,14 @@
                 key: true,
                 colmenu: false,
                 search: false,
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                coloptions: {
+                    sorting: false,
+                    columns: true,
+                    filtering: false,
+                    seraching: false,
+                    grouping: false,
+                    freeze: false
+                },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 width: 30,
                 align: 'center',
@@ -26,7 +33,14 @@
                 index: 'Root',
                 key: true,
                 colmenu: false,
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                coloptions: {
+                    sorting: false,
+                    columns: true,
+                    filtering: false,
+                    seraching: false,
+                    grouping: false,
+                    freeze: false
+                },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 width: 80,
                 align: 'left'
@@ -38,7 +52,14 @@
                 colmenu: true,
                 editable: true, // must set editable to true if you want to make the field editable
                 editrules: { required: true },
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                coloptions: {
+                    sorting: false,
+                    columns: true,
+                    filtering: false,
+                    seraching: false,
+                    grouping: false,
+                    freeze: false
+                },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 width: 300,
                 align: 'left'
@@ -50,7 +71,14 @@
                 colmenu: true,
                 editable: true, // must set editable to true if you want to make the field editable
                 editrules: { required: true },
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                coloptions: {
+                    sorting: false,
+                    columns: true,
+                    filtering: false,
+                    seraching: false,
+                    grouping: false,
+                    freeze: false
+                },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 width: 150,
                 align: 'left'
@@ -62,14 +90,22 @@
                 colmenu: true,
                 editable: true, // must set editable to true if you want to make the field editable
                 editrules: { required: true },
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                coloptions: {
+                    sorting: false,
+                    columns: true,
+                    filtering: false,
+                    seraching: false,
+                    grouping: false,
+                    freeze: false
+                },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 width: 150,
                 align: 'left'
             }
         ],
         viewrecords: true, // show the current page, data rang and total records on the toolbar
-        rowNum: 10, rowList: [10, 20, 50, 100],
+        rowNum: 10,
+        rowList: [10, 20, 50, 100],
         loadonce: false, // this is just for the demo
         pager: "#jqGridPagerTheory",
         height: 'auto',
@@ -86,25 +122,33 @@
         ajaxCellOptions: {}
 
     });
-    $('#jqGridTheory').navGrid("#jqGridPagerTheory", {
-        refresh: true,
-        search: false, // show search button on the toolbar
-        add: false,
-        edit: false,
-        del: false,
-    },
+    $('#jqGridTheory').navGrid("#jqGridPagerTheory",
+        {
+            refresh: true,
+            search: false, // show search button on the toolbar
+            add: false,
+            edit: false,
+            del: false,
+        },
         {}, // edit options
         {}, // add options
         {}, // delete options
         { multipleSearch: true }
     );
-}
+    $('#jqGridTheory').jqGrid('filterToolbar',
+        {
+            stringResult: true,
+            searchOnEnter: true,
+            searchOperators: true
+        });
 
-function selectFormatter(cellvalue, options, rowObject) {
 
-    var html = "";
+    function selectFormatter(cellvalue, options, rowObject) {
 
-    html = '<input class="selected-document-id" type="checkbox" value="' + cellvalue + '|' + rowObject.Name + '" />';
+        var html = "";
 
-    return html;
+        html = '<input class="selected-document-id" type="checkbox" value="' + cellvalue + '|' + rowObject.Name + '" />';
+
+        return html;
+    }
 }

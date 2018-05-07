@@ -1,27 +1,29 @@
 ﻿@model Msr.Services.Procedures.Messages.GetStepDataResult
-<li id="@Model.Print_Order,@Model.Id" data-MainObjectId="@ViewBag.ProcObjectId" class="sortable-item">
-    <span class="fa fa-arrows handle sortable-fa" style="float: left; margin: -4px;"></span>
-    @using (Html.BeginForm("EditStep", "Procedures", FormMethod.Post, new { @class = "step-form", id = "step-form-" + Model.Index }))
-    {
 
-        <input type="hidden" class="step-action" name="UpdateAction" value="" />
-        <input type="hidden" name="ProcedureId" value="@ViewBag.ProcObjectId" />
-        <input type="hidden" id="StepId" name="Id" value="@Model.Id" />
-        <input type="hidden" id="Pre_Step" name="Pre_Step" value="@Model.Pre_Step" />
-        <div class="procedure-step row" id='step1'>
-            <div class="col-lg-6 ">
+
+<li id="@Model.Print_Order,@Model.Id" data-MainObjectId="@ViewBag.ProcObjectId" class="sortable-item">
+    <div class="procedure-step row" id='step1'>
+        <span class="fa fa-arrows handle sortable-fa" style="float: left; margin: -4px;"></span>
+        @using (Html.BeginForm("EditStep", "Procedures", FormMethod.Post, new { @class = "step-form", id = "step-form-" + Model.Index }))
+        {
+            <input type="hidden" class="step-action" name="UpdateAction" value="" />
+            <input type="hidden" name="ProcedureId" value="@ViewBag.ProcObjectId" />
+            <input type="hidden" id="StepId" name="Id" value="@Model.Id" />
+            <input type="hidden" id="Pre_Step" name="Pre_Step" value="@Model.Pre_Step" />
+            <div class="col-lg-5">
+                <span class="grippy" data-toggle="tooltip" data-placement="right" title="" data-original-title="Drag up or down to reorder"></span>
                 <table class="table table-condensed left-table">
                     <tr>
-                        <th style='width: 95px'>Step Number:</th>
+                        <th style='width: 95px'>Step #:</th>
                         <td class='step-number'>@Model.Print_Order</td>
                         <th style='width: 95px'>Predecessor:</th>
-                        <td><input type='text' name='a0' class='form-control' value='@Model.Pre_Step' disabled="disabled" /></td>
+                        <td><input type='text' class='form-control' value='@Model.PrevStepName' disabled="disabled" /></td>
                     </tr>
                     <tr>
                         <th>Step Title:</th>
-                        <td colspan=5>
-                            @Html.TextBoxFor(model => Model.Title, new {@class = "form-control"})
-                            @Html.ValidationMessageFor(model => Model.Title, "", new {@class = "text-danger"})
+                        <td colspan="5">
+                            @Html.TextBoxFor(model => Model.Title, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => Model.Title, "", new { @class = "text-danger" })
                         </td>
                     </tr>
                     <tr>
@@ -29,8 +31,7 @@
                         <td colspan="5">@Html.TextAreaFor(model => Model.Step_Text, new { @class = "form-control" })</td>
                     </tr>
                     <tr>
-                        <td></td>
-                        <th colspan="2" align='right'>Estimated Step Duration:</th>
+                        <th align='right'>Labor Time:</th>
                         <td>
                             <div class="input-group">
                                 @Html.TextBoxFor(model => Model.Duration, new { @class = "form-control pre-populated" })
@@ -45,44 +46,41 @@
                             </div>
                         </td>
                     </tr>
+                    <tr>
+                        <th colspan="1"></th>
+                        <td colspan="5">
+                            <button type="submit" class="btn btn-success" value="Save">Save</button><button type="submit" class="btn btn-danger delete-step" value="Delete" name="DeleteStep" value="DeleteStep">Delete</button>
+                        </td>
+                    </tr>
                 </table>
+
             </div>
-            <div class="col-lg-2">
-                <table class="table">
-                    <tr>
-                        <th>Auth Roles:</th>
-                    </tr>
-                    <tr>
-                        <td>
-                            @Html.ListBox("GetStepLabors", Model.GetStepLaborsList, new { @class = "form-control submitselect" })
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Reference Object:</th>
-                    </tr>
-                    <tr>
-                        <td>
-                            @Html.DropDownListFor(m => Model.REFERENCE_OBJECT, Model.ListReferenceObjects, new { id = "ReferenceObject_" + Model.Index, @class = "form-control submitselect selectReferenceObject", size = 1 })
-                            @Html.ValidationMessageFor(model => Model.REFERENCE_OBJECT, "", new { @class = "text-danger" })
-                            <div style="float: right;">
-                                <span class="data-toggle=" data-call-back-id="ReferenceObject_@Model.Index" data-toggle="modal" data-target="#select-objects"><i class="icon fa fa-file"></i></span>
-                                <span class="deletefiles" data-call-back-id="ReferenceObject_@Model.Index"><i class="icon fa fa-trash-o"></i></span>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
+            <div class="col-lg-3">
+                <div class="row">
+                    <div class="file-loading">
+                        <input id="input-files_@Model.Index" name="input-files_@Model.Index" type="file" multiple>
+                    </div>
+                    <input type="hidden" id="referenceFiles_@Model.Index" name="referenceFiles_@Model.Index" />
+                </div>
+                <div class="row" style="margin-top: 10px">
+                    <label>Reference Documents</label>
+                    <div class="input-group">
+                        @Html.DropDownListFor(m => Model.ReferenceTheories, Model.ListReferenceTheories, new {id = "ReferenceTheories_" + Model.Index, @class = "form-control submitselect selectReferenceTheories", multiple = "multiple", size = "1" })
+                        <span class="input-group-addon btn btn-primary" data-call-back-id="ReferenceTheories_@Model.Index" data-toggle="modal" data-target="#select-theory"><i class="fa fa-folder-open-o"></i></span>
+                        <span class="remove-files input-group-addon btn btn-danger" data-target-id="ReferenceTheories_@Model.Index"><i class="fa fa-trash-o"></i></span>
+                    </div>
+                </div>
+
             </div>
             <div class="col-lg-4">
-                <ul class="nav nav-tabs">
-                    <li class="active"><a href="#">Monitors</a></li>
-                </ul>
-                <table id="@Model.Id" style="width: 100%" class="table table-condensed">
+                <label>Monitors:</label><a data-step-Target-Object="@Model.AddMonitorForProcedureViewModel.Target_Object" data-procedure-name="@ViewBag.ProdecureName" data-moniter-type="@Model.AddMonitorForProcedureViewModel.Monitor_Type" data-fail-action="@Model.AddMonitorForProcedureViewModel.Fail_Action" data-description="@Model.AddMonitorForProcedureViewModel.Description" data-object-id="@Model.AddMonitorForProcedureViewModel.Id" data-related-object="@ViewBag.ProcObjectId" data-step-id="@Model.Id" data-toggle="modal" data-target="#addMoniterModal" href="#" data-value="@Model.Id" class="btn btn-xs btn-success add-monitor_@Model.Id add-monitor " title="Add Monitor" style="float: right"> <i class="fa fa-plus" aria-hidden="true"></i> Add Monitor</a>
+                <table id="@Model.Id" style="width: 100%" class="table table-condensed table-bordered table-striped table-responsive monitor-table">
                     <thead>
                         <tr>
                             <th>Monitor Type</th>
                             <th>Description</th>
                             <th>Input Type</th>
-                            <th>Target Object</th>
+                            <th>Target Value</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -90,10 +88,42 @@
                         @Html.Partial("Partials/_InnerMoniter", Model.GetMoniterViewModels)
                     </tbody>
                 </table>
-                <a data-step-Target-Object="@Model.AddMonitorForProcedureViewModel.Target_Object" data-procedure-name="@ViewBag.ProdecureName" data-moniter-type="@Model.AddMonitorForProcedureViewModel.Monitor_Type" data-fail-action="@Model.AddMonitorForProcedureViewModel.Fail_Action" data-description="@Model.AddMonitorForProcedureViewModel.Description" data-object-id="@Model.AddMonitorForProcedureViewModel.Id" data-related-object="@ViewBag.ProcObjectId" data-step-id="@Model.Id" data-toggle="modal" data-target="#addMoniterModal" href="#" data-value="@Model.Id" class="btn btn-xs btn-success add-monitor_@Model.Id add-monitor " title="Add Monitor"> <i class="fa fa-plus" aria-hidden="true"></i> Add Monitor</a>
+                <div class="auth-roles-container">
+                    <table class="table table-condensed">
+                        <tbody>
+                            <tr>
+                                <th width="20%" nowrap="">Auth Roles:</th>
+                                <td width="80%">
+                                    @Html.ListBoxFor(x=> x.StepLabors, Model.StepLaborsList, new { @class = "form-control select"})
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
-        <input type="submit" class="btn btn-success" value="Save" />
-        <button type="submit" class="btn btn-danger delete-step" value="Delete" name="DeleteStep" value="DeleteStep">Delete</button>
-    }
+        }
+    </div>
 </li>
+
+<script type="text/javascript">
+    
+    $(document).ready(function () {
+        
+        $('.remove-files').click(Msr.FileComman.RemoveSelectItem);
+
+        $('.select').select2();
+
+        var fileUploader = new FileUploader();
+        fileUploader.InitEditUploader($('#input-files_@Model.Index'),
+            '@Url.Action("FileUploaderBootstrap", "Doc")',
+            [@Html.Raw(Model.Preview)],
+            @Html.Raw(Model.PreviewConfig),
+            '@Model.Id',
+            true);
+    });
+
+    function SelectIds() {
+        var fileUploaderGrid = new FileUploaderGrid().SelectIds();
+    }
+
+</script>

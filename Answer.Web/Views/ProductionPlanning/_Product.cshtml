@@ -1,38 +1,34 @@
 ﻿@model Msr.Services.ProductionPlanning.ViewModels.RequirementStepsViewModel
+@Html.ValidationSummary();
 <div class="row">
     <div class="col-sm-3">
         <div class="form-group">
             <label class="sr-only">Supplier </label>
             @Html.DropDownListFor(model => model.ProductCustomerId, Model.Customers, "Select Customer", new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.ProductCustomerId, "", new { @class = "text-danger" })
         </div>
     </div>
     <div class="col-sm-3">
         <div class="form-group">
             <label class="sr-only">Location </label>
             @Html.DropDownListFor(model => model.ProductLocationId, Model.ProductLocationList, "Select Location", new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.ProductLocationId, "", new { @class = "text-danger" })
         </div>
     </div>
     <div class="col-sm-3">
         <div class="form-group">
             <label class="sr-only">Supplier Name </label>
             @Html.DropDownListFor(model => model.ProductSupplierId, Model.Suppliers, "Select Supplier", new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.ProductSupplierId, "", new { @class = "text-danger" })
         </div>
     </div>
     <div class="col-sm-3">
         <div class="form-group">
             <label class="sr-only">Division/Fab # </label>
             @Html.TextBoxFor(x => Model.ProductCustomerDivision, new { @class = "form-control", placeholder = "Division/Fab #", data_toggle = "tooltip", data_placement = "bottom"})
-            @Html.ValidationMessageFor(model => model.ProductCustomerDivision, "", new { @class = "text-danger" })
         </div>
     </div>
     <div class="col-sm-3">
         <div class="form-group">
             <label class="sr-only">Product Name </label>
             @Html.TextBoxFor(x => Model.ProductName, new { @class = "form-control",  data_toggle = "tooltip", data_placement = "bottom"})
-            @Html.ValidationMessageFor(model => model.ProductName, "", new { @class = "text-danger" })
         </div>
     </div>
     <div class="col-sm-3">
@@ -40,7 +36,6 @@
             <label class="sr-only">Part </label>
             <div class="col-sm-10">
                 @Html.DropDownListFor(model => model.ProductPartId, Model.PartList, "Select Part", new { @class = "form-control selectPart" })
-                @Html.ValidationMessageFor(model => model.ProductPartId, "", new { @class = "text-danger" })
             </div>
             <div class="col-sm-2">
                 <button type="button" class="btn btn-default" style="margin-left: -30px; margin-top: -0px" data-toggle="modal" data-target="#partmodel" data-placement="right" title="Add new customer part in modal"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>

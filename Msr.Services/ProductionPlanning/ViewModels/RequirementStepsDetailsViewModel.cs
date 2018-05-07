@@ -22,7 +22,7 @@ namespace Msr.Services.ProductionPlanning.ViewModels
 
         [Display(Name = "Standard Machine Minutes")]
         [Range(0, double.MaxValue, ErrorMessage = "Please enter numaric value only")]
-        public decimal? StandardMachineMinutes { get; set; }
+        public double? StandardMachineMinutes { get; set; }
 
         [Display(Name = "Replacement Cost")]
 

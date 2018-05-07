@@ -30,6 +30,7 @@ namespace Msr.Services.Procedures.ViewModels
             SelectedReferenceProcedures = new List<string>();
             ReferenceFiles = new List<string>();
             SelectedPrecedingSteps = new List<string>();
+            ReferenceTheories = new List<string>();
         }
 
         public void SetUp(ProceduresService proceduresService, ProcedureVerbsService procedureVerbsService, string procedureObjectId)
@@ -42,6 +43,7 @@ namespace Msr.Services.Procedures.ViewModels
             ListReferenceFiles = new List<SelectListItem>();
             GetStepEditData = new GetStepEditDataResult();
             ReferenceFiles = new List<string>();
+            ReferenceTheories = new List<string>();
 
             BaseCounterList = Commons.Lookups.LookupItems.YesNo();
 
@@ -101,7 +103,7 @@ namespace Msr.Services.Procedures.ViewModels
         public IList<SelectListItem> ListReferenceFiles { get; set; }
         public IList<SelectListItem> ListReferenceObjects { get; set; }
         public IList<SelectListItem> ListReferenceTheories { get; set; }
-        public List<string> ReferenceTheory { get; set; }
+        public List<string> ReferenceTheories { get; set; }
         public List<string> ReferenceObject { get; set; }
         public List<string> ReferenceFiles { get; set; }
         public decimal? ReplacementCost { get; set; }

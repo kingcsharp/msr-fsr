@@ -16,10 +16,10 @@ namespace Msr.Services.Procedures.Procedures
         public string ProcObjId { get; set; }
 
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "prevStepID")]
-        public string prevStepId { get; set; }
+        public string PrevStepId { get; set; }
 
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "prePopID")]
-        public string Preproid { get; set; }
+        public string PreProId { get; set; }
 
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 500, ParameterName = "strNTLogin")]
         public string NtLogin { get; set; }

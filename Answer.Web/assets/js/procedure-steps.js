@@ -76,11 +76,7 @@ $(document).ready(function () {
     });
 
     UpdateMonitor();
-
-    DeleteMonitor();
-
     AddMonitor();
-
 });
 
 function UpdateMonitor() {
@@ -151,40 +147,33 @@ function AddMonitor() {
         });
 }
 
-function DeleteMonitor() {
+function DeleteMonitor(target) {
 
-    $(".deleteMoniter").on("click", function () {
-        var clicked = $(this);
-        eModal.confirm(
-                'Are you sure?')
-            .then(confirmCallback, optionalCancelCallback);
+    var clicked = $(target);
 
-        function confirmCallback() {
+    eModal.confirm('Are you sure?').then(confirmCallback);
 
-            var id = clicked.data('id');
-            var stepId = clicked.data('step-id');
+    function confirmCallback() {
 
-            eLoaderOpen();
+        var id = clicked.data('id');
+        var stepId = clicked.data('step-id');
 
-            $.ajax({
-                type: "POST",
-                url: "/Procedures/DeleteMonitor",
-                dataType: 'html',
-                data: { id: id, stepId: stepId },
-                success: function (data) {
-                    $('#' + stepId + ' tbody').html('');
-                    $('#' + stepId + ' tbody').append(data);
-                },
-                error: function (error) {
-                    eLoaderError(error);
-                }
-            });
+        eLoaderOpen();
 
-            eLoaderClose();
-        }
+        $.ajax({
+            type: "POST",
+            url: "/Procedures/DeleteMonitor",
+            dataType: 'html',
+            data: { id: id, stepId: stepId },
+            success: function(data) {
+                $('#' + stepId + ' tbody').html('');
+                $('#' + stepId + ' tbody').append(data);
+                eLoaderClose();
+            },
+            error: function(error){
+            eModal.alert(error.statusText);
+            }
+        });
+    }
 
-        function optionalCancelCallback() {
-        }
-
-    });
 }

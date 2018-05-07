@@ -7,25 +7,7 @@
         $('.submitselect option').prop('selected', true);
         
     });
-    $('#select-images').on('show.bs.modal',
-        function (event) {
-            var button = $(event.relatedTarget);
-            var callBackId = button.data('call-back-id');
-            var modal = $(this);
-
-            $.ajax({
-                type: "GET",
-                url: '/Files/GetFiles?callBackId=' + callBackId,
-                dataType: 'html',
-                success: function (data) {
-                    modal.find('.modal-body').html(data);
-                },
-                error: function () {
-
-                }
-            });
-
-        });
+ 
     $('.deletefiles').click(function () {
 
         var callBackId = $(this).data('call-back-id');

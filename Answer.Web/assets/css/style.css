@@ -478,8 +478,8 @@ a:hover {
   margin-bottom: -5px; }
 
 .btn {
-  margin-top: 5px;
-  margin-bottom: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
   border-radius: 1px;
   border-width: 1px;
   font-family: 'Lato', sans-serif; }
@@ -1527,9 +1527,9 @@ color: black;
 }
 
 .procedure-step {
-    /*border: 1px solid #c0c0c0 !important;*/
+    border: 1px solid #c0c0c0 !important;
     padding: 10px !important;
-    margin-bottom: 0px !important;
+    margin-bottom: 3px !important;
 }
 
     .procedure-step.row > [class*="col-"] {
@@ -2197,4 +2197,72 @@ input.pre-populated {
 }
 .file-caption {
     margin-top: 6px;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: #1abc9c !important;
+    border: 1px solid #1abc9c !important;
+    border-radius: 0 !important; 
+    cursor: default;
+    float: left;
+    margin-right: 5px;
+    margin-top: 5px;
+    padding: 0 5px;
+    color: #fff !important;
+}
+
+.auth-roles-container {
+    position: absolute;
+    top: 225px;
+}
+
+
+.file-drop-zone {
+    margin: 1px !important;
+    padding: 1px !important;
+}
+.krajee-default.file-preview-frame .kv-file-content {
+    width: 150px !important;
+    height: 50px !important;
+}
+
+
+span.fa.fa-arrows.handle.sortable-fa {
+    width: 16px;
+    height: 280px;
+    display: inline-block;
+    overflow: hidden;
+    line-height: 5px;
+    padding: 4px 0;
+    cursor: move;
+    vertical-align: middle;
+    margin-top: -.7em;
+    margin-right: .3em;
+    margin-left: -20px;
+    font-size: 12px;
+    font-family: sans-serif;
+    letter-spacing: 2px;
+    color: #cccccc;
+    text-shadow: 1px 0 1px black;
+    float: left;
+}
+
+.fa-arrows::before {
+    content: '.. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..';
+}
+
+span.fa.fa-arrows.handle.sortable-fa {
+    margin: -8px !important;
+}
+.sortable-container {
+    padding: 0;
+}
+.sortable-item {
+    list-style-type: none;
+    padding: 5px;
+    margin: 0px;
+}
+
+.file-drop-zone {
+    margin: inherit;
 }

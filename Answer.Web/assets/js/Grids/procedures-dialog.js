@@ -89,10 +89,5 @@
 }
 
 function selectFormatter(cellvalue, options, rowObject) {
-
-    var html = "";
-
-    html = '<input class="selected-file" type="checkbox" value="' + cellvalue + '|' + rowObject.Name + '" />';
-
-    return html;
+    return '<input class="selected-files" type="checkbox" value="' + cellvalue + '|' + rowObject.Name + '" />';
 }

@@ -660,7 +660,7 @@
             //noinspection HtmlUnknownAttribute
             tBtnBrowse = '<div tabindex="500" class="{css}" {status}>{icon} {label}</div>';
             //tBtnSelect = '<button type="button" class="{selectClass}" data-call-back-id="ReferenceFiles" data-toggle="modal" data-target="#select-images" title="{selectTitle}">{uploadIcon} Select</button> '; // added by Mike H
-            tBtnSelect = '<button type="button" class="btn btn-md btn-success" data-call-back-id="ReferenceFiles" data-toggle="modal" data-target="#select-images" title="Select Existing File"><i class="glyphicon glyphicon-upload"></i>Select</button> ' ; // TODO Make dynamic Sarb
+            tBtnSelect = '<button type="button" class="btn btn-md btn-success" data-call-back-id="' + self.referenceId + '" data-toggle="modal" data-target="#select-images" title="Select Existing File"><i class="fa fa-list"></i> Select</button> ';
             tModalMain = '<div id="' + $h.MODAL_ID + '" class="file-zoom-dialog modal fade" ' +
                 'tabindex="-1" aria-labelledby="' + $h.MODAL_ID + 'Label"></div>';
             tModal = '<div class="modal-dialog modal-lg{rtl}" role="document">\n' +
@@ -857,6 +857,7 @@
                     showRemove: true,
                     showUpload: true,
                     showSelect: true, // added by Mike H
+                    referenceId: '',
                     showDownload: true,
                     showZoom: true,
                     showDrag: true,
@@ -4147,6 +4148,7 @@
         showCaption: true,
         showBrowse: true,
         showSelect: true, // Added by Sarb
+        referenceId:'',
         showPreview: true,
         showRemove: true,
         showUpload: true,

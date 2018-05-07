@@ -199,7 +199,9 @@ namespace Answer.Web.Controllers
                         ObjectId = step.Id,
                         Process = step.Title,
                         StepTitle = step.Title,
-                        Step = (int) step.Print_Order
+                        Step = (int) step.Print_Order,
+                        StandardDirectLaborMinutes = (decimal?)step.Duration,
+                        StandardMachineMinutes = step.EquipmentTime
                     });
                 }
             }
@@ -247,7 +249,9 @@ namespace Answer.Web.Controllers
                         ObjectId = step.Id,
                         Process = step.Title,
                         StepTitle = step.Title,
-                        Step = (int) step.Print_Order
+                        Step = (int) step.Print_Order,
+                        StandardDirectLaborMinutes = (decimal?)step.Duration,
+                        StandardMachineMinutes = step.EquipmentTime
                     });
                 }
             }
@@ -290,7 +294,9 @@ namespace Answer.Web.Controllers
                         Id = Convert.ToInt32(step.Id),
                         ObjectId = step.Id,
                         Process = step.Title,
-                        Step = (int) step.Print_Order
+                        Step = (int) step.Print_Order,
+                        StandardDirectLaborMinutes = (decimal?)step.Duration,
+                        StandardMachineMinutes = step.EquipmentTime
                     });
                 }
 

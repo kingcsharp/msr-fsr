@@ -194,7 +194,7 @@ namespace Answer.Web.Controllers
                     caption = x.NAME,
                     type = MimeTypes.GetContentType(x.CONTENTTYPE),
                     size = 6666,
-                    url = Url.Action("DeletesingleReference", "Documents", new { linkDocId = x.LINKED_DOC_ID }),
+                    url = Url.Action("DeletesingleReference", "Documents", new { file = x.LINKED_DOC_ID }),
                     downloadUrl = cloudUrl,
                     key = x.LINKED_DOC_ID
                 }).ToArray();
@@ -360,7 +360,7 @@ namespace Answer.Web.Controllers
                 caption = x.NAME,
                 type = MimeTypes.GetContentType(x.CONTENTTYPE),
                 size = 6666,
-                url = Url.Action("DeletesingleReference", "Documents", new { linkDocId = x.LINKED_DOC_ID }),
+                url = Url.Action("DeletesingleReference", "Documents", new { file = x.LINKED_DOC_ID }),
                 downloadUrl = x.SERVER_PATH,
                 key = x.LINKED_DOC_ID
             }).ToArray();

@@ -24,10 +24,11 @@
             });
     }
 
-    var selectIdsForEdit = function() {
+    var selectIdsForEdit = function (section ='') {
+        
         var array = [];
-        var objectId = $('#ObjectId').val();
-
+        var objectId = $('#target-control-id').val();
+        
         $(".selected-file").each(function (index) {
 
             if ($(this).is(":checked")) {
@@ -40,7 +41,7 @@
 
         $.ajax({
             type: "GET",
-            url: '/Documents/AddsingleReference?linkDocId=' + objectId + "&files=" + array,
+            url: '/Documents/AddsingleReference?linkDocId=' + objectId + '&files=' + array + '&section=' + section,
             dataType: 'html',
             success: function (data) {
                 location.reload();
@@ -94,8 +95,8 @@
             url: '/Doc/RefillUploader?ids=' + finalArray,
             dataType: 'JSON',
             success: function (data) {
-                console.log(data.initialPreview);
-                console.log(data.initialPreviewConfig);
+                //console.log(data.initialPreview);
+                //console.log(data.initialPreviewConfig);
 
                 var $el = $('#input-files');
                 $el.fileinput('destroy');

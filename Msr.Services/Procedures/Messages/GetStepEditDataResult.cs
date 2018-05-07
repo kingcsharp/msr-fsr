@@ -21,7 +21,6 @@ namespace Msr.Services.Procedures.Messages
         public string Specific_Location { get; set; }
         public string REFERENCE_VERB { get; set; }
         public string REFERENCE_OBJECT { get; set; }
-        public string REFERENCE_THEORIES { get; set; }
         public int? GOTO_STEP { get; set; }
         public string GOTO_STEP_ID { get; set; }
         public string Cycles { get; set; }

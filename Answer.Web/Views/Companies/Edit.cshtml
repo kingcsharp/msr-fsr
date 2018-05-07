@@ -84,8 +84,6 @@
     @Scripts.Render("~/bundles/js/fileinput")
     <script type="text/javascript">
 
-        var fileUploaderGrid = new FileUploaderGrid();
-
         $(document).ready(function () {
 
             var fileUploader = new FileUploader();
@@ -95,7 +93,6 @@
                 @Html.Raw(ViewBag.PreviewConfig),
                 '@Model.ObjectId',
                 true);
-            fileUploaderGrid.SetupSelectImage();
 
             $("form").submit(function(e) {
                 $('.selectitem option').prop('selected', true);
@@ -105,7 +102,7 @@
         });
 
         function SelectIds() {
-            fileUploaderGrid.SelectIds();
+            new FileUploaderGrid().SelectIds();
         }
 
     </script>

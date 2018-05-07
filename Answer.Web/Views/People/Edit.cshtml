@@ -199,8 +199,6 @@
 
     <script type="text/javascript">
 
-        var fileUploaderGrid = new FileUploaderGrid();
-
         $(function () {
 
             var fileUploader = new FileUploader();
@@ -211,8 +209,6 @@
                 @Html.Raw(ViewBag.PreviewConfig),
                 '@Model.ObjectId',
                 true);
-
-            fileUploaderGrid.SetupSelectImage();
 
             $('.datepicker').datepicker({
                 format: 'mm/dd/yyyy',
@@ -227,7 +223,7 @@
         });
 
         function SelectIds(parameters) {
-            fileUploaderGrid.SelectIds();
+            new FileUploaderGrid().SelectIds();
         }
 
     </script>

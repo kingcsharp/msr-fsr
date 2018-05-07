@@ -5,6 +5,7 @@ using Msr.Web.ViewModel.Engineering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
@@ -258,9 +259,9 @@ namespace Answer.Web.Controllers
 
             var currentUser = GetCurrentUser();
 
-            var model = _proceduresService.GetProcedureById(id);
+            var procedureView = _proceduresService.GetProcedureById(id);
 
-            vm.MapToDto(model);
+            vm.MapToDto(procedureView);
 
             vm.Setup(_proceduresService, _roleService, _procedureVerbsService, _documentFilesService, currentUser.Id, currentUser.Root_Company);
 
@@ -274,8 +275,15 @@ namespace Answer.Web.Controllers
             viewModel.AddMonitorForProcedureViewModel.Step_Id = viewModel.GetMoniterViewModels.FirstOrDefault()?.Step_Id;
 
             ViewBag.ProcObjectId = id;
-            ViewBag.ProdecureName = model.Name;
-            ViewBag.Procedure = new SelectList(_proceduresService.GetProcedurelist(currentUser.Root_Company), "Value", "Show");
+            ViewBag.ProdecureName = procedureView.Name;
+
+            vm.StepTemplateList.Add(new SelectListItem { Text = "None", Value = "" });
+            vm.StepTemplateList.AddRange(_proceduresService.GetStepTemplateList(currentUser.Root_Company).Select(x =>
+                new SelectListItem
+                {
+                    Text = x.Show,
+                    Value = x.Value.ToString()
+                }).OrderBy(o => o.Text).ToList());
 
             vm.GetStepDataResults = viewModel;
 
@@ -300,9 +308,42 @@ namespace Answer.Web.Controllers
 
         [AcceptVerbs(HttpVerbs.Post)]
         [ValidateInput(false)]
-        public ActionResult Edit(SaveProcedureViewModel model, string command)
+        public ActionResult Edit(SaveProcedureViewModel model, string command, string addNewStep)
         {
             var currentUser = GetCurrentUser();
+
+            if (!string.IsNullOrWhiteSpace(addNewStep))
+            {
+                if (string.IsNullOrWhiteSpace(model.AddStepTemplateId))
+                {
+                    var vm = new GetStepEditDataViewModel
+                    {
+                        NtLogin = currentUser.Id,
+                        GetStepEditData =
+                        {
+                            Start_On_Counter = 0,
+                            Duration_Type = "TIME_SYS_SECONDS",
+                            System_Task = "SYS_COMP_TEST"
+                        }
+                    };
+                    vm.ProcObjId = model.ObjectId;
+                    _proceduresService.CreateStepData(vm);
+                }
+                else
+                {
+                    _proceduresService.PrePopSave(model.ObjectId, model.AddStepTemplateId, currentUser.Id);
+                }
+
+                var steps = _proceduresService.GetStepsData(model.ObjectId, currentUser.Id);
+
+                var stepsOrders = steps.ToDictionary(x => x.Id, x => x.Print_Order);
+                
+                _proceduresService.SaveReorderSteps(stepsOrders, model.ObjectId, currentUser.Id);
+
+                TempData["SuccessMessage"] = "Step has been Created successfully.";
+
+                return RedirectToAction("Edit", "Procedures", new { id = model.ObjectId });
+            }
 
             model.NTLogin = currentUser.Id;
 
@@ -419,7 +460,7 @@ namespace Answer.Web.Controllers
             ViewBag.ProcObjectId = id;
             ViewBag.ProdecureName = procedureName;
 
-            ViewBag.Procedure = new SelectList(_proceduresService.GetProcedurelist(getCurrentUser.Root_Company), "Value", "Show");
+            ViewBag.Procedure = new SelectList(_proceduresService.GetStepTemplateList(getCurrentUser.Root_Company), "Value", "Show");
 
 
             return View(viewModel);
@@ -437,6 +478,7 @@ namespace Answer.Web.Controllers
             var vm = new GetStepEditDataViewModel
             {
                 NtLogin = currentUser.Login,
+
                 GetStepEditData =
                 {
                     Start_On_Counter = 0,
@@ -446,7 +488,7 @@ namespace Answer.Web.Controllers
             };
             vm.SetUp(_proceduresService, _procedureVerbsService, procObjectId);
 
-            var singleOrDefault = _proceduresService.GetProcedurelist(currentUser.Root_Company).SingleOrDefault(x => x.Value == procedure);
+            var singleOrDefault = _proceduresService.GetStepTemplateList(currentUser.Root_Company).SingleOrDefault(x => x.Value == procedure);
             if (singleOrDefault != null)
             {
                 vm.GetStepEditData.Step_Text = singleOrDefault.StepText;
@@ -477,7 +519,7 @@ namespace Answer.Web.Controllers
 
             vm.SetUp(_proceduresService, _procedureVerbsService, procedureObjectId);
 
-            var singleOrDefault = _proceduresService.GetProcedurelist(currentUser.Root_Company).SingleOrDefault(x => x.Value == procedure);
+            var singleOrDefault = _proceduresService.GetStepTemplateList(currentUser.Root_Company).SingleOrDefault(x => x.Value == procedure);
             if (singleOrDefault == null) return View(vm);
 
             if (singleOrDefault.Show != "NONE")
@@ -529,7 +571,7 @@ namespace Answer.Web.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult EditStep(GetStepDataResult viewModel, string procedureId, string stepText, string id, string updateAction)
+        public ActionResult EditStep(GetStepDataResult viewModel, string procedureId, string id, string updateAction)
         {
             if (!string.IsNullOrWhiteSpace(updateAction) && updateAction == "delete")
             {
@@ -544,15 +586,16 @@ namespace Answer.Web.Controllers
                     AddErrorNotification("Something went wrong.");
                 }
 
-                return RedirectToAction("Edit", "Procedures", new { Id = procedureId });
+                return RedirectToAction("Edit", "Procedures", new {Id = procedureId});
             }
 
             viewModel.Id = id;
             viewModel.ProcObjId = procedureId;
             _proceduresService.UpdateStepData(viewModel);
 
-            TempData["SuccessMessage"] = "Procedure Step been updated successfully.";
-            return RedirectToAction("Edit", "Procedures", new { Id = procedureId });
+            TempData["SuccessMessage"] = "Procedure step has been updated successfully.";
+
+            return RedirectToAction("Edit", "Procedures", new {Id = procedureId});
         }
 
         public ActionResult EditProcedureObject(string pid, string relationship)
@@ -1114,28 +1157,7 @@ namespace Answer.Web.Controllers
                 return PartialView("Partials/_InnerMoniter", moniter);
             }
 
-            return Content("error");
-        }
-
-        [AcceptVerbs(HttpVerbs.Get)]
-        public ActionResult ReorderCustom(string id)
-        {
-            var model = _proceduresService.GetReorderSteps(procObjectId: id);
-
-            ViewBag.procObjectId = id;
-
-            return View(model);
-        }
-
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult ReorderCustom(string procObjectId, IList<ProcedureStepOtherStepListView> steps)
-        {
-            var currentUser = GetCurrentUser();
-            var stringArray = steps.Select(item => item.print_Order + "," + item.Id).ToList();
-
-            _proceduresService.SaveReorderSteps(stringArray.ToArray(), procObjectId, currentUser.Id);
-
-            return RedirectToAction("Edit", new { id = procObjectId });
+            return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Error with the request");
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
@@ -1143,7 +1165,19 @@ namespace Answer.Web.Controllers
         {
             var currentUser = GetCurrentUser();
 
-            _proceduresService.SaveReorderSteps(array, procObjectId, currentUser.Id);
+            var stepsToOrders = new Dictionary<string, double?>();
+
+            double index = 0;
+            foreach (var step in array.Where(x=> !string.IsNullOrWhiteSpace(x)))
+            {
+                var stepParts = step.Split(',');
+
+                stepsToOrders.Add(stepParts[1], index);
+
+                index++;
+            }
+
+            _proceduresService.SaveReorderSteps(stepsToOrders, procObjectId, currentUser.Id);
 
             return Json("Ok", JsonRequestBehavior.AllowGet);
         }

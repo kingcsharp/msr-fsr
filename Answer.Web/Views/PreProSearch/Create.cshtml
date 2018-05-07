@@ -83,13 +83,20 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(model => model.ReferenceProcedures, htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.LabelFor(model => model.ReferenceProcedures, new { @class = "control-label col-md-2" })
                             <div class="col-md-8">
                                 <div style="width: 96%; float: left;">
                                     @Html.ListBoxFor(m => m.ReferenceProcedures, Model.ReferenceProceduresList, new { @class = "form-control  submitselect" })
                                     @Html.ValidationMessageFor(model => model.ReferenceProcedures, "", new { @class = "text-danger" })
                                 </div>
-                                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceProcedures" data-toggle="modal" data-target="#select-referenceprocedures"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceProcedures"><i class="icon fa fa-trash-o"></i></span> </div>
+                                <div style="width: 3%; float: right;">
+                                    <span class="data-toggle=" data-call-back-id="ReferenceProcedures" data-toggle="modal" data-target="#select-referenceprocedures">
+                                        <i class="icon fa fa-file"></i>
+                                    </span>
+                                    <span class="deletefiles" data-target-id="ReferenceProcedures">
+                                        <i class="icon fa fa-trash-o"></i>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -117,18 +124,19 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(model => model.ReferenceTheories, htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.LabelFor(model => model.ReferenceTheories, new { @class = "control-label col-md-2" })
                             <div class="col-md-8">
-                                <div style="width: 96%; float: left;">
-                                    @Html.ListBoxFor(m => m.ReferenceTheories, Model.ReferenceTheoriesList, new { @class = "form-control submitselect", multiple = "multiple" })
+                                <div class="input-group">
+                                    @Html.DropDownListFor(m => Model.ReferenceTheories, Model.ReferenceTheoriesList, new { @class = "form-control submitselect", multiple= "multiple", size ="1"})
+                                    <span class="input-group-addon btn btn-primary" data-call-back-id="ReferenceTheories" data-toggle="modal" data-target="#select-theory"><i class="fa fa-folder-open-o"></i></span>
+                                    <span class="remove-files input-group-addon btn btn-danger" data-target-id="ReferenceTheories"><i class="fa fa-trash-o"></i></span>
                                 </div>
-                                <div style="width: 3%; float: right;"><span class="data-toggle=" data-call-back-id="ReferenceTheories" data-toggle="modal" data-target="#select-theory"><i class="icon fa fa-file"></i></span><span class="deletefiles" data-call-back-id="ReferenceTheories"><i class="icon fa fa-trash-o"></i></span>  </div>
                             </div>
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(model => model.Comments, htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-8">
-                                @Html.TextAreaFor(model => model.Comments, new { onBlur = "checkMaxSize(this, 4000);lastTextArea = 'document.editForm.Comments';", name = "Comments", rows = "10", cols = "80", @class = "text-formatter", style = "height:150px;" })
+                                @Html.TextAreaFor(model => model.Comments, new { onBlur = "checkMaxSize(this, 4000);;lastTextArea = 'document.editForm.Comments';", name = "Comments", rows = "10", cols = "80", @class = "text-formatter", style = "height:150px;width:100%;" })
                                 @Html.ValidationMessageFor(model => model.Comments, "", new { @class = "text-danger" })
                             </div>
                         </div>
@@ -151,6 +159,7 @@
     @Scripts.Render("~/bundles/js/jqueryval")
     @Scripts.Render("~/bundles/js/fileinput")
     <script src="~/assets/js/grids/comman.js"></script>
+
     <script type="text/javascript">
 
         var fileUploaderGrid = new FileUploaderGrid();
@@ -159,33 +168,17 @@
         $(document).ready(function () {
 
             fileUploader.InitUploader($('#input-files'), '@Url.Action("FileUploaderBootstrap", "Doc")', [],[]);
-            fileUploaderGrid.SetupSelectImage();
+
+            $('.remove-files').click(Msr.FileComman.RemoveSelectItem);
 
             $(".select").select2();
 
-            $('.deletefiles').click(function() {
-
-                var callBackId = $(this).data('call-back-id');
-
-                eModal.confirm('Do you really want to Remove ' + callBackId + ' ?', 'Confirmation delete')
-                    .then(confirmCallback, optionalCancelCallback);
-
-                function confirmCallback() {
-                    console.log("ok");
-                    $('#' + callBackId + ' option:selected').remove();
-                }
-
-                function optionalCancelCallback() {
-                    console.log("cancel");
-                }
-
-            });
-
-
         });
+
         function SelectIds() {
             fileUploaderGrid.SelectIdsForAdd(fileUploader, '@Url.Action("FileUploaderBootstrap", "Doc")');
         }
+
         function removeOldFile(e) {
 
             var control = $(e).closest(".modal-body").find('#target-control-id').val();

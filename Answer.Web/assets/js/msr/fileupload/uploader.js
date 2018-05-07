@@ -1,8 +1,30 @@
-﻿var FileUploader = function () {
+﻿var Msr = Msr || {};
+
+Msr.FileComman = Msr.FileComman ||
+{
+    RemoveSelectItem: function () {
+
+        var targetObj = $(this).data('target-id');
+
+        if ($('#' + targetObj + ' option:selected').length > 0) {
+            eModal.confirm('Do you really want to Remove ' + targetObj + ' ?', 'Confirmation delete')
+                .then(confirmCallback);
+            function confirmCallback() {
+                $('#' + targetObj + ' option:selected').remove();
+            }
+        } else {
+            eModal.alert('Please select an item');
+        }
+    }
+}
+
+
+var FileUploader = function () {
 
     var initEditUploader = function (element, url, initialPreview, initialPreviewConfig, objectId, showSelect) {
 
         element.fileinput({
+            referenceId: objectId,
             showSelect: showSelect,
             showClose: false,
             uploadUrl: url,

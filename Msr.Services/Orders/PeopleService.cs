@@ -142,6 +142,13 @@ namespace Msr.Services.Orders
             try
             {
 
+                var loginIdExist = _dbContext.PeopleObjectViews.Any(x => x.LoginId == model.LoginId);
+                if (loginIdExist)
+                {
+                    responsePeople.AddError($"LoginId already exist with '{model.LoginId}'");
+                    return responsePeople;
+                }
+
                 var savePeopleProcedure = new SavePeopleProcedure
                 {
                     Name = model.FirstName,

@@ -16,5 +16,8 @@ SELECT @myProcID = PROCEDURE_ID FROM A_PROCEDURE_STEPS WHERE ID = @ID
 declare @stepsAllowed as smallInt
 SELECT @stepsAllowed = STEPS_IN_AP FROM A_PROCEDURES_HISTORY WHERE ID = @myProcID
 
-SELECT *,@firstPrevStep as FIRST_PREV_STEP,@stepsAllowed as STEPS_IN_AP FROM A_V_PROCEDURE_STEPS WHERE ID = @ID
+SELECT *,@firstPrevStep as FIRST_PREV_STEP,@stepsAllowed as STEPS_IN_AP,(Select  TITLE  from  A_V_PROCEDURE_STEPS where ID = @firstPrevStep) AS PrevStepName FROM A_V_PROCEDURE_STEPS WHERE ID = @ID
+
+
+
 

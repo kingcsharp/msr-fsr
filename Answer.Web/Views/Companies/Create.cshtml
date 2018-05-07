@@ -111,7 +111,6 @@
     @Scripts.Render("~/bundles/js/fileinput")
     <script type="text/javascript">
 
-        var fileUploaderGrid = new FileUploaderGrid();
         var fileUploader = new FileUploader();
 
         $(document).ready(function () {
@@ -126,7 +125,7 @@
         });
 
         function SelectIds() {
-            fileUploaderGrid.SelectIdsForAdd(fileUploader, '@Url.Action("FileUploaderBootstrap", "Doc")');
+            new FileUploaderGrid().SelectIdsForAdd(fileUploader, '@Url.Action("FileUploaderBootstrap", "Doc")');
         }
     </script>
 }
