@@ -134,7 +134,7 @@ namespace Msr.Services.Orders
                     }
                 }
                 SearchNcrs(fillId, ntlogin);
-                FormatHtml(detailsResponse);
+              //  FormatHtml(detailsResponse);
 
                 return detailsResponse;
             }
@@ -195,13 +195,7 @@ namespace Msr.Services.Orders
 
                 foreach (var tasksForFill in detailsResponse.TasksFindForFillIdResult)
                 {
-                    tasksForFill.FillGetMonitorsForNcrResult =
-                        fillGetMonitorsForNcrResult.Where(
-                            monitor => monitor.Stepper_Id == tasksForFill.Step_Id).ToList();
-                    tasksForFill.Step_Text_Html =
-                        tasksForFill.Step_Text_Html.Replace("<<bb>>", "<br/><h4>")
-                            .Replace("<</bb>>", "</h4>")
-                            .Replace("<<nl/>>", "<br/>");
+                    tasksForFill.FillGetMonitorsForNcrResult = fillGetMonitorsForNcrResult.Where(monitor => monitor.Stepper_Id == tasksForFill.Step_Id).ToList();
                 }
 
             }
@@ -241,13 +235,6 @@ namespace Msr.Services.Orders
                     conn.Query<GetMonitorLabelTsrDetailsResult>("Portal_GetMonitorLabelTsrDetails", p,
                         commandType: CommandType.StoredProcedure).ToList();
 
-                detailsResponse.GetMonitorLabelTsrDetailsResult.ForEach(x =>
-                {
-                    x.Task_Description =
-                        x.Task_Description.Replace("<<bb>>", "<br/><h4>")
-                            .Replace("<</bb>>", "</h4>")
-                            .Replace("<<nl/>>", "<br/>");
-                });
             }
 
             return detailsResponse;
@@ -443,10 +430,6 @@ namespace Msr.Services.Orders
                     tasksForFill.FillGetMonitorsForNcrResult = fillGetMonitorsForNcrResult.Where(
                             monitor => monitor.Stepper_Id == tasksForFill.Step_Id).ToList();
 
-                    tasksForFill.Step_Text_All_Html =
-                        tasksForFill.Step_Text_All_Html.Replace("<<bb>>", "<br/><h4>")
-                            .Replace("<</bb>>", "</h4>")
-                            .Replace("<<nl/>>", "<br/>");
                 }
             }
 
@@ -468,7 +451,6 @@ namespace Msr.Services.Orders
                 {
                     detailsResponse.TaskEditDataResult = multi.Read<TaskEditDataResult>().Single();
 
-                    detailsResponse.TaskEditDataResult.Description = detailsResponse.TaskEditDataResult.Description.Replace("<<bb>>", "<br/><h4>").Replace("<</bb>>", "</h4>").Replace("<<nl/>>", "<br/>");
                 }
 
                 var taskLog = _dbContext.TaskLogs.FirstOrDefault(x => x.TaskId == stepId && x.FillId == fillId);
@@ -484,11 +466,6 @@ namespace Msr.Services.Orders
                     commandType: CommandType.StoredProcedure))
                 {
                     detailsResponse.TaskItemParts = multi.Read<TaskItemPart>().ToList();
-
-                    foreach (var taskResult in detailsResponse.TaskItemParts)
-                    {
-                        taskResult.Description = taskResult.Description.Replace("<<bb>>", "<br/><h4>").Replace("<</bb>>", "</h4>").Replace("<<nl/>>", "<br/>");
-                    }
                 }
 
                 var p2 = new DynamicParameters();

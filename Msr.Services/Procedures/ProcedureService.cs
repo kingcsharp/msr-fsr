@@ -375,13 +375,7 @@ namespace Msr.Services.Procedures
 
             foreach (var stepData in result)
             {
-                if (!string.IsNullOrWhiteSpace(stepData.Step_Text))
-                {
-                    stepData.Step_Text = stepData.Step_Text.Replace("<<bb>>", "<br/><h4>")
-                        .Replace("<</bb>>", "</h4>")
-                        .Replace("<<nl/>>", "<br/>");
-                }
-
+              
                 if (!string.IsNullOrWhiteSpace(stepData.Pre_Step))
                 {
                     Regex regex = new Regex("<i>(.*)</i>");

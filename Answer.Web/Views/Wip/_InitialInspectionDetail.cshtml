@@ -19,17 +19,7 @@
     </tr>
     <tr>
         <td colspan=2>
-            @{ var startIndex = Model.TaskEditDataResult.Description.IndexOf("<br/><br/>") + 10;}
-            
-            @if (Model.TaskEditDataResult.Description.Length > startIndex)
-            {
-                @Html.Raw(Model.TaskEditDataResult.Description.Substring(startIndex, (Model.TaskEditDataResult.Description.Length - startIndex)))
-            }
-            else
-            {
-                @Html.Raw(Model.TaskEditDataResult.Description.Substring(startIndex, (Model.TaskEditDataResult.Description.Length - startIndex)))
-            }
-
+            @Html.Raw(Model.TaskEditDataResult.Description)
          </td>
     </tr>
 
