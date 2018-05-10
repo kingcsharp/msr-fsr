@@ -246,6 +246,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\FilePreviewHelper.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -1368,7 +1369,6 @@
     <Folder Include="assets\js\tinymce\plugins\textpattern\" />
     <Folder Include="assets\js\tinymce\plugins\toc\" />
     <Folder Include="assets\js\tinymce\themes\inlite\" />
-    <Folder Include="Helpers\" />
     <Folder Include="ViewModel\Images\" />
     <Folder Include="Views\Objects\" />
     <Folder Include="Views\Templates\" />

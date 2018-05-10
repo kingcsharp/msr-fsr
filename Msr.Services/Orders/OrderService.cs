@@ -17,16 +17,19 @@ using Msr.Services.Orders.Procedures;
 using Msr.Services.Orders.ViewModels;
 using RestSharp;
 using Msr.Models.Comman;
+using Msr.Services.Documents;
 
 namespace Msr.Services.Orders
 {
     public class OrderService
     {
         private readonly MsrDbContext _dbContext;
+        private readonly DocumentFilesService _documentFilesService;
 
         public OrderService()
         {
             _dbContext = new MsrDbContext();
+            _documentFilesService = new DocumentFilesService();
         }
 
         public IQueryable<WorkOrderView> GetWorkOrderQueryable()
@@ -474,7 +477,12 @@ namespace Msr.Services.Orders
 
                 detailsResponse.ReferenceFiles = conn.Query<GetReferenceFiles>("A_SP_PROCEDURE_GET_REFERENCE_FILES", p2, commandType: CommandType.StoredProcedure).ToList();
 
-                detailsResponse.ReferenceTheories = conn.Query<GetReferenceTheories>("SELECT l.THEORY_ID AS TheoryId,t.NAME AS TheoryName FROM A_PROCEDURE_STEP_THEORY_LINK l, A_V_THEORY_APPROVED_DATA t WHERE l.THEORY_ID = t.ID AND l.PROC_STEP_ID = @stepId", new { stepId = phStepId }, commandType: CommandType.Text).ToList();
+                detailsResponse.ReferenceTheories = conn.Query<GetReferenceTheories>("SELECT l.THEORY_ID AS TheoryId,t.NAME AS TheoryName,OBJECT_ID AS ObjectId FROM A_PROCEDURE_STEP_THEORY_LINK l, A_V_THEORY_APPROVED_DATA t WHERE l.THEORY_ID = t.ID AND l.PROC_STEP_ID = @stepId", new { stepId = phStepId }, commandType: CommandType.Text).ToList();
+
+                foreach (var referenceTheoriese in detailsResponse.ReferenceTheories.AsQueryable())
+                {
+                    referenceTheoriese.DocLinks = _documentFilesService.GetDocByObjectId(referenceTheoriese.ObjectId);
+                }
 
                 if (detailsResponse.TaskEditDataResult.Status != "FINISHED")
                 {

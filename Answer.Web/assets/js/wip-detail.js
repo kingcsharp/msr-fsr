@@ -259,8 +259,10 @@ $(function () {
         var id = button.data('id');
         var type = button.data('type');
         var url = '';
-        if (type == "theory") {
+        if (type === "theory") {
             url = '/wip/GetReferenceTheory?theoryId=' + id;
+        } else if (type === "document") {
+            url = '/documents/GetDocumentById?Id=' + id;
         } else {
             url = '/wip/GetReferenceDocument?documentId=' + id;
         }

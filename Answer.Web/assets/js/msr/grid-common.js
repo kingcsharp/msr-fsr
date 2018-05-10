@@ -19,40 +19,40 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
 
                 switch (valueId[0].split('.').pop().toLowerCase()) {
 
-                    case 'xls': imageUrl = '<span class="data-toggle file-preview" data-call-back-item="' + valueId[1] + '"  data-target="#view-images" title="View File"><img src="/assets/img/icon-xls.png" /></span>&nbsp';
+                    case 'xls': imageUrl = '<span class="data-toggle file-prev" data-call-back-item="' + valueId[1] + '"  data-target="#view-images" title="View File"><img src="/assets/img/icon-xls.png" /></span>&nbsp';
                         break;
                     case 'jpg':
                     case 'png':
                     case 'jpeg':
                     case 'gif':
-                        imageUrl = '<span class="data-toggle  file-preview" data-call-back-item="' + valueId[1] + '"  data-target="#view-images" title="View File"><img src="/assets/img/jpg.png" /></span>&nbsp';
+                        imageUrl = '<span class="data-toggle  file-prev" data-call-back-item="' + valueId[1] + '"  data-target="#view-images" title="View File"><img src="/assets/img/jpg.png" /></span>&nbsp';
                         break;
 
                     case 'docx':
-                        imageUrl = '<span class="data-toggle  file-preview" data-call-back-item="' + valueId[1] + '"  data-target="#view-images" title="View File"><img src="/assets/img/icon-doc.png" /></span>&nbsp';
+                        imageUrl = '<span class="data-toggle  file-prev" data-call-back-item="' + valueId[1] + '"  data-target="#view-images" title="View File"><img src="/assets/img/icon-doc.png" /></span>&nbsp';
                         break;
 
                     case 'xlsx':
-                        imageUrl = '<span class="data-toggle  file-preview" data-call-back-item="' + valueId[1] + '"  data-target="#view-images" title="View File"><img src="/assets/img/icon-xls.png" /></span>&nbsp';
+                        imageUrl = '<span class="data-toggle  file-prev" data-call-back-item="' + valueId[1] + '"  data-target="#view-images" title="View File"><img src="/assets/img/icon-xls.png" /></span>&nbsp';
                         break;
 
                     case 'ppt':
-                        imageUrl = '<span class="data-toggle  file-preview" data-call-back-item="' + valueId[1] + '"  data-target="#view-images" title="View File"><img src="/assets/img/icon-ppt.png" /></span>&nbsp';
+                        imageUrl = '<span class="data-toggle  file-prev" data-call-back-item="' + valueId[1] + '"  data-target="#view-images" title="View File"><img src="/assets/img/icon-ppt.png" /></span>&nbsp';
                         break;
 
                     case 'pdf':
-                        imageUrl = '<span class="data-toggle  file-preview" data-call-back-item="' + valueId[1] + '"  data-target="#view-images" title="View File"><img src="/assets/img/icon-pdf.png" /></span>&nbsp';
+                        imageUrl = '<span class="data-toggle  file-prev" data-call-back-item="' + valueId[1] + '"  data-target="#view-images" title="View File"><img src="/assets/img/icon-pdf.png" /></span>&nbsp';
                         break;
 
                     case 'txt':
-                        imageUrl = '<span class="data-toggle  file-preview" data-call-back-item="' + valueId[1] + '"  data-target="#view-images" title="View File"><img src="/assets/img/txt.png" /></span>&nbsp';
+                        imageUrl = '<span class="data-toggle  file-prev" data-call-back-item="' + valueId[1] + '"  data-target="#view-images" title="View File"><img src="/assets/img/txt.png" /></span>&nbsp';
                         break;
 
                     case 'zip':
-                        imageUrl = '<span class="data-toggle  file-preview" data-call-back-item="' + valueId[1] + '"  data-target="#view-images" title="View File"><img src="/assets/img/icon-zip.png" /></span>&nbsp';
+                        imageUrl = '<span class="data-toggle  file-prev" data-call-back-item="' + valueId[1] + '"  data-target="#view-images" title="View File"><img src="/assets/img/icon-zip.png" /></span>&nbsp';
                         break;
 
-                    default: imageUrl = '<span class="data-toggle  file-preview" data-call-back-item="' + valueId[1] + '"  data-target="#view-images" title="View File"><img src="/assets/img/default.png" /></span>&nbsp';
+                    default: imageUrl = '<span class="data-toggle  file-prev" data-call-back-item="' + valueId[1] + '"  data-target="#view-images" title="View File"><img src="/assets/img/default.png" /></span>&nbsp';
                         break;
 
                 }
@@ -148,7 +148,7 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
 
         DocPreview: function () {
 
-            $('.file-preview').on('click', function (event) {
+            $('.file-prev').on('click', function (event) {
 
                 var callBackitem = $(this).data('call-back-item');
 
