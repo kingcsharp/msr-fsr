@@ -63,7 +63,6 @@ $(document).ready(function () {
                 name: 'LocationName',
                 index: 'LocationName',
                 colmenu: false,
-                editable: true,
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 align: 'center'
