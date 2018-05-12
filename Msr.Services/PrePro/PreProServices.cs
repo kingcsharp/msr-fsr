@@ -138,7 +138,8 @@ namespace Msr.Services.PrePro
                     DurationType = model.DurationType,
                     NTLogin = model.NTLogin,
                     Title = model.Title,
-                    EquipmentTime = null
+                    EquipmentTime = null,
+                    Roles = model.Roles.Any() ? string.Join(",", model.Roles):null
                 };
 
                 _dbContext.Database.ExecuteStoredProcedure(savePartProcedure);
@@ -209,69 +210,6 @@ namespace Msr.Services.PrePro
             var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT ID as Value, OBJ_TABLE as Show, CREATING_CO as CreatingCo FROM A_V_APPROVED_OBJECTS where CREATING_CO='" + creatingCo + "'").ToList();
 
             return result;
-        }
-        public IQueryable<ProcedureObjectsLaborStepView> GetLaborStepsList()
-        {
-            return _dbContext.ProcedureObjectsLaborStepViews;
-        }
-
-        public bool AddLabor(ProcedureObjectViewModel model)
-        {
-            try
-            {
-                var saveProcedureObjectLink = new SaveProcedureObjectLink()
-                {
-                    ProcedureObjectId = model.ProcedureObjectId,
-                    ProcId = model.ProcId,
-                    StepId = model.ProcedureStepId,
-                    ApprovedObjectId = model.ApprovedObjectId,
-                    Qty = model.Qty,
-                    QtyType = model.QtyType,
-                    RelationShip = model.Relationship,
-                    LaborRole = model.LaborRole,
-                    NTLogin = model.NTLogin
-                };
-
-                _dbContext.Database.ExecuteStoredProcedure(saveProcedureObjectLink);
-
-                return true;
-
-            }
-            catch (Exception ex)
-            {
-                var message = "Error occured:" + ex.Message;
-
-                return false;
-            }
-        }
-
-        public bool SaveLabor(ProcedureObjectViewModel model)
-        {
-            try
-            {
-                var saveProcedureObjectLink = new SaveProcedureObjectLink()
-                {
-                    Id = model.Id,
-                    ProcedureObjectId = model.ProcedureObjectId,
-                    ProcId = model.ProcId,
-                    StepId = model.ProcedureStepId,
-                    ApprovedObjectId = model.ApprovedObjectId,
-                    Qty = model.Qty,
-                    QtyType = model.QtyType,
-                    RelationShip = model.Relationship,
-                    LaborRole = model.LaborRole,
-                    NTLogin = model.NTLogin
-                };
-
-                _dbContext.Database.ExecuteStoredProcedure(saveProcedureObjectLink);
-
-                return true;
-
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
         }
 
         public List<SelectFile> GetApplicableObjectsByCreatingCo(string creatingCo)

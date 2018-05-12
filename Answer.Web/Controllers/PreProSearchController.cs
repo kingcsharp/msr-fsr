@@ -10,6 +10,7 @@ using Msr.Commons.Files;
 using Msr.Models.PrePro;
 using Msr.Services.Documents;
 using Msr.Services.ProcedureVerbs;
+using Msr.Services.Roles;
 
 namespace Answer.Web.Controllers
 {
@@ -18,12 +19,14 @@ namespace Answer.Web.Controllers
         private readonly PreProServices _preProServices;
         private readonly DocumentFilesService _documentFilesService;
         private readonly ProcedureVerbsService _procedureVerbsService;
+        private readonly RoleService _roleService;
 
         public PreProSearchController()
         {
             _preProServices = new PreProServices();
             _documentFilesService = new DocumentFilesService();
             _procedureVerbsService = new ProcedureVerbsService();
+            _roleService = new RoleService();
         }
 
         public ActionResult Index()
@@ -148,8 +151,7 @@ namespace Answer.Web.Controllers
 
             var model = new ProcedurePreProViewModel { CreatingCo = currentUser.Company };
 
-
-            model.Setup(_preProServices, _documentFilesService, _procedureVerbsService, currentUser);
+            model.Setup(_preProServices, _documentFilesService, _procedureVerbsService, _roleService, currentUser);
 
             return View(model);
         }
@@ -174,13 +176,9 @@ namespace Answer.Web.Controllers
                 }
 
                 TempData["ErrorMessage"] = "Something went wrong.";
-
-                model.Setup(_preProServices, _documentFilesService, _procedureVerbsService, currentUser);
-
-                return View(model);
             }
 
-            model.Setup(_preProServices, _documentFilesService, _procedureVerbsService, currentUser);
+            model.Setup(_preProServices, _documentFilesService, _procedureVerbsService, _roleService, currentUser);
 
             return View(model);
         }
@@ -195,7 +193,7 @@ namespace Answer.Web.Controllers
 
             vm = vm.MapToDto(model);
 
-            vm.Setup(_preProServices, _documentFilesService, _procedureVerbsService, currentUser);
+            vm.Setup(_preProServices, _documentFilesService, _procedureVerbsService, _roleService, currentUser);
 
             return View(vm);
         }
@@ -212,11 +210,8 @@ namespace Answer.Web.Controllers
 
             vm.CreatingCo = currentUser.Company;
 
-            vm.Setup(_preProServices, _documentFilesService, _procedureVerbsService, currentUser);
+            vm.Setup(_preProServices, _documentFilesService, _procedureVerbsService, _roleService, currentUser);
 
-            var labors = _preProServices.GetLaborStepsList().Where(x => x.StepId == vm.ProcObjId).ToList();
-
-            vm.Labor = labors;
             vm.ApplicationObjects = "Object Description";
 
             var preview = string.Join(",", vm.DocLinks.ToArray().Select(x => string.Format("{0}{1}{0}", "\'", x.Server_Path)));
@@ -260,12 +255,9 @@ namespace Answer.Web.Controllers
 
                 TempData["ErrorMessage"] = "Something went wrong.";
 
-                model.Setup(_preProServices, _documentFilesService, _procedureVerbsService, currentUser);
-
-                return View(model);
             }
 
-            model.Setup(_preProServices, _documentFilesService, _procedureVerbsService, currentUser);
+            model.Setup(_preProServices, _documentFilesService, _procedureVerbsService, _roleService, currentUser);
 
             return View(model);
         }
@@ -281,145 +273,6 @@ namespace Answer.Web.Controllers
             ViewBag.relationship = relationship;
 
             return View(viewModel);
-        }
-        public ActionResult LaborsData(JqGridParam param, string id)
-        {
-
-            var totalRows = _preProServices.GetLaborStepsList().Where(x => x.StepId == id);
-
-            if (param.where != null && param.where.rules.Any())
-            {
-                foreach (var rule in param.where.rules)
-                {
-                    if (rule.field == nameof(ProcedureObjectsLaborStepView.RoleName))
-                    {
-                        totalRows = totalRows.Where(x => x.Id == rule.data);
-                    }
-                    else if (rule.field == nameof(ProcedureObjectsLaborStepView.ObjId))
-                    {
-                        totalRows = totalRows.Where(x => x.ObjId.ToLower().Contains(rule.data.ToLower()));
-                    }
-                }
-            }
-
-            string orderBy = param.sortColumn;
-
-            if (!string.IsNullOrWhiteSpace(param.sortColumn))
-            {
-                orderBy = param.sortColumn;
-            }
-
-            if (param.sortOrder == "desc")
-            {
-                totalRows = totalRows.OrderByDescending(orderBy);
-            }
-            else
-            {
-                totalRows = totalRows.OrderBy(orderBy);
-            }
-
-            var totalRecords = totalRows.Count();
-            totalRows = totalRows.Skip(param.pageSize * (param.pageIndex - 1));
-            totalRows = totalRows.Take(param.pageSize);
-
-            var totalPages = (int)Math.Ceiling(totalRecords / (float)param.pageSize);
-
-            var results = totalRows.ToList();
-
-            var json = new
-            {
-                total = totalPages,
-                page = param.pageIndex,
-                records = totalRecords,
-                rows = results
-            };
-
-            return Json(json, JsonRequestBehavior.AllowGet);
-        }
-
-        [AcceptVerbs(HttpVerbs.Get)]
-        public ActionResult AddLabor(string id, string procStepId, string relationship)
-        {
-            var model = new ProcedureObjectViewModel
-            {
-                ProcedureObjectId = id,
-                ProcedureStepId = procStepId,
-                Relationship = relationship
-            };
-            model.SetUp(_preProServices);
-            return View(model);
-        }
-
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult AddLabor(ProcedureObjectViewModel model)
-        {
-
-            if (ModelState.IsValid)
-            {
-                model.NTLogin = GetCurrentUser().Id;
-
-                var response = _preProServices.AddLabor(model: model);
-
-                if (response)
-                {
-                    TempData["SuccessMessage"] = "Labor has been created successfully.";
-
-                    return RedirectToAction("Index");
-                }
-
-                TempData["ErrorMessage"] = "Something went wrong.";
-
-                model.SetUp(_preProServices);
-
-                return View(model);
-            }
-
-            model.SetUp(_preProServices);
-
-            return View(model);
-        }
-
-        [AcceptVerbs(HttpVerbs.Get)]
-        public ActionResult EditLabor(string id)
-        {
-
-            var procedureObjectViewModel = new ProcedureObjectViewModel();
-
-            var model = _preProServices.GetLaborStepsList().SingleOrDefault(x => x.Id == id);
-
-            procedureObjectViewModel = procedureObjectViewModel.MapToDto(model);
-
-            procedureObjectViewModel.SetUp(_preProServices);
-
-            return View(procedureObjectViewModel);
-        }
-
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult EditLabor(ProcedureObjectViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                model.NTLogin = GetCurrentUser().Id;
-
-                var response = _preProServices.SaveLabor(model: model);
-
-                if (response)
-                {
-                    TempData["SuccessMessage"] = "Labor has been edited successfully.";
-
-                    return RedirectToAction("Index");
-                }
-
-                TempData["ErrorMessage"] = "Something went wrong.";
-
-                model.SetUp(new PreProServices());
-
-                return View(model);
-            }
-
-            model.SetUp(new PreProServices());
-
-            return View(model);
         }
 
         public ActionResult ApplicableObjects(string id)

@@ -44,13 +44,6 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(model => model.Labor, new { @class = "control-label col-md-2" })
-                            <div class="col-md-8">
-                                @Html.TextBoxFor(model => model.Labor, new { @class = "form-control", @readonly = "readonly" })
-                                @Html.ValidationMessageFor(model => model.Labor, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                        <div class="form-group">
                             @Html.LabelFor(model => model.StepText, new { @class = "control-label col-md-2" })
                             <div class="col-md-8">
                                 @Html.Partial("_TextAdder")
@@ -131,6 +124,13 @@
                                     <span class="input-group-addon btn btn-primary" data-call-back-id="ReferenceTheories" data-toggle="modal" data-target="#select-theory"><i class="fa fa-folder-open-o"></i></span>
                                     <span class="remove-files input-group-addon btn btn-danger" data-target-id="ReferenceTheories"><i class="fa fa-trash-o"></i></span>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Roles, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(model => model.Roles, Model.RolesList, new { @class = "form-control select selectroles" })
+                                @Html.ValidationMessageFor(model => model.Roles, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">

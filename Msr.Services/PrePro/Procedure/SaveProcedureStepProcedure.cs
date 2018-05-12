@@ -47,6 +47,7 @@ namespace Msr.Services.PrePro.Procedure
             NTLogin = model.NTLogin;
             Title = model.Title;
             EquipmentTime = null;
+            Roles = string.Join(",", model.Roles);
         }
 
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "newID", Direction = ParameterDirection.Output)]
@@ -138,5 +139,8 @@ namespace Msr.Services.PrePro.Procedure
 
         [StoredProcedureParameter(SqlDbType.Float, ParameterName = "EquipmentTime")]
         public double? EquipmentTime { get; set; }
+
+        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 8000, ParameterName = "Roles")]
+        public string Roles { get; set; }
     }
 }

@@ -52,32 +52,6 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    @Html.LabelFor(model => model.Labor, htmlAttributes: new { @class = "control-label col-md-2" })
-                                    <div class="col-md-8">
-                                        @if (Model.Labors != null)
-                                        {
-                                            <table class="table table-bordered table-responsive">
-                                                <tr>
-                                                    <th>RoleName</th>
-                                                    <th>Time</th>
-                                                </tr>
-                                                @foreach (var labor in Model.Labors)
-                                                {
-                                                    <tr>
-                                                        <td>@labor.RoleName</td>
-                                                        <td>@labor.ObjDesc</td>
-                                                    </tr>
-                                                }
-                                            </table>
-                                        }
-                                        else
-                                        {
-                                            @Html.TextBoxFor(model => model.Labor, new { @class = "form-control", @readonly = "readonly" })
-                                            @Html.ValidationMessageFor(model => model.Labor, "", new { @class = "text-danger" })
-                                        }
-                                    </div>
-                                </div>
-                                <div class="form-group">
                                     @Html.LabelFor(model => model.StepText, htmlAttributes: new { @class = "control-label col-md-2" })
                                     <div class="col-md-8">
                                         @Html.Partial("_TextAdder")
@@ -154,6 +128,13 @@
                                 </div>
                             </div>
                             <div class="form-group">
+                                @Html.LabelFor(model => model.Roles, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-8 margin-right">
+                                    @Html.DropDownListFor(model => model.Roles, Model.RolesList, new { @class = "form-control select selectroles", multiple = "multiple" })
+                                    @Html.ValidationMessageFor(model => model.Roles, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 @Html.LabelFor(model => model.ReferenceTheories, new { @class = "control-label col-md-2" })
                                 <div class="col-md-8">
                                     <div class="input-group">
@@ -173,7 +154,8 @@
                             <div class="form-group">
                                 <div class="col-md-offset-2 col-md-10">
                                     <input type="submit" value="Submit" class="btn btn-success" />
-                                    @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-warning" }) | @Html.ActionLink("Add-Update Applicable Objects", "ApplicableObjects", new { id = Model.ProcObjId }, new { @class = "btn btn-success" }) |  @Html.ActionLink("Add Labor to step", "Labors", new { id = Model.ObjectId, procStepId = Model.ProcObjId, relationship = @"LABOR_PROVIDE_TAKE_BACK" }, new { @class = "btn btn-success" })
+                                    @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-warning" }) | 
+                                    @Html.ActionLink("Add-Update Applicable Objects", "ApplicableObjects", new { id = Model.ProcObjId }, new { @class = "btn btn-success" })
                                 </div>
                             </div>
                         }
@@ -193,6 +175,9 @@
 
     <script type="text/javascript">
 
+        @{
+        var roles = string.Join(",", Model.Roles);
+        }
         var fileUploader = new FileUploader();
 
         $(document).ready(function() {
@@ -229,6 +214,19 @@
                     }
                 });
 
+            var selectRoles = $(".selectroles").select2({
+                tags: [],
+                tokenSeparators: [','],
+                multiple: true,
+                allowClear: true,
+                placeholder: "Select Role",
+                formatNoMatches: function () {
+                    return '';
+                }
+            });
+            var valueRoles = '@roles';
+            var selectRolesList = valueRoles.split(",");
+            selectRoles.val(selectRolesList).trigger("change");
         });
 
         function SelectIds() {

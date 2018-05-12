@@ -20,6 +20,7 @@ using Msr.Services.Procedures.Procedures;
 using Msr.Services.Procedures.ViewModels;
 using Msr.Services.ProcedureVerbs;
 using Msr.Services.PurchesOrder.ViewModels;
+using Msr.Services.Roles;
 using Msr.Services.Roles.Messages;
 using Msr.Services.TheoryParagraph;
 using Msr.Services.Users.Messages;
@@ -30,6 +31,7 @@ namespace Msr.Services.Procedures
     {
         private readonly MsrDbContext _dbContext;
         private DocumentService documentService;
+        private readonly RoleService _roleService;
         private PartsService _partsService;
 
         public ProceduresService()
@@ -37,6 +39,7 @@ namespace Msr.Services.Procedures
             _dbContext = new MsrDbContext();
             documentService = new DocumentService();
             _partsService = new PartsService();
+            _roleService = new RoleService();
         }
 
         public IQueryable<ProcedureView> GetProceduresQueryable()
@@ -375,7 +378,7 @@ namespace Msr.Services.Procedures
 
             foreach (var stepData in result)
             {
-              
+                stepData.Role = stepData.Roles?.Split(',').ToList();
                 if (!string.IsNullOrWhiteSpace(stepData.Pre_Step))
                 {
                     Regex regex = new Regex("<i>(.*)</i>");
@@ -389,7 +392,7 @@ namespace Msr.Services.Procedures
                 }).OrderBy(o => o.Text).ToList();
 
                 stepData.GetMoniterViewModels = GetMoniterByStepId(stepData.Id, loginId);
-                stepData.SetUp(new ProcedureVerbsService(), new ObjectsService(),new DocumentFilesService(), new TheoryParagraphService());
+                stepData.SetUp(new ProcedureVerbsService(), new ObjectsService(),new DocumentFilesService(), new TheoryParagraphService(), _roleService);
             }
 
             return result.OrderBy(x => x.Print_Order).ToList();
@@ -552,32 +555,36 @@ namespace Msr.Services.Procedures
 
         public void UpdateStepData(GetStepDataResult viewModel)
         {
-            var updateOneStep = new UpdateOneStepProcedure();
-
-            updateOneStep.Id = viewModel.Id;
-            updateOneStep.StepText = viewModel.Step_Text;
-            updateOneStep.ProcObjId = viewModel.ProcObjId;
-            updateOneStep.Comments = viewModel.Comments;
-            updateOneStep.StartOnCounter = viewModel.Start_On_Counter?.ToString();
-            updateOneStep.CounterValue = viewModel.Counter_Value?.ToString();
-            updateOneStep.CounterUnit = viewModel.Counter_Unit;
-            updateOneStep.FromStartOrStop = viewModel.FROM_START_OR_STOP;
-            updateOneStep.RelOrAbs = viewModel.REL_OR_ABS;
-            updateOneStep.SystemTask = viewModel.System_Task;
-            updateOneStep.Destination = viewModel.Destination;
-            updateOneStep.SpecificLocation = viewModel.Specific_Location;
-            updateOneStep.ReferenceVerb = viewModel.REFERENCE_VERB;
-            updateOneStep.ReferenceObject = viewModel.REFERENCE_OBJECT;
-            updateOneStep.ReferenceTheories = string.Join(", ", viewModel.ReferenceTheories);
-            updateOneStep.GoToStep = viewModel.GOTO_STEP?.ToString();
-            updateOneStep.GoToStepId = viewModel.GOTO_STEP_ID;
-            updateOneStep.Cycles = viewModel.Cycles;
-            updateOneStep.CycleOnCounter = viewModel.Cycle_On_Counter?.ToString();
-            updateOneStep.CycleCount = viewModel.Cycle_Count?.ToString();
-            updateOneStep.CycleUnit = viewModel.Cycle_Unit;
-            updateOneStep.PrecedingSteps = viewModel.Pre_Step;
-            updateOneStep.Title = viewModel.Title;
-            updateOneStep.EquipmentTime = viewModel.EquipmentTime;
+            var updateOneStep = new UpdateOneStepProcedure
+            {
+                Id = viewModel.Id,
+                StepText = viewModel.Step_Text,
+                ProcObjId = viewModel.ProcObjId,
+                Comments = viewModel.Comments,
+                StartOnCounter = viewModel.Start_On_Counter?.ToString(),
+                CounterValue = viewModel.Counter_Value?.ToString(),
+                CounterUnit = viewModel.Counter_Unit,
+                FromStartOrStop = viewModel.FROM_START_OR_STOP,
+                RelOrAbs = viewModel.REL_OR_ABS,
+                SystemTask = viewModel.System_Task,
+                Destination = viewModel.Destination,
+                SpecificLocation = viewModel.Specific_Location,
+                ReferenceVerb = viewModel.REFERENCE_VERB,
+                ReferenceObject = viewModel.REFERENCE_OBJECT,
+                ReferenceTheories = string.Join(", ", viewModel.ReferenceTheories),
+                GoToStep = viewModel.GOTO_STEP?.ToString(),
+                GoToStepId = viewModel.GOTO_STEP_ID,
+                Cycles = viewModel.Cycles,
+                CycleOnCounter = viewModel.Cycle_On_Counter?.ToString(),
+                CycleCount = viewModel.Cycle_Count?.ToString(),
+                CycleUnit = viewModel.Cycle_Unit,
+                PrecedingSteps = viewModel.Pre_Step,
+                Title = viewModel.Title,
+                EquipmentTime = viewModel.EquipmentTime,
+                Roles = viewModel.Role.Any() ? string.Join(",", viewModel.Role) : null,
+                Duration = viewModel.Duration,
+                DurationType = viewModel.Duration_Type
+            };
 
             if (viewModel.SelectedReferenceProcedureTypes != null && viewModel.SelectedReferenceProcedureTypes.Count > 0)
             {

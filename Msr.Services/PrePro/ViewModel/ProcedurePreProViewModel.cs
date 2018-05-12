@@ -5,9 +5,8 @@ using System.Linq;
 using System.Web.Mvc;
 using Msr.Models.PrePro;
 using Msr.Services.Documents;
-using Msr.Services.Documents.ViewModels;
-using Msr.Services.Procedures;
 using Msr.Services.ProcedureVerbs;
+using Msr.Services.Roles;
 using Msr.Services.Users.Messages;
 
 namespace Msr.Services.PrePro.ViewModel
@@ -23,9 +22,11 @@ namespace Msr.Services.PrePro.ViewModel
             ReferenceTheoriesList = new List<SelectListItem>();
             ReferenceVerbList = new List<SelectListItem>();
             Labors = new List<LaborObjectsView>();
+            Roles = new List<string>();
         }
 
         [Required]
+        [DisplayName("Title:")]
         public string Title { get; set; }
 
         public string PkId { get; set; }
@@ -33,22 +34,22 @@ namespace Msr.Services.PrePro.ViewModel
         public string ObjectId { get; set; }
 
         [AllowHtml]
-        [DisplayName("Text :")]
+        [DisplayName("Text:")]
         public string StepText { get; set; }
 
         public string ProcObjId { get; set; }
 
         [AllowHtml]
-        [DisplayName("Comments :")]
+        [DisplayName("Comments:")]
         public string Comments { get; set; }
 
         [DisplayName("Base Start on Counter :")]
         public int? StartOnCounter { get; set; }
 
-        [DisplayName("System Task :")]
+        [DisplayName("System Task:")]
         public string SystemTask { get; set; }
 
-        [DisplayName("DESTINATION :")]
+        [DisplayName("DESTINATION:")]
         public string Destination { get; set; }
 
         [DisplayName("Reference Verb:")]
@@ -66,31 +67,36 @@ namespace Msr.Services.PrePro.ViewModel
         [DisplayName("Reference Procedure:")]
         public List<string> ReferenceProcedures { get; set; }
 
-        [DisplayName("precedingSteps :")]
+        [DisplayName("precedingSteps:")]
         public string PrecedingSteps { get; set; }
 
-        [DisplayName("Estimated Step Duration :")]
+        [DisplayName("Estimated Step Duration:")]
         public double? Duration { get; set; }
 
 
         [DisplayName("Duration Type:")]
         public string DurationType { get; set; }
 
-        [DisplayName("Labor :")]
+        [DisplayName("Labor:")]
         public List<ProcedureObjectsLaborStepView> Labor { get; set; }
 
-        [DisplayName("Labor :")]
+        [DisplayName("Labor:")]
         public List<LaborObjectsView> Labors { get; set; }
 
-        [DisplayName("Number Of Questions to use :")]
+        [DisplayName("Number Of Questions to use:")]
         public string NumTestQuestion { get; set; }
 
-        [DisplayName("Reference Files :")]
+        [DisplayName("Reference Files:")]
         public string ReferenceFiles { get; set; }
 
         public string NTLogin { get; set; }
 
         public string CreatingCo { get; set; }
+
+        [Display(Name = "Roles:")]
+        public List<string> Roles { get; set; }
+
+        public List<SelectListItem> RolesList { get; set; }
 
         public List<SelectListItem> BaseStartOnCounterList { get; set; }
 
@@ -113,7 +119,7 @@ namespace Msr.Services.PrePro.ViewModel
 
         public List<PreProDockLink> DocLinks { get; set; }
 
-        public void Setup(PreProServices preProServices, DocumentFilesService documentFilesService, ProcedureVerbsService procedureVerbsService, LoggedUserIdResult currentUser)
+        public void Setup(PreProServices preProServices, DocumentFilesService documentFilesService, ProcedureVerbsService procedureVerbsService, RoleService roleService, LoggedUserIdResult currentUser)
         {
             BaseStartOnCounterList = Commons.Lookups.LookupItems.YesNo();
 
@@ -156,11 +162,17 @@ namespace Msr.Services.PrePro.ViewModel
             }).OrderBy(o => o.RoleName).ToList());
 
             DocLinks = documentFilesService.GetPreProRefFileDocLinks(PkId, currentUser.Id);
+
+            RolesList = roleService.GetActiveRoles().Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.Id.ToString()
+            }).OrderBy(o => o.Text).ToList();
         }
 
         public ProcedurePreProViewModel MapToDto(PrePropSearchView model)
         {
-            return new ProcedurePreProViewModel
+            var dto = new ProcedurePreProViewModel
             {
                 PkId = model.Id,
                 ObjectId = model.ObjectId,
@@ -168,14 +180,15 @@ namespace Msr.Services.PrePro.ViewModel
                 StartOnCounter = model.StartOnCounter,
                 Duration = model.Duration,
                 DurationType = model.DurationType,
-                //Labor = model,
                 StepText = model.StepText,
                 SystemTask = model.SystemTask,
                 Title = model.Title,
                 ReferenceVerb = model.ReferenceVerb,
                 ReferenceObject = model.ReferenceObject,
-                Comments = model.Comments
+                Comments = model.Comments,
+                Roles = model.Roles != null ? model.Roles?.Split(',').ToList() : new List<string>()
             };
+            return dto;
         }
     }
 }

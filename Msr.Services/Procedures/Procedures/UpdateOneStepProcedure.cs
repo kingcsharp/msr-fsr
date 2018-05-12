@@ -115,5 +115,8 @@ namespace Msr.Services.Procedures.Procedures
 
         [StoredProcedureParameter(SqlDbType.Float, ParameterName = "EquipmentTime")]
         public double? EquipmentTime { get; set; }
+
+        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 8000, ParameterName = "Roles")]
+        public string Roles { get; set; }
     }
 }

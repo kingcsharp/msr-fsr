@@ -35,7 +35,8 @@
     [AnnualRM]              DECIMAL(18, 0)   NULL,
     [RMPerMinute]           DECIMAL(18, 0)   NULL,
 	[EquipmentTime]			FLOAT (53)		 NULL
-    CONSTRAINT [PK_A_PROCEDURE_STEPS] PRIMARY KEY CLUSTERED ([ID] ASC)
+    CONSTRAINT [PK_A_PROCEDURE_STEPS] PRIMARY KEY CLUSTERED ([ID] ASC), 
+    [Roles] NVARCHAR(MAX) NULL
 );
 
 

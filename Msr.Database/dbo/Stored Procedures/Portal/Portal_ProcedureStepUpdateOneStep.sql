@@ -28,7 +28,8 @@
 @DURATION_TYPE nvarchar(50),
 @strNTLogin nvarchar(50),
 @Title nvarchar(max),
-@EquipmentTime float = null
+@EquipmentTime float = null,
+@Roles nvarchar(max)
 AS
 print 'Starting procedure A_SP_PROCEDURE_STEP_UPDATE_ONE_STEP'
 print 'Get the value of the Procedure ID for this Procedure Object ID'
@@ -72,7 +73,8 @@ DURATION = @DURATION,
 DURATION_TYPE = @DURATION_TYPE,
 DRCM = getDate(),
 MODBY = @strNTLogin,
-EquipmentTime = @EquipmentTime
+EquipmentTime = @EquipmentTime,
+Roles =@Roles
 WHERE ID = @newID
 
 print 'Adding links to the reference Theories'

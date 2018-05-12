@@ -4,14 +4,13 @@ using System.Web.Mvc;
 using Msr.Services.Procedures.ViewModels;
 using Msr.Services.ProcedureVerbs;
 using System.Linq;
-using System.Security.Policy;
 using System.Web.Script.Serialization;
 using Msr.Commons.Files;
 using Msr.Commons.Lookups;
 using Msr.Models.PrePro;
 using Msr.Services.Documents;
-using Msr.Services.Documents.ViewModels;
 using Msr.Services.Objects;
+using Msr.Services.Roles;
 using Msr.Services.TheoryParagraph;
 
 namespace Msr.Services.Procedures.Messages
@@ -33,6 +32,8 @@ namespace Msr.Services.Procedures.Messages
             SelectedReferenceProcedures = new List<string>();
             SelectedPrecedingSteps = new List<string>();
             ReferenceTheories = new List<string>();
+            Role = new List<string>();
+            RolesList = new List<SelectListItem>();
         }
 
         private string DurationType;
@@ -111,8 +112,11 @@ namespace Msr.Services.Procedures.Messages
         public List<PreProDockLink> DocLinks { get; set; }
         public string Preview { get; set; }
         public string PreviewConfig { get; set; }
+        public string Roles { get; set; }
+        public List<string> Role { get; set; }
+        public List<SelectListItem> RolesList { get; set; }
 
-        public void SetUp(ProcedureVerbsService procedureVerbsService, ObjectsService objectsService, DocumentFilesService documentFilesService, TheoryParagraphService theoryParagraphService)
+        public void SetUp(ProcedureVerbsService procedureVerbsService, ObjectsService objectsService, DocumentFilesService documentFilesService, TheoryParagraphService theoryParagraphService, RoleService roleService)
         {
 
             ReferenceProcedureTypes = new List<SelectListItem>();
@@ -158,6 +162,12 @@ namespace Msr.Services.Procedures.Messages
             }));
 
             PreviewConfig = previewConfig;
+
+            RolesList = roleService.GetActiveRoles().Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.Id.ToString()
+            }).OrderBy(o => o.Text).ToList();
         }
     }
 }

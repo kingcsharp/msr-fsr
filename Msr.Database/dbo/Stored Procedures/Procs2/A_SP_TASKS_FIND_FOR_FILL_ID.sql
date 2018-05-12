@@ -1,5 +1,4 @@
-﻿
-CREATE    PROCEDURE [dbo].[A_SP_TASKS_FIND_FOR_FILL_ID]
+﻿CREATE    PROCEDURE [dbo].[A_SP_TASKS_FIND_FOR_FILL_ID]
 @fillID varchar(50),
 @strNTLogin varchar(50)
 AS

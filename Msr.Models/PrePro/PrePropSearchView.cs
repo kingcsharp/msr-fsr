@@ -33,5 +33,6 @@ namespace Msr.Models.PrePro
         public string SystemTask { get; set; }
         public int? StartOnCounter { get; set; }
         public string ReferenceFiles { get; set; }
+        public string Roles { get; set; }
     }
 }

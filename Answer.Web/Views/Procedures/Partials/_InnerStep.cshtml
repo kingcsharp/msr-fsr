@@ -92,9 +92,9 @@
                     <table class="table table-condensed">
                         <tbody>
                             <tr>
-                                <th width="20%" nowrap="">Auth Roles:</th>
+                                <th width="20%" nowrap="">Roles:</th>
                                 <td width="80%">
-                                    @Html.ListBoxFor(x=> x.StepLabors, Model.StepLaborsList, new { @class = "form-control select"})
+                                    @Html.ListBoxFor(x=> x.Role, Model.RolesList, new { @class = "form-control select selectroles_"+ Model.Index , style="width:100%;"})
                                 </td>
                             </tr>
                         </tbody>
@@ -107,8 +107,11 @@
 
 <script type="text/javascript">
 
+    @{
+        var roles = string.Join(",", Model.Roles);
+    }
     $(document).ready(function () {
-        
+
         $('.remove-files').click(Msr.FileComman.RemoveSelectItem);
 
         $('.select').select2();
@@ -122,6 +125,21 @@
             '@Model.Id',
             true,
             'TEMPLATE_STEP');
+
+        var selectRoles = $(".selectroles_@Model.Index").select2({
+            tags: [],
+            tokenSeparators: [','],
+            multiple: true,
+            allowClear: true,
+            placeholder: "Select Role",
+            formatNoMatches: function () {
+                return '';
+            }
+        });
+        var valueRoles = '@roles';
+        var selectRolesList = valueRoles.split(",");
+        selectRoles.val(selectRolesList).trigger("change");
+
     });
 
 </script>
