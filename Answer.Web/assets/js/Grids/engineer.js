@@ -59,7 +59,7 @@ $(document).ready(function () {
                 align: 'center'
             },
             {
-                label: 'Location',
+                label: 'MSR-FSR Facility',
                 name: 'LocationName',
                 index: 'LocationName',
                 colmenu: false,
