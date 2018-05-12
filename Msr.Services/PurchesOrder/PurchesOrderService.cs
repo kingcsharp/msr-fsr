@@ -108,7 +108,7 @@ namespace Msr.Services.PurchesOrder
         }
         public List<SelectFile> PurchasedOrderLocationList()
         {
-            var result = _dbContext.Database.SqlQuery<SelectFile>($"SELECT NAME AS Name,ID AS Id FROM A_O_LOCATIONS WHERE STATUS LIKE 'APPROVED%' AND CREATING_CO = '2'").ToList();
+            var result = _dbContext.Database.SqlQuery<SelectFile>($"SELECT DISTINCT TOP 500 NAME as Name,ROOT as Id FROM A_O_LOCATIONS WHERE ( CREATING_CO = '2' AND STATUS LIKE 'APPROVED%' ) AND (( NAME LIKE '%%' AND NAME LIKE '%%' AND NAME LIKE '%%' ) ) ORDER BY NAME").ToList();
 
             return result;
         }
@@ -430,7 +430,7 @@ namespace Msr.Services.PurchesOrder
                         StrPartId = item.OBJ_PROD_APPLIES_TO,
                         StrSN = item.SERIAL_NUMBER,
                         StrQty = item.PURCHASE_QTY,
-                        StrLoc = null,
+                        StrLoc = item.LOCATION_ID,
                         StrOwner = item.SUPPLIER,
                         StrNtLogin = ntLogin
 

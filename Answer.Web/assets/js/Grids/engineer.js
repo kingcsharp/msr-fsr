@@ -59,6 +59,16 @@ $(document).ready(function () {
                 align: 'center'
             },
             {
+                label: 'Location',
+                name: 'LocationName',
+                index: 'LocationName',
+                colmenu: false,
+                editable: true,
+                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                align: 'center'
+            },
+            {
                 label: 'Serial',
                 name: 'Serial',
                 index: 'Serial',
@@ -310,7 +320,7 @@ $(document).ready(function () {
             });
         }
 
-        instructionsCellVal = notes + '<br/><button id="add-button' + rowObject.FillId + '" onclick="toggleInstructions(' + rowObject.FillId + ',0)" class="btn support-btn btn-xs btn-danger show">Add Instructions</button><div id="instruction' + rowObject.FillId + '" class="hidden" ><textarea style="width: 95%;" rows=4 placeholder="Add disposition Instructions" id="note-' + rowObject.FillId + '"></textarea><button class="btn support-btn btn-xs btn-primary" onclick="toggleInstructions(' + rowObject.FillId + ',1)">Save</button>';
+        instructionsCellVal = notes + '<br/>';
         thisCellVal = (rowObject.HasNcr === 1) ? instructionsCellVal : 'N/A';
         return thisCellVal;
     }

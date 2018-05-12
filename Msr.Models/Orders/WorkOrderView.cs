@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Security.AccessControl;
 
 namespace Msr.Models.Orders
 {
@@ -54,6 +53,7 @@ namespace Msr.Models.Orders
         public DateTime? ActualStopDate { get; set; }
         public string Notes { get; set; }
         public int? Threshold { get; set; }
+        public string LocationName { get; set; }
         [NotMapped]
         public string Action { get; set; }
     }

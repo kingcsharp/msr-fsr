@@ -131,6 +131,8 @@ namespace Msr.Services.PurchesOrder.ViewModels
                 Text = x.Name,
                 Value = x.Id.ToString()
             }).OrderBy(o => o.Text).ToList();
+
+            LocationList.Insert(0, new SelectListItem { Value = "", Text = "Select" });
         }
     }
 }

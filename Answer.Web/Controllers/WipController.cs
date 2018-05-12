@@ -65,6 +65,10 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.SupplierName.ToLower().Contains(rule.data.ToLower()));
                     }
+                    else if (rule.field == nameof(WorkOrderView.LocationName))
+                    {
+                        totalRows = totalRows.Where(x => x.LocationName.ToLower().Contains(rule.data.ToLower()));
+                    }
                     else if (rule.field == nameof(WorkOrderView.Serial))
                     {
                         totalRows = totalRows.Where(x => x.Serial.ToLower().Contains(rule.data.ToLower()));
