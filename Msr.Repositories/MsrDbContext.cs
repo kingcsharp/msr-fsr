@@ -19,6 +19,7 @@ using Msr.Models.TheoryParagraphs;
 using Msr.Models.ApprovalStages;
 using Msr.Models.ApprovalGroups;
 using Msr.Models.ActualParts;
+using Msr.Models.AdminCostSettings;
 using Msr.Models.CustomerRequirement;
 using Msr.Models.CustomerRequirements;
 using Msr.Models.EquipmentMaintenances;
@@ -109,6 +110,8 @@ namespace Msr.Repositories
             modelBuilder.Entity<ApprovedCompaniesView>().ToTable("Portal_ApprovedCompaniesView");
             modelBuilder.Entity<PartApprovedView>().ToTable("Portal_PartsApprovedView");
             modelBuilder.Entity<ActualPartApprovedView>().ToTable("Portal_ActualPartApprovedView");
+            modelBuilder.Entity<ActualPartApprovedView>().ToTable("Portal_ActualPartApprovedView");
+            modelBuilder.Entity<AdminCostSetting>().ToTable("Portal_AdminCostSetting");
         }
 
         public DbSet<AspNetUser> AspNetUsers { get; set; }
@@ -176,5 +179,6 @@ namespace Msr.Repositories
         public DbSet<HelpView> HelpViews { get; set; }
         public DbSet<PartTypesApproved> PartTypesApproveds { get; set; }
         public DbSet<ActualPartApprovedView> ActualPartApprovedViews { get; set; }
+        public DbSet<AdminCostSetting> AdminCostSettings { get; set; }
     }
 }

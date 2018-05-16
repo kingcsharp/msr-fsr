@@ -2833,6 +2833,7 @@
     <Build Include="dbo\Views\Portal\Portal_PartTypesApprovedView.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_ActualPartApprovedView.sql" />
     <Build Include="dbo\Views\Portal\Portal_HelpView.sql" />
+    <Build Include="dbo\Views\Portal_CustomerRequirementView.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Msr.Database.refactorlog" />

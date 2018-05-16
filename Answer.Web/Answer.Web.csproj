@@ -202,6 +202,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ActualPartsController.cs" />
+    <Compile Include="Controllers\AdminCostSettingsController.cs" />
     <Compile Include="Controllers\CustomerRequirementController.cs" />
     <Compile Include="Controllers\DeliveryController.cs" />
     <Compile Include="Controllers\AdministrationController.cs" />
@@ -1347,6 +1348,7 @@
     <Content Include="Views\Procedures\Partials\_InnerStep.cshtml" />
     <Content Include="Views\Wip\_WipListModal.cshtml" />
     <Content Include="Views\Procedures\Partials\_InnerMoniter.cshtml" />
+    <Content Include="Views\AdminCostSettings\Index.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

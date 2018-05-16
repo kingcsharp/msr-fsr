@@ -146,6 +146,7 @@
     <Compile Include="ActualParts\ViewModels\ActualPartImportViewModel.cs" />
     <Compile Include="ActualParts\ViewModels\ReassignTaskViewModel.cs" />
     <Compile Include="ActualParts\ViewModels\SaveActualPartsViewModel.cs" />
+    <Compile Include="AdminCostSettings\AdminCostSettingService.cs" />
     <Compile Include="Administration\AdministrationService.cs" />
     <Compile Include="Administration\Messages\AssignAccRecievableRoleResult.cs" />
     <Compile Include="Administration\Messages\AssignCompaniesToViewResult.cs" />
