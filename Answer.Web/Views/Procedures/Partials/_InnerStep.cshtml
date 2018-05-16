@@ -1,6 +1,5 @@
 ﻿@model Msr.Services.Procedures.Messages.GetStepDataResult
 
-
 <li id="@Model.Print_Order,@Model.Id" data-MainObjectId="@ViewBag.ProcObjectId" class="sortable-item">
     <div class="procedure-step row" id='step1'>
         <span class="fa fa-arrows handle sortable-fa" style="float: left; margin: -4px;"></span>
@@ -47,13 +46,35 @@
                         </td>
                     </tr>
                     <tr>
+                        <th align='right'>Replacement Cost:</th>
+                        <td>
+                            <div class="input-group">
+                                @Html.TextBoxFor(model => Model.ReplacementCost, new { @class = "form-control pre-populated" })
+
+                            </div>
+                        </td>
+                        <th align='right'>Utilization:</th>
+                        <td>
+                            <div class="input-group">
+                                @Html.TextBoxFor(model => Model.Utilization, new { @class = "form-control pre-populated" })
+
+                            </div>
+                        </td>
+                        <th align='right'>Useful Life:</th>
+                        <td>
+                            <div class="input-group">
+                                @Html.TextBoxFor(model => Model.UsefulLife, new { @class = "form-control pre-populated" })
+
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
                         <th colspan="1"></th>
                         <td colspan="5">
                             <button type="submit" class="btn btn-success" value="Save">Save</button><button type="submit" class="btn btn-danger delete-step" value="Delete" name="DeleteStep" value="DeleteStep">Delete</button>
                         </td>
                     </tr>
                 </table>
-
             </div>
             <div class="col-lg-3">
                 <div class="row">
@@ -65,12 +86,11 @@
                 <div class="row" style="margin-top: 10px">
                     <label>Reference Documents</label>
                     <div class="input-group">
-                        @Html.DropDownListFor(m => Model.ReferenceTheories, Model.ListReferenceTheories, new {id = "ReferenceTheories_" + Model.Index, @class = "form-control submitselect selectReferenceTheories", multiple = "multiple", size = "1" })
+                        @Html.DropDownListFor(m => Model.ReferenceTheories, Model.ListReferenceTheories, new { id = "ReferenceTheories_" + Model.Index, @class = "form-control submitselect selectReferenceTheories", multiple = "multiple", size = "1" })
                         <span class="input-group-addon btn btn-primary" data-call-back-id="ReferenceTheories_@Model.Index" data-toggle="modal" data-target="#select-theory"><i class="fa fa-folder-open-o"></i></span>
                         <span class="remove-files input-group-addon btn btn-danger" data-target-id="ReferenceTheories_@Model.Index"><i class="fa fa-trash-o"></i></span>
                     </div>
                 </div>
-
             </div>
             <div class="col-lg-4">
                 <label>Monitors:</label><a data-step-Target-Object="@Model.AddMonitorForProcedureViewModel.Target_Object" data-procedure-name="@ViewBag.ProdecureName" data-moniter-type="@Model.AddMonitorForProcedureViewModel.Monitor_Type" data-fail-action="@Model.AddMonitorForProcedureViewModel.Fail_Action" data-description="@Model.AddMonitorForProcedureViewModel.Description" data-object-id="@Model.AddMonitorForProcedureViewModel.Id" data-related-object="@ViewBag.ProcObjectId" data-step-id="@Model.Id" data-toggle="modal" data-target="#addMoniterModal" href="#" data-value="@Model.Id" class="btn btn-xs btn-success add-monitor_@Model.Id add-monitor " title="Add Monitor" style="float: right"> <i class="fa fa-plus" aria-hidden="true"></i> Add Monitor</a>
@@ -94,7 +114,7 @@
                             <tr>
                                 <th width="20%" nowrap="">Roles:</th>
                                 <td width="80%">
-                                    @Html.ListBoxFor(x=> x.Role, Model.RolesList, new { @class = "form-control select selectroles_"+ Model.Index , style="width:100%;"})
+                                    @Html.ListBoxFor(x => x.Role, Model.RolesList, new { @class = "form-control select selectroles_" + Model.Index })
                                 </td>
                             </tr>
                         </tbody>
@@ -104,11 +124,10 @@
         }
     </div>
 </li>
-
 <script type="text/javascript">
-
     @{
-        var roles = string.Join(",", Model.Roles);
+        var role = string.Join(",", Model.Roles);
+
     }
     $(document).ready(function () {
 
@@ -136,10 +155,9 @@
                 return '';
             }
         });
-        var valueRoles = '@roles';
+        var valueRoles = '@role';
         var selectRolesList = valueRoles.split(",");
         selectRoles.val(selectRolesList).trigger("change");
-
     });
 
 </script>

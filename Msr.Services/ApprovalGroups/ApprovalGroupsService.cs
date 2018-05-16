@@ -96,7 +96,6 @@ namespace Msr.Services.ApprovalGroups
                     _dbContext.Database.ExecuteStoredProcedure(saveGroupRoleProcedure);
                 }
 
-                //dont know from where these values are coming 
                 foreach (var file in model.SpecialMembers)
                 {
                     var saveSpecialMemberProcedure = new SaveSpecialMemberProcedure() { GroupId = model.Id, SpecialId = file, NTLogin = model.NTLogin };
@@ -154,7 +153,6 @@ namespace Msr.Services.ApprovalGroups
                     _dbContext.Database.ExecuteStoredProcedure(saveGroupRoleProcedure);
                 }
 
-                //dont know from where these values are coming 
                 foreach (var file in model.SpecialMembers)
                 {
                     var saveSpecialMemberProcedure = new SaveSpecialMemberProcedure() { GroupId = saveApprovalGroupProcedure.NewId, SpecialId = file, NTLogin = model.NTLogin };

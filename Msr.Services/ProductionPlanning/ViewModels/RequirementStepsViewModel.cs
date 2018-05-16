@@ -67,7 +67,9 @@ namespace Msr.Services.ProductionPlanning.ViewModels
 
         [Display(Name = "Total Sale Price")]
 
-        public decimal TotalSalePrice { get; set; }
+        public decimal? MaterialCost { get; set; }
+
+        public decimal? TotalSalePrice { get; set; }
 
         public List<RequirementStepsDetailsViewModel> Steps { get; set; }
 
@@ -142,6 +144,8 @@ namespace Msr.Services.ProductionPlanning.ViewModels
             ProductProcedureId = requirment.ProcedureId;
             OldProductProcedureId = requirment.ProcedureId;
             SubmittedRequirement = requirment;
+            TotalSalePrice = requirment.TotalSalePrice;
+            MaterialCost = requirment.MaterialCost;
 
             if (!string.IsNullOrWhiteSpace(requirment.QuoteJson))
             {

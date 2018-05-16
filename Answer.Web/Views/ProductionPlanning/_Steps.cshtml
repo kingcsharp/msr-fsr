@@ -1,7 +1,5 @@
 ﻿@model Msr.Services.ProductionPlanning.ViewModels.RequirementStepsViewModel
-
 <div id="add-steps">
-
     <div class="row">
         <div class="col-sm-9">
             <h2 style="position: relative; top: 20px;">Step Details</h2>
@@ -61,16 +59,15 @@
                         <tbody>
                             @Html.DropDownListFor(model => model.ObjectId, Model.ProcessList, new { @id = "defaultProcessList", @class = "form-control", style = "display:none" })
                             @for (int i = 0; i < Model.Steps.Count; i++)
-                        {
-                            var rowid = "row" + i;
-                            <tr id="@rowid" data-value="@Model.Steps[i].ObjectId" data-toggle="tooltip" data-placement="top" title="">
+                            {
+                                var rowid = "row" + i;
+                                <tr id="@rowid" data-value="@Model.Steps[i].ObjectId" data-toggle="tooltip" data-placement="top" title="">
                                     <td>
                                         @Html.HiddenFor(x => Model.Steps[i].Id)
                                         @Html.HiddenFor(x => Model.Steps[i].ObjectId)
-                                        
-                                        @Html.HiddenFor(x => Model.Steps[i].StepTitle)
 
-                                        @if (Model.Steps[i].Id==0)
+                                        @Html.HiddenFor(x => Model.Steps[i].StepTitle)
+                                        @if (Model.Steps[i].Id == 0)
                                         {
                                             for (int j = 0; j < Model.ProcessList.Count; j++)
                                             {
@@ -86,7 +83,6 @@
                                         }
                                         @Html.DropDownListFor(model => model.Steps[i].Process, Model.ProcessList, "Select Process", new { id = "proId", @class = "form-control preDefinedStep" })
                                         @Html.ValidationMessageFor(model => Model.Steps[i].Process, "", new { @class = "text-danger" })
-
 
                                     </td>
                                     <td>
@@ -104,20 +100,20 @@
                                     <td class="text-center hidden hide-col">
                                         <div class="input-group">
                                             <span class="input-group-addon">$</span>
-                                            @Html.TextBoxFor(x => Model.Steps[i].ReplacementCost, new { @class = "form-control", @onkeyup = "javascript:checkType(this)", @onblur = "javascript:checkBlank(this)" })
+                                            @Html.TextBoxFor(x => Model.Steps[i].ReplacementCost, new { @class = "form-control", @readonly = "readonly", @onkeyup = "javascript:checkType(this)", @onblur = "javascript:checkBlank(this)" })
                                             @Html.ValidationMessageFor(x => Model.Steps[i].ReplacementCost, "", new { @class = "text-danger" })
                                             <span class="input-group-addon">.00</span>
                                         </div>
                                     </td>
                                     <td class="text-center hidden hide-col">
                                         <div class="input-group">
-                                            @Html.TextBoxFor(x => Model.Steps[i].Utilization, new { @class = "form-control", @onkeyup = "javascript:checkType(this)", @onblur = "javascript:checkBlank(this)" })
+                                            @Html.TextBoxFor(x => Model.Steps[i].Utilization, new { @class = "form-control", @readonly = "readonly", @onkeyup = "javascript:checkType(this)", @onblur = "javascript:checkBlank(this)" })
                                             @Html.ValidationMessageFor(x => Model.Steps[i].Utilization, "", new { @class = "text-danger" })
                                             <span class="input-group-addon">%</span>
                                         </div>
                                     </td>
                                     <td class="text-center hidden hide-col">
-                                        @Html.TextBoxFor(x => Model.Steps[i].UsefulLife, new { @class = "form-control", @onkeyup = "javascript:checkType(this)", @onblur = "javascript:checkBlank(this)" })
+                                        @Html.TextBoxFor(x => Model.Steps[i].UsefulLife, new { @class = "form-control", @readonly = "readonly", @onkeyup = "javascript:checkType(this)", @onblur = "javascript:checkBlank(this)" })
                                         @Html.ValidationMessageFor(x => Model.Steps[i].UsefulLife, "", new { @class = "text-danger" })
                                     </td>
                                     <td class="text-center hidden hide-col">
@@ -146,9 +142,9 @@
                                     </td>
                                 </tr>
 
-                        }
+                            }
                             @{
-                            var trows = "row" + Model.Steps.Count;
+                                var trows = "row" + Model.Steps.Count;
                             }
                             <tr id="@trows" data-value=""></tr>
                         </tbody>
@@ -164,23 +160,34 @@
                                 </td>
                                 <td colspan="6" class="hidden hide-col">&nbsp;</td>
                             </tr>
-                            <tr>
-                                <td>&nbsp;</td>
-                                <td class="text-right">Dollars:</td>
-                                <td class="text-right">
-                                    <div class="input-group">
-                                        <span class="input-group-addon">$</span>
-                                        @Html.EditorFor(model => model.TotalDirectDollar, new { htmlAttributes = new { @id = "totalDirectDollar", @class = "form-control" } })
-                                    </div>
-                                </td>
-                                <td class="text-right">
-                                    <div class="input-group">
-                                        <span class="input-group-addon">$</span>
-                                        @Html.EditorFor(model => model.StandardMachineDollar, new { htmlAttributes = new { @id = "standardMachineDollar", @class = "form-control" } })
-                                    </div>
-                                </td>
-                                <td colspan="6" class="hidden hide-col">&nbsp;</td>
-                            </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td class="text-right">Dollars:</td>
+                            <td class="text-right">
+                                <div class="input-group">
+                                    <span class="input-group-addon">$</span>
+                                    @Html.EditorFor(model => model.TotalDirectDollar, new { htmlAttributes = new { @readonly = "readonly", @id = "totalDirectDollar", @class = "form-control" } })
+                                </div>
+                            </td>
+                            <td class="text-right">
+                                <div class="input-group">
+                                    <span class="input-group-addon">$</span>
+                                    @Html.EditorFor(model => model.StandardMachineDollar, new { htmlAttributes = new { @readonly = "readonly", @id = "standardMachineDollar", @class = "form-control" } })
+                                </div>
+                            </td>
+                            <td colspan="6" class="hidden hide-col">&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td colspan="2" class="text-right">Material Cost:</td>
+                            <td class="text-right">
+                                <div class="input-group">
+                                    <span class="input-group-addon">$</span>
+                                    @Html.EditorFor(model => model.MaterialCost, new { htmlAttributes = new { @id = "MaterialCost", @class = "form-control" } })
+                                </div>
+                            </td>
+                            <td colspan="6" class="hidden hide-col">&nbsp;</td>
+                        </tr>
                             <tr>
                                 <td>&nbsp;</td>
                                 <td colspan="2" class="text-right">Recommended Sale Price:</td>
@@ -197,12 +204,11 @@
                 </div>
             </div>
             @if (Model.ProductStatus != "APPROVED")
-        {
+            {
                 <a id="add_row" class="btn btn-primary pull-left" data-toggle="tooltip" data-placement="top" title="" data-original-title="Add a Step to the Definition"><i class="fa fa-plus-circle"></i> Add Step</a>
                 <a id="delete_row" class="pull-left btn btn-warning" style="margin-left: 10px;" data-toggle="tooltip" data-placement="top" title="" data-original-title="Removes Last Step from Definition"><i class="fa fa-minus-circle"></i> Remove Step</a>
-        }            
+            }
 
-      
         </div>
     </div>
 </div>

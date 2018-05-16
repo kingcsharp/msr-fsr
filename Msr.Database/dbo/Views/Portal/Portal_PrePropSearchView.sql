@@ -14,7 +14,10 @@ SELECT +','+ DL.NAME+'|'+DL.DOC_ID
 FROM A_V_PROCEDURE_STEP_DOCUMENT_DATA AS DL 
 WHERE DL.STEP_ID = o.OBJ_DESC
     FOR XML PATH('')), 1, 1,''),'') AS ReferenceFiles,
-dbo.A_PROCEDURE_STEPS.Roles AS Roles
+dbo.A_PROCEDURE_STEPS.Roles AS Roles,
+dbo.A_PROCEDURE_STEPS.ReplacementCost,
+dbo.A_PROCEDURE_STEPS.Utilization,
+dbo.A_PROCEDURE_STEPS.UsefulLife
 FROM            dbo.A_OBJECTS AS o INNER JOIN
                          dbo.A_PREPOP_HISTORY AS p ON o.ID = p.OBJECT_ID INNER JOIN
                          dbo.A_PROCEDURE_STEPS ON p.PROC_STEP_ID = dbo.A_PROCEDURE_STEPS.ID

@@ -140,41 +140,43 @@
 @section scripts
 {
     <script type="text/javascript">
-        setTimeout(function () { location.reload(true); }, 300000);
 
-        $('[data-toggle="tooltip"]').tooltip();
+        setTimeout(function() { location.reload(true); }, 300000);
 
-        $('.wip-button').on('click', function () {
+        $(function() {
+            
+            $('[data-toggle="tooltip"]').tooltip();
 
-            var fillId = $(this).data('fill-id');
+            $('.wip-button').on('click', function () {
 
-            if ($(this).hasClass('btn-accepted')) {
+                var fillId = $(this).data('fill-id');
 
-                var id = $(this).data('task-id');
+                if ($(this).hasClass('btn-accepted')) {
 
-                eModal.confirm('Do you want to take ownership of this WO Item?')
-                    .then(function () {
-                        eLoaderOpen();
-                        $.ajax({
-                            type: "POST",
-                            url: "/wip/TakeTaskOwnersShip?taskId=" + id,
-                            dataType: 'json',
-                            success: function (data) {
-                                if (data.Code === "OK") {
-                                    window.location.href = '/wip/Details/' + fillId;
-                                } else {
-                                    alert(data.Message);
+                    var id = $(this).data('task-id');
+
+                    eModal.confirm('Do you want to take ownership of this WO Item?')
+                        .then(function () {
+                            $.ajax({
+                                type: "POST",
+                                url: "/wip/TakeTaskOwnersShip?taskId=" + id,
+                                dataType: 'json',
+                                success: function (data) {
+                                    if (data.Code === "OK") {
+                                        window.location.href = '/wip/Details/' + fillId;
+                                    } else {
+                                        alert(data.Message.ErrorMessage);
+                                    }
+                                },
+                                error: function (error) {
+                                    eModal.alert(error);
                                 }
-                                eLoaderClose();
-                            },
-                            error: function (error) {
-                                eLoaderError(error);
-                            }
-                        });
-                    }, null);
-            } else {
-                window.location.href = '/wip/Details/' + fillId;
-            }
+                            });
+                        }, null);
+                } else {
+                    window.location.href = '/wip/Details/' + fillId;
+                }
+            });
         });
-    </script>
+</script>
 }

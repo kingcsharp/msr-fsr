@@ -24,17 +24,17 @@ namespace Msr.Services.ProductionPlanning.ViewModels
         [Range(0, double.MaxValue, ErrorMessage = "Please enter numaric value only")]
         public double? StandardMachineMinutes { get; set; }
 
-        [Display(Name = "Replacement Cost")]
+        [Display(Name = "Replacement Cost:")]
 
         public decimal? ReplacementCost { get; set; }
 
-        [Display(Name = "Utilization")]
+        [Display(Name = "Utilization:")]
 
         public decimal? Utilization { get; set; }
 
-        [Display(Name = "UsefulLife")]
+        [Display(Name = "Useful Life:")]
 
-        public decimal? UsefulLife { get; set; }
+        public int? UsefulLife { get; set; }
 
         [Display(Name = "Equip Expense Per Minute")]
 

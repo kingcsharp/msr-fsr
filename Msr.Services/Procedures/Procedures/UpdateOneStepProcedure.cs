@@ -92,22 +92,22 @@ namespace Msr.Services.Procedures.Procedures
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "strNTLogin")]
         public string NTLogin { get; set; }
 
-        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "ReplacementCost")]
+        [StoredProcedureParameter(SqlDbType.Decimal, ParameterName = "ReplacementCost")]
         public decimal? ReplacementCost { get; set; }
 
-        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "Utilization")]
+        [StoredProcedureParameter(SqlDbType.Decimal,  ParameterName = "Utilization")]
         public decimal? Utilization { get; set; }
 
-        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "UsefulLife")]
-        public decimal? UsefulLife { get; set; }
+        [StoredProcedureParameter(SqlDbType.Int, ParameterName = "UsefulLife")]
+        public int? UsefulLife { get; set; }
 
-        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "EquipExpensePerMinute")]
+        [StoredProcedureParameter(SqlDbType.Decimal,  ParameterName = "EquipExpensePerMinute")]
         public decimal? EquipExpensePerMinute { get; set; }
 
-        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "AnnualRM")]
+        [StoredProcedureParameter(SqlDbType.Decimal, ParameterName = "AnnualRM")]
         public decimal? AnnualRM { get; set; }
 
-        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "RMPerMinute")]
+        [StoredProcedureParameter(SqlDbType.Decimal, ParameterName = "RMPerMinute")]
         public decimal? RMPerMinute { get; set; }
 
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 5000, ParameterName = "Title")]

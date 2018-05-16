@@ -96,6 +96,15 @@ namespace Msr.Services.PrePro.ViewModel
         [Display(Name = "Roles:")]
         public List<string> Roles { get; set; }
 
+        [Display(Name = "Replacement Cost:")]
+        public decimal? ReplacementCost { get; set; }
+
+        [Display(Name = "Utilization:")]
+        public decimal? Utilization { get; set; }
+
+        [Display(Name = "Useful Life:")]
+        public int? UsefulLife { get; set; }
+
         public List<SelectListItem> RolesList { get; set; }
 
         public List<SelectListItem> BaseStartOnCounterList { get; set; }
@@ -186,7 +195,10 @@ namespace Msr.Services.PrePro.ViewModel
                 ReferenceVerb = model.ReferenceVerb,
                 ReferenceObject = model.ReferenceObject,
                 Comments = model.Comments,
-                Roles = model.Roles != null ? model.Roles?.Split(',').ToList() : new List<string>()
+                Roles = model.Roles != null ? model.Roles?.Split(',').ToList() : new List<string>(),
+                ReplacementCost = model.ReplacementCost,
+                Utilization = model.Utilization,
+                UsefulLife = model.UsefulLife
             };
             return dto;
         }

@@ -192,7 +192,7 @@ function recalculateTotals() {
         });
         $("#total-direct-mins").val(parseFloat(sum).toFixed(2));
         
-        var rate = 3.76; //dont know the calcualtion math from hidden columns
+        var rate = 3.76; 
         var sum2 = (sum * rate).toFixed(2);
         $("#total-direct-dollars").val(parseFloat(sum2).toFixed(2));
         
@@ -207,7 +207,7 @@ function recalculateTotals() {
         });
         $("#total-machine-mins").val(parseFloat(sum1).toFixed(2));
         
-        var rate2 = .44; //dont know the calcualtion math from hidden columns
+        var rate2 = .44; 
         var sum3 = (sum1 * rate2);
         $("#standard-machine-dollars").val(parseFloat(sum3).toFixed(2));
         var labor1 = parseInt($("#total-direct-dollars").val());

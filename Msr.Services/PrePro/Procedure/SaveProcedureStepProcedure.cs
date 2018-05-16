@@ -48,6 +48,9 @@ namespace Msr.Services.PrePro.Procedure
             Title = model.Title;
             EquipmentTime = null;
             Roles = string.Join(",", model.Roles);
+            ReplacementCost = model.ReplacementCost;
+            Utilization = model.Utilization;
+            UsefulLife = model.UsefulLife;
         }
 
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "newID", Direction = ParameterDirection.Output)]
@@ -142,5 +145,14 @@ namespace Msr.Services.PrePro.Procedure
 
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 8000, ParameterName = "Roles")]
         public string Roles { get; set; }
+
+        [StoredProcedureParameter(SqlDbType.Decimal, Size = 100, ParameterName = "ReplacementCost")]
+        public decimal? ReplacementCost { get; set; }
+
+        [StoredProcedureParameter(SqlDbType.Decimal, Size = 100, ParameterName = "Utilization")]
+        public decimal? Utilization { get; set; }
+
+        [StoredProcedureParameter(SqlDbType.Int, Size = 100, ParameterName = "UsefulLife")]
+        public int? UsefulLife { get; set; }
     }
 }

@@ -34,5 +34,8 @@ namespace Msr.Models.PrePro
         public int? StartOnCounter { get; set; }
         public string ReferenceFiles { get; set; }
         public string Roles { get; set; }
+        public decimal? ReplacementCost { get; set; }
+        public decimal? Utilization { get; set; }
+        public int? UsefulLife { get; set; }
     }
 }

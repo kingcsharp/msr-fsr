@@ -11,7 +11,7 @@
         public double? StandardMachineMinutes { get; set; }
         public decimal? ReplacementCost { get; set; }
         public decimal? Utilization { get; set; }
-        public decimal? UsefulLife { get; set; }
+        public int? UsefulLife { get; set; }
         public decimal? EquipExpensePerMinute { get; set; }
         public decimal? AnnualRm { get; set; }
         public decimal? RmPerMinute { get; set; }

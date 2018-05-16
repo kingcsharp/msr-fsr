@@ -205,7 +205,10 @@ namespace Answer.Web.Controllers
                         StepTitle = step.Title,
                         Step = (int) step.Print_Order,
                         StandardDirectLaborMinutes = step.Duration,
-                        StandardMachineMinutes = step.EquipmentTime
+                        StandardMachineMinutes = step.EquipmentTime,
+                        ReplacementCost = step.ReplacementCost,
+                        Utilization = step.Utilization,
+                        UsefulLife = step.UsefulLife,
                     });
                 }
             }
@@ -255,7 +258,10 @@ namespace Answer.Web.Controllers
                         StepTitle = step.Title,
                         Step = (int) step.Print_Order,
                         StandardDirectLaborMinutes = step.Duration,
-                        StandardMachineMinutes = step.EquipmentTime
+                        StandardMachineMinutes = step.EquipmentTime,
+                        ReplacementCost = step.ReplacementCost,
+                        Utilization = step.Utilization,
+                        UsefulLife = step.UsefulLife
                     });
                 }
             }
@@ -300,7 +306,10 @@ namespace Answer.Web.Controllers
                         Process = step.Title,
                         Step = (int) step.Print_Order,
                         StandardDirectLaborMinutes = step.Duration,
-                        StandardMachineMinutes = step.EquipmentTime
+                        StandardMachineMinutes = step.EquipmentTime,
+                        ReplacementCost = step.ReplacementCost,
+                        Utilization = step.Utilization,
+                        UsefulLife = step.UsefulLife
                     });
                 }
 

@@ -22,10 +22,13 @@ CREATE TABLE [dbo].[Portal_CustomerSubmittedRequirement](
 	ProductWorkflowId [nvarchar](50) NULL,
 	[LeadTime] float NULL,
 	[Price] float NULL,
+	[TotalSalePrice]          DECIMAL (18)   NULL,
+	[MaterialCost] DECIMAL NULL,
  CONSTRAINT [PK_Portal_CustomerSubmittedRequirements] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY], 
+    
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 
 GO

@@ -139,7 +139,10 @@ namespace Msr.Services.PrePro
                     NTLogin = model.NTLogin,
                     Title = model.Title,
                     EquipmentTime = null,
-                    Roles = model.Roles.Any() ? string.Join(",", model.Roles):null
+                    Roles = model.Roles.Any() ? string.Join(",", model.Roles):null,
+                    ReplacementCost = model.ReplacementCost,
+                    Utilization = model.Utilization,
+                    UsefulLife = model.UsefulLife
                 };
 
                 _dbContext.Database.ExecuteStoredProcedure(savePartProcedure);

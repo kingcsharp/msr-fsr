@@ -54,6 +54,7 @@ namespace Msr.Services.Procedures
 
         public List<SelectFile> GetSelectedFiles(string id, string type, string ntlogin)
         {
+
             var objId = new SqlParameter("@objID", id ?? "0");
 
             var selecttype = type == null ? new SqlParameter("@type", DBNull.Value) : new SqlParameter("@type", type);
@@ -583,7 +584,10 @@ namespace Msr.Services.Procedures
                 EquipmentTime = viewModel.EquipmentTime,
                 Roles = viewModel.Role.Any() ? string.Join(",", viewModel.Role) : null,
                 Duration = viewModel.Duration,
-                DurationType = viewModel.Duration_Type
+                DurationType = viewModel.Duration_Type,
+                ReplacementCost = viewModel.ReplacementCost,
+                Utilization = viewModel.Utilization,
+                UsefulLife = viewModel.UsefulLife
             };
 
             if (viewModel.SelectedReferenceProcedureTypes != null && viewModel.SelectedReferenceProcedureTypes.Count > 0)

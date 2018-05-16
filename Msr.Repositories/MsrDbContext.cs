@@ -99,7 +99,6 @@ namespace Msr.Repositories
             modelBuilder.Entity<ProcessInfoView>().ToTable("Portal_ProcessInfo");
             modelBuilder.Entity<PartInfoView>().ToTable("Portal_PartInfo");
             modelBuilder.Entity<RequirementStep>().ToTable("Portal_RequirementSteps");
-            modelBuilder.Entity<ProductionPlanningView>().ToTable("Portal_ProductionPlanningView");
             modelBuilder.Entity<CustomerSubmittedRequirement>().ToTable("Portal_CustomerSubmittedRequirement");
             modelBuilder.Entity<PurchaseView>().ToTable("Portal_PurchaseView");
             modelBuilder.Entity<InvoiceView>().ToTable("Portal_InvoiceView");
@@ -168,7 +167,7 @@ namespace Msr.Repositories
         public DbSet<ProcessInfoView> ProcessInfoViews { get; set; }
         public DbSet<PartInfoView> PartInfoViews { get; set; }
         public DbSet<RequirementStep> RequirementSteps { get; set; }
-        public DbSet<ProductionPlanningView> ProductionPlanningViews { get; set; }
+
         public DbSet<CustomerSubmittedRequirement> CustomerSubmittedRequirements { get; set; }
         public DbSet<PurchaseView> PurchaseViews { get; set; }
         public DbSet<InvoiceView> InvoicesViews { get; set; }

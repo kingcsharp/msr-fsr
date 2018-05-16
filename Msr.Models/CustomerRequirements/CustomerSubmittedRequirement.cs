@@ -25,5 +25,7 @@ namespace Msr.Models.CustomerRequirements
         public string ProductWorkflowId { get; set; }
         public double? LeadTime { get; set; }
         public double? Price { get; set; }
+        public decimal? TotalSalePrice { get; set; }
+        public decimal? MaterialCost { get; set; }
     }
 }

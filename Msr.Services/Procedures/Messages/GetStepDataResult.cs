@@ -115,6 +115,9 @@ namespace Msr.Services.Procedures.Messages
         public string Roles { get; set; }
         public List<string> Role { get; set; }
         public List<SelectListItem> RolesList { get; set; }
+        public decimal? ReplacementCost { get; set; }
+        public decimal? Utilization { get; set; }
+        public int? UsefulLife { get; set; }
 
         public void SetUp(ProcedureVerbsService procedureVerbsService, ObjectsService objectsService, DocumentFilesService documentFilesService, TheoryParagraphService theoryParagraphService, RoleService roleService)
         {

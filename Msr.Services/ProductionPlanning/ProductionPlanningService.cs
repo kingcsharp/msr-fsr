@@ -96,6 +96,8 @@ namespace Msr.Services.ProductionPlanning
                 requirment.PartId = model.ProductPartId;
                 requirment.ProcedureId = model.ProductProcedureId;
                 requirment.Division = model.ProductCustomerDivision;
+                requirment.TotalSalePrice = model.TotalSalePrice;
+                requirment.MaterialCost = model.MaterialCost;
 
                 if (string.IsNullOrWhiteSpace(requirment.ProductId))
                 {
