@@ -82,7 +82,6 @@ $(document).ready(function () {
             { "numberOfColumns": 10, "titleText": "Work Order Info", "startColumnName": "PURCHASE_ITEM_ID" },
             { "numberOfColumns": 5, "titleText": "Invoice Details", "startColumnName": "INVOICE_ID" }]
     });
-    
 	
 	$("#custReqsGrid").jqGrid().trigger('reloadGrid');
 	
@@ -95,7 +94,8 @@ $(document).ready(function () {
 		var perm = [ 1, 0, 2, 4, 3 ];
 		$("#custReqsGrid").jqGrid('remapColumns', perm, true, false);
 		console.log($("#custReqsGrid").jqGrid('getGridParam','colModel'));
-	});
+    });
+
 	$("#load").click(function(){
 		console.log(filter);
 		$("#custReqsGrid").jqGrid('refreshFilterToolbar', {
@@ -113,7 +113,8 @@ $(document).ready(function () {
 				}
 			}
 		});
-	});
+    });
+
 	var timer;
 	$("#search_cells").on("keyup", function() {
 		var self = this;
@@ -135,13 +136,13 @@ $(document).ready(function () {
         thisCellVal = StartButton;
         return thisCellVal;
     }
+
     $('#process-start-btn').click(function( event ) {
         event.preventDefault();
         var rowData = $('#custReqsGrid').jqGrid('getRowData', rowId);
         console.log("ROW ID: " + rowId);
         $('#custReqsGrid').jqGrid("setCell", rowid, 'REP_NAME', 'Emily Hart');
     });
-    
     
          // process specs table
      var i=1;
@@ -151,6 +152,7 @@ $(document).ready(function () {
           i++;
           recalculateTotals();
      });
+
      $("#delete_row").click(function(){
     	 if(i>1){
 		    $("#row"+(i-1)).html('');
@@ -181,15 +183,18 @@ $(document).ready(function () {
     $(document).on("keyup", ".machine-mins", function() {
         recalculateTotals();
     });
-    
+
+    recalculateTotals();
 });
 
 function recalculateTotals() {
-        var sum = 0;
+    var sum = 0;
+
         $(".labor-mins").each(function(){
             if($(this).val() != "")
             sum += parseInt($(this).val());  
         });
+
         $("#total-direct-mins").val(parseFloat(sum).toFixed(2));
         
         var rate = 3.76; 
@@ -199,6 +204,7 @@ function recalculateTotals() {
         var machine = parseInt($("#standard-machine-dollars").val());
         var newTotal = (sum2 + machine);
         $("#total-sale-price").val(parseFloat(newTotal).toFixed(2));
+    3
 
          var sum1 = 0;
         $(".machine-mins").each(function(){
@@ -213,4 +219,7 @@ function recalculateTotals() {
         var labor1 = parseInt($("#total-direct-dollars").val());
         var newTotal1 = (labor1 + sum3);
         $("#total-sale-price").val(parseFloat(newTotal1).toFixed(2));
+
+  
 }
+

@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Mvc;
+using Msr.Models.AdminCostSettings;
 using Msr.Models.CustomerRequirements;
 using Msr.Services.CustomerRequirements.ViewModel;
 using Msr.Services.PrePro;
@@ -86,6 +87,8 @@ namespace Msr.Services.ProductionPlanning.ViewModels
         public List<SelectListItem> PartList { get; set; }
 
         public string ProductStatus { get; set; }
+
+        public AdminCostSetting AdminCostSettings { get; set; }
 
         public void Setup(ProductionPlanningService productionPlanningService, PreProServices preProServices,
             LoggedUserIdResult currentUser)

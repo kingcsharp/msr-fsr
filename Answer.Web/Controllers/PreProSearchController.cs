@@ -361,5 +361,19 @@ namespace Answer.Web.Controllers
 
             return View(model);
         }
+
+        public ActionResult GetDetailsById(string id)
+        {
+            var model = _preProServices.GetById(id);
+
+            var data = new
+            {
+                ReplacementCost = model.ReplacementCost.GetValueOrDefault(),
+                Utilization = model.Utilization.GetValueOrDefault(),
+                UsefulLife = model.UsefulLife.GetValueOrDefault()
+            };
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
     }
 }

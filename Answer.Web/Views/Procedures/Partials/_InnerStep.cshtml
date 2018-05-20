@@ -112,8 +112,8 @@
                     <table class="table table-condensed">
                         <tbody>
                             <tr>
-                                <th width="20%" nowrap="">Roles:</th>
-                                <td width="80%">
+                                <th nowrap="">Roles:</th>
+                                <td style="width: 500px;">
                                     @Html.ListBoxFor(x => x.Role, Model.RolesList, new { @class = "form-control select selectroles_" + Model.Index })
                                 </td>
                             </tr>

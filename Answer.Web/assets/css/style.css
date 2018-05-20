@@ -2273,3 +2273,10 @@ span.fa.fa-arrows.handle.sortable-fa {
 .validation-summary-errors {
     color: #a94442;
 }
+
+.select2-selection--single {
+    border-radius: 0px !important;
+}
+.select2-selection--multiple {
+    border-radius: 0px !important;
+}

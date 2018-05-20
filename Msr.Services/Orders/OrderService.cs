@@ -999,16 +999,6 @@ namespace Msr.Services.Orders
             return taskLogDto;
         }
 
-        private void FormatHtml(TsrDetailsResponse response)
-        {
-            foreach (var taskResult in response.TsrTaskResults)
-            {
-                taskResult.Des =
-                    taskResult.Des.Replace("<<bb>>", "<br/><h4>")
-                        .Replace("<</bb>>", "</h4>")
-                        .Replace("<<nl/>>", "<br/>");
-            }
-        }
         public List<SelectFile> GetMultiChoiceAnswers(string id)
         {
             var result = _dbContext.Database.SqlQuery<SelectFile>($"SELECT ID as Id,TXT AS Name from A_MONITOR_TEMPLATES_MULT_CHOICE WHERE MONITOR_ID = {id} order by ORD").ToList();

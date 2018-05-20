@@ -100,26 +100,26 @@
                                     <td class="text-center hidden hide-col">
                                         <div class="input-group">
                                             <span class="input-group-addon">$</span>
-                                            @Html.TextBoxFor(x => Model.Steps[i].ReplacementCost, new { @class = "form-control", @readonly = "readonly", @onkeyup = "javascript:checkType(this)", @onblur = "javascript:checkBlank(this)" })
+                                            @Html.TextBoxFor(x => Model.Steps[i].ReplacementCost, new { @class = "form-control replacement-cost", @readonly = "readonly", @onkeyup = "javascript:checkType(this)", @onblur = "javascript:checkBlank(this)" })
                                             @Html.ValidationMessageFor(x => Model.Steps[i].ReplacementCost, "", new { @class = "text-danger" })
                                             <span class="input-group-addon">.00</span>
                                         </div>
                                     </td>
                                     <td class="text-center hidden hide-col">
                                         <div class="input-group">
-                                            @Html.TextBoxFor(x => Model.Steps[i].Utilization, new { @class = "form-control", @readonly = "readonly", @onkeyup = "javascript:checkType(this)", @onblur = "javascript:checkBlank(this)" })
+                                            @Html.TextBoxFor(x => Model.Steps[i].Utilization, new { @class = "form-control utilization", @readonly = "readonly", @onkeyup = "javascript:checkType(this)", @onblur = "javascript:checkBlank(this)" })
                                             @Html.ValidationMessageFor(x => Model.Steps[i].Utilization, "", new { @class = "text-danger" })
                                             <span class="input-group-addon">%</span>
                                         </div>
                                     </td>
                                     <td class="text-center hidden hide-col">
-                                        @Html.TextBoxFor(x => Model.Steps[i].UsefulLife, new { @class = "form-control", @readonly = "readonly", @onkeyup = "javascript:checkType(this)", @onblur = "javascript:checkBlank(this)" })
+                                        @Html.TextBoxFor(x => Model.Steps[i].UsefulLife, new { @class = "form-control useful-life", @readonly = "readonly", @onkeyup = "javascript:checkType(this)", @onblur = "javascript:checkBlank(this)" })
                                         @Html.ValidationMessageFor(x => Model.Steps[i].UsefulLife, "", new { @class = "text-danger" })
                                     </td>
                                     <td class="text-center hidden hide-col">
                                         <div class="input-group">
                                             <span class="input-group-addon">$</span>
-                                            @Html.TextBoxFor(x => Model.Steps[i].EquipExpensePerMinute, new { @class = "form-control", @onkeyup = "javascript:checkType(this)", @onblur = "javascript:checkBlank(this)" })
+                                            @Html.TextBoxFor(x => Model.Steps[i].EquipExpensePerMinute, new { @class = "form-control equip-expense-per-minute", @readonly = "readonly", @onkeyup = "javascript:checkType(this)", @onblur = "javascript:checkBlank(this)" })
                                             @Html.ValidationMessageFor(x => Model.Steps[i].EquipExpensePerMinute, "", new { @class = "text-danger" })
                                             <span class="input-group-addon">.00</span>
                                         </div>
@@ -127,7 +127,7 @@
                                     <td class="text-center hidden hide-col">
                                         <div class="input-group">
                                             <span class="input-group-addon">$</span>
-                                            @Html.TextBoxFor(x => Model.Steps[i].AnnualRM, new { @class = "form-control", @onkeyup = "javascript:checkType(this)", @onblur = "javascript:checkBlank(this)" })
+                                            @Html.TextBoxFor(x => Model.Steps[i].AnnualRM, new { @class = "form-control annual-rm", @readonly = "readonly", @onkeyup = "javascript:checkType(this)", @onblur = "javascript:checkBlank(this)" })
                                             @Html.ValidationMessageFor(x => Model.Steps[i].AnnualRM, "", new { @class = "text-danger" })
                                             <span class="input-group-addon">.00</span>
                                         </div>
@@ -135,7 +135,7 @@
                                     <td class="text-center hidden hide-col">
                                         <div class="input-group">
                                             <span class="input-group-addon">$</span>
-                                            @Html.TextBoxFor(x => Model.Steps[i].RMPerMinute, new { @class = "form-control", @onkeyup = "javascript:checkType(this)", @onblur = "javascript:checkBlank(this)" })
+                                            @Html.TextBoxFor(x => Model.Steps[i].RMPerMinute, new { @class = "form-control rm-per-minute", @readonly = "readonly", @onkeyup = "javascript:checkType(this)", @onblur = "javascript:checkBlank(this)" })
                                             @Html.ValidationMessageFor(x => Model.Steps[i].RMPerMinute, "", new { @class = "text-danger" })
                                             <span class="input-group-addon">.00</span>
                                         </div>

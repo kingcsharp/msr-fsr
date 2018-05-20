@@ -8,6 +8,7 @@ using Msr.Services.jqGrid;
 using Msr.Services.ProductionPlanning;
 using Msr.Models.CustomerRequirements;
 using Msr.Services;
+using Msr.Services.AdminCostSettings;
 using Msr.Services.Documents;
 using Msr.Services.Parts;
 using Msr.Services.Parts.ViewModels;
@@ -34,9 +35,11 @@ namespace Answer.Web.Controllers
         private readonly RoleService _roleService;
         private readonly PartTypeService _partTypeService;
         private readonly DocumentFilesService _documentFilesService;
+        private readonly AdminCostSettingService _adminCostSettingService;
 
         public ProductionPlanningController()
         {
+            _adminCostSettingService = new AdminCostSettingService();
             _proceduresService = new ProceduresService();
             _productionPlanService = new ProductionPlanningService();
             _quoteService = new QuoteService();
@@ -166,6 +169,8 @@ namespace Answer.Web.Controllers
 
             var currentUser = GetCurrentUser();
 
+            vm.AdminCostSettings = _adminCostSettingService.GetAdminCostSettings(); ;
+
             var requirment = _quoteService.GetById(id);
 
             if (!string.IsNullOrWhiteSpace(requirment.ProductId))
@@ -272,8 +277,7 @@ namespace Answer.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(string id, RequirementStepsViewModel vm, string saveSubmit, string saveDraft,
-            string newProcedure)
+        public ActionResult Edit(string id, RequirementStepsViewModel vm, string saveSubmit, string newProcedure)
         {
             var currentUser = GetCurrentUser();
             ModelState.Clear();
@@ -287,6 +291,7 @@ namespace Answer.Web.Controllers
                 return View(vm);
             }
 
+            vm.AdminCostSettings = _adminCostSettingService.GetAdminCostSettings(); ;
             if (!string.IsNullOrWhiteSpace(vm.ProductProcedureId) && vm.ProductProcedureId != vm.OldProductProcedureId)
             {
                 vm.OldProductProcedureId = vm.ProductProcedureId;
@@ -294,6 +299,7 @@ namespace Answer.Web.Controllers
                 var procedureObjectId = _productionPlanService.GetProceduretById(vm.ProductProcedureId).Value;
 
                 var procedureSteps = _proceduresService.GetStepsData(procedureObjectId, currentUser.Id);
+                
 
                 vm.Steps = new List<RequirementStepsDetailsViewModel>();
 
@@ -310,6 +316,7 @@ namespace Answer.Web.Controllers
                         ReplacementCost = step.ReplacementCost,
                         Utilization = step.Utilization,
                         UsefulLife = step.UsefulLife
+
                     });
                 }
 

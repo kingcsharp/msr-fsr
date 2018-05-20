@@ -35,6 +35,10 @@
                             @Html.HiddenFor(x => x.OldProductProcedureId)
                             @Html.HiddenFor(x => x.HasQuote)
                             @Html.HiddenFor(x => x.SubmittedRequirement.Status)
+                            @Html.HiddenFor(x => x.AdminCostSettings.RmAnnualRate, new { @class= "admin-cost-settings-rm-annual-rate" })
+                            @Html.HiddenFor(x => x.AdminCostSettings.HourMinutes, new { @class = "admin-cost-settings-hour-minutes" })
+                            @Html.HiddenFor(x => x.AdminCostSettings.LaborRateMinute, new { @class = "admin-cost-settings-labor-rate-minute" })
+                            @Html.HiddenFor(x => x.AdminCostSettings.YearsHours, new { @class = "admin-cost-settings-years-hours" })
 
                             @Html.Partial("_Product")
 
@@ -93,7 +97,7 @@
 
         $(document).ready(function () {
 
-              @if (Model.Steps.Count > 0)
+        @if (Model.Steps.Count > 0)
         {
             <text>
             $('.preDefinedStep').css("display", "none");
