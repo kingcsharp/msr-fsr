@@ -78,13 +78,13 @@
                         <tr>
                             <th>Product</th>
                             <th>Purchase Qty</th>
+                            <th><div id="show-hide">Work Order Creation</div></th>
                         </tr>
-
 
                         @for (int i = 0; i < Model.Products.Count; i++)
                         {
                             <tr>
-                                <td style="width:150px;">
+                                <td style="width:320px;">
                                     @Html.HiddenFor(x => Model.ProductPo[i].ORDER_ID)
                                     @Html.HiddenFor(x => Model.ProductPo[i].ACCT_ID)
                                     @Html.HiddenFor(x => Model.ProductPo[i].ACCOUNT_OBJECT_ID)
@@ -92,14 +92,23 @@
                                     @Html.TextBoxFor(x => Model.ProductPo[i].Name, new { @class = "form-control", @readonly = "readonly" })
                                 </td>
                                 <td style="width:150px;">
-                                    @Html.TextBoxFor(x => Model.ProductPo[i].Qty, new { @class = "form-control", @required = "", @style = "width:150px;" })
+                                    @Html.TextBoxFor(x => Model.ProductPo[i].Qty, new { @class = "form-control", @required = "", @style = "width:150px;",@id="Qty" })
                                     @Html.ValidationMessageFor(x => Model.ProductPo[i].Qty, "", new { @class = "text-danger" })
+                                </td>
+                                
+                                <td style="width:400px;">
+                                    <div style="display: inline-block;" id="show-hide-button">
+                                        <div class="make-switch switch-small" data-on="success" data-off="warning" style="display: inline-block">
+                                            <input id="show-switch-button" type="checkbox" name="completed-switch" checked>
+                                        </div>
+                                        <label>Group Wo By Part</label>
+                                    </div>
                                 </td>
                             </tr>
                         }
 
                         <tr class="no-border">
-                            <td colspan="2">
+                            <td colspan="3">
                                 <div id="message" class="alert-success success"></div>
                                 <div id="error-message" class="alert-danger error"></div>
                                 <input type="submit" name="BSUBMIT" class="btn btn-success" value="Create Purchase">
@@ -116,6 +125,43 @@
 
 @section scripts
 {
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+    <script type="text/javascript" src="~/assets/js/jquery.flexslider.js"></script>
+    <script type="text/javascript" src="~/assets/js/bootstrap-select.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+
+            $('#show-switch-button').bootstrapSwitch();
+
+            $('#show-switch-button').on('switchchange.bootstrapswitch',
+                function(e, state) {
+                    e.preventDefault();
+                    LoadShowHideButton(state);
+                });
+
+            $('#show-hide-button,#show-hide').hide();
+
+            $("#Qty").keyup(function() {
+
+                if ($('#Qty').val() > 1) {
+
+                    $('#show-hide-button,#show-hide').show();
+
+                } else {
+
+                    $('#show-hide-button,#show-hide').hide();
+
+                }
+            });
+
+        });
+
+        function LoadShowHideButton(state) {
+            if (state) {
+                $(this).hide();
+            } else {
+                $(this).show();
+            }
+        }
+    </script>
 }

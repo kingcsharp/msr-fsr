@@ -80,7 +80,13 @@
                                 @Html.HiddenFor(modelItem => Model.FillList[i].OBJ_PROD_APPLIES_TO)
                                 @Html.TextBoxFor(modelItem => Model.FillList[i].CUST_LINE_ITEM, new {@class = "form-control", @readonly = "readonly"})
                             </td>
-                            <td>@Html.TextBoxFor(modelItem => Model.FillList[i].SERIAL_NUMBER, new { @class = "form-control" })</td>
+                            <td>
+                                @Html.TextBoxFor(modelItem => Model.FillList[i].SERIAL_NUMBER, new {@class = "form-control", @id = "serial-number"})
+                                @if (Model.FillList.Count > 1)
+                                {
+                                    @Html.ValidationMessageFor(model => Model.FillList[i].SERIAL_NUMBER, "", new {@class = "text-danger"})
+                                }
+                            </td>
                             <td>@Html.TextBoxFor(modelItem => Model.FillList[i].PURCHASE_QTY, new { @Value="1", @class = "form-control" })</td>
                             <td>@Html.TextBoxFor(modelItem => Model.FillList[i].APP_OBJ_DESC, new { @class = "form-control", @readonly = "readonly" })</td>
                             <td>@Html.TextBoxFor(modelItem => Model.FillList[i].PROC_NAME, new { @class = "form-control", @readonly = "readonly" })</td>
@@ -98,6 +104,16 @@
 
 @section scripts
 {
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+    @Scripts.Render("~/bundles/js/jqueryval")
+    
+    <script type="text/javascript">
+        $(document).ready(function () {
+        
+            if ('@Model.FillList.Count' === '1') {
+                $('#serial-number').val('N/A');
+                $('#serial-number').attr('readonly');
+            }
+        });
+    </script>
+
 }
