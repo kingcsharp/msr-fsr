@@ -313,15 +313,25 @@ namespace Answer.Web.Controllers
                 .Where(x => x.RequesteeId == currentUser.Id)
                 .OrderByDescending(o => o.DueDate)
                 .ToList();
-            
+
             vm = _orderService.GetPurchaseItemDetails(id, currentUser.Id);
+
+            var objId = _orderService.GetProcedureByObjId(vm.FileSearchResult.ProcObjId);
+
+            var procedureRoles = _proceduresService.GetSelectedRoles(objId.Id, currentUser.Id)?.Select(x => x.Role_Id).ToList();
+
+            var roles = _roleService.GetAssignedRoles(currentUser.Id);
+
+            var hasRoles = roles.Select(x => x.Role_Id).ToList().Intersect(procedureRoles).Any();
+
+            vm.HasProcedureRoles = hasRoles;
 
             vm.MyWoItems = workItems;
 
             return View(vm);
         }
 
-    
+
         public ActionResult StatusView(int? id)
         {
             var currentUser = GetCurrentUser();
@@ -332,7 +342,7 @@ namespace Answer.Web.Controllers
             viewModel.WipStatusViewItems = _orderService.GetWorkOrderQueryable()
                 .Where(x => (x.Status == WorkItemStatusConstants.Accepted || x.Status == WorkItemStatusConstants.WaitingToStart || x.Status == WorkItemStatusConstants.Requested))
                 .OrderByDescending(x => x.DueDate)
-                .Select(x=> new WipStatusViewItem
+                .Select(x => new WipStatusViewItem
                 {
                     ProductName = x.ProductName,
                     ProcedureName = x.ProcName,
@@ -392,7 +402,7 @@ namespace Answer.Web.Controllers
 
             model.WorkOrderDetailsResponse = _orderService.GetPurchaseItemDetails(id, currentUser.Id);
 
-            model.FillUrl = Request.Url.GetLeftPart(UriPartial.Authority) + Url.Action("Details", "Wip", new {id = model.FillId});
+            model.FillUrl = Request.Url.GetLeftPart(UriPartial.Authority) + Url.Action("Details", "Wip", new { id = model.FillId });
 
             return PartialView("_ViewTsr", model);
         }
@@ -447,7 +457,6 @@ namespace Answer.Web.Controllers
 
             }
 
-
             return Json(new { success = false, responseText = "Something went wrong." }, JsonRequestBehavior.AllowGet);
         }
 
@@ -461,12 +470,32 @@ namespace Answer.Web.Controllers
 
             var myRoles = _roleService.GetAssignedRoles(loggedUserId.Id);
 
-            //checkMyRole(myRS("GROUP_REQUESTEE_ID")) or strNTLogin = myRS("REQUESTEE_ID") then
-            //getButtons
-            if ((myRoles.Any(x => x.Role_Name == "Technician") && response.TaskEditDataResult.RequesteeId == null) || response.TaskEditDataResult.RequesteeId == loggedUserId.Id)
+            var vm = _orderService.GetPurchaseItemDetails(fillId, loggedUserId.Id);
+
+            var currentStep = vm.TaskStepResults.SingleOrDefault(x => x.StepId == stepId.ToString());
+
+            if (currentStep != null && currentStep.PRINT_ORDER == null)
             {
-                response.HasRole = true;
+                var objId = _orderService.GetProcedureByObjId(vm.FileSearchResult.ProcObjId);
+
+                var procedureRoles = _proceduresService.GetSelectedRoles(objId.Id, loggedUserId.Id)?.Select(x => x.Role_Id).ToList();
+
+                var hasProcedureRoles = myRoles.Select(x => x.Role_Id).ToList().Intersect(procedureRoles).Any();
+
+                response.HasStepRoles = hasProcedureRoles;
             }
+            else
+            {
+                if (currentStep != null && currentStep.PRINT_ORDER != null)
+                {
+                    var steptRoles = currentStep.Roles?.Split(',');
+
+                    var hasRoles = steptRoles != null && myRoles.Select(x => x.Role_Id).ToList().Intersect(steptRoles).Any();
+
+                    response.HasStepRoles = hasRoles;
+                }
+            }
+
 
             response.LoggedUserIdResult = loggedUserId;
 
@@ -490,14 +519,14 @@ namespace Answer.Web.Controllers
             };
 
             var images = _orderService.GetOrderItemImagesById(stepId.ToString());
-            
+
             var jsonSerialiser = new JavaScriptSerializer();
             var previewConfig = jsonSerialiser.Serialize(images.Select(x => new
             {
                 caption = x.FILE_NAME,
                 type = MimeTypes.GetContentType(x.ContentType),
                 size = 6666,
-                url = Url.Action("DeleteImageById", "Doc", new { id= x.Id, taskId = x.Task_Id }),
+                url = Url.Action("DeleteImageById", "Doc", new { id = x.Id, taskId = x.Task_Id }),
                 downloadUrl = x.Path,
                 key = x.Id
             }));
@@ -642,13 +671,13 @@ namespace Answer.Web.Controllers
         [HttpPost]
         public ActionResult TakeTaskOwnersShip(int taskId)
         {
-            var loggedUserId = GetCurrentUser().Id;
+            var loggedUserId = GetCurrentUser();
 
-            var statusMessage = _orderService.AssumeTask(taskId, loggedUserId);
+            var statusMessage = _orderService.AssumeTask(taskId, loggedUserId.Id);
 
             if (statusMessage.HasErrors())
             {
-                return Json(new { Code = "Error", Message = statusMessage }, JsonRequestBehavior.AllowGet);
+                return Json(new { Code = "Error", Message = statusMessage.ErrorMessage }, JsonRequestBehavior.AllowGet);
             }
 
             return Json(new { Code = "OK", Message = statusMessage }, JsonRequestBehavior.AllowGet);
@@ -694,7 +723,7 @@ namespace Answer.Web.Controllers
 
             ViewBag.FillId = id;
 
-            var model = new CreateEquipmentMaintenanceViewModel {NTLogin = loggedUser.Id};
+            var model = new CreateEquipmentMaintenanceViewModel { NTLogin = loggedUser.Id };
 
             model.Setup(new EquipmentMaintenanceService(), _roleService);
 
@@ -750,7 +779,7 @@ namespace Answer.Web.Controllers
         [HttpPost]
         public JsonResult CheckEquipmentStatusById(string id)
         {
-            var equipmentMaintenance = _equipmentMaintenanceService.GetEquipmentsQueryable().Where(x => x.SubLocationSecondId == id || x.SubLocationFirstId == id).OrderBy(x=>x.DateTime).FirstOrDefault();
+            var equipmentMaintenance = _equipmentMaintenanceService.GetEquipmentsQueryable().Where(x => x.SubLocationSecondId == id || x.SubLocationFirstId == id).OrderBy(x => x.DateTime).FirstOrDefault();
 
             var canUsed = false;
             var errorMessage = string.Empty;
@@ -761,9 +790,10 @@ namespace Answer.Web.Controllers
             }
             else
             {
-                 if (equipmentMaintenance.PemLastCompletedDate.HasValue && equipmentMaintenance.MaintenanceTask == EquipmentMaintenanceTypeConstants.RoutineMaintenance && equipmentMaintenance.TroubleState == false)                   
+                if (equipmentMaintenance.PemLastCompletedDate.HasValue && equipmentMaintenance.MaintenanceTask == EquipmentMaintenanceTypeConstants.RoutineMaintenance && equipmentMaintenance.TroubleState == false)
                 {
-                    if (equipmentMaintenance.Status == EquipmentMaintenanceConstants.Assigned || equipmentMaintenance.Status == EquipmentMaintenanceConstants.Requested && equipmentMaintenance.TroubleState == false) {
+                    if (equipmentMaintenance.Status == EquipmentMaintenanceConstants.Assigned || equipmentMaintenance.Status == EquipmentMaintenanceConstants.Requested && equipmentMaintenance.TroubleState == false)
+                    {
 
                         if (DateTime.Now >= equipmentMaintenance.PemLastCompletedDate.Value.AddDays(equipmentMaintenance.FrequencyField.Value))
                         {

@@ -1,9 +1,12 @@
 ﻿@using Msr.Models.Tasks
 @model Msr.Services.Orders.Messaging.WipStepDetailsResponse
 
-@if (Model.TaskEditDataResult.Status != "CLOSED")
+@if (Model.HasStepRoles)
 {
-    @Html.Partial("_StepControls", Model)
+    if (Model.TaskEditDataResult.Status != "CLOSED")
+    {
+        @Html.Partial("_StepControls", Model)
+    }
 }
 
 @{
@@ -17,6 +20,7 @@
         timerInput = "";
     }
 }
+
 
 <div class="row">
     @if (Model.TaskEditDataResult.Status == "CLOSED")

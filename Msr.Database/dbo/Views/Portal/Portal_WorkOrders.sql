@@ -71,6 +71,7 @@ isnull('['+STUFF((    SELECT ',' + '{"Date":"'+  FORMAT ( n.CreatedDate, 'MM/dd/
 ,[PROC].Threshold
 ,part.CompanyPartNumber
 ,pa.LocationName
+,[PROC].OBJECT_ID as ProcObjId
 FROM         dbo.A_V_COMPANIES_APPROVED_DATA_QUICK AS customer INNER JOIN
 dbo.A_V_PURCHASES_APPROVED_DATA AS purch ON customer.ID = purch.CUSTOMER_CO RIGHT OUTER JOIN
 dbo.A_TASK_COMPLETION_STATS RIGHT OUTER JOIN

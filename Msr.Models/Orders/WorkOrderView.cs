@@ -56,5 +56,6 @@ namespace Msr.Models.Orders
         public string LocationName { get; set; }
         [NotMapped]
         public string Action { get; set; }
+        public string ProcObjId { get; set; }
     }
 }

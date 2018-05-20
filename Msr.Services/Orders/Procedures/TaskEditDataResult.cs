@@ -18,5 +18,7 @@ namespace Msr.Services.Orders.Procedures
         public string RequesteeId { get; set; }
 
         public string GroupRequesteeId { get; set; }
+
+        public string ParentId { get; set; }
     }
 }

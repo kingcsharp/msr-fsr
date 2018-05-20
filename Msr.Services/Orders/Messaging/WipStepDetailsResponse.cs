@@ -30,5 +30,6 @@ namespace Msr.Services.Orders.Messaging
         public LoggedUserIdResult LoggedUserIdResult { get; set; }
         public TaskLogDto TaskRunningDto { get; set; }
         public bool HasRole { get; set; }
+        public bool HasStepRoles { get; set; }
     }
 }

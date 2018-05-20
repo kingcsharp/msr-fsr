@@ -10,7 +10,8 @@ AS
 	LATEST_REQUESTEE_NAME AS Assignee,
 	Has_Monitor AS HasMonitor,
 	System_Task AS SystemTask,
-	Requestee_Id AS RequesteeId
+	Requestee_Id AS RequesteeId,
+	PARENT_ID AS ParentId
 	FROM A_V_TASK_EDIT_DATA
 	WHERE ID = @stepId
 

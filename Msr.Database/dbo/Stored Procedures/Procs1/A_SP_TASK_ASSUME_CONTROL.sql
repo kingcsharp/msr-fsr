@@ -1,6 +1,6 @@
-﻿Create PROCEDURE dbo.A_SP_TASK_ASSUME_CONTROL 
-@RET_STATUS as varchar(500) OUTPUT,
-@MSGS as varchar(500) OUTPUT,
+﻿CREATE               PROCEDURE [dbo].[A_SP_TASK_ASSUME_CONTROL] 
+@RET_STATUS as varchar(50) OUTPUT,
+@MSGS as varchar(50) OUTPUT,
 @ID as varchar(50),
 @strNTLogin as varchar(50)
 AS
@@ -10,27 +10,35 @@ declare @requestee as varchar(50)
 declare @roleRequestee as varchar(50)
 SELECT @requestee = REQUESTEE_ID,@roleRequestee = GROUP_REQUESTEE_ID FROM A_TASKS WHERE ID = @ID
 declare @tester as varchar(50),@taskStat varchar(50)
-SELECT @taskStat = STATUS FROM A_TASKS WHERE ID = @ID
---if @taskStat not in ('ACCEPTED')
---	begin
---	set @RET_STATUS = 'ERROR - Please start the task to take over this task.'
---	goto fin
---	end
+declare @StepRoles as nvarchar(max)
+SELECT @taskStat = STATUS FROM A_TASKS WHERE ID = @ID              
 
-if @roleRequestee is not null
-	begin
-	print 'This is a request to  role ' + @roleRequestee
-	if not exists (SELECT ID FROM A_PERSON_ROLES WHERE PERSON_ID = @strNTLogin AND ROLE_ID = @roleRequestee)
-		begin
-		set @RET_STATUS = 'ERROR - You are not a member of the role that this task was assigned to.'
-		goto fin
-		end
-	end
-else
-	begin
-	set @RET_STATUS = 'ERROR - This task was never assigned to a group, so I do not know how you can assume it.'
-	goto fin
-	end
+SELECT @StepRoles=(SELECT Roles FROM A_V_TASKS_WITH_PROCEDURE_STEP_DATA WHERE STEP_ID=@ID)
+
+ IF NOT EXISTS(SELECT ROLE_ID FROM A_APPROVED_ROLE_ASSIGNEES WHERE PERSON=@strNTLogin AND ROLE_ID IN (SELECT * from dbo.SplitString(@StepRoles)))
+	BEGIN
+	SET @RET_STATUS = 'ERROR - You are not a member of the role that this task was assigned to.'
+	GOTO fin
+    END
+
+ELSE
+   BEGIN
+IF @taskStat not in ('ACCEPTED')
+	BEGIN
+	SET @RET_STATUS = 'ERROR - This task is not accepted so it can not be assumed.'
+	GOTO fin
+	END
+
+IF @roleRequestee is not null
+    BEGIN
+	PRINT 'This is a request to  role ' + @roleRequestee
+	END
+ELSE
+	BEGIN
+	SET @RET_STATUS = 'ERROR - This task was never assigned to a group, so I do not know how you can assume it.'
+	GOTO fin
+	END
+
 
 
 declare @fwdID varchar(50),@fwdMSG varchar(50)
@@ -46,10 +54,8 @@ exec A_SP_TASK_ACCEPT
 @ID,@strNTLogin
 
 
-fin: 
-
-
-
+fin:
+End 
 
 
 

@@ -16,5 +16,9 @@ namespace Msr.Services.Orders.Procedures
         public string FillObjDesc { get; set; }
 
         public int? FillObjectId { get; set; }
+
+        public string ProcId { get; set; }
+
+        public string ProcObjId { get; set; }
     }
 }

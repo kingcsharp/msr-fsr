@@ -22,5 +22,6 @@ namespace Msr.Services.Orders.Messaging
         public List<TaskStepResult> TaskStepResults { get; set; }
         public List<WorkOrderView> MyWoItems { get; set; }
         public IEnumerable<SelectListItem> WorkItems { get; set; }
+        public bool HasProcedureRoles { get; set; }
     }
 }

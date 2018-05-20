@@ -17,6 +17,7 @@ using Msr.Services.Orders.Procedures;
 using Msr.Services.Orders.ViewModels;
 using RestSharp;
 using Msr.Models.Comman;
+using Msr.Models.Procedures;
 using Msr.Services.Documents;
 
 namespace Msr.Services.Orders
@@ -1005,5 +1006,13 @@ namespace Msr.Services.Orders
 
             return result;
         }
+
+        public ProcedureView GetProcedureByObjId(string objId)
+        {
+            var result = _dbContext.Procedures.SingleOrDefault(x => x.ObjectId == objId);
+
+            return result;
+        }
+
     }
 }
