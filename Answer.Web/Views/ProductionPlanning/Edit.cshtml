@@ -31,11 +31,14 @@
                         @using (Html.BeginForm("Edit", "ProductionPlanning", FormMethod.Post, new { @id = "production-planning-form", @class = "", role = "form" }))
                         {
                             <input type="hidden" id="QuoteProcedureName" name="QuoteProcedureName" value="@ViewBag.QuoteProcedureName" />
+
                             @Html.HiddenFor(x => x.Id)
+                            @Html.HiddenFor(x => x.CustomerSubmitId)
+                            @Html.HiddenFor(x => x.PObjectId)
                             @Html.HiddenFor(x => x.OldProductProcedureId)
                             @Html.HiddenFor(x => x.HasQuote)
                             @Html.HiddenFor(x => x.SubmittedRequirement.Status)
-                            @Html.HiddenFor(x => x.AdminCostSettings.RmAnnualRate, new { @class= "admin-cost-settings-rm-annual-rate" })
+                            @Html.HiddenFor(x => x.AdminCostSettings.RmAnnualRate, new { @class = "admin-cost-settings-rm-annual-rate" })
                             @Html.HiddenFor(x => x.AdminCostSettings.HourMinutes, new { @class = "admin-cost-settings-hour-minutes" })
                             @Html.HiddenFor(x => x.AdminCostSettings.LaborRateMinute, new { @class = "admin-cost-settings-labor-rate-minute" })
                             @Html.HiddenFor(x => x.AdminCostSettings.YearsHours, new { @class = "admin-cost-settings-years-hours" })
@@ -46,14 +49,14 @@
                             {
                                 @Html.Partial("_Steps")
                             }
-                        
+
                             <div>
                                 @if (Model.ProductStatus != "APPROVED")
                                 {
-                                    @Html.ActionLink("Back", "Index", null, new { @class = "btn btn-warning back-step pull-right", title= "Back To Production Planning",  style = "margin-left: 10px;" })
+                                    @Html.ActionLink("Back", "Index", null, new { @class = "btn btn-warning back-step pull-right", title = "Back To Production Planning", style = "margin-left: 10px;" })
                                     <button id="form-change" class="hidden" style="margin-left: 10px;" data-toggle="tooltip" data-placement="top" title="" data-original-title="Saves and Sends Quoation to Client" name="" value=""> Submit</button>
-                                    <button id="submit" class="pull-right btn btn-success" style="margin-left: 10px;" data-toggle="tooltip" data-placement="top" title="" data-original-title="Saves and Sends Quoation to Client" name="SaveSubmit" value="SaveSubmit"><i class="fa fa-send"></i> Save &amp; Submit</button>
-                                    <button id="save_draft" class="pull-right btn btn-info" style="margin-left: 10px;" data-toggle="tooltip" data-placement="top" title="" data-original-title="Saves with In Progress Status" type="submit" name="SaveDraft" value="SaveDraft"><i class="fa fa-save"></i> Save Draft</button>
+                                    <button id="submit" class="pull-right btn btn-success" style="margin-left: 10px;" data-toggle="tooltip" data-placement="top" title="" data-original-title="Saves and Sends Quoation to Client" name="SaveSubmit"><i class="fa fa-send"></i> Save &amp; Submit</button>
+                                    <button id="save_draft" class="pull-right btn btn-info" style="margin-left: 10px;" data-toggle="tooltip" data-placement="top" title="" data-original-title="Saves with In Progress Status" type="submit" name="SaveSubmit"><i class="fa fa-save"></i> Save Draft</button>
                                 }
                                 @if (Model.HasQuote)
                                 {
@@ -67,9 +70,7 @@
         </div>
     </div>
 </div>
-
 @Html.Partial("_Models")
-
 <div id="partmodel" class="modal fade" role="dialog">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -84,12 +85,10 @@
         </div>
     </div>
 </div>
-
 @section scripts
 {
     @Scripts.Render("~/bundles/js/jqueryval")
     @Scripts.Render("~/bundles/js/fileinput")
-
     <script type="text/javascript" src="~/assets/js/ObjectAssign.js"></script>
     <script type="text/javascript" src="~/assets/js/grids/requirement-steps.js"></script>
     <script src="~/assets/js/grids/comman.js"></script>
@@ -97,7 +96,7 @@
 
         $(document).ready(function () {
 
-        @if (Model.Steps.Count > 0)
+              @if (Model.Steps.Count > 0)
         {
             <text>
             $('.preDefinedStep').css("display", "none");
@@ -151,4 +150,3 @@
         });
     </script>
 }
-

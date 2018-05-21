@@ -174,6 +174,7 @@ function recalculateTotals() {
 
     $('.annual-rm').each(function () {
         var replacementCost = parseFloat($(this).closest('tr').find('.replacement-cost').val());
+        debugger;
         var total = (replacementCost * rmAnnualRate);
         $(this).val(total.toFixed(2));
     });

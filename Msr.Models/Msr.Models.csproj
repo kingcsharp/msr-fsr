@@ -211,6 +211,7 @@
     <Compile Include="Users\AspNetUserLogin.cs" />
     <Compile Include="Users\RolesConstants.cs" />
     <Compile Include="Users\PeopleView.cs" />
+    <Compile Include="Workflows\WorkItemStatusConstants.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

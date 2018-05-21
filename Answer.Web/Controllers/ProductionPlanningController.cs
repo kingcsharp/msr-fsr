@@ -60,7 +60,7 @@ namespace Answer.Web.Controllers
         {
 
             var totalRows = _productionPlanService.GetProductionPlaningQueryable().Where(x =>
-                x.ProductStatus != "DELETED" && x.ProductStatus != "OLD" && x.ProductStatus != "APPROVED_BUT_REVISING");
+                x.ProductStatus != "DELETED" && x.ProductStatus != "OLD");
 
             if (param.where != null && param.where.rules.Any())
             {
@@ -105,7 +105,7 @@ namespace Answer.Web.Controllers
                         totalRows = totalRows.Where(x => x.ProcedureName.ToLower().Contains(rule.data.ToLower()));
                     }
                     else if (rule.field == nameof(CustomerRequirementView.Status))
-                    { 
+                    {
                         var statusList = rule.data.Split(',').Select(x => x.Trim().ToLower());
 
                         if (statusList.Any())
@@ -136,7 +136,7 @@ namespace Answer.Web.Controllers
             totalRows = totalRows.Skip(param.pageSize * (param.pageIndex - 1));
 
             totalRows = totalRows.Take(param.pageSize);
-            var totalPages = (int) Math.Ceiling((float) totalRecords / (float) param.pageSize);
+            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)param.pageSize);
 
             var results = totalRows.ToList();
 
@@ -160,7 +160,7 @@ namespace Answer.Web.Controllers
         {
             _productionPlanService.UpdateStatus(id, CustomerSubmittedRequirementConstants.InProgress);
 
-            return RedirectToAction("Edit", "ProductionPlanning", new {id});
+            return RedirectToAction("Edit", "ProductionPlanning", new { id });
         }
 
         public ActionResult Edit(int id)
@@ -169,22 +169,12 @@ namespace Answer.Web.Controllers
 
             var currentUser = GetCurrentUser();
 
-            vm.AdminCostSettings = _adminCostSettingService.GetAdminCostSettings(); ;
+            vm.AdminCostSettings = _adminCostSettingService.GetAdminCostSettings();
 
-            var requirment = _quoteService.GetById(id);
-
-            if (!string.IsNullOrWhiteSpace(requirment.ProductId))
-            {
-                var productView = _productionPlanService.GetProductionPlaningQueryable().SingleOrDefault(x =>
-                    x.ProductId == requirment.ProductId && x.ProductStatus == "CREATING");
-
-                if (productView.ProductStatus != "CREATING")
-                {
-                    _workflowService.CheckOutObject(productView.ProductId, currentUser.Id);
-                }
-            }
+            var requirment = _quoteService.GetCustomerRequirementView(id);
 
             vm.Read(_productionPlanService, requirment, _proceduresService);
+
             var procedureObjectId = "";
 
             if (!string.IsNullOrWhiteSpace(vm.ProductProcedureId))
@@ -208,7 +198,7 @@ namespace Answer.Web.Controllers
                         ObjectId = step.Id,
                         Process = step.Title,
                         StepTitle = step.Title,
-                        Step = (int) step.Print_Order,
+                        Step = (int)step.Print_Order,
                         StandardDirectLaborMinutes = step.Duration,
                         StandardMachineMinutes = step.EquipmentTime,
                         ReplacementCost = step.ReplacementCost,
@@ -236,16 +226,13 @@ namespace Answer.Web.Controllers
         public ActionResult View(int id)
         {
             var currentUser = GetCurrentUser();
-            var requirment = _quoteService.GetById(id);
-
-            var productView = _productionPlanService.GetProductionPlaningQueryable()
-                .FirstOrDefault(x => x.Id == id && x.ProductStatus == "APPROVED");
+            var requirment = _quoteService.GetCustomerRequirementView(id);
 
             var viewModel = new RequirementStepsViewModel();
-            viewModel.ProductStatus = productView.ProductStatus;
+
+            viewModel.AdminCostSettings = _adminCostSettingService.GetAdminCostSettings();
 
             viewModel.Read(_productionPlanService, requirment, _proceduresService);
-
 
             var procedureObjectId = _productionPlanService.GetProceduretById(viewModel.ProductProcedureId).Value;
             var procedureSteps = _proceduresService.GetStepsData(procedureObjectId, currentUser.Id);
@@ -261,7 +248,7 @@ namespace Answer.Web.Controllers
                         ObjectId = step.Id,
                         Process = step.Title,
                         StepTitle = step.Title,
-                        Step = (int) step.Print_Order,
+                        Step = (int)step.Print_Order,
                         StandardDirectLaborMinutes = step.Duration,
                         StandardMachineMinutes = step.EquipmentTime,
                         ReplacementCost = step.ReplacementCost,
@@ -285,7 +272,7 @@ namespace Answer.Web.Controllers
             if (!string.IsNullOrWhiteSpace(newProcedure))
             {
                 vm.ProductProcedureId = null;
-                vm.Steps = new List<RequirementStepsDetailsViewModel> {new RequirementStepsDetailsViewModel()};
+                vm.Steps = new List<RequirementStepsDetailsViewModel> { new RequirementStepsDetailsViewModel() };
                 vm.Setup(_productionPlanService, _preProServices, currentUser);
 
                 return View(vm);
@@ -299,7 +286,7 @@ namespace Answer.Web.Controllers
                 var procedureObjectId = _productionPlanService.GetProceduretById(vm.ProductProcedureId).Value;
 
                 var procedureSteps = _proceduresService.GetStepsData(procedureObjectId, currentUser.Id);
-                
+
 
                 vm.Steps = new List<RequirementStepsDetailsViewModel>();
 
@@ -310,13 +297,12 @@ namespace Answer.Web.Controllers
                         Id = Convert.ToInt32(step.Id),
                         ObjectId = step.Id,
                         Process = step.Title,
-                        Step = (int) step.Print_Order,
+                        Step = (int)step.Print_Order,
                         StandardDirectLaborMinutes = step.Duration,
                         StandardMachineMinutes = step.EquipmentTime,
                         ReplacementCost = step.ReplacementCost,
                         Utilization = step.Utilization,
                         UsefulLife = step.UsefulLife
-
                     });
                 }
 
@@ -343,10 +329,10 @@ namespace Answer.Web.Controllers
                 {
                     TempData["SuccessMessage"] = response.SuccessMessage;
 
-                    if (!string.IsNullOrWhiteSpace(saveSubmit))
+                    if (saveSubmit == "SaveSubmit")
                     {
                         return RedirectToAction("Submit", "Workflow",
-                            new {objId = response.Entity.ProductId, returnUrl = Url.Content("~/ProductionPlanning")});
+                            new { objId = response.Entity.ProductId, returnUrl = Url.Content("~/ProductionPlanning") });
                     }
 
                     vm.Setup(_productionPlanService, _preProServices, currentUser);

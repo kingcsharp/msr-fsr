@@ -20,7 +20,7 @@ namespace Msr.Services.ProductionPlanning.ViewModels
             Steps = new List<RequirementStepsDetailsViewModel>();
         }
 
-        public CustomerSubmittedRequirement SubmittedRequirement { get; set; }
+        public CustomerRequirementView SubmittedRequirement { get; set; }
 
         public bool HasQuote { get; set; }
 
@@ -31,7 +31,7 @@ namespace Msr.Services.ProductionPlanning.ViewModels
         public string ObjectId { get; set; }
 
         public string OldProductProcedureId { get; set; }
-        
+
         public string ProductProcedureId { get; set; }
 
         [Required]
@@ -71,6 +71,7 @@ namespace Msr.Services.ProductionPlanning.ViewModels
         public decimal? MaterialCost { get; set; }
 
         public decimal? TotalSalePrice { get; set; }
+        public int CustomerSubmitId { get; set; }
 
         public List<RequirementStepsDetailsViewModel> Steps { get; set; }
 
@@ -132,10 +133,11 @@ namespace Msr.Services.ProductionPlanning.ViewModels
             }).OrderBy(o => o.Text).ToList();
         }
 
-        public void Read(ProductionPlanningService productionPlanService, CustomerSubmittedRequirement requirment,
+        public void Read(ProductionPlanningService productionPlanService, CustomerRequirementView requirment,
             ProceduresService proceduresService)
         {
-            Id = requirment.Id;
+            Id = requirment.CustomerSubmitId;
+            CustomerSubmitId = requirment.CustomerSubmitId;
             SubmittedRequirement = requirment;
             ProductCustomerDivision = requirment.Division;
             ProductSupplierId = requirment.SupplierId;
@@ -149,13 +151,14 @@ namespace Msr.Services.ProductionPlanning.ViewModels
             SubmittedRequirement = requirment;
             TotalSalePrice = requirment.TotalSalePrice;
             MaterialCost = requirment.MaterialCost;
+            PObjectId = requirment.PObjectId;
 
             if (!string.IsNullOrWhiteSpace(requirment.QuoteJson))
             {
                 HasQuote = true;
             }
 
-            var attachedSteps = productionPlanService.GetStepsByObjectId(requirment.Id).OrderBy(x => x.Step);
+            var attachedSteps = productionPlanService.GetStepsByObjectId(requirment.CustomerSubmitId).OrderBy(x => x.Step);
 
             if (attachedSteps.Any())
             {
@@ -231,5 +234,7 @@ namespace Msr.Services.ProductionPlanning.ViewModels
             }
 
         }
+
+        public string PObjectId { get; set; }
     }
 }

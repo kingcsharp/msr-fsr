@@ -4,7 +4,7 @@ namespace Msr.Models.CustomerRequirements
 {
     public class CustomerRequirementView
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string Respresentative { get; set; }
         public string Description { get; set; }
         public string CustomerId { get; set; }
@@ -23,5 +23,14 @@ namespace Msr.Models.CustomerRequirements
         public string ProductWorkflowId { get; set; }
         public string ProductStatus { get; set; }
         public string ProcedureName { get; set; }
+        public string PObjectId { get; set; }
+        public int CustomerSubmitId { get; set; }
+        public decimal? TotalSalePrice { get; set; }
+        public decimal? MaterialCost { get; set; }
+        public string QuoteJson { get; set; }
+        public string CustomerRequirementJson { get; set; }
+        public double? LeadTime { get; set; }
+        public double? Price { get; set; }
+        public int? Rev { get; set; }
     }
 }

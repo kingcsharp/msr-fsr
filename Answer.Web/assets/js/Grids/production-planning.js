@@ -8,9 +8,9 @@ function LoadGrid(url, returnUrl) {
             datatype: "json",
             colModel: [
                 {
-                    label: 'Id',
-                    name: 'Id',
-                    index: 'Id',
+                    label: 'PObjectId',
+                    name: 'PObjectId',
+                    index: 'PObjectId',
                     colmenu: false,
                     coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                     width: 150,
@@ -98,6 +98,16 @@ function LoadGrid(url, returnUrl) {
                     align: 'center'
                 },
                 {
+                    label: 'Revision',
+                    name: 'Rev',
+                    index: 'Rev',
+                    colmenu: false,
+                    coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                    searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                    align: 'center'
+                }
+                ,
+                {
                     label: 'Status',
                     name: 'ProductStatus',
                     index: 'ProductStatus',
@@ -108,7 +118,7 @@ function LoadGrid(url, returnUrl) {
                     searchoptions: { value: Msr.JqGridCommon.GetStatusFilters() },
                     align: 'center'
                 },
-                { name: 'Actions', index: 'ID', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: actionFormatter, sortable: false, width: 100, align: 'center' }
+                { name: 'Actions', index: 'PObjectId', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: actionFormatter, sortable: false, width: 100, align: 'center' }
 
             ],
             viewrecords: true, // show the current page, data rang and total records on the toolbar
@@ -129,17 +139,51 @@ function LoadGrid(url, returnUrl) {
             ajaxCellOptions: {},
             gridComplete: function () {
                 Msr.JqGridCommon.UnLockWorkflow(returnUrl);
+                $('.editp').on('click',
+                    function (e) {
+                        e.preventDefault();
+
+                        var callBackId = $(this).data('call-back-id');
+                        var callBackName = $(this).data('call-back-name');
+
+                        eModal.confirm(
+                            'Are You Sure? Locking prevents others from editing. Checking out create the next revision for you to edit?', 'Confirmation Edit')
+                            .then(confirmCallback, optionalCancelCallback);
+
+                        function confirmCallback() {
+                            $.ajax({
+                                type: "GET",
+                                url: '/WorkFlow/CheckOutObject/' + callBackId,
+                                dataType: 'JSON',
+                                cache: false,
+                                success: function (data) {
+                                    window.location.href = '/ProductionPlanning/edit/' +
+                                        data.ObjectId +
+                                        '?&saveSubmit=' +
+                                        callBackName;
+                                },
+                                error: function (error) {
+                                    alert(error);
+                                }
+                            });
+
+                        }
+
+                        function optionalCancelCallback() {
+                        }
+
+                    });
             },
 
         });
         $('#jqGrid').navGrid("#jqGridPager", {
-                refresh: true,
-                search: false, // show search button on the toolbar
-                add: false,
-                edit: false,
-                del: false,
+            refresh: true,
+            search: false, // show search button on the toolbar
+            add: false,
+            edit: false,
+            del: false,
 
-            },
+        },
             {}, // edit options
             {}, // add options
             {}, // delete options
@@ -156,19 +200,24 @@ function LoadGrid(url, returnUrl) {
 
             var startButton = '';
             var editButton = '';
+            var viewButton = '';
             if (rowObject.Status === 'Received') {
-                var startButton = '<a href="/ProductionPlanning/start/' + rowObject.Id + '" class="btn btn-xs btn-primary" title="View" style="margin:2px;font-size: .8em;"><i class="fa fa-play-circle"> Start</i></a>';
+                var startButton = '<a href="/ProductionPlanning/start/' + rowObject.CustomerSubmitId + '" class="btn btn-xs btn-primary" title="View" style="margin:2px;font-size: .8em;"><i class="fa fa-play-circle"> Start</i></a>';
             } else if (rowObject.Status === 'In Progress') {
-                editButton = '<a  title="Edit" href="/ProductionPlanning/Edit/' + rowObject.Id + '" class="btn btn-xs btn-warning" style="margin:2px;font-size: .8em;"><i class="fa fa-pencil"> Edit</i></a>';
+                editButton = '<a  title="Edit" href="/ProductionPlanning/Edit/' + rowObject.CustomerSubmitId + '" class="btn btn-xs btn-warning" style="margin:2px;font-size: .8em;"><i class="fa fa-pencil"> Edit in progress</i></a>';
             }
 
-            var editButton = '';
             if ((rowObject.ProductStatus !== 'APPROVED_BUT_REVISING' && rowObject.ProductStatus !== 'APPROVED') && rowObject.Status !== 'Received') {
-                var editButton = '<a  title="Edit" href="/ProductionPlanning/edit/' + rowObject.Id + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
+                if (rowObject.ProductId == null) {
+                    editButton = '<a  title="Edit" href="/ProductionPlanning/edit/' + rowObject.CustomerSubmitId + '?&saveSubmit=CustomerSubmit" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
+                } else {
+                    editButton = '<a  title="Edit" href="/ProductionPlanning/edit/' + rowObject.PObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
+                }
             }
 
             if (rowObject.ProductStatus === 'APPROVED') {
-                var editButton = '<a  title="Edit" href="/ProductionPlanning/view/' + rowObject.Id + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-eye"></i></a>';
+                viewButton = '<a  title="Edit" href="/ProductionPlanning/view/' + rowObject.PObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-eye"></i></a>';
+                editButton = '<a  title="Edit" data-call-back-id ="' + rowObject.PObjectId + '" data-call-back-name ="ProductSubmit" href="/ProductionPlanning/edit/' + rowObject.PObjectId + '" class="btn btn-xs btn-success editp" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
             }
 
             var deleteButton = '';
@@ -178,16 +227,16 @@ function LoadGrid(url, returnUrl) {
 
             if (rowObject.ProductStatus === 'CREATING') {
 
-                url = '/workflow/submit?objId=' + rowObject.ProductId + '&returnUrl=' + returnUrl;
-                buttonWorkflowLeft = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '"  data-call-back-id="' + rowObject.ProductId + '" class="btn btn-xs btn-danger unlock" title="Cancel Creation. Edit will be lost" style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-left"></i></a>';
+                url = '/workflow/submit?objId=' + rowObject.PObjectId + '&returnUrl=' + returnUrl;
+                buttonWorkflowLeft = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '"  data-call-back-id="' + rowObject.PObjectId + '" class="btn btn-xs btn-danger unlock" title="Cancel Creation. Edit will be lost" style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-left"></i></a>';
 
                 buttonWorkflowRight = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-success" title="Proceed to approval workflow for release." style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-right"></i></a>';
             } else {
-                url = '/workflow/delete?objId=' + rowObject.ProductId + '&returnUrl=' + returnUrl;
+                url = '/workflow/delete?objId=' + rowObject.PObjectId + '&returnUrl=' + returnUrl;
                 deleteButton = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-danger" title="Proceed to Delete." style="margin:2px;font-size: .8em;"><i class="fa fa fa-trash-o"></i></a>';
             }
 
-            return startButton + editButton + buttonWorkflowLeft + buttonWorkflowRight;
+            return startButton + editButton + buttonWorkflowLeft + buttonWorkflowRight + viewButton;
         }
 
 

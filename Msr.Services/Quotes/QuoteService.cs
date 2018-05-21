@@ -119,6 +119,15 @@ namespace Msr.Services.Quotes
 
             return requirment;
         }
+
+        public CustomerRequirementView GetCustomerRequirementView(int id)
+        {
+            var requirment = _dbContext.CustomerRequirementViews
+                .FirstOrDefault(x => x.PObjectId == id.ToString() || x.CustomerSubmitId == id);
+
+            return requirment;
+        }
+
         public PartsView GetPartById(string id)
         {
             return _dbContext.PartsViews.Where(x => x.ObjectId == id).SingleOrDefault();

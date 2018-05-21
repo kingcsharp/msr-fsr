@@ -29,7 +29,6 @@ namespace Msr.Services.Orders.Messaging
         public List<GetReferenceTheories> ReferenceTheories { get; set; }
         public LoggedUserIdResult LoggedUserIdResult { get; set; }
         public TaskLogDto TaskRunningDto { get; set; }
-        public bool HasRole { get; set; }
         public bool HasStepRoles { get; set; }
     }
 }
