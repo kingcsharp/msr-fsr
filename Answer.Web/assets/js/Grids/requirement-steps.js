@@ -167,16 +167,17 @@ function recalculateTotals() {
         var usefulLife = parseInt($(this).closest('tr').find('.useful-life').val());
         var total = (replacementCost / usefulLife) / (yearsHours * hourMinutes * utilization);
         if (isNaN(total)) {
-            total = 0;
+            total = 0.00;
         }
-        $(this).val(total);
+        
+        $(this).val(toFixedNumber(total));
     });
 
     $('.annual-rm').each(function () {
         var replacementCost = parseFloat($(this).closest('tr').find('.replacement-cost').val());
-        debugger;
+        
         var total = (replacementCost * rmAnnualRate);
-        $(this).val(total.toFixed(2));
+        $(this).val(toFixedNumber(total));
     });
 
     $('.rm-per-minute').each(function () {
@@ -187,7 +188,7 @@ function recalculateTotals() {
         if (isNaN(total)) {
             total = 0;
         }
-        $(this).val(total.toFixed(4));
+        $(this).val(toFixedNumber(total));
     });
 
     var sum = 0;
@@ -245,3 +246,13 @@ function checkBlank(e) {
         e.value = 0.00;
     }
 }
+
+////TODO this is hack, need to redo
+function toFixedNumber(value) {
+    if (value.toString().length > 4) {
+        return value.toString().substring(0, 4);
+    } else {
+        return value;
+    }
+}
+

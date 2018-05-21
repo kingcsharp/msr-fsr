@@ -72,7 +72,6 @@
                 dataType : "json",
                 data: form,
                 success: function (result) {
-                    debugger;
                     $('#ProductPartId').html('');
                     $.each(result.data, function (i, item) {
                         $('#ProductPartId').append($('<option>', {
