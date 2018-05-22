@@ -88,32 +88,39 @@
 @section scripts
 {
     @Scripts.Render("~/bundles/js/jqueryval")
-    @Scripts.Render("~/bundles/js/fileinput")
+
     <script type="text/javascript" src="~/assets/js/ObjectAssign.js"></script>
     <script type="text/javascript" src="~/assets/js/grids/requirement-steps.js"></script>
     <script src="~/assets/js/grids/comman.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/4.2.2/math.min.js"></script>
     <script type="text/javascript">
 
-        $(document).ready(function () {
+        $(document).ready(function() {
 
-              @if (Model.Steps.Count > 0)
-        {
-            <text>
-            $('.preDefinedStep').css("display", "none");
-            </text>
-        }
+            @if (Model.Steps.Count > 0)
+            {
+                <text>
+                    $('.preDefinedStep').css("display", "none");
+                </text>
+            }
             var i = parseInt($('#totalRecords').val());
             var myoptions = $('#defaultProcessList').html();
+
             LoadSteps(i, myoptions);
 
-            $('#Print').on('click', function () {
-                $('#printThis').printThis();
-            });
+            //override value if manually edited
+            if (!isNaN(parseFloat('@Model.TotalSalePrice'))) {
+                $("#totalSalePrice").val(parseFloat(@Model.TotalSalePrice).toFixed(2));
+            }
 
-            $('#ProductProcedureId').on('change', function () {
-                $('#form-change').trigger('click');
-            });
+            $('#Print').on('click',
+                function() {
+                    $('#printThis').printThis();
+                });
+
+            $('#ProductProcedureId').on('change',
+                function() {
+                    $('#form-change').trigger('click');
+                });
 
             $(".selectPart").select2();
 
@@ -125,25 +132,23 @@
                 multiple: true,
                 allowClear: true,
                 placeholder: "Select Roles",
-                formatNoMatches: function () {
+                formatNoMatches: function() {
                     return '';
                 }
             });
 
             $('#partmodel').on('show.bs.modal',
-                function (event) {
-
+                function(event) {
                     var modal = $(this);
-
                     $.ajax({
                         type: "GET",
                         url: '@Url.Action("AddPart", "ProductionPlanning")',
                         dataType: 'html',
-                        success: function (data) {
+                        success: function(data) {
                             modal.find('.modal-body').html(data);
 
                         },
-                        error: function (error) {
+                        error: function(error) {
                             eLoaderError(error);
                         }
                     });

@@ -79,6 +79,10 @@
             var myoptions = $('#defaultProcessList').html();
             LoadSteps(i, myoptions);
 
+            if (!isNaN(parseFloat('@Model.TotalSalePrice'))) {
+                $("#totalSalePrice").val(parseFloat(@Model.TotalSalePrice).toFixed(2));
+            }
+
             $('#Print').on('click', function () {
                 $('#printThis').printThis();
             });

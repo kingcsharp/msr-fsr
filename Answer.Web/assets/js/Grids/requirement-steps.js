@@ -194,7 +194,7 @@ function recalculateTotals() {
     var sum = 0;
 
     $(".labor-mins").each(function () {
-        if ($(this).val() != "")
+        if ($(this).val() !== "")
             sum += parseInt($(this).val());
     });
 
@@ -214,6 +214,7 @@ function recalculateTotals() {
         if ($(this).val() != "")
             sum1 += parseInt($(this).val());
     });
+
     $("#totalMachineMins").val(parseFloat(sum1).toFixed(2));
 
     var rate2 = .44;
@@ -223,7 +224,6 @@ function recalculateTotals() {
     var labor1 = parseFloat($("#totalDirectDollar").val());
     var newTotal1 = (labor1 + sum3);
     $("#totalSalePrice").val(parseFloat(newTotal1).toFixed(2));
-
 
 }
 function manageSwitchColum() {
