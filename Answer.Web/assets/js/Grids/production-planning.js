@@ -208,7 +208,7 @@ function LoadGrid(url, returnUrl) {
 
             if ((rowObject.ProductStatus !== 'APPROVED_BUT_REVISING' && rowObject.ProductStatus !== 'APPROVED') && rowObject.Status !== 'Received') {
                 if (rowObject.ProductId == null) {
-                    editButton = '<a  title="Edit" href="/ProductionPlanning/edit/' + rowObject.CustomerSubmitId + ' class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
+                    editButton = '<a  title="Edit" href="/ProductionPlanning/edit/' + rowObject.CustomerSubmitId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
                 } else {
                     editButton = '<a  title="Edit" href="/ProductionPlanning/edit/' + rowObject.PObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
                 }
