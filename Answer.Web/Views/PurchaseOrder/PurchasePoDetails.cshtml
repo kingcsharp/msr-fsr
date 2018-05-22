@@ -99,7 +99,7 @@
                                 <td style="width:400px;">
                                     <div style="display: inline-block;" id="show-hide-button">
                                         <div class="make-switch switch-small" data-on="success" data-off="warning" style="display: inline-block">
-                                            <input id="show-switch-button" type="checkbox" name="completed-switch" checked>
+                                            <input id="show-switch-button" type="checkbox" name="completed-switch">
                                         </div>
                                         <label>Group Wo By Part</label>
                                     </div>
@@ -125,43 +125,39 @@
 
 @section scripts
 {
-    <script type="text/javascript" src="~/assets/js/jquery.flexslider.js"></script>
-    <script type="text/javascript" src="~/assets/js/bootstrap-select.js"></script>
+<script type="text/javascript" src="~/assets/js/jquery.flexslider.js"></script>
+<script type="text/javascript" src="~/assets/js/bootstrap-select.js"></script>
 
-    <script type="text/javascript">
-        $(document).ready(function() {
+<script type="text/javascript">
+    $(document).ready(function() {
 
-            $('#show-switch-button').bootstrapSwitch();
+        $('#show-switch-button').bootstrapSwitch();
 
-            $('#show-switch-button').on('switchchange.bootstrapswitch',
-                function(e, state) {
-                    e.preventDefault();
-                    LoadShowHideButton(state);
-                });
-
-            $('#show-hide-button,#show-hide').hide();
-
-            $("#Qty").keyup(function() {
-
-                if ($('#Qty').val() > 1) {
-
-                    $('#show-hide-button,#show-hide').show();
-
-                } else {
-
-                    $('#show-hide-button,#show-hide').hide();
-
-                }
+        $('#show-switch-button').on('switchchange.bootstrapswitch',
+            function(e, state) {
+                e.preventDefault();
+                LoadShowHideButton(state);
             });
 
+        $('#show-hide-button,#show-hide').hide();
+
+        $("#Qty").keyup(function() {
+
+            if ($('#Qty').val() > 1) {
+                $('#show-hide-button,#show-hide').show();
+            } else {
+                $('#show-hide-button,#show-hide').hide();
+            }
         });
 
-        function LoadShowHideButton(state) {
-            if (state) {
-                $(this).hide();
-            } else {
-                $(this).show();
-            }
+    });
+
+    function LoadShowHideButton(state) {
+        if (state) {
+            $(this).hide();
+        } else {
+            $(this).show();
         }
-    </script>
+    }
+</script>
 }

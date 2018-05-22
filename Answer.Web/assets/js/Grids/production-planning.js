@@ -201,15 +201,14 @@ function LoadGrid(url, returnUrl) {
             var startButton = '';
             var editButton = '';
             var viewButton = '';
+
             if (rowObject.Status === 'Received') {
                 var startButton = '<a href="/ProductionPlanning/start/' + rowObject.CustomerSubmitId + '" class="btn btn-xs btn-primary" title="View" style="margin:2px;font-size: .8em;"><i class="fa fa-play-circle"> Start</i></a>';
-            } else if (rowObject.Status === 'In Progress') {
-                editButton = '<a  title="Edit" href="/ProductionPlanning/Edit/' + rowObject.CustomerSubmitId + '" class="btn btn-xs btn-warning" style="margin:2px;font-size: .8em;"><i class="fa fa-pencil"> Edit in progress</i></a>';
             }
 
             if ((rowObject.ProductStatus !== 'APPROVED_BUT_REVISING' && rowObject.ProductStatus !== 'APPROVED') && rowObject.Status !== 'Received') {
                 if (rowObject.ProductId == null) {
-                    editButton = '<a  title="Edit" href="/ProductionPlanning/edit/' + rowObject.CustomerSubmitId + '?&saveSubmit=CustomerSubmit" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
+                    editButton = '<a  title="Edit" href="/ProductionPlanning/edit/' + rowObject.CustomerSubmitId + ' class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
                 } else {
                     editButton = '<a  title="Edit" href="/ProductionPlanning/edit/' + rowObject.PObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
                 }

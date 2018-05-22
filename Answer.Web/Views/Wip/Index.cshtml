@@ -76,9 +76,10 @@
     <script src="~/assets/js/wip-detail-print-other.js"></script>
     @Scripts.Render("~/bundles/js/jqgrid-wip")
 
-    <script>
-        //$.jgrid.defaults.responsive = true;
-        $.jgrid.defaults.styleUI = 'Bootstrap';
-        
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $.jgrid.defaults.styleUI = 'Bootstrap';
+            Msr.WipGrid.LoadWipGrid('@Url.Action("EngineeringData", "wip")');
+        });
     </script>
 }
