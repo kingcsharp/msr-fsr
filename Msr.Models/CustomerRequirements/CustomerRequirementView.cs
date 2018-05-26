@@ -25,12 +25,11 @@ namespace Msr.Models.CustomerRequirements
         public string ProcedureName { get; set; }
         public string PObjectId { get; set; }
         public int CustomerSubmitId { get; set; }
-        public decimal? TotalSalePrice { get; set; }
-        public decimal? MaterialCost { get; set; }
+        public Single? TotalSalePrice { get; set; }
+        public Single? MaterialCost { get; set; }
         public string QuoteJson { get; set; }
         public string CustomerRequirementJson { get; set; }
         public double? LeadTime { get; set; }
-        public double? Price { get; set; }
         public int? Rev { get; set; }
     }
 }

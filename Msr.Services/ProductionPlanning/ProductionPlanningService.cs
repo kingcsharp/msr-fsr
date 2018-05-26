@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Data.Entity.Migrations;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
@@ -212,7 +213,14 @@ namespace Msr.Services.ProductionPlanning
 
                 p.Add("@newID", dbType: DbType.String, direction: ParameterDirection.Output, size: 50);
                 p.Add("@messages", dbType: DbType.String, direction: ParameterDirection.Output, size: 500);
-                p.Add("@productId", requirment.ProductId, DbType.String, ParameterDirection.Input, 50);
+                if (!string.IsNullOrWhiteSpace(requirment.ProductId))
+                {
+                    p.Add("@productId", model.Id, DbType.String, ParameterDirection.Input, 50);
+                }
+                else
+                {
+                    p.Add("@productId", null, DbType.String, ParameterDirection.Input, 50);
+                }
                 p.Add("@productName", model.ProductName, DbType.String, ParameterDirection.Input, 50);
                 p.Add("@custId", model.ProductCustomerId, DbType.String, ParameterDirection.Input, 50);
                 p.Add("@supplierId", model.ProductSupplierId, DbType.String, ParameterDirection.Input, 50);
@@ -223,35 +231,20 @@ namespace Msr.Services.ProductionPlanning
                 p.Add("@price", requirment.Price, DbType.Double, ParameterDirection.Input, 50);
                 p.Add("@totalSalePrice", model.TotalSalePrice, DbType.Single, ParameterDirection.Input, 50);
                 p.Add("@materialCost", model.MaterialCost, DbType.Single, ParameterDirection.Input, 50);
-
+                p.Add("@customerRequirementId", requirment.Id, DbType.Int32, ParameterDirection.Input);
 
                 using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
                 {
                     int i = conn.Execute("Portal_Create_UpdateProduct", p, commandType: CommandType.StoredProcedure);
                     var newId = p.Get<string>("newID");
                     var messages = p.Get<string>("messages");
-
                     requirment.ProductId = newId;
-                    _dbContext.SaveChanges();
                 }
             }
             catch (Exception ex)
             {
                 result.AddError("There was an error creating product");
             }
-        }
-
-        public RequirementStep StepMapping(RequirementStepsDetailsViewModel model, AdminCostSetting adminCost)
-        {
-            var step = new RequirementStep
-            {
-                Id = model.Id,
-                ObjectId = model.ObjectId,
-                Process = model.Process,
-                Step = model.Step
-            };
-
-            return step;
         }
 
         public ResultNotification<string> ChangeStatus(int id, string status)

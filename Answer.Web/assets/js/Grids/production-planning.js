@@ -157,10 +157,7 @@ function LoadGrid(url, returnUrl) {
                                 dataType: 'JSON',
                                 cache: false,
                                 success: function (data) {
-                                    window.location.href = '/ProductionPlanning/edit/' +
-                                        data.ObjectId +
-                                        '?&saveSubmit=' +
-                                        callBackName;
+                                    window.location.href = '/ProductionPlanning/edit/' + data.ObjectId;
                                 },
                                 error: function (error) {
                                     alert(error);

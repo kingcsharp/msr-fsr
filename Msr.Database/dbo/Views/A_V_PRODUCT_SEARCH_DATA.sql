@@ -11,7 +11,10 @@ SELECT     ph.ID, ph.OBJECT_ID, ph.PARENT_ID, ph.NAME, ph.SUPPLIER_ID, dbo.A_V_C
                       dbo.A_OBJECTS.UNLOCKED_BY, dbo.A_OBJECTS.CREATED_BY, dbo.A_OBJECTS.CREATE_DATE, dbo.A_OBJECTS.ROOT, dbo.A_OBJECTS.REV_INFO,
                        dbo.A_OBJECTS.CREATING_CO, dbo.A_OBJECTS.STATUS, dbo.A_OBJECTS.REV, dbo.A_OBJECTS.WFS_ID, dbo.A_OBJECTS.LOCKED_BY_NAME, 
                       dbo.A_OBJECTS.CREATING_CO_NAME, dbo.A_OBJECTS.APPROVAL_ACTIVITY, dbo.A_FN_PRODUCT_WHERE_USED_CHECK(ph.ID) AS HAS_USAGE, 
-                      ph.CUST_MGR_ROLE
+                      ph.CUST_MGR_ROLE,
+					  ph.CustomerRequirementId,
+					  ph.MaterialCost,
+					  ph.TotalSalePrice
 FROM         dbo.A_OBJECTS INNER JOIN
                       dbo.A_PRODUCTS_HISTORY ph ON dbo.A_OBJECTS.ID = ph.OBJECT_ID LEFT OUTER JOIN
                       dbo.A_APPROVED_ROLES ON ph.MGR_TEAM = dbo.A_APPROVED_ROLES.ID LEFT OUTER JOIN

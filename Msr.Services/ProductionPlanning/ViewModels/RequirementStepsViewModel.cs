@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Mvc;
@@ -69,9 +70,9 @@ namespace Msr.Services.ProductionPlanning.ViewModels
 
         [Display(Name = "Total Sale Price")]
 
-        public decimal? MaterialCost { get; set; }
+        public Single? MaterialCost { get; set; }
 
-        public decimal? TotalSalePrice { get; set; }
+        public Single? TotalSalePrice { get; set; }
         public int CustomerSubmitId { get; set; }
 
         public List<RequirementStepsDetailsViewModel> Steps { get; set; }

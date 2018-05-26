@@ -25,6 +25,7 @@
     [MM]               VARCHAR (50)    NULL,
     [MaterialCost]     REAL    NULL,
     [TotalSalePrice]   REAL    NULL,
+    [CustomerRequirementId] INT NULL, 
     CONSTRAINT [PK_A_PRODUCT_HISTORY] PRIMARY KEY CLUSTERED ([ID] ASC)
 );
 

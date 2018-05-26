@@ -21,9 +21,7 @@ CREATE TABLE [dbo].[Portal_CustomerSubmittedRequirement](
 	[ProductId] [nvarchar](50) NULL,
 	ProductWorkflowId [nvarchar](50) NULL,
 	[LeadTime] float NULL,
-	[Price] float NULL,
-	[TotalSalePrice]          DECIMAL (18)   NULL,
-	[MaterialCost] DECIMAL NULL,
+	[Price] float NULL
  CONSTRAINT [PK_Portal_CustomerSubmittedRequirements] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
