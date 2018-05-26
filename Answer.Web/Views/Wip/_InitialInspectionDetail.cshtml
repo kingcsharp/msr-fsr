@@ -19,7 +19,7 @@
             if ((step.Status == "REQUESTED" || step.Status == "ACCEPTED") && !string.IsNullOrWhiteSpace(step.Print_Order))
             {
                 <tr>
-                    <th nowrap style="text-align: right; width: 180px;">Assignee: </th>
+                    <th nowrap style="text-align: right; width: 180px;">Latest Assignee: </th>
                     <td>@step.LATEST_REQUESTEE_NAME</td>
                 </tr>
                 <tr>
