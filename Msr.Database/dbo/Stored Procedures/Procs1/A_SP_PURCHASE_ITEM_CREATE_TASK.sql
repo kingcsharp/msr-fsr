@@ -199,6 +199,7 @@ makeTasks:
 		@requesteeID, --REQUESTEE_ID,
 		@requesteeRole, --GROUP_REQUESTEE_ID
 		@taskName, --DESCRIPTION 
+		@taskName, --Title
 		@systemID, --SYSTEM_TASK,
 		@taskComment, --COMMENT,
 		'3', --Security Level

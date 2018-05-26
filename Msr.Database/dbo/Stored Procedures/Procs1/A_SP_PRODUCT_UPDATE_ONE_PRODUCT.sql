@@ -1,6 +1,4 @@
-﻿
-
-CREATE         PROCEDURE A_SP_PRODUCT_UPDATE_ONE_PRODUCT
+﻿CREATE         PROCEDURE [dbo].[A_SP_PRODUCT_UPDATE_ONE_PRODUCT]
 @newID varchar(50) OUTPUT,
 @messages varchar(500) OUTPUT,
 @objID varchar(50),
@@ -21,7 +19,9 @@ CREATE         PROCEDURE A_SP_PRODUCT_UPDATE_ONE_PRODUCT
 @PROCESS_AREA varchar(200),
 @COPPER tinyInt,
 @MM varchar(200),
-@strNTLogin varchar(50)
+@strNTLogin varchar(50),
+@totalSalePrice REAL,
+@materialCost REAL
 AS
 BEGIN TRANSACTION
 print 'Starting procedure A_SP_PRODUCT_UPDATE_ONE_PRODUCT'
@@ -56,7 +56,9 @@ AREA = @PROCESS_AREA,
 CU = @COPPER,
 MM = @MM,
 modby = @strNTLogin,
-DRCM = getDAte()
+DRCM = getDAte(),
+TotalSalePrice=@totalSalePrice,
+MaterialCost=@materialCost
 WHERE OBJECT_ID = @newID
 if @@ERROR <> 0 goto problem
 declare @myID as varchar(50)

@@ -10,11 +10,13 @@ using System.Web;
 using Dapper;
 using EntityFrameworkExtras.EF6;
 using ExcelDataReader;
+using Msr.Models.AdminCostSettings;
 using Msr.Models.CustomerRequirements;
 using Msr.Services.Procedures;
 using Msr.Services.ProductionPlanning.ViewModels;
 using Msr.Models.Common;
 using Msr.Models.Locations;
+using Msr.Services.AdminCostSettings;
 using Msr.Services.PrePro;
 using Msr.Services.Procedures.ViewModels;
 using Msr.Services.ProductionPlanning.Procedures;
@@ -33,6 +35,8 @@ namespace Msr.Services.ProductionPlanning
         private readonly PreProServices _preProServices;
         private readonly ProceduresService _preProceduresService;
         private readonly QuoteService _quoteService;
+        private readonly AdminCostSettingService _adminCostSettingService;
+
         public ProductionPlanningService()
         {
             _dbContext = new MsrDbContext();
@@ -41,6 +45,7 @@ namespace Msr.Services.ProductionPlanning
             _preProServices = new PreProServices();
             _preProceduresService = new ProceduresService();
             _quoteService = new QuoteService();
+            _adminCostSettingService = new AdminCostSettingService();
         }
 
         public IQueryable<CustomerRequirementView> GetProductionPlaningQueryable()
@@ -64,14 +69,6 @@ namespace Msr.Services.ProductionPlanning
             step.Process = model.Process;
             step.ObjectId = model.ObjectId;
             step.Step = model.Step;
-            step.StandardDirectLaborMinutes = model.StandardDirectLaborMinutes;
-            step.StandardMachineMinutes = model.StandardMachineMinutes;
-            step.ReplacementCost = model.ReplacementCost;
-            step.Utilization = model.Utilization;
-            step.UsefulLife = model.UsefulLife;
-            step.EquipExpensePerMinute = model.EquipExpensePerMinute;
-            step.AnnualRm = model.AnnualRm;
-            step.RmPerMinute = model.RmPerMinute;
             _dbContext.SaveChanges();
         }
 
@@ -101,10 +98,6 @@ namespace Msr.Services.ProductionPlanning
                 requirment.PartId = model.ProductPartId;
                 requirment.ProcedureId = model.ProductProcedureId;
                 requirment.Division = model.ProductCustomerDivision;
-                requirment.TotalSalePrice = model.TotalSalePrice;
-                requirment.MaterialCost = model.MaterialCost;
-
-                SaveProduct(model, requirment, result);
 
                 if (string.IsNullOrWhiteSpace(model.ProductProcedureId))
                 {
@@ -138,9 +131,13 @@ namespace Msr.Services.ProductionPlanning
                     }
                 }
 
+                SaveProduct(model, requirment, result);
+
                 var procedureObjectId = GetProceduretById(requirment.ProcedureId).Value;
 
                 var procedureSteps = _proceduresService.GetStepsData(procedureObjectId, model.LoginId);
+
+                ResultNotification<string> checkOutProcedure = null;
 
                 foreach (var step in model.Steps)
                 {
@@ -148,7 +145,7 @@ namespace Msr.Services.ProductionPlanning
 
                     if (step.ObjectId == null && existingStep == null)
                     {
-                        var checkOutProcedure = _workflowService.CheckOutObject(procedureObjectId, model.LoginId);
+                        checkOutProcedure = _workflowService.CheckOutObject(procedureObjectId, model.LoginId);
 
                         var template = _preProServices.GetById(step.Process);
 
@@ -158,61 +155,40 @@ namespace Msr.Services.ProductionPlanning
                                 {
                                     Step_Text = template.StepText,
                                     Title = template.Title,
-                                    Print_Order = step.Step
+                                    Print_Order = step.Step,
+                                    EquipmentTime = step.StandardMachineMinutes,
+                                    Duration = step.StandardDirectLaborMinutes
                                 },
                             ProcObjId = checkOutProcedure.Entity,
+                            
                             ReplacementCost = step.ReplacementCost,
                             Utilization = step.Utilization,
-                            UsefulLife = step.UsefulLife,
-                            EquipExpensePerMinute = step.EquipExpensePerMinute,
-                            AnnualRM = step.AnnualRM,
-                            RMPerMinute = step.RMPerMinute
+                            UsefulLife = step.UsefulLife
                         };
 
                         var newStepData = _proceduresService.CreateStepData(vm);
-
-                        var submitWorkflow = new SubmitWorkflowViewModel();
-                        submitWorkflow.CompletionStart = "APPROVED";
-                        submitWorkflow.LoggedUserIdResult = currentUser;
-                        submitWorkflow.ObjectId = checkOutProcedure.Entity;
-                        submitWorkflow.ApprovalWorflowId = "37";
-                        submitWorkflow.Comment = "Procedure step approved by system";
-                        submitWorkflow.LoginId = model.LoginId;
-                        _workflowService.SubmitWorkflow(submitWorkflow);
 
                         step.Process = template.Title;
                         step.ObjectId = newStepData.Entity;
                     }
                 }
 
+                if (checkOutProcedure != null)
+                {
+                    var submitWorkflowNew = new SubmitWorkflowViewModel
+                    {
+                        CompletionStart = "APPROVED",
+                        LoggedUserIdResult = currentUser,
+                        ObjectId = checkOutProcedure.Entity,
+                        ApprovalWorflowId = "37",
+                        Comment = "Procedure step approved by system",
+                        LoginId = model.LoginId
+                    };
+                    _workflowService.SubmitWorkflow(submitWorkflowNew);
+                }
+
+
                 requirment.Status = !string.IsNullOrWhiteSpace(submit) ? CustomerSubmittedRequirementConstants.Completed : CustomerSubmittedRequirementConstants.InProgress;
-
-                foreach (var step in model.Steps)
-                {
-                    var requirementStep = StepMapping(step);
-
-                    var record = _dbContext.RequirementSteps.SingleOrDefault(x => x.Id == requirementStep.Id);
-
-                    if (record == null)
-                    {
-                        requirementStep.CustomerSubmittedRequirementId = model.CustomerSubmitId;
-                        requirementStep.ObjectId = step.ObjectId;
-                        _dbContext.RequirementSteps.Add(requirementStep);
-                    }
-                    else
-                    {
-                        UpdateStep(requirementStep);
-                    }
-                }
-
-                var stepsIds = model.Steps.Select(x => x.Id).ToList();
-
-                var stepsToDelete = _dbContext.RequirementSteps.Where(x => x.CustomerSubmittedRequirementId == model.Id && !stepsIds.Contains(x.Id)).ToList();
-
-                foreach (var step in stepsToDelete)
-                {
-                    _dbContext.RequirementSteps.Remove(step);
-                }
 
                 _dbContext.SaveChanges();
 
@@ -227,7 +203,6 @@ namespace Msr.Services.ProductionPlanning
 
             return result;
         }
-
 
         private void SaveProduct(RequirementStepsViewModel model, CustomerSubmittedRequirement requirment, ResultNotification<CustomerSubmittedRequirement> result)
         {
@@ -246,6 +221,9 @@ namespace Msr.Services.ProductionPlanning
                 p.Add("@loginId", model.LoginId, DbType.String, ParameterDirection.Input, 50);
                 p.Add("@leadTime", requirment.LeadTime, DbType.Double, ParameterDirection.Input, 50);
                 p.Add("@price", requirment.Price, DbType.Double, ParameterDirection.Input, 50);
+                p.Add("@totalSalePrice", model.TotalSalePrice, DbType.Single, ParameterDirection.Input, 50);
+                p.Add("@materialCost", model.MaterialCost, DbType.Single, ParameterDirection.Input, 50);
+
 
                 using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
                 {
@@ -263,22 +241,14 @@ namespace Msr.Services.ProductionPlanning
             }
         }
 
-        public RequirementStep StepMapping(RequirementStepsDetailsViewModel model)
+        public RequirementStep StepMapping(RequirementStepsDetailsViewModel model, AdminCostSetting adminCost)
         {
             var step = new RequirementStep
             {
                 Id = model.Id,
                 ObjectId = model.ObjectId,
                 Process = model.Process,
-                Step = model.Step,
-                StandardDirectLaborMinutes = model.StandardDirectLaborMinutes.GetValueOrDefault(),
-                StandardMachineMinutes = model.StandardMachineMinutes.GetValueOrDefault(),
-                ReplacementCost = model.ReplacementCost,
-                Utilization = model.Utilization,
-                UsefulLife = model.UsefulLife,
-                EquipExpensePerMinute = model.EquipExpensePerMinute,
-                AnnualRm = model.AnnualRM,
-                RmPerMinute = model.RMPerMinute
+                Step = model.Step
             };
 
             return step;
@@ -311,7 +281,7 @@ namespace Msr.Services.ProductionPlanning
         }
         public SelectFile GetProceduretById(string id)
         {
-            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT DISTINCT SHOWNAME as Show,OBJECT_ID as Value   FROM A_V_PROCEDURES_APPROVED_DATA_DROP_DOWN WHERE ID =" + id + "").SingleOrDefault();
+            var result = _dbContext.Database.SqlQuery<SelectFile>($"SELECT DISTINCT SHOWNAME as Show,OBJECT_ID as Value   FROM A_V_PROCEDURES_APPROVED_DATA_DROP_DOWN WHERE ID ='{id}'").SingleOrDefault();
 
             return result;
         }

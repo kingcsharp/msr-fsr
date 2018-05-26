@@ -32,6 +32,7 @@ namespace Msr.Services.ProductionPlanning.ViewModels
 
         public string OldProductProcedureId { get; set; }
 
+        [Required(ErrorMessage = "Procedure is required")]
         public string ProductProcedureId { get; set; }
 
         [Required]
@@ -158,78 +159,44 @@ namespace Msr.Services.ProductionPlanning.ViewModels
                 HasQuote = true;
             }
 
-            var attachedSteps = productionPlanService.GetStepsByObjectId(requirment.CustomerSubmitId).OrderBy(x => x.Step);
-
-            if (attachedSteps.Any())
+            if (HasQuote)
             {
-                var procedureObjectId = productionPlanService.GetProceduretById(requirment.ProcedureId).Value;
+                var result = JsonConvert.DeserializeObject<FreeFormQuoteViewModel>(requirment.QuoteJson);
 
-                var procedureSteps = proceduresService.GetStepsData(procedureObjectId, LoginId);
+                var procedureId = result.ExistingProcess;
+                var customerPartNo = result.QuoteItems?.FirstOrDefault().CustomerPartNo;
 
-                foreach (var step in attachedSteps)
+                if (string.IsNullOrWhiteSpace(ProductSupplierId))
                 {
-                    var procStep = procedureSteps.SingleOrDefault(x => x.Id == step.ObjectId);
+                    ProductSupplierId = result.Supplier;
+                }
 
-                    Steps.Add(new RequirementStepsDetailsViewModel
-                    {
-                        Id = step.Id,
-                        ObjectId = step.ObjectId,
-                        Process = step.Process,
-                        StepTitle = procStep?.Title,
-                        Step = step.Step,
-                        StandardDirectLaborMinutes = step.StandardDirectLaborMinutes,
-                        StandardMachineMinutes = step.StandardMachineMinutes,
-                        ReplacementCost = step.ReplacementCost,
-                        Utilization = step.Utilization,
-                        UsefulLife = step.UsefulLife,
-                        EquipExpensePerMinute = step.EquipExpensePerMinute,
-                        AnnualRM = step.AnnualRm,
-                        RMPerMinute = step.RmPerMinute
+                if (string.IsNullOrWhiteSpace(ProductCustomerId))
+                {
+                    ProductCustomerId = result.CustomerId;
+                }
 
-                    });
+                if (string.IsNullOrWhiteSpace(ProductProcedureId))
+                {
+                    ProductProcedureId = productionPlanService.GetProceduretIdById(procedureId);
+                }
+
+                if (string.IsNullOrWhiteSpace(ProductPartId))
+                {
+                    ProductPartId = productionPlanService.GetPartIdByCompanyPartNumber(customerPartNo);
+                }
+                if (string.IsNullOrWhiteSpace(ProductName))
+                {
+                    ProductName = result.QuoteItems?.FirstOrDefault().Description;
                 }
             }
             else
             {
-                if (HasQuote)
+                var result = JsonConvert.DeserializeObject<CustomerRequirementViewModel>(requirment.CustomerRequirementJson);
+
+                if (string.IsNullOrWhiteSpace(ProductName))
                 {
-                    var result = JsonConvert.DeserializeObject<FreeFormQuoteViewModel>(requirment.QuoteJson);
-
-                    var procedureId = result.ExistingProcess;
-                    var customerPartNo = result.QuoteItems?.FirstOrDefault().CustomerPartNo;
-
-                    if (string.IsNullOrWhiteSpace(ProductSupplierId))
-                    {
-                        ProductSupplierId = result.Supplier;
-                    }
-
-                    if (string.IsNullOrWhiteSpace(ProductCustomerId))
-                    {
-                        ProductCustomerId = result.CustomerId;
-                    }
-
-                    if (string.IsNullOrWhiteSpace(ProductProcedureId))
-                    {
-                        ProductProcedureId = productionPlanService.GetProceduretIdById(procedureId);
-                    }
-
-                    if (string.IsNullOrWhiteSpace(ProductPartId))
-                    {
-                        ProductPartId = productionPlanService.GetPartIdByCompanyPartNumber(customerPartNo);
-                    }
-                    if (string.IsNullOrWhiteSpace(ProductName))
-                    {
-                        ProductName = result.QuoteItems?.FirstOrDefault().Description;
-                    }
-                }
-                else
-                {
-                    var result = JsonConvert.DeserializeObject<CustomerRequirementViewModel>(requirment.CustomerRequirementJson);
-
-                    if (string.IsNullOrWhiteSpace(ProductName))
-                    {
-                        ProductName = result.RequirementName;
-                    }
+                    ProductName = result.RequirementName;
                 }
             }
 

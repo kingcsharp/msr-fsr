@@ -62,6 +62,7 @@ exec A_SP_TASKS_UPDATE_TASK @newTaskID OUTPUT,@messages OUTPUT,
 	@fillerPerson, --REQUESTEE_ID,
 	@fillerRole, --GROUP_REQUESTEE_ID
 	@desc, --DESCRIPTION 
+	@desc, --Title
 	'SYS-FILL', --SYSTEM_TASK,
 	null, --COMMENT,
 	'3', --Security Level

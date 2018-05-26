@@ -519,13 +519,11 @@ namespace Msr.Services.Procedures
                     ReferenceProcs = String.Join(",", viewModel.SelectedReferenceProcedures),
                     PrecedingSteps = selectedPrecedingStep,
                     Duration = viewModel.GetStepEditData.Duration,
+                    EquipmentTime = viewModel.GetStepEditData.EquipmentTime,
                     DurationType = viewModel.GetStepEditData.Duration_Type,
                     ReplacementCost = viewModel.ReplacementCost,
                     Utilization = viewModel.Utilization,
-                    UsefulLife = viewModel.UsefulLife,
-                    EquipExpensePerMinute = viewModel.EquipExpensePerMinute,
-                    AnnualRM = viewModel.AnnualRM,
-                    RMPerMinute = viewModel.RMPerMinute
+                    UsefulLife = viewModel.UsefulLife
                 };
 
                 _dbContext.Database.ExecuteStoredProcedure(updateOneStep);

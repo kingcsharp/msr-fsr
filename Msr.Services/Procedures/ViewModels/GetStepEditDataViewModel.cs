@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Msr.Services.Procedures.Messages;
@@ -109,8 +110,5 @@ namespace Msr.Services.Procedures.ViewModels
         public decimal? ReplacementCost { get; set; }
         public decimal? Utilization { get; set; }
         public int? UsefulLife { get; set; }
-        public decimal? EquipExpensePerMinute { get; set; }
-        public decimal? AnnualRM { get; set; }
-        public decimal? RMPerMinute { get; set; }
     }
 }

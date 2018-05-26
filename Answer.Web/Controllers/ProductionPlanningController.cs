@@ -187,11 +187,10 @@ namespace Answer.Web.Controllers
 
             var procedureSteps = _proceduresService.GetStepsData(procedureObjectId, currentUser.Id);
 
-            if (!string.IsNullOrWhiteSpace(vm.ProductProcedureId) && !vm.Steps.Any())
+            if (!string.IsNullOrWhiteSpace(vm.ProductProcedureId))
             {
                 foreach (var step in procedureSteps)
                 {
-                    //TODO
                     vm.Steps.Add(new RequirementStepsDetailsViewModel
                     {
                         Id = Convert.ToInt32(step.Id),
@@ -205,18 +204,6 @@ namespace Answer.Web.Controllers
                         Utilization = step.Utilization,
                         UsefulLife = step.UsefulLife,
                     });
-                }
-            }
-            else
-            {
-                foreach (var item in vm.Steps)
-                {
-                    var step = procedureSteps.FirstOrDefault(x => x.Id == item.ObjectId);
-
-                    if (step != null)
-                    {
-                        item.Process = step.Title;
-                    }
                 }
             }
 
@@ -264,7 +251,7 @@ namespace Answer.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(string id, RequirementStepsViewModel vm, string saveSubmit, string newProcedure)
+        public ActionResult Edit(RequirementStepsViewModel vm, string saveSubmit, string newProcedure)
         {
             var currentUser = GetCurrentUser();
             ModelState.Clear();
@@ -284,9 +271,7 @@ namespace Answer.Web.Controllers
                 vm.OldProductProcedureId = vm.ProductProcedureId;
 
                 var procedureObjectId = _productionPlanService.GetProceduretById(vm.ProductProcedureId).Value;
-
                 var procedureSteps = _proceduresService.GetStepsData(procedureObjectId, currentUser.Id);
-
 
                 vm.Steps = new List<RequirementStepsDetailsViewModel>();
 
@@ -314,14 +299,6 @@ namespace Answer.Web.Controllers
             if (ModelState.IsValid)
             {
                 vm.LoginId = currentUser.Id;
-
-                foreach (var item in vm.Steps)
-                {
-                    if (string.IsNullOrWhiteSpace(item.Process))
-                    {
-                        item.Process = item.StepTitle;
-                    }
-                }
 
                 var response = _productionPlanService.Save(vm, saveSubmit, currentUser);
 

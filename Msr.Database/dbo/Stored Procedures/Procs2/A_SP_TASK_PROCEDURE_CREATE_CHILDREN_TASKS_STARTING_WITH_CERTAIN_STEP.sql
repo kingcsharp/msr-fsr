@@ -66,6 +66,7 @@ exec A_SP_TASKS_UPDATE_TASK @newTaskID OUTPUT,@messages OUTPUT,
 	@requesteeID, --REQUESTEE_ID,
 	@requesteeRole, --GROUP_REQUESTEE_ID
 	@stepName, --DESCRIPTION 
+	@stepName, --Title 
 	@systemID, --SYSTEM_TASK,
 	null, --COMMENT,
 	'3', --Security Level

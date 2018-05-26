@@ -30,9 +30,6 @@
 @ReplacementCost nvarchar(50),
 @Utilization nvarchar(50),
 @UsefulLife nvarchar(50),
-@EquipExpensePerMinute nvarchar(50),
-@AnnualRM nvarchar(50),
-@RMPerMinute nvarchar(50),
 @TITLE nvarchar(Max),
 @EquipmentTime float,
 @Roles nvarchar(max)
@@ -82,9 +79,6 @@ MODBY = @strNTLogin,
 ReplacementCost =@ReplacementCost,
 Utilization =@Utilization,
 UsefulLife =@UsefulLife,
-EquipExpensePerMinute =@EquipExpensePerMinute,
-AnnualRM =@AnnualRM,
-RMPerMinute =@RMPerMinute,
 EquipmentTime = @EquipmentTime,
 Roles = @Roles
 WHERE ID = @newID

@@ -55,6 +55,7 @@ exec A_SP_TASKS_UPDATE_TASK @newTaskID OUTPUT,@messages OUTPUT,
 	@purchaser, --REQUESTEE_ID,
 	null, --GROUP_REQUESTEE_ID
 	@taskName, --DESCRIPTION 
+	@taskName, --Title
 	'SYS_PURCHASE', --SYSTEM_TASK,
 	NULL, --COMMENT,
 	'3', --Security Level

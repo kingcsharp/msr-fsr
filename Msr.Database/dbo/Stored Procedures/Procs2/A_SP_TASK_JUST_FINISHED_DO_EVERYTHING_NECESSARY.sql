@@ -422,7 +422,7 @@ if @parentID is not null
 	begin
 	SELECT @parentSysTask = isNull(SYSTEM_TASK,'') FROM A_TASKS WHERE ID = @parentID
 	if @parentSysTask = 'SYS_DNR'
-		UPDATE A_TASKS SET DESCRIPTION = DESCRIPTION WHERE ID = @parentID
+		UPDATE A_TASKS SET DESCRIPTION = DESCRIPTION,Title = Title WHERE ID = @parentID
 	else
 		begin
 		--UPDATE A_TASKS SET DESCRIPTION = DESCRIPTION + isNull(@parentSysTask,' NULL ') WHERE ID = @parentID

@@ -35,7 +35,15 @@ function LoadSteps(i, myOptions) {
         var dropdownProcess = $('#defaultProcessList').html();
         $('#row' + i).html("<td><select class='form-control default-template-id' name='steps[" + i + "].Process' required>" + dropdownProcess + "</select><span class=" + "text-danger field-validation-error" + " data-valmsg-for=" + "steps[" + i + "].Process" + " data-valmsg-replace=" + "true" + "></span></td>" +
             "<td><input type='text' name='steps[" + i + "].Step'  class='form-control' value='" + (i + 1) + "' onkeyup = 'javascript:checkType(this)' required/><span class=" + "text-danger field-validation-error" + " data-valmsg-for=" + "steps[" + i + "].Step" + " data-valmsg-replace=" + "true" + "></span></td>" +
-            "<td><input type='text' name='steps[" + i + "].StandardDirectLaborMinutes' class='form-control labor-mins' onkeyup = 'javascript:checkType(this)' required='' data-val-required='The Standard Direct Labor Minutes field is required.'/><span class=" + "text-danger field-validation-error" + " data-valmsg-for=" + "steps[" + i + "].StandardDirectLaborMinutes" + " data-valmsg-replace=" + "true" + "></span><td><input type='texct' name='steps[" + i + "].StandardMachineMinutes' class='form-control machine-mins' onkeyup = 'javascript:checkType(this)' required/><span class=" + "text-danger field-validation-error" + " data-valmsg-for=" + "steps[" + i + "].StandardMachineMinutes" + " data-valmsg-replace=" + "true" + "></span></td><td class='text-center hidden hide-col'><div class='input-group'><span class='input-group-addon'>$</span><input type='text' name='steps[" + i + "].ReplacementCost' value='" + replacementCost + "' class='form-control replacement-cost' readonly='readonly' onkeyup='javascript:checkType(this)' onblur = 'javascript:checkBlank(this)'><span class='input-group-addon'>.00</span></div></td><td class='text-center hidden hide-col'><div class='input-group'><input type='text' name='steps[" + i + "].Utilization' value='" + utilization + "' class='form-control numbersOnly utilization' readonly='readonly' onkeyup='javascript:checkType(this)' onblur = 'javascript:checkBlank(this)'><span class='input-group-addon'>%</span></div></td><td class='text-center hidden hide-col'><input type='text' name='steps[" + i + "].UsefulLife' value='" + usefulLife + "' class='form-control useful-life' readonly='readonly' onkeyup='javascript:checkType(this)' onblur = 'javascript:checkBlank(this)'></div></td><td class='text-center hidden hide-col'><div class='input-group'><span class='input-group-addon'>$</span><input type='text' name='steps[" + i + "].EquipExpensePerMinute' value='0' class='form-control equip-expense-per-minute' readonly='readonly' onkeyup='javascript:checkType(this)' onblur = 'javascript:checkBlank(this)'><span class='input-group-addon'>.00</span></div></td><td class='text-center hidden hide-col'><div class='input-group'><span class='input-group-addon'>$</span><input type='text' name='steps[" + i + "].AnnualRM' value='0' class='form-control annual-rm' readonly='readonly' onkeyup='javascript:checkType(this)' onblur = 'javascript:checkBlank(this)'><span class='input-group-addon'>.00</span></div></td><td class='text-center hidden hide-col'><div class='input-group'><span class='input-group-addon'>$</span><input type='text' name='steps[" + i + "].RMPerMinute' value='0' class='form-control rm-per-minute' readonly='readonly' onkeyup='javascript:checkType(this)' onblur = 'javascript:checkBlank(this)'><span class='input-group-addon'>.00</span></div></td>");
+            "<td><input type='text' name='steps[" + i + "].StandardDirectLaborMinutes' class='form-control labor-mins' onkeyup = 'javascript:checkType(this)' required='' data-val-required='The Standard Direct Labor Minutes field is required.'/><span class=" + "text-danger field-validation-error" + " data-valmsg-for=" +
+            "steps[" + i + "].StandardDirectLaborMinutes" + " data-valmsg-replace=" + "true" + "></span><td><input type='texct' name='steps[" + i + "].StandardMachineMinutes' class='form-control machine-mins' onkeyup = 'javascript:checkType(this)' required/><span class=" + "text-danger field-validation-error" + " data-valmsg-for=" +
+            "steps[" + i + "].StandardMachineMinutes" + " data-valmsg-replace=" + "true" + "></span></td><td class='text-center hidden hide-col'><div class='input-group'><span class='input-group-addon'>$</span><input type='text' name='steps[" + i + "].ReplacementCost' value='" + replacementCost +
+            "' class='form-control replacement-cost' readonly='readonly' onkeyup='javascript:checkType(this)' onblur = 'javascript:checkBlank(this)'><span class='input-group-addon'>.00</span></div></td><td class='text-center hidden hide-col'><div class='input-group'><input type='text' name='steps[" + i + "].Utilization' value='"
+            + utilization + "' class='form-control numbersOnly utilization' readonly='readonly' onkeyup='javascript:checkType(this)' onblur = 'javascript:checkBlank(this)'><span class='input-group-addon'>%</span></div></td><td class='text-center hidden hide-col'><input type='text' name='steps[" + i + "].UsefulLife' value='"
+            + usefulLife + "' class='form-control useful-life' readonly='readonly' onkeyup='javascript:checkType(this)' onblur = 'javascript:checkBlank(this)'></div></td><td class='text-center hidden hide-col'><div class='input-group'><span class='input-group-addon'>$</span><input type='text' name='steps[" + i + "].EquipExpensePerMinute' " +
+            "value='0' class='form-control equip-expense-per-minute' readonly='readonly' onkeyup='javascript:checkType(this)' onblur = 'javascript:checkBlank(this)'><span class='input-group-addon'>.00</span></div></td><td class='text-center hidden hide-col'><div class='input-group'><span class='input-group-addon'>$</span><input type='text' name='steps[" + i + "].AnnualRM' value='0' " +
+            "class='form-control annual-rm' readonly='readonly' onkeyup='javascript:checkType(this)' onblur = 'javascript:checkBlank(this)'><span class='input-group-addon'>.00</span></div></td><td class='text-center hidden hide-col'><div class='input-group'><span class='input-group-addon'>$</span><input type='text' name='steps[" + i + "].RMPerMinute' value='0'" +
+            " class='form-control rm-per-minute' readonly='readonly' onkeyup='javascript:checkType(this)' onblur = 'javascript:checkBlank(this)'><span class='input-group-addon'>.00</span></div></td>");
 
         $('#process_steps').append('<tr id="row' + (i + 1) + '" data-value="" ></tr>');
         i++;
@@ -170,13 +178,17 @@ function recalculateTotals() {
             total = 0.00;
         }
         
-        $(this).val(toFixedNumber(total));
+        var converted = scientificToDecimal(total);
+        $(this).val(converted);
     });
 
     $('.annual-rm').each(function () {
         var replacementCost = parseFloat($(this).closest('tr').find('.replacement-cost').val());
         
         var total = (replacementCost * rmAnnualRate);
+        if (isNaN(total)) {
+            total = 0;
+        }
         $(this).val(toFixedNumber(total));
     });
 
@@ -188,7 +200,8 @@ function recalculateTotals() {
         if (isNaN(total)) {
             total = 0;
         }
-        $(this).val(toFixedNumber(total));
+        var converted = scientificToDecimal(total);
+        $(this).val(converted);
     });
 
     var sum = 0;
@@ -255,4 +268,26 @@ function toFixedNumber(value) {
         return value;
     }
 }
+
+function scientificToDecimal(num) {
+    //if the number is in scientific notation remove it
+    if (/\d+\.?\d*e[\+\-]*\d+/i.test(num)) {
+        var zero = '0',
+            parts = String(num).toLowerCase().split('e'), //split into coeff and exponent
+            e = parts.pop(),//store the exponential part
+            l = Math.abs(e), //get the number of zeros
+            sign = e / l,
+            coeff_array = parts[0].split('.');
+        if (sign === -1) {
+            num = zero + '.' + new Array(l).join(zero) + coeff_array.join('');
+        }
+        else {
+            var dec = coeff_array[1];
+            if (dec) l = l - dec.length;
+            num = coeff_array.join('') + new Array(l + 1).join(zero);
+        }
+    }
+
+    return num;
+};
 

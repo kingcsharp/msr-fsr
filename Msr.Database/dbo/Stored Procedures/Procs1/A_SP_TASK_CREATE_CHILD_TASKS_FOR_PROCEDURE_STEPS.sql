@@ -22,6 +22,7 @@ print 'Creating a task from a Procedure in A_SP_TASK_CREATE_CHILD_TASKS_FOR_PROC
 print 'The parent Task is ' + @PARENT_ID
 declare @procID varchar(50),@requestor varchar(50),@requesteeRole varchar(50),
 	@stepName nvarchar(2000),@systemID varchar(50),@newTaskID nvarchar(50),
+	@stepTitle nvarchar(2000),
 	@messages nvarchar(2000),@taskComment nvarchar(2000),
 	@qItemID varchar(50),@SUBMIT_STATUS varchar(50),@newID varchar(50), @phID varchar(50),
 	@supplierID varchar(50),@showStepsInAP smallInt,@requesteeID varchar(50)
@@ -50,7 +51,7 @@ Begin
 		end
 	print 'We need to get all the data for this procedure step ' + @it
 	exec sp_GetUniqueID3 @newID OUTPUT
-	select @requesteeRole = OWNER_ROLE_ID,@stepName = STEP_TEXT,@systemID = SYSTEM_TASK
+	select @requesteeRole = OWNER_ROLE_ID,@stepName = STEP_TEXT, @stepTitle= STEP_TEXT, @systemID = SYSTEM_TASK
 		FROM A_V_PROCEDURE_STEPS_WITH_OWNER_LABOR WHERE ID = @it
 	select @supplierID = HISTORY_REF_ID FROM A_COMPANIES WHERE ID = dbo.FN_ROLE_GET_COMPANY(@requesteeRole)
 	
@@ -90,6 +91,7 @@ Begin
 		@requesteeID, --REQUESTEE_ID,
 		@requesteeRole, --GROUP_REQUESTEE_ID
 		@stepName, --DESCRIPTION 
+		stepTitle, --DESCRIPTION 
 		@systemID, --SYSTEM_TASK,
 		null, --COMMENT,
 		'3', --Security Level

@@ -1,4 +1,6 @@
-﻿namespace Msr.Models.ProductionPlanning
+﻿using System;
+
+namespace Msr.Models.ProductionPlanning
 {
     public class RequirementStep
     {
@@ -7,13 +9,5 @@
         public string ObjectId { get; set; }
         public string Process { get; set; }
         public int Step { get; set; }
-        public double? StandardDirectLaborMinutes { get; set; }
-        public double? StandardMachineMinutes { get; set; }
-        public decimal? ReplacementCost { get; set; }
-        public decimal? Utilization { get; set; }
-        public int? UsefulLife { get; set; }
-        public decimal? EquipExpensePerMinute { get; set; }
-        public decimal? AnnualRm { get; set; }
-        public decimal? RmPerMinute { get; set; }
     }
 }

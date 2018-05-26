@@ -32,6 +32,7 @@ if exists(SELECT * FROM A_MONITOR_TEMPLATES WHERE TASK_ID = @taskID AND IS_PASSI
 		@requesteeID, --REQUESTEE_ID,
 		null, --GROUP_REQUESTEE_ID
 		'Diagnose and Repair Failing Monitors', --DESCRIPTION 
+		'Diagnose and Repair Failing Monitors', --Title 
 		'SYS_DNR', --SYSTEM_TASK,
 		NULL, --COMMENT,
 		'3', --Security Level

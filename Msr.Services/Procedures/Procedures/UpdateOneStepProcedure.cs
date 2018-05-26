@@ -101,15 +101,6 @@ namespace Msr.Services.Procedures.Procedures
         [StoredProcedureParameter(SqlDbType.Int, ParameterName = "UsefulLife")]
         public int? UsefulLife { get; set; }
 
-        [StoredProcedureParameter(SqlDbType.Decimal,  ParameterName = "EquipExpensePerMinute")]
-        public decimal? EquipExpensePerMinute { get; set; }
-
-        [StoredProcedureParameter(SqlDbType.Decimal, ParameterName = "AnnualRM")]
-        public decimal? AnnualRM { get; set; }
-
-        [StoredProcedureParameter(SqlDbType.Decimal, ParameterName = "RMPerMinute")]
-        public decimal? RMPerMinute { get; set; }
-
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 5000, ParameterName = "Title")]
         public string Title { get; set; }
 

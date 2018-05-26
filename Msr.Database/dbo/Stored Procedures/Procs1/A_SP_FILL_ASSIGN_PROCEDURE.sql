@@ -106,6 +106,7 @@ if @newTaskID is NULL
 	@requesteeID, --REQUESTEE_ID,
 	@requesteeRole, --GROUP_REQUESTEE_ID
 	@phName, --DESCRIPTION 
+	@phName, --Title
 	@systemID, --SYSTEM_TASK,
 	@taskComment, --COMMENT,
 	'3', --Security Level

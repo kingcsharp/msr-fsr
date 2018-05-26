@@ -9,7 +9,9 @@ create PROCEDURE [dbo].[Portal_Create_UpdateProduct]
 @custId varchar(50),
 @productName varchar(50),
 @leadTime float,
-@price float
+@price float,
+@totalSalePrice decimal,
+@materialCost decimal
 AS
 
 BEGIN TRANSACTION 
@@ -25,7 +27,7 @@ BEGIN TRY
 
 	declare @p2 varchar(500)
 
-	exec A_SP_PRODUCT_UPDATE_ONE_PRODUCT @newID output,@p2 output,@productId,NULL,@supplierId,@productName,'',@procedureId,@partId,'0',NULL,NULL,'0',NULL,NULL,NULL,NULL,NULL,'0',NULL,@loginId
+	exec A_SP_PRODUCT_UPDATE_ONE_PRODUCT @newID output,@p2 output,@productId,NULL,@supplierId,@productName,'',@procedureId,@partId,'0',NULL,NULL,'0',NULL,NULL,NULL,NULL,NULL,'0',NULL,@loginId,@totalSalePrice,@materialCost
 
 	exec A_SP_FILES_DELETE_LINKS @newID,'REQ_FORM',@loginId
 

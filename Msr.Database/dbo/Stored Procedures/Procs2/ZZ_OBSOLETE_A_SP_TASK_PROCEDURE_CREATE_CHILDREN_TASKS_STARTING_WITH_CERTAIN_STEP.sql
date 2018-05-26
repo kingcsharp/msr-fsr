@@ -58,6 +58,7 @@ Begin
 		@requesteeID, --REQUESTEE_ID,
 		@requesteeRole, --GROUP_REQUESTEE_ID
 		@stepName, --DESCRIPTION 
+		@stepName, --Title 
 		@systemID, --SYSTEM_TASK,
 		null, --COMMENT,
 		'3', --Security Level

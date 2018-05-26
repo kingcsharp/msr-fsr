@@ -73,7 +73,7 @@
                                             {
                                                 Model.ProcessList[j].Selected = Model.ProcessList[j].Value == Model.Steps[i].Process;
                                             }
-                                            @Html.DropDownListFor(model => model.Steps[i].Process, Model.ProcessList, "Select Process", new { id = "proId", @class = "form-control" })
+                                            @Html.DropDownListFor(model => model.Steps[i].Process, Model.ProcessList, "Select Process", new { id = "proId", @class = "form-control default-template-id" })
                                             @Html.ValidationMessageFor(model => Model.Steps[i].Process, "", new { @class = "text-danger" })
                                         }
                                         else
@@ -141,7 +141,6 @@
                                         </div>
                                     </td>
                                 </tr>
-
                             }
                             @{
                                 var trows = "row" + Model.Steps.Count;

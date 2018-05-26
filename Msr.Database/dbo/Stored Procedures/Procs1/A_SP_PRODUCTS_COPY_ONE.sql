@@ -1,16 +1,4 @@
-﻿
-
-
-
-
-
-
-
-
-
-
-
-CREATE          procedure A_SP_PRODUCTS_COPY_ONE
+﻿CREATE          procedure [dbo].[A_SP_PRODUCTS_COPY_ONE]
 	@newObjID nvarchar(50) OUTPUT,
 	@strID nvarchar(50),
 	@copyPrefix nvarchar(50),
@@ -22,10 +10,10 @@ exec sp_getUniqueID3 @newID OUTPUT
 --Insert the new one
 INSERT INTO A_PRODUCTS_HISTORY ([ID], [NAME], SUPPLIER_ID, COMMENTS, PROCEDURE_ID,
 APP_OBJECT, SHIP_OR_LABOR, CUSTOMIZABLE, REQ_FORM, MGR_TEAM, SALES_TAX, OBJECT_ID, PARENT_ID,
-[DRCM], [MODBY], CUST_MGR_ROLE, AVAILABILITY)
+[DRCM], [MODBY], CUST_MGR_ROLE, AVAILABILITY,TotalSalePrice,MaterialCost)
 SELECT @newID as ID, @copyPrefix + [NAME],SUPPLIER_ID, COMMENTS, PROCEDURE_ID,
 APP_OBJECT, SHIP_OR_LABOR, CUSTOMIZABLE, REQ_FORM, MGR_TEAM, SALES_TAX, OBJECT_ID, PARENT_ID,
-getDate() as DRCM, @strNTLogin as MODBY, CUST_MGR_ROLE, AVAILABILITY
+getDate() as DRCM, @strNTLogin as MODBY, CUST_MGR_ROLE, AVAILABILITY,TotalSalePrice,MaterialCost
 FROM A_PRODUCTS_HISTORY WHERE ID = @strID
 
 --find out what object id the new one got

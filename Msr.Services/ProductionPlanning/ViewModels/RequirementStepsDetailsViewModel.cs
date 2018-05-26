@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 
 namespace Msr.Services.ProductionPlanning.ViewModels
@@ -38,15 +39,15 @@ namespace Msr.Services.ProductionPlanning.ViewModels
 
         [Display(Name = "Equip Expense Per Minute")]
 
-        public decimal? EquipExpensePerMinute { get; set; }
+        public Single? EquipExpensePerMinute { get; set; }
 
         [Display(Name = "Annual RM")]
 
-        public decimal? AnnualRM { get; set; }
+        public Single? AnnualRM { get; set; }
 
         [Display(Name = "RM Per Minute")]
 
-        public decimal? RMPerMinute { get; set; }
+        public Single? RMPerMinute { get; set; }
 
         [Display(Name = "Total Direct Mins")]
 

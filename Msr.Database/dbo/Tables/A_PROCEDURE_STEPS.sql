@@ -31,9 +31,6 @@
 	[ReplacementCost]       DECIMAL(18, 0)   NULL,
     [Utilization]           DECIMAL(18, 0)   NULL,
     [UsefulLife]            INT  NULL,
-    [EquipExpensePerMinute] DECIMAL(18, 0)   NULL,
-    [AnnualRM]              DECIMAL(18, 0)   NULL,
-    [RMPerMinute]           DECIMAL(18, 0)   NULL,
 	[EquipmentTime]			FLOAT (53)		 NULL,
 	[Roles] NVARCHAR(MAX) NULL
     CONSTRAINT [PK_A_PROCEDURE_STEPS] PRIMARY KEY CLUSTERED ([ID] ASC)     

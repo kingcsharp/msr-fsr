@@ -4,14 +4,6 @@
 	[ObjectId] [nvarchar](50) NOT NULL,
 	[Process] [nvarchar](MAX) NULL,
 	[Step] [int] NULL,
-	[StandardDirectLaborMinutes] FLOAT NOT NULL,
-	[StandardMachineMinutes] FLOAT NOT NULL,
-	[ReplacementCost] [decimal](18, 2) NULL,
-	[Utilization] [decimal](5, 2) NULL,
-	[UsefulLife] [int] NULL,
-	[EquipExpensePerMinute] [decimal](18, 2) NULL,
-	[AnnualRM] [decimal](18, 2) NULL,
-	[RMPerMinute] [decimal](18, 2) NULL,
  CONSTRAINT [PK_Portal_RequirementSteps] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC

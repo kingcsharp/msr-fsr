@@ -1,6 +1,7 @@
 ﻿CREATE TABLE [dbo].[A_TASKS] (
     [ID]                         VARCHAR (50)    NOT NULL,
     [PARENT_ID]                  VARCHAR (50)    NULL,
+	[Title]                NVARCHAR (2000) NULL,
     [DESCRIPTION]                NVARCHAR (2000) NULL,
     [STATUS]                     VARCHAR (50)    NULL,
     [COMMENT]                    NVARCHAR (1600) NULL,

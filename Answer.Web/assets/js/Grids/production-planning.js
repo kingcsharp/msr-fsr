@@ -215,7 +215,7 @@ function LoadGrid(url, returnUrl) {
             }
 
             if (rowObject.ProductStatus === 'APPROVED') {
-                viewButton = '<a  title="Edit" href="/ProductionPlanning/view/' + rowObject.PObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-eye"></i></a>';
+                viewButton = '<a  title="View" href="/ProductionPlanning/view/' + rowObject.PObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-eye"></i></a>';
                 editButton = '<a  title="Edit" data-call-back-id ="' + rowObject.PObjectId + '" data-call-back-name ="ProductSubmit" href="/ProductionPlanning/edit/' + rowObject.PObjectId + '" class="btn btn-xs btn-success editp" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
             }
 

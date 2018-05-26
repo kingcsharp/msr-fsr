@@ -57,5 +57,6 @@ namespace Msr.Services.Procedures.Messages
 
         public double? Print_Order { get; set; }
         public string Pre_Step { get; set; }
+        public double? EquipmentTime { get; set; }
     }
 }
