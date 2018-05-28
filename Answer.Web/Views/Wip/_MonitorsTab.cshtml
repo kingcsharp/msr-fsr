@@ -221,6 +221,16 @@
             </div>
         </div>
 
+        if (Model[i].Monitor_Type == "PASS_FAIL")
+        {
+            <div class="form-group">
+                <label class="col-lg-2 control-label">Result:</label>
+                <div class="col-lg-2">
+                    @Html.TextBoxFor(x => Model[i].Print_Result, new { @class = !isPassing ? "input-validation-error" : String.Empty })
+                </div>
+            </div>
+        }
+
         if (Model[i].Step_Id != null && int.Parse(Model[i].Step_Id) > 0)
         {
             <div class="form-group">

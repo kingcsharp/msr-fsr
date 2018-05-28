@@ -54,23 +54,9 @@ namespace Msr.Services.ProductionPlanning
             return _dbContext.CustomerRequirementViews;
         }
 
-        public List<RequirementStep> GetStepsByObjectId(int id)
-        {
-            return _dbContext.RequirementSteps.Where(x => x.CustomerSubmittedRequirementId == id).OrderBy(x => x.Id).ToList();
-        }
-
         public IQueryable<LocationView> GetLocationsQueryable()
         {
             return _dbContext.LocationViews;
-        }
-
-        public void UpdateStep(RequirementStep model)
-        {
-            var step = _dbContext.RequirementSteps.SingleOrDefault(x => x.Id == model.Id);
-            step.Process = model.Process;
-            step.ObjectId = model.ObjectId;
-            step.Step = model.Step;
-            _dbContext.SaveChanges();
         }
 
         public void UpdateStatus(int id, string status)
@@ -136,18 +122,16 @@ namespace Msr.Services.ProductionPlanning
 
                 var procedureObjectId = GetProceduretById(requirment.ProcedureId).Value;
 
-                var procedureSteps = _proceduresService.GetStepsData(procedureObjectId, model.LoginId);
+                var checkOutProcedure = _workflowService.CheckOutObject(procedureObjectId, model.LoginId);
 
-                ResultNotification<string> checkOutProcedure = null;
+                var procedureSteps = _proceduresService.GetStepsData(checkOutProcedure.Entity, model.LoginId);
 
                 foreach (var step in model.Steps)
                 {
-                    var existingStep = procedureSteps.SingleOrDefault(x => x.Id == step.ObjectId);
+                    var existingStep = procedureSteps.SingleOrDefault(x => x.Title?.ToLower() == step.StepTitle?.ToLower());
 
                     if (step.ObjectId == null && existingStep == null)
                     {
-                        checkOutProcedure = _workflowService.CheckOutObject(procedureObjectId, model.LoginId);
-
                         var template = _preProServices.GetById(step.Process);
 
                         var vm = new GetStepEditDataViewModel
@@ -165,29 +149,33 @@ namespace Msr.Services.ProductionPlanning
                             ReplacementCost = step.ReplacementCost,
                             Utilization = step.Utilization,
                             UsefulLife = step.UsefulLife
-                        };
+                    };
 
                         var newStepData = _proceduresService.CreateStepData(vm);
 
                         step.Process = template.Title;
                         step.ObjectId = newStepData.Entity;
                     }
-                }
-
-                if (checkOutProcedure != null)
-                {
-                    var submitWorkflowNew = new SubmitWorkflowViewModel
+                    else
                     {
-                        CompletionStart = "APPROVED",
-                        LoggedUserIdResult = currentUser,
-                        ObjectId = checkOutProcedure.Entity,
-                        ApprovalWorflowId = "37",
-                        Comment = "Procedure step approved by system",
-                        LoginId = model.LoginId
-                    };
-                    _workflowService.SubmitWorkflow(submitWorkflowNew);
+                        existingStep.Duration = step.StandardDirectLaborMinutes;
+                        existingStep.EquipmentTime = step.StandardMachineMinutes;
+                        existingStep.ProcObjId = checkOutProcedure.Entity;
+
+                        _proceduresService.UpdateStepData(existingStep);
+                    }
                 }
 
+                var submitWorkflowNew = new SubmitWorkflowViewModel
+                {
+                    CompletionStart = "APPROVED",
+                    LoggedUserIdResult = currentUser,
+                    ObjectId = checkOutProcedure.Entity,
+                    ApprovalWorflowId = "37",
+                    Comment = "Procedure step approved by system",
+                    LoginId = model.LoginId
+                };
+                _workflowService.SubmitWorkflow(submitWorkflowNew);
 
                 requirment.Status = !string.IsNullOrWhiteSpace(submit) ? CustomerSubmittedRequirementConstants.Completed : CustomerSubmittedRequirementConstants.InProgress;
 

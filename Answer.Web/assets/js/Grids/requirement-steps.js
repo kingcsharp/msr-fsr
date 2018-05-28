@@ -168,6 +168,7 @@ function recalculateTotals() {
     var yearsHours = parseInt($('.admin-cost-settings-years-hours').val());
     var hourMinutes = parseInt($('.admin-cost-settings-hour-minutes').val());
     var rmAnnualRate = parseFloat($('.admin-cost-settings-rm-annual-rate').val());
+    var laborRate = parseFloat($('.admin-cost-settings-labor-rate-minute').val());
 
     $('.equip-expense-per-minute').each(function () {
         var replacementCost = parseFloat($(this).closest('tr').find('.replacement-cost').val());
@@ -177,26 +178,25 @@ function recalculateTotals() {
         if (isNaN(total)) {
             total = 0.00;
         }
-        
+
         var converted = scientificToDecimal(total);
         $(this).val(converted);
     });
 
     $('.annual-rm').each(function () {
         var replacementCost = parseFloat($(this).closest('tr').find('.replacement-cost').val());
-        
         var total = (replacementCost * rmAnnualRate);
         if (isNaN(total)) {
             total = 0;
         }
-        $(this).val(toFixedNumber(total));
+        $(this).val(scientificToDecimal(total));
     });
 
     $('.rm-per-minute').each(function () {
-        var replacementCost = parseFloat($(this).closest('tr').find('.replacement-cost').val());
+        var annualRm = parseFloat($(this).closest('tr').find('.annual-rm').val());
         var utilization = parseFloat($(this).closest('tr').find('.utilization').val());
 
-        var total = replacementCost / (yearsHours * hourMinutes * utilization);
+        var total = annualRm / (yearsHours * hourMinutes * utilization);
         if (isNaN(total)) {
             total = 0;
         }
@@ -213,8 +213,8 @@ function recalculateTotals() {
 
     $("#totalDirectMins").val(parseFloat(sum).toFixed(2));
 
+    var rate = laborRate;
 
-    var rate = 2.92;
     var sum2 = (sum * rate).toFixed(2);
     $("#totalDirectDollar").val(parseFloat(sum2).toFixed(2));
 
@@ -224,21 +224,45 @@ function recalculateTotals() {
 
     var sum1 = 0;
     $(".machine-mins").each(function () {
-        if ($(this).val() != "")
+        if ($(this).val() != '')
             sum1 += parseInt($(this).val());
     });
 
     $("#totalMachineMins").val(parseFloat(sum1).toFixed(2));
 
-    var rate2 = .44;
+    var rate2 = 0;
+    $(".equip-expense-per-minute").each(function () {
+        if ($(this).val() != '')
+            rate2 += parseFloat($(this).val());
+    });
+
     var sum3 = (sum1 * rate2);
     $("#standardMachineDollar").val(parseFloat(sum3).toFixed(2));
 
     var labor1 = parseFloat($("#totalDirectDollar").val());
-    var newTotal1 = (labor1 + sum3);
+    var materialCost = parseFloat($('#MaterialCost').val());
+    if (isNaN(materialCost)) {
+        materialCost = 0;
+    }
+    var newTotal1 = (labor1 + sum3 + materialCost);
+
     $("#totalSalePrice").val(parseFloat(newTotal1).toFixed(2));
 
 }
+
+$("#MaterialCost").change(function () {
+    if ($(this).val() !== '')
+        var thisCost = parseFloat($(this).val());
+    var totalLabor = parseFloat($("#totalDirectDollar").val());
+    var totalMachine = parseFloat($("#standardMachineDollar").val());
+    if (isNaN(thisCost)) {
+        thisCost = 0;
+    }
+    var newTotal2 = (totalLabor + totalMachine + thisCost);
+    //update total
+    $("#totalSalePrice").val(parseFloat(newTotal2).toFixed(2));
+});
+
 function manageSwitchColum() {
     if ($('#colSwitch').hasClass('bootstrap-switch-off')) {
         $(".hide-col").addClass('hidden');
@@ -257,15 +281,6 @@ function checkType(e) {
 function checkBlank(e) {
     if (e.value == "") {
         e.value = 0.00;
-    }
-}
-
-////TODO this is hack, need to redo
-function toFixedNumber(value) {
-    if (value.toString().length > 4) {
-        return value.toString().substring(0, 4);
-    } else {
-        return value;
     }
 }
 

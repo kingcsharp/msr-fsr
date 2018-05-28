@@ -286,7 +286,7 @@ namespace Answer.Web.Controllers
                     sb.Append(string.Format("{0}{1}", "", delimiter)); //DOCNUM
                     sb.Append(string.Format("{0}{1}", "", delimiter)); //MEMO
                     sb.Append(string.Format("{0}{1}", invoiceItem.QTY, delimiter)); //MEMO
-                    sb.Append(string.Format("{0}{1}", invoiceItem.UNIT_PRICE, delimiter)); //QNTY
+                    sb.Append(string.Format("{0}{1}", invoiceItem.TotalSalePrice, delimiter)); //QNTY
                     sb.Append(string.Format("{0}{1}", "", delimiter)); //PRICE
                     sb.Append(string.Format("{0}{1}", "Y", delimiter)); //INVITEM
                     sb.Append(string.Format("{0}{1}", "", delimiter)); //PAYMETH

@@ -169,7 +169,6 @@ namespace Msr.Repositories
         public DbSet<CustomerRequirementView> CustomerRequirementViews { get; set; }
         public DbSet<ProcessInfoView> ProcessInfoViews { get; set; }
         public DbSet<PartInfoView> PartInfoViews { get; set; }
-        public DbSet<RequirementStep> RequirementSteps { get; set; }
 
         public DbSet<CustomerSubmittedRequirement> CustomerSubmittedRequirements { get; set; }
         public DbSet<PurchaseView> PurchaseViews { get; set; }

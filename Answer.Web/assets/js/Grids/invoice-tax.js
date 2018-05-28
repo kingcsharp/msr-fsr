@@ -3,6 +3,11 @@ inVoiceTax.values = [];
 inVoiceTax.total = 0;
 
 function CheckBoxSelection(id, element, value) {
+
+    if (isNaN(value)) {
+        value = 0;
+    }
+
     if (id !== '') {
         //for edit
         var editTotalAmount = $('#totalAmount').val();
@@ -59,9 +64,7 @@ $('#totalTaxAmount').on('change', function () {
 
     if (isNaN($(this).val())) {
         $(this).val(0);
-    } else {
-        $(this).val(0);
-    }
+    } 
 
     $(this).val(parseFloat($(this).val()).toFixed(2));
 

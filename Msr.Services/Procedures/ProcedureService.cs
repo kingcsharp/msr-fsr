@@ -580,7 +580,7 @@ namespace Msr.Services.Procedures
                 PrecedingSteps = viewModel.Pre_Step,
                 Title = viewModel.Title,
                 EquipmentTime = viewModel.EquipmentTime,
-                Roles = viewModel.Role.Any() ? string.Join(",", viewModel.Role) : null,
+                Roles = viewModel.Role !=null ? string.Join(",", viewModel.Role) : null,
                 Duration = viewModel.Duration,
                 DurationType = viewModel.Duration_Type,
                 ReplacementCost = viewModel.ReplacementCost,

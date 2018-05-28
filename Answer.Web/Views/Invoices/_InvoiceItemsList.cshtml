@@ -41,14 +41,17 @@
                 <td>
                     @Model.invoiceDetailList[i].QTY
                 </td>
-                <td>
-                        $@Model.invoiceDetailList[i].UNIT_PRICE                        
-                </td>
                 <td class="poAmount">
+                    @if (Model.invoiceDetailList[i].TotalSalePrice.HasValue)
+                    {
+                        <span> $@Model.invoiceDetailList[i].TotalSalePrice</span>
+                        @Html.HiddenFor(x => Model.invoiceDetailList[i].TotalSalePrice, new { @id = "amountPo" })
+                    }
+                </td>
+                <td>
                     @if (Model.invoiceDetailList[i].AMOUNT.HasValue)
                     {
                         <span> $@Model.invoiceDetailList[i].AMOUNT</span>
-                        @Html.HiddenFor(x => Model.invoiceDetailList[i].AMOUNT, new { @id = "amountPo" })
                     }                    
                 </td>
 
