@@ -128,7 +128,7 @@ namespace Msr.Services.ProductionPlanning
 
                 foreach (var step in model.Steps)
                 {
-                    var existingStep = procedureSteps.SingleOrDefault(x => x.Title?.ToLower() == step.StepTitle?.ToLower());
+                    var existingStep = procedureSteps.SingleOrDefault(x => x.Title?.ToLower() == step.StepTitle?.ToLower() && x.Print_Order == step.Step);
 
                     if (step.ObjectId == null && existingStep == null)
                     {
