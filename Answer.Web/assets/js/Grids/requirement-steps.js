@@ -20,16 +20,20 @@ function LoadSteps(i, myOptions) {
     });
 
     function getTemplateDetails(value) {
-        $.ajax({
-            type: "GET",
-            url: '/PreProSearch/GetDetailsById/' + value,
-            dataType: 'Json',
-            success: function (data) {
-                addStep(data.ReplacementCost, data.Utilization, data.UsefulLife);
-            },
-            error: function () {
-            }
-        });
+
+        if (value !== null && value.length > 0 ) {
+            $.ajax({
+                type: "GET",
+                url: '/PreProSearch/GetDetailsById/' + value,
+                dataType: 'Json',
+                success: function (data) {
+                    addStep(data.ReplacementCost, data.Utilization, data.UsefulLife);
+                },
+                error: function () {
+                }
+            });
+        }
+        
     }
     function addStep(replacementCost, utilization, usefulLife) {
         var dropdownProcess = $('#defaultProcessList').html();
@@ -96,21 +100,23 @@ function LoadSteps(i, myOptions) {
     $(document).on("change", ".default-template-id", function () {
         var templateId = $(this).val();
         var row = $(this).closest('tr').attr('id');
-        $.ajax({
-            type: "GET",
-            url: '/PreProSearch/GetDetailsById/' + templateId,
-            dataType: 'Json',
-            success: function (data) {
-                $('#' + row).find('.replacement-cost').val(data.ReplacementCost);
-                $('#' + row).find('.utilization').val(data.Utilization);
-                $('#' + row).find('.useful-life').val(data.UsefulLife);
-                recalculateTotals();
-            },
-            error: function () {
-                addStep(0, 0, 0);
-                recalculateTotals();
-            }
-        });
+        if (templateId !== null && templateId.length > 0) {
+            $.ajax({
+                type: "GET",
+                url: '/PreProSearch/GetDetailsById/' + templateId,
+                dataType: 'Json',
+                success: function(data) {
+                    $('#' + row).find('.replacement-cost').val(data.ReplacementCost);
+                    $('#' + row).find('.utilization').val(data.Utilization);
+                    $('#' + row).find('.useful-life').val(data.UsefulLife);
+                    recalculateTotals();
+                },
+                error: function() {
+                    addStep(0, 0, 0);
+                    recalculateTotals();
+                }
+            });
+        }
     });
     //calculations
     $(document).on("keyup", ".labor-mins", function () {

@@ -9,6 +9,7 @@ namespace Msr.Services.ProductionPlanning.ViewModels
         public int Id { get; set; }
         public string ObjectId { get; set; }
 
+        [Required]
         public string Process { get; set; }
 
         [AllowHtml]
@@ -19,10 +20,12 @@ namespace Msr.Services.ProductionPlanning.ViewModels
 
         [Display(Name = "Standard Direct Labor Minutes")]
         [Range(0, double.MaxValue, ErrorMessage = "Please enter numaric value only")]
+        [Required]
         public double? StandardDirectLaborMinutes { get; set; }
 
         [Display(Name = "Standard Machine Minutes")]
         [Range(0, double.MaxValue, ErrorMessage = "Please enter numaric value only")]
+        [Required]
         public double? StandardMachineMinutes { get; set; }
 
         [Display(Name = "Replacement Cost:")]

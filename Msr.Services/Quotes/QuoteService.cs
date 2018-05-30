@@ -1,14 +1,15 @@
 ﻿using System;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
-using System.Web.Mvc;
 using System.Web.Script.Serialization;
-using EntityFrameworkExtras.EF6;
+using Dapper;
 using Msr.Services.Quotes.ViewModels;
 using Msr.Models.CustomerRequirements;
 using Msr.Models.Parts;
 using Msr.Repositories;
 using Msr.Services.Parts;
-using Msr.Services.Parts.Procedures;
 using Msr.Services.Parts.ViewModels;
 using Msr.Services.Users.Messages;
 using Msr.Services.Workflows;
@@ -45,7 +46,8 @@ namespace Msr.Services.Quotes
                         SubmittedBy = model.CreatedBy,
                         SubmittedDate = model.Date.Value,
                         Status = CustomerSubmittedRequirementConstants.Received,
-                        QuoteJson = new JavaScriptSerializer().Serialize(model)
+                        QuoteJson = new JavaScriptSerializer().Serialize(model),
+                        SupplierId = model.Supplier
                     };
 
                     item.CustomerPartNo = item.CustomerPartNo.Trim();
@@ -54,7 +56,7 @@ namespace Msr.Services.Quotes
 
                     if (part != null)
                     {
-                        entity.PartId = part.Id;
+                        entity.PartId = part.ObjectId;
                     }
                     else
                     {
@@ -84,7 +86,7 @@ namespace Msr.Services.Quotes
                                 LoginId = currentUser.Id
                             };
                             _workflowService.SubmitWorkflow(submitWorkflow);
-
+                            entity.PartId = checkOutObject.Entity;
                         }
                     }
 
@@ -98,9 +100,9 @@ namespace Msr.Services.Quotes
                     }
 
                     _dbContext.CustomerSubmittedRequirements.Add(entity);
+                    _dbContext.SaveChanges();
+                    SaveProduct(entity, response, currentUser.Id);
                 }
-
-                _dbContext.SaveChanges();
 
                 response.SuccessMessage = "Quote has been submitted successfully.";
             }
@@ -123,14 +125,48 @@ namespace Msr.Services.Quotes
         public CustomerRequirementView GetCustomerRequirementView(int id)
         {
             var requirment = _dbContext.CustomerRequirementViews
-                .FirstOrDefault(x => x.PObjectId == id.ToString() || x.CustomerSubmitId == id);
+                .FirstOrDefault(x => x.ObjectId == id.ToString());
 
             return requirment;
         }
 
-        public PartsView GetPartById(string id)
+        public void SaveProduct(CustomerSubmittedRequirement requirment, ResultNotification<string> result, string ntLogin)
         {
-            return _dbContext.PartsViews.Where(x => x.ObjectId == id).SingleOrDefault();
+            try
+            {
+                var p = new DynamicParameters();
+
+                p.Add("@newID", dbType: DbType.String, direction: ParameterDirection.Output, size: 50);
+                p.Add("@messages", dbType: DbType.String, direction: ParameterDirection.Output, size: 500);
+                p.Add("@productId", null, DbType.String, ParameterDirection.Input, 50);
+                p.Add("@productName", requirment.Description, DbType.String, ParameterDirection.Input, 50);
+                p.Add("@custId", requirment.Company, DbType.String, ParameterDirection.Input, 50);
+                p.Add("@supplierId", requirment.SupplierId, DbType.String, ParameterDirection.Input, 50);
+                p.Add("@partId", requirment.PartId, DbType.String, ParameterDirection.Input, 50);
+                p.Add("@procedureId", null, DbType.String, ParameterDirection.Input, 50);
+                p.Add("@loginId", ntLogin, DbType.String, ParameterDirection.Input, 50);
+                p.Add("@leadTime", requirment.LeadTime, DbType.Double, ParameterDirection.Input, 50);
+                p.Add("@price", requirment.Price, DbType.Double, ParameterDirection.Input, 50);
+                p.Add("@totalSalePrice", null, DbType.Single, ParameterDirection.Input, 50);
+                p.Add("@materialCost", null, DbType.Single, ParameterDirection.Input, 50);
+                p.Add("@customerRequirementId", requirment.Id, DbType.Int32, ParameterDirection.Input);
+                p.Add("@IsProduct", false, DbType.Boolean, ParameterDirection.Input);
+
+                using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
+                {
+                    int i = conn.Execute("Portal_Create_UpdateProduct", p, commandType: CommandType.StoredProcedure);
+                    var newId = p.Get<string>("newID");
+                    var messages = p.Get<string>("messages");
+
+                    var requirements = _dbContext.CustomerSubmittedRequirements.SingleOrDefault(x => x.Id == requirment.Id);
+                    requirements.ProductId = newId;
+                    _dbContext.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                result.AddError("There was an error creating product");
+            }
         }
     }
 }

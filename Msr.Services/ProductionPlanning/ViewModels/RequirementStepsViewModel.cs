@@ -33,7 +33,6 @@ namespace Msr.Services.ProductionPlanning.ViewModels
 
         public string OldProductProcedureId { get; set; }
 
-        [Required(ErrorMessage = "Procedure is required")]
         public string ProductProcedureId { get; set; }
 
         [Required]
@@ -135,8 +134,7 @@ namespace Msr.Services.ProductionPlanning.ViewModels
             }).OrderBy(o => o.Text).ToList();
         }
 
-        public void Read(ProductionPlanningService productionPlanService, CustomerRequirementView requirment,
-            ProceduresService proceduresService)
+        public void Read(ProductionPlanningService productionPlanService, CustomerRequirementView requirment)
         {
             Id = requirment.CustomerSubmitId;
             CustomerSubmitId = requirment.CustomerSubmitId;
@@ -153,7 +151,7 @@ namespace Msr.Services.ProductionPlanning.ViewModels
             SubmittedRequirement = requirment;
             TotalSalePrice = requirment.TotalSalePrice;
             MaterialCost = requirment.MaterialCost;
-            PObjectId = requirment.PObjectId;
+            PObjectId = requirment.ObjectId;
 
             if (!string.IsNullOrWhiteSpace(requirment.QuoteJson))
             {
@@ -204,5 +202,6 @@ namespace Msr.Services.ProductionPlanning.ViewModels
         }
 
         public string PObjectId { get; set; }
+        public bool NewProcedure { get; set; }
     }
 }

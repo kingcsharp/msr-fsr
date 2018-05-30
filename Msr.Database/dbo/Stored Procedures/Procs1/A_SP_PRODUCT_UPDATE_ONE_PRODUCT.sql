@@ -22,7 +22,8 @@
 @strNTLogin varchar(50),
 @totalSalePrice REAL,
 @materialCost REAL,
-@customerRequirementId int
+@customerRequirementId int,
+@IsProduct bit
 AS
 BEGIN TRANSACTION
 print 'Starting procedure A_SP_PRODUCT_UPDATE_ONE_PRODUCT'
@@ -60,7 +61,8 @@ modby = @strNTLogin,
 DRCM = getDAte(),
 TotalSalePrice=@totalSalePrice,
 MaterialCost=@materialCost,
-CustomerRequirementId = @customerRequirementId
+CustomerRequirementId = @customerRequirementId,
+IsProduct = @IsProduct
 WHERE OBJECT_ID = @newID
 if @@ERROR <> 0 goto problem
 declare @myID as varchar(50)

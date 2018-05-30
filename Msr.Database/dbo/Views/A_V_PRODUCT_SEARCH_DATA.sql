@@ -14,7 +14,8 @@ SELECT     ph.ID, ph.OBJECT_ID, ph.PARENT_ID, ph.NAME, ph.SUPPLIER_ID, dbo.A_V_C
                       ph.CUST_MGR_ROLE,
 					  ph.CustomerRequirementId,
 					  ph.MaterialCost,
-					  ph.TotalSalePrice
+					  ph.TotalSalePrice,
+					  ph.IsProduct
 FROM         dbo.A_OBJECTS INNER JOIN
                       dbo.A_PRODUCTS_HISTORY ph ON dbo.A_OBJECTS.ID = ph.OBJECT_ID LEFT OUTER JOIN
                       dbo.A_APPROVED_ROLES ON ph.MGR_TEAM = dbo.A_APPROVED_ROLES.ID LEFT OUTER JOIN

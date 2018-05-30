@@ -59,15 +59,6 @@ namespace Msr.Services.ProductionPlanning
             return _dbContext.LocationViews;
         }
 
-        public void UpdateStatus(int id, string status)
-        {
-            var requirment = _dbContext.CustomerSubmittedRequirements.Single(x => x.Id == id);
-
-            requirment.Status = status;
-
-            _dbContext.SaveChanges();
-        }
-
         public ResultNotification<CustomerSubmittedRequirement> Save(RequirementStepsViewModel model, string submit, LoggedUserIdResult currentUser)
         {
             var result = new ResultNotification<CustomerSubmittedRequirement>();
@@ -128,7 +119,8 @@ namespace Msr.Services.ProductionPlanning
 
                 foreach (var step in model.Steps)
                 {
-                    var existingStep = procedureSteps.SingleOrDefault(x => x.Title?.ToLower() == step.StepTitle?.ToLower() && x.Print_Order == step.Step);
+                    var existingStep = procedureSteps
+                        .SingleOrDefault(x => (x.Title?.ToLower() == step.StepTitle?.ToLower() || x.Title?.ToLower() == step.Process?.ToLower()) && x.Print_Order == step.Step);
 
                     if (step.ObjectId == null && existingStep == null)
                     {
@@ -145,11 +137,11 @@ namespace Msr.Services.ProductionPlanning
                                     Duration = step.StandardDirectLaborMinutes
                                 },
                             ProcObjId = checkOutProcedure.Entity,
-                            
+
                             ReplacementCost = step.ReplacementCost,
                             Utilization = step.Utilization,
                             UsefulLife = step.UsefulLife
-                    };
+                        };
 
                         var newStepData = _proceduresService.CreateStepData(vm);
 
@@ -193,7 +185,7 @@ namespace Msr.Services.ProductionPlanning
             return result;
         }
 
-        private void SaveProduct(RequirementStepsViewModel model, CustomerSubmittedRequirement requirment, ResultNotification<CustomerSubmittedRequirement> result)
+        public void SaveProduct(RequirementStepsViewModel model, CustomerSubmittedRequirement requirment, ResultNotification<CustomerSubmittedRequirement> result)
         {
             try
             {
@@ -201,14 +193,7 @@ namespace Msr.Services.ProductionPlanning
 
                 p.Add("@newID", dbType: DbType.String, direction: ParameterDirection.Output, size: 50);
                 p.Add("@messages", dbType: DbType.String, direction: ParameterDirection.Output, size: 500);
-                if (!string.IsNullOrWhiteSpace(requirment.ProductId))
-                {
-                    p.Add("@productId", model.Id, DbType.String, ParameterDirection.Input, 50);
-                }
-                else
-                {
-                    p.Add("@productId", null, DbType.String, ParameterDirection.Input, 50);
-                }
+                p.Add("@productId", !string.IsNullOrWhiteSpace(requirment.ProductId) ? model.PObjectId : null, DbType.String, ParameterDirection.Input, 50);
                 p.Add("@productName", model.ProductName, DbType.String, ParameterDirection.Input, 50);
                 p.Add("@custId", model.ProductCustomerId, DbType.String, ParameterDirection.Input, 50);
                 p.Add("@supplierId", model.ProductSupplierId, DbType.String, ParameterDirection.Input, 50);
@@ -220,6 +205,7 @@ namespace Msr.Services.ProductionPlanning
                 p.Add("@totalSalePrice", model.TotalSalePrice, DbType.Single, ParameterDirection.Input, 50);
                 p.Add("@materialCost", model.MaterialCost, DbType.Single, ParameterDirection.Input, 50);
                 p.Add("@customerRequirementId", requirment.Id, DbType.Int32, ParameterDirection.Input);
+                p.Add("@IsProduct", true, DbType.Boolean, ParameterDirection.Input);
 
                 using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
                 {

@@ -61,7 +61,7 @@ namespace Answer.Web.Controllers
         {
             var currentUser = GetCurrentUser();
 
-            var requirment = _quoteService.GetCustomerRequirementView(id);
+            var requirment = _quoteService.GetById(id);
 
             var vm = new JavaScriptSerializer().Deserialize<FreeFormQuoteViewModel>(requirment.QuoteJson);
 

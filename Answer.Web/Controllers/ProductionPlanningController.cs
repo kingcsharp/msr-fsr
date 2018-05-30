@@ -60,7 +60,7 @@ namespace Answer.Web.Controllers
         {
 
             var totalRows = _productionPlanService.GetProductionPlaningQueryable().Where(x =>
-                x.ProductStatus != "DELETED" && x.ProductStatus != "OLD");
+                x.Status != "DELETED" && x.Status != "OLD");
 
             if (param.where != null && param.where.rules.Any())
             {
@@ -110,7 +110,18 @@ namespace Answer.Web.Controllers
 
                         if (statusList.Any())
                         {
-                            totalRows = totalRows.Where(x => statusList.Contains(x.ProductStatus.ToLower()));
+                            if (statusList.Any(x => x.Contains("received")))
+                            {
+                                totalRows = totalRows.Where(x => x.Status == "creating" && x.IsProduct == false);
+                            }
+                            else if (statusList.Any(x => x.Contains("creating")))
+                            {
+                                totalRows = totalRows.Where(x => x.Status == "creating" && x.IsProduct);
+                            }
+                            else
+                            {
+                                totalRows = totalRows.Where(x => statusList.Contains(x.Status.ToLower()));
+                            }
                         }
                     }
                 }
@@ -156,14 +167,7 @@ namespace Answer.Web.Controllers
             return View();
         }
 
-        public ActionResult Start(int id)
-        {
-            _productionPlanService.UpdateStatus(id, CustomerSubmittedRequirementConstants.InProgress);
-
-            return RedirectToAction("Edit", "ProductionPlanning", new { id });
-        }
-
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int id, bool newProcedure = false)
         {
             var vm = new RequirementStepsViewModel();
 
@@ -173,7 +177,7 @@ namespace Answer.Web.Controllers
 
             var requirment = _quoteService.GetCustomerRequirementView(id);
 
-            vm.Read(_productionPlanService, requirment, _proceduresService);
+            vm.Read(_productionPlanService, requirment);
 
             var procedureObjectId = "";
 
@@ -207,6 +211,16 @@ namespace Answer.Web.Controllers
                 }
             }
 
+            if (newProcedure)
+            {
+                vm.ProductProcedureId = null;
+                vm.Steps = new List<RequirementStepsDetailsViewModel> { new RequirementStepsDetailsViewModel() };
+                vm.Setup(_productionPlanService, _preProServices, currentUser);
+                vm.NewProcedure = newProcedure;
+
+                return View(vm);
+            }
+
             return View(vm);
         }
 
@@ -219,7 +233,7 @@ namespace Answer.Web.Controllers
 
             viewModel.AdminCostSettings = _adminCostSettingService.GetAdminCostSettings();
 
-            viewModel.Read(_productionPlanService, requirment, _proceduresService);
+            viewModel.Read(_productionPlanService, requirment);
 
             var procedureObjectId = _productionPlanService.GetProceduretById(viewModel.ProductProcedureId).Value;
             var procedureSteps = _proceduresService.GetStepsData(procedureObjectId, currentUser.Id);
@@ -251,21 +265,18 @@ namespace Answer.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(RequirementStepsViewModel vm, string saveSubmit, string newProcedure)
+        public ActionResult Edit(RequirementStepsViewModel vm, string saveSubmit)
         {
             var currentUser = GetCurrentUser();
             ModelState.Clear();
 
-            if (!string.IsNullOrWhiteSpace(newProcedure))
+            if (!vm.NewProcedure && string.IsNullOrWhiteSpace(vm.ProductProcedureId))
             {
-                vm.ProductProcedureId = null;
-                vm.Steps = new List<RequirementStepsDetailsViewModel> { new RequirementStepsDetailsViewModel() };
-                vm.Setup(_productionPlanService, _preProServices, currentUser);
-
-                return View(vm);
+                ModelState.AddModelError(nameof(vm.ProductProcedureId), "Procedure is required");
             }
 
-            vm.AdminCostSettings = _adminCostSettingService.GetAdminCostSettings(); ;
+            vm.AdminCostSettings = _adminCostSettingService.GetAdminCostSettings();
+
             if (!string.IsNullOrWhiteSpace(vm.ProductProcedureId) && vm.ProductProcedureId != vm.OldProductProcedureId)
             {
                 vm.OldProductProcedureId = vm.ProductProcedureId;

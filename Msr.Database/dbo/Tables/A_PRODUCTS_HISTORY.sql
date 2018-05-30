@@ -26,6 +26,7 @@
     [MaterialCost]     REAL    NULL,
     [TotalSalePrice]   REAL    NULL,
     [CustomerRequirementId] INT NULL, 
+	[IsProduct]             BIT             NOT NULL DEFAULT (0),
     CONSTRAINT [PK_A_PRODUCT_HISTORY] PRIMARY KEY CLUSTERED ([ID] ASC)
 );
 

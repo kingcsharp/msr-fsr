@@ -26,10 +26,11 @@ namespace Answer.Web.Controllers
         public ActionResult Create(CustomerRequirementViewModel model)
         {
             var customerRequirementService = new CustomerRequirementService();
+            var loggedUser = GetCurrentUser();
 
             if (ModelState.IsValid)
             {
-                var response = customerRequirementService.Create(model);
+                var response = customerRequirementService.Create(model, loggedUser.Id);
 
                 if (!response.HasErrors())
                 {

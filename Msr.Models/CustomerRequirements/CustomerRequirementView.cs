@@ -13,7 +13,6 @@ namespace Msr.Models.CustomerRequirements
         public string PartKitNo { get; set; }
         public string SubmittedBy { get; set; }
         public DateTime SubmittedDate { get; set; }
-        public string Status { get; set; }
         public string SupplierId { get; set; }
         public string LocationId { get; set; }
         public string ProductName { get; set; }
@@ -21,9 +20,9 @@ namespace Msr.Models.CustomerRequirements
         public string ProcedureId { get; set; }
         public string ProductId { get; set; }
         public string ProductWorkflowId { get; set; }
-        public string ProductStatus { get; set; }
+        public string Status { get; set; }
         public string ProcedureName { get; set; }
-        public string PObjectId { get; set; }
+        public string ObjectId { get; set; }
         public int CustomerSubmitId { get; set; }
         public Single? TotalSalePrice { get; set; }
         public Single? MaterialCost { get; set; }
@@ -31,5 +30,6 @@ namespace Msr.Models.CustomerRequirements
         public string CustomerRequirementJson { get; set; }
         public double? LeadTime { get; set; }
         public int? Rev { get; set; }
+        public bool IsProduct { get; set; }
     }
 }
