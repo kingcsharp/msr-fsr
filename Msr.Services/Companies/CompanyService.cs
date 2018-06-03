@@ -68,7 +68,7 @@ namespace Msr.Services.Companies
                     Phone = model.Phone,
                     PicFiles = model.PictureFiles != null ? string.Join(", ", model.PictureFiles) : "",
                     LogoFiles = model.LogoFiles != null ? string.Join(", ", model.LogoFiles) : "",
-                    ReferenceFiles = model.ReferenceFiles != null ? string.Join(", ", model.ReferenceFiles) : "",
+                    ReferenceFiles = model.ReferenceFiles != null ? string.Join(", ", model.ReferenceFiles).Replace(",", ", ") : "",
                     NewPersonLogin = model.NewPersonLogin,
                     NewPersonPassword = model.NewPersonPassword,
                     NewPersonFirstName = model.NewPersonFirstName,

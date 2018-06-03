@@ -78,6 +78,10 @@ namespace Answer.Web.Controllers
                         {
                             totalRows = totalRows.Where(x => x.Balance == value);
                         }
+                        else
+                        {
+                            totalRows = totalRows.Where(x => x.Balance == -1);
+                        }
                     }
 
                     else if (rule.field == nameof(PurchesOrderView.SupplierName))
@@ -105,6 +109,10 @@ namespace Answer.Web.Controllers
                         if (decimal.TryParse(rule.data, out value))
                         {
                             totalRows = totalRows.Where(x => x.TotalPurchaseLimit == value);
+                        }
+                        else
+                        {
+                            totalRows = totalRows.Where(x => x.TotalPurchaseLimit == -1);
                         }
                     }
                     else if (rule.field == nameof(PurchesOrderView.AccType))

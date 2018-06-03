@@ -214,7 +214,11 @@ namespace Answer.Web.Controllers
             if (newProcedure)
             {
                 vm.ProductProcedureId = null;
-                vm.Steps = new List<RequirementStepsDetailsViewModel> { new RequirementStepsDetailsViewModel() };
+                vm.Steps = new List<RequirementStepsDetailsViewModel>
+                {
+                    new RequirementStepsDetailsViewModel
+                        {Step = 1}
+                };
                 vm.Setup(_productionPlanService, _preProServices, currentUser);
                 vm.NewProcedure = newProcedure;
 
@@ -273,6 +277,22 @@ namespace Answer.Web.Controllers
             if (!vm.NewProcedure && string.IsNullOrWhiteSpace(vm.ProductProcedureId))
             {
                 ModelState.AddModelError(nameof(vm.ProductProcedureId), "Procedure is required");
+            }
+
+            foreach (var item in vm.Steps)
+            {
+                if (item.StandardDirectLaborMinutes == null)
+                {
+                    ModelState.AddModelError(nameof(item.StandardDirectLaborMinutes), "Standard DirectLabor Minutes is required");
+                }
+                if (item.StandardMachineMinutes == null)
+                {
+                    ModelState.AddModelError(nameof(item.StandardDirectLaborMinutes), "Standard MachineMinutes is required");
+                }
+                if (vm.Steps.Count < 0)
+                {
+                    ModelState.AddModelError(nameof(item.StandardDirectLaborMinutes), "Step order is required");
+                }
             }
 
             vm.AdminCostSettings = _adminCostSettingService.GetAdminCostSettings();

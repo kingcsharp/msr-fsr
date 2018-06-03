@@ -33,7 +33,7 @@ $('.page-help').on('click', function () {
 
 function SelectOldIds() {
 
-    $(".selected-file").each(function (index) {
+    $(".selected-files").each(function (index) {
 
         if ($(this).is(":checked")) {
             var ids = $(this).val().split('|');

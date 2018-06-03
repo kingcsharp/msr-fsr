@@ -132,6 +132,8 @@ namespace Msr.Services.ProductionPlanning.ViewModels
                 Text = x.Title,
                 Value = x.ObjectId.ToString()
             }).OrderBy(o => o.Text).ToList();
+
+            ProcessList.Insert(0, new SelectListItem { Text = "Select", Value = "" });
         }
 
         public void Read(ProductionPlanningService productionPlanService, CustomerRequirementView requirment)

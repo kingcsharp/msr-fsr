@@ -2,6 +2,8 @@
 @{
     ViewBag.Title = "FreeForm Quote";
 }
+<link href="~/assets/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+
 <div class="app-container">
     <div class="row content-container">
         <div class="container">
@@ -26,7 +28,9 @@
                                     </th>
                                     <td>
                                         <div class="input-group datepicker">
-                                            @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control datepicker" } })
+                                            @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control" } })
+                                            
+
                                             <span class="input-group-addon">
                                                 <span class="glyphicon glyphicon-calendar fa fa-calendar"></span>
                                             </span>

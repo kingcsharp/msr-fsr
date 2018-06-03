@@ -78,6 +78,8 @@ namespace Msr.Services.Invoices.ViewModel
 
         public Double? QTY { get; set; }
 
+        public Decimal? UNIT_PRICE { get; set; }
+
         public Single? TotalSalePrice { get; set; }
     }
 }

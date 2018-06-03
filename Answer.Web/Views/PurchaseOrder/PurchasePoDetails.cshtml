@@ -131,24 +131,24 @@
 <script type="text/javascript">
     $(document).ready(function() {
 
-        //$('#show-switch-button').bootstrapSwitch();
+        $('#show-switch-button').bootstrapSwitch();
 
-        //$('#show-switch-button').on('switchchange.bootstrapswitch',
-        //    function(e, state) {
-        //        e.preventDefault();
-        //        LoadShowHideButton(state);
-        //    });
+        $('#show-switch-button').on('switchchange.bootstrapswitch',
+            function(e, state) {
+                e.preventDefault();
+                LoadShowHideButton(state);
+            });
 
-        //$('#show-hide-button,#show-hide').hide();
+        $('#show-hide-button,#show-hide').hide();
 
-        //$("#Qty").keyup(function() {
+        $("#Qty").keyup(function() {
 
-        //    if ($('#Qty').val() > 1) {
-        //        $('#show-hide-button,#show-hide').show();
-        //    } else {
-        //        $('#show-hide-button,#show-hide').hide();
-        //    }
-        //});
+            if ($('#Qty').val() > 1) {
+                $('#show-hide-button,#show-hide').show();
+            } else {
+                $('#show-hide-button,#show-hide').hide();
+            }
+        });
 
     });
 
