@@ -1,4 +1,4 @@
-﻿function LoadPurchaseOrderGrid(url, returnUrl) {
+﻿function LoadPurchaseOrderGrid(url, returnUrl, rootCompany) {
 
     $.jgrid.defaults.styleUI = 'Bootstrap';
 
@@ -180,6 +180,8 @@
                     grouping: false,
                     freeze: false
                 },
+                formatter: 'date',
+                formatoptions: { srcformat: "m/d/Y H:i", newformat: "m/d/Y" },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 align: 'left',
                 width: 120
@@ -199,6 +201,8 @@
                     grouping: false,
                     freeze: false
                 },
+                formatter: 'date',
+                formatoptions: { srcformat: "m/d/Y H:i", newformat: "m/d/Y" },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 align: 'left',
                 width: 120
@@ -337,6 +341,20 @@
         gridComplete: function () {
             Msr.JqGridCommon.SetupGridLock("/PurchaseOrder/Edit/");
             Msr.JqGridCommon.UnLockWorkflow(returnUrl);
+            $('.close-account').on('click',
+                function (e) {
+                    e.preventDefault();
+
+                    var callBackId = $(this).data('call-back-id');
+                    eModal.confirm('Are you sure you wnat to close this account?')
+                        .then(confirmCallback, optionalCancelCallback);
+
+                    function confirmCallback() {
+                        window.location.href = "/PurchaseOrder/CloseAccount/" + callBackId;
+                    }
+
+                    function optionalCancelCallback() {}
+                });
         }
 
     });
@@ -397,14 +415,23 @@
 
     function ActionFormatter(cellvalue, options, rowObject) {
 
+        var closeButton = '';
         var showPoButton = '';
-        var actions = Msr.JqGridCommon.ActionFormtter(cellvalue, options, rowObject, returnUrl, '/PurchaseOrder/Edit/');
+
+        var actions = Msr.JqGridCommon.ActionFormtter(cellvalue, options, rowObject, returnUrl, '/PurchaseOrder/Edit/', true);
 
         if (rowObject.Product !== null) {
             showPoButton = '<a  title="Purchase On this PO" href="/PurchaseOrder/PurchasePoDetails/' + rowObject.ObjectId + '" data-call-back-id ="' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-dollar"></i></a>';
         }
 
-        return showPoButton + actions;
+        var d = new Date();
+        var strDate = (d.getMonth() + 1) + "/" + d.getDate() + "/" + d.getFullYear();
+        
+        if (Date.parse(rowObject.CloseDate) > Date.parse(strDate) && rowObject.Status === "APPROVED" && rowObject.SupplierCo === rootCompany) {
+            closeButton = '<a  title="Close this Account" href="#" data-call-back-id ="' + rowObject.ObjectId + '" class="btn btn-xs btn-danger close-account" style="margin:2px;font-size: .8em;"><i class="fa fa-ban" aria-hidden="true"></i></a>';
+        }
+
+        return showPoButton + actions + closeButton;
     }
 }
 

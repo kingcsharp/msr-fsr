@@ -25,6 +25,7 @@ namespace Answer.Web.Controllers
         public ActionResult Index()
         {
             ViewBag.ActiveClass = "PurchaseOrder";
+            ViewBag.Company = GetCurrentUser().Root_Company;
 
             return View();
         }
@@ -580,6 +581,15 @@ namespace Answer.Web.Controllers
             };
 
             return Json(json, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult CloseAccount(string id)
+        {
+            var currentUser = GetCurrentUser();
+
+            _purchesOrderService.CloseAccount(id, currentUser.Id);
+
+            return RedirectToAction("Index");
         }
     }
 }

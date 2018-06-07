@@ -35,9 +35,7 @@
         $(document).ready(function () {
 
             $.jgrid.defaults.styleUI = 'Bootstrap';
-
-            LoadPurchaseOrderGrid('@Url.Action("PurchaseOrderData", "PurchaseOrder")','@Request.Url.OriginalString');
-
+            LoadPurchaseOrderGrid('@Url.Action("PurchaseOrderData", "PurchaseOrder")','@Request.Url.OriginalString','@ViewBag.Company');
         });
     </script>
 }

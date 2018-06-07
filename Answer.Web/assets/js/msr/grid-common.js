@@ -63,7 +63,7 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
             return imageUrls;
         },
 
-        ActionFormtter: function (cellvalue, options, rowObject, returnUrl, editUrl) {
+        ActionFormtter: function (cellvalue, options, rowObject, returnUrl, editUrl, hideDelete = false) {
 
             var editButton = '';
             var deleteButton = '';
@@ -82,9 +82,11 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
 
             if (rowObject.Status == 'APPROVED') {
                 editButton = '<a href="#" data-call-back-id ="' + rowObject.ObjectId + '"  class="btn btn-xs btn-success editpeople" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
+                if (hideDelete === false) {
+                    url = '/workflow/delete?objId=' + rowObject.ObjectId + '&returnUrl=' + returnUrl;
+                    deleteButton = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-danger" title="Proceed to delete." style="margin:2px;font-size: .8em;"><i class="fa fa fa-trash-o"></i></a>';
+                }
 
-                url = '/workflow/delete?objId=' + rowObject.ObjectId + '&returnUrl=' + returnUrl;
-                deleteButton = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-danger" title="Proceed to delete." style="margin:2px;font-size: .8em;"><i class="fa fa fa-trash-o"></i></a>';
             }
 
             return editButton + deleteButton + buttonWorkflowLeft + buttonWorkflowRight;
@@ -160,7 +162,7 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                     success: function (data) {
                         viewerLoad(data.FileUrl, data.FileName);
                     },
-                    error: function(error) {
+                    error: function (error) {
                         eLoaderError(error);
                     }
                 });
@@ -172,16 +174,16 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
 
             var filterList =
                 ':[All];' +
-                    'CREATING, DENIED, APPROVED, APPROVED_BUT_REVISING, APPROVED_BUT_DELETING:Creating or Approved;' +
-                    'CREATING, DENIED: Creating;' +
-                    'IN_WORKFLOW:In Approval Workflow;' +
-                    'APPROVED, APPROVED_BUT_REVISING, APPROVED_BUT_DELETING:Approved;' +
-                    'DENIED:Denied;' +
-                    'APPROVED_BUT_REVISING:Approved But Being Revised;' +
-                    'APPROVED_BUT_DELETING:Approved But Being Deleted;' +
-                    'DENIED:Denied;' +
-                    'DELETED:Deleted;' +
-                    'OLD:Obsolete';
+                'CREATING, DENIED, APPROVED, APPROVED_BUT_REVISING, APPROVED_BUT_DELETING:Creating or Approved;' +
+                'CREATING, DENIED: Creating;' +
+                'IN_WORKFLOW:In Approval Workflow;' +
+                'APPROVED, APPROVED_BUT_REVISING, APPROVED_BUT_DELETING:Approved;' +
+                'DENIED:Denied;' +
+                'APPROVED_BUT_REVISING:Approved But Being Revised;' +
+                'APPROVED_BUT_DELETING:Approved But Being Deleted;' +
+                'DENIED:Denied;' +
+                'DELETED:Deleted;' +
+                'OLD:Obsolete';
 
             return filterList;
 

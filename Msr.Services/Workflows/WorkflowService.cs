@@ -60,8 +60,7 @@ namespace Msr.Services.Workflows
                 p.Add("@allRevs", vm.AllRevs, DbType.String, ParameterDirection.Input, size: 50);
                 p.Add("@strNTLogin", vm.LoginId, DbType.String, ParameterDirection.Input, size: 50);
 
-                using (IDbConnection conn =
-                    new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
+                using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
                 {
                     int i = conn.Execute("A_SP_OBJECT_START_WF", p, commandType: CommandType.StoredProcedure);
 

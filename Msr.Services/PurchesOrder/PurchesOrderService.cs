@@ -417,6 +417,7 @@ namespace Msr.Services.PurchesOrder
             }
 
         }
+
         public ResultNotification<string> SavePurchaseMultiFill(PurchaseOrderMultiFillViewModel model, string ntLogin)
         {
             var responsePurchase = new ResultNotification<string>();
@@ -459,5 +460,9 @@ namespace Msr.Services.PurchesOrder
             return result;
         }
 
+        public void CloseAccount(string id, string loginId)
+        {
+            _dbContext.Database.ExecuteSqlCommand($"UPDATE A_ACCOUNTS_HISTORY SET CLOSE_DATE = getDate(), DRCM = getDate(), modby= " + loginId + " WHERE OBJECT_ID = " + id + "");
+        }
     }
 }
