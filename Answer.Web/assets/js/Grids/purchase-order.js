@@ -346,7 +346,7 @@
                     e.preventDefault();
 
                     var callBackId = $(this).data('call-back-id');
-                    eModal.confirm('Are you sure you wnat to close this account?')
+                    eModal.confirm('Are you sure you want to close this account?')
                         .then(confirmCallback, optionalCancelCallback);
 
                     function confirmCallback() {
