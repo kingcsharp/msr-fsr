@@ -1,17 +1,14 @@
-﻿using Msr.Models.ProductionPlanning;
-using Msr.Repositories;
+﻿using Msr.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
-using System.Data.Entity.Migrations;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using Dapper;
 using EntityFrameworkExtras.EF6;
 using ExcelDataReader;
-using Msr.Models.AdminCostSettings;
 using Msr.Models.CustomerRequirements;
 using Msr.Services.Procedures;
 using Msr.Services.ProductionPlanning.ViewModels;
@@ -25,6 +22,8 @@ using Msr.Services.Quotes;
 using Msr.Services.Users.Messages;
 using Msr.Services.Workflows;
 using Msr.Services.Workflows.ViewModels;
+using Msr.Services.Products;
+using Msr.Models.Products;
 
 namespace Msr.Services.ProductionPlanning
 {
@@ -37,6 +36,7 @@ namespace Msr.Services.ProductionPlanning
         private readonly ProceduresService _preProceduresService;
         private readonly QuoteService _quoteService;
         private readonly AdminCostSettingService _adminCostSettingService;
+        private readonly ProductService _productService;
 
         public ProductionPlanningService()
         {
@@ -47,6 +47,7 @@ namespace Msr.Services.ProductionPlanning
             _preProceduresService = new ProceduresService();
             _quoteService = new QuoteService();
             _adminCostSettingService = new AdminCostSettingService();
+            _productService = new ProductService();
         }
 
         public IQueryable<CustomerRequirementView> GetProductionPlaningQueryable()
@@ -59,29 +60,22 @@ namespace Msr.Services.ProductionPlanning
             return _dbContext.LocationViews;
         }
 
-        public ResultNotification<CustomerSubmittedRequirement> Save(RequirementStepsViewModel model, string submit, LoggedUserIdResult currentUser)
+        public ResultNotification<RequirementStepsViewModel> Save(RequirementStepsViewModel model, string submit, LoggedUserIdResult currentUser)
         {
-            var result = new ResultNotification<CustomerSubmittedRequirement>();
+            var result = new ResultNotification<RequirementStepsViewModel>();
 
             try
             {
                 var requirmentView = _quoteService.GetCustomerRequirementView(model.Id);
 
                 var requirment = _dbContext.CustomerSubmittedRequirements.SingleOrDefault(x => x.Id == requirmentView.CustomerSubmitId);
-
-                requirment.SupplierId = model.ProductSupplierId;
-                requirment.LocationId = model.ProductLocationId;
-                requirment.CustomerId = model.ProductCustomerId;
-                requirment.ProductName = model.ProductName;
-                requirment.PartId = model.ProductPartId;
-                requirment.ProcedureId = model.ProductProcedureId;
-                requirment.Division = model.ProductCustomerDivision;
+                var productsView = _productService.GetProducts(currentUser.Id).SingleOrDefault(x => x.Object_Id == model.PObjectId);
 
                 if (string.IsNullOrWhiteSpace(model.ProductProcedureId))
                 {
                     var saveProcedureViewModel = new SaveProcedureViewModel
                     {
-                        Name = requirment.ProductName,
+                        Name = model.ProductName,
                         DurationType = "TIME_SYS_SECONDS",
                         SecurityLevel = "1",
                         StepInAp = 1,
@@ -104,14 +98,14 @@ namespace Msr.Services.ProductionPlanning
                         submitWorkflow.LoginId = model.LoginId;
                         _workflowService.SubmitWorkflow(submitWorkflow);
 
-                        requirment.ProcedureId = response.Entity;
+                        //requirment.ProcedureId = response.Entity;
                         model.ProductProcedureId = response.Entity;
                     }
                 }
 
-                SaveProduct(model, requirment, result);
+                SaveProduct(model, productsView, result);
 
-                var procedureObjectId = GetProceduretById(requirment.ProcedureId).Value;
+                var procedureObjectId = GetProceduretById(model.ProductProcedureId).Value;
 
                 var checkOutProcedure = _workflowService.CheckOutObject(procedureObjectId, model.LoginId);
 
@@ -130,8 +124,8 @@ namespace Msr.Services.ProductionPlanning
                         {
                             GetStepEditData =
                                 {
-                                    Step_Text = template.StepText,
-                                    Title = template.Title,
+                                    Step_Text = template?.StepText,
+                                    Title = template?.Title,
                                     Print_Order = step.Step,
                                     EquipmentTime = step.StandardMachineMinutes,
                                     Duration = step.StandardDirectLaborMinutes
@@ -145,7 +139,7 @@ namespace Msr.Services.ProductionPlanning
 
                         var newStepData = _proceduresService.CreateStepData(vm);
 
-                        step.Process = template.Title;
+                        step.Process = template?.Title;
                         step.ObjectId = newStepData.Entity;
                     }
                     else
@@ -173,7 +167,7 @@ namespace Msr.Services.ProductionPlanning
 
                 _dbContext.SaveChanges();
 
-                result.Entity = requirment;
+                result.Entity = model;
             }
             catch (Exception ex)
             {
@@ -185,7 +179,7 @@ namespace Msr.Services.ProductionPlanning
             return result;
         }
 
-        public void SaveProduct(RequirementStepsViewModel model, CustomerSubmittedRequirement requirment, ResultNotification<CustomerSubmittedRequirement> result)
+        public void SaveProduct(RequirementStepsViewModel model, ProductsView requirment, ResultNotification<RequirementStepsViewModel> result)
         {
             try
             {
@@ -193,26 +187,28 @@ namespace Msr.Services.ProductionPlanning
 
                 p.Add("@newID", dbType: DbType.String, direction: ParameterDirection.Output, size: 50);
                 p.Add("@messages", dbType: DbType.String, direction: ParameterDirection.Output, size: 500);
-                p.Add("@productId", !string.IsNullOrWhiteSpace(requirment.ProductId) ? model.PObjectId : null, DbType.String, ParameterDirection.Input, 50);
+                p.Add("@productId", !string.IsNullOrWhiteSpace(model.PObjectId) ? model.PObjectId : null, DbType.String, ParameterDirection.Input, 50);
                 p.Add("@productName", model.ProductName, DbType.String, ParameterDirection.Input, 50);
                 p.Add("@custId", model.ProductCustomerId, DbType.String, ParameterDirection.Input, 50);
                 p.Add("@supplierId", model.ProductSupplierId, DbType.String, ParameterDirection.Input, 50);
-                p.Add("@partId", requirment.PartId, DbType.String, ParameterDirection.Input, 50);
-                p.Add("@procedureId", requirment.ProcedureId, DbType.String, ParameterDirection.Input, 50);
+                p.Add("@partId", model.ProductPartId, DbType.String, ParameterDirection.Input, 50);
+                p.Add("@procedureId", model.ProductProcedureId, DbType.String, ParameterDirection.Input, 50);
                 p.Add("@loginId", model.LoginId, DbType.String, ParameterDirection.Input, 50);
-                p.Add("@leadTime", requirment.LeadTime, DbType.Double, ParameterDirection.Input, 50);
-                p.Add("@price", requirment.Price, DbType.Double, ParameterDirection.Input, 50);
+                p.Add("@leadTime", null, DbType.Double, ParameterDirection.Input, 50);
+                p.Add("@price", model.TotalSalePrice, DbType.Double, ParameterDirection.Input, 50);
                 p.Add("@totalSalePrice", model.TotalSalePrice, DbType.Single, ParameterDirection.Input, 50);
                 p.Add("@materialCost", model.MaterialCost, DbType.Single, ParameterDirection.Input, 50);
-                p.Add("@customerRequirementId", requirment.Id, DbType.Int32, ParameterDirection.Input);
+                p.Add("@customerRequirementId", requirment.CustomerRequirementId, DbType.Int32, ParameterDirection.Input);
                 p.Add("@IsProduct", true, DbType.Boolean, ParameterDirection.Input);
+                p.Add("@Division", model.ProductCustomerDivision, DbType.String, ParameterDirection.Input, 50);
+                p.Add("@LocationId", model.ProductLocationId, DbType.String, ParameterDirection.Input, 50);
 
                 using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
                 {
                     int i = conn.Execute("Portal_Create_UpdateProduct", p, commandType: CommandType.StoredProcedure);
                     var newId = p.Get<string>("newID");
                     var messages = p.Get<string>("messages");
-                    requirment.ProductId = newId;
+                    requirment.Object_Id = newId;
                 }
             }
             catch (Exception ex)

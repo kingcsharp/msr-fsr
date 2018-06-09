@@ -1,4 +1,6 @@
-﻿CREATE VIEW [dbo].[Portal_CustomerRequirementView]
+﻿
+
+CREATE VIEW [dbo].[Portal_CustomerRequirementView]
 AS
 
 SELECT 
@@ -7,18 +9,17 @@ c.Id AS CustomerSubmitId,
 sup.ROOT_NAME AS Company,
 c.Description,
 p.SUPPLIER_ID AS SupplierId,
-c.LocationId,
+p.LocationId,
 c.SubmittedDate,
 p.PROCEDURE_ID AS ProcedureId,
 pv.NAME AS ProcedureName,
-c.PartId,
+p.APP_OBJECT AS PartId,
 c.QuoteJson,
 c.CustomerRequirementJson,
 p.NAME AS ProductName,
 c.ProductId,
 c.Respresentative,
-c.CustomerId,
-c.Division,
+p.Division,
 c.PartKitNo,
 c.SubmittedBy,
 p.TotalSalePrice,
@@ -29,11 +30,11 @@ c.ProductWorkflowId,
 p.REV AS Rev,
 p.IsProduct,
 p.STATUS,
-p.OBJECT_ID AS ObjectId
+p.OBJECT_ID AS ObjectId,
+PQP.CUST_ID as CustomerId
 FROM  A_V_PRODUCT_SEARCH_DATA p
 INNER JOIN [dbo].[Portal_CustomerSubmittedRequirement] c ON c.Id = p.CustomerRequirementId
 LEFT JOIN Portal_ProceduresView pv ON p.PROCEDURE_ID = pv.ObjectId
 LEFT  JOIN A_V_COMPANIES_DROP_SEARCH sup on sup.ID = p.SUPPLIER_ID
-
+LEFT JOIN A_PRODUCTS_QUICK_PRICE PQP ON P.ID = PQP.PROD_HIST_ID
 GO
-

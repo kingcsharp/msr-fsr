@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web.Mvc;
 using Msr.Models.AdminCostSettings;
 using Msr.Models.CustomerRequirements;
+using Msr.Models.Products;
 using Msr.Services.CustomerRequirements.ViewModel;
 using Msr.Services.PrePro;
 using Msr.Services.Procedures;
@@ -132,28 +133,24 @@ namespace Msr.Services.ProductionPlanning.ViewModels
                 Text = x.Title,
                 Value = x.ObjectId.ToString()
             }).OrderBy(o => o.Text).ToList();
-
             ProcessList.Insert(0, new SelectListItem { Text = "Select", Value = "" });
         }
 
-        public void Read(ProductionPlanningService productionPlanService, CustomerRequirementView requirment)
+        public void Read(ProductionPlanningService productionPlanService, ProductsView productsView, CustomerRequirementView requirment)
         {
-            Id = requirment.CustomerSubmitId;
-            CustomerSubmitId = requirment.CustomerSubmitId;
-            SubmittedRequirement = requirment;
-            ProductCustomerDivision = requirment.Division;
-            ProductSupplierId = requirment.SupplierId;
-            ProductLocationId = requirment.LocationId;
-            ProductCustomerId = requirment.CustomerId;
-            ProductCustomerDivision = requirment.Division;
-            ProductName = requirment.ProductName;
-            ProductPartId = requirment.PartId;
-            ProductProcedureId = requirment.ProcedureId;
-            OldProductProcedureId = requirment.ProcedureId;
-            SubmittedRequirement = requirment;
-            TotalSalePrice = requirment.TotalSalePrice;
-            MaterialCost = requirment.MaterialCost;
-            PObjectId = requirment.ObjectId;
+            Id = productsView.CustomerRequirementId.Value;
+            CustomerSubmitId = productsView.CustomerRequirementId.GetValueOrDefault();
+            ProductCustomerDivision = productsView.Division;
+            ProductSupplierId = productsView.Supplier_Id;
+            ProductLocationId = productsView.LocationId;
+            ProductCustomerId = productsView.CustomerId;
+            ProductName = productsView.Name;
+            ProductPartId = productsView.App_Object;
+            ProductProcedureId = productsView.Procedure_Id;
+            OldProductProcedureId = productsView.Procedure_Id;
+            TotalSalePrice = productsView.TotalSalePrice;
+            MaterialCost = productsView.MaterialCost;
+            PObjectId = productsView.Object_Id;
 
             if (!string.IsNullOrWhiteSpace(requirment.QuoteJson))
             {

@@ -346,14 +346,18 @@
                     e.preventDefault();
 
                     var callBackId = $(this).data('call-back-id');
+
                     eModal.confirm('Are you sure you want to close this account?')
                         .then(confirmCallback, optionalCancelCallback);
 
                     function confirmCallback() {
-                        window.location.href = "/PurchaseOrder/CloseAccount/" + callBackId;
+                        window.location.href =
+                            "/PurchaseOrder/CloseAccount/" + callBackId;
                     }
 
-                    function optionalCancelCallback() {}
+                    function optionalCancelCallback() {
+
+                    }
                 });
         }
 
@@ -417,18 +421,16 @@
 
         var closeButton = '';
         var showPoButton = '';
-
         var actions = Msr.JqGridCommon.ActionFormtter(cellvalue, options, rowObject, returnUrl, '/PurchaseOrder/Edit/', true);
 
         if (rowObject.Product !== null) {
-            showPoButton = '<a  title="Purchase On this PO" href="/PurchaseOrder/PurchasePoDetails/' + rowObject.ObjectId + '" data-call-back-id ="' + rowObject.ObjectId + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-dollar"></i></a>';
+            showPoButton = '<a  title="Purchase On this PO" href="/PurchaseOrder/PurchasePoDetails/' + rowObject.Root + '" data-call-back-id ="' + rowObject.Root + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-dollar"></i></a>';
         }
-
         var d = new Date();
         var strDate = (d.getMonth() + 1) + "/" + d.getDate() + "/" + d.getFullYear();
-        
+
         if (Date.parse(rowObject.CloseDate) > Date.parse(strDate) && rowObject.Status === "APPROVED" && rowObject.SupplierCo === rootCompany) {
-            closeButton = '<a  title="Close this Account" href="#" data-call-back-id ="' + rowObject.ObjectId + '" class="btn btn-xs btn-danger close-account" style="margin:2px;font-size: .8em;"><i class="fa fa-ban" aria-hidden="true"></i></a>';
+            closeButton = '<a  title="Close this Account" href="#" data-call-back-id ="' + rowObject.ObjectId + '" class="btn btn-xs btn-danger close-account" style="margin:2px;font-size: .8em;"><i class="fa fa-close" aria-hidden="true"></i></a>';
         }
 
         return showPoButton + actions + closeButton;

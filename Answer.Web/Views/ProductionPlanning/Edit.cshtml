@@ -28,10 +28,9 @@
                             }
                         </div>
                         @Html.Partial("Message")
-                        @using (Html.BeginForm("Edit", "ProductionPlanning", FormMethod.Post, new { @id = "production-planning-form", @class = "", role = "form" }))
+                        @using (Html.BeginForm("Edit", "ProductionPlanning", FormMethod.Post, new { @id = "production-planning-form", @class = "production-planning-form", role = "form" }))
                         {
                             <input type="hidden" id="QuoteProcedureName" name="QuoteProcedureName" value="@ViewBag.QuoteProcedureName" />
-
                             @Html.HiddenFor(x => x.Id)
                             @Html.HiddenFor(x => x.CustomerSubmitId)
                             @Html.HiddenFor(x => x.NewProcedure)
@@ -56,7 +55,7 @@
                                 {
                                     @Html.ActionLink("Back", "Index", null, new { @class = "btn btn-warning back-step pull-right", title = "Back To Production Planning", style = "margin-left: 10px;" })
                                     <button id="form-change" class="hidden" style="margin-left: 10px;" data-toggle="tooltip" data-placement="top" title="" data-original-title="Saves and Sends Quoation to Client" name="" value=""> Submit</button>
-                                    <button id="submit" class="pull-right btn btn-success" style="margin-left: 10px;" data-toggle="tooltip" data-placement="top" title="" data-original-title="Saves and Sends Quoation to Client" name="SaveSubmit" value="SaveSubmit"><i class="fa fa-send"></i> Save &amp; Submit</button>
+                                    <button id="submit" type="submit" class="pull-right btn btn-success" style="margin-left: 10px;" data-toggle="tooltip" data-placement="top" title="" data-original-title="Saves and Sends Quoation to Client" name="SaveSubmit" value="SaveSubmit"><i class="fa fa-send"></i> Save &amp; Submit</button>
                                     <button id="save_draft" class="pull-right btn btn-info" style="margin-left: 10px;" data-toggle="tooltip" data-placement="top" title="" data-original-title="Saves with In Progress Status" type="submit" name="SaveSubmit"><i class="fa fa-save"></i> Save Draft</button>
                                 }
                                 @if (Model.HasQuote)
@@ -88,7 +87,6 @@
 </div>
 @section scripts
 {
-
     <script type="text/javascript" src="~/assets/js/ObjectAssign.js"></script>
     <script type="text/javascript" src="~/assets/js/grids/requirement-steps.js"></script>
     <script src="~/assets/js/grids/comman.js"></script>

@@ -2,7 +2,6 @@
 @{
     ViewBag.Title = "Purchase Order Details";
 }
-
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="row">
@@ -14,6 +13,7 @@
                 @using (Html.BeginForm("PurchasePoDetails", "PurchaseOrder", FormMethod.Post, new { @class = "form form-horizontal partCreate" }))
                 {
                     @Html.HiddenFor(x => x.OBJECT_ID);
+                    @Html.HiddenFor(x => x.Root);
                     <input type="hidden" id="Id" name="Id" value="@Model.HISTORY_REF_ID" />
                     <table class="table quote-header table-bordered">
                         <tr>
@@ -36,7 +36,6 @@
                                 @Html.EditorFor(model => model.SUPPLIER_NAME, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
                                 @Html.ValidationMessageFor(model => model.SUPPLIER_NAME, "", new { @class = "text-danger" })
                             </td>
-
                         </tr>
                         <tr>
                             <th align="right">Customer:</th>
@@ -51,7 +50,6 @@
                                 @Html.EditorFor(model => model.OPEN_DATE, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
                                 @Html.ValidationMessageFor(model => model.OPEN_DATE, "", new { @class = "text-danger" })
                             </td>
-                            
                         </tr>
                         <tr>
                             <th align="right">Close Date:</th>
@@ -80,7 +78,6 @@
                             <th>Purchase Qty</th>
                             <th><div id="show-hide">Work Order Creation</div></th>
                         </tr>
-
                         @for (int i = 0; i < Model.Products.Count; i++)
                         {
                             <tr>
@@ -92,10 +89,9 @@
                                     @Html.TextBoxFor(x => Model.ProductPo[i].Name, new { @class = "form-control", @readonly = "readonly" })
                                 </td>
                                 <td style="width:150px;">
-                                    @Html.TextBoxFor(x => Model.ProductPo[i].Qty, new { @class = "form-control", @required = "", @style = "width:150px;",@id="Qty" })
+                                    @Html.TextBoxFor(x => Model.ProductPo[i].Qty, new { @class = "form-control", @required = "", @style = "width:150px;", @id = "Qty" })
                                     @Html.ValidationMessageFor(x => Model.ProductPo[i].Qty, "", new { @class = "text-danger" })
                                 </td>
-                                
                                 <td style="width:400px;">
                                     <div style="display: inline-block;" id="show-hide-button">
                                         <div class="make-switch switch-small" data-on="success" data-off="warning" style="display: inline-block">
@@ -106,58 +102,53 @@
                                 </td>
                             </tr>
                         }
-
                         <tr class="no-border">
                             <td colspan="3">
                                 <div id="message" class="alert-success success"></div>
                                 <div id="error-message" class="alert-danger error"></div>
                                 <input type="submit" name="BSUBMIT" class="btn btn-success" value="Create Purchase">
                             </td>
-
                         </tr>
                     </table>
                 }
             </div>
-
         </div>
     </div>
 </div>
-
 @section scripts
 {
-<script type="text/javascript" src="~/assets/js/jquery.flexslider.js"></script>
-<script type="text/javascript" src="~/assets/js/bootstrap-select.js"></script>
+    <script type="text/javascript" src="~/assets/js/jquery.flexslider.js"></script>
+    <script type="text/javascript" src="~/assets/js/bootstrap-select.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
 
-<script type="text/javascript">
-    $(document).ready(function() {
+            $('#show-switch-button').bootstrapSwitch();
 
-        $('#show-switch-button').bootstrapSwitch();
+            $('#show-switch-button').on('switchchange.bootstrapswitch',
+                function (e, state) {
+                    e.preventDefault();
+                    LoadShowHideButton(state);
+                });
 
-        $('#show-switch-button').on('switchchange.bootstrapswitch',
-            function(e, state) {
-                e.preventDefault();
-                LoadShowHideButton(state);
+            $('#show-hide-button,#show-hide').hide();
+
+            $("#Qty").keyup(function () {
+
+                if ($('#Qty').val() > 1) {
+                    $('#show-hide-button,#show-hide').show();
+                } else {
+                    $('#show-hide-button,#show-hide').hide();
+                }
             });
 
-        $('#show-hide-button,#show-hide').hide();
-
-        $("#Qty").keyup(function() {
-
-            if ($('#Qty').val() > 1) {
-                $('#show-hide-button,#show-hide').show();
-            } else {
-                $('#show-hide-button,#show-hide').hide();
-            }
         });
 
-    });
-
-    function LoadShowHideButton(state) {
-        if (state) {
-            $(this).hide();
-        } else {
-            $(this).show();
+        function LoadShowHideButton(state) {
+            if (state) {
+                $(this).hide();
+            } else {
+                $(this).show();
+            }
         }
-    }
-</script>
+    </script>
 }

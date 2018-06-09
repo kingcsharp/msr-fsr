@@ -226,6 +226,7 @@
     <Compile Include="ProductionPlanning\ViewModels\RequirementStepsViewModel.cs" />
     <Compile Include="PurchesOrder\Procedures\AddPurchaseOrderProcedure.cs" />
     <Compile Include="PurchesOrder\Procedures\FillWithPartAndSerialNumberProcedure.cs" />
+    <Compile Include="PurchesOrder\Procedures\PoCheckForValidityProcedure.cs" />
     <Compile Include="PurchesOrder\Procedures\PurchasePoDetailProcedure.cs" />
     <Compile Include="PurchesOrder\Procedures\PurchasePoProcedure.cs" />
     <Compile Include="PurchesOrder\Procedures\PurchasePoViewItemProcedure.cs" />

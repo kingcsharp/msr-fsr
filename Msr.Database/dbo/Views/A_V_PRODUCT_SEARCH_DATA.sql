@@ -1,7 +1,4 @@
-﻿
-
-
-CREATE VIEW dbo.A_V_PRODUCT_SEARCH_DATA
+﻿CREATE VIEW [dbo].[A_V_PRODUCT_SEARCH_DATA]
 AS
 SELECT     ph.ID, ph.OBJECT_ID, ph.PARENT_ID, ph.NAME, ph.SUPPLIER_ID, dbo.A_V_COMPANIES_APPROVED_DATA.NAME AS SUPPLIER_NAME, 
                       ph.COMMENTS, ph.PROCEDURE_ID, dbo.A_V_PROCEDURES_APPROVED_DATA.VERB, dbo.A_V_PROCEDURES_APPROVED_DATA.VERB_NAME, 
@@ -15,13 +12,17 @@ SELECT     ph.ID, ph.OBJECT_ID, ph.PARENT_ID, ph.NAME, ph.SUPPLIER_ID, dbo.A_V_C
 					  ph.CustomerRequirementId,
 					  ph.MaterialCost,
 					  ph.TotalSalePrice,
-					  ph.IsProduct
+					  ph.IsProduct,
+					  ph.Division,
+					  ph.LocationId,
+					  PQP.CUST_ID AS CustomerId
 FROM         dbo.A_OBJECTS INNER JOIN
                       dbo.A_PRODUCTS_HISTORY ph ON dbo.A_OBJECTS.ID = ph.OBJECT_ID LEFT OUTER JOIN
                       dbo.A_APPROVED_ROLES ON ph.MGR_TEAM = dbo.A_APPROVED_ROLES.ID LEFT OUTER JOIN
                       dbo.A_V_APPROVED_OBJECTS ON ph.APP_OBJECT = dbo.A_V_APPROVED_OBJECTS.ID LEFT OUTER JOIN
                       dbo.A_V_COMPANIES_APPROVED_DATA ON ph.SUPPLIER_ID = dbo.A_V_COMPANIES_APPROVED_DATA.ID LEFT OUTER JOIN
-                      dbo.A_V_PROCEDURES_APPROVED_DATA ON ph.PROCEDURE_ID = dbo.A_V_PROCEDURES_APPROVED_DATA.ID
+                      dbo.A_V_PROCEDURES_APPROVED_DATA ON ph.PROCEDURE_ID = dbo.A_V_PROCEDURES_APPROVED_DATA.ID LEFT OUTER JOIN 
+					  dbo.A_PRODUCTS_QUICK_PRICE PQP ON ph.ID = PQP.PROD_HIST_ID
 
 
 

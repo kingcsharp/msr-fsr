@@ -15,12 +15,12 @@ using Msr.Services.Parts.ViewModels;
 using Msr.Services.PartTypes;
 using Msr.Services.PrePro;
 using Msr.Services.Procedures;
-using Msr.Services.Procedures.ViewModels;
 using Msr.Services.ProductionPlanning.ViewModels;
 using Msr.Services.Quotes;
 using Msr.Services.Roles;
 using Msr.Services.Workflows;
 using Msr.Services.Workflows.ViewModels;
+using Msr.Services.Products;
 
 namespace Answer.Web.Controllers
 {
@@ -36,6 +36,7 @@ namespace Answer.Web.Controllers
         private readonly PartTypeService _partTypeService;
         private readonly DocumentFilesService _documentFilesService;
         private readonly AdminCostSettingService _adminCostSettingService;
+        private readonly ProductService _productService;
 
         public ProductionPlanningController()
         {
@@ -48,6 +49,7 @@ namespace Answer.Web.Controllers
             _partsService = new PartsService();
             _partTypeService = new PartTypeService();
             _documentFilesService = new DocumentFilesService();
+            _productService = new ProductService();
         }
 
         public ActionResult Index()
@@ -167,17 +169,17 @@ namespace Answer.Web.Controllers
             return View();
         }
 
-        public ActionResult Edit(int id, bool newProcedure = false)
+        public ActionResult Edit(int id)
         {
             var vm = new RequirementStepsViewModel();
 
             var currentUser = GetCurrentUser();
 
             vm.AdminCostSettings = _adminCostSettingService.GetAdminCostSettings();
-
             var requirment = _quoteService.GetCustomerRequirementView(id);
+            var productsView = _productService.GetProducts(currentUser.Id).SingleOrDefault(x => x.Object_Id == id.ToString());
 
-            vm.Read(_productionPlanService, requirment);
+            vm.Read(_productionPlanService, productsView, requirment);
 
             var procedureObjectId = "";
 
@@ -211,20 +213,6 @@ namespace Answer.Web.Controllers
                 }
             }
 
-            if (newProcedure)
-            {
-                vm.ProductProcedureId = null;
-                vm.Steps = new List<RequirementStepsDetailsViewModel>
-                {
-                    new RequirementStepsDetailsViewModel
-                        {Step = 1}
-                };
-                vm.Setup(_productionPlanService, _preProServices, currentUser);
-                vm.NewProcedure = newProcedure;
-
-                return View(vm);
-            }
-
             return View(vm);
         }
 
@@ -237,7 +225,9 @@ namespace Answer.Web.Controllers
 
             viewModel.AdminCostSettings = _adminCostSettingService.GetAdminCostSettings();
 
-            viewModel.Read(_productionPlanService, requirment);
+            var productsView = _productService.GetProducts(currentUser.Id).SingleOrDefault(x => x.Object_Id == id.ToString());
+
+            viewModel.Read(_productionPlanService, productsView, requirment);
 
             var procedureObjectId = _productionPlanService.GetProceduretById(viewModel.ProductProcedureId).Value;
             var procedureSteps = _proceduresService.GetStepsData(procedureObjectId, currentUser.Id);
@@ -269,29 +259,54 @@ namespace Answer.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(RequirementStepsViewModel vm, string saveSubmit)
+        public ActionResult Edit(RequirementStepsViewModel vm, string saveSubmit, bool isNewProcedure = false)
         {
             var currentUser = GetCurrentUser();
             ModelState.Clear();
+
+            if (isNewProcedure)
+            {
+                vm.ProductProcedureId = null;
+                vm.NewProcedure = true;
+                vm.Steps = new List<RequirementStepsDetailsViewModel>
+                {
+                    new RequirementStepsDetailsViewModel { Step = 1}
+                };
+                vm.Setup(_productionPlanService, _preProServices, currentUser);
+
+                return View(vm);
+            }
 
             if (!vm.NewProcedure && string.IsNullOrWhiteSpace(vm.ProductProcedureId))
             {
                 ModelState.AddModelError(nameof(vm.ProductProcedureId), "Procedure is required");
             }
 
-            foreach (var item in vm.Steps)
+            if (vm.ProductProcedureId == vm.OldProductProcedureId || vm.NewProcedure)
             {
-                if (item.StandardDirectLaborMinutes == null)
+                foreach (var item in vm.Steps)
                 {
-                    ModelState.AddModelError(nameof(item.StandardDirectLaborMinutes), "Standard DirectLabor Minutes is required");
-                }
-                if (item.StandardMachineMinutes == null)
-                {
-                    ModelState.AddModelError(nameof(item.StandardDirectLaborMinutes), "Standard MachineMinutes is required");
-                }
-                if (vm.Steps.Count < 0)
-                {
-                    ModelState.AddModelError(nameof(item.StandardDirectLaborMinutes), "Step order is required");
+                    if (item.Process == null)
+                    {
+                        ModelState.AddModelError(nameof(item.Process), "Process is required");
+                    }
+
+                    if (item.StandardDirectLaborMinutes == null)
+                    {
+                        ModelState.AddModelError(nameof(item.StandardDirectLaborMinutes),
+                            "Standard DirectLabor Minutes is required");
+                    }
+
+                    if (item.StandardMachineMinutes == null)
+                    {
+                        ModelState.AddModelError(nameof(item.StandardDirectLaborMinutes),
+                            "Standard MachineMinutes is required");
+                    }
+
+                    if (vm.Steps.Count < 0)
+                    {
+                        ModelState.AddModelError(nameof(item.StandardDirectLaborMinutes), "Step is required");
+                    }
                 }
             }
 
@@ -326,7 +341,7 @@ namespace Answer.Web.Controllers
 
                 return View(vm);
             }
-
+      
             if (ModelState.IsValid)
             {
                 vm.LoginId = currentUser.Id;
@@ -340,7 +355,7 @@ namespace Answer.Web.Controllers
                     if (saveSubmit == "SaveSubmit")
                     {
                         return RedirectToAction("Submit", "Workflow",
-                            new { objId = response.Entity.ProductId, returnUrl = Url.Content("~/ProductionPlanning") });
+                            new { objId = response.Entity.PObjectId, returnUrl = Url.Content("~/ProductionPlanning") });
                     }
 
                     vm.Setup(_productionPlanService, _preProServices, currentUser);

@@ -22,13 +22,13 @@
     <div class="col-sm-3">
         <div class="form-group">
             <label class="sr-only">Division/Fab # </label>
-            @Html.TextBoxFor(x => Model.ProductCustomerDivision, new { @class = "form-control", placeholder = "Division/Fab #", data_toggle = "tooltip", data_placement = "bottom"})
+            @Html.TextBoxFor(x => Model.ProductCustomerDivision, new { @class = "form-control", placeholder = "Division/Fab #", data_toggle = "tooltip", data_placement = "bottom" })
         </div>
     </div>
     <div class="col-sm-3">
         <div class="form-group">
             <label class="sr-only">Product Name </label>
-            @Html.TextBoxFor(x => Model.ProductName, new { @class = "form-control",  data_toggle = "tooltip", data_placement = "bottom"})
+            @Html.TextBoxFor(x => Model.ProductName, new { @class = "form-control", data_toggle = "tooltip", data_placement = "bottom" })
         </div>
     </div>
     <div class="col-sm-3">
@@ -49,9 +49,8 @@
                 @Html.DropDownListFor(model => model.ProductProcedureId, Model.ProcedureList, "Select Procedure", new { @class = "form-control  selectProcedure" })
             </div>
             <div class="col-sm-1">
-                <a href="~/ProductionPlanning/edit/@Model.PObjectId?newProcedure=true" id="new-procedure" name="newProcedure" value="newProcedure" class="btn btn-default" style="margin-left: -30px; margin-top: -0px" data-placement="right" title="Create New Procedure"><i class="fa fa-plus-circle" aria-hidden="true"></i></a>
+                <button type="submit" id="new-procedure" name="IsNewProcedure" value="true" class="pull-right btn btn-default" style="margin-left: 10px; margin-top: 0px !important" data-toggle="tooltip" data-placement="top" title="" data-original-title="Create New Procedure"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>
             </div>
-
         </div>
     </div>
 </div>

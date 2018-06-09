@@ -58,37 +58,6 @@ namespace Msr.Services.Quotes
                     {
                         entity.PartId = part.ObjectId;
                     }
-                    else
-                    {
-                        var partModel = new AddPartViewModel
-                        {
-                            CompanyPartNumber = item.CustomerPartNo,
-                            Name = item.CustomerPartNo,
-                            NTLogin = currentUser.Id
-                        };
-
-
-                        var partservice = new PartsService();
-
-                        response = partservice.Create(partModel);
-
-                        if (!response.HasErrors())
-                        {
-                            var checkOutObject = _workflowService.CheckOutObject(response.Entity, partModel.NTLogin);
-
-                            var submitWorkflow = new SubmitWorkflowViewModel
-                            {
-                                CompletionStart = "APPROVED",
-                                LoggedUserIdResult = currentUser,
-                                ObjectId = checkOutObject.Entity,
-                                ApprovalWorflowId = "37",
-                                Comment = "Part approved by system",
-                                LoginId = currentUser.Id
-                            };
-                            _workflowService.SubmitWorkflow(submitWorkflow);
-                            entity.PartId = checkOutObject.Entity;
-                        }
-                    }
 
                     model.ExistingProcess = model.ExistingProcess.Trim();
 
@@ -101,6 +70,7 @@ namespace Msr.Services.Quotes
 
                     _dbContext.CustomerSubmittedRequirements.Add(entity);
                     _dbContext.SaveChanges();
+
                     SaveProduct(entity, response, currentUser.Id);
                 }
 
@@ -130,7 +100,8 @@ namespace Msr.Services.Quotes
             return requirment;
         }
 
-        public void SaveProduct(CustomerSubmittedRequirement requirment, ResultNotification<string> result, string ntLogin)
+        public void SaveProduct(CustomerSubmittedRequirement requirment, ResultNotification<string> result,
+            string ntLogin)
         {
             try
             {
@@ -151,6 +122,8 @@ namespace Msr.Services.Quotes
                 p.Add("@materialCost", null, DbType.Single, ParameterDirection.Input, 50);
                 p.Add("@customerRequirementId", requirment.Id, DbType.Int32, ParameterDirection.Input);
                 p.Add("@IsProduct", false, DbType.Boolean, ParameterDirection.Input);
+                p.Add("@Division", requirment.Division, DbType.String, ParameterDirection.Input, 50);
+                p.Add("@LocationId", requirment.LocationId, DbType.String, ParameterDirection.Input, 50);
 
                 using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
                 {

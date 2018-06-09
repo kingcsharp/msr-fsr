@@ -380,8 +380,7 @@ namespace Answer.Web.Controllers
 
             if (!response.HasErrors())
             {
-
-                return RedirectToAction("CreatePurchase", "PurchaseOrder", new { id = response.Entity, oldId = model.OBJECT_ID, refrencePo = model.REFERENCE_PO });
+                return RedirectToAction("CreatePurchase", "PurchaseOrder", new { id = response.Entity, oldId = model.OBJECT_ID, refrencePo = model.REFERENCE_PO, model.Root });
             }
             TempData["ErrorMessage"] = response.ErrorMessage;
 

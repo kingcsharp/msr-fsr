@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace Msr.Services.PurchesOrder.ViewModels
 {
-   public class PurchaseFormAccountViewModel
+    public class PurchaseFormAccountViewModel
     {
         public PurchaseFormAccountViewModel()
         {
             Products = new List<string>();
         }
-      
+
         public string OBJECT_ID { get; set; }
 
         public string NAME { get; set; }
@@ -107,16 +107,18 @@ namespace Msr.Services.PurchesOrder.ViewModels
 
         public Double? TAX_RATE { get; set; }
 
+        public string Root { get; set; }
+
         public List<string> Products { get; set; }
 
         public List<PurchasePoViewModel> ProductPo { get; set; }
 
         public void Setup(PurchesOrderService purchesOrderService)
         {
-         
+
             Products = purchesOrderService.PurchasedOrderProducts(OBJECT_ID).Select(x => x.Id).ToList();
 
-            ProductPo = purchesOrderService.PurchasedOrderProductsPoList(id: OBJECT_ID).ToList();
+            ProductPo = purchesOrderService.PurchasedOrderProductsPoList(id: ID).ToList();
         }
 
     }

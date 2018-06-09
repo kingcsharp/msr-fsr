@@ -1,6 +1,7 @@
 ﻿@model Msr.Services.PurchesOrder.ViewModels.NewPurchaseOrderViewModel
 @Html.AntiForgeryToken()
 @Html.HiddenFor(x => x.ObjId)
+<input type="hidden" name="Id" id="Id" value="@Model.Id" />
 
 <table class="table quote-header" width="100%">
     <tr>

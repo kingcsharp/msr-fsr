@@ -76,7 +76,7 @@ namespace Msr.Services.PurchesOrder
 
         public PurchaseFormAccountViewModel AccountPurchaseOrderById(string id)
         {
-            var result = _dbContext.Database.SqlQuery<PurchaseFormAccountViewModel>($"SELECT * FROM A_V_ACCOUNTS_APPROVED_DATA WHERE ID = '{id}'").SingleOrDefault();
+            var result = _dbContext.Database.SqlQuery<PurchaseFormAccountViewModel>($"SELECT * FROM A_V_ACCOUNTS_APPROVED_DATA WHERE ID = '{id}'").FirstOrDefault();
 
             return result;
         }
@@ -203,7 +203,7 @@ namespace Msr.Services.PurchesOrder
             var responsePurchase = new ResultNotification<string>();
             try
             {
-                _dbContext.Database.ExecuteSqlCommand("UPDATE A_PURCHASES_HISTORY SET  CUST_PURCH_NUM = '" + model.CUST_PURCH_NUM + "', SUP_PURCH_NUM = '" + model.SUP_PURCH_NUM + "', ACCT_FOR_ALL='" + model.oldId + "' WHERE OBJECT_ID = '" + model.newId + "'");
+                _dbContext.Database.ExecuteSqlCommand("UPDATE A_PURCHASES_HISTORY SET  CUST_PURCH_NUM = '" + model.CUST_PURCH_NUM + "', SUP_PURCH_NUM = '" + model.SUP_PURCH_NUM + "', ACCT_FOR_ALL='" + model.ROOT + "' WHERE OBJECT_ID = '" + model.newId + "'");
 
                 var id = new SqlParameter("@pHistID", model.newId);
                 var ntLog = new SqlParameter("@strNTLogin", ntLogin);
@@ -248,6 +248,15 @@ namespace Msr.Services.PurchesOrder
 
                     _dbContext.Database.ExecuteSqlCommand("exec Portal_UpdateOrderItem @DUE_DATE,@QTY,@CUST_LINE_ITEM,@ID", dueDate, qty, custLintItem, orderId);
                 }
+
+                var checkForValidityProcedure = new PoCheckForValidityProcedure
+                {
+                    objId = model.ID,
+                    strNTLogin = ntLogin
+                };
+                _dbContext.Database.ExecuteStoredProcedure(checkForValidityProcedure);
+
+
 
             }
             catch (Exception ex)
@@ -299,7 +308,7 @@ namespace Msr.Services.PurchesOrder
                 _dbContext.Database.ExecuteStoredProcedure(purchasePoProcedure);
                 responsePurchase.Entity = purchasePoProcedure.NewID;
 
-                _dbContext.Database.ExecuteSqlCommand("UPDATE A_PURCHASES_HISTORY SET  CUST_PURCH_NUM = '" + model.REFERENCE_PO + "', ACCT_FOR_ALL = '" + model.OBJECT_ID + "' WHERE OBJECT_ID = '" + responsePurchase.Entity + "'");
+                _dbContext.Database.ExecuteSqlCommand("UPDATE A_PURCHASES_HISTORY SET  CUST_PURCH_NUM = '" + model.REFERENCE_PO + "', ACCT_FOR_ALL = '" + model.Root + "' WHERE OBJECT_ID = '" + responsePurchase.Entity + "'");
 
                 var purchasePoViewItemProcedure = new PurchasePoViewItemProcedure();
                 var purchasePoDetailProcedure = new PurchasePoDetailProcedure();
@@ -317,7 +326,7 @@ namespace Msr.Services.PurchesOrder
                         purchasePoViewItemProcedure.orderItemID = purchasePoDetailProcedure.NewID;
                     }
                     purchasePoViewItemProcedure.qty = model.ProductPo[i].Qty.ToString();
-                    purchasePoViewItemProcedure.acctID = model.OBJECT_ID;
+                    purchasePoViewItemProcedure.acctID = model.Root;
                     purchasePoViewItemProcedure.strNTLogin = ntLogin;
                     _dbContext.Database.ExecuteStoredProcedure(purchasePoViewItemProcedure);
 
@@ -333,7 +342,7 @@ namespace Msr.Services.PurchesOrder
 
                 }
 
-                _dbContext.Database.ExecuteSqlCommand("UPDATE A_PURCHASES_HISTORY SET  CUST_PURCH_NUM = '" + model.REFERENCE_PO + "', ACCT_FOR_ALL = '" + model.OBJECT_ID + "' WHERE OBJECT_ID = '" + responsePurchase.Entity + "'");
+                _dbContext.Database.ExecuteSqlCommand("UPDATE A_PURCHASES_HISTORY SET  CUST_PURCH_NUM = '" + model.REFERENCE_PO + "', ACCT_FOR_ALL = '" + model.Root + "' WHERE OBJECT_ID = '" + responsePurchase.Entity + "'");
 
                 var purchase = PurchasedOrderById(responsePurchase.Entity);
 
@@ -361,9 +370,11 @@ namespace Msr.Services.PurchesOrder
                 var addPurchaseOrderProcedure = new AddPurchaseOrderProcedure
                 {
                     ObjId = model.ObjId,
+                    Id = model.Id,
                     Name = model.POName,
                     AcctType = model.AccountType,
                     ReferencePO = model.RefCustPO,
+                    ReferenceName = model.RefCustPO,
                     SupplierCo = model.SupplierDepartment,
                     CustomerCo = model.Client,
                     CustomerBillCo = model.CustRefNum,
@@ -395,6 +406,14 @@ namespace Msr.Services.PurchesOrder
 
                 responsePurchase.Entity.NewId = addPurchaseOrderProcedure.NewID;
 
+
+                var checkForValidityProcedure = new PoCheckForValidityProcedure
+                {
+                    objId = addPurchaseOrderProcedure.NewID,
+                    strNTLogin = model.NTLogin
+                };
+                _dbContext.Database.ExecuteStoredProcedure(checkForValidityProcedure);
+
                 if (string.IsNullOrWhiteSpace(model.ObjId))
                 {
                     responsePurchase.SuccessMessage = "Purchase order has been created successfully.";
@@ -417,7 +436,6 @@ namespace Msr.Services.PurchesOrder
             }
 
         }
-
         public ResultNotification<string> SavePurchaseMultiFill(PurchaseOrderMultiFillViewModel model, string ntLogin)
         {
             var responsePurchase = new ResultNotification<string>();
@@ -432,7 +450,7 @@ namespace Msr.Services.PurchesOrder
                         StrSN = item.SERIAL_NUMBER,
                         StrQty = item.PURCHASE_QTY,
                         StrLoc = item.LOCATION_ID,
-                        StrOwner = item.SUPPLIER,
+                        StrOwner = "2",
                         StrNtLogin = ntLogin
 
                     };
@@ -460,9 +478,12 @@ namespace Msr.Services.PurchesOrder
             return result;
         }
 
-        public void CloseAccount(string id, string loginId)
+        public string CloseAccount(string id, string ntlogin)
         {
-            _dbContext.Database.ExecuteSqlCommand($"UPDATE A_ACCOUNTS_HISTORY SET CLOSE_DATE = getDate(), DRCM = getDate(), modby= " + loginId + " WHERE OBJECT_ID = " + id + "");
+            _dbContext.Database.ExecuteSqlCommand($"UPDATE A_ACCOUNTS_HISTORY SET CLOSE_DATE = getDate(), DRCM = getDate(), modby= " + ntlogin + " WHERE OBJECT_ID = " + id + "");
+
+            return "";
         }
+
     }
 }

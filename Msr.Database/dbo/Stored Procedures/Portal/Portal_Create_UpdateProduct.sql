@@ -13,7 +13,9 @@ create PROCEDURE [dbo].[Portal_Create_UpdateProduct]
 @totalSalePrice real,
 @materialCost real,
 @customerRequirementId int,
-@IsProduct bit
+@IsProduct bit,
+@Division varchar(50),
+@LocationId varchar(50)
 AS
 
 BEGIN TRANSACTION 
@@ -29,7 +31,7 @@ BEGIN TRY
 
 	declare @p2 varchar(500)
 
-    exec A_SP_PRODUCT_UPDATE_ONE_PRODUCT @newID output,@p2 output,@productId,NULL,@supplierId,@productName,'',@procedureId,@partId,'0',NULL,NULL,'0',NULL,NULL,NULL,NULL,NULL,'0',NULL,@loginId,@totalSalePrice,@materialCost, @customerRequirementId,@IsProduct
+    exec A_SP_PRODUCT_UPDATE_ONE_PRODUCT @newID output,@p2 output,@productId,NULL,@supplierId,@productName,'',@procedureId,@partId,'0',NULL,NULL,'0',NULL,NULL,NULL,NULL,NULL,'0',NULL,@loginId,@totalSalePrice,@materialCost, @customerRequirementId,@IsProduct,@Division,@LocationId
 
 	exec A_SP_FILES_DELETE_LINKS @newID,'REQ_FORM',@loginId
 

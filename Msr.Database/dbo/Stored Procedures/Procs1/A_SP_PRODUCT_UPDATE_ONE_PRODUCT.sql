@@ -23,7 +23,9 @@
 @totalSalePrice REAL,
 @materialCost REAL,
 @customerRequirementId int,
-@IsProduct bit
+@IsProduct bit,
+@Division varchar(50),
+@LocationId varchar(50)
 AS
 BEGIN TRANSACTION
 print 'Starting procedure A_SP_PRODUCT_UPDATE_ONE_PRODUCT'
@@ -62,7 +64,9 @@ DRCM = getDAte(),
 TotalSalePrice=@totalSalePrice,
 MaterialCost=@materialCost,
 CustomerRequirementId = @customerRequirementId,
-IsProduct = @IsProduct
+IsProduct = @IsProduct,
+Division = @Division,
+LocationId =@LocationId
 WHERE OBJECT_ID = @newID
 if @@ERROR <> 0 goto problem
 declare @myID as varchar(50)
