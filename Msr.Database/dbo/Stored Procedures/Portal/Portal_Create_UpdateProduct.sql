@@ -31,7 +31,14 @@ BEGIN TRY
 
 	declare @p2 varchar(500)
 
-    exec A_SP_PRODUCT_UPDATE_ONE_PRODUCT @newID output,@p2 output,@productId,NULL,@supplierId,@productName,'',@procedureId,@partId,'0',NULL,NULL,'0',NULL,NULL,NULL,NULL,NULL,'0',NULL,@loginId,@totalSalePrice,@materialCost, @customerRequirementId,@IsProduct,@Division,@LocationId
+    exec A_SP_PRODUCT_UPDATE_ONE_PRODUCT @newID output,@p2 output,
+	@productId,NULL,@supplierId,@productName,'',@procedureId,@partId,
+	'0',NULL,NULL,'0',NULL,NULL,NULL,NULL,NULL,'0',NULL,@loginId,@totalSalePrice,
+	@materialCost,
+	@customerRequirementId,
+	@IsProduct,
+	@Division,
+	@LocationId
 
 	exec A_SP_FILES_DELETE_LINKS @newID,'REQ_FORM',@loginId
 
