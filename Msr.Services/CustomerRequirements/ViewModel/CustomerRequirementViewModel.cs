@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Mvc;
+using Msr.Models.CustomerRequirements;
 
 namespace Msr.Services.CustomerRequirements.ViewModel
 {
@@ -65,6 +66,8 @@ namespace Msr.Services.CustomerRequirements.ViewModel
         public List<ProcessInfoViewModel> Process { get; set; }
 
         public List<PartInfoViewModel> Parts { get; set; }
+
+        public CustomerRequirementView CustomerRequirementView { get; set; }
 
         public void Setup()
         {

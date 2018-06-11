@@ -176,6 +176,26 @@ function LoadSteps(i, myOptions) {
 
         });
 
+    $('#userRequirementsQuoteModal').on('show.bs.modal',
+        function (event) {
+            var button = $(event.relatedTarget);
+            var callBackId = button.data('call-back-id');
+            var modal = $(this);
+
+            $.ajax({
+                type: "GET",
+                url: '/Quote/ViewRequirementsQuote/' + callBackId,
+                dataType: 'html',
+                success: function (data) {
+                    modal.find('.modal-body').html(data);
+                },
+                error: function () {
+
+                }
+            });
+
+        });
+
 }
 function recalculateTotals() {
 

@@ -70,6 +70,11 @@ namespace Answer.Web.Controllers
             vm.CustomerName = vm.Customers.SingleOrDefault(x => x.Value == vm.CustomerId)?.Text;
             vm.SupplierName = vm.Suppliers.SingleOrDefault(x => x.Value == vm.Supplier)?.Text;
 
+            foreach (var item in vm.QuoteItems)
+            {
+                item.Extension = (decimal) (item.Price * item.Quantity.Value);
+            }
+
             return PartialView("_ViewQuote", vm);
         }
 
@@ -82,6 +87,42 @@ namespace Answer.Web.Controllers
             vm.Setup();
 
             return PartialView("_ViewRequirements", vm);
+        }
+
+        public ActionResult ViewRequirementsQuote(string id)
+        {
+            var model = _productionPlanningService.GetProductionPlaningQueryable().SingleOrDefault(x => x.ObjectId == id);
+            var csr = new JavaScriptSerializer().Deserialize<CustomerRequirementViewModel>(model.CustomerRequirementJson);
+
+            var quote = new FreeFormQuoteViewModel();
+
+            quote.Date = csr.SubmittedDate;
+            quote.Email = csr.CommercialEmail;
+            quote.PhoneCSR = csr.CommercialPhone;
+            quote.PartKitNo = csr.PartKitNo;
+            quote.Title = csr.CommercialTitle;
+            quote.SupplierName = model.SupplierName;
+            quote.CustomerName = model.CustomerName;
+            quote.FOB = csr.DivisionFab;
+            quote.ProcessDescription = model.ProcedureName;
+            quote.ExistingProcess = model.ProcedureName;
+
+            foreach (var partInfoViewModel in csr.Parts)
+            {
+                quote.QuoteItems.Add(new QuoteItemsViewModel
+                {
+                    Quantity = 1, ////There is no way to enter Qty when submitting CSR
+                    Description = partInfoViewModel.PartDescription,
+                    Price = model.TotalSalePrice,
+                    Extension = (decimal)(model.TotalSalePrice * 1)
+                });
+            }
+
+            quote.CreatedBy = model.SubmittedBy;
+            quote.Title = csr.CommercialTitle;
+            quote.AddressSubmit = csr.StreetAddress;
+
+            return PartialView("_ViewQuote", quote);
         }
     }
 }

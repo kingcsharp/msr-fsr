@@ -1349,6 +1349,7 @@
     <Content Include="Views\Wip\_WipListModal.cshtml" />
     <Content Include="Views\Procedures\Partials\_InnerMoniter.cshtml" />
     <Content Include="Views\AdminCostSettings\Index.cshtml" />
+    <Content Include="Views\Quote\_ViewRequirementsQuote.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

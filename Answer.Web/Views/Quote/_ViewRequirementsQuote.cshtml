@@ -1,4 +1,4 @@
-﻿@model Msr.Services.Quotes.ViewModels.FreeFormQuoteViewModel
+﻿@model Msr.Services.CustomerRequirements.ViewModel.CustomerRequirementViewModel
 <style>
     .no-border {
         border-bottom: 0px !important;
@@ -26,7 +26,6 @@
         padding-top: 2px !important;
     }
 </style>
-
 <table class="table no-border" width="100%">
     <tbody>
         <tr>
@@ -34,11 +33,11 @@
             <th align="right">
                 Client:
             </th>
-            <td>@Html.DisplayFor(x => x.CustomerName)</td>
+            <td>@Html.DisplayFor(x => x.RequirementName)</td>
         </tr>
         <tr>
             <th align="right">Part / Kit No.:</th>
-            <td>@Html.DisplayFor(x => x.PartKitNo)</td>
+            <td>@Html.DisplayFor(x => x.CustomerRequirementView.PartKitNo)</td>
         </tr>
         <tr>
             <td colspan="3" align="center"><h2>Quotation</h2></td>
@@ -52,15 +51,15 @@
     <tbody>
         <tr>
             <th width="20%">Date: </th>
-            <td width="30%">@Html.DisplayFor(x => x.Date)</td>
+            <td width="30%">@Html.DisplayFor(x => x.SubmittedDate)</td>
             <th width="20%">Customer Name:</th>
-            <td width="30%">@Html.DisplayFor(x => x.CustomerName)</td>
+            <td width="30%">@Html.DisplayFor(x => x.SubmittedBy)</td>
         </tr>
         <tr>
             <th>Order# :</th>
             <td></td>
-            <th></th>
-            <td></td>
+            <th>Procedure Name:</th>
+            <td>@Html.DisplayFor(x => x.CustomerRequirementView.ProcedureName)</td>
         </tr>
         <tr>
             <th align="right">
@@ -68,7 +67,7 @@
             </th>
             <td></td>
             <th align="right">Supplier Name:</th>
-            <td>@Html.DisplayFor(x => x.SupplierName)</td>
+            <td>@Html.DisplayFor(x => x.CustomerRequirementView.SupplierName)</td>
         </tr>
         <tr>
             <th align="right">
@@ -76,25 +75,25 @@
             </th>
             <td></td>
             <th align="right">Commercial Contact:</th>
-            <td>@Html.DisplayFor(x => x.Contact)</td>
+            <td>@Html.DisplayFor(x => x.CommercialName)</td>
         </tr>
         <tr>
             <th align="right">F.O.B.:</th>
-            <td>@Html.DisplayFor(x => x.FOB)</td>
+            <td>@*@Html.DisplayFor(x => x.FOB)*@</td>
             <th align="right">Title:</th>
-            <td>@Html.DisplayFor(x => x.Title)</td>
+            <td>@Html.DisplayFor(x => x.CommercialTitle)</td>
         </tr>
         <tr>
             <th align="right">Terms:</th>
-            <td>@Html.DisplayFor(x => x.Terms)</td>
+            <td>@*@Html.DisplayFor(x => x.Terms)*@</td>
             <th align="right">Phone:</th>
-            <td>@Html.DisplayFor(x => x.Phone)</td>
+            <td>@Html.DisplayFor(x => x.CommercialPhone)</td>
         </tr>
         <tr>
             <th align="right">Delivery:</th>
-            <td>@Html.DisplayFor(x => x.Delivery)</td>
+            <td>@*@Html.DisplayFor(x => x.Delivery)*@</td>
             <th align="right">Email:</th>
-            <td>@Html.DisplayFor(x => x.Email)</td>
+            <td></td>
         </tr>
         <tr>
             <td colspan="4"></td>
@@ -105,25 +104,30 @@
     <thead>
         <tr>
             <th>Item No.</th>
-            <th>Quantity</th>
-            <th>Unit</th>
-            <th style="text-align: left !important">Description</th>
-            <th>Price</th>
-            <th>Extension</th>
+            <th>CU/Non CU</th>
+            <th style="text-align: left !important">Part Description</th>
+            <th>Substrate</th>
+            <th>Coating/Surface Treatment</th>
+            <th>Dimensions</th>
+            <th>Cust. Part No.</th>
+            <th>Mfg. Part No.</th>
+            <th># Parts per Kit</th>
         </tr>
     </thead>
     <tbody>
-
-        @foreach (var item in Model.QuoteItems)
+        @foreach (var item in Model.Parts)
         {
             var index = 1;
             <tr>
                 <td align="center">@index</td>
-                <td align="center">@item.Quantity</td>
-                <td align="center">Unit</td>
-                <td>@item.Description</td>
-                <td align="center">@item.Price.GetValueOrDefault().ToString("C")</td>
-                <td align="center">@item.Extension.GetValueOrDefault().ToString("C")</td>
+                <td align="center">@item.NonCU</td>
+                <td align="center">@item.PartDescription</td>
+                <td align="center">@item.Substrate</td>
+                <td>@item.CoatingSurface</td>
+                <td align="center"> @item.Dimensions</td>
+                <td align="center"> @item.CustPartNo</td>
+                <td align="center"> @item.MfgPartNo</td>
+                <td align="center"> @item.PartsPerKit</td>
             </tr>
             index = index + 1;
         }
@@ -138,8 +142,8 @@
         </tr>
     </thead>
     <tr>
-        <td align="center">@Model.ExistingProcess</td>
-        <td align="center">@Model.ProcessDescription</td>
+        <td align="center">@*@Model.ExistingProces*@</td>
+        <td align="center">@*@Model.ProcessDescription*@</td>
     </tr>
 </table>
 <table class="table" width="100%">
@@ -199,8 +203,8 @@
         </tr>
         <tr>
             <td colspan="5" width="60%"></td>
-            <td style="border-bottom: 1px solid #000 !important;" width="20%">@Html.DisplayFor(x => x.CreatedBy)</td>
-            <td style="border-bottom: 1px solid #000 !important;" width="30%">@Html.DisplayFor(x => x.Title)</td>
+            <td style="border-bottom: 1px solid #000 !important;" width="20%">@Html.DisplayFor(x => x.SubmittedBy)</td>
+            <td style="border-bottom: 1px solid #000 !important;" width="30%">@*@Html.DisplayFor(x => x.Title)*@</td>
         </tr>
         <tr>
             <td colspan="5" width="60%"></td>
@@ -209,7 +213,7 @@
         </tr>
         <tr>
             <td colspan="5" width="60%"></td>
-            <td colspan="2" style="border-bottom: 1px solid #000 !important;" width="40%">@Html.DisplayFor(x => x.TitleSubmit)</td>
+            <td colspan="2" style="border-bottom: 1px solid #000 !important;" width="40%">@*@Html.DisplayFor(x => x.TitleSubmit)*@</td>
         </tr>
         <tr>
             <td colspan="5" width="60%"></td>
@@ -217,7 +221,7 @@
         </tr>
         <tr>
             <td colspan="5" width="60%"></td>
-            <td colspan="2" width="40%">@Model.AddressSubmit</td>
+            <td colspan="2" width="40%">MSR-FSR LLC</td>
         </tr>
     </tbody>
 </table>

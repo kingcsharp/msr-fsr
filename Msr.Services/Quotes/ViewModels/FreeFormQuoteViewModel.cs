@@ -41,6 +41,12 @@ namespace Msr.Services.Quotes.ViewModels
 
         public string Delivery { get; set; }
 
+        public string Email { get; set; }
+
+        public string PhoneCSR { get; set; }
+
+        public string PartKitNo { get; set; }
+
         [Required]
         public string ExistingProcess { get; set; }
 

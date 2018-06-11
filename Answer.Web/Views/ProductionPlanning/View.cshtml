@@ -22,12 +22,17 @@
                             <div class="col-sm-9">
                                 <h2>View Product Definition</h2>
                             </div>
-
                             @if (!Model.HasQuote)
                             {
-                                <div class="col-sm-3" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="View Orginally Submitted Requirements from Customer">
-                                    <button type="button" class="btn btn-primary pull-right" id="view-requirment" data-call-back-id="@Model.Id" data-toggle="modal" data-target="#userRequirementsModal"><i class="fa fa-eye"></i> View Requirements</button>
+                                <div  class="col-sm-1 pull-right" style="margin-left: 20px;" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="View Orginally Submitted Requirements from Customer">
+                                    <button type="button" class="btn btn-primary pull-right view-requirment" id="view-requirment" data-call-back-id="@Model.Id" data-toggle="modal" data-target="#userRequirementsModal"><i class="fa fa-eye"></i> View Requirements</button>
                                 </div>
+                                if (Model.ProductStatus == "APPROVED")
+                                 {
+                                     <div class="col-sm-1 pull-right"   data-toggle="tooltip" data-placement="bottom" title="" data-original-title="View Quote">
+                                         <button type="button" class="btn btn-primary pull-right view-requirment" id="view-requirment" data-call-back-id="@Model.PObjectId" data-toggle="modal" data-target="#userRequirementsQuoteModal"><i class="fa fa-eye"></i> View Quote</button>
+                                     </div>
+                                 }
                             }
                             else
                             {
@@ -59,6 +64,26 @@
 
 @Html.Partial("_Models")
 
+<div id="userRequirementsQuoteModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h4 class="modal-title">Quote Requirements Preview</h4>
+            </div>
+            <div class="modal-body" style="max-height: 100% !important;" id="printThis">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" id="Print"><i class="fa fa-print"></i> Print </button>
+                <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close-o"></i> Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
 @section scripts
 {
 
@@ -88,7 +113,7 @@
             });
 
             $("input,select,button").prop('disabled', true);
-            $('#view-requirment').prop('disabled', false);
+            $('.view-requirment').prop('disabled', false);
             $('.modal-footer button').prop('disabled', false);
             $('.modal-header button').prop('disabled', false);
             $('#add_row').hide();

@@ -151,6 +151,7 @@ namespace Msr.Services.ProductionPlanning.ViewModels
             TotalSalePrice = productsView.TotalSalePrice;
             MaterialCost = productsView.MaterialCost;
             PObjectId = productsView.Object_Id;
+            ProductStatus = productsView.Status;
 
             if (!string.IsNullOrWhiteSpace(requirment.QuoteJson))
             {

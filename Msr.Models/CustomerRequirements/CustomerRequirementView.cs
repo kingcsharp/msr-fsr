@@ -8,12 +8,14 @@ namespace Msr.Models.CustomerRequirements
         public string Respresentative { get; set; }
         public string Description { get; set; }
         public string CustomerId { get; set; }
+        public string CustomerName { get; set; }
         public string Company { get; set; }
         public string Division { get; set; }
         public string PartKitNo { get; set; }
         public string SubmittedBy { get; set; }
         public DateTime SubmittedDate { get; set; }
         public string SupplierId { get; set; }
+        public string SupplierName { get; set; }
         public string LocationId { get; set; }
         public string ProductName { get; set; }
         public string PartId { get; set; }
