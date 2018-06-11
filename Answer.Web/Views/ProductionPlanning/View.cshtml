@@ -27,8 +27,8 @@
                                 <div  class="col-sm-1 pull-right" style="margin-left: 20px;" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="View Orginally Submitted Requirements from Customer">
                                     <button type="button" class="btn btn-primary pull-right view-requirment" id="view-requirment" data-call-back-id="@Model.Id" data-toggle="modal" data-target="#userRequirementsModal"><i class="fa fa-eye"></i> View Requirements</button>
                                 </div>
-                                if (Model.ProductStatus == "APPROVED")
-                                 {
+                                if (Model.ProductStatus == "APPROVED" || Model.ProductStatus == "APPROVED_BUT_REVISING")
+                                {
                                      <div class="col-sm-1 pull-right"   data-toggle="tooltip" data-placement="bottom" title="" data-original-title="View Quote">
                                          <button type="button" class="btn btn-primary pull-right view-requirment" id="view-requirment" data-call-back-id="@Model.PObjectId" data-toggle="modal" data-target="#userRequirementsQuoteModal"><i class="fa fa-eye"></i> View Quote</button>
                                      </div>

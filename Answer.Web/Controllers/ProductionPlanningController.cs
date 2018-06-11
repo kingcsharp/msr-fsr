@@ -177,7 +177,7 @@ namespace Answer.Web.Controllers
 
             vm.AdminCostSettings = _adminCostSettingService.GetAdminCostSettings();
             var requirment = _quoteService.GetCustomerRequirementView(id);
-            var productsView = _productService.GetProducts(currentUser.Id).SingleOrDefault(x => x.Object_Id == id.ToString());
+            var productsView = _productService.GetProducts().SingleOrDefault(x => x.Object_Id == id.ToString());
 
             vm.Read(_productionPlanService, productsView, requirment);
 
@@ -225,7 +225,7 @@ namespace Answer.Web.Controllers
 
             viewModel.AdminCostSettings = _adminCostSettingService.GetAdminCostSettings();
 
-            var productsView = _productService.GetProducts(currentUser.Id).SingleOrDefault(x => x.Object_Id == id.ToString());
+            var productsView = _productService.GetProducts().SingleOrDefault(x => x.Object_Id == id.ToString());
 
             viewModel.Read(_productionPlanService, productsView, requirment);
 

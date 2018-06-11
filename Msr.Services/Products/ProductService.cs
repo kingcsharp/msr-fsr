@@ -21,10 +21,9 @@ namespace Msr.Services.Products
             return _dbContext.ProductsViews;
         }
 
-        public IQueryable<ProductsView> GetProducts(string ntLogin)
+        public IQueryable<ProductsView> GetProducts()
         {
-            var sql =
-                $"EXEC A_SP_PRODUCTS_SEARCH ' (NAME LIKE ''%%'' OR NAME is NULL ) AND  (SUPPLIER_NAME LIKE ''%%'' OR SUPPLIER_NAME is NULL ) AND  (ROOT LIKE ''%%'' OR ROOT is NULL ) AND  (PROCEDURE_NAME LIKE ''%%'' OR PROCEDURE_NAME is NULL ) AND  (APP_OBJ_NAME LIKE ''%%'' OR APP_OBJ_NAME is NULL ) AND  (VERB_NAME LIKE ''%%'' OR VERB_NAME is NULL ) AND STATUS IN (''CREATING'',''DENIED'',''APPROVED'',''APPROVED_BUT_REVISING'',''APPROVED_BUT_DELETING'')',' ORDER BY NAME','{ntLogin}'";
+            var sql = "SELECT * FROM A_V_PRODUCT_SEARCH_DATA";
 
             var result = _dbContext.Database.SqlQuery<ProductsView>(sql).ToList().AsQueryable();
 

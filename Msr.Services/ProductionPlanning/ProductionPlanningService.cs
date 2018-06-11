@@ -69,7 +69,7 @@ namespace Msr.Services.ProductionPlanning
                 var requirmentView = _quoteService.GetCustomerRequirementView(model.Id);
 
                 var requirment = _dbContext.CustomerSubmittedRequirements.SingleOrDefault(x => x.Id == requirmentView.CustomerSubmitId);
-                var productsView = _productService.GetProducts(currentUser.Id).SingleOrDefault(x => x.Object_Id == model.PObjectId);
+                var productsView = _productService.GetProducts().SingleOrDefault(x => x.Object_Id == model.PObjectId);
 
                 if (string.IsNullOrWhiteSpace(model.ProductProcedureId))
                 {
