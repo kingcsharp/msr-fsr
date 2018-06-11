@@ -3,7 +3,7 @@
 
     var helpUrl =  HttpContext.Current.Request.RequestContext.RouteData.Values["controller"] +"/"+ @HttpContext.Current.Request.RequestContext.RouteData.Values["action"];
 
-    helpUrl = helpUrl.ToLower().Replace("/index", "");
+    helpUrl = "/" + helpUrl.ToLower().Replace("/index", "");
 
     var helpService = new HelpService();
     

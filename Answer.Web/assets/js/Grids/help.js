@@ -47,18 +47,7 @@
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 align: 'left'
-            },
-            {
-                label: 'Category',
-                name: 'Category',
-                index: 'Category',
-                colmenu: false,
-                width: 100,
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                align: 'left'
-            },
-            
+            },     
             { name: 'Actions', index: 'Id', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: HelpEditFormatter, width: 200, align: 'center' }
         ],
 

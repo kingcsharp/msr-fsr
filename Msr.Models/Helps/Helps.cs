@@ -14,6 +14,5 @@ namespace Msr.Models.Helps
 
         public string Content { get; set; }
         public string Roles { get; set; }
-        public string Category { get; set; }
     }
 }

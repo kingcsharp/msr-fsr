@@ -55,10 +55,6 @@ namespace Msr.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.FriendlyUrl.ToLower().Contains(rule.data.ToLower()));
                     }
-                    else if (rule.field == nameof(HelpView.Category))
-                    {
-                        totalRows = totalRows.Where(x => x.Category.ToLower().Contains(rule.data.ToLower()));
-                    }
                     else if (rule.field == nameof(HelpView.RoleName))
                     {
                         totalRows = totalRows.Where(x => x.RoleName.ToLower().Contains(rule.data.ToLower()));

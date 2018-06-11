@@ -46,13 +46,6 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(model => model.Category, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-8">
-                                @Html.DropDownListFor(model => model.Category, Model.CategoryList, new { @class = "form-control" })
-                                @Html.ValidationMessageFor(model => model.Category, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                        <div class="form-group">
                             <div class="col-md-offset-2 col-md-8">
                                 <input type="submit" value="Submit" class="btn btn-success" />
                                 @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-warning" })

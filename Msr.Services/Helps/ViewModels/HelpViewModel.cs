@@ -16,7 +16,6 @@ namespace Msr.Services.Helps.ViewModels
         public HelpViewModel()
         {
             Roles = new List<string>();
-            CategoryList = new List<SelectListItem>();
             RolesList = new List<SelectListItem>();     
         }
 
@@ -30,11 +29,6 @@ namespace Msr.Services.Helps.ViewModels
         public string Content { get; set; }
         [Required]
         public List<string> Roles { get; set; }
-       
-        [Required]
-        public string Category { get; set; }
-
-        public List<SelectListItem> CategoryList { get; set; }
 
         public List<SelectListItem> RolesList { get; set; }
 
@@ -45,32 +39,6 @@ namespace Msr.Services.Helps.ViewModels
                 Text = x.Name,
                 Value = x.Id.ToString()
             }).OrderBy(o => o.Text).ToList();
-
-            CategoryList = new List<SelectListItem>
-            {
-                new SelectListItem
-                {
-                    Text = "Wip",
-                    Value = "Wip",
-                    Selected = true
-                },
-                new SelectListItem
-                {
-                    Text = "Roles",
-                    Value = "Roles"
-                },
-                new SelectListItem
-                {
-                    Text = "People",
-                    Value = "People"
-                },
-                new SelectListItem
-                {
-                    Text = "Invoices",
-                    Value = "Invoices"
-                }
-            };
-
         }
 
         public HelpViewModel MapToDto(HelpView model)
@@ -82,8 +50,7 @@ namespace Msr.Services.Helps.ViewModels
                 Title = model.Title,
                 Content = model.Content,
                 FriendlyUrl = model.FriendlyUrl,
-                Roles = model.Roles.Split(',').ToList(),
-                Category = model.Category
+                Roles = model.Roles.Split(',').ToList()
             };
         }
     }

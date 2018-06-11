@@ -52,7 +52,6 @@ namespace Msr.Services.Helps
                 help.FriendlyUrl = model.FriendlyUrl;
                 help.Content = model.Content;
                 help.Roles = string.Join(",", model.Roles);
-                help.Category = model.Category;
                 _dbContext.Helps.Add(help);
                 _dbContext.SaveChanges();
 
@@ -86,7 +85,6 @@ namespace Msr.Services.Helps
                 help.FriendlyUrl = model.FriendlyUrl;
                 help.Content = model.Content;
                 help.Roles = String.Join(",", model.Roles);
-                help.Category = model.Category;
                 _dbContext.SaveChanges();
 
                 return result;
@@ -138,7 +136,7 @@ namespace Msr.Services.Helps
 
             var user = userervice.GetUserId(userId);
 
-            var result = _dbContext.Helps.Where(x => x.FriendlyUrl.Contains(pageUrl)).SingleOrDefault();
+            var result = _dbContext.Helps.SingleOrDefault(x => x.FriendlyUrl == pageUrl);
 
             var roles = _roleService.GetAssignedRoles(user.Id);
 
@@ -150,9 +148,7 @@ namespace Msr.Services.Helps
 
                 foreach (var role in roles)
                 {
-                    var hasRole = helpRoles.Where(x => x == role.Role_Id).Any();
-
-                    if (hasRole) {
+                    if (helpRoles.Any(x => x == role.Role_Id)) {
                         vm.CanView = true;
                         return vm;
                     }

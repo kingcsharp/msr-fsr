@@ -6,7 +6,6 @@ Ph.title,
 Ph.FriendlyUrl,
 Ph.Content,
 ph.roles,
-Ph.Category,
 (
 select distinct +','+PR.RoleName
 from Portal_RolesView PR
