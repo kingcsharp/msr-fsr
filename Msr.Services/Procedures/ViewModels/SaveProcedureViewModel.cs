@@ -52,6 +52,7 @@ namespace Msr.Services.Procedures.ViewModels
         public string SecurityLevel { get; set; }
 
         [Display(Name = "Roles To View :")]
+        [Required]
         public List<string> Roles { get; set; }
 
         [Display(Name = "Show Steps In AP :")]

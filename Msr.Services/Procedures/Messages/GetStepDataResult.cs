@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using Msr.Services.Procedures.ViewModels;
 using Msr.Services.ProcedureVerbs;
@@ -113,6 +114,7 @@ namespace Msr.Services.Procedures.Messages
         public string Preview { get; set; }
         public string PreviewConfig { get; set; }
         public string Roles { get; set; }
+        [Required]
         public List<string> Role { get; set; }
         public List<SelectListItem> RolesList { get; set; }
         public decimal? ReplacementCost { get; set; }

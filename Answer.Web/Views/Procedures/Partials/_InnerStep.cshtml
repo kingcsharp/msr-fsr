@@ -113,6 +113,7 @@
                                 <th nowrap="">Roles:</th>
                                 <td style="width: 500px;">
                                     @Html.ListBoxFor(x => x.Role, Model.RolesList, new { @class = "form-control select selectroles_" + Model.Index })
+                                    @Html.ValidationMessageFor(m => m.Role, "", new { @class = "text-danger" })
                                 </td>
                             </tr>
                         </tbody>
