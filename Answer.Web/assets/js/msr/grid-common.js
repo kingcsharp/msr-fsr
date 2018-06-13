@@ -63,7 +63,7 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
             return imageUrls;
         },
 
-        ActionFormtter: function (cellvalue, options, rowObject, returnUrl, editUrl, hideDelete = false) {
+        ActionFormtter: function (cellvalue, options, rowObject, returnUrl, editUrl, hideDelete) {
 
             var editButton = '';
             var deleteButton = '';

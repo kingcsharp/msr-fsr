@@ -331,24 +331,25 @@ namespace Answer.Web.Controllers
             return View(vm);
         }
 
-
-        public ActionResult StatusView(int? id)
+        public ActionResult StatusView()
         {
             var currentUser = GetCurrentUser();
 
-            var viewModel = new WipStatusViewModel();
-            viewModel.CurrentUser = currentUser;
-
-            viewModel.WipStatusViewItems = _orderService.GetWorkOrderQueryable()
-                .Where(x => (x.Status == WorkItemStatusConstants.Accepted || x.Status == WorkItemStatusConstants.WaitingToStart || x.Status == WorkItemStatusConstants.Requested))
-                .OrderByDescending(x => x.DueDate)
-                .Select(x => new WipStatusViewItem
-                {
-                    ProductName = x.ProductName,
-                    ProcedureName = x.ProcName,
-                    CompanyPartNumber = x.CompanyPartNumber,
-                    DueDate = x.DueDate
-                }).Distinct().ToList();
+            var viewModel = new WipStatusViewModel
+            {
+                CurrentUser = currentUser,
+                WipStatusViewItems = _orderService.GetWorkOrderQueryable()
+                    .Where(x => (x.Status == WorkItemStatusConstants.Accepted ||
+                                 x.Status == WorkItemStatusConstants.WaitingToStart ||
+                                 x.Status == WorkItemStatusConstants.Requested))
+                    .Select(x => new WipStatusViewItem
+                    {
+                        ProductName = x.ProductName,
+                        ProcedureName = x.ProcName,
+                        CompanyPartNumber = x.CompanyPartNumber,
+                        DueDate = x.DueDate
+                    }).Distinct().ToList()
+            };
 
             var procs = viewModel.WipStatusViewItems.Select(p => p.ProcedureName).ToList();
 
@@ -361,7 +362,6 @@ namespace Answer.Web.Controllers
 
             return View(viewModel);
         }
-
 
         public ActionResult WipListModel()
         {
@@ -393,7 +393,6 @@ namespace Answer.Web.Controllers
             return PartialView("_WipListModal", viewModel);
         }
 
-
         public ActionResult PrintTraveler(int id)
         {
             var currentUser = GetCurrentUser();
@@ -416,7 +415,7 @@ namespace Answer.Web.Controllers
             return PartialView("_PrintOther", vm);
         }
 
-        [AcceptVerbs(verbs: HttpVerbs.Post)]
+        [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult EditOrderItemInline(SaveWorkOrderViewModel model)
         {
             var orderService = new OrderService();

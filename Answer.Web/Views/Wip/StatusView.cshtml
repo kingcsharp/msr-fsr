@@ -52,87 +52,87 @@
                     Open WO's
                 </div> 
             </div>
-            
-                    @foreach (var item in Model.WipStatusViewItems)
-                    {
-                        <div class="row wip-status">
-                            <div class="col-lg-3 col-md-3 col-sm-3 vcenter">
-                                @item.ProductName
-                            </div>
-                            <div class="col-lg-2 col-md-2 col-sm-2 vcenter">
-                                @item.CompanyPartNumber
-                            </div> 
-                            <div class="col-lg-2 col-md-2 col-sm-2 vcenter">
-                                @item.ProcedureName
-                            </div>
-                            <div class="col-lg-5 col-md-5 col-sm-5">
-                                @foreach (var proItem in Model.WoItemsByProcedures.Where(x => x.ProcName == item.ProcedureName).OrderBy(o => o.DueDate))
+            @foreach (var groupItem in Model.WipStatusViewItems.OrderBy(x => x.DueDate).GroupBy(x => new { x.ProductName, x.ProcedureName, x.CompanyPartNumber }))
+            {
+                var item = groupItem.Key;
+                <div class="row wip-status">
+                    <div class="col-lg-3 col-md-3 col-sm-3 vcenter">
+                        @item.ProductName
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-2 vcenter">
+                        @item.CompanyPartNumber
+                    </div> 
+                    <div class="col-lg-2 col-md-2 col-sm-2 vcenter">
+                        @item.ProcedureName
+                    </div>
+                    <div class="col-lg-5 col-md-5 col-sm-5">
+                        @foreach (var proItem in Model.WoItemsByProcedures.Where(x => x.ProcName == item.ProcedureName).OrderBy(o => o.DueDate))
+                        {
+                            var statusText = "";
+                            var cssIconButton = "";
+                            var cssButton = "";
+                            var acceptedButton = "";
+
+                            if (proItem.Status == "CLOSED" || proItem.Status == "FINISHED")
+                            {
+                                cssButton = "step-complete";
+                            }
+                            else if (proItem.Status == "ACCEPTED")
+                            {
+                                cssIconButton = "fa fa-cog fa-spin fa-2x";
+                                cssButton = "btn-success";
+
+                                if (proItem.RequesteeId != Model.CurrentUser.Id)
                                 {
-                                    var statusText = "";
-                                    var cssIconButton = "";
-                                    var cssButton = "";
-                                    var acceptedButton = "";
-
-                                    if (proItem.Status == "CLOSED" || proItem.Status == "FINISHED")
-                                    {
-                                        cssButton = "step-complete";
-                                    }
-                                    else if (proItem.Status == "ACCEPTED")
-                                    {
-                                        cssIconButton = "fa fa-cog fa-spin fa-2x";
-                                        cssButton = "btn-success";
-
-                                        if (proItem.RequesteeId != Model.CurrentUser.Id)
-                                        {
-                                            acceptedButton = "btn-accepted";
-                                        }
-
-                                        statusText = "In Progress";
-                                    }
-                                    else if (proItem.Status == "PENDING_PARENT_ACCEPTANCE" || proItem.Status == WorkItemStatusConstants.Requested)
-                                    {
-                                        cssIconButton = "fa fa-hourglass fa-2x";
-                                        cssButton = "btn-info";
-                                        statusText = "Waiting to Start";
-                                    }
-
-                                    if (DateTime.Now > proItem.DueDate)
-                                    {
-                                        cssIconButton = "fa fa-exclamation-circle fa-2x";
-                                        cssButton = "btn-danger";
-                                    }
-
-                                    if (string.IsNullOrWhiteSpace(proItem.RequesteeName))
-                                    {
-                                        cssIconButton = "fa fa-ban fa-stack-2x";
-                                        cssButton = "btn-success";
-                                    }
-
-                                    var daysTillDueDate = proItem.DueDate?.Subtract(DateTime.Now).Days;
-                                    if (daysTillDueDate <= proItem.Threshold)
-                                    {
-                                        cssIconButton = "fa fa-clock-o fa-2x";
-                                        cssButton = "btn-warning";
-                                    }
-
-                                    <button data-toggle="tooltip" data-task-id="@proItem.TaskId" data-fill-id="@proItem.FillId" data-placement="bottom" data-html="true"
-                                            class="btn btn-xs btn-sq @cssButton wip-button @acceptedButton"
-                                            title="<strong>Serial #:</strong>@proItem.Serial<br />
-                                       <strong>Status:</strong> @statusText <br />
-                                       <strong>Assigned To:</strong> @proItem.RequesteeName <br/>
-                                        @if (proItem.DueDate.HasValue)
-                                        {
-                                            <strong>Due Date:</strong>
-                                            @proItem.DueDate.Value.ToShortDateString()
-                                            <br />
-                                        }
-                                        ">
-                                        <i class="@cssIconButton"></i>
-                                    </button>
+                                    acceptedButton = "btn-accepted";
                                 }
-                            </div>
-                        </div>
-                    }
+
+                                statusText = "In Progress";
+                            }
+                            else if (proItem.Status == "PENDING_PARENT_ACCEPTANCE" || proItem.Status == WorkItemStatusConstants.Requested)
+                            {
+                                cssIconButton = "fa fa-hourglass fa-2x";
+                                cssButton = "btn-info";
+                                statusText = "Waiting to Start";
+                            }
+
+                            if (DateTime.Now > proItem.DueDate)
+                            {
+                                cssIconButton = "fa fa-exclamation-circle fa-2x";
+                                cssButton = "btn-danger";
+                            }
+
+                            if (string.IsNullOrWhiteSpace(proItem.RequesteeName))
+                            {
+                                cssIconButton = "fa fa-ban fa-stack-2x";
+                                cssButton = "btn-success";
+                            }
+
+                            var daysTillDueDate = proItem.DueDate?.Subtract(DateTime.Now).Days;
+                            if (daysTillDueDate <= proItem.Threshold)
+                            {
+                                cssIconButton = "fa fa-clock-o fa-2x";
+                                cssButton = "btn-warning";
+                            }
+
+                            <button data-toggle="tooltip" data-task-id="@proItem.TaskId" data-fill-id="@proItem.FillId" data-placement="bottom" data-html="true"
+                                    class="btn btn-xs btn-sq @cssButton wip-button @acceptedButton"
+                                    title="<strong>Serial #:</strong>@proItem.Serial<br />
+                                <strong>Status:</strong> @statusText <br />
+                                <strong>Assigned To:</strong> @proItem.RequesteeName <br/>
+                                @if (proItem.DueDate.HasValue)
+                                {
+                                    <strong>Due Date:</strong>
+                                    @proItem.DueDate.Value.ToShortDateString()
+                                    <br />
+                                }
+                                ">
+                                <i class="@cssIconButton"></i>
+                            </button>
+                        }
+                    </div>
+                </div>
+            }
 
         </div>
     </div>

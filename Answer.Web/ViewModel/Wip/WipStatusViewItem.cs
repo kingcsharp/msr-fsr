@@ -8,8 +8,8 @@ namespace Answer.Web.ViewModel.Wip
 
         public string ProductName { get; set; }
 
-        public DateTime? DueDate { get; set; }
-
         public string CompanyPartNumber { get; set; }
+
+        public DateTime? DueDate { get; set; }
     }
 }
