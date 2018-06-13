@@ -943,9 +943,13 @@
     <Content Include="assets\js\tinymce\plugins\visualblocks\plugin.min.js" />
     <Content Include="assets\js\tinymce\plugins\visualchars\plugin.min.js" />
     <Content Include="assets\js\tinymce\plugins\wordcount\plugin.min.js" />
+    <Content Include="assets\js\tinymce\skins\lightgray\content.inline.min.css" />
     <Content Include="assets\js\tinymce\skins\lightgray\content.min.css" />
+    <Content Include="assets\js\tinymce\skins\lightgray\content.mobile.min.css" />
     <Content Include="assets\js\tinymce\skins\lightgray\fonts\icomoon-small.svg" />
     <Content Include="assets\js\tinymce\skins\lightgray\fonts\icomoon.svg" />
+    <Content Include="assets\js\tinymce\skins\lightgray\fonts\tinymce-small.svg" />
+    <Content Include="assets\js\tinymce\skins\lightgray\fonts\tinymce.svg" />
     <Content Include="assets\js\tinymce\skins\lightgray\img\anchor.gif" />
     <Content Include="assets\js\tinymce\skins\lightgray\img\loader.gif" />
     <Content Include="assets\js\tinymce\skins\lightgray\img\object.gif" />
@@ -954,6 +958,7 @@
     <Content Include="assets\js\tinymce\skins\lightgray\skin.classic.min.css" />
     <Content Include="assets\js\tinymce\skins\lightgray\skin.ie7.min.css" />
     <Content Include="assets\js\tinymce\skins\lightgray\skin.min.css" />
+    <Content Include="assets\js\tinymce\skins\lightgray\skin.mobile.min.css" />
     <Content Include="assets\js\tinymce\themes\modern\theme.min.js" />
     <Content Include="assets\js\tinymce\tinymce.js" />
     <Content Include="assets\js\tinymce\tinymce.min.js" />
@@ -1087,6 +1092,13 @@
     <Content Include="assets\js\tinymce\skins\lightgray\fonts\icomoon.ttf" />
     <Content Include="assets\js\tinymce\skins\lightgray\fonts\icomoon.woff" />
     <Content Include="assets\js\tinymce\skins\lightgray\fonts\readme.md" />
+    <Content Include="assets\js\tinymce\skins\lightgray\fonts\tinymce-mobile.woff" />
+    <Content Include="assets\js\tinymce\skins\lightgray\fonts\tinymce-small.eot" />
+    <Content Include="assets\js\tinymce\skins\lightgray\fonts\tinymce-small.ttf" />
+    <Content Include="assets\js\tinymce\skins\lightgray\fonts\tinymce-small.woff" />
+    <Content Include="assets\js\tinymce\skins\lightgray\fonts\tinymce.eot" />
+    <Content Include="assets\js\tinymce\skins\lightgray\fonts\tinymce.ttf" />
+    <Content Include="assets\js\tinymce\skins\lightgray\fonts\tinymce.woff" />
     <None Include="Properties\PublishProfiles\dev.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />

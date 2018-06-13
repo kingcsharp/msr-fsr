@@ -4,7 +4,7 @@
         "advlist autolink lists link image charmap print preview hr anchor pagebreak",
         "searchreplace wordcount visualblocks visualchars code fullscreen",
         "insertdatetime media nonbreaking save table contextmenu directionality",
-        "emoticons template paste textcolor autoresize moxiemanager"
+        "emoticons template paste textcolor autoresize"
     ],
     relative_urls: false,
     remove_script_host: false,

@@ -58,33 +58,37 @@
         </div>
     </div>
 </div>
+
 @section scripts{
-    @{
-        var role = string.Join(",", Model.Roles);
-    }
-    @Scripts.Render("~/bundles/js/jqueryval")
-    <script src="~/assets/js/tinymce/jquery.tinymce.min.js"></script>
-    <script src="~/assets/js/tinymce/tinymce.min.js"></script>
-    <script src="~/assets/js/help-tinymce.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function (parameters) {
-            $('.select').select2();
+    
+@{
+    var role = string.Join(",", Model.Roles);
+}
+    
+@Scripts.Render("~/bundles/js/jqueryval")
 
-            var selectPeoples = $(".selectRoles").select2({
-                tags: [],
-                tokenSeparators: [','],
-                multiple: true,
-                allowClear: true,
+<script src="~/assets/js/tinymce/jquery.tinymce.min.js"></script>
+<script src="~/assets/js/tinymce/tinymce.min.js"></script>
+<script src="~/assets/js/help-tinymce.js"></script>
+<script type="text/javascript">
+    $(document).ready(function (parameters) {
 
-                formatNoMatches: function () {
-                    return '';
-                }
-            });
-            var values = '@role';
-            var selectedRoles = values.split(",");
+        $('.select').select2();
 
-            selectedRoles.val(selectedRoles).trigger("change");
+        var selectRoles = $(".selectRoles").select2({
+            tags: [],
+            tokenSeparators: [','],
+            multiple: true,
+            allowClear: true,
+
+            formatNoMatches: function () {
+                return '';
+            }
         });
-    </script>
+        var values = '@role';
+        var selectedRoles = values.split(",");
 
+        selectRoles.val(selectedRoles).trigger("change");
+    });
+</script>
 }
