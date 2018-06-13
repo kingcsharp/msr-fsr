@@ -37,10 +37,17 @@
     </div>
 
     <div class="row">
-        @foreach (var task in Model.TsrTaskResults.Where(x => x.Level == 2))
-        {
-            @Html.Raw(task.Des)
-        }
+        <table class="table table-responsive table-condensed table-bordered">
+            @foreach (var task in Model.TsrTaskResults.Where(x => x.Level == 2))
+            {
+                <tr>
+                    <td>
+                        <h4>@task.Title</h4>
+                        @Html.Raw(task.Des)
+                    </td>
+                </tr>
+            }
+        </table>
     </div>
 
 </div>

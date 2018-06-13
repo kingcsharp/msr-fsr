@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Configuration;
 using System.Data;
 using System.Linq;
@@ -25,6 +24,7 @@ namespace Msr.Services.Orders
     public class OrderService
     {
         private readonly MsrDbContext _dbContext;
+
         private readonly DocumentFilesService _documentFilesService;
 
         public OrderService()
@@ -65,7 +65,6 @@ namespace Msr.Services.Orders
 
             return result;
         }
-
 
         public List<DocumentView> GetStepPics(string fileId)
         {
@@ -293,6 +292,7 @@ namespace Msr.Services.Orders
                 return false;
             }
         }
+
         public bool SaveOrderItemPunchNum(SaveWorkOrderViewModel model)
         {
             try
@@ -310,6 +310,7 @@ namespace Msr.Services.Orders
                 return false;
             }
         }
+
         public bool SaveOrderItemDueDate(SaveWorkOrderViewModel model)
         {
             try
@@ -328,6 +329,7 @@ namespace Msr.Services.Orders
                 return false;
             }
         }
+
         public string SaveOrderItemImages(SaveWorkItemImageViewModel model)
         {
             try
@@ -344,6 +346,7 @@ namespace Msr.Services.Orders
             }
 
         }
+
         public List<WorkOrderImageView> GetOrderItemImagesById(string taskId)
         {
             var taskIdParm = new SqlParameter("@taskId", taskId);
@@ -352,6 +355,7 @@ namespace Msr.Services.Orders
 
             return result;
         }
+
         public bool DeleteOrderItemImageById(string id, string loginId)
         {
             try
@@ -668,6 +672,7 @@ namespace Msr.Services.Orders
             }
             return response;
         }
+
         public ResultNotification<TaskLogDto> StepDone(int stepId, string login, int fillId)
         {
             var response = new ResultNotification<TaskLogDto>();
@@ -1013,6 +1018,5 @@ namespace Msr.Services.Orders
 
             return result;
         }
-
     }
 }
