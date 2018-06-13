@@ -88,7 +88,16 @@
             <th align="right">Terms:</th>
             <td>@Html.DisplayFor(x => x.Terms)</td>
             <th align="right">Phone:</th>
-            <td>@Html.DisplayFor(x => x.Phone)</td>
+            <td>
+                @if (!string.IsNullOrWhiteSpace(Model.PhoneCSR))
+                {
+                    @Html.DisplayFor(x => x.PhoneCSR)
+                }
+                else
+                {
+                    @Html.DisplayFor(x => x.Phone)
+                }
+            </td>
         </tr>
         <tr>
             <th align="right">Delivery:</th>

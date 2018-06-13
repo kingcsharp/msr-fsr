@@ -92,17 +92,18 @@ namespace Answer.Web.Controllers
         public ActionResult ViewRequirementsQuote(string id)
         {
             var model = _productionPlanningService.GetProductionPlaningQueryable().SingleOrDefault(x => x.ObjectId == id);
+
             var csr = new JavaScriptSerializer().Deserialize<CustomerRequirementViewModel>(model.CustomerRequirementJson);
 
             var quote = new FreeFormQuoteViewModel();
 
-            quote.Date = csr.SubmittedDate;
+            quote.Date = model.SubmittedDate;
             quote.Email = csr.CommercialEmail;
             quote.PhoneCSR = csr.CommercialPhone;
             quote.PartKitNo = csr.PartKitNo;
             quote.Title = csr.CommercialTitle;
             quote.SupplierName = model.SupplierName;
-            quote.CustomerName = model.CustomerName;
+            quote.CustomerName = csr.CommercialName;
             quote.FOB = csr.DivisionFab;
             quote.ProcessDescription = model.ProcedureName;
             quote.ExistingProcess = model.ProcedureName;
