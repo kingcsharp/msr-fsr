@@ -28,12 +28,8 @@ namespace Msr.Services.Quotes.ViewModels
 
         public string Contact { get; set; }
 
-        public string FOB { get; set; }
-
         [Required]
         public string Title { get; set; }
-
-        public string Terms { get; set; }
 
         [Display(Name = "Phone")]
         [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Please enter valid phone number.")]
@@ -61,15 +57,16 @@ namespace Msr.Services.Quotes.ViewModels
         [Required]
         public string AddressSubmit { get; set; }
 
-        public string CustomerName { get; set; }
-
         public string SupplierName { get; set; }
+
+        public string ProductId { get; set; }
 
         public List<QuoteItemsViewModel> QuoteItems { get; set; }
 
         public List<SelectListItem> Suppliers { get; set; }
 
         public List<SelectListItem> Customers { get; set; }
+        public string CustomerName { get; set; }
 
         public void Setup(ProductionPlanningService productionPlanningService, LoggedUserIdResult currentUser)
         {

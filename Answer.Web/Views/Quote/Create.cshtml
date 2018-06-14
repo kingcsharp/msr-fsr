@@ -64,10 +64,10 @@
                                         @Html.EditorFor(model => model.Contact, new { htmlAttributes = new { @class = "form-control" } })
                                         @Html.ValidationMessageFor(model => model.Contact, "", new { @class = "text-danger" })
                                     </td>
-                                    <th align="right">F.O.B.:</th>
+                                    <th align="right">Delivery</th>
                                     <td>
-                                        @Html.EditorFor(model => model.FOB, new { htmlAttributes = new { @class = "form-control" } })
-                                        @Html.ValidationMessageFor(model => model.FOB, "", new { @class = "text-danger" })
+                                        @Html.EditorFor(model => model.Delivery, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.Delivery, "", new { @class = "text-danger" })
                                     </td>
                                 </tr>
                                 <tr>
@@ -82,12 +82,8 @@
                                         @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
                                         @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
                                     </td>
-                                    <th align="right">Terms:</th>
-                                    <td>
-                                        @Html.EditorFor(model => model.Terms, new { htmlAttributes = new { @class = "form-control" } })
-                                        @Html.ValidationMessageFor(model => model.Terms, "", new { @class = "text-danger" })
-                                    </td>
-                                   
+                                    <th align="right"></th>
+                                    <td></td>
                                 </tr>
                                 <tr>
                                     <th align="right"></th>
@@ -98,10 +94,9 @@
                                         @Html.EditorFor(model => model.Phone, new { htmlAttributes = new { @class = "form-control" } })
                                         @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
                                     </td>
-                                    <th align="right">Delivery:</th>
+                                    <th align="right"></th>
                                     <td>
-                                        @Html.EditorFor(model => model.Delivery, new { htmlAttributes = new { @class = "form-control" } })
-                                        @Html.ValidationMessageFor(model => model.Delivery, "", new { @class = "text-danger" })
+                                       
                                     </td>                                
                                 </tr>
 

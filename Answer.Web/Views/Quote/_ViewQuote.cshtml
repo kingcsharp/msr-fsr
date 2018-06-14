@@ -26,7 +26,6 @@
         padding-top: 2px !important;
     }
 </style>
-
 <table class="table no-border" width="100%">
     <tbody>
         <tr>
@@ -36,10 +35,11 @@
             </th>
             <td>@Html.DisplayFor(x => x.CustomerName)</td>
         </tr>
-        <tr>
-            <th align="right">Part / Kit No.:</th>
-            <td>@Html.DisplayFor(x => x.PartKitNo)</td>
-        </tr>
+    <tr>
+        <th align="right">Part / Kit No.:</th>
+        <td>@Html.DisplayFor(x => x.PartKitNo)</td>
+    </tr>
+
         <tr>
             <td colspan="3" align="center"><h2>Quotation</h2></td>
         </tr>
@@ -57,36 +57,24 @@
             <td width="30%">@Html.DisplayFor(x => x.CustomerName)</td>
         </tr>
         <tr>
-            <th>Order# :</th>
-            <td></td>
-            <th></th>
-            <td></td>
-        </tr>
-        <tr>
-            <th align="right">
-                PO#:
-            </th>
-            <td></td>
             <th align="right">Supplier Name:</th>
             <td>@Html.DisplayFor(x => x.SupplierName)</td>
+
+            <th align="right">Commercial Contact:</th>
+            <td>@Html.DisplayFor(x => x.Contact)</td>
         </tr>
         <tr>
             <th align="right">
                 Reg or Inq No:
             </th>
-            <td></td>
-            <th align="right">Commercial Contact:</th>
-            <td>@Html.DisplayFor(x => x.Contact)</td>
-        </tr>
-        <tr>
-            <th align="right">F.O.B.:</th>
-            <td>@Html.DisplayFor(x => x.FOB)</td>
-            <th align="right">Title:</th>
+            <td>@Html.DisplayFor(x => x.ProductId)</td>
+
+            <th align="right">Title</th>
             <td>@Html.DisplayFor(x => x.Title)</td>
         </tr>
         <tr>
-            <th align="right">Terms:</th>
-            <td>@Html.DisplayFor(x => x.Terms)</td>
+            <th align="right">Delivery:</th>
+            <td>@Html.DisplayFor(x => x.Delivery)</td>
             <th align="right">Phone:</th>
             <td>
                 @if (!string.IsNullOrWhiteSpace(Model.PhoneCSR))
@@ -100,8 +88,8 @@
             </td>
         </tr>
         <tr>
-            <th align="right">Delivery:</th>
-            <td>@Html.DisplayFor(x => x.Delivery)</td>
+            <th align="right"></th>
+            <td></td>
             <th align="right">Email:</th>
             <td>@Html.DisplayFor(x => x.Email)</td>
         </tr>
@@ -122,7 +110,6 @@
         </tr>
     </thead>
     <tbody>
-
         @foreach (var item in Model.QuoteItems)
         {
             var index = 1;

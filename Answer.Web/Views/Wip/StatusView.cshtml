@@ -66,7 +66,7 @@
                         @item.ProcedureName
                     </div>
                     <div class="col-lg-5 col-md-5 col-sm-5">
-                        @foreach (var proItem in Model.WoItemsByProcedures.Where(x => x.ProcName == item.ProcedureName).OrderBy(o => o.DueDate))
+                        @foreach (var proItem in Model.WoItemsByProcedures.Where(x => x.ProcName == item.ProcedureName && x.ProductName == item.ProductName).OrderBy(o => o.DueDate))
                         {
                             var statusText = "";
                             var cssIconButton = "";

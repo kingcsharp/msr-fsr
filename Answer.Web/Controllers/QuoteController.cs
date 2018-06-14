@@ -5,6 +5,7 @@ using Msr.Services.CustomerRequirements.ViewModel;
 using Msr.Services.ProductionPlanning;
 using Msr.Services.Quotes;
 using Msr.Services.Quotes.ViewModels;
+using Msr.Services.Users;
 
 namespace Answer.Web.Controllers
 {
@@ -12,11 +13,13 @@ namespace Answer.Web.Controllers
     {
         private QuoteService _quoteService;
         private readonly ProductionPlanningService _productionPlanningService;
+        private readonly UserService _userService;
 
         public QuoteController()
         {
             _quoteService = new QuoteService();
             _productionPlanningService = new ProductionPlanningService();
+            _userService = new UserService();
         }
 
         public ActionResult Create()
@@ -38,8 +41,6 @@ namespace Answer.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                viewModel.CreatedBy = currentUser.Login;
-
                 var response = _quoteService.Create(viewModel, currentUser);
 
                 if (!response.HasErrors())
@@ -69,10 +70,11 @@ namespace Answer.Web.Controllers
 
             vm.CustomerName = vm.Customers.SingleOrDefault(x => x.Value == vm.CustomerId)?.Text;
             vm.SupplierName = vm.Suppliers.SingleOrDefault(x => x.Value == vm.Supplier)?.Text;
+            vm.ProductId = requirment.ProductId;
 
             foreach (var item in vm.QuoteItems)
             {
-                item.Extension = (decimal) (item.Price * item.Quantity.Value);
+                item.Extension = (decimal)(item.Price * item.Quantity.Value);
             }
 
             return PartialView("_ViewQuote", vm);
@@ -91,22 +93,27 @@ namespace Answer.Web.Controllers
 
         public ActionResult ViewRequirementsQuote(string id)
         {
+            var currentUser = GetCurrentUser();
+
+            var currentUserDetail = _userService.GetAnserByUserName(currentUser.Login);
+
             var model = _productionPlanningService.GetProductionPlaningQueryable().SingleOrDefault(x => x.ObjectId == id);
 
             var csr = new JavaScriptSerializer().Deserialize<CustomerRequirementViewModel>(model.CustomerRequirementJson);
 
             var quote = new FreeFormQuoteViewModel();
-
+            quote.ProductId = model.ObjectId;
+            quote.CustomerName = model.Company;
             quote.Date = model.SubmittedDate;
             quote.Email = csr.CommercialEmail;
             quote.PhoneCSR = csr.CommercialPhone;
             quote.PartKitNo = csr.PartKitNo;
             quote.Title = csr.CommercialTitle;
             quote.SupplierName = model.SupplierName;
-            quote.CustomerName = csr.CommercialName;
-            quote.FOB = csr.DivisionFab;
+            quote.Contact = csr.CommercialName;
             quote.ProcessDescription = model.ProcedureName;
             quote.ExistingProcess = model.ProcedureName;
+            quote.Delivery = csr.ShippingMethod;
 
             foreach (var partInfoViewModel in csr.Parts)
             {
@@ -119,9 +126,8 @@ namespace Answer.Web.Controllers
                 });
             }
 
-            quote.CreatedBy = model.SubmittedBy;
-            quote.Title = csr.CommercialTitle;
-            quote.AddressSubmit = csr.StreetAddress;
+            quote.CreatedBy = currentUserDetail.FullName;
+            quote.Title = currentUserDetail.Title;
 
             return PartialView("_ViewQuote", quote);
         }

@@ -54,7 +54,8 @@ namespace Msr.Services.Users
                 UserName = s.Login,
                 Phone = s.PrimaryPhone,
                 CompanyName = s.CompanyName,
-                Login = s.Login
+                Login = s.Login,
+                Title = s.Title
             }).SingleOrDefault();
 
             return user;
