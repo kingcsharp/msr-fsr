@@ -99,7 +99,6 @@
             </text>
         }
 
-
         $('#@Model.StepId #pause-step').on('click', function () {
             StepPauseClick($(this).data('task-log-id'));
             $('.timer').timer('pause');
@@ -173,7 +172,6 @@
                     }
                 });
             });
-
     });
 
     function StepDoneClick() {
@@ -184,31 +182,31 @@
             type: "POST",
             url: "/wip/StepDoneClick?stepId=" + stepId + "&fillId=" + fillId,
             dataType: 'json',
-            success: function(data) {
-                TimerVisibility(data);
+            success: function (data) {
+                
+                var result = TimerVisibility(data);
+                
+                if (result) {
+                    var stepInProgress = $('#carousel ul.slides').find(".waiting").first();
 
-                var stepInProgress = $('#carousel ul.slides').find(".waiting").first();
+                    if (stepInProgress !== null) {
+                        $(stepInProgress).removeClass('waiting');
+                        $(stepInProgress).addClass('requested');
+                        $(stepInProgress).trigger("click");
+                    }
 
-                if (stepInProgress !== null) {
-                    $(stepInProgress).removeClass('waiting');
-                    $(stepInProgress).addClass('requested');
-                    $(stepInProgress).trigger("click");
+                    var stepRequested = $('[data-stepid=' + stepId + ']');
+
+                    if (stepRequested !== null) {
+                        $(stepRequested).addClass('step-complete');
+                    }
                 }
-
-                var stepRequested = $('[data-stepid=' + stepId + ']');
-
-                if (stepRequested !== null) {
-                    $(stepRequested).addClass('step-complete');
-                }
-
             },
             error: function() {
 
             }
         });
     }
-
-
 
     function StepStartClick() {
         var stepId = @Model.StepId;
@@ -278,7 +276,7 @@
                 }
 
                 TimerVisibility(data);
-                eLoaderClose()
+                eLoaderClose();
             },
             error: function () {
 
@@ -295,7 +293,7 @@
             dataType: 'json',
             success: function (data) {
                 TimerVisibility(data);
-                eLoaderClose()
+                eLoaderClose();
             },
             error: function () {
 
@@ -306,7 +304,8 @@
     function TimerVisibility(data) {
 
         if (data.ErrorMessage !== '') {
-            alert(data.ErrorMessage);
+            eModal.alert(data.ErrorMessage);
+            return false;
         } else {
 
         $('.timer-btn').attr('data-task-log-id', data.Entity.Id);
@@ -329,6 +328,7 @@
             $('#@Model.StepId #done-step').addClass('hidden');
             }
         }
+        return true;
     }
 
     function eLoaderOpen() {
