@@ -119,8 +119,6 @@
 
         $('#@Model.StepId #done-step').on('click', function() {
             StepDoneClick();
-            $('.timer').timer('pause');
-
         });
 
         $('#@Model.StepId #assume-step').on('click',
@@ -200,6 +198,8 @@
                     if (stepRequested !== null) {
                         $(stepRequested).addClass('step-complete');
                     }
+
+                    $('.timer').timer('pause');
                 }
             },
             error: function() {
