@@ -41,7 +41,7 @@
                 editable: true, // must set editable to true if you want to make the field editable
                 editrules: { required: true },
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'], defaultValue: search },
+                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 width: 200,
                 align: 'left'
             },

@@ -3,7 +3,8 @@
     <tbody>
         <tr>
             <td>
-                <span style="float: left;font-size: 40px;font-weight: bolder;padding: 5px 0 0 7px;">MSR-FSR </span> <span style="float: right;font-size: 31px;font-weight: bolder;padding: 15px 0 0 7px;">DELIVERY TICKET   </span>
+                <span style="float: left;font-size: 40px;font-weight: bolder;padding: 5px 0 0 7px;">MSR-FSR </span>
+                <span style="float: right;font-size: 31px;font-weight: bolder;padding: 15px 0 0 7px;">DELIVERY TICKET </span>
             </td>
         </tr>
         <tr>
@@ -50,14 +51,18 @@
                                 <th class="border" style="width: 13%;">Notes</th>
                                 <th class="border" style="width: 35%;">Barcode</th>
                             </tr>
-                            <tr>
-                                <td class="border" style="width: 14%">@Model.PurchaseItemInfoResult.CompanyPartNumber</td>
-                                <td class="border" style="width: 33%">@Model.PurchaseItemInfoResult.Description</td>
-                                <td class="border" style="width: 12%">@Model.PurchaseItemInfoResult.Serial</td>
-                                <td class="border" style="width: 13%"></td>
-                                <td class="border" style="width: 100%"><img id="barcode-item" style="width: 220px;" /></td>
-                                @*<td class="border" style="width: 100%"><img id="barcode-custlineitem" style="width: 220px;" /></td>*@
-                            </tr>
+                            @for (int i = 0; i < Model.PurchaseItemInfoResultList.Count; i++)
+                            {
+                                <tr>
+                                    <td class="border" style="width: 14%">@Model.PurchaseItemInfoResultList[i].CompanyPartNumber</td>
+                                    <td class="border" style="width: 33%">@Model.PurchaseItemInfoResultList[i].Description</td>
+                                    <td class="border" style="width: 12%">@Model.PurchaseItemInfoResultList[i].Serial</td>
+                                    <td class="border" style="width: 13%"></td>
+                                    <td class="border" style="width: 100%"><img id="barcode-item" style="width: 220px;" /></td>
+                                    @*<td class="border" style="width: 100%"><img id="barcode-custlineitem" style="width: 220px;" /></td>*@
+                                </tr>
+                            }
+
                         </tbody>
                     </table>
                 </div>
@@ -100,15 +105,6 @@
             fontSize:24,
             lineColor: "#000808"
         });
-
-        @*JsBarcode("#barcode-custlineitem", "@Model.PurchaseItemInfoResult.CustLineItem", {
-            format:"CODE128",
-            displayValue: false,
-            width: 2,
-            height: 40,
-            fontSize:24,
-            lineColor: "#000808"
-        });*@
     })
 
 </script>

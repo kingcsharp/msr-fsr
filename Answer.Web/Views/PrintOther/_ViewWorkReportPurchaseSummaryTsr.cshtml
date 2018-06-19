@@ -1,102 +1,86 @@
-﻿@model Msr.Services.Orders.Procedures.GetPurchaseWorkReportTsrDetailsResult
-
+﻿@model IEnumerable<Msr.Services.Orders.Procedures.GetPurchaseWorkReportTsrDetailsResult>
 <div id="work-report-technical-summary">
     <div>
         <table class="table table-bordered">
-            <tbody>
+            <thead>
                 <tr>
-                    <td class="border">
-                        <div style="text-align: center">Purchase #</div>
-                        <div style="text-align: center">@Model.PurchaseId</div>
-                        <div style="text-align: center"><span class="barcode"><nobr>*@Model.PurchaseItemId*</nobr></span></div>
-                    </td>
-                    <td class="border">
-                        <div style="text-align: center">Purchase Item #</div>
-                        <div style="text-align: center">@Model.PurchaseItemId</div>
-                        <div style="text-align: center"><span class="barcode"><nobr>*@Model.PurchaseItemId*</nobr></span></div>
-                    </td>
-                    <td class="border">
-                        <div style="text-align: center">Single PO# (Customer Purchase #)</div>
-                        <div style="text-align: center">@Model.CustomerPurchaseNumber</div>
-                        <div style="text-align: center"><span class="barcode"><nobr>*@Model.CustomerPurchaseNumber*</nobr></span></div>
-                    </td>
-                    <td class="border">
-                        <div style="text-align: center">Blanket PO #</div>
-                        <div style="text-align: center">@Model.BlanketPoNumber</div>
-                    </td>
-                    <td class="border">
-                        <div style="text-align: center">Line Item</div>
-                        <div style="text-align: center">@Model.LineItem</div>
-                        <div style="text-align: center"><span class="barcode"><nobr>*@Model.LineItem*</nobr></span></div>
-                    </td>
-                    <td class="border">
-                        <div style="text-align: center">Actual Part Database ID #</div>
-                        <div style="text-align: center">@Model.ActualPartDbId</div>
-                        <div style="text-align: center"><span class="barcode"><nobr>*@Model.ActualPartDbId*</nobr></span></div>
-                    </td>
-                    <td class="border">
-                        <div style="text-align: center">Serial #</div>
-                        <div style="text-align: center">@Model.Serial</div>
-                    </td>
-                    <td class="border">
-                        <div style="text-align: center">Qty</div>
-                        <div style="text-align: center">@Model.Quantity</div>
-                        <div style="text-align: center"><span class="barcode"><nobr>*@Model.Quantity*</nobr></span></div>
-                    </td>
-                    <td class="border">
-                        <div style="text-align: center">Purchasing Account #</div>
-                        <div style="text-align: center">@Model.AccountNumber</div>
-                    </td>
+                    <th>Purchase #</th>
+                    <th>Purchase Item #</th>
+                    <th>Single PO# (Customer Purchase #)</th>
+                    <th>Blanket PO #</th>
+                    <th>Line Item</th>
+                    <th>Actual Part Database ID #</th>
+                    <th>Serial #</th>
+                    <th>Qty #</th>
+                    <th>Purchasing Accounts #</th>
                 </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.PurchaseId</td>
+                        <td>@item.PurchaseItemId</td>
+                        <td>@item.CustomerPurchaseNumber</td>
+                        <td>@item.BlanketPoNumber</td>
+                        <td>@item.LineItem</td>
+                        <td>@item.ActualPartDbId</td>
+                        <td>@item.Serial</td>
+                        <td>@item.Quantity</td>
+                        <td>@item.AccountNumber</td>
+                    </tr>
+                }
             </tbody>
         </table>
+        <br />
         <table style="width: 8in">
             <tbody>
-                <tr>
-                    <td>
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <td class="subTitle">Supplier:</td>
-                                </tr>
-                                <tr>
-                                    <td>@Model.SupplierName</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </td>
-                    <td style="padding-left: 5px;">
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <td class="subTitle">Customer:</td>
-                                </tr>
-                                <tr>
-                                    <td>@Model.CustomerName</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </td>
-                </tr>
+            <tr>
+                <td>
+                    <table>
+                        <tbody>
+                        <tr>
+                            <td class="subTitle">Supplier:</td>
+                        </tr>
+                        <tr>
+                            <td>@Model.FirstOrDefault().SupplierName</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </td>
+                <td style="padding-left: 5px;">
+                    <table>
+                        <tbody>
+                        <tr>
+                            <td class="subTitle">Customer:</td>
+                        </tr>
+                        <tr>
+                            <td>@Model.FirstOrDefault().CustomerName</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
             </tbody>
         </table>
-        <table class="standard">
+        <br/>
+        <table class="table table-bordered">
             <tbody>
                 <tr>
                     <td class="bold standard">Product Name (#):</td>
-                    <td class="standard">@Model.ProductName (@Model.ProductId)</td>
+                    <td class="standard">@Model.FirstOrDefault().ProductName (@Model.FirstOrDefault().ProductId)</td>
                 </tr>
                 <tr>
                     <td class="bold standard">Procedure Name (#):</td>
-                    <td class="standard"> @Model.ProcedureName (@Model.ProcedureId)</td>
+                    <td class="standard"> @Model.FirstOrDefault().ProcedureName (@Model.FirstOrDefault().ProcedureId)</td>
                 </tr>
                 <tr>
                     <td class="bold standard">Current Owner's Part Name (#):</td>
-                    <td class="standard">@Model.OwnerPartName</td>
+                    <td class="standard">@Model.FirstOrDefault().OwnerPartName</td>
                 </tr>
                 <tr>
                     <td class="bold standard">Fill Date:</td>
-                    <td class="standard">@Model.FillDate</td>
+                    <td class="standard">@Model.FirstOrDefault().FillDate</td>
                 </tr>
             </tbody>
         </table>

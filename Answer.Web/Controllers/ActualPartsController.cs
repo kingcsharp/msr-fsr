@@ -84,10 +84,18 @@ namespace Answer.Web.Controllers
                         {
                             totalRows = totalRows.Where(x => x.Qty == value);
                         }
+                        else
+                        {
+                            totalRows = totalRows.Where(x => x.Qty.ToString().Contains(rule.data.ToLower()));
+                        }
                     }
                     else if (rule.field == nameof(ActualPartsView.LocationName))
                     {
                         totalRows = totalRows.Where(x => x.LocationName.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(ActualPartsView.NickName))
+                    {
+                        totalRows = totalRows.Where(x => x.NickName.ToLower().Contains(rule.data.ToLower()));
                     }
                     else if (rule.field == nameof(ActualPartsView.CurrentOwnerName))
                     {
@@ -103,6 +111,10 @@ namespace Answer.Web.Controllers
                         if (Int32.TryParse(rule.data, out value))
                         {
                             totalRows = totalRows.Where(x => x.Rev == value);
+                        }
+                        else
+                        {
+                            totalRows = totalRows.Where(x => x.Rev.ToString().Contains(rule.data.ToLower()));
                         }
                     }
                     else if (rule.field == nameof(ActualPartsView.Status))

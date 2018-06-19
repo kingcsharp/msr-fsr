@@ -2156,13 +2156,6 @@ input.pre-populated {
     font-weight: bold;
 }
 
-#print-other-content .table > tbody > tr > td,
-#print-other-content .flat-blue .table > tbody > tr > th,
-#print-other-content .flat-blue .table > tfoot > tr > td,
-#print-other-content .flat-blue .table > tfoot > tr > th {
-    border-color: #0E0D0D !important;
-}
-
 .no-border {
     border-bottom: 0px !important;
 }

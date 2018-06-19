@@ -160,8 +160,8 @@ namespace Msr.Services.Orders
                 using (var multi = conn.QueryMultiple("Portal_GetDeliveryTsrDetails", p, commandType: CommandType.StoredProcedure))
                 {
                     detailsResponse.PurchaseWithSupplierQuotesResult = multi.Read<PurchaseWithSupplierQuotesResult>().Single();
-
-                    detailsResponse.PurchaseItemInfoResult = multi.Read<PurchaseItemInfoResult>().Single();
+                    detailsResponse.PurchaseItemInfoResultList = multi.Read<PurchaseItemInfoResult>().ToList();
+                    detailsResponse.PurchaseItemInfoResult = detailsResponse.PurchaseItemInfoResultList.FirstOrDefault();
                 }
             }
 
@@ -393,7 +393,7 @@ namespace Msr.Services.Orders
             }
         }
 
-        public GetPurchaseWorkReportTsrDetailsResult GetPurchaseWorkReportTsrDetails(int purchaseItemId)
+        public List<GetPurchaseWorkReportTsrDetailsResult> GetPurchaseWorkReportTsrDetails(int purchaseItemId)
         {
             using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
             {
@@ -403,7 +403,7 @@ namespace Msr.Services.Orders
 
                 var getPurchaseWorkReportTsrDetailsResult =
                     conn.Query<GetPurchaseWorkReportTsrDetailsResult>("Portal_GetTsrPurchaseWorkReport", p,
-                        commandType: CommandType.StoredProcedure).Single();
+                        commandType: CommandType.StoredProcedure).ToList();
 
                 return getPurchaseWorkReportTsrDetailsResult;
             }

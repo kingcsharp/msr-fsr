@@ -195,7 +195,7 @@
                 </div>
                 <div class="modal-body" id="print-traveler-container"></div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-info" onclick="PrintReport('print-traveler-container')"><i class="fa fa-print"></i> Print Report</button>
+                    <button id="print-traveler-report" type="button" class="btn btn-info"><i class="fa fa-print"></i> Print Report</button>
                     <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close-o"></i> Close</button>
                 </div>
             </div>
@@ -278,6 +278,11 @@
         $('#print-other-report').on('click',
             function() {
                 $('#print-other-content').printThis();
+            });
+
+        $('#print-traveler-report').on('click',
+            function () {
+                $('#print-traveler-container').printThis({ canvas: true });
             });
 
         function PrintReport(id) {

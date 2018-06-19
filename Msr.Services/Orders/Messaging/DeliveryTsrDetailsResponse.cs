@@ -9,10 +9,12 @@ namespace Msr.Services.Orders.Messaging
         {
             PurchaseWithSupplierQuotesResult = new PurchaseWithSupplierQuotesResult();
             PurchaseItemInfoResult = new PurchaseItemInfoResult();
+            PurchaseItemInfoResultList = new List<PurchaseItemInfoResult>();
         }
 
         public int FillId { get; set; }
         public PurchaseWithSupplierQuotesResult PurchaseWithSupplierQuotesResult { get; set; }
         public PurchaseItemInfoResult PurchaseItemInfoResult { get; set; }
+        public List<PurchaseItemInfoResult> PurchaseItemInfoResultList { get; set; }
     }
 }

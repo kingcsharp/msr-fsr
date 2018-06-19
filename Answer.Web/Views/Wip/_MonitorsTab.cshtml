@@ -3,11 +3,11 @@
     .red {
         background-color: red;
     }
+
     .form-horizontal .control-label {
         padding-top: 0px;
     }
 </style>
-
 @using (Html.BeginForm("UpdateStepMonitor", "Wip", FormMethod.Post, new { @class = "form form-horizontal", role = "form" }))
 {
 
@@ -116,24 +116,20 @@
                     @Model[i].Should_Be
                 </div>
             </div>
-            if (!string.IsNullOrWhiteSpace(Model[i].Highest_Threshold))
-            {
-                <div class="form-group">
-                    <label class="col-lg-2 control-label">HIGHEST_THRESHOLD:</label>
-                    <div class="col-lg-2">
+
+            <div class="form-group">
+                <label class="col-lg-2 control-label">HIGHEST_THRESHOLD:</label>
+                <div class="col-lg-2">
+                    @if (!string.IsNullOrWhiteSpace(Model[i].Highest_Threshold))
+                    {
                         @Model[i].Highest_Threshold
-                    </div>
-                </div>
-            }
-            if (!string.IsNullOrWhiteSpace(Model[i].High_Threshold))
-            {
-                <div class="form-group">
-                    <label class="col-lg-2 control-label">HIGH_THRESHOLD:</label>
-                    <div class="col-lg-2">
+                    }
+                    else if (!string.IsNullOrWhiteSpace(Model[i].High_Threshold))
+                    {
                         @Model[i].High_Threshold
-                    </div>
+                    }
                 </div>
-            }
+            </div>
             if (!string.IsNullOrWhiteSpace(Model[i].Target))
             {
                 <div class="form-group">
@@ -143,24 +139,20 @@
                     </div>
                 </div>
             }
-            if (!string.IsNullOrWhiteSpace(Model[i].Low_Threshold))
-            {
-                <div class="form-group">
-                    <label class="col-lg-2 control-label">LOW_THRESHOLD:</label>
-                    <div class="col-lg-2">
+
+            <div class="form-group">
+                <label class="col-lg-2 control-label">LOW_THRESHOLD:</label>
+                <div class="col-lg-2">
+                    @if (!string.IsNullOrWhiteSpace(Model[i].Low_Threshold))
+                    {
                         @Model[i].Low_Threshold
-                    </div>
-                </div>
-            }
-            if (!string.IsNullOrWhiteSpace(Model[i].Lowest_Threshold))
-            {
-                <div class="form-group">
-                    <label class="col-lg-2 control-label">LOWEST_THRESHOLD:</label>
-                    <div class="col-lg-2">
+                    }
+                    else if (!string.IsNullOrWhiteSpace(Model[i].Lowest_Threshold))
+                    {
                         @Model[i].Lowest_Threshold
-                    </div>
+                    }
                 </div>
-            }
+            </div>
 
             <div class="form-group">
                 <label class="col-lg-2 control-label">Result:</label>
@@ -197,13 +189,55 @@
                 </div>
             </div>
         }
-    
+
         if (Model[i].Monitor_Type == "EQUIPMENT")
         {
+            <div class="form-group">
+                <label class="col-lg-2 control-label">Should Be:</label>
+                <div class="col-lg-2">
+                    @Model[i].Should_Be
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-lg-2 control-label">HIGHEST_THRESHOLD:</label>
+                <div class="col-lg-2">
+                    @if (!string.IsNullOrWhiteSpace(Model[i].Highest_Threshold))
+                    {
+                        @Model[i].Highest_Threshold
+                    }
+                    else if (!string.IsNullOrWhiteSpace(Model[i].High_Threshold))
+                    {
+                        @Model[i].High_Threshold
+                    }
+                </div>
+            </div>
+
             <div class="form-group">
                 <label class="col-lg-2 control-label">Target:</label>
                 <div class="col-lg-2">
                     @Html.TextBoxFor(x => Model[i].Target, new { @class = "form-control monitorTemplate_Target" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-lg-2 control-label">LOW_THRESHOLD:</label>
+                <div class="col-lg-2">
+                    @if (!string.IsNullOrWhiteSpace(Model[i].Low_Threshold))
+                    {
+                        @Model[i].Low_Threshold
+                    }
+                    else if (!string.IsNullOrWhiteSpace(Model[i].Lowest_Threshold))
+                    {
+                        @Model[i].Lowest_Threshold
+                    }
+                </div>
+            </div>
+
+            <div class="form-group equipmentresult">
+                <label class="col-lg-2 control-label">Result:</label>
+                <div class="col-lg-2">
+                    @Html.TextBoxFor(x => Model[i].Print_Result, new { @class = !isPassing ? "input-validation-error" : String.Empty })
                 </div>
             </div>
         }
@@ -291,7 +325,6 @@
                 @Html.TextAreaFor(x => Model[i].Comment, new { @class = "form-control" })
             </div>
         </div>
-
     }
     if (Model.Count > 0)
     {
@@ -302,12 +335,16 @@
             </div>
         </div>
     }
-
 }
 <script>
+
+    $(document).ready(function () {
+        $('.equipmentresult').hide();
+    });
+
     $(".monitor-save-close").on('click', function () {
         var form = $(this).parents('form:first');
-        
+
         eLoaderOpen();
 
         $.ajax({
@@ -324,6 +361,7 @@
             }
         });
     });
+
     $(".monitorTemplate_Target").on('change', function () {
         var textbox = $(this);
         var value = $(this).val();
@@ -339,14 +377,17 @@
                 if (data.CanUsed == false) {
                     eModal.alert(data.ErrorMessage);
                     textbox.val('');
+                    $('.equipmentresult').hide();
                 } else {
                     eLoaderClose();
-                }                
+                    $('.equipmentresult').show();
+                }
             },
             error: function(error) {
                 eLoaderError(error);
             }
+        });
     });
-    });
+
     $('.select').select2();
 </script>

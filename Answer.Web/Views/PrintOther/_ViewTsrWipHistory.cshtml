@@ -1,7 +1,7 @@
 ﻿@model Msr.Services.Orders.Messaging.WipHistoryTsrResponse
 
 <div class="row">
-    <table cellpadding="5" cellspacing="5">
+    <table class="table table-bordered">
         <tbody>
         <tr>
             <td rowspan="2" style="border: 1px solid #ccc">@Model.WipHistoryDetailResult.SupplierName</td>
@@ -46,7 +46,7 @@
                 <td colspan="6">
                     @if (task.WipSubTasks.Any())
                     {
-                        <table class="table-bordered">
+                        <table class="table-bordered table">
                             <tr>
                                 <th>Monitor @task.Id</th>
                                 <th>Result</th>

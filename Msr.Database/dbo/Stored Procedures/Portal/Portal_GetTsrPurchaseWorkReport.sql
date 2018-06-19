@@ -15,7 +15,7 @@ DECLARE
 
 	SELECT f.PURCHASE_ID AS PurchaseId, f.PURCH_ITEM_ID AS PurchaseItemId, f.FILL_OBJ_ID AS ActualPartDbId, 
 	f.CUST_LINE_ITEM AS LineItem,ap.QTY AS Quantity,ap.SERIAL, f.SUP_NAME AS SupplierName, f.CUST_NAME AS CustomerName, 
-	f.PROD_ID AS ProductId, f.PROD_NAME AS ProductName, f.PROC_ID AS ProcedureId, f.PROC_NAME AS ProdedureName, 
+	f.PROD_ID AS ProductId, f.PROD_NAME AS ProductName, f.PROC_ID AS ProcedureId, f.PROC_NAME AS ProcedureName, 
 	f.APP_OBJ_DESC AS OwnerPartName, f.FILL_DATE AS FillDate, sq.CUST_PURCH_NUM AS CustomerPurchaseNumber, 
 	@accountNum AS AccountNumber, @blanketPONum AS BlanketPoNumber FROM A_V_FILLS_SEARCH f 
 	LEFT OUTER JOIN A_V_ACTUAL_PARTS_APPROVED_DATA ap on f.FILL_OBJ_ID = ap.ID 

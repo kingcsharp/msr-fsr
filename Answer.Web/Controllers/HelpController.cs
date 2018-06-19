@@ -158,12 +158,7 @@ namespace Msr.Web.Controllers
                     TempData["SuccessMessage"] = "Help Created Successfully";
                     return RedirectToAction("index");
                 }
-                else
-                {
-                    TempData["ErrorMessage"] = "Something Went Wrong";
-                    return RedirectToAction("index");
-                }
-
+                TempData["ErrorMessage"] = response.ErrorMessage;
             }
             return View(model);
         }
