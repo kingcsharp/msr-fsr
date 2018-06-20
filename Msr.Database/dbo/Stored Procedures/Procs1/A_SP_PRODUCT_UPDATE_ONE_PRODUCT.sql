@@ -25,7 +25,8 @@
 @customerRequirementId int,
 @IsProduct bit,
 @Division varchar(50),
-@LocationId varchar(50)
+@LocationId varchar(50),
+@CycleTime int
 AS
 BEGIN TRANSACTION
 print 'Starting procedure A_SP_PRODUCT_UPDATE_ONE_PRODUCT'
@@ -66,7 +67,8 @@ MaterialCost=@materialCost,
 CustomerRequirementId = @customerRequirementId,
 IsProduct = @IsProduct,
 Division = @Division,
-LocationId =@LocationId
+LocationId =@LocationId,
+CycleTime =@CycleTime
 WHERE OBJECT_ID = @newID
 if @@ERROR <> 0 goto problem
 declare @myID as varchar(50)

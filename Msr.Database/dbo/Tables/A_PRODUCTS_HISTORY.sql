@@ -29,6 +29,7 @@
 	[IsProduct]             BIT             DEFAULT ((0)) NOT NULL,
     [Division]              NVARCHAR (50)   NULL,
     [LocationId]            NVARCHAR (50)   NULL,
+	[CycleTime]             INT             NULL,
     CONSTRAINT [PK_A_PRODUCT_HISTORY] PRIMARY KEY CLUSTERED ([ID] ASC)
 );
 

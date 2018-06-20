@@ -4,9 +4,9 @@
         border-bottom: 0px !important;
     }
 
-        .no-border th, .no-border td {
-            border: 1px !important;
-        }
+    .no-border th, .no-border td {
+        border: 1px !important;
+    }
 
     .quote-header th {
         text-align: right;
@@ -30,16 +30,11 @@
     <tbody>
         <tr>
             <td rowspan="2" width="60%" align="left"><img src="~/assets/img/msr-ccs.png" alt="MSR-FSR Critical Component Services"></td>
-            <th align="right">
-                Client:
-            </th>
-            <td>@Html.DisplayFor(x => x.CustomerName)</td>
         </tr>
-    <tr>
-        <th align="right">Part / Kit No.:</th>
-        <td>@Html.DisplayFor(x => x.PartKitNo)</td>
-    </tr>
-
+        <tr>
+            <th align="right">Part / Kit No.:</th>
+            <td>@Html.DisplayFor(x => x.PartKitNo)</td>
+        </tr>
         <tr>
             <td colspan="3" align="center"><h2>Quotation</h2></td>
         </tr>
@@ -59,16 +54,14 @@
         <tr>
             <th align="right">Supplier Name:</th>
             <td>@Html.DisplayFor(x => x.SupplierName)</td>
-
             <th align="right">Commercial Contact:</th>
             <td>@Html.DisplayFor(x => x.Contact)</td>
         </tr>
         <tr>
             <th align="right">
-                Reg or Inq No:
+                Order No:
             </th>
             <td>@Html.DisplayFor(x => x.ProductId)</td>
-
             <th align="right">Title</th>
             <td>@Html.DisplayFor(x => x.Title)</td>
         </tr>
@@ -88,8 +81,8 @@
             </td>
         </tr>
         <tr>
-            <th align="right"></th>
-            <td></td>
+            <th align="right">Cycle Time:</th>
+            <td>@Html.DisplayFor(x => x.CycleTime)</td>
             <th align="right">Email:</th>
             <td>@Html.DisplayFor(x => x.Email)</td>
         </tr>
@@ -117,7 +110,7 @@
                 <td align="center">@index</td>
                 <td align="center">@item.Quantity</td>
                 <td align="center">Unit</td>
-                <td>@item.Description</td>
+                <td>@Model.ProcessDescription</td>
                 <td align="center">@item.Price.GetValueOrDefault().ToString("C")</td>
                 <td align="center">@item.Extension.GetValueOrDefault().ToString("C")</td>
             </tr>
@@ -129,13 +122,11 @@
 <table class="table table-bordered table-striped items-table" width="100%">
     <thead>
         <tr>
-            <th>Existing Process Spec. # or New</th>
-            <th>Process Description</th>
+            <th style="text-align: left;">Existing Process Spec. # or New</th>
         </tr>
     </thead>
     <tr>
-        <td align="center">@Model.ExistingProcess</td>
-        <td align="center">@Model.ProcessDescription</td>
+        <td class="align-left">@Model.ExistingProcess</td>
     </tr>
 </table>
 <table class="table" width="100%">

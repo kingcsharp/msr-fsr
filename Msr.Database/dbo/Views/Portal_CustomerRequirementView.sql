@@ -33,7 +33,8 @@ p.IsProduct,
 p.STATUS,
 p.OBJECT_ID AS ObjectId,
 pqp.CUST_ID as CustomerId,
-Customer.NAME AS CustomerName
+Customer.NAME AS CustomerName,
+p.CycleTime
 FROM  A_V_PRODUCT_SEARCH_DATA p
 INNER JOIN [dbo].[Portal_CustomerSubmittedRequirement] c ON c.Id = p.CustomerRequirementId
 LEFT JOIN Portal_ProceduresView pv ON p.PROCEDURE_ID = pv.ObjectId

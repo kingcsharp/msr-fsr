@@ -202,6 +202,7 @@ namespace Msr.Services.ProductionPlanning
                 p.Add("@IsProduct", true, DbType.Boolean, ParameterDirection.Input);
                 p.Add("@Division", model.ProductCustomerDivision, DbType.String, ParameterDirection.Input, 50);
                 p.Add("@LocationId", model.ProductLocationId, DbType.String, ParameterDirection.Input, 50);
+                p.Add("@CycleTime", model.CycleTime, DbType.Int32, ParameterDirection.Input);
 
                 using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
                 {

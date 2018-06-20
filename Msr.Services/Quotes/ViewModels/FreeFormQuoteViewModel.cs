@@ -61,6 +61,8 @@ namespace Msr.Services.Quotes.ViewModels
 
         public string ProductId { get; set; }
 
+        public int? CycleTime { get; set; }
+
         public List<QuoteItemsViewModel> QuoteItems { get; set; }
 
         public List<SelectListItem> Suppliers { get; set; }

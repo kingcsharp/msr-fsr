@@ -160,11 +160,11 @@ function LoadSteps(i, myOptions) {
 
             var button = $(event.relatedTarget);
             var id = button.data('id');
-
+            var objectId = button.data('object');
             var modal = $(this);
             $.ajax({
                 type: "GET",
-                url: '/Quote/ViewQuote/' + id,
+                url: '/Quote/ViewQuote/' + id + '?objectId=' + objectId,
                 dataType: 'html',
                 success: function (data) {
                     modal.find('.modal-body').html(data);

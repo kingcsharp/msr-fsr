@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using Msr.Services.CustomerRequirements.ViewModel;
 using Msr.Services.ProductionPlanning;
+using Msr.Services.Products;
 using Msr.Services.Quotes;
 using Msr.Services.Quotes.ViewModels;
 using Msr.Services.Users;
@@ -14,12 +15,14 @@ namespace Answer.Web.Controllers
         private QuoteService _quoteService;
         private readonly ProductionPlanningService _productionPlanningService;
         private readonly UserService _userService;
+        private readonly ProductService _productService;
 
         public QuoteController()
         {
             _quoteService = new QuoteService();
             _productionPlanningService = new ProductionPlanningService();
             _userService = new UserService();
+            _productService = new ProductService();
         }
 
         public ActionResult Create()
@@ -58,7 +61,7 @@ namespace Answer.Web.Controllers
             return View(viewModel);
         }
 
-        public ActionResult ViewQuote(int id)
+        public ActionResult ViewQuote(int id, string objectId)
         {
             var currentUser = GetCurrentUser();
 
@@ -71,6 +74,10 @@ namespace Answer.Web.Controllers
             vm.CustomerName = vm.Customers.SingleOrDefault(x => x.Value == vm.CustomerId)?.Text;
             vm.SupplierName = vm.Suppliers.SingleOrDefault(x => x.Value == vm.Supplier)?.Text;
             vm.ProductId = requirment.ProductId;
+
+
+            var model = _productionPlanningService.GetProductionPlaningQueryable().SingleOrDefault(x => x.ObjectId == objectId);
+            vm.CycleTime = model.CycleTime;
 
             foreach (var item in vm.QuoteItems)
             {

@@ -95,6 +95,8 @@ namespace Msr.Services.PurchesOrder.ViewModels
 
         public DateTime? all_date { get; set; }
 
+        public int? CycleTime { get; set; }
+
         public List<PurchasePoModel> OrderItems { get; set; }
 
         public List<SelectListItem> NewPoList { get; set; }

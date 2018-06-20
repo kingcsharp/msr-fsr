@@ -69,5 +69,6 @@ namespace Msr.Models.Products
         public bool? IsProduct { get; set; }
         public string Division { get; set; }
         public string LocationId { get; set; }
+        public int? CycleTime { get; set; }
     }
 }

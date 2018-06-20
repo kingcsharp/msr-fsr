@@ -145,10 +145,17 @@ namespace Msr.Services.PurchesOrder
         {
             var accName = "";
             var result = _dbContext.Database.SqlQuery<PurchasePoModel>($"SELECT * FROM A_V_ORDER_ITEMS_ALL_DATA WHERE PURCHASE_HIST_ID = '{id}' AND PARENT IS NULL ").ToList();
+
             foreach (var item in result)
             {
                 item.UNIT_PRICE = Math.Round((decimal)item.TOTAL_PRICE / Convert.ToDecimal(item.QTY), 2);
                 item.TOTAL_PRICE = Math.Round((decimal)item.TOTAL_PRICE, 2);
+
+                if (item.CycleTime.HasValue)
+                {
+                    item.DUE_DATE = DateTime.Now.AddDays(item.CycleTime.Value);
+                }
+
                 if (item.ACCT_NAME != null)
                 {
                     accName = item.ACCT_NAME;

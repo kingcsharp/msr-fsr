@@ -33,5 +33,6 @@ namespace Msr.Models.CustomerRequirements
         public double? LeadTime { get; set; }
         public int? Rev { get; set; }
         public bool IsProduct { get; set; }
+        public int? CycleTime { get; set; }
     }
 }

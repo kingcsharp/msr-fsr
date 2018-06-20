@@ -15,7 +15,8 @@ create PROCEDURE [dbo].[Portal_Create_UpdateProduct]
 @customerRequirementId int,
 @IsProduct bit,
 @Division varchar(50),
-@LocationId varchar(50)
+@LocationId varchar(50),
+@CycleTime int = null
 AS
 
 BEGIN TRANSACTION 
@@ -38,7 +39,8 @@ BEGIN TRY
 	@customerRequirementId,
 	@IsProduct,
 	@Division,
-	@LocationId
+	@LocationId,
+	@CycleTime
 
 	exec A_SP_FILES_DELETE_LINKS @newID,'REQ_FORM',@loginId
 

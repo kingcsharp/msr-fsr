@@ -75,6 +75,9 @@ namespace Msr.Services.ProductionPlanning.ViewModels
         public Single? TotalSalePrice { get; set; }
         public int CustomerSubmitId { get; set; }
 
+        [Range(0, int.MaxValue, ErrorMessage = "Please enter a whole number")]
+        public int? CycleTime { get; set; }
+
         public List<RequirementStepsDetailsViewModel> Steps { get; set; }
 
         public List<SelectListItem> ProcessList { get; set; }
@@ -128,13 +131,14 @@ namespace Msr.Services.ProductionPlanning.ViewModels
                 Selected = false
             }).OrderBy(o => o.Text).ToList();
 
+
             ProcessList = preProServices.GetPreProQueryable().Where(x => x.Status == "APPROVED").Select(x => new SelectListItem
             {
                 Text = x.Title,
                 Value = x.ObjectId.ToString()
             }).OrderBy(o => o.Text).ToList();
             ProcessList.Insert(0, new SelectListItem { Text = "Select", Value = "" });
-        }
+        } 
 
         public void Read(ProductionPlanningService productionPlanService, ProductsView productsView, CustomerRequirementView requirment)
         {
@@ -152,6 +156,7 @@ namespace Msr.Services.ProductionPlanning.ViewModels
             MaterialCost = productsView.MaterialCost;
             PObjectId = productsView.Object_Id;
             ProductStatus = productsView.Status;
+            CycleTime = productsView.CycleTime;
 
             if (!string.IsNullOrWhiteSpace(requirment.QuoteJson))
             {
