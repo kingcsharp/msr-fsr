@@ -121,6 +121,7 @@ namespace Answer.Web.Controllers
             quote.ProcessDescription = model.ProcedureName;
             quote.ExistingProcess = model.ProcedureName;
             quote.Delivery = csr.ShippingMethod;
+            quote.CycleTime = model.CycleTime;
 
             foreach (var partInfoViewModel in csr.Parts)
             {
