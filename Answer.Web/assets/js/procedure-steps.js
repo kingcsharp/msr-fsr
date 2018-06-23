@@ -3,7 +3,7 @@
 $(document).ready(function () {
 
     $("#sortable").sortable({
-        handle: '.sortable-fa',
+        handle: '.grippy',
         delay: 100,
         cancel: "input,textarea,select",
 
