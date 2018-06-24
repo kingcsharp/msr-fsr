@@ -20,5 +20,7 @@ namespace Msr.Services.Orders.Procedures
         public string ProcId { get; set; }
 
         public string ProcObjId { get; set; }
+
+        public string Rev { get; set; }
     }
 }

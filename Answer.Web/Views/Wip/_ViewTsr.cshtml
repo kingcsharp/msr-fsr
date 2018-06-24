@@ -23,6 +23,11 @@
         <h4>Parts Info</h4>
         <table class="table table-responsive table-condensed table-bordered">
             <tbody>
+            <tr>
+                <td>
+                    Revision:@Model.WorkOrderDetailsResponse.FileSearchResult.Rev
+                </td>
+            </tr>
             @if (Model.WorkOrderDetailsResponse.FileSearchResult != null)
             {
                 <tr><td>@Model.WorkOrderDetailsResponse.FileSearchResult.FillObjDesc. qty:@Model.WorkOrderDetailsResponse.FileSearchResult.Qty</td></tr>
