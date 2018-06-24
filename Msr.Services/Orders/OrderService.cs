@@ -106,7 +106,7 @@ namespace Msr.Services.Orders
 
                     detailsResponse.Parts = multi.Read<string>().ToList();
 
-                    detailsResponse.TaskStepResults = multi.Read<TaskStepResult>().ToList();
+                    detailsResponse.TaskStepResults = multi.Read<TaskStepResult>().Where(x => x.PRINT_ORDER != null).ToList();
                 }
             }
 
@@ -491,9 +491,10 @@ namespace Msr.Services.Orders
 
                 if (detailsResponse.TaskEditDataResult.Status != "FINISHED")
                 {
-                    foreach (var task in detailsResponse.TaskItemParts)
+                    foreach (var task in detailsResponse.TaskItemParts.Where(x => x.Print_Order != null))
                     {
-                        if ((task.Status == "REQUESTED" || task.Status == "ACCEPTED") && !string.IsNullOrWhiteSpace(task.Print_Order) && task.HAS_MONITOR == "1")
+                        if ((task.Status == "REQUESTED" || task.Status == "ACCEPTED" || task.Status == "PENDING_PARENT_ACCEPTANCE") 
+                            && !string.IsNullOrWhiteSpace(task.Print_Order) && task.HAS_MONITOR == "1")
                         {
                             var monitorParams = new DynamicParameters();
 
@@ -594,7 +595,7 @@ namespace Msr.Services.Orders
             }
         }
 
-        public string CloseTask(string taskId, string login)
+        public string CloseTask(string taskId, string login, int fillId)
         {
             var p = new DynamicParameters();
 
@@ -613,6 +614,11 @@ namespace Msr.Services.Orders
                 if (!string.IsNullOrWhiteSpace(retStatus))
                 {
                     return retStatus;
+                }
+
+                if (retStatus != null && !retStatus.Contains("ERROR") || retStatus == null)
+                {
+                   StopTimer(taskId, fillId);
                 }
 
                 var p2 = new DynamicParameters();
@@ -695,26 +701,9 @@ namespace Msr.Services.Orders
                     response.AddError(status);
                 }
 
-                if ((status != null && !status.Contains("ERROR")) || status == null)
+                if (status != null && !status.Contains("ERROR") || status == null)
                 {
-                    var taskLog = _dbContext.TaskLogs.Where(x => x.TaskId == stepId && x.FillId == fillId)
-                            .OrderByDescending(x => x.Id)
-                            .FirstOrDefault();
-
-                    if (taskLog != null)
-                    {
-                        if (taskLog.StatusId == TimerStatuseConstants.InProgress)
-                        {
-                            taskLog.EndTime = DateTime.Now;
-                            taskLog.TotalTime = TimeSpan.FromSeconds((taskLog.EndTime.Value - taskLog.StartTime).TotalSeconds);
-                        }
-
-                        taskLog.StatusId = TimerStatuseConstants.Stopped;
-
-                        _dbContext.SaveChanges();
-
-                        response.Entity = GetTotalTime(taskLog);
-                    }
+                    response.Entity = StopTimer(stepId.ToString(), fillId);
                 }
             }
 
@@ -1018,5 +1007,28 @@ namespace Msr.Services.Orders
 
             return result;
         }
+
+        private TaskLogDto StopTimer(string taskId, int fillId)
+        {
+            var taskLog = _dbContext.TaskLogs
+            .Where(x => x.TaskId.ToString() == taskId && x.FillId == fillId)
+            .OrderByDescending(x => x.Id)
+            .FirstOrDefault();
+
+            if (taskLog == null) return null;
+
+            if (taskLog.StatusId == TimerStatuseConstants.InProgress)
+            {
+                taskLog.EndTime = DateTime.Now;
+                taskLog.TotalTime = TimeSpan.FromSeconds((taskLog.EndTime.Value - taskLog.StartTime).TotalSeconds);
+            }
+
+            taskLog.StatusId = TimerStatuseConstants.Stopped;
+
+            _dbContext.SaveChanges();
+
+            return GetTotalTime(taskLog);
+        }
+
     }
 }

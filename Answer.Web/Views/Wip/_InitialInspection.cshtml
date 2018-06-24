@@ -45,8 +45,9 @@
             <div id="@monitorsId" class="tab-pane fade task-window">
 
                 @*@if (Model.TaskEditDataResult.HasMonitor == true)*@
-
+                <div class="col-sm-12">
                 @Html.Partial("_MonitorsTab", Model.MonitorTemplateResult)
+                </div>
 
                 @*else
             {
@@ -62,24 +63,22 @@
     </div>
 </div>
 
-<script>
-    
-    @if (Model.TaskRunningDto !=null &&  Model.TaskRunningDto.Duration != "0s")
-    {
-        <text>
-            $('.timer').timer({
-                seconds: @Math.Round(Model.TaskRunningDto.TotalSeconds),
-                duration: '@Model.TaskRunningDto.Duration'
-            });
+@if (Model.TaskEditDataResult.Status == "CLOSED")
+{
+    <script type="text/javascript">
 
-            $('.timer').timer('pause');
-        </text>
-    }
+        @if (Model.TaskRunningDto !=null &&  Model.TaskRunningDto.Duration != "0s")
+        {
+            <text>
+                $('#step-@Model.StepId .timer').timer({
+                    seconds: @Math.Round(Model.TaskRunningDto.TotalSeconds),
+                    duration: '@Model.TaskRunningDto.Duration'
+                });
 
-    
-    @if ((Model.TaskRunningDto != null &&  Model.TaskRunningDto.StatusId == TimerStatuseConstants.InProgress)|| Model.TaskRunningDto == null)
-    {
-        <text>$('.timer').timer('resume');</text>
-    }
-    
-</script>
+                $('#step-@Model.StepId .timer').timer('pause');
+            </text>
+        }
+
+    </script>
+}
+

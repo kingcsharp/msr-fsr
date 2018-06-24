@@ -18,7 +18,6 @@
     }
 }
 
-@*getButtons*@
 @if ((Model.TaskEditDataResult.Status != "ACCEPTED" && Model.TaskRunningDto == null) && Model.TaskEditDataResult.Status != "FINISHED")
 {
     startButton = "show";
@@ -29,9 +28,6 @@
 {
     timerInput = "";
 }
-
- 
-
 
 @if (Model.TaskRunningDto != null)
 {
@@ -84,36 +80,38 @@
     </div>
 </div>
 
-
-<script>
+<script type="text/javascript">
 
     $(function () {
-
-        @if ((Model.TaskRunningDto !=null && Model.TaskRunningDto.Duration != "0s"))
+        @if (Model.TaskRunningDto!=null)
         {
             <text>
-                $('.timer').timer({
-                    seconds: @Math.Round(Model.TaskRunningDto!=null ? Model.TaskRunningDto.TotalSeconds:0),
-                    duration: '@(Model.TaskRunningDto !=null ? Model.TaskRunningDto.Duration.ToString() :"0")'
+                $('#step-@Model.StepId .timer').timer({
+                    seconds: @Math.Round(Model.TaskRunningDto?.TotalSeconds ?? 0),
+                    duration: '@(Model.TaskRunningDto?.Duration ?? "0")'
                 });
             </text>
+
+            if (Model.TaskRunningDto.StatusId == TimerStatuseConstants.InProgress)
+            {
+                 <text> $('#step-@Model.StepId .timer').timer('resume'); </text>
+            } else if (Model.TaskRunningDto.StatusId == TimerStatuseConstants.Paused)
+            {
+                 <text> $('#step-@Model.StepId .timer').timer('pause'); </text>
+            }
         }
 
         $('#@Model.StepId #pause-step').on('click', function () {
             StepPauseClick($(this).data('task-log-id'));
-            $('.timer').timer('pause');
-
+            $('#step-@Model.StepId .timer').timer('pause');
         });
 
         $('#@Model.StepId #resume-step').on('click',function() {
             StepResumeClick($(this).data('task-log-id'));
-
-            $('#@Model.StepId .timer').timer('resume');
-
+            $('#step-@Model.StepId .timer').timer('resume');
         });
 
         $('#@Model.StepId #start-step').on('click', function () {
-
             StepStartClick();
         });
 
@@ -124,12 +122,11 @@
         $('#@Model.StepId #assume-step').on('click',
             function() {
                 StepAssumeClick();
-            });
+        });
 
-        $('#addNcrModal').on('hidden.bs.modal',
-            function(event) {
+        $('#addNcrModal').on('hidden.bs.modal', function(event) {
                 $(this).data('bs.modal', null);
-            });
+         });
 
         $('#addNcrModal').on('show.bs.modal',
             function(event) {
@@ -145,8 +142,8 @@
                     success: function(data) {
                         modal.find('.modal-body').html(data);
                     },
-                    error: function() {
-
+                    error: function (error) {
+                        eLoaderError(error);
                     }
                 });
             });
@@ -165,8 +162,8 @@
                     success: function(data) {
                         modal.find('.modal-body').html(data);
                     },
-                    error: function() {
-
+                    error: function (error) {
+                        eLoaderError(error);
                     }
                 });
             });
@@ -176,18 +173,20 @@
         var stepId = @Model.StepId;
         var fillId = @Model.FillId;
 
+        eLoaderOpen();
+
         $.ajax({
             type: "POST",
             url: "/wip/StepDoneClick?stepId=" + stepId + "&fillId=" + fillId,
             dataType: 'json',
             success: function (data) {
-                
-                var result = TimerVisibility(data);
-                
-                if (result) {
+
+                if (data.ErrorMessage !== '') {
+                    eLoaderError(data.ErrorMessage);
+                } else {
                     var stepInProgress = $('#carousel ul.slides').find(".waiting").first();
 
-                    if (stepInProgress !== null) {
+                    if (stepInProgress.length > 0) {
                         $(stepInProgress).removeClass('waiting');
                         $(stepInProgress).addClass('requested');
                         $(stepInProgress).trigger("click");
@@ -195,39 +194,42 @@
 
                     var stepRequested = $('[data-stepid=' + stepId + ']');
 
-                    if (stepRequested !== null) {
+                    if (stepRequested.length > 0) {
                         $(stepRequested).addClass('step-complete');
                     }
 
                     $('.timer').timer('pause');
+                    eLoaderClose();
                 }
             },
-            error: function() {
-
+            error: function (error) {
+                eLoaderError(error);
             }
         });
     }
 
     function StepStartClick() {
+
         var stepId = @Model.StepId;
         var fillId = @Model.FillId;
+
+        eLoaderOpen();
 
         $.ajax({
             type: "POST",
             url: "/wip/StepStartClick?stepId=" + stepId + "&fillId=" + fillId,
             dataType: 'json',
             success: function (data) {
-                TimerVisibility(data);
-
-                if (data.ErrorMessage === '') {
-                        $('.timer').timer({
-                            editable: true
-                        });
-                    }
-
+                if (data.ErrorMessage !== '') {
+                    eLoaderError(data.ErrorMessage);
+                } else {
+                    eLoaderClose();
+                    var currentStep = $(".slides li[data-stepid='" + stepId + "']");
+                    $(currentStep).trigger("click");
+                }
             },
-            error: function () {
-
+            error: function (error) {
+                eLoaderError(error);
             }
         });
     }
@@ -235,30 +237,35 @@
     function StepAssumeClick() {
 
         var taskId = '@Model.StepId';
+        eLoaderOpen();
 
         $.ajax({
             type: "POST",
             url: "/wip/AssumeTaskClick?taskId=" + taskId,
             dataType: 'json',
             success: function (data) {
-
                 if (data === 'OK') {
-                    location.reload();
+                    var currentStep = $(".slides li[data-stepid='" + taskId + "']");;
+                    eLoaderClose();
+                    $(currentStep).trigger("click");
                 } else {
-                    alert(data);
+                    eLoaderError(error);
                 }
             },
-            error: function () {
-
+            error: function (error) {
+                eLoaderError(error);
             }
         });
     }
 
     function StepResumeClick(id) {
+
         var fillId = @Model.FillId;
         var taskId = '@Model.StepId';
         id = $('#resume-step').attr('data-task-log-id');
-        eLoaderOpen()
+
+        eLoaderOpen();
+
         $.ajax({
             type: "POST",
             url: "/wip/stepResume?taskLogId=" + id + "&stepId=" + taskId +"&fillId=" + fillId,
@@ -278,15 +285,17 @@
                 TimerVisibility(data);
                 eLoaderClose();
             },
-            error: function () {
-
+            error: function (error) {
+                eLoaderError(error);
             }
         });
     }
 
     function StepPauseClick(id) {
         var fillId = @Model.FillId;
-        eLoaderOpen()
+
+        eLoaderOpen();
+
         $.ajax({
             type: "POST",
             url: "/wip/StepPause?taskLogId=" + id + "&fillId=" + fillId,
@@ -295,8 +304,8 @@
                 TimerVisibility(data);
                 eLoaderClose();
             },
-            error: function () {
-
+            error: function (error) {
+                eLoaderError(error);
             }
         });
     }
@@ -308,40 +317,21 @@
             return false;
         } else {
 
-        $('.timer-btn').attr('data-task-log-id', data.Entity.Id);
+            $('.timer-btn').attr('data-task-log-id', data.Entity.Id);
 
-        if (data.Entity.StatusId === 2) {
-            $('#@Model.StepId #resume-step').removeClass('hidden');
-            $('#@Model.StepId #pause-step').addClass('hidden');
-
-        } else
-            if (data.Entity.StatusId === 1) {
-            $('#@Model.StepId #done-step').removeClass('hidden');
-            $('#@Model.StepId #pause-step').removeClass('hidden');
-            $('#@Model.StepId #resume-step').addClass('hidden');
-            $('#@Model.StepId #start-step').addClass('hidden');
+            if (data.Entity.StatusId === 2) {
+                $('#@Model.StepId #resume-step').removeClass('hidden');
+                $('#@Model.StepId #pause-step').addClass('hidden');
             }
-            else if (data.Entity.StatusId === 3)
-            {
-            $('#@Model.StepId #pause-step').addClass('hidden');
-            $('#@Model.StepId #resume-step').addClass('hidden');
-            $('#@Model.StepId #done-step').addClass('hidden');
+            else
+            if (data.Entity.StatusId === 1) {
+                $('#@Model.StepId #done-step').removeClass('hidden');
+                $('#@Model.StepId #pause-step').removeClass('hidden');
+                $('#@Model.StepId #resume-step').addClass('hidden');
+                $('#@Model.StepId #start-step').addClass('hidden');
             }
         }
         return true;
-    }
-
-    function eLoaderOpen() {
-        $("#emodel").modal({
-
-            backdrop: 'static',
-
-            keyboard: false
-
-        });
-    }
-    function eLoaderClose() {
-        $("#emodel").modal('hide');
     }
 
 </script>

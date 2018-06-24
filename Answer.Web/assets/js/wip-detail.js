@@ -22,16 +22,16 @@ $(function () {
     });
 
     setTimeout(function () {
-        var stepInProgress = $('#carousel ul.slides').find(".step-inprogress").first();
+        var stepInProgress = $('#carousel ul.slides').find(".step-inprogress, .waiting").first();
 
-        if (stepInProgress !== null) {
+        if (stepInProgress.length > 0) {
+            $(stepInProgress).removeClass('waiting');
+            $(stepInProgress).addClass('requested');
             $(stepInProgress).trigger("click");
         } else {
             loadStep($('#carousel ul.slides li.step').first());
         }
     }, 1000);
-
-
 
     if (parseInt($('#ncr-count').val()) > 0) {
         eModal.confirm('There are NCRs associated to this part. Would you like to view them?', 'NCR Check')
@@ -74,12 +74,6 @@ $(function () {
         }
     });
 
-    //$('#fileupload').fileupload({
-    // Uncomment the following to send cross-domain cookies:
-    //xhrFields: {withCredentials: true},
-    //url: 'server/php/'
-    //});
-
     //init switch
     $('#showCompletedSwitch').bootstrapSwitch();
 
@@ -88,7 +82,6 @@ $(function () {
         LoadMyItems(state);
     });
 
-    
     LoadMyItems(true);
 
     $('[data-toggle="tooltip"]').tooltip();
@@ -244,11 +237,8 @@ $(function () {
     });
 
     $('.step-task').on('click', function () {
-
         loadStep(this);
     });
-
-
 
     $('#relatedDocument').on('hidden.bs.modal', function (event) {
         $(this).data('bs.modal', null);
@@ -343,12 +333,8 @@ function loadStep(step) {
         success: function (data) {
             $('#step-' + stepId).html('');
             $('#step-' + stepId).html(data);
-  
-
-            
         },
-        error: function () {
-
+        error: function (error) {
         }
     });
 }
@@ -364,9 +350,7 @@ function handleNCRButtonPush() {
             $('#ncrModal').modal("show");
             $('#ncrModal').find('.modal-body').html(data);
         },
-        error: function() {
-
-        }
+        error: function() {}
     });
 }
 

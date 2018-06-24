@@ -495,7 +495,6 @@ namespace Answer.Web.Controllers
                 }
             }
 
-
             response.LoggedUserIdResult = loggedUserId;
 
             foreach (var monitorTemplate in response.MonitorTemplateResult)
@@ -566,7 +565,7 @@ namespace Answer.Web.Controllers
                     _orderService.UpdateStepMonitor(monitorTemplate);
                 }
 
-                var returnValue = _orderService.CloseTask(monitorTemplates.FirstOrDefault().TASK_ID, loggedUserId);
+                var returnValue = _orderService.CloseTask(monitorTemplates.FirstOrDefault().TASK_ID, loggedUserId, monitorTemplates.FirstOrDefault().FillId);
 
                 if (!string.IsNullOrWhiteSpace(returnValue))
                 {
@@ -629,13 +628,6 @@ namespace Answer.Web.Controllers
             {
                 return Json(result.ErrorMessage, JsonRequestBehavior.AllowGet);
             }
-
-            return Json("OK", JsonRequestBehavior.AllowGet);
-        }
-
-        [HttpPost]
-        public ActionResult TaskAssumeClick(int taskId)
-        {
 
             return Json("OK", JsonRequestBehavior.AllowGet);
         }
