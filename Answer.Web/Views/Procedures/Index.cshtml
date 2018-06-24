@@ -30,7 +30,7 @@
 
         $(document).ready(function () {
             $.jgrid.defaults.styleUI = 'Bootstrap';
-            LoadProceduresGrid('@Url.Action("ProceduresData", "Procedures")','@Url.Action("Index", "Procedures")');
+            Msr.ProceduresGrid.LoadProceduresGrid('@Url.Action("ProceduresData", "Procedures")','@Url.Action("Index", "Procedures")');
         });
     </script>
 }

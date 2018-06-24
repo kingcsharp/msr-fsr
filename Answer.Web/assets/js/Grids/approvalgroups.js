@@ -1,4 +1,8 @@
-﻿function LoadApprovalGroupsGrid(url) {
+﻿var Msr = Msr || {};
+
+Msr.ApprovalGroupsGrid = Msr.ApprovalGroupsGrid ||
+{
+    LoadApprovalGroups: function (url) {
     //$.jgrid.defaults.responsive = true;
     $.jgrid.defaults.styleUI = 'Bootstrap';
 
@@ -90,4 +94,4 @@
         }).trigger("reloadGrid");
 
     });
-}
+}}

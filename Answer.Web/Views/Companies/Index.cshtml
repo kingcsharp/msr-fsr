@@ -28,7 +28,7 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            LoadCompanyGrid('@Url.Action("CompaniesData", "Companies")','@Request.Url.OriginalString');
+            Msr.CompanyGrid.LoadCompanyGrid('@Url.Action("CompaniesData", "Companies")', '@Request.Url.OriginalString');
         });
 
     </script>

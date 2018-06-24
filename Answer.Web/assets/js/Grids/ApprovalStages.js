@@ -1,4 +1,8 @@
-﻿function LoadApprovalStagesGrid(url) {
+﻿var Msr = Msr || {};
+
+Msr.ApprovalStagesGrid = Msr.ApprovalStagesGrid ||
+{
+    LoadApprovalStages: function (url) {
     //$.jgrid.defaults.responsive = true;
     $.jgrid.defaults.styleUI = 'Bootstrap';
 
@@ -90,4 +94,5 @@
         }).trigger("reloadGrid");
 
     });
-}
+        }
+    }

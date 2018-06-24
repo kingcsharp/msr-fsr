@@ -27,9 +27,10 @@
     @Scripts.Render("~/bundles/js/jqgrid-approval-workflows")
 
     <script>
-        //$.jgrid.defaults.responsive = true;
-        $.jgrid.defaults.styleUI = 'Bootstrap';
-
+        $(document).ready(function () {
+            $.jgrid.defaults.styleUI = 'Bootstrap';
+            Msr.ApprovalWorkflowsGrid.LoadApprovalWorkflows('@Url.Action("ApprovalWorkflowsData", "ApprovalWorkflows")');
+        });
     </script>
 }
 

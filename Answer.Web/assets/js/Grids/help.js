@@ -1,4 +1,8 @@
-﻿function SetUpGrid(returnUrl) {
+﻿var Msr = Msr || {};
+
+Msr.HelpGrid = Msr.HelpGrid ||
+{
+    SetUpGrid: function (returnUrl) {
 
     $("#jqGrid").jqGrid({
         url: '/Help/HelpsData',
@@ -124,5 +128,5 @@
 
     });
 
-
+}
 }

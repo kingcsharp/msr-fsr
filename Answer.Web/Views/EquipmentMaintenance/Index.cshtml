@@ -27,9 +27,7 @@
 
     <script type="text/javascript">
         $(document).ready(function () {         
-
-            LoadEquipmentGrid('@ViewBag.HasMaintenanceTechnicianRole','@ViewBag.HasProductionManagerRole');
-          
+            Msr.EquipmentGrid.LoadEquipment('@ViewBag.HasMaintenanceTechnicianRole','@ViewBag.HasProductionManagerRole');
         });
     </script>
 }

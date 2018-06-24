@@ -1,5 +1,9 @@
-﻿
-function SetUpRegionGrid(returnUrl) {
+﻿var Msr = Msr || {};
+
+Msr.RegionGrid = Msr.RegionGrid ||
+{
+    SetUpRegionGrid: function (returnUrl) {
+
 
     $("#jqGridRegions").jqGrid({
         url: '/Regions/RegionsData',
@@ -109,6 +113,6 @@ function SetUpRegionGrid(returnUrl) {
     }
 
 
-}
+}}
 
 

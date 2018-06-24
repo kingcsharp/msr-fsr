@@ -1,4 +1,8 @@
-function LoadGrid(url, returnUrl) {
+var Msr = Msr || {};
+
+Msr.QuotesGrid = Msr.QuotesGrid ||
+{
+    LoadGrid: function (url, returnUrl) {
 
     $(document).ready(function () {
         $("#jqGrid").jqGrid({
@@ -216,4 +220,4 @@ function LoadGrid(url, returnUrl) {
     })
     
 
-}
+}}

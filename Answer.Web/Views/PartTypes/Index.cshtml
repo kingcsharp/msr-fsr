@@ -29,7 +29,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $.jgrid.defaults.styleUI = 'Bootstrap';
-            LoadPartTypesGrid('@Url.Action("PartTypesData", "PartTypes")','@Request.Url.OriginalString');
+            Msr.PartTypeGrid.LoadPartTypesGrid('@Url.Action("PartTypesData", "PartTypes")', '@Request.Url.OriginalString');
         });
     </script>
 

@@ -68,7 +68,7 @@
         $(document).ready(function () {
 
             $.jgrid.defaults.styleUI = 'Bootstrap';
-            InvoicesGrid('@Url.Action("InvoicesData", "Invoices")');
+            Msr.InvoicesGrid.LoadInvoices('@Url.Action("InvoicesData", "Invoices")');
        
         $('#invModal').on('show.bs.modal',
             function (event) {
@@ -105,7 +105,7 @@
                         modal.find('.modal-body').html(data);
                     },
                     error: function (error) {
-                        eLoaderError(error)
+                        eLoaderError(error);
                     }
                 });
 

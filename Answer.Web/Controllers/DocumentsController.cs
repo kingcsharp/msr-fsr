@@ -77,6 +77,10 @@ namespace Answer.Web.Controllers
                         {
                             totalRows = totalRows.Where(x => x.Rev == value);
                         }
+                        else
+                        {
+                            totalRows = totalRows.Where(x => x.Rev == -1);
+                        }
                     }
                     else if (rule.field == nameof(DocumentView.Status))
                     {

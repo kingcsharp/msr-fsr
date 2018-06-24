@@ -1,4 +1,8 @@
-﻿function LoadPartTypesGrid(url, returnUrl) {
+﻿var Msr = Msr || {};
+
+Msr.PartTypeGrid = Msr.PartTypeGrid ||
+{
+    LoadPartTypesGrid: function (url, returnUrl) {
 
     $("#jqGrid").jqGrid({
         url: url,
@@ -188,4 +192,4 @@
         }).trigger("reloadGrid");
 
     });
-}
+}}

@@ -1,4 +1,8 @@
-﻿function LoadCompanyGrid(url, returnUrl) {
+﻿var Msr = Msr || {};
+
+Msr.CompanyGrid = Msr.CompanyGrid ||
+{
+    LoadCompanyGrid: function (url, returnUrl) {
     //$.jgrid.defaults.responsive = true;
     $.jgrid.defaults.styleUI = 'Bootstrap';
 
@@ -189,7 +193,7 @@
         }).trigger("reloadGrid");
 
     });
-}
+}}
 
 function LoadCompanyDialogGrid() {
     $.jgrid.defaults.styleUI = 'Bootstrap';

@@ -1,4 +1,8 @@
-﻿function LoadProceduresGrid(url, returnUrl) {
+﻿var Msr = Msr || {};
+
+Msr.ProceduresGrid = Msr.ProceduresGrid ||
+{
+    LoadProceduresGrid: function (url, returnUrl) {
     $("#jqGrid").jqGrid({
         url: url,
         mtype: "GET",
@@ -158,4 +162,4 @@
         }).trigger("reloadGrid");
 
     });
-}
+}}

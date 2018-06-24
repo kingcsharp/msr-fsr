@@ -28,8 +28,7 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            LoadActualPartsGrid('@Url.Action("ActualPartsData", "ActualParts")', '@ViewBag.Serial','@Request.Url.OriginalString');
-
+            Msr.ActualPartsGrid.LoadActualPartsGrid('@Url.Action("ActualPartsData", "ActualParts")', '@ViewBag.Serial','@Request.Url.OriginalString');
         });
     </script>
 }

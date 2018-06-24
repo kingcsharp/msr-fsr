@@ -3,7 +3,9 @@ var Msr = Msr || {};
 Msr.WipGrid = Msr.WipGrid ||
 {
     LoadWipGrid: function (url) {
+
         $.jgrid.defaults.responsive = true;
+
         $("#jqGrid").jqGrid({
             url: url,
             mtype: "GET",
@@ -248,7 +250,6 @@ Msr.WipGrid = Msr.WipGrid ||
     }
 }
 
-
 function initDateEdit(elem, options) {
         //console.log(options);
         var StartDate = $('#jqGrid').jqGrid('getCell', options.rowId, 'StDate');
@@ -265,7 +266,7 @@ function initDateEdit(elem, options) {
 
     };
 
-    function currentStepFormatter(cellvalue, options, rowObject) {
+function currentStepFormatter(cellvalue, options, rowObject) {
         var thisCellVal = '';
 
         if (rowObject.Status !== 'ACCEPTED') {
@@ -283,7 +284,7 @@ function initDateEdit(elem, options) {
         return thisCellVal;
     }
 
-    function dispositionFormatter(cellvalue, options, rowObject) {
+function dispositionFormatter(cellvalue, options, rowObject) {
 
         var notes = "";
 
@@ -302,7 +303,7 @@ function initDateEdit(elem, options) {
         return thisCellVal;
     }
 
-    function workItemFormatter(cellvalue, options, rowObject) {
+function workItemFormatter(cellvalue, options, rowObject) {
 
         var thisCellVal = '<span class="badge info"><a style="color:white;" href="/wip/details/' + rowObject.FillId + '">' + cellvalue + '</a><span>';
 

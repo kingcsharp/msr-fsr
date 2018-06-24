@@ -23,5 +23,10 @@
     @Scripts.Render("~/bundles/js/jqgrid")
     @Scripts.Render("~/bundles/js/jqgrid-Monitors")
 
+    <script type="text/javascript">
+        $(document).ready(function () {
+            Msr.MonitorsGrid.LoadMonitorsGrid('@Url.Action("MonitorsData", "Monitors")');
+        });
 
+    </script>
 }

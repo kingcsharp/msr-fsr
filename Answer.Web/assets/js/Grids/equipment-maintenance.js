@@ -1,4 +1,8 @@
-﻿function LoadEquipmentGrid(hasMaintenanceTechnicianRole, hasProductionManagerRole) {
+﻿var Msr = Msr || {};
+
+Msr.EquipmentGrid = Msr.EquipmentGrid ||
+{
+    LoadEquipment: function (hasMaintenanceTechnicianRole, hasProductionManagerRole) {
     $.jgrid.defaults.responsive = true;
 
     $.jgrid.defaults.styleUI = 'Bootstrap';
@@ -331,4 +335,5 @@
         }).trigger("reloadGrid");
 
     });
+}
 }

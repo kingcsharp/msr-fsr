@@ -1,4 +1,9 @@
-﻿function InvoicesGrid(url) {
+﻿var Msr = Msr || {};
+
+Msr.InvoicesGrid = Msr.InvoicesGrid ||
+{
+    LoadInvoices: function (url) {
+
 
     $("#jqGrid").jqGrid({
         url: url,
@@ -18,7 +23,7 @@
                 width: 100,
                 align: 'left'
             },
-         
+
             {
                 label: 'Description',
                 name: 'Description',
@@ -41,8 +46,8 @@
 
             {
                 label: 'Amount',
-                name: 'TotalDue',
-                index: 'TotalDue',
+                name: 'Total',
+                index: 'Total',
                 colmenu: false,
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                 formatter: 'currency',
@@ -138,5 +143,5 @@
 
     });
 
-
+}
 }

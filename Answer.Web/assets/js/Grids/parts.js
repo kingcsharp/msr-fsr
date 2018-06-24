@@ -1,4 +1,8 @@
-function SetUpGrid(returnUrl) {
+var Msr = Msr || {};
+
+Msr.PartsGrid = Msr.PartsGrid ||
+{
+    SetUpGrid: function (returnUrl) {
 
     $("#jqGrid").jqGrid({
         url: '/Parts/PartsData',
@@ -177,4 +181,5 @@ function SetUpGrid(returnUrl) {
     });
 
 
+}
 }

@@ -28,7 +28,7 @@
     <script>
 
         $(document).ready(function () {
-            loadProcedureVerbsGrid('@Url.Action("ProcedureVerbsData", "ProcedureVerbs")','@Request.Url.OriginalString');
+            Msr.ProcedureVerbsGrid.loadProcedureVerbsGrid('@Url.Action("ProcedureVerbsData", "ProcedureVerbs")','@Request.Url.OriginalString');
         });
     </script>
 }
