@@ -54,7 +54,13 @@
                 @Html.DropDownListFor(model => model.ProductProcedureId, Model.ProcedureList, "Select Procedure", new { @class = "form-control  selectProcedure" })
             </div>
             <div class="col-sm-1">
-                <button type="submit" id="new-procedure" name="IsNewProcedure" value="true" class="pull-right btn btn-default cancel" style="margin-left: 10px; margin-top: 0px !important" data-toggle="tooltip" data-placement="top" title="" data-original-title="Create New Procedure"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>
+                <button type="submit" id="new-procedure" name="IsNewProcedure" value="true"
+                        class="pull-right btn btn-default cancel"
+                        style="margin-left: 10px; margin-top: 0px !important"
+                        data-toggle="tooltip" data-placement="top" title=""
+                        data-original-title="Create New Procedure">
+                    <i id="new-procedure-icon" class="fa fa-plus-circle"  aria-hidden="false"></i>
+                </button>
             </div>
         </div>
     </div>

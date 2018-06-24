@@ -125,12 +125,17 @@
             });
 
             $('#ProductProcedureId').on('change', function() {
+                $('#production-planning-form').removeData('validator');
+                $('#production-planning-form').removeData('unobtrusiveValidation');
+                $('#production-planning-form').validate().cancelSubmit = true;
+                $('#form-change').trigger('click');
+            });
 
-                    $('#production-planning-form').removeData('validator');
-                    $('#production-planning-form').removeData('unobtrusiveValidation');
-                    $('#production-planning-form').validate().cancelSubmit = true;
-                    $('#form-change').trigger('click');
-
+            $('#new-procedure-icon').on('click', function () {
+                $('#production-planning-form').removeData('validator');
+                $('#production-planning-form').removeData('unobtrusiveValidation');
+                $('#production-planning-form').validate().cancelSubmit = true;
+                $('#form-change').trigger('click');
              });
 
             $(".selectPart").select2();
