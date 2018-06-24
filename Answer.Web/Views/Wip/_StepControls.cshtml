@@ -187,18 +187,23 @@
                     var stepInProgress = $('#carousel ul.slides').find(".waiting").first();
 
                     if (stepInProgress.length > 0) {
+                        ////Get next step
                         $(stepInProgress).removeClass('waiting');
                         $(stepInProgress).addClass('requested');
                         $(stepInProgress).trigger("click");
                     }
-
+                    
                     var stepRequested = $('[data-stepid=' + stepId + ']');
 
                     if (stepRequested.length > 0) {
                         $(stepRequested).addClass('step-complete');
+
+                        ////When last step done
+                        if (stepInProgress.length === 0) {
+                            $(stepRequested).trigger("click");
+                        }
                     }
 
-                    $('.timer').timer('pause');
                     eLoaderClose();
                 }
             },
