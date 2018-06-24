@@ -653,7 +653,6 @@
     <Content Include="assets\js\grids\invoice-tax.js" />
     <Content Include="assets\js\grids\invoices.js" />
     <Content Include="assets\js\grids\labors-step.js" />
-    <Content Include="assets\js\grids\delivery.js" />
     <Content Include="assets\js\grids\PartProductStay.js" />
     <Content Include="assets\js\grids\procedure-monitors.js" />
     <Content Include="assets\js\grids\PrePro.js" />

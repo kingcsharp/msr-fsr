@@ -27,11 +27,17 @@ namespace Msr.Services.Locations
         {
             return GetLocationsQueryable().SingleOrDefault(x => x.ObjectId == id);
         }
+
         public string GetParentLocations(string id)
         {
             var locations = GetLocationsQueryable().SingleOrDefault(x => x.ObjectId == id);
 
-            return GetLocationsQueryable().Where(x => x.ObjectId == locations.ParentLocation).SingleOrDefault().Name;
+            if (locations.ParentLocation != null)
+            {
+                return GetLocationsQueryable().SingleOrDefault(x => x.ObjectId == locations.ParentLocation).Name;
+            }
+
+            return string.Empty;
         }
 
         public List<LocationView> GetSecoundLocations(string id)

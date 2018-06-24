@@ -242,6 +242,7 @@
     <Compile Include="Quotes\QuoteService.cs" />
     <Compile Include="Quotes\ViewModels\FreeFormQuoteViewModel.cs" />
     <Compile Include="Quotes\ViewModels\QuoteItemsViewModel.cs" />
+    <Compile Include="Quotes\ViewModels\SaveProductRequest.cs" />
     <Compile Include="ResultNotification.cs" />
     <Compile Include="BaseNotificationRequest.cs" />
     <Compile Include="BaseNotification.cs" />
