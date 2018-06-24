@@ -37,6 +37,8 @@ namespace Msr.Services.Workflows.ViewModels
         [Display(Name = "Delete All Revs")]
         public string AllRevs { get; set; }
 
+        public bool ShowCancel { get; set; }
+
         public void SetUp(List<ShowApplicableWorkflowsResult> workflows)
         {
             WorkflowsList = workflows.Select(x => new SelectListItem {Text = x.WF_Name, Value = x.Wf_Id}).ToList();

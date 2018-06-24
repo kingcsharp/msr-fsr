@@ -13,7 +13,7 @@ namespace Answer.Web.Controllers
             _workflowService = new WorkflowService();
         }
 
-        public ActionResult Submit(string objId, string returnUrl)
+        public ActionResult Submit(string objId, string returnUrl, bool showCancel = false)
         {
             var user = GetCurrentUser();
 
@@ -24,6 +24,7 @@ namespace Answer.Web.Controllers
             vm.Name = objectData.Obj_Desc;
             vm.ObjectId = objectData.Id;
             vm.ReturnUrl = returnUrl;
+            vm.ShowCancel = showCancel;
 
             var workflows = _workflowService.GetSpObjectShowApplicableWorkflows(objId, user.Id);
             vm.SetUp(workflows);

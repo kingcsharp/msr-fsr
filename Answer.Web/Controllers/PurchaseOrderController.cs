@@ -380,7 +380,8 @@ namespace Answer.Web.Controllers
 
             if (!response.HasErrors())
             {
-                return RedirectToAction("CreatePurchase", "PurchaseOrder", new { id = response.Entity, oldId = model.OBJECT_ID, refrencePo = model.REFERENCE_PO, model.Root });
+                return RedirectToAction("CreatePurchase", "PurchaseOrder",
+                    new {id = response.Entity, oldId = model.OBJECT_ID, refrencePo = model.REFERENCE_PO, model.Root});
             }
             TempData["ErrorMessage"] = response.ErrorMessage;
 
@@ -420,7 +421,8 @@ namespace Answer.Web.Controllers
 
                     var url = Url.Action("PurchaseOrderMultifill", "PurchaseOrder", new { id = model.OBJECT_ID });
 
-                    return RedirectToAction("Submit", "Workflow", new { objId = model.OBJECT_ID, returnUrl = url });
+                    return RedirectToAction("Submit", "Workflow", new { objId = model.OBJECT_ID, returnUrl = url, showCancel = true });
+
 
                 }
                 modelpo.Setup(_purchesOrderService, currentUser);
