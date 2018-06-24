@@ -232,7 +232,7 @@
                                                             <div class="form-group">
                                                                 <label class="control-label  col-sm-2" for="field42">Expected Cycle Time:</label>
                                                                 <div class="controls col-sm-8">
-                                                                    @Html.EditorFor(model => model.ExpectedCycleTime, new { htmlAttributes = new { @class = "form-control" } })
+                                                                    @Html.TextBoxFor(model => model.ExpectedCycleTime, new { @class = "form-control" })
                                                                     @Html.ValidationMessageFor(model => model.ExpectedCycleTime, "", new { @class = "text-danger" })
                                                                 </div>
                                                             </div><div class="form-group">

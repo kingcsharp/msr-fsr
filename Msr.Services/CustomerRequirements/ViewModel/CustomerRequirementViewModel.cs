@@ -50,7 +50,8 @@ namespace Msr.Services.CustomerRequirements.ViewModel
         public string ForecastedVolumes { get; set; }
         public string SpecialPackagingShipping { get; set; }
         public DateTime? ExpectedQuoteDate { get; set; }
-        public string ExpectedCycleTime { get; set; }
+        [Range(0, int.MaxValue, ErrorMessage = "Please enter a whole number")]
+        public int? ExpectedCycleTime { get; set; }
         public string PickupNotification { get; set; }
         public string ShippingMethod { get; set; }
         public string AdditionalInformation { get; set; }

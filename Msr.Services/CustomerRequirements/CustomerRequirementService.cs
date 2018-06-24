@@ -4,6 +4,7 @@ using Msr.Models.CustomerRequirements;
 using Msr.Repositories;
 using Msr.Services.CustomerRequirements.ViewModel;
 using Msr.Services.Quotes;
+using Msr.Services.Quotes.ViewModels;
 
 namespace Msr.Services.CustomerRequirements
 {
@@ -41,8 +42,21 @@ namespace Msr.Services.CustomerRequirements
                     _dbContext.CustomerSubmittedRequirements.Add(entity);
                     _dbContext.SaveChanges();
 
-                    entity.Description = model.RequirementName;
-                    _quoteService.SaveProduct(entity, response, ntLogin);
+                    var saveProduct = new SaveProductRequest
+                    {
+                        ProductName = model.RequirementName,
+                        SupplierId = entity.SupplierId,
+                        PartId = entity.PartId,
+                        NtLogin = ntLogin,
+                        LeadTime = entity.LeadTime,
+                        Price = entity.Price,
+                        CustomerRequirementId = entity.Id,
+                        Division = entity.Division,
+                        LocationId = entity.LocationId,
+                        CycleTime = model.ExpectedCycleTime
+                    };
+
+                    _quoteService.SaveProduct(saveProduct);
                 }
 
                 response.SuccessMessage = "Customer Requirements has been submitted successfully.";

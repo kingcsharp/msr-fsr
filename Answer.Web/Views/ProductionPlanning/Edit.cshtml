@@ -60,7 +60,15 @@
                                 }
                                 @if (Model.HasQuote)
                                 {
-                                    <span class="pull-right btn btn-primary" style="margin-left: 10px;" data-id="@Model.CustomerSubmitId" data-placement="top" title="" data-original-title="Generates a Quote Preview" data-toggle="modal" data-target="#quoteModal"><i class="fa fa-eye"></i>Preview Quote</span>
+                                    <span class="pull-right btn btn-primary" style="margin-left: 10px;" 
+                                          data-id="@Model.CustomerSubmitId" 
+                                          data-object="@Model.PObjectId" 
+                                          data-placement="top" title="" 
+                                          data-original-title="Generates a Quote Preview" 
+                                          data-toggle="modal" 
+                                          data-target="#quoteModal">
+                                        <i class="fa fa-eye"></i>Preview Quote
+                                    </span>
                                 }
                             </div>
                         }
@@ -90,6 +98,8 @@
     <script type="text/javascript" src="~/assets/js/ObjectAssign.js"></script>
     <script type="text/javascript" src="~/assets/js/grids/requirement-steps.js"></script>
     <script src="~/assets/js/grids/comman.js"></script>
+    @Scripts.Render("~/bundles/js/jqueryval")
+
     <script type="text/javascript">
 
         $(document).ready(function() {
@@ -110,10 +120,12 @@
                 $("#totalSalePrice").val(parseFloat(@Model.TotalSalePrice).toFixed(2));
             }
 
-            $('#Print').on('click',
-                function() {
-                    $('#printThis').printThis();
-                });
+            $('#Print').on('click', function () {
+                $('#production-planning-form').removeData('validator');
+                $('#production-planning-form').removeData('unobtrusiveValidation');
+                $('#production-planning-form').validate().cancelSubmit = true;
+                $('#printThis').printThis();
+            });
 
             $('#ProductProcedureId').on('change',
                 function() {

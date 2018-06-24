@@ -1,6 +1,5 @@
 ﻿function eLoaderOpen() {
     $("#emodel").modal({
-
         backdrop: 'static',
         keyboard: false
     });

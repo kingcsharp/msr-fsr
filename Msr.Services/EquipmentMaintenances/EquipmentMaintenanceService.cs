@@ -71,7 +71,7 @@ namespace Msr.Services.EquipmentMaintenances
 
         public List<LocationView> GetLocation()
         {
-            return _dbContext.LocationViews.Where(x => x.ParentLocation == null).ToList();
+            return _dbContext.LocationViews.Where(x => x.ParentLocation == null && x.Name != "").ToList();
         }
 
         public List<LocationView> GetSubLocation1(string locationId)
@@ -80,10 +80,8 @@ namespace Msr.Services.EquipmentMaintenances
             {
                 return new List<LocationView>();
             }
-            else
-            {
-                return _dbContext.LocationViews.Where(x => x.ParentLocation == locationId).ToList();
-            }
+
+            return _dbContext.LocationViews.Where(x => x.ParentLocation == locationId).ToList();
         }
 
         public List<LocationView> GetPrimaryLocation()
