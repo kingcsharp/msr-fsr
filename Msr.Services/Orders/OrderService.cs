@@ -811,7 +811,7 @@ namespace Msr.Services.Orders
             var p = new DynamicParameters();
 
             p.Add("@RET_STATUS", dbType: DbType.String, direction: ParameterDirection.Output, size: 500);
-            p.Add("@MSGS", dbType: DbType.String, direction: ParameterDirection.Output, size: 50);
+            p.Add("@MSGS", dbType: DbType.String, direction: ParameterDirection.Output, size: 100);
             p.Add("@ID", taskId.ToString(), DbType.String, ParameterDirection.Input, size: 50);
             p.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input, size: 50);
 

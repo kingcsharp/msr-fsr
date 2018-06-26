@@ -230,6 +230,8 @@
                 } else {
                     eLoaderClose();
                     var currentStep = $(".slides li[data-stepid='" + stepId + "']");
+                    $(currentStep).removeClass('waiting');
+                    $(currentStep).addClass('requested');
                     $(currentStep).trigger("click");
                 }
             },
@@ -254,7 +256,7 @@
                     eLoaderClose();
                     $(currentStep).trigger("click");
                 } else {
-                    eLoaderError(error);
+                    eLoaderError(data);
                 }
             },
             error: function (error) {

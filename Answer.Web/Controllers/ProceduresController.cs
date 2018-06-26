@@ -116,7 +116,7 @@ namespace Answer.Web.Controllers
 
         public ActionResult ProceduresData(JqGridParam param)
         {
-            var totalRows = _proceduresService.GetProceduresQueryable().Where(x => x.Status != "DELETED" && x.Status != "OLD");
+            var totalRows = _proceduresService.GetProceduresQueryable();
 
             if (param.where != null && param.where.rules.Any())
             {

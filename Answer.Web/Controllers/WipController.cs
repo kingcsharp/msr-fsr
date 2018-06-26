@@ -496,6 +496,8 @@ namespace Answer.Web.Controllers
             }
 
             response.LoggedUserIdResult = loggedUserId;
+            response.TaskEditDataResult.StepTitle = currentStep.Title;
+            response.TaskEditDataResult.Description = currentStep.Description;
 
             foreach (var monitorTemplate in response.MonitorTemplateResult)
             {

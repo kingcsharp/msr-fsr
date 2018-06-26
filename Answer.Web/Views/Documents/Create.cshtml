@@ -113,8 +113,10 @@
         function SelectIds() {
             new FileUploaderGrid().SelectIds();
         }
+         
         function SelectIds() {
-            FileUploaderGrid().SelectIdsForAdd(fileUploader, '@Url.Action("FileUploaderBootstrap", "Doc")');
+            FileUploaderGrid().SelectIdsForAdd('@Url.Action("FileUploaderBootstrap", "Doc")');
         }
+    
     </script>
 }

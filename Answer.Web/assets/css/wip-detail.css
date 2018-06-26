@@ -11,6 +11,7 @@
 #carousel .slides > li.flex-active-slide {
     border: 1px #202020 solid;
     background-color: #fff;
+    border: 3px #202020 solid;
 }
 #carousel .slides > li div {
     font-size:14px;

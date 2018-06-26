@@ -275,39 +275,16 @@
 
     <script type="text/javascript">
 
-        $('#print-other-report').on('click',
-            function() {
+        $('#print-other-report').on('click', function() {
                 $('#print-other-content').printThis();
-            });
+        });
 
-        $('#print-traveler-report').on('click',
-            function () {
+        $('#ncr-print-button').on('click', function () {
+                $('#ncr-print').printThis({ canvas: true });
+        });
+
+        $('#print-traveler-report').on('click', function() {
                 $('#print-traveler-container').printThis({ canvas: true });
-            });
-
-        function PrintReport(id) {
-
-            var contents = document.getElementById(id).innerHTML;
-            var frame1 = document.createElement('iframe');
-
-            frame1.name = "frame1";
-            frame1.style.position = "absolute";
-            document.body.appendChild(frame1);
-            var frameDoc = frame1.contentWindow ? frame1.contentWindow : frame1.contentDocument.document ? frame1.contentDocument.document : frame1.contentDocument;
-            frameDoc.document.open();
-            frameDoc.document.write('<html><head><title></title>');
-            frameDoc.document.write('</head><body>');
-            frameDoc.document.write(contents);
-            frameDoc.document.write('</body></html>');
-            document.close();
-
-            setTimeout(function () {
-                window.frames["frame1"].focus();
-                window.frames["frame1"].print();
-                document.body.removeChild(frame1);
-            }, 500);
-
-            return false;
-        }
+        });
     </script>
 }

@@ -38,5 +38,7 @@ namespace Msr.Services.Orders.Procedures
         public string AccountNumber { get; set; }
 
         public string BlanketPoNumber { get; set; }
+
+        public string AccountId { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿CREATE               PROCEDURE [dbo].[A_SP_TASK_ASSUME_CONTROL] 
-@RET_STATUS as varchar(50) OUTPUT,
-@MSGS as varchar(50) OUTPUT,
+@RET_STATUS as varchar(500) OUTPUT,
+@MSGS as varchar(500) OUTPUT,
 @ID as varchar(50),
 @strNTLogin as varchar(50)
 AS
@@ -25,7 +25,7 @@ ELSE
    BEGIN
 IF @taskStat not in ('ACCEPTED')
 	BEGIN
-	SET @RET_STATUS = 'ERROR - This task is not accepted so it can not be assumed.'
+	SET @RET_STATUS = 'ERROR - This task is not started so it can not be assumed.'
 	GOTO fin
 	END
 

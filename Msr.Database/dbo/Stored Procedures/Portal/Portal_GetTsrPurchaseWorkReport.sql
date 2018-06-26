@@ -17,7 +17,9 @@ DECLARE
 	f.CUST_LINE_ITEM AS LineItem,ap.QTY AS Quantity,ap.SERIAL, f.SUP_NAME AS SupplierName, f.CUST_NAME AS CustomerName, 
 	f.PROD_ID AS ProductId, f.PROD_NAME AS ProductName, f.PROC_ID AS ProcedureId, f.PROC_NAME AS ProcedureName, 
 	f.APP_OBJ_DESC AS OwnerPartName, f.FILL_DATE AS FillDate, sq.CUST_PURCH_NUM AS CustomerPurchaseNumber, 
-	@accountNum AS AccountNumber, @blanketPONum AS BlanketPoNumber FROM A_V_FILLS_SEARCH f 
+	@accountNum AS AccountNumber, @blanketPONum AS BlanketPoNumber, 
+	f.ACCOUNT_ID as AccountId
+	FROM A_V_FILLS_SEARCH f 
 	LEFT OUTER JOIN A_V_ACTUAL_PARTS_APPROVED_DATA ap on f.FILL_OBJ_ID = ap.ID 
 	LEFT OUTER JOIN A_V_PURCHASES_WITH_SUPPLIER_QUOTES sq on f.PURCHASE_HIST_ID = sq.PURCH_HIST_ID
 	WHERE f.PURCH_ITEM_ID IN (SELECT ID FROM A_ORDER_ITEMS WHERE PURCHASE_HIST_ID = @purchaseHistoryId)

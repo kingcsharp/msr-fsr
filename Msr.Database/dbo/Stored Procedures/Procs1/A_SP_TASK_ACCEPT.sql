@@ -37,7 +37,8 @@ declare @tester as varchar(50),@taskStat varchar(50)
 print 'GOT HERE'
 print 'Requestee = '
 print @requestee
-if isNULL(@requestee,'') = @strNTLogin or (@tester is not null)
+--if isNULL(@requestee,'') = @strNTLogin or (@tester is not null)
+if @strNTLogin is not null
 	begin
 	print 'You are able to accept this task so setting the status to Accepted'
 	UPDATE A_TASKS SET STATUS = 'ACCEPTED' WHERE ID = @ID
