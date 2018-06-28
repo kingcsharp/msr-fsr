@@ -128,27 +128,7 @@ namespace Msr.Services.Parts
 
                 _dbContext.Database.ExecuteStoredProcedure(savePartProcedure);
 
-                if (model.SubPartList != null && model.SubPartList.Any())
-                {
-                    foreach (var subPart in model.SubPartList)
-                    {
-                        var saveSubPartEditProcedure = new UpdateSubPartProcedure
-                        {
-                            NtLogin = model.NTLogin,
-                            Qty = subPart.Qty,
-                            ParentObjId = model.ObjID,
-                            NickName = subPart.NickName,
-                            PartId = subPart.PartId
-                        };
-
-                        if (!string.IsNullOrWhiteSpace(subPart.Id))
-                        {
-                            saveSubPartEditProcedure.Id = subPart.Id;
-                        }
-
-                        _dbContext.Database.ExecuteStoredProcedure(saveSubPartEditProcedure);
-                    }
-                }
+                SaveSubParts(model);
 
                 return result;
             }
@@ -207,6 +187,7 @@ namespace Msr.Services.Parts
                 _dbContext.Database.ExecuteStoredProcedure(deleteReferenceFileProcedure);
 
                 if (model.ReferenceFiles != null)
+                {
                     foreach (var file in model.ReferenceFiles.Split(','))
                     {
                         var saveFileProcedure =
@@ -220,6 +201,10 @@ namespace Msr.Services.Parts
 
                         _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
                     }
+                }
+
+                model.ObjID = result.Entity;
+                SaveSubParts(model);
 
                 return result;
             }
@@ -506,6 +491,26 @@ namespace Msr.Services.Parts
             {
                 var message = "Error occured:" + ex.Message;
                 return message;
+            }
+        }
+
+        private void SaveSubParts(AddPartViewModel model)
+        {
+            if (model.SubPartList != null && model.SubPartList.Any())
+            {
+                foreach (var subPart in model.SubPartList)
+                {
+                    var saveSubPartEditProcedure = new UpdateSubPartProcedure
+                    {
+                        NtLogin = model.NTLogin,
+                        Qty = subPart.Qty,
+                        ParentObjId = model.ObjID,
+                        NickName = subPart.NickName,
+                        PartId = subPart.PartId
+                    };
+
+                    _dbContext.Database.ExecuteStoredProcedure(saveSubPartEditProcedure);
+                }
             }
         }
     }
