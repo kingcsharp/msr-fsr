@@ -192,7 +192,7 @@ namespace Answer.Web.Controllers
             if (ModelState.IsValid)
             {
                 model.NTLogin = getCurrentUser.Id;
-                model.SubPartList = null;
+                model.SubParts = null;
                 model.Company = getCurrentUser.Company;
 
                 var response = _partsService.Create(model);
