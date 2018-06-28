@@ -31,6 +31,7 @@ namespace Msr.Services.Parts
         {
             return _dbContext.PartsViews;
         }
+
         public IQueryable<PartApprovedView> GetPartsApprovedQueryable(string co)
         {
             return _dbContext.PartApprovedViews.Where(x => x.Status.Contains("APPROVED") && x.CreatingCo == co);
@@ -56,7 +57,9 @@ namespace Msr.Services.Parts
             //need to be dynamic
             var NTLogin = new SqlParameter("@strNTLogin", ntlogin);
 
-            var result = _dbContext.Database.SqlQuery<SelectFile>("EXEC A_SP_FILES_SHOW_FOR_OBJECT  @objID, @type, @strNTLogin", objID, selecttype, NTLogin).ToList();
+            var result = _dbContext.Database
+                .SqlQuery<SelectFile>("EXEC A_SP_FILES_SHOW_FOR_OBJECT  @objID, @type, @strNTLogin", objID, selecttype,
+                    NTLogin).ToList();
 
             return result;
         }
@@ -125,8 +128,31 @@ namespace Msr.Services.Parts
 
                 _dbContext.Database.ExecuteStoredProcedure(savePartProcedure);
 
+                if (model.SubPartList != null && model.SubPartList.Any())
+                {
+                    foreach (var subPart in model.SubPartList)
+                    {
+                        var saveSubPartEditProcedure = new UpdateSubPartProcedure
+                        {
+                            NtLogin = model.NTLogin,
+                            Qty = subPart.Qty,
+                            ParentObjId = model.ObjID,
+                            NickName = subPart.NickName,
+                            PartId = subPart.PartId
+                        };
+
+                        if (!string.IsNullOrWhiteSpace(subPart.Id))
+                        {
+                            saveSubPartEditProcedure.Id = subPart.Id;
+                        }
+
+                        _dbContext.Database.ExecuteStoredProcedure(saveSubPartEditProcedure);
+                    }
+                }
+
                 return result;
             }
+
             catch (Exception ex)
             {
                 result.AddError(ex.Message);
@@ -161,7 +187,7 @@ namespace Msr.Services.Parts
                     SupplierCo = model.SupplierCo,
                     ProductType = model.ProductType,
                     ProcVerb = model.ProcVerb,
-                    SpecialCustomers = model.SpecialCustomers != null ? string.Join(", ", model.SpecialCustomers) : DBNull.Value.ToString(CultureInfo.InvariantCulture),
+                    SpecialCustomers = model.SpecialCustomers != null ? string.Join(", ", model.SpecialCustomers): DBNull.Value.ToString(CultureInfo.InvariantCulture),
                     CustomerExceptions = model.CustomerExceptions != null ? string.Join(", ", model.CustomerExceptions) : DBNull.Value.ToString(CultureInfo.InvariantCulture),
                     Customers = model.Customers,
                     Price = model.Price,
@@ -171,7 +197,12 @@ namespace Msr.Services.Parts
                 _dbContext.Database.ExecuteStoredProcedure(savePartProcedure);
                 result.Entity = savePartProcedure.NewObjID;
 
-                var deleteReferenceFileProcedure = new DeleteFileProcedure() { ObjID = savePartProcedure.NewObjID, Type = null, NTLogin = model.NTLogin };
+                var deleteReferenceFileProcedure = new DeleteFileProcedure()
+                    {
+                        ObjID = savePartProcedure.NewObjID,
+                        Type = null,
+                        NTLogin = model.NTLogin
+                    };
 
                 _dbContext.Database.ExecuteStoredProcedure(deleteReferenceFileProcedure);
 
@@ -220,7 +251,8 @@ namespace Msr.Services.Parts
             }
         }
 
-        public List<PartsSafetyStock> GetPartSafetyStocksByLocation(IEnumerable<string> locationIds, string partObjectId)
+        public List<PartsSafetyStock> GetPartSafetyStocksByLocation(IEnumerable<string> locationIds,
+            string partObjectId)
         {
             var locationIdsParam = new SqlParameter("@locationIdsParam", String.Join("','", locationIds));
             var partObjectIdParam = new SqlParameter("@partObjectIdParam", partObjectId);
@@ -297,7 +329,7 @@ namespace Msr.Services.Parts
             var loginIdParam = new SqlParameter("@loginIdParam", loginId);
             var emailTypeParam = new SqlParameter("@emailTypeParam", emailType);
             var safetyStockRole = _dbContext.Database.ExecuteSqlCommand("INSERT INTO A_PARTS_SAFETY_STOCK_ROLES (ID,SAFETY_STOCK_ID,ROLE_ID,EMAIL_TYPE,DRCM,MODBY) " +
-                                                                        "VALUES (newID(), @safetyStockIdParam, @roleParam, @emailTypeParam, getDate(), @loginIdParam)",
+                "VALUES (newID(), @safetyStockIdParam, @roleParam, @emailTypeParam, getDate(), @loginIdParam)",
                 safetyStockIdParam, roleParam, emailTypeParam, loginIdParam);
         }
 
@@ -326,6 +358,17 @@ namespace Msr.Services.Parts
         public List<ProductSupplierView> GetProductSuppliersByCreatingCo(string co)
         {
             var result = _dbContext.Database.SqlQuery<ProductSupplierView>($"SELECT DISTINCT TOP 500 NAME,ID FROM A_V_COMPANIES_DROP_SEARCH WHERE ROOT_CO_ID = '{co}'").ToList();
+            return result;
+        }
+
+
+        public List<SubPartView> GetSubPartByObjId(string Id, string ntLogin)
+        {
+            var strId = new SqlParameter("@objID", Id);
+            var login = new SqlParameter("@strNTLogin", ntLogin);
+
+            var result = _dbContext.Database.SqlQuery<SubPartView>("Exec A_SP_PARTS_GET_SUB_PART_DATA_FROM_PARENT_OBJ_ID @objID, @strNTLogin", strId, login).ToList();
+
             return result;
         }
 
@@ -389,7 +432,8 @@ namespace Msr.Services.Parts
             }
         }
 
-        private void ProcessRow(string ntLogin, List<ImportPartViewModel> parts, ResultNotification<List<ImportPartViewModel>> result)
+        private void ProcessRow(string ntLogin, List<ImportPartViewModel> parts,
+            ResultNotification<List<ImportPartViewModel>> result)
         {
             foreach (var part in parts)
             {
@@ -434,11 +478,34 @@ namespace Msr.Services.Parts
                         }
                     }
                 }
-                catch (Exception ex) 
+                catch (Exception ex)
                 {
                     part.Messages.Add($"Unable to process part, PartName:'{part.Name}' PartId:'{part.PartId}' ");
                     result.Entity.Add(part);
                 }
+            }
+        }
+
+        public List<SelectFile> GetPartsList(string co)
+        {
+            var result = _dbContext.Database.SqlQuery<SelectFile>($"SELECT distinct ID as Value,NAME as Show FROM A_V_PART_DATA_BY_APPROVED_DATA WHERE STATUS LIKE 'APPROVED%' AND CREATING_CO = '{co}'")
+                .Where(x => !string.IsNullOrWhiteSpace(x.Show)).ToList();
+
+            return result;
+        }
+
+        public string SubPartDeleteById(string id)
+        {
+            try
+            {
+                var result = _dbContext.Database.SqlQuery<string>($"DELETE FROM A_PARTS_SUB_PARTS WHERE ID = '{id}'").SingleOrDefault();
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                var message = "Error occured:" + ex.Message;
+                return message;
             }
         }
     }

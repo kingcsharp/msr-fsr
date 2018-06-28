@@ -1,0 +1,67 @@
+﻿@model Msr.Services.Parts.ViewModels.AddPartViewModel
+<div class="form-group collapse" id="SubPartItems">
+    <div id="add-steps">
+        <label class="control-label col-md-2"> </label>
+        <div class="col-md-8">
+            <input type="hidden" value="@Model.SubPartList.Count" id="totalRecords"/>
+            <table class="table table-bordered table-hover table-striped table-condensed" id="sub-parts">
+                <thead>
+                <tr data-toggle="tooltip" data-placement="top" title="">
+                    <th class="text-center" width="40%">Part</th>
+                    <th class="text-center" width="10%">Qty</th>
+                    <th class="text-center" width="40%">Nick Name</th>
+                    <th class="text-center" width="10%">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                @Html.DropDownList("default",Model.PartList, new {@id = "defaultProcessList", style = "display:none"})
+
+                @for (int i = 0; i < Model.SubPartList.Count; i++)
+                {
+                    var rowid = "row" + i;
+                    <tr id="@rowid" data-value="@Model.SubPartList[i].Id" data-placement="top">
+                        <td>
+                            @Html.HiddenFor(x => Model.SubPartList[i].Id)
+                            @for (int j = 0; j < Model.PartList.Count; j++)
+                            {
+                                Model.PartList[j].Selected = Model.PartList[j].Value == Model.SubPartList[i].PartId;
+                            }
+                            @Html.DropDownListFor(model => model.SubPartList[i].PartId, Model.PartList, new {@class = "form-control default-template-id"})
+                            @Html.ValidationMessageFor(model => model.SubPartList[i].PartId, "", new {@class = "text-danger"})
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(x => Model.SubPartList[i].Qty, new {@class = "form-control"})
+                            @Html.ValidationMessageFor(x => Model.SubPartList[i].Qty, "", new {@class = "text-danger"})
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(x => Model.SubPartList[i].NickName, new {@class = "form-control"})
+                            @Html.ValidationMessageFor(x => Model.SubPartList[i].NickName, "", new {@class = "text-danger"})
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-xs btn-danger"
+                                    onclick="javascript: DeleteSubPart(this, @Model.SubPartList[i].Id);"
+                                    data-id="@Model.SubPartList[i].Id"
+                                    title="Remove Sub Part"
+                                    data-original-title="Remove Sub Part">
+                                <i class="fa fa-trash-o"></i>
+                            </button>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+            <div>
+                <button type="button" id="add-sub-part-row" 
+                        class="btn btn-primary pull-left" 
+                        data-toggle="tooltip" 
+                        data-placement="top" 
+                        title="Add a Sub Part to the Part"
+                        data-original-title="Add a Sub Part to the Part">
+                    <i class="fa fa-plus-circle"></i> Add Sub Part
+                </button>
+            </div>
+        </div><br/><br/>
+      
+    </div>
+</div>

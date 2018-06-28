@@ -212,6 +212,8 @@
     <Compile Include="Jobs\SpAdminJob.cs" />
     <Compile Include="Orders\Messaging\TaskLogDto.cs" />
     <Compile Include="Parts\Procedures\PartsImportAndUpdateExternalPartProcedure.cs" />
+    <Compile Include="Parts\Procedures\UpdateSubPartProcedure.cs" />
+    <Compile Include="Parts\ViewModels\SaveSubPartViewModel.cs" />
     <Compile Include="Parts\ViewModels\ImportPartViewModel.cs" />
     <Compile Include="Procedures\Procedures\DeleteProcedure.cs" />
     <Compile Include="Procedures\Procedures\ProcedureImportExternalProcedure.cs" />

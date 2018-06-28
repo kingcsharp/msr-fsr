@@ -25,6 +25,8 @@ namespace Msr.Services.Parts.ViewModels
             ListPartsTypes = new List<SelectListItem>();
             ListSupplierCompany = new List<SelectListItem>();
             PartsTypes = new List<SelectListItem>();
+            SubPartList = new List<SaveSubPartViewModel>();
+            PartList = new List<SelectListItem>();
         }
 
         public string Id { get; set; }
@@ -56,9 +58,6 @@ namespace Msr.Services.Parts.ViewModels
 
         [DisplayName("Shipping Weight Per Ordering Unit :")]
         public double? UnitShippingWeight { get; set; }
-
-        [DisplayName("Sub-parts :")]
-        public string SubParts { get; set; }
 
         [DisplayName("Allow customers to see actual parts availability? :")]
         public Int16? CustomerSeeAvailability { get; set; }
@@ -115,6 +114,10 @@ namespace Msr.Services.Parts.ViewModels
         [DisplayName("Reference Theories :")]
         public List<string> ReferenceTheories { get; set; }
 
+        public List<SaveSubPartViewModel> SubPartList { get; set; }
+
+        public string SubParts { get; set; }
+
         public List<SelectListItem> ListInternalEqualParts { get; set; }
 
         public IList<SelectListItem> ListExternalEqualParts { get; set; }
@@ -145,9 +148,11 @@ namespace Msr.Services.Parts.ViewModels
 
         public List<DocLink> DocLinks { get; set; }
 
+        public List<SelectListItem> PartList { get; set; }
 
         public void Setup(DocumentFilesService documentFilesService, PartsService partsService, PartTypeService partTypeService, string creatingCo, string ntlog)
         {
+
             OrderingUnits = Commons.Lookups.LookupItems.OrderingUnits();
 
             ShippingWeightTypes = new List<SelectListItem>
@@ -299,6 +304,14 @@ namespace Msr.Services.Parts.ViewModels
             SpecialCustomers = partsService.GetPartSpecialCustomers(id: Id).ToList();
 
             DocLinks = documentFilesService.GetDocByObjectId(ObjID);
+
+            PartList = partsService.GetPartsList(creatingCo).Select(x => new SelectListItem
+            {
+                Text = x.Show,
+                Value = x.Value.ToString()
+            }).OrderBy(x => x.Text).ToList();
+            PartList.Insert(0, new SelectListItem { Text = "Select", Value = "" });
+
         }
 
         public AddPartViewModel MapToDto(PartsView model)
@@ -326,6 +339,25 @@ namespace Msr.Services.Parts.ViewModels
                 ProcVerb = model.ProcVerb,
                 Price = model.Price != null ? $"{model.Price:0.00}" : null
             };
+        }
+
+        public List<SaveSubPartViewModel> SubPartMapToDto(List<SubPartView> model)
+        {
+            var subparts = new List<SaveSubPartViewModel>();
+
+            foreach (var item in model)
+            {
+                var subPartModel = new SaveSubPartViewModel
+                {
+                    Id = item.ID,
+                    PartId = item.SUB_PART_ID,
+                    Qty = Convert.ToInt32(item.QTY),
+                    NickName = item.NICK_NAME
+                };
+                subparts.Add(subPartModel);
+            }
+
+            return subparts;
         }
     }
 }

@@ -153,6 +153,7 @@
     <Compile Include="Parts\PartsView.cs" />
     <Compile Include="Parts\PartsWithTaskAndResult.cs" />
     <Compile Include="Parts\PartsSafetyStock.cs" />
+    <Compile Include="Parts\SubPartView.cs" />
     <Compile Include="PartTypes\PartTypesApproved.cs" />
     <Compile Include="PartTypes\PartTypesView.cs" />
     <Compile Include="Parts\SelectInternalPart.cs" />

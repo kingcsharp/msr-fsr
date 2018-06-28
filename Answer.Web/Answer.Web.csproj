@@ -1361,6 +1361,7 @@
     <Content Include="Views\Procedures\Partials\_InnerMoniter.cshtml" />
     <Content Include="Views\AdminCostSettings\Index.cshtml" />
     <Content Include="Views\Quote\_ViewRequirementsQuote.cshtml" />
+    <Content Include="Views\Parts\SubParts.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

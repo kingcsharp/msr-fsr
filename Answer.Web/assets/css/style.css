@@ -1461,6 +1461,18 @@ color: black;
     width: 100%;
 }
 
+.part button.sub-part::before {
+    content: 'Hide Sub Parts';
+    display: block;
+    width: 100%;
+}
+
+.part button.sub-part.collapsed::before {
+    content: 'Show Sub Parts';
+    display: block;
+    width: 100%;
+}
+
 .ui-jqgrid .ui-jqgrid-htable .ui-th-div {
     /*height: 67px;*/
 }

@@ -192,7 +192,7 @@ namespace Answer.Web.Controllers
             if (ModelState.IsValid)
             {
                 model.NTLogin = getCurrentUser.Id;
-                model.SubParts = null;
+                model.SubPartList = null;
                 model.Company = getCurrentUser.Company;
 
                 var response = _partsService.Create(model);
@@ -227,9 +227,11 @@ namespace Answer.Web.Controllers
 
             part = part.MapToDto(model);
 
-            part.Setup(_documentFilesService, _partsService, _partTypeService, getCurrentUser.Company, getCurrentUser.Id);
+            var subPartModel = _partsService.GetSubPartByObjId(id, getCurrentUser.Id);
 
-            part.InternalEqualParts = _partsService.GetInternalEqualPartByPartId(part.Id);
+            part.SubPartList = part.SubPartMapToDto(subPartModel);
+
+            part.Setup(_documentFilesService, _partsService, _partTypeService, getCurrentUser.Company, getCurrentUser.Id);
 
             part.InternalEqualParts = _partsService.GetInternalEqualPartByPartId(part.Id);
 
@@ -259,8 +261,7 @@ namespace Answer.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                model.NTLogin = GetCurrentUser().Id;
-                model.SubParts = null;
+                model.NTLogin = getCurrentUser.Id;
 
                 var response = _partsService.Update(model);
 
@@ -399,6 +400,23 @@ namespace Answer.Web.Controllers
             Response.AddHeader("Content-Disposition", "attachment;filename=parts-upload.csv");
             Response.Write(string.Join(",", ImportPartViewModel.GetHeaderColumns()));
             Response.End();
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult SubPartDelete(string id)
+        {
+
+            var response = _partsService.SubPartDeleteById(id: id);
+
+            if (response != null)
+            {
+                TempData["SuccessMessage"] = "Sub Part deleted successfully.";
+
+                return Json("ok", JsonRequestBehavior.AllowGet);
+            }
+
+            TempData["ErrorMessage"] = "Something went wrong.";
+            return Json("Error", JsonRequestBehavior.AllowGet);
         }
     }
 }
