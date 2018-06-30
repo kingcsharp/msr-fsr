@@ -167,7 +167,7 @@ namespace Msr.Services.Parts
                     SupplierCo = model.SupplierCo,
                     ProductType = model.ProductType,
                     ProcVerb = model.ProcVerb,
-                    SpecialCustomers = model.SpecialCustomers != null ? string.Join(", ", model.SpecialCustomers): DBNull.Value.ToString(CultureInfo.InvariantCulture),
+                    SpecialCustomers = model.SpecialCustomers != null ? string.Join(", ", model.SpecialCustomers) : DBNull.Value.ToString(CultureInfo.InvariantCulture),
                     CustomerExceptions = model.CustomerExceptions != null ? string.Join(", ", model.CustomerExceptions) : DBNull.Value.ToString(CultureInfo.InvariantCulture),
                     Customers = model.Customers,
                     Price = model.Price,
@@ -178,11 +178,11 @@ namespace Msr.Services.Parts
                 result.Entity = savePartProcedure.NewObjID;
 
                 var deleteReferenceFileProcedure = new DeleteFileProcedure()
-                    {
-                        ObjID = savePartProcedure.NewObjID,
-                        Type = null,
-                        NTLogin = model.NTLogin
-                    };
+                {
+                    ObjID = savePartProcedure.NewObjID,
+                    Type = null,
+                    NTLogin = model.NTLogin
+                };
 
                 _dbContext.Database.ExecuteStoredProcedure(deleteReferenceFileProcedure);
 
@@ -471,27 +471,24 @@ namespace Msr.Services.Parts
             }
         }
 
-        public List<SelectFile> GetPartsList(string co)
+        public ResultNotification<string> SubPartDeleteById(string id)
         {
-            var result = _dbContext.Database.SqlQuery<SelectFile>($"SELECT distinct ID as Value,NAME as Show FROM A_V_PART_DATA_BY_APPROVED_DATA WHERE STATUS LIKE 'APPROVED%' AND CREATING_CO = '{co}'")
-                .Where(x => !string.IsNullOrWhiteSpace(x.Show)).ToList();
-
-            return result;
-        }
-
-        public string SubPartDeleteById(string id)
-        {
+            var ressult = new ResultNotification<string>();
             try
             {
-                var result = _dbContext.Database.SqlQuery<string>($"DELETE FROM A_PARTS_SUB_PARTS WHERE ID = '{id}'").SingleOrDefault();
+                var numOfRowEffected = _dbContext.Database.ExecuteSqlCommand($"DELETE FROM A_PARTS_SUB_PARTS WHERE ID = '{id}'");
 
-                return result;
+                if (numOfRowEffected == 0)
+                {
+                    ressult.AddError("There is an eroor deleting part");
+                }
             }
             catch (Exception ex)
             {
-                var message = "Error occured:" + ex.Message;
-                return message;
+                ressult.AddError("There is an eroor deleting part");
             }
+
+            return ressult;
         }
 
         private void SaveSubParts(AddPartViewModel model)
@@ -509,9 +506,15 @@ namespace Msr.Services.Parts
                         PartId = subPart.PartId
                     };
 
+                    if (!string.IsNullOrWhiteSpace(subPart.Id))
+                    {
+                        saveSubPartEditProcedure.Id = subPart.Id;
+                    }
+
                     _dbContext.Database.ExecuteStoredProcedure(saveSubPartEditProcedure);
                 }
             }
         }
+
     }
 }

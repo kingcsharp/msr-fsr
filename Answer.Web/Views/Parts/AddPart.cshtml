@@ -7,9 +7,7 @@
 <link rel="stylesheet" type="text/css" href="/assets/css/ui.jqgrid.css">
 <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
 <link rel="stylesheet" type="text/css" href="/assets/css/hopscotch.css">
-
 @Styles.Render("~/bundles/css/fileinput")
-
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="row">
@@ -18,7 +16,7 @@
             </h2>
             <div class="col-lg-10">
                 @Html.Partial("Message")
-                @using (Html.BeginForm("AddPart", "Parts", FormMethod.Post, new { @class = "form form-horizontal partCreate" }))
+                @using (Html.BeginForm("AddPart", "Parts", FormMethod.Post, new { @class = "form form-horizontal partCreate", @id = "part-form" }))
                 {
                     @Html.AntiForgeryToken()
 
@@ -48,12 +46,11 @@
                             <label class="control-label col-md-2"> </label>
                             <div class="col-md-8">
                                 <button type="button" class="btn btn-info sub-part collapsed" data-toggle="collapse" data-target="#SubPartItems"></button>
-                                <button type="button" class="btn btn-info info collapsed" data-toggle="collapse" data-target="#AdvanceItems"></button>        
+                                <button type="button" class="btn btn-info info collapsed" data-toggle="collapse" data-target="#AdvanceItems"></button>
                             </div>
                         </div>
-                            
-                        @Html.Partial("SubParts")
 
+                        @Html.Partial("SubParts")
                         <div id="AdvanceItems" class="collapse">
                             <div class="form-group">
                                 @Html.LabelFor(model => model.Unit, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -132,7 +129,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="form-group">
                                 @Html.LabelFor(model => model.PartType, htmlAttributes: new { @class = "control-label col-md-2" })
                                 <div class="col-md-8">
@@ -197,7 +194,7 @@
                                 </div>
                             </div>
                         </div>
-                     
+
                         <div class="form-group">
                             <div class="col-md-offset-2 col-md-8">
                                 <input type="submit" value="Submit" class="btn btn-success" />
@@ -215,13 +212,14 @@
 {
     @Scripts.Render("~/bundles/js/jqueryval")
     @Scripts.Render("~/bundles/js/fileinput")
-
+    @Scripts.Render("~/bundles/js/sub-part")
     <script type="text/javascript">
 
         var fileUploaderGrid = new FileUploaderGrid();
         var fileUploader = new FileUploader();
 
         $(document).ready(function () {
+
             var $el = $('#input-files');
 
             fileUploader.InitUploader($el,
@@ -242,67 +240,17 @@
 
             $(".select").select2({
                 placeholder: "Select",
-                allowClear: true
+                allowClear: true,
+                width:'980'
             });
 
             $("form").submit(function (e) {
                 $('.partCreate .submitselect option').prop('selected', true);
             });
 
-            $("#add-sub-part-row").click(function () {
-                var index = 0;
-                var rowsLength = $('#sub-parts tbody tr').length;
-                if (rowsLength > 0) {
-                    index = rowsLength;
-                }
-
-                var dropdownProcess = $('#defaultProcessList').html();
-
-                $('#sub-parts').append("<tr>" +
-                    "<td><select class='form-control default-template-id' name='SubPartList[" + index + "].PartId' required>" + dropdownProcess + "</select><span class=" + "text-danger field-validation-error" + " data-valmsg-for=" + "AddSubPartViewModels[" + index + "].PartId" + " data-valmsg-replace=" + "true" + "></span></td>" +
-                    "<td><input type='text' name='SubPartList[" + index + "].Qty'  class='form-control' value='' onkeyup = 'javascript:checkType(this)' required/><span class=" +
-                    "text-danger field-validation-error" + " data-valmsg-for=" + "SubPartList[" + index + "].Qty" + " data-valmsg-replace=" + "true" + "></span></td>" +
-                    "<td><input type='text' name='SubPartList[" + index + "].NickName' class='form-control' data-val-required='The Nick Name field is required.'/><span class=" + "text-danger field-validation-error" + " data-valmsg-for=" + "AddSubPartViewModels[" + index + "].NickName" + " data-valmsg-replace=" + "true" +"></span></td>" +
-                    "<td><button type='button'  class='btn btn-xs btn-danger' onclick = 'javascript: DeleteSubPart(this);' title=''><i class='fa fa-trash-o'></i></button></td></tr>");
-            });
-
-
-
-         
+            Msr.SaveOrPartUpdate.AddSubPart();
+            Msr.SaveOrPartUpdate.DeleteSubPart();
         });
-
-        function DeleteSubPart(e, value) {
-
-            if (value != null && value !== '') {
-                eModal.confirm('Are you sure?')
-                    .then(confirmCallback, optionalCancelCallback);
-
-                function confirmCallback() {
-                    eLoaderOpen();
-                    $.ajax({
-                        type: "POST",
-                        url: '/Parts/SubPartDelete/',
-                        data: {
-                            id: value
-                        },
-                        dataType: 'Json',
-                        success: function(data) {
-                            location.reload();
-                            //eLoaderError(data);
-                        },
-                        error: function (error) {
-                            eLoaderError(error);
-                        }
-                    });
-                }
-
-                function optionalCancelCallback() {}
-
-            } else {
-                $(e).closest("tr").remove();
-            }
-
-        }
 
         function SelectIds() {
             fileUploaderGrid.SelectIdsForAdd(fileUploader, '@Url.Action("FileUploaderBootstrap", "Doc")');

@@ -14,7 +14,7 @@
                 <section class="panel">
                     <div class="panel-body bio-graph-info part">
                         @Html.Partial("Message")
-                        @using (Html.BeginForm("Edit", "Parts", FormMethod.Post, new { @class = "form form-horizontal partEdit", enctype = "multipart/form-data" }))
+                        @using (Html.BeginForm("Edit", "Parts", FormMethod.Post, new { @class = "form form-horizontal partEdit", @id = "part-form", enctype = "multipart/form-data" }))
                         {
                             @Html.AntiForgeryToken()
                             @Html.HiddenFor(x => x.ObjID, new { id = "ObjectId" })
@@ -44,10 +44,10 @@
                                 <label class="control-label col-md-2"> </label>
                                 <div class="col-md-8">
                                     <button type="button" class="btn btn-info sub-part collapsed" data-toggle="collapse" data-target="#SubPartItems"></button>
-                                    <button type="button" class="btn btn-info info collapsed" data-toggle="collapse" data-target="#AdvanceItems"></button>        
+                                    <button type="button" class="btn btn-info info collapsed" data-toggle="collapse" data-target="#AdvanceItems"></button>
                                 </div>
                             </div>
-                            
+
                             @Html.Partial("SubParts")
 
                             <div id="AdvanceItems" class="collapse">
@@ -195,15 +195,15 @@
                                 </div>
                             </div>
 
-                                <div class="form-group">
-                                    <div class="col-md-offset-2 col-md-8">
-                                        <input type="submit" value="Submit" class="btn btn-success" />
-                                        @Html.ActionLink("Update & Update Min/Max Inventory Levels", "EditSafetyStock", new { id = Model.ObjID }, new { @class = "btn btn-success" })
-                                        @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-warning" })
-                                    </div>
+                            <div class="form-group">
+                                <div class="col-md-offset-2 col-md-8">
+                                    <input type="submit" value="Submit" class="btn btn-success" />
+                                    @Html.ActionLink("Update & Update Min/Max Inventory Levels", "EditSafetyStock", new { id = Model.ObjID }, new { @class = "btn btn-success" })
+                                    @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-warning" })
                                 </div>
+                            </div>
 
-                          }
+                        }
                     </div>
                 </section>
             </div>
@@ -212,12 +212,12 @@
 </div>
 @section scripts
 {
+    @Scripts.Render("~/bundles/js/sub-part")
     @Scripts.Render("~/bundles/js/jqueryval")
     @Scripts.Render("~/bundles/js/fileinput")
     <script type="text/javascript">
 
-        $(document).ready(function() {
-
+        $(document).ready(function () {
             var fileUploader = new FileUploader();
 
             fileUploader.InitEditUploader('input-files',
@@ -240,67 +240,29 @@
 
             $(".select").select2({
                 placeholder: "Select",
-                allowClear: true
+                allowClear: true,
+                width:'980'
             });
 
             $("form").submit(function() {
                 $('.partEdit .submitselect option').prop('selected', true);
             });
+
+            $(".selectSubPart").select2({
+                width: '440'
+            });
+
+            Msr.SaveOrPartUpdate.AddSubPart();
         });
 
         function SelectIds() {
             new FileUploaderGrid().SelectIds();
         }
 
-        $("#add-sub-part-row").click(function () {
-            var index = 0;
-            var rowsLength = $('#sub-parts tbody tr').length;
-            if (rowsLength > 0) {
-                index = rowsLength;
-            }
-
-            var dropdownProcess = $('#defaultProcessList').html();
-
-            $('#sub-parts').append("<tr>" +
-                "<td><select class='form-control default-template-id' name='SubPartList[" + index + "].PartId' required>" + dropdownProcess + "</select><span class=" + "text-danger field-validation-error" + " data-valmsg-for=" + "AddSubPartViewModels[" + index + "].PartId" + " data-valmsg-replace=" + "true" + "></span></td>" +
-                "<td><input type='text' name='SubPartList[" + index + "].Qty'  class='form-control' value='' onkeyup = 'javascript:checkType(this)' required/><span class=" +
-                "text-danger field-validation-error" + " data-valmsg-for=" + "SubPartList[" + index + "].Qty" + " data-valmsg-replace=" + "true" + "></span></td>" +
-                "<td><input type='text' name='SubPartList[" + index + "].NickName' class='form-control' data-val-required='The Nick Name field is required.'/><span class=" + "text-danger field-validation-error" + " data-valmsg-for=" + "AddSubPartViewModels[" + index + "].NickName" + " data-valmsg-replace=" + "true" +"></span></td>" +
-                "<td><button type='button'  class='btn btn-xs btn-danger' onclick = 'javascript: DeleteSubPart(this);' title=''><i class='fa fa-trash-o'></i></button></td></tr>");
-        });
-
-
         function DeleteSubPart(e, value) {
-
-            if (value != null && value !== '') {
-                eModal.confirm('Are you sure?')
-                    .then(confirmCallback, optionalCancelCallback);
-
-                function confirmCallback() {
-                    eLoaderOpen();
-                    $.ajax({
-                        type: "POST",
-                        url: '/Parts/SubPartDelete/',
-                        data: {
-                            id: value
-                        },
-                        dataType: 'Json',
-                        success: function(data) {
-                            location.reload();
-                            //eLoaderError(data);
-                        },
-                        error: function (error) {
-                            eLoaderError(error);
-                        }
-                    });
-                }
-
-                function optionalCancelCallback() {}
-
-            } else {
-                $(e).closest("tr").remove();
-            }
-
+            Msr.SaveOrPartUpdate.DeleteSubPartData(e, value);
         }
+
+
     </script>
 }

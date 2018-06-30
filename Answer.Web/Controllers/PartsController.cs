@@ -16,6 +16,7 @@ using Msr.Services.Parts.ViewModels;
 using Msr.Services.PartTypes;
 using Msr.Services.Locations;
 using Msr.Services.Roles;
+using Msr.Services.ProductionPlanning;
 
 namespace Answer.Web.Controllers
 {
@@ -26,6 +27,7 @@ namespace Answer.Web.Controllers
         private readonly RoleService _roleService;
         private readonly PartTypeService _partTypeService;
         private readonly DocumentFilesService _documentFilesService;
+        private readonly ProductionPlanningService _productionPlanningService;
 
         public PartsController()
         {
@@ -34,6 +36,7 @@ namespace Answer.Web.Controllers
             _roleService = new RoleService();
             _partTypeService = new PartTypeService();
             _documentFilesService = new DocumentFilesService();
+            _productionPlanningService = new ProductionPlanningService();
         }
 
         public ActionResult Index()
@@ -108,6 +111,10 @@ namespace Answer.Web.Controllers
                         {
                             totalRows = totalRows.Where(x => x.Rev == value);
                         }
+                        else
+                        {
+                            totalRows = totalRows.Where(x => x.Rev.ToString().Contains(rule.data.ToLower()));
+                        }
                     }
                     else if (rule.field == nameof(PartsView.Status))
                     {
@@ -159,7 +166,7 @@ namespace Answer.Web.Controllers
 
             part = part.MapToDto(model);
 
-            part.Setup(_documentFilesService, _partsService, _partTypeService, getCurrentUser.Company, getCurrentUser.Id);
+            part.Setup(_documentFilesService, _partsService, _partTypeService, _productionPlanningService, getCurrentUser.Company, getCurrentUser.Id);
 
             return View(part);
         }
@@ -178,7 +185,7 @@ namespace Answer.Web.Controllers
 
             var part = new AddPartViewModel();
 
-            part.Setup(_documentFilesService, _partsService, _partTypeService, getCurrentUser.Company, getCurrentUser.Id);
+            part.Setup(_documentFilesService, _partsService, _partTypeService, _productionPlanningService, getCurrentUser.Company, getCurrentUser.Id);
 
             return View(part);
         }
@@ -186,7 +193,6 @@ namespace Answer.Web.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult AddPart(AddPartViewModel model)
         {
-
             var getCurrentUser = GetCurrentUser();
 
             if (ModelState.IsValid)
@@ -206,12 +212,12 @@ namespace Answer.Web.Controllers
 
                 TempData["ErrorMessage"] = $"<strong>Something went wrong :</strong> {response.ErrorMessage}";
 
-                model.Setup(_documentFilesService, _partsService, _partTypeService, getCurrentUser.Company, getCurrentUser.Id);
+                model.Setup(_documentFilesService, _partsService, _partTypeService, _productionPlanningService, getCurrentUser.Company, getCurrentUser.Id);
 
                 return View(model);
             }
 
-            model.Setup(_documentFilesService, _partsService, _partTypeService, getCurrentUser.Company, getCurrentUser.Id);
+            model.Setup(_documentFilesService, _partsService, _partTypeService, _productionPlanningService, getCurrentUser.Company, getCurrentUser.Id);
 
             return View(model);
 
@@ -231,7 +237,7 @@ namespace Answer.Web.Controllers
 
             part.SubPartList = part.SubPartMapToDto(subPartModel);
 
-            part.Setup(_documentFilesService, _partsService, _partTypeService, getCurrentUser.Company, getCurrentUser.Id);
+            part.Setup(_documentFilesService, _partsService, _partTypeService, _productionPlanningService, getCurrentUser.Company, getCurrentUser.Id);
 
             part.InternalEqualParts = _partsService.GetInternalEqualPartByPartId(part.Id);
 
@@ -259,6 +265,18 @@ namespace Answer.Web.Controllers
         {
             var getCurrentUser = GetCurrentUser();
 
+            foreach (var item in model.SubPartList)
+            {
+                if (item.PartId == null)
+                {
+                    ModelState.AddModelError(nameof(item.PartId), "Part is required");
+                }
+                if (item.Qty < 0)
+                {
+                    ModelState.AddModelError(nameof(item.Qty), "Qty is required");
+                }
+            }
+
             if (ModelState.IsValid)
             {
                 model.NTLogin = getCurrentUser.Id;
@@ -275,12 +293,12 @@ namespace Answer.Web.Controllers
                 TempData["ErrorMessage"] = "Something went wrong";
 
 
-                model.Setup(_documentFilesService, _partsService, _partTypeService, getCurrentUser.Company, getCurrentUser.Id);
+                model.Setup(_documentFilesService, _partsService, _partTypeService, _productionPlanningService, getCurrentUser.Company, getCurrentUser.Id);
 
                 return View(model);
             }
 
-            model.Setup(_documentFilesService, _partsService, _partTypeService, getCurrentUser.Company, getCurrentUser.Id);
+            model.Setup(_documentFilesService, _partsService, _partTypeService, _productionPlanningService, getCurrentUser.Company, getCurrentUser.Id);
 
             return View(model);
         }
@@ -405,18 +423,13 @@ namespace Answer.Web.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult SubPartDelete(string id)
         {
+            var response = _partsService.SubPartDeleteById(id);
 
-            var response = _partsService.SubPartDeleteById(id: id);
-
-            if (response != null)
+            if (response.HasErrors())
             {
-                TempData["SuccessMessage"] = "Sub Part deleted successfully.";
-
-                return Json("ok", JsonRequestBehavior.AllowGet);
+                return Json(response.ErrorMessage, JsonRequestBehavior.AllowGet);
             }
-
-            TempData["ErrorMessage"] = "Something went wrong.";
-            return Json("Error", JsonRequestBehavior.AllowGet);
+            return Json("OK", JsonRequestBehavior.AllowGet);
         }
     }
 }

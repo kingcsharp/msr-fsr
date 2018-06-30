@@ -9,6 +9,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Msr.Services.Documents;
 using Msr.Services.Documents.ViewModels;
 using Msr.Services.PartTypes;
+using Msr.Services.ProductionPlanning;
 
 namespace Msr.Services.Parts.ViewModels
 {
@@ -150,7 +151,7 @@ namespace Msr.Services.Parts.ViewModels
 
         public List<SelectListItem> PartList { get; set; }
 
-        public void Setup(DocumentFilesService documentFilesService, PartsService partsService, PartTypeService partTypeService, string creatingCo, string ntlog)
+        public void Setup(DocumentFilesService documentFilesService, PartsService partsService, PartTypeService partTypeService, ProductionPlanningService productionPlanningService, string creatingCo, string ntlog)
         {
 
             OrderingUnits = Commons.Lookups.LookupItems.OrderingUnits();
@@ -305,11 +306,11 @@ namespace Msr.Services.Parts.ViewModels
 
             DocLinks = documentFilesService.GetDocByObjectId(ObjID);
 
-            PartList = partsService.GetPartsList(creatingCo).Select(x => new SelectListItem
+            PartList = productionPlanningService.GetPartList().Select(x => new SelectListItem
             {
                 Text = x.Show,
                 Value = x.Value.ToString()
-            }).OrderBy(x => x.Text).ToList();
+            }).OrderBy(o => o.Text).ToList();
             PartList.Insert(0, new SelectListItem { Text = "Select", Value = "" });
 
         }

@@ -406,7 +406,7 @@ namespace Answer.Web.Controllers
             var currentUser = GetCurrentUser();
 
             var vm = new AddPartViewModel();
-            vm.Setup(_documentFilesService, _partsService, _partTypeService, currentUser.Company, currentUser.Id);
+            vm.Setup(_documentFilesService, _partsService, _partTypeService, _productionPlanService, currentUser.Company, currentUser.Id);
 
             return PartialView("_Parts", vm);
         }
