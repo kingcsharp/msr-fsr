@@ -41,7 +41,7 @@ namespace Answer.Web.Controllers
             var myCo = GetCurrentUser();
 
             var totalRows = _locationService.GetLocationsQueryable().Where(x => x.CreatingCo == myCo.Root_Company);
-            
+
             if (param.where != null && param.where.rules.Any())
             {
                 foreach (var rule in param.where.rules)
@@ -62,12 +62,24 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.RegionName.ToLower().Contains(rule.data.ToLower()));
                     }
+                    else if (rule.field == nameof(LocationView.Region))
+                    {
+                        totalRows = totalRows.Where(x => x.Region.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(LocationView.ParentLocationName))
+                    {
+                        totalRows = totalRows.Where(x => x.ParentLocationName.ToLower().Contains(rule.data.ToLower()));
+                    }
                     else if (rule.field == nameof(LocationView.Revision))
                     {
                         int value;
                         if (Int32.TryParse(rule.data, out value))
                         {
                             totalRows = totalRows.Where(x => x.Revision == value);
+                        }
+                        else
+                        {
+                            totalRows = totalRows.Where(x => x.Revision.ToString().Contains(rule.data.ToLower()));
                         }
 
                     }

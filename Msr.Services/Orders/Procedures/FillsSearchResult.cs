@@ -7,5 +7,6 @@
         public string PartInfo { get; set; }
         public string ProcedureName { get; set; }
         public string CustomerPo { get; set; }
+        public string ProcId { get; set; }
     }
 }

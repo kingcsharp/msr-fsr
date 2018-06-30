@@ -62,6 +62,10 @@ namespace Answer.Web.Controllers
                         {
                             totalRows = totalRows.Where(x => x.Rev == value);
                         }
+                        else
+                        {
+                            totalRows = totalRows.Where(x => x.Rev.ToString().Contains(rule.data.ToLower()));
+                        }
                     }
                     else if (rule.field == nameof(RegionsView.Status))
                     {
@@ -71,6 +75,10 @@ namespace Answer.Web.Controllers
                         {
                             totalRows = totalRows.Where(x => statusList.Contains(x.Status.ToLower()));
                         }
+                    }
+                    else if (rule.field == nameof(RegionsView.LockedByName))
+                    {
+                        totalRows = totalRows.Where(x => x.LockedByName.ToLower().Contains(rule.data.ToLower()));
                     }
                 }
             }

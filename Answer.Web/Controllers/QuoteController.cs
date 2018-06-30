@@ -3,7 +3,6 @@ using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using Msr.Services.CustomerRequirements.ViewModel;
 using Msr.Services.ProductionPlanning;
-using Msr.Services.Products;
 using Msr.Services.Quotes;
 using Msr.Services.Quotes.ViewModels;
 using Msr.Services.Users;
@@ -15,14 +14,12 @@ namespace Answer.Web.Controllers
         private QuoteService _quoteService;
         private readonly ProductionPlanningService _productionPlanningService;
         private readonly UserService _userService;
-        private readonly ProductService _productService;
 
         public QuoteController()
         {
             _quoteService = new QuoteService();
             _productionPlanningService = new ProductionPlanningService();
             _userService = new UserService();
-            _productService = new ProductService();
         }
 
         public ActionResult Create()

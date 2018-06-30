@@ -5,7 +5,6 @@
         font-size: 7px !important;
     }
 </style>
-
 <div style="top:0px;left:0px;width:7.95in;height:9.95in;">
     @foreach (var partLabel in Model.GetPartsAndKitsLabelsResult)
     {
@@ -13,29 +12,37 @@
             <br>
             <table class="tight" style="font-size: 7px; width: 100%;">
                 <tbody>
-                <tr>
-                    <td colspan="2"><b>MSR-FSR</b></td>
-                </tr>
-                <tr>
-                    <td style="width: 30%"><div style="text-align: left">Procedure***</div></td>
-                    <td style="width: 70%"><div style="text-align: left">@partLabel.Proc_Name</div>
-                    </td>
-                </tr>
-                <tr>
-                    <td style="border-top: thin black solid;">
-                        <div style="text-align: left">Part Number:***</div></td>
-                    <td style="border-top: thin black solid;">
-                        @partLabel.Company_Part_Number<br>@partLabel.Part_Desc
-                    </td></tr>
-                <tr>
-                    <td>
-                        <div style="text-align: left">Serial***</div></td>
-                    <td>
-                        <div style="text-align: left">@partLabel.Serial</div></td>
+                    <tr>
+                        <td colspan="2"><b>MSR-FSR</b></td>
                     </tr>
-                <tr>
-                    <td colspan="2">This Part Processed*** 0 times*** </td>
-                </tr>
+                    <tr>
+                        <td style="width: 30%"><div style="text-align: left">Procedure***</div></td>
+                        <td style="width: 70%">
+                            <div style="text-align: left">@partLabel.Proc_Name</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border-top: thin black solid;">
+                            <div style="text-align: left">Part Number:***</div>
+                        </td>
+                        <td style="border-top: thin black solid;">
+                            @partLabel.Company_Part_Number<br>@partLabel.Part_Desc
+                        </td>
+                    </tr>
+                    <tr>
+                        @if (!string.IsNullOrWhiteSpace(partLabel.Serial))
+                        {
+                            <td>
+                                <div style="text-align: left">Serial***</div>
+                            </td>
+                            <td>
+                                <div style="text-align: left">@partLabel.Serial</div>
+                            </td>
+                        }
+                    </tr>
+                    <tr>
+                        <td colspan="2">This Part Processed*** 0 times*** </td>
+                    </tr>
                 </tbody>
             </table>
         </div>

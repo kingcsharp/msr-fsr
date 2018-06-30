@@ -92,9 +92,9 @@ namespace Msr.Services.Quotes
             return response;
         }
 
-        public CustomerSubmittedRequirement GetById(int id)
+        public CustomerRequirementView GetById(int id)
         {
-            var requirment = _dbContext.CustomerSubmittedRequirements.SingleOrDefault(x => x.Id == id);
+            var requirment = _dbContext.CustomerRequirementViews.SingleOrDefault(x => x.CustomerSubmitId == id);
 
             return requirment;
         }
@@ -139,11 +139,6 @@ namespace Msr.Services.Quotes
                     int i = conn.Execute("Portal_Create_UpdateProduct", p, commandType: CommandType.StoredProcedure);
                     var newId = p.Get<string>("newID");
                     var messages = p.Get<string>("messages");
-
-                    var requirements = _dbContext.CustomerSubmittedRequirements.SingleOrDefault(x => x.Id == productRequest.Id);
-                    requirements.ProductId = newId;
-
-                    _dbContext.SaveChanges();
                 }
             }
             catch (Exception)

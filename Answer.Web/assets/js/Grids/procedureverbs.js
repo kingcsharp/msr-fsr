@@ -157,7 +157,7 @@ Msr.ProcedureVerbsGrid = Msr.ProcedureVerbsGrid ||
         function prodecureVerbsEditFormatter(cellvalue, options, rowObject) {
 
             var actions =
-                Msr.JqGridCommon.ActionFormtter(cellvalue, options, rowObject, returnUrl, '/Actualparts/Edit/');
+                Msr.JqGridCommon.ActionFormtter(cellvalue, options, rowObject, returnUrl, '/ProcedureVerbs/Edit/');
 
             return actions;
 

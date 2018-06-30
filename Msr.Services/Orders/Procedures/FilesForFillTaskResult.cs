@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace Msr.Services.Orders.Procedures
 {
     public class FilesForFillTaskResult
     {
         public string File_Id { get; set; }
+        public string Path { get; set; }
     }
 }

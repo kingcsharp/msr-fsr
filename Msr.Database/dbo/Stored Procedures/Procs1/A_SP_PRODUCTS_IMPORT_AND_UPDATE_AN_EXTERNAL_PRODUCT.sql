@@ -216,8 +216,8 @@ else
 	@MM,
 	@strNTLogin	
 
-	INSERT INTO Portal_CustomerSubmittedRequirement(SubmittedDate,SubmittedBy,CustomerId,Company,Division,PartKitNo,Description,Status,SupplierId,LocationId,ProductName,PartId,ProcedureId,ProductId)
-	VALUES(GETDATE(),@strNTLogin,@INTERNAL_CUSTOMER_ID,@INTERNAL_PRODUCT_SUPPLIER_ID,'',@KIT_ID,@PRODUCT_NAME,'Completed',@INTERNAL_PRODUCT_SUPPLIER_ID,'',@PRODUCT_NAME,@intPartRootID,@INTERNAL_PROCEDURE_ID,@newID)
+	INSERT INTO Portal_CustomerSubmittedRequirement(SubmittedDate,SubmittedBy,CustomerId,Company,Division,PartKitNo,Description,Status,SupplierId,LocationId,ProductName,PartId,ProcedureId)
+	VALUES(GETDATE(),@strNTLogin,@INTERNAL_CUSTOMER_ID,@INTERNAL_PRODUCT_SUPPLIER_ID,'',@KIT_ID,@PRODUCT_NAME,'Completed',@INTERNAL_PRODUCT_SUPPLIER_ID,'',@PRODUCT_NAME,@intPartRootID,@INTERNAL_PROCEDURE_ID)
 
 
 	set @newID = @newID + ' Created the new product with the ID = ' + @intProdObjID

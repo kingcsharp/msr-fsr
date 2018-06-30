@@ -242,7 +242,8 @@
             <div class="form-group equipmentresult">
                 <label class="col-lg-1 control-label">Result:</label>
                 <div class="col-lg-2">
-                    @Html.TextBoxFor(x => Model[i].Print_Result, new { @class = !isPassing ? "input-validation-error" : String.Empty })
+                    @Html.TextBoxFor(x => Model[i].Print_Result, new { @class = !isPassing ? "input-validation-error" : String.Empty, @id = "equipment" })
+                    <span id="print-result-message"></span>
                 </div>
             </div>
         }
@@ -347,6 +348,13 @@
         $('.equipmentresult').hide();
 
         $("#number").keypress(function (e) {
+            if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                $("#print-result-message").html("Digit Only").show().fadeOut("slow");
+                return false;
+            }
+        });
+
+        $("#equipment").keypress(function (e) {
             if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
                 $("#print-result-message").html("Digit Only").show().fadeOut("slow");
                 return false;

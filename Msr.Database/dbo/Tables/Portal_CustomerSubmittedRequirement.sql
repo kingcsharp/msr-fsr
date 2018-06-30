@@ -18,7 +18,6 @@ CREATE TABLE [dbo].[Portal_CustomerSubmittedRequirement](
 	[ProductName] [nvarchar](50) NULL,
 	[PartId] [nvarchar](50) NULL,
 	[ProcedureId] [nvarchar](50) NULL,
-	[ProductId] [nvarchar](50) NULL,
 	ProductWorkflowId [nvarchar](50) NULL,
 	[LeadTime] float NULL,
 	[Price] float NULL

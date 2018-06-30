@@ -12,7 +12,7 @@ Msr.RegionGrid = Msr.RegionGrid ||
         datatype: "json",
         colModel: [
             {
-                label: ' #',
+                label: 'Id',
                 name: 'Root',
                 index: 'Root',
                 key: true,

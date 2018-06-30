@@ -120,10 +120,6 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.LockedByName.ToLower().Contains(rule.data.ToLower()));
                     }
-                    else if (rule.field == nameof(PeopleObjectView.ReferenceFiles))
-                    {
-                        totalRows = totalRows.Where(x => x.ReferenceFiles.ToLower().Contains(rule.data.ToLower()));
-                    }
                     else if (rule.field == nameof(PeopleObjectView.Rev))
                     {
                         int value;

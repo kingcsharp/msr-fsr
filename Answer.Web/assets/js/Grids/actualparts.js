@@ -185,9 +185,11 @@ Msr.ActualPartsGrid = Msr.ActualPartsGrid ||
                         grouping: false,
                         freeze: false
                     },
-                    searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                    stype: "select",
+                    searchoptions: { value: ":[All];ap_available:ap_available;ap_installed:ap_installed;ap_consumed:ap_consumed;ap_filled:ap_filled;ap_filled:ap_filled;ap_held:ap_held;ap_installed:ap_installed;ap_received:ap_received" },
                     width: 150,
-                    align: 'left'
+                    align: 'left',
+                    hidedlg: false
                 },
                 {
                     label: 'Revision',

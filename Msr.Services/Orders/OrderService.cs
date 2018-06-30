@@ -180,8 +180,8 @@ namespace Msr.Services.Orders
                 p.Add("@strNTLogin", string.Empty, DbType.String, ParameterDirection.Input);
 
                 detailsResponse.FillsSearchResult = conn.Query<FillsSearchResult>(
-                    @"SELECT CUST_NAME AS CustomerName, PROD_NAME AS ProductName, FILL_OBJ_DESC AS PartInfo, PROC_NAME AS ProcedureName, CUST_LINE_ITEM AS CustomerPo FROM A_V_FILLS_SEARCH with (noLock)  WHERE ID = @Id",
-                    new { Id = fillId.ToString() })
+                        @"SELECT CUST_NAME AS CustomerName, PROD_NAME AS ProductName, FILL_OBJ_DESC AS PartInfo, PROC_NAME AS ProcedureName, CUST_LINE_ITEM AS CustomerPo,PROC_ID AS ProcId FROM A_V_FILLS_SEARCH with (noLock)  WHERE ID = @Id",
+                        new { Id = fillId.ToString() })
                     .FirstOrDefault();
 
                 detailsResponse.TasksFindForFillIdResult =
@@ -194,7 +194,7 @@ namespace Msr.Services.Orders
 
                 detailsResponse.AttachmentFileIds =
                     conn.Query<FilesForFillTaskResult>("A_SP_FILES_GET_FOR_FILL_TASKS", p,
-                        commandType: CommandType.StoredProcedure).Select(x => x.File_Id).ToList();
+                        commandType: CommandType.StoredProcedure).ToList();
 
                 foreach (var tasksForFill in detailsResponse.TasksFindForFillIdResult)
                 {

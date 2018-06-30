@@ -41,6 +41,10 @@ namespace Answer.Web.Controllers
             {
                 foreach (var rule in param.where.rules)
                 {
+                    if (rule.field == nameof(PartTypesView.Root))
+                    {
+                        totalRows = totalRows.Where(x => x.Root == rule.data.ToLower());
+                    }
                     if (rule.field == nameof(PartTypesView.Id))
                     {
                         totalRows = totalRows.Where(x => x.Id == rule.data.ToLower());
