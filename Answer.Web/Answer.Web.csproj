@@ -511,6 +511,7 @@
     <Content Include="assets\css\animate.css\animate.css" />
     <Content Include="assets\css\animate.css\animate.min.css" />
     <Content Include="assets\css\animate.min.css" />
+    <Content Include="assets\css\bootstrap-datepicker.min.css" />
     <Content Include="assets\css\bootstrap-datetimepicker.min.css" />
     <Content Include="assets\css\bootstrap-editable.css" />
     <Content Include="assets\css\bootstrap-print-fix.css" />
@@ -613,6 +614,7 @@
     <Content Include="assets\js\app.js" />
     <Content Include="assets\js\bluebird.min.js" />
     <Content Include="assets\js\bootbox.min.js" />
+    <Content Include="assets\js\bootstrap-datepicker.min.js" />
     <Content Include="assets\js\bootstrap-datetimepicker.min.js" />
     <Content Include="assets\js\bootstrap-editable.min.js" />
     <Content Include="assets\js\bootstrap-select.js" />
@@ -694,6 +696,7 @@
     <Content Include="assets\js\JsBarcode.all.min.js" />
     <Content Include="assets\js\msr\fileupload\uploader-grid.js" />
     <Content Include="assets\js\msr\grid-common.js" />
+    <Content Include="assets\js\msr\Parts\PartUpdate.js" />
     <Content Include="assets\js\printThis.js" />
     <Content Include="assets\js\procedure-steps.js" />
     <Content Include="assets\js\requirements_form.js" />

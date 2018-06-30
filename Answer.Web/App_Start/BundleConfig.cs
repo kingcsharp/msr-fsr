@@ -100,6 +100,9 @@ namespace Answer.Web
             bundles.Add(new ScriptBundle("~/bundles/js/jqgrid-help")
                 .Include("~/assets/js/grids/help.js")
             );
+            bundles.Add(new ScriptBundle("~/bundles/js/sub-part")
+                .Include("~/assets/js/msr/parts/PartUpdate.js")
+            );
 
             // Use the development version of Modernizr to develop with and learn from. Then, when you're
             // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
@@ -118,6 +121,55 @@ namespace Answer.Web
                 "~/assets/js/BootstrapFileInput/css/fileinput.min.css",
                 "~/assets/js/JqueryConfirm/jquery-confirm.min.css")
             );
+
+            bundles.Add(new StyleBundle("~/bundles/css/main")
+               .Include("~/assets/css/bootstrap.min.css", new CssRewriteUrlTransform())
+               .Include("~/assets/css/font-awesome.min.css", new CssRewriteUrlTransform())
+               .Include("~/assets/css/animate.min.css")
+               .Include("~/assets/css/bootstrap-switch.min.css")
+               .Include("~/assets/css/checkbox3.min.css")
+               .Include("~/assets/css/dataTables.bootstrap.css")
+               .Include("~/assets/css/select2.min.css")
+               .Include("~/assets/css/themes/flat-blue.css")
+               .Include("~/assets/css/ui.jqgrid-bootstrap-ui.css")
+               .Include("~/assets/css/ui.jqgrid.css")
+               .Include("~/assets/css/style.css")
+               .Include("~/assets/css/jquery.fileupload.css")
+               .Include("~/assets/css/jquery.fileupload-ui.css")
+               .Include("~/assets/css/flexslider.css")
+               .Include("~/assets/css/bootstrap-select.css")
+               .Include("~/assets/css/jquery.fileupload-noscript.css")
+               .Include("~/assets/css/jquery.fileupload-ui-noscript.css")
+               .Include("~/assets/css/hopscotch.css")
+               .Include("~/assets/css/bootstrap-datepicker.min.css")
+           );
+
+            bundles.Add(new ScriptBundle("~/bundles/js/main")
+                .Include("~/assets/js/jquery.min.js")
+                .Include("~/assets/js/bootstrap.min.js")
+                .Include("~/assets/js/Chart.min.js")
+                .Include("~/assets/js/bootstrap-switch.min.js")
+                .Include("~/assets/js/jquery.matchHeight-min.js")
+                .Include("~/assets/js/jquery.dataTables.min.js")
+                .Include("~/assets/js/select2.full.min.js")
+                .Include("~/assets/js/ace/ace.js")
+                .Include("~/assets/js/ace/mode-html.js")
+                .Include("~/assets/js/ace/theme-github.js")
+                .Include("~/assets/js/app.js")
+                .Include("~/assets/js/help_form.js")
+                .Include("~/assets/js/eModal.min.js")
+                .Include("~/assets/js/hopscotch.js")
+                .Include("~/assets/js/docviewer.js")
+                .Include("~/assets/js/printThis.js")
+                .Include("~/assets/js/comman.js")
+                .Include("~/assets/js/bootstrap-datepicker.min.js")
+           );
+
+            #if DEBUG
+                        BundleTable.EnableOptimizations = true;
+            #else
+                            BundleTable.EnableOptimizations = true;
+            #endif
         }
     }
 }

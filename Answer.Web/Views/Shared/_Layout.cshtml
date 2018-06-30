@@ -11,33 +11,7 @@
     <link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:300,400' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,900' rel='stylesheet' type='text/css'>
     <!-- CSS Libs -->
-    <link rel="stylesheet" type="text/css" href="~/assets/css/bootstrap.min.css">
-
-    <link rel="stylesheet" type="text/css" href="~/assets/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="~/assets/css/animate.min.css">
-    <link rel="stylesheet" type="text/css" href="~/assets/css/bootstrap-switch.min.css">
-    <link rel="stylesheet" type="text/css" href="~/assets/css/checkbox3.min.css">
-
-    <link rel="stylesheet" type="text/css" href="~/assets/css/dataTables.bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="~/assets/css/select2.min.css">
-    <!-- CSS App -->
-    <link rel="stylesheet" type="text/css" href="~/assets/css/themes/flat-blue.css">
-
-    <link rel="stylesheet" type="text/css" href="~/assets/css/ui.jqgrid-bootstrap-ui.css">
-    <link rel="stylesheet" type="text/css" href="~/assets/css/ui.jqgrid.css">
-    <link rel="stylesheet" type="text/css" href="~/assets/css/style.css">
-
-
-    <link rel="stylesheet" href="~/assets/css/jquery.fileupload.css">
-    <link rel="stylesheet" href="~/assets/css/jquery.fileupload-ui.css">
-    <link rel="stylesheet" type="text/css" href="~/assets/css/flexslider.css">
-    <link rel="stylesheet" type="text/css" href="~/assets/css/bootstrap-select.css">
-    <noscript><link rel="stylesheet" href="~/assets/css/jquery.fileupload-noscript.css"></noscript>
-    <noscript><link rel="stylesheet" href="~/assets/css/jquery.fileupload-ui-noscript.css"></noscript>
-    
-    <link rel="stylesheet" type="text/css" href="~/assets/css/hopscotch.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.0/css/bootstrap-datepicker.css" integrity="sha256-hAJmzibna+yekGzrC0d2adi25IbGDXYE0erhJvZOcEg=" crossorigin="anonymous" />
-
+    @Styles.Render("~/bundles/css/main")
 </head>
 <body class="flat-blue">
     <div class="app-container">
@@ -68,27 +42,7 @@
         </div>
 
         @Html.Partial("_Footer")
-        <script src="~/assets/js/jquery.min.js"></script>
-        <script type="text/javascript" src="~/assets/js/bootstrap.min.js"></script>
-        <script type="text/javascript" src="~/assets/js/Chart.min.js"></script>
-
-        <script type="text/javascript" src="~/assets/js/bootstrap-switch.min.js"></script>
-        <script type="text/javascript" src="~/assets/js/jquery.matchHeight-min.js"></script>
-        <script type="text/javascript" src="~/assets/js/jquery.dataTables.min.js"></script>
-        <script type="text/javascript" src="~/assets/js/select2.full.min.js"></script>
-        <script type="text/javascript" src="~/assets/js/ace/ace.js"></script>
-        <script type="text/javascript" src="~/assets/js/ace/mode-html.js"></script>
-        <script type="text/javascript" src="~/assets/js/ace/theme-github.js"></script>
-        <!-- Javascript -->
-        <script type="text/javascript" src="~/assets/js/app.js"></script>
-        <script type="text/javascript" src="~/assets/js/help_form.js"></script>
-        <script type="text/javascript" src="~/assets/js/hopscotch.js"></script>
-        
-        <script src="~/assets/js/eModal.min.js"></script>
-        <script src="~/assets/js/docviewer.js"></script>
-        <script src="~/assets/js/printThis.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.0/js/bootstrap-datepicker.js"></script>
-        <script src="~/assets/js/comman.js"></script>
+        @Scripts.Render("~/bundles/js/main")
         @RenderSection("scripts", required: false)
 
     </div>
