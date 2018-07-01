@@ -134,14 +134,11 @@ namespace Answer.Web
                .Include("~/assets/css/ui.jqgrid-bootstrap-ui.css")
                .Include("~/assets/css/ui.jqgrid.css")
                .Include("~/assets/css/style.css")
-               .Include("~/assets/css/jquery.fileupload.css")
-               .Include("~/assets/css/jquery.fileupload-ui.css")
-               .Include("~/assets/css/flexslider.css")
+               .Include("~/assets/css/flexslider.css", new CssRewriteUrlTransform())
                .Include("~/assets/css/bootstrap-select.css")
-               .Include("~/assets/css/jquery.fileupload-noscript.css")
-               .Include("~/assets/css/jquery.fileupload-ui-noscript.css")
                .Include("~/assets/css/hopscotch.css")
                .Include("~/assets/css/bootstrap-datepicker.min.css")
+               .Include("~/assets/css/wip-detail.css", new CssRewriteUrlTransform())
            );
 
             bundles.Add(new ScriptBundle("~/bundles/js/main")
