@@ -8,6 +8,7 @@ using Answer.Web.ViewModel.Wip;
 using Msr.Commons.Files;
 using Msr.Infrastructure.Common.Constansts;
 using Msr.Models.Orders;
+using Msr.Services;
 using Msr.Services.EquipmentMaintenances;
 using Msr.Services.EquipmentMaintenances.ViewModels;
 using Msr.Services.jqGrid;
@@ -540,18 +541,22 @@ namespace Answer.Web.Controllers
         [HttpPost]
         public ActionResult UpdateStepMonitor(List<MonitorTemplateResult> monitorTemplates)
         {
-            if (ModelState.IsValid)
-            {
-                var currentUser = GetCurrentUser();
+            var currentUser = GetCurrentUser();
 
-                foreach (var monitorTemplate in monitorTemplates)
+            var result = new ResultNotification<string>();
+
+            foreach (var monitorTemplate in monitorTemplates)
+            {
+                monitorTemplate.StrNtLogin = currentUser.Id;
+                result = _orderService.UpdateStepMonitor(monitorTemplate);
+
+                if (result.HasErrors())
                 {
-                    monitorTemplate.StrNtLogin = currentUser.Id;
-                    _orderService.UpdateStepMonitor(monitorTemplate);
+                    break;
                 }
             }
 
-            return RedirectToAction("Details", new { id = monitorTemplates.FirstOrDefault().FillId });
+            return Json(new {result.ErrorMessage}, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]

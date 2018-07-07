@@ -569,30 +569,46 @@ namespace Msr.Services.Orders
             return detailsResponse;
         }
 
-        public void UpdateStepMonitor(MonitorTemplateResult request)
+        public ResultNotification<string> UpdateStepMonitor(MonitorTemplateResult request)
         {
-            var p = new DynamicParameters();
+            var response = new ResultNotification<string>();
 
-            p.Add("@id", request.Id, DbType.String, ParameterDirection.Input);
-            p.Add("@failAction", request.Fail_Action, DbType.String, ParameterDirection.Input);
-            if (request.Monitor_Type == "MULTIPLE")
+            try
             {
-                p.Add("@result", request.Mult_Choice_Answer, DbType.String, ParameterDirection.Input);
-            }
-            else
-            {
-                p.Add("@result", request.Print_Result, DbType.String, ParameterDirection.Input);
-            }
-            p.Add("@comment", request.Comment, DbType.String, ParameterDirection.Input);
-            p.Add("@target", request.Target, DbType.String, ParameterDirection.Input);
-            p.Add("@tolerance", request.Tolerance, DbType.String, ParameterDirection.Input);
-            p.Add("@theSaurusId", request.TheSaurusId, DbType.String, ParameterDirection.Input);
-            p.Add("@strNTLogin", request.StrNtLogin, DbType.String, ParameterDirection.Input);
+                var p = new DynamicParameters();
 
-            using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
-            {
-                int i = conn.Execute("Portal_StepSaveMonitor", p, commandType: CommandType.StoredProcedure);
+                p.Add("@id", request.Id, DbType.String, ParameterDirection.Input);
+                p.Add("@failAction", request.Fail_Action, DbType.String, ParameterDirection.Input);
+                if (request.Monitor_Type == "MULTIPLE")
+                {
+                    p.Add("@result", request.Mult_Choice_Answer, DbType.String, ParameterDirection.Input);
+                }
+                else
+                {
+                    p.Add("@result", request.Print_Result, DbType.String, ParameterDirection.Input);
+                }
+                p.Add("@comment", request.Comment, DbType.String, ParameterDirection.Input);
+                p.Add("@target", request.Target, DbType.String, ParameterDirection.Input);
+                p.Add("@tolerance", request.Tolerance, DbType.String, ParameterDirection.Input);
+                p.Add("@theSaurusId", request.TheSaurusId, DbType.String, ParameterDirection.Input);
+                p.Add("@strNTLogin", request.StrNtLogin, DbType.String, ParameterDirection.Input);
+
+                using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
+                {
+                    int i = conn.Execute("Portal_StepSaveMonitor", p, commandType: CommandType.StoredProcedure);
+
+                    if (i == 0)
+                    {
+                        response.AddError("There is an error updating monitor");
+                    }
+                }
             }
+            catch (Exception exception)
+            {
+                response.AddError(exception.Message);
+            }
+
+            return response;
         }
 
         public string CloseTask(string taskId, string login, int fillId)

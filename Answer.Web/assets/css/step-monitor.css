@@ -1,0 +1,38 @@
+.red {
+    background-color: red;
+}
+
+.form-horizontal .control-label {
+    padding-top: 0px;
+}
+
+#print-result-message {
+    color: red;
+}
+
+.nw-rght {
+    text-align: right;
+    white-space: nowrap;
+    padding: 0 4px;
+}
+
+.monitor-body {
+    font-size: 14px;
+}
+
+.panel-height {
+    min-height: 250px !important;
+}
+
+.text-td {
+    margin-top: 0;
+}
+
+.form-horizontal .form-group {
+    margin-right: inherit !important;
+    margin-left: -15px;
+}
+
+.mon-panel {
+    padding-right: 0;
+}

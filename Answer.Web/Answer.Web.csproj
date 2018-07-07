@@ -550,6 +550,7 @@
     <Content Include="assets\css\ui.jqgrid-bootstrap-ui.css" />
     <Content Include="assets\css\ui.jqgrid-bootstrap.css" />
     <Content Include="assets\css\ui.jqgrid.css" />
+    <Content Include="assets\css\step-monitor.css" />
     <Content Include="assets\css\wip-detail.css" />
     <Content Include="assets\fonts\ElegantIcons.svg" />
     <Content Include="assets\fonts\fontawesome-webfont.svg" />
