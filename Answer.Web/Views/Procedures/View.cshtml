@@ -40,13 +40,21 @@
                         <td>@Model.StepDataList[i].Print_Order</td>
                         <td>@Model.StepDataList[i].Id</td>
                         <td>@Model.StepDataList[i].Title</td>
-                        <td>@Html.Raw(Model.StepDataList[i].Step_Text)</td>
+                        <td>
+                            @if (!string.IsNullOrWhiteSpace(Model.StepDataList[i].Step_Text))
+                            {
+                                @Html.Raw(Model.StepDataList[i].Step_Text.Replace(Environment.NewLine, "<br/>")) 
+                            }   
+                        </td>
                         <td>@Model.StepDataList[i].Duration @Model.StepDataList[i].Duration_Type</td>
                     </tr>
-                    <tr><td colspan="6">LABOR_ROLE_LABOR_OWNER :@if (@Model.StepDataList[i].StepLaborsList.Count > 0)
-                                                                {
-                                                                    @Model.StepDataList[i].StepLaborsList.SingleOrDefault().Text
-                                                                } @Model.StepDataList[i].Duration @Model.StepDataList[i].Duration_Type</td>
+                    <tr>
+                        <td colspan="6">LABOR_ROLE_LABOR_OWNER :
+                            @if (@Model.StepDataList[i].StepLaborsList.Count > 0)
+                            {
+                                @Model.StepDataList[i].StepLaborsList.SingleOrDefault().Text
+                            }
+                            @Model.StepDataList[i].Duration @Model.StepDataList[i].Duration_Type</td>
                     </tr>
                 }
                 </tbody>

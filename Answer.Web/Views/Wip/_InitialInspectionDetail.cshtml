@@ -17,7 +17,12 @@
     </tr>
     <tr>
         <th nowrap style="text-align: right; width: 180px;">Description: </th>
-        <td>@Html.Raw(Model.TaskEditDataResult.Description)</td>
+        <td>
+            @if (!string.IsNullOrWhiteSpace(Model.TaskEditDataResult.Description))
+            {
+                @Html.Raw(Model.TaskEditDataResult.Description.Replace(Environment.NewLine, "<br/>")) 
+            }            
+        </td>
     </tr>
     <tr>
         <th nowrap style="text-align: right; width: 180px;">Related Documents: </th>
