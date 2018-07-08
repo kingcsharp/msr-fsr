@@ -122,6 +122,10 @@ namespace Answer.Web
                 "~/assets/js/JqueryConfirm/jquery-confirm.min.css")
             );
 
+            bundles.Add(new ScriptBundle("~/bundles/js/comman-js")
+                .Include("~/assets/js/comman.js")
+            );
+
             bundles.Add(new StyleBundle("~/bundles/css/main")
                .Include("~/assets/css/bootstrap.min.css", new CssRewriteUrlTransform())
                .Include("~/assets/css/font-awesome.min.css", new CssRewriteUrlTransform())

@@ -331,4 +331,50 @@ $(document).ready(function () {
     $("form").submit(function (e) {
         $('.submitselect option').prop('selected', true);
     });
-})
+
+    $('#support-model').on('show.bs.modal',
+        function (event) {
+
+            var modal = $(this);
+
+            $.ajax({
+                type: "Get",
+                url: '/Help/SupportTicket',
+                success: function (data) {
+                    modal.find('.modal-body').html(data);
+                },
+                error: function () {
+
+                }
+            });
+        });
+
+    $("#support-ticket").click(function (e) {
+
+        e.preventDefault();
+        var form = $(this).closest("form");
+        var isvalid = form.valid();
+
+        if (isvalid) {
+            eLoaderOpen();
+            $.ajax({
+                type: "POST",
+                url: '/Help/SupportRequest/',
+                dataType: 'Json',
+                data: $('.support-form').serialize(),
+                success: function (data) {
+                    if (data === 'OK') {
+                        $('#support-model').modal("hide");
+                        eLoaderClose();
+                    } else {
+                        eLoaderError(data);
+                    }
+                },
+                error: function (error) {
+                    eLoaderError(error);
+                }
+            });
+        }
+    });
+    
+});

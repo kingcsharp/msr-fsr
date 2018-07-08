@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Configuration;
 using System.Linq;
+using System.Web.Helpers;
 using System.Web.Mvc;
 using Answer.Web.Controllers;
 using Msr.Infrastructure.Email;
@@ -110,18 +111,30 @@ namespace Msr.Web.Controllers
 
         }
 
+        public ActionResult SupportTicket()
+        {
+            var suppoertModel = new SupportViewModel();
+
+            return PartialView("_SupportTicket", suppoertModel);
+        }
+
         [HttpPost]
         public JsonResult SupportRequest(SupportViewModel viewModel)
         {
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    return Json("Invalid data", JsonRequestBehavior.AllowGet);
+                }
+
                 var body = $@"<table>
                     <tr><td>First Name</td><td>{viewModel.FirstName}</td></tr>
                     <tr><td>Last Name</td><td>{viewModel.LastName}</td></tr>
                     <tr><td>Email</td><td>{viewModel.Email}</td></tr>
                     <tr><td>Phone</td><td>{viewModel.Phone}</td></tr>
                     <tr><td>Subject</td><td>{viewModel.Subject}</td></tr>
-                    <tr><td>ContactMathod</td><td>{viewModel.ContactMathod}</td></tr>
+                    <tr><td>ContactMethod</td><td>{viewModel.ContactMethod}</td></tr>
                     <tr><td>Details</td><td>{viewModel.Details}</td></tr>
                     </table>";
 
@@ -135,7 +148,7 @@ namespace Msr.Web.Controllers
             }
             catch (Exception)
             {
-                return Json("NOK", JsonRequestBehavior.AllowGet);
+                return Json("Something went wrong", JsonRequestBehavior.AllowGet);
             }
         }
 
@@ -216,7 +229,8 @@ namespace Msr.Web.Controllers
         {
             var helpPage = _helpService.GetHelp(pageUrl);
 
-            if (helpPage == null) {
+            if (helpPage == null)
+            {
                 helpPage = new HelpPage() { Title = $"Page not found, Url :'{pageUrl}'" };
             }
 
