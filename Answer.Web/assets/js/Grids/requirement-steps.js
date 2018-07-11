@@ -155,7 +155,7 @@ function LoadSteps(i, myOptions) {
 
     $('#userRequirementsModal').on('show.bs.modal',
         function (event) {
-            debugger;
+     
             var button = $(event.relatedTarget);
             var id = button.data('id');
             var objectId = button.data('object');

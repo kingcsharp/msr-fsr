@@ -107,7 +107,7 @@ namespace Answer.Web.Controllers
 
             var quote = new FreeFormQuoteViewModel();
             quote.ProductId = model.ObjectId;
-            quote.CustomerName = model.Company;
+            quote.CustomerName = model.CustomerName;
             quote.Date = model.SubmittedDate;
             quote.Email = csr.CommercialEmail;
             quote.PhoneCSR = csr.CommercialPhone;

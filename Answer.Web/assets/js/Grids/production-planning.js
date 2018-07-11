@@ -35,8 +35,8 @@ Msr.QuotesGrid = Msr.QuotesGrid ||
                 },
                 {
                     label: 'Company',
-                    name: 'Company',
-                    index: 'Company',
+                    name: 'CustomerName',
+                    index: 'CustomerName',
                     colmenu: false,
                     coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                     searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
