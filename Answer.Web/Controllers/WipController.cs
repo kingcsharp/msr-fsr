@@ -468,6 +468,8 @@ namespace Answer.Web.Controllers
 
             var response = _orderService.GetWipStepDetails(stepId, fillId, loggedUserId.Id, phStepId);
 
+            ViewBag.IsStepStatusClosed = response.TaskEditDataResult.Status == "CLOSED";
+
             var myRoles = _roleService.GetAssignedRoles(loggedUserId.Id);
 
             var vm = _orderService.GetPurchaseItemDetails(fillId, loggedUserId.Id);

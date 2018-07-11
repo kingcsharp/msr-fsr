@@ -21,11 +21,12 @@
 }
 
 .panel-height {
-    min-height: 250px !important;
+    min-height: 285px !important;
 }
 
 .text-td {
     margin-top: 0;
+    vertical-align: bottom;
 }
 
 .form-horizontal .form-group {
@@ -35,4 +36,15 @@
 
 .mon-panel {
     padding-right: 0;
+}
+label {
+    display: inline-block;
+    max-width: 100%;
+    margin-bottom: 5px;
+    font-weight: 700;
+}
+.form-horizontal .control-label {
+    padding-top: 7px !important;
+    margin-bottom: 0;
+    text-align: right;
 }

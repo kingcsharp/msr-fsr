@@ -493,7 +493,8 @@ namespace Msr.Services.Orders
                 {
                     foreach (var task in detailsResponse.TaskItemParts.Where(x => x.Print_Order != null))
                     {
-                        if ((task.Status == "REQUESTED" || task.Status == "ACCEPTED" || task.Status == "PENDING_PARENT_ACCEPTANCE") 
+                        if ((task.Status == "REQUESTED" || task.Status == "ACCEPTED" ||
+                             task.Status == "PENDING_PARENT_ACCEPTANCE" || task.Status == "CLOSED")
                             && !string.IsNullOrWhiteSpace(task.Print_Order) && task.HAS_MONITOR == "1")
                         {
                             var monitorParams = new DynamicParameters();
@@ -503,29 +504,35 @@ namespace Msr.Services.Orders
                             monitorParams.Add("@TASK_ID", task.STEP_ID, DbType.String, ParameterDirection.Input);
                             monitorParams.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input);
 
-                            using (var multi = conn.QueryMultiple("A_SP_MONITOR_TEMPLATES_GET_DATA_FOR_OBJECT", monitorParams,
-                                commandType: CommandType.StoredProcedure))
+                            if (task.STEP_ID == detailsResponse.StepId.ToString())
                             {
-                                detailsResponse.MonitorTemplateResult = multi.Read<MonitorTemplateResult>().ToList();
-                            }
-
-                            if (detailsResponse.MonitorTemplateResult.Any())
-                            {
-                                foreach (var monitorTemplate in detailsResponse.MonitorTemplateResult)
+                                using (var multi = conn.QueryMultiple("A_SP_MONITOR_TEMPLATES_GET_DATA_FOR_OBJECT",
+                                    monitorParams,
+                                    commandType: CommandType.StoredProcedure))
                                 {
-                                    monitorTemplate.FillId = fillId;
-                                    monitorTemplate.MonitorTemplateMultiChoices = conn.Query<MonitorTemplateMultiChoiceResult>(
-                                        @"SELECT TXT AS Text, IS_ANSWER AS IsAnswer FROM A_MONITOR_TEMPLATES_MULT_CHOICE WHERE MONITOR_ID = @monitorId  ORDER BY ORD",
-                                        new { monitorId = monitorTemplate.Id })
-                                        .Select(x => new SelectListItem
-                                        {
-                                            Value = x.Id,
-                                            Text = x.Text
-                                        }).ToList();
+                                    detailsResponse.MonitorTemplateResult =
+                                        multi.Read<MonitorTemplateResult>().ToList();
                                 }
-                            }
 
-                            break;
+                                if (detailsResponse.MonitorTemplateResult.Any())
+                                {
+                                    foreach (var monitorTemplate in detailsResponse.MonitorTemplateResult)
+                                    {
+                                        monitorTemplate.FillId = fillId;
+                                        monitorTemplate.MonitorTemplateMultiChoices = conn
+                                            .Query<MonitorTemplateMultiChoiceResult>(
+                                                @"SELECT TXT AS Text, IS_ANSWER AS IsAnswer FROM A_MONITOR_TEMPLATES_MULT_CHOICE WHERE MONITOR_ID = @monitorId  ORDER BY ORD",
+                                                new {monitorId = monitorTemplate.Id})
+                                            .Select(x => new SelectListItem
+                                            {
+                                                Value = x.Id,
+                                                Text = x.Text
+                                            }).ToList();
+                                    }
+                                }
+
+                                break;
+                            }
                         }
 
                         var taskData =
