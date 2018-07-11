@@ -52,7 +52,8 @@
             <label class="sr-only">Procedure </label>
             <div class="col-sm-11">
                 @Html.DropDownListFor(model => model.ProductProcedureId, Model.ProcedureList, "Select Procedure", new { @class = "form-control  selectProcedure" })
-            </div>
+                @Html.ValidationMessageFor(model => model.ProductProcedureId, "", new { @class = "text-danger" })
+              </div>
             <div class="col-sm-1">
                 <button type="submit" id="new-procedure" name="IsNewProcedure" value="true"
                         class="pull-right btn btn-default cancel"

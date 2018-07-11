@@ -92,9 +92,9 @@ namespace Msr.Services.Quotes
             return response;
         }
 
-        public CustomerRequirementView GetById(int id)
+        public CustomerRequirementView GetById(string objectId)
         {
-            var requirment = _dbContext.CustomerRequirementViews.SingleOrDefault(x => x.CustomerSubmitId == id);
+            var requirment = _dbContext.CustomerRequirementViews.SingleOrDefault(x => x.ObjectId == objectId);
 
             return requirment;
         }

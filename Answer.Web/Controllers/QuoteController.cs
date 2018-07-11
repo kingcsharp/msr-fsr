@@ -58,11 +58,11 @@ namespace Answer.Web.Controllers
             return View(viewModel);
         }
 
-        public ActionResult ViewQuote(int id, string objectId)
+        public ActionResult ViewQuote(string objectId)
         {
             var currentUser = GetCurrentUser();
 
-            var requirment = _quoteService.GetById(id);
+            var requirment = _quoteService.GetById(objectId);
 
             var vm = new JavaScriptSerializer().Deserialize<FreeFormQuoteViewModel>(requirment.QuoteJson);
 
@@ -84,9 +84,9 @@ namespace Answer.Web.Controllers
             return PartialView("_ViewQuote", vm);
         }
 
-        public ActionResult ViewRequirements(int id)
+        public ActionResult ViewRequirements( string objectId)
         {
-            var requirment = _quoteService.GetById(id);
+            var requirment = _quoteService.GetById(objectId);
 
             var vm = new JavaScriptSerializer().Deserialize<CustomerRequirementViewModel>(requirment.CustomerRequirementJson);
 

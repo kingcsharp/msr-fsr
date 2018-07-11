@@ -17,14 +17,18 @@
                 <div class="side-body padding-top">
                     <div class="" id="reqDetail">
                         <div class="row">
-                            <div class="col-sm-9">
+                            <div class="col-sm-8">
                                 <h2>View Product Definition</h2>
                             </div>
                             @if (!Model.HasQuote)
                             {
-                                <div class="col-sm-1 pull-right" style="margin-left: 20px;" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="View Orginally Submitted Requirements from Customer">
-                                    <button type="button" class="btn btn-primary pull-right view-requirment" id="view-requirment" data-call-back-id="@Model.Id" data-toggle="modal" data-target="#userRequirementsModal"><i class="fa fa-eye"></i> View Requirements</button>
-                                </div>
+                                <div class="col-sm-2 pull-right"  data-toggle="tooltip" data-placement="bottom" title="" data-original-title="View Orginally Submitted Requirements from Customer">
+                                    <button type="button" class="btn btn-primary pull-right view-requirment" 
+                                            id="view-requirment" data-call-back-id="@Model.Id"
+                                            data-id="@Model.Id" 
+                                            data-object="@Model.PObjectId"
+                                            data-toggle="modal" data-target="#userRequirementsModal"><i class="fa fa-eye"></i> View Requirements</button>
+                                 </div>
                                 if (Model.ProductStatus == "APPROVED" || Model.ProductStatus == "APPROVED_BUT_REVISING")
                                 {
                                     <div class="col-sm-1 pull-right" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="View Quote">
@@ -34,7 +38,16 @@
                             }
                             else
                             {
-                                <span class="pull-right btn btn-primary" style="margin-left: 10px;" data-id="@Model.Id" data-object="@Model.PObjectId" data-placement="top" title="" data-original-title="Generates a Quote Preview" data-toggle="modal" data-target="#quoteModal"><i class="fa fa-eye"></i> Preview Quote</span>
+                                <span class="pull-right btn btn-primary" style="margin-left: 10px;"
+                                      data-id="@Model.Id"
+                                      data-object="@Model.PObjectId"
+                                      data-placement="top"
+                                      title=""
+                                      data-original-title="Generates a Quote Preview"
+                                      data-toggle="modal"
+                                      data-target="#quoteModal">
+                                    <i class="fa fa-eye"></i> Preview Quote
+                                </span>
                             }
                         </div>
                         @using (Html.BeginForm("Edit", "ProductionPlanning", FormMethod.Post, new { @id = "production-planning-form", @class = "", role = "form" }))
@@ -66,10 +79,10 @@
                 <button type="button" class="close" data-dismiss="modal">×</button>
                 <h4 class="modal-title">Quote Requirements Preview</h4>
             </div>
-            <div class="modal-body" style="max-height: 100% !important;" id="printThis">
+            <div class="modal-body quote-requirements-print" style="max-height: 100% !important;">
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-info" id="Print"><i class="fa fa-print"></i> Print </button>
+                <button type="button" class="btn btn-info quote-requirements-preview"><i class="fa fa-print"></i> Print </button>
                 <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close-o"></i> Close</button>
             </div>
         </div>
@@ -96,8 +109,8 @@
                 $("#totalSalePrice").val(parseFloat(@Model.TotalSalePrice).toFixed(2));
             }
 
-            $('#Print').on('click', function () {
-                $('#printThis').printThis();
+            $('.quote-requirements-preview').on('click', function () {
+                $('.quote-requirements-print').printThis();
             });
 
             $("input,select,button").prop('disabled', true);

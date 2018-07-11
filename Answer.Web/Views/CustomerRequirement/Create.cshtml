@@ -141,6 +141,7 @@
                                                                                 <label class=" col-sm-2" for="field24">Name</label>
                                                                                 <div class="controls col-sm-8">
                                                                                     @Html.EditorFor(model => model.TechnicalName, new { htmlAttributes = new { @class = "form-control" } })
+                                                                                    @Html.ValidationMessageFor(model => model.TechnicalName, "", new { @class = "text-danger" })
                                                                                 </div>
                                                                             </div>
                                                                             <div class="form-group">

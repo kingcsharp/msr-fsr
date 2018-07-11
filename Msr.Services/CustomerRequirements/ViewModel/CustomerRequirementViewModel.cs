@@ -35,8 +35,12 @@ namespace Msr.Services.CustomerRequirements.ViewModel
         public string CommercialPhone { get; set; }
         [EmailAddress]
         public string CommercialEmail { get; set; }
+
+        [Required]
         public string TechnicalName { get; set; }
+
         public string TechnicalTitle { get; set; }
+        [Display(Name = "Phone")]
         [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Please enter a valid phone number.")]
         public string TechnicalPhone { get; set; }
         [EmailAddress]

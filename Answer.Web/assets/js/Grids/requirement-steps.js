@@ -150,23 +150,24 @@ function LoadSteps(i, myOptions) {
     $(document).on("keyup", ".machine-mins", function () {
         recalculateTotals();
     });
+
     recalculateTotals();
+
     $('#userRequirementsModal').on('show.bs.modal',
         function (event) {
+            debugger;
             var button = $(event.relatedTarget);
-            var callBackId = button.data('call-back-id');
+            var id = button.data('id');
+            var objectId = button.data('object');
             var modal = $(this);
-
             $.ajax({
                 type: "GET",
-                url: '/Quote/ViewRequirements/' + callBackId,
+                url: '/Quote/ViewRequirements/' + id + '?objectId=' + objectId,
                 dataType: 'html',
                 success: function (data) {
                     modal.find('.modal-body').html(data);
                 },
-                error: function () {
-
-                }
+                error: function () {}
             });
 
         });
@@ -363,3 +364,4 @@ function reBindValidation(form) {
 
     $.validator.unobtrusive.parse(form);
 }
+
