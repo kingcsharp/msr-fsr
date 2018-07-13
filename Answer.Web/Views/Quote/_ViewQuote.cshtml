@@ -29,14 +29,18 @@
 <table class="table no-border" width="100%">
     <tbody>
         <tr>
-            <td rowspan="2" width="60%" align="left"><img src="~/assets/img/msr-ccs.png" alt="MSR-FSR Critical Component Services"></td>
+            <td rowspan="2" width="60%" align="left">
+                <img src="~/assets/img/msr-ccs.png" alt="MSR-FSR Critical Component Services">
+            </td>
         </tr>
         <tr>
             <th align="right">Part / Kit No.:</th>
             <td>@Html.DisplayFor(x => x.PartKitNo)</td>
         </tr>
         <tr>
-            <td colspan="3" align="center"><h2>Quotation</h2></td>
+            <td colspan="3" align="center">
+                <h2 style="margin-top: -25px;">Quotation</h2>
+            </td>
         </tr>
         <tr>
             <td colspan="3"></td>
@@ -47,8 +51,8 @@
     <tbody>
         <tr>
             <th width="20%">Date: </th>
-            <td width="30%">@Html.DisplayFor(x => x.Date)</td>
-            <th width="20%">Customer Name:</th>
+            <td width="20%">@Html.DisplayFor(x => x.Date)</td>
+            <th width="30%">Customer Name:</th>
             <td width="30%">@Html.DisplayFor(x => x.CustomerName)</td>
         </tr>
         <tr>
