@@ -221,6 +221,11 @@ namespace Msr.Services.Orders
                         commandType: CommandType.StoredProcedure).ToList();
             }
 
+            foreach (var getPartsAndKitsLabelsResult in detailsResponse.GetPartsAndKitsLabelsResult)
+            {
+                getPartsAndKitsLabelsResult.Count = _dbContext.Database.SqlQuery<int>($"SELECT COUNT(SerialNumber) as COUNT FROM[PartsTransactionLog] WHERE PARTID = '{ getPartsAndKitsLabelsResult.Actual_Part_ID}' AND SerialNumber = '{ getPartsAndKitsLabelsResult.Serial}'").Single();
+            }
+
             return detailsResponse;
         }
 
@@ -915,18 +920,32 @@ namespace Msr.Services.Orders
             return detailsResponse;
         }
 
-        public void UpdateRootPart(int partId, string serialNumber, int taskId, string login)
+        public ResultNotification<StepStartTaskResult> UpdateRootPart(int partId, string serial, int taskId, string login, string type)
         {
-            var p = new DynamicParameters();
-
-            p.Add("@ID", partId, DbType.String, ParameterDirection.Input, size: 500);
-            p.Add("@taskID", taskId, DbType.String, ParameterDirection.Input, size: 50);
-            p.Add("@SN", serialNumber, DbType.String, ParameterDirection.Input, size: 50);
-            p.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input, size: 50);
-
-            using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
+            var result = new ResultNotification<StepStartTaskResult>();
+            try
             {
-                var stepStartDoneTaskResult = conn.Query<StepStartTaskResult>("A_SP_ACTUAL_PART_UPDATE_SERIAL_FROM_SERIALIZE_TASK", p, commandType: CommandType.StoredProcedure);
+                var p = new DynamicParameters();
+
+                p.Add("@ID", partId, DbType.String, ParameterDirection.Input, size: 500);
+                p.Add("@taskID", taskId, DbType.String, ParameterDirection.Input, size: 50);
+                p.Add("@SN", serial, DbType.String, ParameterDirection.Input, size: 50);
+                p.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input, size: 50);
+
+                using (IDbConnection conn =
+                    new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
+                {
+                    var stepStartDoneTaskResult =
+                        conn.Query<StepStartTaskResult>("A_SP_ACTUAL_PART_UPDATE_SERIAL_FROM_SERIALIZE_TASK", p,
+                            commandType: CommandType.StoredProcedure);
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                result.AddError(ex.Message);
+
+                return result;
             }
         }
 

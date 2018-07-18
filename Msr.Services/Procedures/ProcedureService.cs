@@ -565,7 +565,7 @@ namespace Msr.Services.Procedures
                 CounterUnit = viewModel.Counter_Unit,
                 FromStartOrStop = viewModel.FROM_START_OR_STOP,
                 RelOrAbs = viewModel.REL_OR_ABS,
-                SystemTask = viewModel.System_Task,
+                SystemTask = viewModel.StepSystemTask,
                 Destination = viewModel.Destination,
                 SpecificLocation = viewModel.Specific_Location,
                 ReferenceVerb = viewModel.REFERENCE_VERB,

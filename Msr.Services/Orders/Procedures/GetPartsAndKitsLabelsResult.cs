@@ -10,5 +10,9 @@ namespace Msr.Services.Orders.Procedures
         public string Company_Part_Number { get; set; }
 
         public string Part_Desc { get; set; }
+
+        public string Actual_Part_ID { get; set; }
+
+        public int Count { get; set; }
     }
 }

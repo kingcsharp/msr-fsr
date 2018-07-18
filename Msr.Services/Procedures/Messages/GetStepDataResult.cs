@@ -66,6 +66,7 @@ namespace Msr.Services.Procedures.Messages
         public string Pre_Step { get; set; }
         public string Title { get; set; }
         public string PrevStepName { get; set; }
+        public string StepSystemTask { get; set; }
         public string Duration_Type
         {
             get { return DurationType; }

@@ -3,64 +3,97 @@
     int i = 0;
     string readOnly = "";//(!Model.IsEditable).ToString();
 }
-@using (Html.BeginForm("UpdateRootParts", "Wip", FormMethod.Post))
+@using (Html.BeginForm("UpdateRootParts", "Wip", FormMethod.Post, new { id = "Update-root-part" }))
 {
     <input type="hidden" name="taskId" value="@Model.STEP_ID" />
-    <table class="table">
-        <tr>
-            <td>Part</td>
-            <td>Serial #</td>
-        </tr>
-        @foreach (var part in Model.GetActualPartsShowHierarchys)
-    {
-    <tr>
-        <td>@part.Part_Desc</td>
-        <td>
-            <input name="parts[@i].Serial" type="text" value="@part.Serial" @readOnly />
-            <input name="parts[@i].Id" type="hidden" value="@part.Id" />
-            <input name="parts[@i].TreeLevel" type="hidden" value="@part.Tree_Level" />
-            @if (part.Tree_Level == 0)
-                {
-                <button onclick="$('div#@part.Id').show()"   class="btn-success btn">Change</button>
-                <div id="@part.Id" style="display: none">
-                    S/N: <input type="text" />
-                    <button id="submit-serial-number" data-part-id="@part.Id">Submit</button>
-                </div>
-                }
-        </td>
-    </tr>
-        i++;
-    }
-        <tr>
-            <td colspan="2">
-                <button type="submit"  class="btn-success btn" id="btn-save">Save</button>
-                <button type="submit" class="btn-success btn">Save & complete task</button>
-            </td>
-        </tr>
-    </table>
-}
+        <table class="table">
+            <tr>
+                <td><label class="control-label">Part</label></td>
+                <td><label class="control-label">Serial #</label></td>
+            </tr>
+            @foreach (var part in Model.GetActualPartsShowHierarchys)
+            {
+                <tr>
+                    <td style="width: 500px;"><label class="control-label">@part.Part_Desc</label></td>
 
-<script>
-    $('#submit-serial-number').on('click', function() {
-        var partId = $(this).data('part-id');
-        var serialNumber = $('div#' + partId).find('input').val();
-        var taskId = @Model.STEP_ID;
+                    <td class="text-td">
+                        <input name="parts[@i].Serial" type="text" value="@part.Serial" @readOnly />
+                        <input name="parts[@i].Id" type="hidden" value="@part.Id" />
+                        <input name="parts[@i].TreeLevel" type="hidden" value="@part.Tree_Level" />
+                        @if (part.Tree_Level == 0)
+                        {
+                            <a onclick="$('div#@part.Id').show()" class="btn-success btn change-button">Change</a>
+                            <div id="@part.Id" style="display: none">
+                                S/N: <input type="text" />
+                                <button id="submit-serial-number" data-part-id="@part.Id" class="btn-success btn">Submit</button>
+                            </div>
+                        }
+                    </td>
 
-        eLoaderOpen()
-
-        $.ajax({
-            type: "POST",
-            url: "/wip/UpdateRootPart?partId=" + partId + "&serialNumber=" + serialNumber + "&taskId=" + taskId,
-            dataType: 'html',
-            success: function(data) {
-                if (data === "OK") {
-                    $('div#' + partId).hide();
-                }
-                eLoaderClose()
-            },
-            error: function (error) {
-                eLoaderError(error)
+                </tr>  i++;
             }
-        });
-    });
+            <tr>
+                <td colspan="2">
+                    <button type="button" class="btn-success btn" id="btn-save">Save</button>
+                    <button type="button" class="btn-success btn" id="btn-save-complete-task" data-button-id="completeTask">Save & complete task</button>
+                </td>
+            </tr>
+        </table>    }
+
+<script type="text/javascript">
+
+	$('.change-button').click(function() {
+		$('#btn-save').prop('disabled', true);
+	});
+
+	$('#submit-serial-number').on('click', function (e) {
+
+		e.preventDefault();
+		var partId = $(this).data('part-id');
+		var serialNumber = $('div#' + partId).find('input').val();
+		var taskId = @Model.STEP_ID;
+		$('#btn-save').prop('disabled', false);
+		eLoaderOpen();
+
+		$.ajax({
+			type: "POST",
+			url: "/wip/UpdateRootPart?partId=" + partId + "&serialNumber=" + serialNumber + "&taskId=" + taskId,
+			dataType: 'json',
+			success: function (data) {
+				if (data === 'OK') {
+					$('div#' + partId).hide();
+					eLoaderClose();
+				} else {
+					eLoaderError(data);
+				}
+			},
+			error: function (data) {
+				eLoaderError(data);
+			}
+		});
+	});
+
+	$('#btn-save,#btn-save-complete-task').on('click',
+		function (e) {
+			var button = $(this).data('button-id');
+			e.preventDefault();
+			eLoaderOpen();
+
+			$.ajax({
+				type: "POST",
+				url: "/wip/UpdateRootParts/?type=" + button,
+				data: $('#Update-root-part').serialize(),
+				dataType: 'json',
+				success: function (data) {
+					if (data === 'OK') {
+						eLoaderClose();
+					} else {
+						eLoaderError(data);
+					}
+				},
+				error: function (data) {
+					eLoaderError(data);
+				}
+			});
+		});
 </script>

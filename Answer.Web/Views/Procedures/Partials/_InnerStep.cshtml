@@ -65,6 +65,12 @@
                         </td>
                     </tr>
                     <tr>
+                        <th align='right'>SystemTask:</th>
+                        <td colspan="3">
+                            @Html.DropDownListFor(x => x.StepSystemTask, Model.SystemTasks, new { @class = "form-control" })
+                        </td>
+                    </tr>
+                    <tr>
                         <th colspan="1"></th>
                         <td colspan="5">
                             <button type="submit" class="btn btn-success" value="Save">Save</button>

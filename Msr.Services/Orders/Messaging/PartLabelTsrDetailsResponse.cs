@@ -11,6 +11,9 @@ namespace Msr.Services.Orders.Messaging
         }
 
         public int FillId { get; set; }
+
         public List<GetPartsAndKitsLabelsResult> GetPartsAndKitsLabelsResult { get; set; }
+
+        public int Count { get; set; }
     }
 }

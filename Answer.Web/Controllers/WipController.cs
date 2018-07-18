@@ -687,18 +687,39 @@ namespace Answer.Web.Controllers
         public ActionResult UpdateRootPart(int partId, string serialNumber, int taskId)
         {
             var loggedUserId = GetCurrentUser().Id;
-            _orderService.UpdateRootPart(partId, serialNumber, taskId, loggedUserId);
+            var responce = _orderService.UpdateRootPart(partId, serialNumber, taskId, loggedUserId, null);
 
-            return Json("OK", JsonRequestBehavior.AllowGet);
+            if (responce.HasErrors())
+            {
+                return Json(responce.ErrorMessage, JsonRequestBehavior.AllowGet);
+            }
+
+            return Json(new { Code = "OK", Message = responce }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
-        public ActionResult UpdateRootParts(List<ActualPart> parts, int taskId)
+        public ActionResult UpdateRootParts(List<ActualPart> parts, int taskId, string type)
         {
-            var loggedUserId = GetCurrentUser().Id;//to be removed
+            var loggedUserId = GetCurrentUser();//to be removed
+
             foreach (ActualPart part in parts.Where(x => x.TreeLevel > 0))
             {
-                _orderService.UpdateRootPart(part.Id, part.Serial, taskId, loggedUserId);
+                if (part.Serial != null)
+                {
+                    var result = _orderService.UpdateRootPart(part.Id, part.Serial, taskId, loggedUserId.Id, type);
+
+                    if (result.HasErrors())
+                    {
+                        return Json(result.ErrorMessage, JsonRequestBehavior.AllowGet);
+                    }
+                }
+            }
+
+            if (type == "completeTask")
+            {
+                var responce = _orderService.CloseTask(taskId.ToString(), loggedUserId.Id, 0);
+
+                return Json(responce, JsonRequestBehavior.AllowGet);
             }
 
             return Json("OK", JsonRequestBehavior.AllowGet);
