@@ -719,7 +719,12 @@ namespace Answer.Web.Controllers
             {
                 var responce = _orderService.CloseTask(taskId.ToString(), loggedUserId.Id, 0);
 
-                return Json(responce, JsonRequestBehavior.AllowGet);
+                if (!string.IsNullOrWhiteSpace(responce))
+                {
+                    return Json(responce, JsonRequestBehavior.AllowGet);
+                }
+
+                return Json("OK", JsonRequestBehavior.AllowGet);
             }
 
             return Json("OK", JsonRequestBehavior.AllowGet);

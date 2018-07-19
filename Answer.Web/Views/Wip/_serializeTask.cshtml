@@ -74,26 +74,30 @@
 	});
 
 	$('#btn-save,#btn-save-complete-task').on('click',
-		function (e) {
-			var button = $(this).data('button-id');
-			e.preventDefault();
-			eLoaderOpen();
+	    function (e) {
+	        var button = $(this).data('button-id');
+	        e.preventDefault();
+	        eLoaderOpen();
 
-			$.ajax({
-				type: "POST",
-				url: "/wip/UpdateRootParts/?type=" + button,
-				data: $('#Update-root-part').serialize(),
-				dataType: 'json',
-				success: function (data) {
-					if (data === 'OK') {
-						eLoaderClose();
-					} else {
-						eLoaderError(data);
-					}
-				},
-				error: function (data) {
-					eLoaderError(data);
-				}
-			});
-		});
+	        $.ajax({
+	            type: "POST",
+	            url: "/wip/UpdateRootParts/?type=" + button,
+	            data: $('#Update-root-part').serialize(),
+	            dataType: 'json',
+	            success: function (data) {
+	                eLoaderClose();
+	                if (data === 'OK') {
+	                    location.reload();
+	                    eLoaderClose();
+	                } else {
+	                    eLoaderError(data);
+
+	                }
+	            },
+	            error: function (error) {
+	                eLoaderError(error);
+	            }
+	        });
+        });
+
 </script>
