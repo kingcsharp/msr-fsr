@@ -64,7 +64,7 @@
     </tr>
     @foreach (var step in Model.TaskItemParts)
     {
-        if ((step.Status == "REQUESTED" || step.Status == "ACCEPTED" || step.Status == "PENDING_PARENT_ACCEPTANCE") && !string.IsNullOrWhiteSpace(step.Print_Order))
+        if ((step.Status == "REQUESTED" || step.Status == "ACCEPTED" || step.Status == "PENDING_PARENT_ACCEPTANCE"))
         {
             if (step.SYSTEM_TASK == "SYS_SERIALIZE" && step.STEP_ID== Model.StepId.ToString())
             {

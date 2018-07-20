@@ -42,8 +42,17 @@
 
 <script type="text/javascript">
 
+    if ($('#@Model.STEP_ID #start-step').hasClass('show')) {
+        $('#btn-save,#btn-save-complete-task').hide();
+        $('.change-button').addClass('disabled');
+    } else {
+        $('#btn-save,#btn-save-complete-task').show();
+        $('.change-button').removeClass('disabled');
+    }
+
 	$('.change-button').click(function() {
-		$('#btn-save').prop('disabled', true);
+        $('#btn-save').prop('disabled', true);
+	    $('#btn-save-complete-task').prop('disabled', true);
 	});
 
 	$('#submit-serial-number').on('click', function (e) {
@@ -60,12 +69,7 @@
 			url: "/wip/UpdateRootPart?partId=" + partId + "&serialNumber=" + serialNumber + "&taskId=" + taskId,
 			dataType: 'json',
 			success: function (data) {
-				if (data === 'OK') {
-					$('div#' + partId).hide();
-					eLoaderClose();
-				} else {
-					eLoaderError(data);
-				}
+			    location.reload();
 			},
 			error: function (data) {
 				eLoaderError(data);

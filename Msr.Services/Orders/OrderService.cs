@@ -535,8 +535,6 @@ namespace Msr.Services.Orders
                                             }).ToList();
                                     }
                                 }
-
-                                break;
                             }
                         }
 
