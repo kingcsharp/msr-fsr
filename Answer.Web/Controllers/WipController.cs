@@ -698,7 +698,7 @@ namespace Answer.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult UpdateRootParts(List<ActualPart> parts, int taskId, string type)
+        public ActionResult UpdateRootParts(List<ActualPart> parts, int taskId, string type, int fillId)
         {
             var loggedUserId = GetCurrentUser();//to be removed
 
@@ -717,7 +717,7 @@ namespace Answer.Web.Controllers
 
             if (type == "completeTask")
             {
-                var responce = _orderService.CloseTask(taskId.ToString(), loggedUserId.Id, 0);
+                var responce = _orderService.CloseTask(taskId.ToString(), loggedUserId.Id, fillId);
 
                 if (!string.IsNullOrWhiteSpace(responce))
                 {

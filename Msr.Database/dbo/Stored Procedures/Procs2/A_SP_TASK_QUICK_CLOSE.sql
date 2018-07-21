@@ -1,7 +1,4 @@
-﻿
-
-
-CREATE   PROCEDURE A_SP_TASK_QUICK_CLOSE
+﻿CREATE   PROCEDURE A_SP_TASK_QUICK_CLOSE
 @RET_STATUS as varchar(500) OUTPUT,
 @MSGS as varchar(50) OUTPUT,
 @ID as varchar(50),
@@ -50,7 +47,6 @@ exec A_SP_TASK_CHECK_MONITORS_TO_GO_TO_DNR @ID
 
 
 
-
 declare @errMsg varchar(100)
 --print 'Check to see if the task has children and should not be closed'
 --if exists(SELECT * FROM A_TASKS WHERE
@@ -92,7 +88,7 @@ if @parentSys <> 'SYS_DNR'
 	begin
 	print 'Check to see if the task has failing monitors that stop it from closing'
 	if exists(SELECT * FROM A_MONITOR_TEMPLATES 
-		WHERE TASK_ID = @ID AND IS_PASSING=0 AND FAIL_ACTION not in ('CONTINUE','ENDPROCEDURE'))
+		WHERE TASK_ID = @ID AND IS_PASSING=0 AND FAIL_ACTION not in ('CONTINUE','ENDPROCEDURE',null))
 		begin
 		set @RET_STATUS = 'ERROR - A Failing Monitor Must Be Corrected'
 		goto fin

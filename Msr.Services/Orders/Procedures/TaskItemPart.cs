@@ -22,5 +22,7 @@ namespace Msr.Services.Orders.Procedures
         public bool IsEditable { get; set; }
 
         public List<GetActualPartsShowHierarchy> GetActualPartsShowHierarchys { get; set; }
+
+        public int FillId { get; set; }
     }
 }

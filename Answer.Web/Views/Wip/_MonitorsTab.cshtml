@@ -203,12 +203,6 @@
                                     </tr>
                                 }
                                 <tr>
-                                    <td class="nw-rght"><label class="control-label">Fault Handling:</label></td>
-                                    <td class="text-td">
-                                        @Html.DropDownListFor(x => Model[i].Fail_Action, Model[i].FailActionList, new { @class = "form-control" })
-                                    </td>
-                                </tr>
-                                <tr>
                                     <td class="nw-rght"><label class="control-label">Comments:</label></td>
                                     <td>@Html.TextAreaFor(x => Model[i].Comment, new { @class = "form-control" })</td>
                                 </tr>

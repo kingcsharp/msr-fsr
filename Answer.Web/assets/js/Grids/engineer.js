@@ -277,7 +277,7 @@ function currentStepFormatter(cellvalue, options, rowObject) {
             }
         } else {
             if (cellvalue !== 'NULL' && cellvalue !== null && cellvalue !== '') {
-                thisCellVal = '<strong>' + cellvalue + '</strong><br /> <div class="meter">' + rowObject.TimeComplete + '</div> <div class="meter">' + rowObject.PercComplete + '</div> ';
+                thisCellVal = '<strong>' + rowObject.TimeComplete  + '</strong><br /> <div class="meter">' + rowObject.TimeComplete + '</div> <div class="meter">' + rowObject.PercComplete + '</div> ';
             }
         }
 
