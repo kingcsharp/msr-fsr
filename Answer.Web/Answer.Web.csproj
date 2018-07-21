@@ -699,6 +699,7 @@
     <Content Include="assets\js\msr\grid-common.js" />
     <Content Include="assets\js\msr\Parts\PartUpdate.js" />
     <Content Include="assets\js\printThis.js" />
+    <Content Include="assets\js\procedure-monitor.js" />
     <Content Include="assets\js\procedure-steps.js" />
     <Content Include="assets\js\requirements_form.js" />
     <Content Include="assets\js\grids\showpruchasestatus.js" />

@@ -58,7 +58,7 @@ namespace Msr.Services.Procedures.ViewModels
 
         public string Clock_Unit { get; set; }
 
-        [DisplayName("Highest Threshold")]
+        [DisplayName("High Value")]
         [Range(0, float.MaxValue, ErrorMessage = "Can only be between 0 .. max")]
         public float? Highest_Threshold { get; set; }
 
@@ -70,7 +70,7 @@ namespace Msr.Services.Procedures.ViewModels
         [Range(0, float.MaxValue, ErrorMessage = "Can only be between 0 .. max")]
         public float? Target { get; set; }
 
-        [DisplayName("Low Threshold")]
+        [DisplayName("Low Value")]
         [Range(0, float.MaxValue, ErrorMessage = "Can only be between 0 .. max")]
         public float? Low_Threshold { get; set; }
 
@@ -109,6 +109,7 @@ namespace Msr.Services.Procedures.ViewModels
 
         public string Target_Object_Type { get; set; }
 
+        [DisplayName("Target Value")]
         public string Target_Object { get; set; }
 
         public string Skip_Mode { get; set; }

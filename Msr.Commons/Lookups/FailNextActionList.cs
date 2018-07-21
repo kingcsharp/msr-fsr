@@ -9,10 +9,8 @@ namespace Msr.Commons.Lookups
         {
             return new List<SelectListItem>
             {
-                new SelectListItem {Text = "CONTINUE", Value = "CONTINUE"},
-                new SelectListItem {Text = "DONOTCLOSE", Value = "DONOTCLOSE"},
-                new SelectListItem {Text = "DNR", Value = "DNR"},
-                new SelectListItem {Text = "DNR", Value = "DNR"}
+                new SelectListItem {Text = "RECORD AND CONTINUE", Value = "CONTINUE"},
+                new SelectListItem {Text = "STOP UNTIL FAULT CLEARED", Value = "DONOTCLOSE"}
             };
         }
     }
