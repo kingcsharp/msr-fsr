@@ -100,15 +100,22 @@
                                 }
                                 else if (Model[i].Monitor_Type == "NUMBER")
                                 {
-                                    if (!string.IsNullOrWhiteSpace(Model[i].Target))
-                                    {
-                                        <tr>
-                                            <td class="nw-rght"><label class="control-label">Target:</label></td>
-                                            <td class="text-td">
-                                                @Model[i].Target
-                                            </td>
-                                        </tr>
-                                    }
+                                    <tr>
+                                        <td class="nw-rght"><label class="control-label">Should be:</label></td>
+                                        @if (Model[i].Should_Be == "BETWEEN")
+                                        {
+                                        <td class="text-td">
+                                            @Model[i].Lowest_Threshold and @Model[i].Highest_Threshold
+                                        </td>
+                                        }
+                                        else
+                                        {
+                                        <td class="text-td">
+                                            @Model[i].Target
+                                        </td> 
+                                        }
+                                    </tr>
+
                                     <tr>
                                         <td class="nw-rght"><label class="control-label">Result:</label></td>
                                         <td class="text-td">

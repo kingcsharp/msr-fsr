@@ -18,15 +18,17 @@
 
             if (this.value === 'NUMBER') {
                 $('.if-number').show();
-                $('.if-not-between').show();
+                $('.if-not-number').show();
 
-                if ($('#AddMonitorForProcedureViewModel_Should_Be').val() === 'BETWEEN' && $('#AddMonitorForProcedureViewModel_Monitor_Type').val() === 'NUMBER') {
-                    $('.if-not-between').hide();
-                }
+            }
+            else if (this.value === 'EQUIPMENT' || this.value === 'YES_NO' || this.value === 'TEXT' || this.value === 'PASS_FAIL') {
+                $('.if-between').hide();
+                $('.if-not-between').show();
+                $('.if-number').hide();
             }
             else {
                 $('.if-number').hide();
-                $('.if-not-between').show();
+                $('.if-not-number').show();
             }
         });
 

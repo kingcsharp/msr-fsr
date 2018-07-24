@@ -74,7 +74,7 @@ namespace Msr.Services.Procedures.ViewModels
         [Range(0, float.MaxValue, ErrorMessage = "Can only be between 0 .. max")]
         public float? Low_Threshold { get; set; }
 
-        [DisplayName("Lowest Threshold")]
+        [DisplayName("Low Value")]
         [Range(0, float.MaxValue, ErrorMessage = "Can only be between 0 .. max")]
         public float? Lowest_Threshold { get; set; }
 
