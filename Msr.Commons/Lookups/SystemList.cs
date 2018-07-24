@@ -16,72 +16,72 @@ namespace Msr.Commons.Lookups
                 },
                 new SelectListItem
                 {
-                    Text = @"SYS_COMP_TEST",
+                    Text = @"Computerized Test",
                     Value = "SYS_COMP_TEST",
                 },
                 new SelectListItem
                 {
-                    Text = @"SYS_CONSUME",
+                    Text = @"Consume",
                     Value = "SYS_CONSUME"
                 },
                 new SelectListItem
                 {
-                    Text = @"SYS_CREATE",
+                    Text = @"Create",
                     Value = "SYS_CREATE"
                 },
                 new SelectListItem
                 {
-                    Text = @"SYS_DNR",
+                    Text = @"Diagnose And Repair",
                     Value = "SYS_DNR"
                 },
                 new SelectListItem
                 {
-                    Text = @"SYS_E_ACCESS",
+                    Text = @"E-Access",
                     Value = "SYS_E_ACCESS"
                 },
                 new SelectListItem
                 {
-                    Text = @"SYS_INSTALL",
+                    Text = @"Install",
                     Value = "SYS_INSTALL"
                 },
                 new SelectListItem
                 {
-                    Text = @"SYS_PROVIDE_AND_CONSUMED",
+                    Text = @"Provide and consume",
                     Value = "SYS_PROVIDE_AND_CONSUMED"
                 },
                 new SelectListItem
                 {
-                    Text = @"SYS_PROVIDE_AND_STAY",
+                    Text = @"Provide and stay",
                     Value = "SYS_PROVIDE_AND_STAY"
                 },
                 new SelectListItem
                 {
-                    Text = @"SYS_PROVIDE_TAKE_BACK",
+                    Text = @"Provide and take back",
                     Value = "SYS_PROVIDE_TAKE_BACK"
                 },
                 new SelectListItem
                 {
-                    Text = @"SYS_RECEIVE",
+                    Text = @"Receive",
                     Value = "SYS_RECEIVE"
                 },
                 new SelectListItem
                 {
-                    Text = @"SYS_REMOVE",
+                    Text = @"Remove",
                     Value = "SYS_REMOVE"
                 },
                 new SelectListItem
                 {
-                    Text = @"SYS_SEND",
+                    Text = @"Send",
                     Value = "SYS_SEND"
                 },
                 new SelectListItem
                 {
-                    Text = @"SYS_SERIALIZE",
+                    Text = @"Serialize Parts",
                     Value = "SYS_SERIALIZE"
                 },
                 new SelectListItem
                 {
-                    Text = @"SYS_SHIPPING",
+                    Text = @"Shipping",
                     Value = "SYS_SHIPPING"
                 }
             };

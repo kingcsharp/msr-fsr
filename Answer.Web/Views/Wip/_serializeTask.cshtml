@@ -1,8 +1,8 @@
 ﻿@model Msr.Services.Orders.Procedures.TaskItemPart
 @{
     int i = 0;
-    string readOnly = "";
 }
+
 @using (Html.BeginForm("UpdateRootParts", "Wip", FormMethod.Post, new { id = "Update-root-part" }))
 {
     <input type="hidden" name="taskId" value="@Model.STEP_ID" />
@@ -23,95 +23,66 @@
                         }
                         else
                         {
-                            <input name="parts[@i].Serial" type="text" class="serialize-serial" value="@part.Serial" />
+                            <input name="parts[@i].Serial" type="text" class="serialize-serial-num" value="@part.Serial" />
                         }
                         <input name="parts[@i].Id" type="hidden" value="@part.Id" />
                         <input name="parts[@i].TreeLevel" type="hidden" value="@part.Tree_Level" />
                         @if (part.Tree_Level == 0)
                         {
-                            <a onclick="$('div#@part.Id').show()" class="btn-success btn change-button">Change</a>
-                            <div id="@part.Id" style="display: none">
-                                S/N: <input type="text" class="serialize-serial"/>
-                                <button id="submit-serial-number" data-part-id="@part.Id" class="btn-success btn">Submit</button>
+                            <button type="button" class="btn-success btn change-button">Change</button>
+                            <div id="@part.Id" style="display: none" class="divshow">
+                                S/N: <input type="text" class="part-serail-number" />
+                                <button id="submit-serial-number" type="button" data-part-id="@part.Id" class="btn-success btn">Submit</button>
+                                <button type="button" class="btn-warning btn cancel-button">Cancel</button>
                             </div>
                         }
                     </td>
 
                 </tr>  i++;
             }
-            <tr>
-                <td colspan="2">
-                    <button type="button" class="btn-success btn" id="btn-save">Save</button>
-                    <button type="button" class="btn-success btn" id="btn-save-complete-task" data-button-id="completeTask">Save & complete task</button>
-                </td>
-            </tr>
-        </table>
-}
+
+        </table>    }
 
 <script type="text/javascript">
 
-    if ($('#@Model.STEP_ID #start-step').hasClass('show')) {
-        $('#btn-save,#btn-save-complete-task').hide();
-        $("input.serialize-serial").attr("disabled", true);
-        $('.change-button').addClass('disabled');
-    } else {
-        $('#btn-save,#btn-save-complete-task').show();
-        $('.change-button').removeClass('disabled');
-        $("input.serialize-serial").attr("disabled", false);
-    }
+	$(document).ready(function () {
 
-	$('.change-button').click(function() {
-        $('#btn-save').prop('disabled', true);
-	    $('#btn-save-complete-task').prop('disabled', true);
-	});
+		if ('@Model.Status' === "CLOSED") {
+			$('input.serialize-serial-num').attr("disabled", true);
+		}
 
-	$('#submit-serial-number').on('click', function (e) {
+		$('.change-button').click(function () {
+			$('.divshow').css('display', 'block');
+		});
 
-		e.preventDefault();
-		var partId = $(this).data('part-id');
-		var serialNumber = $('div#' + partId).find('input').val();
-		var taskId = @Model.STEP_ID;
-		$('#btn-save').prop('disabled', false);
-		eLoaderOpen();
+		$('.cancel-button').click(function () {
+			$('.divshow').css('display', 'none');
+		});
 
-		$.ajax({
-			type: "POST",
-			url: "/wip/UpdateRootPart?partId=" + partId + "&serialNumber=" + serialNumber + "&taskId=" + taskId,
-			dataType: 'json',
-			success: function (data) {
-			    location.reload();
-			},
-			error: function (data) {
-				eLoaderError(data);
+		$('#submit-serial-number').on('click', function (e) {
+			var partId = $(this).data('part-id');
+			var serialNumber = $('div#' + partId).find('input').val();
+			var taskId = @Model.STEP_ID;
+
+			eLoaderOpen();
+			var partSerailNum = $('.part-serail-number').val();
+			if (partSerailNum === '') {
+				eLoaderError('Please enter a serial number for parts in the screen before continuing');
+			}
+			else
+			{
+			$.ajax({
+				type: "POST",
+				url: "/wip/UpdateRootPart?partId=" + partId + "&serialNumber=" + serialNumber + "&taskId=" + taskId,
+				dataType: 'json',
+				success: function (data) {
+					location.reload();
+				},
+				error: function (data) {
+					eLoaderError(data);
+				}
+				});
 			}
 		});
 	});
-
-	$('#btn-save,#btn-save-complete-task').on('click',
-	    function (e) {
-	        var button = $(this).data('button-id');
-	        e.preventDefault();
-	        eLoaderOpen();
-
-	        $.ajax({
-	            type: "POST",
-	            url: "/wip/UpdateRootParts/?type=" + button + "&fillId=" + '@Model.FillId',
-	            data: $('#Update-root-part').serialize(),
-	            dataType: 'json',
-	            success: function (data) {
-	                eLoaderClose();
-	                if (data === 'OK') {
-	                    location.reload();
-	                    eLoaderClose();
-	                } else {
-	                    eLoaderError(data);
-
-	                }
-	            },
-	            error: function (error) {
-	                eLoaderError(error);
-	            }
-	        });
-        });
-
 </script>

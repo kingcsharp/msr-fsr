@@ -1,5 +1,4 @@
-﻿@using Microsoft.AspNet.Identity
-@using Msr.Models.Tasks
+﻿@using Msr.Models.Tasks
 @model Msr.Services.Orders.Messaging.WipStepDetailsResponse
 
 @{
@@ -60,7 +59,12 @@
             }
 
             <button class="timer-btn btn btn-warning btn-lg print-btn pull-left @pauseButton" data-task-log-id="@taskId" id="pause-step"><i class="glyphicon glyphicon-pause"></i> Pause</button>
-            <button class="timer-btn btn btn-primary btn-lg print-btn pull-left @doneButton" data-task-log-id="@taskId" id="done-step"><i class="glyphicon glyphicon-stop"></i> Done</button>
+            <button class="timer-btn btn btn-primary btn-lg print-btn pull-left @doneButton"
+                    data-task-log-id="@taskId"
+                    data-system-task="@Model.TaskEditDataResult.SystemTask"
+                    id="done-step">
+                <i class="glyphicon glyphicon-stop"></i> Done
+            </button>
 
         </div>
     }
@@ -115,11 +119,16 @@
             StepStartClick();
         });
 
-        $('#@Model.StepId #done-step').on('click', function() {
-            StepDoneClick();
+        $('#@Model.StepId #done-step').on('click', function () {
+
+            if ($(this).data('system-task') === 'SYS_SERIALIZE') {
+                UpdateSerialNumber();
+            } else {
+                StepDoneClick();
+            }
         });
 
-        $('#@Model.StepId #assume-step').on('click',
+        $('#@Model.StepId #assume-step').on('click', 
             function() {
                 StepAssumeClick();
         });
@@ -335,10 +344,38 @@
                 $('#@Model.StepId #done-step').removeClass('hidden');
                 $('#@Model.StepId #pause-step').removeClass('hidden');
                 $('#@Model.StepId #resume-step').addClass('hidden');
+
                 $('#@Model.StepId #start-step').addClass('hidden');
             }
         }
         return true;
     }
 
+    function UpdateSerialNumber() {
+
+        var isValid = true;
+
+        $('.serialize-serial-num').each(function() {
+            if ($(this).val() === '') {
+                isValid = false;
+            }
+        });
+
+        if (!isValid) {
+            eModal.alert('Please enter a Serial Number for all parts and sub-parts in this screen before continuing.');
+        } else {
+                $.ajax({
+                    type: "POST",
+                    url: "/wip/UpdateRootParts/?fillId=" + '@Model.FillId',
+                    data: $('#Update-root-part').serialize(),
+                    dataType: 'json',
+                    success: function (data) {
+                        StepDoneClick();
+                    },
+                    error: function (error) {
+                        eLoaderError(error);
+                    }
+                });   
+        }
+    }
 </script>

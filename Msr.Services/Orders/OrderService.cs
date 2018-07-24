@@ -918,7 +918,7 @@ namespace Msr.Services.Orders
             return detailsResponse;
         }
 
-        public ResultNotification<StepStartTaskResult> UpdateRootPart(int partId, string serial, int taskId, string login, string type)
+        public ResultNotification<StepStartTaskResult> UpdateRootPart(int partId, string serial, int taskId, string login)
         {
             var result = new ResultNotification<StepStartTaskResult>();
             try

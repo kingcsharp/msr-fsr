@@ -687,7 +687,7 @@ namespace Answer.Web.Controllers
         public ActionResult UpdateRootPart(int partId, string serialNumber, int taskId)
         {
             var loggedUserId = GetCurrentUser().Id;
-            var responce = _orderService.UpdateRootPart(partId, serialNumber, taskId, loggedUserId, null);
+            var responce = _orderService.UpdateRootPart(partId, serialNumber, taskId, loggedUserId);
 
             if (responce.HasErrors())
             {
@@ -706,7 +706,7 @@ namespace Answer.Web.Controllers
             {
                 if (part.Serial != null)
                 {
-                    var result = _orderService.UpdateRootPart(part.Id, part.Serial, taskId, loggedUserId.Id, type);
+                    var result = _orderService.UpdateRootPart(part.Id, part.Serial, taskId, loggedUserId.Id);
 
                     if (result.HasErrors())
                     {
