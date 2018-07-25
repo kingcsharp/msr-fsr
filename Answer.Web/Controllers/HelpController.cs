@@ -135,7 +135,7 @@ namespace Msr.Web.Controllers
                     <tr><td>Phone</td><td>{viewModel.Phone}</td></tr>
                     <tr><td>Subject</td><td>{viewModel.Subject}</td></tr>
                     <tr><td>ContactMethod</td><td>{viewModel.ContactMethod}</td></tr>
-                    <tr><td>Details</td><td>{viewModel.Details}</td></tr>
+                    <tr><td>Details</td><td>{viewModel.Details.Replace(Environment.NewLine, "<br/>")}</td></tr>
                     </table>";
 
                 var from = viewModel.Email;

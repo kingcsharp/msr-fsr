@@ -366,6 +366,7 @@ $(document).ready(function () {
                     if (data === 'OK') {
                         $('#support-model').modal("hide");
                         eLoaderClose();
+                        $('.close').click();
                     } else {
                         eLoaderError(data);
                     }
