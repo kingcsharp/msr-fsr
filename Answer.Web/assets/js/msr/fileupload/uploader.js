@@ -18,7 +18,7 @@ Msr.FileComman = Msr.FileComman ||
     }
 }
 
-
+var count = 0;
 var FileUploader = function () {
 
     var initEditUploader = function (elementId, url, initialPreview, initialPreviewConfig, objectId, showSelect, section) {
@@ -51,26 +51,31 @@ var FileUploader = function () {
                 console.log('File uploaded params', params);
             }).on('filebeforedelete',
             function () {
-                return new Promise(function (resolve) {
 
-                    $.confirm({
-                        title: 'Confirmation!',
-                        content: 'Are you sure you want to delete this file?',
-                        type: 'red',
-                        buttons: {
-                            ok: {
-                                btnClass: 'btn-primary text-white',
-                                keys: ['enter'],
-                                action: function () {
-                                    resolve();
+                if (count === 0) {
+                    count++;
+                    return new Promise(function (resolve) {
+                        $.confirm({
+                            title: 'Confirmation!',
+                            content: 'Are you sure you want to delete this file?',
+                            type: 'red',
+                            buttons: {
+                                ok: {
+                                    btnClass: 'btn-primary text-white',
+                                    keys: ['enter'],
+                                    action: function () {
+                                        resolve();
+                                        count = 0;
+                                    }
+                                },
+                                cancel: function () {
+                                    count = 0;
                                 }
-                            },
-                            cancel: function () {
-                                //$.alert('File deletion was aborted! ' + getCount(element));
                             }
-                        }
+                        });
                     });
-                });
+                }
+
             }).on("filebatchselected", function () {
                 //element.fileinput("upload");
             });
