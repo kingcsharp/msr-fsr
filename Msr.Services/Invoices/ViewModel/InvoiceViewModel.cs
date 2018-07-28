@@ -4,8 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Mvc;
 
 namespace Msr.Services.Invoices.ViewModel
@@ -31,6 +29,7 @@ namespace Msr.Services.Invoices.ViewModel
         [Required]
         public string CustPo { get; set; }
 
+        [Required]
         public DateTime? InvoiceDate { get; set; }
 
         public int InvoiceNumber { get; set; }
@@ -51,7 +50,7 @@ namespace Msr.Services.Invoices.ViewModel
 
         public string InvoiceClass { get; set; }
 
-        public List<InvoiceDetailListViewModel> invoiceDetailList { get; set; }
+        public List<InvoiceDetailListViewModel> InvoiceDetailList { get; set; }
 
         public List<SelectListItem> ClientList { get; set; }
 

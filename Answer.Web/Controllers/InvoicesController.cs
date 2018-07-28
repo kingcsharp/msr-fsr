@@ -130,7 +130,7 @@ namespace Answer.Web.Controllers
         {
             var invoiceViewModel = new InvoiceViewModel();
 
-            invoiceViewModel.invoiceDetailList = _invoicesService.InvoiceItemsDetailListById(id).ToList();
+            invoiceViewModel.InvoiceDetailList = _invoicesService.InvoiceItemsDetailListById(id).ToList();
 
             return PartialView("_InvoiceItemsList", invoiceViewModel);
         }
@@ -152,7 +152,7 @@ namespace Answer.Web.Controllers
 
             var model = _invoicesService.GetInvoicesQueryable().Where(x => x.Id == id).SingleOrDefault();
 
-            invoiceViewModel.invoiceDetailList = _invoicesService.InvoiceItemsDetailListById(model.CustPo).ToList();
+            invoiceViewModel.InvoiceDetailList = _invoicesService.InvoiceItemsDetailListById(model.CustPo).ToList();
 
             invoiceViewModel = invoiceViewModel.MapToDto(model);
 

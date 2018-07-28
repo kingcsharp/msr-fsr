@@ -1,12 +1,13 @@
 ﻿@model Msr.Services.Invoices.ViewModel.InvoiceViewModel
+
 <style>
     .no-border {
         border-bottom: 0px !important;
     }
 
-        .no-border th, .no-border td {
-            border: 1px !important;
-        }
+    .no-border th, .no-border td {
+        border: 1px !important;
+    }
 
     .quote-header th {
         text-align: right;
@@ -26,14 +27,14 @@
         padding-top: 2px !important;
     }
 </style>
+
 <link href="~/assets/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+
 @Html.Partial("Message")
 @using (Html.BeginForm("Create", "Invoices", FormMethod.Post, new { @class = "form-horizontal", @id = "FormId" }))
 {
     @Html.HiddenFor(model => model.Id, new { @class = "form-control", @id = "editId" })
-
     @Html.HiddenFor(model => model.Items, new { @class = "form-control", @id = "itemId" })
-
     @Html.HiddenFor(model => model.InvoiceNumber, new { @class = "form-control" })
     <table class="table quote-header" width="100%">
 
@@ -68,15 +69,14 @@
                         <span class="glyphicon glyphicon-calendar"></span>
                     </span>
                 </div>
+                @Html.ValidationMessageFor(model => model.InvoiceDate, "", new { @class = "text-danger" })
             </td>
             <th align="right">Invoice #:</th>
             <td>
                 @Html.DropDownListFor(model => model.InvoiceClass, Model.InvoiceIdList, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
             </td>
-
         </tr>
-
     </table>
     <table>
         <tr>
@@ -94,53 +94,51 @@
             </td>
         </tr>
     </table>
+    <table>
 
-        <table>
+        <tr>
+            <th align="right">Sub Total:</th>
+            <td>
+                <div class="input-group">
+                    <span class="input-group-addon">$</span>
+                    @Html.EditorFor(model => model.SubTotal, new { htmlAttributes = new { @class = "form-control", @id = "totalAmount", @readonly = "readonly" } })
+                </div>
+            </td>
+            <th align="right">Tax %:</th>
+            <td>
+                <div class="input-group">
 
-            <tr>
-                <th align="right">Sub Total:</th>
-                <td>
-                    <div class="input-group">
-                        <span class="input-group-addon">$</span>
-                        @Html.EditorFor(model => model.SubTotal, new { htmlAttributes = new { @class = "form-control", @id = "totalAmount", @readonly = "readonly" } })
-                    </div>
-                </td>
-                <th align="right">Tax %:</th>
-                <td>
-                    <div class="input-group">
+                    @Html.EditorFor(model => model.Tax, new { htmlAttributes = new { @class = "form-control", @id = "totalTaxAmount" } })
+                    <span class="input-group-addon">%</span>
+                </div>
+            </td>
+            <th align="right">Total:</th>
+            <td>
+                <div class="input-group">
+                    <span class="input-group-addon">$</span>
+                    @Html.EditorFor(model => model.Total, new { htmlAttributes = new { @class = "form-control", @id = "total", @readonly = "readonly" } })
 
-                        @Html.EditorFor(model => model.Tax, new { htmlAttributes = new { @class = "form-control", @id = "totalTaxAmount" } })
-                        <span class="input-group-addon">%</span>
-                    </div>
-                </td>
-                <th align="right">Total:</th>
-                <td>
-                    <div class="input-group">
-                        <span class="input-group-addon">$</span>
-                        @Html.EditorFor(model => model.Total, new { htmlAttributes = new { @class = "form-control", @id = "total", @readonly = "readonly" } })
+                </div>
+            </td>
+        </tr>
+        <br />
+        <br />
 
-                    </div>
-                </td>
-            </tr>
-            <br />
-            <br />
+        <tr>
+            <td colspan="4"></td>
+        </tr>
+    </table>
+    <table class="table  no-border" width="100%">
+        <tr>
+            <td align="right">
 
-            <tr>
-                <td colspan="4"></td>
-            </tr>
-        </table>
-
-        <table class="table  no-border" width="100%">
-            <tr>
-                <td align="right">
-
-                    <input type="submit" name="BSUBMIT" class="btn btn-primary" value="Submit">
+                <input type="submit" name="BSUBMIT" class="btn btn-primary" value="Submit">
 
 
-                    <input type="button" name="BCLOSE" class="btn btn-danger" data-dismiss="modal" value="Cancel">
-                </td>
-            </tr>
-        </table>
+                <input type="button" name="BCLOSE" class="btn btn-danger" data-dismiss="modal" value="Cancel">
+            </td>
+        </tr>
+    </table>
 }
 
 @Scripts.Render("~/bundles/js/jqueryval")

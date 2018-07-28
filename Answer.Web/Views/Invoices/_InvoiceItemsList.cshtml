@@ -1,6 +1,6 @@
 ﻿@model Msr.Services.Invoices.ViewModel.InvoiceViewModel
 <h4>Purchase Items to Apply (Check All that Apply)</h4>
-@if (Model.invoiceDetailList != null)
+@if (Model.InvoiceDetailList != null)
 {
     <table class="table table-bordered" id="records_table">
         <tr>
@@ -16,50 +16,50 @@
             <th>Amt of Inv Items</th>
             <th>Total</th>
         </tr>
-        @for (int i = 0; i < Model.invoiceDetailList.Count; i++)
+        @for (int i = 0; i < Model.InvoiceDetailList.Count; i++)
         {
 
             <tr>
                 <td class="getId">
-                    <input name="checkbox" class="checkAmount" value="@Model.invoiceDetailList[i].ID" id="poId" type="checkBox">
+                    <input name="checkbox" class="checkAmount" value="@Model.InvoiceDetailList[i].ID" id="poId" type="checkBox">
                 </td>
                 <td>
-                    @string.Format("{0:M/d/yyyy}", Model.invoiceDetailList[i].DATE_POSTED)
+                    @string.Format("{0:M/d/yyyy}", Model.InvoiceDetailList[i].DATE_POSTED)
                 </td>
              
                 <td>
-                    @Model.invoiceDetailList[i].CUST_PURCH_NUM
+                    @Model.InvoiceDetailList[i].CUST_PURCH_NUM
                 </td>
                 <td>
-                    @Model.invoiceDetailList[i].PURCHASE_ID
+                    @Model.InvoiceDetailList[i].PURCHASE_ID
                 </td>
                 <td>
-                    @Model.invoiceDetailList[i].PURCH_ITEM_ID
+                    @Model.InvoiceDetailList[i].PURCH_ITEM_ID
                 </td>
                 <td>
-                    @Model.invoiceDetailList[i].DESCRIPTION
+                    @Model.InvoiceDetailList[i].DESCRIPTION
                 </td>
                 <td>
-                    @Model.invoiceDetailList[i].QTY
+                    @Model.InvoiceDetailList[i].QTY
                 </td>
                 <td class="poAmount">
-                    @if (Model.invoiceDetailList[i].TotalSalePrice.HasValue)
+                    @if (Model.InvoiceDetailList[i].TotalSalePrice.HasValue)
                     {
-                        <span> $@Model.invoiceDetailList[i].TotalSalePrice</span>
-                        @Html.HiddenFor(x => Model.invoiceDetailList[i].TotalSalePrice, new { @id = "amountPo" })
+                        <span> $@Model.InvoiceDetailList[i].TotalSalePrice</span>
+                        @Html.HiddenFor(x => Model.InvoiceDetailList[i].TotalSalePrice, new { @id = "amountPo" })
                     }
                 </td>
                 <td>
-                    @if (Model.invoiceDetailList[i].AMOUNT.HasValue)
+                    @if (Model.InvoiceDetailList[i].AMOUNT.HasValue)
                     {
-                        <span> $@Model.invoiceDetailList[i].AMOUNT</span>
+                        <span> $@Model.InvoiceDetailList[i].AMOUNT</span>
                     }                    
                 </td>
 
                 <td>
-                    @if (Model.invoiceDetailList[i].TOTAL.HasValue)
+                    @if (Model.InvoiceDetailList[i].TOTAL.HasValue)
                     {
-                        <span>$ @Model.invoiceDetailList[i].TOTAL</span>
+                        <span>$ @Model.InvoiceDetailList[i].TOTAL</span>
                     }                   
                     
                 </td>
