@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Msr.Models.Tasks;
+﻿using System.Collections.Generic;
 using Msr.Services.Orders.Procedures;
 using Msr.Services.Orders.ViewModels;
 using Msr.Services.Users.Messages;
@@ -30,5 +28,6 @@ namespace Msr.Services.Orders.Messaging
         public LoggedUserIdResult LoggedUserIdResult { get; set; }
         public TaskLogDto TaskRunningDto { get; set; }
         public bool HasStepRoles { get; set; }
+        public string ParentPartId { get; set; }
     }
 }

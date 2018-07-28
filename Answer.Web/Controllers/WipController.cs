@@ -474,6 +474,8 @@ namespace Answer.Web.Controllers
 
             var vm = _orderService.GetPurchaseItemDetails(fillId, loggedUserId.Id);
 
+            response.ParentPartId = vm.FileSearchResult.FillObjectId.ToString();
+
             var currentStep = vm.TaskStepResults.SingleOrDefault(x => x.StepId == stepId.ToString());
 
             if (currentStep != null && currentStep.PRINT_ORDER == null)
@@ -589,11 +591,11 @@ namespace Answer.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult StepDoneClick(int stepId, int fillId)
+        public ActionResult StepDoneClick(int stepId, int fillId, int parentPartId, bool isSerilizeStep)
         {
             var loggedUserId = GetCurrentUser().Id;
 
-            var result = _orderService.StepDone(stepId, loggedUserId, fillId);
+            var result = _orderService.StepDone(stepId, loggedUserId, fillId, parentPartId, isSerilizeStep);
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }

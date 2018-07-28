@@ -7,5 +7,6 @@
         public string Serial { get; set; }
         public int Tree_Level { get; set; }
         public int Object_Id { get; set; }
+        public int TREE_HAS_CHILD { get; set; }
     }
 }

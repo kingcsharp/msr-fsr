@@ -84,16 +84,24 @@
     </div>
 </div>
 
-<script type="text/javascript">
 
-    $(function () {
-        @if (Model.TaskRunningDto!=null)
+@Scripts.Render("~/bundles/js/wip-step-controls")
+
+<script type="text/javascript">
+	$(document).ready(function () {
+
+	    var fillId = @Model.FillId;
+        var stepId = @Model.StepId;
+
+		var stepControls = new StepControls();
+
+		@if (Model.TaskRunningDto!=null)
         {
             <text>
-                $('#step-@Model.StepId .timer').timer({
-                    seconds: @Math.Round(Model.TaskRunningDto?.TotalSeconds ?? 0),
-                    duration: '@(Model.TaskRunningDto?.Duration ?? "0")'
-                });
+	            $('#step-@Model.StepId .timer').timer({
+		            seconds: @Math.Round(Model.TaskRunningDto?.TotalSeconds ?? 0),
+		            duration: '@(Model.TaskRunningDto?.Duration ?? "0")'
+	            });
             </text>
 
             if (Model.TaskRunningDto.StatusId == TimerStatuseConstants.InProgress)
@@ -105,277 +113,46 @@
             }
         }
 
-        $('#@Model.StepId #pause-step').on('click', function () {
-            StepPauseClick($(this).data('task-log-id'));
-            $('#step-@Model.StepId .timer').timer('pause');
-        });
+		$('#@Model.StepId #pause-step').on('click', function () {
+				var id = $(this).data('task-log-id');
+				eLoaderOpen();
+                stepControls.StepPauseClick(id, fillId, stepId);
+				$('#step-@Model.StepId .timer').timer('pause');
+			});
 
-        $('#@Model.StepId #resume-step').on('click',function() {
-            StepResumeClick($(this).data('task-log-id'));
-            $('#step-@Model.StepId .timer').timer('resume');
-        });
+		$('#@Model.StepId #resume-step').on('click', function () {
+				eLoaderOpen();
+				var id = $(this).data('task-log-id');
+                stepControls.StepResumeClick(id, stepId, fillId);
+				$('#step-@Model.StepId .timer').timer('resume');
+			});
 
-        $('#@Model.StepId #start-step').on('click', function () {
-            StepStartClick();
-        });
+		$('#@Model.StepId #start-step').on('click',function () {
+				eLoaderOpen();
+                stepControls.StepStartClick(stepId, fillId);
+			});
 
         $('#@Model.StepId #done-step').on('click', function () {
+            var parentPartId = @Model.ParentPartId;
 
-            if ($(this).data('system-task') === 'SYS_SERIALIZE') {
-                UpdateSerialNumber();
-            } else {
-                StepDoneClick();
-            }
-        });
+			if ($(this).data('system-task') === 'SYS_SERIALIZE') {
+			    stepControls.UpdateSerialNum(stepId, fillId, parentPartId);
+			} else {
+                stepControls.StepDone(stepId, fillId, parentPartId, false);
+			}
+	    });
 
-        $('#@Model.StepId #assume-step').on('click', 
-            function() {
-                StepAssumeClick();
-        });
+		$('#@Model.StepId #assume-step').on('click', function() {
+			eLoaderOpen();
+            stepControls.StepAssumeClick(stepId);
+		});
 
-        $('#addNcrModal').on('hidden.bs.modal', function(event) {
-                $(this).data('bs.modal', null);
-         });
+		$('#addNcrModal').on('hidden.bs.modal',function() {
+			$(this).data('bs.modal', null);
+		});
 
-        $('#addNcrModal').on('show.bs.modal',
-            function(event) {
-                var button = $(event.relatedTarget);
-                var id = button.data('id');
-                var fillId = button.data('fill-id');
-                var modal = $(this);
+		stepControls.AddNcrModel();
+		stepControls.AddNewEquipmentModel();
+	});
 
-                $.ajax({
-                    type: "GET",
-                    url: '/Wip/AddNcrModel?parentId=' + id + '&fillid=' + fillId,
-                    dataType: 'html',
-                    success: function(data) {
-                        modal.find('.modal-body').html(data);
-                    },
-                    error: function (error) {
-                        eLoaderError(error);
-                    }
-                });
-            });
-
-        $('#add-new-equipment-model').on('show.bs.modal',
-            function(event) {
-                var button = $(event.relatedTarget);
-                //var id = button.data('id');
-                var fillId = button.data('fill-id');
-                var modal = $(this);
-
-                $.ajax({
-                    type: "GET",
-                    url: '/Wip/AddEquipmentMaintenance?id=' + fillId,
-                    dataType: 'html',
-                    success: function(data) {
-                        modal.find('.modal-body').html(data);
-                    },
-                    error: function (error) {
-                        eLoaderError(error);
-                    }
-                });
-            });
-    });
-
-    function StepDoneClick() {
-        var stepId = @Model.StepId;
-        var fillId = @Model.FillId;
-
-        eLoaderOpen();
-
-        $.ajax({
-            type: "POST",
-            url: "/wip/StepDoneClick?stepId=" + stepId + "&fillId=" + fillId,
-            dataType: 'json',
-            success: function (data) {
-
-                if (data.ErrorMessage !== '') {
-                    eLoaderError(data.ErrorMessage);
-                } else {
-                    var stepInProgress = $('#carousel ul.slides').find(".waiting").first();
-
-                    if (stepInProgress.length > 0) {
-                        ////Get next step
-                        $(stepInProgress).removeClass('waiting');
-                        $(stepInProgress).addClass('requested');
-                        $(stepInProgress).trigger("click");
-                    }
-                    
-                    var stepRequested = $('[data-stepid=' + stepId + ']');
-
-                    if (stepRequested.length > 0) {
-                        $(stepRequested).addClass('step-complete');
-
-                        ////When last step done
-                        if (stepInProgress.length === 0) {
-                            $(stepRequested).trigger("click");
-                        }
-                    }
-
-                    eLoaderClose();
-                }
-            },
-            error: function (error) {
-                eLoaderError(error);
-            }
-        });
-    }
-
-    function StepStartClick() {
-
-        var stepId = @Model.StepId;
-        var fillId = @Model.FillId;
-
-        eLoaderOpen();
-
-        $.ajax({
-            type: "POST",
-            url: "/wip/StepStartClick?stepId=" + stepId + "&fillId=" + fillId,
-            dataType: 'json',
-            success: function (data) {
-                if (data.ErrorMessage !== '') {
-                    eLoaderError(data.ErrorMessage);
-                } else {
-                    eLoaderClose();
-                    var currentStep = $(".slides li[data-stepid='" + stepId + "']");
-                    $(currentStep).removeClass('waiting');
-                    $(currentStep).addClass('requested');
-                    $(currentStep).trigger("click");
-                }
-            },
-            error: function (error) {
-                eLoaderError(error);
-            }
-        });
-    }
-
-    function StepAssumeClick() {
-
-        var taskId = '@Model.StepId';
-        eLoaderOpen();
-
-        $.ajax({
-            type: "POST",
-            url: "/wip/AssumeTaskClick?taskId=" + taskId,
-            dataType: 'json',
-            success: function (data) {
-                if (data === 'OK') {
-                    var currentStep = $(".slides li[data-stepid='" + taskId + "']");;
-                    eLoaderClose();
-                    $(currentStep).trigger("click");
-                } else {
-                    eLoaderError(data);
-                }
-            },
-            error: function (error) {
-                eLoaderError(error);
-            }
-        });
-    }
-
-    function StepResumeClick(id) {
-
-        var fillId = @Model.FillId;
-        var taskId = '@Model.StepId';
-        id = $('#resume-step').attr('data-task-log-id');
-
-        eLoaderOpen();
-
-        $.ajax({
-            type: "POST",
-            url: "/wip/stepResume?taskLogId=" + id + "&stepId=" + taskId +"&fillId=" + fillId,
-            dataType: 'json',
-            success: function (data) {
-
-                if (id === null || id === '') {
-
-                    $('#resume-step,#pause-step,#done-step').attr('data-task-log-id', data.Entity.Id);
-
-                    $('.timer').timer({
-                        seconds: '' + data.Entity.TotalSeconds+'',
-                        duration: data.Entity.Duration
-                    });
-                }
-
-                TimerVisibility(data);
-                eLoaderClose();
-            },
-            error: function (error) {
-                eLoaderError(error);
-            }
-        });
-    }
-
-    function StepPauseClick(id) {
-        var fillId = @Model.FillId;
-
-        eLoaderOpen();
-
-        $.ajax({
-            type: "POST",
-            url: "/wip/StepPause?taskLogId=" + id + "&fillId=" + fillId,
-            dataType: 'json',
-            success: function (data) {
-                TimerVisibility(data);
-                eLoaderClose();
-            },
-            error: function (error) {
-                eLoaderError(error);
-            }
-        });
-    }
-
-    function TimerVisibility(data) {
-
-        if (data.ErrorMessage !== '') {
-            eModal.alert(data.ErrorMessage);
-            return false;
-        } else {
-
-            $('.timer-btn').attr('data-task-log-id', data.Entity.Id);
-
-            if (data.Entity.StatusId === 2) {
-                $('#@Model.StepId #resume-step').removeClass('hidden');
-                $('#@Model.StepId #pause-step').addClass('hidden');
-            }
-            else
-            if (data.Entity.StatusId === 1) {
-                $('#@Model.StepId #done-step').removeClass('hidden');
-                $('#@Model.StepId #pause-step').removeClass('hidden');
-                $('#@Model.StepId #resume-step').addClass('hidden');
-
-                $('#@Model.StepId #start-step').addClass('hidden');
-            }
-        }
-        return true;
-    }
-
-    function UpdateSerialNumber() {
-
-        var isValid = true;
-
-        $('.serialize-serial-num').each(function() {
-            if ($(this).val() === '') {
-                isValid = false;
-            }
-        });
-
-        if (!isValid) {
-            eModal.alert('Please enter a Serial Number for all parts and sub-parts in this screen before continuing.');
-        } else {
-                $.ajax({
-                    type: "POST",
-                    url: "/wip/UpdateRootParts/?fillId=" + '@Model.FillId',
-                    data: $('#Update-root-part').serialize(),
-                    dataType: 'json',
-                    success: function (data) {
-                        StepDoneClick();
-                    },
-                    error: function (error) {
-                        eLoaderError(error);
-                    }
-                });   
-        }
-    }
 </script>

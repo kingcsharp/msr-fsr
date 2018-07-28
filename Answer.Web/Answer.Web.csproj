@@ -698,6 +698,7 @@
     <Content Include="assets\js\msr\fileupload\uploader-grid.js" />
     <Content Include="assets\js\msr\grid-common.js" />
     <Content Include="assets\js\msr\Parts\PartUpdate.js" />
+    <Content Include="assets\js\msr\Wip\wip-step.js" />
     <Content Include="assets\js\printThis.js" />
     <Content Include="assets\js\procedure-monitor.js" />
     <Content Include="assets\js\procedure-steps.js" />
