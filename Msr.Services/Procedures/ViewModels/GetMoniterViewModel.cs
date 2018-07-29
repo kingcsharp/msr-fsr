@@ -1,12 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Net.Mime;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Mvc;
-using EntityFrameworkExtras.EF6;
 
 namespace Msr.Services.Procedures.ViewModels
 {
@@ -118,6 +112,8 @@ namespace Msr.Services.Procedures.ViewModels
         public string Hide_Target_Text { get; set; }
 
         public string Use_Result_Text { get; set; }
+
+        public Int16? YES_NO_ANSWER { get; set; }
 
         public string Fail_Stop_Text { get; set; }
 

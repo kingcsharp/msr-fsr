@@ -9,8 +9,6 @@ $(document).ready(function () {
 
         placeholder: "highlight",
         start: function (event, ui) {
-            console.log("Start");
-            //alert("Start");
         },
         change: function (event, ui) {
             console.log("Change");
@@ -80,6 +78,7 @@ $(document).ready(function () {
 });
 
 function UpdateMonitor() {
+
     $('#submit-moniter-form').on('click',
 
         function () {
@@ -106,35 +105,69 @@ function UpdateMonitor() {
                 }
             });
         });
+
+    $('#edit-submit-moniter-form').on('click',
+
+        function () {
+
+            var stepId = $('#AddMonitorForProcedureViewModel_Step_Id').val();
+            var moniter = $('#moniter-form').serialize();
+
+            eLoaderOpen();
+
+            $.ajax({
+                type: "POST",
+                url: "/Procedures/SaveMonitor",
+                dataType: 'HTML',
+                data: moniter,
+                success: function (data) {
+                    $('#' + stepId + ' tbody').html('');
+                    $('#' + stepId + ' tbody').append(data);
+                    eLoaderClose();
+
+                    $('#editMoniterModal').modal('toggle');
+                },
+                error: function (error) {
+                    eLoaderError(error);
+                }
+            });
+        });
 }
 
 function AddMonitor() {
     $('#addMoniterModal').on('show.bs.modal',
         function (event) {
             var button = $(event.relatedTarget);
-            //var id = button.data('id');
-            var moniterType = button.data('moniter-type');
-            var inputType = button.data('input-type');
-            var failAction = button.data('fail-action');
-            var description = button.data('description');
-            var objectId = button.data('object-id');
             var relatedObject = button.data('related-object');
             var stepId = button.data('step-id');
-            var procedureName = button.data('procedure-name');
-
-            var shouldBe = button.data('step-shouldbe');
-            var highestThreshold = button.data('step-highestthreshold');
-            var highThreshold = button.data('step-highthreshold');
-            var target = button.data('step-target');
-            var lowThreshold = button.data('step-lowthreshold');
-            var lowestThreshold = button.data('step-lowestthreshold');
-            var targetObject = button.data('step-Target-Object');
 
             var modal = $(this);
-            modal.find('.modal-body').html('');
+            $('.modal-body').html('');
             $.ajax({
                 type: "GET",
-                url: '/Procedures/AddMonitor?moniterType=' + moniterType + '&inputType=' + inputType + '&failAction=' + failAction + '&description=' + description + '&objectId=' + objectId + '&relatedObject=' + relatedObject + '&stepId=' + stepId + '&procedureName=' + procedureName + '&shouldBe=' + shouldBe + '&highestThreshold=' + highestThreshold + '&highThreshold=' + highThreshold + '&target=' + target + '&lowThreshold=' + lowThreshold + '&lowestThreshold=' + lowestThreshold + '&targetObject=' + targetObject,
+                url: '/Procedures/AddMonitor?relatedObject=' + relatedObject + '&stepId=' + stepId,
+                dataType: 'html',
+                success: function (data) {
+                    modal.find('.modal-body').html(data);
+                },
+                error: function (error) {
+                    eLoaderError(error);
+
+                }
+            });
+        });
+}
+function EditMonitor() {
+
+    $('#editMoniterModal').on('show.bs.modal',
+        function (event) {
+            var button = $(event.relatedTarget);
+            var objectId = button.data('object-id');
+            var modal = $(this);
+            $('.modal-body').html('');
+            $.ajax({
+                type: "GET",
+                url: '/Procedures/EditMonitor?objectId=' + objectId,
                 dataType: 'html',
                 success: function (data) {
                     modal.find('.modal-body').html(data);
@@ -165,13 +198,13 @@ function DeleteMonitor(target) {
             url: "/Procedures/DeleteMonitor",
             dataType: 'html',
             data: { id: id, stepId: stepId },
-            success: function(data) {
+            success: function (data) {
                 $('#' + stepId + ' tbody').html('');
                 $('#' + stepId + ' tbody').append(data);
                 eLoaderClose();
             },
-            error: function(error){
-            eModal.alert(error.statusText);
+            error: function (error) {
+                eModal.alert(error.statusText);
             }
         });
     }

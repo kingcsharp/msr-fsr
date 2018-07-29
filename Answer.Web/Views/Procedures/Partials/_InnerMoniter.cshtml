@@ -6,26 +6,40 @@
         <td>@item.Monitor_Type</td>
         <td>@item.Description</td>
         <td>@item.Input_Type</td>
-        <td>@item.Target_Object</td>
+        
+        @if (item.Monitor_Type == "NUMBER" && item.Should_Be == "BETWEEN")
+        {
+            <td>Between @item.Lowest_Threshold and @item.Highest_Threshold</td>
+        }
+        else if (item.Monitor_Type == "NUMBER" && item.Should_Be != "BETWEEN" )
+        {
+            <td>@item.Target</td>
+        }
+        else if (item.Monitor_Type == "EQUIPMENT")
+        {
+            <td>@item.Target</td>
+        }
+        else if (item.Monitor_Type == "TEXT")
+        {
+            <td>@item.Text_Target</td>
+        }
+        else if (item.Monitor_Type == "YES_NO")
+        {
+            <td>@item.YES_NO_ANSWER</td>
+        }
+        else if (item.Monitor_Type == "PASS_FAIL")
+        {
+            <td>@item.Target_Object</td>
+        }
         <td>
-            <span title="Edit Monitor" class="btn btn-xs btn-success" data-toggle="modal" data-procedure-name="@ViewBag.ProdecureName"
-                  data-moniter-type="@item.Monitor_Type"
-                  data-input-type="@item.Input_Type"
-                  data-fail-action="@item.Fail_Action"
-                  data-description="@item.Description"
+            <span title="Edit Monitor" class="btn btn-xs btn-success edit-monitor" data-toggle="modal"
                   data-object-id="@item.Id"
-                  data-related-object="@item.Related_Object_Id"
-                  data-step-id="@item.Step_Id"
-                  data-step-shouldbe="@item.Should_Be"
-                  data-step-highestthreshold="@item.Highest_Threshold"
-                  data-step-highthreshold="@item.High_Threshold"
-                  data-step-target="@item.Target"
-                  data-step-lowthreshold="@item.Low_Threshold"
-                  data-step-lowestthreshold="@item.Lowest_Threshold"
-                  data-step-Target-Object="@item.Target_Object"
-                  data-target="#addMoniterModal"
-                  href="#monitor_@item.Id"><i class="fa fa-edit" aria-hidden="true"></i></span>
-            <span onclick="DeleteMonitor(this)" title="Delete Monitor" style="cursor: pointer;" class="btn btn-xs btn-danger" data-ProcedureName="@ViewBag.ProdecureName" data-step-id="@item.Step_Id" data-id="@item.Id">
+                  data-target="#editMoniterModal"
+                  href="#monitor_@item.Id">
+                <i class="fa fa-edit" aria-hidden="true"></i>
+            </span>
+
+            <span onclick="DeleteMonitor(this)" title="Delete Monitor" style="cursor: pointer;" class="btn btn-xs btn-danger" data-step-id="@item.Step_Id" data-id="@item.Id">
                 <i class="fa fa-trash-o" aria-hidden="true"></i>
             </span>
         </td>
@@ -34,6 +48,6 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        AddMonitor();
+        EditMonitor();
     });
 </script>

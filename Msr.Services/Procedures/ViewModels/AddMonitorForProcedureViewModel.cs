@@ -1,4 +1,5 @@
-﻿using Msr.Services.EquipmentMaintenances;
+﻿using System;
+using Msr.Services.EquipmentMaintenances;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -111,6 +112,8 @@ namespace Msr.Services.Procedures.ViewModels
 
         [DisplayName("Target Value")]
         public string Target_Object { get; set; }
+
+        public Int16? YES_NO_ANSWER { get; set; }
 
         public string Skip_Mode { get; set; }
 

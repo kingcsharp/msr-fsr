@@ -18,9 +18,9 @@ namespace Msr.Services.Orders.Procedures
 
         public string CompletedBy { get; set; }
 
-        public DateTime ActualStartDate { get; set; }
+        public DateTime? ActualStartDate { get; set; }
 
-        public DateTime ActualStopDate { get; set; }
+        public DateTime? ActualStopDate { get; set; }
 
         public string LatestRequesteeName { get; set; }
 

@@ -1182,32 +1182,76 @@ namespace Answer.Web.Controllers
             return Json("Ok", JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult AddMonitor(string moniterType, string inputType, string failAction, string description, string objectId, string relatedObject, string stepId, string procedureName, string shouldBe, float? highestThreshold, float? highThreshold, float? target, float? lowThreshold, float? lowestThreshold, string targetObject)
+        public ActionResult AddMonitor(string relatedObject, string stepId)
         {
             var model = new GetStepDataResult
             {
                 AddMonitorForProcedureViewModel =
                 {
-                    Id = objectId,
-                    Monitor_Type = moniterType,
-                    Input_Type = inputType,
-                    Fail_Action = failAction,
-                    Description = description ?? "",
                     Related_Object_Id = relatedObject,
-                    Step_Id = stepId,
-                    ProcedureName = procedureName,
-                    Should_Be = shouldBe,
-                    Highest_Threshold =highestThreshold,
-                    High_Threshold =highThreshold,
-                    Target= target,
-                    Low_Threshold =lowThreshold,
-                    Lowest_Threshold =lowestThreshold,
-                    Target_Object =targetObject
-
+                    Step_Id = stepId
                 }
             };
-            ViewBag.ProcedureName = procedureName;
             model.AddMonitorForProcedureViewModel.Setup(new EquipmentMaintenanceService());
+            return PartialView("_Monitor", model);
+        }
+
+        public ActionResult EditMonitor(string objectId)
+        {
+            var currentUser = GetCurrentUser();
+
+            var result = _proceduresService.EditMonitorSteps(objectId, currentUser.Id);
+
+            var model = new GetStepDataResult
+            {
+                AddMonitorForProcedureViewModel =
+                {
+                    Id = objectId,
+                    Monitor_Type = result.Monitor_Type,
+                    Input_Type = result.Input_Type,
+                    Fail_Action = result.Fail_Action,
+                    Description = result.Description,
+                    Related_Object_Id = result.Related_Object_Id,
+                    Step_Id = result.Step_Id,
+                    Should_Be = result.Should_Be,
+                    Highest_Threshold =result.Highest_Threshold,
+                    Lowest_Threshold =result.Lowest_Threshold,
+                    Target_Object =result.Target_Object,
+                    Text_Target =result.Text_Target,
+                    Target = result.Target,
+                    Correct_Answer = result.Correct_Answer,
+                    YES_NO_ANSWER = result.YES_NO_ANSWER
+                }
+            };
+
+            if (result.Monitor_Type == "NUMBER" && result.Should_Be == "BETWEEN")
+            {
+                model.AddMonitorForProcedureViewModel.Highest_Threshold = result.Highest_Threshold;
+                model.AddMonitorForProcedureViewModel.Lowest_Threshold = result.Lowest_Threshold;
+            }
+            else if (result.Monitor_Type == "NUMBER" && result.Should_Be != "BETWEEN" && result.Target.HasValue)
+            {
+                model.AddMonitorForProcedureViewModel.Target_Object = result.Target.Value.ToString();
+            }
+            else if (result.Monitor_Type == "EQUIPMENT" && result.Target.HasValue)
+            {
+                model.AddMonitorForProcedureViewModel.Target_Object = result.Target.Value.ToString();
+            }
+            else if (result.Monitor_Type == "TEXT")
+            {
+                model.AddMonitorForProcedureViewModel.Target_Object = result.Text_Target;
+            }
+            else if (result.Monitor_Type == "YES_NO")
+            {
+                model.AddMonitorForProcedureViewModel.Target_Object = result.YES_NO_ANSWER?.ToString() ?? "";
+            }
+            else if (result.Monitor_Type == "PASS_FAIL")
+            {
+                model.AddMonitorForProcedureViewModel.Target_Object = result.Target_Object;
+            }
+
+            model.AddMonitorForProcedureViewModel.Setup(new EquipmentMaintenanceService());
+
             return PartialView("_Monitor", model);
         }
 

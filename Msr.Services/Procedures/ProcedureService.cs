@@ -110,74 +110,69 @@ namespace Msr.Services.Procedures
             var responsePurchase = new ResultNotification<AddPurchaseResponse> { Entity = new AddPurchaseResponse() };
             try
             {
-                var addProcedureMonitorProcedure = new AddProcedureMonitorProcedure()
+               var addProcedureMonitorProcedure = new AddProcedureMonitorProcedure()
                 {
 
                     Id = model.Id,
-
                     Monitor_Type = model.Monitor_Type,
                     Input_Type = model.Input_Type,
-
                     Description = model.Description,
-
                     Start_System_Task = model.Start_System_Task,
-
                     Start_Type = model.Start_Type,
-
                     Stop_System_Task = model.Stop_System_Task,
-
                     Stop_Type = model.Stop_Type,
-
                     Counter_Or_Clock = model.Counter_Or_Clock,
-
-                    Clock_Unit = model.Clock_Unit,
-
-                    Highest_Threshold = model.Highest_Threshold,
-
-                    High_Threshold = model.High_Threshold,
-
-                    Target = model.Target,
-
-                    Low_Threshold = model.Low_Threshold,
-
-                    Lowest_Threshold = model.Lowest_Threshold,
-
+                    Clock_Unit = model.Clock_Unit,                   
                     Should_Be = model.Should_Be,
-
                     Opinion = model.Opinion,
-
                     Hide_Target = model.Hide_Target,
-
                     Use_Result = model.Use_Result,
-
                     Fail_Stop = model.Fail_Stop,
-
                     Step_Id = model.Step_Id,
-
-                    Correct_Answer = model.Correct_Answer,
-
-                    Text_Target = model.Text_Target,
-
                     Task_Id = model.Task_Id,
-
                     Tolerance = model.Tolerance,
-
                     Related_Object_Id = model.Related_Object_Id,
-
                     Fail_Action = model.Fail_Action,
-
                     Target_Object_Type = model.Target_Object_Type,
-
-                    Target_Object = model.Target_Object,
-
                     Skip_Mode = model.Skip_Mode,
-
                     Cant_Change = model.Cant_Change,
-
                     Always_Pass = model.Always_Pass,
-
                     StrNTLogin = model.StrNTLogin
                 };
+
+
+                if (model.Monitor_Type == "NUMBER" && model.Should_Be == "BETWEEN")
+                {
+                    addProcedureMonitorProcedure.Target_Object = null;
+                    addProcedureMonitorProcedure.Highest_Threshold = model.Highest_Threshold;
+                    addProcedureMonitorProcedure.Lowest_Threshold = model.Lowest_Threshold;
+                }
+                else if (model.Monitor_Type == "NUMBER" && model.Should_Be != "BETWEEN" || model.Monitor_Type == "EQUIPMENT")
+                {
+                    addProcedureMonitorProcedure.Target = Convert.ToSingle(model.Target_Object);
+                    addProcedureMonitorProcedure.Highest_Threshold = null;
+                    addProcedureMonitorProcedure.Lowest_Threshold = null;
+                    addProcedureMonitorProcedure.Target_Object = null;
+                }
+                else if (model.Monitor_Type == "YES_NO")
+                {
+                    addProcedureMonitorProcedure.Correct_Answer = model.Target_Object;
+                    addProcedureMonitorProcedure.Target_Object = null;
+                }
+                else if (model.Monitor_Type == "TEXT")
+                {
+                    addProcedureMonitorProcedure.Text_Target = model.Target_Object;
+                    addProcedureMonitorProcedure.Target_Object = null;
+                }
+                else if (model.Monitor_Type == "PASS_FAIL")
+                {
+                    addProcedureMonitorProcedure.Target_Object = model.Target_Object;
+                    addProcedureMonitorProcedure.Target = null;
+                    addProcedureMonitorProcedure.Highest_Threshold = null;
+                    addProcedureMonitorProcedure.Lowest_Threshold = null;
+                    addProcedureMonitorProcedure.Text_Target = null;
+                    addProcedureMonitorProcedure.Correct_Answer = null;
+                }
 
                 _dbContext.Database.ExecuteStoredProcedure(addProcedureMonitorProcedure);
 
@@ -1197,6 +1192,18 @@ namespace Msr.Services.Procedures
 
             return result;
         }
+
+        public AddMonitorForProcedureViewModel EditMonitorSteps(string objectId, string ntLogin)
+        {
+            var objId = new SqlParameter("@ID", objectId);
+
+            var NTLogin = new SqlParameter("@strNTLogin", ntLogin);
+
+            var result = _dbContext.Database.SqlQuery<AddMonitorForProcedureViewModel>("EXEC A_SP_MONITOR_TEMPLATE_GET_DATA_BY_ID  @ID, @strNTLogin", objId, NTLogin).SingleOrDefault();
+
+            return result;
+        }
+
     }
 }
 

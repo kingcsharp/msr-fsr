@@ -6,15 +6,33 @@
     Steps
 </h2>
 <div class="col-lg-12">
-<ul id="sortable" class="sortable-container">
-    @for (var index = 0; index < Model.GetStepDataResults.Count; index++)
-    {
-        var item = Model.GetStepDataResults[index];
-        item.Index = index;
-        @Html.Partial("Partials/_InnerStep", item)
-    }
-</ul>
+    <ul id="sortable" class="sortable-container">
+        @for (var index = 0; index < Model.GetStepDataResults.Count; index++)
+        {
+            var item = Model.GetStepDataResults[index];
+            item.Index = index;
+            @Html.Partial("Partials/_InnerStep", item)
+        }
+    </ul>
 </div>
+
+<div id="editMoniterModal" class="modal fade" role="dialog">
+    <div class="modal-dialog" style="width: 50%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Edit Monitor</h4>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer">
+                <button type="button" id="edit-submit-moniter-form" class="btn btn-info"><i class="fa fa-print"></i> Submit</button>
+                <button type="button" class="btn btn-warning monitor-close" data-dismiss="modal"><i class="fa fa-close-o"></i> Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <div id="addMoniterModal" class="modal fade" role="dialog">
     <div class="modal-dialog" style="width: 50%;">
         <div class="modal-content">
