@@ -51,7 +51,7 @@ Begin
 		end
 	print 'We need to get all the data for this procedure step ' + @it
 	exec sp_GetUniqueID3 @newID OUTPUT
-	select @requesteeRole = OWNER_ROLE_ID,@stepName = STEP_TEXT, @stepTitle= STEP_TEXT, @systemID = SYSTEM_TASK
+	select @requesteeRole = OWNER_ROLE_ID,@stepName = STEP_TEXT, @stepTitle= TITLE, @systemID = SYSTEM_TASK
 		FROM A_V_PROCEDURE_STEPS_WITH_OWNER_LABOR WHERE ID = @it
 	select @supplierID = HISTORY_REF_ID FROM A_COMPANIES WHERE ID = dbo.FN_ROLE_GET_COMPANY(@requesteeRole)
 	
@@ -91,7 +91,7 @@ Begin
 		@requesteeID, --REQUESTEE_ID,
 		@requesteeRole, --GROUP_REQUESTEE_ID
 		@stepName, --DESCRIPTION 
-		stepTitle, --DESCRIPTION 
+		@stepTitle, --DESCRIPTION 
 		@systemID, --SYSTEM_TASK,
 		null, --COMMENT,
 		'3', --Security Level
