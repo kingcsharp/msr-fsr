@@ -152,17 +152,22 @@ namespace Msr.Services.Procedures
                     addProcedureMonitorProcedure.Target = Convert.ToSingle(model.Target_Object);
                     addProcedureMonitorProcedure.Highest_Threshold = null;
                     addProcedureMonitorProcedure.Lowest_Threshold = null;
-                    addProcedureMonitorProcedure.Target_Object = null;
+                    addProcedureMonitorProcedure.Correct_Answer = null;
+                    addProcedureMonitorProcedure.Text_Target = null;
                 }
                 else if (model.Monitor_Type == "YES_NO")
                 {
                     addProcedureMonitorProcedure.Correct_Answer = model.Target_Object;
                     addProcedureMonitorProcedure.Target_Object = null;
+                    addProcedureMonitorProcedure.Text_Target = null;
+                    addProcedureMonitorProcedure.Target = null;
                 }
                 else if (model.Monitor_Type == "TEXT")
                 {
                     addProcedureMonitorProcedure.Text_Target = model.Target_Object;
                     addProcedureMonitorProcedure.Target_Object = null;
+                    addProcedureMonitorProcedure.Correct_Answer = null;
+                    addProcedureMonitorProcedure.Target = null;
                 }
                 else if (model.Monitor_Type == "PASS_FAIL")
                 {

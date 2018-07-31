@@ -20,6 +20,10 @@
     font-size: 14px;
 }
 
+.panel-height {
+    height: 335px !important;
+}
+
 .text-td {
     margin-top: 0;
     vertical-align: bottom;

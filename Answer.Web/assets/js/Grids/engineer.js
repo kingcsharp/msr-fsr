@@ -269,19 +269,24 @@ function initDateEdit(elem, options) {
 function currentStepFormatter(cellvalue, options, rowObject) {
         var thisCellVal = '';
 
-        if (rowObject.Status !== 'ACCEPTED') {
-            if (rowObject.Status === 'REQUESTED') {
-                thisCellVal = 'REQUESTED';
-            } else {
-                thisCellVal = 'Completed';
-            }
+    if (rowObject.Status !== 'ACCEPTED') {
+        if (rowObject.Status === 'REQUESTED') {
+            thisCellVal = 'Waiting Start';
         } else {
-            if (cellvalue !== 'NULL' && cellvalue !== null && cellvalue !== '') {
-                thisCellVal = '<strong>' + rowObject.TimeComplete  + '</strong><br /> <div class="meter">' + rowObject.TimeComplete + '</div> <div class="meter">' + rowObject.PercComplete + '</div> ';
+            thisCellVal = 'Completed';
+        }
+    } else {
+        if (rowObject.PercComplete !== '')
+        {
+            if (rowObject.CurStepText != null) {
+                thisCellVal = '<strong>' + rowObject.CurStepText + '</strong><br /> <div class="meter">' + rowObject.TimeComplete + '</div> <div class="meter">' + rowObject.PercComplete + '</div> ';
+            } else {
+                thisCellVal = '<div class="meter">' + rowObject.TimeComplete + '</div> <div class="meter">' + rowObject.PercComplete + '</div> ';
             }
         }
+    }
 
-        return thisCellVal;
+    return thisCellVal;
     }
 
 function dispositionFormatter(cellvalue, options, rowObject) {

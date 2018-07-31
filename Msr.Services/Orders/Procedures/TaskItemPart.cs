@@ -1,5 +1,4 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Msr.Services.Orders.Procedures
 {
@@ -24,5 +23,9 @@ namespace Msr.Services.Orders.Procedures
         public List<GetActualPartsShowHierarchy> GetActualPartsShowHierarchys { get; set; }
 
         public int FillId { get; set; }
+
+        public string PARENT_ID { get; set; }
+
+        public byte? HAS_CHILD { get; set; }
     }
 }

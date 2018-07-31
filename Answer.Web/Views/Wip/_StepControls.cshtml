@@ -127,9 +127,10 @@
 				$('#step-@Model.StepId .timer').timer('resume');
 			});
 
-		$('#@Model.StepId #start-step').on('click',function () {
+        $('#@Model.StepId #start-step').on('click', function () {
+                var parentId=@Model.ParentId;
 				eLoaderOpen();
-                stepControls.StepStartClick(stepId, fillId);
+                stepControls.StepStartClick(stepId, fillId, parentId);
 			});
 
         $('#@Model.StepId #done-step').on('click', function () {

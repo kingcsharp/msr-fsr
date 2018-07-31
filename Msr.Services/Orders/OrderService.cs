@@ -481,6 +481,8 @@ namespace Msr.Services.Orders
                     detailsResponse.TaskItemParts = multi.Read<TaskItemPart>().ToList();
                 }
 
+                detailsResponse.ParentId = detailsResponse.TaskItemParts.Select(x => x.PARENT_ID.ToString()).FirstOrDefault();
+
                 var p2 = new DynamicParameters();
                 p2.Add("@procStepID", phStepId, DbType.String, ParameterDirection.Input);
                 p2.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input);
@@ -659,7 +661,31 @@ namespace Msr.Services.Orders
             }
         }
 
-        public ResultNotification<TaskLogDto> StepStart(int stepId, string login, int fillId)
+        public ResultNotification<TaskLogDto> StepStart(int stepId, string login, int fillId, string parentId)
+        {
+            if (!string.IsNullOrWhiteSpace(parentId))
+            {
+                var fill_Id = new SqlParameter("@fillID", fillId.ToString());
+                var ntLogin = new SqlParameter("@strNTLogin", login);
+
+                var result = _dbContext.Database.SqlQuery<TaskItemPart>("EXEC A_SP_TASKS_FIND_FOR_PURCHASE_ITEM_AND_ACT_PART @fillID, @strNTLogin", fill_Id, ntLogin).FirstOrDefault();
+
+                if (result.Status == "REQUESTED" && result.HAS_CHILD != null && result.Print_Order == null)
+                {
+                    ////Start parent procedure step
+                    var response = StepStart(Convert.ToInt32(result.STEP_ID), login, fillId);
+
+                    if (response.HasErrors())
+                    {
+                        return response;
+                    }
+                }
+            }
+            
+            return StepStart(stepId, login, fillId);
+        }
+
+        private ResultNotification<TaskLogDto> StepStart(int stepId, string login, int fillId)
         {
             var response = new ResultNotification<TaskLogDto>();
 
@@ -672,7 +698,8 @@ namespace Msr.Services.Orders
 
             using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
             {
-                var stepStartDoneTaskResult = conn.Query<StepStartTaskResult>("A_SP_TASK_ACCEPT", p, commandType: CommandType.StoredProcedure);
+                var stepStartDoneTaskResult =
+                    conn.Query<StepStartTaskResult>("A_SP_TASK_ACCEPT", p, commandType: CommandType.StoredProcedure);
 
                 var status = p.Get<string>("RET_STATUS");
 

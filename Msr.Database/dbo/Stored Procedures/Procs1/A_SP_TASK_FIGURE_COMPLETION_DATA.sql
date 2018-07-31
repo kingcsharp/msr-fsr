@@ -47,7 +47,7 @@ else
 	begin
 	SELECT @numSubTasks = count(ID) FROM A_TASKS WHERE PARENT_ID = @taskID
 	SELECT @numSubTasksComplete = count(ID) FROM A_TASKS WHERE PARENT_ID = @taskID AND STATUS in ('FINISHED','CLOSED','COMPLETED')
-	SELECT top 1 @curStepText = DESCRIPTION FROM A_TASKS WHERE PARENT_ID = @taskID AND STATUS in ('REQUESTED','ACCEPTED')
+	SELECT top 1 @curStepText = Title FROM A_TASKS WHERE PARENT_ID = @taskID AND STATUS in ('REQUESTED','ACCEPTED')
 	print 'Cur Step = ' + @curStepText
 	SELECT 
 		@numSubTasks = count(NUM_SUB_TASKS),

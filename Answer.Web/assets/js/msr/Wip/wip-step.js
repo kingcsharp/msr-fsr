@@ -1,10 +1,10 @@
 ﻿var StepControls = function () {
 
-    var stepStart = function (stepId, fillId) {
+    var stepStart = function (stepId, fillId, parentId) {
 
         $.ajax({
             type: "POST",
-            url: "/wip/StepStartClick?stepId=" + stepId + "&fillId=" + fillId,
+            url: "/wip/StepStartClick?stepId=" + stepId + "&fillId=" + fillId + "&parentId=" + parentId,
             dataType: 'json',
             success: function (data) {
                 if (data.ErrorMessage !== '') {

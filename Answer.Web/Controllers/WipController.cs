@@ -601,11 +601,11 @@ namespace Answer.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult StepStartClick(int stepId, int fillId)
+        public ActionResult StepStartClick(int stepId, int fillId, string parentId)
         {
             var loggedUserId = GetCurrentUser().Id;
 
-            var result = _orderService.StepStart(stepId, loggedUserId, fillId);
+            var result = _orderService.StepStart(stepId, loggedUserId, fillId, parentId);
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
