@@ -63,12 +63,12 @@
 
         @if (Model.Roles.Any(x => x.Role_Name == RoleConstants.ProductionManager || x.Role_Name == RoleConstants.MaintenanceTechnician))
                 {
-            <div class="form-group">
-                <label class="col-md-4 control-label" for="comments">Comments</label>
-                <div class="col-md-4">
-                    @Html.TextAreaFor(model => model.Comments, new { @class = "form-control input-md" })
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="comments">Comments</label>
+                    <div class="col-md-8">
+                        @Html.TextAreaFor(model => model.Comments, new { @class = "form-control input-md" })
+                    </div>
                 </div>
-            </div>
         }
         else
         {
@@ -217,11 +217,11 @@
             type: 'POST',
             url: "/EquipmentMaintenance/GetSecoundLocationsManually/" + id,
             success: function (data) {
-
+                
                 $("#SubLocationFirstId").empty();
                 $("#SubLocationSecondId").empty();
 
-                if (data === '') {
+                if (data.locations === '') {
                     $("#SubLocationFirstId").prop('disabled', true);
                     $("#SubLocationSecondId").prop('disabled', true);
                 } else {
@@ -234,7 +234,7 @@
                                 .append("<option value='" + row.Value + "'>" + row.Text + "</option>");
                         });
                 }
-                eLoaderClose()
+                eLoaderClose();
             },
             error: function (error) {
                 eLoaderError(error)

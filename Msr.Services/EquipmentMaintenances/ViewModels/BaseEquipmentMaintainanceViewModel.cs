@@ -53,9 +53,10 @@ namespace Msr.Services.EquipmentMaintenances.ViewModels
 
         public string NTLogin { get; set; }
 
+        [Required]
         public DateTime? PemLastCompletedDate { get; set; }
 
-//        [MinLength(1)]
+        [Required]
         public int? FrequencyField { get; set; }
 
         public List<GetMyRolesResult> Roles { get; set; }
