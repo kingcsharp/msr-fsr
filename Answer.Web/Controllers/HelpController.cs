@@ -128,15 +128,15 @@ namespace Msr.Web.Controllers
                     return Json("Invalid data", JsonRequestBehavior.AllowGet);
                 }
 
-                var body = $@"<table>
+                var body = $@"<!DOCTYPE html><html><body><table>
                     <tr><td>First Name</td><td>{viewModel.FirstName}</td></tr>
                     <tr><td>Last Name</td><td>{viewModel.LastName}</td></tr>
                     <tr><td>Email</td><td>{viewModel.Email}</td></tr>
                     <tr><td>Phone</td><td>{viewModel.Phone}</td></tr>
                     <tr><td>Subject</td><td>{viewModel.Subject}</td></tr>
-                    <tr><td>ContactMethod</td><td>{viewModel.ContactMethod}</td></tr>
+                    <tr><td>Contact Method</td><td>{viewModel.ContactMethod}</td></tr>
                     <tr><td>Details</td><td>{viewModel.Details.Replace(Environment.NewLine, "<br/>")}</td></tr>
-                    </table>";
+                    </table></body></html>";
 
                 var from = viewModel.Email;
                 var to = ConfigurationManager.AppSettings["SupportEmail"];

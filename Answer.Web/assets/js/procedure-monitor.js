@@ -2,45 +2,109 @@
 
     var initialize = function () {
 
-        if ($('#AddMonitorForProcedureViewModel_Monitor_Type').val() !== 'NUMBER') {
+        if ($('#AddMonitorForProcedureViewModel_Monitor_Type').val() === 'EQUIPMENT') {
             $('.if-number').hide();
+            $('.text-target').hide();
+            $('.yes-no').hide();
         }
-        else {
+        if ($('#AddMonitorForProcedureViewModel_Monitor_Type').val() === 'NUMBER') {
             $('.if-number').show();
+            $('.text-target').hide();
+            $('.yes-no').hide();
+        }
+        if ($('#AddMonitorForProcedureViewModel_Monitor_Type').val() === 'YES_NO') {
+            $('.if-number').hide();
+            $('.text-target').hide();
+            $('.yes-no').show();
+            $('.target-obj').hide();
+        }
+        if ($('#AddMonitorForProcedureViewModel_Monitor_Type').val() === 'TEXT') {
+            $('.if-number').hide();
+            $('.text-target').show();
+            $('.yes-no').hide();
+            $('.target-obj').hide();
+        }
+        if ($('#AddMonitorForProcedureViewModel_Monitor_Type').val() === 'PASS_FAIL') {
+            $('.if-number').hide();
+            $('.text-target').hide();
+            $('.yes-no').hide();
+            $('.target-obj').show();
         }
 
         if ($('#AddMonitorForProcedureViewModel_Should_Be').val() === 'BETWEEN' && $('#AddMonitorForProcedureViewModel_Monitor_Type').val() === 'NUMBER') {
             $('.if-not-between').hide();
             $('.if-between').show();
+            $('.target-obj').hide();
         }
 
         $('#AddMonitorForProcedureViewModel_Monitor_Type').on('change', function () {
 
-            if (this.value === 'NUMBER') {
+            if (this.value === 'NUMBER' && $('#AddMonitorForProcedureViewModel_Should_Be').val() === 'BETWEEN') {
                 $('.if-number').show();
                 $('.if-not-number').show();
-
+                $('.yes-no').hide();
+                $('.if-between').show();
+                $('.target-obj').hide();
+                $('.if-not-between').hide();
             }
-            else if (this.value === 'EQUIPMENT' || this.value === 'YES_NO' || this.value === 'TEXT' || this.value === 'PASS_FAIL') {
+            if (this.value === 'NUMBER' && $('#AddMonitorForProcedureViewModel_Should_Be').val() !== 'BETWEEN') {
+                $('.if-number').show();
+                $('.if-not-number').show();
+                $('.yes-no').hide();
+                $('.text-target').hide();
+                $('.target-obj').show();
+            }
+            if (this.value === 'EQUIPMENT') {
                 $('.if-between').hide();
                 $('.if-not-between').show();
                 $('.if-number').hide();
+                $('.text-target').hide();
+                $('.yes-no').hide();
+
             }
-            else {
+            if (this.value === 'YES_NO') {
+                $('.if-between').hide();
+                $('.if-not-between').show();
+                $('.if-number').hide();
+                $('.text-target').hide();
+                $('.yes-no').show();
+                $('.target-obj').hide();
+
+            }
+            if (this.value === 'TEXT') {
+                $('.if-between').hide();
+                $('.if-not-between').show();
+                $('.if-number').hide();
+                $('.text-target').show();
+                $('.target-obj').hide();
+                $('.yes-no').hide();
+            }
+            if (this.value === 'PASS_FAIL') {
                 $('.if-number').hide();
                 $('.if-not-number').show();
+                $('.text-target').hide();
+                $('.target-obj').show();
+                $('.yes-no').hide();
             }
+
+            $('#AddMonitorForProcedureViewModel_Target_Object').val('');
         });
 
         $('#AddMonitorForProcedureViewModel_Should_Be').on('change', function () {
 
+            $('#AddMonitorForProcedureViewModel_Target_Object').val('');
+
             if (this.value === 'BETWEEN') {
                 $('.if-between').show();
                 $('.if-not-between').hide();
+                $('.text-target').hide();
+                $('.yes-no').hide();
             }
             else {
                 $('.if-between').hide();
                 $('.if-not-between').show();
+                $('.text-target').hide();
+                $('.yes-no').hide();
             }
         });
 

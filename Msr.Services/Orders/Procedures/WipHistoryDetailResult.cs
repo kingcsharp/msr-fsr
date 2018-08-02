@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Msr.Services.Orders.Procedures
+﻿namespace Msr.Services.Orders.Procedures
 {
     public class WipHistoryDetailResult
     {
@@ -13,5 +11,7 @@ namespace Msr.Services.Orders.Procedures
         public string CustomerPerson { get; set; }
 
         public string FillObjectDescription { get; set; }
+
+        public string Rev { get; set; }
     }
 }
