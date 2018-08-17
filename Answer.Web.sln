@@ -11,8 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Msr.Repositories", "Msr.Rep
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Msr.Infrastructure", "Msr.Infrastructure\Msr.Infrastructure.csproj", "{9DD1FA43-9B92-4694-98A5-D75B672CFD67}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Msr.Documents.Api", "Msr.Documents.Api\Msr.Documents.Api.csproj", "{E4414CF4-39AD-4D1B-AC0C-367238C74182}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Msr.Infrastructure.Tests", "Msr.Infrastructure.Tests\Msr.Infrastructure.Tests.csproj", "{31BCB498-C9DC-44DE-A044-AFB2FB535DE4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Msr.Resources", "Msr.Resources\Msr.Resources.csproj", "{3F8721E6-7768-4BE7-864B-AA6C68F0D9E1}"
@@ -68,14 +66,6 @@ Global
 		{9DD1FA43-9B92-4694-98A5-D75B672CFD67}.Prod|Any CPU.Build.0 = Prod|Any CPU
 		{9DD1FA43-9B92-4694-98A5-D75B672CFD67}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9DD1FA43-9B92-4694-98A5-D75B672CFD67}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E4414CF4-39AD-4D1B-AC0C-367238C74182}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E4414CF4-39AD-4D1B-AC0C-367238C74182}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E4414CF4-39AD-4D1B-AC0C-367238C74182}.Dev|Any CPU.ActiveCfg = Dev|Any CPU
-		{E4414CF4-39AD-4D1B-AC0C-367238C74182}.Dev|Any CPU.Build.0 = Dev|Any CPU
-		{E4414CF4-39AD-4D1B-AC0C-367238C74182}.Prod|Any CPU.ActiveCfg = Prod|Any CPU
-		{E4414CF4-39AD-4D1B-AC0C-367238C74182}.Prod|Any CPU.Build.0 = Prod|Any CPU
-		{E4414CF4-39AD-4D1B-AC0C-367238C74182}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E4414CF4-39AD-4D1B-AC0C-367238C74182}.Release|Any CPU.Build.0 = Release|Any CPU
 		{31BCB498-C9DC-44DE-A044-AFB2FB535DE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{31BCB498-C9DC-44DE-A044-AFB2FB535DE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{31BCB498-C9DC-44DE-A044-AFB2FB535DE4}.Dev|Any CPU.ActiveCfg = Dev|Any CPU
