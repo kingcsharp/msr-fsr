@@ -1219,36 +1219,9 @@ namespace Answer.Web.Controllers
                     Target_Object =result.Target_Object,
                     Text_Target =result.Text_Target,
                     Target = result.Target,
-                    Correct_Answer = result.Correct_Answer,
-                    YES_NO_ANSWER = result.YES_NO_ANSWER
+                    Correct_Answer = result.YES_NO_ANSWER.ToString(),
                 }
             };
-
-            if (result.Monitor_Type == "NUMBER" && result.Should_Be == "BETWEEN")
-            {
-                model.AddMonitorForProcedureViewModel.Highest_Threshold = result.Highest_Threshold;
-                model.AddMonitorForProcedureViewModel.Lowest_Threshold = result.Lowest_Threshold;
-            }
-            else if (result.Monitor_Type == "NUMBER" && result.Should_Be != "BETWEEN" && result.Target.HasValue)
-            {
-                model.AddMonitorForProcedureViewModel.Target_Object = result.Target.Value.ToString();
-            }
-            else if (result.Monitor_Type == "EQUIPMENT" && result.Target.HasValue)
-            {
-                model.AddMonitorForProcedureViewModel.Target_Object = result.Target.Value.ToString();
-            }
-            else if (result.Monitor_Type == "TEXT")
-            {
-                model.AddMonitorForProcedureViewModel.Target_Object = result.Text_Target;
-            }
-            else if (result.Monitor_Type == "YES_NO")
-            {
-                model.AddMonitorForProcedureViewModel.Target_Object = result.YES_NO_ANSWER?.ToString() ?? "";
-            }
-            else if (result.Monitor_Type == "PASS_FAIL")
-            {
-                model.AddMonitorForProcedureViewModel.Target_Object = result.Target_Object;
-            }
 
             model.AddMonitorForProcedureViewModel.Setup(new EquipmentMaintenanceService());
 
@@ -1258,9 +1231,39 @@ namespace Answer.Web.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult SaveMonitor(GetStepDataResult model)
         {
+            var currentUser = GetCurrentUser();
+
+            if (model.AddMonitorForProcedureViewModel.Monitor_Type == "EQUIPMENT" || model.AddMonitorForProcedureViewModel.Monitor_Type == "PASS_FAIL" || model.AddMonitorForProcedureViewModel.Monitor_Type == "NUMBER" && model.AddMonitorForProcedureViewModel.Should_Be != "BETWEEN")
+            {
+                ModelState.Remove("AddMonitorForProcedureViewModel.Highest_Threshold");
+                ModelState.Remove("AddMonitorForProcedureViewModel.Lowest_Threshold");
+                ModelState.Remove("AddMonitorForProcedureViewModel.Text_Target");
+                ModelState.Remove("AddMonitorForProcedureViewModel.Correct_Answer");
+            }
+            else if (model.AddMonitorForProcedureViewModel.Monitor_Type == "YES_NO")
+            {
+                ModelState.Remove("AddMonitorForProcedureViewModel.Highest_Threshold");
+                ModelState.Remove("AddMonitorForProcedureViewModel.Lowest_Threshold");
+                ModelState.Remove("AddMonitorForProcedureViewModel.Text_Target");
+                ModelState.Remove("AddMonitorForProcedureViewModel.Target_Object");
+            }
+            else if (model.AddMonitorForProcedureViewModel.Monitor_Type == "TEXT")
+            {
+                ModelState.Remove("AddMonitorForProcedureViewModel.Highest_Threshold");
+                ModelState.Remove("AddMonitorForProcedureViewModel.Lowest_Threshold");
+                ModelState.Remove("AddMonitorForProcedureViewModel.Target_Object");
+                ModelState.Remove("AddMonitorForProcedureViewModel.Correct_Answer");
+            }
+            else if (model.AddMonitorForProcedureViewModel.Monitor_Type == "NUMBER" && model.AddMonitorForProcedureViewModel.Should_Be == "BETWEEN")
+            {
+                ModelState.Remove("AddMonitorForProcedureViewModel.Text_Target");
+                ModelState.Remove("AddMonitorForProcedureViewModel.Target_Object");
+                ModelState.Remove("AddMonitorForProcedureViewModel.Correct_Answer");
+            }
+
             if (ModelState.IsValid)
             {
-                model.AddMonitorForProcedureViewModel.StrNTLogin = GetCurrentUser().Id;
+                model.AddMonitorForProcedureViewModel.StrNTLogin = currentUser.Id;
 
                 if (model.AddMonitorForProcedureViewModel.Monitor_Type != "NUMBER")
                 {
@@ -1276,16 +1279,14 @@ namespace Answer.Web.Controllers
 
                 if (!response.HasErrors())
                 {
-                    TempData["SuccessMessage"] = model.AddMonitorForProcedureViewModel.Id == null
-                        ? "Monitor has been added successfully."
-                        : "Monitor has been Updated successfully.";
-
-                    var moniter = _proceduresService.GetMoniterByStepId(model.AddMonitorForProcedureViewModel.Step_Id, GetCurrentUser().Id);
+                    var moniter = _proceduresService.GetMoniterByStepId(model.AddMonitorForProcedureViewModel.Step_Id, currentUser.Id);
                     return PartialView("Partials/_InnerMoniter", moniter);
                 }
+
+                return Content(response.ErrorMessage);
             }
 
-            return Content("error");
+            return Content("model validation error");
         }
 
         public ActionResult Import()

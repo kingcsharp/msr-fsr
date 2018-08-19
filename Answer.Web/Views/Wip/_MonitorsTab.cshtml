@@ -1,6 +1,11 @@
 ﻿@model List<Msr.Services.Orders.Procedures.MonitorTemplateResult>
 
 <link href="~/assets/css/step-monitor.css" rel="stylesheet" />
+<style>
+    .red {
+        background-color: red;
+    }
+</style>
 
 @using (Html.BeginForm("UpdateStepMonitor", "Wip", FormMethod.Post, new { @class = "form form-horizontal", role = "form" }))
 {
@@ -109,7 +114,7 @@
                                         else
                                         {
                                         <td class="text-td">
-                                            @Model[i].Target
+                                            @Model[i].Should_Be  To @Model[i].Target
                                         </td> 
                                         }
                                     </tr>
@@ -147,9 +152,24 @@
                                 @if (Model[i].Monitor_Type == "EQUIPMENT")
                                 {
                                     <tr>
+                                        <td class="nw-rght"><label class="control-label">Target Value:</label></td>
+                                        <td class="text-td">
+                                            @Model[i].Target
+                                        </td>
+                                    </tr>
+                                    <tr>
                                         <td class="nw-rght"><label class="control-label">Target:</label></td>
                                         <td class="text-td">
-                                            @Html.TextBoxFor(x => Model[i].Target, new { @class = "form-control monitorTemplate_Target" })
+                                            @Html.TextBoxFor(x => Model[i].Target_Object, new { @class = "form-control monitorTemplate_Target" })
+                                        </td>
+                                    </tr>
+                                    <tr class="equipmentresult">
+                                        <td class="nw-rght">
+                                            <label class="control-label">Result:</label>
+                                            <td class="text-td">
+                                                @Html.TextBoxFor(x => Model[i].Print_Result, new { @class = !isPassing ? "input-validation-error" : String.Empty, @id = "equipment" })
+                                                <span id="print-result-message"></span>
+                                            </td>
                                         </td>
                                     </tr>
                                 }
@@ -159,6 +179,7 @@
                                         @if (!string.IsNullOrWhiteSpace(Model[i].Fail_Action))
                                         {
                                             failText = Model[i].FailActionList.Single(x => x.Value == Model[i].Fail_Action).Text;
+                                            @Html.HiddenFor(x => Model[i].Fail_Action, Model[i].FailActionList)
                                         }
                                         @failText
                                     </td>
@@ -168,7 +189,7 @@
                                     <tr>
                                         <td class="nw-rght"><label class="control-label">Target:</label></td>
                                         <td class="text-td">
-                                            @Html.TextBoxFor(x => Model[i].Target_Object, new { @class = "form-control monitorTemplate_Target" })
+                                            @Model[i].Target_Object
                                         </td>
                                     </tr>
                                     <tr>
@@ -296,7 +317,12 @@
             dataType: 'json',
             data: form.serialize(),
             success: function (data) {
-                location.reload();
+                if (data === 'OK') {
+
+                    location.reload();
+                } else {
+                    eLoaderError(data);
+                }
             },
             error: function (error) {
 

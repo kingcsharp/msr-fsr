@@ -88,7 +88,7 @@ if @parentSys <> 'SYS_DNR'
 	begin
 	print 'Check to see if the task has failing monitors that stop it from closing'
 	if exists(SELECT * FROM A_MONITOR_TEMPLATES 
-		WHERE TASK_ID = @ID AND IS_PASSING=0 AND FAIL_ACTION not in ('CONTINUE','ENDPROCEDURE',null))
+		WHERE TASK_ID = @ID AND IS_PASSING=0 AND FAIL_ACTION not in ('CONTINUE','ENDPROCEDURE'))
 		begin
 		set @RET_STATUS = 'ERROR - A Failing Monitor Must Be Corrected'
 		goto fin

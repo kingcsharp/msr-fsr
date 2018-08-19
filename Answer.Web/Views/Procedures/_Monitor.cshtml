@@ -40,10 +40,24 @@
             @Html.LabelFor(model => model.AddMonitorForProcedureViewModel.Lowest_Threshold, htmlAttributes: new { @class = "control-label col-md-4" })
             <div class="col-md-5">
                 @Html.EditorFor(model => model.AddMonitorForProcedureViewModel.Lowest_Threshold, new { htmlAttributes = new { @class = "form-control", data_content = "Description" } })
-                @Html.ValidationMessageFor(model => model.AddMonitorForProcedureViewModel.Lowest_Threshold, "", new { @class = "text-danger" })
+                @Html.ValidationMessageFor(model => model.AddMonitorForProcedureViewModel.Lowest_Threshold, "", new { @class = "text-danger low-threshold" })
             </div>
         </div>
-        <div class="form-group if-not-between">
+        <div class="form-group if-not-between text-target">
+            @Html.LabelFor(model => model.AddMonitorForProcedureViewModel.Text_Target, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-5">
+                @Html.TextBoxFor(model => model.AddMonitorForProcedureViewModel.Text_Target, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.AddMonitorForProcedureViewModel.Text_Target, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group if-not-between yes-no">
+            @Html.LabelFor(model => model.AddMonitorForProcedureViewModel.Correct_Answer, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-5">
+                @Html.TextBoxFor(model => model.AddMonitorForProcedureViewModel.Correct_Answer, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.AddMonitorForProcedureViewModel.Correct_Answer, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group if-not-between target-obj">
             @Html.LabelFor(model => model.AddMonitorForProcedureViewModel.Target_Object, htmlAttributes: new { @class = "control-label col-md-4" })
             <div class="col-md-5">
                 @Html.TextBoxFor(model => model.AddMonitorForProcedureViewModel.Target_Object, new { @class = "form-control" })

@@ -27,8 +27,8 @@
                                         Date:
                                     </th>
                                     <td>
-                                        <div class="input-group datepicker">
-                                            @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control datepicker" } })
+                                        <div class="input-group datepick">
+                                            @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control datepick" } })
                                             <span class="input-group-addon">
                                                 <span class="glyphicon glyphicon-calendar fa fa-calendar"></span>
                                             </span>
@@ -255,13 +255,13 @@
     <script type="text/javascript" src="~/assets/js/moment.min.js"></script>
     <script type="text/javascript" src="~/assets/js/bootstrap-datetimepicker.min.js"></script>
     <script type="text/javascript" src="~/assets/js/dataTables.bootstrap.min.js"></script>
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+    @Scripts.Render("~/bundles/js/jqueryval")
+
     <script type="text/javascript">
 
         $(document).ready(function () {
 
-            $('.datepicker').datetimepicker();
+            $('.datepick').datetimepicker();
 
             var i = 1;
 

@@ -279,7 +279,8 @@ namespace Answer.Web.Controllers
                         NTLogin = currentUser.Id,
                         TaskId = linkDocId,
                         FileUrl = docFile.FileUrl,
-                        FileKey = docFile.FileKey
+                        FileKey = docFile.FileKey,
+                        FileId = file
                     };
                     _orderService.SaveOrderItemImages(imageModel);
                 }
