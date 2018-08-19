@@ -14,7 +14,6 @@ using EntityFrameworkExtras.EF6;
 using Msr.Services.Parts.ViewModels;
 using Msr.Models.Common;
 using ExcelDataReader;
-using Msr.Services.Orders.Procedures;
 
 namespace Msr.Services.Parts
 {
