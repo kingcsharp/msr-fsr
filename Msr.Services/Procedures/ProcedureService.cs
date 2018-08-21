@@ -110,7 +110,7 @@ namespace Msr.Services.Procedures
             var responsePurchase = new ResultNotification<AddPurchaseResponse> { Entity = new AddPurchaseResponse() };
             try
             {
-               var addProcedureMonitorProcedure = new AddProcedureMonitorProcedure()
+                var addProcedureMonitorProcedure = new AddProcedureMonitorProcedure()
                 {
 
                     Id = model.Id,
@@ -122,7 +122,7 @@ namespace Msr.Services.Procedures
                     Stop_System_Task = model.Stop_System_Task,
                     Stop_Type = model.Stop_Type,
                     Counter_Or_Clock = model.Counter_Or_Clock,
-                    Clock_Unit = model.Clock_Unit,                   
+                    Clock_Unit = model.Clock_Unit,
                     Should_Be = model.Should_Be,
                     Opinion = model.Opinion,
                     Hide_Target = model.Hide_Target,
@@ -140,7 +140,6 @@ namespace Msr.Services.Procedures
                     StrNTLogin = model.StrNTLogin
                 };
 
-
                 if (model.Monitor_Type == "NUMBER" && model.Should_Be == "BETWEEN")
                 {
                     addProcedureMonitorProcedure.Target_Object = null;
@@ -157,14 +156,14 @@ namespace Msr.Services.Procedures
                 }
                 else if (model.Monitor_Type == "YES_NO")
                 {
-                    addProcedureMonitorProcedure.Correct_Answer = model.Target_Object;
+                    addProcedureMonitorProcedure.Correct_Answer = model.Correct_Answer;
                     addProcedureMonitorProcedure.Target_Object = null;
                     addProcedureMonitorProcedure.Text_Target = null;
                     addProcedureMonitorProcedure.Target = null;
                 }
                 else if (model.Monitor_Type == "TEXT")
                 {
-                    addProcedureMonitorProcedure.Text_Target = model.Target_Object;
+                    addProcedureMonitorProcedure.Text_Target = model.Text_Target;
                     addProcedureMonitorProcedure.Target_Object = null;
                     addProcedureMonitorProcedure.Correct_Answer = null;
                     addProcedureMonitorProcedure.Target = null;
@@ -393,7 +392,7 @@ namespace Msr.Services.Procedures
                 }).OrderBy(o => o.Text).ToList();
 
                 stepData.GetMoniterViewModels = GetMoniterByStepId(stepData.Id, loginId);
-                stepData.SetUp(new ProcedureVerbsService(), new ObjectsService(),new DocumentFilesService(), new TheoryParagraphService(), _roleService);
+                stepData.SetUp(new ProcedureVerbsService(), new ObjectsService(), new DocumentFilesService(), new TheoryParagraphService(), _roleService);
             }
 
             return result.OrderBy(x => x.Print_Order).ToList();
@@ -580,7 +579,7 @@ namespace Msr.Services.Procedures
                 PrecedingSteps = viewModel.Pre_Step,
                 Title = viewModel.Title,
                 EquipmentTime = viewModel.EquipmentTime,
-                Roles = viewModel.Role !=null ? string.Join(",", viewModel.Role) : null,
+                Roles = viewModel.Role != null ? string.Join(",", viewModel.Role) : null,
                 Duration = viewModel.Duration,
                 DurationType = viewModel.Duration_Type,
                 ReplacementCost = viewModel.ReplacementCost,
@@ -1205,6 +1204,11 @@ namespace Msr.Services.Procedures
             var NTLogin = new SqlParameter("@strNTLogin", ntLogin);
 
             var result = _dbContext.Database.SqlQuery<AddMonitorForProcedureViewModel>("EXEC A_SP_MONITOR_TEMPLATE_GET_DATA_BY_ID  @ID, @strNTLogin", objId, NTLogin).SingleOrDefault();
+
+            if (result.Monitor_Type == "EQUIPMENT" || result.Monitor_Type == "NUMBER" && result.Should_Be != "BETWEEN")
+            {
+                result.Target_Object = result.Target.ToString();
+            }
 
             return result;
         }

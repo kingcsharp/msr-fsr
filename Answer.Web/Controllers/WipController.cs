@@ -580,7 +580,7 @@ namespace Answer.Web.Controllers
 
                 if (!string.IsNullOrWhiteSpace(returnValue))
                 {
-                    TempData["ErrorMesage"] = returnValue;
+                    return Json(returnValue, JsonRequestBehavior.AllowGet);
                 }
 
                 if (returnValue == "NEW_TEXT")

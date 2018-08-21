@@ -1,10 +1,6 @@
 ﻿using EntityFrameworkExtras.EF6;
 using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Msr.Services.Parts.Procedures
 {
@@ -83,8 +79,8 @@ namespace Msr.Services.Parts.Procedures
         [StoredProcedureParameter(SqlDbType.VarChar, Size = 8000, ParameterName = "CUSTOMERS")]
         public string Customers { get; set; }
 
-        [StoredProcedureParameter(SqlDbType.VarChar, Size = 50, ParameterName = "PRICE")]
-        public string Price { get; set; }
+        [StoredProcedureParameter(SqlDbType.Decimal, ParameterName = "PRICE")]
+        public decimal? Price { get; set; }
 
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "strNTLogin")]
         public string NTLogin { get; set; }

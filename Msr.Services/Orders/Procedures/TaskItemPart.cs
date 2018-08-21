@@ -27,5 +27,7 @@ namespace Msr.Services.Orders.Procedures
         public string PARENT_ID { get; set; }
 
         public byte? HAS_CHILD { get; set; }
+
+        public string OldStepId { get; set; }
     }
 }

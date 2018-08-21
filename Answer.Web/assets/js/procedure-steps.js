@@ -81,56 +81,65 @@ function UpdateMonitor() {
 
     $('#submit-moniter-form').on('click',
 
-        function () {
+        function (e) {
 
             var stepId = $('#AddMonitorForProcedureViewModel_Step_Id').val();
             var moniter = $('#moniter-form').serialize();
 
-            eLoaderOpen();
+            e.preventDefault();
+            var form = $('#moniter-form').closest("form");
+            var isvalid = form.valid();
+            if (isvalid) {
+                eLoaderOpen();
+                $.ajax({
+                    type: "POST",
+                    url: "/Procedures/SaveMonitor",
+                    dataType: 'HTML',
+                    data: moniter,
+                    success: function (data) {
+                        $('#' + stepId + ' tbody').html('');
+                        $('#' + stepId + ' tbody').append(data);
+                        eLoaderClose();
 
-            $.ajax({
-                type: "POST",
-                url: "/Procedures/SaveMonitor",
-                dataType: 'HTML',
-                data: moniter,
-                success: function (data) {
-                    $('#' + stepId + ' tbody').html('');
-                    $('#' + stepId + ' tbody').append(data);
-                    eLoaderClose();
-
-                    $('#addMoniterModal').modal('toggle');
-                },
-                error: function (error) {
-                    eLoaderError(error);
-                }
-            });
+                        $('.monitor-close').click();
+                    },
+                    error: function (error) {
+                        eLoaderError(error);
+                    }
+                });
+            }
         });
 
     $('#edit-submit-moniter-form').on('click',
 
-        function () {
+        function (e) {
 
             var stepId = $('#AddMonitorForProcedureViewModel_Step_Id').val();
             var moniter = $('#moniter-form').serialize();
 
-            eLoaderOpen();
+            e.preventDefault();
+            var form = $('#moniter-form').closest("form");
+            var isvalid = form.valid();
 
-            $.ajax({
-                type: "POST",
-                url: "/Procedures/SaveMonitor",
-                dataType: 'HTML',
-                data: moniter,
-                success: function (data) {
-                    $('#' + stepId + ' tbody').html('');
-                    $('#' + stepId + ' tbody').append(data);
-                    eLoaderClose();
+            if (isvalid) {
+                eLoaderOpen();
+                $.ajax({
+                    type: "POST",
+                    url: "/Procedures/SaveMonitor",
+                    dataType: 'HTML',
+                    data: moniter,
+                    success: function (data) {
+                        $('#' + stepId + ' tbody').html('');
+                        $('#' + stepId + ' tbody').append(data);
+                        eLoaderClose();
 
-                    $('#editMoniterModal').modal('toggle');
-                },
-                error: function (error) {
-                    eLoaderError(error);
-                }
-            });
+                        $('.monitor-close').click();
+                    },
+                    error: function (error) {
+                        eLoaderError(error);
+                    }
+                });
+            }
         });
 }
 

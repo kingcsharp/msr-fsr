@@ -1,6 +1,11 @@
 ﻿@model List<Msr.Services.Orders.Procedures.MonitorTemplateResult>
 
 <link href="~/assets/css/step-monitor.css" rel="stylesheet" />
+<style>
+    .red {
+        background-color: red;
+    }
+</style>
 
 @using (Html.BeginForm("UpdateStepMonitor", "Wip", FormMethod.Post, new { @class = "form form-horizontal", role = "form" }))
 {
@@ -109,7 +114,7 @@
                                         else
                                         {
                                         <td class="text-td">
-                                            @Model[i].Target
+                                            @Model[i].Should_Be  To @Model[i].Target
                                         </td> 
                                         }
                                     </tr>
@@ -117,7 +122,8 @@
                                     <tr>
                                         <td class="nw-rght"><label class="control-label">Result:</label></td>
                                         <td class="text-td">
-                                            @Html.TextBoxFor(x => Model[i].Print_Result, new { @class = !isPassing ? "input-validation-error form-control" : "form-control", @id = "number" })
+                                            @Html.TextBoxFor(x => Model[i].Print_Result, new { @class = !isPassing ? "input-validation-error form-control number" : "form-control number" })
+                                            <span id="print-result-message"></span>
                                         </td>
                                     </tr>
                                     <tr>
@@ -146,9 +152,24 @@
                                 @if (Model[i].Monitor_Type == "EQUIPMENT")
                                 {
                                     <tr>
+                                        <td class="nw-rght"><label class="control-label">Target Value:</label></td>
+                                        <td class="text-td">
+                                            @Model[i].Target
+                                        </td>
+                                    </tr>
+                                    <tr>
                                         <td class="nw-rght"><label class="control-label">Target:</label></td>
                                         <td class="text-td">
-                                            @Html.TextBoxFor(x => Model[i].Target, new { @class = "form-control monitorTemplate_Target" })
+                                            @Html.TextBoxFor(x => Model[i].Target_Object, new { @class = "form-control monitorTemplate_Target" })
+                                        </td>
+                                    </tr>
+                                    <tr class="equipmentresult">
+                                        <td class="nw-rght">
+                                            <label class="control-label">Result:</label>
+                                            <td class="text-td">
+                                                @Html.TextBoxFor(x => Model[i].Print_Result, new { @class = !isPassing ? "input-validation-error" : String.Empty, @id = "equipment" })
+                                                <span id="print-result-message"></span>
+                                            </td>
                                         </td>
                                     </tr>
                                 }
@@ -158,6 +179,7 @@
                                         @if (!string.IsNullOrWhiteSpace(Model[i].Fail_Action))
                                         {
                                             failText = Model[i].FailActionList.Single(x => x.Value == Model[i].Fail_Action).Text;
+                                            @Html.HiddenFor(x => Model[i].Fail_Action, Model[i].FailActionList)
                                         }
                                         @failText
                                     </td>
@@ -167,7 +189,7 @@
                                     <tr>
                                         <td class="nw-rght"><label class="control-label">Target:</label></td>
                                         <td class="text-td">
-                                            @Html.TextBoxFor(x => Model[i].Target_Object, new { @class = "form-control monitorTemplate_Target" })
+                                            @Model[i].Target_Object
                                         </td>
                                     </tr>
                                     <tr>
@@ -241,16 +263,16 @@
     $(document).ready(function () {
         $('.equipmentresult').hide();
 
-        $("#number").keypress(function (e) {
-            if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
-                $("#print-result-message").html("Digit Only").show().fadeOut("slow");
-                return false;
+        $(".number").on("keyup keypress blur change",function (e) {
+            if (isNaN($(this).val())) {
+                $("#print-result-message").html("Please enter a number").show().fadeOut(1200);
+                $(this).val('');
             }
         });
 
         $("#equipment").keypress(function (e) {
             if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
-                $("#print-result-message").html("Digit Only").show().fadeOut("slow");
+                $("#print-result-message").html("Please enter a number").show().fadeOut("slow");
                 return false;
             }
         });
@@ -295,7 +317,12 @@
             dataType: 'json',
             data: form.serialize(),
             success: function (data) {
-                location.reload();
+                if (data === 'OK') {
+
+                    location.reload();
+                } else {
+                    eLoaderError(data);
+                }
             },
             error: function (error) {
 

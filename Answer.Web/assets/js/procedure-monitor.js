@@ -81,6 +81,7 @@
             }
             if (this.value === 'PASS_FAIL') {
                 $('.if-number').hide();
+                $('.if-between').hide();
                 $('.if-not-number').show();
                 $('.text-target').hide();
                 $('.target-obj').show();

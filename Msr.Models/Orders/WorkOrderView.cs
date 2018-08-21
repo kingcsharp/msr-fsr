@@ -57,5 +57,7 @@ namespace Msr.Models.Orders
         [NotMapped]
         public string Action { get; set; }
         public string ProcObjId { get; set; }
+        public string PercCompletedText { get; set; }
+        public string TimeCompletedText { get; set; }
     }
 }
