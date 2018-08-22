@@ -102,7 +102,7 @@ namespace Msr.Services.Parts.ViewModels
         public string Customers { get; set; }
 
         [DisplayName("Unit Price :")]
-        public string Price { get; set; }
+        public decimal? Price { get; set; }
 
         public string NTLogin { get; set; }
 
@@ -338,7 +338,7 @@ namespace Msr.Services.Parts.ViewModels
                 SupplierCo = model.SupplierCo,
                 ProductType = model.ProductType,
                 ProcVerb = model.ProcVerb,
-                Price = model.Price != null ? $"{model.Price:0.00}" : null
+                Price = model.Price
             };
         }
 

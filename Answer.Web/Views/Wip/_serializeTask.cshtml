@@ -56,10 +56,11 @@
 		});
 
 		$('.cancel-button').click(function () {
-			$('.divshow').css('display', 'none');
+            $('.divshow').css('display', 'none');
+		    $('.part-serail-number').val('');
 		});
 
-		$('#submit-serial-number').on('click', function (e) {
+	    $('button#submit-serial-number').on('click', function (e) {
 			var partId = $(this).data('part-id');
 			var serialNumber = $('div#' + partId).find('input').val();
 			var taskId = @Model.STEP_ID;

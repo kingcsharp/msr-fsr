@@ -339,9 +339,21 @@ namespace Msr.Services.Orders
         {
             try
             {
+                var fileId = new SqlParameter();
+
                 var saveWorkItemImagesProcedure = new SaveWorkItemImagesProcedure(model);
 
                 _dbContext.Database.ExecuteStoredProcedure(saveWorkItemImagesProcedure);
+
+                var result = GetWipActualPartId(model.TaskId);
+
+                var actualPartId = new SqlParameter("@ActualPartId", result);
+
+                fileId = model.FileId == null ? new SqlParameter("@FileId", saveWorkItemImagesProcedure.NewId) : new SqlParameter("@FileId", model.FileId);
+
+                var ntLogin = new SqlParameter("@ModBy", model.NTLogin);
+
+                _dbContext.Database.ExecuteSqlCommand("EXEC portal_Actula_Part_Related_Files @ActualPartId,@FileId,@ModBy", actualPartId, fileId, ntLogin);
 
                 return saveWorkItemImagesProcedure.NewId;
             }
@@ -351,6 +363,18 @@ namespace Msr.Services.Orders
             }
 
         }
+
+        private string GetWipActualPartId(string id)
+        {
+            var result = _dbContext.Database.SqlQuery<string>($"select PARENT_ID from A_TASKS where id={id}").FirstOrDefault();
+
+            if (result == null)
+            {
+                return _dbContext.Database.SqlQuery<string>($"select ActualPartId from Portal_WorkOrders where TaskId={id}").SingleOrDefault();
+            }
+            return _dbContext.Database.SqlQuery<string>($"select ActualPartId from Portal_WorkOrders where TaskId={result}").SingleOrDefault();
+        }
+
 
         public List<WorkOrderImageView> GetOrderItemImagesById(string taskId)
         {
@@ -491,6 +515,13 @@ namespace Msr.Services.Orders
 
                 detailsResponse.ReferenceTheories = conn.Query<GetReferenceTheories>("SELECT l.THEORY_ID AS TheoryId,t.NAME AS TheoryName,OBJECT_ID AS ObjectId FROM A_PROCEDURE_STEP_THEORY_LINK l, A_V_THEORY_APPROVED_DATA t WHERE l.THEORY_ID = t.ID AND l.PROC_STEP_ID = @stepId", new { stepId = phStepId }, commandType: CommandType.Text).ToList();
 
+                foreach (var item in detailsResponse.TaskItemParts)
+                {
+                    if (item.Print_Order != null && item.STEP_ID == stepId.ToString())
+                    {
+                        detailsResponse.ReferenceTheories = conn.Query<GetReferenceTheories>($"SELECT l.THEORY_ID AS TheoryId,t.NAME AS TheoryName,OBJECT_ID AS ObjectId FROM A_PROCEDURE_STEP_THEORY_LINK l, A_V_THEORY_APPROVED_DATA t WHERE l.THEORY_ID = t.ID AND l.PROC_STEP_ID ='{item.OldStepId}'").ToList();
+                    }
+                }
                 foreach (var referenceTheoriese in detailsResponse.ReferenceTheories.AsQueryable())
                 {
                     referenceTheoriese.DocLinks = _documentFilesService.GetDocByObjectId(referenceTheoriese.ObjectId);

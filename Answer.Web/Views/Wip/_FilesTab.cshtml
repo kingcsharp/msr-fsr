@@ -4,16 +4,26 @@
     @Html.Partial("_FileUpload")
 </div>
 
-
 <script type="text/javascript">
 
     $(function () {
         var fileUploader = new FileUploader();
-        var fileId = 'file-tab-@Model.TaskId' +' #input-files';
+        var fileId = 'file-tab-@Model.TaskId' + ' #input-files';
+        var jsonString = '';
+        var jsonData = [""];
+
+        @if (!string.IsNullOrWhiteSpace(Model.Preview))
+        {
+            <text> jsonString = @Html.Raw(Model.Preview)</text>
+        }
+
+        if (jsonString.length>0) {
+            jsonData = [jsonString];
+        }
 
         fileUploader.InitEditUploader(fileId,
             '@Url.Action("FileUploaderForWipTask", "Doc")',
-            @Html.Raw(Model.Preview),
+            jsonData,
             @Html.Raw(Model.PreviewConfig),
             '@Model.TaskId',
             true,

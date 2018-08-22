@@ -51,7 +51,7 @@
             success: function (data) {
                 var $el = $('#' + elementId);
                 $el.fileinput('destroy');
-                
+                $el.off("filebeforedelete");
                 new FileUploader().InitEditUploader(elementId, uplaodUrl, data.initialPreview, data.initialPreviewConfig, objectId, true, elementId);
             },
             error: function () {
@@ -104,7 +104,7 @@
             success: function (data) {
                 var $el = $('#input-files');
                 $el.fileinput('destroy');
-
+                $el.off("filebeforedelete");
                 new FileUploader().InitUploader($el, fileUploaderUrl, data.initialPreview, data.initialPreviewConfig);
             },
             error: function () {

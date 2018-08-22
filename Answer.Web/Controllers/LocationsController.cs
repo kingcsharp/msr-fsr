@@ -50,9 +50,9 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.Id == rule.data);
                     }
-                    else if (rule.field == nameof(LocationView.ObjectId))
+                    else if (rule.field == nameof(LocationView.Root))
                     {
-                        totalRows = totalRows.Where(x => x.ObjectId.ToLower().Contains(rule.data.ToLower()));
+                        totalRows = totalRows.Where(x => x.Root.ToLower().Contains(rule.data.ToLower()));
                     }
                     else if (rule.field == nameof(LocationView.Name))
                     {

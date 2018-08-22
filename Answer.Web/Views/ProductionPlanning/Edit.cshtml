@@ -129,6 +129,10 @@
                 $('#printThis').printThis();
             });
 
+            $('.quote-requirements-preview').on('click', function () {
+                $('.quote-requirements-print').printThis();
+            });
+
             $('#ProductProcedureId').on('change', function() {
                 $('#production-planning-form').removeData('validator');
                 $('#production-planning-form').removeData('unobtrusiveValidation');

@@ -12,8 +12,8 @@ Msr.LocationsGrid = Msr.LocationsGrid ||
                     colModel: [
                         {
                             label: 'ID',
-                            name: 'ObjectId',
-                            index: 'ObjectId',
+                            name: 'Root',
+                            index: 'Root',
                             key: true,
                             colmenu: false,
                             coloptions: {

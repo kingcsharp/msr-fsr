@@ -2837,6 +2837,7 @@
     <Build Include="dbo\Tables\AdminCostSettings.sql" />
     <Build Include="dbo\Functions\SplitString.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_Create_UpdateProduct.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_Actula_Part_Related_Files.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Msr.Database.refactorlog" />

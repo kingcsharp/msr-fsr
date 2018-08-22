@@ -59,6 +59,7 @@ namespace Msr.Services.Procedures.ViewModels
 
         public string Clock_Unit { get; set; }
 
+        [Required]
         [DisplayName("High Value")]
         [Range(0, float.MaxValue, ErrorMessage = "Can only be between 0 .. max")]
         public float? Highest_Threshold { get; set; }
@@ -75,6 +76,7 @@ namespace Msr.Services.Procedures.ViewModels
         [Range(0, float.MaxValue, ErrorMessage = "Can only be between 0 .. max")]
         public float? Low_Threshold { get; set; }
 
+        [Required]
         [DisplayName("Low Value")]
         [Range(0, float.MaxValue, ErrorMessage = "Can only be between 0 .. max")]
         public float? Lowest_Threshold { get; set; }
@@ -95,8 +97,12 @@ namespace Msr.Services.Procedures.ViewModels
 
         public string Step_Id { get; set; }
 
+        [Required]
+        [Range(0, 1, ErrorMessage = "Please enter 0 or 1")]
+        [DisplayName("Target Value")]
         public string Correct_Answer { get; set; }
 
+        [DisplayName("Target Value")]
         public string Text_Target { get; set; }
 
         public string Task_Id { get; set; }
@@ -110,7 +116,9 @@ namespace Msr.Services.Procedures.ViewModels
 
         public string Target_Object_Type { get; set; }
 
+        [Required]
         [DisplayName("Target Value")]
+        [Range(0, float.MaxValue, ErrorMessage = "Please enter a number")]
         public string Target_Object { get; set; }
 
         public Int16? YES_NO_ANSWER { get; set; }

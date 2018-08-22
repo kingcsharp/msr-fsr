@@ -249,11 +249,14 @@
             });
 
             Msr.SaveOrPartUpdate.AddSubPart();
-            Msr.SaveOrPartUpdate.DeleteSubPart();
         });
 
         function SelectIds() {
-            fileUploaderGrid.SelectIdsForAdd(fileUploader, '@Url.Action("FileUploaderBootstrap", "Doc")');
+            fileUploaderGrid.SelectIdsForAdd('@Url.Action("FileUploaderBootstrap", "Doc")');
+        }
+
+        function DeleteSubPart(e, value) {
+            Msr.SaveOrPartUpdate.DeleteSubPartData(e, value);
         }
 
     </script>

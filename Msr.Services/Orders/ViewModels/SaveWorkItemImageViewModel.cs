@@ -20,5 +20,6 @@
         public string TaskId { get; set; }
         public string FileUrl { get; set; }
         public string FileKey { get; set; }
+        public string FileId { get; set; }
     }
 }
