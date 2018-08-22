@@ -1,0 +1,23 @@
+﻿@using Answer.Web.ViewModel.Help
+
+@{
+    var model = (SupportRequestModel)Model;
+}
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+    <body>
+        <table>
+            <tr><td>First Name</td><td>@Model.FirstName</td></tr>
+            <tr><td>Last Name</td><td>@Model.LastName</td></tr>
+            <tr><td>Email</td><td>@Model.Email</td></tr>
+            <tr><td>Phone</td><td>@Model.Phone</td></tr>
+            <tr><td>Subject</td><td>@Model.Subject</td></tr>
+            <tr><td>Contact Method</td><td>@Model.ContactMethod</td></tr>
+            <tr><td>Details</td><td>@Model.Details.Replace(Environment.NewLine, "<br />")</td></tr>
+        </table>
+    </body>
+</html>

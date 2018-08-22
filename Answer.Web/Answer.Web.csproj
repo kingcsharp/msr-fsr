@@ -76,6 +76,9 @@
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Mvc.Mailer, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvcMailer.4.5\lib\45\Mvc.Mailer.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -253,6 +256,8 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="UserMailer\IUserMailer.cs" />
+    <Compile Include="UserMailer\UserMailer.cs" />
     <Compile Include="ViewModel\AddClientUserViewModel.cs" />
     <Compile Include="ViewModel\Administration\AssignAccRecievableRoleViewModel.cs" />
     <Compile Include="ViewModel\Administration\AssignCompaniesToViewViewModel.cs" />
@@ -264,6 +269,7 @@
     <Compile Include="ViewModel\EditSafetyStockViewModel.cs" />
     <Compile Include="ViewModel\EditUserProfileViewModel.cs" />
     <Compile Include="ViewModel\Engineering\EngineeringViewModel.cs" />
+    <Compile Include="ViewModel\Help\SupportRequestModel.cs" />
     <Compile Include="ViewModel\Help\SupportViewModel.cs" />
     <Compile Include="ViewModel\Notes\AddNoteViewModel.cs" />
     <Compile Include="ViewModel\PartsReportsViewModel.cs" />
@@ -1369,6 +1375,7 @@
     <Content Include="Views\Quote\_ViewRequirementsQuote.cshtml" />
     <Content Include="Views\Parts\SubParts.cshtml" />
     <Content Include="Views\Help\_SupportTicket.cshtml" />
+    <Content Include="Views\UserMailer\SupportRequest.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

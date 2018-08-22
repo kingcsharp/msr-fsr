@@ -13,15 +13,21 @@ using Msr.Services.jqGrid;
 using Msr.Web.ViewModel.Engineering;
 using Msr.Web.ViewModel.Help;
 using Msr.Services.Roles;
+using Mvc.Mailer;
+using System.Threading.Tasks;
+using Answer.Web.ViewModel.Help;
+using Answer.Web.UserMailer;
 
 namespace Msr.Web.Controllers
 {
     public class HelpController : BaseController
     {
         private readonly HelpService _helpService;
+        private readonly IUserMailer _userMailer;
 
         public HelpController()
         {
+            _userMailer = new UserMailer();
             _helpService = new HelpService();
         }
 
@@ -127,26 +133,37 @@ namespace Msr.Web.Controllers
                 {
                     return Json("Invalid data", JsonRequestBehavior.AllowGet);
                 }
+               
+                _userMailer.SendSupportRequest(new SupportRequestModel()
+                {
+                    FirstName = viewModel.FirstName,
+                    LastName = viewModel.LastName,
+                    Email = viewModel.Email,
+                    Phone = viewModel.Phone,
+                    Subject = viewModel.Subject,
+                    ContactMethod = viewModel.ContactMethod,
+                    Details = viewModel.Details
+                }).Send();
 
-                var body = $@"<!DOCTYPE html><html><body><table>
-                    <tr><td>First Name</td><td>{viewModel.FirstName}</td></tr>
-                    <tr><td>Last Name</td><td>{viewModel.LastName}</td></tr>
-                    <tr><td>Email</td><td>{viewModel.Email}</td></tr>
-                    <tr><td>Phone</td><td>{viewModel.Phone}</td></tr>
-                    <tr><td>Subject</td><td>{viewModel.Subject}</td></tr>
-                    <tr><td>Contact Method</td><td>{viewModel.ContactMethod}</td></tr>
-                    <tr><td>Details</td><td>{viewModel.Details.Replace(Environment.NewLine, "<br/>")}</td></tr>
-                    </table></body></html>";
+                //var body = $@"<!DOCTYPE html><html><body><table>
+                //    <tr><td>First Name</td><td>{viewModel.FirstName}</td></tr>
+                //    <tr><td>Last Name</td><td>{viewModel.LastName}</td></tr>
+                //    <tr><td>Email</td><td>{viewModel.Email}</td></tr>
+                //    <tr><td>Phone</td><td>{viewModel.Phone}</td></tr>
+                //    <tr><td>Subject</td><td>{viewModel.Subject}</td></tr>
+                //    <tr><td>Contact Method</td><td>{viewModel.ContactMethod}</td></tr>
+                //    <tr><td>Details</td><td>{viewModel.Details.Replace(Environment.NewLine, "<br/>")}</td></tr>
+                //    </table></body></html>";
 
-                var from = viewModel.Email;
-                var to = ConfigurationManager.AppSettings["SupportEmail"];
+                //var from = viewModel.Email;
+                //var to = ConfigurationManager.AppSettings["SupportEmail"];
 
-                EmailService.SendEmail(from, to, "Support Request", body, null, true);
+                //EmailService.SendEmail(from, to, "Support Request", body, null, true);
 
                 return Json("OK", JsonRequestBehavior.AllowGet);
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return Json("Something went wrong", JsonRequestBehavior.AllowGet);
             }
