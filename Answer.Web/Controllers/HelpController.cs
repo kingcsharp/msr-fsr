@@ -133,8 +133,8 @@ namespace Msr.Web.Controllers
                 {
                     return Json("Invalid data", JsonRequestBehavior.AllowGet);
                 }
-               
-                _userMailer.SendSupportRequest(new SupportRequestModel()
+
+                var mailMessage = _userMailer.SendSupportRequest(new SupportRequestModel()
                 {
                     FirstName = viewModel.FirstName,
                     LastName = viewModel.LastName,
@@ -143,8 +143,8 @@ namespace Msr.Web.Controllers
                     Subject = viewModel.Subject,
                     ContactMethod = viewModel.ContactMethod,
                     Details = viewModel.Details
-                }).Send();
-
+                });
+                EmailService.SendEmail(viewModel.Email, ConfigurationManager.AppSettings["SupportEmail"],mailMessage.Subject, mailMessage.Body, null, true);
                 //var body = $@"<!DOCTYPE html><html><body><table>
                 //    <tr><td>First Name</td><td>{viewModel.FirstName}</td></tr>
                 //    <tr><td>Last Name</td><td>{viewModel.LastName}</td></tr>
