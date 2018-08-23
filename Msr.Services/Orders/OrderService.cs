@@ -395,7 +395,7 @@ namespace Msr.Services.Orders
                     p.Add("@fileLinkId", id, DbType.String, ParameterDirection.Input);
                     p.Add("@strNTLogin", loginId, DbType.String, ParameterDirection.Input);
 
-                    conn.Execute("Portal_DeleteWorkItemImagesById1", p, commandType: CommandType.StoredProcedure);
+                    conn.Execute("Portal_DeleteWorkItemImagesById", p, commandType: CommandType.StoredProcedure);
                 }
 
                 return true;
