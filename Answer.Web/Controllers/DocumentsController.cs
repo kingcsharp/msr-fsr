@@ -257,9 +257,8 @@ namespace Answer.Web.Controllers
 
         public ActionResult AddsingleReference(string linkDocId, string files, string section)
         {
-            var jsonSerialiser = new JavaScriptSerializer();
-
             var result = false;
+
             var currentUser = GetCurrentUser();
 
             var initialPreview = new List<string>();
@@ -280,7 +279,6 @@ namespace Answer.Web.Controllers
                         TaskId = linkDocId,
                         FileUrl = docFile.FileUrl,
                         FileKey = docFile.FileKey,
-                        FileId = file
                     };
                     _orderService.SaveOrderItemImages(imageModel);
                 }

@@ -339,21 +339,20 @@ namespace Msr.Services.Orders
         {
             try
             {
-                var fileId = new SqlParameter();
-
                 var saveWorkItemImagesProcedure = new SaveWorkItemImagesProcedure(model);
 
                 _dbContext.Database.ExecuteStoredProcedure(saveWorkItemImagesProcedure);
 
                 var result = GetWipActualPartId(model.TaskId);
 
-                var actualPartId = new SqlParameter("@ActualPartId", result);
+                using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
+                {
+                    var p = new DynamicParameters();
+                    p.Add("@ActualPartId", result, DbType.String, ParameterDirection.Input);
+                    p.Add("@FileId", saveWorkItemImagesProcedure.NewId, DbType.String, ParameterDirection.Input);
+                    p.Add("@ModBy", model.NTLogin, DbType.String, ParameterDirection.Input);
 
-                fileId = model.FileId == null ? new SqlParameter("@FileId", saveWorkItemImagesProcedure.NewId) : new SqlParameter("@FileId", model.FileId);
-
-                var ntLogin = new SqlParameter("@ModBy", model.NTLogin);
-
-                _dbContext.Database.ExecuteSqlCommand("EXEC portal_Actula_Part_Related_Files @ActualPartId,@FileId,@ModBy", actualPartId, fileId, ntLogin);
+                    var resultAddPartFile = conn.Execute("Portal_Actual_Part_Related_Files", p, commandType: CommandType.StoredProcedure);}
 
                 return saveWorkItemImagesProcedure.NewId;
             }
@@ -396,7 +395,7 @@ namespace Msr.Services.Orders
                     p.Add("@fileLinkId", id, DbType.String, ParameterDirection.Input);
                     p.Add("@strNTLogin", loginId, DbType.String, ParameterDirection.Input);
 
-                    conn.Execute("Portal_DeleteWorkItemImagesById", p, commandType: CommandType.StoredProcedure);
+                    conn.Execute("Portal_DeleteWorkItemImagesById1", p, commandType: CommandType.StoredProcedure);
                 }
 
                 return true;
