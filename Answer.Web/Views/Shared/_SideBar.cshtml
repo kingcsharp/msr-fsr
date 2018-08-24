@@ -1,6 +1,7 @@
-@using System.Security.Claims
-@using Msr.Models.Users
+@model Answer.Web.ViewModel.BaseViewModel
 
+@using Answer.Web.Helpers
+@using Msr.Models.Menus
 
 <div class="side-menu sidebar-inverse">
     <nav class="navbar navbar-default" role="navigation">
@@ -15,49 +16,51 @@
                 </button>
             </div>
             <ul class="nav navbar-nav">
-                <li class="panel panel-default dropdown">
-                    <a data-toggle="collapse" href="#dropdown-element1">
-                        <span class="icon fa fa-list-alt"></span><span class="title">WIP </span>
-                    </a>
-                    <!-- Dropdown level 1 -->
-                    <div id="dropdown-element1" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <ul class="nav navbar-nav">
-                                <li>
-                                    <a href="~/wip/statusview">
-                                        <span class="icon fa fa-tachometer"></span><span class="title">WIP Status</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="~/wip">
-                                        <span class="icon fa fa-list"></span><span class="title">WIP Menu</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
+            <li class="panel panel-default dropdown">
+                <a data-toggle="collapse" href="#dropdown-element1">
+                    <span class="icon fa fa-list-alt"></span><span class="title">WIP </span>
+                </a>
+                <!-- Dropdown level 1 -->
+                <div id="dropdown-element1" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <ul class="nav navbar-nav">
+                            <li>
+                                <a href="~/wip/statusview">
+                                    <span class="icon fa fa-tachometer"></span><span class="title">WIP Status</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="~/wip">
+                                    <span class="icon fa fa-list"></span><span class="title">WIP Menu</span>
+                                </a>
+                            </li>
+                        </ul>
                     </div>
-                </li>
+                </div>
+            </li>
+            
+            @if (UIPermissionHelper.HasPermission(Model.UserModules, MenuGroupConstants.Parts))
+            {
                 <li class="panel panel-default dropdown">
                     <a data-toggle="collapse" href="#dropdown-element2">
                         <span class="icon fa fa-cogs"></span><span class="title">Parts </span>
                     </a>
-                    <!-- Dropdown level 1 -->
                     <div id="dropdown-element2" class="panel-collapse collapse">
                         <div class="panel-body">
                             <ul class="nav navbar-nav">
+
                                 <li>
                                     <a href="@Url.Action("Index", "Parts")">
                                         <span class="icon fa fa-cog"></span><span class="title">Parts</span>
                                     </a>
                                 </li>
-
                                 <li>
-                                    <a href="@Url.Action("Index","PartTypes")">
+                                    <a href="@Url.Action("Index", "PartTypes")">
                                         <span class="icon fa fa-list"></span><span class="title">Part Types</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href='@Url.Action("Index","ActualParts")'>
+                                    <a href='@Url.Action("Index", "ActualParts")'>
                                         <span class="icon fa fa-clone"></span><span class="title">Actual Parts/Assets</span>
                                     </a>
                                 </li>
@@ -65,6 +68,10 @@
                         </div>
                     </div>
                 </li>
+            }
+
+            @if (UIPermissionHelper.HasPermission(Model.UserModules, MenuGroupConstants.Procedures))
+            {
                 <li class="panel panel-default dropdown">
                     <a data-toggle="collapse" href="#dropdown-element3">
                         <span class="icon fa fa-puzzle-piece"></span><span class="title">Procedures </span>
@@ -75,18 +82,18 @@
                             <ul class="nav navbar-nav">
 
                                 <li>
-                                    <a href='@Url.Action("Index","Procedures")'>
+                                    <a href='@Url.Action("Index", "Procedures")'>
                                         <span class="icon fa fa-step-forward"></span><span class="title">Runnable Procedures</span>
                                     </a>
                                 </li>
-                               
+
                                 <li>
-                                    <a href='@Url.Action("Index","ProcedureVerbs")'>
+                                    <a href='@Url.Action("Index", "ProcedureVerbs")'>
                                         <span class="icon fa fa-list"></span><span class="title">Proecedure Types</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="@Url.Action("Index","PreProSearch")">
+                                    <a href="@Url.Action("Index", "PreProSearch")">
                                         <span class="icon fa fa-file-text"></span><span class="title">Templates</span>
                                     </a>
                                 </li>
@@ -94,6 +101,10 @@
                         </div>
                     </div>
                 </li>
+            }
+                
+            @if (UIPermissionHelper.HasPermission(Model.UserModules, MenuGroupConstants.People))
+            {
                 <li class="panel panel-default dropdown">
                     <a data-toggle="collapse" href="#dropdown-element4">
                         <span class="icon fa fa-users"></span><span class="title">People </span>
@@ -101,20 +112,20 @@
                     <!-- Dropdown level 1 -->
                     <div id="dropdown-element4" class="panel-collapse collapse">
                         <div class="panel-body">
-                            <ul class="nav navbar-nav">                             
+                            <ul class="nav navbar-nav">
                                 <li>
-                                    <a href="@Url.Action("Index","People")">
+                                    <a href="@Url.Action("Index", "People")">
                                         <span class="icon fa fa-user"></span><span class="title">Users</span>
                                     </a>
                                 </li>
 
                                 <li>
-                                    <a href="@Url.Action("Index","Roles")">
+                                    <a href="@Url.Action("Index", "Roles")">
                                         <span class="icon fa fa-group"></span><span class="title">User Roles</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="@Url.Action("Index","Companies")">
+                                    <a href="@Url.Action("Index", "Companies")">
                                         <span class="icon fa fa-building"></span><span class="title">Companies/Departments</span>
                                     </a>
                                 </li>
@@ -122,6 +133,9 @@
                         </div>
                     </div>
                 </li>
+            }
+            @if (UIPermissionHelper.HasPermission(Model.UserModules, MenuGroupConstants.Locations))
+            {
                 <li class="panel panel-default dropdown">
                     <a data-toggle="collapse" href="#dropdown-element5">
                         <span class="icon fa fa-map-marker"></span><span class="title">Locations </span>
@@ -131,12 +145,12 @@
                         <div class="panel-body">
                             <ul class="nav navbar-nav">
                                 <li>
-                                    <a href="@Url.Action("Index","Locations")">
+                                    <a href="@Url.Action("Index", "Locations")">
                                         <span class="icon fa fa-map"></span><span class="title">Locations</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="@Url.Action("Index","Regions")">
+                                    <a href="@Url.Action("Index", "Regions")">
                                         <span class="icon fa fa-globe"></span><span class="title">Regions</span>
                                     </a>
                                 </li>
@@ -144,25 +158,28 @@
                         </div>
                     </div>
                 </li>
+            }
 
-
-                <li class="panel panel-default dropdown">
-                    <a data-toggle="collapse" href="#dropdown-element13">
-                        <span class="icon fa fa-desktop"></span><span class="title">Monitors </span>
-                    </a>
-                    <!-- Dropdown level 1 -->
-                    <div id="dropdown-element13" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <ul class="nav navbar-nav">
-                                <li>
-                                    <a href="@Url.Action("Index","Monitors")">
-                                        <span class="icon fa fa-desktop"></span><span class="title">Monitors</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
+            <li class="panel panel-default dropdown">
+                <a data-toggle="collapse" href="#dropdown-element13">
+                    <span class="icon fa fa-desktop"></span><span class="title">Monitors </span>
+                </a>
+                <!-- Dropdown level 1 -->
+                <div id="dropdown-element13" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <ul class="nav navbar-nav">
+                            <li>
+                                <a href="@Url.Action("Index","Monitors")">
+                                    <span class="icon fa fa-desktop"></span><span class="title">Monitors</span>
+                                </a>
+                            </li>
+                        </ul>
                     </div>
-                </li>
+                </div>
+            </li>
+            @if (UIPermissionHelper.HasPermission(Model.UserModules, MenuGroupConstants.Quotes))
+            {
+
                 <li class="panel panel-default dropdown">
                     <a data-toggle="collapse" href="#dropdown-element6">
                         <span class="icon fa fa-money "></span><span class="title">Pricing </span>
@@ -191,6 +208,9 @@
                         </div>
                     </div>
                 </li>
+            }
+            @if (UIPermissionHelper.HasPermission(Model.UserModules, MenuGroupConstants.Forecast))
+            {
                 <li class="panel panel-default dropdown">
                     <a data-toggle="collapse" href="#dropdown-element7">
                         <span class="icon fa fa-envelope-square"></span><span class="title">Billing </span>
@@ -210,11 +230,14 @@
                                         <span class="icon fa fa-usd"></span><span class="title">Purchases</span>
                                     </a>
                                 </li>
-                              
+
                             </ul>
                         </div>``
                     </div>
                 </li>
+            }
+            @if (UIPermissionHelper.HasPermission(Model.UserModules, MenuGroupConstants.Approvals))
+            {
                 <li class="panel panel-default dropdown">
                     <a data-toggle="collapse" href="#dropdown-element12">
                         <span class="icon fa fa-align-center"></span><span class="title">Workflow </span>
@@ -224,17 +247,17 @@
                         <div class="panel-body">
                             <ul class="nav navbar-nav">
                                 <li>
-                                    <a href="@Url.Action("Index","ApprovalWorkflows")">
+                                    <a href="@Url.Action("Index", "ApprovalWorkflows")">
                                         <span class="icon fa fa-check-circle"></span><span class="title">Approval Workflows</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="@Url.Action("Index","ApprovalStages")">
+                                    <a href="@Url.Action("Index", "ApprovalStages")">
                                         <span class="icon fa fa-list-ol"></span><span class="title">Approval Stages</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="@Url.Action("Index","ApprovalGroups")">
+                                    <a href="@Url.Action("Index", "ApprovalGroups")">
                                         <span class="icon fa fa-group"></span><span class="title">Approval Groups</span>
                                     </a>
                                 </li>
@@ -242,6 +265,9 @@
                         </div>
                     </div>
                 </li>
+            }
+            @if (UIPermissionHelper.HasPermission(Model.UserModules, MenuGroupConstants.Dashboards))
+            {
                 <li class="panel panel-default dropdown">
                     <a data-toggle="collapse" href="#dropdown-element8">
                         <span class="icon fa fa-newspaper-o"></span><span class="title">Reporting </span>
@@ -259,12 +285,14 @@
                                         <span class="icon fa fa-usd"></span><span class="title">Purchases</span>
                                     </a>
                                 </li>
-                              
+
                             </ul>
                         </div>
                     </div>
                 </li>
-       
+            }
+            @if (UIPermissionHelper.HasPermission(Model.UserModules, MenuGroupConstants.Dashboards))
+            {
                 <li class="panel panel-default dropdown">
                     <a data-toggle="collapse" href="#dropdown-element9">
                         <span class="icon fa fa-dashboard"></span><span class="title">Dashboards </span>
@@ -293,7 +321,10 @@
                         </div>
                     </div>
                 </li>
-                <li class="panel panel-default dropdown">
+            }
+            @if (UIPermissionHelper.HasPermission(Model.UserModules, MenuGroupConstants.Administration))
+            {
+            <li class="panel panel-default dropdown">
                     <a data-toggle="collapse" href="#dropdown-element10">
                         <span class="icon fa fa-newspaper-o"></span><span class="title">Utilities </span>
                     </a>
@@ -327,13 +358,15 @@
                         </div>
                     </div>
                 </li>
-
-            <li class="panel panel-default dropdown">
-                <a href="@Url.Action("Index","Documents")">
-                    <span class="icon fa fa-file-text"></span><span class="title">Documents</span>
-                </a>
-            </li>
-
+            }
+            @if (UIPermissionHelper.HasPermission(Model.UserModules, MenuGroupConstants.Theory))
+            {
+                <li class="panel panel-default dropdown">
+                    <a href="@Url.Action("Index", "Documents")">
+                        <span class="icon fa fa-file-text"></span><span class="title">Documents</span>
+                    </a>
+                </li>
+            }
                 <li class="panel panel-default dropdown">
                     <a data-toggle="collapse" href="#dropdown-element11">
                         <span class="icon fa fa-life-bouy"></span><span class="title">Help </span>
@@ -347,11 +380,14 @@
                                         <span class="icon fa fa-question-circle"></span><span class="title">Open a Support Ticket</span>
                                     </a>
                                 </li>
+                            @if (UIPermissionHelper.HasPermission(Model.UserModules, MenuGroupConstants.Administration))
+                            {
                                 <li>
                                     <a href="~/help/index">
                                         <span class="icon fa fa-list"></span><span class="title">Pages</span>
                                     </a>
                                 </li>
+                            }
                             </ul>
                         </div>
                     </div>

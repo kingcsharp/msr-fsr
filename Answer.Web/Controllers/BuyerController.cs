@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Msr.Models.Orders;
@@ -10,9 +7,11 @@ using Msr.Services.jqGrid;
 using Msr.Services.Orders;
 using Msr.Services.Users;
 using Answer.Web.Controllers;
+using Answer.Web.Filters;
 
 namespace Msr.Web.Controllers
 {
+    [AuthorizeUser]
     public class BuyerController : BaseController
     {
         public ActionResult Index()

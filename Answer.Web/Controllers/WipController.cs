@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
+using Answer.Web.Filters;
 using Answer.Web.ViewModel.Wip;
 using Msr.Commons.Files;
 using Msr.Infrastructure.Common.Constansts;
@@ -24,6 +25,7 @@ using Msr.Web.ViewModel.Engineering;
 
 namespace Answer.Web.Controllers
 {
+    [AuthorizeUser]
     public class WipController : BaseController
     {
         private OrderService _orderService;

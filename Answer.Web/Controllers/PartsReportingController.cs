@@ -11,9 +11,12 @@ using Msr.Web.ViewModel.Reports;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Answer.Web.Controllers;
+using Answer.Web.Filters;
+using Msr.Models.Menus;
 
 namespace Msr.Web.Controllers
 {
+    [AuthorizeUser(ModuleName = MenuGroupConstants.Parts)]
     public class PartsReportingController : BaseController
     {
         public ActionResult Index()

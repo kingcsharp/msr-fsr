@@ -4,7 +4,9 @@ using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Answer.Web.Filters;
 using Msr.Commons.Files;
+using Msr.Models.Menus;
 using Msr.Models.Orders;
 using Msr.Services.Documents;
 using Msr.Services.Documents.ViewModels;
@@ -17,6 +19,7 @@ using Msr.Services.PrePro;
 
 namespace Answer.Web.Controllers
 {
+    [AuthorizeUser]
     public class DocController : BaseController
     {
         private readonly FileService _fileService;

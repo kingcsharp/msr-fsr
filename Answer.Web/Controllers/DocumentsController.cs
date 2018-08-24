@@ -10,13 +10,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
+using Answer.Web.Filters;
 using Msr.Commons.Files;
+using Msr.Models.Menus;
 using Msr.Services.Orders;
 using Msr.Services.Orders.ViewModels;
 using Msr.Services.PrePro;
 
 namespace Answer.Web.Controllers
 {
+    [AuthorizeUser(ModuleName = MenuGroupConstants.Theory)]
     public class DocumentsController : BaseController
     {
         private readonly DocumentService _documentService;

@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using Msr.Models.ActualParts;
+using Answer.Web.Filters;
+using Msr.Models.Menus;
 using Msr.Models.ProductsActualPart;
 using Msr.Services.ActualParts;
 using Msr.Services.jqGrid;
@@ -11,6 +10,7 @@ using Msr.Services.ProductsActualParts;
 
 namespace Answer.Web.Controllers
 {
+    [AuthorizeUser(ModuleName = MenuGroupConstants.Parts)]
     public class ProductsActualPartsController : BaseController
     {
         // GET: ProductsActualParts

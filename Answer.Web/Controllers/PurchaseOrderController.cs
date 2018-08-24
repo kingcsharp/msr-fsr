@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
+using Answer.Web.Filters;
 using Msr.Infrastructure.Common.Constansts;
+using Msr.Models.Menus;
 using Msr.Models.Orders;
 using Msr.Services.jqGrid;
 using Msr.Services.PurchesOrder;
@@ -11,6 +13,7 @@ using Msr.Services.ProductionPlanning;
 
 namespace Answer.Web.Controllers
 {
+    [AuthorizeUser(ModuleName = MenuGroupConstants.Quotes)]
     public class PurchaseOrderController : BaseController
     {
         private readonly PurchesOrderService _purchesOrderService;

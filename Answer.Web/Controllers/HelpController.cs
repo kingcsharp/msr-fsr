@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Configuration;
 using System.Linq;
-using System.Web.Helpers;
 using System.Web.Mvc;
 using Answer.Web.Controllers;
 using Msr.Infrastructure.Email;
@@ -13,13 +12,13 @@ using Msr.Services.jqGrid;
 using Msr.Web.ViewModel.Engineering;
 using Msr.Web.ViewModel.Help;
 using Msr.Services.Roles;
-using Mvc.Mailer;
-using System.Threading.Tasks;
+using Answer.Web.Filters;
 using Answer.Web.ViewModel.Help;
 using Answer.Web.UserMailer;
 
 namespace Msr.Web.Controllers
 {
+    [AuthorizeUser]
     public class HelpController : BaseController
     {
         private readonly HelpService _helpService;

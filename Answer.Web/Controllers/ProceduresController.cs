@@ -9,10 +9,12 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
+using Answer.Web.Filters;
 using Answer.Web.ViewModel;
 using Msr.Commons.Files;
 using Msr.Infrastructure.Common.Constansts;
 using Msr.Models.ActualParts;
+using Msr.Models.Menus;
 using Msr.Services.Documents;
 using Msr.Services.Procedures.Messages;
 using Msr.Services.Procedures.ViewModels;
@@ -23,6 +25,7 @@ using Msr.Services.EquipmentMaintenances;
 
 namespace Answer.Web.Controllers
 {
+    [AuthorizeUser(ModuleName = MenuGroupConstants.Procedures)]
     public class ProceduresController : BaseController
     {
         private readonly ProceduresService _proceduresService;

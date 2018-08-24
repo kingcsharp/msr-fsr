@@ -1,10 +1,4 @@
-﻿@using Microsoft.AspNet.Identity
-@using Msr.Services.Users
-@{
-    var userService = new UserService();
-
-    var user=  userService.GetUser(User.Identity.GetUserId());
-}
+﻿@model Answer.Web.ViewModel.BaseViewModel
 
 <nav class="navbar navbar-default navbar-fixed-top navbar-top">
     <div class="container-fluid">
@@ -24,25 +18,28 @@
                 <i class="fa fa-times icon"></i>
             </button>
            
-            <li class="dropdown profile">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" data-intro="View your profile or logout here" data-position="bottom">@user.FirstName @user.LastName <span class="caret"></span></a>
-                <ul class="dropdown-menu animated fadeInDown">
-                    <li>
-                        <div class="profile-info">
-                            <h4 class="username">@user.FirstName @user.LastName</h4>
-                            <p>@user.Email</p>
-                            <div class="btn-group margin-bottom-2x" role="group">
-                                <a href="~/user/profile" class="btn btn-default"><i class="fa fa-user"></i> Profile</a>
-                                @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new {id = "logoutForm", @class = "navbar-right"}))
-                                {
-                                    @Html.AntiForgeryToken()
-                                    <a href="javascript:document.getElementById('logoutForm').submit()" class="btn btn-default"><i class="fa fa-sign-out"></i>Logout</a>
-                                }
+            @if (Model.LoggedUserIdResult != null)
+            {
+                <li class="dropdown profile">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" data-intro="View your profile or logout here" data-position="bottom">@Model.LoggedUserIdResult.Name @Model.LoggedUserIdResult.Last_Name <span class="caret"></span></a>
+                    <ul class="dropdown-menu animated fadeInDown">
+                        <li>
+                            <div class="profile-info">
+                                <h4 class="username"> @Model.LoggedUserIdResult.Name @Model.LoggedUserIdResult.Last_Name </h4>
+                                
+                                <div class="btn-group margin-bottom-2x" role="group">
+                                    <a href="~/user/profile" class="btn btn-default"><i class="fa fa-user"></i> Profile</a>
+                                    @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new {id = "logoutForm", @class = "navbar-right"}))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        <a href="javascript:document.getElementById('logoutForm').submit()" class="btn btn-default"><i class="fa fa-sign-out"></i>Logout</a>
+                                    }
+                                </div>
                             </div>
-                        </div>
-                    </li>
-                </ul>
-            </li>
+                        </li>
+                    </ul>
+                </li>
+            }
         </ul>
     </div>
 </nav>

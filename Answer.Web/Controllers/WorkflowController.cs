@@ -1,9 +1,12 @@
 ﻿using System.Web.Mvc;
+using Answer.Web.Filters;
+using Msr.Models.Menus;
 using Msr.Services.Workflows;
 using Msr.Services.Workflows.ViewModels;
 
 namespace Answer.Web.Controllers
 {
+    [AuthorizeUser(ModuleName = MenuGroupConstants.Approvals)]
     public class WorkflowController : BaseController
     {
         private readonly WorkflowService _workflowService;

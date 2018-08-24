@@ -1,8 +1,11 @@
 ﻿using System.Web.Mvc;
+using Answer.Web.Filters;
+using Msr.Models.Menus;
 using Msr.Services.Orders;
 
 namespace Answer.Web.Controllers
 {
+    [AuthorizeUser]
     public class PrintOtherController : BaseController
     {
         private readonly OrderService _orderService;

@@ -8,12 +8,14 @@ using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Answer.Web.Filters;
 using Msr.Services.Documents;
 using Msr.Services.Files.ViewModels;
 using Msr.Services.S3;
 
 namespace Answer.Web.Controllers
 {
+    [AuthorizeUser]
     public class FilesController : BaseController
     {
         private readonly FileService _fileService;

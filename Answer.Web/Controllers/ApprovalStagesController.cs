@@ -7,10 +7,13 @@ using Msr.Web.ViewModel.Engineering;
 using System;
 using System.Linq;
 using System.Web.Mvc;
+using Answer.Web.Filters;
 using Microsoft.Ajax.Utilities;
+using Msr.Models.Menus;
 
 namespace Answer.Web.Controllers
 {
+    [AuthorizeUser(ModuleName = MenuGroupConstants.Approvals)]
     public class ApprovalStagesController : BaseController
     {
         private readonly ApprovalStagesService _approvalStagesService;

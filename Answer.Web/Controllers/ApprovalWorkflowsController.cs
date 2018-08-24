@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
+using Answer.Web.Filters;
 using Msr.Models.ApprovalWorkflows;
+using Msr.Models.Menus;
 using Msr.Services.ApprovalWorkflows;
 using Msr.Services.ApprovalWorkflows.ViewModels;
 using Msr.Services.Documents;
@@ -10,6 +12,7 @@ using Msr.Web.ViewModel.Engineering;
 
 namespace Answer.Web.Controllers
 {
+    [AuthorizeUser(ModuleName = MenuGroupConstants.Approvals)]
     public class ApprovalWorkflowsController : BaseController
     {
         private readonly ApprovalWorkflowsService _approvalWorkflowsService;

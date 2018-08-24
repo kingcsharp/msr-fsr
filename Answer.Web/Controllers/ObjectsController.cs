@@ -2,13 +2,13 @@
 using Msr.Services.jqGrid;
 using Msr.Services.Objects;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
+using Answer.Web.Filters;
 
 namespace Answer.Web.Controllers
 {
+    [AuthorizeUser]
     public class ObjectsController : BaseController
     {
         public ActionResult Index()

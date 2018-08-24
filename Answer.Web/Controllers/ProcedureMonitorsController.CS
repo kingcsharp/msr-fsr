@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
+using Answer.Web.Filters;
+using Msr.Models.Menus;
 using Msr.Services.jqGrid;
 using Msr.Services.Procedures;
 using Msr.Services.Procedures.ViewModels;
@@ -8,6 +10,7 @@ using Msr.Services.EquipmentMaintenances;
 
 namespace Answer.Web.Controllers
 {
+    [AuthorizeUser]
     public class ProcedureMonitorsController : BaseController
     {
         public ActionResult Monitors()

@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Web;
+﻿using System.Configuration;
 using System.Web.Mvc;
 using Answer.Web.Controllers;
+using Answer.Web.Filters;
 using Msr.Infrastructure.Email;
 
 namespace Msr.Web.Controllers
 {
+    [AuthorizeUser]
     public class HomeController : BaseController
     {
         public ActionResult Index()

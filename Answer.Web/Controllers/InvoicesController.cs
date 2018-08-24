@@ -4,18 +4,16 @@ using Msr.Services.Invoices.ViewModel;
 using Msr.Services.jqGrid;
 using Msr.Services.PurchesOrder;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Web.Helpers;
 using System.Web.Mvc;
-using System.Web.UI;
-using System.Web.UI.WebControls;
+using Answer.Web.Filters;
+using Msr.Models.Menus;
+
 namespace Answer.Web.Controllers
 {
+    [AuthorizeUser(ModuleName = MenuGroupConstants.Forecast)]
     public class InvoicesController : BaseController
     {
         private readonly InvoicesService _invoicesService;

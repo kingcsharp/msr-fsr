@@ -3,6 +3,8 @@ using Msr.Web.ViewModel.Engineering;
 using System;
 using System.Linq;
 using System.Web.Mvc;
+using Answer.Web.Filters;
+using Msr.Models.Menus;
 using Msr.Models.ProcedureVerbs;
 using Msr.Services.ProcedureVerbs;
 using Msr.Services.ProcedureVerbs.ViewModels;
@@ -10,6 +12,7 @@ using Msr.Services.Workflows;
 
 namespace Answer.Web.Controllers
 {
+    [AuthorizeUser(ModuleName = MenuGroupConstants.Procedures)]
     public class ProcedureVerbsController : BaseController
     {
         public ActionResult Index()

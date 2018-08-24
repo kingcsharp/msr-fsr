@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Answer.Web.ViewModel.Administration;
 using System.Web.Mvc;
-using Msr.Models.Comman;
+using Answer.Web.Filters;
+using Msr.Models.Menus;
 using Msr.Services.Administration;
 using Msr.Services.Administration.Messages;
 using Msr.Services.Administration.ViewModels;
@@ -15,6 +16,7 @@ using Msr.Services.Roles;
 
 namespace Answer.Web.Controllers
 {
+    [AuthorizeUser(ModuleName = MenuGroupConstants.Administration)]
     public class AdministrationController : BaseController
     {
         private AdministrationService _administrationService;

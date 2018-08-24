@@ -4,7 +4,9 @@ using System;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
+using Answer.Web.Filters;
 using Msr.Commons.Files;
+using Msr.Models.Menus;
 using Msr.Models.People;
 using Msr.Services.Orders;
 using Msr.Services.People.ViewModels;
@@ -14,6 +16,7 @@ using Msr.Services.Locations;
 
 namespace Answer.Web.Controllers
 {
+    [AuthorizeUser(ModuleName = MenuGroupConstants.People)]
     public class PeopleController : BaseController
     {
         private readonly PeopleService _peopleService;

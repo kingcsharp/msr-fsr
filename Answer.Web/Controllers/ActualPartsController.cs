@@ -5,19 +5,21 @@ using Msr.Services.jqGrid;
 using Msr.Services.Locations;
 using Msr.Services.Parts;
 using Msr.Services.Products;
-using Msr.Services.Users;
 using Msr.Web.ViewModel.Engineering;
 using System;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Answer.Web.Filters;
 using Msr.Infrastructure.Common.Constansts;
+using Msr.Models.Menus;
 using Msr.Services.Companies;
 using Msr.Services.Orders;
 using Msr.Services.Roles;
 
 namespace Answer.Web.Controllers
 {
+    [AuthorizeUser(ModuleName = MenuGroupConstants.Parts)]
     public class ActualPartsController : BaseController
     {
         private readonly LocationService _locationService;

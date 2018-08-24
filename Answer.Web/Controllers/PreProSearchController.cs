@@ -6,7 +6,9 @@ using System;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
+using Answer.Web.Filters;
 using Msr.Commons.Files;
+using Msr.Models.Menus;
 using Msr.Models.PrePro;
 using Msr.Services.Documents;
 using Msr.Services.ProcedureVerbs;
@@ -14,6 +16,7 @@ using Msr.Services.Roles;
 
 namespace Answer.Web.Controllers
 {
+    [AuthorizeUser(ModuleName = MenuGroupConstants.Procedures)]
     public class PreProSearchController : BaseController
     {
         private readonly PreProServices _preProServices;
