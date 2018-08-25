@@ -70,6 +70,7 @@
     <Folder Include="dbo\Views" />
     <Folder Include="dbo\Stored Procedures\Portal" />
     <Folder Include="dbo\Views\Portal" />
+    <Folder Include="Seeds" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\A_PARTS_SUB_PARTS.sql" />
@@ -859,7 +860,6 @@
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_MENUS_CREATE_MENUS.sql">
       <QuotedIdentifier>Off</QuotedIdentifier>
     </Build>
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_MENUS_SEARCH.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_MENUS_SEARCH_ALL_MENU_ITEMS.sql">
       <QuotedIdentifier>Off</QuotedIdentifier>
     </Build>
@@ -2838,8 +2838,14 @@
     <Build Include="dbo\Functions\SplitString.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_Create_UpdateProduct.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_Actual_Part_Related_Files.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_GetUserModulePermissions.sql" />
+    <Build Include="dbo\Views\Portal\Portal_MenuView.sql" />
+    <PostDeploy Include="Seeds\SeedMenus.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Msr.Database.refactorlog" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Script.PostDeployment1.sql" />
   </ItemGroup>
 </Project>

@@ -274,6 +274,7 @@
     <Compile Include="ViewModel\Engineering\EngineeringViewModel.cs" />
     <Compile Include="ViewModel\Help\SupportRequestModel.cs" />
     <Compile Include="ViewModel\Help\SupportViewModel.cs" />
+    <Compile Include="ViewModel\MenuViewModel.cs" />
     <Compile Include="ViewModel\Notes\AddNoteViewModel.cs" />
     <Compile Include="ViewModel\PartsReportsViewModel.cs" />
     <Compile Include="ViewModel\ProcedureViewModel.cs" />

@@ -33,6 +33,7 @@ using Msr.Models.ProductionPlanning;
 using Msr.Models.PurchesOrder;
 using Msr.Models.Invoices;
 using Msr.Models.Helps;
+using Msr.Models.Menus;
 using Msr.Models.PartTypes;
 
 namespace Msr.Repositories
@@ -112,6 +113,7 @@ namespace Msr.Repositories
             modelBuilder.Entity<ActualPartApprovedView>().ToTable("Portal_ActualPartApprovedView");
             modelBuilder.Entity<ActualPartApprovedView>().ToTable("Portal_ActualPartApprovedView");
             modelBuilder.Entity<AdminCostSetting>().ToTable("Portal_AdminCostSetting");
+            modelBuilder.Entity<MenuView>().ToTable("Portal_MenuView");
         }
 
         public DbSet<AspNetUser> AspNetUsers { get; set; }
@@ -179,5 +181,6 @@ namespace Msr.Repositories
         public DbSet<PartTypesApproved> PartTypesApproveds { get; set; }
         public DbSet<ActualPartApprovedView> ActualPartApprovedViews { get; set; }
         public DbSet<AdminCostSetting> AdminCostSettings { get; set; }
+        public DbSet<MenuView> MenuViews { get; set; }
     }
 }

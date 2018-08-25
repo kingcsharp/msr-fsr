@@ -161,9 +161,9 @@ namespace Msr.Services.Administration
             return result;
         }
 
-        public List<ModuleAccessResult> GeModuleAccess()
+        public List<ModuleAccessResult> GetModuleAccess()
         {
-            var sql = "SELECT * FROM A_MENUS ORDER BY MENU_GROUP,ID,NAME";
+            var sql = "SELECT * FROM A_MENUS ORDER BY OrderNumber";
 
             var result = _dbContext.Database.SqlQuery<ModuleAccessResult>(sql).ToList();
 

@@ -245,7 +245,7 @@ namespace Answer.Web.Controllers
         {
             var vm = new ModuleAccessViewViewModel();
 
-            vm.CompaniesToView = _administrationService.GeModuleAccess();
+            vm.ModuleAccess = _administrationService.GetModuleAccess();
 
             vm.SetUp(new RoleService());
 
@@ -284,7 +284,7 @@ namespace Answer.Web.Controllers
         {
             var vm = new ModuleAccessViewViewModel();
 
-            vm.CompaniesToView = _administrationService.GeModuleAccess();
+            vm.ModuleAccess = _administrationService.GetModuleAccess();
             vm.GlobalSettings = _administrationService.ReadGlobalSettings().ToList();
 
             vm.SetUp(new RoleService());

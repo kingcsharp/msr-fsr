@@ -1,5 +1,5 @@
-﻿@using Answer.Web.ViewModel
-@using Msr.Services.Menus
+﻿@using Answer.Web.Helpers
+@using Answer.Web.ViewModel
 @using Msr.Services.Users
 @{
     var baseViewModel  = new BaseViewModel();
@@ -12,8 +12,7 @@
 
         if (baseViewModel.LoggedUserIdResult != null)
         {
-            var menuService = new MenuService();
-            baseViewModel.UserModules = menuService.GetMenu(baseViewModel.LoggedUserIdResult.Id);
+            baseViewModel.MenuViewModel = UIPermissionHelper.GetUserMenuPermissions(baseViewModel.LoggedUserIdResult);
         }
     }
 }
@@ -60,11 +59,9 @@
                 </div>
             </div>
         </div>
-
         @Html.Partial("_Footer")
         @Scripts.Render("~/bundles/js/main")
         @RenderSection("scripts", required: false)
-
     </div>
 </body>
 </html>

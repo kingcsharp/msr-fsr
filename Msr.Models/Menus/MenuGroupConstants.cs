@@ -18,6 +18,7 @@
         public const string Quotes = "Quotes";
         public const string Theory = "Theory";
         public const string Thesaurus = "Thesaurus";
-        public const string TimeLabor = "TimeLabor";
+        public const string OpenASupportTicket = "Open a Support Ticket";
+        public const string AnswerAdmin = "Answer Admin";
     }
 }
