@@ -174,18 +174,21 @@ namespace Msr.Services.People.ViewModels
             ListEmailTypes = Commons.Lookups.LookupItems.EmailTypes();
             ListAddressTypes = Commons.Lookups.LookupItems.AddressTypes();
 
-            string RootCoId = "2"; 
+            string RootCoId = "2";
+            
             ListTimeZones = peopleService.GetTimeZones().Select(x => new SelectListItem
             {
                 Text = x.Description,
                 Value = x.Id
             }).ToList();
+
             ListOfficialPosition = peopleService.GetOfficialPosition().Where(x => x.CreatingCo == RootCoId).Select(x =>
                 new SelectListItem
                 {
                     Text = x.Name,
-                    Value = x.Name
+                    Value = x.Id
                 }).ToList();
+
             Locations = companyService.GetLocationsQueryable().Select(x => new SelectListItem
             {
                 Text = x.Name,
@@ -204,7 +207,7 @@ namespace Msr.Services.People.ViewModels
             ListBossInfo = peopleService.GetBossInfo().Select(x => new SelectListItem
             {
                 Text = x.FullName,
-                Value = x.FullName
+                Value = x.Id
             }).Distinct().ToList();
 
             DocLinks = documentFilesService.GetDocByObjectId(ObjectId);
