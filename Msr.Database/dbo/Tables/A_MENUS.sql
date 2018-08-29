@@ -7,6 +7,11 @@
     [NAME]       NVARCHAR (50)  NULL,
     [INFO]       NVARCHAR (255) NULL,
     [MENU_GROUP] NVARCHAR (50)  NULL,
+	[Icon] NVARCHAR (255)  NULL,
+	[GroupIcon] NVARCHAR (255)  NULL,
+	[OrderNumber] int  NOT NULL,
+	[IsParent] BIT  NOT NULL DEFAULT (0),
+
     CONSTRAINT [PK_A_MENUS] PRIMARY KEY CLUSTERED ([ID] ASC)
 );
 

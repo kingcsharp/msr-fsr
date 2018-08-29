@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using Msr.Infrastructure.Helpers;
 using Msr.Models.Companies;
@@ -116,6 +117,18 @@ namespace Msr.Services.Users
             var result = _dbContext.Database.SqlQuery<LoggedUserIdResult>(sql).Single();
 
             return result;
+        }
+
+        public bool CheckModulePermissions(string userId, string moduleName)
+        {
+            var userIdParam = new SqlParameter("@userId", userId);
+            var moduleNameParam = new SqlParameter("@moduleName", moduleName);
+
+            var result = _dbContext.Database
+                .SqlQuery<int>("Portal_CheckModulePermissions @userId, @moduleName", userIdParam, moduleNameParam)
+                .SingleOrDefault();
+
+            return result > 0;
         }
 
         public void UpdatePassword(string id, string password)

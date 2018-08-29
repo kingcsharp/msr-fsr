@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using Answer.Web.Filters;
 using Msr.Infrastructure.Common.Constansts;
 using Msr.Services.jqGrid;
 using Msr.Models.EquipmentMaintenances;
+using Msr.Models.Menus;
 using Msr.Services.EquipmentMaintenances;
 using Msr.Services.EquipmentMaintenances.ViewModels;
 using Msr.Services.Locations;
@@ -12,6 +14,7 @@ using Msr.Services.Roles;
 
 namespace Answer.Web.Controllers
 {
+    [AuthorizeUser(ModuleName = MenuGroupConstants.Administration)]
     public class EquipmentMaintenanceController : BaseController
     {
         private readonly EquipmentMaintenanceService _equipmentMaintenanceService;

@@ -1,16 +1,17 @@
 ﻿using Msr.Models.Parts;
 using Msr.Services.jqGrid;
 using Msr.Services.Parts;
-using Msr.Web.ViewModel.Engineering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
+using Answer.Web.Filters;
 using Answer.Web.ViewModel;
 using Msr.Commons.Files;
 using Msr.Infrastructure.Common.Constansts;
+using Msr.Models.Menus;
 using Msr.Services.Documents;
 using Msr.Services.Parts.ViewModels;
 using Msr.Services.PartTypes;
@@ -20,6 +21,7 @@ using Msr.Services.ProductionPlanning;
 
 namespace Answer.Web.Controllers
 {
+    [AuthorizeUser(ModuleName = MenuGroupConstants.Parts)]
     public class PartsController : BaseController
     {
         private readonly LocationService _locationService;
@@ -41,11 +43,9 @@ namespace Answer.Web.Controllers
 
         public ActionResult Index()
         {
-            var viewModel = new EngineeringViewModel();
-
             ViewBag.ActiveClass = "Parts";
 
-            return View(viewModel);
+            return View();
         }
 
         public ActionResult PartsData(JqGridParam param)

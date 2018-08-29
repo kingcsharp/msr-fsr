@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Xml;
+using Dapper;
 using Msr.Models.Administration;
 using Msr.Repositories;
 using Msr.Services.Administration.Messages;
@@ -157,9 +161,9 @@ namespace Msr.Services.Administration
             return result;
         }
 
-        public List<ModuleAccessResult> GeModuleAccess()
+        public List<ModuleAccessResult> GetModuleAccess()
         {
-            var sql = "SELECT * FROM A_MENUS ORDER BY MENU_GROUP,ID,NAME";
+            var sql = "SELECT * FROM A_MENUS ORDER BY OrderNumber";
 
             var result = _dbContext.Database.SqlQuery<ModuleAccessResult>(sql).ToList();
 
@@ -174,14 +178,22 @@ namespace Msr.Services.Administration
             {
                 foreach (var job in items)
                 {
-                    var sql = $"exec A_SP_ADMIN_MENU_ROLES_UPDATE '{job.Id}','{string.Join(", ", job.RoleId)}','{loginId}'";
-                   
-                    _dbContext.Database.ExecuteSqlCommand(sql);
-                }
+                    var roleid = job.RoleId != null ? string.Join(", ", job.RoleId) : null;
+                    using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
+                    {
+                        var p = new DynamicParameters();
 
+                        p.Add("@menuID", job.Id, DbType.String, ParameterDirection.Input);
+                        p.Add("@roleList", roleid, DbType.String, ParameterDirection.Input);
+                        p.Add("@strNTLogin", loginId, DbType.String, ParameterDirection.Input);
+
+                        conn.QueryMultiple("A_SP_ADMIN_MENU_ROLES_UPDATE", p, commandType: CommandType.StoredProcedure);
+                    }
+                }
             }
             catch (Exception ex)
             {
+                result.AddError(ex.Message);
             }
 
             return result;

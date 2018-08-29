@@ -48,13 +48,11 @@ CASE WHEN (
 SELECT count(*)
  FROM A_DOCUMENTS WHERE ID IN
 (
-SELECT file_id FROM A_V_ACTUAL_PARTS_RELATED_FILES
+SELECT file_id FROM A_ACTUAL_PARTS_RELATED_FILES
 WHERE 
 ACTUAL_PART_ID = dbo.A_V_ACTUAL_PARTS_QUICK.ID
-AND (FILE_NAME LIKE '%%' OR FILE_NAME is NULL ) 
-AND  (FILE_DESCRIPTION LIKE '%%' OR FILE_DESCRIPTION is NULL ) 
 AND STATUS = 'ACTIVE'
-)) > 0THEN 1 ELSE 0 END 
+)) > 0 THEN 1 ELSE 0 END 
 AS HasFile,
 supp.ID as SupplierId,
 isnull('['+STUFF((    SELECT ',' + '{"Date":"'+  FORMAT ( n.CreatedDate, 'MM/dd/yyyy hh:mm') +'","Name":"'+ u.FirstName + ' '+ u.LastName + '","Message":"' +n.message  +'"}'

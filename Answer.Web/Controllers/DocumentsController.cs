@@ -10,13 +10,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
+using Answer.Web.Filters;
 using Msr.Commons.Files;
+using Msr.Models.Menus;
 using Msr.Services.Orders;
 using Msr.Services.Orders.ViewModels;
 using Msr.Services.PrePro;
 
 namespace Answer.Web.Controllers
 {
+    [AuthorizeUser(ModuleName = MenuGroupConstants.Theory)]
     public class DocumentsController : BaseController
     {
         private readonly DocumentService _documentService;
@@ -257,9 +260,8 @@ namespace Answer.Web.Controllers
 
         public ActionResult AddsingleReference(string linkDocId, string files, string section)
         {
-            var jsonSerialiser = new JavaScriptSerializer();
-
             var result = false;
+
             var currentUser = GetCurrentUser();
 
             var initialPreview = new List<string>();
@@ -280,7 +282,6 @@ namespace Answer.Web.Controllers
                         TaskId = linkDocId,
                         FileUrl = docFile.FileUrl,
                         FileKey = docFile.FileKey,
-                        FileId = file
                     };
                     _orderService.SaveOrderItemImages(imageModel);
                 }

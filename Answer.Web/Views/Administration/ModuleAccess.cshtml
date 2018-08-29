@@ -1,15 +1,14 @@
 ﻿@model Answer.Web.ViewModel.Administration.ModuleAccessViewViewModel
 
 @{
-    ViewBag.Title = " MODULE ACCESS";
+    ViewBag.Title = "Assign Roles to view Modules";
 }
-
 
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="row">
             <h2 class="page-header">
-                ASSIGN WSCR CLOSER & ROLE & CHECK MAIL LOCATION
+                Assign Roles to view Modules
                 <button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
             </h2>
 
@@ -25,17 +24,26 @@
                     {
                         <table class="table table-bordered" style="width: 600px;">
                             <tr>
-                                <th>Company/Dept</th>
+                                <th>Module Name</th>
                                 <th>Roles (Groups)</th>
                             </tr>
-
-                            @for (int index = 0; index < Model.CompaniesToView.Count; index++)
+                            @{
+                                var groupName = string.Empty;
+                            }
+                            @for (int index = 0; index < Model.ModuleAccess.Count; index++)
                             {
+                                if (groupName != Model.ModuleAccess[index].Menu_Group)
+                                {
+                                    groupName = Model.ModuleAccess[index].Menu_Group;
+                                    <tr>
+                                     <td colspan="2"><strong>@groupName</strong></td>
+                                    </tr>
+                                }
                                 <tr>
-                                    <td>@Model.CompaniesToView[index].Name</td>
+                                    <td>@Model.ModuleAccess[index].Name</td>
                                     <td style="width: 300px;">
-                                        @Html.Hidden("items[" + index + "].Id", Model.CompaniesToView[index].Id)
-                                        @Html.DropDownList("items[" + index + "].RoleId", new SelectList(Model.Roles, "Value", "Text", Model.SelectedRoles.Where(x=>x.Menu_Id == Model.CompaniesToView[index].Id).Select(x=>x.Role_Id)), new { @class = "form-control select-"+index+"", multiple = "multiple" })
+                                        @Html.Hidden("items[" + index + "].Id", Model.ModuleAccess[index].Id)
+                                        @Html.DropDownList("items[" + index + "].RoleId", new SelectList(Model.Roles, "Value", "Text", Model.SelectedRoles.Where(x=>x.Menu_Id == Model.ModuleAccess[index].Id).Select(x=>x.Role_Id)), new { @class = "form-control select-"+index+"", multiple = "multiple" })
                                         
                                     </td>
                                 </tr>
@@ -61,7 +69,7 @@
     <script type="text/javascript">
         $(document).ready(function() {
 
-            @for (int index = 0; index < Model.CompaniesToView.Count; index++)
+            @for (int index = 0; index < Model.ModuleAccess.Count; index++)
             {
                 <text>
                     
@@ -77,7 +85,7 @@
                             return '';
                         }
                     });
-                    var values = '@string.Join(",",Model.SelectedRoles.Where(x => x.Menu_Id == Model.CompaniesToView[index].Id).Select(x => x.Role_Id))';
+                    var values = '@string.Join(",",Model.SelectedRoles.Where(x => x.Menu_Id == Model.ModuleAccess[index].Id).Select(x => x.Role_Id))';
                     var selectedPeoples = values.split(",");
                     selectPeoples.val(selectedPeoples).trigger("change");
 

@@ -1,6 +1,8 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
+using Answer.Web.Filters;
+using Msr.Models.Menus;
 using Msr.Services.CustomerRequirements.ViewModel;
 using Msr.Services.ProductionPlanning;
 using Msr.Services.Quotes;
@@ -9,6 +11,7 @@ using Msr.Services.Users;
 
 namespace Answer.Web.Controllers
 {
+    [AuthorizeUser(ModuleName = MenuGroupConstants.Quotes)]
     public class QuoteController : BaseController
     {
         private QuoteService _quoteService;

@@ -2,13 +2,13 @@
 using Msr.Services.jqGrid;
 using Msr.Services.TheoryParagraph;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
+using Answer.Web.Filters;
 
 namespace Answer.Web.Controllers
 {
+    [AuthorizeUser]
     public class TheoryParagraphController : BaseController
     {
         // GET: TheoryParagraph

@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Answer.Web.Filters;
 using Msr.Infrastructure.Common.Constansts;
 using Msr.Services.jqGrid;
 using Msr.Services.ProductionPlanning;
 using Msr.Models.CustomerRequirements;
+using Msr.Models.Menus;
 using Msr.Services;
 using Msr.Services.AdminCostSettings;
 using Msr.Services.Documents;
@@ -24,6 +26,7 @@ using Msr.Services.Products;
 
 namespace Answer.Web.Controllers
 {
+    [AuthorizeUser(ModuleName = MenuGroupConstants.Quotes)]
     public class ProductionPlanningController : BaseController
     {
         private readonly ProductionPlanningService _productionPlanService;

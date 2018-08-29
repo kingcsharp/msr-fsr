@@ -8,13 +8,16 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
+using Answer.Web.Filters;
 using Msr.Commons.Files;
 using Msr.Services.Documents;
 using Msr.Infrastructure.Common.Constansts;
+using Msr.Models.Menus;
 using Msr.Services.Locations;
 
 namespace Answer.Web.Controllers
 {
+    [AuthorizeUser(ModuleName = MenuGroupConstants.People)]
     public class CompaniesController : BaseController
     {
         private readonly CompanyService _companyService;

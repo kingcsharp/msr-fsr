@@ -1,9 +1,11 @@
 ﻿using System.Web.Mvc;
+using Answer.Web.Filters;
 using Answer.Web.ViewModel;
 using Msr.Services.Users;
 
 namespace Answer.Web.Controllers
 {
+    [AuthorizeUser]
     public class UserController : BaseController
     {
         public UserController()

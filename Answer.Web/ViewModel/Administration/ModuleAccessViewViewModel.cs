@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
-using Msr.Models.Comman;
 using Msr.Services.Administration.Messages;
 using Msr.Services.Administration.ViewModels;
-using Msr.Services.Companies;
 using Msr.Services.Roles;
 using Msr.Services.Roles.Messages;
 
@@ -15,11 +13,11 @@ namespace Answer.Web.ViewModel.Administration
         public ModuleAccessViewViewModel()
         {
             Roles = new List<SelectListItem>();
-            CompaniesToView = new List<ModuleAccessResult>();
+            ModuleAccess = new List<ModuleAccessResult>();
             RoleId = new List<SelectListItem>();
         }
 
-        public List<ModuleAccessResult> CompaniesToView { get; set; }
+        public List<ModuleAccessResult> ModuleAccess { get; set; }
 
         public List<XmlContentViewModel> GlobalSettings { get; set; }
 

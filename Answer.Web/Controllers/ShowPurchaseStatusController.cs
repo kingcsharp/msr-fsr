@@ -1,16 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
+using Answer.Web.Filters;
 using Msr.Models.ProductsActualPart;
 using Msr.Models.ShowPurchaseStatus;
 using Msr.Services.jqGrid;
-using Msr.Services.ProductsActualParts;
 using Msr.Services.ShowPurchaseStatus;
 
 namespace Answer.Web.Controllers
 {
+    [AuthorizeUser]    
     public class ShowPurchaseStatusController : BaseController
     {
         // GET: ShowPurchaseStatus

@@ -6,11 +6,12 @@ using Msr.Web.ViewModel.Engineering;
 using System;
 using System.Linq;
 using System.Web.Mvc;
-using Msr.Services.Workflows;
+using Answer.Web.Filters;
+using Msr.Models.Menus;
 
 namespace Answer.Web.Controllers
 {
-    [Authorize]
+    [AuthorizeUser(ModuleName = MenuGroupConstants.Locations)]
     public class RegionsController : BaseController
     {
         private readonly RegionService _regionService;

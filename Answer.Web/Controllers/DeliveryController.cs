@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
+using Answer.Web.Filters;
 using Msr.Models.Delivery;
+using Msr.Models.Menus;
 using Msr.Services.jqGrid;
 using Msr.Services.Delivery;
 using Msr.Web.ViewModel.Engineering;
 
 namespace Answer.Web.Controllers
 {
+    [AuthorizeUser]
     public class DeliveryController : BaseController
     {
 

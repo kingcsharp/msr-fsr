@@ -1,7 +1,26 @@
-﻿<!DOCTYPE html>
+﻿@using Answer.Web.Helpers
+@using Answer.Web.ViewModel
+@using Msr.Services.Users
+@{
+    var baseViewModel  = new BaseViewModel();
+
+    if (User.Identity.IsAuthenticated && !string.IsNullOrWhiteSpace(User.Identity.Name))
+    {
+        ////TODO This need to be done with a better way
+        var userService = new UserService();
+        baseViewModel.LoggedUserIdResult = userService.GetUserId(User.Identity.Name);
+
+        if (baseViewModel.LoggedUserIdResult != null)
+        {
+            baseViewModel.MenuViewModel = UIPermissionHelper.GetUserMenuPermissions(baseViewModel.LoggedUserIdResult);
+        }
+    }
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>@ViewBag.Title</title>
@@ -16,8 +35,8 @@
 <body class="flat-blue">
     <div class="app-container">
         <div class="row content-container">
-            @Html.Partial("_Header")
-            @Html.Partial("_SideBar")
+            @Html.Partial("_Header", baseViewModel)
+            @Html.Partial("_SideBar", baseViewModel)
 
             @RenderBody()
 
@@ -40,11 +59,9 @@
                 </div>
             </div>
         </div>
-
         @Html.Partial("_Footer")
         @Scripts.Render("~/bundles/js/main")
         @RenderSection("scripts", required: false)
-
     </div>
 </body>
 </html>

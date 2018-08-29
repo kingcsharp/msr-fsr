@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace Msr.Services.Administration.Messages
 {
    public class ModuleAccessResult
@@ -12,5 +7,6 @@ namespace Msr.Services.Administration.Messages
         public string Name { get; set; }
         public string Info { get; set; }
         public string Menu_Group { get; set; }
+        public int Order_Number { get; set; }
     }
 }

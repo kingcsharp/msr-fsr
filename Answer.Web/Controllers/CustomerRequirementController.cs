@@ -1,9 +1,12 @@
 ﻿using System.Web.Mvc;
+using Answer.Web.Filters;
+using Msr.Models.Menus;
 using Msr.Services.CustomerRequirements;
 using Msr.Services.CustomerRequirements.ViewModel;
 
 namespace Answer.Web.Controllers
 {
+    [AuthorizeUser(ModuleName = MenuGroupConstants.Quotes)]
     public class CustomerRequirementController : BaseController
     {
         public ActionResult Index()

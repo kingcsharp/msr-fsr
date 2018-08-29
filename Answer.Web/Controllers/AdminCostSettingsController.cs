@@ -1,9 +1,12 @@
 ﻿using System.Web.Mvc;
+using Answer.Web.Filters;
 using Msr.Models.AdminCostSettings;
+using Msr.Models.Menus;
 using Msr.Services.AdminCostSettings;
 
 namespace Answer.Web.Controllers
 {
+    [AuthorizeUser(ModuleName = MenuGroupConstants.Administration)]
     public class AdminCostSettingsController : BaseController
     {
         private readonly AdminCostSettingService _adminCostSettingService;

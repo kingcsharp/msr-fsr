@@ -6,11 +6,14 @@ using Msr.Web.ViewModel.Engineering;
 using System;
 using System.Linq;
 using System.Web.Mvc;
+using Answer.Web.Filters;
+using Msr.Models.Menus;
 using Msr.Services.Users;
 using Msr.Services.Workflows;
 
 namespace Answer.Web.Controllers
 {
+    [AuthorizeUser(ModuleName = MenuGroupConstants.People)]
     public class RolesController : BaseController
     {
         private readonly RoleService _roleService;

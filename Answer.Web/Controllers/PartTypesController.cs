@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
+using Answer.Web.Filters;
+using Msr.Models.Menus;
 using Msr.Models.PartTypes;
 using Msr.Services.jqGrid;
 using Msr.Services.PartTypes;
@@ -10,6 +12,7 @@ using Msr.Web.ViewModel.Engineering;
 
 namespace Answer.Web.Controllers
 {
+    [AuthorizeUser(ModuleName = MenuGroupConstants.Parts)]
     public class PartTypesController : BaseController
     {
         private PartTypeService _partTypeService;
