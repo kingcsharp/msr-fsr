@@ -29,7 +29,7 @@ namespace Msr.Services.Workflows
                 var items = _dbContext.NotificationItemViews.ToList();
 
                 notificationViewModel.Items = items.OrderByDescending(x=>x.ItemCount).Take(3);
-                notificationViewModel.Total = items.Count;
+                notificationViewModel.Total = items.Sum(x => x.ItemCount);
             }
             catch (Exception e)
             {

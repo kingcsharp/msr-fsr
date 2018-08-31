@@ -113,7 +113,7 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
                 autowidth: true,
                 colMenu: true,
                 gridComplete: function () {
-                    Msr.JqGridCommon.UnLockWorkflow("/PendingApproval");
+                    Msr.JqGridCommon.UnLockWorkflow("/PendingApproval?itemType=" + itemType);
                 }
             });
             $('#jqGrid').navGrid("#jqGridPager", {
@@ -262,7 +262,7 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
                 autowidth: true,
                 colMenu: true,
                 gridComplete: function () {
-                    Msr.JqGridCommon.UnLockWorkflow("/PendingApproval");
+                    Msr.JqGridCommon.UnLockWorkflow("/PendingApproval?itemType=" + itemType);
                 }
             });
             $('#jqProductGrid').navGrid("#jqGridProductPager", {
