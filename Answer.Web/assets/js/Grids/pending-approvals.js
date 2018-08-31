@@ -153,7 +153,7 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
             });
     },
 
-        SetUpProductGrid: function (returnUrl) {
+        SetUpProductGrid: function (returnUrl, itemType) {
             $.jgrid.defaults.styleUI = 'Bootstrap';
 
             $("#jqProductGrid").jqGrid({
