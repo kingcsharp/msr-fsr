@@ -311,10 +311,6 @@ namespace Answer.Web.Controllers
         {
             var totalRows = _companyService.GetCompaniesApprovedQueryable(GetCurrentUser().Root_Company);
 
-            var defaultStatusList = base.GetDefaultStatus();
-
-            totalRows = totalRows.Where(x => defaultStatusList.Contains(x.Status) && x.Id.Length > 0);
-
             if (param.where != null && param.where.rules.Any())
             {
                 foreach (var rule in param.where.rules)

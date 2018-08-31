@@ -210,6 +210,9 @@
     <Compile Include="Invoices\ViewModel\InvoiceDetailListViewModel.cs" />
     <Compile Include="Invoices\ViewModel\InvoiceViewModel.cs" />
     <Compile Include="Jobs\SpAdminJob.cs" />
+    <Compile Include="jqGrid\IPageResult.cs" />
+    <Compile Include="jqGrid\PageResult.cs" />
+    <Compile Include="jqGrid\Pagination.cs" />
     <Compile Include="Menus\MenuService.cs" />
     <Compile Include="Orders\Messaging\TaskLogDto.cs" />
     <Compile Include="Parts\Procedures\PartsImportAndUpdateExternalPartProcedure.cs" />
@@ -469,7 +472,10 @@
     <Compile Include="Users\Messages\LoggedUserIdResult.cs" />
     <Compile Include="Users\Messages\SearchPeopleResult.cs" />
     <Compile Include="Users\UserService.cs" />
+    <Compile Include="Workflows\PendingApprovalService.cs" />
     <Compile Include="Workflows\ViewModels\CheckoutView.cs" />
+    <Compile Include="Workflows\ViewModels\DeniedWorkflowViewModel.cs" />
+    <Compile Include="Workflows\ViewModels\NotificationViewModel.cs" />
     <Compile Include="Workflows\ViewModels\SubmitWorkflowViewModel.cs" />
     <Compile Include="Workflows\WorkflowService.cs" />
   </ItemGroup>

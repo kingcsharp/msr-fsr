@@ -2841,6 +2841,10 @@
     <Build Include="dbo\Stored Procedures\Portal\Portal_GetUserModulePermissions.sql" />
     <Build Include="dbo\Views\Portal\Portal_MenuView.sql" />
     <PostDeploy Include="Seeds\SeedMenus.sql" />
+    <Build Include="dbo\Views\Portal\Protal_PendingApprovals.sql" />
+    <Build Include="dbo\Stored Procedures\Procs1\A_SP_MENUS_SEARCH.sql" />
+    <Build Include="dbo\Views\Portal\Portal_NotificationView.sql" />
+    <None Include="Seeds\SeedWfActivities.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Msr.Database.refactorlog" />

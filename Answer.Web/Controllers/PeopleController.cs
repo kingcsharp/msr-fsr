@@ -47,9 +47,7 @@ namespace Answer.Web.Controllers
         public ActionResult PeopleData(JqGridParam param)
         {
 
-            var defaultStatusList = "CREATING,DENIED,APPROVED,APPROVED_BUT_REVISING,APPROVED_BUT_DELETING".Split(',');
-
-            var totalRows = _peopleService.GetPeople().Where(x => defaultStatusList.Contains(x.Status));
+            var totalRows = _peopleService.GetPeople();
 
             if (param.where != null && param.where.rules.Any())
             {

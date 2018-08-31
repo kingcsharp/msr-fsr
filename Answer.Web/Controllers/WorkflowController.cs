@@ -128,5 +128,41 @@ namespace Answer.Web.Controllers
 
             return Json(new { ObjectId = checkoutEntity.Entity }, JsonRequestBehavior.AllowGet);
         }
+
+        public ActionResult Denied(string wfsId, string wfStageId, string wfGroupId, string returnUrl)
+        {
+            var user = GetCurrentUser();
+
+            var vm = new DeniedWorkflowViewModel
+            {
+                Wfsid = wfsId,
+                WfStageId = wfStageId,
+                WfGroupId = wfGroupId,
+                ReturnUrl = returnUrl,
+                NtLogin = user.Id
+            };
+
+            return View(vm);
+        }
+
+        [HttpPost]
+        public ActionResult Denied(DeniedWorkflowViewModel vm)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = _workflowService.DeniedWorkflow(vm);
+
+                if (!result.HasErrors())
+                {
+                    TempData["SuccessMessage"] = result.SuccessMessage;
+
+                    return RedirectPermanent(vm.ReturnUrl);
+                }
+
+                TempData["ErrorMessage"] = result.ErrorMessage();
+            }
+
+            return View(vm);
+        }
     }
 }

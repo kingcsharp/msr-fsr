@@ -1,0 +1,54 @@
+﻿CREATE VIEW dbo.Protal_PendingApprovals
+AS
+
+SELECT        
+ITEM_TYPE AS ItemType,
+ITEM_NAME AS ItemName, 
+ITEM_NUMBER AS ItemNumber, 
+OBJECT_ID AS ObjectId,
+REVISION AS Revision,
+REV_INFO AS RevInfo,
+WF_NAME AS WfName, 
+STAGE_NAME AS StageName, 
+GROUP_NAME AS GroupName, 
+INITIATOR AS Initiator, 
+APPROVER_NAME AS ApprovalName,
+DATE_STARTED AS DateStarted,
+STATUS AS Status,
+PERSON_ID AS PersonId,
+WFS_ID AS WfsId,
+WF_STAGE_ID AS WfStageId, 
+WF_GROUP_ID AS WfGroupId,
+APPROVER AS Approver,
+'IN_WORKFLOW' AS NotificationType
+FROM  dbo.A_V_APPROVALS_PENDING
+
+UNION
+
+SELECT 
+o.OBJ_TABLE AS ITEM_TYPE,
+o.OBJ_DESC AS ITEM_NAME,
+o.ROOT AS ITEM_NUMBER,
+o.ID AS ObjectId, 
+o.REV AS Revision, 
+O.REV_INFO AS RevInfo,
+wf.NAME AS WF_NAME,
+'' AS StageName, 
+'' AS GroupName, 
+STARTER.FULL_NAME AS Initiator, 
+'' AS ApprovalName, 
+'' AS DateStarted, 
+wfs.STATUS_ON_COMPLETION  AS Status, 
+o.LOCKED_BY AS PersonId, 
+'' AS WfsId, 
+'' AS WfStageId, 
+'' AS WfGroupId, 
+'' AS Approver, 
+'CREATING' AS NotificationType
+FROM A_OBJECTS o
+LEFT JOIN dbo.A_WORKFLOWS_STARTED wfs ON wfs.ID = O.WFS_ID
+LEFT JOIN dbo.A_WORKFLOWS wf ON wfs.WF_ID = wf.ID 
+LEFT JOIN dbo.A_APPROVED_PEOPLE STARTER ON wfs.STARTED_BY = STARTER.ID 
+WHERE o.STATUS ='CREATING'
+
+GO

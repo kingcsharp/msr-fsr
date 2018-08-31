@@ -111,9 +111,9 @@ namespace Msr.Services.Workflows
 
             try
             {
-                var checkIfObjectInCreatingSql = $"select status, root from A_OBJECTS where id ='{objectId}'";
+                var objectIdParam = new SqlParameter("@objectId", objectId);
 
-                var checkoutView = _dbContext.Database.SqlQuery<CheckoutView>(checkIfObjectInCreatingSql).FirstOrDefault();
+                var checkoutView = _dbContext.Database.SqlQuery<CheckoutView>("select status, root from A_OBJECTS where id =@objectId", objectIdParam).FirstOrDefault();
 
                 if (checkoutView.Status != null && checkoutView.Status == "CREATING")
                 {
@@ -123,7 +123,9 @@ namespace Msr.Services.Workflows
 
                 if (checkoutView.Status != null && checkoutView.Status == "APPROVED_BUT_REVISING")
                 {
-                    var id = _dbContext.Database.SqlQuery<string>($"select Id from A_OBJECTS where root ='{checkoutView.Root}' AND STATUS='CREATING'").FirstOrDefault();
+                    var rootParam = new SqlParameter("@root", objectId);
+
+                    var id = _dbContext.Database.SqlQuery<string>($"select Id from A_OBJECTS where root =@root AND STATUS='CREATING'", rootParam).FirstOrDefault();
                     result.Entity = id;
                     return result;
                 }
@@ -159,5 +161,39 @@ namespace Msr.Services.Workflows
             return result;
         }
 
+        public BaseNotification DeniedWorkflow(DeniedWorkflowViewModel vm)
+        {
+            var result = new BaseNotification();
+
+            try
+            {
+                var p = new DynamicParameters();
+                p.Add("@newID", dbType: DbType.String, direction: ParameterDirection.Output, size: 500);
+                p.Add("@msg", dbType: DbType.String, direction: ParameterDirection.Output, size: 8000);
+                p.Add("@WFS_ID", vm.Wfsid, DbType.String, ParameterDirection.Input, 50);
+                p.Add("@WF_GROUP_ID", vm.WfGroupId, DbType.String, ParameterDirection.Input, 50);
+                p.Add("@WF_STAGE_ID", vm.WfStageId, DbType.String, ParameterDirection.Input, 2000);
+                p.Add("@reason", vm.Reason, DbType.String, ParameterDirection.Input, 50);
+                p.Add("@strNTLogin", vm.NtLogin, DbType.String, ParameterDirection.Input, 50);
+
+                using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
+                {
+                    int i = conn.Execute("A_SP_APPROVALS_DENY_ONE", p, commandType: CommandType.StoredProcedure);
+
+                    var newID = p.Get<string>("msg");
+                    var msg = p.Get<string>("msg2");
+
+                    result.SuccessMessage = msg;
+                }
+
+                SpRunAdminSql();
+            }
+            catch (Exception ex)
+            {
+                // ignored
+            }
+
+            return result;
+        }
     }
 }

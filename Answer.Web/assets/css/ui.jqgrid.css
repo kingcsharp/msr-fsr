@@ -5,7 +5,7 @@
 	-webkit-box-sizing: content-box; 
 	box-sizing: content-box;
 }
-.ui-jqgrid .ui-jqgrid-view {position: relative;left:0; top: 0; padding: 0; font-size:.8em; z-index:100;}
+.ui-jqgrid .ui-jqgrid-view {position: relative;left:0; top: 0; padding: 0; font-size:.8em;}
 .ui-jqgrid .ui-common-table {border-width: 0px; border-style: none; border-spacing: 0px; padding: 0;}
 /* caption*/
 .ui-jqgrid .ui-jqgrid-titlebar {height:19px; padding: .3em .2em .2em .3em; position: relative; font-size: 1.2em; border-left: 0 none;border-right: 0 none; border-top: 0 none;}

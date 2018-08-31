@@ -214,6 +214,9 @@
     <Compile Include="Users\AspNetUserLogin.cs" />
     <Compile Include="Users\RolesConstants.cs" />
     <Compile Include="Users\PeopleView.cs" />
+    <Compile Include="Workflows\NotificationItemView.cs" />
+    <Compile Include="Workflows\PendingApprovalView.cs" />
+    <Compile Include="Workflows\TableConstants.cs" />
     <Compile Include="Workflows\WorkItemStatusConstants.cs" />
   </ItemGroup>
   <ItemGroup>

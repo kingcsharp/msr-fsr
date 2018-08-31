@@ -45,9 +45,7 @@ namespace Answer.Web.Controllers
 
         public ActionResult DocumentsData(JqGridParam param)
         {
-            var defaultStatusList = GetDefaultStatus();
-
-            var totalRows = _documentService.GetDocumentsQueryable().Where(x => defaultStatusList.Contains(x.Status));
+            var totalRows = _documentService.GetDocumentsQueryable();
 
             if (param.where != null && param.where.rules.Any())
             {

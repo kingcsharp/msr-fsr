@@ -1,0 +1,52 @@
+﻿@model Msr.Services.Workflows.ViewModels.DeniedWorkflowViewModel
+@{
+    ViewBag.Title = "Denied Approval Workflow & Submit";
+}
+<div class="container-fluid">
+    <div class="side-body padding-top">
+        <div class="row">
+            <h2 class="page-header">
+                Denied Approval Workflow & Submit
+                <div class=" pull-right" data-toggle="modal">
+                </div>
+            </h2>
+            <div class="col-lg-10">
+                <section class="panel">
+                    <div class="panel-body bio-graph-info">
+                        @Html.Partial("Message")
+                        @using (Html.BeginForm("Denied", "Workflow", FormMethod.Post, new { @class = "form form-horizontal" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.HiddenFor(model => model.WfGroupId)
+                            @Html.HiddenFor(model => model.Wfsid)
+                            @Html.HiddenFor(model => model.WfStageId)
+                            @Html.HiddenFor(model => model.ReturnUrl)
+                            @Html.HiddenFor(model => model.NtLogin)
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Reason, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-8">
+                                    @Html.TextAreaFor(model => model.Reason, new { htmlAttributes = new { @class = "form-control " } })
+                                    @Html.ValidationMessageFor(model => model.Reason, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-lg-offset-2 col-lg-8">
+                                    <input type="submit" value="Submit" class="btn btn-success" />
+                                    <a href="@Model.ReturnUrl" class="btn btn-warning">Cancel</a>
+                                </div>
+                            </div>
+
+                        }
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/js/jqueryval")
+}

@@ -52,10 +52,6 @@ namespace Answer.Web.Controllers
 
             var totalRows = _actualPartsService.GetActualPartsQueryable();
 
-            var defaultStatusList = GetDefaultStatus();
-
-            totalRows = totalRows.Where(x => defaultStatusList.Contains(x.Status));
-
             if (param.where != null && param.where.rules.Any())
             {
                 foreach (var rule in param.where.rules)
@@ -133,6 +129,7 @@ namespace Answer.Web.Controllers
                     }
                 }
             }
+
             var orderBy = nameof(ActualPartsView.PartDesc);
             if (!string.IsNullOrWhiteSpace(param.sortColumn))
             {

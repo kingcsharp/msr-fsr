@@ -17,6 +17,7 @@ namespace Msr.Services.Menus
         {
             _dbContext = new MsrDbContext();    
         }
+
         public List<MenuView> GetMenu(string loginId)
         {
             using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))

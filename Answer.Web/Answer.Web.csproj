@@ -214,6 +214,7 @@
     <Compile Include="Controllers\ApprovalWorkflowsController.cs" />
     <Compile Include="Controllers\EquipmentMaintenanceController.cs" />
     <Compile Include="Controllers\InvoicesController.cs" />
+    <Compile Include="Controllers\PendingApprovalController.cs" />
     <Compile Include="Controllers\PeopleController.cs" />
     <Compile Include="Controllers\CompaniesController.cs" />
     <Compile Include="Controllers\DocumentsController.cs" />
@@ -519,6 +520,7 @@
     <Content Include="assets\js\grids\invoices.js" />
     <Content Include="assets\js\grids\labors-step.js" />
     <Content Include="assets\js\grids\PartProductStay.js" />
+    <Content Include="assets\js\grids\pending-approvals.js" />
     <Content Include="assets\js\grids\procedure-monitors.js" />
     <Content Include="assets\js\grids\PrePro.js" />
     <Content Include="assets\js\grids\PreProTheoryDiolag.js" />
@@ -1232,6 +1234,8 @@
     <Content Include="Views\Parts\SubParts.cshtml" />
     <Content Include="Views\Help\_SupportTicket.cshtml" />
     <Content Include="Views\UserMailer\SupportRequest.cshtml" />
+    <Content Include="Views\PendingApproval\Index.cshtml" />
+    <Content Include="Views\Workflow\Denied.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
