@@ -117,6 +117,7 @@ namespace Msr.Repositories
             modelBuilder.Entity<MenuView>().ToTable("Portal_MenuView");
             modelBuilder.Entity<PendingApprovalView>().ToTable("Protal_PendingApprovals");
             modelBuilder.Entity<NotificationItemView>().ToTable("Portal_NotificationView");
+            modelBuilder.Entity<ObjectSearchView>().ToTable("Portal_ObjectSearch");
         }
 
         public DbSet<AspNetUser> AspNetUsers { get; set; }
@@ -187,5 +188,6 @@ namespace Msr.Repositories
         public DbSet<MenuView> MenuViews { get; set; }
         public DbSet<PendingApprovalView> PendingApprovalViews { get; set; }
         public DbSet<NotificationItemView> NotificationItemViews { get; set; }
+        public DbSet<ObjectSearchView> ObjectSearchViews { get; set; }
     }
 }

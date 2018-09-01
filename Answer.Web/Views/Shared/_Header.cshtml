@@ -23,14 +23,15 @@
                 <i class="fa fa-times icon"></i>
             </button>
             <li>
-                <form class="navbar-form" role="search">
+            @using (Html.BeginForm("Index","Search",FormMethod.Get,new {@class= "navbar-form" }))
+            {
                     <div class="input-group">
-                        <input class="form-control" placeholder="Search" name="srch-term" id="srch-term" style="margin-top: 5px;" type="text">
+                        <input class="form-control" placeholder="Search" value="@Request.QueryString["searchTerm"]" name="searchTerm" id="srch-term" style="margin-top: 5px;" type="text">
                         <div class="input-group-btn">
                             <button class="btn btn-info" type="submit"><i class="glyphicon glyphicon-search"></i></button>
                         </div>
                     </div>
-                </form>
+            }
             </li>
             <li class="dropdown danger">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-bell" data-intro="View your notificiations" data-position="bottom"></i> @notifications.Total</a>

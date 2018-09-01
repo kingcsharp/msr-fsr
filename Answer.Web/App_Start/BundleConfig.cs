@@ -138,6 +138,10 @@ namespace Answer.Web
                 .Include("~/assets/js/grids/pending-approvals.js")
             );
 
+            bundles.Add(new ScriptBundle("~/bundles/js/object-search")
+                .Include("~/assets/js/grids/object-search.js")
+            );
+
             bundles.Add(new StyleBundle("~/bundles/css/main")
                .Include("~/assets/css/bootstrap.min.css", new CssRewriteUrlTransform())
                .Include("~/assets/css/font-awesome.min.css", new CssRewriteUrlTransform())
