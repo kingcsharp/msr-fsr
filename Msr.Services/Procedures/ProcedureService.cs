@@ -581,7 +581,7 @@ namespace Msr.Services.Procedures
                 EquipmentTime = viewModel.EquipmentTime,
                 Roles = viewModel.Role != null ? string.Join(",", viewModel.Role) : null,
                 Duration = viewModel.Duration,
-                DurationType = viewModel.Duration_Type,
+                DurationType = viewModel.Duration_type ?? "TIME_SYS_HOURS",
                 ReplacementCost = viewModel.ReplacementCost,
                 Utilization = viewModel.Utilization,
                 UsefulLife = viewModel.UsefulLife
@@ -598,7 +598,7 @@ namespace Msr.Services.Procedures
             }
 
             updateOneStep.Duration = viewModel.Duration;
-            updateOneStep.DurationType = viewModel.Duration_Type;
+            updateOneStep.DurationType = viewModel.Duration_type;
 
             _dbContext.Database.ExecuteStoredProcedure(updateOneStep);
         }
