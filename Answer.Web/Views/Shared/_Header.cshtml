@@ -1,4 +1,5 @@
-﻿@using Msr.Services.Workflows
+﻿@using Answer.Web.Helpers
+@using Msr.Services.Workflows
 @model Answer.Web.ViewModel.BaseViewModel
 
 @{
@@ -46,7 +47,7 @@
                                 {
                                     <a href="~/PendingApproval?itemType=@item.ItemType">
                                         <li class="list-group-item">
-                                            <span class="@notifications.IconCssList.Dequeue()">@item.ItemCount</span> <i class="fa fa-gear icon"></i> @item.Title
+                                            <span class="@notifications.IconCssList.Dequeue()">@item.ItemCount</span> <i class="@(item.ItemType.GetNotificationIconCss())"></i> @item.Title
                                         </li>
                                     </a>
                                 }
