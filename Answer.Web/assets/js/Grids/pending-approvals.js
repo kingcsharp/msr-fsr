@@ -7,7 +7,7 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
             $.jgrid.defaults.styleUI = 'Bootstrap';
 
             $("#jqGrid").jqGrid({
-                url: 'PendingApproval/PendingApprovalsData?itemType=' + itemType,
+                url: 'PendingApproval/PendingApprovalsData',
                 mtype: "GET",
                 styleUI: 'Bootstrap',
                 datatype: "json",
@@ -134,15 +134,20 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
                 searchOperators: true
             });
 
+            setTimeout(function () {
+                $('#gs_ItemType').val(itemType);
+                $("#jqGrid")[0].triggerToolbar();
+            }, 300);
+
+
             function approvalEditFormatter(cellvalue, options, rowObject) {
 
                 return Msr.PendingApprovalsGrid.ActionLinks(cellvalue, options, rowObject, returnUrl);
             }
             function itemNameFormatter(cellvalue, options, rowObject) {
-                var itemName = 'Approving Changes to approval_' + rowObject.ItemType + ' Called ' + '<a href="">' + rowObject.ItemName + " " + rowObject.Revision + '</a>';
+                var itemName = 'Approving Changes to approval_' + rowObject.ItemType + ' Called ' + rowObject.ItemName + " " + rowObject.Revision;
                 return itemName;
             }
-
 
             $('#search').click(function () {
 

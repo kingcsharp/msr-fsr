@@ -33,15 +33,10 @@ namespace Answer.Web.Controllers
             return View();
         }
 
-        public ActionResult PendingApprovalsData(JqGridParam param, string itemType)
+        public ActionResult PendingApprovalsData(JqGridParam param)
         {
             var totalRows = _pendingApprovalService.GetPedningApprovalsQueryable()
                 .Where(x => x.ItemType != TableConstants.ProductHistory);
-
-            if (!string.IsNullOrWhiteSpace(itemType) && !param.HasGridFilters())
-            {
-                totalRows = totalRows.Where(x => x.ItemType == itemType);
-            }
 
             return ApplyFilters(param, totalRows);
         }

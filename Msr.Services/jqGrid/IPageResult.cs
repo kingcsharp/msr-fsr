@@ -4,9 +4,9 @@ namespace Msr.Services.jqGrid
 {
     public interface IPageResult<T>
     {
-        int Total { get; set; }
-        int Page { get; set; }
-        int Records { get; set; }
+        int total { get; set; }
+        int page { get; set; }
+        int records { get; set; }
         List<T> rows { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿CREATE VIEW Portal_NotificationView
+﻿CREATE PROCEDURE Portal_GetUserNotifications
+@userId AS NVARCHAR(50)
 AS
 
 SELECT
@@ -8,7 +9,7 @@ wf.Title,
 COUNT(*) ItemCount 
 FROM [Protal_PendingApprovals] pa 
 INNER JOIN[A_WF_ACTIVITIES] wf ON wf.ACTIVITY = pa.ItemType 
-WHERE ItemType IN (
+WHERE pa.PersonId =@userId AND ItemType IN (
 'A_PROCEDURES_HISTORY',
 'A_PARTS_HISTORY',
 'A_PART_TYPES_HISTORY',
