@@ -137,7 +137,7 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
             setTimeout(function () {
                 $('#gs_ItemType').val(itemType);
                 $("#jqGrid")[0].triggerToolbar();
-            }, 150);
+            }, 300);
 
 
             function approvalEditFormatter(cellvalue, options, rowObject) {
