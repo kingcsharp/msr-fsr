@@ -3,7 +3,7 @@
 @model Answer.Web.ViewModel.BaseViewModel
 
 @{
-    var notifications = new PendingApprovalService().GetNotifications();
+    var notifications = new PendingApprovalService().GetUserNotifications(Model.LoggedUserIdResult.Id);
 }
 
 <nav class="navbar navbar-default navbar-fixed-top navbar-top">

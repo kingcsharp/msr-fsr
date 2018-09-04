@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.SqlClient;
 using System.Linq;
 using Msr.Models.Workflows;
 using Msr.Repositories;
@@ -20,15 +21,17 @@ namespace Msr.Services.Workflows
             return _dbContext.PendingApprovalViews;
         }
 
-        public NotificationViewModel GetNotifications()
+        public NotificationViewModel GetUserNotifications(string userId)
         {
             var notificationViewModel = new NotificationViewModel();
 
             try
             {
-                var items = _dbContext.NotificationItemViews.ToList();
+                var fileIdParm = new SqlParameter("@userId", userId);
 
-                notificationViewModel.Items = items.OrderByDescending(x=>x.ItemCount).Take(3);
+                var items = _dbContext.Database.SqlQuery<NotificationItemView>("Portal_GetUserNotifications @userId", fileIdParm).ToList();
+
+                notificationViewModel.Items = items.OrderByDescending(x => x.ItemCount).Take(3);
                 notificationViewModel.Total = items.Sum(x => x.ItemCount);
             }
             catch (Exception e)

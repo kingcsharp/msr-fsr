@@ -21,9 +21,9 @@ namespace Msr.Services.jqGrid
 
             var result = new PageResult<T>
             {
-                Total = totalPages,
-                Page = param.pageIndex,
-                Records = totalRecords,
+                total = totalPages,
+                page = param.pageIndex,
+                records = totalRecords,
                 rows = results
             };
 

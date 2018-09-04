@@ -116,7 +116,6 @@ namespace Msr.Repositories
             modelBuilder.Entity<AdminCostSetting>().ToTable("Portal_AdminCostSetting");
             modelBuilder.Entity<MenuView>().ToTable("Portal_MenuView");
             modelBuilder.Entity<PendingApprovalView>().ToTable("Protal_PendingApprovals");
-            modelBuilder.Entity<NotificationItemView>().ToTable("Portal_NotificationView");
         }
 
         public DbSet<AspNetUser> AspNetUsers { get; set; }
@@ -186,6 +185,5 @@ namespace Msr.Repositories
         public DbSet<AdminCostSetting> AdminCostSettings { get; set; }
         public DbSet<MenuView> MenuViews { get; set; }
         public DbSet<PendingApprovalView> PendingApprovalViews { get; set; }
-        public DbSet<NotificationItemView> NotificationItemViews { get; set; }
     }
 }
