@@ -79,7 +79,7 @@
     <script type="text/javascript">
         $(document).ready(function() {
             $.jgrid.defaults.styleUI = 'Bootstrap';
-            Msr.WipGrid.LoadWipGrid('@Url.Action("EngineeringData", "wip")');
+            Msr.WipGrid.LoadWipGrid('@Url.Action("EngineeringData", "wip", new {step=Request.QueryString["step"] })');
         });
     </script>
 }

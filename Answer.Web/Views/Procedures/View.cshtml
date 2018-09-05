@@ -12,7 +12,6 @@
 
             <div class="col-lg-12">
                 @Html.Partial("Message")
-
                 Procedure Status: @Model.ProcedureView.Status <br/>
                 Procedure number: @Model.ProcedureView.ObjectId <br />
                 Rev number: @Model.ProcedureView.Rev<br />
@@ -29,10 +28,10 @@
                     <th>Title</th>
                     <th>Text</th>
                     <th>Duration Type</th>
+                    <th>Duration</th>
                 </tr>
                 </thead>
                 <tbody>
-                
                 @for (int i = 0; i < Model.StepDataList.OrderBy(x => x.Print_Order).Count(); i++)
                 {
                     <tr>
@@ -45,16 +44,10 @@
                                 @Html.Raw(Model.StepDataList[i].Step_Text.Replace(Environment.NewLine, "<br/>")) 
                             }   
                         </td>
-                        <td>@Model.StepDataList[i].Duration @Model.StepDataList[i].Duration_type</td>
+                        <td>@Model.StepDataList[i].Duration_type</td>
+                        <td>@Model.StepDataList[i].Duration</td>
                     </tr>
-                    <tr>
-                        <td colspan="6">LABOR_ROLE_LABOR_OWNER :
-                            @if (@Model.StepDataList[i].StepLaborsList.Count > 0)
-                            {
-                                @Model.StepDataList[i].StepLaborsList.SingleOrDefault().Text
-                            }
-                            @Model.StepDataList[i].Duration @Model.StepDataList[i].Duration_type</td>
-                    </tr>
+
                 }
                 </tbody>
             </table>

@@ -17,7 +17,8 @@ WHERE DL.STEP_ID = o.OBJ_DESC
 dbo.A_PROCEDURE_STEPS.Roles AS Roles,
 dbo.A_PROCEDURE_STEPS.ReplacementCost,
 dbo.A_PROCEDURE_STEPS.Utilization,
-dbo.A_PROCEDURE_STEPS.UsefulLife
+dbo.A_PROCEDURE_STEPS.UsefulLife,
+A_PROCEDURE_STEPS.DRCM AS UpdatedDate
 FROM            dbo.A_OBJECTS AS o INNER JOIN
                          dbo.A_PREPOP_HISTORY AS p ON o.ID = p.OBJECT_ID INNER JOIN
                          dbo.A_PROCEDURE_STEPS ON p.PROC_STEP_ID = dbo.A_PROCEDURE_STEPS.ID

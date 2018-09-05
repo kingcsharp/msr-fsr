@@ -9,6 +9,6 @@ namespace Msr.Models.Objects
         public string Name { get; set; }
         public string Description { get; set; }
         public string ItemType { get; set; }
-        public DateTime? Date { get; set; }
+        public DateTime? UpdatedDate { get; set; }
     }
 }

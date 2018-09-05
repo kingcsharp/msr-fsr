@@ -8,7 +8,8 @@ isnull(STUFF((
 SELECT +','+ DL.NAME+'|'+DL.LINKED_DOC_ID 
 FROM A_V_DOCUMENTS_WITH_LINKED_ITEM AS DL 
 WHERE DL.OBJECT_ID = AP.OBJECT_ID
-    FOR XML PATH('')), 1, 1,''),'') AS ReferenceFiles
+    FOR XML PATH('')), 1, 1,''),'') AS ReferenceFiles,
+ph.DRCM AS UpdatedDate
 FROM            dbo.A_V_PROCEDURE_HISTORY_SEARCH AS PH LEFT OUTER JOIN
                          dbo.A_O_PROCEDURES AS AP ON AP.OBJECT_ID = PH.OBJECT_ID
 GO

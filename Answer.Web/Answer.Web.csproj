@@ -1240,6 +1240,10 @@
     <Content Include="Views\PendingApproval\Index.cshtml" />
     <Content Include="Views\Workflow\Denied.cshtml" />
     <Content Include="Views\Search\Index.cshtml" />
+    <Content Include="Views\People\Details.cshtml" />
+    <Content Include="Views\ProcedureVerbs\Details.cshtml" />
+    <Content Include="Views\Regions\Details.cshtml" />
+    <Content Include="Views\Documents\Details.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

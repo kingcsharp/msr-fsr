@@ -189,19 +189,19 @@ namespace Answer.Web.Controllers
         {
             var model = _documentService.GetById(id);
 
-            var location = new SaveDocumentViewModel();
+            var documentViewModel = new SaveDocumentViewModel();
 
-            location = location.MapToDto(model);
+            documentViewModel = documentViewModel.MapToDto(model);
 
-            location.Setup(new RoleService(), new PartsService(), new DocumentFilesService(), _documentService, GetCurrentUser().Id);
+            documentViewModel.Setup(new RoleService(), new PartsService(), new DocumentFilesService(), _documentService, GetCurrentUser().Id);
 
-            var preview = string.Join(",", location.DocLinks.ToArray().Select(x => string.Format("{0}{1}{0}", "\'", x.SERVER_PATH)));
+            var preview = string.Join(",", documentViewModel.DocLinks.ToArray().Select(x => string.Format("{0}{1}{0}", "\'", x.SERVER_PATH)));
 
             ViewBag.Preview = preview;
 
             var jsonSerialiser = new JavaScriptSerializer();
 
-            var previewConfig = jsonSerialiser.Serialize(location.DocLinks
+            var previewConfig = jsonSerialiser.Serialize(documentViewModel.DocLinks
                 .Select(x => new
                 {
                     caption = x.NAME,
@@ -214,7 +214,7 @@ namespace Answer.Web.Controllers
 
             ViewBag.PreviewConfig = previewConfig;
 
-            return View(location);
+            return View(documentViewModel);
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
@@ -343,6 +343,38 @@ namespace Answer.Web.Controllers
             }
 
             return Json(new { initialPreview, initialPreviewConfig }, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult Details(string id)
+        {
+            var model = _documentService.GetById(id);
+
+            var detail = new SaveDocumentViewModel();
+
+            detail = detail.MapToDto(model);
+
+            detail.Setup(new RoleService(), new PartsService(), new DocumentFilesService(), _documentService, GetCurrentUser().Id);
+
+            var preview = string.Join(",", detail.DocLinks.ToArray().Select(x => string.Format("{0}{1}{0}", "\'", x.SERVER_PATH)));
+
+            ViewBag.Preview = preview;
+
+            var jsonSerialiser = new JavaScriptSerializer();
+
+            var previewConfig = jsonSerialiser.Serialize(detail.DocLinks
+                .Select(x => new
+                {
+                    caption = x.NAME,
+                    type = MimeTypes.GetContentType(x.CONTENTTYPE),
+                    size = 6666,
+                    url = Url.Action("DeletesingleReference", "Documents", new { file = x.LINKED_DOC_ID }),
+                    downloadUrl = x.SERVER_PATH,
+                    key = x.LINKED_DOC_ID
+                }));
+
+            ViewBag.PreviewConfig = previewConfig;
+
+            return View(detail);
         }
     }
 }

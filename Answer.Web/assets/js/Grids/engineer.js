@@ -197,7 +197,6 @@ Msr.WipGrid = Msr.WipGrid ||
                 },
                 afterSaveCell: function (rowid, cellname, value, iRow, iCol) {
                     $("#jqGrid").jqGrid().trigger('reloadGrid');
-                    console.log('afterSaveCell : ' + cellname);
                 },
                 gridComplete: function () {
                     $('div.meter').each(function (index) {

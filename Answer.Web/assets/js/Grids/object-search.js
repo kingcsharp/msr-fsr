@@ -11,11 +11,6 @@ Msr.SearhResult = Msr.SearhResult ||
                     'Procedures: Procedures;' +
                     'Documents:Documents;' +
                     'Monitors:Monitors;' +
-                    'Parts:Parts;' +
-                    'PartsTypes:PartsTypes;' +
-                    'ActualParts:ActualParts;' +
-                    'Templates:Templates;' +
-                    'Companies:Companies;' +
                     'Steps:Steps';
 
             $("#jqGrid").jqGrid({
@@ -46,8 +41,8 @@ Msr.SearhResult = Msr.SearhResult ||
                     },
                     {
                         label: 'Last Updated',
-                        name: 'CreateDate',
-                        index: 'CreateDate',
+                        name: 'UpdatedDate',
+                        index: 'UpdatedDate',
                         colmenu: false,
                         sorttype: 'date',
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
@@ -88,7 +83,6 @@ Msr.SearhResult = Msr.SearhResult ||
                 ajaxCellOptions: {},
 
                 gridComplete: function () {
-
                 }
             });
 
@@ -111,7 +105,6 @@ Msr.SearhResult = Msr.SearhResult ||
                 searchOperators: true
             });
 
-
             $("#jqGrid").jqGrid().trigger('reloadGrid');
 
             $("#jqGrid").tooltip();
@@ -125,25 +118,18 @@ Msr.SearhResult = Msr.SearhResult ||
     }
 
 function workItemFormatter(cellvalue, options, rowObject) {
-    var url='';
+    var url;
 
     if (rowObject.ItemType === 'Procedures') {
         url = '/Procedures/view/' + rowObject.ObjectId;
-    }
-    else if (rowObject.ItemType === 'Documents') {
-        url = '/Documents/view/' + rowObject.ObjectId;
-    }
-    else if (rowObject.ItemType === 'Monitors') {
-        url = '/Monitors/view/' + rowObject.ObjectId;
-    }
-    else if (rowObject.ItemType === 'Steps') {
-        url = '/wip/details/' + rowObject.ObjectId;
+    } else if (rowObject.ItemType === 'Documents') {
+        url = '/Documents/details/' + rowObject.ObjectId;
+    } else if (rowObject.ItemType === 'Monitors') {
+        url = '/Monitors?description=' + rowObject.Description;
+    } else if (rowObject.ItemType === 'Steps') {
+        url = '/wip?step=' + rowObject.Name;
     }
 
-    if (url !== '') {
-        return '<span class="btn btn-xs btn-info"><a style="color:white;" href="' + url + '"><i class="fa fa-eye"></i> View Details</a><span>';
-    }
-
-    return '<span class="btn btn-xs btn-info"><a style="color:white;" href="#"><i class="fa fa-eye"></i> View Details</a><span>';
+    return '<span class="btn btn-xs btn-info"><a style="color:white;" href="' + url + '"><i class="fa fa-eye"></i> View Details</a><span>';
 }
 

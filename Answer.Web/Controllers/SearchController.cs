@@ -45,7 +45,7 @@ namespace Answer.Web.Controllers
                     }
                     else if (rule.field == nameof(ObjectSearchView.Description))
                     {
-                        totalRows = totalRows.Where(x => x.Description.ToLower().Contains(rule.data.ToLower()));
+                        totalRows = totalRows.Where(x => x.Description!= null &&  x.Description.ToLower().Contains(rule.data.ToLower()));
                     }
                     else if (rule.field == nameof(ObjectSearchView.ItemType))
                     {
@@ -64,7 +64,7 @@ namespace Answer.Web.Controllers
 
             if (!string.IsNullOrWhiteSpace(param.sortColumn))
             {
-                param.sortColumn = nameof(ObjectSearchView.Date);
+                param.sortColumn = nameof(ObjectSearchView.UpdatedDate);
             }
 
             var result = totalRows.ApplyPaging(param);
