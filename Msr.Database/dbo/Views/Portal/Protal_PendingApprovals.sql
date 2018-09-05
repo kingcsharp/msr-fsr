@@ -2,27 +2,35 @@
 AS
 
 SELECT        
-ITEM_TYPE AS ItemType,
-ITEM_NAME AS ItemName, 
-ITEM_NUMBER AS ItemNumber, 
-OBJECT_ID AS ObjectId,
-REVISION AS Revision,
-REV_INFO AS RevInfo,
-WF_NAME AS WfName, 
-STAGE_NAME AS StageName, 
-GROUP_NAME AS GroupName, 
-INITIATOR AS Initiator, 
-APPROVER_NAME AS ApprovalName,
-DATE_STARTED AS DateStarted,
-STATUS AS Status,
-PERSON_ID AS PersonId,
-WFS_ID AS WfsId,
-WF_STAGE_ID AS WfStageId, 
-WF_GROUP_ID AS WfGroupId,
+O.OBJ_TABLE AS ItemType,
+ O.OBJ_DESC AS ItemName, 
+ O.ROOT AS ItemNumber, 
+O.ID AS ObjectId,
+O.REV AS Revision,
+O.REV_INFO AS RevInfo,
+wf.NAME AS WfName, 
+s.NAME AS StageName, 
+g.NAME AS GroupName, 
+STARTER.FULL_NAME AS Initiator, 
+APPROVER.FULL_NAME AS ApprovalName,
+wfs.START_DATE AS DateStarted,
+o.Status AS Status,
+d.PERSON AS PersonId,
+gs.WFS_ID AS WfsId,
+gs.WF_STAGE_ID AS WfStageId, 
+gs.WF_GROUP_ID AS WfGroupId,
 APPROVER AS Approver,
 'IN_WORKFLOW' AS NotificationType
-FROM  dbo.A_V_APPROVALS_PENDING 
-WHERE ITEM_TYPE IN (
+FROM         dbo.A_WF_GROUP_PEOPLE_WITH_PENDING_APPROVALS d INNER JOIN
+                      dbo.A_WORKFLOW_GROUP_STARTED gs ON d.WFGS_ID = gs.ID INNER JOIN
+                      dbo.A_WF_STAGES s ON gs.WF_STAGE_ID = s.ID INNER JOIN
+                      dbo.A_WF_GROUPS g ON gs.WF_GROUP_ID = g.ID INNER JOIN
+                      dbo.A_WORKFLOWS_STARTED wfs ON gs.WFS_ID = wfs.ID INNER JOIN
+                      dbo.A_WORKFLOWS wf ON wfs.WF_ID = wf.ID INNER JOIN
+                      dbo.A_APPROVED_PEOPLE APPROVER ON d.PERSON = APPROVER.ID INNER JOIN
+                      dbo.A_OBJECTS O ON wfs.ID = O.WFS_ID INNER JOIN
+                      dbo.A_APPROVED_PEOPLE STARTER ON wfs.STARTED_BY = STARTER.ID
+WHERE O.OBJ_TABLE IN (
 'A_PROCEDURES_HISTORY',
 'A_PARTS_HISTORY',
 'A_PART_TYPES_HISTORY',

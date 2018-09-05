@@ -316,7 +316,7 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
             var buttonWorkflowLeft;
             var buttonWorkflowRight;
 
-            if (rowObject.Status === 'APPROVED') {
+            if (rowObject.Status === 'IN_WORKFLOW') {
                 var urlDelete = '/workflow/Denied?objId=' + rowObject.ObjectId + '&WfsId=' + rowObject.WfsId + '&WfStageId=' + rowObject.WfStageId + '&WfGroupId=' + rowObject.WfGroupId + '&returnUrl=' + returnUrl;
                 urlApprove = '/workflow/submit?objId=' + rowObject.ObjectId + '&returnUrl=' + returnUrl;
                 approvalWorkflows = '<a href="' + urlApprove + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-success" title="Approve this item" style="margin:2px;font-size: .8em;"><i class="fa fa-smile-o fa-2x" aria-hidden="true"></i></a>';
