@@ -141,7 +141,7 @@ GO
 IF NOT EXISTS(SELECT * FROM [dbo].[A_MENUS] WHERE ID ='Pricing-3')
 BEGIN
 INSERT [dbo].[A_MENUS] ([ID], [URL], [DRCM], [MODBY], [NUM], [NAME], [INFO], [MENU_GROUP], [ICON], [GroupIcon], [OrderNumber], [IsParent])
-VALUES (N'Pricing-3', N'PurchaseOrder', N'Aug  24 2018 10:18PM', N'SP', 3, N'PurchaseOrders', N'PurchaseOrders', N'Pricing', N'fa-list-ul', N'fa-money', 7, 0)
+VALUES (N'Pricing-3', N'PurchaseOrder', N'Aug  24 2018 10:18PM', N'SP', 3, N'Purchase Orders', N'Purchase Orders', N'Pricing', N'fa-list-ul', N'fa-money', 7, 0)
 END
 GO
 

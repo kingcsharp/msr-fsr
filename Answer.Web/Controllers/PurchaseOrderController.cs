@@ -35,7 +35,7 @@ namespace Answer.Web.Controllers
 
         public ActionResult PurchaseOrderData(JqGridParam param)
         {
-            var totalRows = _purchesOrderService.GetPurchesOrderQueryable().Where(x => x.Status != "DELETED" && x.Status != "OLD");
+            var totalRows = _purchesOrderService.GetPurchesOrderQueryable();
 
             if (param.where != null && param.where.rules.Any())
             {

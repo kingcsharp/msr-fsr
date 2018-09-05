@@ -7,7 +7,7 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
             $.jgrid.defaults.styleUI = 'Bootstrap';
 
             $("#jqGrid").jqGrid({
-                url: 'PendingApproval/PendingApprovalsData',
+                url: 'PendingApproval/PendingApprovalsData?itemType=' + itemType,
                 mtype: "GET",
                 styleUI: 'Bootstrap',
                 datatype: "json",
@@ -133,12 +133,6 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
                 searchOnEnter: true,
                 searchOperators: true
             });
-
-            setTimeout(function () {
-                $('#gs_ItemType').val(itemType);
-                $("#jqGrid")[0].triggerToolbar();
-            }, 300);
-
 
             function approvalEditFormatter(cellvalue, options, rowObject) {
 

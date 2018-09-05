@@ -119,7 +119,7 @@ ELSE
 		[ACTIVITY]='A_ACCOUNTS_HISTORY', 
 		[DRCM]=GETDATE(), 
 		[MODBY]='7', 
-		[Title]='A_ACCOUNTS_HISTORY' 
+		[Title]='Purchase Orders' 
 		WHERE ID='15'
 	END
 GO
