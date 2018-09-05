@@ -139,6 +139,7 @@
     <Compile Include="Menus\MenuView.cs" />
     <Compile Include="Monitor\MonitorView.cs" />
     <Compile Include="Notes\Note.cs" />
+    <Compile Include="Objects\ObjectSearchView.cs" />
     <Compile Include="Objects\ObjectView.cs" />
     <Compile Include="Orders\PurchaseView.cs" />
     <Compile Include="Orders\UploadedImageView.cs" />

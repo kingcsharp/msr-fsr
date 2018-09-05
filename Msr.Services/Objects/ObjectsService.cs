@@ -1,10 +1,6 @@
 ﻿using Msr.Models.Objects;
 using Msr.Repositories;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Msr.Services.Objects
 {
@@ -23,6 +19,11 @@ namespace Msr.Services.Objects
         public ObjectView GetObjectById(string id)
         {
             return GetObjectsQueryable().Where(x => x.Id == id).SingleOrDefault();
+        }
+
+        public IQueryable<ObjectSearchView> GetObjectSearchQueryable()
+        {
+            return _dbContext.ObjectSearchViews;
         }
     }
 }

@@ -1,0 +1,35 @@
+﻿@{
+    ViewBag.Title = "Search Results";
+}
+<div class="container-fluid">
+    <div class="side-body padding-top">
+        <div class="row">
+            <h2 class="page-header">
+                <span class="icon fa fa-list"></span>
+                Search Results
+                @Html.Partial("_HelpViewButton")
+            </h2>
+            <div class="col-lg-12">
+                @Html.Partial("Message")
+                <table id="jqGrid"></table>
+                <div id="jqGridPager"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/js/jqgrid")
+    @Scripts.Render("~/bundles/js/object-search")
+
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+            $.jgrid.defaults.styleUI = 'Bootstrap';
+            Msr.SearhResult.LoadSearchResultsGrid('@Url.Action("SearchResultData", "Search",new{ searchTerm = Request.QueryString["searchTerm"] })');
+        });
+
+    </script>
+}

@@ -1,0 +1,111 @@
+﻿@model Msr.Services.Documents.ViewModels.SaveDocumentViewModel
+
+@{
+    ViewBag.Title = "Document Details";
+}
+
+<div class="container-fluid">
+    <div class="side-body padding-top">
+        <div class="row">
+            <h2 class="page-header">
+                Document Details
+            </h2>
+
+            <div>
+                <dl class="dl-horizontal">
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Rev)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Rev)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Company)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Company)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.ObjectId)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.ObjectId)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Name)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Name)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.ReferenceFiles)
+                    </dt>
+                    @foreach (var item in Model.DocLinks)
+                    {
+                        <dd>
+                            @Html.DisplayFor(model => item.NAME) <span class="data-toggle file-prev" data-call-back-item="@item.LINKED_DOC_ID" data-toggle="modal" title="View File"><i class="icon fa fa-eye"></i></span>
+                        </dd>
+                    }
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Comments)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Comments)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.ApprovalStatus)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.ApprovalStatus)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Roles)
+                    </dt>
+
+                    <dd>
+                        @Html.DropDownListFor(model => model.Roles, Model.ListRoles, new { @class = "form-control selectroles", disabled = "disabled", multiple = "multiple" })
+                    </dd>
+                </dl>
+            </div>
+            <p>
+                @Html.ActionLink("Back to List", "Index")
+            </p>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    @{
+        var roles = string.Join(",", Model.Roles);
+    }
+    @Scripts.Render("~/bundles/js/jqgrid")
+    @Scripts.Render("~/bundles/js/fileinput")
+
+    <script>
+		$(document).ready(function () {
+
+			Msr.JqGridCommon.DocPreview();
+
+			var selectRoles = $(".selectroles").select2({
+				tags: [],
+				tokenSeparators: [','],
+				multiple: true,
+				allowClear: true,
+				placeholder: "Select Roles",
+				formatNoMatches: function () {
+					return '';
+				}
+			});
+			var values = '@roles';
+
+			var selectedRoles = values.split(",");
+
+			selectRoles.val(selectedRoles).trigger("change");
+		});
+    </script>
+}

@@ -2,10 +2,10 @@
 
 Msr.MonitorsGrid = Msr.MonitorsGrid ||
 {
-    LoadMonitorsGrid: function(url) {
+    LoadMonitorsGrid: function (url, description) {
 
         $("#jqGrid").jqGrid({
-            url: url,
+            url: url +'?description='+ description,
             mtype: "GET",
             styleUI: 'Bootstrap',
             datatype: "json",
@@ -41,7 +41,7 @@ Msr.MonitorsGrid = Msr.MonitorsGrid ||
                         grouping: false,
                         freeze: false
                     },
-                    searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                    searchoptions: { defaultValue: description },
                     width: 150,
                     align: 'center'
                 },

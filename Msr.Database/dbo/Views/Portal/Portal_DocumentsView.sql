@@ -22,7 +22,8 @@ isnull(STUFF((
 SELECT +','+ DL.NAME+'|'+DL.LINKED_DOC_ID 
 FROM A_V_DOCUMENTS_WITH_LINKED_ITEM AS DL 
 WHERE DL.OBJECT_ID = tp.OBJECT_ID
-FOR XML PATH('')), 1, 1,''),'') AS ReferenceFiles
+FOR XML PATH('')), 1, 1,''),'') AS ReferenceFiles,
+tp.DRCM AS UpdatedDate
 FROM dbo.A_O_THEORY_WITH_PARAGRAPHS AS tp 
 INNER JOIN dbo.A_O_THEORY AS t ON tp.OBJ_ID = t.OBJ_ID
 

@@ -25,7 +25,7 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            Msr.MonitorsGrid.LoadMonitorsGrid('@Url.Action("MonitorsData", "Monitors")');
+            Msr.MonitorsGrid.LoadMonitorsGrid('@Url.Action("MonitorsData", "Monitors")', '@Request.QueryString["description"]');
         });
 
     </script>

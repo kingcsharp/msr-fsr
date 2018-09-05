@@ -14,6 +14,7 @@ using Msr.Services.EquipmentMaintenances;
 using Msr.Services.EquipmentMaintenances.ViewModels;
 using Msr.Services.jqGrid;
 using Msr.Services.Notes;
+using Msr.Services.Objects;
 using Msr.Services.Orders;
 using Msr.Services.Orders.Messaging;
 using Msr.Services.Orders.Procedures;
@@ -32,6 +33,7 @@ namespace Answer.Web.Controllers
         private TaskService _taskService;
         private ProceduresService _proceduresService;
         private RoleService _roleService;
+        private ObjectsService _objectsService;
         private EquipmentMaintenanceService _equipmentMaintenanceService;
 
         public WipController()
@@ -52,7 +54,7 @@ namespace Answer.Web.Controllers
             return View(viewModel);
         }
 
-        public ActionResult EngineeringData(JqGridParam param)
+        public ActionResult EngineeringData(JqGridParam param, string step)
         {
             var totalRows = _orderService.GetWorkOrderQueryable();
 
@@ -142,8 +144,20 @@ namespace Answer.Web.Controllers
             }
             else
             {
-                totalRows = totalRows.Where(x => x.Status.ToLower() == WorkItemStatusConstants.Requested
-                    || x.Status.ToLower() == WorkItemStatusConstants.Accepted);
+                if (!string.IsNullOrWhiteSpace(step))
+                {
+                    _objectsService = new ObjectsService();
+                    var fillIds = _objectsService.GetObjectSearchQueryable()
+                        .Where(x => x.Description != null && x.Description.ToLower().Contains(step)).Select(x => x.ObjectId)
+                        .ToList();
+
+                    totalRows = totalRows.Where(x => fillIds.Contains(x.FillItemId));
+                }
+                else
+                {
+                    totalRows = totalRows.Where(x => x.Status.ToLower() == WorkItemStatusConstants.Requested
+                                                     || x.Status.ToLower() == WorkItemStatusConstants.Accepted);
+                }
             }
 
             var orderDirection = "asc";

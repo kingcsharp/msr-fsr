@@ -241,6 +241,7 @@
     <Compile Include="Controllers\QuoteController.cs" />
     <Compile Include="Controllers\RegionsController.cs" />
     <Compile Include="Controllers\RolesController.cs" />
+    <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\ShowPurchaseStatusController.cs" />
     <Compile Include="Controllers\TheoryParagraphController.cs" />
     <Compile Include="Controllers\UserController.cs" />
@@ -520,6 +521,7 @@
     <Content Include="assets\js\grids\invoice-tax.js" />
     <Content Include="assets\js\grids\invoices.js" />
     <Content Include="assets\js\grids\labors-step.js" />
+    <Content Include="assets\js\grids\object-search.js" />
     <Content Include="assets\js\grids\PartProductStay.js" />
     <Content Include="assets\js\grids\pending-approvals.js" />
     <Content Include="assets\js\grids\procedure-monitors.js" />
@@ -1237,6 +1239,11 @@
     <Content Include="Views\UserMailer\SupportRequest.cshtml" />
     <Content Include="Views\PendingApproval\Index.cshtml" />
     <Content Include="Views\Workflow\Denied.cshtml" />
+    <Content Include="Views\Search\Index.cshtml" />
+    <Content Include="Views\People\Details.cshtml" />
+    <Content Include="Views\ProcedureVerbs\Details.cshtml" />
+    <Content Include="Views\Regions\Details.cshtml" />
+    <Content Include="Views\Documents\Details.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

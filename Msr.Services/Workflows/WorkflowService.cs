@@ -195,5 +195,31 @@ namespace Msr.Services.Workflows
 
             return result;
         }
+
+        public ResultNotification<string> GetObjectTable(string objectId)
+        {
+            var result = new ResultNotification<string>();
+
+            try
+            {
+                var strId = new SqlParameter("@strID ", objectId ?? "0");
+
+                var objectTable = _dbContext.Database.SqlQuery<string>("EXEC A_SP_OBJECT_GET_TABLE  @strID", strId).SingleOrDefault();
+
+                if (string.IsNullOrWhiteSpace(objectTable))
+                {
+                    result.AddError("Unable to find object.");
+                    return result;
+                }
+
+                result.Entity = objectTable;
+            }
+            catch (Exception e)
+            {
+                result.AddError(e.Message);
+            }
+
+            return result;
+        }
     }
 }
