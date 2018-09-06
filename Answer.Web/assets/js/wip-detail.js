@@ -41,10 +41,12 @@ $(function () {
     $('.selectpicker').selectpicker();
 
     $('#wip-item-select').on('changed.bs.select', function (e) {
-        currVal = $(this).children('option:selected').data('content');
+        
+        var currVal = $(this).children('option:selected').data('content');
 
-        if (currVal !== '') {
-
+        if (currVal == 'undefined' || currVal ==='<strong>Select an Item...</strong>') {
+            return;
+        } else {
             window.location.href = '/wip/details/' + $(this).val();
 
             var term = /Complete/;
@@ -63,7 +65,7 @@ $(function () {
                             className: 'btn-danger'
                         }
                     },
-                    callback: function(result) {
+                    callback: function (result) {
 
                         if (result) {
                             $("#ncrModal").modal();
