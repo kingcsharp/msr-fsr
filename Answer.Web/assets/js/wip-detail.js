@@ -43,39 +43,38 @@ $(function () {
     $('#wip-item-select').on('changed.bs.select', function (e) {
         currVal = $(this).children('option:selected').data('content');
 
-        if (currVal != '') {
-            return;
-        }
+        if (currVal !== '') {
 
-        window.location.href = '/wip/details/' + $(this).val();
+            window.location.href = '/wip/details/' + $(this).val();
 
-        var term = /Complete/;
-        var exists = term.test(currVal);
-        if (!exists) {
-            $('.wip-detail-item-controls').show();
-            bootbox.confirm({
-                message: "There is one or more NCR's related to this WO Item. would you like to view them now?",
-                buttons: {
-                    confirm: {
-                        label: 'Yes',
-                        className: 'btn-success'
+            var term = /Complete/;
+            var exists = term.test(currVal);
+            if (!exists) {
+                $('.wip-detail-item-controls').show();
+                bootbox.confirm({
+                    message: "There is one or more NCR's related to this WO Item. would you like to view them now?",
+                    buttons: {
+                        confirm: {
+                            label: 'Yes',
+                            className: 'btn-success'
+                        },
+                        cancel: {
+                            label: 'No',
+                            className: 'btn-danger'
+                        }
                     },
-                    cancel: {
-                        label: 'No',
-                        className: 'btn-danger'
+                    callback: function(result) {
+
+                        if (result) {
+                            $("#ncrModal").modal();
+                        }
                     }
-                },
-                callback: function (result) {
-                    
-                    if (result) {
-                        $("#ncrModal").modal();
-                    }
-                }
-            });
+                });
+            } else {
+                $('.wip-detail-item-controls').hide();
+            }
         }
-        else {
-            $('.wip-detail-item-controls').hide();
-        }
+
     });
 
     //init switch
