@@ -581,7 +581,7 @@ namespace Msr.Services.Procedures
                 EquipmentTime = viewModel.EquipmentTime,
                 Roles = viewModel.Role != null ? string.Join(",", viewModel.Role) : null,
                 Duration = viewModel.Duration,
-                DurationType = viewModel.Duration_type ?? "TIME_SYS_HOURS",
+                DurationType = viewModel.Duration_type ?? "TIME_SYS_MINUTES",
                 ReplacementCost = viewModel.ReplacementCost,
                 Utilization = viewModel.Utilization,
                 UsefulLife = viewModel.UsefulLife
