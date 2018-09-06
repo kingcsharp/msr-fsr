@@ -40,17 +40,17 @@ $(function () {
 
     $('.selectpicker').selectpicker();
 
-    $('#wip-item-select').on('changed.bs.select', function (e) {
-        
-        var currVal = $(this).children('option:selected').data('content');
+    $('.dropdown-menu li').on('click', function (e) {
+        var fillId = $(this).find('strong').data('fill-id');
+        var content = $(this).html();
 
-        if (currVal == 'undefined' || currVal ==='<strong>Select an Item...</strong>') {
-            return;
-        } else {
-            window.location.href = '/wip/details/' + $(this).val();
+        if (!isNaN(fillId)) {
+
+            window.location.href = '/wip/details/' + fillId;
 
             var term = /Complete/;
-            var exists = term.test(currVal);
+            var exists = term.test(content);
+
             if (!exists) {
                 $('.wip-detail-item-controls').show();
                 bootbox.confirm({
@@ -74,8 +74,8 @@ $(function () {
                 });
             } else {
                 $('.wip-detail-item-controls').hide();
-            }
-        }
+            }  
+        } 
 
     });
 

@@ -31,7 +31,7 @@
                                 {
                                     foreach (var item in Model.MyWoItems)
                                     {
-                                        <option data-content="<strong>@item.PurchaseItemId</strong><br>Proc: @item.ProcName<br>Serial: @item.Serial<span class='label label-success pull-right'>@item.Status</span>" data-status="@item.Status" data-fill-id="@Model.FillId">@item.FillId</option>
+                                        <option  data-content="<strong data-fill-id='@item.FillId'>@item.PurchaseItemId</strong><br>Proc: @item.ProcName<br>Serial: @item.Serial<span class='label label-success pull-right'>@item.Status</span>" data-status="@item.Status" data-fill-id="@Model.FillId">@item.FillId</option>
                                     }
                                 }
                                 else
