@@ -2,7 +2,7 @@
 
 Msr.CompanyGrid = Msr.CompanyGrid ||
 {
-    LoadCompanyGrid: function (url, returnUrl) {
+    LoadCompanyGrid: function (url, returnUrl, hasAdministratorRole) {
     //$.jgrid.defaults.responsive = true;
     $.jgrid.defaults.styleUI = 'Bootstrap';
 
@@ -181,7 +181,7 @@ Msr.CompanyGrid = Msr.CompanyGrid ||
 
     function ActionFormtter(cellvalue, options, rowObject) {
 
-        var actions = Msr.JqGridCommon.ActionFormtter(cellvalue, options, rowObject, returnUrl, '/Companies/Edit/');
+        var actions = Msr.JqGridCommon.ActionFormtter(cellvalue, options, rowObject, returnUrl, '/Companies/Edit/', hasAdministratorRole);
 
         return actions;
     }

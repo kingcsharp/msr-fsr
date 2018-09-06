@@ -1,4 +1,4 @@
-﻿function LoadDocumentsGrid(url, returnUrl) {
+﻿function LoadDocumentsGrid(url, returnUrl, hasAdministratorRole) {
     $("#jqGrid").jqGrid({
         url: url,
         mtype: "GET",
@@ -150,7 +150,7 @@
 
     function ActionFormtter(cellvalue, options, rowObject) {
 
-        var actions = Msr.JqGridCommon.ActionFormtter(cellvalue, options, rowObject, returnUrl, '/Documents/Edit/');
+        var actions = Msr.JqGridCommon.ActionFormtter(cellvalue, options, rowObject, returnUrl, '/Documents/Edit/', hasAdministratorRole);
 
         return actions;
 

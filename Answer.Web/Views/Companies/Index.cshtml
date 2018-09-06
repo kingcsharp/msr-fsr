@@ -28,7 +28,10 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            Msr.CompanyGrid.LoadCompanyGrid('@Url.Action("CompaniesData", "Companies")', '@Request.Url.OriginalString');
+
+            var hasAdministratorRole = '@User.IsInRole("Administrators")' === "True";
+
+            Msr.CompanyGrid.LoadCompanyGrid('@Url.Action("CompaniesData", "Companies")', '@Request.Url.OriginalString', hasAdministratorRole);
         });
 
     </script>

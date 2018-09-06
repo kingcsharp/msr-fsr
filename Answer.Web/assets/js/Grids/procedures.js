@@ -2,7 +2,7 @@
 
 Msr.ProceduresGrid = Msr.ProceduresGrid ||
 {
-    LoadProceduresGrid: function (url, returnUrl) {
+    LoadProceduresGrid: function (url, returnUrl, hasAdministratorRole) {
     $("#jqGrid").jqGrid({
         url: url,
         mtype: "GET",
@@ -148,7 +148,7 @@ Msr.ProceduresGrid = Msr.ProceduresGrid ||
     function ActionsFormatter(cellvalue, options, rowObject) {
 
         var viewButton = '<a href="/Procedures/view/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" title="View" style="margin:2px;font-size: .8em;"><i class="fa fa-eye"></i></a>';
-        var actions = Msr.JqGridCommon.ActionFormtter(cellvalue, options, rowObject, returnUrl, '/Procedures/Edit/');
+        var actions = Msr.JqGridCommon.ActionFormtter(cellvalue, options, rowObject, returnUrl, '/Procedures/Edit/', hasAdministratorRole);
 
         return actions + viewButton;
     }

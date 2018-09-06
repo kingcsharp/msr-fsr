@@ -63,7 +63,7 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
             return imageUrls;
         },
 
-        ActionFormtter: function (cellvalue, options, rowObject, returnUrl, editUrl, hideDelete) {
+        ActionFormtter: function (cellvalue, options, rowObject, returnUrl, editUrl, showDelete) {
 
             var editButton = '';
             var deleteButton = '';
@@ -82,7 +82,7 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
 
             if (rowObject.Status == 'APPROVED') {
                 editButton = '<a href="#" data-call-back-id ="' + rowObject.ObjectId + '"  class="btn btn-xs btn-success editpeople" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
-                if (hideDelete === false) {
+                if (showDelete) {
                     url = '/workflow/delete?objId=' + rowObject.ObjectId + '&returnUrl=' + returnUrl;
                     deleteButton = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-danger" title="Proceed to delete." style="margin:2px;font-size: .8em;"><i class="fa fa fa-trash-o"></i></a>';
                 }

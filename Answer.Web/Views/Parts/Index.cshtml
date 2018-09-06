@@ -30,10 +30,12 @@
 
     <script>
         $.jgrid.defaults.styleUI = 'Bootstrap';
-
-        $(document).ready(function () {
-            Msr.PartsGrid.SetUpGrid('@Request.Url.OriginalString');
-        });
         
+        var hasAdministratorRole = '@User.IsInRole("Administrators")' === "True";
+        
+        $(document).ready(function () {
+            Msr.PartsGrid.SetUpGrid('@Request.Url.OriginalString', hasAdministratorRole);
+        });
+
     </script>
 }

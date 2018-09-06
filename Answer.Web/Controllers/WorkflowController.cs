@@ -1,5 +1,6 @@
 ﻿using System.Web.Mvc;
 using Answer.Web.Filters;
+using Msr.Infrastructure.Common.Constansts;
 using Msr.Models.Menus;
 using Msr.Services.Workflows;
 using Msr.Services.Workflows.ViewModels;
@@ -63,6 +64,13 @@ namespace Answer.Web.Controllers
 
         public ActionResult Delete(string objId, string returnUrl)
         {
+            if (!User.IsInRole(RoleConstants.Administrators))
+            {
+                AddErrorNotification("Un-authorize access");
+
+                return View("Error");
+            }
+
             var user = GetCurrentUser();
 
             var vm = new SubmitWorkflowViewModel();

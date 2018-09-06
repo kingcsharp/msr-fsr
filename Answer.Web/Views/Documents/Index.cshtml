@@ -25,8 +25,12 @@
     @Scripts.Render("~/bundles/js/jqgrid")
     @Scripts.Render("~/bundles/js/jqgrid-documents")
 
-    <script> $(document).ready(function () {
-            LoadDocumentsGrid('@Url.Action("DocumentsData", "Documents")','@Request.Url.OriginalString');
-    });
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            var hasAdministratorRole = '@User.IsInRole("Administrators")' === "True";
+
+            LoadDocumentsGrid('@Url.Action("DocumentsData", "Documents")', '@Request.Url.OriginalString', hasAdministratorRole);
+        });
     </script>
 }

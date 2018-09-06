@@ -43,6 +43,10 @@ $(function () {
     $('#wip-item-select').on('changed.bs.select', function (e) {
         currVal = $(this).children('option:selected').data('content');
 
+        if (currVal != '') {
+            return;
+        }
+
         window.location.href = '/wip/details/' + $(this).val();
 
         var term = /Complete/;

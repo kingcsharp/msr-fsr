@@ -2,7 +2,7 @@
 
 Msr.PeopleGrid = Msr.PeopleGrid ||
 {
-    LoadPeopleGrid: function(url, returnUrl) {
+    LoadPeopleGrid: function (url, returnUrl, hasAdministratorRole) {
 
         $.jgrid.defaults.styleUI = 'Bootstrap';
 
@@ -384,7 +384,7 @@ Msr.PeopleGrid = Msr.PeopleGrid ||
 
         function ActionFormtter(cellvalue, options, rowObject) {
 
-            var actions = Msr.JqGridCommon.ActionFormtter(cellvalue, options, rowObject, returnUrl, '/People/Edit/');
+            var actions = Msr.JqGridCommon.ActionFormtter(cellvalue, options, rowObject, returnUrl, '/People/Edit/', hasAdministratorRole);
 
             var subordinate = '<a  title="SubOrdinate" href="/People/Add/' +
                 rowObject.ObjectId +

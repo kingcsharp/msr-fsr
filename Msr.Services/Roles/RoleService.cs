@@ -220,6 +220,18 @@ namespace Msr.Services.Roles
             return result.Where(x => x.Status == "ACTIVE").ToList();
         }
 
+      public List<GetMyRolesResult> GetAssignedRolesByLogin(string personId)
+        {
+            RefreashMyRoles(personId);
+
+            var personIdParam = new SqlParameter("@personId", personId);
+            var sql = "SELECT distinct pa.ROLE_ID, pa.ROLE, pa.PERSON, pa.STATUS, pa.ROLE_NAME  FROM A_APPROVED_ROLE_ASSIGNEES pa INNER JOIN Portal_PeopleView pv on pv.ObjectId = pa.PERSON WHERE  pv.Login = @personId";
+
+            var result = _dbContext.Database.SqlQuery<GetMyRolesResult>(sql, personIdParam).ToList();
+
+            return result.Where(x => x.Status == "ACTIVE").ToList();
+        }
+
         public List<RoleResult> GetRolesList(string ntLogin)
         {
             var result = _dbContext.Database.SqlQuery<RoleResult>($"EXEC A_SP_ROLE_SELECT NULL, NULL, NULL,NULL, '{ntLogin}',' ORDER BY NAME'").ToList();

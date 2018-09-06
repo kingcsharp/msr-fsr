@@ -2,7 +2,7 @@ var Msr = Msr || {};
 
 Msr.PartsGrid = Msr.PartsGrid ||
 {
-    SetUpGrid: function (returnUrl) {
+    SetUpGrid: function (returnUrl, hasAdministratorRole) {
 
     $("#jqGrid").jqGrid({
         url: '/Parts/PartsData',
@@ -167,7 +167,7 @@ Msr.PartsGrid = Msr.PartsGrid ||
 
     function PartEditFormatter(cellvalue, options, rowObject) {
 
-        var actions = Msr.JqGridCommon.ActionFormtter(cellvalue, options, rowObject, returnUrl, '/Parts/Edit/');
+        var actions = Msr.JqGridCommon.ActionFormtter(cellvalue, options, rowObject, returnUrl, '/Parts/Edit/', hasAdministratorRole);
         return actions;
     }
 

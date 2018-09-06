@@ -30,7 +30,10 @@
 
         $(document).ready(function () {
             $.jgrid.defaults.styleUI = 'Bootstrap';
-            Msr.ProceduresGrid.LoadProceduresGrid('@Url.Action("ProceduresData", "Procedures")','@Url.Action("Index", "Procedures")');
+
+            var hasAdministratorRole = '@User.IsInRole("Administrators")' === "True";
+
+            Msr.ProceduresGrid.LoadProceduresGrid('@Url.Action("ProceduresData", "Procedures")', '@Url.Action("Index", "Procedures")', hasAdministratorRole);
         });
     </script>
 }

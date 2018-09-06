@@ -1,5 +1,4 @@
-﻿@model  Msr.Web.ViewModel.Engineering.EngineeringViewModel
-@{
+﻿@{
     ViewBag.Title = "Users";
 }
 
@@ -23,14 +22,16 @@
 </div>
 @section scripts
 {
-   
     @Scripts.Render("~/bundles/js/jqgrid")
     @Scripts.Render("~/bundles/js/jqgrid-people")
 
     <script type="text/javascript">
 
         $(document).ready(function () {
-            Msr.PeopleGrid.LoadPeopleGrid('@Url.Action("PeopleData", "People")','@Request.Url.OriginalString');
+
+            var hasAdministratorRole = '@User.IsInRole("Administrators")' === "True";
+
+            Msr.PeopleGrid.LoadPeopleGrid('@Url.Action("PeopleData", "People")', '@Request.Url.OriginalString', hasAdministratorRole);
         });
 
     </script>
