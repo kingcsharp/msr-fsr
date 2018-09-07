@@ -519,7 +519,7 @@ namespace Msr.Services.Procedures
                     PrecedingSteps = selectedPrecedingStep,
                     Duration = viewModel.GetStepEditData.Duration,
                     EquipmentTime = viewModel.GetStepEditData.EquipmentTime,
-                    DurationType = viewModel.GetStepEditData.Duration_Type,
+                    DurationType = DurationTypeConstants.TimeSysTimeMinutes,
                     ReplacementCost = viewModel.ReplacementCost,
                     Utilization = viewModel.Utilization,
                     UsefulLife = viewModel.UsefulLife
@@ -581,7 +581,7 @@ namespace Msr.Services.Procedures
                 EquipmentTime = viewModel.EquipmentTime,
                 Roles = viewModel.Role != null ? string.Join(",", viewModel.Role) : null,
                 Duration = viewModel.Duration,
-                DurationType = viewModel.Duration_type ?? "TIME_SYS_MINUTES",
+                DurationType = DurationTypeConstants.TimeSysTimeMinutes,
                 ReplacementCost = viewModel.ReplacementCost,
                 Utilization = viewModel.Utilization,
                 UsefulLife = viewModel.UsefulLife
@@ -598,7 +598,6 @@ namespace Msr.Services.Procedures
             }
 
             updateOneStep.Duration = viewModel.Duration;
-            updateOneStep.DurationType = viewModel.Duration_type;
 
             _dbContext.Database.ExecuteStoredProcedure(updateOneStep);
         }

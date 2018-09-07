@@ -175,6 +175,7 @@
     <Compile Include="PrePro\PreProDockLink.cs" />
     <Compile Include="PrePro\PrePropSearchView.cs" />
     <Compile Include="PrePro\ProcedureObjectsLaborStepView.cs" />
+    <Compile Include="Procedures\DurationTypeConstants.cs" />
     <Compile Include="Procedures\EditProcedureObjestFile.cs" />
     <Compile Include="Procedures\ProcedureApprovedView.cs" />
     <Compile Include="Procedures\ProcedureEditFile.cs" />
