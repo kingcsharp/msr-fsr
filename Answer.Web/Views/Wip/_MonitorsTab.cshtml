@@ -83,6 +83,7 @@
                                         <td class="nw-rght"><label class="control-label">Correct Answer</label></td>
                                         <td class="text-td">
                                             <div class="col-lg-2" style="font-weight: bold;">
+                                                @Html.HiddenFor(x => Model[i].Yes_No_Answer,new {@id="yes-no-answer"})
                                                 @if (@Model[i].Yes_No_Answer == "1")
                                                 {
                                                     <text>YES</text>
@@ -97,7 +98,7 @@
                                     <tr>
                                         <td class="nw-rght"><label class="control-label">Your Answer:</label></td>
                                         <td class="text-td">
-                                            @(Model[i].Yes_No_Answer == Model[i].Print_Result ? Html.DropDownListFor(x => Model[i].Print_Result, Model[i].ResultList, new { @class = "form-control" }) : Html.DropDownListFor(x => Model[i].Print_Result, Model[i].ResultList, new { @class = "form-control red" }))
+                                            @Html.DropDownListFor(x => Model[i].Print_Result, Model[i].ResultList, new { @class = "form-control", @id = "yes-no-monitor" })
                                         </td>
                                     </tr>
                                 }
@@ -261,6 +262,13 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
+
+        ApplyCssForMonitor($('#yes-no-monitor'));
+
+        $('#yes-no-monitor').change(function () {
+            ApplyCssForMonitor($(this));
+        });
+
         $('.equipmentresult').hide();
 
         $(".number").on("keyup keypress blur change",function (e) {
@@ -276,6 +284,8 @@
                 return false;
             }
         });
+
+
 
     });
 
@@ -342,9 +352,9 @@
             url: "@Url.Action("CheckEquipmentStatusById", "Wip")",
             dataType: 'json',
             data: { 'Id': value },
-            success: function (data) {
-                 if (data.CanUsed === false) {
-                     eLoaderError(data.ErrorMessage);
+            success: function(data) {
+                if (data.CanUsed === false) {
+                    eLoaderError(data.ErrorMessage);
                     textbox.val('');
                     $('.equipmentresult').hide();
                 } else {
@@ -359,4 +369,13 @@
     });
 
     $('.select').select2();
+
+    function ApplyCssForMonitor(target) {
+        if (target.val() !== $('#yes-no-answer').val()) {
+            target.addClass('red');
+        } else {
+            target.removeClass('red');
+        }
+    }
+    
 </script>
