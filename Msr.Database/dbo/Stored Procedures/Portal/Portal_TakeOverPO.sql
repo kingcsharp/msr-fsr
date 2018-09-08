@@ -2,6 +2,7 @@
 @RET_STATUS as varchar(500) OUTPUT,
 @MSGS as varchar(500) OUTPUT,
 @ID as varchar(50),
+@ParentTaskId as varchar(50),
 @strNTLogin as varchar(50)
 AS
 print 'Assuming a task'
@@ -15,12 +16,10 @@ SELECT @taskStat = STATUS FROM A_TASKS WHERE ID = @ID
 
 SELECT @StepRoles=(SELECT Roles FROM A_V_TASKS_WITH_PROCEDURE_STEP_DATA WHERE STEP_ID=@ID)
 
- IF NOT EXISTS(SELECT ROLE_ID FROM A_APPROVED_ROLE_ASSIGNEES WHERE PERSON=@strNTLogin AND (ROLE_ID 
- IN (SELECT * from dbo.SplitString(@StepRoles)) 
- OR
+ IF NOT EXISTS(SELECT ROLE_ID FROM A_APPROVED_ROLE_ASSIGNEES WHERE PERSON=@strNTLogin AND 
  ROLE_ID IN (SELECT ROLE_ID FROM A_V_PROCEDURE_ROLES_TO_VIEW
  WHERE PROCEDURE_OBJ_ID IN ( SELECT ProcObjId FROM Portal_WorkOrders
- WHERE TaskId = @ID)))
+ WHERE TaskId = @ParentTaskId))
  )
 	BEGIN
 	SET @RET_STATUS = 'ERROR - User Not Authorized to Perform Task'
@@ -29,7 +28,6 @@ SELECT @StepRoles=(SELECT Roles FROM A_V_TASKS_WITH_PROCEDURE_STEP_DATA WHERE ST
 
 ELSE
    BEGIN
-
 
 declare @fwdID varchar(50),@fwdMSG varchar(50)
 exec A_SP_TASKS_FORWARD_TASK 

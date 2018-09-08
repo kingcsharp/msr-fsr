@@ -915,15 +915,16 @@ namespace Msr.Services.Orders
             var fill_Id = new SqlParameter("@fillID", fillId);
             var ntLogin = new SqlParameter("@strNTLogin", login);
             var result = _dbContext.Database.SqlQuery<TaskItemPart>("exec A_SP_TASKS_FIND_FOR_PURCHASE_ITEM_AND_ACT_PART @fillID,@strNTLogin", fill_Id, ntLogin).ToList();
-
+            var parentTask = result.Where(x => x.HAS_CHILD.HasValue && x.HAS_CHILD == 1).SingleOrDefault();
             var p = new DynamicParameters();
 
             foreach (var item in result)
             {
                 p.Add("@RET_STATUS", dbType: DbType.String, direction: ParameterDirection.Output, size: 500);
                 p.Add("@MSGS", dbType: DbType.String, direction: ParameterDirection.Output, size: 100);
-                p.Add("@ID", item.STEP_ID, DbType.String, ParameterDirection.Input, size: 50);
-                p.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input, size: 50);
+                p.Add("@ID", item.STEP_ID, DbType.String, ParameterDirection.Input, 50);
+                p.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input, 50);
+                p.Add("@ParentTaskId", parentTask.STEP_ID, DbType.String, ParameterDirection.Input, 50);
 
                 using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
                 {
