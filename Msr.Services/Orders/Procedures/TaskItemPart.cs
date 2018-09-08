@@ -6,13 +6,13 @@ namespace Msr.Services.Orders.Procedures
     {
         public string Description { get; set; }
 
-        public string Print_Order { get; set; }
+        public double? Print_Order { get; set; }
 
         public string Status { get; set; }
 
         public string LATEST_REQUESTEE_NAME { get; set; }
 
-        public string HAS_MONITOR { get; set; }
+        public byte? HAS_MONITOR { get; set; }
 
         public string SYSTEM_TASK { get; set; }
 

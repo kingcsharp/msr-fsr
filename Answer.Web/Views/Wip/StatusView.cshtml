@@ -159,7 +159,7 @@
                         .then(function () {
                             $.ajax({
                                 type: "POST",
-                                url: "/wip/TakeTaskOwnersShip?taskId=" + id,
+                                url: "/wip/TakeTaskOwnersShip?fillId=" + fillId,
                                 dataType: 'json',
                                 success: function (data) {
                                     if (data.Code === "OK") {

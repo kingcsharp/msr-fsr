@@ -2846,6 +2846,7 @@
     <None Include="Seeds\SeedWfActivities.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_GetUserNotifications.sql" />
     <Build Include="dbo\Views\Portal\Portal_ObjectSearch.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_TakeOverPO.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Msr.Database.refactorlog" />

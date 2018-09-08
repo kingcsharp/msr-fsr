@@ -645,11 +645,11 @@ namespace Answer.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult AssumeTaskClick(int taskId)
+        public ActionResult AssumeTaskClick(int fillId)
         {
             var loggedUserId = GetCurrentUser().Id;
 
-            var result = _orderService.AssumeTask(taskId, loggedUserId);
+            var result = _orderService.TakeOverPO(fillId, loggedUserId);
 
             if (result.HasErrors())
             {
@@ -687,11 +687,11 @@ namespace Answer.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult TakeTaskOwnersShip(int taskId)
+        public ActionResult TakeTaskOwnersShip(int fillId)
         {
             var loggedUserId = GetCurrentUser();
 
-            var statusMessage = _orderService.AssumeTask(taskId, loggedUserId.Id);
+            var statusMessage = _orderService.TakeOverPO(fillId, loggedUserId.Id);
 
             if (statusMessage.HasErrors())
             {
