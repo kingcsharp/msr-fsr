@@ -23,7 +23,7 @@ SELECT @StepRoles=(SELECT Roles FROM A_V_TASKS_WITH_PROCEDURE_STEP_DATA WHERE ST
  WHERE TaskId = @ID)))
  )
 	BEGIN
-	SET @RET_STATUS = 'ERROR - You are not a member of the role that this task was assigned to.'
+	SET @RET_STATUS = 'ERROR - User Not Authorized to Perform Task'
 	GOTO fin
     END
 

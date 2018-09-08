@@ -931,9 +931,10 @@ namespace Msr.Services.Orders
                     var retStatus = p.Get<string>("RET_STATUS");
                     var msg = p.Get<string>("MSGS");
 
-                    if (!string.IsNullOrWhiteSpace(msg))
+                    if (!string.IsNullOrWhiteSpace(retStatus))
                     {
-                        ressult.AddError(msg);
+                        ressult.AddError(retStatus);
+                        break;
                     }
                 }
             }

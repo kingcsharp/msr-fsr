@@ -108,9 +108,8 @@
                                 if (data.Code === "OK") {
                                     window.location.href = '/wip/Details/' + fillId;
                                 } else {
-                                    alert(data.Message);
+                                    eLoaderError(data.Message);
                                 }
-                                eLoaderClose();
                             },
                             error: function (error) {
                                 eLoaderError(error);
