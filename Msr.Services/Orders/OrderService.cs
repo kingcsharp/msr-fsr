@@ -918,7 +918,7 @@ namespace Msr.Services.Orders
             var parentTask = result.Where(x => x.HAS_CHILD.HasValue && x.HAS_CHILD == 1).SingleOrDefault();
             var p = new DynamicParameters();
 
-            foreach (var item in result)
+            foreach (var item in result.Where(x=> x.Status != "CLOSED"))
             {
                 p.Add("@RET_STATUS", dbType: DbType.String, direction: ParameterDirection.Output, size: 500);
                 p.Add("@MSGS", dbType: DbType.String, direction: ParameterDirection.Output, size: 100);
