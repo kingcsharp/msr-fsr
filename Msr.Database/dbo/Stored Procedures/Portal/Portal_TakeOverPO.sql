@@ -35,11 +35,5 @@ exec A_SP_TASKS_FORWARD_TASK
 @fwdMSG OUTPUT,
 @ID,@strNTLogin,null,@requestee
 
-declare @accStat varchar(50),@accMSG varchar(50)
-exec A_SP_TASK_ACCEPT 
-@accStat OUTPUT,
-@accMSG OUTPUT,
-@ID,@strNTLogin
-
 fin:
 End 

@@ -494,28 +494,11 @@ namespace Answer.Web.Controllers
 
             var currentStep = vm.TaskStepResults.SingleOrDefault(x => x.StepId == stepId.ToString());
 
-            if (currentStep != null && currentStep.PRINT_ORDER == null)
-            {
-                var objId = _orderService.GetProcedureByObjId(vm.FileSearchResult.ProcObjId);
+            var objId = _orderService.GetProcedureByObjId(vm.FileSearchResult.ProcObjId);
 
-                var procedureRoles = _proceduresService.GetSelectedRoles(objId.Id, loggedUserId.Id)?.Select(x => x.Role_Id).ToList();
-
-                var hasProcedureRoles = myRoles.Select(x => x.Role_Id).ToList().Intersect(procedureRoles).Any();
-
-                response.HasStepRoles = hasProcedureRoles;
-            }
-            else
-            {
-                if (currentStep != null && currentStep.PRINT_ORDER != null)
-                {
-                    var steptRoles = currentStep.Roles?.Split(',');
-
-                    var hasRoles = steptRoles != null && myRoles.Select(x => x.Role_Id).ToList().Intersect(steptRoles).Any();
-
-                    response.HasStepRoles = hasRoles;
-                }
-            }
-
+            var procedureRoles = _proceduresService.GetSelectedRoles(objId.Id, loggedUserId.Id)?.Select(x => x.Role_Id).ToList();
+            response.HasStepRoles = myRoles.Select(x => x.Role_Id).ToList().Intersect(procedureRoles).Any();
+            
             response.LoggedUserIdResult = loggedUserId;
             response.TaskEditDataResult.StepTitle = currentStep.Title;
             response.TaskEditDataResult.Description = currentStep.Description;

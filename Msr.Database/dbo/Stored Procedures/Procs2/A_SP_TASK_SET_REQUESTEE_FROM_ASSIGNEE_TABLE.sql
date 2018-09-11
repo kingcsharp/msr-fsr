@@ -33,7 +33,9 @@ if @STATUS = 'REQUESTED'
 	begin
 	if isNull(@curStat,'') != 'REQUESTED' 
 		begin
-		UPDATE A_TASKS SET STATUS = 'REQUESTED',DRCM = getDate(),MODBY = @strNTLogin WHERE ID = @ID
+		UPDATE A_TASKS SET 
+		--STATUS = 'REQUESTED',
+		DRCM = getDate(),MODBY = @strNTLogin WHERE ID = @ID
 		end
 	if @REQ_DATE is not null
 		begin
