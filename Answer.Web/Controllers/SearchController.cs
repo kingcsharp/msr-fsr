@@ -28,12 +28,7 @@ namespace Answer.Web.Controllers
             {
                 foreach (var rule in param.where.rules)
                 {
-                    if (string.IsNullOrWhiteSpace(rule.data))
-                    {
-                        continue;
-                    }
-
-                    rule.data = rule.data.Trim();
+                    rule.data = rule.data?.Trim();
 
                     if (rule.field == nameof(ObjectSearchView.ItemType))
                     {
@@ -53,13 +48,11 @@ namespace Answer.Web.Controllers
                     }
                 }
             }
-            else
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
             {
-                if (!string.IsNullOrWhiteSpace(searchTerm))
-                {
-                    searchTerm = searchTerm.Trim();
-                    totalRows = totalRows.Where(x => x.ObjectId == searchTerm || x.Description.Contains(searchTerm) || x.Name.Contains(searchTerm));
-                }
+                searchTerm = searchTerm.Trim();
+                totalRows = totalRows.Where(x => x.ObjectId == searchTerm || x.Description.Contains(searchTerm) || x.Name.Contains(searchTerm));
             }
 
             if (!string.IsNullOrWhiteSpace(param.sortColumn))
@@ -70,6 +63,16 @@ namespace Answer.Web.Controllers
             var result = totalRows.ApplyPaging(param);
 
             return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        private string SetSearchFilter(string ruleData, string searchTerm)
+        {
+            if (string.IsNullOrWhiteSpace(ruleData) && !string.IsNullOrWhiteSpace(searchTerm))
+            {
+                return searchTerm;
+            }
+
+            return ruleData;
         }
     }
 }

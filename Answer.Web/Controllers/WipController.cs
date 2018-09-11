@@ -148,7 +148,8 @@ namespace Answer.Web.Controllers
                 {
                     _objectsService = new ObjectsService();
                     var fillIds = _objectsService.GetObjectSearchQueryable()
-                        .Where(x => x.Description != null && x.Description.ToLower().Contains(step)).Select(x => x.ObjectId)
+                        .Where(x => (x.Description != null && x.Description.ToLower().Contains(step)) || (x.Name != null && x.Name.ToLower().Contains(step)))
+                        .Select(x => x.ObjectId)
                         .ToList();
 
                     totalRows = totalRows.Where(x => fillIds.Contains(x.FillItemId));
