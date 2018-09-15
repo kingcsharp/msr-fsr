@@ -141,7 +141,7 @@ namespace Msr.Services.Roles
 
                     _dbContext.Database.ExecuteStoredProcedure(saveRoleAssignPersonRoleProcedure);
 
-                    RefreashMyRoles(personId);
+                    RefreshUserRoles(personId);
                 }
 
                 return true;
@@ -199,7 +199,7 @@ namespace Msr.Services.Roles
             return result;
         }
 
-        public List<GetMyRolesResult> RefreashMyRoles(string personId)
+        public List<GetMyRolesResult> RefreshUserRoles(string personId)
         {
             var myID = new SqlParameter("@myID", personId);
             var strNTLogin = new SqlParameter("@strNTLogin", personId);
@@ -211,7 +211,7 @@ namespace Msr.Services.Roles
 
         public List<GetMyRolesResult> GetAssignedRoles(string personId)
         {
-            RefreashMyRoles(personId);
+            RefreshUserRoles(personId);
 
             var personIdParam = new SqlParameter("@personId", personId);
 
@@ -222,7 +222,7 @@ namespace Msr.Services.Roles
 
       public List<GetMyRolesResult> GetAssignedRolesByLogin(string personId)
         {
-            RefreashMyRoles(personId);
+            RefreshUserRoles(personId);
 
             var personIdParam = new SqlParameter("@personId", personId);
             var sql = "SELECT distinct pa.ROLE_ID, pa.ROLE, pa.PERSON, pa.STATUS, pa.ROLE_NAME  FROM A_APPROVED_ROLE_ASSIGNEES pa INNER JOIN Portal_PeopleView pv on pv.ObjectId = pa.PERSON WHERE  pv.Login = @personId";

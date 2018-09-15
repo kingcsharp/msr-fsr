@@ -49,6 +49,10 @@ namespace Msr.Services.Workflows
 
             try
             {
+                SpObjectCheckForValidity(vm.ObjectId, vm.LoginId);
+
+                GetSpObjectShowApplicableWorkflow(vm.ObjectId, vm.LoginId);
+
                 var p = new DynamicParameters();
 
                 p.Add("@msg", dbType: DbType.String, direction: ParameterDirection.Output, size: 500);
@@ -190,7 +194,6 @@ namespace Msr.Services.Workflows
             }
             catch (Exception ex)
             {
-                // ignored
             }
 
             return result;
@@ -220,6 +223,24 @@ namespace Msr.Services.Workflows
             }
 
             return result;
+        }
+
+        public void SpObjectCheckForValidity(string id, string ntLogin)
+        {
+            var returnVal = new SqlParameter("@returnVal", ParameterDirection.Output);
+            var messages = new SqlParameter("@messages", ParameterDirection.Output);
+            var newId = new SqlParameter("@objID", id);
+            var ntLog = new SqlParameter("@strNTLogin", ntLogin);
+
+            _dbContext.Database.ExecuteSqlCommand("exec A_SP_OBJECT_CHECK_FOR_VALIDITY @returnVal,@messages, @objID,@strNTLogin", returnVal, messages, newId, ntLog);
+        }
+
+        public void GetSpObjectShowApplicableWorkflow(string id, string ntLogin)
+        {
+            var newId = new SqlParameter("@objID", id);
+            var ntLog = new SqlParameter("@strNTLogin", ntLogin);
+
+            _dbContext.Database.ExecuteSqlCommand("exec A_SP_OBJECT_SHOW_APPLICABLE_WORKFLOWS @objID,@strNTLogin", newId, ntLog);
         }
     }
 }

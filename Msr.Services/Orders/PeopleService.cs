@@ -17,6 +17,7 @@ using Msr.Services.People.ViewModels;
 using System.Configuration;
 using System.IO;
 using Msr.Infrastructure.Email;
+using Msr.Services.Roles;
 using Msr.Services.Users;
 
 namespace Msr.Services.Orders
@@ -27,10 +28,13 @@ namespace Msr.Services.Orders
 
         private readonly UserService _userService;
 
+        private readonly RoleService _roleService;
+
         public PeopleService()
         {
             _userService = new UserService();
             _dbContext = new MsrDbContext();
+            _roleService = new RoleService();
         }
 
         public bool CheckUserExists(string login, string password)
@@ -43,7 +47,6 @@ namespace Msr.Services.Orders
             }
 
             return true;
-
         }
 
         public ResultNotification<CheckLoginResult> GetAnswerUser(string login, string password)
@@ -102,6 +105,8 @@ namespace Msr.Services.Orders
                 context.SaveChanges();
             }
 
+            _roleService.RefreshUserRoles(user.Id);
+
             result.Entity.Id = user.Id;
             result.Entity.Login = login;
             result.Entity.Password = user.Password;
@@ -111,10 +116,6 @@ namespace Msr.Services.Orders
         public IQueryable<PeopleObjectView> GetPeople()
         {
             return _dbContext.PeopleObjectViews;
-        }
-        public IQueryable<PeopleObjectView> GetApprovedPeople()
-        {
-            return _dbContext.PeopleObjectViews.Where(x => x.Status == "APPROVED").AsQueryable();
         }
 
         public IQueryable<TimeZonesView> GetTimeZones()
