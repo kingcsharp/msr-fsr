@@ -23,7 +23,7 @@ namespace Answer.Web
 
             bundles.Add(new ScriptBundle("~/bundles/js/jqgrid")
                 .Include("~/assets/js/plugins/bootstrap3/bootstrap-dialog.min.js")
-                .Include("~/assets/js/jquery.jqGrid.min.js")
+                .Include("~/assets/js/jquery.jqGrid.js")
                 .Include("~/assets/js/i18n/grid.locale-en.js")
                 .Include("~/assets/js/msr/grid-common.js")
             );

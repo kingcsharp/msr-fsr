@@ -559,6 +559,7 @@
     <Content Include="assets\js\grids\purchase-order.js" />
     <Content Include="assets\js\grids\regions.js" />
     <Content Include="assets\js\grids\requirement-steps.js" />
+    <Content Include="assets\js\jquery.jqGrid.js" />
     <Content Include="assets\js\JqueryConfirm\jquery-confirm.min.css" />
     <Content Include="assets\js\JqueryConfirm\jquery-confirm.min.js" />
     <Content Include="assets\js\JsBarcode.all.min.js" />
@@ -688,7 +689,6 @@
     <Content Include="assets\js\jquery.fitvid.js" />
     <Content Include="assets\js\jquery.flexslider.js" />
     <Content Include="assets\js\jquery.iframe-transport.js" />
-    <Content Include="assets\js\jquery.jqGrid.min.js" />
     <Content Include="assets\js\jquery.loadTemplate.js" />
     <Content Include="assets\js\jquery.matchHeight-min.js" />
     <Content Include="assets\js\jquery.min.js" />
@@ -1090,7 +1090,6 @@
     <Content Include="Views\Roles\Index.cshtml" />
     <Content Include="Views\Shared\_Companies.cshtml" />
     <Content Include="Views\Companies\Edit.cshtml" />
-    <Content Include="Views\Shared\_File.cshtml" />
     <Content Include="Views\Locations\Create.cshtml" />
     <Content Include="Views\Locations\Edit.cshtml" />
     <Content Include="Views\Locations\Index.cshtml" />

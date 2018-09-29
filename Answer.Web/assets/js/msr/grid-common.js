@@ -1,5 +1,5 @@
 ﻿var Msr = Msr || {};
-
+var hasGridLoaded = false;
 Msr.JqGridCommon = Msr.JqGridCommon ||
     {
         FilePreview: function (cellvalue, options, rowObject) {
@@ -169,7 +169,6 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
 
             });
         },
-
         GetStatusFilters: function () {
 
             var filterList =
@@ -186,6 +185,45 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                 'OLD:Obsolete';
 
             return filterList;
+        },
+        SaveGridSate: function (type) {
+            $.jgrid.saveState(type, { saveData: false });
+        },
+        LoadGridSate: function (type) {
+            var loadGridSate = $.jgrid.loadState(type);
+            if (loadGridSate !== null) {
+                $.jgrid.loadState(type, { restoreData: false });
+            }
+        },
+        TriggerSaveLoadGridState: function (id) {
 
-        }
+            if (!hasGridLoaded) {
+                hasGridLoaded = true;
+                var intervalInMilliSeconds = 100;
+
+                var myinterval = setInterval(function () {
+
+                    Msr.JqGridCommon.LoadGridSate(id);
+
+                        clearInterval(myinterval);
+
+                        $("#" + id).setGridParam({
+                            datatype: 'json'
+                        }).trigger("reloadGrid");
+                    },
+                    intervalInMilliSeconds);
+
+            } else {
+                Msr.JqGridCommon.SaveGridSate(id);
+            }
+        },
+        ClearGridState: function (gridId) {
+            var storageRemoveElement = "jqGrid" + gridId;
+            localStorage.removeItem(storageRemoveElement);
+
+            var storageRemoveElementData = storageRemoveElement + "_data";
+            localStorage.removeItem(storageRemoveElementData);
+
+            location.reload();  
+        },
     }
