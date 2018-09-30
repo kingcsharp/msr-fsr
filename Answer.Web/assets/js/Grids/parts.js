@@ -12,7 +12,7 @@ Msr.PartsGrid = Msr.PartsGrid ||
         GetGridEditUrl: function () {
             return "/Parts/Edit/";
         },
-        LoadPartsGrid: function (url, hasAdministratorRole) {
+        LoadPartsGrid: function (url) {
 
             $("#" + Msr.PartsGrid.GetGridId()).jqGrid({
                 url: url,
