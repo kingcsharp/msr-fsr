@@ -152,6 +152,7 @@ namespace Answer.Web
                .Include("~/assets/css/select2.min.css")
                .Include("~/assets/css/themes/flat-blue.css")
                .Include("~/assets/css/ui.jqgrid-bootstrap-ui.css")
+                .Include("~/assets/css/ui.jqgrid-bootstrap.css")
                .Include("~/assets/css/ui.jqgrid.css")
                .Include("~/assets/css/style.css")
                .Include("~/assets/css/flexslider.css", new CssRewriteUrlTransform())

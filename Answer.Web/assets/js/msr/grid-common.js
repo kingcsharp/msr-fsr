@@ -197,6 +197,8 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
         },
         TriggerSaveLoadGridState: function (id) {
 
+            $('#' + id).jqGrid('setGridWidth', $(window).innerWidth()-100);
+
             if (!hasGridLoaded) {
                 hasGridLoaded = true;
                 var intervalInMilliSeconds = 100;
@@ -225,5 +227,11 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
             localStorage.removeItem(storageRemoveElementData);
 
             location.reload();  
-        },
+        }, UpdateGridStateOnColumnsHideShow: function (id) {
+            $("body").click(function (event) {
+                if (event.target.type ==='checkbox' && (event.target.checked === true || event.target.checked === false)) {
+                    Msr.JqGridCommon.TriggerSaveLoadGridState(id);
+                }
+            });
+        }
     }

@@ -32,7 +32,7 @@ Msr.PartsGrid = Msr.PartsGrid ||
                         align: 'left'
                     },
                     {
-                        label: "Current Owner's Part Name",
+                        label: "Part Name",
                         name: 'Name',
                         index: 'Name',
                         colmenu: true,
@@ -42,13 +42,14 @@ Msr.PartsGrid = Msr.PartsGrid ||
                         align: 'left'
                     },
                     {
-                        label: "Current Owner's Part #",
+                        label: "Part #",
                         name: 'CompanyPartNumber',
                         index: 'CompanyPartNumber',
                         colmenu: false,
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: true, grouping: false, freeze: false },
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                         align: 'left',
+                        width: 200,
                         hidedlg: false
                     },
                     {
@@ -65,7 +66,7 @@ Msr.PartsGrid = Msr.PartsGrid ||
                         name: 'Consumable',
                         index: 'Consumable',
                         colmenu: false,
-                        width: 100,
+                        width: 150,
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                         align: 'left'
@@ -85,7 +86,7 @@ Msr.PartsGrid = Msr.PartsGrid ||
                         name: 'Unit',
                         index: 'Unit',
                         colmenu: false,
-                        width: 80,
+                        width: 150,
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                         align: 'left'
@@ -107,7 +108,8 @@ Msr.PartsGrid = Msr.PartsGrid ||
                         stype: "select",
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                         searchoptions: { value: Msr.JqGridCommon.GetStatusFilters() },
-                        align: 'center'
+                        align: 'center',
+                        width: 180,
                     },
 
                     {
@@ -117,7 +119,8 @@ Msr.PartsGrid = Msr.PartsGrid ||
                         colmenu: false,
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                        align: 'left'
+                        align: 'left',
+                        width: 190,
                     },
                     {
                         label: 'Reference Files',
@@ -127,7 +130,9 @@ Msr.PartsGrid = Msr.PartsGrid ||
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                         formatter: FilePreviewFormatter,
-                        align: 'center'
+                        align: 'center',
+                        width: 180,
+                        sortable: false
                     },
                     {
                         name: 'Actions', index: 'ID', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: PartEditFormatter, width: 200,
@@ -150,9 +155,7 @@ Msr.PartsGrid = Msr.PartsGrid ||
                 editurl: 'clientArray',
                 autowidth: true,
                 colMenu: true,
-                
                 gridComplete: function () {
-                    
                     Msr.JqGridCommon.TriggerSaveLoadGridState(Msr.PartsGrid.GetGridId());
                     Msr.JqGridCommon.SetupGridLock(Msr.PartsGrid.GetGridEditUrl());
                     Msr.JqGridCommon.UnLockWorkflow(Msr.PartsGrid.GetReturnUrl());
@@ -180,6 +183,7 @@ Msr.PartsGrid = Msr.PartsGrid ||
                 autosearch: true
             });
 
+            Msr.JqGridCommon.UpdateGridStateOnColumnsHideShow(Msr.PartsGrid.GetGridId());
 
             function FilePreviewFormatter(cellvalue, options, rowObject) {
                 return Msr.JqGridCommon.FilePreview(cellvalue, options, rowObject);
