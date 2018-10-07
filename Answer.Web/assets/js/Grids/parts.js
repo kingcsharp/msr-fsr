@@ -7,7 +7,7 @@ Msr.PartsGrid = Msr.PartsGrid ||
             return "/Parts";
         },
         GetGridId: function () {
-            return "jqGridPart";
+            return "jq-grid-part";
         },
         GetGridEditUrl: function () {
             return "/Parts/Edit/";
@@ -144,7 +144,7 @@ Msr.PartsGrid = Msr.PartsGrid ||
                 viewrecords: true, 
                 rowNum: 10, rowList: [10, 20, 50, 100],
                 loadonce: false, 
-                pager: "#jqGridPager",
+                pager: "#jq-grid-pager",
                 height: 'auto',
                 gridview: true,
                 sortname: 'CompanyPartNumber',
@@ -163,27 +163,7 @@ Msr.PartsGrid = Msr.PartsGrid ||
                 }
             });
 
-            $("#" + Msr.PartsGrid.GetGridId()).navGrid("#jqGridPager", {
-                search: false, // show search button on the toolbar
-                add: false,
-                edit: false,
-                del: false,
-                refresh: true
-            },
-                {}, // edit options
-                {}, // add options
-                {}, // delete options
-                { multipleSearch: true }
-            );
-
-            $("#" + Msr.PartsGrid.GetGridId()).jqGrid('filterToolbar', {
-                stringResult: true,
-                searchOnEnter: true,
-                searchOperators: true,
-                autosearch: true
-            });
-
-            Msr.JqGridCommon.UpdateGridStateOnColumnsHideShow(Msr.PartsGrid.GetGridId());
+            Msr.JqGridCommon.BindGridEvents(Msr.PartsGrid.GetGridId());
 
             function FilePreviewFormatter(cellvalue, options, rowObject) {
                 return Msr.JqGridCommon.FilePreview(cellvalue, options, rowObject);

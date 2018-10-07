@@ -233,5 +233,35 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                     Msr.JqGridCommon.TriggerSaveLoadGridState(id);
                 }
             });
+        },
+        BindClearGridState: function (id) {
+            $('#clear-state').click(function () {
+                Msr.JqGridCommon.ClearGridState(id);
+            });
+        },
+        BindGridEvents: function (id) {
+
+            Msr.JqGridCommon.UpdateGridStateOnColumnsHideShow(id);
+
+            Msr.JqGridCommon.BindClearGridState(id);
+
+            $("#" + id).navGrid("#jq-grid-pager", {
+                search: false, 
+                add: false,
+                edit: false,
+                del: false,
+                refresh: true
+            },
+                {}, // edit options
+                {}, // add options
+                {}, // delete options
+                { multipleSearch: true }
+            );
+            $("#" + id).jqGrid('filterToolbar', {
+                stringResult: true,
+                searchOnEnter: true,
+                searchOperators: true
+            });
+
         }
     }

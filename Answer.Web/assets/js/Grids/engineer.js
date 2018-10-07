@@ -2,15 +2,21 @@ var Msr = Msr || {};
 
 Msr.WipGrid = Msr.WipGrid ||
     {
+        GetReturnUrl: function () {
+            return "/Wip";
+        },
+        GetGridId: function () {
+            return "jq-grid-wip";
+        },
         LoadWipGrid: function (url) {
 
             $.jgrid.defaults.responsive = true;
 
-            $("#jqGrid").jqGrid({
+            $("#" + Msr.WipGrid.GetGridId()).jqGrid({
                 url: url,
                 mtype: "GET",
                 styleUI: 'Bootstrap',
-                datatype: "json",
+                datatype: "local",
                 colModel: [
                     { name: 'FillId', index: 'FillId', width: 60, align: 'center', hidden: true, edittype: 'text', editable: true, editrules: { edithidden: true } },
                     {
@@ -159,7 +165,7 @@ Msr.WipGrid = Msr.WipGrid ||
                 viewrecords: true, // show the current page, data rang and total records on the toolbar
                 rowNum: 10, rowList: [10, 20, 50, 100],
                 loadonce: false, // this is just for the demo
-                pager: "#jqGridPager",
+                pager: "#jq-grid-pager",
                 height: 'auto',
                 gridview: true,
                 sortname: 'DueDate',
@@ -174,9 +180,9 @@ Msr.WipGrid = Msr.WipGrid ||
                 ajaxCellOptions: {},
                 beforeSaveCell: function (rowid, cellname, value, iRow, iCol) {
 
-                    var fillId = $('#jqGrid').jqGrid('getCell', rowid, 'FillId');
+                    var fillId = $("#" + Msr.WipGrid.GetGridId()).jqGrid('getCell', rowid, 'FillId');
 
-                    var purchaseItemId = $('#jqGrid').jqGrid('getCell', rowid, 'PurchaseItemId');
+                    var purchaseItemId = $("#" + Msr.WipGrid.GetGridId()).jqGrid('getCell', rowid, 'PurchaseItemId');
 
                     var options = {
                         FillId: fillId,
@@ -196,9 +202,11 @@ Msr.WipGrid = Msr.WipGrid ||
                     });
                 },
                 afterSaveCell: function (rowid, cellname, value, iRow, iCol) {
-                    $("#jqGrid").jqGrid().trigger('reloadGrid');
+                    $("#" + Msr.WipGrid.GetGridId()).jqGrid().trigger('reloadGrid');
                 },
                 gridComplete: function () {
+                    Msr.JqGridCommon.TriggerSaveLoadGridState(Msr.WipGrid.GetGridId());
+
                     $('div.meter').each(function (index) {
                         var tooltiptime = '';
                         var type = $(this).data('type');
@@ -225,29 +233,9 @@ Msr.WipGrid = Msr.WipGrid ||
                 }
             });
 
-            $('#jqGrid').navGrid("#jqGridPager", {
-                refresh: true,
-                search: false, // show search button on the toolbar
-                add: false,
-                edit: false,
-                del: false,
+            Msr.JqGridCommon.BindGridEvents(Msr.WipGrid.GetGridId());
 
-            },
-                {}, // edit options
-                {}, // add options
-                {}, // delete options
-                { multipleSearch: true }
-            );
-            $('#jqGrid').jqGrid('filterToolbar', {
-                stringResult: true,
-                searchOnEnter: true,
-                searchOperators: true
-            });
-
-
-            $("#jqGrid").jqGrid().trigger('reloadGrid');
-
-            $("#jqGrid").tooltip();
+            $("#" + Msr.WipGrid.GetGridId()).tooltip();
 
             $('a.colmenu').click(function (event) {
                 //event.stopPropagation();
@@ -258,9 +246,6 @@ Msr.WipGrid = Msr.WipGrid ||
     }
 
 function initDateEdit(elem, options) {
-    //console.log(options);
-    var StartDate = $('#jqGrid').jqGrid('getCell', options.rowId, 'StDate');
-    console.log(StartDate);
     $(elem).datepicker({
         maxDate: "10/27/2015",
         dateFormat: "mm/dd/yy",

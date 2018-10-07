@@ -1,404 +1,389 @@
 ﻿var Msr = Msr || {};
 
 Msr.PeopleGrid = Msr.PeopleGrid ||
-{
-    LoadPeopleGrid: function (url, returnUrl, hasAdministratorRole) {
+    {
+        GetReturnUrl: function () {
+            return "/People";
+        },
+        GetGridId: function () {
+            return "jq-grid-people";
+        },
+        GetGridEditUrl: function () {
+            return "/People/Edit/";
+        },
 
-        $.jgrid.defaults.styleUI = 'Bootstrap';
+        LoadPeopleGrid: function (url) {
 
-        $("#jqGrid").jqGrid({
-            url: url,
-            mtype: "GET",
-            styleUI: 'Bootstrap',
-            emptyrecords: 'No records to display',
-            datatype: "json",
-            colModel: [
-                {
-                    label: 'Id',
-                    name: 'Root',
-                    index: 'Root',
-                    key: true,
-                    colmenu: false,
-                    coloptions: {
-                        sorting: false,
-                        columns: true,
-                        filtering: false,
-                        seraching: false,
-                        grouping: false,
-                        freeze: false
+            $.jgrid.defaults.styleUI = 'Bootstrap';
+
+            $("#" + Msr.PeopleGrid.GetGridId()).jqGrid({
+                url: url,
+                mtype: "GET",
+                styleUI: 'Bootstrap',
+                emptyrecords: 'No records to display',
+                datatype: "local",
+                colModel: [
+                    {
+                        label: 'Id',
+                        name: 'Root',
+                        index: 'Root',
+                        key: true,
+                        colmenu: false,
+                        coloptions: {
+                            sorting: false,
+                            columns: true,
+                            filtering: false,
+                            seraching: false,
+                            grouping: false,
+                            freeze: false
+                        },
+                        searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                        width: 100,
+                        align: 'left'
                     },
-                    searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                    width: 100,
-                    align: 'left'
-                },
-                {
-                    label: 'First Name',
-                    name: 'FirstName',
-                    index: 'FirstName',
-                    colmenu: true,
-                    editable: true, // must set editable to true if you want to make the field editable
-                    editrules: { required: true },
-                    coloptions: {
-                        sorting: false,
-                        columns: true,
-                        filtering: false,
-                        seraching: false,
-                        grouping: false,
-                        freeze: false
+                    {
+                        label: 'First Name',
+                        name: 'FirstName',
+                        index: 'FirstName',
+                        colmenu: true,
+                        editable: true, // must set editable to true if you want to make the field editable
+                        editrules: { required: true },
+                        coloptions: {
+                            sorting: false,
+                            columns: true,
+                            filtering: false,
+                            seraching: false,
+                            grouping: false,
+                            freeze: false
+                        },
+                        searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                        width: 200,
+                        align: 'left'
                     },
-                    searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                    width: 200,
-                    align: 'left'
-                },
-                {
-                    label: 'Last Name',
-                    name: 'LastName',
-                    index: 'LastName',
-                    colmenu: false,
-                    editable: true,
-                    coloptions: {
-                        sorting: false,
-                        columns: true,
-                        filtering: false,
-                        seraching: true,
-                        grouping: false,
-                        freeze: false
+                    {
+                        label: 'Last Name',
+                        name: 'LastName',
+                        index: 'LastName',
+                        colmenu: false,
+                        editable: true,
+                        coloptions: {
+                            sorting: false,
+                            columns: true,
+                            filtering: false,
+                            seraching: true,
+                            grouping: false,
+                            freeze: false
+                        },
+                        searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                        align: 'left',
+                        width: 150,
+                        hidedlg: false
                     },
-                    searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                    align: 'left',
-                    width: 150,
-                    hidedlg: false
-                },
-                {
-                    label: 'User Name',
-                    name: 'LoginId',
-                    index: 'LoginId',
-                    colmenu: false,
-                    editable: true,
-                    coloptions: {
-                        sorting: false,
-                        columns: true,
-                        filtering: false,
-                        seraching: true,
-                        grouping: false,
-                        freeze: false
+                    {
+                        label: 'User Name',
+                        name: 'LoginId',
+                        index: 'LoginId',
+                        colmenu: false,
+                        editable: true,
+                        coloptions: {
+                            sorting: false,
+                            columns: true,
+                            filtering: false,
+                            seraching: true,
+                            grouping: false,
+                            freeze: false
+                        },
+                        searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                        align: 'left',
+                        width: 150,
+                        hidedlg: false
                     },
-                    searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                    align: 'left',
-                    width: 150,
-                    hidedlg: false
-                },
-                {
-                    label: 'Picture',
-                    name: 'PicRecord',
-                    index: 'PicRecord',
-                    colmenu: false,
-                    editable: true,
-                    coloptions: {
-                        sorting: false,
-                        columns: true,
-                        filtering: false,
-                        seraching: false,
-                        grouping: false,
-                        freeze: false
+                    {
+                        label: 'Picture',
+                        name: 'PicRecord',
+                        index: 'PicRecord',
+                        colmenu: false,
+                        editable: true,
+                        coloptions: {
+                            sorting: false,
+                            columns: true,
+                            filtering: false,
+                            seraching: false,
+                            grouping: false,
+                            freeze: false
+                        },
+                        searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                        align: 'left'
                     },
-                    searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                    align: 'left'
-                },
-                {
-                    label: 'Position',
-                    name: 'PositionName',
-                    index: 'PositionName',
-                    colmenu: false,
-                    editable: true,
-                    coloptions: {
-                        sorting: false,
-                        columns: true,
-                        filtering: false,
-                        seraching: false,
-                        grouping: false,
-                        freeze: false
+                    {
+                        label: 'Position',
+                        name: 'PositionName',
+                        index: 'PositionName',
+                        colmenu: false,
+                        editable: true,
+                        coloptions: {
+                            sorting: false,
+                            columns: true,
+                            filtering: false,
+                            seraching: false,
+                            grouping: false,
+                            freeze: false
+                        },
+                        searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                        align: 'left'
                     },
-                    searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                    align: 'left'
-                },
-                {
-                    label: 'Supervisor',
-                    name: 'BossName',
-                    index: 'BossName',
-                    colmenu: false,
-                    editable: true,
-                    coloptions: {
-                        sorting: false,
-                        columns: true,
-                        filtering: false,
-                        seraching: false,
-                        grouping: false,
-                        freeze: false
+                    {
+                        label: 'Supervisor',
+                        name: 'BossName',
+                        index: 'BossName',
+                        colmenu: false,
+                        editable: true,
+                        coloptions: {
+                            sorting: false,
+                            columns: true,
+                            filtering: false,
+                            seraching: false,
+                            grouping: false,
+                            freeze: false
+                        },
+                        searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                        align: 'left'
                     },
-                    searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                    align: 'left'
-                },
-                {
-                    label: 'Main Company Root',
-                    name: 'RootCoName',
-                    index: 'RootCoName',
-                    colmenu: false,
-                    editable: true,
-                    coloptions: {
-                        sorting: false,
-                        columns: true,
-                        filtering: false,
-                        seraching: false,
-                        grouping: false,
-                        freeze: false
+                    {
+                        label: 'Main Company Root',
+                        name: 'RootCoName',
+                        index: 'RootCoName',
+                        colmenu: false,
+                        editable: true,
+                        coloptions: {
+                            sorting: false,
+                            columns: true,
+                            filtering: false,
+                            seraching: false,
+                            grouping: false,
+                            freeze: false
+                        },
+                        searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                        align: 'left'
                     },
-                    searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                    align: 'left'
-                },
-                {
-                    label: 'Company Department',
-                    name: 'CompanyName',
-                    index: 'CompanyName',
-                    colmenu: false,
-                    editable: true,
-                    coloptions: {
-                        sorting: false,
-                        columns: true,
-                        filtering: false,
-                        seraching: false,
-                        grouping: false,
-                        freeze: false
+                    {
+                        label: 'Company Department',
+                        name: 'CompanyName',
+                        index: 'CompanyName',
+                        colmenu: false,
+                        editable: true,
+                        coloptions: {
+                            sorting: false,
+                            columns: true,
+                            filtering: false,
+                            seraching: false,
+                            grouping: false,
+                            freeze: false
+                        },
+                        searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                        align: 'left'
                     },
-                    searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                    align: 'left'
-                },
-                {
-                    label: 'Primary Work Phone',
-                    name: 'PrimaryPhoneNumber',
-                    index: 'PrimaryPhoneNumber',
-                    colmenu: false,
-                    editable: true,
-                    coloptions: {
-                        sorting: false,
-                        columns: true,
-                        filtering: false,
-                        seraching: false,
-                        grouping: false,
-                        freeze: false
+                    {
+                        label: 'Primary Work Phone',
+                        name: 'PrimaryPhoneNumber',
+                        index: 'PrimaryPhoneNumber',
+                        colmenu: false,
+                        editable: true,
+                        coloptions: {
+                            sorting: false,
+                            columns: true,
+                            filtering: false,
+                            seraching: false,
+                            grouping: false,
+                            freeze: false
+                        },
+                        searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                        align: 'left'
                     },
-                    searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                    align: 'left'
-                },
-                {
-                    label: 'Work Email',
-                    name: 'WorkEmailAddress',
-                    index: 'WorkEmailAddress',
-                    colmenu: false,
-                    editable: true,
-                    coloptions: {
-                        sorting: false,
-                        columns: true,
-                        filtering: false,
-                        seraching: false,
-                        grouping: false,
-                        freeze: false
+                    {
+                        label: 'Work Email',
+                        name: 'WorkEmailAddress',
+                        index: 'WorkEmailAddress',
+                        colmenu: false,
+                        editable: true,
+                        coloptions: {
+                            sorting: false,
+                            columns: true,
+                            filtering: false,
+                            seraching: false,
+                            grouping: false,
+                            freeze: false
+                        },
+                        searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                        align: 'left'
                     },
-                    searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                    align: 'left'
-                },
-                {
-                    label: 'Hire Date',
-                    name: 'DateHired',
-                    index: 'DateHired',
-                    colmenu: false,
-                    editable: true,
-                    coloptions: {
-                        sorting: false,
-                        columns: true,
-                        filtering: false,
-                        seraching: false,
-                        grouping: false,
-                        freeze: false
+                    {
+                        label: 'Hire Date',
+                        name: 'DateHired',
+                        index: 'DateHired',
+                        colmenu: false,
+                        editable: true,
+                        coloptions: {
+                            sorting: false,
+                            columns: true,
+                            filtering: false,
+                            seraching: false,
+                            grouping: false,
+                            freeze: false
+                        },
+                        searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                        align: 'left'
                     },
-                    searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                    align: 'left'
-                },
-                {
-                    label: 'System Status',
-                    name: 'SystemStatus',
-                    index: 'SystemStatus',
-                    colmenu: false,
-                    editable: true,
-                    coloptions: {
-                        sorting: false,
-                        columns: true,
-                        filtering: false,
-                        seraching: false,
-                        grouping: false,
-                        freeze: false
+                    {
+                        label: 'System Status',
+                        name: 'SystemStatus',
+                        index: 'SystemStatus',
+                        colmenu: false,
+                        editable: true,
+                        coloptions: {
+                            sorting: false,
+                            columns: true,
+                            filtering: false,
+                            seraching: false,
+                            grouping: false,
+                            freeze: false
+                        },
+                        searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                        align: 'left'
                     },
-                    searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                    align: 'left'
-                },
-                {
-                    label: 'Revision',
-                    name: 'Rev',
-                    index: 'Rev',
-                    colmenu: false,
-                    editable: true,
-                    coloptions: {
-                        sorting: false,
-                        columns: true,
-                        filtering: false,
-                        seraching: false,
-                        grouping: false,
-                        freeze: false
+                    {
+                        label: 'Revision',
+                        name: 'Rev',
+                        index: 'Rev',
+                        colmenu: false,
+                        editable: true,
+                        coloptions: {
+                            sorting: false,
+                            columns: true,
+                            filtering: false,
+                            seraching: false,
+                            grouping: false,
+                            freeze: false
+                        },
+                        searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                        align: 'left',
+                        width: 100
                     },
-                    searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                    align: 'left',
-                    width: 100
-                },
-                {
-                    label: 'Approval Status',
-                    name: 'Status',
-                    index: 'Status',
-                    colmenu: false,
-                    editable: true,
-                    stype: "select",
-                    coloptions: {
-                        sorting: false,
-                        columns: true,
-                        filtering: false,
-                        seraching: false,
-                        grouping: false,
-                        freeze: false
+                    {
+                        label: 'Approval Status',
+                        name: 'Status',
+                        index: 'Status',
+                        colmenu: false,
+                        editable: true,
+                        stype: "select",
+                        coloptions: {
+                            sorting: false,
+                            columns: true,
+                            filtering: false,
+                            seraching: false,
+                            grouping: false,
+                            freeze: false
+                        },
+                        searchoptions: { value: Msr.JqGridCommon.GetStatusFilters() },
+                        align: 'left'
                     },
-                    searchoptions: { value: Msr.JqGridCommon.GetStatusFilters() },
-                    align: 'left'
-                },
-                {
-                    label: 'Checked Out To',
-                    name: 'LockedByName',
-                    index: 'LockedByName',
-                    colmenu: false,
-                    editable: true, // must set editable to true if you want to make the field editable
-                    editrules: { required: true },
-                    coloptions: {
-                        sorting: false,
-                        columns: true,
-                        filtering: false,
-                        seraching: false,
-                        grouping: false,
-                        freeze: false
+                    {
+                        label: 'Checked Out To',
+                        name: 'LockedByName',
+                        index: 'LockedByName',
+                        colmenu: false,
+                        editable: true, // must set editable to true if you want to make the field editable
+                        editrules: { required: true },
+                        coloptions: {
+                            sorting: false,
+                            columns: true,
+                            filtering: false,
+                            seraching: false,
+                            grouping: false,
+                            freeze: false
+                        },
+                        searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                        width: 200,
+                        align: 'left'
                     },
-                    searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                    width: 200,
-                    align: 'left'
-                },
-                {
-                    label: 'Reference Files',
-                    name: 'ReferenceFiles',
-                    index: 'ReferenceFiles',
-                    colmenu: false,
-                    coloptions: {
-                        sorting: false,
-                        columns: true,
-                        filtering: false,
-                        seraching: false,
-                        grouping: false,
-                        freeze: false
+                    {
+                        label: 'Reference Files',
+                        name: 'ReferenceFiles',
+                        index: 'ReferenceFiles',
+                        colmenu: false,
+                        coloptions: {
+                            sorting: false,
+                            columns: true,
+                            filtering: false,
+                            seraching: false,
+                            grouping: false,
+                            freeze: false
+                        },
+                        searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                        formatter: filePreviewFormatter,
+                        align: 'center'
                     },
-                    searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                    formatter: FilePreviewFormatter,
-                    align: 'center'
+                    {
+                        name: 'Actions',
+                        index: 'ObjectId',
+                        key: true,
+                        search: false,
+                        hidden: false,
+                        colmenu: false,
+                        editable: false,
+                        formatter: actionFormtter,
+                        width: 200,
+                        align: 'center'
+                    }
+                ],
+                ajaxRowOptions: {
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json"
                 },
-                {
-                    name: 'Actions',
-                    index: 'ObjectId',
-                    key: true,
-                    search: false,
-                    hidden: false,
-                    colmenu: false,
-                    editable: false,
-                    formatter: ActionFormtter,
-                    width: 200,
-                    align: 'center'
+                serializeRowData: function (postdata) {
+                    return JSON.stringify(postdata);
+                },
+                viewrecords: true,
+                rowNum: 10,
+                rowList: [10, 20, 50, 100],
+                loadonce: false,
+                pager: "#jq-grid-pager",
+                height: 'auto',
+                gridview: true,
+                sortname: 'Id',
+                sortable: true,
+                sortorder: 'asc',
+                cellEdit: false,
+                cellsubmit: 'clientArray',
+                editurl: 'clientArray',
+                autowidth: true,
+                colMenu: true,
+                gridComplete: function () {
+
+                    Msr.JqGridCommon.TriggerSaveLoadGridState(Msr.PeopleGrid.GetGridId());
+                    Msr.JqGridCommon.SetupGridLock(Msr.PeopleGrid.GetGridEditUrl());
+                    Msr.JqGridCommon.UnLockWorkflow(Msr.PeopleGrid.GetReturnUrl());
+                    Msr.JqGridCommon.DocPreview();
                 }
-            ],
-            ajaxRowOptions: {
-                type: "POST",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json"
-            },
-            serializeRowData: function(postdata) {
-                return JSON.stringify(postdata);
-            },
-            viewrecords: true, // show the current page, data rang and total records on the toolbar
-            rowNum: 10,
-            rowList: [10, 20, 50, 100],
-            loadonce: false, // this is just for the demo
-            pager: "#jqGridPager",
-            height: 'auto',
-            gridview: true,
-            sortname: 'Id',
-            sortable: true,
-            sortorder: 'asc',
-            cellEdit: false,
-            cellsubmit: 'clientArray',
-            editurl: 'clientArray',
-            autowidth: true,
-            colMenu: true,
-            gridComplete: function() {
-                Msr.JqGridCommon.SetupGridLock("/People/Edit/");
-                Msr.JqGridCommon.UnLockWorkflow(returnUrl);
-                Msr.JqGridCommon.DocPreview();
-            }
 
-        });
-
-        $('#jqGrid').navGrid("#jqGridPager",
-            {
-                search: false, // show search button on the toolbar
-                add: false,
-                edit: false,
-                del: false,
-                refresh: true
-            },
-            {}, // edit options
-            {}, // add options
-            {}, // delete options
-            { multipleSearch: true }
-        );
-        $('#jqGrid').jqGrid('filterToolbar',
-            {
-                stringResult: true,
-                searchOnEnter: true,
-                searchOperators: true
             });
 
+            Msr.JqGridCommon.BindGridEvents(Msr.PeopleGrid.GetGridId());
 
-        function FilePreviewFormatter(cellvalue, options, rowObject) {
-            return Msr.JqGridCommon.FilePreview(cellvalue, options, rowObject);
+            function filePreviewFormatter(cellvalue, options, rowObject) {
+                return Msr.JqGridCommon.FilePreview(cellvalue, options, rowObject);
+            }
+
+            function actionFormtter(cellvalue, options, rowObject) {
+
+                var actions = Msr.JqGridCommon.ActionFormtter(cellvalue, options, rowObject, Msr.PeopleGrid.GetReturnUrl(), Msr.PeopleGrid.GetGridEditUrl(), hasAdministratorRole);
+
+                var subordinate = '<a  title="SubOrdinate" href="/People/Add/' +
+                    rowObject.ObjectId +
+                    '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-list-alt"></i></a>';
+
+                return actions + subordinate;
+            }
         }
-
-        function ActionFormtter(cellvalue, options, rowObject) {
-
-            var actions = Msr.JqGridCommon.ActionFormtter(cellvalue, options, rowObject, returnUrl, '/People/Edit/', hasAdministratorRole);
-
-            var subordinate = '<a  title="SubOrdinate" href="/People/Add/' +
-                rowObject.ObjectId +
-                '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-list-alt"></i></a>';
-
-            return actions + subordinate;
-        }
-
-        $('#search').click(function() {
-
-            jQuery("#jqGrid").setGridParam({
-                page: 1
-            }).trigger("reloadGrid");
-
-        });
     }
-}

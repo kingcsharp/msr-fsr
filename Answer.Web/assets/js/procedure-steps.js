@@ -1,221 +1,180 @@
-﻿
+﻿var Msr = Msr || {};
 
-$(document).ready(function () {
-
-    $("#sortable").sortable({
-        handle: '.grippy',
-        delay: 100,
-        cancel: "input,textarea,select",
-
-        placeholder: "highlight",
-        start: function (event, ui) {
+Msr.ProcedureStepGrid = Msr.ProcedureStepGrid ||
+    {
+        GetReturnUrl: function () {
+            return "/PreProSearch";
         },
-        change: function (event, ui) {
-            console.log("Change");
+        GetGridId: function () {
+            return "jq-grid-templates";
         },
-        update: function (event, ui) {
+        GetGridEditUrl: function () {
+            return "/PreProSearch/Edit/";
+        },
+        LoadProcedureStepGrid: function (url) {
 
-            var productOrder = $(this).sortable('toArray');
-            console.log(productOrder);
-
-            var procObjectId = $(this).find('li').data("mainobjectid");
-            eLoaderOpen();
-            $.ajax({
-                type: "POST",
-                url: "/Procedures/ReorderSteps",
-                dataType: 'json',
-                data: {
-                    array: productOrder, procObjectId: procObjectId
-
-                },
-                success: function (data) {
-                    location.reload();
-                },
-                error: function (error) {
-                    eLoaderError(error);
-                }
-            });
-        }
-
-    }).disableSelection();
-    $('#monitor1-switch').bootstrapSwitch();
-    $('#monitor1-switch').on('switchChange.bootstrapSwitch', function (e, state) {
-        e.preventDefault();
-        if (state) {
-            $("#1a tr.on-off-row").show();
-            console.log('on');
-        } else {
-            $("#1a tr.on-off-row").hide();
-            console.log('off');
-        }
-    });
-
-    $('#monitor2-switch').bootstrapSwitch();
-    $('#monitor2-switch').on('switchChange.bootstrapSwitch', function (e, state) {
-        e.preventDefault();
-        if (state) {
-            $("#2a tr.on-off-row").show();
-            console.log('on');
-        } else {
-            $("#2a tr.on-off-row").hide();
-            console.log('off');
-        }
-    });
-
-    $(".nav-tabs").on("click", "a", function (e) {
-        e.preventDefault();
-        if (!$(this).hasClass('add-monitor')) {
-            $(this).tab('show');
-        }
-    });
-
-    $("form").submit(function (e) {
-        $('.submitselect option').prop('selected', true);
-    });
-
-    UpdateMonitor();
-    AddMonitor();
-});
-
-function UpdateMonitor() {
-
-    $('#submit-moniter-form').on('click',
-
-        function (e) {
-
-            var stepId = $('#AddMonitorForProcedureViewModel_Step_Id').val();
-            var moniter = $('#moniter-form').serialize();
-
-            e.preventDefault();
-            var form = $('#moniter-form').closest("form");
-            var isvalid = form.valid();
-            if (isvalid) {
-                eLoaderOpen();
-                $.ajax({
-                    type: "POST",
-                    url: "/Procedures/SaveMonitor",
-                    dataType: 'HTML',
-                    data: moniter,
-                    success: function (data) {
-                        $('#' + stepId + ' tbody').html('');
-                        $('#' + stepId + ' tbody').append(data);
-                        eLoaderClose();
-
-                        $('.monitor-close').click();
+            $("#" + Msr.ProcedureStepGrid.GetGridId()).jqGrid({
+                url: url,
+                mtype: "GET",
+                styleUI: 'Bootstrap',
+                datatype: "local",
+                colModel: [
+                    {
+                        label: ' #',
+                        name: 'Root',
+                        index: 'Root',
+                        key: true,
+                        colmenu: false,
+                        coloptions: {
+                            sorting: false,
+                            columns: true,
+                            filtering: false,
+                            seraching: false,
+                            grouping: false,
+                            freeze: false
+                        },
+                        searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                        width: 30,
+                        align: 'center'
                     },
-                    error: function (error) {
-                        eLoaderError(error);
-                    }
-                });
-            }
-        });
-
-    $('#edit-submit-moniter-form').on('click',
-
-        function (e) {
-
-            var stepId = $('#AddMonitorForProcedureViewModel_Step_Id').val();
-            var moniter = $('#moniter-form').serialize();
-
-            e.preventDefault();
-            var form = $('#moniter-form').closest("form");
-            var isvalid = form.valid();
-
-            if (isvalid) {
-                eLoaderOpen();
-                $.ajax({
-                    type: "POST",
-                    url: "/Procedures/SaveMonitor",
-                    dataType: 'HTML',
-                    data: moniter,
-                    success: function (data) {
-                        $('#' + stepId + ' tbody').html('');
-                        $('#' + stepId + ' tbody').append(data);
-                        eLoaderClose();
-
-                        $('.monitor-close').click();
+                    {
+                        label: 'Title',
+                        name: 'Title',
+                        index: 'Title',
+                        key: true,
+                        colmenu: true,
+                        coloptions: {
+                            sorting: false,
+                            columns: true,
+                            filtering: false,
+                            seraching: false,
+                            grouping: false,
+                            freeze: false
+                        },
+                        searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                        width: 100,
+                        align: 'center'
                     },
-                    error: function (error) {
-                        eLoaderError(error);
+                    {
+                        label: 'Step Text',
+                        name: 'StepText',
+                        index: 'StepText',
+                        colmenu: false,
+                        coloptions: {
+                            sorting: false,
+                            columns: true,
+                            filtering: false,
+                            seraching: false,
+                            grouping: false,
+                            freeze: false
+                        },
+                        searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                        width: 150,
+                        align: 'center'
+                    },
+                    {
+                        label: 'Revision',
+                        name: 'Rev',
+                        index: 'Rev',
+                        colmenu: false,
+                        coloptions: {
+                            sorting: false,
+                            columns: true,
+                            filtering: false,
+                            seraching: false,
+                            grouping: false,
+                            freeze: false
+                        },
+                        searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                        align: 'center'
+                    },
+                    {
+                        label: 'Approval Status',
+                        name: 'Status',
+                        index: 'Status',
+                        colmenu: false,
+                        stype: "select",
+                        searchoptions: {
+                            value:
+                            ":[All];CREATING, DENIED, APPROVED, APPROVED_BUT_REVISING, APPROVED_BUT_DELETING:Creating or Approved;CREATING, DENIED:Creating;IN_WORKFLOW:In Approval Workflow;APPROVED, APPROVED_BUT_REVISING, APPROVED_BUT_DELETING:Approved;DENIED:Denied;APPROVED_BUT_REVISING:Approved But Being Revised;APPROVED_BUT_DELETING:Approved But Being Deleted;DENIED:Denied;DELETED:Deleted;OLD:Obsolete"
+                        },
+                        coloptions: {
+                            sorting: false,
+                            columns: true,
+                            filtering: false,
+                            seraching: false,
+                            grouping: false,
+                            freeze: false
+                        },
+                        align: 'center'
+                    },
+                    {
+                        label: 'Reference Files',
+                        name: 'ReferenceFiles',
+                        index: 'ReferenceFiles',
+                        colmenu: false,
+                        coloptions: {
+                            sorting: false,
+                            columns: true,
+                            filtering: false,
+                            seraching: false,
+                            grouping: false,
+                            freeze: false
+                        },
+                        searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                        formatter: filePreviewFormatter,
+                        align: 'center'
+                    },
+                    {
+                        name: 'Actions',
+                        index: 'ID',
+                        key: true,
+                        search: false,
+                        hidden: false,
+                        colmenu: false,
+                        editable: false,
+                        formatter: procedureStepEditFormatter,
+                        width: 100,
+                        align: 'center'
                     }
-                });
-            }
-        });
-}
-
-function AddMonitor() {
-    $('#addMoniterModal').on('show.bs.modal',
-        function (event) {
-            var button = $(event.relatedTarget);
-            var relatedObject = button.data('related-object');
-            var stepId = button.data('step-id');
-
-            var modal = $(this);
-            $('.modal-body').html('');
-            $.ajax({
-                type: "GET",
-                url: '/Procedures/AddMonitor?relatedObject=' + relatedObject + '&stepId=' + stepId,
-                dataType: 'html',
-                success: function (data) {
-                    modal.find('.modal-body').html(data);
-                },
-                error: function (error) {
-                    eLoaderError(error);
-
+                ],
+                viewrecords: true, // show the current page, data rang and total records on the toolbar
+                rowNum: 10,
+                rowList: [10, 20, 50, 100],
+                loadonce: false, // this is just for the demo
+                pager: "#jq-grid-pager",
+                height: 'auto',
+                gridview: true,
+                sortname: 'StepText',
+                sortable: true,
+                sortorder: 'asc',
+                cellEdit: false,
+                cellsubmit: 'clientArray',
+                editurl: 'clientArray',
+                autowidth: true,
+                colMenu: true,
+                key: true,
+                ajaxCellOptions: {},
+                gridComplete: function () {
+                    Msr.JqGridCommon.TriggerSaveLoadGridState(Msr.ProcedureStepGrid.GetGridId());
+                    Msr.JqGridCommon.SetupGridLock(Msr.ProcedureStepGrid.GetGridEditUrl());
+                    Msr.JqGridCommon.UnLockWorkflow(Msr.ProcedureStepGrid.GetReturnUrl());
+                    Msr.JqGridCommon.DocPreview();
                 }
             });
-        });
-}
-function EditMonitor() {
 
-    $('#editMoniterModal').on('show.bs.modal',
-        function (event) {
-            var button = $(event.relatedTarget);
-            var objectId = button.data('object-id');
-            var modal = $(this);
-            $('.modal-body').html('');
-            $.ajax({
-                type: "GET",
-                url: '/Procedures/EditMonitor?objectId=' + objectId,
-                dataType: 'html',
-                success: function (data) {
-                    modal.find('.modal-body').html(data);
-                },
-                error: function (error) {
-                    eLoaderError(error);
+            Msr.JqGridCommon.BindGridEvents(Msr.ProcedureStepGrid.GetGridId());
 
-                }
-            });
-        });
-}
-
-function DeleteMonitor(target) {
-
-    var clicked = $(target);
-
-    eModal.confirm('Are you sure?').then(confirmCallback);
-
-    function confirmCallback() {
-
-        var id = clicked.data('id');
-        var stepId = clicked.data('step-id');
-
-        eLoaderOpen();
-
-        $.ajax({
-            type: "POST",
-            url: "/Procedures/DeleteMonitor",
-            dataType: 'html',
-            data: { id: id, stepId: stepId },
-            success: function (data) {
-                $('#' + stepId + ' tbody').html('');
-                $('#' + stepId + ' tbody').append(data);
-                eLoaderClose();
-            },
-            error: function (error) {
-                eModal.alert(error.statusText);
+            function filePreviewFormatter(cellvalue, options, rowObject) {
+                return Msr.JqGridCommon.FilePreview(cellvalue, options, rowObject);
             }
-        });
+
+            function procedureStepEditFormatter(cellvalue, options, rowObject) {
+
+                var actions = Msr.JqGridCommon.ActionFormtter(cellvalue, options, rowObject, Msr.ProcedureStepGrid.GetReturnUrl(), Msr.ProcedureStepGrid.GetGridEditUrl());
+
+                return actions;
+
+            }
+        }
     }
-
-}
