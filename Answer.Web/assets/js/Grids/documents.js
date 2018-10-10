@@ -168,6 +168,40 @@ Msr.DocumentsGrid = Msr.DocumentsGrid ||
                         align: 'center'
                     },
                     {
+                        label: 'Updated By',
+                        name: 'UpdatedBy',
+                        index: 'UpdatedBy',
+                        colmenu: false,
+                        coloptions: {
+                            sorting: false,
+                            columns: true,
+                            filtering: false,
+                            seraching: false,
+                            grouping: false,
+                            freeze: false
+                        },
+                        searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                        align: 'center'
+                    },
+                    {
+                        label: 'Updated Date',
+                        name: 'UpdatedDate',
+                        index: 'UpdatedDate',
+                        colmenu: false,
+                        coloptions: {
+                            sorting: false,
+                            columns: true,
+                            filtering: false,
+                            seraching: false,
+                            grouping: false,
+                            freeze: false
+                        },
+                        searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                        formatter: 'date',
+                        formatoptions: { srcformat: "m/d/Y H:i", newformat: "m/d/Y" },
+                        align: 'center'
+                    },
+                    {
                         label: 'Reference Files',
                         name: 'ReferenceFiles',
                         index: 'ReferenceFiles',

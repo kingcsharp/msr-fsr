@@ -100,6 +100,19 @@ namespace Answer.Web.Controllers
                                                              q.ApprovalDate.Value.Month == value.Month && q.ApprovalDate.Value.Year == value.Year);
                         }
                     }
+                    else if (rule.field == nameof(DocumentView.UpdatedDate))
+                    {
+                        DateTime value;
+                        if (DateTime.TryParse(rule.data.Trim(), out value))
+                        {
+                            totalRows = totalRows.Where(q => q.UpdatedDate.HasValue && q.UpdatedDate.Value.Day == value.Day &&
+                                                             q.UpdatedDate.Value.Month == value.Month && q.UpdatedDate.Value.Year == value.Year);
+                        }
+                    }
+                    else if (rule.field == nameof(DocumentView.UpdatedBy))
+                    {
+                        totalRows = totalRows.Where(x => x.UpdatedBy.ToLower().Contains(rule.data.ToLower()));
+                    }
                     else if (rule.field == nameof(DocumentView.LockedByName))
                     {
                         totalRows = totalRows.Where(x => x.LockedByName.ToLower().Contains(rule.data.ToLower()));
