@@ -13,6 +13,7 @@ using Msr.Services;
 using Msr.Services.EquipmentMaintenances;
 using Msr.Services.EquipmentMaintenances.ViewModels;
 using Msr.Services.jqGrid;
+using Msr.Services.Locations;
 using Msr.Services.Notes;
 using Msr.Services.Objects;
 using Msr.Services.Orders;
@@ -54,9 +55,21 @@ namespace Answer.Web.Controllers
             return View(viewModel);
         }
 
+        private static List<string> GetMultiStatusList(JqGridParam param)
+        {
+            var statusList = new List<string>();
+
+            statusList.AddRange(from itemRule in param.@where.rules.Where(x => x.field == "Status")
+                where !string.IsNullOrWhiteSpace(itemRule.data)
+                select itemRule.data.ToLower());
+
+            return statusList;
+        }
+
         public ActionResult EngineeringData(JqGridParam param, string step)
         {
             var totalRows = _orderService.GetWorkOrderQueryable();
+
 
             if (param.where != null && param.where.rules.Any())
             {
@@ -72,7 +85,12 @@ namespace Answer.Web.Controllers
                     }
                     else if (rule.field == nameof(WorkOrderView.LocationName))
                     {
-                        totalRows = totalRows.Where(x => x.LocationName.ToLower().Contains(rule.data.ToLower()));
+                        var locationList = GetMultiLocationList(param);
+
+                        if (locationList.Any())
+                        {
+                            totalRows = totalRows.Where(x => locationList.Contains(x.LocationName));
+                        }
                     }
                     else if (rule.field == nameof(WorkOrderView.Serial))
                     {
@@ -130,14 +148,19 @@ namespace Answer.Web.Controllers
                     }
                     else if (rule.field == nameof(WorkOrderView.CurStepText))
                     {
-                        if (rule.data != "All")
-                        {
-                            var statusList = rule.data.Split(',').Select(x => x.Trim().ToLower());
+                        var statusList = GetMultiStatusList(param);
 
-                            if (statusList.Any())
-                            {
-                                totalRows = totalRows.Where(x => statusList.Contains(x.Status.ToLower()));
-                            }
+                        if (rule.data == "true")
+                        {
+                            totalRows = totalRows.AsQueryable();
+                        }
+                        else if (rule.data != "" && rule.data != "true")
+                        {
+                            totalRows = statusList.Count > 0 ? totalRows.Where(x => statusList.Contains(x.Status)) : totalRows;
+                        }
+                        else
+                        {
+                            totalRows = totalRows.Where(x => statusList.Contains(x.Status));
                         }
                     }
                 }
@@ -847,6 +870,21 @@ namespace Answer.Web.Controllers
             return Json(new { CanUsed = canUsed, ErrorMessage = errorMessage }, JsonRequestBehavior.AllowGet);
         }
 
+
+        [HttpGet]
+        public JsonResult GetLocations()
+        {
+            var activeLocations = new LocationService()
+                .GetLocationsQueryable()
+                .Where(x => x.Status.Contains("APPROVED") && x.Name !=null && x.Name != "")
+                .Select(x => x.Name)
+                .ToList();
+
+            var locationslist = string.Join(";", activeLocations.Select(x => x + ":" + x).ToList());
+
+            return Json(new { locationslist }, JsonRequestBehavior.AllowGet);
+        }
+
         private List<DocumentView> GetDocViewModel(List<DocumentView> docs, OrderService orderService, int width)
         {
             var photos = new List<DocumentView>();
@@ -866,6 +904,16 @@ namespace Answer.Web.Controllers
             }
 
             return photos;
+        }
+
+        private List<string> GetMultiLocationList(JqGridParam param)
+        {
+
+            var locationFilterValues = param.where.rules.Where(x => x.field == nameof(WorkOrderView.LocationName))
+                .Where(itemRule => !string.IsNullOrWhiteSpace(itemRule.data) && itemRule.data!= "HiddenOption")
+                .Select(itemRule => itemRule.data.ToLower()).ToList();
+
+            return locationFilterValues;
         }
     }
 }

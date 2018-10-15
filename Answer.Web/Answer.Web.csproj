@@ -398,6 +398,8 @@
     <Content Include="assets\css\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="assets\css\hopscotch.css" />
     <Content Include="assets\css\hopscotch.min.css" />
+    <Content Include="assets\css\jquery-ui\jquery-ui.css" />
+    <Content Include="assets\css\jquery-ui\jquery.multiselect.css" />
     <Content Include="assets\css\jquery.dataTables.min.css" />
     <Content Include="assets\css\jquery.fileupload-noscript.css" />
     <Content Include="assets\css\jquery.fileupload-ui.css" />
@@ -559,6 +561,8 @@
     <Content Include="assets\js\grids\purchase-order.js" />
     <Content Include="assets\js\grids\regions.js" />
     <Content Include="assets\js\grids\requirement-steps.js" />
+    <Content Include="assets\js\jquery-ui\jquery-ui.min.js" />
+    <Content Include="assets\js\jquery-ui\jquery.multiselect.js" />
     <Content Include="assets\js\jquery.jqGrid.js" />
     <Content Include="assets\js\JqueryConfirm\jquery-confirm.min.css" />
     <Content Include="assets\js\JqueryConfirm\jquery-confirm.min.js" />

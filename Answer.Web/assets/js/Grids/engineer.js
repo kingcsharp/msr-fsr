@@ -47,8 +47,17 @@ Msr.WipGrid = Msr.WipGrid ||
                         index: 'LocationName',
                         colmenu: false,
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                        searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                        align: 'center'
+                        align: 'center',
+                        stype: 'select',
+                        multiselect: true,
+                        searchoptions: {
+                            sopt: ['eq'],
+                            value: 'HiddenOption:;'+ activeLocations.Locations(),
+                            attr: { multiple: 'multiple', size: 4 },
+                            dataInit: function (elem) {
+                                Msr.JqGridCommon.DataInitMultiselect(elem);
+                            }
+                        }
                     },
                     {
                         label: 'Serial',
@@ -230,6 +239,13 @@ Msr.WipGrid = Msr.WipGrid ||
                             '</div>'
                         );
                     });
+
+                    $('.ui-multiselect-checkboxes li:first-child').hide();
+
+                },
+                beforeRequest: function () {
+            
+                    Msr.JqGridCommon.ModifySearchingFilter.call(this, ',', 'LocationName');
                 }
             });
 
@@ -242,8 +258,28 @@ Msr.WipGrid = Msr.WipGrid ||
                 event.preventDefault();
                 // Do something
             });
+
+           
         }
     }
+
+var activeLocations = {
+    Locations: function () {
+        var dataList;
+        $.ajax({
+            type: "GET",
+            url: "/Wip/GetLocations",
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            async: false,
+            cache: false,
+            success: function (data) {
+                dataList = data.locationslist;
+            }
+        });
+        return dataList;
+    }
+};
 
 function initDateEdit(elem, options) {
     $(elem).datepicker({

@@ -183,8 +183,17 @@ namespace Answer.Web
                 .Include("~/assets/js/bootstrap-datepicker.min.js")
            );
 
+            bundles.Add(new ScriptBundle("~/bundles/js/jquery-ui")
+                .Include("~/assets/js/jquery-ui/jquery-ui.min.js")
+                .Include("~/assets/js/jquery-ui/jquery.multiselect.js")
+            );
+
+            bundles.Add(new StyleBundle("~/bundles/css/jquery-ui")
+                .Include("~/assets/css/jquery-ui/jquery-ui.css")
+                .Include("~/assets/css/jquery-ui/jquery.multiselect.css"));
+
             #if DEBUG
-                        BundleTable.EnableOptimizations = false;
+            BundleTable.EnableOptimizations = false;
             #else
                             BundleTable.EnableOptimizations = true;
             #endif
