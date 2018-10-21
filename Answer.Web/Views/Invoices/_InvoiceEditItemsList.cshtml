@@ -20,8 +20,8 @@
         {
 
             <tr>
-                <td class="get-id">
-                    <input name="invoiceDetailListStrings" class="check-amount" value="@Model.InvoiceItemList[i].FillItemId" id="po-id" type="checkBox">
+                <td class="getId">
+                    <input name="invoiceDetailListStrings" class="checkAmount" value="@Model.InvoiceItemList[i].FillItemId" id="poId" type="checkBox">
                     @Html.HiddenFor(x => Model.InvoiceItemList[i].FillItemId)
                 </td>
                 <td>
@@ -43,11 +43,11 @@
                 <td>
                     @Model.InvoiceItemList[i].FillQty
                 </td>
-                <td class="po-amount">
+                <td class="poAmount">
                     @if (Model.InvoiceItemList[i].TotalSalePrice.HasValue)
                     {
                         <span> $@Model.InvoiceItemList[i].TotalSalePrice</span>
-                        @Html.HiddenFor(x => Model.InvoiceItemList[i].TotalSalePrice, new { @id = "amount-po" })
+                        @Html.HiddenFor(x => Model.InvoiceItemList[i].TotalSalePrice, new { @id = "amountPo" })
                     }
                 </td>
                 <td>
@@ -67,13 +67,13 @@
     </table>
 }
 
-<script src="~/assets/js/grids/invoice-tax.js"></script>
-
+<script src="~/assets/js/grids/invoice-tax-edit.js"></script>
 <script type="text/javascript">
 
     $(document).ready(function () {
-        $('input[type="checkbox"]').click(function () {
-            CheckBoxSelection($('#addId').val(), this, $(this).closest('tr').find('.po-amount').find('#amount-po').val());
+		$('input:checkbox[class=checkAmount]').click(function () {
+
+	        CheckBoxSelectionOnEdit($('#editId').val(), this, $(this).closest('tr').find('.poAmount').find('#amountPo').val());
         });
     });
 

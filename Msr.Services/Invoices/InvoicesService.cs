@@ -1,12 +1,8 @@
-﻿using EntityFrameworkExtras.EF6;
-using Msr.Models.Comman;
-using Msr.Models.Invoices;
-using Msr.Models.Invoices;
+﻿using Msr.Models.Invoices;
 using Msr.Repositories;
 using Msr.Services.Invoices.ViewModel;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
 
 namespace Msr.Services.Invoices
@@ -30,34 +26,95 @@ namespace Msr.Services.Invoices
             return _dbContext.Invoices;
         }
 
-        public List<InvoiceDetailListViewModel> InvoiceItemsDetailListById(string poNumber)
+        public List<InvoicePoWorkItem> InvoiceItemsByPurchaseId(string purchaseId, bool hasValue)
         {
-            var result = _dbContext.Database.SqlQuery<InvoiceDetailListViewModel>($"SELECT item.ID,item.DATE_POSTED,item.ITEM_TYPE,item.CUST_PURCH_NUM, item.PURCHASE_ID,item.PURCH_ITEM_ID,item.DESCRIPTION, item.COMMENTS,item.QTY,item.UNIT_PRICE,item.AMOUNT,item.TAX, item.TOTAL,PW.TotalSalePrice FROM A_V_ACCOUNT_INVOICE_ITEMS_ALL_DATA as item left join A_V_INVOICES_WITH_ACCT_INFORMATION as acct on acct.INVOICE_ID=item.INVOICE_ID inner join Portal_WorkOrders as PW on PW.FillId=item.FILL_ID where acct.PO_NUMBER = '{poNumber}'").ToList();
+            if (hasValue)
+            {
+                return InvoiceViewList().Where(x => x.Status == "FINISHED" && x.CustPurchNum == purchaseId).Distinct().ToList();
+            }
+
+            return InvoiceViewList()
+                .Where(x => x.Status == "FINISHED" && x.CustPurchNum == purchaseId && !_dbContext.InvoiceWorkItems.Select(y => y.ItemId).Contains(x.FillItemId))
+                .Distinct()
+                .ToList();
+        }
+
+        public List<InvoiceWorkItem> InvoiceItemsById(string invoiceId)
+        {
+            var result = _dbContext.InvoiceWorkItems.Where(x => x.InvoiceId == invoiceId).ToList();
 
             return result;
         }
-        public InvoiceDetailListViewModel InvoiceItemDetailById(string id)
+
+        public List<InvoicePoWorkItem> InvoiceExportByPo(string po)
         {
-            var result = _dbContext.Database.SqlQuery<InvoiceDetailListViewModel>($"SELECT * FROM A_V_ACCOUNT_INVOICE_ITEMS_ALL_DATA WHERE ID = '{id}'").SingleOrDefault();
+            var result = InvoiceViewList().Where(x => x.CustPurchNum == po && x.Status == "FINISHED" && _dbContext.InvoiceWorkItems.Select(y => y.ItemId).Contains(x.FillItemId)).ToList();
 
             return result;
         }
 
-        public List<SelectFile> InvoicePoList()
+        public List<string> InvoicePoList(bool onEdit)
         {
-            var result = _dbContext.Database.SqlQuery<SelectFile>($"select DISTINCT PO_NUMBER as Id,PO_NUMBER as Name from dbo.A_ACCOUNT_INVOICES where PO_NUMBER IS NOT NULL").ToList();
+            var flag = false;
+
+            var woItem = _dbContext.InvoiceWorkItems.ToList();
+
+            foreach (var item in woItem)
+            {
+                var invoicePoWorkItems = InvoiceViewList().Where(x => x.Status == "FINISHED" && x.CustPurchNum == item.RefPo).Distinct().ToList();
+
+                foreach (var refPo in invoicePoWorkItems)
+                {
+                    var woItemCount = _dbContext.InvoiceWorkItems.Count(x => x.RefPo == refPo.CustPurchNum);
+
+                    if (invoicePoWorkItems.Count == woItemCount)
+                    {
+                        flag = true;
+                    }
+                }
+            }
+
+            if (flag && !onEdit)
+            {
+                return InvoiceViewList().Where(x => x.Status == "FINISHED" && x.CustPurchNum != null &&
+                !_dbContext.InvoiceWorkItems.Where(y => y.RefPo == x.CustPurchNum && y.ItemId == x.FillItemId).Select(y => y.RefPo).Contains(x.CustPurchNum))
+                .Select(x => x.CustPurchNum).Distinct().ToList();
+            }
+
+            return InvoiceViewList().Where(x => x.Status == "FINISHED" && x.CustPurchNum != null).Select(x => x.CustPurchNum).Distinct().ToList();
+        }
+
+        public IQueryable<InvoicePoWorkItem> InvoiceViewList()
+        {
+            var result = from pwo in _dbContext.WorkOrders
+                         join po in _dbContext.PurchesOrderViews on pwo.ReferencePo equals
+                         po.ReferencePo
+                         join p in _dbContext.Peoples on pwo.Purchaser equals p.ObjectId
+                         select new InvoicePoWorkItem
+                         {
+                             FillItemId = pwo.FillItemId,
+                             CustPurchNum = pwo.ReferencePo,
+                             PurchaseId = pwo.PurchaseId,
+                             OpenDate = po.OpenDate,
+                             PurchaseItemId = pwo.PurchaseItemId,
+                             Description = pwo.ProductName + "(" + pwo.ProcObjId + ")",
+                             FillQty = pwo.FillQty,
+                             TotalSalePrice = pwo.TotalSalePrice,
+                             Amount = pwo.Amount,
+                             Status = pwo.Status,
+                             Purchaser = p.FullName
+                         };
 
             return result;
         }
-
         public ResultNotification<string> Create(InvoiceViewModel model)
         {
             var result = new ResultNotification<string>();
+
             try
             {
                 var invoice = new Invoice();
                 invoice.Client = model.Client;
-                invoice.Items = model.Items;
                 invoice.Description = model.InvoiceDescription;
                 invoice.Status = model.Status;
                 invoice.CustPo = model.CustPo;
@@ -68,6 +125,22 @@ namespace Msr.Services.Invoices
                 invoice.Supplier = model.Supplier;
                 invoice.InvoiceClass = model.InvoiceClass;
                 _dbContext.Invoices.Add(invoice);
+
+                var invoiceItem = model.Items.Split(',');
+
+
+                foreach (var item in invoiceItem)
+                {
+                    var invoiceWorkItem = new InvoiceWorkItem
+                    {
+                        ItemId = item,
+                        InvoiceId = invoice.Id.ToString(),
+                        RefPo = invoice.CustPo,
+                    };
+           
+                    _dbContext.InvoiceWorkItems.Add(invoiceWorkItem);
+                }
+
                 _dbContext.SaveChanges();
 
                 return result;
@@ -85,9 +158,8 @@ namespace Msr.Services.Invoices
             var result = new ResultNotification<string>();
             try
             {
-                var invoice = _dbContext.Invoices.Where(x => x.Id == model.Id).Single();
+                var invoice = _dbContext.Invoices.Single(x => x.Id == model.Id);
                 invoice.Client = model.Client;
-                invoice.Items = model.Items;
                 invoice.Description = model.InvoiceDescription;
                 invoice.Status = model.Status;
                 invoice.CustPo = model.CustPo;
@@ -97,6 +169,22 @@ namespace Msr.Services.Invoices
                 invoice.Tax = model.Tax;
                 invoice.InvoiceClass = model.InvoiceClass;
                 invoice.Supplier = model.Supplier;
+
+                var invoiceItem = model.Items?.Split(',');
+
+                var workItem = _dbContext.InvoiceWorkItems.Where(x => x.InvoiceId == model.Id.ToString()).ToList();
+                _dbContext.InvoiceWorkItems.RemoveRange(workItem);
+
+                if (invoiceItem != null)
+                    foreach (var item in invoiceItem)
+                    {
+                        var invoiceWorkItem = new InvoiceWorkItem();
+
+                        invoiceWorkItem.ItemId = item;
+                        invoiceWorkItem.InvoiceId = invoice.Id.ToString();
+                        invoiceWorkItem.RefPo = invoice.CustPo;
+                        _dbContext.InvoiceWorkItems.Add(invoiceWorkItem);
+                    }
                 _dbContext.SaveChanges();
 
                 return result;

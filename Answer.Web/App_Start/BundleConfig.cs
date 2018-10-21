@@ -192,6 +192,10 @@ namespace Answer.Web
                 .Include("~/assets/css/jquery-ui/jquery-ui.css")
                 .Include("~/assets/css/jquery-ui/jquery.multiselect.css"));
 
+               bundles.Add(new ScriptBundle("~/bundles/js/invoice-setup")
+		        .Include("~/assets/js/invoice-setup.js")
+	        );
+
             #if DEBUG
             BundleTable.EnableOptimizations = false;
             #else

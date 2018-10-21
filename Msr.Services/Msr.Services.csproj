@@ -208,6 +208,7 @@
     <Compile Include="Invoices\Procedures\InvoiceSendCustomerProcedure.cs" />
     <Compile Include="Invoices\ViewModel\InvoiceDetailEditViewModel.cs" />
     <Compile Include="Invoices\ViewModel\InvoiceDetailListViewModel.cs" />
+    <Compile Include="Invoices\ViewModel\InvoiceItemsListViewModel.cs" />
     <Compile Include="Invoices\ViewModel\InvoiceViewModel.cs" />
     <Compile Include="Jobs\SpAdminJob.cs" />
     <Compile Include="jqGrid\IPageResult.cs" />

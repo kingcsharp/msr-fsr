@@ -55,8 +55,8 @@ Msr.InvoicesGrid = Msr.InvoicesGrid || {
 
                 {
                     label: 'Amount',
-                    name: 'Total',
-                    index: 'Total',
+                    name: 'SubTotal',
+                    index: 'SubTotal',
                     colmenu: false,
                     coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                     formatter: 'currency',
@@ -124,7 +124,7 @@ Msr.InvoicesGrid = Msr.InvoicesGrid || {
         function invoiceEditFormatter(cellvalue, options, rowObject) {
 
             var editButton = '<span data-call-id="' + rowObject.Id + '" data-toggle="modal"  data-target="#editInvModal" class="btn btn-xs btn-success"  title="Edit" style="margin:2px;font-size: .8em;"><i class="fa fa-edit" aria-hidden="true"></i></span>';
-            var exportButton = '<a href="/Invoices/ExportFile/' + rowObject.Id + '?&items=' + rowObject.Items + '"  class="btn btn-xs btn-info" title="Export" style="margin:2px;font-size: .8em;"><i class="fa fa-file-text" aria-hidden="true"></i></a>';
+            var exportButton = '<a href="/Invoices/ExportFile/' + rowObject.Id + '?&po=' + rowObject.CustPo + '"  class="btn btn-xs btn-info" title="Export" style="margin:2px;font-size: .8em;"><i class="fa fa-file-text" aria-hidden="true"></i></a>';
 
             return editButton + exportButton;
         }

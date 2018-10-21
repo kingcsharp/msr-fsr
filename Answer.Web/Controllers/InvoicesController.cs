@@ -60,7 +60,7 @@ namespace Answer.Web.Controllers
                     }
                     else if (rule.field == nameof(InvoiceView.InvoiceNumber))
                     {
-                       totalRows = totalRows.Where(x => x.InvoiceNumber.ToLower().Contains(rule.data.ToLower()));
+                        totalRows = totalRows.Where(x => x.InvoiceNumber.ToLower().Contains(rule.data.ToLower()));
                     }
                     else if (rule.field == nameof(InvoiceView.Total))
                     {
@@ -124,39 +124,53 @@ namespace Answer.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult InvoiceModelDetail(string id)
+        public ActionResult InvoiceModelGetPoItems(string id, bool hasValue)
         {
             var invoiceViewModel = new InvoiceViewModel();
 
-            invoiceViewModel.InvoiceDetailList = _invoicesService.InvoiceItemsDetailListById(id).ToList();
+            invoiceViewModel.InvoiceItemList = _invoicesService.InvoiceItemsByPurchaseId(id, hasValue).ToList();
 
             return PartialView("_InvoiceItemsList", invoiceViewModel);
         }
 
+        [HttpPost]
+        public ActionResult InvoiceModelEditGetPoItems(string id, bool hasValue)
+        {
+            var invoiceViewModel = new InvoiceViewModel();
+
+            invoiceViewModel.InvoiceItemList = _invoicesService.InvoiceItemsByPurchaseId(id, hasValue).ToList();
+
+            return PartialView("_InvoiceEditItemsList", invoiceViewModel);
+        }
         [HttpGet]
         public ActionResult LoadInvoice()
         {
-            var invoiceViewModel = new InvoiceViewModel();
+            var invoiceAddViewModel = new InvoiceViewModel();
 
-            invoiceViewModel.SetUp(new PurchesOrderService(), new InvoicesService());
+            invoiceAddViewModel.SetUp(new PurchesOrderService(), new InvoicesService(), false);
 
-            return PartialView("_InvoiceAddEditModel", invoiceViewModel);
+            return PartialView("_InvoiceAddModel", invoiceAddViewModel);
         }
 
         [HttpGet]
-        public ActionResult LoadInvoiceById(int? id)
+        public ActionResult LoadInvoiceById(int? id, bool hasValue)
         {
+
             var invoiceViewModel = new InvoiceViewModel();
 
-            var model = _invoicesService.GetInvoicesQueryable().Where(x => x.Id == id).SingleOrDefault();
-
-            invoiceViewModel.InvoiceDetailList = _invoicesService.InvoiceItemsDetailListById(model.CustPo).ToList();
+            var model = _invoicesService.GetInvoicesQueryable().SingleOrDefault(x => x.Id == id);
 
             invoiceViewModel = invoiceViewModel.MapToDto(model);
 
-            invoiceViewModel.SetUp(new PurchesOrderService(), new InvoicesService());
+            invoiceViewModel.SetUp(new PurchesOrderService(), new InvoicesService(), true);
 
-            return PartialView("_InvoiceAddEditModel", invoiceViewModel);
+            invoiceViewModel.InvoiceItemList = _invoicesService.InvoiceItemsByPurchaseId(model.CustPo, hasValue).ToList();
+
+            invoiceViewModel.InvoiceWorkItem = _invoicesService.InvoiceItemsById(model.Id.ToString()).ToList();
+
+            invoiceViewModel.Items = string.Join(",", invoiceViewModel.InvoiceWorkItem.Select(x => x.ItemId));
+
+            return PartialView("_InvoiceEditModel ", invoiceViewModel);
         }
 
         [HttpPost]
@@ -164,34 +178,44 @@ namespace Answer.Web.Controllers
         {
             var currentUser = GetCurrentUser();
             model.Supplier = currentUser.Root_Company;
-            if (model.Id == null)
+
+            var response = _invoicesService.Create(model: model);
+            if (!response.HasErrors())
             {
-                var response = _invoicesService.Create(model: model);
-                if (!response.HasErrors())
-                {
-                    TempData["SuccessMessage"] = "Invoice Created Successfully";
-                }
-                else
-                {
-                    TempData["SuccessMessage"] = "Something Went Wrong";
-                }
+                TempData["SuccessMessage"] = "Invoice Created Successfully";
             }
             else
             {
-                var response = _invoicesService.Edit(model: model);
-                if (!response.HasErrors())
-                {
-                    TempData["SuccessMessage"] = "Invoice Updated Successfully";
-                }
-                else
-                {
-                    TempData["SuccessMessage"] = "Something Went Wrong";
-                }
+                TempData["SuccessMessage"] = "Something Went Wrong";
             }
             return RedirectToAction("index");
         }
-        public ActionResult ExportFile(int? id, string items)
+
+
+
+        [HttpPost]
+        public ActionResult Save(InvoiceViewModel model)
         {
+            var currentUser = GetCurrentUser();
+            model.Supplier = currentUser.Root_Company;
+
+            var response = _invoicesService.Edit(model: model);
+            if (!response.HasErrors())
+            {
+                TempData["SuccessMessage"] = "Invoice Updated Successfully";
+            }
+            else
+            {
+                TempData["SuccessMessage"] = "Something Went Wrong";
+            }
+
+            return RedirectToAction("index");
+        }
+
+        public ActionResult ExportFile(int? id, string po)
+        {
+            var items = _invoicesService.InvoiceExportByPo(po);
+
             var delimiter = "\t";
             var invoice = _invoicesService.GetInvoiceViewQueryable().Where(x => x.Id == id).SingleOrDefault();
 
@@ -249,7 +273,7 @@ namespace Answer.Web.Controllers
             sb.Append(string.Format("{0}{1}", "1100", delimiter)); //ACCNT
             sb.Append(string.Format("{0}{1}", "", delimiter)); //NAME
             sb.Append(string.Format("{0}{1}", invoice.InvoiceClass, delimiter)); //CLASS
-            sb.Append(string.Format("{0}{1}", invoice.Total, delimiter)); //AMOUNT
+            sb.Append(string.Format("{0}{1}", invoice.SubTotal, delimiter)); //AMOUNT
             sb.Append(string.Format("{0}{1}", "", delimiter)); //DOCNUM
             sb.Append(string.Format("{0}{1}", "", delimiter)); //MEMO
             sb.Append(string.Format("{0}{1}", "", delimiter)); //CLEAR
@@ -265,26 +289,23 @@ namespace Answer.Web.Controllers
             sb.Append(string.Format("{0:d}{1}", "", delimiter)); //SHIPDATE
 
             sb.Append(Environment.NewLine);
-            var itemsArray = items.Split(',');
 
-            foreach (var item in itemsArray)
+            foreach (var item in items)
             {
-                if (!string.IsNullOrWhiteSpace(item))
+                if (!string.IsNullOrWhiteSpace(item.ToString()))
                 {
-                    var invoiceItem = _invoicesService.InvoiceItemDetailById(item);
-
                     sb.Append(string.Format("SPL{0}", delimiter)); //SPL
                     sb.Append(string.Format("{0}{1}", invoice.InvoiceNumber, delimiter)); //SPLID
                     sb.Append(string.Format("{0}", "INVOICE")); //TRNSTYPE
                     sb.Append(string.Format("{0:d}{1}", invoice.InvoiceDate, delimiter)); //DATE
                     sb.Append(string.Format("{0}{1}", "1100", delimiter)); //ACCNT
-                    sb.Append(string.Format("{0}{1}", invoiceItem.PURCHASER_NAME, delimiter)); //NAME
+                    sb.Append(string.Format("{0}{1}", item.Purchaser, delimiter)); //NAME
                     sb.Append(string.Format("{0}{1}", invoice.InvoiceClass, delimiter)); //CLASS
-                    sb.Append(string.Format("{0}{1}", invoiceItem.AMOUNT, delimiter)); //AMOUNT
+                    sb.Append(string.Format("{0}{1}", item.Amount, delimiter)); //AMOUNT
                     sb.Append(string.Format("{0}{1}", "", delimiter)); //DOCNUM
                     sb.Append(string.Format("{0}{1}", "", delimiter)); //MEMO
-                    sb.Append(string.Format("{0}{1}", invoiceItem.QTY, delimiter)); //MEMO
-                    sb.Append(string.Format("{0}{1}", invoiceItem.TotalSalePrice, delimiter)); //QNTY
+                    sb.Append(string.Format("{0}{1}", item.FillQty, delimiter)); //MEMO
+                    sb.Append(string.Format("{0}{1}", item.TotalSalePrice, delimiter)); //QNTY
                     sb.Append(string.Format("{0}{1}", "", delimiter)); //PRICE
                     sb.Append(string.Format("{0}{1}", "Y", delimiter)); //INVITEM
                     sb.Append(string.Format("{0}{1}", "", delimiter)); //PAYMETH
@@ -313,7 +334,7 @@ namespace Answer.Web.Controllers
             sb.Append(string.Format("{0}{1}", "Y", delimiter));//TAXABLE
             sb.Append(string.Format("{0}{1}", "", delimiter)); //REIMBEXP
             sb.Append(string.Format("{0}{1}", "", delimiter)); //EXTRA
-            
+
             sb.Append(Environment.NewLine);
 
 

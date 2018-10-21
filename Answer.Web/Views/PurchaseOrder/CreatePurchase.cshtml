@@ -62,31 +62,31 @@
                                 </td>
 
                                 <td style="padding-left: 0px;">
-                                   
-                                    <input id="AddToPurchase" type="button" name="BSUBMIT" class="btn btn-primary" value="Add To Purchase"/>
-                                   
+
+                                    <input id="AddToPurchase" type="button" name="BSUBMIT" class="btn btn-primary" value="Add To Purchase" />
+
                                 </td>
                             </tr>
                         } @if (Model.STATUS == "CREATING")
-                          {
-                              <tr>
-                                  <th>Accout to use for everything:</th>
+                        {
+                            <tr>
+                                <th>Accout to use for everything:</th>
 
-                                  <td>
-                                      <div class="input-group">
-                                          @Html.DropDownListFor(model => model.ACCT_FOR_ALL, Model.AcctForAllList, new { @class = "form-control" })
-                                          @Html.ValidationMessageFor(model => model.ACCT_FOR_ALL, "", new { @class = "text-danger" })
-                                      </div>
-                                      @Html.ValidationMessageFor(model => model.ACCT_FOR_ALL, "", new { @class = "text-danger" })
-                                  </td>
+                                <td>
+                                    <div class="input-group">
+                                        @Html.DropDownListFor(model => model.ACCT_FOR_ALL, Model.AcctForAllList, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.ACCT_FOR_ALL, "", new { @class = "text-danger" })
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.ACCT_FOR_ALL, "", new { @class = "text-danger" })
+                                </td>
 
-                                  <td style="padding-left: 0px;">
-                               
-                                      <input id="Submit" type="submit" name="BSUBMIT" class="btn btn-success" value="Apply Account and Update Status"/>
-                               
-                                  </td>
-                              </tr>
-                          }
+                                <td style="padding-left: 0px;">
+
+                                    <input id="Submit" type="submit" name="BSUBMIT" class="btn btn-success" value="Apply Account and Update Status" />
+
+                                </td>
+                            </tr>
+                        }
                         @if (Model.STATUS == "CREATING")
                         {
                             <tr>
@@ -102,9 +102,9 @@
                                     @Html.ValidationMessageFor(model => model.all_date, "", new { @class = "text-danger" })
                                 </td>
                                 <td>
-                                
-                                    <input id="copydate" type="button" class="btn btn-info" value="Apply To All Items"/>
-                                
+
+                                    <input id="copydate" type="button" class="btn btn-info" value="Apply To All Items" />
+
                                 </td>
                             </tr>
                         }
@@ -158,14 +158,14 @@
                                 <td>
                                     <div class="input-group">
                                         <span class="input-group-addon">$</span>
-                                        @Html.TextBoxFor(modelItem => Model.OrderItems[i].TOTAL_PRICE, new { @class = "form-control", @readonly = "readonly" })
+                                        @Html.TextBoxFor(modelItem => Model.OrderItems[i].UNIT_PRICE, new { @class = "form-control", @readonly = "readonly" })
                                     </div>
                                 </td>
                             </tr>
                         }
                     </table>
-                        
-                    if(Model.STATUS == "CREATING")
+
+                    if (Model.STATUS == "CREATING")
                     {
                         <table>
                             <tr>

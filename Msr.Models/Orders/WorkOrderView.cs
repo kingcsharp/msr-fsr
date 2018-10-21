@@ -59,5 +59,8 @@ namespace Msr.Models.Orders
         public string ProcObjId { get; set; }
         public string PercCompletedText { get; set; }
         public string TimeCompletedText { get; set; }
+        public decimal? Amount { get; set; }
+        public Single? TotalSalePrice { get; set; }
+        public string Purchaser { get; set; }
     }
 }
