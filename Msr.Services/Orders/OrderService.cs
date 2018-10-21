@@ -339,16 +339,18 @@ namespace Msr.Services.Orders
         {
             try
             {
+                var ids = model.TaskId.Split(',');
+
+                model.TaskId = ids[0];
+
                 var saveWorkItemImagesProcedure = new SaveWorkItemImagesProcedure(model);
 
                 _dbContext.Database.ExecuteStoredProcedure(saveWorkItemImagesProcedure);
 
-                var result = GetWipActualPartId(model.TaskId);
-
                 using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
                 {
                     var p = new DynamicParameters();
-                    p.Add("@ActualPartId", result, DbType.String, ParameterDirection.Input);
+                    p.Add("@ActualPartId", ids[1], DbType.String, ParameterDirection.Input);
                     p.Add("@FileId", saveWorkItemImagesProcedure.NewId, DbType.String, ParameterDirection.Input);
                     p.Add("@ModBy", model.NTLogin, DbType.String, ParameterDirection.Input);
 
@@ -360,20 +362,7 @@ namespace Msr.Services.Orders
             {
                 throw ex;
             }
-
         }
-
-        private string GetWipActualPartId(string id)
-        {
-            var result = _dbContext.Database.SqlQuery<string>($"select PARENT_ID from A_TASKS where id={id}").FirstOrDefault();
-
-            if (result == null)
-            {
-                return _dbContext.Database.SqlQuery<string>($"select ActualPartId from Portal_WorkOrders where TaskId={id}").SingleOrDefault();
-            }
-            return _dbContext.Database.SqlQuery<string>($"select ActualPartId from Portal_WorkOrders where TaskId={result}").SingleOrDefault();
-        }
-
 
         public List<WorkOrderImageView> GetOrderItemImagesById(string taskId)
         {

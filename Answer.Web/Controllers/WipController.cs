@@ -366,8 +366,13 @@ namespace Answer.Web.Controllers
             var hasRoles = roles.Select(x => x.Role_Id).ToList().Intersect(procedureRoles).Any();
 
             vm.HasProcedureRoles = hasRoles;
-
             vm.MyWoItems = workItems;
+
+            var stringFillId = id.ToString();
+
+            var actualPartId = _orderService.GetWorkOrderQueryable().Where(x => x.FillId == stringFillId).Select(a => a.ActualPartId).SingleOrDefault();
+
+            vm.ActualPartId = actualPartId;
 
             return View(vm);
         }

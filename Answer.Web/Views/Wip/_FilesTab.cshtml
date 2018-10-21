@@ -7,6 +7,7 @@
 <script type="text/javascript">
 
     $(function () {
+        var actualPartId = $('#actual-part-id').val();
         var fileUploader = new FileUploader();
         var fileId = 'file-tab-@Model.TaskId' + ' #input-files';
         var jsonString = '';
@@ -25,7 +26,7 @@
             '@Url.Action("FileUploaderForWipTask", "Doc")',
             jsonData,
             @Html.Raw(Model.PreviewConfig),
-            '@Model.TaskId',
+            '@Model.TaskId' + ',' + actualPartId,
             true,
             'WIP_TASK_STEP');
     });
