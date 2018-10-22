@@ -18,12 +18,12 @@ namespace Answer.Web.Helpers
 
         public static MenuViewModel GetUserMenuPermissions(LoggedUserIdResult loggedUserIdResult)
         {
-            var menuViewModel = new MenuViewModel {LoggedUserIdResult = loggedUserIdResult};
+            var menuViewModel = new MenuViewModel { LoggedUserIdResult = loggedUserIdResult };
 
             var menuService = new MenuService();
             menuViewModel.UserModules = menuService.GetMenu(loggedUserIdResult.Id);
 
-            if (!menuViewModel.UserModules.Any(x=>x.Name == MenuGroupConstants.AnswerAdmin))
+            if (!menuViewModel.UserModules.Any(x => x.Name == MenuGroupConstants.AnswerAdmin))
             {
                 var roleService = new RoleService();
                 var roles = roleService.GetAssignedRoles(loggedUserIdResult.Id);
@@ -34,6 +34,20 @@ namespace Answer.Web.Helpers
                     menuViewModel.UserModules.Add(adminMenu);
                 }
             }
+
+            menuViewModel.UserModules.Add(new MenuView()
+            {
+                GroupIcon = "fa-newspaper-o",
+                GroupMenu = "Reporting",
+                Icon = " fa-bar-chart",
+                Id = "Reporting-3",
+                Info = "Reports Widestage",
+                IsParent = false,
+                Name = "Reports",
+                Num = 0,
+                OrderNumber = 10,
+                Url = "Report"
+            });
 
             return menuViewModel;
         }

@@ -1286,7 +1286,7 @@ widget.xe-counter, .xe-widget.xe-counter-block .xe-upper, .xe-widget.xe-progress
     padding-right: 5px;
 }
 
-.panel {
+/*.panel {
     position: relative;
     background: #fff;
     padding: 20px 30px;
@@ -1295,7 +1295,7 @@ widget.xe-counter, .xe-widget.xe-counter-block .xe-upper, .xe-widget.xe-progress
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
     box-shadow: none;
-}
+}*/
 
 
 .panel .panel-heading {

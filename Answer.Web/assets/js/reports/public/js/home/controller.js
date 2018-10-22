@@ -346,8 +346,7 @@ app.controller('homeCtrl', ['$scope', '$rootScope','$sessionStorage','connection
 
     $scope.getDashboards = function(params) {
         var params = (params) ? params : {};
-
-        connection.get('/api/dashboards/find-all', params, function(data) {
+        connection.get('/api/dashboards/find-all', params, function (data) {
             $scope.dashboards = data;
         });
     };

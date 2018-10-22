@@ -1,21 +1,27 @@
 ﻿
 'use strict';
 
-var app = angular.module('WideStage',['ngRoute', 'ui.sortable', 'gridster', 'ui.layout', 'draganddrop', 'ui.bootstrap',
+var app = angular.module('WideStage', ['ngRoute', 'ui.sortable', 'gridster', 'ui.layout', 'draganddrop', 'ui.bootstrap',
     'checklist-model', 'ng-nestable', 'infinite-scroll', 'angular-canv-gauge', 'ui.bootstrap-slider',
     'widestage.directives', 'ngSanitize', 'ui.select', 'tg.dynamicDirective', 'angularUUID2',
     'vs-repeat', 'ui.bootstrap.datetimepicker', 'ui.tree', 'page.block', 'gridshore.c3js.chart',
     'vAccordion', 'bsLoadingOverlay', 'gg.editableText', 'intro.help', 'ngTagsInput', 'ui.codemirror',
     '720kb.socialshare', 'ngFileUpload', 'pascalprecht.translate', 'colorpicker.module',
-        'angularSpectrumColorpicker', 'wst.inspector']);
+    'angularSpectrumColorpicker', 'wst.inspector']);
 angular.module('WideStage')
     .config(['$routeProvider', '$translateProvider', function ($routeProvider, $translateProvider) {
-        
+
         //$translateProvider.useUrlLoader('./translations.json');
         $translateProvider.preferredLanguage('en');
         $translateProvider.useSanitizeValueStrategy('escaped');
 
-        $routeProvider.otherwise({ redirectTo: '/reports' });
+        $routeProvider.otherwise({ redirectTo: '/login' });
+
+
+        $routeProvider.when('/login', {
+            templateUrl: 'assets/js/reports/partials/home/login.html',
+            controller: 'PublicCtrl'
+        });
 
         //$routeProvider.when('/home', {
         //    templateUrl: 'partials/home/index.html',
@@ -51,19 +57,19 @@ angular.module('WideStage')
 
         //dashboards v2
 
-        //$routeProvider.when('/dashboardv2', {
-        //    templateUrl: 'partials/dashboardv2/list.html',
-        //    controller: 'dashBoardv2Ctrl'
-        //});
+        $routeProvider.when('/dashboardv2', {
+            templateUrl: 'assets/js/reports/partials/dashboardv2/list.html',
+            controller: 'dashBoardv2Ctrl'
+        });
         //$routeProvider.when('/dashboardv2/:extra', {
         //    templateUrl: 'partials/dashboardv2/list.html',
         //    controller: 'dashBoardv2Ctrl'
         //});
 
-        //$routeProvider.when('/dashboardsv2/:dashboardID', {
-        //    templateUrl: 'partials/dashboardv2/view.html',
-        //    controller: 'dashBoardv2Ctrl'
-        //});
+        $routeProvider.when('/dashboardsv2/:dashboardID', {
+            templateUrl: 'assets/js/reports/partials/dashboardv2/view.html',
+            controller: 'dashBoardv2Ctrl'
+        });
 
         //$routeProvider.when('/dashboardsv2/:dashboardID/:elementID/:elementValue', {
         //    templateUrl: 'partials/dashboardv2/view.html',
@@ -93,7 +99,7 @@ angular.module('WideStage')
         //    templateUrl: 'partials/report/list.html',
         //    controller: 'report_v2Ctrl'
         //});
-        
+
         $routeProvider.when('/reports/:reportID/', {
             templateUrl: 'assets/js/reports/partials/report-view/view.html',
             controller: 'report_viewCtrl'
@@ -423,7 +429,9 @@ app.service('reportService', function () {
 
 });
 
-app.run(['$rootScope', '$sessionStorage', 'connection', function ($rootScope, $sessionStorage, connection) {
+app.run(['$rootScope', '$sessionStorage', 'connection', '$location', function ($rootScope, $sessionStorage, connection, $location, $httpProvider) {
+
+
     $rootScope.removeFromArray = function (array, item) {
         var index = array.indexOf(item);
 
@@ -454,45 +462,52 @@ app.run(['$rootScope', '$sessionStorage', 'connection', function ($rootScope, $s
         connection.get('/api/set-viewed-context-help', params, function (data) {
             $rootScope.user.contextHelp = data.items;
         });
-
     }
+
 
     $rootScope.user = $sessionStorage.getObject('user');
-    if (!$rootScope.user) {
-        connection.get('/api/get-user-data', {}, function (data) {
-            if (!data.items.user) return window.location.href = "/login";
 
-            var theUser = data.items.user;
-            theUser.companyData = data.items.companyData;
-            theUser.rolesData = data.items.rolesData;
-            theUser.reportsCreate = data.items.reportsCreate;
-            theUser.dashboardsCreate = data.items.dashboardsCreate;
-            theUser.pagesCreate = data.items.pagesCreate;
-            theUser.exploreData = data.items.exploreData;
-            theUser.isWSTADMIN = data.items.isWSTADMIN;
-            theUser.contextHelp = data.items.contextHelp;
-            theUser.dialogs = data.items.dialogs;
-            theUser.viewSQL = data.items.viewSQL;
-            $rootScope.user = theUser;
-            $sessionStorage.setObject('user', theUser);
-            $rootScope.isWSTADMIN = isWSTADMIN($rootScope);
-        });
+    if (!$rootScope.user) {
+        $location.path("/login");
+        //TODO check sessionStorage si tiene al user hacer el get data
+        //connection.get('/Report/GetUserData', {}, function (data) {
+        //    if (!data.items.user) {
+        //        //return window.location.href = "/o"
+        //        $location.path("/login");
+        //    }
+
+        //    var theUser = data.items.user;
+        //    theUser.companyData = data.items.companyData;
+        //    theUser.rolesData = data.items.rolesData;
+        //    theUser.reportsCreate = data.items.reportsCreate;
+        //    theUser.dashboardsCreate = data.items.dashboardsCreate;
+        //    theUser.pagesCreate = data.items.pagesCreate;
+        //    theUser.exploreData = data.items.exploreData;
+        //    theUser.isWSTADMIN = data.items.isWSTADMIN;
+        //    theUser.contextHelp = data.items.contextHelp;
+        //    theUser.dialogs = data.items.dialogs;
+        //    theUser.viewSQL = data.items.viewSQL;
+        //    $rootScope.user = theUser;
+        //    $sessionStorage.setObject('user', theUser);
+        //    $rootScope.isWSTADMIN = isWSTADMIN($rootScope);
+        //});
     } else {
         $rootScope.isWSTADMIN = isWSTADMIN($rootScope);
+        $location.path("/dashboardv2");
     }
 
-    connection.get('/api/get-user-objects', {}, function (data) {
-        $rootScope.userObjects = data.items;
-        $rootScope.user.canPublish = data.userCanPublish;
-    });
-
+    //connection.get('/api/get-user-objects', {}, function (data) {
+    //    $rootScope.userObjects = data.items;
+    //    $rootScope.user.canPublish = data.userCanPublish;
+    //});
+    //});
 }]);
 
 app.run(function (bsLoadingOverlayService) {
     bsLoadingOverlayService.setGlobalConfig({
         delay: 0, // Minimal delay to hide loading overlay in ms.
         activeClass: undefined, // Class that is added to the element where bs-loading-overlay is applied when the overlay is active.
-        templateUrl: 'partials/loading-overlay-template.html' // Template url for overlay element. If not specified - no overlay element is created.
+        templateUrl: 'assets/js/reports/partials/loading-overlay-template.html' // Template url for overlay element. If not specified - no overlay element is created.
     });
 });
 

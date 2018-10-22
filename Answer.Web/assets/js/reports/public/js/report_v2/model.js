@@ -72,7 +72,7 @@ app.service('report_v2Model' , function (queryModel,c3Charts,reportHtmlWidgets,g
                                             angular.element(el).empty();
                                             var $div = $(htmlCode);
                                             angular.element(el).append($div);
-                                            angular.element(document).injector().invoke(function($compile) {
+                                            angular.element($('#angularAppDiv')).injector().invoke(function($compile) {
                                                 var scope = angular.element($div).scope();
                                                 $compile($div)(scope);
                                                 hideOverlay(report.parentDiv);
@@ -90,7 +90,7 @@ app.service('report_v2Model' , function (queryModel,c3Charts,reportHtmlWidgets,g
                                             angular.element(el).empty();
                                             var $div = $(htmlCode);
                                             angular.element(el).append($div);
-                                            angular.element(document).injector().invoke(function($compile) {
+                                            angular.element($('#angularAppDiv')).injector().invoke(function($compile) {
                                                 var scope = angular.element($div).scope();
                                                 $compile($div)(scope);
                                                 hideOverlay(report.parentDiv);
@@ -183,7 +183,7 @@ app.service('report_v2Model' , function (queryModel,c3Charts,reportHtmlWidgets,g
                                             angular.element(el).empty();
                                             var $div = $(htmlCode);
                                             angular.element(el).append($div);
-                                            angular.element(document).injector().invoke(function($compile) {
+                                            angular.element($('#angularAppDiv')).injector().invoke(function($compile) {
                                                 var scope = angular.element($div).scope();
                                                 $compile($div)(scope);
                                                 //hideOverlay('OVERLAY_'+report.parentDiv);
@@ -212,7 +212,7 @@ app.service('report_v2Model' , function (queryModel,c3Charts,reportHtmlWidgets,g
                                     angular.element(el).empty();
                                     var $div = $(htmlCode);
                                     angular.element(el).append($div);
-                                    angular.element(document).injector().invoke(function($compile) {
+                                    angular.element($('#angularAppDiv')).injector().invoke(function($compile) {
                                         var scope = angular.element($div).scope();
                                         $compile($div)(scope);
                                         setTimeout(function() {c3Charts.rebuildChart(report);
@@ -237,7 +237,7 @@ app.service('report_v2Model' , function (queryModel,c3Charts,reportHtmlWidgets,g
                                     angular.element(el).empty();
                                     var $div = $(htmlCode);
                                     angular.element(el).append($div);
-                                    angular.element(document).injector().invoke(function($compile) {
+                                    angular.element($('#angularAppDiv')).injector().invoke(function($compile) {
                                         var scope = angular.element($div).scope();
                                         $compile($div)(scope);
                                         /*setTimeout(function() {c3Charts.rebuildChart(report,report.query,report.properties.chart);

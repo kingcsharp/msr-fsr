@@ -300,18 +300,19 @@ app.service('queryModel' , function ($http, $q, $filter, connection, $compile, $
 
     }
 
-    this.getQueryData = function( done) {
-        getQueryData(done);
+    this.getQueryData = function (done, localapiparams) {
+        getQueryData(done, localapiparams);
     }
 
-    this.getQueryData = function(queryObject, done) {
+    this.getQueryData = function (queryObject, done, localapiparams) {
         query = queryObject;
-        getQueryData(done);
+        getQueryData(done, localapiparams);
     }
 
 
-    function getQueryData(done)
+    function getQueryData(done, localapiparams)
     {
+        //$sessionStorage.getObject('localapiparams')
             var params = {};
             cleanQuery(query);
             wrongFilters = [];
@@ -321,7 +322,7 @@ app.service('queryModel' , function ($http, $q, $filter, connection, $compile, $
                     {
                         params.query = angular.copy(query);
 
-                connection.get('http://reports.msr-fsr.com/api/reports/get-data', params, function(data) {
+                connection.get('/Report/getreportsdata', params, function(data) {
                            var sql = data.sql;
 
                             if (data.result == 0)
@@ -336,7 +337,7 @@ app.service('queryModel' , function ($http, $q, $filter, connection, $compile, $
                             }
 
 
-                        });
+                }, undefined, localapiparams);
                     } else {
 
                         done([],'',query);
@@ -347,8 +348,9 @@ app.service('queryModel' , function ($http, $q, $filter, connection, $compile, $
         getQueryDataNextPage(page,done);
     }
 
-    function getQueryDataNextPage(page, done)
+    function getQueryDataNextPage(page, done, localapiparams)
     {
+        //$sessionStorage.getObject('localapiparams')
         var params = {};
             wrongFilters = [];
             checkFilters(query.groupFilters);
@@ -358,8 +360,8 @@ app.service('queryModel' , function ($http, $q, $filter, connection, $compile, $
                         params.query = angular.copy(query);
                         cleanQuery(params.query);
                         params.page = page;
-
-                connection.get('http://reports.msr-fsr.com/api/reports/get-data', params, function(data) {
+                //api/reports/get-data GetReportsData
+                connection.get('/Report/getreportsdata', params, function(data) {
                            var sql = data.sql;
                             if (data.result == 0)
                             {
@@ -370,10 +372,8 @@ app.service('queryModel' , function ($http, $q, $filter, connection, $compile, $
                                 {
                                     done(result,sql,query);
                                 });
-
-
                             }
-                        });
+                }, undefined, localapiparams);
                     } else {
                         done([],'',query);
                     }
@@ -397,10 +397,10 @@ app.service('queryModel' , function ($http, $q, $filter, connection, $compile, $
             }
     }
 
-    function getData(query, params,  done) {
+    function getData(query, params, done, localapiparams) {
         params.query = query;
 
-        connection.get('/api/reports/get-data', params, function(data) {
+        connection.get('/Report/getreportsdata', params, function(data) {
             if (data.result == 0)
                 {
                     noty({text: data.msg,  timeout: 2000, type: 'error'});
@@ -408,7 +408,7 @@ app.service('queryModel' , function ($http, $q, $filter, connection, $compile, $
                 } else {
                     done(data.data,data.sql,query);
                 }
-        });
+        }, undefined, localapiparams);
     }
 
     function prepareData(query,data,done)

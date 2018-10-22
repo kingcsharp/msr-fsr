@@ -1181,7 +1181,7 @@ return {
 								var html = '<'+newProps+' page-block ndtype="heading" class="editable">' + $scope.selectedElement[0].innerHTML + '</'+newProps+'>';
 								var $div = $(html);
 
-				            angular.element(document).injector().invoke(function($compile) {
+                                angular.element($('#angularAppDiv')).injector().invoke(function($compile) {
 				                var scope = angular.element($div).scope();
 				                $compile($div)($scope);
 				            });

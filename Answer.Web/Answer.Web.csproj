@@ -79,6 +79,10 @@
     <Reference Include="Mvc.Mailer, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MvcMailer.4.5\lib\45\Mvc.Mailer.dll</HintPath>
     </Reference>
+    <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\RestSharp.105.2.3\lib\net46\RestSharp.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -702,6 +706,7 @@
     <Content Include="assets\js\reports\partials\home\header2.html" />
     <Content Include="assets\js\reports\partials\home\headerX.html" />
     <Content Include="assets\js\reports\partials\home\index.html" />
+    <Content Include="assets\js\reports\partials\home\login.html" />
     <Content Include="assets\js\reports\partials\home\main.html" />
     <Content Include="assets\js\reports\partials\home\sidebar.html" />
     <Content Include="assets\js\reports\partials\layer\datasetModal.html" />
@@ -874,6 +879,7 @@
     <Content Include="assets\js\reports\public\js\layer\layerObjectProperties.js" />
     <Content Include="assets\js\reports\public\js\login.js" />
     <Content Include="assets\js\reports\public\js\login\controller.js" />
+    <Content Include="assets\js\reports\public\js\login\controller2.js" />
     <Content Include="assets\js\reports\public\js\logout\controller.js" />
     <Content Include="assets\js\reports\public\js\modules\angular-uuid2.js" />
     <Content Include="assets\js\reports\public\js\modules\intro-help.js" />

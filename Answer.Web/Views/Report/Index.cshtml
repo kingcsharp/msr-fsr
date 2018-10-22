@@ -54,11 +54,13 @@
 <link rel="stylesheet" type="text/css" href="~/assets/js/reports/public/css/inspector.css" />
 <link rel="stylesheet" type="text/css" href="~/assets/js/reports/public/css/custom.css" />
 
-<div ng-app="WideStage">
-    @*<div ng-view ng-intro-options="IntroOptions" ng-intro-method="CallMe">
-        </div>*@
+<div style="position: relative;top: 60px;left: 34px;">
+    <div ng-app="WideStage" style="margin: 14px 44px 14px 26px;">
+        @*<div ng-view ng-intro-options="IntroOptions" ng-intro-method="CallMe">
+            </div>*@
 
-    <div ng-view>
+        <div  id="angularAppDiv" ng-view>
+        </div>
     </div>
 </div>
 
@@ -80,6 +82,7 @@
     @*<script src="~/assets/js/reports/libs/angular/angular-route.min.js"></script>*@
     <script src="//code.angularjs.org/1.5.5/angular-route.js"></script>
     <script src="~/assets/js/reports/libs/angular/angular-ui-router.min.js"></script>
+    @*<script src="~/assets/js/reports/public/js/login.js"></script>*@
     <!-- gridster -->
     <script src="~/assets/js/reports/libs/angular/angular-gridster.min.js"></script>
     <!-- nestable -->
@@ -222,6 +225,7 @@
     <script type="text/javascript" src="~/assets/js/reports/public/js/widgets/wstHidden.js"></script>
     <script type="text/javascript" src="~/assets/js/reports/public/js/setup/controller.js"></script>
     <script type="text/javascript" src="~/assets/js/reports/public/js/files/controller.js"></script>
+    <script type="text/javascript" src="~/assets/js/reports/public/js/login/controller2.js"></script>
     <script>
         $(document).ready(function () {
             $('[data-toggle="tooltip"]').tooltip();
