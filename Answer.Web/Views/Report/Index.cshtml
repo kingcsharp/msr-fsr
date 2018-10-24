@@ -1,7 +1,6 @@
 ﻿@{
     ViewBag.Title = "Reporting";
 }
-<h2>@*@ViewBag.ClientName*@</h2>
 
 <link href="~/assets/js/reports/libs/bootstrap/bootstrap.min.css" rel="stylesheet" />
 <link href="~/assets/js/reports/libs/angular-ui-select/select.min.css" rel="stylesheet" />
@@ -42,10 +41,8 @@
 <link href="~/assets/js/reports/libs/angular-bootstrap-colorpicker/colorpicker.min.css" rel="stylesheet" />
 <!-- spectrum color picker-->
 <link href="~/assets/js/reports/libs/spectrum/spectrum.css" rel="stylesheet" />
-
 <!--custom scroll bar -->
 <link href="~/assets/js/reports/libs/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css" rel="stylesheet" />
-
 <link href="~/assets/js/reports/libs/nodedream/nodedream.css" rel="stylesheet" />
 <link rel="stylesheet" type="text/css" href="~/assets/js/reports/public/css/components.css" />
 <link rel="stylesheet" type="text/css" href="~/assets/js/reports/public/css/forms.css" />
@@ -58,8 +55,7 @@
     <div ng-app="WideStage" style="margin: 14px 44px 14px 26px;">
         @*<div ng-view ng-intro-options="IntroOptions" ng-intro-method="CallMe">
             </div>*@
-
-        <div  id="angularAppDiv" ng-view>
+        <div id="angularAppDiv" ng-view>
         </div>
     </div>
 </div>
@@ -229,5 +225,6 @@
     <script>
         $(document).ready(function () {
             $('[data-toggle="tooltip"]').tooltip();
-        });</script>
+        });
+    </script>
 }
