@@ -242,6 +242,22 @@ $(function () {
     });
 
     $('.step-task').on('click', function () {
+
+        var hasCompleted = $(this).hasClass('step-complete');
+
+        if (!hasCompleted) {
+            $('#carousel ul.slides li').each(function (i, obj) {
+                var hasRequiested = $(this).hasClass('requested');
+                if (hasRequiested) {
+                    $(this).removeClass('requested');
+                    $(this).addClass('waiting');
+                }
+            });
+
+            $(this).removeClass('waiting');
+            $(this).addClass('requested');
+        }
+
         loadStep(this);
     });
 

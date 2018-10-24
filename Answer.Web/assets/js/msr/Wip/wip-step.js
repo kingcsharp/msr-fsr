@@ -39,6 +39,14 @@
 
                     var stepInProgress = $('#carousel ul.slides').find(".waiting").first();
 
+                    $('#carousel ul.slides li').each(function (i, obj) {
+                        var hasRequiested = $(this).hasClass('requested');
+                        if (hasRequiested) {
+                            $(this).removeClass('requested');
+                            $(this).addClass('waiting');
+                        }
+                    });
+
                     if (stepInProgress.length > 0) {
                         ////Get next step
                         $(stepInProgress).removeClass('waiting');
@@ -50,7 +58,7 @@
 
                     if (stepRequested.length > 0) {
                         $(stepRequested).addClass('step-complete');
-
+                        $(stepRequested).removeClass('waiting');
                         ////When last step done
                         if (stepInProgress.length === 0) {
                             $(stepRequested).trigger("click");

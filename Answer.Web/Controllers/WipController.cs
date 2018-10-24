@@ -148,19 +148,14 @@ namespace Answer.Web.Controllers
                     }
                     else if (rule.field == nameof(WorkOrderView.CurStepText))
                     {
-                        var statusList = GetMultiStatusList(param);
+                        if (rule.data != "All")
+                        {
+                            var statusList = rule.data.Split(',').Select(x => x.Trim().ToLower());
 
-                        if (rule.data == "true")
-                        {
-                            totalRows = totalRows.AsQueryable();
-                        }
-                        else if (rule.data != "" && rule.data != "true")
-                        {
-                            totalRows = statusList.Count > 0 ? totalRows.Where(x => statusList.Contains(x.Status)) : totalRows;
-                        }
-                        else
-                        {
-                            totalRows = totalRows.Where(x => statusList.Contains(x.Status));
+                            if (statusList.Any())
+                            {
+                                totalRows = totalRows.Where(x => statusList.Contains(x.Status.ToLower()));
+                            }
                         }
                     }
                 }
