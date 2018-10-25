@@ -22,7 +22,6 @@ app.service('Constants', function () {
     .service('connection', function ($http, Constants) {
 
         this.get = function (url, params, done, options, localapiparams) {
-            debugger;
             options = {
                 showLoader: (options && typeof options.showLoader != 'undefined') ? options.showLoader : true,
                 showMsg: (options && typeof options.showMsg != 'undefined') ? options.showMsg : true

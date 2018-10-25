@@ -1975,7 +1975,7 @@ widget.xe-counter, .xe-widget.xe-counter-block .xe-upper, .xe-widget.xe-progress
         }
 
 .repeater-data-column {
-    height: 20px;
+    height: 23px!important;
     overflow: hidden;
     padding: 2px;
     border-bottom: 1px solid #ccc;
@@ -3658,7 +3658,12 @@ label[for] {
 
 .container-fluid {
     padding-right: 15px;
-    padding-left: 0!important;
+    padding-left: 0 !important;
     margin-right: auto;
     margin-left: auto;
 }
+
+    .container-fluid.featurette.ndContainer {
+        width: 99%;
+        padding-right: 0 !important;
+    }

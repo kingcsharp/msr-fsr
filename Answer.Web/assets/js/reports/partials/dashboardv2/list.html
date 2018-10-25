@@ -1,15 +1,8 @@
-<!--<div id="parentIntro" intro-help ng-intro-method="showIntro"  ng-intro-options="IntroOptions" class="container-fluid " ng-init="getDashboards(1,'',['dashboardName','isPublic','owner','dashboardDescription'])"  style="padding-top: 10px;">-->
+
 <div id="parentIntro" class="container-fluid " ng-init="getDashboards(1,'',['dashboardName','isPublic','owner','dashboardDescription'])" style="padding-top: 10px;">
     <div class="container-fluid">
-        <!--<div class="main col-md-3" ng-include="'assets/js/reports/partials/home/sidebar.html'">
-        </div>-->
         <div class="main col-md-12">
             <div class="container-fluid">
-                <!--<div class="container-fluid branded-border-panel">
-                    <h3 class="pull-left">My dashboards</h3>
-                    <a id="newReportBtn" ng-if="user.dashboardsCreate" href="/#/dashboardsv2/new/true" class="btn btn-success pull-right" tooltip="Click here to create a new page report" tooltip-placement="bottom">New Dashboard</a>
-                    <a class="btn btn-info pull-right" ng-click="showIntro()" style="margin-right:3px;" tooltip="Click here to start the guided tour for page reports" tooltip-placement="bottom"><i class="fa fa-question-circle"></i></a>
-                </div>-->
                 <div class="row">
                     <div class="col-lg-12">
                         <h2 class="page-header">
@@ -17,105 +10,46 @@
                             My dashboards <button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
                         </h2>
                     </div>
-                    <div class="col-lg-12">
-                        <div class="col-lg-12">
-                            <div class="ui-jqgrid " id="gbox_jqGrid" dir="ltr" style="width: 1800px;">
+                    <div class="col-lg-12" style="padding-right: 0">
+                        <div class="col-lg-12" style="padding-right: 0">
+                            <div class="ui-jqgrid " id="gbox_jqGrid" dir="ltr" style="width: 100%; min-width: 400px;">
                                 <div class="jqgrid-overlay ui-overlay" id="lui_jqGrid"></div>
-                                <div class="ui-jqgrid-view table-responsive" role="grid" id="gview_jqGrid" style="width: 1800px;">
+                                <div class="ui-jqgrid-view table-responsive" role="grid" id="gview_jqGrid" style="width: 100%;">
                                     <div class="ui-jqgrid-titlebar ui-jqgrid-caption" style="display: none;"><a role="link" class="ui-jqgrid-titlebar-close HeaderButton " title="Toggle Expand Collapse Grid" style="right: 0px;"><span class="ui-jqgrid-headlink glyphicon glyphicon-circle-arrow-up"></span></a><span class="ui-jqgrid-title"></span></div>
-                                    <div class="ui-jqgrid-hdiv" style="width: 1798px;">
-                                        <div class="ui-jqgrid-hbox">
-                                            <table class="ui-jqgrid-htable ui-common-table table table-bordered" style="width: 1800px" role="presentation" aria-labelledby="gbox_jqGrid">
+                                    <div class="ui-jqgrid-hdiv" style="width: 100%;">
+                                        <div class="ui-jqgrid-hbox" style="padding-right: 0">
+                                            <table class="ui-jqgrid-htable ui-common-table table table-bordered angulargrid" style="width: 100%" role="presentation" aria-labelledby="gbox_jqGrid">
                                                 <thead>
                                                     <tr class="ui-jqgrid-labels" role="row">
-                                                        <th id="jqGrid_Id" role="columnheader" class="ui-th-column ui-th-ltr" style="width: 257px;">
+                                                        <th id="jqGrid_Id" role="columnheader" class="ui-th-column ui-th-ltr" width="50">
                                                             <span class="ui-jqgrid-resize ui-jqgrid-resize-ltr" style="cursor: col-resize;">&nbsp;</span>
                                                             <div class="ui-th-div ui-jqgrid-sortable" id="jqgh_jqGrid_Id">Name<span class="s-ico" style="display: none"><span sort="asc" class="ui-grid-ico-sort ui-icon-asc ui-sort-ltr ui-disabled glyphicon glyphicon-triangle-top"></span><span sort="desc" class="ui-grid-ico-sort ui-icon-desc ui-sort-ltr ui-disabled glyphicon glyphicon-triangle-bottom"></span></span></div>
                                                         </th>
-                                                        <th id="jqGrid_StageName" role="columnheader" class="ui-th-column ui-th-ltr" style="width: 1029px;">
+                                                        <th id="jqGrid_StageName" role="columnheader" class="ui-th-column ui-th-ltr" width="25">
                                                             <span class="ui-jqgrid-resize ui-jqgrid-resize-ltr" style="cursor: col-resize;">&nbsp;</span>
                                                             <div class="ui-th-div ui-jqgrid-sortable" id="jqgh_jqGrid_StageName">
                                                                 Status
-                                                                <!--<span class="s-ico" style="display: none">
-                                                                    <span sort="asc" class="ui-grid-ico-sort ui-icon-asc ui-sort-ltr ui-disabled glyphicon glyphicon-triangle-top"></span>
-                                                                    <span sort="desc" class="ui-grid-ico-sort ui-icon-desc ui-sort-ltr ui-disabled glyphicon glyphicon-triangle-bottom"></span>
-                                                                </span>
-                                                                <a class="colmenu" href="#/">
-                                                                    <span class="colmenuspan glyphicon glyphicon-menu-hamburger"></span>
-                                                                </a>-->
                                                             </div>
                                                         </th>
-                                                        <th id="jqGrid_Actions" role="columnheader" class="ui-th-column ui-th-ltr" style="width: 514px;">
+                                                        <th id="jqGrid_Actions" role="columnheader" class="ui-th-column ui-th-ltr" width="25">
                                                             <span class="ui-jqgrid-resize ui-jqgrid-resize-ltr" style="cursor: col-resize;">&nbsp;</span>
                                                             <div class="ui-th-div ui-jqgrid-sortable" id="jqgh_jqGrid_Actions">
                                                                 Actions
-                                                                <!--<span class="s-ico" style="">
-                                                                    <span sort="asc" class="ui-grid-ico-sort ui-icon-asc ui-sort-ltr glyphicon glyphicon-triangle-top"></span>
-                                                                    <span sort="desc" class="ui-grid-ico-sort ui-icon-desc ui-sort-ltr ui-disabled glyphicon glyphicon-triangle-bottom"></span>
-                                                                </span>-->
                                                             </div>
                                                         </th>
                                                     </tr>
-                                                    <!--<tr class="ui-search-toolbar" role="row">
-                                                        <th role="columnheader" class=" ui-th-ltr" id="gsh_jqGrid_Id">
-                                                            <div>
-                                                                <table class="ui-search-table" cellspacing="0">
-                                                                    <tbody>
-                                                                    <tr>
-                                                                        <td class="ui-search-oper" headers="" colindex="0" style="display: none;"></td>
-                                                                        <td class="ui-search-input" headers="">
-                                                                            <input type="text" searchopermenu="false" name="Id" id="gs_Id" clearsearch="true" role="textbox" class="form-control">
-                                                                        </td>
-                                                                        <td class="ui-search-clear" headers="">
-                                                                            <a title="Reset Search Value" style="padding-right: 0.3em; padding-left: 0.3em;" class="clearsearchclass">x</a>
-                                                                        </td>
-                                                                    </tr>
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
-                                                        </th>
-                                                        <th role="columnheader" class=" ui-th-ltr" id="gsh_jqGrid_StageName">
-                                                            <div>
-                                                                <table class="ui-search-table" cellspacing="0">
-                                                                    <tbody>
-                                                                    <tr>
-                                                                        <td class="ui-search-oper" headers="" colindex="1" style="display: none;"></td>
-                                                                        <td class="ui-search-input" headers="">
-                                                                            <input type="text" searchopermenu="false" name="StageName" id="gs_StageName" clearsearch="true" role="textbox" class="form-control">
-                                                                        </td>
-                                                                        <td class="ui-search-clear" headers="">
-                                                                            <a title="Reset Search Value" style="padding-right: 0.3em; padding-left: 0.3em;" class="clearsearchclass">x</a>
-                                                                        </td>
-                                                                    </tr>
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
-                                                        </th>
-                                                        <th role="columnheader" class=" ui-th-ltr" id="gsh_jqGrid_Actions">
-                                                            <div></div>
-                                                        </th>
-                                                    </tr>-->
                                                 </thead>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <div class="ui-jqgrid-bdiv" style="height: auto; width: 1798px;">
-                                        <div style="position: relative;">
-                                            <div>
-
-                                            </div>
-                                            <table id="jqGrid" tabindex="0" role="presentation" aria-multiselectable="false" aria-labelledby="gbox_jqGrid" class="ui-jqgrid-btable ui-common-table table table-bordered" style="width: 1800px;">
                                                 <tbody>
                                                     <tr class="jqgfirstrow" role="row">
-                                                        <td role="gridcell" style="height: 0px; width: 257px;"></td>
-                                                        <td role="gridcell" style="height: 0px; width: 1029px;"></td>
-                                                        <td role="gridcell" style="height: 0px; width: 514px;"></td>
+                                                        <td role="gridcell" style="height: 0px;"></td>
+                                                        <td role="gridcell" style="height: 0px;"></td>
+                                                        <td role="gridcell" style="height: 0px;"></td>
                                                     </tr>
                                                     <tr role="row" id="1" tabindex="-1" class="jqgrow ui-row-ltr" ng-repeat="dashboard in dashboards.items">
                                                         <td role="gridcell" style="text-align: left;" title="dashboard.dashboardName" aria-describedby="jqGrid_Id" ng-bind="dashboard.dashboardName"></td>
                                                         <td role="gridcell" style="text-align: left;" aria-describedby="jqGrid_StageName"><span ng-if="dashboard.isPublic">Published</span><span ng-if="dashboard.isPublic==false">Draft</span></td>
                                                         <td role="gridcell" style="text-align: center;" aria-describedby="jqGrid_Actions">
-                                                            <a ng-href="/Report#/dashboardsv2/{{dashboard._id}}"  tooltip="Click here to execute this dashboard" tooltip-placement="bottom" class="btn btn-xs btn-success" style="margin: 2px; font-size: .8em;">
+                                                            <a ng-href="/Report#/dashboardsv2/{{dashboard._id}}" tooltip="Click here to execute this dashboard" tooltip-placement="bottom" class="btn btn-xs btn-success" style="margin: 2px; font-size: .8em;">
                                                                 <i class="fa fa-eye"></i> View
                                                             </a>
                                                         </td>
@@ -124,27 +58,56 @@
                                             </table>
                                         </div>
                                     </div>
+                                    <!--<div class="ui-jqgrid-bdiv" style="height: auto; width: 100%;">
+                                        <div style="position: relative;">
+                                            <div>
+
+                                            </div>
+                                            <table id="jqGrid" tabindex="0" role="presentation" aria-multiselectable="false" aria-labelledby="gbox_jqGrid" class="ui-jqgrid-btable ui-common-table table table-bordered" style="width: 100%;">
+                                                <tbody>
+                                                    <tr class="jqgfirstrow" role="row">
+                                                        <td role="gridcell" style="height: 0px;" ></td>
+                                                        <td role="gridcell" style="height: 0px;" ></td>
+                                                        <td role="gridcell" style="height: 0px;" ></td>
+                                                    </tr>
+                                                    <tr role="row" id="1" tabindex="-1" class="jqgrow ui-row-ltr" ng-repeat="dashboard in dashboards.items">
+                                                        <td width="60" role="gridcell" style="text-align: left;" title="dashboard.dashboardName" aria-describedby="jqGrid_Id" ng-bind="dashboard.dashboardName"></td>
+                                                        <td width="20" role="gridcell" style="text-align: left;" aria-describedby="jqGrid_StageName"><span ng-if="dashboard.isPublic">Published</span><span ng-if="dashboard.isPublic==false">Draft</span></td>
+                                                        <td width="20" role="gridcell" style="text-align: center;" aria-describedby="jqGrid_Actions">
+                                                            <a ng-href="/Report#/dashboardsv2/{{dashboard._id}}"  tooltip="Click here to execute this dashboard" tooltip-placement="bottom" class="btn btn-xs btn-success" style="margin: 2px; font-size: .8em;">
+                                                                <i class="fa fa-eye"></i> View
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>-->
                                 </div>
                                 <div class="ui-jqgrid-resize-mark" id="rs_mjqGrid">&nbsp;</div>
-                                <div id="jqGridPager" class="ui-jqgrid-pager" dir="ltr" style="width: 1800px;">
+                                <div id="jqGridPager" class="ui-jqgrid-pager" dir="ltr" style="width: 100%; min-width: 400px;">
                                     <div id="pg_jqGridPager" class="ui-pager-control" role="group">
                                         <table class="ui-pg-table ui-common-table ui-pager-table table">
                                             <tbody>
                                                 <tr>
-                                                    <td id="jqGridPager_left" align="left">
+                                                    <td width="34" id="jqGridPager_left" align="left" class="hidden-xs">
                                                         <table class="ui-pg-table navtable ui-common-table">
                                                             <tbody>
                                                                 <tr>
                                                                     <td class="ui-pg-button" title="Reload Grid" id="refresh_jqGrid">
-                                                                        <div class="ui-pg-div"><span class="glyphicon glyphicon-refresh"></span></div>
+                                                                        <div class="ui-pg-div">
+                                                                            <!--<span class="glyphicon glyphicon-refresh"></span>-->
+                                                                        </div>
                                                                     </td>
                                                                 </tr>
                                                             </tbody>
                                                         </table>
                                                     </td>
-                                                    <td id="jqGridPager_center" align="center" style="white-space: pre; width: 322px;"><table class="ui-pg-table ui-common-table ui-paging-pager"><tbody><tr><td id="first_jqGridPager" class="ui-pg-button ui-disabled" title="First Page"><span class="glyphicon glyphicon-step-backward"></span></td><td id="prev_jqGridPager" class="ui-pg-button ui-disabled" title="Previous Page"><span class="glyphicon glyphicon-backward"></span></td><td class="ui-pg-button ui-disabled"><span class="ui-separator"></span></td><td id="input_jqGridPager" dir="ltr">Page <input class="ui-pg-input form-control" type="text" size="2" maxlength="7" value="0" role="textbox"> of <span id="sp_1_jqGridPager">1</span></td><td class="ui-pg-button ui-disabled"><span class="ui-separator"></span></td><td id="next_jqGridPager" class="ui-pg-button ui-disabled" title="Next Page"><span class="glyphicon glyphicon-forward"></span></td><td id="last_jqGridPager" class="ui-pg-button ui-disabled" title="Last Page"><span class="glyphicon glyphicon-step-forward"></span></td><td dir="ltr"><select class="ui-pg-selbox form-control" role="listbox" title="Records per Page"><option role="option" value="10" selected="selected">10</option><option role="option" value="20">20</option><option role="option" value="50">50</option><option role="option" value="100">100</option></select></td></tr></tbody></table></td>
-                                                    <td id="jqGridPager_right" align="right">
-                                                        <div dir="ltr" style="text-align: right" class="ui-paging-info">View 1 - 1 of 1</div>
+                                                    <td width="33"  id="jqGridPager_center" align="center" style="white-space: pre; border: none;"><table class="ui-pg-table ui-common-table ui-paging-pager"><tbody><tr><td id="first_jqGridPager" ng-click="getDashboards(1,'',['dashboardName','isPublic','owner','dashboardDescription'])" class="ui-pg-button ui-disabled" title="First Page"><span class="glyphicon glyphicon-step-backward"></span></td><td id="prev_jqGridPager" class="ui-pg-button ui-disabled" title="Previous Page" ng-click="getDashboards(pager.currentPage - 1,'',['dashboardName','isPublic','owner','dashboardDescription'])"><span class="glyphicon glyphicon-backward"></span></td><td class="ui-pg-button ui-disabled"><span class="ui-separator"></span></td><td id="input_jqGridPager" dir="ltr">Page <input class="ui-pg-input form-control" type="text" size="2" maxlength="7" ng-model="pager.currentPage" disabled="disabled" role="textbox"> of <span id="sp_1_jqGridPager" ng-bind="pager.totalPages"></span></td><td class="ui-pg-button ui-disabled"><span class="ui-separator"></span></td><td id="next_jqGridPager" class="ui-pg-button ui-disabled" title="Next Page" ng-click="getDashboards(pager.currentPage + 1,'',['dashboardName','isPublic','owner','dashboardDescription'])"><span class="glyphicon glyphicon-forward"></span></td><td id="last_jqGridPager" class="ui-pg-button ui-disabled" title="Last Page" ng-click="getDashboards(pager.totalPages,'',['dashboardName','isPublic','owner','dashboardDescription'])"><span class="glyphicon glyphicon-step-forward"></span></td><td dir="ltr"><select class="ui-pg-selbox form-control" role="listbox" title="Records per Page"><option role="option" value="10" selected="selected">10</option></select></td></tr></tbody></table></td>
+                                                    <td width="33"  id="jqGridPager_right" align="right" style="border-top:0">
+                                                        <div dir="ltr" style="text-align: right" class="ui-paging-info" ng-if="pager.currentPage">
+                                                            View {{((pager.currentPage-1)*10+1)}} - {{pager.currentPage*10}} of {{dashboards.items.length}}
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -153,46 +116,9 @@
                                 </div>
                             </div>
                         </div>
-
-
                     </div>
                 </div>
-
-                <!--<div id="reportList" class="list-group">
-                    <div id="reportListItem" class="list-group-item" ng-repeat="dashboard in dashboards.items">
-                        <a id="reportListItemDeleteBtn" href="" class="pull-right  list-delete-button" ng-click="delete(dashboard._id,dashboard.dashboardName)" tooltip="Click here to delete this dashboard" tooltip-placement="bottom">
-                            <i class="fa fa-trash-o "></i>
-                        </a>
-                        <a id="reportListItemEditBtn" class="pull-right  list-edit-button" href="/#/dashboardsv2/edit/{{dashboard._id}}" tooltip="Click here to modify this dashboard" tooltip-placement="bottom">
-                                                        <i class="fa fa-pencil"></i>
-                        </a>
-                        <span id="reportListItemPublished" ng-if="dashboard.isPublic" class="badge badge-success pull-right" style="margin-right: 5px;">published</span>
-                        <a href="/Report#/dashboardsv2/{{dashboard._id}}" tooltip="Click here to execute this dashboard" tooltip-placement="bottom">
-                            <h4 id="reportListItemName" class="list-group-item-heading" ng-bind="dashboard.dashboardName"></h4>
-                            <p id="reportListItemDetails" class="list-group-item-text" ng-bind="dashboard.dashboardDescription"></p>
-                        </a>
-                    </div>
-                </div>-->
-                <!--<div class="container-fluid">
-                    <ul ng-if="pager.pages.length" class="pagination">
-                        <li ng-class="{disabled:pager.currentPage === 1}">
-                            <a ng-click="getDashboards(1,'',['dashboardName','isPublic','owner','dashboardDescription'])">First</a>
-                        </li>
-                        <li ng-class="{disabled:pager.currentPage === 1}">
-                            <a ng-click="getDashboards(pager.currentPage - 1,'',['dashboardName','isPublic','owner','dashboardDescription'])">Previous</a>
-                        </li>
-                        <li ng-repeat="page in pager.pages" ng-class="{active:pager.currentPage === page}">
-                            <a ng-click="getDashboards(page,'',['dashboardName','isPublic','owner','dashboardDescription'])">{{page}}</a>
-                        </li>
-                        <li ng-class="{disabled:pager.currentPage === pager.totalPages}">
-                            <a ng-click="getDashboards(pager.currentPage + 1,'',['dashboardName','isPublic','owner','dashboardDescription'])">Next</a>
-                        </li>
-                        <li ng-class="{disabled:pager.currentPage === pager.totalPages}">
-                            <a ng-click="getDashboards(pager.totalPages,'',['dashboardName','isPublic','owner','dashboardDescription'])">Last</a>
-                        </li>
-                    </ul>
-                </div>-->
             </div>
         </div>
     </div>
-    <!--<div ng-include src="'assets/js/reports/partials/deleteModal.html'"></div>-->
+</div>

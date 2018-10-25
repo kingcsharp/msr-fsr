@@ -1,5 +1,5 @@
 app.controller('report_viewCtrl', function ($scope, $routeParams, report_v2Model, queryModel, connection, bsLoadingOverlayService, widgetsCommon) {
-    debugger;
+    
     $scope.promptsBlock = 'assets/js/reports/partials/report/promptsBlock.html';
     $scope.dateModal = 'assets/js/reports/partials/report/dateModal.html';
     $scope.linkModal = 'assets/js/reports/partials/report/linkModal.html';
@@ -30,7 +30,6 @@ app.controller('report_viewCtrl', function ($scope, $routeParams, report_v2Model
     };
 
     $scope.getReportDiv = function () {
-        debugger;
         if ($routeParams.reportID) {
             $scope.showOverlay('OVERLAY_reportLayout');
             report_v2Model.getReportDefinition($routeParams.reportID, false, function (report) {
@@ -88,7 +87,6 @@ app.controller('report_viewCtrl', function ($scope, $routeParams, report_v2Model
             /*queryModel.getQueryData( function(){
 
             });*/
-            debugger;
             report_v2Model.getReport($scope.selectedReport, 'reportLayout', $scope.mode, function () {
                 //Done
                 $scope.hideOverlay('OVERLAY_reportLayout');

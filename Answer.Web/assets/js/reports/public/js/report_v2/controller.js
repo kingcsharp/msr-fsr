@@ -7,8 +7,7 @@
  */
 
 app.controller('report_v2Ctrl', function ($scope, connection, $compile, queryModel, queryService, reportService, $routeParams, $timeout, $rootScope, bsLoadingOverlayService, grid, uuid2, c3Charts, report_v2Model, widgetsCommon, $location, PagerService) {
-    debugger;
-
+    
     $scope.promptsBlock = 'partials/report/promptsBlock.html';
     $scope.dateModal = 'partials/report/dateModal.html';
     $scope.linkModal = 'partials/report/linkModal.html';

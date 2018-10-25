@@ -300,7 +300,6 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
     };
 
     $scope.loadHTML = function () {
-        debugger;
         $scope.mode = 'preview';
         var localapiparams = $sessionStorage.getObject('localapiparams');
         localapiparams.id = $scope.dashboardID;
