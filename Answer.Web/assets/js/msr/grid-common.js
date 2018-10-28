@@ -342,7 +342,7 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                 marginBottom: "1px",
                 paddingTop: "3px"
             });
-        }, 1000);
+        }, 1500);
     },
     GetColumnIndexByName: function (columnName) {
         var cm = $(this).jqGrid('getGridParam', 'colModel'), i, l = cm.length;
