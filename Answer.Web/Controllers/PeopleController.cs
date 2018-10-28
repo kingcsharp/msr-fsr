@@ -233,6 +233,7 @@ namespace Answer.Web.Controllers
                 people.TypePrimaryPhoneNumber = phoneInfo.TypePrimaryPhoneNumber;
                 people.ExtPrimaryPhoneNumber = phoneInfo.ExtPrimaryPhoneNumber;
                 people.PinPrimaryPhoneNumber = phoneInfo.PinPrimaryPhoneNumber;
+                people.PhoneId = phoneInfo.PhoneId;
             }
             if (emailInfo != null)
             {
@@ -245,7 +246,7 @@ namespace Answer.Web.Controllers
             {
                 people.AddressLocation = locationInfo.AddressLocation;
                 people.AddressType = locationInfo.AddressType;
-
+                people.LocationId = locationInfo.LocationId;
             }
 
             var preview = string.Join(",", people.DocLinks.ToArray().Select(x => string.Format("{0}{1}{0}", "\'", x.SERVER_PATH)));

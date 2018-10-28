@@ -20,8 +20,8 @@ Msr.DocumentsGrid = Msr.DocumentsGrid ||
                 colModel: [
                     {
                         label: 'Id',
-                        name: 'Id',
-                        index: 'Id',
+                        name: 'Root',
+                        index: 'Root',
                         key: true,
                         colmenu: false,
                         coloptions: {

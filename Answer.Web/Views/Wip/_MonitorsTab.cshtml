@@ -168,7 +168,7 @@
                                         <td class="nw-rght">
                                             <label class="control-label">Result:</label>
                                             <td class="text-td">
-                                                @Html.TextBoxFor(x => Model[i].Print_Result, new { @class = !isPassing ? "input-validation-error" : String.Empty, @id = "equipment" })
+                                                @Html.TextBoxFor(x => Model[i].Print_Result, new { @class = !isPassing ? "form-control input-validation-error" : String.Empty, @id = "equipment" })
                                                 <span id="print-result-message"></span>
                                             </td>
                                         </td>

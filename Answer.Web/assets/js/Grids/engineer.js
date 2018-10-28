@@ -126,7 +126,6 @@ Msr.WipGrid = Msr.WipGrid ||
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                         width: 250,
                         align: 'left',
-                        hidedlg: true
                     },
                     {
                         label: 'Procedure',

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Web.Mvc;
 using Msr.Models.People;
 using Msr.Services.Companies;
@@ -114,7 +113,8 @@ namespace Msr.Services.People.ViewModels
         public string Password { get; set; }
         public string ObjectId { get; set; }
         public string newID { get; set; }
-        
+        public string LocationId { get; set; }
+        public string PhoneId { get; set; }
         public IEnumerable<SelectListItem> ListRealUserTypes { get; set; }
         public IEnumerable<SelectListItem> ListScreenTypes { get; set; }
         public IEnumerable<SelectListItem> ListLanguages { get; set; }
@@ -175,7 +175,7 @@ namespace Msr.Services.People.ViewModels
             ListAddressTypes = Commons.Lookups.LookupItems.AddressTypes();
 
             string RootCoId = "2";
-            
+
             ListTimeZones = peopleService.GetTimeZones().Select(x => new SelectListItem
             {
                 Text = x.Description,
@@ -192,10 +192,10 @@ namespace Msr.Services.People.ViewModels
             Locations = companyService.GetLocationsQueryable().Select(x => new SelectListItem
             {
                 Text = x.Name,
-                Value = x.Id
+                Value = x.ObjectId
             }).OrderBy(o => o.Text).ToList();
 
-            ListCompanyEditPerson.Add(new SelectListItem {Text = "--Select--", Value = ""});
+            ListCompanyEditPerson.Add(new SelectListItem { Text = "--Select--", Value = "" });
 
             ListCompanyEditPerson.AddRange(peopleService.GetCompanyEditPersons()
                 .Select(x => new SelectListItem
@@ -220,8 +220,8 @@ namespace Msr.Services.People.ViewModels
             ObjectId = model.ObjectId;
             FirstName = model.FirstName;
             LastName = model.LastName;
-            OfficialPosition = model.PositionName;
-            BossName = model.BossName;
+            OfficialPosition = model.OfficialPosition;
+            BossName = model.BossId;
             CompanyEditPerson = model.Company;
             HireDate = model.DateHired;
 
@@ -229,7 +229,7 @@ namespace Msr.Services.People.ViewModels
             {
                 StatusEditPerson = model.SystemStatus.Trim();
             }
-            ScreenType = model.ScreenType;           
+            ScreenType = model.ScreenType;
             IsDepartmentHead = model.IsHead;
             TimeZone = model.TimeZone;
             LoginId = model.LoginId;

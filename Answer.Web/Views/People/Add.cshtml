@@ -112,7 +112,7 @@
                         <div class="form-group">
                             @Html.LabelFor(model => model.PrimaryPhoneNumber,  new { @class = "control-label col-md-2" })
                             <div class="col-md-8">
-                                <div style="width: 96%; float: left; display: flex">
+                                <div style="width: 100%; float: left; display: flex">
                                     @Html.DropDownListFor(model => model.TypePrimaryPhoneNumber, Model.ListPhoneTypes, new { @class = "form-control" })
                                     @Html.ValidationMessageFor(model => model.PrimaryPhoneNumber, "", new { @class = "text-danger" })
                                     @Html.EditorFor(model => model.PrimaryPhoneNumber, new { htmlAttributes = new { @class = "form-control" } })
@@ -121,17 +121,14 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="col-md-2"></div>
+                            @Html.LabelFor(model => model.ExtPrimaryPhoneNumber,  new { @class = "control-label col-md-2" })
                             <div class="col-md-8">
-                                <div style="width: 96%; float: left; display: flex">
-                                    @Html.LabelFor(model => model.ExtPrimaryPhoneNumber,  new { @class = "control-label col-md-8" })
-                                    @Html.EditorFor(model => model.ExtPrimaryPhoneNumber, new { htmlAttributes = new { @class = "form-control" } })
-                                    @Html.ValidationMessageFor(model => model.ExtPrimaryPhoneNumber, "", new { @class = "text-danger" })
-
-                                    @Html.LabelFor(model => model.PinPrimaryPhoneNumber,  new { @class = "control-label col-md-2" })
-
-                                    @Html.EditorFor(model => model.PinPrimaryPhoneNumber, new { htmlAttributes = new { @class = "form-control" } })
-                                    @Html.ValidationMessageFor(model => model.PinPrimaryPhoneNumber, "", new { @class = "text-danger" })
+                                <div style="width: 100%; float: left; display: flex">
+                                    @Html.EditorFor(model => model.ExtPrimaryPhoneNumber, new {htmlAttributes = new {@class = "form-control"}})
+                                    @Html.ValidationMessageFor(model => model.ExtPrimaryPhoneNumber, "", new {@class = "text-danger"})
+                                    @Html.LabelFor(model => model.PinPrimaryPhoneNumber, new {@class = "control-label col-md-2"})
+                                    @Html.EditorFor(model => model.PinPrimaryPhoneNumber, new {htmlAttributes = new {@class = "form-control"}})
+                                    @Html.ValidationMessageFor(model => model.PinPrimaryPhoneNumber, "", new {@class = "text-danger"})
                                 </div>
                             </div>
                         </div>
@@ -153,7 +150,7 @@
                         <div class="form-group">
                             @Html.LabelFor(model => model.AddressType,  new { @class = "control-label col-md-2" })
                             <div class="col-md-8">
-                                <div style="width: 96%; float: left; display: flex">
+                                <div style="width: 100%; float: left; display: flex">
                                     @Html.DropDownListFor(model => model.AddressType, Model.ListAddressTypes, new { @class = "form-control" })
                                     @Html.ValidationMessageFor(model => model.AddressType, "", new { @class = "text-danger" })
                                     @Html.DropDownListFor(model => model.AddressLocation, Model.Locations, new { @class = "form-control select" })

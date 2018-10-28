@@ -30,5 +30,7 @@ namespace Msr.Models.People
         public string LockedByName { get; set; }
         public string Root { get; set; }
         public string ReferenceFiles { get; set; }
+        public string OfficialPosition { get; set; }
+        public string BossId { get; set; }
     }
 }

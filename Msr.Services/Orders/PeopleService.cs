@@ -267,7 +267,7 @@ namespace Msr.Services.Orders
         {
             var result = _dbContext.Database
                 .SqlQuery<EditPeopleViewModel>(
-                    "SELECT PHONE_NUMBER as PrimaryPhoneNumber,PHONE_TYPE as TypePrimaryPhoneNumber,PHONE_PIN as PinPrimaryPhoneNumber,PHONE_EXTENSION as ExtPrimaryPhoneNumber FROM dbo.A_PHONE_NUMBERS WHERE OBJECT_ID = '" + id + "'")
+                    "SELECT PHONE_NUMBER as PrimaryPhoneNumber,PHONE_TYPE as TypePrimaryPhoneNumber,PHONE_PIN as PinPrimaryPhoneNumber,PHONE_EXTENSION as ExtPrimaryPhoneNumber,ID as PhoneId FROM dbo.A_PHONE_NUMBERS WHERE OBJECT_ID = '" + id + "'")
                 .FirstOrDefault();
             return result;
         }
@@ -283,7 +283,7 @@ namespace Msr.Services.Orders
         {
             var result = _dbContext.Database
                 .SqlQuery<EditPeopleViewModel>(
-                    "SELECT LOCATION_ID as AddressLocation,LOCATION_TYPE as AddressType FROM A_LOCATIONS_OBJECT_LINK WHERE OBJECT_ID = '" + id + "'")
+                    "SELECT LOCATION_ID as AddressLocation,ID as LocationId, LOCATION_TYPE as AddressType FROM A_LOCATIONS_OBJECT_LINK WHERE OBJECT_ID = '" + id + "'")
                 .FirstOrDefault();
             return result;
         }
@@ -321,16 +321,19 @@ namespace Msr.Services.Orders
                 _dbContext.Database.ExecuteStoredProcedure<SavePasswrodProcedure>(savePasswrodProcedure);
 
                 _dbContext.Database.SqlQuery<EditPeopleViewModel>(
-                    "INSERT INTO A_PHONE_NUMBERS(ID, PHONE_NUMBER, PHONE_TYPE, PHONE_PIN, PHONE_EXTENSION, MODBY, DRCM, OBJECT_ID)VALUES(newID(), '" +
-                    model.PrimaryPhoneNumber + "', '" + model.TypePrimaryPhoneNumber + "', '" +
-                    model.ExtPrimaryPhoneNumber + "', '" + model.PinPrimaryPhoneNumber + "', '" + model.NTLogin +
-                    "', getDate(), '" + savePeopleProcedure.NewObjId + "')").SingleOrDefault();
+                     "UPDATE A_PHONE_NUMBERS SET PHONE_NUMBER='" + model.PrimaryPhoneNumber + "',PHONE_TYPE='" + model.TypePrimaryPhoneNumber + "'" +
+                     ",PHONE_PIN= '" + model.ExtPrimaryPhoneNumber + "',PHONE_EXTENSION='" + model.PinPrimaryPhoneNumber + "', MODBY='" + model.NTLogin + "' ,DRCM=getDate()" +
+                     ",OBJECT_ID='" + model.ObjectId + "' WHERE ID = '" + model.PhoneId + "'").SingleOrDefault();
+
                 _dbContext.Database.SqlQuery<EditPeopleViewModel>(
                     "UPDATE A_EMAILS SET ADDY = '" + model.EmailPrimary + "',[TYPE] = '" + model.EmailTypePrimary + "',EMAIL_TYPE = '" + model.EmailTextTypePrimary + "',MODBY = '" + model.NTLogin + "',DRCM = getDate() WHERE ID = '" + model.EmailIdPrimary + "'").SingleOrDefault();
+
                 _dbContext.Database.SqlQuery<EditPeopleViewModel>(
-                    "INSERT INTO A_LOCATIONS_OBJECT_LINK (ID,LOCATION_ID,[LOCATION_TYPE],MODBY,DRCM,OBJECT_ID)VALUES (newID(), '" +
-                    model.AddressLocation + "', '" + model.AddressType + "', '" + model.NTLogin +
-                    "', getDate(), '" + savePeopleProcedure.NewObjId + "')").SingleOrDefault();
+                    "UPDATE A_LOCATIONS_OBJECT_LINK SET LOCATION_ID='" + model.AddressLocation + "',[LOCATION_TYPE]='" +
+                    model.AddressType + "'" +
+                    ",MODBY= '" + model.NTLogin + "',DRCM=getDate(), OBJECT_ID='" + model.ObjectId + "'  WHERE ID = '" +
+                    model.LocationId + "'").SingleOrDefault();
+
                 return true;
             }
             catch (Exception ex)

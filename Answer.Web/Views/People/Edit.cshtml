@@ -21,6 +21,8 @@
                     @Html.HiddenFor(x=> x.Id)
                     @Html.HiddenFor(x => x.ObjectId)
                     @Html.HiddenFor(x => x.EmailIdPrimary)
+                    @Html.HiddenFor(x => x.LocationId)
+                    @Html.HiddenFor(x => x.PhoneId)
 
                     <div class="form-horizontal">
                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -156,7 +158,7 @@
                                             @Html.DropDownListFor(model => model.EmailTextTypePrimary, Model.ListEmailTextTypes, new {@class = "form-control"})
                                             @Html.ValidationMessageFor(model => model.EmailTextTypePrimary, "", new {@class = "text-danger"})
                                         </td>
-                                        <td>
+                                        <td style="width: 133%; float: left; margin-top: 5px;">
                                             @Html.EditorFor(model => model.EmailPrimary, new {htmlAttributes = new {@class = "form-control"}})
                                             @Html.ValidationMessageFor(model => model.EmailPrimary, "", new {@class = "text-danger"})
                                         </td>
@@ -171,7 +173,7 @@
                         <div class="form-group">
                             @Html.LabelFor(model => model.AddressType,  new { @class = "control-label col-md-2" })
                             <div class="col-md-8">
-                                <div style="width: 96%; float: left; display: flex">
+                                <div style="width: 100%; float: left; display: flex">
                                     @Html.DropDownListFor(model => model.AddressType, Model.ListAddressTypes, new { @class = "form-control" })
                                     @Html.ValidationMessageFor(model => model.AddressType, "", new { @class = "text-danger" })
                                     @Html.DropDownListFor(model => model.AddressLocation, Model.Locations, new { @class = "form-control select" })

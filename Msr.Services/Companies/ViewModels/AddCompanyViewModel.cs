@@ -33,6 +33,7 @@ namespace Msr.Services.Companies.ViewModels
         public string Parent { get; set; }
 
         [Required]
+        [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Please enter valid phone number.")]
         [DisplayName("Phone :")]
         public string Phone { get; set; }
 
