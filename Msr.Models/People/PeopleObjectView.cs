@@ -14,7 +14,6 @@ namespace Msr.Models.People
         public string LocationName { get; set; }
         public string PrimaryPhoneNumber { get; set; }
         public string SecondaryPhoneNumber { get; set; }
-        public string WorkEmailAddress { get; set; }
         public string SystemStatus { get; set; }
         public string DateHired { get; set; }
         public string Status { get; set; }
@@ -32,5 +31,6 @@ namespace Msr.Models.People
         public string ReferenceFiles { get; set; }
         public string OfficialPosition { get; set; }
         public string BossId { get; set; }
+        public string EmailAddress { get; set; }
     }
 }

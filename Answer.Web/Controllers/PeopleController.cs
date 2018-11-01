@@ -105,9 +105,9 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.SecondaryPhoneNumber.ToLower().Contains(rule.data.ToLower()));
                     }
-                    else if (rule.field == nameof(PeopleObjectView.WorkEmailAddress))
+                    else if (rule.field == nameof(PeopleObjectView.EmailAddress))
                     {
-                        totalRows = totalRows.Where(x => x.WorkEmailAddress.ToLower().Contains(rule.data.ToLower()));
+                        totalRows = totalRows.Where(x => x.EmailAddress.ToLower().Contains(rule.data.ToLower()));
                     }
                     else if (rule.field == nameof(PeopleObjectView.DateHired))
                     {
@@ -301,13 +301,32 @@ namespace Answer.Web.Controllers
 
             var response = _peopleService.Update(model);
 
-            if (response)
+            if (!response.HasErrors())
             {
                 TempData["SuccessMessage"] = "User has been updated successfully.";
                 return RedirectToAction("Index");
             }
 
-            TempData["ErrorMessage"] = "Something went wrong.";
+            model.Setup(_documentFilesService, _peopleService, _companyService, currentUser.Id);
+
+            var preview = string.Join(",", model.DocLinks.ToArray().Select(x => string.Format("{0}{1}{0}", "\'", x.SERVER_PATH)));
+
+            ViewBag.Preview = preview;
+
+            var jsonSerialiser = new JavaScriptSerializer();
+
+            var previewConfig = jsonSerialiser.Serialize(model.DocLinks.Select(x => new
+            {
+                caption = x.NAME,
+                type = MimeTypes.GetContentType(x.CONTENTTYPE),
+                size = 6666,
+                url = Url.Action("DeletesingleReference", "Documents", new { file = x.LINKED_DOC_ID }),
+                downloadUrl = x.SERVER_PATH,
+                key = x.LINKED_DOC_ID
+            }));
+
+            ViewBag.PreviewConfig = previewConfig;
+            TempData["ErrorMessage"] = response.ErrorMessage;
 
             return View(model);
         }

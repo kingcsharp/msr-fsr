@@ -202,8 +202,8 @@ Msr.PeopleGrid = Msr.PeopleGrid ||
                     },
                     {
                         label: 'Work Email',
-                        name: 'WorkEmailAddress',
-                        index: 'WorkEmailAddress',
+                        name: 'EmailAddress',
+                        index: 'EmailAddress',
                         colmenu: false,
                         editable: true,
                         coloptions: {

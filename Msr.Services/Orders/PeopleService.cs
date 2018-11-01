@@ -143,10 +143,11 @@ namespace Msr.Services.Orders
             try
             {
 
-                var loginIdExist = _dbContext.PeopleObjectViews.Any(x => x.LoginId == model.LoginId);
+                var loginIdExist = _dbContext.PeopleObjectViews.Any(x => x.LoginId == model.LoginId || x.EmailAddress == model.EmailPrimary);
+
                 if (loginIdExist)
                 {
-                    responsePeople.AddError($"LoginId already exist with '{model.LoginId}'");
+                    responsePeople.AddError($"LoginId or email already exist with '{model.LoginId}'");
                     return responsePeople;
                 }
 
@@ -245,7 +246,7 @@ namespace Msr.Services.Orders
 
                 string body = "<b>Please set your password by clicking following link: </b><br/>" + lnkHref;
 
-                string subject = "Password reminder";
+                string subject = "ANSWER - Password reminder";
 
                 EmailService.SendEmail(from, email, subject, body, null, true);
             }
@@ -287,10 +288,24 @@ namespace Msr.Services.Orders
                 .FirstOrDefault();
             return result;
         }
-        public bool Update(EditPeopleViewModel model)
+        public ResultNotification<string> Update(EditPeopleViewModel model)
         {
+            var responsePeople = new ResultNotification<string>();
             try
             {
+                var userEmail = _dbContext.PeopleObjectViews.Where(x => x.ObjectId == model.ObjectId).Select(x => x.EmailAddress).SingleOrDefault();
+
+                if (userEmail != null && userEmail != model.EmailPrimary)
+                {
+                    var hasEmail = _dbContext.PeopleObjectViews.Any(x => x.EmailAddress.Contains(model.EmailPrimary) && (x.Status == "APPROVED" || x.Status == "APPROVED_BUT_REVISING"));
+
+                    if (hasEmail)
+                    {
+                        responsePeople.AddError($"Email already exist");
+                        return responsePeople;
+                    }
+                }
+
                 var savePeopleProcedure = new EditPeopleProcedure
                 {
                     ObjID = model.ObjectId,
@@ -334,13 +349,13 @@ namespace Msr.Services.Orders
                     ",MODBY= '" + model.NTLogin + "',DRCM=getDate(), OBJECT_ID='" + model.ObjectId + "'  WHERE ID = '" +
                     model.LocationId + "'").SingleOrDefault();
 
-                return true;
+                return responsePeople;
             }
             catch (Exception ex)
             {
-                var message = "Error occured:" + ex.Message;
+                responsePeople.AddError("There is an error when editing user");
 
-                return false;
+                return responsePeople;
             }
 
         }

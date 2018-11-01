@@ -28,6 +28,8 @@ namespace Msr.Services.People.ViewModels
             ListEmailTypes = new List<SelectListItem>();
             ListAddressTypes = new List<SelectListItem>();
             ListEmailTextTypes = new List<SelectListItem>();
+            ListRealUserTypes = new List<SelectListItem>();
+            ListScreenTypes = new List<SelectListItem>();
         }
 
         [DisplayName("ANSWER-User?:")]
