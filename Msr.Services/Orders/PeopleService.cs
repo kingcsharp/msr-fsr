@@ -242,7 +242,7 @@ namespace Msr.Services.Orders
                 var from = ConfigurationManager.AppSettings["From"];
                 var websiteUrl = ConfigurationManager.AppSettings["WebsiteUrl"];
 
-                var lnkHref = $"<a href='{websiteUrl}/Account/ResetPassword?token={EncryptionHelper.Encrypt(userName)}'>Reset Password</a>";
+                var lnkHref = $"<a href='{websiteUrl}/Account/ResetPassword?token={EncryptionHelper.Encrypt(userName).Replace('/', '*')}'>Reset Password</a>";
 
                 var body = $@"<div>
                <p>Hello ANSWER user,<br/></p>
