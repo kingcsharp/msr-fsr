@@ -139,9 +139,14 @@ namespace Msr.Web.Controllers
 
                 var lnkHref = $"<a href='{websiteUrl}/Account/ResetPassword?token={EncryptionHelper.Encrypt(user.Login)}'>Reset Password</a>";
 
-                var body = "<b>Please reset your password by clicking  </b><br/>" + lnkHref;
+                var body = $@"<div>
+               <p>Hello ANSWER user,<br/></p>
+               <p>This email is being sent to you due to a password reset request from the MSR-FSR Answer system.<br/></p>
+               <p><b> Please reset your password by clicking : </ b ><br/> </p>
+               <p>{lnkHref}</p>
+                        </div>";
 
-                var subject = "Reset password";
+                var subject = "ANSWER - Reset password";
 
                 try
                 {
