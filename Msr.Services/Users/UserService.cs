@@ -151,7 +151,7 @@ namespace Msr.Services.Users
             return curentPassword == encryptedPasswod;
         }
 
-        public async Task<ResultNotification<bool>> SendUserName(string email)
+        public async Task<ResultNotification<bool>> SendUsername(string email)
         {
             var result = new ResultNotification<bool>();
 
@@ -172,9 +172,9 @@ namespace Msr.Services.Users
 
             var from = ConfigurationManager.AppSettings["From"];
 
-            var body = $"Hello ANSWER user, <br/><br/> <b>Your user name is : {user.UserName}</b>";
+            var body = $"Hello ANSWER user, <br/><br/> <b>Your username is : {user.UserName}</b>";
 
-            var subject = "ANSWER - Forget User Name";
+            var subject = "ANSWER - Forgot Username";
 
             try
             {

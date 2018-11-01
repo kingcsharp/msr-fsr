@@ -244,7 +244,12 @@ namespace Msr.Services.Orders
 
                 var lnkHref = $"<a href='{websiteUrl}/Account/ResetPassword?token={EncryptionHelper.Encrypt(userName)}'>Reset Password</a>";
 
-                string body = "<b>Please set your password by clicking following link: </b><br/>" + lnkHref;
+                var body = $@"<div>
+               <p>Hello ANSWER user,<br/></p>
+               <p>This email is being sent to you due to a password reset request from the MSR-FSR Answer system.<br/></p>
+               <p><b> Please reset your password by clicking : </ b ><br/> </p>
+               <p>{lnkHref}</p>
+                        </div>";
 
                 string subject = "ANSWER - Password reminder";
 

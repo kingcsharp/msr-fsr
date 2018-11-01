@@ -251,7 +251,7 @@ namespace Msr.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _userService.SendUserName(model.Email);
+                var result = await _userService.SendUsername(model.Email);
 
                 if (result.HasErrors())
                 {
