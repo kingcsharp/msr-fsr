@@ -1040,7 +1040,6 @@
     <Content Include="Views\Wip\_Photos.cshtml" />
     <Content Include="Views\Wip\_Monitors.cshtml" />
     <Content Include="Views\User\Profile.cshtml" />
-    <Content Include="Views\Account\Login - Copy.cshtml" />
     <Content Include="Views\Shared\Message.cshtml" />
     <Content Include="Views\Shared\Help\_ClientAdmin.cshtml" />
     <Content Include="Views\Shared\Help\_Buyer.cshtml" />

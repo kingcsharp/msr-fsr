@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -137,7 +138,10 @@ namespace Msr.Web.Controllers
                 var from = ConfigurationManager.AppSettings["From"];
                 var websiteUrl = ConfigurationManager.AppSettings["WebsiteUrl"];
 
-                var lnkHref = $"<a href='{websiteUrl}/Account/ResetPassword?token={EncryptionHelper.Encrypt(user.Login)}'>Reset Password</a>";
+                var encryptedText = EncryptionHelper.Encrypt(user.Login);
+                var encodedText = Convert.ToBase64String(Encoding.ASCII.GetBytes(encryptedText)).Replace('/', '*');
+
+                var lnkHref = $"<a href='{websiteUrl}/Account/ResetPassword?token={encodedText}'>Reset Password</a>";
 
                 var body = $@"<div>
                <p>Hello ANSWER user,<br/></p>
@@ -176,7 +180,8 @@ namespace Msr.Web.Controllers
         {
             token = Request.Url.Query.Replace("?token=", "");
 
-            var decUser = EncryptionHelper.Decrypt(token.Trim());
+            var decodedText = Convert.FromBase64String(token.Replace('*', '/'));
+            var decUser = EncryptionHelper.Decrypt(Encoding.ASCII.GetString(decodedText));
 
             var user = _userService.GetAnserByUserName(decUser);
 
