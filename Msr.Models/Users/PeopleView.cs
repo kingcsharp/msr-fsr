@@ -19,5 +19,6 @@ namespace Msr.Models.Users
         public string Title { get; set; }
         public string Password { get; set; }
         public DateTime? CreatedDate { get; set; }
+        public string EmailAddress { get; set; }
     }
 }

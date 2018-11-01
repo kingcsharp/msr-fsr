@@ -257,6 +257,7 @@
     <Compile Include="Helpers\FilePreviewHelper.cs" />
     <Compile Include="Helpers\UIPermissionHelper.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\ForgotUserNameViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -1249,6 +1250,8 @@
     <Content Include="Views\Invoices\_InvoiceAddModel.cshtml" />
     <Content Include="Views\Invoices\_InvoiceEditItemsList.cshtml" />
     <Content Include="Views\Invoices\_InvoiceEditModel .cshtml" />
+    <Content Include="Views\Account\ForgotUserNameConfirmation.cshtml" />
+    <Content Include="Views\Account\ForgotUserName.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

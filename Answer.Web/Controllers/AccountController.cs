@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Configuration;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using Answer.Web.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
@@ -220,6 +220,40 @@ namespace Msr.Web.Controllers
         public ActionResult ExternalLoginFailure()
         {
             return View();
+        }
+
+        [AllowAnonymous]
+        public ActionResult ForgotUserNameConfirmation()
+        {
+            return View();
+        }
+
+        [AllowAnonymous]
+        public ActionResult ForgotUserName()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ForgotUserName(ForgotUserNameViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _userService.SendUserName(model.Email);
+
+                if (result.HasErrors())
+                {
+                    ModelState.AddModelError("", result.ErrorMessage);
+
+                    return View(model);
+                }
+
+                return RedirectToAction("ForgotUserNameConfirmation", "Account");
+            }
+
+            return View(model);
         }
 
         protected override void Dispose(bool disposing)
