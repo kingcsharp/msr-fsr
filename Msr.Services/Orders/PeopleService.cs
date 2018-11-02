@@ -241,6 +241,16 @@ namespace Msr.Services.Orders
 
                 var from = ConfigurationManager.AppSettings["From"];
                 var websiteUrl = ConfigurationManager.AppSettings["WebsiteUrl"];
+                var loginLink = $"<a href='{websiteUrl}/Account/login'>Login</a>";
+
+                var bodyUsername = $@"<div>
+               <p>Hello ANSWER user,<br/></p>
+               <p>Your username is : {user.UserName}</p>
+               <p>Please click here to login : {loginLink}</p>
+               </div>";
+
+                EmailService.SendEmail(from, email, "ANSWER - Username", bodyUsername, null, true);
+
 
                 var lnkHref = $"<a href='{websiteUrl}/Account/ResetPassword?token={EncryptionHelper.Encrypt(userName).Replace('/', '*')}'>Reset Password</a>";
 
@@ -251,7 +261,7 @@ namespace Msr.Services.Orders
                <p>{lnkHref}</p>
                         </div>";
 
-                string subject = "ANSWER - Password reminder";
+                var subject = "ANSWER - Password reminder";
 
                 EmailService.SendEmail(from, email, subject, body, null, true);
             }
