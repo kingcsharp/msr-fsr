@@ -143,11 +143,19 @@ namespace Msr.Services.Orders
             try
             {
 
-                var loginIdExist = _dbContext.PeopleObjectViews.Any(x => x.LoginId == model.LoginId || x.EmailAddress == model.EmailPrimary);
+                var loginIdExist = _dbContext.PeopleObjectViews.Any(x => x.LoginId == model.LoginId);
 
                 if (loginIdExist)
                 {
-                    responsePeople.AddError($"LoginId or email already exist with '{model.LoginId}'");
+                    responsePeople.AddError($"LoginId already exist with '{model.LoginId}'");
+                    return responsePeople;
+                }
+
+                var emailIdExist = _dbContext.PeopleObjectViews.Any(x => x.EmailAddress == model.EmailPrimary && x.Status != "DELETED");
+
+                if (emailIdExist)
+                {
+                    responsePeople.AddError($"Email already exist with '{model.EmailPrimary}'");
                     return responsePeople;
                 }
 
