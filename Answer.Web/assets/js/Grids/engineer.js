@@ -52,7 +52,7 @@ Msr.WipGrid = Msr.WipGrid ||
                         multiselect: true,
                         searchoptions: {
                             sopt: ['eq'],
-                            value: 'HiddenOption:;'+ activeLocations.Locations(),
+                            value: 'HiddenOption:;' + 'Arizona Service Center:Arizona Service Center;Oregon Service Center:Oregon Service Center;Ireland Service Center:Ireland Service Center;Israel Service Center:Israel Service Center',
                             attr: { multiple: 'multiple', size: 4 },
                             dataInit: function (elem) {
                                 Msr.JqGridCommon.DataInitMultiselect(elem);
@@ -262,23 +262,6 @@ Msr.WipGrid = Msr.WipGrid ||
         }
     }
 
-var activeLocations = {
-    Locations: function () {
-        var dataList;
-        $.ajax({
-            type: "GET",
-            url: "/Wip/GetLocations",
-            dataType: "json",
-            contentType: 'application/json; charset=utf-8',
-            async: false,
-            cache: false,
-            success: function (data) {
-                dataList = data.locationslist;
-            }
-        });
-        return dataList;
-    }
-};
 
 function initDateEdit(elem, options) {
     $(elem).datepicker({
