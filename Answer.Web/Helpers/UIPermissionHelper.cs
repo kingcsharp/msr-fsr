@@ -35,20 +35,6 @@ namespace Answer.Web.Helpers
                 }
             }
 
-            menuViewModel.UserModules.Add(new MenuView()
-            {
-                GroupIcon = "fa-newspaper-o",
-                GroupMenu = "Reporting",
-                Icon = " fa-bar-chart",
-                Id = "Reporting-3",
-                Info = "Reports Widestage",
-                IsParent = false,
-                Name = "Reports",
-                Num = 0,
-                OrderNumber = 10,
-                Url = "Report"
-            });
-
             return menuViewModel;
         }
     }

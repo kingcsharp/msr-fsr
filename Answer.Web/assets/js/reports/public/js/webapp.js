@@ -18,7 +18,7 @@ angular.module('WideStage')
         $routeProvider.otherwise({ redirectTo: '/login' });
 
 
-        $routeProvider.when('/login', {
+        $routeProvider.when('/login/:dashboardId', {
             templateUrl: 'assets/js/reports/partials/home/login.html',
             controller: 'PublicCtrl'
         });
@@ -429,79 +429,82 @@ app.service('reportService', function () {
 
 });
 
-app.run(['$rootScope', '$sessionStorage', 'connection', '$location', function ($rootScope, $sessionStorage, connection, $location, $httpProvider) {
+app.run(['$rootScope', '$sessionStorage', 'connection', '$location',
+    function ($rootScope, $sessionStorage, connection, $location, $httpProvider) {
 
 
-    $rootScope.removeFromArray = function (array, item) {
-        var index = array.indexOf(item);
+        $rootScope.removeFromArray = function (array, item) {
+            var index = array.indexOf(item);
 
-        if (index > -1) array.splice(index, 1);
-    };
+            if (index > -1) array.splice(index, 1);
+        };
 
-    $rootScope.goBack = function () {
-        window.history.back();
-    };
+        $rootScope.goBack = function () {
+            window.history.back();
+        };
 
-    $rootScope.getUserContextHelp = function (contextHelpName) {
-        var found = false;
+        $rootScope.getUserContextHelp = function (contextHelpName) {
+            var found = false;
 
-        if ($rootScope.user.contextHelp) {
-            for (var i in $rootScope.user.contextHelp) {
-                if ($rootScope.user.contextHelp[i] == contextHelpName) {
-                    found = true;
+            if ($rootScope.user.contextHelp) {
+                for (var i in $rootScope.user.contextHelp) {
+                    if ($rootScope.user.contextHelp[i] == contextHelpName) {
+                        found = true;
+                    }
                 }
             }
+
+            return !found;
         }
 
-        return !found;
-    }
-
-    $rootScope.setUserContextHelpViewed = function (contextHelpName) {
-        var params = (params) ? params : {};
-        params.contextHelpName = contextHelpName;
-        connection.get('/api/set-viewed-context-help', params, function (data) {
-            $rootScope.user.contextHelp = data.items;
-        });
-    }
+        $rootScope.setUserContextHelpViewed = function (contextHelpName) {
+            var params = (params) ? params : {};
+            params.contextHelpName = contextHelpName;
+            connection.get('/api/set-viewed-context-help', params, function (data) {
+                $rootScope.user.contextHelp = data.items;
+            });
+        }
 
 
-    $rootScope.user = $sessionStorage.getObject('user');
+        $rootScope.user = $sessionStorage.getObject('user');
 
-    if (!$rootScope.user) {
-        $location.path("/login");
-        //TODO check sessionStorage si tiene al user hacer el get data
-        //connection.get('/Report/GetUserData', {}, function (data) {
-        //    if (!data.items.user) {
-        //        //return window.location.href = "/o"
-        //        $location.path("/login");
-        //    }
+        if (!$rootScope.user) {
+            debugger;
 
-        //    var theUser = data.items.user;
-        //    theUser.companyData = data.items.companyData;
-        //    theUser.rolesData = data.items.rolesData;
-        //    theUser.reportsCreate = data.items.reportsCreate;
-        //    theUser.dashboardsCreate = data.items.dashboardsCreate;
-        //    theUser.pagesCreate = data.items.pagesCreate;
-        //    theUser.exploreData = data.items.exploreData;
-        //    theUser.isWSTADMIN = data.items.isWSTADMIN;
-        //    theUser.contextHelp = data.items.contextHelp;
-        //    theUser.dialogs = data.items.dialogs;
-        //    theUser.viewSQL = data.items.viewSQL;
-        //    $rootScope.user = theUser;
-        //    $sessionStorage.setObject('user', theUser);
-        //    $rootScope.isWSTADMIN = isWSTADMIN($rootScope);
+            $location.path("/login/" + $location.path().split('/')[2]);
+            //TODO check sessionStorage si tiene al user hacer el get data
+            //connection.get('/Report/GetUserData', {}, function (data) {
+            //    if (!data.items.user) {
+            //        //return window.location.href = "/o"
+            //        $location.path("/login");
+            //    }
+
+            //    var theUser = data.items.user;
+            //    theUser.companyData = data.items.companyData;
+            //    theUser.rolesData = data.items.rolesData;
+            //    theUser.reportsCreate = data.items.reportsCreate;
+            //    theUser.dashboardsCreate = data.items.dashboardsCreate;
+            //    theUser.pagesCreate = data.items.pagesCreate;
+            //    theUser.exploreData = data.items.exploreData;
+            //    theUser.isWSTADMIN = data.items.isWSTADMIN;
+            //    theUser.contextHelp = data.items.contextHelp;
+            //    theUser.dialogs = data.items.dialogs;
+            //    theUser.viewSQL = data.items.viewSQL;
+            //    $rootScope.user = theUser;
+            //    $sessionStorage.setObject('user', theUser);
+            //    $rootScope.isWSTADMIN = isWSTADMIN($rootScope);
+            //});
+        } else {
+            $rootScope.isWSTADMIN = isWSTADMIN($rootScope);
+            //$location.path("/dashboardv2");
+        }
+
+        //connection.get('/api/get-user-objects', {}, function (data) {
+        //    $rootScope.userObjects = data.items;
+        //    $rootScope.user.canPublish = data.userCanPublish;
         //});
-    } else {
-        $rootScope.isWSTADMIN = isWSTADMIN($rootScope);
-        $location.path("/dashboardv2");
-    }
-
-    //connection.get('/api/get-user-objects', {}, function (data) {
-    //    $rootScope.userObjects = data.items;
-    //    $rootScope.user.canPublish = data.userCanPublish;
-    //});
-    //});
-}]);
+        //});
+    }]);
 
 app.run(function (bsLoadingOverlayService) {
     bsLoadingOverlayService.setGlobalConfig({

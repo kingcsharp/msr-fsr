@@ -55,7 +55,7 @@ app.controller('PublicCtrl', ["$scope", "$http", "$rootScope", "$sessionStorage"
                             theUser.viewSQL = data.items.viewSQL;
                             $rootScope.user = theUser;
                             $sessionStorage.setObject('user', theUser);
-                            $location.path("/dashboardv2");
+                            $location.path("/dashboardsv2/" + $location.path().split('/')[2]);
                         }, undefined, localapiparams);
 
                 }).
