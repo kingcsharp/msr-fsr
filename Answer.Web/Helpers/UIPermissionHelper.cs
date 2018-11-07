@@ -18,12 +18,12 @@ namespace Answer.Web.Helpers
 
         public static MenuViewModel GetUserMenuPermissions(LoggedUserIdResult loggedUserIdResult)
         {
-            var menuViewModel = new MenuViewModel {LoggedUserIdResult = loggedUserIdResult};
+            var menuViewModel = new MenuViewModel { LoggedUserIdResult = loggedUserIdResult };
 
             var menuService = new MenuService();
             menuViewModel.UserModules = menuService.GetMenu(loggedUserIdResult.Id);
 
-            if (!menuViewModel.UserModules.Any(x=>x.Name == MenuGroupConstants.AnswerAdmin))
+            if (!menuViewModel.UserModules.Any(x => x.Name == MenuGroupConstants.AnswerAdmin))
             {
                 var roleService = new RoleService();
                 var roles = roleService.GetAssignedRoles(loggedUserIdResult.Id);
