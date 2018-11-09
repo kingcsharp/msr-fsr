@@ -273,6 +273,8 @@ namespace Answer.Web.Controllers
         {
             var result = false;
 
+            var ids = linkDocId.Split(',');
+
             var currentUser = GetCurrentUser();
 
             var initialPreview = new List<string>();
@@ -298,17 +300,17 @@ namespace Answer.Web.Controllers
                 }
                 else if (section == "TEMPLATE_STEP")
                 {
-                    _preProServices.SavePreProSingleFileReference(linkDocId, file, currentUser.Id);
+                    _preProServices.SavePreProSingleFileReference(ids[0], file, currentUser.Id);
                 }
                 else
                 {
-                    _documentService.SaveSingleFileReference(linkDocId, file, currentUser.Id);
+                    _documentService.SaveSingleFileReference(ids[0], file, currentUser.Id);
                 }
             }
 
             if (section == "WIP_TASK_STEP")
             {
-                var images = _orderService.GetOrderItemImagesById(linkDocId);
+                var images = _orderService.GetOrderItemImagesById(ids[0]);
 
                 initialPreview = images.Select(x => x.Path).ToList();
 
@@ -324,7 +326,7 @@ namespace Answer.Web.Controllers
             }
             else if (section == "TEMPLATE_STEP")
             {
-                var proDockLinks = _documentFilesService.GetPreProRefFileDocLinks(linkDocId, currentUser.Id);
+                var proDockLinks = _documentFilesService.GetPreProRefFileDocLinks(ids[0], currentUser.Id);
 
                 initialPreview = proDockLinks.ToArray().Select(x => x.Server_Path).ToList();
 
@@ -333,14 +335,14 @@ namespace Answer.Web.Controllers
                     caption = x.Name,
                     type = MimeTypes.GetContentType(x.Contenttype),
                     size = 6666,
-                    url = Url.Action("DeletePreProImageById", "Doc", new { id = linkDocId, fileId = x.Value }),
+                    url = Url.Action("DeletePreProImageById", "Doc", new { id = ids[0], fileId = x.Value }),
                     downloadUrl = x.Server_Path,
                     key = x.Value
                 });
             }
             else
             {
-                var proDockLinks = _documentFilesService.GetDocByObjectId(linkDocId);
+                var proDockLinks = _documentFilesService.GetDocByObjectId(ids[0]);
 
                 initialPreview = proDockLinks.ToArray().Select(x => x.SERVER_PATH).ToList();
 

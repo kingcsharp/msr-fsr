@@ -215,7 +215,11 @@ namespace Answer.Web.Controllers
         {
             var currentUser = GetCurrentUser();
 
+            var taskId = objectId.Split(',');
+
             var initialPreview = new List<string>();
+
+
             var initialPreviewConfigs = new List<DocLink>();
 
             var initialPreviewConfig = new object();
@@ -262,7 +266,7 @@ namespace Answer.Web.Controllers
                     caption = x.NAME,
                     type = MimeTypes.GetContentType(x.CONTENTTYPE),
                     size = 6666,
-                    url = "/doc/DeleteImageById?Id=" + newId + "&taskId=" + objectId,
+                    url = "/doc/DeleteImageById?Id=" + newId + "&taskId=" + taskId[0],
                     downloadUrl = cloudUrl,
                     key = x.LINKED_DOC_ID
                 }).ToArray();

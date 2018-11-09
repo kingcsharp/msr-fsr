@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
-using System.Web.Script.Serialization;
 using Answer.Web.Filters;
 using Answer.Web.ViewModel.Wip;
-using Msr.Commons.Files;
 using Msr.Infrastructure.Common.Constansts;
 using Msr.Models.Orders;
 using Msr.Services;
+using Msr.Services.Documents;
+using Msr.Services.Documents.ViewModels;
 using Msr.Services.EquipmentMaintenances;
 using Msr.Services.EquipmentMaintenances.ViewModels;
+using Msr.Services.Helpers;
 using Msr.Services.jqGrid;
 using Msr.Services.Locations;
 using Msr.Services.Notes;
@@ -36,6 +37,7 @@ namespace Answer.Web.Controllers
         private RoleService _roleService;
         private ObjectsService _objectsService;
         private EquipmentMaintenanceService _equipmentMaintenanceService;
+        private readonly DocumentFilesService _documentFilesService;
 
         public WipController()
         {
@@ -44,6 +46,7 @@ namespace Answer.Web.Controllers
             _taskService = new TaskService();
             _proceduresService = new ProceduresService();
             _roleService = new RoleService();
+            _documentFilesService = new DocumentFilesService();
         }
 
         public ActionResult Index()
@@ -543,24 +546,24 @@ namespace Answer.Web.Controllers
             response.Images = new ImageViewModel
             {
                 FillId = fillId,
-                TaskId = stepId
+                TaskId = stepId,
+                ActualPartId = response.ParentPartId
             };
 
             var images = _orderService.GetOrderItemImagesById(stepId.ToString());
 
-            var jsonSerialiser = new JavaScriptSerializer();
-            var previewConfig = jsonSerialiser.Serialize(images.Select(x => new
-            {
-                caption = x.FILE_NAME,
-                type = MimeTypes.GetContentType(x.ContentType),
-                size = 6666,
-                url = Url.Action("DeleteImageById", "Doc", new { id = x.Id, taskId = x.Task_Id }),
-                downloadUrl = x.Path,
-                key = x.Id
-            }));
+            var dockLinks = images.Select(itemImage => new DocLink
+                {
+                    SERVER_PATH = itemImage.Path,
+                    CONTENTTYPE = itemImage.ContentType,
+                    LINKED_DOC_ID = itemImage.Id,
+                    NAME = itemImage.FILE_NAME
+                })
+                .ToList();
 
-            response.Images.PreviewConfig = previewConfig;
-            response.Images.Preview = jsonSerialiser.Serialize(images.Select(x => x.Path));
+            response.Images.PreviewConfig = FileInputConfigHelper.GetPreviewConfigValue(dockLinks, Url.Action("DeleteImageById", "Doc"), Url.Action("Download", "Doc"));
+
+            response.Images.Preview = FileInputConfigHelper.GetPreviewValue(dockLinks, _documentFilesService);
 
             return PartialView("_InitialInspection", response);
         }
