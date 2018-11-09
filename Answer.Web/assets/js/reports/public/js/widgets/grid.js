@@ -93,7 +93,7 @@ this.extendedGridV2 = function(report,mode)
             htmlCode += '<div class="container-fluid" style="'+headerStyle+'">';
             for(var i = 0; i < columns.length; i++)
             {
-                htmlCode += getHeaderColumn(columns[i],i);
+                htmlCode += getHeaderColumn(columns[i], i, report);
             }
             htmlCode += '</div>';
 
@@ -132,7 +132,7 @@ this.extendedGridV2 = function(report,mode)
 
 
 
-    function getHeaderColumn(column,columnIndex)
+    function getHeaderColumn(column, columnIndex, report)
     {
           var htmlCode = '';
             //var elementName = "'"+column.id+"'";
@@ -145,7 +145,7 @@ this.extendedGridV2 = function(report,mode)
                     if (column.elementType === 'date')
                         elementNameAux = "'"+'wst'+column.elementID+'_original'+"'";
                     //htmlCode += '<div class="'+colClass+' report-repeater-column-header" style="'+colWidth+'"><span class="hand-cursor" ng-click="orderColumn('+elementNameAux+','+quotedHashedID()+')">'+column.objectLabel+'</span><span class="sortorder" ng-show="getReport(\''+hashedID+'\').predicate === '+elementName+'" ng-class="{reverse:getReport(\''+hashedID+'\').reverse}"></span>'+getColumnDropDownHTMLCode(column,columnIndex,elementName,column.elementType)+' </div>';
-        htmlCode += '<div class="'+colClass+' report-repeater-column-header" style="'+colWidth+'"><table style="table-layout:fixed;width:100%"><tr><td style="overflow:hidden;white-space: nowrap;width:95%;">'+column.objectLabel+'</td><td style="width:34px;>'+getColumnDropDownHTMLCode(column,columnIndex,elementName,column.elementType)+'</td></tr></table> </div>';
+        htmlCode += '<div class="' + colClass + ' report-repeater-column-header" style="' + colWidth + '"><table style="table-layout:fixed;width:100%"><tr><td style="overflow:hidden;white-space: nowrap;width:95%;">' + column.objectLabel + '</td><td style="width:34px;>' + getColumnDropDownHTMLCode(column, columnIndex, elementName, column.elementType, report)+'</td></tr></table> </div>';
 
         return htmlCode;
     }
@@ -390,7 +390,7 @@ this.extendedGridV2 = function(report,mode)
     }
 
 
-    function getColumnDropDownHTMLCode(column, columnIndex,elementName,columnType)
+    function getColumnDropDownHTMLCode(column, columnIndex, elementName, columnType, report)
     {
         if (column.elementType == 'date')
         {
@@ -400,22 +400,31 @@ this.extendedGridV2 = function(report,mode)
             elementName = "'"+elementName+'_original'+"'";
         }
 
-        var columnPropertiesBtn = '<div class="btn-group pull-right" dropdown="" > '
-            +'<button type="button" class="btn btn-blue dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="margin-bottom: 0px;background-color:transparent;">'
-        +' <i class="fa fa-angle-down"></i>'
-            +'</button>'
-            +'<ul class="dropdown-menu dropdown-blue multi-level" role="menu">'
-            +'<li class="dropdown-submenu">'
-            +'      <a href="">Sort</a>'  //ascendente, descendente
-            +'      <ul class="dropdown-menu">'
-            +'      <li><a ng-click="reverse = true; orderColumn('+columnIndex+',false,'+quotedHashedID()+')">Ascending</a></li>'
-            +'      <li><a ng-click="reverse = false; orderColumn('+columnIndex+',true,'+quotedHashedID()+')">Descending</a></li>'
-            +'      </ul>'
-            +'</li>'
+        var columnPropertiesBtn = '<div class="btn-group pull-right" dropdown="" > ' +
+            '<button type="button" class="btn btn-blue dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="margin-bottom: 0px;background-color:transparent;">' +
+            ' <i class="fa fa-angle-down"></i>' +
+            '</button>' +
+            '<ul class="dropdown-menu dropdown-blue multi-level" role="menu">' +
+            '<li class="dropdown-submenu">' +
+            '      <a href="">Sort</a>' //ascendente, descendente
+            +
+            '      <ul class="dropdown-menu">' +
+            '      <li><a ng-click="reverse = true; orderColumn(' +
+            columnIndex +
+            ',false,' +
+            quotedHashedID() +
+            ')">Ascending</a></li>' +
+            '      <li><a ng-click="reverse = false; orderColumn(' +
+            columnIndex +
+            ',true,' +
+            quotedHashedID() +
+            ')">Descending</a></li>' +
+            '      </ul>' +
+            '</li>';
 
-
+        debugger;
             columnPropertiesBtn += '<li class="divider"></li>'
-            +'<li><a ng-click="saveToExcel(\''+hashedID+'\')"><i class="fa fa-file-excel-o"></i> Export table to excel</a></li>'
+            + '<li><a ng-click="saveToExcel(\'' + hashedID +'\',\'' + report.id +'\')"><i class="fa fa-file-excel-o"></i> Export table to excel</a></li>'
             +'<li class="divider"></li>'
             +'<li><input class="find-input pull-right" type="search" ng-model="theFilter" placeholder="Table filter..." aria-label="Table filter..." style="margin:5px;" /></li>'
             +'</ul>'

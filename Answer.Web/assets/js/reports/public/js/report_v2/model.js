@@ -1,12 +1,10 @@
-app.service('report_v2Model' , function (queryModel,c3Charts,reportHtmlWidgets,grid,bsLoadingOverlayService,connection,$routeParams,verticalGrid) {
+app.service('report_v2Model', function (queryModel, c3Charts, reportHtmlWidgets, grid, bsLoadingOverlayService, connection, $routeParams, verticalGrid) {
 
     var report = {};
 
-    this.getReportDefinition = function(id,isLinked,done)
-    {
-        connection.get('/api/reports/get-report/'+id, {id: id, mode: 'preview', linked:isLinked}, function(data) {
-            if (data.item)
-            {
+    this.getReportDefinition = function (id, isLinked, done) {
+        connection.get('/api/reports/get-report/' + id, { id: id, mode: 'preview', linked: isLinked }, function (data) {
+            if (data.item) {
                 //report = data.item;
                 done(data.item);
             } else {
@@ -15,87 +13,77 @@ app.service('report_v2Model' , function (queryModel,c3Charts,reportHtmlWidgets,g
         });
     }
 
-    this.getReport = function(report,parentDiv,mode,done)
-    {
-        getReport(report,parentDiv,mode,done);
+    this.getReport = function (report, parentDiv, mode, done) {
+        getReport(report, parentDiv, mode, done);
     }
 
 
-    function getReport(report,parentDiv,mode,done)
-    {
+    function getReport(report, parentDiv, mode, done) {
         showOverlay(parentDiv);
         var isLinked = false;
         queryModel.loadQuery(report.query);
         queryModel.detectLayerJoins();
-        queryModel.getQueryData(report.query, function(data,sql,query){
-                    report.query.data = data;
-                    report.parentDiv = parentDiv;
-                    repaintReport(report,mode);
-                    done(sql);
-                    hideOverlay(parentDiv);
-            });
+        queryModel.getQueryData(report.query, function (data, sql, query) {
+            report.query.data = data;
+            report.parentDiv = parentDiv;
+            repaintReport(report, mode);
+            done(sql);
+            hideOverlay(parentDiv);
+        });
     }
 
-    this.getReportDataNextPage = function(report,page)
-    {
-        getReportDataNextPage(report,page);
+    this.getReportDataNextPage = function (report, page) {
+        getReportDataNextPage(report, page);
     }
 
-    function getReportDataNextPage(report,page)
-    {
+    function getReportDataNextPage(report, page) {
         queryModel.loadQuery(report.query);
-        queryModel.getQueryDataNextPage(page, function(data,sql,query){
-                report.query.data.push.apply(report.query.data, data);
-            });
+        queryModel.getQueryDataNextPage(page, function (data, sql, query) {
+            report.query.data.push.apply(report.query.data, data);
+        });
     }
 
-    this.repaintReport = function(report,mode)
-    {
-        repaintReport(report,mode);
+    this.repaintReport = function (report, mode) {
+        repaintReport(report, mode);
     }
 
-    function repaintReport(report,mode)
-    {
+    function repaintReport(report, mode) {
         var data = report.query.data;
 
-        if (data.length != 0)
-            {
-        switch(report.reportType)
-            {
+        if (data.length != 0) {
+            switch (report.reportType) {
                 case "grid":
                     {
-                                var htmlCode = grid.extendedGridV2(report,mode);
-                                var el = document.getElementById(report.parentDiv);
+                        var htmlCode = grid.extendedGridV2(report, mode);
+                        var el = document.getElementById(report.parentDiv);
 
-                                        if (el)
-                                        {
-                                            angular.element(el).empty();
-                                            var $div = $(htmlCode);
-                                            angular.element(el).append($div);
-                                            angular.element($('#angularAppDiv')).injector().invoke(function($compile) {
-                                                var scope = angular.element($div).scope();
-                                                $compile($div)(scope);
-                                                hideOverlay(report.parentDiv);
-                                            });
-                                        }
+                        if (el) {
+                            angular.element(el).empty();
+                            var $div = $(htmlCode);
+                            angular.element(el).append($div);
+                            angular.element($('#angularAppDiv')).injector().invoke(function ($compile) {
+                                var scope = angular.element($div).scope();
+                                $compile($div)(scope);
+                                hideOverlay(report.parentDiv);
+                            });
+                        }
                     }
                     break;
                 case "vertical-grid":
                     {
-                                var htmlCode = verticalGrid.getVerticalGrid(report,mode);
-                                var el = document.getElementById(report.parentDiv);
+                        var htmlCode = verticalGrid.getVerticalGrid(report, mode);
+                        var el = document.getElementById(report.parentDiv);
 
-                                        if (el)
-                                        {
-                                            angular.element(el).empty();
-                                            var $div = $(htmlCode);
-                                            angular.element(el).append($div);
-                                            angular.element($('#angularAppDiv')).injector().invoke(function($compile) {
-                                                var scope = angular.element($div).scope();
-                                                $compile($div)(scope);
-                                                hideOverlay(report.parentDiv);
-                                            });
-                                        }
+                        if (el) {
+                            angular.element(el).empty();
+                            var $div = $(htmlCode);
+                            angular.element(el).append($div);
+                            angular.element($('#angularAppDiv')).injector().invoke(function ($compile) {
+                                var scope = angular.element($div).scope();
+                                $compile($div)(scope);
+                                hideOverlay(report.parentDiv);
+                            });
+                        }
                     }
                     break;
                 case 'chart-line':
@@ -104,23 +92,23 @@ app.service('report_v2Model' , function (queryModel,c3Charts,reportHtmlWidgets,g
                 case 'gauge':
                     {
                         if (report.reportType == 'chart-donut')
-                                    report.properties.chart.type = 'donut';
-                                if (report.reportType == 'chart-pie')
-                                    report.properties.chart.type = 'pie';
-                                if (report.reportType == 'gauge')
-                                    report.properties.chart.type = 'gauge';
-                        generatec3Chart(report,mode);
+                            report.properties.chart.type = 'donut';
+                        if (report.reportType == 'chart-pie')
+                            report.properties.chart.type = 'pie';
+                        if (report.reportType == 'gauge')
+                            report.properties.chart.type = 'gauge';
+                        generatec3Chart(report, mode);
                     }
                     break;
                 case 'indicator':
                     generateIndicator(report);
                     break;
 
-        }
-
-            } else {
-                generateNoDataHTML()
             }
+
+        } else {
+            generateNoDataHTML()
+        }
         /*
 
                 if (report.reportType == 'grid')
@@ -174,80 +162,75 @@ app.service('report_v2Model' , function (queryModel,c3Charts,reportHtmlWidgets,g
 
     }
 
-    function generateNoDataHTML()
-    {
-        var htmlCode = '<span style="font-size: small;color: darkgrey;padding: 5px;">'+report.reportName+'</span><div style="width: 100%;height: 100%;display: flex;align-items: center;"><span style="color: darkgray; font-size: initial; width:100%;text-align: center";><img src="/images/empty.png">No data for this report</span></div>';
-                                var el = document.getElementById(report.parentDiv);
-                                        if (el)
-                                        {
-                                            angular.element(el).empty();
-                                            var $div = $(htmlCode);
-                                            angular.element(el).append($div);
-                                            angular.element($('#angularAppDiv')).injector().invoke(function($compile) {
-                                                var scope = angular.element($div).scope();
-                                                $compile($div)(scope);
-                                                //hideOverlay('OVERLAY_'+report.parentDiv);
-                                                hideOverlay(report.parentDiv);
-                                            });
-                                        }
+    function generateNoDataHTML() {
+        var htmlCode = '<span style="font-size: small;color: darkgrey;padding: 5px;">' + report.reportName + '</span><div style="width: 100%;height: 100%;display: flex;align-items: center;"><span style="color: darkgray; font-size: initial; width:100%;text-align: center";><img src="/images/empty.png">No data for this report</span></div>';
+        var el = document.getElementById(report.parentDiv);
+        if (el) {
+            angular.element(el).empty();
+            var $div = $(htmlCode);
+            angular.element(el).append($div);
+            angular.element($('#angularAppDiv')).injector().invoke(function ($compile) {
+                var scope = angular.element($div).scope();
+                $compile($div)(scope);
+                //hideOverlay('OVERLAY_'+report.parentDiv);
+                hideOverlay(report.parentDiv);
+            });
+        }
     }
 
-    this.generateIndicator = function(report)
-    {
+    this.generateIndicator = function (report) {
         generateIndicator(report);
     }
 
-    function generateIndicator(report)
-    {
+    function generateIndicator(report) {
 
         var htmlCode = reportHtmlWidgets.generateIndicator(report);
         //var el = document.getElementById(report.parentDiv);
         var el = document.getElementById(report.parentDiv);
 
-        console.log('indicator HTML',htmlCode);
-        console.log('indicator el',el);
+        console.log('indicator HTML', htmlCode);
+        console.log('indicator el', el);
 
-                                if (el)
-                                {
-                                    angular.element(el).empty();
-                                    var $div = $(htmlCode);
-                                    angular.element(el).append($div);
-                                    angular.element($('#angularAppDiv')).injector().invoke(function($compile) {
-                                        var scope = angular.element($div).scope();
-                                        $compile($div)(scope);
-                                        setTimeout(function() {c3Charts.rebuildChart(report);
-                                                               hideOverlay('OVERLAY_'+report.parentDiv);
-                                                               }, 500);
-                                    });
-                                }
+        if (el) {
+            angular.element(el).empty();
+            var $div = $(htmlCode);
+            angular.element(el).append($div);
+            angular.element($('#angularAppDiv')).injector().invoke(function ($compile) {
+                var scope = angular.element($div).scope();
+                $compile($div)(scope);
+                setTimeout(function () {
+                    c3Charts.rebuildChart(report);
+                    hideOverlay('OVERLAY_' + report.parentDiv);
+                }, 500);
+            });
+        }
     }
 
 
-    function generatec3Chart(report,mode)
-    {
+    function generatec3Chart(report, mode) {
 
         var reportID = report.id;
 
-        var htmlCode = c3Charts.getChartHTML(report,reportID,mode);
+        var htmlCode = c3Charts.getChartHTML(report, reportID, mode);
 
         var el = document.getElementById(report.parentDiv);
 
-                                if (el)
-                                {
-                                    angular.element(el).empty();
-                                    var $div = $(htmlCode);
-                                    angular.element(el).append($div);
-                                    angular.element($('#angularAppDiv')).injector().invoke(function($compile) {
-                                        var scope = angular.element($div).scope();
-                                        $compile($div)(scope);
-                                        /*setTimeout(function() {c3Charts.rebuildChart(report,report.query,report.properties.chart);
-                                                               hideOverlay('OVERLAY_'+report.parentDiv);
-                                                               }, 500);*/
-                                        setTimeout(function() {c3Charts.rebuildChart(report);
-                                                               hideOverlay('OVERLAY_'+report.parentDiv);
-                                                               }, 500);
-                                    });
-                                }
+        if (el) {
+            angular.element(el).empty();
+            var $div = $(htmlCode);
+            angular.element(el).append($div);
+            angular.element($('#angularAppDiv')).injector().invoke(function ($compile) {
+                var scope = angular.element($div).scope();
+                $compile($div)(scope);
+                /*setTimeout(function() {c3Charts.rebuildChart(report,report.query,report.properties.chart);
+                                       hideOverlay('OVERLAY_'+report.parentDiv);
+                                       }, 500);*/
+                setTimeout(function () {
+                    c3Charts.rebuildChart(report);
+                    hideOverlay('OVERLAY_' + report.parentDiv);
+                }, 500);
+            });
+        }
 
     }
 
@@ -265,52 +248,47 @@ app.service('report_v2Model' , function (queryModel,c3Charts,reportHtmlWidgets,g
 
     var selectedColumn = undefined;
 
-    this.selectedColumn = function()
-    {
+    this.selectedColumn = function () {
         return selectedColumn;
     }
 
     var selectedColumnHashedID = undefined;
 
-    this.selectedColumnHashedID = function()
-    {
+    this.selectedColumnHashedID = function () {
         return selectedColumnHashedID;
     }
 
     var selectedColumnIndex = undefined;
 
-    this.selectedColumnIndex = function()
-    {
+    this.selectedColumnIndex = function () {
         return selectedColumnIndex;
     }
 
 
-    this.changeColumnStyle = function(report,columnIndex ,hashedID)
-    {
+    this.changeColumnStyle = function (report, columnIndex, hashedID) {
         selectedColumn = report.properties.columns[columnIndex];
-        selectedColumnHashedID  = hashedID;
-        selectedColumnIndex  = columnIndex;
+        selectedColumnHashedID = hashedID;
+        selectedColumnIndex = columnIndex;
 
         if (!selectedColumn.columnStyle)
-             selectedColumn.columnStyle = {color:'#000','background-color':'#EEEEEE','text-align':'left','font-size':"12px",'font-weight':"normal",'font-style':"normal"};
+            selectedColumn.columnStyle = { color: '#000', 'background-color': '#EEEEEE', 'text-align': 'left', 'font-size': "12px", 'font-weight': "normal", 'font-style': "normal" };
 
         $('#columnFormatModal').modal('show');
 
     }
 
-    this.changeColumnSignals = function(report,columnIndex ,hashedID)
-    {
+    this.changeColumnSignals = function (report, columnIndex, hashedID) {
 
         selectedColumn = report.properties.columns[columnIndex];
-        selectedColumnHashedID  = hashedID;
-        selectedColumnIndex  = columnIndex;
+        selectedColumnHashedID = hashedID;
+        selectedColumnIndex = columnIndex;
 
         if (!selectedColumn.signals)
             selectedColumn.signals = [];
         $('#columnSignalsModal').modal('show');
     }
 
-    this.orderColumn = function(report,columnIndex, desc,hashedID) {
+    this.orderColumn = function (report, columnIndex, desc, hashedID) {
 
         var theColumn = report.query.columns[columnIndex];
         if (desc == true)
@@ -319,12 +297,12 @@ app.service('report_v2Model' , function (queryModel,c3Charts,reportHtmlWidgets,g
             theColumn.sortType = -1;
         report.query.order = [];
         report.query.order.push(theColumn);
-        showOverlay('OVERLAY_'+hashedID);
+        showOverlay('OVERLAY_' + hashedID);
 
-        queryModel.getQueryData(report.query, function(data,sql,query){
+        queryModel.getQueryData(report.query, function (data, sql, query) {
 
-                report.query.data = data;
-                hideOverlay('OVERLAY_'+hashedID);
+            report.query.data = data;
+            hideOverlay('OVERLAY_' + hashedID);
         });
         //get the column index, identify the report.query.column by  index, then add to query.order taking care about the sortType -1 / 1
     };
@@ -339,48 +317,54 @@ app.service('report_v2Model' , function (queryModel,c3Charts,reportHtmlWidgets,g
     }
 
 
-    this.saveAsReport = function(report,mode,done) {
+    this.saveAsReport = function (report, mode, done) {
 
-                //Cleaning up the report object
-                var clonedReport = clone(report);
-                if (clonedReport.properties.chart)
-                    {
-                    clonedReport.properties.chart.chartCanvas = undefined;
-                    clonedReport.properties.chart.data = undefined;
-                    //clonedReport.properties.chart.query = undefined;
-                    }
-                if (clonedReport.query.data)
-                    clonedReport.query.data = undefined;
-                clonedReport.parentDiv = undefined;
+        //Cleaning up the report object
+        var clonedReport = clone(report);
+        if (clonedReport.properties.chart) {
+            clonedReport.properties.chart.chartCanvas = undefined;
+            clonedReport.properties.chart.data = undefined;
+            //clonedReport.properties.chart.query = undefined;
+        }
+        if (clonedReport.query.data)
+            clonedReport.query.data = undefined;
+        clonedReport.parentDiv = undefined;
 
-                if (mode == 'add') {
-                    connection.post('/api/reports/create', clonedReport, function(data) {
-                        if (data.result == 1) {
-                           setTimeout(function () {
-                            done();
-                            }, 400);
-                        }
-                    });
+        if (mode == 'add') {
+            connection.post('/api/reports/create', clonedReport, function (data) {
+                if (data.result == 1) {
+                    setTimeout(function () {
+                        done();
+                    }, 400);
                 }
-                else {
-                    connection.post('/api/reports/update/'+report._id, clonedReport, function(result) {
-                        if (result.result == 1) {
-                            setTimeout(function () {
-                            done();
-                            }, 400);
-                        }
-                    });
+            });
+        }
+        else {
+            connection.post('/api/reports/update/' + report._id, clonedReport, function (result) {
+                if (result.result == 1) {
+                    setTimeout(function () {
+                        done();
+                    }, 400);
+                }
+            });
         }
 
 
     };
 
-    this.saveToExcel = function($scope,reportHash)
-    {
-        var wopts = { bookType:'xlsx', bookSST:false, type:'binary' };
-        var ws_name = $scope.selectedReport.reportName;
+    this.saveToExcel = function ($scope, reportHash, report) {
+        var reports = $scope.selectedDashboard.reports;
+        var length = reports.length;
+        var currReport = {};
+        while (length--) {
+            if (reports[length].id === report) {
+                currReport = reports[length];
+            }
+        }
+        var wopts = { bookType: 'xlsx', bookSST: false, type: 'binary' };
+        var ws_name = currReport.reportName;
 
-        var wb = new Workbook(), ws = sheet_from_array_of_arrays($scope,reportHash);
+        var wb = new Workbook(), ws = sheet_from_array_of_arrays($scope, currReport);
 
         wb.SheetNames.push(ws_name);
         wb.Sheets[ws_name] = ws;
@@ -388,45 +372,79 @@ app.service('report_v2Model' , function (queryModel,c3Charts,reportHtmlWidgets,g
 
 
 
-        var wbout = XLSX.write(wb,wopts);
+        var wbout = XLSX.write(wb, wopts);
 
         function s2ab(s) {
             var buf = new ArrayBuffer(s.length);
             var view = new Uint8Array(buf);
-            for (var i=0; i!=s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+            for (var i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
             return buf;
         }
 
-        saveAs(new Blob([s2ab(wbout)],{type:""}), ws_name+".xlsx")
+        saveAss(new Blob([s2ab(wbout)], { type: "" }), ws_name + ".xlsx");
 
 
     }
 
+    function saveAss(data, fname, opts) {
+        opts = $.extend(true, {
+            type: 'plain/text;charset=utf-8'
+        }, opts || {});
 
-     function Workbook() {
-        if(!(this instanceof Workbook)) return new Workbook();
+        var file, url, tmp = [];
+
+        fname = fname == null || fname === '' ? 'jqGridFile.txt' : fname;
+
+        if (!$.isArray(data)) {
+            tmp[0] = data;
+        } else {
+            tmp = data;
+        }
+        try {
+            file = new File(tmp, fname, opts);
+        } catch (e) {
+            file = new Blob(tmp, opts);
+        }
+        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+            window.navigator.msSaveOrOpenBlob(file, fname);
+        } else {
+            url = URL.createObjectURL(file);
+            var a = document.createElement("a");
+            a.href = url;
+            a.download = fname;
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(function () {
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+            }, 0);
+        }
+    }
+
+
+    function Workbook() {
+        if (!(this instanceof Workbook)) return new Workbook();
         this.SheetNames = [];
         this.Sheets = {};
     }
 
-    function sheet_from_array_of_arrays($scope,reportHash) {
-        var data = $scope.selectedReport.query.data;
-        var report = $scope.selectedReport;
+    function sheet_from_array_of_arrays($scope, currReport) {
+        var data = currReport.query.data;
+        var report = currReport;
         var ws = {};
-        var range = {s: {c:10000000, r:10000000}, e: {c:0, r:0 }};
-        for(var i = 0; i < report.properties.columns.length; i++)
-        {
-            if(range.s.r > 0) range.s.r = 0;
-            if(range.s.c > i) range.s.c = i;
-            if(range.e.r < 0) range.e.r = 0;
-            if(range.e.c < i) range.e.c = i;
+        var range = { s: { c: 10000000, r: 10000000 }, e: { c: 0, r: 0 } };
+        for (var i = 0; i < report.properties.columns.length; i++) {
+            if (range.s.r > 0) range.s.r = 0;
+            if (range.s.c > i) range.s.c = i;
+            if (range.e.r < 0) range.e.r = 0;
+            if (range.e.c < i) range.e.c = i;
 
 
-            var cell = {v: report.properties.columns[i].objectLabel };
-            var cell_ref = XLSX.utils.encode_cell({c:i,r:0});
-            if(typeof cell.v === 'number') cell.t = 'n';
-            else if(typeof cell.v === 'boolean') cell.t = 'b';
-            else if(cell.v instanceof Date) {
+            var cell = { v: report.properties.columns[i].objectLabel };
+            var cell_ref = XLSX.utils.encode_cell({ c: i, r: 0 });
+            if (typeof cell.v === 'number') cell.t = 'n';
+            else if (typeof cell.v === 'boolean') cell.t = 'b';
+            else if (cell.v instanceof Date) {
                 cell.t = 'n'; cell.z = XLSX.SSF._table[14];
                 cell.v = datenum(cell.v);
             }
@@ -436,75 +454,70 @@ app.service('report_v2Model' , function (queryModel,c3Charts,reportHtmlWidgets,g
         }
 
 
-        for(var R = 0; R != data.length; ++R) {
+        for (var R = 0; R != data.length; ++R) {
 
-            for(var i = 0; i < report.properties.columns.length; i++)
-            {
+            for (var i = 0; i < report.properties.columns.length; i++) {
                 //var elementName = report.properties.columns[i].collectionID.toLowerCase()+'_'+report.properties.columns[i].elementName;
-                var elementID = 'wst'+report.properties.columns[i].elementID.toLowerCase();
-                var elementName = elementID.replace(/[^a-zA-Z ]/g,'');
+                var elementID = 'wst' + report.properties.columns[i].elementID.toLowerCase();
+                var elementName = elementID.replace(/[^a-zA-Z ]/g, '');
 
-                if (report.properties.columns[i].aggregation)
-                    {
+                if (report.properties.columns[i].aggregation) {
                     //elementName = report.properties.columns[i].collectionID.toLowerCase()+'_'+report.properties.columns[i].elementName+report.properties.columns[i].aggregation;
-                    var elementID = 'wst'+report.properties.columns[i].elementID.toLowerCase()+report.properties.columns[i].aggregation;
-                    var elementName = elementID.replace(/[^a-zA-Z ]/g,'');
-                    }
-                if(range.s.r > R+1) range.s.r = R+1;
-                if(range.s.c > i) range.s.c = i;
-                if(range.e.r < R+1) range.e.r = R+1;
-                if(range.e.c < i) range.e.c = i;
-
-                if (report.properties.columns[i].elementType == 'number' && data[R][elementName])
-                {
-                    var cell = {v: Number(data[R][elementName]) };
-                } else {
-                    var cell = {v: data[R][elementName] };
+                    var elementID = 'wst' + report.properties.columns[i].elementID.toLowerCase() + report.properties.columns[i].aggregation;
+                    var elementName = elementID.replace(/[^a-zA-Z ]/g, '');
                 }
-                var cell_ref = XLSX.utils.encode_cell({c:i,r:R+1});
-                if(typeof cell.v === 'number') cell.t = 'n';
-                else if(typeof cell.v === 'boolean') cell.t = 'b';
-                else if(cell.v instanceof Date) {
+                if (range.s.r > R + 1) range.s.r = R + 1;
+                if (range.s.c > i) range.s.c = i;
+                if (range.e.r < R + 1) range.e.r = R + 1;
+                if (range.e.c < i) range.e.c = i;
+
+                if (report.properties.columns[i].elementType == 'number' && data[R][elementName]) {
+                    var cell = { v: Number(data[R][elementName]) };
+                } else {
+                    var cell = { v: data[R][elementName] };
+                }
+                var cell_ref = XLSX.utils.encode_cell({ c: i, r: R + 1 });
+                if (typeof cell.v === 'number') cell.t = 'n';
+                else if (typeof cell.v === 'boolean') cell.t = 'b';
+                else if (cell.v instanceof Date) {
                     cell.t = 'n'; cell.z = XLSX.SSF._table[14];
                     cell.v = datenum(cell.v);
                 }
                 else cell.t = 's';
 
-                cell.s = {fill: { fgColor: { rgb: "FFFF0000"}}};
+                cell.s = { fill: { fgColor: { rgb: "FFFF0000" } } };
 
                 ws[cell_ref] = cell;
             }
         }
-        if(range.s.c < 10000000) ws['!ref'] = XLSX.utils.encode_range(range);
+        if (range.s.c < 10000000) ws['!ref'] = XLSX.utils.encode_range(range);
 
         return ws;
 
     }
 
-    this.getReportContainerHTML = function(reportID)
-    {
-        var containerID = 'REPORT_CONTAINER_'+reportID;
-/*
-        var html = '<div page-block class="container-fluid featurette ndContainer"  ndType="container" style="height:100%">'+
-                        '<div page-block class="col-md-12 ndContainer" ndtype="column" style="height:100%">'+
-                              '<div class="container-fluid" id="'+containerID+'" ng-init="getRuntimeReport('+"'"+reportID+"'"+')" bs-loading-overlay bs-loading-overlay-reference-id="REPORT_'+reportID+'" style="padding:0pxposition: relative;height: 100%;"></div>';
+    this.getReportContainerHTML = function (reportID) {
+        var containerID = 'REPORT_CONTAINER_' + reportID;
+        /*
+                var html = '<div page-block class="container-fluid featurette ndContainer"  ndType="container" style="height:100%">'+
+                                '<div page-block class="col-md-12 ndContainer" ndtype="column" style="height:100%">'+
+                                      '<div class="container-fluid" id="'+containerID+'" ng-init="getRuntimeReport('+"'"+reportID+"'"+')" bs-loading-overlay bs-loading-overlay-reference-id="REPORT_'+reportID+'" style="padding:0pxposition: relative;height: 100%;"></div>';
+        
+                                '</div>'+
+                            '</div>';
+        */
+        var html = '<div page-block  class="container-fluid featurette ndContainer"  ndType="container" style="height:100%;padding:0px;">' +
+            '<div page-block class="col-md-12 ndContainer" ndType="column" style="height:100%;padding:0px;">' +
+            '<div page-block class="container-fluid" id="' + containerID + '" ndType="' + reportType + '" ng-init="getRuntimeReport(' + "'" + reportID + "'" + ')" bs-loading-overlay bs-loading-overlay-reference-id="REPORT_' + reportID + '" style="padding:0px;position: relative;height: 100%;"></div>';
 
-                        '</div>'+
-                    '</div>';
-*/
-        var html = '<div page-block  class="container-fluid featurette ndContainer"  ndType="container" style="height:100%;padding:0px;">'+
-                        '<div page-block class="col-md-12 ndContainer" ndType="column" style="height:100%;padding:0px;">'+
-                            '<div page-block class="container-fluid" id="'+containerID+'" ndType="'+reportType+'" ng-init="getRuntimeReport('+"'"+reportID+"'"+')" bs-loading-overlay bs-loading-overlay-reference-id="REPORT_'+reportID+'" style="padding:0px;position: relative;height: 100%;"></div>';
-
-                        '</div>'+
-                    '</div>';
+        '</div>' +
+            '</div>';
 
         return html;
     }
 
-    this.getPromptHTML = function(prompt)
-    {
-        var html = '<div id="PROMPT_'+prompt.elementID+'" page-block class="ndContainer" ndType="ndPrompt"><nd-prompt  filter="getFilter('+"'"+prompt.elementID+"'"+')" element-id="'+prompt.elementID+'" label="'+prompt.objectLabel+'" value-field="'+prompt.name+'" show-field="'+prompt.name+'" prompts="prompts" after-get-values="afterPromptGetValues" on-change="promptChanged" ng-model="lastPromptSelectedValue"></nd-prompt></div>';
+    this.getPromptHTML = function (prompt) {
+        var html = '<div id="PROMPT_' + prompt.elementID + '" page-block class="ndContainer" ndType="ndPrompt"><nd-prompt  filter="getFilter(' + "'" + prompt.elementID + "'" + ')" element-id="' + prompt.elementID + '" label="' + prompt.objectLabel + '" value-field="' + prompt.name + '" show-field="' + prompt.name + '" prompts="prompts" after-get-values="afterPromptGetValues" on-change="promptChanged" ng-model="lastPromptSelectedValue"></nd-prompt></div>';
 
         return html;
     }
