@@ -25,7 +25,14 @@
         }
         else if (item.Monitor_Type == "YES_NO")
         {
-            <td>@item.YES_NO_ANSWER</td>
+            if (item.YES_NO_ANSWER == 1)
+            {
+                <td>Yes</td>
+            }
+            else
+            {
+                <td>No</td>
+            }
         }
         else if (item.Monitor_Type == "PASS_FAIL")
         {

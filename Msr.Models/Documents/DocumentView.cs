@@ -49,5 +49,9 @@ namespace Msr.Models.Documents
         public string Comments { get; set; }
 
         public string ReferenceFiles { get; set; }
+
+        public DateTime? UpdatedDate { get; set; }
+
+        public string UpdatedBy { get; set; }
     }
 }

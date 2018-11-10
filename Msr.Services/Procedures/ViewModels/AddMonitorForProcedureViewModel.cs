@@ -31,6 +31,9 @@ namespace Msr.Services.Procedures.ViewModels
 
             EquipmentMaintenanceList = new List<SelectListItem>();
 
+            CorrectAnsList = new List<SelectListItem>();
+
+
         }
         public string NewId { get; set; }
 
@@ -98,7 +101,6 @@ namespace Msr.Services.Procedures.ViewModels
         public string Step_Id { get; set; }
 
         [Required]
-        [Range(0, 1, ErrorMessage = "Please enter 0 or 1")]
         [DisplayName("Target Value")]
         public string Correct_Answer { get; set; }
 
@@ -156,6 +158,7 @@ namespace Msr.Services.Procedures.ViewModels
 
         public List<SelectListItem> EquipmentMaintenanceList { get; set; }
 
+        public List<SelectListItem> CorrectAnsList { get; set; }
         public void Setup(EquipmentMaintenanceService equipmentMaintenanceService)
         {
             InputTypesList = new List<SelectListItem>
@@ -173,6 +176,7 @@ namespace Msr.Services.Procedures.ViewModels
             FailNextActionList = Commons.Lookups.LookupItems.FailNextActionList();
             ForceEndActionList = Commons.Lookups.LookupItems.YesNo();
             AlwaysPassList = Commons.Lookups.LookupItems.YesNo();
+            CorrectAnsList = Commons.Lookups.LookupItems.YesNo();
         }
         public AddMonitorForProcedureViewModel MapToDto(GetMoniterViewModel model)
         {

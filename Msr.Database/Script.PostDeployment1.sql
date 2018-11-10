@@ -11,4 +11,5 @@ Post-Deployment Script Template
 */
 
  :r .\Seeds\SeedMenus.sql		
+ :r .\Seeds\SeedWfActivities.sql		
 

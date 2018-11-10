@@ -7,88 +7,54 @@ function CheckBoxSelection(id, element, value) {
     if (isNaN(value)) {
         value = 0;
     }
+    //for add
+    if ($(element).prop("checked") === true) {
+        AddItems($(element).closest('tr').find('.get-id').find('#po-id').val());
 
-    if (id !== '') {
-        //for edit
-        var editTotalAmount = $('#totalAmount').val();
+        inVoiceTax.total = (parseFloat(inVoiceTax.total) + parseFloat(value)).toFixed(2);
+        $('#total-amount').val(inVoiceTax.total);
 
-        var items = $('#itemId').val();
-
-        if (items.indexOf(',') !== -1) {
-            inVoiceTax.values = items.split(',');
-        } else {
-            inVoiceTax.values.push(items);
-        }
-        if ($(element).prop("checked") === true) {
-
-            AddItems($(element).closest('tr').find('.getId').find('#poId').val());
-
-            inVoiceTax.total = (parseFloat(editTotalAmount) + parseFloat(value)).toFixed(2);
-            $('#totalAmount').val(inVoiceTax.total);
-
-            CalculateTax($('#totalAmount').val(), $('#totalTaxAmount').val());
-        }
-        else {
-            RemoveItems($(element).closest('tr').find('.getId').find('#poId').val());
-
-            inVoiceTax.total = (parseFloat(editTotalAmount) - parseFloat(value)).toFixed(2);
-            $('#totalAmount').val(inVoiceTax.total);
-
-            CalculateTax($('#totalAmount').val(), $('#totalTaxAmount').val());
-        }
-
+        CalculateTax($('#total-amount').val(), $('#total-tax-amount').val());
     }
     else {
-        //for add
-        if ($(element).prop("checked") === true) {
-            AddItems($(element).closest('tr').find('.getId').find('#poId').val());
+        RemoveItems($(element).closest('tr').find('.get-id').find('#po-id').val());
 
-            inVoiceTax.total = (parseFloat(inVoiceTax.total) + parseFloat(value)).toFixed(2);
-            $('#totalAmount').val(inVoiceTax.total);
+        inVoiceTax.total = (parseFloat(inVoiceTax.total) - parseFloat(value)).toFixed(2);
+        $('#total-amount').val(inVoiceTax.total);
 
-            CalculateTax($('#totalAmount').val(), $('#totalTaxAmount').val());
-        }
-        else {
-            RemoveItems($(element).closest('tr').find('.getId').find('#poId').val());
-
-            inVoiceTax.total = (parseFloat(inVoiceTax.total) - parseFloat(value)).toFixed(2);
-            $('#totalAmount').val(inVoiceTax.total);
-
-            CalculateTax($('#totalAmount').val(), $('#totalTaxAmount').val());
-        }
+        CalculateTax($('#total-amount').val(), $('#total-tax-amount').val());
     }
 }
 
-
-$('#totalTaxAmount').on('change', function () {
+$('#total-tax-amount').on('change', function () {
 
     if (isNaN($(this).val())) {
         $(this).val(0);
-    } 
+    }
 
     $(this).val(parseFloat($(this).val()).toFixed(2));
 
-    CalculateTax($('#totalAmount').val(), $(this).val());
+    CalculateTax($('#total-amount').val(), $(this).val());
 });
 
 function AddItems(id) {
     inVoiceTax.values.push(id);
-    $('#itemId').val(inVoiceTax.values);
+    $('#addId').val(inVoiceTax.values);
 }
 
 function RemoveItems(id) {
     inVoiceTax.values = inVoiceTax.values.filter(function (item) {
         return item !== id;
     });
-    $('#itemId').val(inVoiceTax.values);
+    $('#addId').val(inVoiceTax.values);
 }
 
 function CalculateTax(subTotal, tax) {
     if (tax !== '') {
         var totalTaxPerAmount = (subTotal * tax) / 100;
         var totalAmount = parseFloat(subTotal) + parseFloat(totalTaxPerAmount);
-        $('#total').val(totalAmount.toFixed(2));
+        $('#total-add').val(totalAmount.toFixed(2));
     } else {
-        $('#total').val(subTotal);
+        $('#total-add').val(subTotal);
     }
 }

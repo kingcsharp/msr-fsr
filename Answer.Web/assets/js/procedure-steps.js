@@ -11,7 +11,6 @@ $(document).ready(function () {
         start: function (event, ui) {
         },
         change: function (event, ui) {
-            console.log("Change");
         },
         update: function (event, ui) {
 
@@ -149,15 +148,13 @@ function AddMonitor() {
             var button = $(event.relatedTarget);
             var relatedObject = button.data('related-object');
             var stepId = button.data('step-id');
-
             var modal = $(this);
-            $('.modal-body').html('');
             $.ajax({
                 type: "GET",
                 url: '/Procedures/AddMonitor?relatedObject=' + relatedObject + '&stepId=' + stepId,
                 dataType: 'html',
                 success: function (data) {
-                    modal.find('.modal-body').html(data);
+                    modal.find('.modal-body').html('').append(data);
                 },
                 error: function (error) {
                     eLoaderError(error);
@@ -173,13 +170,12 @@ function EditMonitor() {
             var button = $(event.relatedTarget);
             var objectId = button.data('object-id');
             var modal = $(this);
-            $('.modal-body').html('');
             $.ajax({
                 type: "GET",
                 url: '/Procedures/EditMonitor?objectId=' + objectId,
                 dataType: 'html',
                 success: function (data) {
-                    modal.find('.modal-body').html(data);
+                    modal.find('.modal-body').html('').append(data);
                 },
                 error: function (error) {
                     eLoaderError(error);

@@ -29,7 +29,7 @@ namespace Answer.Web.Controllers
             return View(viewModel);
         }
 
-        public ActionResult MonitorsData(JqGridParam param)
+        public ActionResult MonitorsData(JqGridParam param, string description)
         {
             var defaultStatusList = "FINISHED,CLOSED".Split(',');
 
@@ -39,6 +39,8 @@ namespace Answer.Web.Controllers
             {
                 foreach (var rule in param.where.rules)
                 {
+                    rule.data = rule.data?.Trim();
+
                     if (rule.field == nameof(MonitorView.RollUpId))
                     {
                         totalRows = totalRows.Where(x => x.RollUpId == rule.data);
@@ -84,6 +86,13 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.ActualPartsApprovedDataSerial.ToLower().Contains(rule.data.ToLower()));
                     }
+                }
+            }
+            else
+            {
+                if (!string.IsNullOrWhiteSpace(description))
+                {
+                    totalRows = totalRows.Where(x => x.Description !=null && x.Description.ToLower().Contains(description.Trim().ToLower()));
                 }
             }
 

@@ -1,19 +1,12 @@
 ﻿using System;
-using System.Data;
-using System.Data.Entity.Core.Objects;
-using System.Data.SqlClient;
 using System.Linq;
 using EntityFrameworkExtras.EF6;
 using Msr.Models.ApprovalWorkflows;
 using Msr.Models.Documents;
 using Msr.Models.Files;
-using Msr.Models.Users;
 using Msr.Repositories;
-using Msr.Services.ApprovalStages.Procedures;
 using Msr.Services.ApprovalWorkflows.Procedures;
 using Msr.Services.ApprovalWorkflows.ViewModels;
-using Msr.Services.Companies.Procedures;
-using Msr.Services.Companies.ViewModels;
 
 namespace Msr.Services.ApprovalWorkflows
 {

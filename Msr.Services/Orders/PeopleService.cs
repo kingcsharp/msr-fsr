@@ -17,6 +17,7 @@ using Msr.Services.People.ViewModels;
 using System.Configuration;
 using System.IO;
 using Msr.Infrastructure.Email;
+using Msr.Services.Roles;
 using Msr.Services.Users;
 
 namespace Msr.Services.Orders
@@ -27,10 +28,13 @@ namespace Msr.Services.Orders
 
         private readonly UserService _userService;
 
+        private readonly RoleService _roleService;
+
         public PeopleService()
         {
             _userService = new UserService();
             _dbContext = new MsrDbContext();
+            _roleService = new RoleService();
         }
 
         public bool CheckUserExists(string login, string password)
@@ -43,7 +47,6 @@ namespace Msr.Services.Orders
             }
 
             return true;
-
         }
 
         public ResultNotification<CheckLoginResult> GetAnswerUser(string login, string password)
@@ -102,6 +105,8 @@ namespace Msr.Services.Orders
                 context.SaveChanges();
             }
 
+            _roleService.RefreshUserRoles(user.Id);
+
             result.Entity.Id = user.Id;
             result.Entity.Login = login;
             result.Entity.Password = user.Password;
@@ -111,10 +116,6 @@ namespace Msr.Services.Orders
         public IQueryable<PeopleObjectView> GetPeople()
         {
             return _dbContext.PeopleObjectViews;
-        }
-        public IQueryable<PeopleObjectView> GetApprovedPeople()
-        {
-            return _dbContext.PeopleObjectViews.Where(x => x.Status == "APPROVED").AsQueryable();
         }
 
         public IQueryable<TimeZonesView> GetTimeZones()
@@ -143,9 +144,18 @@ namespace Msr.Services.Orders
             {
 
                 var loginIdExist = _dbContext.PeopleObjectViews.Any(x => x.LoginId == model.LoginId);
+
                 if (loginIdExist)
                 {
                     responsePeople.AddError($"LoginId already exist with '{model.LoginId}'");
+                    return responsePeople;
+                }
+
+                var emailIdExist = _dbContext.PeopleObjectViews.Any(x => x.EmailAddress == model.EmailPrimary && x.Status != "DELETED");
+
+                if (emailIdExist)
+                {
+                    responsePeople.AddError($"Email already exist with '{model.EmailPrimary}'");
                     return responsePeople;
                 }
 
@@ -239,12 +249,27 @@ namespace Msr.Services.Orders
 
                 var from = ConfigurationManager.AppSettings["From"];
                 var websiteUrl = ConfigurationManager.AppSettings["WebsiteUrl"];
+                var loginLink = $"<a href='{websiteUrl}/Account/login'>Login</a>";
 
-                var lnkHref = $"<a href='{websiteUrl}/Account/ResetPassword?token={EncryptionHelper.Encrypt(userName)}'>Reset Password</a>";
+                var bodyUsername = $@"<div>
+               <p>Hello ANSWER user,<br/></p>
+               <p>Your username is : {user.UserName}</p>
+               <p>Please click here to login : {loginLink}</p>
+               </div>";
 
-                string body = "<b>Please set your password by clicking following link: </b><br/>" + lnkHref;
+                EmailService.SendEmail(from, email, "ANSWER - Username", bodyUsername, null, true);
 
-                string subject = "Password reminder";
+
+                var lnkHref = $"<a href='{websiteUrl}/Account/ResetPassword?token={EncryptionHelper.Encrypt(userName).Replace('/', '*')}'>Reset Password</a>";
+
+                var body = $@"<div>
+               <p>Hello ANSWER user,<br/></p>
+               <p>This email is being sent to you due to a password reset request from the MSR-FSR Answer system.<br/></p>
+               <p><b> Please reset your password by clicking : </ b ><br/> </p>
+               <p>{lnkHref}</p>
+                        </div>";
+
+                var subject = "ANSWER - Password reminder";
 
                 EmailService.SendEmail(from, email, subject, body, null, true);
             }
@@ -266,7 +291,7 @@ namespace Msr.Services.Orders
         {
             var result = _dbContext.Database
                 .SqlQuery<EditPeopleViewModel>(
-                    "SELECT PHONE_NUMBER as PrimaryPhoneNumber,PHONE_TYPE as TypePrimaryPhoneNumber,PHONE_PIN as PinPrimaryPhoneNumber,PHONE_EXTENSION as ExtPrimaryPhoneNumber FROM dbo.A_PHONE_NUMBERS WHERE OBJECT_ID = '" + id + "'")
+                    "SELECT PHONE_NUMBER as PrimaryPhoneNumber,PHONE_TYPE as TypePrimaryPhoneNumber,PHONE_PIN as PinPrimaryPhoneNumber,PHONE_EXTENSION as ExtPrimaryPhoneNumber,ID as PhoneId FROM dbo.A_PHONE_NUMBERS WHERE OBJECT_ID = '" + id + "'")
                 .FirstOrDefault();
             return result;
         }
@@ -282,14 +307,28 @@ namespace Msr.Services.Orders
         {
             var result = _dbContext.Database
                 .SqlQuery<EditPeopleViewModel>(
-                    "SELECT LOCATION_ID as AddressLocation,LOCATION_TYPE as AddressType FROM A_LOCATIONS_OBJECT_LINK WHERE OBJECT_ID = '" + id + "'")
+                    "SELECT LOCATION_ID as AddressLocation,ID as LocationId, LOCATION_TYPE as AddressType FROM A_LOCATIONS_OBJECT_LINK WHERE OBJECT_ID = '" + id + "'")
                 .FirstOrDefault();
             return result;
         }
-        public bool Update(EditPeopleViewModel model)
+        public ResultNotification<string> Update(EditPeopleViewModel model)
         {
+            var responsePeople = new ResultNotification<string>();
             try
             {
+                var userEmail = _dbContext.PeopleObjectViews.Where(x => x.ObjectId == model.ObjectId).Select(x => x.EmailAddress).SingleOrDefault();
+
+                if (userEmail != null && userEmail != model.EmailPrimary)
+                {
+                    var hasEmail = _dbContext.PeopleObjectViews.Any(x => x.EmailAddress.Contains(model.EmailPrimary) && (x.Status == "APPROVED" || x.Status == "APPROVED_BUT_REVISING"));
+
+                    if (hasEmail)
+                    {
+                        responsePeople.AddError($"Email already exist");
+                        return responsePeople;
+                    }
+                }
+
                 var savePeopleProcedure = new EditPeopleProcedure
                 {
                     ObjID = model.ObjectId,
@@ -320,23 +359,26 @@ namespace Msr.Services.Orders
                 _dbContext.Database.ExecuteStoredProcedure<SavePasswrodProcedure>(savePasswrodProcedure);
 
                 _dbContext.Database.SqlQuery<EditPeopleViewModel>(
-                    "INSERT INTO A_PHONE_NUMBERS(ID, PHONE_NUMBER, PHONE_TYPE, PHONE_PIN, PHONE_EXTENSION, MODBY, DRCM, OBJECT_ID)VALUES(newID(), '" +
-                    model.PrimaryPhoneNumber + "', '" + model.TypePrimaryPhoneNumber + "', '" +
-                    model.ExtPrimaryPhoneNumber + "', '" + model.PinPrimaryPhoneNumber + "', '" + model.NTLogin +
-                    "', getDate(), '" + savePeopleProcedure.NewObjId + "')").SingleOrDefault();
+                     "UPDATE A_PHONE_NUMBERS SET PHONE_NUMBER='" + model.PrimaryPhoneNumber + "',PHONE_TYPE='" + model.TypePrimaryPhoneNumber + "'" +
+                     ",PHONE_PIN= '" + model.ExtPrimaryPhoneNumber + "',PHONE_EXTENSION='" + model.PinPrimaryPhoneNumber + "', MODBY='" + model.NTLogin + "' ,DRCM=getDate()" +
+                     ",OBJECT_ID='" + model.ObjectId + "' WHERE ID = '" + model.PhoneId + "'").SingleOrDefault();
+
                 _dbContext.Database.SqlQuery<EditPeopleViewModel>(
                     "UPDATE A_EMAILS SET ADDY = '" + model.EmailPrimary + "',[TYPE] = '" + model.EmailTypePrimary + "',EMAIL_TYPE = '" + model.EmailTextTypePrimary + "',MODBY = '" + model.NTLogin + "',DRCM = getDate() WHERE ID = '" + model.EmailIdPrimary + "'").SingleOrDefault();
+
                 _dbContext.Database.SqlQuery<EditPeopleViewModel>(
-                    "INSERT INTO A_LOCATIONS_OBJECT_LINK (ID,LOCATION_ID,[LOCATION_TYPE],MODBY,DRCM,OBJECT_ID)VALUES (newID(), '" +
-                    model.AddressLocation + "', '" + model.AddressType + "', '" + model.NTLogin +
-                    "', getDate(), '" + savePeopleProcedure.NewObjId + "')").SingleOrDefault();
-                return true;
+                    "UPDATE A_LOCATIONS_OBJECT_LINK SET LOCATION_ID='" + model.AddressLocation + "',[LOCATION_TYPE]='" +
+                    model.AddressType + "'" +
+                    ",MODBY= '" + model.NTLogin + "',DRCM=getDate(), OBJECT_ID='" + model.ObjectId + "'  WHERE ID = '" +
+                    model.LocationId + "'").SingleOrDefault();
+
+                return responsePeople;
             }
             catch (Exception ex)
             {
-                var message = "Error occured:" + ex.Message;
+                responsePeople.AddError("There is an error when editing user");
 
-                return false;
+                return responsePeople;
             }
 
         }

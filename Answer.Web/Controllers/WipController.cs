@@ -3,17 +3,20 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
-using System.Web.Script.Serialization;
 using Answer.Web.Filters;
 using Answer.Web.ViewModel.Wip;
-using Msr.Commons.Files;
 using Msr.Infrastructure.Common.Constansts;
 using Msr.Models.Orders;
 using Msr.Services;
+using Msr.Services.Documents;
+using Msr.Services.Documents.ViewModels;
 using Msr.Services.EquipmentMaintenances;
 using Msr.Services.EquipmentMaintenances.ViewModels;
+using Msr.Services.Helpers;
 using Msr.Services.jqGrid;
+using Msr.Services.Locations;
 using Msr.Services.Notes;
+using Msr.Services.Objects;
 using Msr.Services.Orders;
 using Msr.Services.Orders.Messaging;
 using Msr.Services.Orders.Procedures;
@@ -32,7 +35,9 @@ namespace Answer.Web.Controllers
         private TaskService _taskService;
         private ProceduresService _proceduresService;
         private RoleService _roleService;
+        private ObjectsService _objectsService;
         private EquipmentMaintenanceService _equipmentMaintenanceService;
+        private readonly DocumentFilesService _documentFilesService;
 
         public WipController()
         {
@@ -41,6 +46,7 @@ namespace Answer.Web.Controllers
             _taskService = new TaskService();
             _proceduresService = new ProceduresService();
             _roleService = new RoleService();
+            _documentFilesService = new DocumentFilesService();
         }
 
         public ActionResult Index()
@@ -52,9 +58,21 @@ namespace Answer.Web.Controllers
             return View(viewModel);
         }
 
-        public ActionResult EngineeringData(JqGridParam param)
+        private static List<string> GetMultiStatusList(JqGridParam param)
+        {
+            var statusList = new List<string>();
+
+            statusList.AddRange(from itemRule in param.@where.rules.Where(x => x.field == "Status")
+                where !string.IsNullOrWhiteSpace(itemRule.data)
+                select itemRule.data.ToLower());
+
+            return statusList;
+        }
+
+        public ActionResult EngineeringData(JqGridParam param, string step)
         {
             var totalRows = _orderService.GetWorkOrderQueryable();
+
 
             if (param.where != null && param.where.rules.Any())
             {
@@ -70,7 +88,12 @@ namespace Answer.Web.Controllers
                     }
                     else if (rule.field == nameof(WorkOrderView.LocationName))
                     {
-                        totalRows = totalRows.Where(x => x.LocationName.ToLower().Contains(rule.data.ToLower()));
+                        var locationList = GetMultiLocationList(param);
+
+                        if (locationList.Any())
+                        {
+                            totalRows = totalRows.Where(x => locationList.Contains(x.LocationName));
+                        }
                     }
                     else if (rule.field == nameof(WorkOrderView.Serial))
                     {
@@ -142,8 +165,21 @@ namespace Answer.Web.Controllers
             }
             else
             {
-                totalRows = totalRows.Where(x => x.Status.ToLower() == WorkItemStatusConstants.Requested
-                    || x.Status.ToLower() == WorkItemStatusConstants.Accepted);
+                if (!string.IsNullOrWhiteSpace(step))
+                {
+                    _objectsService = new ObjectsService();
+                    var fillIds = _objectsService.GetObjectSearchQueryable()
+                        .Where(x => (x.Description != null && x.Description.ToLower().Contains(step)) || (x.Name != null && x.Name.ToLower().Contains(step)))
+                        .Select(x => x.ObjectId)
+                        .ToList();
+
+                    totalRows = totalRows.Where(x => fillIds.Contains(x.FillItemId));
+                }
+                else
+                {
+                    totalRows = totalRows.Where(x => x.Status.ToLower() == WorkItemStatusConstants.Requested
+                                                     || x.Status.ToLower() == WorkItemStatusConstants.Accepted);
+                }
             }
 
             var orderDirection = "asc";
@@ -328,8 +364,13 @@ namespace Answer.Web.Controllers
             var hasRoles = roles.Select(x => x.Role_Id).ToList().Intersect(procedureRoles).Any();
 
             vm.HasProcedureRoles = hasRoles;
-
             vm.MyWoItems = workItems;
+
+            var stringFillId = id.ToString();
+
+            var actualPartId = _orderService.GetWorkOrderQueryable().Where(x => x.FillId == stringFillId).Select(a => a.ActualPartId).SingleOrDefault();
+
+            vm.ActualPartId = actualPartId;
 
             return View(vm);
         }
@@ -480,28 +521,11 @@ namespace Answer.Web.Controllers
 
             var currentStep = vm.TaskStepResults.SingleOrDefault(x => x.StepId == stepId.ToString());
 
-            if (currentStep != null && currentStep.PRINT_ORDER == null)
-            {
-                var objId = _orderService.GetProcedureByObjId(vm.FileSearchResult.ProcObjId);
+            var objId = _orderService.GetProcedureByObjId(vm.FileSearchResult.ProcObjId);
 
-                var procedureRoles = _proceduresService.GetSelectedRoles(objId.Id, loggedUserId.Id)?.Select(x => x.Role_Id).ToList();
-
-                var hasProcedureRoles = myRoles.Select(x => x.Role_Id).ToList().Intersect(procedureRoles).Any();
-
-                response.HasStepRoles = hasProcedureRoles;
-            }
-            else
-            {
-                if (currentStep != null && currentStep.PRINT_ORDER != null)
-                {
-                    var steptRoles = currentStep.Roles?.Split(',');
-
-                    var hasRoles = steptRoles != null && myRoles.Select(x => x.Role_Id).ToList().Intersect(steptRoles).Any();
-
-                    response.HasStepRoles = hasRoles;
-                }
-            }
-
+            var procedureRoles = _proceduresService.GetSelectedRoles(objId.Id, loggedUserId.Id)?.Select(x => x.Role_Id).ToList();
+            response.HasStepRoles = myRoles.Select(x => x.Role_Id).ToList().Intersect(procedureRoles).Any();
+            
             response.LoggedUserIdResult = loggedUserId;
             response.TaskEditDataResult.StepTitle = currentStep.Title;
             response.TaskEditDataResult.Description = currentStep.Description;
@@ -522,24 +546,24 @@ namespace Answer.Web.Controllers
             response.Images = new ImageViewModel
             {
                 FillId = fillId,
-                TaskId = stepId
+                TaskId = stepId,
+                ActualPartId = response.ParentPartId
             };
 
             var images = _orderService.GetOrderItemImagesById(stepId.ToString());
 
-            var jsonSerialiser = new JavaScriptSerializer();
-            var previewConfig = jsonSerialiser.Serialize(images.Select(x => new
-            {
-                caption = x.FILE_NAME,
-                type = MimeTypes.GetContentType(x.ContentType),
-                size = 6666,
-                url = Url.Action("DeleteImageById", "Doc", new { id = x.Id, taskId = x.Task_Id }),
-                downloadUrl = x.Path,
-                key = x.Id
-            }));
+            var dockLinks = images.Select(itemImage => new DocLink
+                {
+                    SERVER_PATH = itemImage.Path,
+                    CONTENTTYPE = itemImage.ContentType,
+                    LINKED_DOC_ID = itemImage.Id,
+                    NAME = itemImage.FILE_NAME
+                })
+                .ToList();
 
-            response.Images.PreviewConfig = previewConfig;
-            response.Images.Preview = jsonSerialiser.Serialize(images.Select(x => x.Path));
+            response.Images.PreviewConfig = FileInputConfigHelper.GetPreviewConfigValue(dockLinks, Url.Action("DeleteImageById", "Doc"), Url.Action("Download", "Doc"));
+
+            response.Images.Preview = FileInputConfigHelper.GetPreviewValue(dockLinks, _documentFilesService);
 
             return PartialView("_InitialInspection", response);
         }
@@ -631,11 +655,11 @@ namespace Answer.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult AssumeTaskClick(int taskId)
+        public ActionResult AssumeTaskClick(int fillId)
         {
             var loggedUserId = GetCurrentUser().Id;
 
-            var result = _orderService.AssumeTask(taskId, loggedUserId);
+            var result = _orderService.TakeOverPO(fillId, loggedUserId);
 
             if (result.HasErrors())
             {
@@ -673,11 +697,11 @@ namespace Answer.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult TakeTaskOwnersShip(int taskId)
+        public ActionResult TakeTaskOwnersShip(int fillId)
         {
             var loggedUserId = GetCurrentUser();
 
-            var statusMessage = _orderService.AssumeTask(taskId, loggedUserId.Id);
+            var statusMessage = _orderService.TakeOverPO(fillId, loggedUserId.Id);
 
             if (statusMessage.HasErrors())
             {
@@ -849,6 +873,21 @@ namespace Answer.Web.Controllers
             return Json(new { CanUsed = canUsed, ErrorMessage = errorMessage }, JsonRequestBehavior.AllowGet);
         }
 
+
+        [HttpGet]
+        public JsonResult GetLocations()
+        {
+            var activeLocations = new LocationService()
+                .GetLocationsQueryable()
+                .Where(x => x.Status.Contains("APPROVED") && x.Name !=null && x.Name != "")
+                .Select(x => x.Name)
+                .ToList();
+
+            var locationslist = string.Join(";", activeLocations.Select(x => x + ":" + x).ToList());
+
+            return Json(new { locationslist }, JsonRequestBehavior.AllowGet);
+        }
+
         private List<DocumentView> GetDocViewModel(List<DocumentView> docs, OrderService orderService, int width)
         {
             var photos = new List<DocumentView>();
@@ -868,6 +907,16 @@ namespace Answer.Web.Controllers
             }
 
             return photos;
+        }
+
+        private List<string> GetMultiLocationList(JqGridParam param)
+        {
+
+            var locationFilterValues = param.where.rules.Where(x => x.field == nameof(WorkOrderView.LocationName))
+                .Where(itemRule => !string.IsNullOrWhiteSpace(itemRule.data) && itemRule.data!= "HiddenOption")
+                .Select(itemRule => itemRule.data.ToLower()).ToList();
+
+            return locationFilterValues;
         }
     }
 }

@@ -11,25 +11,26 @@
             </h2>
             <div style="width:100%;">
                 @Html.Partial("Message")
-                <table id="jqGrid"></table>
-                <div id="jqGridPager"></div>
+                <table id="jq-grid-location"></table>
+                <div id="jq-grid-pager"></div>
             </div>
         </div>
         <div class="row">
             <a href="/Locations/Create" class="btn btn-success help-btn">Add</a>
+            <button type="button" id="clear-state" class="btn btn-success help-btn">Clear State</button>
         </div>
     </div>
 </div>
 @section scripts
 {
 
-@Scripts.Render("~/bundles/js/jqgrid")
-@Scripts.Render("~/bundles/js/jqgrid-locations")
+    @Scripts.Render("~/bundles/js/jqgrid")
+    @Scripts.Render("~/bundles/js/jqgrid-locations")
     
-<script type="text/javascript">
-    $(document).ready(function() {
-        Msr.LocationsGrid.SetUpGrid('@Request.Url.OriginalString');
-    });
-</script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            Msr.LocationsGrid.SetUpGrid('@Url.Action("LocationsData", "Locations")');
+        });
+    </script>
 
 }

@@ -10,6 +10,7 @@ using Msr.Services.PurchesOrder;
 using Msr.Models.PurchesOrder;
 using Msr.Services.PurchesOrder.ViewModels;
 using Msr.Services.ProductionPlanning;
+using Msr.Services.Workflows;
 
 namespace Answer.Web.Controllers
 {
@@ -35,7 +36,7 @@ namespace Answer.Web.Controllers
 
         public ActionResult PurchaseOrderData(JqGridParam param)
         {
-            var totalRows = _purchesOrderService.GetPurchesOrderQueryable().Where(x => x.Status != "DELETED" && x.Status != "OLD");
+            var totalRows = _purchesOrderService.GetPurchesOrderQueryable();
 
             if (param.where != null && param.where.rules.Any())
             {
@@ -487,6 +488,11 @@ namespace Answer.Web.Controllers
             var refId = _purchesOrderService.GetHistId(currentUser.Id, id);
 
             var purchaseApprovedData = _purchesOrderService.PurchasedApprovedDataById(refId);
+
+            var workflowService = new WorkflowService();
+
+            workflowService.SpRunAdminSql();
+            workflowService.SpRunAdminSql();
 
             return View(purchaseApprovedData);
         }

@@ -11,12 +11,13 @@
             </h2>
             <div class="col-lg-12">
                 @Html.Partial("Message")
-                <table id="jqGrid"></table>
-                <div id="jqGridPager"></div>
+                <table id="jq-grid-documents"></table>
+                <div id="jq-grid-pager"></div>
             </div>
         </div>
         <div class="row">
             <a href="/Documents/Create" class="btn btn-success help-btn">Add</a>
+            <button type="button" id="clear-state" class="btn btn-success help-btn">Clear State</button>
         </div>
     </div>
 </div>
@@ -25,8 +26,12 @@
     @Scripts.Render("~/bundles/js/jqgrid")
     @Scripts.Render("~/bundles/js/jqgrid-documents")
 
-    <script> $(document).ready(function () {
-            LoadDocumentsGrid('@Url.Action("DocumentsData", "Documents")','@Request.Url.OriginalString');
-    });
+    <script type="text/javascript">
+        var hasAdministratorRole = '@User.IsInRole("Administrators")' === "True";
+
+        $(document).ready(function () {
+
+            Msr.DocumentsGrid.LoadDocumentsGrid('@Url.Action("DocumentsData", "Documents")');
+        });
     </script>
 }

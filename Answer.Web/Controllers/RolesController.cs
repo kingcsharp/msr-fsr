@@ -9,7 +9,6 @@ using System.Web.Mvc;
 using Answer.Web.Filters;
 using Msr.Models.Menus;
 using Msr.Services.Users;
-using Msr.Services.Workflows;
 
 namespace Answer.Web.Controllers
 {
@@ -36,11 +35,7 @@ namespace Answer.Web.Controllers
 
         public ActionResult UserRolesData(JqGridParam param)
         {
-            var defaultStatusList = new[] { "CREATING", "DENIED", "APPROVED", "APPROVED_BUT_REVISING", "APPROVED_BUT_DELETING", "OLD" };
-
             var totalRows = _roleService.GetUserRolesQueryable();
-
-            totalRows = totalRows.Where(x => defaultStatusList.Contains(x.Status));
 
             if (param.where != null && param.where.rules.Any())
             {

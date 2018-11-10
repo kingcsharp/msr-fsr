@@ -35,6 +35,7 @@ using Msr.Models.Invoices;
 using Msr.Models.Helps;
 using Msr.Models.Menus;
 using Msr.Models.PartTypes;
+using Msr.Models.Workflows;
 
 namespace Msr.Repositories
 {
@@ -114,6 +115,9 @@ namespace Msr.Repositories
             modelBuilder.Entity<ActualPartApprovedView>().ToTable("Portal_ActualPartApprovedView");
             modelBuilder.Entity<AdminCostSetting>().ToTable("Portal_AdminCostSetting");
             modelBuilder.Entity<MenuView>().ToTable("Portal_MenuView");
+            modelBuilder.Entity<PendingApprovalView>().ToTable("Protal_PendingApprovals");
+            modelBuilder.Entity<ObjectSearchView>().ToTable("Portal_ObjectSearch");
+            modelBuilder.Entity<InvoiceWorkItem>().ToTable("Portal_InvoiceWorkItem");
         }
 
         public DbSet<AspNetUser> AspNetUsers { get; set; }
@@ -182,5 +186,8 @@ namespace Msr.Repositories
         public DbSet<ActualPartApprovedView> ActualPartApprovedViews { get; set; }
         public DbSet<AdminCostSetting> AdminCostSettings { get; set; }
         public DbSet<MenuView> MenuViews { get; set; }
+        public DbSet<PendingApprovalView> PendingApprovalViews { get; set; }
+        public DbSet<ObjectSearchView> ObjectSearchViews { get; set; }
+        public DbSet<InvoiceWorkItem> InvoiceWorkItems { get; set; }
     }
 }

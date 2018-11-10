@@ -9,7 +9,7 @@
 <div class="container-fluid">
     <div class="side-body padding-top">
         @Html.Partial("Message")
-        
+
         @if (Model.FillId > 0)
         {
             <div class="row wip-detail-header">
@@ -31,7 +31,7 @@
                                 {
                                     foreach (var item in Model.MyWoItems)
                                     {
-                                        <option data-content="<strong>@item.PurchaseItemId</strong><br>Proc: @item.ProcName<br>Serial: @item.Serial<span class='label label-success pull-right'>@item.Status</span>" data-status="@item.Status" data-fill-id="@Model.FillId">@item.FillId</option>
+                                        <option data-content="<strong data-fill-id='@item.FillId'>@item.PurchaseItemId</strong><br>Proc: @item.ProcName<br>Serial: @item.Serial<span class='label label-success pull-right'>@item.Status</span>" data-status="@item.Status" data-fill-id="@Model.FillId">@item.FillId</option>
                                     }
                                 }
                                 else
@@ -65,15 +65,15 @@
                             <div id="parts-table" class="col-sm-12">
                                 <table class="table table-responsive table-condensed table-bordered">
                                     <tbody>
-                                    @if (Model.FileSearchResult != null)
-                                    {
-                                        <tr><td>@Model.FileSearchResult.FillObjDesc qty:@Model.FileSearchResult.Qty </td></tr>
-                                    }
+                                        @if (Model.FileSearchResult != null)
+                                        {
+                                            <tr><td>@Model.FileSearchResult.FillObjDesc qty:@Model.FileSearchResult.Qty </td></tr>
+                                        }
 
-                                    @foreach (var part in Model.Parts)
-                                    {
-                                        <tr><td>@part</td></tr>
-                                    }
+                                        @foreach (var part in Model.Parts)
+                                        {
+                                            <tr><td>@part</td></tr>
+                                        }
                                     </tbody>
                                 </table>
                             </div>
@@ -83,22 +83,23 @@
                             <div id="purchase" class="tab-pane fade">
                                 <table class="table table-responsive table-condensed table-bordered">
                                     <tbody>
-                                    <tr>
-                                        <th nowrap style="text-align: right">Customer:</th>
-                                        <td>@Model.FileSearchResult.CustomerName</td>
-                                    </tr>
-                                    <tr>
-                                        <th nowrap style="text-align: right">Product:</th>
-                                        <td>@Model.FileSearchResult.ProductName</td>
-                                    </tr>
-                                    <tr>
-                                        <th nowrap style="text-align: right">Procedure:</th>
-                                        <td>@Model.FileSearchResult.ProcedureName</td>
-                                    </tr>
-                                    <tr>
-                                        <th nowrap style="text-align: right">Purchase Item #:</th>
-                                        <td>@Model.FileSearchResult.PurchItemId</td>
-                                    </tr>
+                                        <tr>
+                                            <th nowrap style="text-align: right">Customer:</th>
+                                            <td>@Model.FileSearchResult.CustomerName</td>
+                                        </tr>
+                                        <tr>
+                                            <th nowrap style="text-align: right">Product:</th>
+                                            <td>@Model.FileSearchResult.ProductName</td>
+                                        </tr>
+                                        <tr>
+                                            <th nowrap style="text-align: right">Procedure:</th>
+                                            <td>@Model.FileSearchResult.ProcedureName</td>
+                                        </tr>
+                                        <tr>
+                                            <th nowrap style="text-align: right">Purchase Item #:</th>
+                                            <td>@Model.FileSearchResult.PurchItemId</td>
+                                        </tr>
+
                                     </tbody>
                                 </table>
                             </div>
@@ -120,11 +121,11 @@
                                 {
                                     stepCss = "step-complete";
                                 }
-                                else if (step.Status == "ACCEPTED" || step.Status == "REQUESTED")
+                                else if (step.Status == "ACCEPTED")
                                 {
                                     stepCss = "step-inprogress";
                                 }
-                                else if (step.Status == "PENDING_PARENT_ACCEPTANCE")
+                                else if (step.Status == "PENDING_PARENT_ACCEPTANCE" || step.Status == "REQUESTED")
                                 {
                                     stepCss = "waiting";
                                 }
@@ -275,15 +276,15 @@
     <script type="text/javascript">
 
         $('#print-other-report').on('click', function() {
-                $('#print-other-content').printThis();
+            $('#print-other-content').printThis();
         });
 
         $('#ncr-print-button').on('click', function () {
-                $('#ncr-print').printThis({ canvas: true });
+            $('#ncr-print').printThis({ canvas: true });
         });
 
         $('#print-traveler-report').on('click', function() {
-                $('#print-traveler-container').printThis({ canvas: true });
+            $('#print-traveler-container').printThis({ canvas: true });
         });
     </script>
 }

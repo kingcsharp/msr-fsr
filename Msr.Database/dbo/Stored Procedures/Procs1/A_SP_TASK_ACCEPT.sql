@@ -41,7 +41,7 @@ print @requestee
 if @strNTLogin is not null
 	begin
 	print 'You are able to accept this task so setting the status to Accepted'
-	UPDATE A_TASKS SET STATUS = 'ACCEPTED' WHERE ID = @ID
+	--UPDATE A_TASKS SET STATUS = 'ACCEPTED' WHERE ID = @ID
 	exec A_SP_TASK_ACCEPT_BATCHED_TASKS @ID,@strNTLogin
 	print 'Updated now continueing'
 	if @requestee is null

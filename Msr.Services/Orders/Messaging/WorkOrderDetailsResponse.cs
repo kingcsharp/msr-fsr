@@ -23,5 +23,6 @@ namespace Msr.Services.Orders.Messaging
         public List<WorkOrderView> MyWoItems { get; set; }
         public IEnumerable<SelectListItem> WorkItems { get; set; }
         public bool HasProcedureRoles { get; set; }
+        public string ActualPartId { get; set; }
     }
 }

@@ -40,38 +40,43 @@ $(function () {
 
     $('.selectpicker').selectpicker();
 
-    $('#wip-item-select').on('changed.bs.select', function (e) {
-        currVal = $(this).children('option:selected').data('content');
+    $('.dropdown-menu li').on('click', function (e) {
+        var fillId = $(this).find('strong').data('fill-id');
+        var content = $(this).html();
 
-        window.location.href = '/wip/details/' + $(this).val();
+        if (!isNaN(fillId)) {
 
-        var term = /Complete/;
-        var exists = term.test(currVal);
-        if (!exists) {
-            $('.wip-detail-item-controls').show();
-            bootbox.confirm({
-                message: "There is one or more NCR's related to this WO Item. would you like to view them now?",
-                buttons: {
-                    confirm: {
-                        label: 'Yes',
-                        className: 'btn-success'
+            window.location.href = '/wip/details/' + fillId;
+
+            var term = /Complete/;
+            var exists = term.test(content);
+
+            if (!exists) {
+                $('.wip-detail-item-controls').show();
+                bootbox.confirm({
+                    message: "There is one or more NCR's related to this WO Item. would you like to view them now?",
+                    buttons: {
+                        confirm: {
+                            label: 'Yes',
+                            className: 'btn-success'
+                        },
+                        cancel: {
+                            label: 'No',
+                            className: 'btn-danger'
+                        }
                     },
-                    cancel: {
-                        label: 'No',
-                        className: 'btn-danger'
+                    callback: function (result) {
+
+                        if (result) {
+                            $("#ncrModal").modal();
+                        }
                     }
-                },
-                callback: function (result) {
-                    
-                    if (result) {
-                        $("#ncrModal").modal();
-                    }
-                }
-            });
-        }
-        else {
-            $('.wip-detail-item-controls').hide();
-        }
+                });
+            } else {
+                $('.wip-detail-item-controls').hide();
+            }  
+        } 
+
     });
 
     //init switch
@@ -237,6 +242,22 @@ $(function () {
     });
 
     $('.step-task').on('click', function () {
+
+        var hasCompleted = $(this).hasClass('step-complete');
+
+        if (!hasCompleted) {
+            $('#carousel ul.slides li').each(function (i, obj) {
+                var hasRequiested = $(this).hasClass('requested');
+                if (hasRequiested) {
+                    $(this).removeClass('requested');
+                    $(this).addClass('waiting');
+                }
+            });
+
+            $(this).removeClass('waiting');
+            $(this).addClass('requested');
+        }
+
         loadStep(this);
     });
 

@@ -11,9 +11,12 @@
             </h2>
             <div style="width:100%;">
                 @Html.Partial("Message")
-                <table id="jqGrid"></table>
-                <div id="jqGridPager"></div>
+                <table id="jq-grid-monitors"></table>
+                <div id="jq-grid-pager"></div>
             </div>
+        </div>
+        <div class="row">
+            <button type="button" id="clear-state" class="btn btn-success help-btn">Clear State</button>
         </div>
     </div>
 </div>
@@ -25,7 +28,7 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            Msr.MonitorsGrid.LoadMonitorsGrid('@Url.Action("MonitorsData", "Monitors")');
+            Msr.MonitorsGrid.LoadMonitorsGrid('@Url.Action("MonitorsData", "Monitors")', '@Request.QueryString["description"]');
         });
 
     </script>

@@ -1,10 +1,10 @@
-﻿using Msr.Models.Invoices;
-using Msr.Services.PurchesOrder;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Mvc;
+using Msr.Models.Invoices;
+using Msr.Services.PurchesOrder;
 
 namespace Msr.Services.Invoices.ViewModel
 {
@@ -16,6 +16,8 @@ namespace Msr.Services.Invoices.ViewModel
             ClientList = new List<SelectListItem>();
             InvoiceIdList = new List<SelectListItem>();
             PoList = new List<SelectListItem>();
+            InvoiceWorkItem = new List<InvoiceWorkItem>();
+            InvoiceItemList = new List<InvoicePoWorkItem>();
         }
         public int? Id { get; set; }
 
@@ -49,9 +51,7 @@ namespace Msr.Services.Invoices.ViewModel
         public string InvoiceId { get; set; }
 
         public string InvoiceClass { get; set; }
-
-        public List<InvoiceDetailListViewModel> InvoiceDetailList { get; set; }
-
+        public List<InvoicePoWorkItem> InvoiceItemList { get; set; }
         public List<SelectListItem> ClientList { get; set; }
 
         public List<SelectListItem> StatusList { get; set; }
@@ -60,7 +60,8 @@ namespace Msr.Services.Invoices.ViewModel
 
         public List<SelectListItem> PoList { get; set; }
 
-        public void SetUp(PurchesOrderService purchesOrderService, InvoicesService invoicesService)
+        public List<InvoiceWorkItem> InvoiceWorkItem { get; set; }
+        public void SetUp(PurchesOrderService purchesOrderService, InvoicesService invoicesService, bool onEdit)
         {
 
             StatusList = new List<SelectListItem>
@@ -90,7 +91,7 @@ namespace Msr.Services.Invoices.ViewModel
 
             InvoiceIdList = new List<SelectListItem>
             {
-                  new SelectListItem
+                new SelectListItem
                 {
                     Text = "PDX",
                     Value = "03",
@@ -110,11 +111,12 @@ namespace Msr.Services.Invoices.ViewModel
             };
 
 
-            PoList = invoicesService.InvoicePoList().Select(x => new SelectListItem
+            PoList = invoicesService.InvoicePoList(onEdit).Select(x => new SelectListItem
             {
-                Text = x.Name,
-                Value = x.Id.ToString()
+                Text = x.ToString(),
+                Value = x.ToString()
             }).OrderBy(o => o.Text).ToList();
+
             PoList.Insert(0, new SelectListItem() { Value = "", Text = @"Select Po" });
 
             ClientList = purchesOrderService.GetCompaniesList().Select(x => new SelectListItem

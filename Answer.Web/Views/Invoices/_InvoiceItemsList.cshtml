@@ -1,6 +1,6 @@
 ﻿@model Msr.Services.Invoices.ViewModel.InvoiceViewModel
 <h4>Purchase Items to Apply (Check All that Apply)</h4>
-@if (Model.InvoiceDetailList != null)
+@if (Model.InvoiceItemList != null)
 {
     <table class="table table-bordered" id="records_table">
         <tr>
@@ -14,54 +14,53 @@
             <th>Product Cost Calculation</th>
             <th>Unit Price</th>
             <th>Amt of Inv Items</th>
-            <th>Total</th>
+
         </tr>
-        @for (int i = 0; i < Model.InvoiceDetailList.Count; i++)
+        @for (int i = 0; i < Model.InvoiceItemList.Count; i++)
         {
 
             <tr>
-                <td class="getId">
-                    <input name="checkbox" class="checkAmount" value="@Model.InvoiceDetailList[i].ID" id="poId" type="checkBox">
+                <td class="get-id">
+                    <input name="invoiceDetailListStrings" class="check-amount" value="@Model.InvoiceItemList[i].FillItemId" id="po-id" type="checkBox">
+                    @Html.HiddenFor(x => Model.InvoiceItemList[i].FillItemId)
                 </td>
                 <td>
-                    @string.Format("{0:M/d/yyyy}", Model.InvoiceDetailList[i].DATE_POSTED)
-                </td>
-             
-                <td>
-                    @Model.InvoiceDetailList[i].CUST_PURCH_NUM
-                </td>
-                <td>
-                    @Model.InvoiceDetailList[i].PURCHASE_ID
-                </td>
-                <td>
-                    @Model.InvoiceDetailList[i].PURCH_ITEM_ID
-                </td>
-                <td>
-                    @Model.InvoiceDetailList[i].DESCRIPTION
-                </td>
-                <td>
-                    @Model.InvoiceDetailList[i].QTY
-                </td>
-                <td class="poAmount">
-                    @if (Model.InvoiceDetailList[i].TotalSalePrice.HasValue)
-                    {
-                        <span> $@Model.InvoiceDetailList[i].TotalSalePrice</span>
-                        @Html.HiddenFor(x => Model.InvoiceDetailList[i].TotalSalePrice, new { @id = "amountPo" })
-                    }
-                </td>
-                <td>
-                    @if (Model.InvoiceDetailList[i].AMOUNT.HasValue)
-                    {
-                        <span> $@Model.InvoiceDetailList[i].AMOUNT</span>
-                    }                    
+                    @string.Format("{0:M/d/yyyy}", Model.InvoiceItemList[i].OpenDate)
                 </td>
 
                 <td>
-                    @if (Model.InvoiceDetailList[i].TOTAL.HasValue)
+                    @Model.InvoiceItemList[i].CustPurchNum
+                </td>
+                <td>
+                    @Model.InvoiceItemList[i].PurchaseId
+                </td>
+                <td>
+                    @Model.InvoiceItemList[i].PurchaseItemId
+                </td>
+                <td>
+                    @Model.InvoiceItemList[i].Description
+                </td>
+                <td>
+                    @Model.InvoiceItemList[i].FillQty
+                </td>
+                <td class="po-amount">
+                    @if (Model.InvoiceItemList[i].TotalSalePrice.HasValue)
                     {
-                        <span>$ @Model.InvoiceDetailList[i].TOTAL</span>
-                    }                   
-                    
+                        <span> $@Model.InvoiceItemList[i].TotalSalePrice</span>
+                        @Html.HiddenFor(x => Model.InvoiceItemList[i].TotalSalePrice, new { @id = "amount-po" })
+                    }
+                </td>
+                <td>
+                    @if (Model.InvoiceItemList[i].TotalSalePrice.HasValue)
+                    {
+                        <span> $@Model.InvoiceItemList[i].TotalSalePrice</span>
+                    }
+                </td>
+                <td>
+                    @if (Model.InvoiceItemList[i].Amount.HasValue)
+                    {
+                        <span> $@Model.InvoiceItemList[i].Amount</span>
+                    }
                 </td>
             </tr>
         }
@@ -74,7 +73,7 @@
 
     $(document).ready(function () {
         $('input[type="checkbox"]').click(function () {
-            CheckBoxSelection($('#editId').val(), this, $(this).closest('tr').find('.poAmount').find('#amountPo').val());
+            CheckBoxSelection($('#addId').val(), this, $(this).closest('tr').find('.po-amount').find('#amount-po').val());
         });
     });
 

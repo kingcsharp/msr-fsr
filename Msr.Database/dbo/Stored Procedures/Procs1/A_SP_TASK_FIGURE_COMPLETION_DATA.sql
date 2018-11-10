@@ -21,12 +21,18 @@ else
 	print 'Processing Task = ' + @realID
 
 declare @numSubTasks float,@subTasksComplete float,@numSubTaskHours float,@numSubTaskHoursComplete float,
-@percComplete float,@numSubTasksComplete int,@timeComplete float
+@percComplete float,@numSubTasksComplete int,@timeComplete float,@totSecs float,@hours float
 
 if isNull(@taskHASChild,0) = 0
 	begin
 	set @numSubTasks = 1
-	SELECT @numSubTaskHours = DURATION FROM A_PROCEDURE_STEPS WHERE ID = @procStepID
+
+    SELECT @totSecs = sum(s.DURATION * t.SECS) FROM dbo.A_PROCEDURE_STEPS s INNER JOIN
+                     dbo.A_Z_UNITS_TIME_TO_SECS t ON s.DURATION_TYPE = t.FROM_UNIT
+                     WHERE s.ID = @procStepID
+
+   set @numSubTaskHours=CAST(@totSecs/60/60 AS float);
+
 	print 'This task has no children so its completion is based on itself'
 	if @stat in ('FINISHED','CLOSED','COMPLETED')
 		begin

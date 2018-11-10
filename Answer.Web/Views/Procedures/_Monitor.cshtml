@@ -53,7 +53,7 @@
         <div class="form-group if-not-between yes-no">
             @Html.LabelFor(model => model.AddMonitorForProcedureViewModel.Correct_Answer, htmlAttributes: new { @class = "control-label col-md-4" })
             <div class="col-md-5">
-                @Html.TextBoxFor(model => model.AddMonitorForProcedureViewModel.Correct_Answer, new { @class = "form-control" })
+                @Html.DropDownListFor(model => model.AddMonitorForProcedureViewModel.Correct_Answer, Model.AddMonitorForProcedureViewModel.CorrectAnsList, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.AddMonitorForProcedureViewModel.Correct_Answer, "", new { @class = "text-danger" })
             </div>
         </div>

@@ -36,10 +36,6 @@ namespace Answer.Web.Controllers
 
             var totalRows = regionService.RegionsQueryable;
 
-            var defaultStatusList = GetDefaultStatus();
-
-            totalRows = totalRows.Where(x => defaultStatusList.Contains(x.Status));
-
             if (param.where != null && param.where.rules.Any())
             {
                 foreach (var rule in param.where.rules)

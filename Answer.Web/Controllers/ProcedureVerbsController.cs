@@ -28,7 +28,7 @@ namespace Answer.Web.Controllers
         {
             var procedureTypesService = new ProcedureVerbsService();
 
-            var totalRows = procedureTypesService.GetProceduresVerbs().Where(x => x.Status != "DELETED");
+            var totalRows = procedureTypesService.GetProceduresVerbs();
 
             if (param.where != null && param.where.rules.Any())
             {

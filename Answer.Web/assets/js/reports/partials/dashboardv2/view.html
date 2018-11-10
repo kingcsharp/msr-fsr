@@ -1,0 +1,29 @@
+<div class="container-fluid">
+    <div class="container-fluid">
+        <!--<div class="row">-->
+            <div class="col-lg-12">
+                <h2 class="page-header">
+                    <span class="icon fa fa-list-ol"></span>
+
+                    {{selectedDashboard.dashboardName}} 
+                    <!--<a href="javascript:;" class="btn btn-success help-btn pull-right" ng-click="goBack();">Back</a>-->
+                    <!--<button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal" ng-click="goBack();">Back</button>-->
+                </h2>
+            </div>
+        <!--</div>-->
+        <!--<div class="row">-->
+            <div class="main col-lg-12">
+                <!--<div class="container-fluid" style="padding-bottom: 5px; padding-top: 5px; height: 40px;">
+                    <h3 class="pull-left">{{selectedDashboard.dashboardName}}</h3>
+                    <a ng-click="goBack();" class="btn btn-default pull-right" tooltip="Click here to cancel and backtrack" tooltip-placement="bottom">Cancel</a>
+                </div>-->
+
+                <div class="container-fluid" id="pageViewer" ng-init="loadHTML()" style="height: 60vh; width: 100%; padding-top: 10px;">
+
+                </div>
+            </div>
+        <!--</div>-->
+    </div>
+</div>
+<!--<div ng-include src="publishModal"></div>-->
+<!--<div ng-include src="promptModal"></div>-->

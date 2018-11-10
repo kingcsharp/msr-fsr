@@ -17,6 +17,7 @@ namespace Msr.Services.Menus
         {
             _dbContext = new MsrDbContext();    
         }
+
         public List<MenuView> GetMenu(string loginId)
         {
             using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
@@ -27,6 +28,7 @@ namespace Msr.Services.Menus
                 using (var multi = conn.QueryMultiple("Portal_GetUserModulePermissions", p, commandType: CommandType.StoredProcedure))
                 {
                     var menus = multi.Read<MenuView>().ToList();
+                    
                     return menus;
                 }
             }

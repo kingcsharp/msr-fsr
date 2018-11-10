@@ -2,13 +2,22 @@
 
 Msr.LocationsGrid = Msr.LocationsGrid ||
     {
-        SetUpGrid: function (returnUrl) {
+        GetReturnUrl: function () {
+            return "/Locations";
+        },
+        GetGridId: function () {
+            return "jq-grid-location";
+        },
+        GetGridEditUrl: function () {
+            return "/Locations/Edit/";
+        },
+        SetUpGrid: function (url) {
             $(document).ready(function () {
-                $("#jqGrid").jqGrid({
-                    url: '/Locations/locationsData',
+                $("#" + Msr.LocationsGrid.GetGridId()).jqGrid({
+                    url: url,
                     mtype: "GET",
                     styleUI: 'Bootstrap',
-                    datatype: "json",
+                    datatype: "local",
                     colModel: [
                         {
                             label: 'ID',
@@ -136,7 +145,7 @@ Msr.LocationsGrid = Msr.LocationsGrid ||
                     rowNum: 10,
                     rowList: [10, 20, 50, 100],
                     loadonce: false, // this is just for the demo
-                    pager: "#jqGridPager",
+                    pager: "#jq-grid-pager",
                     height: 'auto',
                     gridview: true,
                     sortname: 'Name',
@@ -151,36 +160,18 @@ Msr.LocationsGrid = Msr.LocationsGrid ||
                     ajaxCellOptions: {},
                     gridComplete: function () {
 
-                        Msr.JqGridCommon.SetupGridLock("/Locations/Edit/");
-                        Msr.JqGridCommon.UnLockWorkflow(returnUrl);
+                        Msr.JqGridCommon.TriggerSaveLoadGridState(Msr.LocationsGrid.GetGridId());
+                        Msr.JqGridCommon.SetupGridLock(Msr.LocationsGrid.GetGridEditUrl());
+                        Msr.JqGridCommon.UnLockWorkflow(Msr.LocationsGrid.GetReturnUrl());
                     }
 
                 });
-                $('#jqGrid').navGrid("#jqGridPager",
-                    {
-                        refresh: true,
-                        search: false, // show search button on the toolbar
-                        add: false,
-                        edit: false,
-                        del: false,
-
-                    },
-                    {}, // edit options
-                    {}, // add options
-                    {}, // delete options
-                    { multipleSearch: true }
-                );
-                $('#jqGrid').jqGrid('filterToolbar',
-                    {
-                        stringResult: true,
-                        searchOnEnter: true,
-                        searchOperators: true
-                    });
+                Msr.JqGridCommon.BindGridEvents(Msr.LocationsGrid.GetGridId());
 
                 function LocationEditFormatter(cellvalue, options, rowObject) {
 
                     var actions =
-                        Msr.JqGridCommon.ActionFormtter(cellvalue, options, rowObject, returnUrl, '/Locations/Edit/');
+                        Msr.JqGridCommon.ActionFormtter(cellvalue, options, rowObject, Msr.LocationsGrid.GetReturnUrl(), '/Locations/Edit/');
 
                     return actions;
                 }

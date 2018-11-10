@@ -11,13 +11,15 @@
             </h2>
             <div class="col-lg-12">
                 @Html.Partial("Message")
-                <table id="jqGrid"></table>
-                <div id="jqGridPager"></div>
+                <table id="jq-grid-actual-part"></table>
+                <div id="jq-grid-pager"></div>
             </div>
         </div>
         <div class="row">
             <a href="~/ActualParts/Create" class="btn btn-success help-btn">Add</a>
             <a href="~/ActualParts/import" class="btn btn-success help-btn">Import</a>
+            <button type="button" id="clear-state" class="btn btn-success help-btn">Clear State</button>
+
         </div>
     </div>
 </div>
@@ -28,7 +30,9 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            Msr.ActualPartsGrid.LoadActualPartsGrid('@Url.Action("ActualPartsData", "ActualParts")', '@ViewBag.Serial','@Request.Url.OriginalString');
+
+            Msr.ActualPartsGrid.LoadActualPartsGrid('@Url.Action("ActualPartsData", "ActualParts")');
+
         });
     </script>
 }

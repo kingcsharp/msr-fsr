@@ -339,16 +339,18 @@ namespace Msr.Services.Orders
         {
             try
             {
+                var ids = model.TaskId.Split(',');
+
+                model.TaskId = ids[0];
+
                 var saveWorkItemImagesProcedure = new SaveWorkItemImagesProcedure(model);
 
                 _dbContext.Database.ExecuteStoredProcedure(saveWorkItemImagesProcedure);
 
-                var result = GetWipActualPartId(model.TaskId);
-
                 using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
                 {
                     var p = new DynamicParameters();
-                    p.Add("@ActualPartId", result, DbType.String, ParameterDirection.Input);
+                    p.Add("@ActualPartId", ids[1], DbType.String, ParameterDirection.Input);
                     p.Add("@FileId", saveWorkItemImagesProcedure.NewId, DbType.String, ParameterDirection.Input);
                     p.Add("@ModBy", model.NTLogin, DbType.String, ParameterDirection.Input);
 
@@ -360,20 +362,7 @@ namespace Msr.Services.Orders
             {
                 throw ex;
             }
-
         }
-
-        private string GetWipActualPartId(string id)
-        {
-            var result = _dbContext.Database.SqlQuery<string>($"select PARENT_ID from A_TASKS where id={id}").FirstOrDefault();
-
-            if (result == null)
-            {
-                return _dbContext.Database.SqlQuery<string>($"select ActualPartId from Portal_WorkOrders where TaskId={id}").SingleOrDefault();
-            }
-            return _dbContext.Database.SqlQuery<string>($"select ActualPartId from Portal_WorkOrders where TaskId={result}").SingleOrDefault();
-        }
-
 
         public List<WorkOrderImageView> GetOrderItemImagesById(string taskId)
         {
@@ -516,7 +505,7 @@ namespace Msr.Services.Orders
 
                 foreach (var item in detailsResponse.TaskItemParts)
                 {
-                    if (item.Print_Order != null && item.STEP_ID == stepId.ToString())
+                    if (item.Print_Order.HasValue && item.STEP_ID == stepId.ToString())
                     {
                         detailsResponse.ReferenceTheories = conn.Query<GetReferenceTheories>($"SELECT l.THEORY_ID AS TheoryId,t.NAME AS TheoryName,OBJECT_ID AS ObjectId FROM A_PROCEDURE_STEP_THEORY_LINK l, A_V_THEORY_APPROVED_DATA t WHERE l.THEORY_ID = t.ID AND l.PROC_STEP_ID ='{item.OldStepId}'").ToList();
                     }
@@ -532,7 +521,7 @@ namespace Msr.Services.Orders
                     {
                         if ((task.Status == "REQUESTED" || task.Status == "ACCEPTED" ||
                              task.Status == "PENDING_PARENT_ACCEPTANCE" || task.Status == "CLOSED")
-                            && !string.IsNullOrWhiteSpace(task.Print_Order) && task.HAS_MONITOR == "1")
+                            && task.Print_Order.HasValue && task.HAS_MONITOR.HasValue && task.HAS_MONITOR ==1)
                         {
                             var monitorParams = new DynamicParameters();
 
@@ -700,7 +689,7 @@ namespace Msr.Services.Orders
 
                 var result = _dbContext.Database.SqlQuery<TaskItemPart>("EXEC A_SP_TASKS_FIND_FOR_PURCHASE_ITEM_AND_ACT_PART @fillID, @strNTLogin", fill_Id, ntLogin).FirstOrDefault();
 
-                if (result.Status == "REQUESTED" && result.HAS_CHILD != null && result.Print_Order == null)
+                if (result.Status == "REQUESTED" && result.HAS_CHILD != null && !result.Print_Order.HasValue)
                 {
                     ////Start parent procedure step
                     var response = StepStart(Convert.ToInt32(result.STEP_ID), login, fillId);
@@ -908,27 +897,35 @@ namespace Msr.Services.Orders
             }
         }
 
-        public ResultNotification<bool> AssumeTask(int taskId, string login)
+        public ResultNotification<bool> TakeOverPO(int fillId, string login)
         {
             var ressult = new ResultNotification<bool>();
 
+            var fill_Id = new SqlParameter("@fillID", fillId);
+            var ntLogin = new SqlParameter("@strNTLogin", login);
+            var result = _dbContext.Database.SqlQuery<TaskItemPart>("exec A_SP_TASKS_FIND_FOR_PURCHASE_ITEM_AND_ACT_PART @fillID,@strNTLogin", fill_Id, ntLogin).ToList();
+            var parentTask = result.Where(x => x.HAS_CHILD.HasValue && x.HAS_CHILD == 1).SingleOrDefault();
             var p = new DynamicParameters();
 
-            p.Add("@RET_STATUS", dbType: DbType.String, direction: ParameterDirection.Output, size: 500);
-            p.Add("@MSGS", dbType: DbType.String, direction: ParameterDirection.Output, size: 100);
-            p.Add("@ID", taskId.ToString(), DbType.String, ParameterDirection.Input, size: 50);
-            p.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input, size: 50);
-
-            using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
+            foreach (var item in result.Where(x=> x.Status != "CLOSED"))
             {
-                var stepStartDoneTaskResult = conn.Query<StepStartTaskResult>("A_SP_TASK_ASSUME_CONTROL", p, commandType: CommandType.StoredProcedure);
+                p.Add("@RET_STATUS", dbType: DbType.String, direction: ParameterDirection.Output, size: 500);
+                p.Add("@MSGS", dbType: DbType.String, direction: ParameterDirection.Output, size: 100);
+                p.Add("@ID", item.STEP_ID, DbType.String, ParameterDirection.Input, 50);
+                p.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input, 50);
+                p.Add("@ParentTaskId", parentTask.STEP_ID, DbType.String, ParameterDirection.Input, 50);
 
-                var retStatus = p.Get<string>("RET_STATUS");
-                var msg = p.Get<string>("MSGS");
-
-                if (!string.IsNullOrWhiteSpace(retStatus))
+                using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
                 {
-                    ressult.AddError(retStatus);
+                    conn.Query<StepStartTaskResult>("Portal_TakeOverPO", p, commandType: CommandType.StoredProcedure);
+                    var retStatus = p.Get<string>("RET_STATUS");
+                    var msg = p.Get<string>("MSGS");
+
+                    if (!string.IsNullOrWhiteSpace(retStatus))
+                    {
+                        ressult.AddError(retStatus);
+                        break;
+                    }
                 }
             }
 

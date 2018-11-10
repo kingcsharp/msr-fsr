@@ -1,0 +1,59 @@
+﻿@{
+    ViewBag.Title = "Pending Approvals";
+}
+
+<div class="container-fluid">
+    <div class="side-body padding-top">
+        <div class="row">
+            <h2 class="page-header">
+                <span class="icon fa fa-cog"></span>
+                Pending Approvals
+                @Html.Partial("_HelpViewButton")
+            </h2>
+            <div class="col-lg-12">
+                @Html.Partial("Message")
+                <table id="jqGrid"></table>
+                <div id="jqGridPager"></div>
+            </div>
+        </div>
+    </div>
+</div>
+@if (ViewBag.HasQuoteViewPermissions)
+{
+    <div class="container-fluid">
+        <div class="side-body padding-top">
+            <div class="row">
+                <h2 class="page-header">
+                    <span class="icon fa fa-cog"></span>
+                    Pending CRF Form submissions (Products)
+                </h2>
+                <div class="col-lg-12">
+                    <table id="jqProductGrid"></table>
+                    <div id="jqGridProductPager"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/js/jqgrid")
+    @Scripts.Render("~/bundles/js/pending-approvals")
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            var itemType = '@Request.QueryString["itemType"]';
+
+            Msr.PendingApprovalsGrid.SetUpGrid('@Request.Url.OriginalString', itemType);
+
+            @if (ViewBag.HasQuoteViewPermissions)
+            {
+              <text> Msr.PendingApprovalsGrid.SetUpProductGrid('@Request.Url.OriginalString', itemType); </text>
+            }
+        });
+
+    </script>
+}

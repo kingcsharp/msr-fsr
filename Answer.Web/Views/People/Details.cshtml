@@ -1,0 +1,280 @@
+﻿@model Msr.Services.People.ViewModels.EditPeopleViewModel
+@{
+    ViewBag.Title = "Detail People";
+}
+
+@Styles.Render("~/bundles/css/fileinput")
+
+<div class="container-fluid">
+    <div class="side-body padding-top">
+        <div class="row">
+            <h2 class="page-header">
+                Detail People @Html.Partial("_HelpViewButton")
+                <div class=" pull-right" data-toggle="modal">
+                    <!-- Split button -->
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-warning">Action</button>
+                        <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="caret"></span>
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a href="~/People/Delete/@Model.ObjectId">Delete</a></li>
+                        </ul>
+                    </div>
+
+                </div>
+            </h2>
+
+            <div class="col-lg-10">
+                @Html.Partial("Message")
+
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="form-horizontal">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.RealUser, new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(model => model.RealUser, Model.ListRealUserTypes, new { @class = "form-control people" })
+                                @Html.ValidationMessageFor(model => model.RealUser, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.LoginId, new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
+                                @Html.HiddenFor(x => x.LoginId)
+                                @Html.EditorFor(model => model.LoginId, new { htmlAttributes = new { @class = "form-control people" } })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.FirstName, new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control people" } })
+                                @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.LastName, new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control people" } })
+                                @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ScreenType, new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(model => model.ScreenType, Model.ListScreenTypes, new { @class = "form-control select people" })
+                                @Html.ValidationMessageFor(model => model.ScreenType, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.CompanyEditPerson, new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(model => model.CompanyEditPerson, Model.ListCompanyEditPerson, new { @class = "form-control select people" })
+                                @Html.ValidationMessageFor(model => model.CompanyEditPerson, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.IsDepartmentHead, new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(model => model.IsDepartmentHead, Model.ListIsDepartmentHead, new { @class = "form-control people" })
+                                @Html.ValidationMessageFor(model => model.IsDepartmentHead, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.OfficialPosition, new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(model => model.OfficialPosition, Model.ListOfficialPosition, new { @class = "form-control select people" })
+                                @Html.ValidationMessageFor(model => model.OfficialPosition, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ReferenceFiles, new { @class = "control-label col-md-2" })
+                            @foreach (var item in Model.DocLinks)
+                            {
+                                <dd>
+                                    @Html.DisplayFor(model => item.NAME) <span class="data-toggle=" data-call-back-id="@item.LINKED_DOC_ID" data-toggle="modal" data-target="#view-images" title="View File"><i class="icon fa fa-eye"></i></span>
+                                </dd>
+                            }
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.BossName, new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(model => model.BossName, Model.ListBossInfo, new { @class = "form-control select people" })
+                                @Html.ValidationMessageFor(model => model.BossName, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.TimeZone, new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(model => model.TimeZone, Model.ListTimeZones, new { @class = "form-control people" })
+                                @Html.ValidationMessageFor(model => model.TimeZone, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.HireDate, new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.HireDate, new { htmlAttributes = new { @class = "form-control datepicker people" } })
+                                @Html.ValidationMessageFor(model => model.HireDate, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.StatusEditPerson, new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(model => model.StatusEditPerson, Model.ListStatusEditPerson, new { @class = "form-control people" })
+                                @Html.ValidationMessageFor(model => model.StatusEditPerson, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.PrimaryPhoneNumber, new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
+                                <div style="width: 96%; float: left; display: flex">
+                                    @Html.DropDownListFor(model => model.TypePrimaryPhoneNumber, Model.ListPhoneTypes, new { @class = "form-control people" })
+                                    @Html.ValidationMessageFor(model => model.PrimaryPhoneNumber, "", new { @class = "text-danger" })
+                                    @Html.EditorFor(model => model.PrimaryPhoneNumber, new { htmlAttributes = new { @class = "form-control people" } })
+                                    @Html.ValidationMessageFor(model => model.PrimaryPhoneNumber, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-8">
+                                <div style="width: 96%; float: left; display: flex">
+                                    @Html.LabelFor(model => model.ExtPrimaryPhoneNumber, new { @class = "control-label col-md-8" })
+                                    @Html.EditorFor(model => model.ExtPrimaryPhoneNumber, new { htmlAttributes = new { @class = "form-control people" } })
+                                    @Html.ValidationMessageFor(model => model.ExtPrimaryPhoneNumber, "", new { @class = "text-danger" })
+
+                                    @Html.LabelFor(model => model.PinPrimaryPhoneNumber, new { @class = "control-label col-md-2" })
+
+                                    @Html.EditorFor(model => model.PinPrimaryPhoneNumber, new { htmlAttributes = new { @class = "form-control people" } })
+                                    @Html.ValidationMessageFor(model => model.PinPrimaryPhoneNumber, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.EmailPrimary, new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
+                                <table style="width: 100%; border-spacing: 2px;">
+                                    <tr>
+                                        <td>
+                                            @Html.DropDownListFor(model => model.EmailTypePrimary, Model.ListEmailTypes, new { @class = "form-control people" })
+                                            @Html.ValidationMessageFor(model => model.EmailTypePrimary, "", new { @class = "text-danger" })
+                                        </td>
+                                        <td>
+                                            @Html.DropDownListFor(model => model.EmailTextTypePrimary, Model.ListEmailTextTypes, new { @class = "form-control people" })
+                                            @Html.ValidationMessageFor(model => model.EmailTextTypePrimary, "", new { @class = "text-danger" })
+                                        </td>
+                                        <td>
+                                            @Html.EditorFor(model => model.EmailPrimary, new { htmlAttributes = new { @class = "form-control people" } })
+                                            @Html.ValidationMessageFor(model => model.EmailPrimary, "", new { @class = "text-danger" })
+                                        </td>
+
+                                    </tr>
+                                </table>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.AddressType, new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
+                                <div style="width: 96%; float: left; display: flex">
+                                    @Html.DropDownListFor(model => model.AddressType, Model.ListAddressTypes, new { @class = "form-control people" })
+                                    @Html.ValidationMessageFor(model => model.AddressType, "", new { @class = "text-danger" })
+                                    @Html.DropDownListFor(model => model.AddressLocation, Model.Locations, new { @class = "form-control select people" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Roles, new { @class = "control-label col-md-2" })
+                            <table class="table table-bordered table-hover table-striped table-condensed" id="sub-parts">
+                                <thead>
+                                    <tr data-toggle="tooltip" data-placement="top" title="">
+                                        <th class="text-center" width="20%">Role Name</th>
+                                        <th class="text-center" width="40%">Start Date</th>
+                                        <th class="text-center" width="40%">End Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i < Model.Roles.Count; i++)
+                                    {
+                                        var rowid = "row" + i;
+                                        <tr id="@rowid" data-value="Roles[i].Role" data-placement="top">
+                                            <td>
+                                                @Html.DisplayFor(x => Model.Roles[i].Role_Name, new { @class = "form-control" })
+                                                @Html.HiddenFor(x => Model.Roles[i].Person, new { @class = "form-control" })
+                                                @Html.HiddenFor(x => Model.Roles[i].Role, new { @class = "form-control" })
+                                            </td>
+                                            <td>
+                                                @Html.TextBoxFor(x => Model.Roles[i].StartDate, "{0:MM/dd/yyyy}", new { @class = "form-control date-picker people" })
+                                            </td>
+                                            <td>
+                                                @Html.TextBoxFor(x => Model.Roles[i].EndDate, "{0:MM/dd/yyyy}", new { @class = "form-control date-picker people" })
+                                            </td>
+
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-8">
+                                @Html.ActionLink("Back To List", "Index", null, new { @class = "btn btn-warning" })
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+
+        $(function () {
+
+            $('.people').attr('disabled', true);
+
+            $('.date-picker').datepicker({
+                format: 'mm/dd/yyyy',
+                autoclose: true
+            });
+            $('.datepicker').datepicker({
+                format: 'mm/dd/yyyy',
+                autoclose: true
+            });
+
+            $('.datepicker').datepicker('setDate', 'now');
+
+            $('#view-images').on('show.bs.modal',
+                function (event) {
+                    var button = $(event.relatedTarget);
+                    var callBackId = button.data('call-back-id');
+                    var modal = $(this);
+                    $.ajax({
+                        type: "GET",
+                        url: '/Doc/ViewFile?callBackId=' + callBackId,
+                        dataType: 'html',
+                        success: function (data) {
+                            modal.find('.modal-body').html(data);
+                        },
+                        error: function (error) {
+                            eLoaderError(error);
+                        }
+                    });
+                });
+        });
+
+    </script>
+}
+<style>
+    .Address {
+        width: 50% !important;
+    }
+</style>

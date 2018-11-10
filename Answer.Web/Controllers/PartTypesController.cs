@@ -36,10 +36,6 @@ namespace Answer.Web.Controllers
 
             var totalRows = _partTypeService.GetPartTypesQueryable();
 
-            var defaultStatusList = "CREATING,DENIED,APPROVED,APPROVED_BUT_REVISING,APPROVED_BUT_DELETING".Split(',');
-
-            totalRows = totalRows.Where(x => defaultStatusList.Contains(x.Status));
-
             if (param.where != null && param.where.rules.Any())
             {
                 foreach (var rule in param.where.rules)

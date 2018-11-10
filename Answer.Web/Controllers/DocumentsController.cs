@@ -45,9 +45,7 @@ namespace Answer.Web.Controllers
 
         public ActionResult DocumentsData(JqGridParam param)
         {
-            var defaultStatusList = GetDefaultStatus();
-
-            var totalRows = _documentService.GetDocumentsQueryable().Where(x => defaultStatusList.Contains(x.Status));
+            var totalRows = _documentService.GetDocumentsQueryable();
 
             if (param.where != null && param.where.rules.Any())
             {
@@ -101,6 +99,19 @@ namespace Answer.Web.Controllers
                             totalRows = totalRows.Where(q => q.ApprovalDate.HasValue && q.ApprovalDate.Value.Day == value.Day &&
                                                              q.ApprovalDate.Value.Month == value.Month && q.ApprovalDate.Value.Year == value.Year);
                         }
+                    }
+                    else if (rule.field == nameof(DocumentView.UpdatedDate))
+                    {
+                        DateTime value;
+                        if (DateTime.TryParse(rule.data.Trim(), out value))
+                        {
+                            totalRows = totalRows.Where(q => q.UpdatedDate.HasValue && q.UpdatedDate.Value.Day == value.Day &&
+                                                             q.UpdatedDate.Value.Month == value.Month && q.UpdatedDate.Value.Year == value.Year);
+                        }
+                    }
+                    else if (rule.field == nameof(DocumentView.UpdatedBy))
+                    {
+                        totalRows = totalRows.Where(x => x.UpdatedBy.ToLower().Contains(rule.data.ToLower()));
                     }
                     else if (rule.field == nameof(DocumentView.LockedByName))
                     {
@@ -191,19 +202,19 @@ namespace Answer.Web.Controllers
         {
             var model = _documentService.GetById(id);
 
-            var location = new SaveDocumentViewModel();
+            var documentViewModel = new SaveDocumentViewModel();
 
-            location = location.MapToDto(model);
+            documentViewModel = documentViewModel.MapToDto(model);
 
-            location.Setup(new RoleService(), new PartsService(), new DocumentFilesService(), _documentService, GetCurrentUser().Id);
+            documentViewModel.Setup(new RoleService(), new PartsService(), new DocumentFilesService(), _documentService, GetCurrentUser().Id);
 
-            var preview = string.Join(",", location.DocLinks.ToArray().Select(x => string.Format("{0}{1}{0}", "\'", x.SERVER_PATH)));
+            var preview = string.Join(",", documentViewModel.DocLinks.ToArray().Select(x => string.Format("{0}{1}{0}", "\'", x.SERVER_PATH)));
 
             ViewBag.Preview = preview;
 
             var jsonSerialiser = new JavaScriptSerializer();
 
-            var previewConfig = jsonSerialiser.Serialize(location.DocLinks
+            var previewConfig = jsonSerialiser.Serialize(documentViewModel.DocLinks
                 .Select(x => new
                 {
                     caption = x.NAME,
@@ -216,7 +227,7 @@ namespace Answer.Web.Controllers
 
             ViewBag.PreviewConfig = previewConfig;
 
-            return View(location);
+            return View(documentViewModel);
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
@@ -262,6 +273,8 @@ namespace Answer.Web.Controllers
         {
             var result = false;
 
+            var ids = linkDocId.Split(',');
+
             var currentUser = GetCurrentUser();
 
             var initialPreview = new List<string>();
@@ -287,17 +300,17 @@ namespace Answer.Web.Controllers
                 }
                 else if (section == "TEMPLATE_STEP")
                 {
-                    _preProServices.SavePreProSingleFileReference(linkDocId, file, currentUser.Id);
+                    _preProServices.SavePreProSingleFileReference(ids[0], file, currentUser.Id);
                 }
                 else
                 {
-                    _documentService.SaveSingleFileReference(linkDocId, file, currentUser.Id);
+                    _documentService.SaveSingleFileReference(ids[0], file, currentUser.Id);
                 }
             }
 
             if (section == "WIP_TASK_STEP")
             {
-                var images = _orderService.GetOrderItemImagesById(linkDocId);
+                var images = _orderService.GetOrderItemImagesById(ids[0]);
 
                 initialPreview = images.Select(x => x.Path).ToList();
 
@@ -313,7 +326,7 @@ namespace Answer.Web.Controllers
             }
             else if (section == "TEMPLATE_STEP")
             {
-                var proDockLinks = _documentFilesService.GetPreProRefFileDocLinks(linkDocId, currentUser.Id);
+                var proDockLinks = _documentFilesService.GetPreProRefFileDocLinks(ids[0], currentUser.Id);
 
                 initialPreview = proDockLinks.ToArray().Select(x => x.Server_Path).ToList();
 
@@ -322,14 +335,14 @@ namespace Answer.Web.Controllers
                     caption = x.Name,
                     type = MimeTypes.GetContentType(x.Contenttype),
                     size = 6666,
-                    url = Url.Action("DeletePreProImageById", "Doc", new { id = linkDocId, fileId = x.Value }),
+                    url = Url.Action("DeletePreProImageById", "Doc", new { id = ids[0], fileId = x.Value }),
                     downloadUrl = x.Server_Path,
                     key = x.Value
                 });
             }
             else
             {
-                var proDockLinks = _documentFilesService.GetDocByObjectId(linkDocId);
+                var proDockLinks = _documentFilesService.GetDocByObjectId(ids[0]);
 
                 initialPreview = proDockLinks.ToArray().Select(x => x.SERVER_PATH).ToList();
 
@@ -345,6 +358,38 @@ namespace Answer.Web.Controllers
             }
 
             return Json(new { initialPreview, initialPreviewConfig }, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult Details(string id)
+        {
+            var model = _documentService.GetById(id);
+
+            var detail = new SaveDocumentViewModel();
+
+            detail = detail.MapToDto(model);
+
+            detail.Setup(new RoleService(), new PartsService(), new DocumentFilesService(), _documentService, GetCurrentUser().Id);
+
+            var preview = string.Join(",", detail.DocLinks.ToArray().Select(x => string.Format("{0}{1}{0}", "\'", x.SERVER_PATH)));
+
+            ViewBag.Preview = preview;
+
+            var jsonSerialiser = new JavaScriptSerializer();
+
+            var previewConfig = jsonSerialiser.Serialize(detail.DocLinks
+                .Select(x => new
+                {
+                    caption = x.NAME,
+                    type = MimeTypes.GetContentType(x.CONTENTTYPE),
+                    size = 6666,
+                    url = Url.Action("DeletesingleReference", "Documents", new { file = x.LINKED_DOC_ID }),
+                    downloadUrl = x.SERVER_PATH,
+                    key = x.LINKED_DOC_ID
+                }));
+
+            ViewBag.PreviewConfig = previewConfig;
+
+            return View(detail);
         }
     }
 }

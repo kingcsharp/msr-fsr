@@ -3,6 +3,8 @@
     ViewBag.Title = "Wip Menu";
 }
 
+@Styles.Render("~/bundles/css/jquery-ui")
+
 <link rel="stylesheet" href="//blueimp.github.io/Gallery/css/blueimp-gallery.min.css">
 <div class="container-fluid">
     <div class="side-body padding-top">
@@ -14,9 +16,12 @@
             </h2>
             <div class="col-lg-12">
                 @Html.Partial("Message")
-                <table id="jqGrid"></table>
-                <div id="jqGridPager"></div>
+                <table id="jq-grid-wip"></table>
+                <div id="jq-grid-pager"></div>
             </div>
+        </div>
+        <div class="row">
+            <button type="button" id="clear-state" class="btn btn-success help-btn">Clear State</button>
         </div>
     </div>
 </div>
@@ -75,11 +80,11 @@
     
     <script src="~/assets/js/wip-detail-print-other.js"></script>
     @Scripts.Render("~/bundles/js/jqgrid-wip")
+    @Scripts.Render("~/bundles/js/jquery-ui")
 
     <script type="text/javascript">
         $(document).ready(function() {
-            $.jgrid.defaults.styleUI = 'Bootstrap';
-            Msr.WipGrid.LoadWipGrid('@Url.Action("EngineeringData", "wip")');
+            Msr.WipGrid.LoadWipGrid('@Url.Action("EngineeringData", "wip", new {step=Request.QueryString["step"] })');
         });
     </script>
 }

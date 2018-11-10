@@ -23,7 +23,7 @@ namespace Answer.Web
 
             bundles.Add(new ScriptBundle("~/bundles/js/jqgrid")
                 .Include("~/assets/js/plugins/bootstrap3/bootstrap-dialog.min.js")
-                .Include("~/assets/js/jquery.jqGrid.min.js")
+                .Include("~/assets/js/jquery.jqGrid.js")
                 .Include("~/assets/js/i18n/grid.locale-en.js")
                 .Include("~/assets/js/msr/grid-common.js")
             );
@@ -134,6 +134,14 @@ namespace Answer.Web
                 .Include("~/assets/js/comman.js")
             );
 
+            bundles.Add(new ScriptBundle("~/bundles/js/pending-approvals")
+                .Include("~/assets/js/grids/pending-approvals.js")
+            );
+
+            bundles.Add(new ScriptBundle("~/bundles/js/object-search")
+                .Include("~/assets/js/grids/object-search.js")
+            );
+
             bundles.Add(new StyleBundle("~/bundles/css/main")
                .Include("~/assets/css/bootstrap.min.css", new CssRewriteUrlTransform())
                .Include("~/assets/css/font-awesome.min.css", new CssRewriteUrlTransform())
@@ -144,6 +152,7 @@ namespace Answer.Web
                .Include("~/assets/css/select2.min.css")
                .Include("~/assets/css/themes/flat-blue.css")
                .Include("~/assets/css/ui.jqgrid-bootstrap-ui.css")
+                .Include("~/assets/css/ui.jqgrid-bootstrap.css")
                .Include("~/assets/css/ui.jqgrid.css")
                .Include("~/assets/css/style.css")
                .Include("~/assets/css/flexslider.css", new CssRewriteUrlTransform())
@@ -174,8 +183,21 @@ namespace Answer.Web
                 .Include("~/assets/js/bootstrap-datepicker.min.js")
            );
 
+            bundles.Add(new ScriptBundle("~/bundles/js/jquery-ui")
+                .Include("~/assets/js/jquery-ui/jquery-ui.min.js")
+                .Include("~/assets/js/jquery-ui/jquery.multiselect.js")
+            );
+
+            bundles.Add(new StyleBundle("~/bundles/css/jquery-ui")
+                .Include("~/assets/css/jquery-ui/jquery-ui.css")
+                .Include("~/assets/css/jquery-ui/jquery.multiselect.css"));
+
+               bundles.Add(new ScriptBundle("~/bundles/js/invoice-setup")
+		        .Include("~/assets/js/invoice-setup.js")
+	        );
+
             #if DEBUG
-                        BundleTable.EnableOptimizations = false;
+            BundleTable.EnableOptimizations = false;
             #else
                             BundleTable.EnableOptimizations = true;
             #endif

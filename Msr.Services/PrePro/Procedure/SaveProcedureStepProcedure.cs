@@ -43,7 +43,7 @@ namespace Msr.Services.PrePro.Procedure
                 : DBNull.Value.ToString(CultureInfo.InvariantCulture);
             PrecedingSteps = null;
             Duration = model.Duration.HasValue ? model.Duration.Value.ToString() : null;
-            DurationType = model.DurationType;
+            DurationType = "TIME_SYS_MINUTES";
             NTLogin = model.NTLogin;
             Title = model.Title;
             EquipmentTime = null;

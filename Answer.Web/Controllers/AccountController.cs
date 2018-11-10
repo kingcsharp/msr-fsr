@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Configuration;
-using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using Answer.Web.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
@@ -137,11 +138,18 @@ namespace Msr.Web.Controllers
                 var from = ConfigurationManager.AppSettings["From"];
                 var websiteUrl = ConfigurationManager.AppSettings["WebsiteUrl"];
 
-                var lnkHref = $"<a href='{websiteUrl}/Account/ResetPassword?token={EncryptionHelper.Encrypt(user.Login)}'>Reset Password</a>";
+                var encryptedText = EncryptionHelper.Encrypt(user.Login).Replace('/', '*');
 
-                var body = "<b>Please reset your password by clicking  </b><br/>" + lnkHref;
+                var lnkHref = $"<a href='{websiteUrl}/Account/ResetPassword?token={encryptedText}'>Reset Password</a>";
 
-                var subject = "Reset password";
+                var body = $@"<div>
+               <p>Hello ANSWER user,<br/></p>
+               <p>This email is being sent to you due to a password reset request from the MSR-FSR Answer system.<br/></p>
+               <p><b> Please reset your password by clicking : </ b ><br/> </p>
+               <p>{lnkHref}</p>
+                        </div>";
+
+                var subject = "ANSWER - Reset password";
 
                 try
                 {
@@ -171,7 +179,7 @@ namespace Msr.Web.Controllers
         {
             token = Request.Url.Query.Replace("?token=", "");
 
-            var decUser = EncryptionHelper.Decrypt(token.Trim());
+            var decUser = EncryptionHelper.Decrypt(token.Replace('*', '/'));
 
             var user = _userService.GetAnserByUserName(decUser);
 
@@ -220,6 +228,40 @@ namespace Msr.Web.Controllers
         public ActionResult ExternalLoginFailure()
         {
             return View();
+        }
+
+        [AllowAnonymous]
+        public ActionResult ForgotUserNameConfirmation()
+        {
+            return View();
+        }
+
+        [AllowAnonymous]
+        public ActionResult ForgotUserName()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ForgotUserName(ForgotUserNameViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _userService.SendUsername(model.Email);
+
+                if (result.HasErrors())
+                {
+                    ModelState.AddModelError("", result.ErrorMessage);
+
+                    return View(model);
+                }
+
+                return RedirectToAction("ForgotUserNameConfirmation", "Account");
+            }
+
+            return View(model);
         }
 
         protected override void Dispose(bool disposing)

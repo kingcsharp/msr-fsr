@@ -39,6 +39,14 @@
 
                     var stepInProgress = $('#carousel ul.slides').find(".waiting").first();
 
+                    $('#carousel ul.slides li').each(function (i, obj) {
+                        var hasRequiested = $(this).hasClass('requested');
+                        if (hasRequiested) {
+                            $(this).removeClass('requested');
+                            $(this).addClass('waiting');
+                        }
+                    });
+
                     if (stepInProgress.length > 0) {
                         ////Get next step
                         $(stepInProgress).removeClass('waiting');
@@ -50,7 +58,7 @@
 
                     if (stepRequested.length > 0) {
                         $(stepRequested).addClass('step-complete');
-
+                        $(stepRequested).removeClass('waiting');
                         ////When last step done
                         if (stepInProgress.length === 0) {
                             $(stepRequested).trigger("click");
@@ -94,17 +102,15 @@
         }
     };
 
-    var stepAssume = function (taskId) {
+    var stepAssume = function (stepId, fillId) {
 
         $.ajax({
             type: "POST",
-            url: "/wip/AssumeTaskClick?taskId=" + taskId,
+            url: "/wip/AssumeTaskClick?fillId=" + fillId,
             dataType: 'json',
             success: function (data) {
                 if (data === 'OK') {
-                    var currentStep = $(".slides li[data-stepid='" + taskId + "']");;
-                    eLoaderClose();
-                    $(currentStep).trigger("click");
+                    window.location.href = '/wip/details/' + fillId;
                 } else {
                     eLoaderError(data);
                 }

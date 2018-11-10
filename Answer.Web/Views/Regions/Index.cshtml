@@ -12,12 +12,13 @@
             </h2>
             <div class="col-lg-12">
                 @Html.Partial("Message")
-                <table id="jqGridRegions"></table>
-                <div id="jqGridPagerRegions"></div>
+                <table id="jq-grid-regions"></table>
+                <div id="jq-grid-pager"></div>
             </div>
         </div>
         <div class="row">
             <a href="~/Regions/Create" class="btn btn-success help-btn">Add</a>
+            <button type="button" id="clear-state" class="btn btn-success help-btn">Clear State</button>
         </div>
     </div>
 </div>
@@ -28,9 +29,8 @@
     @Scripts.Render("~/bundles/js/jqgrid-regions")
 
     <script type="text/javascript">
-
         $(document).ready(function() {
-            Msr.RegionGrid.SetUpRegionGrid('@Request.Url.OriginalString');
+            Msr.RegionGrid.SetUpRegionGrid('@Url.Action("RegionsData", "Regions")');
         });
     </script>
 

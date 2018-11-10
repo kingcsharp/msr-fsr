@@ -153,23 +153,24 @@
 
                 if ($(this).hasClass('btn-accepted')) {
 
-                    var id = $(this).data('task-id');
-
                     eModal.confirm('Do you want to take ownership of this WO Item?')
                         .then(function () {
+
+                            eLoaderOpen();
+
                             $.ajax({
                                 type: "POST",
-                                url: "/wip/TakeTaskOwnersShip?taskId=" + id,
+                                url: "/wip/TakeTaskOwnersShip?fillId=" + fillId,
                                 dataType: 'json',
                                 success: function (data) {
                                     if (data.Code === "OK") {
                                         window.location.href = '/wip/Details/' + fillId;
                                     } else {
-                                        alert(data.Message);
+                                        eLoaderError(data.Message);
                                     }
                                 },
                                 error: function (error) {
-                                    eModal.alert(error);
+                                    eLoaderError(error);
                                 }
                             });
                         }, null);

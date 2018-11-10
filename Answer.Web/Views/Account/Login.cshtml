@@ -1,5 +1,7 @@
 ﻿@using Msr.Web.Models
+
 @model LoginViewModel
+
 @{
     ViewBag.Title = "Log in";
     Layout = "~/Views/Shared/_LoginLayout.cshtml";
@@ -21,13 +23,14 @@
             @Html.ValidationMessageFor(m => m.Password, "", new { @class = "color-white" })
             <div class="clear"></div>
             @Html.CheckBoxFor(m => m.RememberMe)
+
             <label class="check" for="remember"><span></span>Remember Me</label>
             <div class="clear"></div>
 
             <input id="go-home" type="submit" value="Login" />
         }
     </section>
-    <div class="forgot"><a href="~/account/forgotpassword">Forgot Password?</a></div>
+    <div class="forgot"><a href="~/account/forgotusername">Forgot Username?</a> | <a href="~/account/forgotpassword">Forgot Password?</a></div>
 </div>
 
 @section scripts {

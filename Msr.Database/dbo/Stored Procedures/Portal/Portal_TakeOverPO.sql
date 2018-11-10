@@ -1,0 +1,39 @@
+﻿CREATE PROCEDURE Portal_TakeOverPO
+@RET_STATUS as varchar(500) OUTPUT,
+@MSGS as varchar(500) OUTPUT,
+@ID as varchar(50),
+@ParentTaskId as varchar(50),
+@strNTLogin as varchar(50)
+AS
+print 'Assuming a task'
+print 'Verifying that I am a person who can accept it'
+declare @requestee as varchar(50)
+declare @roleRequestee as varchar(50)
+SELECT @requestee = REQUESTEE_ID,@roleRequestee = GROUP_REQUESTEE_ID FROM A_TASKS WHERE ID = @ID
+declare @tester as varchar(50),@taskStat varchar(50)
+declare @stepRoles as nvarchar(max)
+SELECT @taskStat = STATUS FROM A_TASKS WHERE ID = @ID              
+
+SELECT @StepRoles=(SELECT Roles FROM A_V_TASKS_WITH_PROCEDURE_STEP_DATA WHERE STEP_ID=@ID)
+
+ IF NOT EXISTS(SELECT ROLE_ID FROM A_APPROVED_ROLE_ASSIGNEES WHERE PERSON=@strNTLogin AND 
+ ROLE_ID IN (SELECT ROLE_ID FROM A_V_PROCEDURE_ROLES_TO_VIEW
+ WHERE PROCEDURE_OBJ_ID IN ( SELECT ProcObjId FROM Portal_WorkOrders
+ WHERE TaskId = @ParentTaskId))
+ )
+	BEGIN
+	SET @RET_STATUS = 'ERROR - User Not Authorized to Perform Task'
+	GOTO fin
+    END
+
+ELSE
+   BEGIN
+
+declare @fwdID varchar(50),@fwdMSG varchar(50)
+exec A_SP_TASKS_FORWARD_TASK 
+@fwdID OUTPUT,
+@fwdMSG OUTPUT,
+@ID,@strNTLogin,null,@requestee
+
+fin:
+End 

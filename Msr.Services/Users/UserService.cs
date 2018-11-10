@@ -1,6 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Threading.Tasks;
+using Msr.Infrastructure.Email;
 using Msr.Infrastructure.Helpers;
 using Msr.Models.Companies;
 using Msr.Models.Orders;
@@ -146,5 +151,41 @@ namespace Msr.Services.Users
             return curentPassword == encryptedPasswod;
         }
 
+        public async Task<ResultNotification<bool>> SendUsername(string email)
+        {
+            var result = new ResultNotification<bool>();
+
+            email = email.Trim().ToLower();
+
+            var user = await _dbContext.Peoples
+              .Where(x => x.EmailAddress.ToLower() == email && (x.Status == PeopleStatusConstants.Approved || x.Status == PeopleStatusConstants.ApprovedButRevising))
+             .Select(s => new UserSummary
+            {
+                UserName = s.Login
+            }).FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                result.AddError($"User not found with email '{email}'");
+                return result;
+            }
+
+            var from = ConfigurationManager.AppSettings["From"];
+
+            var body = $"Hello ANSWER user, <br/><br/> <b>Your username is : {user.UserName}</b>";
+
+            var subject = "ANSWER - Forgot Username";
+
+            try
+            {
+                EmailService.SendEmail(from, email, subject, body, null, true);
+            }
+            catch (Exception ex)
+            {
+                result.AddError("There is an error sending email.");
+            }
+
+            return result;
+        }
     }
 }

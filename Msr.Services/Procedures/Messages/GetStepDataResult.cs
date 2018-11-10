@@ -67,31 +67,7 @@ namespace Msr.Services.Procedures.Messages
         public string Title { get; set; }
         public string PrevStepName { get; set; }
         public string StepSystemTask { get; set; }
-        public string Duration_Type
-        {
-            get { return DurationType; }
-            set
-            {
-                SetDurationType(value);
-            }
-        }
-
-        private void SetDurationType(string value)
-        {
-            switch (value)
-            {
-                case "TIME_SYS_HOURS":
-                    {
-                        DurationType = "Hours";
-                        break;
-                    }
-                default:
-                    {
-                        DurationType = String.Empty;
-                        break;
-                    }
-            }
-        }
+        public string Duration_type { get; set; }
 
         public string ProcObjId { get; set; }
         public int? Index { get; set; }

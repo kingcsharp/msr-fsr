@@ -1,0 +1,80 @@
+﻿@model Msr.Services.Invoices.ViewModel.InvoiceViewModel
+<h4>Purchase Items to Apply (Check All that Apply)</h4>
+@if (Model.InvoiceItemList != null)
+{
+    <table class="table table-bordered" id="records_table">
+        <tr>
+            <th></th>
+            <th>Date Posted</th>
+            <th>Cust Purchase Number</th>
+            <th>AII Purchase Number</th>
+            <th>AII Item Id</th>
+            <th style="width:100px;">Description</th>
+            <th>Qty</th>
+            <th>Product Cost Calculation</th>
+            <th>Unit Price</th>
+            <th>Amt of Inv Items</th>
+
+        </tr>
+        @for (int i = 0; i < Model.InvoiceItemList.Count; i++)
+        {
+
+            <tr>
+                <td class="getId">
+                    <input name="invoiceDetailListStrings" class="checkAmount" value="@Model.InvoiceItemList[i].FillItemId" id="poId" type="checkBox">
+                    @Html.HiddenFor(x => Model.InvoiceItemList[i].FillItemId)
+                </td>
+                <td>
+                    @string.Format("{0:M/d/yyyy}", Model.InvoiceItemList[i].OpenDate)
+                </td>
+
+                <td>
+                    @Model.InvoiceItemList[i].CustPurchNum
+                </td>
+                <td>
+                    @Model.InvoiceItemList[i].PurchaseId
+                </td>
+                <td>
+                    @Model.InvoiceItemList[i].PurchaseItemId
+                </td>
+                <td>
+                    @Model.InvoiceItemList[i].Description
+                </td>
+                <td>
+                    @Model.InvoiceItemList[i].FillQty
+                </td>
+                <td class="poAmount">
+                    @if (Model.InvoiceItemList[i].TotalSalePrice.HasValue)
+                    {
+                        <span> $@Model.InvoiceItemList[i].TotalSalePrice</span>
+                        @Html.HiddenFor(x => Model.InvoiceItemList[i].TotalSalePrice, new { @id = "amountPo" })
+                    }
+                </td>
+                <td>
+                    @if (Model.InvoiceItemList[i].TotalSalePrice.HasValue)
+                    {
+                        <span> $@Model.InvoiceItemList[i].TotalSalePrice</span>
+                    }
+                </td>
+                <td>
+                    @if (Model.InvoiceItemList[i].Amount.HasValue)
+                    {
+                        <span> $@Model.InvoiceItemList[i].Amount</span>
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+}
+
+<script src="~/assets/js/grids/invoice-tax-edit.js"></script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+		$('input:checkbox[class=checkAmount]').click(function () {
+
+	        CheckBoxSelectionOnEdit($('#editId').val(), this, $(this).closest('tr').find('.poAmount').find('#amountPo').val());
+        });
+    });
+
+</script>
