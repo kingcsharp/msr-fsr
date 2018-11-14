@@ -211,6 +211,7 @@
     <Compile Include="Tasks\TaskLogs.cs" />
     <Compile Include="TheoryParagraphs\TheoryParagraphView.cs" />
     <Compile Include="TimeZones\TimeZoneView.cs" />
+    <Compile Include="Training\TrainingView.cs" />
     <Compile Include="Users\ClientUser.cs" />
     <Compile Include="Users\ApplicationUser.cs" />
     <Compile Include="Users\AspNetRole.cs" />

@@ -36,6 +36,7 @@ using Msr.Models.Helps;
 using Msr.Models.Menus;
 using Msr.Models.PartTypes;
 using Msr.Models.Workflows;
+using Msr.Models.Training;
 
 namespace Msr.Repositories
 {
@@ -118,6 +119,7 @@ namespace Msr.Repositories
             modelBuilder.Entity<PendingApprovalView>().ToTable("Protal_PendingApprovals");
             modelBuilder.Entity<ObjectSearchView>().ToTable("Portal_ObjectSearch");
             modelBuilder.Entity<InvoiceWorkItem>().ToTable("Portal_InvoiceWorkItem");
+            modelBuilder.Entity<TrainingView>().ToTable("Portal_TrainingView");
         }
 
         public DbSet<AspNetUser> AspNetUsers { get; set; }
@@ -189,5 +191,6 @@ namespace Msr.Repositories
         public DbSet<PendingApprovalView> PendingApprovalViews { get; set; }
         public DbSet<ObjectSearchView> ObjectSearchViews { get; set; }
         public DbSet<InvoiceWorkItem> InvoiceWorkItems { get; set; }
+        public DbSet<TrainingView> TrainingViews { get; set; }
     }
 }

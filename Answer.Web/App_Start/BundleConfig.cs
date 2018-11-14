@@ -196,7 +196,11 @@ namespace Answer.Web
 		        .Include("~/assets/js/invoice-setup.js")
 	        );
 
-            #if DEBUG
+            bundles.Add(new ScriptBundle("~/bundles/js/jqgrid-training")
+               .Include("~/assets/js/grids/training.js")
+           );
+
+#if DEBUG
             BundleTable.EnableOptimizations = false;
             #else
                             BundleTable.EnableOptimizations = true;
