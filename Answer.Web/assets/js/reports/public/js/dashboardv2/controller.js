@@ -175,6 +175,7 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
     }
 
 
+
     if ($rootScope.user.reportsCreate || $rootScope.counts.reports > 0) {
         $scope.IntroOptions.steps.push({
             element: '#parentIntroReports',
@@ -228,6 +229,7 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
                     var $div = $($scope.selectedDashboard.properties.designerHTML);
                     var el = angular.element(document.getElementById('designArea'));
                     el.append($div);
+                    debugger;
                     angular.element($('#angularAppDiv')).injector().invoke(function ($compile) {
                         var scope = angular.element($div).scope();
                         $compile($div)($scope);
@@ -339,6 +341,7 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
             var el = angular.element(document.getElementById('pageViewer'));
             el.append($div);
             angular.element($('#angularAppDiv')).injector().invoke(function ($compile) {
+                debugger;
                 var scope = angular.element($div).scope();
                 $compile($div)($scope);
             });
@@ -347,6 +350,12 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
         }
     };
 
+    $scope.saveToExcel = function (reportHash,reportId) {
+        report_v2Model.saveToExcel($scope, reportHash, reportId);
+    }
+    $scope.orderColumn = function (columnIndex, desc, hashedID) {
+        report_v2Model.orderColumn($scope.selectedReport, columnIndex, desc, hashedID);
+    };
 
     $scope.showOverlay = function (referenceId) {
         bsLoadingOverlayService.start({
@@ -623,11 +632,6 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
             });
         }
     };
-
-
-
-
-
 
     function defaultGridProperties() {
         return {

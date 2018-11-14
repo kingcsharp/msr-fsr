@@ -1975,7 +1975,7 @@ widget.xe-counter, .xe-widget.xe-counter-block .xe-upper, .xe-widget.xe-progress
         }
 
 .repeater-data-column {
-    height: 23px!important;
+    height: 23px !important;
     overflow: hidden;
     padding: 2px;
     border-bottom: 1px solid #ccc;
@@ -3667,3 +3667,15 @@ label[for] {
         width: 99%;
         padding-right: 0 !important;
     }
+
+.dropdown-menu.dropdown-blue.multi-level {
+    top: 28px !important;
+}
+
+.report-repeater-column-header > table > tbody > tr > td {
+    position: relative;
+}
+
+.dropdown-menu.dropdown-blue.multi-level {
+    cursor: pointer;
+}
