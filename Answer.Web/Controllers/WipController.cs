@@ -525,7 +525,25 @@ namespace Answer.Web.Controllers
 
             var procedureRoles = _proceduresService.GetSelectedRoles(objId.Id, loggedUserId.Id)?.Select(x => x.Role_Id).ToList();
             response.HasStepRoles = myRoles.Select(x => x.Role_Id).ToList().Intersect(procedureRoles).Any();
+
+            if (response.HasStepRoles) {
+                var myCertifications = myRoles.Where(x => x.StartDate != null && x.EndDate != null).ToList();
+
+                foreach (var item in myCertifications)
+                {
+                    var steptRoles = currentStep.Roles?.Split(',');
+
+                    if (steptRoles.Any(x => x == item.Role_Id)) {
+
+                        if (DateTime.Today >= item.StartDate && item.EndDate.Value.Date < DateTime.Today.Date.AddDays(1))
+                        {
+                            response.HasStepRoles = false;
+                        }
+                    }
+                }
+            }
             
+
             response.LoggedUserIdResult = loggedUserId;
             response.TaskEditDataResult.StepTitle = currentStep.Title;
             response.TaskEditDataResult.Description = currentStep.Description;

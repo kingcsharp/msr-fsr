@@ -21,7 +21,7 @@ namespace Msr.Services.Roles
         {
             _dbContext = new MsrDbContext();
         }
-        
+
         public IQueryable<RolesView> GetUserRolesQueryable()
         {
             return _dbContext.RolesViews;
@@ -38,13 +38,24 @@ namespace Msr.Services.Roles
             return result;
         }
 
-        public List<SelectFile> GetAssignedPeople(string id,string ntlogin)
+        public List<SelectFile> GetAssignedPeople(string id, string ntlogin)
         {
             var strID = new SqlParameter("@ID", id == null ? "0" : id);
 
             var NTLogin = new SqlParameter("@strNTLogin", ntlogin);
 
             var result = _dbContext.Database.SqlQuery<SelectFile>("EXEC A_SP_POPFILL_EDITROLE_PEOPLE_ASSIGNED @ID, @strNTLogin", strID, NTLogin).ToList();
+
+            return result;
+        }
+
+        public List<CertificationRole> GetAssignedWithCetificatePeople(string id, string ntlogin)
+        {
+            var strID = new SqlParameter("@ID", id ?? "0");
+
+            var NTLogin = new SqlParameter("@strNTLogin", ntlogin);
+
+            var result = _dbContext.Database.SqlQuery<CertificationRole>("EXEC A_SP_POPFILL_EDITROLE_PEOPLE_ASSIGNED @ID, @strNTLogin", strID, NTLogin).ToList();
 
             return result;
         }
@@ -114,18 +125,18 @@ namespace Msr.Services.Roles
                 _dbContext.Database.ExecuteStoredProcedure(saveUserRoleProcedure);
 
                 var deleteRoleParentSaveProcedure =
-                    new DeleteRoleParentProcedure {ObjId = model.WfId, NTLogin = model.NTLogin};
+                    new DeleteRoleParentProcedure { ObjId = model.WfId, NTLogin = model.NTLogin };
 
                 _dbContext.Database.ExecuteStoredProcedure(deleteRoleParentSaveProcedure);
 
                 var deleteRolePeopleAssignedProcedure =
-                    new DeleteRoleAssignedProcedure {ObjId = model.WfId, NTLogin = model.NTLogin};
+                    new DeleteRoleAssignedProcedure { ObjId = model.WfId, NTLogin = model.NTLogin };
 
                 _dbContext.Database.ExecuteStoredProcedure(deleteRolePeopleAssignedProcedure);
 
                 foreach (var childRole in model.ChildRoles)
                 {
-                    var saveRoleToRoleProcedure = new SaveRoleToRoleProcedure {Child = childRole, StrId = model.WfId, NTLogin = model.NTLogin};
+                    var saveRoleToRoleProcedure = new SaveRoleToRoleProcedure { Child = childRole, StrId = model.WfId, NTLogin = model.NTLogin };
 
                     _dbContext.Database.ExecuteStoredProcedure(saveRoleToRoleProcedure);
                 }
@@ -133,11 +144,13 @@ namespace Msr.Services.Roles
                 foreach (var personId in model.PeopleAssigned)
                 {
                     var saveRoleAssignPersonRoleProcedure = new SaveRoleAssignPersonRoleProcedure
-                        {
-                            Child = personId,
-                            StrId = model.WfId,
-                            NTLogin = model.NTLogin
-                        };
+                    {
+                        Child = personId,
+                        StrId = model.WfId,
+                        NTLogin = model.NTLogin,
+                        StartDate = model.StartDate,
+                        EndDate = model.EndDate
+                    };
 
                     _dbContext.Database.ExecuteStoredProcedure(saveRoleAssignPersonRoleProcedure);
 
@@ -154,7 +167,7 @@ namespace Msr.Services.Roles
                 return false;
             }
         }
-        public bool Delete(string id,string ntlogin)
+        public bool Delete(string id, string ntlogin)
         {
             try
             {
@@ -187,7 +200,7 @@ namespace Msr.Services.Roles
 
         public List<RoleApprovedData> GetSelectedRolesByCompanyId(string id)
         {
-            var result = _dbContext.Database.SqlQuery<RoleApprovedData>("SELECT mr.*,r.NAME FROM A_MENU_ROLES mr,A_V_ROLES_APPROVED_DATA r WHERE r.ID = mr.ROLE_ID AND mr.CO = '" + id +"'").ToList();
+            var result = _dbContext.Database.SqlQuery<RoleApprovedData>("SELECT mr.*,r.NAME FROM A_MENU_ROLES mr,A_V_ROLES_APPROVED_DATA r WHERE r.ID = mr.ROLE_ID AND mr.CO = '" + id + "'").ToList();
 
             return result;
         }
@@ -215,12 +228,12 @@ namespace Msr.Services.Roles
 
             var personIdParam = new SqlParameter("@personId", personId);
 
-            var result = _dbContext.Database.SqlQuery<GetMyRolesResult>($"SELECT distinct ROLE_ID, ROLE, PERSON, STATUS, ROLE_NAME FROM A_APPROVED_ROLE_ASSIGNEES WHERE PERSON = @personId", personIdParam).ToList();
+            var result = _dbContext.Database.SqlQuery<GetMyRolesResult>($"SELECT distinct ROLE_ID, ROLE, PERSON, STATUS, ROLE_NAME, StartDate, EndDate FROM A_APPROVED_ROLE_ASSIGNEES WHERE PERSON = {personId}").ToList();
 
             return result.Where(x => x.Status == "ACTIVE").ToList();
         }
 
-      public List<GetMyRolesResult> GetAssignedRolesByLogin(string personId)
+        public List<GetMyRolesResult> GetAssignedRolesByLogin(string personId)
         {
             RefreshUserRoles(personId);
 

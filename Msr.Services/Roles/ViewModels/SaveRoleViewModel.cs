@@ -1,4 +1,5 @@
-﻿using Msr.Models.Roles;
+﻿using System;
+using Msr.Models.Roles;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -51,6 +52,12 @@ namespace Msr.Services.Roles.ViewModels
 
         public List<SelectListItem> ListPeopleAssigned { get; set; }
 
+        [Display(Name = "Start Date :")]
+        public DateTime? StartDate { get; set; }
+
+        [Display(Name = "End Date :")]
+        public DateTime? EndDate { get; set; }
+
         public void Setup(RoleService roleService, UserService userService, LoggedUserIdResult getCurrentUser)
         {
             SecurityLevels = new List<SelectListItem>
@@ -97,7 +104,12 @@ namespace Msr.Services.Roles.ViewModels
             }).OrderBy(o => o.Text).ToList();
 
             ChildRoles = roleService.GetChildRoles(Id, getCurrentUser.Id).Select(x => x.Value).ToList();
-            PeopleAssigned = roleService.GetAssignedPeople(Id, getCurrentUser.Id).Select(x => x.Value).ToList();
+
+            var certificationRoles = roleService.GetAssignedWithCetificatePeople(Id, getCurrentUser.Id);
+
+            PeopleAssigned = certificationRoles.Select(x => x.Value).ToList();
+            StartDate = certificationRoles.Select(x => x.StartDate).FirstOrDefault();
+            EndDate = certificationRoles.Select(x => x.EndDate).FirstOrDefault();
         }
 
         public void Read(RolesView role)

@@ -372,6 +372,17 @@ namespace Msr.Services.Orders
                     ",MODBY= '" + model.NTLogin + "',DRCM=getDate(), OBJECT_ID='" + model.ObjectId + "'  WHERE ID = '" +
                     model.LocationId + "'").SingleOrDefault();
 
+                foreach (var role in model.Roles)
+                {
+                    var startDate = new SqlParameter("@StartDate", (object)role.StartDate ?? DBNull.Value);
+                    var endDate = new SqlParameter("@EndDate", (object)role.EndDate ?? DBNull.Value);
+                    var person = new SqlParameter("@Person", role.Person);
+                    var roleRole = new SqlParameter("@Role", role.Role);
+
+                    _dbContext.Database.ExecuteSqlCommand("EXEC Portal_AssignCertificationRoles @StartDate,@EndDate,@Person,@Role", startDate, endDate, person, roleRole);
+
+                }
+
                 return responsePeople;
             }
             catch (Exception ex)
