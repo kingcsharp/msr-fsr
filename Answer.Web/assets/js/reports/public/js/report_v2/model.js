@@ -1,16 +1,20 @@
-app.service('report_v2Model', function (queryModel, c3Charts, reportHtmlWidgets, grid, bsLoadingOverlayService, connection, $routeParams, verticalGrid) {
+app.service('report_v2Model', function (queryModel, c3Charts, reportHtmlWidgets, grid, bsLoadingOverlayService, connection, $routeParams, verticalGrid, $sessionStorage) {
 
     var report = {};
 
     this.getReportDefinition = function (id, isLinked, done) {
-        connection.get('/api/reports/get-report/' + id, { id: id, mode: 'preview', linked: isLinked }, function (data) {
+        var localapiparams = $sessionStorage.getObject('localapiparams');
+
+        localapiparams.id = id;
+
+        connection.get('/Report/Findreport/', { id: id, mode: 'preview', linked: isLinked }, function (data) {
             if (data.item) {
                 //report = data.item;
                 done(data.item);
             } else {
                 done(null);
             }
-        });
+        }, undefined, localapiparams);
     }
 
     this.getReport = function (report, parentDiv, mode, done) {
@@ -29,7 +33,7 @@ app.service('report_v2Model', function (queryModel, c3Charts, reportHtmlWidgets,
             repaintReport(report, mode);
             done(sql);
             hideOverlay(parentDiv);
-        });
+        }, $sessionStorage.getObject('localapiparams'));
     }
 
     this.getReportDataNextPage = function (report, page) {

@@ -23,6 +23,11 @@ angular.module('WideStage')
             controller: 'PublicCtrl'
         });
 
+        $routeProvider.when('/login/reports', {
+            templateUrl: 'assets/js/reports/partials/home/login.html',
+            controller: 'PublicCtrl'
+        });
+
         //$routeProvider.when('/home', {
         //    templateUrl: 'partials/home/index.html',
         //    controller: 'homeCtrl'
@@ -88,8 +93,6 @@ angular.module('WideStage')
         //    templateUrl: 'partials/dashboardv2/edit.html',
         //    controller: 'dashBoardv2Ctrl'
         //});
-
-        //reports
 
         $routeProvider.when('/reports', {
             templateUrl: 'assets/js/reports/partials/report/list.html',
@@ -470,8 +473,10 @@ app.run(['$rootScope', '$sessionStorage', 'connection', '$location',
 
         if (!$rootScope.user) {
             debugger;
+            var path = $location.path().split('/');
+            var route = path.length > 2 ? path[2] : path[1];
 
-            $location.path("/login/" + $location.path().split('/')[2]);
+            $location.path("/login/" + route);
             //TODO check sessionStorage si tiene al user hacer el get data
             //connection.get('/Report/GetUserData', {}, function (data) {
             //    if (!data.items.user) {

@@ -39,6 +39,51 @@ namespace Msr.Web.Controllers
             return WidestageLoginResult();
         }
 
+        public ActionResult Findreport(string session, string sessionsig, string data, string id)
+        { //'/api/reports/get-report/' + id, { id: id, mode: 'preview', linked: isLinked }
+            var client = new RestClient("http://reports.msr-fsr.com/api/reports/get-report/" + id + "?data=" + HttpUtility.UrlEncode(data));
+            var request = new RestRequest(Method.GET);
+            var cookies = Request.Cookies;
+            var machineId = cookies["mongoMachineId"].Value;
+            request.AddHeader("cache-control", "no-cache");
+
+            request.AddParameter("mongoMachineId", machineId, ParameterType.Cookie);
+            request.AddParameter("session", session, ParameterType.Cookie);
+            request.AddParameter("session.sig", sessionsig, ParameterType.Cookie);
+
+            request.AddHeader("accept-language", "en-US,en;q=0.9,es-UY;q=0.8,es;q=0.7");
+            request.AddHeader("accept-encoding", "gzip, deflate");
+            request.AddHeader("referer", "http://reports.msr-fsr.com/login");
+            request.AddHeader("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36");
+            request.AddHeader("accept", "application/json, text/plain, */*");
+
+            IRestResponse response = client.Execute(request);
+
+            return Json(response.Content, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult Findallreports(string session, string sessionsig, string data)
+        {
+            var client = new RestClient("http://reports.msr-fsr.com/api/reports/find-all?data=" + HttpUtility.UrlEncode(data));
+            var request = new RestRequest(Method.GET);
+            var cookies = Request.Cookies;
+            var machineId = cookies["mongoMachineId"].Value;
+            request.AddHeader("cache-control", "no-cache");
+
+            request.AddParameter("mongoMachineId", machineId, ParameterType.Cookie);
+            request.AddParameter("session", session, ParameterType.Cookie);
+            request.AddParameter("session.sig", sessionsig, ParameterType.Cookie);
+
+            request.AddHeader("accept-language", "en-US,en;q=0.9,es-UY;q=0.8,es;q=0.7");
+            request.AddHeader("accept-encoding", "gzip, deflate");
+            request.AddHeader("referer", "http://reports.msr-fsr.com/login");
+            request.AddHeader("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36");
+            request.AddHeader("accept", "application/json, text/plain, */*");
+
+            IRestResponse response = client.Execute(request);
+
+            return Json(response.Content, JsonRequestBehavior.AllowGet);
+        }
 
         public ActionResult Dashboardsv2get(string id, string session, string sessionsig, string data)
         {
@@ -85,7 +130,7 @@ namespace Msr.Web.Controllers
 
             return Json(response.Content, JsonRequestBehavior.AllowGet);
         }
-        
+
 
         public ActionResult dashboardsv2findall(string session, string sessionsig, string data)
         {

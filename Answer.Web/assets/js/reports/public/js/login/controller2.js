@@ -1,17 +1,6 @@
 ﻿/* Controllers */
 function WebAppCtrl($scope, $http, $window, $location) {
-
-    /*$scope.loadBrandHomePage = function() {
-        if ($scope.myBrand && $scope.myBrand.loadBrandHomeFile) {
-            $.ajax({
-                url: $scope.myBrand.brandHomeFile,
-                dataType: 'html',
-                success: function(html) {
-                    $('#homeContainer').html(html);
-                }
-            });
-        }
-    };*/
+    
 }
 
 WebAppCtrl.$inject = ["$scope", "$http", "$window", "$location"];
@@ -38,9 +27,6 @@ app.controller('PublicCtrl', ["$scope", "$http", "$rootScope", "$sessionStorage"
 
                     $sessionStorage.setObject('localapiparams', localapiparams);
 
-                    //connection.get('/api/get-user-data', {}, function (data) {
-                    //url, params, done, options, localapiparams
-                    //url, params, done, options, localapiparams
                     connection.get('/Report/GetUserData',
                         {}, function (data) {
                             theUser.companyData = data.items.companyData;
@@ -55,7 +41,11 @@ app.controller('PublicCtrl', ["$scope", "$http", "$rootScope", "$sessionStorage"
                             theUser.viewSQL = data.items.viewSQL;
                             $rootScope.user = theUser;
                             $sessionStorage.setObject('user', theUser);
-                            $location.path("/dashboardsv2/" + $location.path().split('/')[2]);
+                            if ($location.path().split('/')[2] == "reports") {
+                                $location.path("/reports/");
+                            } else {
+                                $location.path("/dashboardsv2/" + $location.path().split('/')[2]);
+                            }
                         }, undefined, localapiparams);
 
                 }).
