@@ -97,7 +97,7 @@ this.extendedGridV2 = function(report,mode)
             }
             htmlCode += '</div>';
 
-            htmlCode += '<div vs-repeat style="width:100%;overflow-y: scroll;border: 1px solid #ccc;align-items: stretch;position: absolute;bottom: 0px;top: '+theProperties.headerHeight+'px;" scrolly="gridGetMoreData(\''+id+'\')">';
+            htmlCode += '<div vs-repeat style="width:100%;overflow-y: scroll;align-items: stretch;position: absolute;bottom: 0px;top: '+theProperties.headerHeight+'px;" scrolly="gridGetMoreData(\''+id+'\')">';
 
             htmlCode += '<div ndType="repeaterGridItems" class="repeater-data container-fluid" ng-repeat="item in getQuery(\''+hashedID+'\').data | filter:theFilter | orderBy:getReport(\''+hashedID+'\').predicate:getReport(\''+hashedID+'\').reverse  " style="'+rowStyle+'"  >';
 
@@ -144,8 +144,18 @@ this.extendedGridV2 = function(report,mode)
                     var elementNameAux = elementName;
                     if (column.elementType === 'date')
                         elementNameAux = "'"+'wst'+column.elementID+'_original'+"'";
-                    //htmlCode += '<div class="'+colClass+' report-repeater-column-header" style="'+colWidth+'"><span class="hand-cursor" ng-click="orderColumn('+elementNameAux+','+quotedHashedID()+')">'+column.objectLabel+'</span><span class="sortorder" ng-show="getReport(\''+hashedID+'\').predicate === '+elementName+'" ng-class="{reverse:getReport(\''+hashedID+'\').reverse}"></span>'+getColumnDropDownHTMLCode(column,columnIndex,elementName,column.elementType)+' </div>';
-        htmlCode += '<div class="' + colClass + ' report-repeater-column-header" style="' + colWidth + '"><table style="table-layout:fixed;width:100%"><tr><td style="overflow:hidden;white-space: nowrap;width:95%;">' + column.objectLabel + '</td><td style="width:34px;>' + getColumnDropDownHTMLCode(column, columnIndex, elementName, column.elementType, report)+'</td></tr></table> </div>';
+        //<input class="find-input pull-right" type="search" ng-model="theFilter" placeholder="Table filter..." aria-label="Table filter..." style="margin:5px;" />
+        //htmlCode += '<div class="' + colClass + ' report-repeater-column-header" style="' + colWidth + '"><table style="table-layout:fixed;width:100%"><tr><td style="overflow:hidden;white-space: nowrap;width:95%;">' + column.objectLabel + '</td><td style="width:34px;>' + getColumnDropDownHTMLCode(column, columnIndex, elementName, column.elementType, report)+'</td></tr></table> </div>';
+        htmlCode += '<div class="' + colClass + ' report-repeater-column-header" style="' + colWidth + '">' +
+            '<table style="table-layout:fixed;width:100%">' +
+            '<tr>' +
+            '<td style="overflow:hidden;white-space: nowrap;width:95%;">' + column.objectLabel + '<br/>' +
+            '<input class="find-input pull-right" type="search" ng-model="theFilter" placeholder="Table filter..." aria-label="Table filter..." style="margin:5px;" />' +
+            '</td>' +
+            '<td style="width:34px;>' + getColumnDropDownHTMLCode(column, columnIndex, elementName, column.elementType, report) + '</td>' +
+            '</tr>' +
+            '</table>' +
+            '</div>';
 
         return htmlCode;
     }
@@ -421,12 +431,11 @@ this.extendedGridV2 = function(report,mode)
             ')">Descending</a></li>' +
             '      </ul>' +
             '</li>';
-
-        debugger;
+        
             columnPropertiesBtn += '<li class="divider"></li>'
             + '<li><a ng-click="saveToExcel(\'' + hashedID +'\',\'' + report.id +'\')"><i class="fa fa-file-excel-o"></i> Export table to excel</a></li>'
             +'<li class="divider"></li>'
-            +'<li><input class="find-input pull-right" type="search" ng-model="theFilter" placeholder="Table filter..." aria-label="Table filter..." style="margin:5px;" /></li>'
+            //+'<li><input class="find-input pull-right" type="search" ng-model="theFilter" placeholder="Table filter..." aria-label="Table filter..." style="margin:5px;" /></li>'
             +'</ul>'
             +'</div>';
 

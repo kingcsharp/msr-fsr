@@ -3674,8 +3674,16 @@ label[for] {
 
 .report-repeater-column-header > table > tbody > tr > td {
     position: relative;
+    text-align: center;
 }
 
 .dropdown-menu.dropdown-blue.multi-level {
     cursor: pointer;
+}
+.report-container {
+    background: #F9F9F9!important;
+}
+
+.repeater-data-column {
+    border: 1px solid #EAEAEA;
 }
