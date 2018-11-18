@@ -11,5 +11,7 @@ namespace Answer.Web.ViewModel.Wip
         public string CompanyPartNumber { get; set; }
 
         public DateTime? DueDate { get; set; }
+
+        public string LocationName { get; set; }
     }
 }

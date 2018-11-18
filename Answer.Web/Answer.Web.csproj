@@ -2625,6 +2625,7 @@
     <Content Include="Views\Report\Index.cshtml" />
     <Content Include="Views\People\_Roles.cshtml" />
     <Content Include="Views\Training\Index.cshtml" />
+    <Content Include="Views\Wip\_StatusItems.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

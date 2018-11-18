@@ -375,25 +375,32 @@ namespace Answer.Web.Controllers
             return View(vm);
         }
 
-        public ActionResult StatusView()
+        public ActionResult StatusView(string locationName)
         {
             var currentUser = GetCurrentUser();
 
-            var viewModel = new WipStatusViewModel
+            var viewModel = new WipStatusViewModel();
+            viewModel.Location = locationName;
+            var workOrdersQueryable = _orderService.GetWorkOrderQueryable();
+
+            if (!string.IsNullOrWhiteSpace(locationName))
             {
-                CurrentUser = currentUser,
-                WipStatusViewItems = _orderService.GetWorkOrderQueryable()
-                    .Where(x => (x.Status == WorkItemStatusConstants.Accepted ||
-                                 x.Status == WorkItemStatusConstants.WaitingToStart ||
-                                 x.Status == WorkItemStatusConstants.Requested))
-                    .Select(x => new WipStatusViewItem
-                    {
-                        ProductName = x.ProductName,
-                        ProcedureName = x.ProcName,
-                        CompanyPartNumber = x.CompanyPartNumber,
-                        DueDate = x.DueDate
-                    }).Distinct().ToList()
-            };
+                workOrdersQueryable = workOrdersQueryable.Where(x => x.LocationName.ToLower() == locationName.ToLower());
+            }
+
+            viewModel.CurrentUser = currentUser;
+            viewModel.WipStatusViewItems = workOrdersQueryable
+                .Where(x => x.Status == WorkItemStatusConstants.Accepted ||
+                            x.Status == WorkItemStatusConstants.WaitingToStart ||
+                            x.Status == WorkItemStatusConstants.Requested)
+            .Select(x => new WipStatusViewItem
+            {
+                ProductName = x.ProductName,
+                ProcedureName = x.ProcName,
+                CompanyPartNumber = x.CompanyPartNumber,
+                DueDate = x.DueDate,
+                LocationName = x.LocationName
+            }).Distinct().ToList();
 
             var procs = viewModel.WipStatusViewItems.Select(p => p.ProcedureName).ToList();
 
@@ -403,6 +410,14 @@ namespace Answer.Web.Controllers
                 .Where(x => x.Status == WorkItemStatusConstants.Accepted ||
                             x.Status == WorkItemStatusConstants.WaitingToStart ||
                             x.Status == WorkItemStatusConstants.Requested).ToList();
+
+            viewModel.Setup();
+
+            if (Request.IsAjaxRequest())
+            {
+                return PartialView("_statusItems", viewModel);
+            }
+
 
             return View(viewModel);
         }
