@@ -2852,6 +2852,7 @@
     <Build Include="dbo\Views\Portal\Portal_TrainingView.sql" />
     <Build Include="dbo\Views\Reports\Report_SerialNumberHistory.sql" />
     <Build Include="dbo\Views\Reports\Report_WorkInProgress.sql" />
+    <Build Include="dbo\Views\Reports\Report_CombinedFinancialData.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Msr.Database.refactorlog" />
