@@ -344,8 +344,8 @@ app.service('queryModel' , function ($http, $q, $filter, connection, $compile, $
                     }
     };
 
-    this.getQueryDataNextPage = function(page, done) {
-        getQueryDataNextPage(page,done);
+    this.getQueryDataNextPage = function (page, done, localapiparams) {
+        getQueryDataNextPage(page, done, localapiparams);
     }
 
     function getQueryDataNextPage(page, done, localapiparams)

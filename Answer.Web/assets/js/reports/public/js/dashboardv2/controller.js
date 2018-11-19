@@ -220,8 +220,7 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
                     getQueryData(0, function () {
                         rebuildCharts();
                         rebuildGrids();
-
-                    });
+                    }, $sessionStorage.getObject('localapiparams'));
 
                     //getAllPageColumns();
 
@@ -277,8 +276,7 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
                         getQueryData(0, function () {
                             rebuildCharts();
                             rebuildGrids();
-
-                        });
+                        }, $sessionStorage.getObject('localapiparams'));
 
                         //getAllPageColumns();
 
@@ -316,7 +314,7 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
             getQueryData(0, function () {
                 rebuildCharts();
                 rebuildGrids();
-            });
+            }, $sessionStorage.getObject('localapiparams'));
 
             if ($scope.selectedDashboard.backgroundColor)
                 $('#pageViewer').css({ 'background-color': $scope.selectedDashboard.backgroundColor });
@@ -688,8 +686,7 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
                         rebuildCharts();
                         rebuildGrids();
                         rebuildIndicators();
-
-                    });
+                    }, $sessionStorage.getObject('localapiparams'));
                 }
             }
         }
@@ -1359,7 +1356,7 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
                 else
                     $scope.selectedDashboard.reports[i].lastLoadedPage += 1;
 
-                report_v2Model.getReportDataNextPage($scope.selectedDashboard.reports[i], $scope.selectedDashboard.reports[i].lastLoadedPage);
+                report_v2Model.getReportDataNextPage($scope.selectedDashboard.reports[i], $scope.selectedDashboard.reports[i].lastLoadedPage, $sessionStorage.getObject('localapiparams'));
             }
         }
     }

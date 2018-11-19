@@ -36,13 +36,13 @@ app.service('report_v2Model', function (queryModel, c3Charts, reportHtmlWidgets,
         }, $sessionStorage.getObject('localapiparams'));
     }
 
-    this.getReportDataNextPage = function (report, page) {
-        getReportDataNextPage(report, page);
+    this.getReportDataNextPage = function (report, page, localapiparams) {
+        getReportDataNextPage(report, page, localapiparams);
     }
 
-    function getReportDataNextPage(report, page) {
+    function getReportDataNextPage(report, page, localapiparams) {
         queryModel.loadQuery(report.query);
-        queryModel.getQueryDataNextPage(page, function (data, sql, query) {
+        queryModel.getQueryDataNextPage(page, function (data, sql, query, localapiparams) {
             report.query.data.push.apply(report.query.data, data);
         });
     }

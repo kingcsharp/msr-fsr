@@ -47,7 +47,7 @@ this.extendedGridV2 = function(report,mode)
 
             if (!theProperties.backgroundColor) theProperties.backgroundColor = "#FFFFFF";
             if (!theProperties.height) theProperties.height = 400;
-            if (!theProperties.headerHeight) theProperties.headerHeight = 30;
+            if (!theProperties.headerHeight) theProperties.headerHeight = 60;
             if (!theProperties.rowHeight) theProperties.rowHeight = 20;
             if (!theProperties.headerBackgroundColor) theProperties.headerBackgroundColor = "#FFFFFF";
             if (!theProperties.headerBottomLineWidth) theProperties.headerBottomLineWidth = 4;
@@ -69,11 +69,11 @@ this.extendedGridV2 = function(report,mode)
 
                     columnDefaultStyle += 'height:'+theProperties.rowHeight+'px;';
                     var paddingTop = (theProperties.rowHeight - 14) /2;
-                    columnDefaultStyle += 'padding-top:'+paddingTop+'px;';
+                columnDefaultStyle += 'padding-top:' + paddingTop + 'px;';
 
                     headerStyle += 'background-color:'+theProperties.headerBackgroundColor+';';
                     headerStyle += 'height:'+theProperties.headerHeight+'px;';
-                    headerStyle += 'border-bottom: '+theProperties.headerBottomLineWidth+'px solid '+theProperties.headerBottomLineColor+';';
+                    headerStyle += 'border-bottom: '+theProperties.headerBottomLineWidth+';';
 
                     columnDefaultStyle += 'border-bottom: '+theProperties.rowBottomLineWidth+'px solid '+theProperties.rowBorderColor+';';
                     columnDefaultStyle += 'border-right: '+theProperties.columnLineWidht+'px solid '+theProperties.rowBorderColor+';';
@@ -90,16 +90,22 @@ this.extendedGridV2 = function(report,mode)
                 colClass = 'col-xs-'+12/columns.length;
 
             //header
-            htmlCode += '<div class="container-fluid" style="'+headerStyle+'">';
-            for(var i = 0; i < columns.length; i++)
-            {
-                htmlCode += getHeaderColumn(columns[i], i, report);
+            htmlCode += '<div class="container-fluid" style="' + headerStyle + '">';
+                //var filter = '{';
+                    for(var i = 0; i < columns.length; i++)
+                    {
+                        htmlCode += getHeaderColumn(columns[i], i, report);
+                        //filter += "\'" + columns[i].elementName + "\':" + columns[i].elementName;
+                        //if (i !== columns[i].length) {
+                        //    filter += ',';
+                        //}
             }
+            //filter += '}';
             htmlCode += '</div>';
 
-            htmlCode += '<div vs-repeat style="width:100%;overflow-y: scroll;align-items: stretch;position: absolute;bottom: 0px;top: '+theProperties.headerHeight+'px;" scrolly="gridGetMoreData(\''+id+'\')">';
+            htmlCode += '<div vs-repeat style="width:100%;overflow-y: auto;border: 1px solid #ccc;align-items: stretch;position: absolute;bottom: 0px;top:60px;" scrolly="gridGetMoreData(\'' + id + '\')">';
 
-            htmlCode += '<div ndType="repeaterGridItems" class="repeater-data container-fluid" ng-repeat="item in getQuery(\''+hashedID+'\').data | filter:theFilter | orderBy:getReport(\''+hashedID+'\').predicate:getReport(\''+hashedID+'\').reverse  " style="'+rowStyle+'"  >';
+    htmlCode += '<div ndType="repeaterGridItems" class="repeater-data container-fluid" ng-repeat="item in getQuery(\'' + hashedID + '\').data | filter:theFilter | orderBy:getReport(\''+hashedID+'\').predicate:getReport(\''+hashedID+'\').reverse  " style="'+rowStyle+'"  >';
 
             for(var i = 0; i < columns.length; i++)
             {
@@ -130,10 +136,7 @@ this.extendedGridV2 = function(report,mode)
 
     }
 
-
-
-    function getHeaderColumn(column, columnIndex, report)
-    {
+    function getHeaderColumn(column, columnIndex, report) {
           var htmlCode = '';
             //var elementName = "'"+column.id+"'";
                     var elementID = 'wst'+column.elementID.toLowerCase();
@@ -149,10 +152,15 @@ this.extendedGridV2 = function(report,mode)
         htmlCode += '<div class="' + colClass + ' report-repeater-column-header" style="' + colWidth + '">' +
             '<table style="table-layout:fixed;width:100%">' +
             '<tr>' +
-            '<td style="overflow:hidden;white-space: nowrap;width:95%;">' + column.objectLabel + '<br/>' +
-            '<input class="find-input pull-right" type="search" ng-model="theFilter" placeholder="Table filter..." aria-label="Table filter..." style="margin:5px;" />' +
+            '<td style="overflow:hidden;white-space: nowrap;width:95%;">' + column.objectLabel + 
+            '<div class="filters">' +
+            '<input class="find-input pull-right" type="search" ng-model="theFilter" aria-label="Table filter..." /> ' +
+            '<a style="top: 5px;position: relative;" title="Export table to excel" ng-click="saveToExcel(\'' + hashedID + '\',\'' + report.id + '\')"><i class="fa fa-file-excel-o"></i></a>' +
+            '<div>' +
+            '<a title="Reset Search Value" style="padding-right: 0.3em;padding-left: 0.3em;" ng-click="theFilter=\'\'" class="clearsearchclass">x</a><div/>' +
+            '</div>' +
             '</td>' +
-            '<td style="width:34px;>' + getColumnDropDownHTMLCode(column, columnIndex, elementName, column.elementType, report) + '</td>' +
+            //'<td style="width:34px;>' + getColumnDropDownHTMLCode(column, columnIndex, elementName, column.elementType, report) + '</td>' +
             '</tr>' +
             '</table>' +
             '</div>';

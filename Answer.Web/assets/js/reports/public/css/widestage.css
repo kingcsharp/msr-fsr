@@ -3680,10 +3680,49 @@ label[for] {
 .dropdown-menu.dropdown-blue.multi-level {
     cursor: pointer;
 }
-.report-container {
-    background: #F9F9F9!important;
+
+.report-repeater-column-header {
+    height: 65px !important;
 }
 
-.repeater-data-column {
-    border: 1px solid #EAEAEA;
+/*.container-fluid.report-container:first-child > div {
+    height: 65px !important;
+}*/
+
+.filters {
+    width: 100%;
+    float: left;
 }
+
+    .filters > input {
+        line-height: 1.42857143;
+        color: #555;
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        width: 75%;
+        float: left !important;
+    }
+
+    .filters > div {
+        padding-right: 0.3em;
+        padding-left: 0.3em;
+        margin-left: 2px;
+        padding: 0 !important;
+        float: left !important;
+        width: 15px;
+        height: 15px;
+        position: relative;
+        top: 7px;
+    }
+
+        .filters > div:hover {
+            background-color: #ddd;
+            text-decoration: none;
+        }
+
+        .filters > div > a {
+            text-decoration: none !important;
+            position: relative;
+            top: -2px;
+        }

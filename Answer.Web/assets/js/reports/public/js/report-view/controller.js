@@ -1,4 +1,4 @@
-app.controller('report_viewCtrl', function ($scope, $routeParams, report_v2Model, queryModel, connection, bsLoadingOverlayService, widgetsCommon) {
+app.controller('report_viewCtrl', function ($scope, $routeParams, report_v2Model, queryModel, connection, bsLoadingOverlayService, widgetsCommon, $sessionStorage) {
     
     $scope.promptsBlock = 'assets/js/reports/partials/report/promptsBlock.html';
     $scope.dateModal = 'assets/js/reports/partials/report/dateModal.html';
@@ -156,7 +156,7 @@ app.controller('report_viewCtrl', function ($scope, $routeParams, report_v2Model
 
     $scope.gridGetMoreData = function (reportID) {
         $scope.page += 1;
-        report_v2Model.getReportDataNextPage($scope.selectedReport, $scope.page);
+        report_v2Model.getReportDataNextPage($scope.selectedReport, $scope.page, $sessionStorage.getObject('localapiparams'));
     }
 
 

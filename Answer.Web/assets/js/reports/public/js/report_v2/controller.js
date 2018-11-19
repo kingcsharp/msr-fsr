@@ -278,6 +278,7 @@ app.controller('report_v2Ctrl', function ($scope, connection, $compile, queryMod
         connection.get('/Report/Findallreports', params, function (data) {
             $scope.reports = data;
             $scope.items = data.items;
+            debugger;
             $scope.page = data.page;
             $scope.pages = data.pages;
             $scope.pager = PagerService.GetPager($scope.reports.items.length, data.page, 10, data.pages);
@@ -1163,7 +1164,7 @@ app.controller('report_v2Ctrl', function ($scope, connection, $compile, queryMod
 
     $scope.gridGetMoreData = function (reportID) {
         $scope.page += 1;
-        report_v2Model.getReportDataNextPage($scope.selectedReport, $scope.page);
+        report_v2Model.getReportDataNextPage($scope.selectedReport, $scope.page, $sessionStorage.getObject('localapiparams'));
     }
 
 
