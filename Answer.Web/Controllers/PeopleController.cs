@@ -13,6 +13,7 @@ using Msr.Services.People.ViewModels;
 using Msr.Services.Companies;
 using Msr.Services.Documents;
 using Msr.Services.Locations;
+using Msr.Services.Roles;
 
 namespace Answer.Web.Controllers
 {
@@ -27,12 +28,15 @@ namespace Answer.Web.Controllers
 
         private readonly LocationService _locationService;
 
+        private RoleService _roleService;
+
         public PeopleController()
         {
             _peopleService = new PeopleService();
             _companyService = new CompanyService();
             _documentFilesService = new DocumentFilesService();
             _locationService = new LocationService();
+            _roleService = new RoleService();
         }
 
         public ActionResult Index()
@@ -248,6 +252,9 @@ namespace Answer.Web.Controllers
                 people.AddressType = locationInfo.AddressType;
                 people.LocationId = locationInfo.LocationId;
             }
+
+            people.Root = model.Root;
+            people.Roles = _roleService.GetAssignedRoles(model.Root); 
 
             var preview = string.Join(",", people.DocLinks.ToArray().Select(x => string.Format("{0}{1}{0}", "\'", x.SERVER_PATH)));
 

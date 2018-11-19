@@ -64,6 +64,20 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            @Html.LabelFor(model => model.StartDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(model => model.StartDate, "{0:MM/dd/yyyy}", new { @class = "form-control date-picker" })
+                                @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.EndDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(model => model.EndDate, "{0:MM/dd/yyyy}", new { @class = "form-control date-picker" })
+                                @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <div class="col-md-offset-2 col-md-8">
                                 <input type="submit" value="Submit" class="btn btn-success" />
                                 @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-warning" })
@@ -100,6 +114,11 @@
             var selectedPeoples = values.split(",");
 
             selectPeoples.val(selectedPeoples).trigger("change");
+
+            $('.date-picker').datepicker({
+                format: 'mm/dd/yyyy',
+                autoclose: true
+            });
         });
     </script>
 }

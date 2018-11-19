@@ -249,6 +249,7 @@
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\ShowPurchaseStatusController.cs" />
     <Compile Include="Controllers\TheoryParagraphController.cs" />
+    <Compile Include="Controllers\TrainingController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\WipController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -489,6 +490,8 @@
     <Content Include="assets\js\bluebird.min.js" />
     <Content Include="assets\js\bootbox.min.js" />
     <Content Include="assets\js\bootstrap-datepicker.min.js" />
+    <Content Include="assets\js\bootstrap-datetimepicker.min.js" />
+    <Content Include="assets\js\grids\training.js" />
     <Content Include="assets\js\reports\libs\angular-bootstrap-colorpicker\bootstrap-colorpicker-module.min.js" />
     <Content Include="assets\js\reports\libs\angular-bootstrap-datetimepicker\bootstrap-datetimepicker.min.js" />
     <Content Include="assets\js\bootstrap-editable.min.js" />
@@ -2620,6 +2623,9 @@
     <Content Include="Views\Account\ForgotUserNameConfirmation.cshtml" />
     <Content Include="Views\Account\ForgotUserName.cshtml" />
     <Content Include="Views\Report\Index.cshtml" />
+    <Content Include="Views\People\_Roles.cshtml" />
+    <Content Include="Views\Training\Index.cshtml" />
+    <Content Include="Views\Wip\_StatusItems.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
