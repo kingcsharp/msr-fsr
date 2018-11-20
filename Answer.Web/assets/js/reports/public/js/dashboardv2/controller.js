@@ -348,8 +348,16 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
         }
     };
 
-    $scope.saveToExcel = function (reportHash,reportId) {
-        report_v2Model.saveToExcel($scope, reportHash, reportId);
+    $scope.saveToExcel = function (reportHash, reportId) {
+        var reports = $scope.selectedDashboard.reports;
+        var length = reports.length;
+        var currReport = {};
+        while (length--) {
+            if (reports[length].id === reportId) {
+                currReport = reports[length];
+            }
+        }
+        report_v2Model.saveToExcel($scope, reportHash, currReport);
     }
     $scope.orderColumn = function (columnIndex, desc, hashedID) {
         report_v2Model.orderColumn($scope.selectedReport, columnIndex, desc, hashedID);

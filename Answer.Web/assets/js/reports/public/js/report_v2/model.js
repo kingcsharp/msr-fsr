@@ -357,18 +357,10 @@ app.service('report_v2Model', function (queryModel, c3Charts, reportHtmlWidgets,
     };
 
     this.saveToExcel = function ($scope, reportHash, report) {
-        var reports = $scope.selectedDashboard.reports;
-        var length = reports.length;
-        var currReport = {};
-        while (length--) {
-            if (reports[length].id === report) {
-                currReport = reports[length];
-            }
-        }
         var wopts = { bookType: 'xlsx', bookSST: false, type: 'binary' };
-        var ws_name = currReport.reportName;
+        var ws_name = report.reportName;
 
-        var wb = new Workbook(), ws = sheet_from_array_of_arrays($scope, currReport);
+        var wb = new Workbook(), ws = sheet_from_array_of_arrays($scope, report);
 
         wb.SheetNames.push(ws_name);
         wb.Sheets[ws_name] = ws;
