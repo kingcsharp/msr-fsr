@@ -317,7 +317,7 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
             }, $sessionStorage.getObject('localapiparams'));
 
             if ($scope.selectedDashboard.backgroundColor)
-                $('#pageViewer').css({ 'background-color': $scope.selectedDashboard.backgroundColor });
+                $('#pageViewer').css({ 'background-color': '#f8f8f8' });
 
             if ($scope.selectedDashboard.backgroundImage && $scope.selectedDashboard.backgroundImage != 'none') {
 

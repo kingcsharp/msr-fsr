@@ -128,6 +128,7 @@ app.controller('report_viewCtrl', function ($scope, $routeParams, report_v2Model
     $scope.signalOptions = widgetsCommon.signalOptions;
 
     $scope.saveToExcel = function (reportHash) {
+        debugger;
         report_v2Model.saveToExcel($scope, reportHash);
     }
     $scope.orderColumn = function (columnIndex, desc, hashedID) {
