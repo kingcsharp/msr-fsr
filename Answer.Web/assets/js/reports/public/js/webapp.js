@@ -17,13 +17,7 @@ angular.module('WideStage')
 
         $routeProvider.otherwise({ redirectTo: '/login' });
 
-
-        $routeProvider.when('/login/:dashboardId', {
-            templateUrl: 'assets/js/reports/partials/home/login.html',
-            controller: 'PublicCtrl'
-        });
-
-        $routeProvider.when('/login/reports', {
+        $routeProvider.when('/login/', {
             templateUrl: 'assets/js/reports/partials/home/login.html',
             controller: 'PublicCtrl'
         });
@@ -473,10 +467,11 @@ app.run(['$rootScope', '$sessionStorage', 'connection', '$location',
 
         if (!$rootScope.user) {
             debugger;
-            var path = $location.path().split('/');
-            var route = path.length > 2 ? path[2] : path[1];
-
-            $location.path("/login/" + route);
+            //var path = $location.path().split('/');
+            //var route = path.length > 2 ? path[2] : path[1];
+            //var route = $location.path().substring(1);
+            $sessionStorage.setObject('afterloginpath', $location.path());
+            $location.path("/login/");
             //TODO check sessionStorage si tiene al user hacer el get data
             //connection.get('/Report/GetUserData', {}, function (data) {
             //    if (!data.items.user) {

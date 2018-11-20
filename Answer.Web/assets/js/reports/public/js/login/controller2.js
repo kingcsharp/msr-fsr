@@ -41,11 +41,13 @@ app.controller('PublicCtrl', ["$scope", "$http", "$rootScope", "$sessionStorage"
                             theUser.viewSQL = data.items.viewSQL;
                             $rootScope.user = theUser;
                             $sessionStorage.setObject('user', theUser);
-                            if ($location.path().split('/')[2] == "reports") {
-                                $location.path("/reports/");
-                            } else {
-                                $location.path("/dashboardsv2/" + $location.path().split('/')[2]);
-                            }
+                            //if ($location.path().split('/')[2] == "reports") {
+                            //    $location.path("/reports/");
+                            //} else {
+                            //    $location.path("/dashboardsv2/" + $location.path().split('/')[2]);
+                            //}
+                            $location.path($sessionStorage.getObject('afterloginpath'));
+
                         }, undefined, localapiparams);
 
                 }).
