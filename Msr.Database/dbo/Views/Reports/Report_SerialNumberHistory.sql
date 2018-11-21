@@ -22,6 +22,4 @@ OUTER APPLY(
 			FROM PartsTransactionLog AS pt
 			WHERE pt.PartId = pwo.PartId AND pt.SerialNumber=pwo.Serial
 			) PTLCount
-ORDER BY pwo.Serial
-
 GO
