@@ -322,7 +322,7 @@ app.service('queryModel' , function ($http, $q, $filter, connection, $compile, $
                     {
                         params.query = angular.copy(query);
 
-                connection.get('/Report/getreportsdata', params, function(data) {
+                connection.post('/Report/getreportsdata', params, function(data) {
                            var sql = data.sql;
 
                             if (data.result == 0)
@@ -361,7 +361,7 @@ app.service('queryModel' , function ($http, $q, $filter, connection, $compile, $
                         cleanQuery(params.query);
                         params.page = page;
                 //api/reports/get-data GetReportsData
-                connection.get('/Report/getreportsdata', params, function(data) {
+                connection.post('/Report/getreportsdata', params, function(data) {
                            var sql = data.sql;
                             if (data.result == 0)
                             {

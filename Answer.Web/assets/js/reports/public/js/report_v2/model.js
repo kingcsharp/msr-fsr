@@ -6,7 +6,6 @@ app.service('report_v2Model', function (queryModel, c3Charts, reportHtmlWidgets,
         var localapiparams = $sessionStorage.getObject('localapiparams');
 
         localapiparams.id = id;
-
         connection.get('/Report/Findreport/', { id: id, mode: 'preview', linked: isLinked }, function (data) {
             if (data.item) {
                 //report = data.item;
