@@ -215,12 +215,11 @@
                 @Html.Raw(ViewBag.PreviewConfig),
                 '@Model.ObjectId',
                 true);
+
             $('.datepicker').datepicker({
                 format: 'mm/dd/yyyy',
                 autoclose: true
             });
-
-            $('.datepicker').datepicker('setDate', 'now');
 
             $("form").submit(function(e) {
                 $('.selectitem option').prop('selected', true);
