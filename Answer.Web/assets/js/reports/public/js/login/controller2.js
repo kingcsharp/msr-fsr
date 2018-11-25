@@ -20,10 +20,7 @@ app.controller('PublicCtrl', ["$scope", "$http", "$rootScope", "$sessionStorage"
                     $scope.loginError = false;
 
                     var theUser = JSON.parse(data.Content).user;
-                    var localapiparams = {
-                        session: data.Cookies[0].value,
-                        sessionsig: data.Cookies[1].value
-                    }
+                    var localapiparams = {a:"a"}
 
                     $sessionStorage.setObject('localapiparams', localapiparams);
 

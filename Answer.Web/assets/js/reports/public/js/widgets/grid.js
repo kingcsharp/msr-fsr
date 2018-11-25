@@ -75,13 +75,13 @@ app.service('grid', function () {
         }
 
 
-        var htmlCode = '<div ' + pageBlock + ' id="REPORT_' + id + '" ndType="extendedGrid" class="container-fluid report-container" style="' + reportStyle + '">';
+        var htmlCode = '<div ' + pageBlock + ' id="REPORT_' + id + '" ndType="extendedGrid" class="container-fluid report-container" style="min-height: 60vh;' + reportStyle + '">';
         htmlCode +=
-            '<a style="top: -34px;right:5px;position:absolute;cursor:pointer;font-size: 20px;" title="Export table to excel" ng-click="saveToExcel(\'' +
+            '<a class="btn btn-success help-btn" style="top:-41px;right: 5px;position: absolute;cursor: pointer;font-size: 18px;width: 187px;height: 32px;padding-top:3px;" title="Export table to excel" ng-click="saveToExcel(\'' +
             hashedID +
             '\',\'' +
             report.id +
-            '\')"><i class="fa fa-file-excel-o"></i></a>';
+            '\')"><i class="fa fa-file-excel-o"></i> Export to Excel</a>';
         columns = report.properties.columns;
         debugger;
         if (columns.length > 4)
