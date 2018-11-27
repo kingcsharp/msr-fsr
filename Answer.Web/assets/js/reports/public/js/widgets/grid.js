@@ -160,17 +160,10 @@ app.service('grid', ['$sce', function ($sce) {
             '<tr>' +
             '<td style="overflow:hidden;white-space: nowrap;width:95%;">' + column.objectLabel +
             '<div class="filters">' +
-            '<input class="find-input hidden" type="search" ng-model="' + column.id + columnIndex + '" aria-label="Table filter..." /> ' +
-            '<div class="ui-selectDr">' +
-            '<ui-select ng-model="dimf.' + column.id + columnIndex + '"on-select="elemChanged($item,\'' + column.id + '\',\'' + reportId + '\')">' +
-            '<ui-select-match placeholder="Search...">{{ $select.selected.' + column.id + '}} ' +
-            '<a class="btn btn-xs btn-link pull-right delbtn" ng-click="clear($event, $select,\'' + column.id + '\',\'' + reportId + '\') "> <i class=" glyphicon glyphicon-remove"></i></a >' +
-            '</ui-select-match>' +
-            '<ui-select-choices repeat="elem.' + column.id + ' as item in ' + reportId + '| filter:gridFilters' + reportId + ' | filter:$select.search | orderBy:getReport(\'' + hashedID + '\').predicate:getReport(\'' + hashedID + '\').reverse">' +
-            '<div ng-bind="item.' + column.id + '"></div>' +
-            '</ui-select-choices>' +
-            '</ui-select>' +
-            '</div>' +
+            //'<input class="find-input hidden" type="search" ng-model="' + column.id + columnIndex + '" aria-label="Table filter..." /> ' +
+
+            //smartDropdownFilter(column, columnIndex, reportId) +
+            renderFilter(column, columnIndex, report, reportId)+
             '<div class="resetF">' +
             //'<a title="Reset Search Value" style="padding-right: 0.3em;padding-left: 0.3em;" ng-click="gridFilters' + reportId + '.' + column.id+ '=\'\'" class="clearsearchclass">x</a>' +
             '<div/>' +
@@ -183,6 +176,76 @@ app.service('grid', ['$sce', function ($sce) {
         return htmlCode;
     }
 
+    //function getDateTimeFilter(column,report)
+    function renderFilter(column, columnIndex, report, reportId) {
+        if (report.query.data.length < 1) {
+            return smartDropdownFilter(column, columnIndex, reportId);
+        }
+
+        var valIsDate = isDate(report.query.data[0][column.id]);
+        if (valIsDate) {
+            return getDateTimeFilter(column, columnIndex, reportId);
+        } else {
+            return smartDropdownFilter(column, columnIndex, reportId);
+        }
+
+    }
+
+    function getDateTimeFilter(column, columnIndex, reportId) {
+        //dimf.
+        var a = '<div style="width:75%!important;position:relative;">' +
+            '<input change="updateDtFilter(dimf.' +column.id +columnIndex+',\'' + column.id + '\',\'' + reportId + '\')" class="form-control" format="M/D/YYYY" ng-model="dimf.' +
+            column.id +
+            columnIndex +
+            '" ng-model-options="{ updateOn: \'blur\' }" placeholder="M/D/YYYY" moment-picker="' +
+            column.id +
+            columnIndex +
+            '">' +
+            '<a class="btn btn-xs btn-link pull-right delbtn" ng-click="clearDt(\'' + columnIndex + '\',\'' + column.id + '\',\'' + reportId + '\') "><i class=" glyphicon glyphicon-remove"></i></a >' +
+            '</div>';
+        return a;
+    }
+
+    function smartDropdownFilter(column, columnIndex, reportId) {
+        //isDate(val)
+
+        return '<div class="ui-selectDr">' +
+            '<ui-select append-to-body="true" ng-model="dimf.' +
+            column.id +
+            columnIndex +
+            '"on-select="elemChanged($item,\'' +
+            column.id +
+            '\',\'' +
+            reportId +
+            '\')">' +
+            '<ui-select-match placeholder="Search...">{{ $select.selected.' +
+            column.id +
+            '}} ' +
+            '<a class="btn btn-xs btn-link pull-right delbtn" ng-click="clear($event, $select,\'' +
+            column.id +
+            '\',\'' +
+            reportId +
+            '\') "> <i class=" glyphicon glyphicon-remove"></i></a >' +
+            '</ui-select-match>' +
+            '<ui-select-choices repeat="elem.' +
+            column.id +
+            ' as item in ' +
+            reportId +
+            '| filter:gridFilters' +
+            reportId +
+            ' | filter:$select.search | orderBy:getReport(\'' +
+            hashedID +
+            '\').predicate:getReport(\'' +
+            hashedID +
+            '\').reverse">' +
+            '<div ng-bind="item.' +
+            column.id +
+            '"></div>' +
+            '</ui-select-choices>' +
+            '</ui-select>' +
+            '</div>';
+    }
+
     function createId() {
         var text = "";
         var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -193,6 +256,11 @@ app.service('grid', ['$sce', function ($sce) {
         return text;
     }
 
+
+
+    function isDate(val) {
+        return moment(val, "M/D/YYYY", true).isValid();;
+    }
 
     function getDataCell(column, gridID, columnIndex, columnDefaultStyle) {
         var htmlCode = '';

@@ -429,8 +429,35 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
     }
 
 
+    $scope.dimf = {};
+    $scope.elemChanged = function ($item, colId, gridId) {
 
+        $scope['gridFilters' + gridId][(colId)] = $item[colId];
+        console.log(1);
+    }
 
+    $scope.updateDtFilter = function ($item, colId, gridId) {
+        $scope['gridFilters' + gridId][(colId)] = moment($item._d).format('M/D/YYYY');
+        console.log(2);
+    }
+    $scope.clearDt = function (colIndex, colId, gridId) {
+        $scope['dimf'][colId + colIndex] = moment().format('M/D/YYYY');
+        $timeout(function () {
+            $scope['gridFilters' + gridId][(colId)] = undefined;
+        }, 100);
+    }
+
+    $scope.clear = function ($event, $select, colId, gridId) {
+        //stops click event bubbling
+        $event.stopPropagation();
+        //to allow empty field, in order to force a selection remove the following line
+        $select.selected = undefined;
+        //reset search query
+        $select.search = undefined;
+        //focus and open dropdown
+        $select.activate();
+        $scope['gridFilters' + gridId][(colId)] = undefined;
+    }
     $scope.getQuery = function (queryID) {
         for (var r in $scope.selectedDashboard.reports) {
             if ($scope.selectedDashboard.reports[r].query.id == queryID) {

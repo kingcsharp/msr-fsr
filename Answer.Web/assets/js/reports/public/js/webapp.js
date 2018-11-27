@@ -7,7 +7,7 @@ var app = angular.module('WideStage', ['ngRoute', 'ui.sortable', 'gridster', 'ui
     'vs-repeat', 'ui.bootstrap.datetimepicker', 'ui.tree', 'page.block', 'gridshore.c3js.chart',
     'vAccordion', 'bsLoadingOverlay', 'gg.editableText', 'intro.help', 'ngTagsInput', 'ui.codemirror',
     '720kb.socialshare', 'ngFileUpload', 'pascalprecht.translate', 'colorpicker.module',
-    'angularSpectrumColorpicker', 'wst.inspector']);
+    'angularSpectrumColorpicker', 'wst.inspector', 'moment-picker']);
 angular.module('WideStage')
     .config(['$routeProvider', '$translateProvider', function ($routeProvider, $translateProvider) {
 
@@ -398,6 +398,7 @@ app.service('queryService', function () {
     };
 
     var getQuery = function () {
+        debugger;
         return theQuery;
     };
 
