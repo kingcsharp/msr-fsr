@@ -1,10 +1,15 @@
-app.service('grid', function () {
+app.service('grid', ['$sce', function ($sce) {
 
     var colClass = '';
     var colWidth = '';
     var hashedID = '';
     var columns = [];
     var report = {};
+
+
+    this.trustHtml = function (html) {
+        return $sce.trustAsHtml(html);
+    }
 
     function quotedHashedID() {
         return "'" + hashedID + "'";
@@ -83,7 +88,6 @@ app.service('grid', function () {
             report.id +
             '\')"><i class="fa fa-file-excel-o"></i> Export to Excel</a>';
         columns = report.properties.columns;
-        debugger;
         if (columns.length > 4)
             colWidth = 'width:' + 100 / columns.length + '%;float:left;';
         else
@@ -92,6 +96,14 @@ app.service('grid', function () {
         //header
         htmlCode += '<div class="container-fluid" style="' + headerStyle + '">';
         var filter = '{';
+        //dimf
+        //for (var i = 0; i < columns.length; i++) {
+        //    htmlCode += getHeaderColumn(columns[i], i, report);
+        //    filter += "\'" + columns[i].id + "\':" + columns[i].id + i;
+        //    if (i !== columns[i].length) {
+        //        filter += ',';
+        //    }
+        //}
         for (var i = 0; i < columns.length; i++) {
             htmlCode += getHeaderColumn(columns[i], i, report);
             filter += "\'" + columns[i].id + "\':" + columns[i].id + i;
@@ -132,6 +144,8 @@ app.service('grid', function () {
 
     }
 
+
+
     function getHeaderColumn(column, columnIndex, report) {
         var htmlCode = '';
         //var elementName = "'"+column.id+"'";
@@ -143,17 +157,27 @@ app.service('grid', function () {
         var elementNameAux = elementName;
         if (column.elementType === 'date')
             elementNameAux = "'" + 'wst' + column.elementID + '_original' + "'";
-        //<input class="find-input pull-right" type="search" ng-model="theFilter" placeholder="Table filter..." aria-label="Table filter..." style="margin:5px;" />
-        //htmlCode += '<div class="' + colClass + ' report-repeater-column-header" style="' + colWidth + '"><table style="table-layout:fixed;width:100%"><tr><td style="overflow:hidden;white-space: nowrap;width:95%;">' + column.objectLabel + '</td><td style="width:34px;>' + getColumnDropDownHTMLCode(column, columnIndex, elementName, column.elementType, report)+'</td></tr></table> </div>';
         htmlCode += '<div class="' + colClass + ' report-repeater-column-header" style="' + colWidth + '">' +
             '<table style="table-layout:fixed;width:100%">' +
             '<tr>' +
-            '<td style="overflow:hidden;white-space: nowrap;width:95%;">' + column.objectLabel +
+            '<td ng-init="dimf.a' + column.id + columnIndex + '=\'{}\'" style="overflow:hidden;white-space: nowrap;width:95%;">' + column.objectLabel +
             '<div class="filters">' +
-            '<input class="find-input" type="search" ng-model="' + column.id + columnIndex + '" aria-label="Table filter..." /> ' +
+            '<input class="find-input hidden" type="search" ng-model="' + column.id + columnIndex + '" aria-label="Table filter..." /> ' +
             
-            '<div>' +
-            '<a title="Reset Search Value" style="padding-right: 0.3em;padding-left: 0.3em;" ng-click="' + column.id + columnIndex + '=\'\'" class="clearsearchclass">x</a><div/>' +
+            //'<pre style="float: left;">{{dimf.' + column.id + columnIndex + '}}</pre>' +
+            //'<div style="float: left;" ng-bind="dimf.' + column.id + columnIndex + '[' + column.id + columnIndex + ']"></div>' +
+            '<div class="ui-selectDr">' +
+            '<ui-select ng-model="dimf.' + column.id + columnIndex + '"on-select="elemChanged($item,\'' + column.id + '\',\'' + columnIndex +'\')">' +
+            '<ui-select-match placeholder="Search...">{{ $select.selected.' + column.id + '}}</ui-select-match>' +
+            '<ui-select-choices repeat="elem.' + column.id + ' as item in getQuery(\'' + hashedID + '\').data | filter: $select.search | orderBy:getReport(\'' + hashedID + '\').predicate:getReport(\'' + hashedID + '\').reverse">' +
+            '<div ng-bind="item.' + column.id + '"></div>' +
+            '</ui-select-choices>' +
+            '</ui-select>' +
+            '</div>'+
+
+                '<div class="resetF">' +
+                '<a title="Reset Search Value" style="padding-right: 0.3em;padding-left: 0.3em;" ng-click="' + column.id + columnIndex + '=\'\'" class="clearsearchclass">x</a>' +
+                '<div/>' +
             '</div>' +
             //'<a style="top: 5px;position: relative;cursor:pointer;float:left;" title="Export table to excel" ng-click="saveToExcel(\'' + hashedID + '\',\'' + report.id + '\')"><i class="fa fa-file-excel-o"></i></a>' +
             '</td>' +
@@ -434,7 +458,7 @@ app.service('grid', function () {
     }
 
 
-});
+}]);
 
 app.directive('scrolly', function () {
     return {
