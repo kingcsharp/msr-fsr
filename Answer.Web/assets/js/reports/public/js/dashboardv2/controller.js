@@ -228,7 +228,7 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
                     var $div = $($scope.selectedDashboard.properties.designerHTML);
                     var el = angular.element(document.getElementById('designArea'));
                     el.append($div);
-                    debugger;
+                    //debugger;
                     angular.element($('#angularAppDiv')).injector().invoke(function ($compile) {
                         var scope = angular.element($div).scope();
                         $compile($div)($scope);
@@ -339,7 +339,7 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
             var el = angular.element(document.getElementById('pageViewer'));
             el.append($div);
             angular.element($('#angularAppDiv')).injector().invoke(function ($compile) {
-                debugger;
+                //debugger;
                 var scope = angular.element($div).scope();
                 $compile($div)($scope);
             });
@@ -1164,7 +1164,7 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
 
         $scope.selectedDashboard.reports[index].loadingData = true;
         $scope.showOverlay('OVERLAY_' + $scope.selectedDashboard.reports[index].id);
-        debugger;
+        //debugger;
         queryModel.getQueryData($scope.selectedDashboard.reports[index].query, function (data) {
             $scope.selectedDashboard.reports[index].query.data = data;
             $scope.selectedDashboard.reports[index].loadingData = false;

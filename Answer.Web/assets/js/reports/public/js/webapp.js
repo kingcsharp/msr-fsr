@@ -398,7 +398,7 @@ app.service('queryService', function () {
     };
 
     var getQuery = function () {
-        debugger;
+        //debugger;
         return theQuery;
     };
 
@@ -467,7 +467,7 @@ app.run(['$rootScope', '$sessionStorage', 'connection', '$location',
         $rootScope.user = $sessionStorage.getObject('user');
 
         if (!$rootScope.user) {
-            debugger;
+            //debugger;
             //var path = $location.path().split('/');
             //var route = path.length > 2 ? path[2] : path[1];
             //var route = $location.path().substring(1);

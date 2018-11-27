@@ -227,7 +227,7 @@ app.controller('queryCtrl', function ($scope, connection, $compile, queryModel, 
     }
     $scope.getQuery = function(queryID)
     {
-        debugger;
+        //debugger;
         for (var q in $scope.queries)
         {
             if ($scope.queries[q].id == queryID)
