@@ -94,16 +94,17 @@ app.service('grid', ['$sce', function ($sce) {
             colClass = 'col-xs-' + 12 / columns.length;
         var reportId = 'report' + createId();
         //header
-        htmlCode += '<div ng-init="' + reportId + '= getQuery(\'' + hashedID + '\').data; gridFilters' + reportId+' = ' + createFilter(columns)+'" class="container-fluid" style="' + headerStyle + '">';
-        
+        htmlCode += '<div ng-init="' + reportId + '= getQuery(\'' + hashedID + '\').data; gridFilters' + reportId + ' = ' + createFilter(columns) + '" class="container-fluid" style="' + headerStyle + '">';
+
         for (var i = 0; i < columns.length; i++) {
             htmlCode += getHeaderColumn(columns[i], i, report, reportId);
         }
+
         htmlCode += '</div>';
-        
+
         htmlCode += '<div  vs-repeat style="width:100%;overflow-y: auto;border: 1px solid #ccc;align-items: stretch;position: absolute;bottom: 0px;top:60px;" scrolly="gridGetMoreData(\'' + id + '\')">';
         //| filter:gridFilters | orderBy:getReport(\'' + hashedID + '\').predicate:getReport(\'' + hashedID + '\').reverse
-        htmlCode += '<div ndType="repeaterGridItems" class="repeater-data container-fluid" ng-repeat="item in ' + reportId + '| filter: gridFilters' + reportId +' | orderBy:getReport(\'' + hashedID + '\').predicate:getReport(\'' + hashedID + '\').reverse" style="' + rowStyle + '"  >';
+        htmlCode += '<div ndType="repeaterGridItems" class="repeater-data container-fluid" ng-repeat="item in ' + reportId + '| filter: gridFilters' + reportId + ' | orderBy:getReport(\'' + hashedID + '\').predicate:getReport(\'' + hashedID + '\').reverse" style="' + rowStyle + '"  >';
 
         for (var i = 0; i < columns.length; i++) {
             htmlCode += getDataCell(columns[i], id, i, columnDefaultStyle);
@@ -157,27 +158,24 @@ app.service('grid', ['$sce', function ($sce) {
         htmlCode += '<div class="' + colClass + ' report-repeater-column-header" style="' + colWidth + '">' +
             '<table style="table-layout:fixed;width:100%">' +
             '<tr>' +
-            '<td ng-init="dimf.a' + column.id + columnIndex + '=\'{}\'" style="overflow:hidden;white-space: nowrap;width:95%;">' + column.objectLabel +
+            '<td style="overflow:hidden;white-space: nowrap;width:95%;">' + column.objectLabel +
             '<div class="filters">' +
             '<input class="find-input hidden" type="search" ng-model="' + column.id + columnIndex + '" aria-label="Table filter..." /> ' +
-            
-            //'<pre style="float: left;">{{dimf.' + column.id + columnIndex + '}}</pre>' +
-            //'<div style="float: left;" ng-bind="dimf.' + column.id + columnIndex + '[' + column.id + columnIndex + ']"></div>' +
             '<div class="ui-selectDr">' +
-            '<ui-select ng-model="dimf.' + column.id + columnIndex + '"on-select="elemChanged($item,\'' + column.id + '\',\'' + columnIndex + '\',\'' + reportId +'\')">' +
-            '<ui-select-match placeholder="Search...">{{ $select.selected.' + column.id + '}}</ui-select-match>' +
-            '<ui-select-choices repeat="elem.' + column.id + ' as item in getQuery(\'' + hashedID + '\').data | filter:$select.search | orderBy:getReport(\'' + hashedID + '\').predicate:getReport(\'' + hashedID + '\').reverse">' +
+            '<ui-select ng-model="dimf.' + column.id + columnIndex + '"on-select="elemChanged($item,\'' + column.id + '\',\'' + reportId + '\')">' +
+            '<ui-select-match placeholder="Search...">{{ $select.selected.' + column.id + '}} ' +
+            '<a class="btn btn-xs btn-link pull-right delbtn" ng-click="clear($event, $select,\'' + column.id + '\',\'' + reportId + '\') "> <i class=" glyphicon glyphicon-remove"></i></a >' +
+            '</ui-select-match>' +
+            '<ui-select-choices repeat="elem.' + column.id + ' as item in ' + reportId + '| filter:gridFilters' + reportId + ' | filter:$select.search | orderBy:getReport(\'' + hashedID + '\').predicate:getReport(\'' + hashedID + '\').reverse">' +
             '<div ng-bind="item.' + column.id + '"></div>' +
             '</ui-select-choices>' +
             '</ui-select>' +
-            '</div>'+
-                '<div class="resetF">' +
-                '<a title="Reset Search Value" style="padding-right: 0.3em;padding-left: 0.3em;" ng-click="' + column.id + columnIndex + '=\'\'" class="clearsearchclass">x</a>' +
-                '<div/>' +
             '</div>' +
-            //'<a style="top: 5px;position: relative;cursor:pointer;float:left;" title="Export table to excel" ng-click="saveToExcel(\'' + hashedID + '\',\'' + report.id + '\')"><i class="fa fa-file-excel-o"></i></a>' +
+            '<div class="resetF">' +
+            //'<a title="Reset Search Value" style="padding-right: 0.3em;padding-left: 0.3em;" ng-click="gridFilters' + reportId + '.' + column.id+ '=\'\'" class="clearsearchclass">x</a>' +
+            '<div/>' +
+            '</div>' +
             '</td>' +
-            //'<td style="width:34px;>' + getColumnDropDownHTMLCode(column, columnIndex, elementName, column.elementType, report) + '</td>' +
             '</tr>' +
             '</table>' +
             '</div>';
