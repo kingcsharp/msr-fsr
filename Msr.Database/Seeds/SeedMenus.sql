@@ -115,10 +115,18 @@ VALUES (N'People-2', N'Roles', N'Aug  24 2018 10:18PM', N'SP', 2, N'User Roles',
 END
 GO
 
+
 IF NOT EXISTS(SELECT * FROM [dbo].[A_MENUS] WHERE ID ='People-3')
 BEGIN
 INSERT [dbo].[A_MENUS] ([ID], [URL], [DRCM], [MODBY], [NUM], [NAME], [INFO], [MENU_GROUP], [ICON], [GroupIcon], [OrderNumber], [IsParent])
-VALUES (N'People-3', N'Companies', N'Aug  24 2018 10:18PM', N'SP', 3, N'Companies/Departments', N'Companies/Departments', N'People', N'fa-building', N'fa-users', 4, 0)
+VALUES (N'People-3', N'Companies', N'Aug  24 2018 10:18PM', N'SP', 3, N'Companies/Departments', N'Companies/Departments', N'People', N'fa-building', N'fa-certificate', 4, 0)
+END
+GO
+
+IF NOT EXISTS(SELECT * FROM [dbo].[A_MENUS] WHERE ID ='People-4')
+BEGIN
+INSERT [dbo].[A_MENUS] ([ID], [URL], [DRCM], [MODBY], [NUM], [NAME], [INFO], [MENU_GROUP], [ICON], [GroupIcon], [OrderNumber], [IsParent]) 
+VALUES (N'People-4', N'Training', N'Aug  24 2018 10:18PM', N'SP', 4, N'Training/Certifications', N'Training/Certifications', N'People', N'fa-certificate', N'fa-users', 4, 0)
 END
 GO
 

@@ -220,8 +220,7 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
                     getQueryData(0, function () {
                         rebuildCharts();
                         rebuildGrids();
-
-                    });
+                    }, $sessionStorage.getObject('localapiparams'));
 
                     //getAllPageColumns();
 
@@ -229,7 +228,7 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
                     var $div = $($scope.selectedDashboard.properties.designerHTML);
                     var el = angular.element(document.getElementById('designArea'));
                     el.append($div);
-                    debugger;
+                    //debugger;
                     angular.element($('#angularAppDiv')).injector().invoke(function ($compile) {
                         var scope = angular.element($div).scope();
                         $compile($div)($scope);
@@ -277,8 +276,7 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
                         getQueryData(0, function () {
                             rebuildCharts();
                             rebuildGrids();
-
-                        });
+                        }, $sessionStorage.getObject('localapiparams'));
 
                         //getAllPageColumns();
 
@@ -316,10 +314,10 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
             getQueryData(0, function () {
                 rebuildCharts();
                 rebuildGrids();
-            });
+            }, $sessionStorage.getObject('localapiparams'));
 
             if ($scope.selectedDashboard.backgroundColor)
-                $('#pageViewer').css({ 'background-color': $scope.selectedDashboard.backgroundColor });
+                $('#pageViewer').css({ 'background-color': '#f8f8f8' });
 
             if ($scope.selectedDashboard.backgroundImage && $scope.selectedDashboard.backgroundImage != 'none') {
 
@@ -341,7 +339,7 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
             var el = angular.element(document.getElementById('pageViewer'));
             el.append($div);
             angular.element($('#angularAppDiv')).injector().invoke(function ($compile) {
-                debugger;
+                //debugger;
                 var scope = angular.element($div).scope();
                 $compile($div)($scope);
             });
@@ -350,8 +348,16 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
         }
     };
 
-    $scope.saveToExcel = function (reportHash,reportId) {
-        report_v2Model.saveToExcel($scope, reportHash, reportId);
+    $scope.saveToExcel = function (reportHash, reportId) {
+        var reports = $scope.selectedDashboard.reports;
+        var length = reports.length;
+        var currReport = {};
+        while (length--) {
+            if (reports[length].id === reportId) {
+                currReport = reports[length];
+            }
+        }
+        report_v2Model.saveToExcel($scope, reportHash, currReport);
     }
     $scope.orderColumn = function (columnIndex, desc, hashedID) {
         report_v2Model.orderColumn($scope.selectedReport, columnIndex, desc, hashedID);
@@ -423,8 +429,35 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
     }
 
 
+    $scope.dimf = {};
+    $scope.elemChanged = function ($item, colId, gridId) {
 
+        $scope['gridFilters' + gridId][(colId)] = $item[colId];
+        console.log(1);
+    }
 
+    $scope.updateDtFilter = function ($item, colId, gridId) {
+        $scope['gridFilters' + gridId][(colId)] = moment($item._d).format('M/D/YYYY');
+        console.log(2);
+    }
+    $scope.clearDt = function (colIndex, colId, gridId) {
+        $scope['dimf'][colId + colIndex] = moment().format('M/D/YYYY');
+        $timeout(function () {
+            $scope['gridFilters' + gridId][(colId)] = undefined;
+        }, 100);
+    }
+
+    $scope.clear = function ($event, $select, colId, gridId) {
+        //stops click event bubbling
+        $event.stopPropagation();
+        //to allow empty field, in order to force a selection remove the following line
+        $select.selected = undefined;
+        //reset search query
+        $select.search = undefined;
+        //focus and open dropdown
+        $select.activate();
+        $scope['gridFilters' + gridId][(colId)] = undefined;
+    }
     $scope.getQuery = function (queryID) {
         for (var r in $scope.selectedDashboard.reports) {
             if ($scope.selectedDashboard.reports[r].query.id == queryID) {
@@ -688,8 +721,7 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
                         rebuildCharts();
                         rebuildGrids();
                         rebuildIndicators();
-
-                    });
+                    }, $sessionStorage.getObject('localapiparams'));
                 }
             }
         }
@@ -1132,7 +1164,7 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
 
         $scope.selectedDashboard.reports[index].loadingData = true;
         $scope.showOverlay('OVERLAY_' + $scope.selectedDashboard.reports[index].id);
-        debugger;
+        //debugger;
         queryModel.getQueryData($scope.selectedDashboard.reports[index].query, function (data) {
             $scope.selectedDashboard.reports[index].query.data = data;
             $scope.selectedDashboard.reports[index].loadingData = false;
@@ -1359,7 +1391,7 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
                 else
                     $scope.selectedDashboard.reports[i].lastLoadedPage += 1;
 
-                report_v2Model.getReportDataNextPage($scope.selectedDashboard.reports[i], $scope.selectedDashboard.reports[i].lastLoadedPage);
+                report_v2Model.getReportDataNextPage($scope.selectedDashboard.reports[i], $scope.selectedDashboard.reports[i].lastLoadedPage, $sessionStorage.getObject('localapiparams'));
             }
         }
     }

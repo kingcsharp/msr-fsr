@@ -19,6 +19,7 @@ using System.IO;
 using Msr.Infrastructure.Email;
 using Msr.Services.Roles;
 using Msr.Services.Users;
+using Msr.Models.Training;
 
 namespace Msr.Services.Orders
 {
@@ -372,6 +373,17 @@ namespace Msr.Services.Orders
                     ",MODBY= '" + model.NTLogin + "',DRCM=getDate(), OBJECT_ID='" + model.ObjectId + "'  WHERE ID = '" +
                     model.LocationId + "'").SingleOrDefault();
 
+                foreach (var role in model.Roles)
+                {
+                    var startDate = new SqlParameter("@StartDate", (object)role.StartDate ?? DBNull.Value);
+                    var endDate = new SqlParameter("@EndDate", (object)role.EndDate ?? DBNull.Value);
+                    var person = new SqlParameter("@Person", role.Person);
+                    var roleRole = new SqlParameter("@Role", role.Role);
+
+                    _dbContext.Database.ExecuteSqlCommand("EXEC Portal_AssignCertificationRoles @StartDate,@EndDate,@Person,@Role", startDate, endDate, person, roleRole);
+
+                }
+
                 return responsePeople;
             }
             catch (Exception ex)
@@ -404,9 +416,15 @@ namespace Msr.Services.Orders
                 return false;
             }
         }
+
         public List<PeopleApprovedSearch> GetPeopleApprovedSearch(string ntlogin, string co)
         {
             return _dbContext.Database.SqlQuery<PeopleApprovedSearch>($"exec A_SP_PEOPLE_SEARCH ' (FULL_NAME LIKE ''%%'' OR FULL_NAME is NULL ) AND  (ROOT LIKE ''%%'' OR ROOT is NULL ) AND  (POSITION_NAME LIKE ''%%'' OR POSITION_NAME is NULL ) AND  (BOSS_NAME LIKE ''%%'' OR BOSS_NAME is NULL ) AND  (COMPANY_NAME LIKE ''%%'' OR COMPANY_NAME is NULL ) AND (( ROOT_CO_ID LIKE ''%{co}%'' ) ) AND  STATUS LIKE ''APPROVED%'' AND  (LOGIN IS NOT NULL) AND  (LOCATION_NAME LIKE ''%%'' OR LOCATION_NAME is NULL )',' ORDER BY LAST_NAME,NAME',NULL,NULL,'{ntlogin}'").ToList();
+        }
+
+        public IQueryable<TrainingView> GetTrainingQueryable()
+        {
+            return _dbContext.TrainingViews;
         }
     }
 }

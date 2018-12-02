@@ -322,7 +322,7 @@ app.service('queryModel' , function ($http, $q, $filter, connection, $compile, $
                     {
                         params.query = angular.copy(query);
 
-                connection.get('/Report/getreportsdata', params, function(data) {
+                connection.post('/Report/getreportsdata', params, function(data) {
                            var sql = data.sql;
 
                             if (data.result == 0)
@@ -344,8 +344,8 @@ app.service('queryModel' , function ($http, $q, $filter, connection, $compile, $
                     }
     };
 
-    this.getQueryDataNextPage = function(page, done) {
-        getQueryDataNextPage(page,done);
+    this.getQueryDataNextPage = function (page, done, localapiparams) {
+        getQueryDataNextPage(page, done, localapiparams);
     }
 
     function getQueryDataNextPage(page, done, localapiparams)
@@ -361,7 +361,7 @@ app.service('queryModel' , function ($http, $q, $filter, connection, $compile, $
                         cleanQuery(params.query);
                         params.page = page;
                 //api/reports/get-data GetReportsData
-                connection.get('/Report/getreportsdata', params, function(data) {
+                connection.post('/Report/getreportsdata', params, function(data) {
                            var sql = data.sql;
                             if (data.result == 0)
                             {
@@ -1325,7 +1325,8 @@ app.service('queryModel' , function ($http, $q, $filter, connection, $compile, $
 
     }
 
-    this.orderColumn = function(predicate) {
+    this.orderColumn = function (predicate) {
+        //debugger;
         this.reverse = (this.predicate === predicate) ? !this.reverse : false;
         this.predicate = predicate;
     };

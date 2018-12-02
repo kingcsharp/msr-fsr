@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 using Answer.Web.Filters;
@@ -270,6 +271,9 @@ namespace Answer.Web.Controllers
                     downloadUrl = cloudUrl,
                     key = x.LINKED_DOC_ID
                 }).ToArray();
+
+                Thread.Sleep(2000);
+
             }
 
             return Json(new { initialPreview, initialPreviewConfig, newId }, JsonRequestBehavior.AllowGet);

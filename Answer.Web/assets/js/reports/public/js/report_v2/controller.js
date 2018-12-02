@@ -6,7 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-app.controller('report_v2Ctrl', function ($scope, connection, $compile, queryModel, queryService, reportService, $routeParams, $timeout, $rootScope, bsLoadingOverlayService, grid, uuid2, c3Charts, report_v2Model, widgetsCommon, $location, PagerService) {
+app.controller('report_v2Ctrl', function ($scope, connection, $compile, queryModel, queryService, reportService, $routeParams, $timeout, $rootScope, bsLoadingOverlayService, grid, uuid2, c3Charts, report_v2Model, widgetsCommon, $location, PagerService, $sessionStorage) {
     
     $scope.promptsBlock = 'partials/report/promptsBlock.html';
     $scope.dateModal = 'partials/report/dateModal.html';
@@ -229,7 +229,6 @@ app.controller('report_v2Ctrl', function ($scope, connection, $compile, queryMod
                 $scope.selectedReport.reportType = 'grid';
                 $scope.mode = 'add';
             } else {
-
                 report_v2Model.getReportDefinition($routeParams.reportID, false, function (report) {
                     if (report) {
                         $scope.showOverlay('OVERLAY_reportLayout');
@@ -252,11 +251,11 @@ app.controller('report_v2Ctrl', function ($scope, connection, $compile, queryMod
     $scope.getReports = function (params) {
         var params = (params) ? params : {};
 
-
-        connection.get('/api/reports/find-all', params, function(data) {
+        var localapiparams = $sessionStorage.getObject('localapiparams');
+        connection.get('/Report/Findallreports', params, function(data) {
         $scope.reports = data;
         //$scope.reports = { items: [] };
-        });
+        }, undefined, localapiparams);
     };
 
     $scope.getReports = function (page, search, fields) {
@@ -275,14 +274,15 @@ app.controller('report_v2Ctrl', function ($scope, connection, $compile, queryMod
         }
 
         if (fields) params.fields = fields;
-
-        connection.get('/api/reports/find-all', params, function (data) {
+        var localapiparams = $sessionStorage.getObject('localapiparams');
+        connection.get('/Report/Findallreports', params, function (data) {
             $scope.reports = data;
             $scope.items = data.items;
+            //debugger;
             $scope.page = data.page;
             $scope.pages = data.pages;
             $scope.pager = PagerService.GetPager($scope.reports.items.length, data.page, 10, data.pages);
-        });
+        }, undefined, localapiparams);
         
 
         //$scope.reports = { items: [
@@ -836,7 +836,6 @@ app.controller('report_v2Ctrl', function ($scope, connection, $compile, queryMod
     }
 
     $scope.getDataForPreview = function () {
-
         $scope.page = 1;
 
         var query = queryModel.generateQuery();  //queryModel.query();
@@ -852,8 +851,6 @@ app.controller('report_v2Ctrl', function ($scope, connection, $compile, queryMod
             if ($scope.selectedReport.reportType == 'grid' || $scope.selectedReport.reportType == 'vertical-grid') {
 
                 report_v2Model.getReport($scope.selectedReport, 'reportLayout', $scope.mode, function (sql) {
-
-
                     $scope.sql = sql;
                     $scope.hideOverlay('OVERLAY_reportLayout');
                     $scope.gettingData == false;
@@ -1167,7 +1164,7 @@ app.controller('report_v2Ctrl', function ($scope, connection, $compile, queryMod
 
     $scope.gridGetMoreData = function (reportID) {
         $scope.page += 1;
-        report_v2Model.getReportDataNextPage($scope.selectedReport, $scope.page);
+        report_v2Model.getReportDataNextPage($scope.selectedReport, $scope.page, $sessionStorage.getObject('localapiparams'));
     }
 
 

@@ -7,7 +7,7 @@ var app = angular.module('WideStage', ['ngRoute', 'ui.sortable', 'gridster', 'ui
     'vs-repeat', 'ui.bootstrap.datetimepicker', 'ui.tree', 'page.block', 'gridshore.c3js.chart',
     'vAccordion', 'bsLoadingOverlay', 'gg.editableText', 'intro.help', 'ngTagsInput', 'ui.codemirror',
     '720kb.socialshare', 'ngFileUpload', 'pascalprecht.translate', 'colorpicker.module',
-    'angularSpectrumColorpicker', 'wst.inspector']);
+    'angularSpectrumColorpicker', 'wst.inspector', 'moment-picker']);
 angular.module('WideStage')
     .config(['$routeProvider', '$translateProvider', function ($routeProvider, $translateProvider) {
 
@@ -17,8 +17,7 @@ angular.module('WideStage')
 
         $routeProvider.otherwise({ redirectTo: '/login' });
 
-
-        $routeProvider.when('/login/:dashboardId', {
+        $routeProvider.when('/login/', {
             templateUrl: 'assets/js/reports/partials/home/login.html',
             controller: 'PublicCtrl'
         });
@@ -88,8 +87,6 @@ angular.module('WideStage')
         //    templateUrl: 'partials/dashboardv2/edit.html',
         //    controller: 'dashBoardv2Ctrl'
         //});
-
-        //reports
 
         $routeProvider.when('/reports', {
             templateUrl: 'assets/js/reports/partials/report/list.html',
@@ -401,6 +398,7 @@ app.service('queryService', function () {
     };
 
     var getQuery = function () {
+        //debugger;
         return theQuery;
     };
 
@@ -469,9 +467,12 @@ app.run(['$rootScope', '$sessionStorage', 'connection', '$location',
         $rootScope.user = $sessionStorage.getObject('user');
 
         if (!$rootScope.user) {
-            debugger;
-
-            $location.path("/login/" + $location.path().split('/')[2]);
+            //debugger;
+            //var path = $location.path().split('/');
+            //var route = path.length > 2 ? path[2] : path[1];
+            //var route = $location.path().substring(1);
+            $sessionStorage.setObject('afterloginpath', $location.path());
+            $location.path("/login/");
             //TODO check sessionStorage si tiene al user hacer el get data
             //connection.get('/Report/GetUserData', {}, function (data) {
             //    if (!data.items.user) {

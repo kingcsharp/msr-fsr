@@ -9,6 +9,7 @@ using Msr.Services.Companies;
 using Msr.Services.Documents;
 using Msr.Services.Documents.ViewModels;
 using Msr.Services.Orders;
+using Msr.Services.Roles.Procedures;
 
 namespace Msr.Services.People.ViewModels
 {
@@ -30,6 +31,7 @@ namespace Msr.Services.People.ViewModels
             ListEmailTextTypes = new List<SelectListItem>();
             ListRealUserTypes = new List<SelectListItem>();
             ListScreenTypes = new List<SelectListItem>();
+            Roles = new List<GetMyRolesResult>();
         }
 
         [DisplayName("ANSWER-User?:")]
@@ -133,6 +135,10 @@ namespace Msr.Services.People.ViewModels
         public IEnumerable<SelectListItem> ListBossInfo { get; set; }
         public List<DocLink> DocLinks { get; set; }
         public string ReferenceFiles { get; set; }
+
+        public string Root { get; set; }
+        [DisplayName("Roles :")]
+        public List<GetMyRolesResult> Roles { get; set; }
 
         public void Setup(DocumentFilesService documentFilesService, PeopleService peopleService,
             CompanyService companyService, string ntlog)

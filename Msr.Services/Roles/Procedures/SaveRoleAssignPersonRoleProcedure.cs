@@ -17,6 +17,12 @@ namespace Msr.Services.Roles.Procedures
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "strID")]
         public string StrId { get; set; }
 
+        [StoredProcedureParameter(SqlDbType.DateTime, ParameterName = "StartDate")]
+        public DateTime? StartDate { get; set; }
+
+        [StoredProcedureParameter(SqlDbType.DateTime, ParameterName = "EndDate")]
+        public DateTime? EndDate { get; set; }
+
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "strNTLogin")]
         public string NTLogin { get; set; }
     }

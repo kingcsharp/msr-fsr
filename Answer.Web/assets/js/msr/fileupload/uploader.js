@@ -32,7 +32,7 @@ var FileUploader = function () {
             uploadUrl: url,
             uploadAsync: true,
             minFileCount: 1,
-            maxFileCount: 10,
+            maxFileCount: 0,
             overwriteInitial: false,
             initialPreview: initialPreview,
             initialPreviewAsData: true,
@@ -83,7 +83,7 @@ var FileUploader = function () {
             uploadUrl: url,
             uploadAsync: true,
             minFileCount: 1,
-            maxFileCount: 10,
+            maxFileCount: 0,
             overwriteInitial: false,
             initialPreview: initialPreview,
             initialPreviewAsData: true,// defaults markup

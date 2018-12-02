@@ -28,6 +28,7 @@ namespace Msr.Services.Orders.Messaging
         public LoggedUserIdResult LoggedUserIdResult { get; set; }
         public TaskLogDto TaskRunningDto { get; set; }
         public bool HasStepRoles { get; set; }
+        public bool HasStepRolesCertification { get; set; }
         public string ParentPartId { get; set; }
         public string ParentId { get; set; }
     }

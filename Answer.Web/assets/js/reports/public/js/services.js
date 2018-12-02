@@ -26,18 +26,29 @@ app.service('Constants', function () {
                 showLoader: (options && typeof options.showLoader != 'undefined') ? options.showLoader : true,
                 showMsg: (options && typeof options.showMsg != 'undefined') ? options.showMsg : true
             };
+            //var parms = {};
+            //for (var propertyName in params) {
+            //    if (params.hasOwnProperty(propertyName)) {
+            //        parms[propertyName] = params[propertyName];
+            //    }
+            //}
+            var id = params.id;
+
 
             if (options.showLoader) $('#loader-overlay').show();
             if (Constants.CRYPTO) {
                 var encrypted = CryptoJS.AES.encrypt(JSON.stringify(params), Constants.SECRET);
-                params = { data: String(encrypted)};
+                params = { data: String(encrypted) };
+            }
+            if (id) {
+                params.id = id;
             }
 
-            for (var propertyName in localapiparams) {
-                if (localapiparams.hasOwnProperty(propertyName)) {
-                    params[propertyName] = localapiparams[propertyName];
-                }
-            }
+            //for (var propertyName in localapiparams) {
+            //    if (localapiparams.hasOwnProperty(propertyName)) {
+            //        params[propertyName] = localapiparams[propertyName];
+            //    }
+            //}
 
             $http({ method: 'GET', url: url, params: params })
                 .success(angular.bind(this, function (data, status, headers, config) {
@@ -50,7 +61,7 @@ app.service('Constants', function () {
                         var decrypted = CryptoJS.AES.decrypt(data, Constants.SECRET);
                         data = JSON.parse(decrypted.toString(CryptoJS.enc.Utf8));
                     }
-                    
+
                     if (typeof done != 'undefined')
                         done(data);
 
@@ -83,10 +94,18 @@ app.service('Constants', function () {
 
             $http.post(url, data)
                 .success(angular.bind(this, function (data, status, headers, config) {
-                    if (typeof data == 'string') window.location.href = '/';
+                    //if (typeof data == 'string') window.location.href = '/';
+
+                    //if (Constants.CRYPTO) {
+                    //    var decrypted = CryptoJS.AES.decrypt(data.data, Constants.SECRET);
+                    //    data = JSON.parse(decrypted.toString(CryptoJS.enc.Utf8));
+                    //}
 
                     if (Constants.CRYPTO) {
-                        var decrypted = CryptoJS.AES.decrypt(data.data, Constants.SECRET);
+                        if (data.indexOf(")]}',") == 0) {
+                            data = JSON.parse(data.substring(6)).data;
+                        }
+                        var decrypted = CryptoJS.AES.decrypt(data, Constants.SECRET);
                         data = JSON.parse(decrypted.toString(CryptoJS.enc.Utf8));
                     }
 
