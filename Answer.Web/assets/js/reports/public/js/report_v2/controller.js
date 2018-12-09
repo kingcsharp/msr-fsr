@@ -278,7 +278,7 @@ app.controller('report_v2Ctrl', function ($scope, connection, $compile, queryMod
         connection.get('/Report/Findallreports', params, function (data) {
             $scope.reports = data;
             $scope.items = data.items;
-            debugger;
+            //debugger;
             $scope.page = data.page;
             $scope.pages = data.pages;
             $scope.pager = PagerService.GetPager($scope.reports.items.length, data.page, 10, data.pages);

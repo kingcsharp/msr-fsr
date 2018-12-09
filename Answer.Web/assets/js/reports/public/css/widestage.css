@@ -3248,7 +3248,6 @@ label[for] {
     -moz-align-items: stretch;
     align-items: stretch;
     height: 100%;
-    "
 }
 
 .explorer-header {
@@ -3467,7 +3466,6 @@ label[for] {
     vertical-align: middle;
     padding-left: 5px;
     color: #000;
-    "
 }
 
     #elementsTab .tool-set .container-fluid {
@@ -3685,44 +3683,67 @@ label[for] {
     height: 65px !important;
 }
 
-/*.container-fluid.report-container:first-child > div {
-    height: 65px !important;
-}*/
-
 .filters {
     width: 100%;
     float: left;
 }
 
-    .filters > input {
-        line-height: 1.42857143;
+    .filters input, btn.btn-default.form-control.ui-select-toggle {
         color: #555;
         background-color: #fff;
         background-image: none;
+        border-radius: 0;
         border: 1px solid #ccc;
+        box-shadow: none !important;
+    }
+
+    .filters .ui-selectDr {
         width: 75%;
         float: left !important;
     }
 
-    .filters > div {
-        padding-right: 0.3em;
-        padding-left: 0.3em;
-        margin-left: 2px;
-        padding: 0 !important;
-        float: left !important;
-        width: 15px;
-        height: 15px;
+    .filters .resetF {
+        float: left;
         position: relative;
-        top: 7px;
+        top: 8px;
+        left: 5px;
     }
 
-        .filters > div:hover {
-            background-color: #ddd;
-            text-decoration: none;
-        }
+.ui-select-choices.ui-select-choices-content.ui-select-dropdown.dropdown-menu {
+    position: relative !important;
+    width: 240px;
+}
 
-        .filters > div > a {
-            text-decoration: none !important;
-            position: relative;
-            top: -2px;
-        }
+.ui-select-bootstrap .ui-select-choices-row.active > span {
+    background: #22A7F0 !important;
+}
+
+.filters > div > a {
+    text-decoration: none !important;
+    position: relative;
+    top: -2px;
+}
+
+.delbtn {
+    position: absolute !important;
+    top: 4px !important;
+    margin: 0;
+    right: -21px;
+    height: 19px !important;
+    padding: 0 1px;
+}
+
+.delbtn:hover {
+    background-color: #ddd;
+}
+.btn-default-focus {
+    box-shadow: none;
+}
+
+span.btn.btn-default.form-control.ui-select-toggle {
+    height: 34px;
+    margin: 0;
+    background-color: #fff !important;
+    border: 1px solid #ccc !important;
+    border-bottom: 2px solid #ccc !important;
+}

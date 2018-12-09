@@ -221,9 +221,13 @@ app.controller('queryCtrl', function ($scope, connection, $compile, queryModel, 
     {
         queryModel.detectLayerJoins();
     }
-
+    $scope.dimf = {};
+    $scope.elemChanged = function ($item, colId, columnIndex) {
+        $scope[(colId + columnIndex)] = $item[colId];
+    }
     $scope.getQuery = function(queryID)
     {
+        //debugger;
         for (var q in $scope.queries)
         {
             if ($scope.queries[q].id == queryID)

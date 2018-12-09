@@ -1,5 +1,5 @@
-app.controller('report_viewCtrl', function ($scope, $routeParams, report_v2Model, queryModel, connection, bsLoadingOverlayService, widgetsCommon, $sessionStorage) {
-    
+app.controller('report_viewCtrl', function ($scope, $routeParams, report_v2Model, queryModel, connection, bsLoadingOverlayService, widgetsCommon, $sessionStorage,$timeout) {
+
     $scope.promptsBlock = 'assets/js/reports/partials/report/promptsBlock.html';
     $scope.dateModal = 'assets/js/reports/partials/report/dateModal.html';
     $scope.linkModal = 'assets/js/reports/partials/report/linkModal.html';
@@ -52,10 +52,41 @@ app.controller('report_viewCtrl', function ($scope, $routeParams, report_v2Model
 
 
     };
+    $scope.dimf = {};
+    $scope.elemChanged = function ($item, colId, gridId) {
+        
+        $scope['gridFilters' + gridId][(colId)] = $item[colId];
+        console.log(1);
+    }
+
+    $scope.updateDtFilter = function ($item, colId, gridId) {
+        $scope['gridFilters' + gridId][(colId)] = moment($item._d).format('M/D/YYYY');
+        console.log(2);
+    }
+    $scope.clearDt = function (colIndex, colId, gridId) {
+        $scope['dimf'][colId + colIndex] = moment().format('M/D/YYYY');
+        $timeout(function() {
+            $scope['gridFilters' + gridId][(colId)] = undefined;
+        }, 100);
+    }
+
+    $scope.clear = function ($event, $select, colId, gridId) {
+        //stops click event bubbling
+        $event.stopPropagation();
+        //to allow empty field, in order to force a selection remove the following line
+        $select.selected = undefined;
+        //reset search query
+        $select.search = undefined;
+        //focus and open dropdown
+        $select.activate();
+        $scope['gridFilters' + gridId][(colId)] = undefined;
+    }
+
 
     $scope.getQuery = function (queryID) {
         return queryModel.query();
     }
+
 
     /********PUBLISH******/
     $scope.publishReport = function () {

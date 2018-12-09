@@ -873,6 +873,10 @@
     <Content Include="assets\js\reports\public\js\data-source\controller.js" />
     <Content Include="assets\js\reports\public\js\data-source\model.js" />
     <Content Include="assets\js\reports\public\js\data-source\services\dataSourceNameModal.js" />
+    <Content Include="assets\js\reports\public\js\datepicker\angular-moment-picker.css" />
+    <Content Include="assets\js\reports\public\js\datepicker\angular-moment-picker.js" />
+    <Content Include="assets\js\reports\public\js\datepicker\angular-moment-picker.min.css" />
+    <Content Include="assets\js\reports\public\js\datepicker\angular-moment-picker.min.js" />
     <Content Include="assets\js\reports\public\js\directives\checklist-model.js" />
     <Content Include="assets\js\reports\public\js\directives\lvl-drag-drop.js" />
     <Content Include="assets\js\reports\public\js\directives\lvl-uuid.js" />
@@ -906,6 +910,8 @@
     <Content Include="assets\js\reports\public\js\services.js" />
     <Content Include="assets\js\reports\public\js\setup\controller.js" />
     <Content Include="assets\js\reports\public\js\spaces\controller.js" />
+    <Content Include="assets\js\reports\public\js\ui-select\select.min.css" />
+    <Content Include="assets\js\reports\public\js\ui-select\select.min.js" />
     <Content Include="assets\js\reports\public\js\users\controller.js" />
     <Content Include="assets\js\reports\public\js\webapp.js" />
     <Content Include="assets\js\reports\public\js\widgets\c3Charts.js" />

@@ -1326,7 +1326,7 @@ app.service('queryModel' , function ($http, $q, $filter, connection, $compile, $
     }
 
     this.orderColumn = function (predicate) {
-        debugger;
+        //debugger;
         this.reverse = (this.predicate === predicate) ? !this.reverse : false;
         this.predicate = predicate;
     };
