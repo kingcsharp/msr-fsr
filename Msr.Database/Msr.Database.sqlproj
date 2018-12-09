@@ -2854,6 +2854,7 @@
     <Build Include="dbo\Views\Reports\Report_WorkInProgress.sql" />
     <Build Include="dbo\Views\Reports\Report_CombinedFinancialData.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_PeopleRoleAssigneeSetDate.sql" />
+    <Build Include="dbo\Tables\Portal_AddSubPartQtyCount.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Msr.Database.refactorlog" />

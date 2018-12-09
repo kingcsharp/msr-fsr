@@ -368,7 +368,7 @@ namespace Answer.Web.Controllers
 
             var stringFillId = id.ToString();
 
-            var actualPartId = _orderService.GetWorkOrderQueryable().Where(x => x.FillId == stringFillId).Select(a => a.ActualPartId).SingleOrDefault();
+            var actualPartId = _orderService.GetWorkOrderQueryable().Where(x => x.FillId == stringFillId).Select(a => a.ActualPartId).FirstOrDefault();
 
             vm.ActualPartId = actualPartId;
 
