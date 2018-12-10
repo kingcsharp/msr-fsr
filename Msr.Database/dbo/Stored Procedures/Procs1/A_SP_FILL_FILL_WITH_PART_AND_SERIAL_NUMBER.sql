@@ -89,6 +89,8 @@ if @strOwner is null
 	UPDATE A_OBJECTS SET STATUS = 'APPROVED',UNLOCKED_BY = @strNTLogin,LOCKED_BY = NULL,LOCKED_BY_NAME = NULL
 		WHERE ID = @actPartRootObjID
 	exec A_SP_ACTUAL_PARTS_FINISH_WF 	null,@actPartRootObjID,@strNTLogin
+
+    DELETE FROM Portal_AddSubPartQtyCount
 	end
 else
 	begin

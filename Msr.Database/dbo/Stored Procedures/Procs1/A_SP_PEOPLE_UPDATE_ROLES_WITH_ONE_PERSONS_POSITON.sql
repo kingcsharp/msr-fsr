@@ -16,9 +16,8 @@ SELECT @myPos = HISTORY_REF_ID FROM A_ROLES WHERE ID = @myPosition
 print 'Now we need to get the current position role assignee'
 UPDATE A_ROLE_ASSIGNEE SET STATUS = 'OLD' WHERE PERSON = @pID AND TYPE = 'POSITION'
 INSERT INTO A_ROLE_ASSIGNEE 
-		([ID], [ROLE], [PERSON], [STATUS], [SOURCE], [TYPE], [DRCM], [MODBY])
-		VALUES 
-		(newID(), @myPos, @pID, 'ACTIVE', 'A_SP_PEOPLE_UPDATE_ROLES_WITH_ONE_PERSONS_POSITON', 
-		'POSITION', getDate(), @strNTLogin)
+		([ID], [ROLE], [PERSON], [STATUS], [SOURCE], [TYPE], [DRCM], [MODBY],StartDate,EndDate)
+SELECT newID(), @myPos, @pID, 'ACTIVE', 'A_SP_PEOPLE_UPDATE_ROLES_WITH_ONE_PERSONS_POSITON','POSITION', getDate(), @strNTLogin, StartDate, EndDate FROM A_ROLE_ASSIGNEE
+WHERE PERSON = @pID AND Role= @myPos AND STATUS='ACTIVE';
 
 fin:

@@ -1,47 +1,56 @@
 ﻿@model Msr.Services.Orders.Procedures.TaskItemPart
 @{
-    int i = 0;
+    var i = 0;
 }
 
 @using (Html.BeginForm("UpdateRootParts", "Wip", FormMethod.Post, new { id = "Update-root-part" }))
 {
     <input type="hidden" name="taskId" value="@Model.STEP_ID" />
-        <table class="table">
+    <table class="table">
+        <tr>
+            <td><label class="control-label">Part</label></td>
+            <td><label class="control-label">Serial #</label></td>
+        </tr>
+        @foreach (var part in Model.GetActualPartsShowHierarchys.GroupBy(x => x.Part_Desc))
+        {
             <tr>
-                <td><label class="control-label">Part</label></td>
-                <td><label class="control-label">Serial #</label></td>
-            </tr>
-            @foreach (var part in Model.GetActualPartsShowHierarchys)
-            {
-                <tr>
-                    <td style="width: 500px;"><label class="control-label">@part.Part_Desc</label></td>
-
+                <td>
+                    <label class="control-label">@part.FirstOrDefault().Part_Desc</label>
+                </td>
+                @foreach (var subPart in part)
+                {
                     <td class="text-td">
-                        @if (part.Tree_Level == 0)
+                        @if (subPart.Tree_Level == 0)
                         {
-                            <input name="parts[@i].Serial" type="text" value="@part.Serial" disabled="disabled" />
+                            <input name="parts[@i].Serial" type="text" value="@subPart.Serial" disabled="disabled" />
                         }
                         else
                         {
-                            <input name="parts[@i].Serial" type="text" class="serialize-serial-num" value="@part.Serial" />
+                            <input name="parts[@i].Serial" type="text" class="serialize-serial-num" value="@subPart.Serial" />
                         }
-                        <input name="parts[@i].Id" type="hidden" value="@part.Id" />
-                        <input name="parts[@i].TreeLevel" type="hidden" value="@part.Tree_Level" />
-                        @if (part.Tree_Level == 0)
+                        <input name="parts[@i].Id" type="hidden" value="@subPart.Id" />
+                        <input name="parts[@i].TreeLevel" type="hidden" value="@subPart.Tree_Level" />
+                        @if (subPart.Tree_Level == 0)
                         {
                             <button type="button" class="btn-success btn change-button">Change</button>
-                            <div id="@part.Id" style="display: none" class="divshow">
+                            <div id="@subPart.Id" style="display: none" class="divshow">
                                 S/N: <input type="text" class="part-serail-number" />
-                                <button id="submit-serial-number" type="button" data-part-id="@part.Id" class="btn-success btn">Submit</button>
+                                <button id="submit-serial-number" type="button" data-part-id="@subPart.Id" class="btn-success btn">Submit</button>
                                 <button type="button" class="btn-warning btn cancel-button">Cancel</button>
                             </div>
                         }
                     </td>
-
-                </tr>  i++;
-            }
-
-        </table>    }
+                    i++;
+                }
+            </tr>
+        }
+        <tr>
+            <td colspan="2">
+                <button type="button" class="btn-success btn" id="btn-save">Save</button>
+                <button type="button" class="btn-success btn" id="btn-save-complete-task" data-button-id="completeTask">Save & complete task</button>
+            </td>
+        </tr>
+    </table>    }
 
 <script type="text/javascript">
 
@@ -85,5 +94,30 @@
 				});
 			}
 		});
+
+		$('#btn-save,#btn-save-complete-task').on('click',
+			function (e) {
+				console.log($('.serialize-serial-num').val());
+				var button = $(this).data('button-id');
+				e.preventDefault();
+				eLoaderOpen();
+
+				$.ajax({
+					type: "POST",
+					url: "/wip/UpdateRootParts/?type=" + button + "&fillId=" + '@Model.FillId',
+					data: $('#Update-root-part').serialize(),
+					dataType: 'json',
+					success: function (data) {
+						if (data === 'OK') {
+							location.reload();
+						} else {
+							eLoaderError(data);
+						}
+					},
+					error: function (error) {
+						eLoaderError(error);
+					}
+				});
+			});
 	});
 </script>
