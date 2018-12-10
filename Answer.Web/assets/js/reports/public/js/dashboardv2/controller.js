@@ -13,6 +13,7 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
     $scope.dashboardID = $routeParams.dashboardID;
     $scope.lastElementID = 0;
     $scope.dataPool = [];
+    $scope.filterGridByLastXmonths = 6;
     //$scope.faList = icons.faList;
     //$scope.colors = colors.colors;
     $scope.hiddenXS = false;
@@ -1053,7 +1054,7 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
                         $scope.showOverlay('OVERLAY_' + theChart.chartID);
                         //debugger;
                         if ($scope.selectedDashboard.reports[i].reportType === "chart-line") {
-                            $scope.showOnlyLastXMonthData($scope.selectedDashboard.reports[i], 4);
+                            $scope.showOnlyLastXMonthData($scope.selectedDashboard.reports[i], $scope.filterGridByLastXmonths);
                             var el = document.getElementById($scope.selectedDashboard.reports[i].parentDiv);
                             if (el) {
                                 if ($scope.filters[theChart.chartID] == undefined) {
