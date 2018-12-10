@@ -1,4 +1,4 @@
-app.service('queryModel' , function ($http, $q, $filter, connection, $compile, $rootScope,uuid2) {
+app.service('queryModel', function ($http, $q, $filter, connection, $compile, $rootScope, uuid2) {
     this.data = null;
     this.scope = null;
     this.reverse = false;
@@ -7,62 +7,53 @@ app.service('queryModel' , function ($http, $q, $filter, connection, $compile, $
     var wrongFilters = [];
     var query = {};
     query.id = uuid2.newguid();
-    this.query = function()
-    {
+    this.query = function () {
         return query;
     }
 
     var datasources = [];
     var queries = [];
-    this.queries = function()
-    {
+    this.queries = function () {
         return queries;
     }
 
     var layers = [];
-    this.layers = function()
-    {
+    this.layers = function () {
         return layers;
     }
 
     var selectedLayer = undefined;
 
-    function setSelectedLayer(layer)
-    {
-       selectedLayer = layer;
+    function setSelectedLayer(layer) {
+        selectedLayer = layer;
         selectedLayerID = layer._id;
         query.selectedLayerID = layer._id;
         rootItem.elements = layer.objects;
         calculateIdForAllElements(rootItem.elements);
     }
 
-    this.changeLayer = function(selectedLayerID)
-    {
-        for (var i in layers)
-        {
-            if (layers[i]._id == selectedLayerID)
-            {
+    this.changeLayer = function (selectedLayerID) {
+        for (var i in layers) {
+            if (layers[i]._id == selectedLayerID) {
                 setSelectedLayer(layers[i]);
             }
         }
     }
 
     var selectedLayerID = undefined;
-    this.selectedLayerID = function()
-    {
+    this.selectedLayerID = function () {
         return selectedLayerID;
     }
 
-    var rootItem = {elementLabel: '', elementRole: 'root', elements: []};
-    this.rootItem = function()
-    {
+    var rootItem = { elementLabel: '', elementRole: 'root', elements: [] };
+    this.rootItem = function () {
         return rootItem;
     }
 
     var page = 0;
     var pages = 0;
 
-    this.initQuery = function() {
+    this.initQuery = function () {
         query = {};
         query.id = uuid2.newguid();
         query.columns = [];
@@ -74,67 +65,64 @@ app.service('queryModel' , function ($http, $q, $filter, connection, $compile, $
             detectLayerJoins();
     }
 
-    this.loadQuery = function(theQuery)
-    {
+    this.loadQuery = function (theQuery) {
 
 
         query = theQuery;
         query.selectedLayerID = query.layers[0];
-        for (var i in layers)
-                              {
-                                  if (layers[i]._id == query.selectedLayerID)
-                                      {
-                                           // selectedLayer = layers[i];
-                                          setSelectedLayer(layers[i])
-                                      }
-                              }
+        for (var i in layers) {
+            if (layers[i]._id == query.selectedLayerID) {
+                // selectedLayer = layers[i];
+                setSelectedLayer(layers[i])
+            }
+        }
     }
 
     this.filterStringOptions = [
-                                    {value:"equal",label:"equal"},
-                                    {value:"in",label:"in"},
-                                    {value:"diferentThan",label:"different than"},
-                                    {value:"notIn",label:"not in"},
-                                    {value:"biggerThan",label:"bigger than"},
-                                    {value:"biggerOrEqualThan",label:"bigger or equal than"},
-                                    {value:"lessThan",label:"less than"},
-                                    {value:"lessOrEqualThan",label:"less or equal than"},
-                                    {value:"between",label:"between"},
-                                    {value:"notBetween",label:"not between"},
-                                    {value:"contains",label:"contains"},
-                                    {value:"notContains",label:"not contains"},
-                                    {value:"startWith",label:"start with"},
-                                    {value:"notStartWith",label:"not start with"},
-                                    {value:"endsWith",label:"ends with"},
-                                    {value:"notEndsWith",label:"not ends with"},
-                                    {value:"like",label:"like"},
-                                    {value:"notLike",label:"not like"},
-                                    {value:"null",label:"is null"},
-                                    {value:"notNull",label:"is not null"}
+        { value: "equal", label: "equal" },
+        { value: "in", label: "in" },
+        { value: "diferentThan", label: "different than" },
+        { value: "notIn", label: "not in" },
+        { value: "biggerThan", label: "bigger than" },
+        { value: "biggerOrEqualThan", label: "bigger or equal than" },
+        { value: "lessThan", label: "less than" },
+        { value: "lessOrEqualThan", label: "less or equal than" },
+        { value: "between", label: "between" },
+        { value: "notBetween", label: "not between" },
+        { value: "contains", label: "contains" },
+        { value: "notContains", label: "not contains" },
+        { value: "startWith", label: "start with" },
+        { value: "notStartWith", label: "not start with" },
+        { value: "endsWith", label: "ends with" },
+        { value: "notEndsWith", label: "not ends with" },
+        { value: "like", label: "like" },
+        { value: "notLike", label: "not like" },
+        { value: "null", label: "is null" },
+        { value: "notNull", label: "is not null" }
 
-                                    ];
+    ];
     this.filterArrayOptions = [
-        {value:"equal",label:"equal"},
-        {value:"diferentThan",label:"different than"},   //TODO: el different than no está funcionando
-        {value:"null",label:"is null"},
-        {value:"notNull",label:"is not null"},
-        {value:"in",label:"in"},
-        {value:"notIn",label:"not in"}
+        { value: "equal", label: "equal" },
+        { value: "diferentThan", label: "different than" },   //TODO: el different than no está funcionando
+        { value: "null", label: "is null" },
+        { value: "notNull", label: "is not null" },
+        { value: "in", label: "in" },
+        { value: "notIn", label: "not in" }
     ];
 
     this.filterNumberOptions = [
-        {value:"equal",label:"equal"},
-        {value:"in",label:"in"},
-        {value:"diferentThan",label:"different than"},
-        {value:"notIn",label:"not in"},
-        {value:"biggerThan",label:"bigger than"},
-        {value:"biggerOrEqualThan",label:"bigger or equal than"},
-        {value:"lessThan",label:"less than"},
-        {value:"lessOrEqualThan",label:"less or equal than"},
-        {value:"between",label:"between"},
-        {value:"notBetween",label:"not between"},
-        {value:"null",label:"is null"},
-        {value:"notNull",label:"is not null"}
+        { value: "equal", label: "equal" },
+        { value: "in", label: "in" },
+        { value: "diferentThan", label: "different than" },
+        { value: "notIn", label: "not in" },
+        { value: "biggerThan", label: "bigger than" },
+        { value: "biggerOrEqualThan", label: "bigger or equal than" },
+        { value: "lessThan", label: "less than" },
+        { value: "lessOrEqualThan", label: "less or equal than" },
+        { value: "between", label: "between" },
+        { value: "notBetween", label: "not between" },
+        { value: "null", label: "is null" },
+        { value: "notNull", label: "is not null" }
 
         /* RANKING
         el (los) primeros
@@ -145,156 +133,146 @@ app.service('queryModel' , function ($http, $q, $filter, connection, $compile, $
     ];
 
     this.signalOptions = [
-        {value:"equal",label:"equal"},
-        {value:"diferentThan",label:"different than"},
-        {value:"biggerThan",label:"bigger than"},
-        {value:"biggerOrEqualThan",label:"bigger or equal than"},
-        {value:"lessThan",label:"less than"},
-        {value:"lessOrEqualThan",label:"less or equal than"},
-        {value:"between",label:"between"},
-        {value:"notBetween",label:"not between"}
+        { value: "equal", label: "equal" },
+        { value: "diferentThan", label: "different than" },
+        { value: "biggerThan", label: "bigger than" },
+        { value: "biggerOrEqualThan", label: "bigger or equal than" },
+        { value: "lessThan", label: "less than" },
+        { value: "lessOrEqualThan", label: "less or equal than" },
+        { value: "between", label: "between" },
+        { value: "notBetween", label: "not between" }
     ];
 
-    this.getDatePatternFilters = function()
-    {
+    this.getDatePatternFilters = function () {
         return this.datePatternFilters;
     }
 
     this.datePatternFilters = [
-        {value:"#WST-TODAY#",label:"Today"},
-        {value:"#WST-THISWEEK#",label:"This week"},
-        {value:"#WST-THISMONTH#",label:"This month"},
-        {value:"#WST-THISYEAR#",label:"This year"},
-        {value:"#WST-FIRSTQUARTER#",label:"First quarter"},
-        {value:"#WST-SECONDQUARTER#",label:"Second quarter"},
-        {value:"#WST-THIRDQUARTER#",label:"Third quarter"},
-        {value:"#WST-FOURTHQUARTER#",label:"Fourth quarter"},
-        {value:"#WST-FIRSTSEMESTER#",label:"First semester"},
-        {value:"#WST-SECONDSEMESTER#",label:"Second semester"},
-        {value:"#WST-YESTERDAY#",label:"Yesterday"},
-        {value:"#WST-LASTWEEK#",label:"Last week"},
-        {value:"#WST-LASTMONTH#",label:"Last month"},
-        {value:"#WST-LASTYEAR#",label:"Last year"},
-        {value:"#WST-LYFIRSTQUARTER#",label:"Last year first quarter"},
-        {value:"#WST-LYSECONDQUARTER#",label:"Last year second quarter"},
-        {value:"#WST-LYTHIRDQUARTER#",label:"Last year third quarter"},
-        {value:"#WST-LYFOURTHQUARTER#",label:"Last year fourth quarter"},
-        {value:"#WST-LYFIRSTSEMESTER#",label:"Last year first semester"},
-        {value:"#WST-LYSECONDSEMESTER#",label:"Last year second semester"}
+        { value: "#WST-TODAY#", label: "Today" },
+        { value: "#WST-THISWEEK#", label: "This week" },
+        { value: "#WST-THISMONTH#", label: "This month" },
+        { value: "#WST-THISYEAR#", label: "This year" },
+        { value: "#WST-FIRSTQUARTER#", label: "First quarter" },
+        { value: "#WST-SECONDQUARTER#", label: "Second quarter" },
+        { value: "#WST-THIRDQUARTER#", label: "Third quarter" },
+        { value: "#WST-FOURTHQUARTER#", label: "Fourth quarter" },
+        { value: "#WST-FIRSTSEMESTER#", label: "First semester" },
+        { value: "#WST-SECONDSEMESTER#", label: "Second semester" },
+        { value: "#WST-YESTERDAY#", label: "Yesterday" },
+        { value: "#WST-LASTWEEK#", label: "Last week" },
+        { value: "#WST-LASTMONTH#", label: "Last month" },
+        { value: "#WST-LASTYEAR#", label: "Last year" },
+        { value: "#WST-LYFIRSTQUARTER#", label: "Last year first quarter" },
+        { value: "#WST-LYSECONDQUARTER#", label: "Last year second quarter" },
+        { value: "#WST-LYTHIRDQUARTER#", label: "Last year third quarter" },
+        { value: "#WST-LYFOURTHQUARTER#", label: "Last year fourth quarter" },
+        { value: "#WST-LYFIRSTSEMESTER#", label: "Last year first semester" },
+        { value: "#WST-LYSECONDSEMESTER#", label: "Last year second semester" }
     ]
 
     this.filterDateOptions = [
-        {value:"equal",label:"equal"},
-        {value:"equal-pattern",label:"equal (pattern)"},
+        { value: "equal", label: "equal" },
+        { value: "equal-pattern", label: "equal (pattern)" },
         //{value:"in",label:"in"},
-        {value:"diferentThan",label:"different than"},
-        {value:"diferentThan-pattern",label:"different than (pattern)"},
+        { value: "diferentThan", label: "different than" },
+        { value: "diferentThan-pattern", label: "different than (pattern)" },
         //{value:"notIn",label:"not in"},
-        {value:"biggerThan",label:"bigger than"},
-        {value:"biggerThan-pattern",label:"bigger than (pattern)"},
-        {value:"biggerOrEqualThan",label:"bigger or equal than"},
-        {value:"biggerOrEqualThan-pattern",label:"bigger or equal than (pattern)"},
-        {value:"lessThan",label:"less than"},
-        {value:"lessThan-pattern",label:"less than (pattern)"},
-        {value:"lessOrEqualThan",label:"less or equal than"},
-        {value:"lessOrEqualThan-pattern",label:"less or equal than (pattern)"},
-        {value:"between",label:"between"},
-        {value:"notBetween",label:"not between"},
-        {value:"null",label:"is null"},
-        {value:"notNull",label:"is not null"}
+        { value: "biggerThan", label: "bigger than" },
+        { value: "biggerThan-pattern", label: "bigger than (pattern)" },
+        { value: "biggerOrEqualThan", label: "bigger or equal than" },
+        { value: "biggerOrEqualThan-pattern", label: "bigger or equal than (pattern)" },
+        { value: "lessThan", label: "less than" },
+        { value: "lessThan-pattern", label: "less than (pattern)" },
+        { value: "lessOrEqualThan", label: "less or equal than" },
+        { value: "lessOrEqualThan-pattern", label: "less or equal than (pattern)" },
+        { value: "between", label: "between" },
+        { value: "notBetween", label: "not between" },
+        { value: "null", label: "is null" },
+        { value: "notNull", label: "is not null" }
         //TODO: in , not in or date elements
     ];
 
     this.fieldsAggregations = {
         'number': [
-            {name: 'Sum', value: 'sum'},
-            {name: 'Avg', value: 'avg'},
-            {name: 'Min', value: 'min'},
-            {name: 'Max', value: 'max'},
-            {name: 'Count', value: 'count'},
-            {name: 'Raw', value:'original'}
+            { name: 'Sum', value: 'sum' },
+            { name: 'Avg', value: 'avg' },
+            { name: 'Min', value: 'min' },
+            { name: 'Max', value: 'max' },
+            { name: 'Count', value: 'count' },
+            { name: 'Raw', value: 'original' }
         ],
         'date': [
-            {name: 'Year', value: 'year'},
-            {name: 'Month', value: 'month'},
-            {name: 'Day', value: 'day'},
-            {name: 'Count', value: 'count'},
-            {name: 'Raw', value:'original'}
+            { name: 'Year', value: 'year' },
+            { name: 'Month', value: 'month' },
+            { name: 'Day', value: 'day' },
+            { name: 'Count', value: 'count' },
+            { name: 'Raw', value: 'original' }
             /*{name: 'Semester', value: 'semester'},
             {name: 'Quarter', value: 'quarter'},
             {name: 'Trimester', value: 'trimester'}*/
         ],
         'string': [
-            {name: 'Count', value: 'count'},
-            {name: 'Raw', value:'original'}
+            { name: 'Count', value: 'count' },
+            { name: 'Raw', value: 'original' }
         ]
     };
 
     this.conditionTypes = [
-        {conditionType: 'and', conditionLabel: 'AND'},
-        {conditionType: 'or', conditionLabel: 'OR'},
-        {conditionType: 'andNot', conditionLabel: 'AND NOT'},
-        {conditionType: 'orNot', conditionLabel: 'OR NOT'}
+        { conditionType: 'and', conditionLabel: 'AND' },
+        { conditionType: 'or', conditionLabel: 'OR' },
+        { conditionType: 'andNot', conditionLabel: 'AND NOT' },
+        { conditionType: 'orNot', conditionLabel: 'OR NOT' }
     ];
 
 
-    this.getElementFilterOptions = function(elementType)
-    {
+    this.getElementFilterOptions = function (elementType) {
         if (elementType == 'array')
-            return  this.filterArrayOptions;
+            return this.filterArrayOptions;
         if (elementType == 'string')
-           return  this.filterStringOptions;
+            return this.filterStringOptions;
         if (elementType == 'number')
-            return  this.filterNumberOptions;
+            return this.filterNumberOptions;
         if (elementType == 'date')
             return this.filterDateOptions
     }
 
 
-    this.removeQueryItem = function(object,type)
-    {
-        if (type == 'column')
-                {
-                    if (query.columns)
-                        $rootScope.removeFromArray(query.columns, object);
+    this.removeQueryItem = function (object, type) {
+        if (type == 'column') {
+            if (query.columns)
+                $rootScope.removeFromArray(query.columns, object);
 
-                    for (var i in query.columns)
-                        {
-                            if (query.columns[i].elementID == object.elementID)
-                                {
+            for (var i in query.columns) {
+                if (query.columns[i].elementID == object.elementID) {
 
-                                    query.columns.splice(i,1);
-                                }
-                        }
+                    query.columns.splice(i, 1);
                 }
+            }
+        }
 
-        if (type == 'order')
-                {
-                    $rootScope.removeFromArray(query.order, object);
-                    for (var i in query.order)
-                        {
-                            if (query.order[i].elementID == object.elementID)
-                                {
+        if (type == 'order') {
+            $rootScope.removeFromArray(query.order, object);
+            for (var i in query.order) {
+                if (query.order[i].elementID == object.elementID) {
 
-                                    query.order.splice(i,1);
-                                }
-                        }
+                    query.order.splice(i, 1);
                 }
+            }
+        }
 
-       if (type == 'filter')
-                {
+        if (type == 'filter') {
 
-                     $rootScope.removeFromArray(query.groupFilters, object);
+            $rootScope.removeFromArray(query.groupFilters, object);
 
-                   /* for (var i in query.groupFilters)
-                        {
-                            if (query.groupFilters[i].elementID == object.elementID)
-                                {
+            /* for (var i in query.groupFilters)
+                 {
+                     if (query.groupFilters[i].elementID == object.elementID)
+                         {
 
-                                    query.groupFilters.splice(i,1);
-                                }
-                        }*/
-                }
+                             query.groupFilters.splice(i,1);
+                         }
+                 }*/
+        }
 
         detectLayerJoins();
 
@@ -310,109 +288,95 @@ app.service('queryModel' , function ($http, $q, $filter, connection, $compile, $
     }
 
 
-    function getQueryData(done, localapiparams)
-    {
+    function getQueryData(done, localapiparams) {
         //$sessionStorage.getObject('localapiparams')
-            var params = {};
-            cleanQuery(query);
-            wrongFilters = [];
-            checkFilters(query.groupFilters);
+        var params = {};
+        cleanQuery(query);
+        wrongFilters = [];
+        checkFilters(query.groupFilters);
 
-            if (wrongFilters.length == 0)
-                    {
-                        params.query = angular.copy(query);
+        if (wrongFilters.length == 0) {
+            params.query = angular.copy(query);
 
-                connection.post('/Report/getreportsdata', params, function(data) {
-                           var sql = data.sql;
+            connection.post('/Report/getreportsdata', params, function (data) {
+                var sql = data.sql;
 
-                            if (data.result == 0)
-                            {
-                                noty({text: data.msg,  timeout: 2000, type: 'error'});
-                                done([],sql,query);
-                            } else {
-                                prepareData(query,data.data, function(result)
-                                {
-                                    done(result,sql,query);
-                                });
-                            }
+                if (data.result == 0) {
+                    noty({ text: data.msg, timeout: 2000, type: 'error' });
+                    done([], sql, query);
+                } else {
+                    prepareData(query, data.data, function (result) {
+                        done(result, sql, query);
+                    });
+                }
 
 
-                }, undefined, localapiparams);
-                    } else {
+            }, undefined, localapiparams);
+        } else {
 
-                        done([],'',query);
-                    }
+            done([], '', query);
+        }
     };
 
     this.getQueryDataNextPage = function (page, done, localapiparams) {
         getQueryDataNextPage(page, done, localapiparams);
     }
 
-    function getQueryDataNextPage(page, done, localapiparams)
-    {
+    function getQueryDataNextPage(page, done, localapiparams) {
         //$sessionStorage.getObject('localapiparams')
         var params = {};
-            wrongFilters = [];
-            checkFilters(query.groupFilters);
+        wrongFilters = [];
+        checkFilters(query.groupFilters);
 
-            if (wrongFilters.length == 0)
-                    {
-                        params.query = angular.copy(query);
-                        cleanQuery(params.query);
-                        params.page = page;
-                //api/reports/get-data GetReportsData
-                connection.post('/Report/getreportsdata', params, function(data) {
-                           var sql = data.sql;
-                            if (data.result == 0)
-                            {
-                                noty({text: data.msg,  timeout: 2000, type: 'error'});
-                                done([],sql,query);
-                            } else {
-                                prepareData(query,data.data, function(result)
-                                {
-                                    done(result,sql,query);
-                                });
-                            }
-                }, undefined, localapiparams);
-                    } else {
-                        done([],'',query);
-                    }
+        if (wrongFilters.length == 0) {
+            params.query = angular.copy(query);
+            cleanQuery(params.query);
+            params.page = page;
+            //api/reports/get-data GetReportsData
+            connection.post('/Report/getreportsdata', params, function (data) {
+                var sql = data.sql;
+                if (data.result == 0) {
+                    noty({ text: data.msg, timeout: 2000, type: 'error' });
+                    done([], sql, query);
+                } else {
+                    prepareData(query, data.data, function (result) {
+                        done(result, sql, query);
+                    });
+                }
+            }, undefined, localapiparams);
+        } else {
+            done([], '', query);
+        }
     }
 
-    function cleanQuery(theQuery)
-    {
+    function cleanQuery(theQuery) {
         theQuery.data = [];
-        for (f in theQuery.groupFilters)
-            {
-                theQuery.groupFilters[f].data = [];
-                theQuery.groupFilters[f].values = [];
+        for (f in theQuery.groupFilters) {
+            theQuery.groupFilters[f].data = [];
+            theQuery.groupFilters[f].values = [];
+        }
+        for (var c in theQuery.collections) {
+            for (var cf in theQuery.collections[c].filters) {
+                theQuery.collections[c].filters[cf].data = [];
+                theQuery.collections[c].filters[cf].values = [];
             }
-        for (var c in theQuery.collections)
-            {
-                for (var cf in theQuery.collections[c].filters)
-                    {
-                        theQuery.collections[c].filters[cf].data = [];
-                        theQuery.collections[c].filters[cf].values = [];
-                    }
-            }
+        }
     }
 
     function getData(query, params, done, localapiparams) {
         params.query = query;
 
-        connection.get('/Report/getreportsdata', params, function(data) {
-            if (data.result == 0)
-                {
-                    noty({text: data.msg,  timeout: 2000, type: 'error'});
-                    done([]);
-                } else {
-                    done(data.data,data.sql,query);
-                }
+        connection.post('/Report/getreportsdata', params, function (data) {
+            if (data.result == 0) {
+                noty({ text: data.msg, timeout: 2000, type: 'error' });
+                done([]);
+            } else {
+                done(data.data, data.sql, query);
+            }
         }, undefined, localapiparams);
     }
 
-    function prepareData(query,data,done)
-    {
+    function prepareData(query, data, done) {
         var dateTimeReviver = function (key, value) {
             var a;
             if (typeof value === 'string') {
@@ -425,10 +389,10 @@ app.service('queryModel' , function ($http, $q, $filter, connection, $compile, $
         }
 
         if (data != undefined)
-            done(JSON.parse(JSON.stringify(data),dateTimeReviver));
+            done(JSON.parse(JSON.stringify(data), dateTimeReviver));
     }
 
-    this.getDistinct = function($scope,attribute,done) {
+    this.getDistinct = function ($scope, attribute, done) {
 
         var execute = (typeof execute !== 'undefined') ? execute : true;
 
@@ -464,8 +428,7 @@ app.service('queryModel' , function ($http, $q, $filter, connection, $compile, $
                 collection.order.push(attribute);
 
                 for (var n1 in query.order) {
-                    if (query.order[n1].collectionID == dtsCollections[n])
-                    {
+                    if (query.order[n1].collectionID == dtsCollections[n]) {
                         collection.order.push(query.order[n1]);
                     }
                 }
@@ -480,7 +443,7 @@ app.service('queryModel' , function ($http, $q, $filter, connection, $compile, $
         //query.order = [];
         //query.order.push(attribute);
 
-        getData(query, {page: 0}, function(data,sql) {
+        getData(query, { page: 0 }, function (data, sql) {
 
             if (data.items)
                 data = data.items;
@@ -491,75 +454,73 @@ app.service('queryModel' , function ($http, $q, $filter, connection, $compile, $
             page = data.page;
             pages = data.pages;
 
-            done(data,sql);
+            done(data, sql);
             //$scope.data = data;
 
         });
     }
 
 
-    this.getDistinctFiltered = function(attribute,search,done) {
+    this.getDistinctFiltered = function (attribute, search, done) {
 
-        if (attribute)
-            {
+        if (attribute) {
 
-        var execute = (typeof execute !== 'undefined') ? execute : true;
+            var execute = (typeof execute !== 'undefined') ? execute : true;
 
-        var query = {};
-        query.id = uuid2.newguid();
-        query.datasources = [];
-        query.columns = [];
-        query.order = [];
+            var query = {};
+            query.id = uuid2.newguid();
+            query.datasources = [];
+            query.columns = [];
+            query.order = [];
 
 
-        var datasourcesList = [];
-        var layersList = [];
-        layersList.push(selectedLayerID);
-        datasourcesList.push(attribute.datasourceID);
-        layersList.push(attribute.layerID);
+            var datasourcesList = [];
+            var layersList = [];
+            layersList.push(selectedLayerID);
+            datasourcesList.push(attribute.datasourceID);
+            layersList.push(attribute.layerID);
 
-        for (var i in datasourcesList) {
-            var dtsObject = {};
-            dtsObject.datasourceID = datasourcesList[i];
-            dtsObject.collections = [];
+            for (var i in datasourcesList) {
+                var dtsObject = {};
+                dtsObject.datasourceID = datasourcesList[i];
+                dtsObject.collections = [];
 
-            var dtsCollections = [];
-            dtsCollections.push(attribute.collectionID);
+                var dtsCollections = [];
+                dtsCollections.push(attribute.collectionID);
 
-            for (var n in dtsCollections) {
+                for (var n in dtsCollections) {
 
-                var collection = {};
-                collection.collectionID = dtsCollections[n];
+                    var collection = {};
+                    collection.collectionID = dtsCollections[n];
 
-                collection.columns = [];
-                collection.columns.push(attribute);
+                    collection.columns = [];
+                    collection.columns.push(attribute);
 
-                collection.order = [];
-                collection.order.push(attribute);
+                    collection.order = [];
+                    collection.order.push(attribute);
 
-                for (var n1 in query.order) {
-                    if (query.order[n1].collectionID == dtsCollections[n])
-                    {
-                        collection.order.push(query.order[n1]);
+                    for (var n1 in query.order) {
+                        if (query.order[n1].collectionID == dtsCollections[n]) {
+                            collection.order.push(query.order[n1]);
+                        }
                     }
+
+                    dtsObject.collections.push(collection);
+
                 }
-
-                dtsObject.collections.push(collection);
-
+                query.datasources.push(dtsObject);
             }
-            query.datasources.push(dtsObject);
+
+            query.layers = layersList;
+            //query.order = [];
+            //query.order.push(attribute);
+            getData(query, { page: 0 }, function (data, sql) {
+                done(data, sql);
+            });
         }
-
-        query.layers = layersList;
-        //query.order = [];
-        //query.order.push(attribute);
-        getData(query, {page: 0}, function(data,sql) {
-            done(data,sql);
-        });
-            }
     }
 
-    this.getFilterValues = function(attribute,done) {
+    this.getFilterValues = function (attribute, done) {
 
         var execute = (typeof execute !== 'undefined') ? execute : true;
 
@@ -595,8 +556,7 @@ app.service('queryModel' , function ($http, $q, $filter, connection, $compile, $
                 collection.order.push(attribute);
 
                 for (var n1 in query.order) {
-                    if (query.order[n1].collectionID == dtsCollections[n])
-                    {
+                    if (query.order[n1].collectionID == dtsCollections[n]) {
                         collection.order.push(query.order[n1]);
                     }
                 }
@@ -611,7 +571,7 @@ app.service('queryModel' , function ($http, $q, $filter, connection, $compile, $
         //query.order = [];
         //query.order.push(attribute);
 
-        getData(query, {page: 0}, function(data,sql) {
+        getData(query, { page: 0 }, function (data, sql) {
 
             if (data.items)
                 data = data.items;
@@ -622,131 +582,115 @@ app.service('queryModel' , function ($http, $q, $filter, connection, $compile, $
             page = data.page;
             pages = data.pages;
             //$scope.data = data;
-            done(data,sql);
+            done(data, sql);
         });
     }
 
 
     this.onDateSet = function (newDate, oldDate, filter) {
-        if (angular.isDate(newDate))
-            {
-                var year = newDate.getFullYear();
-                var month = pad(newDate.getMonth()+1,2);
-                var day = pad(newDate.getDate(),2);
-                var theDate = new Date(year+'-'+month+'-'+day+'T00:00:00.000Z');
-                if (filter.filterType == 'in' || filter.filterType == 'notIn')
-                {
-                    if (!filter.filterText1)
-                        filter.filterText1 = [];
-                    filter.filterText1.push(theDate);
-                } else
-                    filter.filterText1 = theDate;
+        if (angular.isDate(newDate)) {
+            var year = newDate.getFullYear();
+            var month = pad(newDate.getMonth() + 1, 2);
+            var day = pad(newDate.getDate(), 2);
+            var theDate = new Date(year + '-' + month + '-' + day + 'T00:00:00.000Z');
+            if (filter.filterType == 'in' || filter.filterType == 'notIn') {
+                if (!filter.filterText1)
+                    filter.filterText1 = [];
+                filter.filterText1.push(theDate);
+            } else
+                filter.filterText1 = theDate;
 
-                filter.searchValue = theDate;
-                filter.filterValue = theDate;
-                filter.dateCustomFilterLabel = undefined;
-            }
+            filter.searchValue = theDate;
+            filter.filterValue = theDate;
+            filter.dateCustomFilterLabel = undefined;
+        }
     }
 
     this.onDateEndSet = function (newDate, oldDate, filter) {
-        if (angular.isDate(newDate))
-            {
-                var year = newDate.getFullYear();
-                var month = pad(newDate.getMonth()+1,2);
-                var day = pad(newDate.getDate(),2);
-                var theDate = new Date(year+'-'+month+'-'+day+'T00:00:00.000Z');
-                filter.filterText2 = theDate;
-                filter.dateCustomFilterLabel = undefined;
-            }
+        if (angular.isDate(newDate)) {
+            var year = newDate.getFullYear();
+            var month = pad(newDate.getMonth() + 1, 2);
+            var day = pad(newDate.getDate(), 2);
+            var theDate = new Date(year + '-' + month + '-' + day + 'T00:00:00.000Z');
+            filter.filterText2 = theDate;
+            filter.dateCustomFilterLabel = undefined;
+        }
     }
 
 
-    this.layers = function()
-    {
+    this.layers = function () {
         return layers;
     }
 
-    this.getLayers = function(done) {
+    this.getLayers = function (done) {
 
 
-        if (layers.length == 0)
-            {
-                connection.get('/api/layers/get-layers', {}, function(data) {
-                    //$scope.errorMsg = (data.result === 0) ? data.msg : false;
+        if (layers.length == 0) {
+            connection.get('/api/layers/get-layers', {}, function (data) {
+                //$scope.errorMsg = (data.result === 0) ? data.msg : false;
 
-                    if (data.result == 1)
-                        {
-                            page = data.page;
-                            pages = data.pages;
-                            layers = data.items;
-                            if (selectedLayerID)
-                                {
-                                  for (var i in data.items)
-                                      {
-                                          if (data.items[i]._id == selectedLayerID)
-                                              {
-                                                    rootItem.elements = data.items[i].objects;
-                                                   selectedLayer = data.items[i];
+                if (data.result == 1) {
+                    page = data.page;
+                    pages = data.pages;
+                    layers = data.items;
+                    if (selectedLayerID) {
+                        for (var i in data.items) {
+                            if (data.items[i]._id == selectedLayerID) {
+                                rootItem.elements = data.items[i].objects;
+                                selectedLayer = data.items[i];
 
-                                              }
-                                      }
-                                } else {
-                                    setSelectedLayer(data.items[0]);
-                                }
-
-                            calculateIdForAllElements(rootItem.elements);
-                            done(layers,selectedLayerID);
+                            }
                         }
-                });
-            }
+                    } else {
+                        setSelectedLayer(data.items[0]);
+                    }
+
+                    calculateIdForAllElements(rootItem.elements);
+                    done(layers, selectedLayerID);
+                }
+            });
+        }
     };
 
     function pad(num, size) {
-        var s = num+"";
+        var s = num + "";
         while (s.length < size) s = "0" + s;
         while (s.length < size) s = "0" + s;
         return s;
     }
 
-    this.calculateIdForAllElements = function(elements)
-    {
+    this.calculateIdForAllElements = function (elements) {
         calculateIdForAllElements(elements);
     }
 
 
-    function calculateIdForAllElements(elements)
-    {
-        for (var e in elements)
-        {
-                if (elements[e].collectionID)
-                {
+    function calculateIdForAllElements(elements) {
+        for (var e in elements) {
+            if (elements[e].collectionID) {
                 //var elementID = elements[e].collectionID.toLowerCase()+'_'+elements[e].elementName;
 
                 if (!elements[e].aggregation)
-                    var elementID = 'wst'+elements[e].elementID.toLowerCase();
-                    else
-                    var elementID = 'wst'+elements[e].elementID.toLowerCase()+elements[e].aggregation;
+                    var elementID = 'wst' + elements[e].elementID.toLowerCase();
+                else
+                    var elementID = 'wst' + elements[e].elementID.toLowerCase() + elements[e].aggregation;
 
-                elements[e].id = elementID.replace(/[^a-zA-Z ]/g,'');
-                }
+                elements[e].id = elementID.replace(/[^a-zA-Z ]/g, '');
+            }
 
             if (elements[e].elements)
                 calculateIdForAllElements(elements[e].elements);
         }
     }
 
-    this.detectLayerJoins = function()
-    {
+    this.detectLayerJoins = function () {
         detectLayerJoins();
     }
 
-    function detectLayerJoins()
-    {
-        if (layers.length > 0)
-            {
-        checkChoosedElements();
+    function detectLayerJoins() {
+        if (layers.length > 0) {
+            checkChoosedElements();
 
-        generateQuery();
+            generateQuery();
 
             //this function enables and disables elements in the layer if there is a join between the elements in the report and the element in the layer...
             var reportCollections = [];
@@ -754,104 +698,87 @@ app.service('queryModel' , function ($http, $q, $filter, connection, $compile, $
 
             for (var i in query.datasources) {
                 for (var c in query.datasources[i].collections) {
-                     reportCollections.push(query.datasources[i].collections[c].collectionID);
-                     selectableCollections.push(query.datasources[i].collections[c].collectionID);
+                    reportCollections.push(query.datasources[i].collections[c].collectionID);
+                    selectableCollections.push(query.datasources[i].collections[c].collectionID);
                 }
             }
 
-        if (!selectedLayer)
-            {
-                for (var i in layers)
-                    {
-                        if (layers[i]._id == query.selectedLayerID)
-                            {
-                                selectedLayer = layers[i];
+            if (!selectedLayer) {
+                for (var i in layers) {
+                    if (layers[i]._id == query.selectedLayerID) {
+                        selectedLayer = layers[i];
 
 
-                            }
                     }
+                }
             }
 
-                    if (selectedLayer.params && selectedLayer.params.joins)
-                    for (var j in selectedLayer.params.joins)
-                    {
-                        for (var c in reportCollections)
-                        {
-                            if (selectedLayer.params.joins[j].sourceCollectionID == reportCollections[c])
-                            {
-                                     if (selectableCollections.indexOf(selectedLayer.params.joins[j].sourceCollectionID) == -1)
-                                         selectableCollections.push(selectedLayer.params.joins[j].sourceCollectionID);
+            if (selectedLayer.params && selectedLayer.params.joins)
+                for (var j in selectedLayer.params.joins) {
+                    for (var c in reportCollections) {
+                        if (selectedLayer.params.joins[j].sourceCollectionID == reportCollections[c]) {
+                            if (selectableCollections.indexOf(selectedLayer.params.joins[j].sourceCollectionID) == -1)
+                                selectableCollections.push(selectedLayer.params.joins[j].sourceCollectionID);
 
-                                     if (selectableCollections.indexOf(selectedLayer.params.joins[j].targetCollectionID) == -1)
-                                         selectableCollections.push(selectedLayer.params.joins[j].targetCollectionID);
-                            }
+                            if (selectableCollections.indexOf(selectedLayer.params.joins[j].targetCollectionID) == -1)
+                                selectableCollections.push(selectedLayer.params.joins[j].targetCollectionID);
+                        }
 
-                            if (selectedLayer.params.joins[j].targetCollectionID == reportCollections[c])
-                            {
-                                if (selectableCollections.indexOf(selectedLayer.params.joins[j].sourceCollectionID) == -1)
-                                    selectableCollections.push(selectedLayer.params.joins[j].sourceCollectionID);
+                        if (selectedLayer.params.joins[j].targetCollectionID == reportCollections[c]) {
+                            if (selectableCollections.indexOf(selectedLayer.params.joins[j].sourceCollectionID) == -1)
+                                selectableCollections.push(selectedLayer.params.joins[j].sourceCollectionID);
 
-                                if (selectableCollections.indexOf(selectedLayer.params.joins[j].targetCollectionID) == -1)
-                                    selectableCollections.push(selectedLayer.params.joins[j].targetCollectionID);
-                            }
+                            if (selectableCollections.indexOf(selectedLayer.params.joins[j].targetCollectionID) == -1)
+                                selectableCollections.push(selectedLayer.params.joins[j].targetCollectionID);
                         }
                     }
+                }
 
-                    if (selectableCollections.length == 0)
-                        enableAllElements(rootItem.elements);
-                    else
-                        detectLayerJoins4Elements(rootItem.elements,selectableCollections);
-            }
+            if (selectableCollections.length == 0)
+                enableAllElements(rootItem.elements);
+            else
+                detectLayerJoins4Elements(rootItem.elements, selectableCollections);
+        }
 
     }
 
-    function detectLayerJoins4Elements(elements,selectableCollections)
-    {
-        for (var e in elements)
-        {
-            if (elements[e].elementRole != 'folder')
-            {
-                if (selectableCollections.indexOf(elements[e].collectionID) == -1)
-                {
+    function detectLayerJoins4Elements(elements, selectableCollections) {
+        for (var e in elements) {
+            if (elements[e].elementRole != 'folder') {
+                if (selectableCollections.indexOf(elements[e].collectionID) == -1) {
                     elements[e].enabled = false;
-                 } else {
+                } else {
                     elements[e].enabled = true;
                 }
 
             }
             if (elements[e].elements)
-                detectLayerJoins4Elements(elements[e].elements,selectableCollections);
+                detectLayerJoins4Elements(elements[e].elements, selectableCollections);
 
         }
     }
 
 
-    this.enableAllElements = function()
-    {
+    this.enableAllElements = function () {
         enableAllElements(rootItem.elements);
     }
 
-    function enableAllElements(elements)
-    {
-        for (var e in elements)
-        {
-            if (elements[e].elementRole != 'folder')
-            {
-                    elements[e].enabled = true;
+    function enableAllElements(elements) {
+        for (var e in elements) {
+            if (elements[e].elementRole != 'folder') {
+                elements[e].enabled = true;
             }
 
-            if (elements[e].id == undefined)
-            {
-                if (elements[e].collectionID)
-                    {
-                       //var elementID = elements[e].collectionID.toLowerCase()+'_'+elements[e].elementName;
-                        var elementID = 'wst'+elements[e].elementID.toLowerCase();
+            if (elements[e].id == undefined) {
+                if (elements[e].collectionID) {
+                    //var elementID = elements[e].collectionID.toLowerCase()+'_'+elements[e].elementName;
+                    var elementID = 'wst' + elements[e].elementID.toLowerCase();
 
-                        if (elements[e].aggregation)
-                          var elementID = 'wst'+elements[e].elementID.toLowerCase()+elements[e].aggregation;
+                    if (elements[e].aggregation)
+                        var elementID = 'wst' + elements[e].elementID.toLowerCase() + elements[e].aggregation;
 
-                        elements[e].id = elementID.replace(/[^a-zA-Z ]/g,'');
-                    }
+                    elements[e].id = elementID.replace(/[^a-zA-Z ]/g, '');
+                }
 
             }
 
@@ -861,29 +788,26 @@ app.service('queryModel' , function ($http, $q, $filter, connection, $compile, $
     }
 
 
-    function checkFilters(thefilters)
-    {
+    function checkFilters(thefilters) {
         for (var g in thefilters) {
-                var filter = thefilters[g];
-                if (filter)
+            var filter = thefilters[g];
+            if (filter) {
+                /*if ((filter.searchValue == undefined || filter.searchValue == '' || filter.searchValue == 'Invalid Date') && filter.filterPrompt == false )
                     {
-                        /*if ((filter.searchValue == undefined || filter.searchValue == '' || filter.searchValue == 'Invalid Date') && filter.filterPrompt == false )
-                            {
+                    wrongFilters.push(filter.id);
+                    } else {
+                       if ((filter.filterType == 'between' || filter.filterType == 'notBetween') && (filter.filterText2 == undefined || filter.filterText2 == '' || filter.filterText2 == 'Invalid Date'))
                             wrongFilters.push(filter.id);
-                            } else {
-                               if ((filter.filterType == 'between' || filter.filterType == 'notBetween') && (filter.filterText2 == undefined || filter.filterText2 == '' || filter.filterText2 == 'Invalid Date'))
-                                    wrongFilters.push(filter.id);
-                            }*/
+                    }*/
 
-                        if (isfilterComplete(filter) == false && filter.promptMandatory == true)
-                             wrongFilters.push(filter.id);
+                if (isfilterComplete(filter) == false && filter.promptMandatory == true)
+                    wrongFilters.push(filter.id);
 
-                        if (filter.group == true)
-                        {
-                            checkFilters(filter.filters)
-                        }
-                    }
+                if (filter.group == true) {
+                    checkFilters(filter.filters)
+                }
             }
+        }
     }
 
 
@@ -891,7 +815,7 @@ app.service('queryModel' , function ($http, $q, $filter, connection, $compile, $
 
 
     // Drop handler.
-    this.onDrop = function ($scope,data, event, type, group, done) {
+    this.onDrop = function ($scope, data, event, type, group, done) {
         event.stopPropagation();
         if (lastDrop && lastDrop == 'onFilter') {
             lastDrop = null;
@@ -907,10 +831,10 @@ app.service('queryModel' , function ($http, $q, $filter, connection, $compile, $
 
         if (type == 'column') {
             if (!query.columns)
-                 query.columns = [];
+                query.columns = [];
             query.columns.push(customObjectData);
 
-            }
+        }
 
         if (type == 'order') {
             customObjectData.sortType = -1;
@@ -919,10 +843,9 @@ app.service('queryModel' , function ($http, $q, $filter, connection, $compile, $
         if (type == 'filter') {
 
             var el = document.getElementById('filter-zone');
-            if (query.groupFilters.length > 0)
-            {
-               customObjectData.condition = 'AND';
-               customObjectData.conditionLabel = 'AND';
+            if (query.groupFilters.length > 0) {
+                customObjectData.condition = 'AND';
+                customObjectData.conditionLabel = 'AND';
             }
 
             query.groupFilters.push(customObjectData);
@@ -938,79 +861,70 @@ app.service('queryModel' , function ($http, $q, $filter, connection, $compile, $
 
         detectLayerJoins();
 
-        processStructure(undefined,done);
+        processStructure(undefined, done);
     };
 
     this.addColumn = function (element, done) {
 
         if (!query.columns)
-                 query.columns = [];
-            query.columns.push(element);
+            query.columns = [];
+        query.columns.push(element);
         detectLayerJoins();
 
-        processStructure(undefined,done);
+        processStructure(undefined, done);
     }
 
-   /* this.onDropOnFilter = function (data, event, filter) {
-        lastDrop = 'onFilter';
+    /* this.onDropOnFilter = function (data, event, filter) {
+         lastDrop = 'onFilter';
+ 
+         var droppedFilter = data['json/custom-object'];
+ 
+         filter.filters = [jQuery.extend({}, filter), droppedFilter];
+ 
+         filter.group = true;
+ 
+         updateConditions(filter.filters);
+ 
+         delete(filter.collectionID);
+         delete(filter.datasourceID);
+         delete(filter.elementID);
+         delete(filter.elementName);
+         delete(filter.elementType);
+         delete(filter.filterType);
+         delete(filter.filterTypeLabel);
+         delete(filter.objectLabel);
+         delete(filter.filterText1);
+         delete(filter.filterText2);
+ 
+         event.stopPropagation();
+         return;
+     };*/
 
-        var droppedFilter = data['json/custom-object'];
-
-        filter.filters = [jQuery.extend({}, filter), droppedFilter];
-
-        filter.group = true;
-
-        updateConditions(filter.filters);
-
-        delete(filter.collectionID);
-        delete(filter.datasourceID);
-        delete(filter.elementID);
-        delete(filter.elementName);
-        delete(filter.elementType);
-        delete(filter.filterType);
-        delete(filter.filterTypeLabel);
-        delete(filter.objectLabel);
-        delete(filter.filterText1);
-        delete(filter.filterText2);
-
-        event.stopPropagation();
-        return;
-    };*/
-
-    function checkChoosedElements()
-    {
-        if (query.columns.length > 1)
-        {
-            for( var e=query.columns.length -1;e>=0;e--)
-            {
-                if (thereIsAJoinForMe(query.columns[e]) == 0)
-                {
-                    query.columns.splice(e,1);
+    function checkChoosedElements() {
+        if (query.columns.length > 1) {
+            for (var e = query.columns.length - 1; e >= 0; e--) {
+                if (thereIsAJoinForMe(query.columns[e]) == 0) {
+                    query.columns.splice(e, 1);
                 }
             }
         }
     }
 
 
-    this.generateQuery = function()
-    {
+    this.generateQuery = function () {
         return generateQuery();
     }
 
-    this.hideColumn = function(elementID,hidden)
-    {
-        for( var i  in query.columns)
-            {
-                if (query.columns[i].elementID == elementID)
-                {
-                    query.columns[i].hidden = hidden;
-                }
-
+    this.hideColumn = function (elementID, hidden) {
+        for (var i in query.columns) {
+            if (query.columns[i].elementID == elementID) {
+                query.columns[i].hidden = hidden;
             }
+
+        }
     }
 
-    function generateQuery()
-    {
+    function generateQuery() {
         query.id = uuid2.newguid();
         query.datasources = [];
         query.wrongFilters = wrongFilters;
@@ -1027,18 +941,18 @@ app.service('queryModel' , function ($http, $q, $filter, connection, $compile, $
 
 
         for (var i in query.groupFilters) {
-                if (datasourcesList.indexOf(query.groupFilters[i].datasourceID) == -1)
-                    datasourcesList.push(query.groupFilters[i].datasourceID);
-                if (layersList.indexOf(query.groupFilters[i].layerID) == -1)
-                    layersList.push(query.groupFilters[i].layerID);
+            if (datasourcesList.indexOf(query.groupFilters[i].datasourceID) == -1)
+                datasourcesList.push(query.groupFilters[i].datasourceID);
+            if (layersList.indexOf(query.groupFilters[i].layerID) == -1)
+                layersList.push(query.groupFilters[i].layerID);
         }
 
 
         for (var i in query.order) {
-                if (datasourcesList.indexOf(query.order[i].datasourceID) == -1)
-                    datasourcesList.push(query.order[i].datasourceID);
-                if (layersList.indexOf(query.order[i].layerID) == -1)
-                    layersList.push(query.order[i].layerID);
+            if (datasourcesList.indexOf(query.order[i].datasourceID) == -1)
+                datasourcesList.push(query.order[i].datasourceID);
+            if (layersList.indexOf(query.order[i].layerID) == -1)
+                layersList.push(query.order[i].layerID);
         }
 
         for (var i in datasourcesList) {
@@ -1051,190 +965,172 @@ app.service('queryModel' , function ($http, $q, $filter, connection, $compile, $
 
 
             for (var z in query.columns) {
-                if (query.columns[z].datasourceID == datasourcesList[i])
-                {
+                if (query.columns[z].datasourceID == datasourcesList[i]) {
                     if (dtsCollections.indexOf(query.columns[z].collectionID) == -1)
                         dtsCollections.push(query.columns[z].collectionID);
                 }
             }
 
             for (var z in query.order) {
-                if (query.order[z].datasourceID == datasourcesList[i])
-                {
+                if (query.order[z].datasourceID == datasourcesList[i]) {
                     if (dtsCollections.indexOf(query.order[z].collectionID) == -1)
                         dtsCollections.push(query.order[z].collectionID);
                 }
             }
 
 
-            getFiltersCollections(query.groupFilters,dtsCollections,datasourcesList[i], function(){
+            getFiltersCollections(query.groupFilters, dtsCollections, datasourcesList[i], function () {
 
-                        for (var n in dtsCollections) {
+                for (var n in dtsCollections) {
 
-                            var collection = {};
-                            collection.collectionID = dtsCollections[n];
+                    var collection = {};
+                    collection.collectionID = dtsCollections[n];
 
-                            collection.columns = [];
+                    collection.columns = [];
 
-                            for (var n1 in query.columns) {
-                                if (query.columns[n1].collectionID == dtsCollections[n])
-                                {
-                                    collection.columns.push(query.columns[n1]);
-                                }
-                            }
-
-                            collection.order = [];
-
-                            for (var n1 in query.order) {
-                                if (query.order[n1].collectionID == dtsCollections[n])
-                                {
-                                    collection.order.push(query.order[n1]);
-                                }
-                            }
-
-
-                            collection.filters = [];
-                             for (var n1 in query.groupFilters) {
-                                /*for (var n1f in query.filters[n1].filters)
-                                {
-                                if (query.filters[n1].filters[n1f].collectionID)
-                                    if (query.filters[n1].filters[n1f].collectionID == dtsCollections[n])
-                                        {
-                                            collection.filters.push(query.filters[n1].filters[n1f]);
-                                        }
-                                }*/
-
-                                if (query.groupFilters[n1].collectionID)
-                                    if (query.groupFilters[n1].collectionID == dtsCollections[n])
-                                        {
-                                            //collection.filters.push(angular.copy(query.groupFilters[n1]));
-                                        }
-
-                             }
-
-                            dtsObject.collections.push(collection);
-
+                    for (var n1 in query.columns) {
+                        if (query.columns[n1].collectionID == dtsCollections[n]) {
+                            collection.columns.push(query.columns[n1]);
                         }
+                    }
+
+                    collection.order = [];
+
+                    for (var n1 in query.order) {
+                        if (query.order[n1].collectionID == dtsCollections[n]) {
+                            collection.order.push(query.order[n1]);
+                        }
+                    }
+
+
+                    collection.filters = [];
+                    for (var n1 in query.groupFilters) {
+                        /*for (var n1f in query.filters[n1].filters)
+                        {
+                        if (query.filters[n1].filters[n1f].collectionID)
+                            if (query.filters[n1].filters[n1f].collectionID == dtsCollections[n])
+                                {
+                                    collection.filters.push(query.filters[n1].filters[n1f]);
+                                }
+                        }*/
+
+                        if (query.groupFilters[n1].collectionID)
+                            if (query.groupFilters[n1].collectionID == dtsCollections[n]) {
+                                //collection.filters.push(angular.copy(query.groupFilters[n1]));
+                            }
+
+                    }
+
+                    dtsObject.collections.push(collection);
+
+                }
 
 
 
-                        query.datasources.push(dtsObject);
-                        query.layers = layersList;
+                query.datasources.push(dtsObject);
+                query.layers = layersList;
 
             });
 
         }
 
-       // query.groupFilters = filters;
+        // query.groupFilters = filters;
 
         return query;
     }
 
 
-    function getFiltersCollections(thefilters,dtsCollections,dtsID,done)
-    {
+    function getFiltersCollections(thefilters, dtsCollections, dtsID, done) {
 
         for (var z in thefilters) {
-                if (thefilters[z].datasourceID == dtsID)
-                            {
-                                    if (dtsCollections.indexOf(thefilters[z].collectionID) == -1)
-                                    {
-                                        dtsCollections.push(thefilters[z].collectionID);
-                                    }
-                            }
+            if (thefilters[z].datasourceID == dtsID) {
+                if (dtsCollections.indexOf(thefilters[z].collectionID) == -1) {
+                    dtsCollections.push(thefilters[z].collectionID);
+                }
             }
+        }
 
         done();
     }
-/*
-    function getGroupCollections(theGroup,dtsCollections,dtsID,isRoot,done)
-    {
-            for (var ff in theGroup)
-                {
-                    if (theGroup[ff].datasourceID)
-                      {
-                        if (theGroup[ff].datasourceID == dtsID)
-                            {
-                                    if (dtsCollections.indexOf(theGroup[ff].collectionID) == -1)
-                                    {
-                                        dtsCollections.push(theGroup[ff].collectionID);
-                                    }
+    /*
+        function getGroupCollections(theGroup,dtsCollections,dtsID,isRoot,done)
+        {
+                for (var ff in theGroup)
+                    {
+                        if (theGroup[ff].datasourceID)
+                          {
+                            if (theGroup[ff].datasourceID == dtsID)
+                                {
+                                        if (dtsCollections.indexOf(theGroup[ff].collectionID) == -1)
+                                        {
+                                            dtsCollections.push(theGroup[ff].collectionID);
+                                        }
+                                }
                             }
-                        }
-                        var well = theGroup[ff];
-
-                       if (theGroup[ff].group == true)
-                        {
-                            getGroupCollections(theGroup[ff].filters,dtsCollections,false,done);
-                        }
-
-                }
-
-            if (isRoot == true)
-                done();
-
-    }
-*/
-    this.processStructure = function(execute, done)
-    {
-        processStructure(execute,done);
+                            var well = theGroup[ff];
+    
+                           if (theGroup[ff].group == true)
+                            {
+                                getGroupCollections(theGroup[ff].filters,dtsCollections,false,done);
+                            }
+    
+                    }
+    
+                if (isRoot == true)
+                    done();
+    
+        }
+    */
+    this.processStructure = function (execute, done) {
+        processStructure(execute, done);
     }
 
-    function processStructure(execute,done) {
+    function processStructure(execute, done) {
         var execute = (typeof execute !== 'undefined') ? execute : true;
         wrongFilters = [];
         checkFilters(query.groupFilters);
-            if (wrongFilters.length == 0)
-                {
-                    $('#reportLayout').empty();
-                    if (query.columns.length > 0 && execute)
-                        {
-                          if (done)
-                              done(true);
-                        } else {
-                            if (done)
-                              done(false);
-                        }
+        if (wrongFilters.length == 0) {
+            $('#reportLayout').empty();
+            if (query.columns.length > 0 && execute) {
+                if (done)
+                    done(true);
+            } else {
+                if (done)
+                    done(false);
+            }
 
 
-                } else {
-                    //var errorMsg = 'There are incomplete filters'
-                    //noty({text: errorMsg,  timeout: 6000, type: 'error'});
-                }
+        } else {
+            //var errorMsg = 'There are incomplete filters'
+            //noty({text: errorMsg,  timeout: 6000, type: 'error'});
+        }
 
     }
 
 
-    function thereIsAJoinForMe(element)
-    {
+    function thereIsAJoinForMe(element) {
         var found = 0;
-        for (var i in query.columns)
-        {
-             if (element.elementID != query.columns[i].elementID)
-             {
-                 if (joinExists(element.collectionID,query.columns[i].collectionID) || (element.collectionID == query.columns[i].collectionID))
-                    found = found+1;
-             }
+        for (var i in query.columns) {
+            if (element.elementID != query.columns[i].elementID) {
+                if (joinExists(element.collectionID, query.columns[i].collectionID) || (element.collectionID == query.columns[i].collectionID))
+                    found = found + 1;
+            }
         }
 
         return found;
     }
 
-    function joinExists(collection1,collection2)
-    {
+    function joinExists(collection1, collection2) {
         var found = false;
 
 
         if (!selectedLayer || !selectedLayer.params || !selectedLayer.params.joins) return false;
 
 
-        if (collection1 != collection2)
-        {
-            for (var j in selectedLayer.params.joins)
-            {
+        if (collection1 != collection2) {
+            for (var j in selectedLayer.params.joins) {
                 if ((selectedLayer.params.joins[j].sourceCollectionID == collection1 && selectedLayer.params.joins[j].targetCollectionID == collection2) ||
-                    (selectedLayer.params.joins[j].sourceCollectionID == collection2 && selectedLayer.params.joins[j].targetCollectionID == collection1))
-                {
+                    (selectedLayer.params.joins[j].sourceCollectionID == collection2 && selectedLayer.params.joins[j].targetCollectionID == collection1)) {
                     found = true;
                 }
             }
@@ -1245,35 +1141,35 @@ app.service('queryModel' , function ($http, $q, $filter, connection, $compile, $
     }
 
 
-    this.updateCondition = function(filter, condition) {
+    this.updateCondition = function (filter, condition) {
         filter.conditionType = condition.conditionType;
         filter.conditionLabel = condition.conditionLabel;
         this.processStructure();
     };
 
 
-    this.filtersUpdated = function(theFilters, mainFilters) {
+    this.filtersUpdated = function (theFilters, mainFilters) {
         var theFilters = (theFilters) ? theFilters : query.groupFilters;
         var mainFilters = (typeof mainFilters === 'undefined') ? true : mainFilters;
     };
-/*
-    function updateGroups(theFilters, mainFilters) {
-        var theFilters = (theFilters) ? theFilters : query.groupFilters;
-
-        for (var i in theFilters) {
-            if (theFilters[i])
-                if (theFilters[i].group && theFilters[i].filters.length == 0 && !mainFilters) {
-                    theFilters.splice(i, 1);
-                    updateConditions(theFilters);
-                    return updateGroups(theFilters, mainFilters);
-                }
-        }
-    };
-*/
+    /*
+        function updateGroups(theFilters, mainFilters) {
+            var theFilters = (theFilters) ? theFilters : query.groupFilters;
+    
+            for (var i in theFilters) {
+                if (theFilters[i])
+                    if (theFilters[i].group && theFilters[i].filters.length == 0 && !mainFilters) {
+                        theFilters.splice(i, 1);
+                        updateConditions(theFilters);
+                        return updateGroups(theFilters, mainFilters);
+                    }
+            }
+        };
+    */
     function updateConditions(theFilters) {
         var theFilters = (theFilters) ? theFilters : query.groupFilters;
         for (var i in theFilters) {
-            if (i%2) { //must be condition
+            if (i % 2) { //must be condition
                 if (!theFilters[i].condition) {
                     theFilters.splice(i, 0, {
                         condition: true,
@@ -1283,8 +1179,8 @@ app.service('queryModel' , function ($http, $q, $filter, connection, $compile, $
                     return updateConditions(theFilters);
                 }
                 else { //is a condition, next is a filter?
-                    if (theFilters[Number(i)+1]) {
-                        if (theFilters[Number(i)+1].condition) { //if next is a condition
+                    if (theFilters[Number(i) + 1]) {
+                        if (theFilters[Number(i) + 1].condition) { //if next is a condition
                             theFilters.splice(i, 1);
                             return updateConditions(theFilters);
                         }
@@ -1306,13 +1202,11 @@ app.service('queryModel' , function ($http, $q, $filter, connection, $compile, $
     };
 
 
-    this.setFilterType = function(filter, filterOption)
-    {
+    this.setFilterType = function (filter, filterOption) {
         filter.filterType = filterOption.value;
         filter.filterTypeLabel = filterOption.label;
 
-        if (filter.filterType == 'in' || filter.filterType == 'notIn')
-        {
+        if (filter.filterType == 'in' || filter.filterType == 'notIn') {
             filter.filterText1 = [];
             filter.filterLabel1 = [];
         } else {
@@ -1332,22 +1226,19 @@ app.service('queryModel' , function ($http, $q, $filter, connection, $compile, $
     };
 
 
-    this.isfilterComplete = function(filter)
-    {
+    this.isfilterComplete = function (filter) {
         return isfilterComplete(filter);
     }
 
-    function isfilterComplete(filter)
-    {
+    function isfilterComplete(filter) {
         var result = true;
-        if ((filter.searchValue == '' || filter.searchValue == undefined || filter.searchValue == 'Invalid Date') )
-            {
-                result = false;
+        if ((filter.searchValue == '' || filter.searchValue == undefined || filter.searchValue == 'Invalid Date')) {
+            result = false;
 
-            } else {
-                if ((filter.filterType == 'between' || filter.filterType == 'notBetween') && (filter.filterText2 == undefined || filter.filterText2 == '' || filter.filterText2 == 'Invalid Date'))
-                        result = false;
-            }
+        } else {
+            if ((filter.filterType == 'between' || filter.filterType == 'notBetween') && (filter.filterText2 == undefined || filter.filterText2 == '' || filter.filterText2 == 'Invalid Date'))
+                result = false;
+        }
 
         if ((filter.filterType == 'null' || filter.filterType == 'notNull'))
             result = true;
@@ -1355,33 +1246,27 @@ app.service('queryModel' , function ($http, $q, $filter, connection, $compile, $
         return result;
     }
 
-    this.setDatePatternFilterType = function(filter,option)
-    {
+    this.setDatePatternFilterType = function (filter, option) {
         filter.searchValue = option.value;
         filter.filterText1 = option.value;
         filter.filterLabel1 = option.label;
     }
 
-    this.reorderFilters = function()
-    {
+    this.reorderFilters = function () {
         reorderFilters();
     }
 
-    function reorderFilters()
-    {
-        for (var i in query.groupFilters)
-                {
-                    if (i == 0)
-                        {
-                           delete(query.groupFilters[0].condition);
-                           delete(query.groupFilters[0].conditionLabel);
-                        }
-                    if (i != 0 && query.groupFilters[i].condition == undefined)
-                        {
-                            query.groupFilters[i].condition = 'AND';
-                            query.groupFilters[i].conditionLabel = 'AND';
-                        }
-                }
+    function reorderFilters() {
+        for (var i in query.groupFilters) {
+            if (i == 0) {
+                delete (query.groupFilters[0].condition);
+                delete (query.groupFilters[0].conditionLabel);
+            }
+            if (i != 0 && query.groupFilters[i].condition == undefined) {
+                query.groupFilters[i].condition = 'AND';
+                query.groupFilters[i].conditionLabel = 'AND';
+            }
+        }
 
 
 

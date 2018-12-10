@@ -213,7 +213,6 @@ app.service('report_v2Model', function (queryModel, c3Charts, reportHtmlWidgets,
     function generatec3Chart(report, mode) {
 
         var reportID = report.id;
-
         var htmlCode = c3Charts.getChartHTML(report, reportID, mode);
 
         var el = document.getElementById(report.parentDiv);
