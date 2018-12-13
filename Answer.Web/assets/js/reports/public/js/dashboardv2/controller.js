@@ -883,7 +883,6 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
     }
 
 
-
     $scope.dashboardName = function () {
         if ($scope.mode == 'add') {
             $('#dashboardNameModal').modal('show');
@@ -1056,6 +1055,8 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
                         if ($scope.selectedDashboard.reports[i].reportType === "chart-line") {
                             $scope.showOnlyLastXMonthData($scope.selectedDashboard.reports[i], $scope.filterGridByLastXmonths);
                             var el = document.getElementById($scope.selectedDashboard.reports[i].parentDiv);
+                            console.log($scope.selectedDashboard.reports[i].parentDiv);
+                            debugger;
                             if (el) {
                                 if ($scope.filters[theChart.chartID] == undefined) {
                                     $scope.filters[theChart.chartID] = {
@@ -1065,35 +1066,45 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
                                 }
                                 if ($scope.filters[theChart.chartID] !== undefined) {
                                     $scope.selectedDashboard.reports[i].properties.xkeys.forEach(function (elem) {
-                                        $scope.filters[theChart.chartID].filters.push({
-                                            "text": elem.elementName,
-                                            "elementID": elem.id,
-                                            "val": ''
-                                        });
+                                        if (elem.elementName.toLocaleLowerCase() === "month") {
+                                            $scope.filters[theChart.chartID].filters.push({
+                                                "text": "From Date",
+                                                "elementID": elem.id,
+                                                "val": '',
+                                                "fromDate": new Date()
+                                            });
+
+                                            $scope.filters[theChart.chartID].filters.push({
+                                                "text": "To Date",
+                                                "elementID": elem.id,
+                                                "val": '',
+                                                "toDate": new Date()
+                                            });
+                                        } else {
+                                            $scope.filters[theChart.chartID].filters.push({
+                                                "text": elem.elementName,
+                                                "elementID": elem.id,
+                                                "val": ''
+                                            });
+                                        }
                                     });
                                 }
 
                                 var filterDiv = $('<div style="position:relative;z-index:99999">' +
-                                    '<div style="float: left;margin: 5px;margin-left: 15px;width:200px;" ng-repeat="filter in filters[\'' +
-                                    theChart.chartID +
-                                    '\'].filters">' +
+                                    '<div style="float: left;margin: 5px;margin-left: 15px;width:110px;" ng-repeat="filter in filters[\'' + theChart.chartID + '\'].filters">' +
                                     '<label style="width:100%;" class="filterNames" ng-bind="filter.text"></label>' +
-                                    '<div style="position:relative;display:inline-block"><input type="text" ng-model="filter.val" ng-change="searchChanged(filter,\'' +
-                                    theChart.chartID +
-                                    '\')" ng-model-options="{debounce: 750}" />' +
-                                    '<a class="btn btn-xs btn-link pull-right delbtn" ng-click="filter.val =\'\';searchChanged(filter,\'' +
-                                    theChart.chartID +
-                                    '\')"><i class=" glyphicon glyphicon-remove"></i></a></div>' +
-                                    '</div></div>');
+                                    '<div style="position:relative;display:inline-block">' +
+                                    getinputSearch(theChart.chartID) + getDtPicker(theChart.chartID) +
+                                    '<a class="btn btn-xs btn-link pull-right delbtn" ng-click="filter.val =\'\';searchChanged(filter,\'' + theChart.chartID + '\')">' +
+                                    '<i class=" glyphicon glyphicon-remove"></i></a>' +
+                                    '</div></div></div>');
                                 angular.element(el).prepend(filterDiv);
                                 angular.element($('#angularAppDiv')).injector().invoke(function ($compile) {
                                     var scope = angular.element(filterDiv).scope();
                                     $compile(filterDiv)(scope);
                                 });
                             }
-
                             c3Charts.rebuildChart(angular.copy($scope.filters[theChart.chartID].report));
-
                         } else {
                             c3Charts.rebuildChart($scope.filters[theChart.chartID].report);
                         }
@@ -1104,6 +1115,18 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
             }
         }
     }
+
+    function getinputSearch(chartId) {
+        return '<input style="height: 34px;" ng-if="filter.fromDate == undefined && filter.toDate == undefined" type="text" ng-model="filter.val" ng-change="searchChanged(filter,\'' +
+            chartId + '\')" ng-model-options="{debounce: 750}" />';
+    }
+
+    function getDtPicker(chartId) {
+        return '<input ng-if="filter.fromDate !== undefined || filter.toDate !== undefined" change="searchChanged(filter,\'' + chartId + '\')" ' +
+            'class="form-control" format="M/D/YYYY" ng-model="filter.val"' +
+            ' "ng-model-options="{ updateOn: \'blur\' }" placeholder="M/D/YYYY" moment-picker="filter.val">';
+    }
+
 
     $scope.searchChanged = function (elem, chartId) {
         //filter shit
@@ -1116,8 +1139,28 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
             var addItem = true;
             while (filtersLength--) {
                 var filterElem = filtersChart.filters[filtersLength];
-                if (filterElem.val !== '' && data[length][filterElem.elementID].toLowerCase().indexOf(filterElem.val.toLowerCase()) === -1) {
+                debugger;
+                if (filterElem.fromDate !== undefined) {
+                    var d1 = moment(data[length][filterElem.elementID], 'MMMM-YY')._d;
+                    var d2 = moment(filterElem.val, 'MMMM-YY')._d;
+
+                    addItem = filterElem.val === '' || d1.getFullYear() >= d2.getFullYear() &&
+                        d1.getFullYear() >= d2.getFullYear() &&
+                        d1.getMonth() >= d2.getMonth();
+                }
+                else if (filterElem.toDate !== undefined) {
+
+                    var d3 = moment(data[length][filterElem.elementID], 'MMMM-YY')._d;
+                    var d4 = moment(filterElem.val, 'MMMM-YY')._d;
+
+                    addItem = filterElem.val === '' || d3.getFullYear() <= d4.getFullYear() &&
+                        d3.getFullYear() <= d4.getFullYear() &&
+                        d3.getMonth() <= d4.getMonth();
+                } else if (filterElem.val !== '' && data[length][filterElem.elementID].toLowerCase().indexOf(filterElem.val.toLowerCase()) === -1) {
                     addItem = false;
+                }
+                if (!addItem) {
+                    filtersLength = 0;
                 }
             }
             if (addItem) {
