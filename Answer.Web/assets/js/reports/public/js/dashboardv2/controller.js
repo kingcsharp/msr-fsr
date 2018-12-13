@@ -1117,7 +1117,7 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
     }
 
     function getinputSearch(chartId) {
-        return '<input style="height: 34px;" ng-if="filter.fromDate == undefined && filter.toDate == undefined" type="text" ng-model="filter.val" ng-change="searchChanged(filter,\'' +
+        return '<input style="height: 34px;width: 100%;" ng-if="filter.fromDate == undefined && filter.toDate == undefined" type="text" ng-model="filter.val" ng-change="searchChanged(filter,\'' +
             chartId + '\')" ng-model-options="{debounce: 750}" />';
     }
 
