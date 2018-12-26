@@ -90,7 +90,7 @@ if @strOwner is null
 		WHERE ID = @actPartRootObjID
 	exec A_SP_ACTUAL_PARTS_FINISH_WF 	null,@actPartRootObjID,@strNTLogin
 
-    DELETE FROM Portal_AddSubPartQtyCount
+    DELETE FROM Portal_AddSubPartQtyCount WHERE Portal_AddSubPartQtyCount.ParentId IN (select ParentId from Portal_AddSubPartQtyCount WHERE dbo.Portal_AddSubPartQtyCount.ParentId=@actPartRootObjID)
 	end
 else
 	begin
