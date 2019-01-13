@@ -1,3 +1,31 @@
+(function (app) {
+    app.filter('unique', function () {
+        // we will return a function which will take in a collection
+        // and a keyname
+        return function (collection, keyname) {
+            // we define our output and keys array;
+            var output = [], keys = [];
+            debugger;
+            // we utilize angular's foreach function
+            // this takes in our original collection and an iterator function
+            angular.forEach(collection, function (item) {
+                // we check to see whether our object exists
+                var key = item[keyname];
+                // if it's not already part of our keys array
+                if (keys.indexOf(key) === -1) {
+                    // add it to our keys array
+                    keys.push(key);
+                    // push this item to our final output array
+                    output.push(item);
+                }
+            });
+            // return our array which should be devoid of
+            // any duplicates
+            return output;
+        };
+    });
+})(app || {});
+
 app.service('grid', ['$sce', function ($sce) {
 
     var colClass = '';
@@ -83,10 +111,7 @@ app.service('grid', ['$sce', function ($sce) {
         var htmlCode = '<div ' + pageBlock + ' id="REPORT_' + id + '" ndType="extendedGrid" class="container-fluid report-container" style="min-height: 60vh;' + reportStyle + '">';
         htmlCode +=
             '<a class="btn btn-success help-btn" style="top:-41px;right: 5px;position: absolute;cursor: pointer;font-size: 18px;width: 187px;height: 32px;padding-top:3px;" title="Export table to excel" ng-click="saveToExcel(\'' +
-            hashedID +
-            '\',\'' +
-            report.id +
-            '\')"><i class="fa fa-file-excel-o"></i> Export to Excel</a>';
+            hashedID + '\',\'' + report.id + '\')"><i class="fa fa-file-excel-o"></i> Export to Excel</a>';
         columns = report.properties.columns;
         if (columns.length > 4)
             colWidth = 'width:' + 100 / columns.length + '%;float:left;';
@@ -160,10 +185,7 @@ app.service('grid', ['$sce', function ($sce) {
             '<tr>' +
             '<td style="overflow:hidden;white-space: nowrap;width:95%;">' + column.objectLabel +
             '<div class="filters">' +
-            //'<input class="find-input hidden" type="search" ng-model="' + column.id + columnIndex + '" aria-label="Table filter..." /> ' +
-
-            //smartDropdownFilter(column, columnIndex, reportId) +
-            renderFilter(column, columnIndex, report, reportId)+
+            renderFilter(column, columnIndex, report, reportId) +
             '<div class="resetF">' +
             //'<a title="Reset Search Value" style="padding-right: 0.3em;padding-left: 0.3em;" ng-click="gridFilters' + reportId + '.' + column.id+ '=\'\'" class="clearsearchclass">x</a>' +
             '<div/>' +
@@ -176,7 +198,6 @@ app.service('grid', ['$sce', function ($sce) {
         return htmlCode;
     }
 
-    //function getDateTimeFilter(column,report)
     function renderFilter(column, columnIndex, report, reportId) {
         if (report.query.data.length < 1) {
             return smartDropdownFilter(column, columnIndex, reportId);
@@ -194,7 +215,7 @@ app.service('grid', ['$sce', function ($sce) {
     function getDateTimeFilter(column, columnIndex, reportId) {
         //dimf.
         var a = '<div style="width:75%!important;position:relative;">' +
-            '<input change="updateDtFilter(dimf.' +column.id +columnIndex+',\'' + column.id + '\',\'' + reportId + '\')" class="form-control" format="M/D/YYYY" ng-model="dimf.' +
+            '<input change="updateDtFilter(dimf.' + column.id + columnIndex + ',\'' + column.id + '\',\'' + reportId + '\')" class="form-control" format="M/D/YYYY" ng-model="dimf.' +
             column.id +
             columnIndex +
             '" ng-model-options="{ updateOn: \'blur\' }" placeholder="M/D/YYYY" moment-picker="' +
@@ -207,40 +228,16 @@ app.service('grid', ['$sce', function ($sce) {
     }
 
     function smartDropdownFilter(column, columnIndex, reportId) {
-        //isDate(val)
 
         return '<div class="ui-selectDr">' +
-            '<ui-select append-to-body="true" ng-model="dimf.' +
-            column.id +
-            columnIndex +
-            '"on-select="elemChanged($item,\'' +
-            column.id +
-            '\',\'' +
-            reportId +
-            '\')">' +
-            '<ui-select-match placeholder="Search...">{{ $select.selected.' +
-            column.id +
-            '}} ' +
-            '<a class="btn btn-xs btn-link pull-right delbtn" ng-click="clear($event, $select,\'' +
-            column.id +
-            '\',\'' +
-            reportId +
-            '\') "> <i class=" glyphicon glyphicon-remove"></i></a >' +
+            '<ui-select append-to-body="true" ng-model="dimf.' + column.id + columnIndex +
+            '"on-select="elemChanged($item,\'' + column.id + '\',\'' + reportId + '\')">' +
+            '<ui-select-match placeholder="Search...">{{ $select.selected.' + column.id + '}} ' +
+            '<a class="btn btn-xs btn-link pull-right delbtn" ng-click="clear($event, $select,\'' + column.id + '\',\'' + reportId + '\') "> <i class=" glyphicon glyphicon-remove"></i></a >' +
             '</ui-select-match>' +
-            '<ui-select-choices repeat="elem.' +
-            column.id +
-            ' as item in ' +
-            reportId +
-            '| filter:gridFilters' +
-            reportId +
-            ' | filter:$select.search | orderBy:getReport(\'' +
-            hashedID +
-            '\').predicate:getReport(\'' +
-            hashedID +
-            '\').reverse">' +
-            '<div ng-bind="item.' +
-            column.id +
-            '"></div>' +
+            '<ui-select-choices repeat="elem.' + column.id + ' as item in ' + reportId + '| unique:\'' + column.id + '\' | filter:gridFilters' + reportId + '| filter:$select.search | orderBy:getReport(\'' +
+            hashedID + '\').predicate:getReport(\'' + hashedID + '\').reverse">' +
+            '<div ng-bind="item.' + column.id + '"></div>' +
             '</ui-select-choices>' +
             '</ui-select>' +
             '</div>';

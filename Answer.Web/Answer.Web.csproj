@@ -884,6 +884,7 @@
     <Content Include="assets\js\reports\public\js\directives\tabs.js" />
     <Content Include="assets\js\reports\public\js\directives\wst-directives.js" />
     <Content Include="assets\js\reports\public\js\files\controller.js" />
+    <Content Include="assets\js\reports\public\js\filters\unique.js" />
     <Content Include="assets\js\reports\public\js\home\controller.js" />
     <Content Include="assets\js\reports\public\js\inspector\colors.js" />
     <Content Include="assets\js\reports\public\js\inspector\icons.js" />
