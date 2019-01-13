@@ -171,7 +171,7 @@ Msr.LocationsGrid = Msr.LocationsGrid ||
                 function LocationEditFormatter(cellvalue, options, rowObject) {
 
                     var actions =
-                        Msr.JqGridCommon.ActionFormtter(cellvalue, options, rowObject, Msr.LocationsGrid.GetReturnUrl(), '/Locations/Edit/');
+                        Msr.JqGridCommon.ActionFormtter(cellvalue, options, rowObject, Msr.LocationsGrid.GetReturnUrl(), '/Locations/Edit/', true);
 
                     return actions;
                 }
