@@ -551,7 +551,7 @@ namespace Answer.Web.Controllers
 
                         if (item.StartDate.HasValue && item.EndDate.HasValue)
                         {
-                            if (DateTime.Today >= item.StartDate && DateTime.Today.Date.AddDays(1) < item.EndDate.Value.Date)
+                            if (DateTime.Today.Date >= item.StartDate.Value.Date && DateTime.Today.Date < item.EndDate.Value.Date.AddDays(1))
                             {
                                 response.HasStepRoles = true;
                                 break;

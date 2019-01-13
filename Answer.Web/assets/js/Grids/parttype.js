@@ -174,7 +174,7 @@ Msr.PartTypeGrid = Msr.PartTypeGrid ||
 
             function partTypesEditFormatter(cellvalue, options, rowObject) {
 
-                var actions = Msr.JqGridCommon.ActionFormtter(cellvalue, options, rowObject, Msr.PartTypeGrid.GetReturnUrl(), Msr.PartTypeGrid.GetGridEditUrl());
+                var actions = Msr.JqGridCommon.ActionFormtter(cellvalue, options, rowObject, Msr.PartTypeGrid.GetReturnUrl(), Msr.PartTypeGrid.GetGridEditUrl(),true);
 
                 return actions;
 
