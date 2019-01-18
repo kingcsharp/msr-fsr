@@ -5,7 +5,6 @@
         return function (collection, keyname) {
             // we define our output and keys array;
             var output = [], keys = [];
-            debugger;
             // we utilize angular's foreach function
             // this takes in our original collection and an iterator function
             angular.forEach(collection, function (item) {
@@ -26,6 +25,125 @@
     });
 })(app || {});
 
+(function (app) {
+    app.filter('filterGrid', function () {
+        // we will return a function which will take in a collection
+        // and a keyname
+        return function (collection, filters) {
+            // we define our output and keys array;
+            var output = [], keys = [];
+            // we utilize angular's foreach function
+            // this takes in our original collection and an iterator function
+
+            angular.forEach(collection, function (item) {
+                var filtersLength = filters.length;
+                var addItem = true;
+                while (filtersLength--) {
+                    var filterElem = filters[filtersLength];
+                    //debugger;
+                    if (filterElem.fromDate !== undefined) {
+                        var d1 = moment(item[filterElem.elementID], 'MMMM-YY')._d;
+                        var d2 = moment(filterElem.val, 'M/D/YYYY')._d;
+
+                        addItem = filterElem.val === '' || filterElem.val === undefined ||
+                            d1.getFullYear() > d2.getFullYear() ||
+                            d1.getFullYear() === d2.getFullYear() &&
+                            d1.getMonth() >= d2.getMonth();
+                    } else if (filterElem.toDate !== undefined) {
+                        //need to remove the 1 to get the value of the item to check out
+                        var d3 = moment(item[filterElem.elementID.replace('1', '')], 'MMMM-YY')._d;
+                        var d4 = moment(filterElem.val, 'M/D/YYYY')._d;
+
+                        addItem = filterElem.val === '' || filterElem.val === undefined ||
+                            d3.getFullYear() < d4.getFullYear() ||
+                            d3.getFullYear() === d4.getFullYear() &&
+                            d3.getMonth() <= d4.getMonth();
+                    } else {
+                        if (filterElem.val !== undefined && filterElem.val !== '') {
+                            var type = typeof item[filterElem.elementID];
+                            if (type == "number" && (item[filterElem.elementID]).toString().indexOf((filterElem.val).toString()) === -1) {
+                                addItem = false;
+                            }
+                            if (type == "string" && item[filterElem.elementID].toLowerCase().indexOf(filterElem.val.toLowerCase()) === -1) {
+                                addItem = false;
+                            }
+                        }
+                    }
+                    if (!addItem) {
+                        filtersLength = 0;
+                    }
+                }
+                if (addItem) {
+                    output.unshift(item);
+                }
+            });
+            // return our array which should be devoid of
+            // any duplicates
+            return output;
+        };
+    });
+})(app || {});
+
+(function (app) {
+    app.filter('filterDr', function () {
+        // we will return a function which will take in a collection
+        // and a keyname
+        return function (collection, filters) {
+            // we define our output and keys array;
+            var output = [], keys = [];
+            // we utilize angular's foreach function
+            // this takes in our original collection and an iterator function
+
+            angular.forEach(collection, function (item) {
+                var filtersLength = filters.length;
+                var addItem = true;
+                while (filtersLength--) {
+                    var filterElem = filters[filtersLength];
+                    //debugger;
+                    if (filterElem.fromDate !== undefined) {
+                        var d1 = moment(item[filterElem.elementID], 'MMMM-YY')._d;
+                        var d2 = moment(filterElem.val, 'M/D/YYYY')._d;
+
+                        addItem = filterElem.val === '' || filterElem.val === undefined ||
+                            d3.getFullYear() < d4.getFullYear() ||
+                            d3.getFullYear() === d4.getFullYear() &&
+                            d3.getMonth() <= d4.getMonth();
+                    } else if (filterElem.toDate !== undefined) {
+                        var d3 = moment(item[filterElem.elementID.replace('1', '')], 'MMMM-YY')._d;
+                        var d4 = moment(filterElem.val, 'M/D/YYYY')._d;
+
+                        addItem = filterElem.val === '' || filterElem.val === undefined ||
+                            d3.getFullYear() < d4.getFullYear() ||
+                            d3.getFullYear() === d4.getFullYear() &&
+                            d3.getMonth() <= d4.getMonth();
+                    } else {
+                        if (filterElem.val !== undefined && filterElem.val !== '') {
+                            var type = typeof item[filterElem.elementID];
+                            if (type == "number" && (item[filterElem.elementID]).toString().indexOf((filterElem.val).toString()) === -1) {
+                                addItem = false;
+                            }
+                            if (type == "string" && item[filterElem.elementID].toLowerCase().indexOf(filterElem.val.toLowerCase()) === -1) {
+                                addItem = false;
+                            }
+                        }
+                    }
+                    if (!addItem) {
+                        filtersLength = 0;
+                    }
+                }
+                if (addItem) {
+                    output.unshift(item);
+                }
+            });
+            // return our array which should be devoid of
+            // any duplicates
+            return output;
+        };
+    });
+})(app || {});
+
+
+
 app.service('grid', ['$sce', function ($sce) {
 
     var colClass = '';
@@ -33,7 +151,8 @@ app.service('grid', ['$sce', function ($sce) {
     var hashedID = '';
     var columns = [];
     var report = {};
-
+    var vm = this;
+    //this.filters = {};
 
     this.trustHtml = function (html) {
         return $sce.trustAsHtml(html);
@@ -46,7 +165,6 @@ app.service('grid', ['$sce', function ($sce) {
     this.refresh = function (columns, id, query, designerMode, properties) {
         this.simpleGrid(columns, id, query, designerMode, properties, function () { });
     }
-
     function replaceAll(str, find, replace) {
         return str.replace(new RegExp(find, 'g'), replace);
     }
@@ -66,7 +184,6 @@ app.service('grid', ['$sce', function ($sce) {
         if (mode == 'preview') {
             pageBlock = "";
         }
-
 
         var reportStyle = 'width:100%;padding-left:0px;padding-right:0px;';
         var headerStyle = 'width:100%;padding-left:0px;background-color:#ccc;';
@@ -119,7 +236,7 @@ app.service('grid', ['$sce', function ($sce) {
             colClass = 'col-xs-' + 12 / columns.length;
         var reportId = 'report' + createId();
         //header
-        htmlCode += '<div ng-init="' + reportId + '= getQuery(\'' + hashedID + '\').data; gridFilters' + reportId + ' = ' + createFilter(columns) + '" class="container-fluid" style="' + headerStyle + '">';
+        htmlCode += '<div ng-init="' + reportId + '= getQuery(\'' + hashedID + '\').data; gridFilters' + reportId + '=' + createFilter2(columns) + '" class="container-fluid" style="' + headerStyle + '">';
 
         for (var i = 0; i < columns.length; i++) {
             htmlCode += getHeaderColumn(columns[i], i, report, reportId);
@@ -128,8 +245,9 @@ app.service('grid', ['$sce', function ($sce) {
         htmlCode += '</div>';
 
         htmlCode += '<div  vs-repeat style="width:100%;overflow-y: auto;border: 1px solid #ccc;align-items: stretch;position: absolute;bottom: 0px;top:60px;" scrolly="gridGetMoreData(\'' + id + '\')">';
-        //| filter:gridFilters | orderBy:getReport(\'' + hashedID + '\').predicate:getReport(\'' + hashedID + '\').reverse
-        htmlCode += '<div ndType="repeaterGridItems" class="repeater-data container-fluid" ng-repeat="item in ' + reportId + '| filter: gridFilters' + reportId + ' | orderBy:getReport(\'' + hashedID + '\').predicate:getReport(\'' + hashedID + '\').reverse" style="' + rowStyle + '"  >';
+
+        htmlCode += '<div ndType="repeaterGridItems" class="repeater-data container-fluid" ' +
+            'ng-repeat="item in ' + reportId + '| filterGrid: gridFilters' + reportId + ' | orderBy:getReport(\'' + hashedID + '\').predicate:getReport(\'' + hashedID + '\').reverse" style="' + rowStyle + '"  >';
 
         for (var i = 0; i < columns.length; i++) {
             htmlCode += getDataCell(columns[i], id, i, columnDefaultStyle);
@@ -154,7 +272,64 @@ app.service('grid', ['$sce', function ($sce) {
         }
         htmlCode += '</div> </div>';
         return htmlCode;
+    }
 
+    function createFilter2(columns) {
+        var filtersToAdd = [];
+        var length = columns.length;
+        while (length--) {
+            var col = columns[length];
+            if (col.elementName.toLocaleLowerCase() === "month") {
+                filtersToAdd.push({
+                    "text": "From Date",
+                    "elementID": col.id,
+                    "val": '',
+                    "fromDate": new Date()
+                });
+                filtersToAdd.push({
+                    "text": "To Date",
+                    "elementID": col.id + '1',
+                    "val": '',
+                    "toDate": new Date()
+                });
+            }
+            else {
+                filtersToAdd.push({
+                    "text": col.elementName,
+                    "elementID": col.id,
+                    "val": ''
+                });
+            }
+        }
+
+        var filter = '[';
+        for (var i = 0; i < filtersToAdd.length; i++) {
+            filter += '{';
+            var elem = filtersToAdd[i];
+            filter += "\'text\':\'" + elem.text + "\'";
+            filter += ',';
+
+            filter += "\'elementID\':\'" + elem.elementID + "\'";
+
+            filter += ',';
+            filter += "\'val\':\'\'";
+            filter += ',';
+
+            if (elem.toDate !== undefined) {
+                filter += "\'toDate\':\'" + elem.toDate + "\'";
+            } else if (elem.fromDate !== undefined) {
+                filter += "\'fromDate\':\'" + elem.fromDate + "\'";
+            }
+
+            filter += '}';
+            if (i !== elem.length) {
+                filter += ',';
+            }
+
+        }
+        filter += ']';
+
+        return filter;
     }
 
     function createFilter(columns) {
@@ -187,7 +362,6 @@ app.service('grid', ['$sce', function ($sce) {
             '<div class="filters">' +
             renderFilter(column, columnIndex, report, reportId) +
             '<div class="resetF">' +
-            //'<a title="Reset Search Value" style="padding-right: 0.3em;padding-left: 0.3em;" ng-click="gridFilters' + reportId + '.' + column.id+ '=\'\'" class="clearsearchclass">x</a>' +
             '<div/>' +
             '</div>' +
             '</td>' +
@@ -199,43 +373,47 @@ app.service('grid', ['$sce', function ($sce) {
     }
 
     function renderFilter(column, columnIndex, report, reportId) {
+        //5be2442a4f625d000b986c89
         if (report.query.data.length < 1) {
             return smartDropdownFilter(column, columnIndex, reportId);
         }
 
-        var valIsDate = isDate(report.query.data[0][column.id]);
+        var valIsDate = moment(report.query.data[0][column.id], "MMMM-YY", true).isValid();
         if (valIsDate) {
             return getDateTimeFilter(column, columnIndex, reportId);
         } else {
             return smartDropdownFilter(column, columnIndex, reportId);
         }
-
     }
 
     function getDateTimeFilter(column, columnIndex, reportId) {
-        //dimf.
-        var a = '<div style="width:75%!important;position:relative;">' +
-            '<input change="updateDtFilter(dimf.' + column.id + columnIndex + ',\'' + column.id + '\',\'' + reportId + '\')" class="form-control" format="M/D/YYYY" ng-model="dimf.' +
-            column.id +
-            columnIndex +
-            '" ng-model-options="{ updateOn: \'blur\' }" placeholder="M/D/YYYY" moment-picker="' +
-            column.id +
-            columnIndex +
-            '">' +
-            '<a class="btn btn-xs btn-link pull-right delbtn" ng-click="clearDt(\'' + columnIndex + '\',\'' + column.id + '\',\'' + reportId + '\') "><i class=" glyphicon glyphicon-remove"></i></a >' +
+        var id = "dr_" + new Date().getTime().toString(); 
+        var from = '<div id="' + id + '" style="width:37%!important;position:relative;float: left;margin-right: 20px;">' +
+            '<input style="padding:2px" change="updateDtFilter(\'' + id + '\', dimf.' + column.id + columnIndex + ',\'' + column.id + '\',\'' + reportId + '\')" class="form-control" format="M/D/YYYY" ' +
+            'ng-model="dimf.' + column.id + columnIndex + '" ' +
+            'ng-model-options="{ updateOn: \'blur\' }" placeholder="M/D/YYYY" moment-picker="' +
+            column.id + columnIndex + '">' +
+            '<a class="btn btn-xs btn-link pull-right delbtn" ng-click="clearDt(\'' + columnIndex + '\',\'' + column.id + '\',\'' + reportId + '\',\'0\',\'' + id + '\') "><i class=" glyphicon glyphicon-remove"></i></a >' +
             '</div>';
-        return a;
+        var to = '<div style="width:37%!important;position:relative;float: left;">' +
+            '<input style="padding:2px" change="updateDtFilter(\'' + id + '\', dimf.' + column.id + columnIndex + '_,\'' + column.id + '1\',\'' + reportId + '\')" class="form-control" format="M/D/YYYY" ' +
+            'ng-model="dimf.' + column.id + columnIndex + '_" ' +
+            'ng-model-options="{ updateOn: \'blur\' }" placeholder="M/D/YYYY" moment-picker="' +
+            column.id + columnIndex + '_">' +
+            '<a class="btn btn-xs btn-link pull-right delbtn" ng-click="clearDt(\'' + columnIndex + '_\',\'' + column.id + '\',\'' + reportId + '\',\'1\',\'' + id + '\') "><i class=" glyphicon glyphicon-remove"></i></a >' +
+            '</div>';
+        return from + to;
     }
 
     function smartDropdownFilter(column, columnIndex, reportId) {
-
-        return '<div class="ui-selectDr">' +
+        var id = "dr_" + new Date().getTime().toString();
+        return '<div id="' + id + '" class="ui-selectDr">' +
             '<ui-select append-to-body="true" ng-model="dimf.' + column.id + columnIndex +
-            '"on-select="elemChanged($item,\'' + column.id + '\',\'' + reportId + '\')">' +
+            '"on-select="elemChanged(\'' + id + '\',$item,\'' + column.id + '\',\'' + reportId + '\')">' +
             '<ui-select-match placeholder="Search...">{{ $select.selected.' + column.id + '}} ' +
-            '<a class="btn btn-xs btn-link pull-right delbtn" ng-click="clear($event, $select,\'' + column.id + '\',\'' + reportId + '\') "> <i class=" glyphicon glyphicon-remove"></i></a >' +
+            '<a class="btn btn-xs btn-link pull-right delbtn" ng-click="clear($event, $select,\'' + column.id + '\',\'' + reportId + '\',\'' + id + '\') "> <i class=" glyphicon glyphicon-remove"></i></a >' +
             '</ui-select-match>' +
-            '<ui-select-choices repeat="elem.' + column.id + ' as item in ' + reportId + '| unique:\'' + column.id + '\' | filter:gridFilters' + reportId + '| filter:$select.search | orderBy:getReport(\'' +
+            '<ui-select-choices repeat="elem.' + column.id + ' as item in ' + reportId + '| filterDr: gridFilters' + reportId + ' | unique:\'' + column.id + '\' | filter:$select.search | orderBy:getReport(\'' +
             hashedID + '\').predicate:getReport(\'' + hashedID + '\').reverse">' +
             '<div ng-bind="item.' + column.id + '"></div>' +
             '</ui-select-choices>' +
@@ -251,12 +429,6 @@ app.service('grid', ['$sce', function ($sce) {
             text += possible.charAt(Math.floor(Math.random() * possible.length));
 
         return text;
-    }
-
-
-
-    function isDate(val) {
-        return moment(val, "M/D/YYYY", true).isValid();;
     }
 
     function getDataCell(column, gridID, columnIndex, columnDefaultStyle) {
@@ -353,7 +525,7 @@ app.service('grid', ['$sce', function ($sce) {
 
         var defaultAligment = '';
         if (column.elementType === 'number')
-            defaultAligment = 'text-align: right;'
+            defaultAligment = 'text-align: right;';
         //with popover
         /* htmlCode += '<div id="ROW_'+gridID+'" class="repeater-data-column '+colClass+' popover-primary" style="'+columnDefaultStyle+columnStyle+colWidth+defaultAligment+'" popover-trigger="mouseenter" popover-placement="top" popover-title="'+column.objectLabel+'" popover="{{item.'+elementName+'}}" ng-click="cellClick(\''+hashedID+'\',item,'+'\''+elementID+'\''+','+'\''+elementName+'\''+')">'+theValue+' </div>';
         */

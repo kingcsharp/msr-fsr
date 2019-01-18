@@ -53,25 +53,41 @@ app.controller('report_viewCtrl', function ($scope, $routeParams, report_v2Model
 
     };
     $scope.dimf = {};
-    $scope.elemChanged = function ($item, colId, gridId) {
-        
-        $scope['gridFilters' + gridId][(colId)] = $item[colId];
-        console.log(1);
+    $scope.elemChanged = function (domElemId, $item, colId, gridId) {
+        var elem = getElemOfArr($scope['gridFilters' + gridId], 'elementID', colId);
+        if (elem !== -1) {
+            elem.val = $item[colId];
+        }
+    }
+
+    function getElemOfArr(arr, prop, lookupVal) {
+        var arrLength = arr.length;
+        while (arrLength--) {
+            if (arr[arrLength][prop] === lookupVal) {
+                return arr[arrLength];
+            }
+        }
+        return -1;
     }
 
     $scope.updateDtFilter = function ($item, colId, gridId) {
-        $scope['gridFilters' + gridId][(colId)] = moment($item._d).format('M/D/YYYY');
-        console.log(2);
+        var elem = getElemOfArr($scope['gridFilters' + gridId], 'elementID', colId);
+        if (elem !== -1 && $item) {
+            elem.val = moment($item._d).format('M/D/YYYY');
+        }
     }
     $scope.clearDt = function (colIndex, colId, gridId) {
-        $scope['dimf'][colId + colIndex] = moment().format('M/D/YYYY');
-        $timeout(function() {
-            $scope['gridFilters' + gridId][(colId)] = undefined;
+        $scope['dimf'][colId + colIndex] = undefined;
+        $timeout(function () {
+            //$scope['gridFilters' + gridId][(colId)] = undefined;
+            var elem = getElemOfArr($scope['gridFilters' + gridId], 'elementID', colId + (dtNr === "1" ? dtNr : ''));
+            if (elem !== -1) {
+                elem.val = undefined;
+            }
         }, 100);
     }
 
     $scope.clear = function ($event, $select, colId, gridId) {
-        //stops click event bubbling
         $event.stopPropagation();
         //to allow empty field, in order to force a selection remove the following line
         $select.selected = undefined;
@@ -79,7 +95,12 @@ app.controller('report_viewCtrl', function ($scope, $routeParams, report_v2Model
         $select.search = undefined;
         //focus and open dropdown
         $select.activate();
-        $scope['gridFilters' + gridId][(colId)] = undefined;
+        debugger;
+        //$scope['gridFilters' + gridId][(colId)] = undefined;
+        var elem = getElemOfArr($scope['gridFilters' + gridId], 'elementID', colId);
+        if (elem !== -1) {
+            elem.val = undefined;
+        }
     }
 
 

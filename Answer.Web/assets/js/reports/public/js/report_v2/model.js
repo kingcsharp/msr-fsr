@@ -46,11 +46,11 @@ app.service('report_v2Model', function (queryModel, c3Charts, reportHtmlWidgets,
         });
     }
 
-    this.repaintReport = function (report, mode) {
-        repaintReport(report, mode);
+    this.repaintReport = function (report, mode, isOperationsDashboard) {
+        repaintReport(report, mode, isOperationsDashboard);
     }
 
-    function repaintReport(report, mode) {
+    function repaintReport(report, mode, isOperationsDashboard) {
         var data = report.query.data;
 
         if (data.length != 0) {
@@ -68,6 +68,25 @@ app.service('report_v2Model', function (queryModel, c3Charts, reportHtmlWidgets,
                                 var scope = angular.element($div).scope();
                                 $compile($div)(scope);
                                 hideOverlay(report.parentDiv);
+                                debugger;
+                                if (isOperationsDashboard) {
+                                    var chartsContainer = getParent('#' + report.parentDiv, '.col-md-6.ndContainer');
+
+                                    var div = $('<div style="padding:10px 0;float:left;width:100%;"></div>');
+
+                                    $("#" + report.parentDiv + " .filters").each(function (index, elem) {
+                                        var name = $(elem).parent().text();
+                                        if (name.toLowerCase() == "month") {
+                                            name = "Date From - To";
+                                        }
+                                        var col = $('<div style="float:left;width:25%;"><span style="font-weight:bold;color:#000000;">' + name + '<span><div>');
+                                        $(elem).appendTo(col);
+                                        col.appendTo(div);
+                                    });
+
+                                    div.insertAfter(chartsContainer.children().first().find('h3'));
+                                    $('#' + report.parentDiv).children().children().last().prev().css('top', '30px');
+                                }
                             });
                         }
                     }
@@ -110,7 +129,7 @@ app.service('report_v2Model', function (queryModel, c3Charts, reportHtmlWidgets,
             }
 
         } else {
-            generateNoDataHTML()
+            generateNoDataHTML();
         }
         /*
 
@@ -163,6 +182,13 @@ app.service('report_v2Model', function (queryModel, c3Charts, reportHtmlWidgets,
                             }
         */
 
+    }
+
+    function getParent(elem, selector) {
+        if ($(elem).parent(selector)[0] === undefined) {
+            return getParent($(elem).parent(), selector);
+        }
+        return $(elem).parent(selector).parent();
     }
 
     function generateNoDataHTML() {

@@ -103,7 +103,7 @@ app.service('c3Charts', function () {
         }
 
         //console.log('the names', theNames);
-        debugger;
+        //debugger;
         if (query) {
             var theChartCode = '#CHART_' + reportID;
 
@@ -234,7 +234,7 @@ app.service('c3Charts', function () {
                                 contents: function (d, defaultTitleFormat, defaultValueFormat, color) {
 
 
-                                    debugger;
+                                    //debugger;
                                     var a = query.data;
                                     console.log(d);
                                     return '<div>HI</div>';
@@ -421,7 +421,7 @@ app.service('c3Charts', function () {
 
     this.getChartHTML = function (report, theChartID, mode) {
         var html = '';
-        debugger;
+        //debugger;
         console.log("getChartHTML");
         if (mode == 'edit')
             //html = '<c3chart page-block  bs-loading-overlay bs-loading-overlay-reference-id="OVERLAY_'+theChartID+'" bindto-id="'+theChartID+'" ndType="c3Chart" id="'+theChartID+'" drop="onDropQueryElement($data, $event, \''+theChartID+'\')" drop-effect="copy" drop-accept="[\'json/custom-object\',\'json/column\']">';
