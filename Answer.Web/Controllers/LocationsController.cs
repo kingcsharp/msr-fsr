@@ -179,14 +179,6 @@ namespace Answer.Web.Controllers
                 if (model.Parent != "" && ModelState["InternalAddress"].Errors.Count == 0 && ModelState["Name"].Errors.Count == 0)
                 {
                     model.LoggedUserIdResult = GetCurrentUser();
-                    var locationData = _locationService.GetById(model.Parent);
-                    model.Address1 = locationData.Address1;
-                    model.Address2 = locationData.Address2;
-                    model.City = locationData.City;
-                    model.Country = locationData.Country;
-                    model.PostalCode = locationData.PostalCode;
-                    model.Region = locationData.Region;
-                    model.State = locationData.State;
                     var response = _locationService.Save(model);
 
                     if (response)
@@ -245,19 +237,16 @@ namespace Answer.Web.Controllers
             {
                 if (model.Parent != "" && ModelState["InternalAddress"].Errors.Count == 0 && ModelState["Name"].Errors.Count == 0)
                 {
-                    model.LoggedUserIdResult = GetCurrentUser();
+                    var saveEditModel = new SaveLocationViewModel()
+                    {
+                        Parent = model.Parent,
+                        InternalAddress = model.InternalAddress,
+                        Name = model.Name,
+                        ObjectId = model.ObjectId,
+                        LoggedUserIdResult = GetCurrentUser()
+                    };
 
-                    var locationData = _locationService.GetById(model.Parent);
-
-                    model.Address1 = locationData.Address1;
-                    model.Address2 = locationData.Address2;
-                    model.City = locationData.City;
-                    model.Country = locationData.Country;
-                    model.PostalCode = locationData.PostalCode;
-                    model.Region = locationData.Region;
-                    model.State = locationData.State;
-
-                    var response = _locationService.Save(model);
+                    var response = _locationService.Save(saveEditModel);
 
                     if (response)
                     {
