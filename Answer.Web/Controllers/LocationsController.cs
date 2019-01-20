@@ -183,7 +183,7 @@ namespace Answer.Web.Controllers
 
                     if (response)
                     {
-                        TempData["SuccessMessage"] = "Location has been updated successfully.";
+                        TempData["SuccessMessage"] = "Location has been created successfully.";
 
                         return RedirectToAction("Index");
                     }
