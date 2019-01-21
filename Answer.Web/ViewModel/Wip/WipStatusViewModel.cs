@@ -17,34 +17,5 @@ namespace Answer.Web.ViewModel.Wip
 
         public List<SelectListItem> LocationList { get; set; }
 
-        public void Setup()
-        {
-            LocationList = new List<SelectListItem>
-            {
-                new SelectListItem
-                {
-                    Text = @"Arizona Service Center",
-                    Value = "Arizona Service Center"
-                },
-                new SelectListItem
-                {
-                    Text = @"Oregon Service Center",
-                    Value = "Oregon Service Center"
-                },
-                new SelectListItem
-                {
-                    Text = @"Ireland Service Center",
-                    Value = "Ireland Service Center"
-                },
-                new SelectListItem
-                {
-                    Text = @"Israel Service Center",
-                    Value = "Israel Service Center"
-                },
-            };
-
-            LocationList.Insert(0, new SelectListItem { Text = "--Please Select--", Value = "" });
-        }
-
     }
 }

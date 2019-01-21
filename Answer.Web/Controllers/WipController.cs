@@ -38,9 +38,11 @@ namespace Answer.Web.Controllers
         private ObjectsService _objectsService;
         private EquipmentMaintenanceService _equipmentMaintenanceService;
         private readonly DocumentFilesService _documentFilesService;
+        private LocationService _locationService;
 
         public WipController()
         {
+            _locationService = new LocationService();
             _equipmentMaintenanceService = new EquipmentMaintenanceService();
             _orderService = new OrderService();
             _taskService = new TaskService();
@@ -63,8 +65,8 @@ namespace Answer.Web.Controllers
             var statusList = new List<string>();
 
             statusList.AddRange(from itemRule in param.@where.rules.Where(x => x.field == "Status")
-                where !string.IsNullOrWhiteSpace(itemRule.data)
-                select itemRule.data.ToLower());
+                                where !string.IsNullOrWhiteSpace(itemRule.data)
+                                select itemRule.data.ToLower());
 
             return statusList;
         }
@@ -379,8 +381,18 @@ namespace Answer.Web.Controllers
         {
             var currentUser = GetCurrentUser();
 
-            var viewModel = new WipStatusViewModel();
-            viewModel.Location = locationName;
+            var viewModel = new WipStatusViewModel
+            {
+                Location = locationName,
+                LocationList = _locationService.GetActiveLocations(currentUser.Id).Select(x => new SelectListItem
+                {
+                    Text = x.Name,
+                    Value = x.Name
+                }).OrderBy(o => o.Text).ToList()
+            };
+
+            viewModel.LocationList.Insert(0, new SelectListItem { Text = "--Please Select--", Value = "" });
+
             var workOrdersQueryable = _orderService.GetWorkOrderQueryable();
 
             if (!string.IsNullOrWhiteSpace(locationName))
@@ -411,7 +423,6 @@ namespace Answer.Web.Controllers
                             x.Status == WorkItemStatusConstants.WaitingToStart ||
                             x.Status == WorkItemStatusConstants.Requested).ToList();
 
-            viewModel.Setup();
 
             if (Request.IsAjaxRequest())
             {
@@ -541,13 +552,15 @@ namespace Answer.Web.Controllers
             var procedureRoles = _proceduresService.GetSelectedRoles(objId.Id, loggedUserId.Id)?.Select(x => x.Role_Id).ToList();
             response.HasStepRoles = myRoles.Select(x => x.Role_Id).ToList().Intersect(procedureRoles).Any();
 
-            if (!response.HasStepRoles) {
+            if (!response.HasStepRoles)
+            {
 
                 var steptRoles = currentStep.Roles?.Split(',');
 
                 foreach (var item in myRoles)
                 {
-                    if (steptRoles.Any(x => x == item.Role_Id)) {
+                    if (steptRoles.Any(x => x == item.Role_Id))
+                    {
 
                         if (item.StartDate.HasValue && item.EndDate.HasValue)
                         {
@@ -593,12 +606,12 @@ namespace Answer.Web.Controllers
             var images = _orderService.GetOrderItemImagesById(stepId.ToString());
 
             var dockLinks = images.Select(itemImage => new DocLink
-                {
-                    SERVER_PATH = itemImage.Path,
-                    CONTENTTYPE = itemImage.ContentType,
-                    LINKED_DOC_ID = itemImage.Id,
-                    NAME = itemImage.FILE_NAME
-                })
+            {
+                SERVER_PATH = itemImage.Path,
+                CONTENTTYPE = itemImage.ContentType,
+                LINKED_DOC_ID = itemImage.Id,
+                NAME = itemImage.FILE_NAME
+            })
                 .ToList();
 
             response.Images.PreviewConfig = FileInputConfigHelper.GetPreviewConfigValue(dockLinks, Url.Action("DeleteImageById", "Doc"), Url.Action("Download", "Doc"));
@@ -626,7 +639,7 @@ namespace Answer.Web.Controllers
                 }
             }
 
-            return Json(new {result.ErrorMessage}, JsonRequestBehavior.AllowGet);
+            return Json(new { result.ErrorMessage }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -919,7 +932,7 @@ namespace Answer.Web.Controllers
         {
             var activeLocations = new LocationService()
                 .GetLocationsQueryable()
-                .Where(x => x.Status.Contains("APPROVED") && x.Name !=null && x.Name != "")
+                .Where(x => x.Status.Contains("APPROVED") && x.Name != null && x.Name != "")
                 .Select(x => x.Name)
                 .ToList();
 
@@ -953,7 +966,7 @@ namespace Answer.Web.Controllers
         {
 
             var locationFilterValues = param.where.rules.Where(x => x.field == nameof(WorkOrderView.LocationName))
-                .Where(itemRule => !string.IsNullOrWhiteSpace(itemRule.data) && itemRule.data!= "HiddenOption")
+                .Where(itemRule => !string.IsNullOrWhiteSpace(itemRule.data) && itemRule.data != "HiddenOption")
                 .Select(itemRule => itemRule.data.ToLower()).ToList();
 
             return locationFilterValues;
