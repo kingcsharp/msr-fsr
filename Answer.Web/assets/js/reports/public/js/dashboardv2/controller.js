@@ -340,7 +340,7 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
     }
 
     $scope.updateDtFilter = function (domElemId, $item, colId, gridId) {
-        debugger;
+        //debugger;
         var elem = getElemOfArr($scope['gridFilters' + gridId], 'elementID', colId);
         if (elem !== -1 && $item) {
             elem.val = moment($item._d).format('M/D/YYYY');
@@ -354,7 +354,7 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
         }
     }
     $scope.clearDt = function (colIndex, colId, gridId, dtNr, domElemId) {
-        debugger;
+        //debugger;
         $scope['dimf'][colId + colIndex] = undefined;
 
         $timeout(function () {
@@ -381,7 +381,7 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
         $select.search = undefined;
         //focus and open dropdown
         $select.activate();
-        debugger;
+        //debugger;
         //$scope['gridFilters' + gridId][(colId)] = undefined;
         var elem = getElemOfArr($scope['gridFilters' + gridId], 'elementID', colId);
         if (elem !== -1) {
@@ -413,6 +413,18 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
     }
 
     function filterBarchart(chartId, filters) {
+        //an option would be to equal the filters
+        //var length = filters.length;
+        //while (length--) {
+        //    var gridFilter = filters[length];
+        //    var id = gridFilter.elementID;
+        //    var elem = getElemOfArr($scope.filters[chartId].filters, 'elementID', id);
+        //    if (elem !== -1) {
+        //        elem.val = gridFilter.val;
+        //    }
+        //}
+        //$scope.searchChanged({}, chartId);
+
         var filtersChart = angular.copy($scope.filters[chartId]);
         var data = filtersChart.report.query.data;
         var output = [];
@@ -1074,7 +1086,8 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
                         $scope.showOverlay('OVERLAY_' + theChart.chartID);
                         //debugger;
                         if ($scope.selectedDashboard.reports[i].reportType === "chart-line") {
-                            $scope.showOnlyLastXMonthData($scope.selectedDashboard.reports[i], $scope.filterGridByLastXmonths);
+                            //get last 6moths data
+                            //$scope.showOnlyLastXMonthData($scope.selectedDashboard.reports[i], $scope.filterGridByLastXmonths);
                             var el = document.getElementById($scope.selectedDashboard.reports[i].parentDiv);
 
                             if (el) {
@@ -1124,7 +1137,7 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
                                 }
 
                                 var displayChartWithFilters = $scope.isOperationsDashboard ? 'style="display:none;' : '';
-
+                                //var displayChartWithFilters = '';
                                 var filterDiv = $('<div ' + displayChartWithFilters + '" data-chart="' + theChart.chartID + '" style="position:relative;z-index:99999">' +
                                     '<div style="float: left;margin: 5px;margin-left: 15px;width:110px;" ng-repeat="filter in filters[\'' + theChart.chartID + '\'].filters">' +
                                     '<label style="width:100%;" class="filterNames" ng-bind="filter.text"></label>' +
