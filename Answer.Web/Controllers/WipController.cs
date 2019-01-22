@@ -54,8 +54,10 @@ namespace Answer.Web.Controllers
         public ActionResult Index()
         {
             var viewModel = new EngineeringViewModel();
+            var currentUser = GetCurrentUser();
 
             ViewBag.ActiveClass = "WIP";
+            ViewBag.Locations = _locationService.GetActiveLocations(currentUser.Id).Select(x => x.Name).OrderBy(o => o).ToList();
 
             return View(viewModel);
         }
@@ -74,7 +76,6 @@ namespace Answer.Web.Controllers
         public ActionResult EngineeringData(JqGridParam param, string step)
         {
             var totalRows = _orderService.GetWorkOrderQueryable();
-
 
             if (param.where != null && param.where.rules.Any())
             {
