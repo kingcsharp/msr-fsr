@@ -156,7 +156,6 @@ Msr.WipGrid = Msr.WipGrid ||
                         formatter: currentStepFormatter,
                         align: 'center'
                     },
-
                     {
                         label: 'Disposition',
                         name: 'ActualPartId',
@@ -168,7 +167,7 @@ Msr.WipGrid = Msr.WipGrid ||
                         width: 180,
                         align: 'center',
                         formatter: dispositionFormatter
-                    },
+                    }
                 ],
                 viewrecords: true, // show the current page, data rang and total records on the toolbar
                 rowNum: 10, rowList: [10, 20, 50, 100],

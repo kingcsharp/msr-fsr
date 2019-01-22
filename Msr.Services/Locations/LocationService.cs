@@ -137,6 +137,13 @@ namespace Msr.Services.Locations
             return result;
         }
 
+        public List<LocationResult> GetParentLocations()
+        {
+            var result = GetLocationsQueryable().Where(x => x.ParentLocation == null)
+                .Select(x => new LocationResult() { Id = x.Id, Name = x.Name, ObJect_Id = x.ObjectId }).ToList();
+            return result;
+        }
+
         public List<LocationView> GetLocationsForSafetyStock(string rootCompany)
         {
             return GetLocationsQueryable()
