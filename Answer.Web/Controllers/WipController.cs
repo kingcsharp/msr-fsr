@@ -57,7 +57,7 @@ namespace Answer.Web.Controllers
             var currentUser = GetCurrentUser();
 
             ViewBag.ActiveClass = "WIP";
-            ViewBag.Locations = _locationService.GetActiveLocations(currentUser.Id).Select(x => x.Name).OrderBy(o => o).ToList();
+            ViewBag.Locations = _locationService.GetParentLocations().Select(x => x.Name).OrderBy(o => o).ToList();
 
             return View(viewModel);
         }
@@ -385,7 +385,7 @@ namespace Answer.Web.Controllers
             var viewModel = new WipStatusViewModel
             {
                 Location = locationName,
-                LocationList = _locationService.GetActiveLocations(currentUser.Id).Select(x => new SelectListItem
+                LocationList = _locationService.GetParentLocations().Select(x => new SelectListItem
                 {
                     Text = x.Name,
                     Value = x.Name

@@ -86,7 +86,8 @@
         locations = locations.map(function(elem){
             return elem+":"+elem+";";
         });
-
+        locations = locations.join('');
+        locations = locations.substr(0, locations.length - 1);
         $(document).ready(function() {
             Msr.WipGrid.LoadWipGrid('@Url.Action("EngineeringData", "wip", new {step = Request.QueryString["step"]})', locations);
         });
