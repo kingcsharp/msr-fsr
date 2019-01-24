@@ -12,6 +12,8 @@ namespace Msr.Services.Locations.ViewModels
         public SaveLocationViewModel()
         {
             ParentsLocations = new List<SelectListItem>();
+            Countries = new List<SelectListItem>();
+            Regions = new List<SelectListItem>();
         }
         public string ObjectId { get; set; }
 
@@ -60,7 +62,7 @@ namespace Msr.Services.Locations.ViewModels
                 Value = x.Id.ToString()
             }).OrderBy(o => o.Text).ToList();
 
-            ParentsLocations = locationService.GetActiveLocations(ntLogin).Select(x => new SelectListItem
+            ParentsLocations = locationService.GetParentLocations().Select(x => new SelectListItem
             {
                 Text = x.Name,
                 Value = x.Id
