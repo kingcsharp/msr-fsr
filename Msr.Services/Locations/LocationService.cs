@@ -135,7 +135,7 @@ namespace Msr.Services.Locations
             var result = _dbContext.Database.SqlQuery<LocationResult>(sql).ToList();
 
             return result;
-        }
+        } 
 
         public List<LocationResult> GetParentLocations()
         {
