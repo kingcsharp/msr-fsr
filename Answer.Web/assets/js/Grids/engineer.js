@@ -8,7 +8,7 @@ Msr.WipGrid = Msr.WipGrid ||
         GetGridId: function () {
             return "jq-grid-wip";
         },
-        LoadWipGrid: function (url) {
+        LoadWipGrid: function (url, locations) {
 
             $.jgrid.defaults.responsive = true;
 
@@ -52,7 +52,7 @@ Msr.WipGrid = Msr.WipGrid ||
                         multiselect: true,
                         searchoptions: {
                             sopt: ['eq'],
-                            value: 'HiddenOption:;' + 'Arizona Service Center:Arizona Service Center;Oregon Service Center:Oregon Service Center;Ireland Service Center:Ireland Service Center;Israel Service Center:Israel Service Center',
+                            value: 'HiddenOption:;' + locations,
                             attr: { multiple: 'multiple', size: 4 },
                             dataInit: function (elem) {
                                 Msr.JqGridCommon.DataInitMultiselect(elem);
@@ -156,7 +156,6 @@ Msr.WipGrid = Msr.WipGrid ||
                         formatter: currentStepFormatter,
                         align: 'center'
                     },
-
                     {
                         label: 'Disposition',
                         name: 'ActualPartId',
@@ -168,7 +167,7 @@ Msr.WipGrid = Msr.WipGrid ||
                         width: 180,
                         align: 'center',
                         formatter: dispositionFormatter
-                    },
+                    }
                 ],
                 viewrecords: true, // show the current page, data rang and total records on the toolbar
                 rowNum: 10, rowList: [10, 20, 50, 100],
@@ -243,7 +242,7 @@ Msr.WipGrid = Msr.WipGrid ||
 
                 },
                 beforeRequest: function () {
-            
+
                     Msr.JqGridCommon.ModifySearchingFilter.call(this, ',', 'LocationName');
                 }
             });
@@ -258,7 +257,7 @@ Msr.WipGrid = Msr.WipGrid ||
                 // Do something
             });
 
-           
+
         }
     }
 

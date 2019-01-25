@@ -174,6 +174,25 @@ namespace Answer.Web.Controllers
                     return View(model);
                 }
             }
+            else
+            {
+                if (model.Parent != "" && ModelState["InternalAddress"].Errors.Count == 0 && ModelState["Name"].Errors.Count == 0)
+                {
+                    model.LoggedUserIdResult = GetCurrentUser();
+                    var response = _locationService.Save(model);
+
+                    if (response)
+                    {
+                        TempData["SuccessMessage"] = "Location has been created successfully.";
+
+                        return RedirectToAction("Index");
+                    }
+
+                    TempData["ErrorMessage"] = "Something went wrong.";
+
+                    return View(model);
+                }
+            }
 
             return View(model);
 
@@ -213,6 +232,33 @@ namespace Answer.Web.Controllers
                 TempData["ErrorMessage"] = "Something went wrong.";
 
                 return View(model);
+            }
+            else
+            {
+                if (model.Parent != "" && ModelState["InternalAddress"].Errors.Count == 0 && ModelState["Name"].Errors.Count == 0)
+                {
+                    var saveEditModel = new SaveLocationViewModel()
+                    {
+                        Parent = model.Parent,
+                        InternalAddress = model.InternalAddress,
+                        Name = model.Name,
+                        ObjectId = model.ObjectId,
+                        LoggedUserIdResult = GetCurrentUser()
+                    };
+
+                    var response = _locationService.Save(saveEditModel);
+
+                    if (response)
+                    {
+                        TempData["SuccessMessage"] = "Location has been updated successfully.";
+
+                        return RedirectToAction("Index");
+                    }
+
+                    TempData["ErrorMessage"] = "Something went wrong.";
+
+                    return View(model);
+                }
             }
 
             model.Setup(_regionService, _locationService, GetCurrentUser().Id);
