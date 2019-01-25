@@ -52,6 +52,7 @@
 
             <button class="timer-btn btn btn-warning btn-lg print-btn pull-left @resumeButton" data-task-log-id="@taskId" id="resume-step"><i class="glyphicon glyphicon-step-forward"></i> Resume</button>
 
+
             @if (Model.TaskRunningDto != null && Model.TaskRunningDto.StatusId == TimerStatuseConstants.InProgress)
             {
                 pauseButton = "show";
