@@ -112,6 +112,19 @@
                     $('.toSlide').fadeIn('slow');
                 }
             });
+            $("#Parent").select2({
+                placeholder: "Select Location",
+                allowClear: true
+            });
+            $("#Country").select2({
+                placeholder: "Select Country",
+                allowClear: true
+            });
+            $("#Region").select2({
+                placeholder: "Select Region",
+                allowClear: true
+            });
+            
         });
         $('#select-location').on('show.bs.modal',
             function (event) {
@@ -128,7 +141,7 @@
                         modal.find('.modal-body').html(data);
                     },
                     error: function (error) {
-                        eLoaderError(error)
+                        eLoaderError(error);
                     }
                 });
 
