@@ -135,11 +135,11 @@ namespace Msr.Services.Locations
             var result = _dbContext.Database.SqlQuery<LocationResult>(sql).ToList();
 
             return result;
-        } 
+        }
 
         public List<LocationResult> GetParentLocations()
         {
-            var result = GetLocationsQueryable().Where(x => x.ParentLocation == null)
+            var result = GetLocationsQueryable().Where(x => x.ParentLocation == null && x.Status == "APPROVED")
                 .Select(x => new LocationResult() { Id = x.Id, Name = x.Name, ObJect_Id = x.ObjectId }).ToList();
             return result;
         }
@@ -153,7 +153,7 @@ namespace Msr.Services.Locations
         public List<LocationResult> GetSitesAndRooms()
         {
             var parentLocationIds = GetLocationsQueryable().Where(x => x.ParentLocation == null).Select(x => x.Id);
-            var result = GetLocationsQueryable().Where(x => x.ParentLocation == null || x.ParentLocation !=null && parentLocationIds.Contains(x.ParentLocation))
+            var result = GetLocationsQueryable().Where(x => (x.ParentLocation == null || x.ParentLocation != null && parentLocationIds.Contains(x.ParentLocation)) && x.Status == "APPROVED")
                 .Select(x => new LocationResult() { Id = x.Id, Name = x.Name, ObJect_Id = x.ObjectId }).ToList();
             return result;
         }
