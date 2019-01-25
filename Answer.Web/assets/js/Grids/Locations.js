@@ -55,9 +55,9 @@ Msr.LocationsGrid = Msr.LocationsGrid ||
                             align: 'center'
                         },
                         {
-                            label: 'Region',
-                            name: 'RegionName',
-                            index: 'RegionName',
+                            label: 'Internal Address',
+                            name: 'InternalAddress',
+                            index: 'InternalAddress',
                             colmenu: false,
                             coloptions: {
                                 sorting: false,

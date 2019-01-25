@@ -57,6 +57,10 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.Root.ToLower().Contains(rule.data.ToLower()));
                     }
+                    else if (rule.field == nameof(LocationView.InternalAddress))
+                    {
+                        totalRows = totalRows.Where(x => x.InternalAddress.ToLower().Contains(rule.data.ToLower()));
+                    }
                     else if (rule.field == nameof(LocationView.Name))
                     {
                         totalRows = totalRows.Where(x => x.Name.ToLower().Contains(rule.data.ToLower()));
