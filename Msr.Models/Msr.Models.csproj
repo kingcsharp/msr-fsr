@@ -136,6 +136,7 @@
     <Compile Include="Invoices\InvoicePoWorkItem.cs" />
     <Compile Include="Invoices\InvoiceView.cs" />
     <Compile Include="Invoices\InvoiceWorkItem.cs" />
+    <Compile Include="Locations\ApprovedSitesAndRoomsView.cs" />
     <Compile Include="Locations\LocationView.cs" />
     <Compile Include="Menus\MenuGroupConstants.cs" />
     <Compile Include="Menus\MenuView.cs" />
