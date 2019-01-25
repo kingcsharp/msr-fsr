@@ -2851,4 +2851,10 @@ span.fa.fa-arrows.handle.sortable-fa {
     height: 24px;
 }
 
+.select2Form + .select2.select2-container .select2-selection.select2-selection--single {
+    border: 1px solid #ccc;
+    height: 34px;
+    padding: 2px 6px 5px;
+    font-size: 14px;
+}
 
