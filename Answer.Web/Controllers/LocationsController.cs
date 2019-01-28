@@ -57,6 +57,10 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.Root.ToLower().Contains(rule.data.ToLower()));
                     }
+                    else if (rule.field == nameof(LocationView.InternalAddress))
+                    {
+                        totalRows = totalRows.Where(x => x.InternalAddress.ToLower().Contains(rule.data.ToLower()));
+                    }
                     else if (rule.field == nameof(LocationView.Name))
                     {
                         totalRows = totalRows.Where(x => x.Name.ToLower().Contains(rule.data.ToLower()));
@@ -179,11 +183,19 @@ namespace Answer.Web.Controllers
                 if (model.Parent != "" && ModelState["InternalAddress"].Errors.Count == 0 && ModelState["Name"].Errors.Count == 0)
                 {
                     model.LoggedUserIdResult = GetCurrentUser();
+                    var locationData = _locationService.GetById(model.Parent);
+                    model.Address1 = locationData.Address1;
+                    model.Address2 = locationData.Address2;
+                    model.City = locationData.City;
+                    model.Country = locationData.Country;
+                    model.PostalCode = locationData.PostalCode;
+                    model.Region = locationData.Region;
+                    model.State = locationData.State;
                     var response = _locationService.Save(model);
 
                     if (response)
                     {
-                        TempData["SuccessMessage"] = "Location has been created successfully.";
+                        TempData["SuccessMessage"] = "Location has been updated successfully.";
 
                         return RedirectToAction("Index");
                     }
@@ -193,6 +205,8 @@ namespace Answer.Web.Controllers
                     return View(model);
                 }
             }
+
+            return View(model);
 
             return View(model);
 
@@ -247,6 +261,35 @@ namespace Answer.Web.Controllers
                     };
 
                     var response = _locationService.Save(saveEditModel);
+
+                    if (response)
+                    {
+                        TempData["SuccessMessage"] = "Location has been updated successfully.";
+
+                        return RedirectToAction("Index");
+                    }
+
+                    TempData["ErrorMessage"] = "Something went wrong.";
+
+                return View(model);
+            }
+            else
+            {
+                if (model.Parent != "" && ModelState["InternalAddress"].Errors.Count == 0 && ModelState["Name"].Errors.Count == 0)
+                {
+                    model.LoggedUserIdResult = GetCurrentUser();
+
+                    var locationData = _locationService.GetById(model.Parent);
+
+                    model.Address1 = locationData.Address1;
+                    model.Address2 = locationData.Address2;
+                    model.City = locationData.City;
+                    model.Country = locationData.Country;
+                    model.PostalCode = locationData.PostalCode;
+                    model.Region = locationData.Region;
+                    model.State = locationData.State;
+
+                    var response = _locationService.Save(model);
 
                     if (response)
                     {

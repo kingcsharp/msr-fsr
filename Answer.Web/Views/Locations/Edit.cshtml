@@ -28,7 +28,7 @@
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.Parent, htmlAttributes: new { @class = "control-label col-md-2" })
                                     <div class="col-md-8">
-                                        @Html.DropDownListFor(model => model.Parent, Model.ParentsLocations, "Select Parent", new { @class = "form-control" })
+                                        @Html.DropDownListFor(model => model.Parent, Model.ParentsLocations, "Select Parent", new { @class = "form-control select select2Form" })
                                         @Html.ValidationMessageFor(model => model.Parent, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
@@ -65,7 +65,7 @@
                                     <div class="form-group">
                                         @Html.LabelFor(model => model.Country, htmlAttributes: new { @class = "control-label col-md-2" })
                                         <div class="col-md-8">
-                                            @Html.DropDownListFor(model => model.Country, Model.Countries, "Select Country", new { @class = "form-control" })
+                                            @Html.DropDownListFor(model => model.Country, Model.Countries, "Select Country", new { @class = "form-control select select2Form" })
                                             @Html.ValidationMessageFor(model => model.Country, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
@@ -79,7 +79,7 @@
                                     <div class="form-group">
                                         @Html.LabelFor(model => model.Region, htmlAttributes: new { @class = "control-label col-md-2" })
                                         <div class="col-md-8">
-                                            @Html.DropDownListFor(model => model.Region, Model.Regions, "Select Region", new { @class = "form-control" })
+                                            @Html.DropDownListFor(model => model.Region, Model.Regions, "Select Region", new { @class = "form-control select select2Form" })
                                             @Html.ValidationMessageFor(model => model.Region, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
@@ -120,6 +120,18 @@
                 } else {
                     $('.toSlide').fadeIn('slow');
                 }
+            });
+            $("#Parent").select2({
+                placeholder: "Select Parent",
+                allowClear: true
+            });
+            $("#Country").select2({
+                placeholder: "Select Country",
+                allowClear: true
+            });
+            $("#Region").select2({
+                placeholder: "Select Region",
+                allowClear: true
             });
         });
 

@@ -62,7 +62,7 @@ namespace Msr.Services.Locations.ViewModels
                 Value = x.Id.ToString()
             }).OrderBy(o => o.Text).ToList();
 
-            ParentsLocations = locationService.GetParentLocations().Select(x => new SelectListItem
+            ParentsLocations = locationService.GetSitesAndRooms().Select(x => new SelectListItem
             {
                 Text = x.Name,
                 Value = x.Id

@@ -23,6 +23,11 @@ namespace Msr.Services.Locations
             return _dbContext.LocationViews;
         }
 
+        public IQueryable<ApprovedSitesAndRoomsView> GetLocationsApprovedSitesAndRoomsQueryable()
+        {
+            return _dbContext.ApprovedSitesAndRoomsViews;
+        }
+
         public LocationView GetById(string id)
         {
             return GetLocationsQueryable().SingleOrDefault(x => x.ObjectId == id);
@@ -139,8 +144,24 @@ namespace Msr.Services.Locations
 
         public List<LocationResult> GetParentLocations()
         {
-            var result = GetLocationsQueryable().Where(x => x.ParentLocation == null)
+            var result = GetLocationsQueryable().Where(x => x.ParentLocation == null && x.Status == "APPROVED")
                 .Select(x => new LocationResult() { Id = x.Id, Name = x.Name, ObJect_Id = x.ObjectId }).ToList();
+            return result;
+        }
+
+        /// <summary>
+        /// Sites: Parent Locations = NULL
+        /// Rooms: Parent Locations != NULL but id == the group of Parent Locations = NULL
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public List<LocationResult> GetSitesAndRooms()
+        {
+            //var parentLocationIds = GetLocationsQueryable().Where(x => x.ParentLocation == null).Select(x => x.Id);
+            //var result = GetLocationsQueryable().Where(x => (x.ParentLocation == null || x.ParentLocation != null && parentLocationIds.Contains(x.ParentLocation)) && x.Status == "APPROVED")
+            //    .Select(x => new LocationResult() { Id = x.Id, Name = x.Name, ObJect_Id = x.ObjectId }).ToList();
+            //return result;
+            var result = GetLocationsApprovedSitesAndRoomsQueryable().Select(x => new LocationResult() { Id = x.Id, Name = x.Name, ObJect_Id = x.OBJECT_ID }).ToList();
             return result;
         }
 

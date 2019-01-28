@@ -452,7 +452,7 @@ namespace Answer.Web.Controllers
 
             var refId = _purchesOrderService.GetHistId(currentUser.Id, id);
 
-            var purchaseApprovedData = _purchesOrderService.PurchasedApprovedDataById(refId);
+            var purchaseApprovedData = _purchesOrderService.PurchasedApprovedDataById(refId); 
 
             var fillList = _purchesOrderService.PurchasedOrderSearchTasks(purchaseApprovedData.HISTORY_REF_ID, currentUser.Id);
 

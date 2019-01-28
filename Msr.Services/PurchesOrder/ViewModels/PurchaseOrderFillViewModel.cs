@@ -121,11 +121,6 @@ namespace Msr.Services.PurchesOrder.ViewModels
 
         public void SetUp(PurchesOrderService purchesOrderService)
         {
-            var desiredLocations = new List<string>();
-            desiredLocations.Add("Arizona Service Center");
-            desiredLocations.Add("Oregon Service Center");
-            desiredLocations.Add("Ireland Service Center");
-            desiredLocations.Add("Israel Service Center");
 
             OwnerList = purchesOrderService.PurchasedOrderOwnerList().Select(x => new SelectListItem
             {
@@ -134,12 +129,11 @@ namespace Msr.Services.PurchesOrder.ViewModels
             }).OrderBy(o => o.Text).ToList();
 
             LocationList = purchesOrderService.PurchasedOrderLocationList()
-                .Where(x=> desiredLocations.Contains(x.Name))
                 .Select(x => new SelectListItem
-            {
-                Text = x.Name,
-                Value = x.Id.ToString()
-            }).OrderBy(o => o.Text).ToList();
+                {
+                    Text = x.Name,
+                    Value = x.Id.ToString()
+                }).OrderBy(o => o.Text).ToList();
 
             LocationList.Insert(0, new SelectListItem { Value = "", Text = "Select" });
         }
