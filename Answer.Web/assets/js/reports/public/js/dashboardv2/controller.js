@@ -413,6 +413,7 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
     }
 
     function filterBarchart(chartId, filters) {
+        //debugger;
         //an option would be to equal the filters
         //var length = filters.length;
         //while (length--) {
@@ -1137,6 +1138,7 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
                                 }
 
                                 var displayChartWithFilters = $scope.isOperationsDashboard ? 'style="display:none;' : '';
+                                debugger;
                                 //var displayChartWithFilters = '';
                                 var filterDiv = $('<div ' + displayChartWithFilters + '" data-chart="' + theChart.chartID + '" style="position:relative;z-index:99999">' +
                                     '<div style="float: left;margin: 5px;margin-left: 15px;width:110px;" ng-repeat="filter in filters[\'' + theChart.chartID + '\'].filters">' +

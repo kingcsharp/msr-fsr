@@ -131,57 +131,6 @@ app.service('report_v2Model', function (queryModel, c3Charts, reportHtmlWidgets,
         } else {
             generateNoDataHTML();
         }
-        /*
-
-                if (report.reportType == 'grid')
-                            {
-                                //var htmlCode = grid.getUIGrid(report);
-                                var htmlCode = grid.extendedGridV2(report,mode);
-                                var el = document.getElementById(report.parentDiv);
-
-                                        if (el)
-                                        {
-                                            angular.element(el).empty();
-                                            var $div = $(htmlCode);
-                                            angular.element(el).append($div);
-                                            angular.element(document).injector().invoke(function($compile) {
-                                                var scope = angular.element($div).scope();
-                                                $compile($div)(scope);
-                                                hideOverlay(report.parentDiv);
-                                            });
-                                        }
-
-
-                            } else {
-
-        if (data.length != 0)
-            {
-                    if (report.reportType == 'chart-line' || report.reportType == 'chart-donut' || report.reportType == 'chart-pie' || report.reportType == 'gauge')
-                            {
-
-                                        if (report.reportType == 'chart-donut')
-                                            report.properties.chart.type = 'donut';
-                                        if (report.reportType == 'chart-pie')
-                                            report.properties.chart.type = 'pie';
-                                        if (report.reportType == 'gauge')
-                                            report.properties.chart.type = 'gauge';
-                                generatec3Chart(report,mode);
-                            }
-                    if (report.reportType == 'indicator')
-                        {
-
-                            generateIndicator(report);
-                        }
-
-
-            } else {
-                 generateNoDataHTML()
-            }
-
-
-                            }
-        */
-
     }
 
     function getParent(elem, selector) {

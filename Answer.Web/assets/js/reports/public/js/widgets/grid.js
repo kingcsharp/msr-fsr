@@ -353,12 +353,13 @@ app.service('grid', ['$sce', function ($sce) {
             //elementName = "'"+column.collectionID.toLowerCase()+'_'+column.elementName+column.aggregation+"'";
             elementName = "'" + elementName + column.aggregation + "'";
         var elementNameAux = elementName;
+        //debugger;
         if (column.elementType === 'date')
             elementNameAux = "'" + 'wst' + column.elementID + '_original' + "'";
         htmlCode += '<div class="' + colClass + ' report-repeater-column-header" style="' + colWidth + '">' +
             '<table style="table-layout:fixed;width:100%">' +
             '<tr>' +
-            '<td style="overflow:hidden;white-space: nowrap;width:95%;">' + column.objectLabel +
+            '<td style="overflow:hidden;white-space: nowrap;width:95%;text-transform:capitalize">' + column.objectLabel +
             '<div class="filters">' +
             renderFilter(column, columnIndex, report, reportId) +
             '<div class="resetF">' +
