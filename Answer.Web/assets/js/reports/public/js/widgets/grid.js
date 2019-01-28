@@ -353,7 +353,7 @@ app.service('grid', ['$sce', function ($sce) {
             //elementName = "'"+column.collectionID.toLowerCase()+'_'+column.elementName+column.aggregation+"'";
             elementName = "'" + elementName + column.aggregation + "'";
         var elementNameAux = elementName;
-        //debugger;
+        //debugger; 
         if (column.elementType === 'date')
             elementNameAux = "'" + 'wst' + column.elementID + '_original' + "'";
         htmlCode += '<div class="' + colClass + ' report-repeater-column-header" style="' + colWidth + '">' +
