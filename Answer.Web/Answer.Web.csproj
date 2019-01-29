@@ -472,6 +472,7 @@
     <Content Include="assets\img\jpg.png" />
     <Content Include="assets\img\loading.gif" />
     <Content Include="assets\img\msr-ccs.png" />
+    <Content Include="assets\img\nice_loader.gif" />
     <Content Include="assets\img\profile-avatar.jpg" />
     <Content Include="assets\img\profile-widget-avatar.jpg" />
     <Content Include="assets\img\profile\picjumbo.com_HNCK4153_resize.jpg" />
@@ -491,7 +492,9 @@
     <Content Include="assets\js\bootbox.min.js" />
     <Content Include="assets\js\bootstrap-datepicker.min.js" />
     <Content Include="assets\js\bootstrap-datetimepicker.min.js" />
+    <Content Include="assets\js\grids\jgrid.defaults.js" />
     <Content Include="assets\js\grids\training.js" />
+    <Content Include="assets\js\plugins\jquery.blockUI.js" />
     <Content Include="assets\js\reports\libs\angular-bootstrap-colorpicker\bootstrap-colorpicker-module.min.js" />
     <Content Include="assets\js\reports\libs\angular-bootstrap-datetimepicker\bootstrap-datetimepicker.min.js" />
     <Content Include="assets\js\bootstrap-editable.min.js" />
