@@ -108,7 +108,7 @@ namespace Msr.Services.PurchesOrder
         }
         public List<SelectFile> PurchasedOrderLocationList()
         {
-            var result = _dbContext.Database.SqlQuery<SelectFile>($"SELECT DISTINCT TOP 500 NAME as Name,ROOT as Id FROM A_O_LOCATIONS WHERE ( CREATING_CO = '2' AND STATUS LIKE 'APPROVED%' ) AND (( NAME LIKE '%%' AND NAME LIKE '%%' AND NAME LIKE '%%' ) ) ORDER BY NAME").ToList();
+            var result = _dbContext.Database.SqlQuery<SelectFile>($"SELECT DISTINCT TOP 500 NAME as Name,ROOT as Id FROM A_O_LOCATIONS WHERE PARENT_LOCATION IS NULL and ( CREATING_CO = '2' AND STATUS LIKE 'APPROVED%' ) AND (( NAME LIKE '%%' AND NAME LIKE '%%' AND NAME LIKE '%%' ) ) ORDER BY NAME").ToList();
 
             return result;
         }
