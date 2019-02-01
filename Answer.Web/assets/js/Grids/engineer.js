@@ -264,7 +264,6 @@ Msr.WipGrid = Msr.WipGrid ||
                             isGridDone = true;
                         });
                         if (isGridDone) {
-                            console.log('sss');
                             $("#" + Msr.WipGrid.GetGridId()).jqGrid('resizeColumn', 'WoItem', maxWidth+25, true);
                             clearInterval(gridComplete);
                         }

@@ -192,7 +192,7 @@ namespace Answer.Web
             );
 
             bundles.Add(new StyleBundle("~/bundles/css/jquery-ui")
-                .Include("~/assets/css/jquery-ui/jquery-ui.css")
+                .Include("~/assets/css/jquery-ui/jquery-ui.css", new CssRewriteUrlTransform())
                 .Include("~/assets/css/jquery-ui/jquery.multiselect.css"));
 
             bundles.Add(new ScriptBundle("~/bundles/js/invoice-setup")
