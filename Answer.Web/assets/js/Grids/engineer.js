@@ -213,7 +213,6 @@ Msr.WipGrid = Msr.WipGrid ||
                 },
                 gridComplete: function () {
                     Msr.JqGridCommon.TriggerSaveLoadGridState(Msr.WipGrid.GetGridId());
-                    console.log('comp');
                     $('div.meter').each(function (index) {
                         var tooltiptime = '';
                         var type = $(this).data('type');
