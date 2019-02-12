@@ -17,7 +17,7 @@
                 name: 'RoleName',
                 index: 'RoleName',
                 key: true,
-                colmenu: false,
+                colmenu: true,
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 width: 50,
@@ -27,7 +27,7 @@
                 label: 'Duration',
                 name: 'Qty',
                 index: 'Qty',
-                colmenu: true,
+                colmenu: false,
                 editable: true, // must set editable to true if you want to make the field editable
                 editrules: { required: true },
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
@@ -39,7 +39,7 @@
                 label: 'Duration Type',
                 name: 'QtyType',
                 index: 'QtyType',
-                colmenu: true,
+                colmenu: false,
                 editable: true, // must set editable to true if you want to make the field editable
                 editrules: { required: true },
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
@@ -51,7 +51,7 @@
                 label: 'Labor Type',
                 name: 'LaborRole',
                 index: 'LaborRole',
-                colmenu: true,
+                colmenu: false,
                 editable: true, // must set editable to true if you want to make the field editable
                 editrules: { required: true },
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
@@ -82,8 +82,7 @@
         cellsubmit: 'clientArray',
         editurl: 'clientArray',
         autowidth: true,
-        colMenu: true,
-
+        colMenu: true
     });
     $('#jqGrid').navGrid("#jqGridPager", {
             search: false, // show search button on the toolbar

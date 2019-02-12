@@ -16,7 +16,7 @@
                 name: 'OBJ_TABLE',
                 index: 'OBJ_TABLE',
                 key: true,
-                colmenu: false,
+                colmenu: true,
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 width: 100,
@@ -26,7 +26,7 @@
                 label: 'NAME',
                 name: 'OBJ_DESC',
                 index: 'OBJ_DESC',
-                colmenu: true,
+                colmenu: false,
                 editable: true, // must set editable to true if you want to make the field editable
                 editrules: { required: true },
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
@@ -38,7 +38,7 @@
                 label: 'QTY',
                 name: 'QTY',
                 index: 'QTY',
-                colmenu: true,
+                colmenu: false,
                 editable: true, // must set editable to true if you want to make the field editable
                 editrules: { required: true },
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
@@ -50,7 +50,7 @@
                 label: 'ORDERING UNIT',
                 name: 'QTY_TYPE',
                 index: 'QTY_TYPE',
-                colmenu: true,
+                colmenu: false,
                 editable: true, // must set editable to true if you want to make the field editable
                 editrules: { required: true },
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },

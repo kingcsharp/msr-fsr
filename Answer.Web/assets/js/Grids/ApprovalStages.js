@@ -28,7 +28,7 @@ Msr.ApprovalStagesGrid = Msr.ApprovalStagesGrid || {
                     name: 'Id',
                     index: 'Id',
                     key: true,
-                    colmenu: false,
+                    colmenu: true,
                     coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                     searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                     width: 50,
@@ -38,7 +38,7 @@ Msr.ApprovalStagesGrid = Msr.ApprovalStagesGrid || {
                     label: 'Approval Stage Name',
                     name: 'StageName',
                     index: 'StageName',
-                    colmenu: true,
+                    colmenu: false,
                     editable: true, // must set editable to true if you want to make the field editable
                     editrules: { required: true },
                     coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },

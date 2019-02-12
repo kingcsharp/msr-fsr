@@ -12,7 +12,7 @@
                 name: 'RootId',
                 index: 'RootId',
                 key: true,
-                colmenu: false,
+                colmenu: true,
                 search: false,
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
@@ -46,7 +46,7 @@
                 label: 'Procedure Name',
                 name: 'Name',
                 index: 'Name',
-                colmenu: true,
+                colmenu: false,
                 editable: true, // must set editable to true if you want to make the field editable
                 editrules: { required: true },
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },

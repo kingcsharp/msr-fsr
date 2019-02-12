@@ -26,30 +26,30 @@ $(document).ready(function () {
                name: 'FirstName', index: 'FirstName', colmenu: true, coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true },
            },
            {
-               name: 'LastName', index: 'LastName', colmenu: true, coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true },
+               name: 'LastName', index: 'LastName', colmenu: false, coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true },
            },
              {
-                 name: 'TimeZone', index: 'TimeZone', colmenu: true, coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true },
+                 name: 'TimeZone', index: 'TimeZone', colmenu: false, coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true },
                  formatter: timezoneFormatter, coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true },
              },
              {
-                 name: 'CompanyName', index: 'CompanyName', colmenu: true, coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true },
+                 name: 'CompanyName', index: 'CompanyName', colmenu: false, coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true },
              },
               {
-                  name: 'RoleName', index: 'RoleName', colmenu: true, coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true },
+                  name: 'RoleName', index: 'RoleName', colmenu: false, coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true },
               },
             
              {
-                 name: 'Phone', index: 'Phone', colmenu: true, coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true },
+                 name: 'Phone', index: 'Phone', colmenu: false, coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true },
              },
              {
-                 name: 'Email', index: 'Email', colmenu: true, coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true },
+                 name: 'Email', index: 'Email', colmenu: false, coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true },
              },
              {
-                 name: 'UserName', index: 'UserName', colmenu: true, coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true },
+                 name: 'UserName', index: 'UserName', colmenu: false, coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true },
              },
              {
-                 name: 'Status', index: 'Status', colmenu: true, coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true },
+                 name: 'Status', index: 'Status', colmenu: false, coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true },
              },
              { name: 'ID', index: 'ID', key: true, hidden: false, editable: false, formatter: pwResetFormatter, width: 100, align: 'center' }
           

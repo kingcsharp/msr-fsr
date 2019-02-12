@@ -22,7 +22,7 @@ Msr.PurchaseOrderGrid = Msr.PurchaseOrderGrid ||
                     name: 'Root',
                     index: 'Root',
                     key: true,
-                    colmenu: false,
+                    colmenu: true,
                     sortable: false,
                     coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                     searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
@@ -159,7 +159,7 @@ Msr.PurchaseOrderGrid = Msr.PurchaseOrderGrid ||
                     label: 'Cust/Co/Dept',
                     name: 'CustomerCo',
                     index: 'CustomerCo',
-                    colmenu: true,
+                    colmenu: false,
                     editable: false,
                     editrules: { required: true },
                     coloptions: {

@@ -25,7 +25,7 @@ Msr.QuotesGrid = Msr.QuotesGrid ||
                         label: 'ObjectId',
                         name: 'ObjectId',
                         index: 'ObjectId',
-                        colmenu: false,
+                        colmenu: true,
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                         width: 150,
                         hidden: true,
@@ -75,7 +75,7 @@ Msr.QuotesGrid = Msr.QuotesGrid ||
                         label: 'Part/Kit No.',
                         name: 'PartKitNo',
                         index: 'PartKitNo',
-                        colmenu: true,
+                        colmenu: false,
                         editable: true, // must set editable to true if you want to make the field editable
                         editrules: { required: true },
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },

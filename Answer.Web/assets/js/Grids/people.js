@@ -28,7 +28,7 @@ Msr.PeopleGrid = Msr.PeopleGrid ||
                         name: 'Root',
                         index: 'Root',
                         key: true,
-                        colmenu: false,
+                        colmenu: true,
                         coloptions: {
                             sorting: false,
                             columns: true,
@@ -45,7 +45,7 @@ Msr.PeopleGrid = Msr.PeopleGrid ||
                         label: 'First Name',
                         name: 'FirstName',
                         index: 'FirstName',
-                        colmenu: true,
+                        colmenu: false,
                         editable: true, // must set editable to true if you want to make the field editable
                         editrules: { required: true },
                         coloptions: {

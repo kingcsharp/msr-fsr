@@ -24,7 +24,7 @@ Msr.MonitorsGrid = Msr.MonitorsGrid ||
                         name: 'RollUpId',
                         index: 'RollUpId',
                         key: true,
-                        colmenu: false,
+                        colmenu: true,
                         coloptions: {
                             sorting: false,
                             columns: true,
@@ -41,7 +41,7 @@ Msr.MonitorsGrid = Msr.MonitorsGrid ||
                         label: 'Description',
                         name: 'Description',
                         index: 'Description',
-                        colmenu: true,
+                        colmenu: false,
                         coloptions: {
                             sorting: false,
                             columns: true,

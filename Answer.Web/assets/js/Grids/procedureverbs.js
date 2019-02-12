@@ -25,7 +25,7 @@ Msr.ProcedureVerbsGrid = Msr.ProcedureVerbsGrid ||
                         name: 'Root',
                         index: 'Root',
                         key: true,
-                        colmenu: false,
+                        colmenu: true,
                         coloptions: {
                             sorting: false,
                             columns: true,
@@ -42,7 +42,7 @@ Msr.ProcedureVerbsGrid = Msr.ProcedureVerbsGrid ||
                         label: 'Name',
                         name: 'Name',
                         index: 'Name',
-                        colmenu: true,
+                        colmenu: false,
                         coloptions: {
                             sorting: false,
                             columns: true,

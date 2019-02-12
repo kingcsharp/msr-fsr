@@ -27,7 +27,7 @@ Msr.ActualPartsGrid = Msr.ActualPartsGrid ||
                         name: 'Root',
                         index: 'Root',
                         key: true,
-                        colmenu: false,
+                        colmenu: true,
                         coloptions: {
                             sorting: false,
                             columns: true,
@@ -86,7 +86,7 @@ Msr.ActualPartsGrid = Msr.ActualPartsGrid ||
                         label: 'Part Description',
                         name: 'PartDesc',
                         index: 'PartDesc',
-                        colmenu: true,
+                        colmenu: false,
                         editable: true, // must set editable to true if you want to make the field editable
                         editrules: { required: true },
                         coloptions: {

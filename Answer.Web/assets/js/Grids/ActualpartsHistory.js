@@ -76,10 +76,8 @@
                 width: 130,
                 formatter: 'date',
                 formatoptions: { srcformat: "m/d/Y H:i", newformat: "m/d/Y" },
-                align: 'left',
+                align: 'left'
             },
-           
-         
             {
                 label: 'Request Date',
                 name: 'RequestDate',
@@ -93,11 +91,7 @@
                 formatter: 'date',
                 formatoptions: { srcformat: "m/d/Y H:i", newformat: "m/d/Y" },
                 align: 'left'
-            },
-          
-     
-      
-          
+            }
         ],
         ajaxRowOptions: {
             type: "POST",
