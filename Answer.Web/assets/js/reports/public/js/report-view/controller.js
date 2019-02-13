@@ -76,8 +76,10 @@ app.controller('report_viewCtrl', function ($scope, $routeParams, report_v2Model
             elem.val = moment($item._d).format('M/D/YYYY');
         }
     }
+    //clearDt(\'' + columnIndex + '_\',\'' + column.id + '\',\'' + reportId + '\',\'1\',\'' + id + '\')
+
     $scope.clearDt = function (colIndex, colId, gridId) {
-        $scope['dimf'][colId + colIndex] = undefined;
+        $scope['dimf'][colId.toString() + colIndex.toString() + gridId.toString()] = undefined;
         $timeout(function () {
             //$scope['gridFilters' + gridId][(colId)] = undefined;
             var elem = getElemOfArr($scope['gridFilters' + gridId], 'elementID', colId + (dtNr === "1" ? dtNr : ''));
@@ -95,7 +97,7 @@ app.controller('report_viewCtrl', function ($scope, $routeParams, report_v2Model
         $select.search = undefined;
         //focus and open dropdown
         $select.activate();
-        debugger;
+        //debugger;
         //$scope['gridFilters' + gridId][(colId)] = undefined;
         var elem = getElemOfArr($scope['gridFilters' + gridId], 'elementID', colId);
         if (elem !== -1) {

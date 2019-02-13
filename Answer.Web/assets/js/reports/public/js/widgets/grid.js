@@ -388,19 +388,17 @@ app.service('grid', ['$sce', function ($sce) {
     }
 
     function getDateTimeFilter(column, columnIndex, reportId) {
-        var id = "dr_" + new Date().getTime().toString(); 
+        var id = "dr_" + new Date().getTime().toString();
         var from = '<div id="' + id + '" style="width:37%!important;position:relative;float: left;margin-right: 20px;">' +
-            '<input style="padding:2px" change="updateDtFilter(\'' + id + '\', dimf.' + column.id + columnIndex + ',\'' + column.id + '\',\'' + reportId + '\')" class="form-control" format="M/D/YYYY" ' +
-            'ng-model="dimf.' + column.id + columnIndex + '" ' +
-            'ng-model-options="{ updateOn: \'blur\' }" placeholder="M/D/YYYY" moment-picker="' +
-            column.id + columnIndex + '">' +
+            '<input style="padding:2px" change="updateDtFilter(\'' + id + '\', dimf.' + column.id.toString() + columnIndex.toString() + reportId.toString() + ',\'' + column.id + '\',\'' + reportId + '\')" class="form-control" format="M/D/YYYY" ' +
+            'ng-model="dimf.' + column.id.toString() + columnIndex.toString() + reportId.toString() + '" ' +
+            'ng-model-options="{ updateOn: \'blur\' }" placeholder="M/D/YYYY" moment-picker="' + column.id.toString() + columnIndex.toString() + reportId.toString() +  '">' +
             '<a class="btn btn-xs btn-link pull-right delbtn" ng-click="clearDt(\'' + columnIndex + '\',\'' + column.id + '\',\'' + reportId + '\',\'0\',\'' + id + '\') "><i class=" glyphicon glyphicon-remove"></i></a >' +
             '</div>';
         var to = '<div style="width:37%!important;position:relative;float: left;">' +
-            '<input style="padding:2px" change="updateDtFilter(\'' + id + '\', dimf.' + column.id + columnIndex + '_,\'' + column.id + '1\',\'' + reportId + '\')" class="form-control" format="M/D/YYYY" ' +
-            'ng-model="dimf.' + column.id + columnIndex + '_" ' +
-            'ng-model-options="{ updateOn: \'blur\' }" placeholder="M/D/YYYY" moment-picker="' +
-            column.id + columnIndex + '_">' +
+            '<input style="padding:2px" change="updateDtFilter(\'' + id + '\', dimf.' + column.id.toString() + columnIndex.toString() + reportId.toString() + '_,\'' + column.id + '1\',\'' + reportId + '\')" class="form-control" format="M/D/YYYY" ' +
+            'ng-model="dimf.' + column.id.toString() + columnIndex.toString() + reportId.toString() + '_" ' +
+            'ng-model-options="{ updateOn: \'blur\' }" placeholder="M/D/YYYY" moment-picker="' + column.id.toString() + columnIndex.toString() + reportId.toString() +  '_">' +
             '<a class="btn btn-xs btn-link pull-right delbtn" ng-click="clearDt(\'' + columnIndex + '_\',\'' + column.id + '\',\'' + reportId + '\',\'1\',\'' + id + '\') "><i class=" glyphicon glyphicon-remove"></i></a >' +
             '</div>';
         return from + to;
@@ -409,7 +407,7 @@ app.service('grid', ['$sce', function ($sce) {
     function smartDropdownFilter(column, columnIndex, reportId) {
         var id = "dr_" + new Date().getTime().toString();
         return '<div id="' + id + '" class="ui-selectDr">' +
-            '<ui-select append-to-body="true" ng-model="dimf.' + column.id + columnIndex +
+            '<ui-select append-to-body="true" ng-model="dimf.' + column.id.toString() + columnIndex.toString() + reportId.toString() + 
             '"on-select="elemChanged(\'' + id + '\',$item,\'' + column.id + '\',\'' + reportId + '\')">' +
             '<ui-select-match placeholder="Search...">{{ $select.selected.' + column.id + '}} ' +
             '<a class="btn btn-xs btn-link pull-right delbtn" ng-click="clear($event, $select,\'' + column.id + '\',\'' + reportId + '\',\'' + id + '\') "> <i class=" glyphicon glyphicon-remove"></i></a >' +

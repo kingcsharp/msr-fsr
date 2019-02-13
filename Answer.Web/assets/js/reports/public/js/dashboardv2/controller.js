@@ -355,7 +355,7 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
     }
     $scope.clearDt = function (colIndex, colId, gridId, dtNr, domElemId) {
         //debugger;
-        $scope['dimf'][colId + colIndex] = undefined;
+        $scope['dimf'][colId.toString() + colIndex.toString() + gridId.toString()] = undefined;
 
         $timeout(function () {
             //$scope['gridFilters' + gridId][(colId)] = undefined;
@@ -1138,7 +1138,7 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
                                 }
 
                                 var displayChartWithFilters = $scope.isOperationsDashboard ? 'style="display:none;' : '';
-                                debugger;
+                                //debugger;
                                 //var displayChartWithFilters = '';
                                 var filterDiv = $('<div ' + displayChartWithFilters + '" data-chart="' + theChart.chartID + '" style="position:relative;z-index:99999">' +
                                     '<div style="float: left;margin: 5px;margin-left: 15px;width:110px;" ng-repeat="filter in filters[\'' + theChart.chartID + '\'].filters">' +
