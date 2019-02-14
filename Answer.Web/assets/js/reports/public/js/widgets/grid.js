@@ -184,7 +184,7 @@ app.service('grid', ['$sce', function ($sce) {
         if (mode == 'preview') {
             pageBlock = "";
         }
-
+        var colWidth = '';
         var reportStyle = 'width:100%;padding-left:0px;padding-right:0px;';
         var headerStyle = 'width:100%;padding-left:0px;background-color:#ccc;';
         var rowStyle = 'width:100%;padding:0px';
@@ -229,7 +229,7 @@ app.service('grid', ['$sce', function ($sce) {
         htmlCode +=
             '<a class="btn btn-success help-btn" style="top:-41px;right: 5px;position: absolute;cursor: pointer;font-size: 18px;width: 187px;height: 32px;padding-top:3px;" title="Export table to excel" ng-click="saveToExcel(\'' +
             hashedID + '\',\'' + report.id + '\')"><i class="fa fa-file-excel-o"></i> Export to Excel</a>';
-        columns = report.properties.columns;
+        var columns = report.properties.columns;
         if (columns.length > 4)
             colWidth = 'width:' + 100 / columns.length + '%;float:left;';
         else
@@ -239,7 +239,7 @@ app.service('grid', ['$sce', function ($sce) {
         htmlCode += '<div ng-init="' + reportId + '= getQuery(\'' + hashedID + '\').data; gridFilters' + reportId + '=' + createFilter2(columns) + '" class="container-fluid" style="' + headerStyle + '">';
 
         for (var i = 0; i < columns.length; i++) {
-            htmlCode += getHeaderColumn(columns[i], i, report, reportId);
+            htmlCode += getHeaderColumn(columns[i], i, report, reportId, colWidth);
         }
 
         htmlCode += '</div>';
@@ -250,7 +250,7 @@ app.service('grid', ['$sce', function ($sce) {
             'ng-repeat="item in ' + reportId + '| filterGrid: gridFilters' + reportId + ' | orderBy:getReport(\'' + hashedID + '\').predicate:getReport(\'' + hashedID + '\').reverse" style="' + rowStyle + '"  >';
 
         for (var i = 0; i < columns.length; i++) {
-            htmlCode += getDataCell(columns[i], id, i, columnDefaultStyle);
+            htmlCode += getDataCell(columns[i], id, i, columnDefaultStyle, colWidth);
         }
 
         htmlCode += '</div>';
@@ -268,7 +268,7 @@ app.service('grid', ['$sce', function ($sce) {
             if (columns[i].aggregation)
                 //elementName = columns[i].collectionID.toLowerCase()+'_'+columns[i].elementName+columns[i].aggregation;
                 elementName = elementName + columns[i].aggregation;
-            htmlCode += '<div class=" calculus-data-column ' + colClass + ' " style="' + colWidth + '"> ' + calculateForColumn(report, i, elementName) + ' </div>';
+            htmlCode += '<div class=" calculus-data-column ' + colClass + ' " style="' + colWidth + '"> ' + calculateForColumn(report, i, elementName, columns) + ' </div>';
         }
         htmlCode += '</div> </div>';
         return htmlCode;
@@ -344,7 +344,7 @@ app.service('grid', ['$sce', function ($sce) {
         return filter;
     }
 
-    function getHeaderColumn(column, columnIndex, report, reportId) {
+    function getHeaderColumn(column, columnIndex, report, reportId, colWidth) {
         var htmlCode = '';
         //var elementName = "'"+column.id+"'";
         var elementID = 'wst' + column.elementID.toLowerCase();
@@ -392,13 +392,13 @@ app.service('grid', ['$sce', function ($sce) {
         var from = '<div id="' + id + '" style="width:37%!important;position:relative;float: left;margin-right: 20px;">' +
             '<input style="padding:2px" change="updateDtFilter(\'' + id + '\', dimf.' + column.id.toString() + columnIndex.toString() + reportId.toString() + ',\'' + column.id + '\',\'' + reportId + '\')" class="form-control" format="M/D/YYYY" ' +
             'ng-model="dimf.' + column.id.toString() + columnIndex.toString() + reportId.toString() + '" ' +
-            'ng-model-options="{ updateOn: \'blur\' }" placeholder="M/D/YYYY" moment-picker="' + column.id.toString() + columnIndex.toString() + reportId.toString() +  '">' +
+            'ng-model-options="{ updateOn: \'blur\' }" placeholder="M/D/YYYY" moment-picker="' + column.id.toString() + columnIndex.toString() + reportId.toString() + '">' +
             '<a class="btn btn-xs btn-link pull-right delbtn" ng-click="clearDt(\'' + columnIndex + '\',\'' + column.id + '\',\'' + reportId + '\',\'0\',\'' + id + '\') "><i class=" glyphicon glyphicon-remove"></i></a >' +
             '</div>';
         var to = '<div style="width:37%!important;position:relative;float: left;">' +
             '<input style="padding:2px" change="updateDtFilter(\'' + id + '\', dimf.' + column.id.toString() + columnIndex.toString() + reportId.toString() + '_,\'' + column.id + '1\',\'' + reportId + '\')" class="form-control" format="M/D/YYYY" ' +
             'ng-model="dimf.' + column.id.toString() + columnIndex.toString() + reportId.toString() + '_" ' +
-            'ng-model-options="{ updateOn: \'blur\' }" placeholder="M/D/YYYY" moment-picker="' + column.id.toString() + columnIndex.toString() + reportId.toString() +  '_">' +
+            'ng-model-options="{ updateOn: \'blur\' }" placeholder="M/D/YYYY" moment-picker="' + column.id.toString() + columnIndex.toString() + reportId.toString() + '_">' +
             '<a class="btn btn-xs btn-link pull-right delbtn" ng-click="clearDt(\'' + columnIndex + '_\',\'' + column.id + '\',\'' + reportId + '\',\'1\',\'' + id + '\') "><i class=" glyphicon glyphicon-remove"></i></a >' +
             '</div>';
         return from + to;
@@ -407,7 +407,7 @@ app.service('grid', ['$sce', function ($sce) {
     function smartDropdownFilter(column, columnIndex, reportId) {
         var id = "dr_" + new Date().getTime().toString();
         return '<div id="' + id + '" class="ui-selectDr">' +
-            '<ui-select append-to-body="true" ng-model="dimf.' + column.id.toString() + columnIndex.toString() + reportId.toString() + 
+            '<ui-select append-to-body="true" ng-model="dimf.' + column.id.toString() + columnIndex.toString() + reportId.toString() +
             '"on-select="elemChanged(\'' + id + '\',$item,\'' + column.id + '\',\'' + reportId + '\')">' +
             '<ui-select-match placeholder="Search...">{{ $select.selected.' + column.id + '}} ' +
             '<a class="btn btn-xs btn-link pull-right delbtn" ng-click="clear($event, $select,\'' + column.id + '\',\'' + reportId + '\',\'' + id + '\') "> <i class=" glyphicon glyphicon-remove"></i></a >' +
@@ -430,7 +430,7 @@ app.service('grid', ['$sce', function ($sce) {
         return text;
     }
 
-    function getDataCell(column, gridID, columnIndex, columnDefaultStyle) {
+    function getDataCell(column, gridID, columnIndex, columnDefaultStyle, colWidth) {
         var htmlCode = '';
 
         //var elementName = column.collectionID.toLowerCase()+'_'+column.elementName;
@@ -523,8 +523,9 @@ app.service('grid', ['$sce', function ($sce) {
         }
 
         var defaultAligment = '';
-        if (column.elementType === 'number')
-            defaultAligment = 'text-align: right;';
+        if (column.elementType === 'number') {
+            defaultAligment = 'text-align: left;';
+        }
         //with popover
         /* htmlCode += '<div id="ROW_'+gridID+'" class="repeater-data-column '+colClass+' popover-primary" style="'+columnDefaultStyle+columnStyle+colWidth+defaultAligment+'" popover-trigger="mouseenter" popover-placement="top" popover-title="'+column.objectLabel+'" popover="{{item.'+elementName+'}}" ng-click="cellClick(\''+hashedID+'\',item,'+'\''+elementID+'\''+','+'\''+elementName+'\''+')">'+theValue+' </div>';
         */
@@ -536,7 +537,7 @@ app.service('grid', ['$sce', function ($sce) {
     }
 
 
-    function calculateForColumn(report, columnIndex, elementName) {
+    function calculateForColumn(report, columnIndex, elementName, columns) {
         var htmlCode = '';
 
         if (columns[columnIndex].operationSum === true) {
