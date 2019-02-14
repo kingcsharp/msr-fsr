@@ -181,8 +181,11 @@ app.controller('report_viewCtrl', function ($scope, $routeParams, report_v2Model
 
     $scope.signalOptions = widgetsCommon.signalOptions;
 
-    $scope.saveToExcel = function (reportHash) {
-        report_v2Model.saveToExcel($scope, reportHash, $scope.selectedReport);
+    $scope.saveToExcel = function (reportHash, reportId, reportCreatedId) {
+        var copyReport = angular.copy($scope.selectedReport);
+        copyReport.query.data = filterGridToExport($scope[reportCreatedId], $scope['gridFilters' + reportCreatedId]);
+
+        report_v2Model.saveToExcel($scope, reportHash, copyReport);
     }
     $scope.orderColumn = function (columnIndex, desc, hashedID) {
         report_v2Model.orderColumn($scope.selectedReport, columnIndex, desc, hashedID);
@@ -213,7 +216,58 @@ app.controller('report_viewCtrl', function ($scope, $routeParams, report_v2Model
         report_v2Model.getReportDataNextPage($scope.selectedReport, $scope.page, $sessionStorage.getObject('localapiparams'));
     }
 
+    function filterGridToExport(collection, filters) {
+        // we define our output and keys array;
+        var output = [], keys = [];
+        // we utilize angular's foreach function
+        // this takes in our original collection and an iterator function
 
+        angular.forEach(collection, function (item) {
+            var filtersLength = filters.length;
+            var addItem = true;
+            while (filtersLength--) {
+                var filterElem = filters[filtersLength];
+                //debugger;
+                if (filterElem.fromDate !== undefined) {
+                    var d1 = moment(item[filterElem.elementID], 'MMMM-YY')._d;
+                    var d2 = moment(filterElem.val, 'M/D/YYYY')._d;
+
+                    addItem = filterElem.val === '' || filterElem.val === undefined ||
+                        d1.getFullYear() > d2.getFullYear() ||
+                        d1.getFullYear() === d2.getFullYear() &&
+                        d1.getMonth() >= d2.getMonth();
+                } else if (filterElem.toDate !== undefined) {
+                    //need to remove the 1 to get the value of the item to check out
+                    var d3 = moment(item[filterElem.elementID.replace('1', '')], 'MMMM-YY')._d;
+                    var d4 = moment(filterElem.val, 'M/D/YYYY')._d;
+
+                    addItem = filterElem.val === '' || filterElem.val === undefined ||
+                        d3.getFullYear() < d4.getFullYear() ||
+                        d3.getFullYear() === d4.getFullYear() &&
+                        d3.getMonth() <= d4.getMonth();
+                } else {
+                    if (filterElem.val !== undefined && filterElem.val !== '') {
+                        var type = typeof item[filterElem.elementID];
+                        if (type == "number" && (item[filterElem.elementID]).toString().indexOf((filterElem.val).toString()) === -1) {
+                            addItem = false;
+                        }
+                        if (type == "string" && item[filterElem.elementID].toLowerCase().indexOf(filterElem.val.toLowerCase()) === -1) {
+                            addItem = false;
+                        }
+                    }
+                }
+                if (!addItem) {
+                    filtersLength = 0;
+                }
+            }
+            if (addItem) {
+                output.unshift(item);
+            }
+        });
+        // return our array which should be devoid of
+        // any duplicates
+        return output;
+    }
 
 });
 

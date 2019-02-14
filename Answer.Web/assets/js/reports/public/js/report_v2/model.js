@@ -68,7 +68,6 @@ app.service('report_v2Model', function (queryModel, c3Charts, reportHtmlWidgets,
                                 var scope = angular.element($div).scope();
                                 $compile($div)(scope);
                                 hideOverlay(report.parentDiv);
-                                debugger;
                                 if (isOperationsDashboard) {
                                     var chartsContainer = getParent('#' + report.parentDiv, '.col-md-6.ndContainer');
 

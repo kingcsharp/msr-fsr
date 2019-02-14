@@ -223,18 +223,21 @@ app.service('grid', ['$sce', function ($sce) {
             columnDefaultStyle += 'border-bottom: ' + theProperties.rowBottomLineWidth + 'px solid ' + theProperties.rowBorderColor + ';';
             columnDefaultStyle += 'border-right: ' + theProperties.columnLineWidht + 'px solid ' + theProperties.rowBorderColor + ';';
         }
-
-
+        var reportId = 'report' + createId();
         var htmlCode = '<div ' + pageBlock + ' id="REPORT_' + id + '" ndType="extendedGrid" class="container-fluid report-container" style="min-height: 60vh;' + reportStyle + '">';
         htmlCode +=
-            '<a class="btn btn-success help-btn" style="top:-41px;right: 5px;position: absolute;cursor: pointer;font-size: 18px;width: 187px;height: 32px;padding-top:3px;" title="Export table to excel" ng-click="saveToExcel(\'' +
-            hashedID + '\',\'' + report.id + '\')"><i class="fa fa-file-excel-o"></i> Export to Excel</a>';
+            '<a class="btn btn-success help-btn" style="top:-41px;right: 5px;position: absolute;' +
+            'cursor: pointer;font-size: 18px;width: 187px;height: 32px;padding-top:3px;" ' +
+            'title="Export table to excel" ' +
+            'ng-click="saveToExcel(\'' + hashedID + '\',\'' + report.id + '\',\'' + reportId + '\')">' +
+            '<i class="fa fa-file-excel-o"></i> Export to Excel</a>';
         var columns = report.properties.columns;
-        if (columns.length > 4)
+        if (columns.length > 4) {
             colWidth = 'width:' + 100 / columns.length + '%;float:left;';
-        else
+        } else {
             colClass = 'col-xs-' + 12 / columns.length;
-        var reportId = 'report' + createId();
+        }
+
         //header
         htmlCode += '<div ng-init="' + reportId + '= getQuery(\'' + hashedID + '\').data; gridFilters' + reportId + '=' + createFilter2(columns) + '" class="container-fluid" style="' + headerStyle + '">';
 
@@ -642,7 +645,7 @@ app.service('grid', ['$sce', function ($sce) {
         return lastValue;
     }
 
-
+    //Deprecated
     function getColumnDropDownHTMLCode(column, columnIndex, elementName, columnType, report) {
         if (column.elementType == 'date') {
             var elementID = 'wst' + column.elementID.toLowerCase();
@@ -661,15 +664,9 @@ app.service('grid', ['$sce', function ($sce) {
             +
             '      <ul class="dropdown-menu">' +
             '      <li><a ng-click="reverse = true; orderColumn(' +
-            columnIndex +
-            ',false,' +
-            quotedHashedID() +
-            ')">Ascending</a></li>' +
+            columnIndex + ',false,' + quotedHashedID() + ')">Ascending</a></li>' +
             '      <li><a ng-click="reverse = false; orderColumn(' +
-            columnIndex +
-            ',true,' +
-            quotedHashedID() +
-            ')">Descending</a></li>' +
+            columnIndex + ',true,' + quotedHashedID() + ')">Descending</a></li>' +
             '      </ul>' +
             '</li>';
 
