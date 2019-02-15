@@ -521,6 +521,7 @@
     <Content Include="assets\js\bootbox.min.js" />
     <Content Include="assets\js\bootstrap-datepicker.min.js" />
     <Content Include="assets\js\bootstrap-datetimepicker.min.js" />
+    <Content Include="assets\js\blockLayout.ui.js" />
     <Content Include="assets\js\grids\jgrid.defaults.js" />
     <Content Include="assets\js\grids\training.js" />
     <Content Include="assets\js\plugins\jquery.blockUI.js" />
