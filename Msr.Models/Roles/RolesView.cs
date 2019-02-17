@@ -18,6 +18,10 @@ namespace Msr.Models.Roles
 
         public string SecurityLevelName { get; set; }
 
+        public string Comments { get; set; }
+
+        public string TrainingIdRev { get; set; }
+
         public string Root { get; set; }
 
         public string RoleName { get; set; }

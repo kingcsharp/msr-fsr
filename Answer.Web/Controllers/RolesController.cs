@@ -9,6 +9,9 @@ using System.Web.Mvc;
 using Answer.Web.Filters;
 using Msr.Models.Menus;
 using Msr.Services.Users;
+using Msr.Services.Documents;
+using System.Web.Script.Serialization;
+using Msr.Commons.Files;
 
 namespace Answer.Web.Controllers
 {
@@ -17,11 +20,14 @@ namespace Answer.Web.Controllers
     {
         private readonly RoleService _roleService;
         private readonly UserService _userService;
+        private readonly DocumentFilesService _documentFilesService;
+
 
         public RolesController()
         {
             _roleService = new RoleService();
             _userService = new UserService();
+            _documentFilesService = new DocumentFilesService();
         }
 
         public ActionResult Index()
@@ -128,7 +134,7 @@ namespace Answer.Web.Controllers
 
             var vm = new SaveRoleViewModel();
 
-            vm.Setup(_roleService, _userService, currentUser);
+            vm.Setup(_documentFilesService, _roleService, _userService, currentUser);
 
             return View(vm);
         }
@@ -154,13 +160,13 @@ namespace Answer.Web.Controllers
                 {
                     TempData["ErrorMessage"] = "Something went wrong.";
 
-                    vm.Setup(_roleService, _userService, currentUser);
+                    vm.Setup(_documentFilesService, _roleService, _userService, currentUser);
 
                     return View(vm);
                 }
             }
 
-            vm.Setup(_roleService, _userService, currentUser);
+            vm.Setup(_documentFilesService, _roleService, _userService, currentUser);
 
             return View(vm);
         }
@@ -173,7 +179,23 @@ namespace Answer.Web.Controllers
             var role = _roleService.GetRoleById(id);
 
             vm.Read(role);
-            vm.Setup(_roleService, _userService, currentUser);
+            vm.Setup(_documentFilesService, _roleService, _userService, currentUser);
+
+            var preview = string.Join(",", vm.DocLinks.ToArray().Select(x => string.Format("{0}{1}{0}", "\'", x.SERVER_PATH)));
+            ViewBag.Preview = preview;
+
+            var jsonSerialiser = new JavaScriptSerializer();
+            var previewConfig = jsonSerialiser.Serialize(vm.DocLinks.Select(x => new
+            {
+                caption = x.NAME,
+                type = MimeTypes.GetContentType(x.CONTENTTYPE),
+                size = 6666,
+                url = Url.Action("DeletesingleReference", "Documents", new { file = x.LINKED_DOC_ID }),
+                downloadUrl = x.SERVER_PATH,
+                key = x.LINKED_DOC_ID
+            }));
+
+            ViewBag.PreviewConfig = previewConfig;
 
             return View(vm);
         }
@@ -194,15 +216,15 @@ namespace Answer.Web.Controllers
                     TempData["SuccessMessage"] = "User Role has been Updated successfully.";
                     return RedirectToAction("Index");
                 }
-
-                TempData["ErrorMessage"] = "Something went wrong.";
-
-                model.Setup(_roleService, _userService, currentUser);
-
-                return View(model);
+                else
+                {
+                    TempData["ErrorMessage"] = "Something went wrong.";
+                    model.Setup(_documentFilesService, _roleService, _userService, currentUser);
+                    return View(model);
+                }
             }
 
-            model.Setup(_roleService, _userService, currentUser);
+            model.Setup(_documentFilesService , _roleService, _userService, currentUser);
 
             return View(model);
         }
@@ -233,7 +255,7 @@ namespace Answer.Web.Controllers
             var saveRoleViewModel = new SaveRoleViewModel();
 
             saveRoleViewModel.Read(model);
-            saveRoleViewModel.Setup(_roleService, _userService, currentUser);
+            saveRoleViewModel.Setup(_documentFilesService, _roleService, _userService, currentUser);
 
             return View(saveRoleViewModel);
         }

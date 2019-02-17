@@ -10,6 +10,7 @@ using System.Linq;
 using Msr.Models.Common;
 using Msr.Models.People;
 using Msr.Services.Roles.Messages;
+using Msr.Services.Documents;
 
 namespace Msr.Services.Roles
 {
@@ -68,8 +69,15 @@ namespace Msr.Services.Roles
         {
             try
             {
+                var documentFilesService = new DocumentFilesService();
+                var refFile = string.Join(", ", model.ReferenceFiles);
 
-                var saveUserRoleProcedure = new SaveUserRoleProcedure { Name = model.Name, SecurityLevel = model.SecurityLevel, NTLogin = model.NTLogin };
+                var saveUserRoleProcedure = new SaveUserRoleProcedure { Name = model.Name,
+                                                                        SecurityLevel = model.SecurityLevel,
+                                                                        TrainingIDRev = model.TrainingIdRev,
+                                                                        Comments = model.Comments,
+                                                                        ReferenceFiles = refFile,
+                                                                        NTLogin = model.NTLogin };
 
                 _dbContext.Database.ExecuteStoredProcedure(saveUserRoleProcedure);
 
@@ -100,6 +108,7 @@ namespace Msr.Services.Roles
                     _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
                 }
 
+
                 return true;
             }
             catch (Exception ex)
@@ -114,11 +123,17 @@ namespace Msr.Services.Roles
         {
             try
             {
+                var documentFilesService = new DocumentFilesService();
+                var refFile = string.Join(", ", documentFilesService.GetDocByObjectId(model.ObjectId).Select(x => x.LINKED_DOC_ID).ToList());
+
                 var saveUserRoleProcedure = new SaveUserRoleProcedure
                 {
                     Id = model.WfId,
                     Name = model.Name,
                     SecurityLevel = model.SecurityLevel,
+                    TrainingIDRev = model.TrainingIdRev,
+                    ReferenceFiles = refFile,
+                    Comments = model.Comments,
                     NTLogin = model.NTLogin
                 };
 
