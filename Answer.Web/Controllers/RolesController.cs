@@ -260,9 +260,16 @@ namespace Answer.Web.Controllers
             return View(saveRoleViewModel);
         }
 
-        public ActionResult LoadPerson()
+        public ActionResult LoadPersonDate(string roleId, string userId)
         {
-            return PartialView("PersonDate");
+            var currentUser = GetCurrentUser();
+            string fullName = _roleService.GetPeopleAssigned(userId, currentUser.Company).Where(x => x.Root == userId).Select(x => x.Full_Name).FirstOrDefault();
+        
+            CertificationRole certificationRole = new CertificationRole();
+            certificationRole.Show = fullName;
+            certificationRole.Value = userId;
+
+            return PartialView("_PersonDate", certificationRole);
         }
 
     }

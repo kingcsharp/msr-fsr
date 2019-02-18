@@ -58,12 +58,9 @@ namespace Msr.Services.Roles.ViewModels
 
         public List<CertificationRole> CertificationRoleList { get; set; }
 
-        //Bpp Will need to change or delete
-        //[Display(Name = "Start Date :")]
-        //public DateTime? StartDate { get; set; }
-
-        //[Display(Name = "End Date :")]
-        //public DateTime? EndDate { get; set; }
+        public IEnumerable<DateTime?> StartDate { get; set; }
+        public IEnumerable<DateTime?>  EndDate { get; set; }
+        public IEnumerable<string> CalendarUserId { get; set; }
 
         [Display(Name = "Training ID and Rev :")]
         public string TrainingIdRev { get; set; }
@@ -109,7 +106,6 @@ namespace Msr.Services.Roles.ViewModels
                 }
             };
 
-
             ListChildRoles = roleService.GetRolesList(getCurrentUser.Id).Select(x => new SelectListItem
             {
                 Text = x.Name,
@@ -128,8 +124,6 @@ namespace Msr.Services.Roles.ViewModels
 
             PeopleAssigned = certificationRoles.Select(x => x.Value).ToList();
             CertificationRoleList = certificationRoles.ToList();
-            //StartDate = certificationRoles.Select(x => x.StartDate).FirstOrDefault();
-            //EndDate = certificationRoles.Select(x => x.EndDate).FirstOrDefault();
 
             DocLinks = documentFilesService.GetDocByObjectId(ObjectId);
         }

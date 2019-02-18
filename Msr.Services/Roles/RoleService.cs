@@ -103,7 +103,13 @@ namespace Msr.Services.Roles
 
                 foreach (var file in model.PeopleAssigned)
                 {
-                    var saveFileProcedure = new SaveRoleAssignPersonRoleProcedure() { Child = file, StrId = saveUserRoleProcedure.ReturnID, NTLogin = model.NTLogin };
+                    int index = model.CalendarUserId.ToList().FindIndex(x => x == file);
+ 
+                    var saveFileProcedure = new SaveRoleAssignPersonRoleProcedure() { Child = file, StrId = saveUserRoleProcedure.ReturnID,
+                                                                                      NTLogin = model.NTLogin,
+                                                                                      StartDate = model.StartDate.ToArray()[index],
+                                                                                      EndDate = model.EndDate.ToArray()[index]
+                                                                                    };
 
                     _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
                 }
@@ -158,15 +164,15 @@ namespace Msr.Services.Roles
 
                 foreach (var personId in model.PeopleAssigned)
                 {
+
+                    int index = model.CalendarUserId.ToList().FindIndex(x => x == personId);
                     var saveRoleAssignPersonRoleProcedure = new SaveRoleAssignPersonRoleProcedure
-                    {
+                    {                
                         Child = personId,
                         StrId = model.WfId,
-                        NTLogin = model.NTLogin
-
-                        //bpp
-                        //StartDate = model.StartDate,
-                        //EndDate = model.EndDate
+                        NTLogin = model.NTLogin,
+                        StartDate = model.StartDate.ToArray()[index],
+                        EndDate = model.EndDate.ToArray()[index]
                     };
 
                     _dbContext.Database.ExecuteStoredProcedure(saveRoleAssignPersonRoleProcedure);

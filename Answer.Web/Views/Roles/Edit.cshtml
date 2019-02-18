@@ -168,20 +168,24 @@
                     return '';
                 }
             });
+
             var valuePeople = '@selectedPeoples';
             var selectedPeoplesList = valuePeople.split(",");
             var currentPeopleList = selectedPeoplesList;
 
             $(".selectassignedpeoples").val(selectedPeoplesList).trigger("change");
 
-
             var IDs = [];
             $("#person>div").each(function (i) {
                 IDs[i] = $(this).prop('id');
             });
 
-
             $(".selectassignedpeoples").change(function (e) {
+                IDs = [];
+                $("#person>div").each(function (i) {
+                    IDs[i] = $(this).prop('id');
+                });
+                
                 /* Logic here does not execute when val() is used */
                 if ($(this).val() != null) {
                     currentPeopleList = $(this).val().toString().split(",");
@@ -193,7 +197,24 @@
                 //This would be someone was added to the people list
                 for (var i = currentPeopleList.length; i--;) {
                     if (IDs.indexOf(currentPeopleList[i]) === -1) {
-                        alert("Add: " + currentPeopleList[i]);
+
+                        var roleId = window.location.href.match(/(\d+)$/g);
+
+                        $.ajax({
+                            url: '@Url.Action("LoadPersonDate", "Roles")?RoleId=' + roleId + '&userId=' + currentPeopleList[i],
+                            type: 'GET',
+                            error: function (xhr) {
+                                alert('Error: ' + xhr.statusText);
+                            },
+                            success: function (result) {
+                                $('#person').append(result);
+
+                                $('.date-picker').datepicker({
+                                    format: 'mm/dd/yyyy',
+                                    autoclose: true
+                                });
+                            }
+                        });
                     }
                 }
                 
@@ -201,17 +222,12 @@
                 //Someone was removed from the people list
                 for (var i = IDs.length; i--;) {
                     if (currentPeopleList.indexOf(IDs[i]) === -1) {
-                        //alert("Remove: " + IDs[i]);
                         $('#' + IDs[i]).remove();
                     } else if (currentPeopleList.length == 0) {
+                        alert("Remove2");
                         $('#' + IDs[i]).remove();
                     }
                 }
-
-                $("#person>div").each(function (i) {
-                    IDs[i] = $(this).prop('id');
-                });
-
             });
 
 
