@@ -19,7 +19,7 @@ namespace Msr.Services.Roles.ViewModels
             ChildRoles = new List<string>();
             PeopleAssigned = new List<string>();
             ReferenceFiles = new List<string>();
-            //ListReferenceFiles = new List<SelectListItem>();
+            CertificationRoleList = new List<CertificationRole>();
         }
 
         public string Id { get; set; }
@@ -56,20 +56,20 @@ namespace Msr.Services.Roles.ViewModels
 
         public List<SelectListItem> ListPeopleAssigned { get; set; }
 
-        //Bpp Will need to change or delete
-        [Display(Name = "Start Date :")]
-        public DateTime? StartDate { get; set; }
+        public List<CertificationRole> CertificationRoleList { get; set; }
 
-        [Display(Name = "End Date :")]
-        public DateTime? EndDate { get; set; }
+        //Bpp Will need to change or delete
+        //[Display(Name = "Start Date :")]
+        //public DateTime? StartDate { get; set; }
+
+        //[Display(Name = "End Date :")]
+        //public DateTime? EndDate { get; set; }
 
         [Display(Name = "Training ID and Rev :")]
         public string TrainingIdRev { get; set; }
 
         [Display(Name = "Reference Docs :")]
         public List<string> ReferenceFiles { get; set; }
-
-        //public IList<SelectListItem> ListReferenceFiles { get; set; }
 
         public List<DocLink> DocLinks { get; set; }
 
@@ -127,8 +127,9 @@ namespace Msr.Services.Roles.ViewModels
             var certificationRoles = roleService.GetAssignedWithCetificatePeople(Id, getCurrentUser.Id);
 
             PeopleAssigned = certificationRoles.Select(x => x.Value).ToList();
-            StartDate = certificationRoles.Select(x => x.StartDate).FirstOrDefault();
-            EndDate = certificationRoles.Select(x => x.EndDate).FirstOrDefault();
+            CertificationRoleList = certificationRoles.ToList();
+            //StartDate = certificationRoles.Select(x => x.StartDate).FirstOrDefault();
+            //EndDate = certificationRoles.Select(x => x.EndDate).FirstOrDefault();
 
             DocLinks = documentFilesService.GetDocByObjectId(ObjectId);
         }

@@ -1,4 +1,6 @@
-﻿@model Msr.Services.Roles.ViewModels.SaveRoleViewModel
+﻿@using Msr.Models.Roles
+@model Msr.Services.Roles.ViewModels.SaveRoleViewModel
+
 @{
     ViewBag.Title = "Update Role or Certification";
 }
@@ -63,7 +65,7 @@
                                 @Html.ValidationMessageFor(model => model.PeopleAssigned, "", new { @class = "text-danger" })
                             </div>
                         </div>
-@*  *@
+                        @*  *@
                         <div class="form-group">
                             @Html.LabelFor(model => model.TrainingIdRev, htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-8">
@@ -93,24 +95,15 @@
                             </div>
                         </div>
 
-
-
-                        <div class="form-group">
-                                @Html.LabelFor(model => model.StartDate, htmlAttributes: new { @class = "control-label col-md-2" })
-                                <div class="col-md-8">
-                                    @Html.TextBoxFor(model => model.StartDate, "{0:MM/dd/yyyy}", new { @class = "form-control date-picker" })
-                                    @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.EndDate, htmlAttributes: new { @class = "control-label col-md-2" })
-                                <div class="col-md-8">
-                                    @Html.TextBoxFor(model => model.EndDate, "{0:MM/dd/yyyy}", new { @class = "form-control date-picker" })
-                                    @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
-                                </div>
-                            </div>
-
-
+                        <div id="person" class="form-group">              
+                            @if (Model.CertificationRoleList != null && Model.CertificationRoleList.Count() > 0)
+                            {
+                                foreach (CertificationRole certRole in Model.CertificationRoleList)
+                                {
+                                    @Html.Partial("_PersonDate", certRole);
+                                }
+                            }
+                        </div>
 
                         <div class="form-group">
                             <div class="col-md-offset-2 col-md-8">
@@ -177,10 +170,49 @@
             });
             var valuePeople = '@selectedPeoples';
             var selectedPeoplesList = valuePeople.split(",");
+            var currentPeopleList = selectedPeoplesList;
 
             $(".selectassignedpeoples").val(selectedPeoplesList).trigger("change");
 
 
+            var IDs = [];
+            $("#person>div").each(function (i) {
+                IDs[i] = $(this).prop('id');
+            });
+
+
+            $(".selectassignedpeoples").change(function (e) {
+                /* Logic here does not execute when val() is used */
+                if ($(this).val() != null) {
+                    currentPeopleList = $(this).val().toString().split(",");
+                } else {
+                    currentPeopleList = [];
+                }
+
+                //currentPeopleList not in the DIVS
+                //This would be someone was added to the people list
+                for (var i = currentPeopleList.length; i--;) {
+                    if (IDs.indexOf(currentPeopleList[i]) === -1) {
+                        alert("Add: " + currentPeopleList[i]);
+                    }
+                }
+                
+                //Needs to be removed
+                //Someone was removed from the people list
+                for (var i = IDs.length; i--;) {
+                    if (currentPeopleList.indexOf(IDs[i]) === -1) {
+                        //alert("Remove: " + IDs[i]);
+                        $('#' + IDs[i]).remove();
+                    } else if (currentPeopleList.length == 0) {
+                        $('#' + IDs[i]).remove();
+                    }
+                }
+
+                $("#person>div").each(function (i) {
+                    IDs[i] = $(this).prop('id');
+                });
+
+            });
 
 
             $('.date-picker').datepicker({
@@ -189,9 +221,9 @@
             });
         });
 
-        function SelectIds() {
-            new FileUploaderGrid().SelectIds();
-        }
+        //function SelectIds() {
+        //    new FileUploaderGrid().SelectIds();
+        //}
 
         function SelectIds() {
             FileUploaderGrid().SelectIdsForAdd('@Url.Action("FileUploaderBootstrap", "Doc")');

@@ -260,5 +260,10 @@ namespace Answer.Web.Controllers
             return View(saveRoleViewModel);
         }
 
+        public ActionResult LoadPerson()
+        {
+            return PartialView("PersonDate");
+        }
+
     }
 }

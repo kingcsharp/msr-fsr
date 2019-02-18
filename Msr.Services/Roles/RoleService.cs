@@ -162,9 +162,11 @@ namespace Msr.Services.Roles
                     {
                         Child = personId,
                         StrId = model.WfId,
-                        NTLogin = model.NTLogin,
-                        StartDate = model.StartDate,
-                        EndDate = model.EndDate
+                        NTLogin = model.NTLogin
+
+                        //bpp
+                        //StartDate = model.StartDate,
+                        //EndDate = model.EndDate
                     };
 
                     _dbContext.Database.ExecuteStoredProcedure(saveRoleAssignPersonRoleProcedure);
