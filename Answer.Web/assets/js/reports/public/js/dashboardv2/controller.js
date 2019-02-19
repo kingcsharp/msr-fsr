@@ -345,7 +345,7 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
     }
 
     $scope.updateDtFilter = function (domElemId, $item, colId, gridId) {
-        
+
         var elem = getElemOfArr($scope['gridFilters' + gridId], 'elementID', colId);
         if (elem !== -1 && $item) {
             elem.val = moment($item._d).format('M/D/YYYY');
@@ -416,9 +416,12 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
     }
 
     function filterBarchart(chartId, filters) {
+        //From Date", elementID: "wstwstybb", val: "1/1/2019", fromDate: "Tue Feb 19 2019 19:11:29 GMT-0300 (Uruguay Standard Time)"}
+
         var filtersChart = angular.copy($scope.filters[chartId]);
         var data = filtersChart.report.query.data;
         var output = [];
+        var monthFilter = getElemOfArr(filters == undefined ? filtersChart.filters : filters, 'text', "From Date");
         angular.forEach(data, function (item) {
             var filtersLength = filters == undefined ? filtersChart.filters.length : filters.length;
             var addItem = true;
@@ -461,9 +464,24 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
                 output.push(item);
             }
         });
+        if (monthFilter !== -1) {
+            output.sort(compare(monthFilter.elementID));
+        }
+
         filtersChart.report.query.data = output;
         c3Charts.rebuildChart(filtersChart.report);
         return output;
+    }
+
+    function compare(key) {
+        return function (a, b) {
+            if (!a.hasOwnProperty(key) ||
+                !b.hasOwnProperty(key)) {
+                return 0;
+            }
+            var isAfter = moment(a[key], 'MMMM-YY').isAfter(moment(b[key], 'MMMM-YY'));
+            return isAfter ? 1 : -1;
+        }
     }
 
     function filterGridToExport(collection, filters) {

@@ -34,7 +34,7 @@
             var output = [], keys = [];
             // we utilize angular's foreach function
             // this takes in our original collection and an iterator function
-
+            var monthFilter = getElemOfArr(filters, 'text', "From Date");
             angular.forEach(collection, function (item) {
                 var filtersLength = filters.length;
                 var addItem = true;
@@ -74,14 +74,40 @@
                     }
                 }
                 if (addItem) {
-                    output.unshift(item);
+                    output.push(item);
                 }
             });
             // return our array which should be devoid of
             // any duplicates
+            if (monthFilter !== -1) {
+                output.sort(compare(monthFilter.elementID));
+            }
+
             return output;
         };
     });
+
+    function compare(key) {
+        return function (a, b) {
+            if (!a.hasOwnProperty(key) ||
+                !b.hasOwnProperty(key)) {
+                return 0;
+            }
+            var isAfter = moment(a[key], 'MMMM-YY').isAfter(moment(b[key], 'MMMM-YY'));
+            return isAfter ? 1 : -1;
+        }
+    }
+
+    function getElemOfArr(arr, prop, lookupVal) {
+        var arrLength = arr.length;
+        while (arrLength--) {
+            if (arr[arrLength][prop] === lookupVal) {
+                return arr[arrLength];
+            }
+        }
+        return -1;
+    }
+
 })(app || {});
 
 (function (app) {
