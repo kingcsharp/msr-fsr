@@ -17,6 +17,7 @@ Msr.WipGrid = Msr.WipGrid ||
                 styleUI: 'Bootstrap',
                 datatype: "local",
                 colModel: [
+                    { name: 'PurchaseItemId', index: 'PurchaseItemId',hidden: true,editable: false, editrules: { edithidden: true } },
                     { name: 'FillId', index: 'FillId', width: 60, align: 'center', hidden: true, edittype: 'text', editable: true, editrules: { edithidden: true } },
                     {
                         label: 'WO Item #',
@@ -109,6 +110,7 @@ Msr.WipGrid = Msr.WipGrid ||
                         editable: true,
                         sorttype: 'date',
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                        // edittype: 'text', editable: true, editrules: { edithidden: true }
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                         formatter: 'date',
                         formatoptions: { srcformat: "m/d/Y", newformat: "m/d/Y" },
@@ -191,6 +193,11 @@ Msr.WipGrid = Msr.WipGrid ||
 
                     var purchaseItemId = $("#" + Msr.WipGrid.GetGridId()).jqGrid('getCell', rowid, 'PurchaseItemId');
 
+                    if (cellname === 'DueDate') {
+                        //value = $("#" + Msr.WipGrid.GetGridId()).jqGrid('getCell', rowid, cellname);
+                        value = moment($("#" + Msr.WipGrid.GetGridId()).jqGrid('getCell', rowid, cellname), 'MM/DD/YYYY').format();
+                    }
+
                     var options = {
                         FillId: fillId,
                         PurchaseItemId: purchaseItemId,
@@ -204,12 +211,13 @@ Msr.WipGrid = Msr.WipGrid ||
                         data: options,
                         dataType: 'JSON',
                         success: function (resultData) {
-                            console.log("row with rowid=" + rowid + " is successfuly modified.")
+                            $("#" + Msr.WipGrid.GetGridId()).jqGrid().trigger('reloadGrid');
+                            console.log("row with rowid=" + rowid + " is successfuly modified.");
                         }
                     });
                 },
                 afterSaveCell: function (rowid, cellname, value, iRow, iCol) {
-                    $("#" + Msr.WipGrid.GetGridId()).jqGrid().trigger('reloadGrid');
+                    //$("#" + Msr.WipGrid.GetGridId()).jqGrid().trigger('reloadGrid');
                 },
                 gridComplete: function () {
                     Msr.JqGridCommon.TriggerSaveLoadGridState(Msr.WipGrid.GetGridId());
@@ -286,20 +294,15 @@ Msr.WipGrid = Msr.WipGrid ||
                 event.preventDefault();
                 // Do something
             });
-
-            
         }
     }
 
 
 function initDateEdit(el, options) {
     $(el).datepicker({
-        format: 'mm/dd/yy'
-    });
-
-    $('.datepicker').on('changeDate', function (e) {
-        console.log('af');
-        // `e` here contains the extra attributes
+        format: 'mm/dd/yyyy'
+    }).on("change", function (e) {
+        $("#" + Msr.WipGrid.GetGridId()).jqGrid("setCell", this.getAttribute('rowid'), this.getAttribute('name'), this.value);
     });
 };
 

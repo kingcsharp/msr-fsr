@@ -514,8 +514,7 @@ namespace Answer.Web.Controllers
                 if (response)
                 {
                     TempData["SuccessMessage"] = "Part has been created successfully.";
-
-                    return RedirectToAction("Index");
+                    return Json(new { success = true, responseText = "Part has been created successfully." }, JsonRequestBehavior.AllowGet);
                 }
                 else
                 {
