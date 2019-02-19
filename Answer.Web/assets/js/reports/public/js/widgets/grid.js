@@ -392,17 +392,22 @@ app.service('grid', ['$sce', function ($sce) {
 
     function getDateTimeFilter(column, columnIndex, reportId) {
         var id = "dr_" + new Date().getTime().toString();
+        var fromModelName = column.id.toString() + columnIndex.toString() + reportId.toString();
+
         var from = '<div id="' + id + '" style="width:37%!important;position:relative;float: left;margin-right: 20px;">' +
-            '<input style="padding:2px" change="updateDtFilter(\'' + id + '\', dimf.' + column.id.toString() + columnIndex.toString() + reportId.toString() + ',\'' + column.id + '\',\'' + reportId + '\')" class="form-control" format="M/D/YYYY" ' +
-            'ng-model="dimf.' + column.id.toString() + columnIndex.toString() + reportId.toString() + '" ' +
-            'ng-model-options="{ updateOn: \'blur\' }" placeholder="M/D/YYYY" moment-picker="' + column.id.toString() + columnIndex.toString() + reportId.toString() + '">' +
+            '<input style="padding:2px" change="updateDtFilter(\'' + id + '\', dimf.' + fromModelName + ',\'' + column.id + '\',\'' + reportId + '\')" class="form-control" format="M/D/YYYY" ' +
+            'ng-model="dimf.' + fromModelName + '" ' +
+            'ng-model-options="{ updateOn: \'blur\' }" placeholder="M/D/YYYY" moment-picker="' + fromModelName + '">' +
             '<a class="btn btn-xs btn-link pull-right delbtn" ng-click="clearDt(\'' + columnIndex + '\',\'' + column.id + '\',\'' + reportId + '\',\'0\',\'' + id + '\') "><i class=" glyphicon glyphicon-remove"></i></a >' +
             '</div>';
+
+        var dt2ModelName = fromModelName + '_';
+
         var to = '<div style="width:37%!important;position:relative;float: left;">' +
-            '<input style="padding:2px" change="updateDtFilter(\'' + id + '\', dimf.' + column.id.toString() + columnIndex.toString() + reportId.toString() + '_,\'' + column.id + '1\',\'' + reportId + '\')" class="form-control" format="M/D/YYYY" ' +
-            'ng-model="dimf.' + column.id.toString() + columnIndex.toString() + reportId.toString() + '_" ' +
-            'ng-model-options="{ updateOn: \'blur\' }" placeholder="M/D/YYYY" moment-picker="' + column.id.toString() + columnIndex.toString() + reportId.toString() + '_">' +
-            '<a class="btn btn-xs btn-link pull-right delbtn" ng-click="clearDt(\'' + columnIndex + '_\',\'' + column.id + '\',\'' + reportId + '\',\'1\',\'' + id + '\') "><i class=" glyphicon glyphicon-remove"></i></a >' +
+            '<input style="padding:2px" change="updateDtFilter(\'' + id + '\', dimf.' + dt2ModelName + ',\'' + column.id + '1\',\'' + reportId + '\')" class="form-control" format="M/D/YYYY" ' +
+            'ng-model="dimf.' + dt2ModelName + '" ' +
+            'ng-model-options="{ updateOn: \'blur\' }" placeholder="M/D/YYYY" moment-picker="' + dt2ModelName + '">' +
+            '<a class="btn btn-xs btn-link pull-right delbtn" ng-click="clearDt(\'' + columnIndex + '\',\'' + column.id + '\',\'' + reportId + '\',\'1\',\'' + id + '\') "><i class=" glyphicon glyphicon-remove"></i></a >' +
             '</div>';
         return from + to;
     }
@@ -525,10 +530,7 @@ app.service('grid', ['$sce', function ($sce) {
             }
         }
 
-        var defaultAligment = '';
-        if (column.elementType === 'number') {
-            defaultAligment = 'text-align: left;';
-        }
+        var defaultAligment = 'text-align: center;';
         //with popover
         /* htmlCode += '<div id="ROW_'+gridID+'" class="repeater-data-column '+colClass+' popover-primary" style="'+columnDefaultStyle+columnStyle+colWidth+defaultAligment+'" popover-trigger="mouseenter" popover-placement="top" popover-title="'+column.objectLabel+'" popover="{{item.'+elementName+'}}" ng-click="cellClick(\''+hashedID+'\',item,'+'\''+elementID+'\''+','+'\''+elementName+'\''+')">'+theValue+' </div>';
         */

@@ -345,7 +345,7 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
     }
 
     $scope.updateDtFilter = function (domElemId, $item, colId, gridId) {
-        //debugger;
+        
         var elem = getElemOfArr($scope['gridFilters' + gridId], 'elementID', colId);
         if (elem !== -1 && $item) {
             elem.val = moment($item._d).format('M/D/YYYY');
@@ -360,7 +360,7 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
     }
     $scope.clearDt = function (colIndex, colId, gridId, dtNr, domElemId) {
         //debugger;
-        $scope['dimf'][colId.toString() + colIndex.toString() + gridId.toString()] = undefined;
+        $scope['dimf'][colId.toString() + colIndex.toString() + gridId.toString() + (dtNr === "1" ? '_' : '')] = undefined;
 
         $timeout(function () {
             var elem = getElemOfArr($scope['gridFilters' + gridId], 'elementID', colId + (dtNr === "1" ? dtNr : ''));
