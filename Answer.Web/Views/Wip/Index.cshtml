@@ -3,8 +3,7 @@
     ViewBag.Title = "Wip Menu";
 }
 
-@Styles.Render("~/bundles/css/jquery-ui")
-
+@*@Styles.Render("~/bundles/css/jquery-ui")*@
 <link rel="stylesheet" href="//blueimp.github.io/Gallery/css/blueimp-gallery.min.css">
 <div class="container-fluid">
     <div class="side-body padding-top">
@@ -79,8 +78,9 @@
     @Scripts.Render("~/bundles/js/jqgrid")
 
     <script src="~/assets/js/wip-detail-print-other.js"></script>
+    <script src="~/assets/js/moment.min.js"></script>
     @Scripts.Render("~/bundles/js/jqgrid-wip")
-    @Scripts.Render("~/bundles/js/jquery-ui")
+    @*@Scripts.Render("~/bundles/js/jquery-ui")*@
     <script type="text/javascript">
         var locations = @Html.Raw(Json.Encode(ViewBag.Locations));
         locations = locations.map(function(elem){

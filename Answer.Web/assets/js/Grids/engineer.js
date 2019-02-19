@@ -263,7 +263,7 @@ Msr.WipGrid = Msr.WipGrid ||
                             isGridDone = true;
                         });
                         if (isGridDone) {
-                            $("#" + Msr.WipGrid.GetGridId()).jqGrid('resizeColumn', 'WoItem', maxWidth+25, true);
+                            $("#" + Msr.WipGrid.GetGridId()).jqGrid('resizeColumn', 'WoItem', maxWidth + 25, true);
                             clearInterval(gridComplete);
                         }
                         //after 50 secs do not execute function anymore.
@@ -287,22 +287,20 @@ Msr.WipGrid = Msr.WipGrid ||
                 // Do something
             });
 
-
+            
         }
     }
 
 
-function initDateEdit(elem, options) {
-    $(elem).datepicker({
-        maxDate: "10/27/2015",
-        dateFormat: "mm/dd/yy",
-        autoSize: true,
-        changeYear: true,
-        changeMonth: true,
-        showButtonPanel: true,
-        showWeek: true
+function initDateEdit(el, options) {
+    $(el).datepicker({
+        format: 'mm/dd/yy'
     });
 
+    $('.datepicker').on('changeDate', function (e) {
+        console.log('af');
+        // `e` here contains the extra attributes
+    });
 };
 
 function currentStepFormatter(cellvalue, options, rowObject) {
