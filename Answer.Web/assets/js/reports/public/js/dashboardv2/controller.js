@@ -458,7 +458,7 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
                 }
             }
             if (addItem) {
-                output.unshift(item);
+                output.push(item);
             }
         });
         filtersChart.report.query.data = output;
