@@ -30,6 +30,7 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
     $scope.mode = 'preview';
     $scope.pager = {};
     $scope.filters = [];
+    $scope.barDrChange = barDrChange;
 
     $scope.textAlign = [
         { name: 'left', value: 'left' },
@@ -362,7 +363,6 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
         $scope['dimf'][colId.toString() + colIndex.toString() + gridId.toString()] = undefined;
 
         $timeout(function () {
-            //$scope['gridFilters' + gridId][(colId)] = undefined;
             var elem = getElemOfArr($scope['gridFilters' + gridId], 'elementID', colId + (dtNr === "1" ? dtNr : ''));
             if (elem !== -1) {
                 elem.val = undefined;
@@ -386,7 +386,6 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
         //focus and open dropdown
         $select.activate();
         //debugger;
-        //$scope['gridFilters' + gridId][(colId)] = undefined;
         var elem = getElemOfArr($scope['gridFilters' + gridId], 'elementID', colId);
         if (elem !== -1) {
             elem.val = undefined;
@@ -417,27 +416,14 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
     }
 
     function filterBarchart(chartId, filters) {
-        //debugger;
-        //an option would be to equal the filters
-        //var length = filters.length;
-        //while (length--) {
-        //    var gridFilter = filters[length];
-        //    var id = gridFilter.elementID;
-        //    var elem = getElemOfArr($scope.filters[chartId].filters, 'elementID', id);
-        //    if (elem !== -1) {
-        //        elem.val = gridFilter.val;
-        //    }
-        //}
-        //$scope.searchChanged({}, chartId);
-
         var filtersChart = angular.copy($scope.filters[chartId]);
         var data = filtersChart.report.query.data;
         var output = [];
         angular.forEach(data, function (item) {
-            var filtersLength = filters.length;
+            var filtersLength = filters == undefined ? filtersChart.filters.length : filters.length;
             var addItem = true;
             while (filtersLength--) {
-                var filterElem = filters[filtersLength];
+                var filterElem = filters == undefined ? filtersChart.filters[filtersLength] : filters[filtersLength];
                 //debugger;
                 if (filterElem.fromDate !== undefined) {
                     var d1 = moment(item[filterElem.elementID], 'MMMM-YY')._d;
@@ -1178,7 +1164,7 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
                                         } else {
                                             $scope.filters[theChart.chartID].filters.push({
                                                 "text": elem.elementLabel,
-                                                "elementID": elem.id,
+                                                "elementID": elem.id + (elem.aggregation !== undefined ? 'sum' : ''),
                                                 "val": '',
                                                 "id": id + elem.elementName
                                             });
@@ -1187,23 +1173,24 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
 
                                     $scope.selectedDashboard.reports[i].properties.ykeys.forEach(function (elem) {
                                         $scope.filters[theChart.chartID].filters.push({
-                                            "text": elem.elementName,
-                                            "elementID": elem.id,
-                                            "val": ''
+                                            "text": elem.elementLabel,
+                                            "elementID": elem.id + (elem.aggregation !== undefined ? 'sum' : ''),
+                                            "val": '',
+                                            "id": id + elem.elementName
                                         });
                                     });
                                 }
 
                                 var displayChartWithFilters = $scope.isOperationsDashboard ? 'style="display:none;' : '';
-                                //debugger;
                                 //var displayChartWithFilters = '';
+
                                 var filterDiv = $('<div ' + displayChartWithFilters + '" data-chart="' + theChart.chartID + '" style="position:relative;z-index:99999">' +
                                     '<div style="float: left;margin: 5px;margin-left: 15px;width:110px;" ng-repeat="filter in filters[\'' + theChart.chartID + '\'].filters">' +
                                     '<label style="width:100%;" class="filterNames" ng-bind="filter.text"></label>' +
                                     '<div style="position:relative;display:inline-block">' +
                                     getinputSearch(theChart.chartID) + getDtPicker(theChart.chartID) +
                                     '<a class="btn btn-xs btn-link pull-right delbtn" ng-click="filter.val =\'\';' +
-                                    'searchChanged' + '(filter,\'' + theChart.chartID + '\')">' +
+                                    'searchChanged(\'' + theChart.chartID + '\')">' +
                                     '<i class=" glyphicon glyphicon-remove"></i></a>' +
                                     '</div></div></div>');
                                 angular.element(el).prepend(filterDiv);
@@ -1225,57 +1212,38 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
     }
 
     function getinputSearch(chartId) {
-        return '<input id="{{filter.id}}" style="height: 34px;width: 100%;" ng-if="filter.fromDate == undefined && filter.toDate == undefined" type="text" ng-model="filter.val" ng-change="searchChanged(filter,\'' +
-            chartId + '\')" ng-model-options="{debounce: 750}" />';
+        return smartDropdownFilter(chartId);
+    }
+
+    function barDrChange(filter, itemVal, chartId) {
+        filter.val = itemVal;
+        $scope.searchChanged(chartId);
+    }
+
+    function smartDropdownFilter(chartId) {
+        var id = "dr_" + new Date().getTime().toString();
+        //elem.val = $item[colId];
+        return '<div id="' + id + '" class="ui-selectDr" ng-if="filter.fromDate == undefined && filter.toDate == undefined">' +
+            '<ui-select append-to-body="true" ng-model="filter.val" on-select="barDrChange(filter,$item[filter.elementID],\'' + chartId + '\')">' +
+            '<ui-select-match placeholder="Search...">{{ $select.selected[filter.elementID]}} ' +
+            //'<a class="btn btn-xs btn-link pull-right delbtn" ng-click="clear($event, $select,\'' + column.id + '\',\'' + reportId + '\',\'' + id + '\') "> <i class=" glyphicon glyphicon-remove"></i></a >' +
+            '</ui-select-match>' +
+            '<ui-select-choices repeat="elem[filter.elementID] as item in filters[\'' + chartId + '\'].report.query.data | filterDr: filters[\'' + chartId + '\'].filters | unique:filter.elementID | filter:$select.search">' +
+            '<div ng-bind="item[filter.elementID]"></div>' +
+            '</ui-select-choices>' +
+            '</ui-select>' +
+            '</div>';
     }
 
     function getDtPicker(chartId) {
-        return '<input id="{{filter.id}}" ng-if="filter.fromDate !== undefined || filter.toDate !== undefined" change="searchChanged(filter,\'' + chartId + '\')" ' +
+        return '<input id="{{filter.id}}" ng-if="filter.fromDate !== undefined || filter.toDate !== undefined" change="searchChanged(\'' + chartId + '\')" ' +
             'class="form-control" format="M/D/YYYY" ng-model="filter.val"' +
             ' "ng-model-options="{ updateOn: \'blur\' }" placeholder="M/D/YYYY" moment-picker="filter.val">';
     }
 
 
-    $scope.searchChanged = function (elem, chartId) {
-        //filter shit
-        var filtersChart = angular.copy($scope.filters[chartId]);
-        var data = filtersChart.report.query.data;
-        var newData = [];
-        var length = data.length;
-        while (length--) {
-            var filtersLength = filtersChart.filters.length;
-            var addItem = true;
-            while (filtersLength--) {
-                var filterElem = filtersChart.filters[filtersLength];
-                //debugger;
-                if (filterElem.fromDate !== undefined) {
-                    var d1 = moment(data[length][filterElem.elementID], 'MMMM-YY')._d;
-                    var d2 = moment(filterElem.val, 'MMMM-YY')._d;
-
-                    addItem = filterElem.val === '' || d1.getFullYear() >= d2.getFullYear() &&
-                        d1.getFullYear() >= d2.getFullYear() &&
-                        d1.getMonth() >= d2.getMonth();
-                }
-                else if (filterElem.toDate !== undefined) {
-                    var d3 = moment(data[length][filterElem.elementID], 'MMMM-YY')._d;
-                    var d4 = moment(filterElem.val, 'MMMM-YY')._d;
-
-                    addItem = filterElem.val === '' || d3.getFullYear() <= d4.getFullYear() &&
-                        d3.getFullYear() <= d4.getFullYear() &&
-                        d3.getMonth() <= d4.getMonth();
-                } else if (filterElem.val !== '' && data[length][filterElem.elementID].toLowerCase().indexOf(filterElem.val.toLowerCase()) === -1) {
-                    addItem = false;
-                }
-                if (!addItem) {
-                    filtersLength = 0;
-                }
-            }
-            if (addItem) {
-                newData.unshift(data[length]);
-            }
-        }
-        filtersChart.report.query.data = newData;
-        c3Charts.rebuildChart(filtersChart.report);
+    $scope.searchChanged = function (chartId) {
+        return filterBarchart(chartId);
     }
 
     $scope.getLastXMonths = function (xMonths) {

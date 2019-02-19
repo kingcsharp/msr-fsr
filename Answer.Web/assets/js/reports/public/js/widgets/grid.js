@@ -299,7 +299,7 @@ app.service('grid', ['$sce', function ($sce) {
             else {
                 filtersToAdd.push({
                     "text": col.elementName,
-                    "elementID": col.id,
+                    "elementID": col.id + (col.aggregation !== undefined ? 'sum' : ''),
                     "val": ''
                 });
             }
@@ -409,15 +409,15 @@ app.service('grid', ['$sce', function ($sce) {
 
     function smartDropdownFilter(column, columnIndex, reportId) {
         var id = "dr_" + new Date().getTime().toString();
+        var colId = column.id + (column.aggregation !== undefined ? 'sum' : '');
         return '<div id="' + id + '" class="ui-selectDr">' +
-            '<ui-select append-to-body="true" ng-model="dimf.' + column.id.toString() + columnIndex.toString() + reportId.toString() +
-            '"on-select="elemChanged(\'' + id + '\',$item,\'' + column.id + '\',\'' + reportId + '\')">' +
-            '<ui-select-match placeholder="Search...">{{ $select.selected.' + column.id + '}} ' +
-            '<a class="btn btn-xs btn-link pull-right delbtn" ng-click="clear($event, $select,\'' + column.id + '\',\'' + reportId + '\',\'' + id + '\') "> <i class=" glyphicon glyphicon-remove"></i></a >' +
+            '<ui-select append-to-body="true" ng-model="dimf.' + colId.toString() + columnIndex.toString() + reportId.toString() +
+            '"on-select="elemChanged(\'' + id + '\',$item,\'' + colId + '\',\'' + reportId + '\')">' +
+            '<ui-select-match placeholder="Search...">{{ $select.selected.' + colId + '}} ' +
+            '<a class="btn btn-xs btn-link pull-right delbtn" ng-click="clear($event, $select,\'' + colId + '\',\'' + reportId + '\',\'' + id + '\') "> <i class=" glyphicon glyphicon-remove"></i></a >' +
             '</ui-select-match>' +
-            '<ui-select-choices repeat="elem.' + column.id + ' as item in ' + reportId + '| filterDr: gridFilters' + reportId + ' | unique:\'' + column.id + '\' | filter:$select.search | orderBy:getReport(\'' +
-            hashedID + '\').predicate:getReport(\'' + hashedID + '\').reverse">' +
-            '<div ng-bind="item.' + column.id + '"></div>' +
+            '<ui-select-choices repeat="elem.' + colId + ' as item in ' + reportId + ' | filterDr: gridFilters' + reportId + ' | unique:\'' + colId + '\' | filter:$select.search ">' +
+            '<div ng-bind="item.' + colId + '"></div>' +
             '</ui-select-choices>' +
             '</ui-select>' +
             '</div>';

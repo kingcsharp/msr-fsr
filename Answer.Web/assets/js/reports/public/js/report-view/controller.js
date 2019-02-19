@@ -81,7 +81,6 @@ app.controller('report_viewCtrl', function ($scope, $routeParams, report_v2Model
     $scope.clearDt = function (colIndex, colId, gridId) {
         $scope['dimf'][colId.toString() + colIndex.toString() + gridId.toString()] = undefined;
         $timeout(function () {
-            //$scope['gridFilters' + gridId][(colId)] = undefined;
             var elem = getElemOfArr($scope['gridFilters' + gridId], 'elementID', colId + (dtNr === "1" ? dtNr : ''));
             if (elem !== -1) {
                 elem.val = undefined;
@@ -97,8 +96,6 @@ app.controller('report_viewCtrl', function ($scope, $routeParams, report_v2Model
         $select.search = undefined;
         //focus and open dropdown
         $select.activate();
-        //debugger;
-        //$scope['gridFilters' + gridId][(colId)] = undefined;
         var elem = getElemOfArr($scope['gridFilters' + gridId], 'elementID', colId);
         if (elem !== -1) {
             elem.val = undefined;
