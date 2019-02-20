@@ -1218,6 +1218,7 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
                                 });
                             }
                             c3Charts.rebuildChart(angular.copy($scope.filters[theChart.chartID].report));
+                            filterBarchart(theChart.chartID);
                         } else {
                             c3Charts.rebuildChart($scope.filters[theChart.chartID].report);
                         }
