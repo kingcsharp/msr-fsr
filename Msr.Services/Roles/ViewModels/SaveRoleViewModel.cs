@@ -7,6 +7,8 @@ using System.Web.Mvc;
 using Msr.Models.Common;
 using Msr.Services.Users;
 using Msr.Services.Users.Messages;
+using Msr.Services.Documents.ViewModels;
+using Msr.Services.Documents;
 
 namespace Msr.Services.Roles.ViewModels
 {
@@ -16,6 +18,8 @@ namespace Msr.Services.Roles.ViewModels
         {
             ChildRoles = new List<string>();
             PeopleAssigned = new List<string>();
+            ReferenceFiles = new List<string>();
+            CertificationRoleList = new List<CertificationRole>();
         }
 
         public string Id { get; set; }
@@ -52,13 +56,25 @@ namespace Msr.Services.Roles.ViewModels
 
         public List<SelectListItem> ListPeopleAssigned { get; set; }
 
-        [Display(Name = "Start Date :")]
-        public DateTime? StartDate { get; set; }
+        public List<CertificationRole> CertificationRoleList { get; set; }
 
-        [Display(Name = "End Date :")]
-        public DateTime? EndDate { get; set; }
+        public IEnumerable<DateTime?> StartDate { get; set; }
+        public IEnumerable<DateTime?>  EndDate { get; set; }
+        public IEnumerable<string> CalendarUserId { get; set; }
 
-        public void Setup(RoleService roleService, UserService userService, LoggedUserIdResult getCurrentUser)
+        [Display(Name = "Training ID and Rev :")]
+        public string TrainingIdRev { get; set; }
+
+        [Display(Name = "Reference Docs :")]
+        public List<string> ReferenceFiles { get; set; }
+
+        public List<DocLink> DocLinks { get; set; }
+
+        [AllowHtml]
+        [Display(Name = "Event History and Comments :")]
+        public string Comments { get; set; }
+
+        public void Setup(DocumentFilesService documentFilesService, RoleService roleService, UserService userService, LoggedUserIdResult getCurrentUser)
         {
             SecurityLevels = new List<SelectListItem>
             {
@@ -90,7 +106,6 @@ namespace Msr.Services.Roles.ViewModels
                 }
             };
 
-
             ListChildRoles = roleService.GetRolesList(getCurrentUser.Id).Select(x => new SelectListItem
             {
                 Text = x.Name,
@@ -108,8 +123,9 @@ namespace Msr.Services.Roles.ViewModels
             var certificationRoles = roleService.GetAssignedWithCetificatePeople(Id, getCurrentUser.Id);
 
             PeopleAssigned = certificationRoles.Select(x => x.Value).ToList();
-            StartDate = certificationRoles.Select(x => x.StartDate).FirstOrDefault();
-            EndDate = certificationRoles.Select(x => x.EndDate).FirstOrDefault();
+            CertificationRoleList = certificationRoles.ToList();
+
+            DocLinks = documentFilesService.GetDocByObjectId(ObjectId);
         }
 
         public void Read(RolesView role)
@@ -117,6 +133,8 @@ namespace Msr.Services.Roles.ViewModels
             Id = role.Id;
             WfId = role.Id;
             Name = role.RoleName;
+            Comments = role.Comments;
+            TrainingIdRev = role.TrainingIdRev;
             SecurityLevel = role.SecurityLevel;
             ObjectId = role.ObjectId;
         }
