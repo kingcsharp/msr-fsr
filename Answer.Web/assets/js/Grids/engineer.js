@@ -52,10 +52,11 @@ Msr.WipGrid = Msr.WipGrid ||
                         multiselect: true,
                         searchoptions: {
                             sopt: ['eq'],
-                            value: 'HiddenOption:;' + locations,
                             attr: { multiple: 'multiple', size: 4 },
+                            value: locations,
+                            //attr: { multiple: 'multiple', size: 4 },
                             dataInit: function (elem) {
-                                Msr.JqGridCommon.DataInitMultiselect(elem);
+                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem);
                             }
                         }
                     },
@@ -104,7 +105,6 @@ Msr.WipGrid = Msr.WipGrid ||
                             }
                         },
                         formatter: 'date',
-                        //formatoptions: { srcformat: "m/d/Y", newformat: "m/d/Y" },
                         width: 90,
                         align: 'center'
                     },
@@ -263,8 +263,6 @@ Msr.WipGrid = Msr.WipGrid ||
                             '</div>'
                         );
                     });
-
-                    $('.ui-multiselect-checkboxes li:first-child').hide();
 
                     var isGridDone = false;
                     var time = new Date().getTime();

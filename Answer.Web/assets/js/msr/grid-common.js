@@ -309,30 +309,56 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                     searchOnEnter: true,
                     searchOperators: true
                 });
-
         },
         DataInitDatePicker: function (elem) {
             $(elem).datepicker({
                 format: 'm/d/yyyy',
                 autoclose: true
             })
-                .on('hide', function () {
-                    if (!this.firstHide) {
-                        if (!$(this).is(":focus")) {
-                            this.firstHide = true;
-                            // this will inadvertently call show (we're trying to hide!)
-                            this.focus();
+                .on('hide',
+                    function () {
+                        if (!this.firstHide) {
+                            if (!$(this).is(":focus")) {
+                                this.firstHide = true;
+                                // this will inadvertently call show (we're trying to hide!)
+                                this.focus();
+                            }
+                        } else {
+                            this.firstHide = false;
                         }
-                    } else {
-                        this.firstHide = false;
-                    }
-                })
-                .on('show', function () {
-                    if (this.firstHide) {
-                        // careful, we have an infinite loop!
-                        $(this).datepicker('hide');
-                    }
-                })
+                    })
+                .on('show',
+                    function () {
+                        if (this.firstHide) {
+                            // careful, we have an infinite loop!
+                            $(this).datepicker('hide');
+                        }
+                    });
+        },
+        DataInitBootstrapMultiselect: function (elem) {
+            setTimeout(function () {
+                $(document).ready(function () {
+                    $(elem).attr('multiple', 'multiple');
+                    $(elem).multiselect({
+                        includeSelectAllOption: true,
+                        onInitialized: function ($aSelect, $aContainer) {
+                            var $dropdown = $aContainer.find('.btn'),
+                                offset = $dropdown.offset();
+                            $aContainer.find('.dropdown-menu').css({
+                                position: 'fixed',
+                                top: (offset.top + $dropdown.outerHeight()),
+                                left: offset.left
+                            });
+                        }
+                    });
+                    //$('.multiselect-container.dropdown-menu li:eq(1) input').hide();
+                    setTimeout(function () {
+                        $(elem).parent().parent().find('button>span').text('None Selected');
+                        $(elem).parent().parent().find('input').prop('checked', false);
+                        $(elem).parent().parent().find('.multiselect-container.dropdown-menu>li').removeClass('active');
+                    }, 100);
+                });
+            }, 100);
         },
         DataInitMultiselect: function (elem) {
             setTimeout(function () {
@@ -396,6 +422,19 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                 rulesArraystring = JSON.stringify(rulesArray);
                 rulesArraystring = rulesArraystring.replace("[", "").replace("]", "");
 
+                //multiselect-container dropdown-menu
+                $('.multiselect-container.dropdown-menu li input[type=checkbox]:checked').each(function (e) {
+                    if (jQuery.inArray($(this).val(), statusArray) !== -1) {
+
+                    } else {
+                        if ($(this).val() === "") {
+                            statusArray.push("true");
+                        }
+                        else {
+                            statusArray.push($(this).val());
+                        }
+                    }
+                });
 
                 $('.ui-multiselect-checkboxes li input[type=checkbox]:checked').each(function (e) {
                     if (jQuery.inArray($(this).val(), statusArray) !== -1) {
