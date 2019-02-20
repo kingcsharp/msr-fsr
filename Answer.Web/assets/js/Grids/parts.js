@@ -107,9 +107,24 @@ Msr.PartsGrid = Msr.PartsGrid ||
                         colmenu: false,
                         stype: "select",
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                        searchoptions: { value: Msr.JqGridCommon.GetStatusFilters() },
+                        //searchoptions: { value: Msr.JqGridCommon.GetStatusFilters() },
+                        multiselect: true,
+                        searchoptions: {
+                            sopt: ['eq'],
+                            attr: { multiple: 'multiple', size: 4 },
+                            value: Msr.JqGridCommon.GetStatusFilters(),
+                            dataInit: function (elem) {
+                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem,
+                                    { includeSelectAllOption: false }, function (elem) {
+                                        $(elem).multiselect('select', "[All]");
+                                        var elemInput = $(elem).parent().parent().find('input[value=""]');
+                                        elemInput.prop('checked', true);
+                                        elemInput.parent().parent().parent().addClass('active');
+                                    });
+                            }
+                        },
                         align: 'center',
-                        width: 180,
+                        width: 180
                     },
 
                     {
@@ -120,7 +135,7 @@ Msr.PartsGrid = Msr.PartsGrid ||
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                         align: 'left',
-                        width: 190,
+                        width: 190
                     },
                     {
                         label: 'Reference Files',
@@ -137,13 +152,13 @@ Msr.PartsGrid = Msr.PartsGrid ||
                     {
                         name: 'Actions', index: 'ID', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: PartEditFormatter, width: 200,
                         align: 'center',
-                        sortable:false
+                        sortable: false
                     }
                 ],
 
-                viewrecords: true, 
+                viewrecords: true,
                 rowNum: 10, rowList: [10, 20, 50, 100],
-                loadonce: false, 
+                loadonce: false,
                 pager: "#jq-grid-pager",
                 height: 'auto',
                 gridview: true,

@@ -51,7 +51,21 @@ Msr.PartTypeGrid = Msr.PartTypeGrid ||
                         editable: true,
                         stype: "select",
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: true, grouping: false, freeze: false },
-                        searchoptions: { value: ":[All];PTSPARE_NO:Not Typically a Spare Part;PTSPARE_1:L1 - Stock in location with 1 machine;PTSPARE_2:L2 - Stock in location with 10 machine;PTSPARE_3:L3 - Stock in location with 50 machine" },
+                        //searchoptions: { value: ":[All];PTSPARE_NO:Not Typically a Spare Part;PTSPARE_1:L1 - Stock in location with 1 machine;PTSPARE_2:L2 - Stock in location with 10 machine;PTSPARE_3:L3 - Stock in location with 50 machine" },
+                        multiselect: true,
+                        searchoptions: {
+                            sopt: ['eq'],
+                            value: ":[All];PTSPARE_NO:Not Typically a Spare Part;PTSPARE_1:L1 - Stock in location with 1 machine;PTSPARE_2:L2 - Stock in location with 10 machine;PTSPARE_3:L3 - Stock in location with 50 machine",
+                            dataInit: function (elem) {
+                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem,
+                                    { includeSelectAllOption: false }, function (elem) {
+                                        $(elem).multiselect('select', "[All]");
+                                        var elemInput = $(elem).parent().parent().find('input[value=""]');
+                                        elemInput.prop('checked', true);
+                                        elemInput.parent().parent().parent().addClass('active');
+                                    });
+                            }
+                        },
                         align: 'left',
                         width: 100,
                         hidedlg: false
@@ -64,7 +78,21 @@ Msr.PartTypeGrid = Msr.PartTypeGrid ||
                         editable: true,
                         stype: "select",
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                        searchoptions: { value: ":[All];PTCON_NO:Not Consumable Part;PTCON_YES:Consumable Part" },
+                        //searchoptions: { value: ":[All];PTCON_NO:Not Consumable Part;PTCON_YES:Consumable Part" },
+                        multiselect: true,
+                        searchoptions: {
+                            sopt: ['eq'],
+                            value: ":[All];PTCON_NO:Not Consumable Part;PTCON_YES:Consumable Part",
+                            dataInit: function (elem) {
+                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem,
+                                    { includeSelectAllOption: false }, function (elem) {
+                                        $(elem).multiselect('select', "[All]");
+                                        var elemInput = $(elem).parent().parent().find('input[value=""]');
+                                        elemInput.prop('checked', true);
+                                        elemInput.parent().parent().parent().addClass('active');
+                                    });
+                            }
+                        },
                         align: 'left'
                     },
                     {
@@ -95,7 +123,20 @@ Msr.PartTypeGrid = Msr.PartTypeGrid ||
                         editable: true,
                         stype: "select",
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                        searchoptions: { value: Msr.JqGridCommon.GetStatusFilters() },
+                        multiselect: true,
+                        searchoptions: {
+                            sopt: ['eq'],
+                            value: Msr.JqGridCommon.GetStatusFilters(),
+                            dataInit: function (elem) {
+                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem,
+                                    { includeSelectAllOption: false }, function (elem) {
+                                        $(elem).multiselect('select', "[All]");
+                                        var elemInput = $(elem).parent().parent().find('input[value=""]');
+                                        elemInput.prop('checked', true);
+                                        elemInput.parent().parent().parent().addClass('active');
+                                    });
+                            }
+                        },
                         align: 'left'
                     },
                     {
@@ -174,7 +215,7 @@ Msr.PartTypeGrid = Msr.PartTypeGrid ||
 
             function partTypesEditFormatter(cellvalue, options, rowObject) {
 
-                var actions = Msr.JqGridCommon.ActionFormtter(cellvalue, options, rowObject, Msr.PartTypeGrid.GetReturnUrl(), Msr.PartTypeGrid.GetGridEditUrl(),true);
+                var actions = Msr.JqGridCommon.ActionFormtter(cellvalue, options, rowObject, Msr.PartTypeGrid.GetReturnUrl(), Msr.PartTypeGrid.GetGridEditUrl(), true);
 
                 return actions;
 

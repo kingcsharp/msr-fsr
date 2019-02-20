@@ -112,7 +112,7 @@ namespace Answer.Web.Controllers
                             totalRows = totalRows.Where(x => x.Rev.ToString().Contains(rule.data.ToLower()));
                         }
                     }
-                    else if (rule.field == nameof(PartsView.Status))
+                    else if (rule.field == nameof(PartsView.Status) && rule.data != "")
                     {
                         var statusList = rule.data.Split(',').Select(x => x.Trim().ToLower());
 
