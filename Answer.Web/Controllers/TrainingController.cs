@@ -38,6 +38,10 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.PositionName.ToLower() == rule.data.ToLower());
                     }
+                    else if (rule.field == nameof(TrainingView.TrainingIdRev))
+                    {
+                        totalRows = totalRows.Where(x => x.TrainingIdRev.ToLower() == rule.data.ToLower());
+                    }
                     else if (rule.field == nameof(TrainingView.EndDate))
                     {
                         DateTime value;
