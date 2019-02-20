@@ -41,6 +41,19 @@ Msr.TrainingGrid = Msr.TrainingGrid ||
                         width: 200,
                         align: 'center'
                     },
+
+               
+                    {
+                        label: "Training_ID_And_Rev",
+                        name: 'TrainingIdRev',
+                        index: 'TrainingIdRev',
+                        colmenu: true,
+                        coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                        searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                        width: 200,
+                        align: 'center'
+                    },
+
                     {
                         label: "Issue_Date",
                         name: 'StartDate',
@@ -49,7 +62,7 @@ Msr.TrainingGrid = Msr.TrainingGrid ||
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: true, grouping: false, freeze: false },
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                         align: 'center',
-                        width: 200,
+                        width: 100,
                         formatter: 'date',
                         formatoptions: { srcformat: "m/d/Y", newformat: "m/d/Y" },
                         hidedlg: false
