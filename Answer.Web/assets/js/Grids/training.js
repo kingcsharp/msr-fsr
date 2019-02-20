@@ -42,15 +42,14 @@ Msr.TrainingGrid = Msr.TrainingGrid ||
                         align: 'center'
                     },
 
-               
                     {
                         label: "Training_ID_And_Rev",
                         name: 'TrainingIdRev',
                         index: 'TrainingIdRev',
-                        colmenu: true,
+                        colmenu: false,
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                        width: 200,
+                        width: 150,
                         align: 'center'
                     },
 
