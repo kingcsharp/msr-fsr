@@ -61,7 +61,7 @@ Msr.TrainingGrid = Msr.TrainingGrid ||
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: true, grouping: false, freeze: false },
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                         align: 'center',
-                        width: 100,
+                        width: 200,
                         formatter: 'date',
                         formatoptions: { srcformat: "m/d/Y", newformat: "m/d/Y" },
                         hidedlg: false
