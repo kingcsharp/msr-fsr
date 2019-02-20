@@ -2857,4 +2857,6 @@ span.fa.fa-arrows.handle.sortable-fa {
     padding: 2px 6px 5px;
     font-size: 14px;
 }
-
+.datepicker-dropdown {
+    z-index: 101!important;
+}

@@ -17,13 +17,13 @@ Msr.WipGrid = Msr.WipGrid ||
                 styleUI: 'Bootstrap',
                 datatype: "local",
                 colModel: [
-                    { name: 'PurchaseItemId', index: 'PurchaseItemId',hidden: true,editable: false, editrules: { edithidden: true } },
+                    { name: 'Id', index: 'Id', hidden: true, key: true, editable: false, editrules: { edithidden: true } },
+                    { name: 'PurchaseItemId', index: 'PurchaseItemId', hidden: true, editable: false, editrules: { edithidden: true } },
                     { name: 'FillId', index: 'FillId', width: 60, align: 'center', hidden: true, edittype: 'text', editable: true, editrules: { edithidden: true } },
                     {
                         label: 'WO Item #',
                         name: 'WoItem',
                         index: 'WoItem',
-                        key: true,
                         colmenu: true,
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
@@ -96,9 +96,15 @@ Msr.WipGrid = Msr.WipGrid ||
                         colmenu: false,
                         sorttype: 'date',
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                        searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                        searchoptions: {
+                            searchOperMenu: false,
+                            sopt: ['eq', 'gt', 'lt', 'ge', 'le'],
+                            dataInit: function (elem) {
+                                Msr.JqGridCommon.DataInitDatePicker(elem);
+                            }
+                        },
                         formatter: 'date',
-                        formatoptions: { srcformat: "m/d/Y H:i", newformat: "m/d/Y" },
+                        //formatoptions: { srcformat: "m/d/Y", newformat: "m/d/Y" },
                         width: 90,
                         align: 'center'
                     },
@@ -111,9 +117,15 @@ Msr.WipGrid = Msr.WipGrid ||
                         sorttype: 'date',
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                         // edittype: 'text', editable: true, editrules: { edithidden: true }
-                        searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                        searchoptions: {
+                            searchOperMenu: false,
+                            sopt: ['eq', 'gt', 'lt', 'ge', 'le'],
+                            dataInit: function (elem) {
+                                Msr.JqGridCommon.DataInitDatePicker(elem);
+                            }
+                        },
                         formatter: 'date',
-                        formatoptions: { srcformat: "m/d/Y", newformat: "m/d/Y" },
+                        //formatoptions: { srcformat: "m/d/Y", newformat: "m/d/Y" },
                         editoptions: { dataInit: initDateEdit, readonly: 'readonly' },
                         width: 90,
                         align: 'center'
@@ -241,20 +253,12 @@ Msr.WipGrid = Msr.WipGrid ||
                             tooltiptime = $(this).data('tooltip-time');
                         }
                         $(this).replaceWith(
-                            '<div class = "progress" title="' +
-                            tooltiptime +
-                            '">' +
-                            '<div class = "progress-bar progress-bar-' +
-                            statClass +
-                            '" role = "progressbar" aria-valuenow = "' +
-                            progVal +
-                            '" ' +
-                            'aria-valuemin = "0" aria-valuemax = "100" style = "width: ' +
-                            progVal +
-                            '%;"> ' +
-                            '<span>' +
-                            progVal +
-                            '%</span>' +
+                            '<div class = "progress" title="' + tooltiptime + '">' +
+                            '<div class = "progress-bar progress-bar-' + statClass +
+                            '" role = "progressbar" aria-valuenow = "' + progVal + '" '
+                            + 'aria-valuemin = "0" aria-valuemax = "100" style = "width: ' +
+                            progVal + '%;"> ' +
+                            '<span>' + progVal + '%</span>' +
                             '</div>' +
                             '</div>'
                         );
@@ -299,11 +303,7 @@ Msr.WipGrid = Msr.WipGrid ||
 
 
 function initDateEdit(el, options) {
-    $(el).datepicker({
-        format: 'mm/dd/yyyy'
-    }).on("change", function (e) {
-        $("#" + Msr.WipGrid.GetGridId()).jqGrid("setCell", this.getAttribute('rowid'), this.getAttribute('name'), this.value);
-    });
+    Msr.JqGridCommon.DataInitDatePicker(el);
 };
 
 function currentStepFormatter(cellvalue, options, rowObject) {
