@@ -99,9 +99,13 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.CurrentOwnerName.ToLower().Contains(rule.data.ToLower()));
                     }
-                    else if (rule.field == nameof(ActualPartsView.ApStatus))
+                    else if (rule.field == nameof(ActualPartsView.ApStatus) && rule.data != "")
                     {
-                        totalRows = totalRows.Where(x => x.ApStatus.ToLower().Contains(rule.data.ToLower()));
+                        var list = rule.data.Split(',').Select(x => x.Trim().ToLower());
+                        if (list.Any())
+                        {
+                            totalRows = totalRows.Where(x => list.Contains(x.ApStatus.ToLower()));
+                        }
                     }
                     else if (rule.field == nameof(ActualPartsView.Rev))
                     {
@@ -115,12 +119,12 @@ namespace Answer.Web.Controllers
                             totalRows = totalRows.Where(x => x.Rev.ToString().Contains(rule.data.ToLower()));
                         }
                     }
-                    else if (rule.field == nameof(ActualPartsView.Status))
+                    else if (rule.field == nameof(ActualPartsView.Status) && rule.data != "")
                     {
-                        var statusList = rule.data.Split(',').Select(x => x.Trim().ToLower());
-                        if (statusList.Any())
+                        var list = rule.data.Split(',').Select(x => x.Trim().ToLower());
+                        if (list.Any())
                         {
-                            totalRows = totalRows.Where(x => statusList.Contains(x.Status.ToLower()));
+                            totalRows = totalRows.Where(x => list.Contains(x.Status.ToLower()));
                         }
                     }
                     else if (rule.field == nameof(ActualPartsView.CreatingCoName))

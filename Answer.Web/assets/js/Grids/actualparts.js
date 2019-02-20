@@ -194,7 +194,21 @@ Msr.ActualPartsGrid = Msr.ActualPartsGrid ||
                             freeze: false
                         },
                         stype: "select",
-                        searchoptions: { value: ":[All];ap_available:ap_available;ap_installed:ap_installed;ap_consumed:ap_consumed;ap_filled:ap_filled;ap_filled:ap_filled;ap_held:ap_held;ap_installed:ap_installed;ap_received:ap_received" },
+                        multiselect: true,
+                        searchoptions: {
+                            sopt: ['eq'],
+                            attr: { multiple: 'multiple', size: 4 },
+                            value: ":[All];ap_available:ap_available;ap_installed:ap_installed;ap_consumed:ap_consumed;ap_filled:ap_filled;ap_filled:ap_filled;ap_held:ap_held;ap_installed:ap_installed;ap_received:ap_received",
+                            dataInit: function (elem) {
+                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem,
+                                    { includeSelectAllOption: false }, function (elem) {
+                                        $(elem).multiselect('select', "[All]");
+                                        var elemInput = $(elem).parent().parent().find('input[value=""]');
+                                        elemInput.prop('checked', true);
+                                        elemInput.parent().parent().parent().addClass('active');
+                                    });
+                            }
+                        },
                         width: 150,
                         align: 'left',
                         hidedlg: false
@@ -234,7 +248,21 @@ Msr.ActualPartsGrid = Msr.ActualPartsGrid ||
                             freeze: false
                         },
                         stype: "select",
-                        searchoptions: { value: Msr.JqGridCommon.GetStatusFilters() },
+                        multiselect: true,
+                        searchoptions: {
+                            sopt: ['eq'],
+                            attr: { multiple: 'multiple', size: 4 },
+                            value: Msr.JqGridCommon.GetStatusFilters(),
+                            dataInit: function (elem) {
+                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem,
+                                    { includeSelectAllOption: false }, function (elem) {
+                                        $(elem).multiselect('select', "[All]");
+                                        var elemInput = $(elem).parent().parent().find('input[value=""]');
+                                        elemInput.prop('checked', true);
+                                        elemInput.parent().parent().parent().addClass('active');
+                                    });
+                            }
+                        },
                         width: 150,
                         align: 'left'
                     },
