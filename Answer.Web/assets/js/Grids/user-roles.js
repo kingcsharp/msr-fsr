@@ -84,7 +84,20 @@ Msr.RoleGrid = Msr.RoleGrid ||
                         editable: true,
                         stype: "select",
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                        searchoptions: { value: Msr.JqGridCommon.GetStatusFilters() },
+                        multiselect: true,
+                        searchoptions: {
+                            sopt: ['eq'],
+                            value: Msr.JqGridCommon.GetStatusFilters(),
+                            dataInit: function (elem) {
+                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem,
+                                    { includeSelectAllOption: false }, function (elem) {
+                                        $(elem).multiselect('select', "[All]");
+                                        var elemInput = $(elem).parent().parent().find('input[value=""]');
+                                        elemInput.prop('checked', true);
+                                        elemInput.parent().parent().parent().addClass('active');
+                                    });
+                            }
+                        },
                         align: 'left'
                     },
                     {

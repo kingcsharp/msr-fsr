@@ -158,9 +158,9 @@ namespace Answer.Web.Controllers
                             totalRows = totalRows.Where(x => x.Rev.ToString().ToLower() == rule.data.ToLower());
                         }
                     }
-                    else if (rule.field == nameof(ProcedureView.Status))
+                    else if (rule.field == nameof(ProcedureView.Status) && rule.data != "")
                     {
-                        var list = rule.data.Split(',').Select(x => x.Trim().ToLower());
+                        var list = rule.data.Split(',').Select(x => x.Trim().ToLower()).ToArray();
                         if (list.Any())
                         {
                             totalRows = totalRows.Where(x => list.Contains(x.Status.ToLower()));

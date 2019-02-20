@@ -103,9 +103,19 @@ Msr.ProcedureVerbsGrid = Msr.ProcedureVerbsGrid ||
                             grouping: false,
                             freeze: false
                         },
+                        multiselect: true,
                         searchoptions: {
-                            value:
-                            ":[All];CREATING, DENIED, APPROVED, APPROVED_BUT_REVISING:Creating or Approved;CREATING, DENIED: Creating;IN_WORKFLOW:In Approval Workflow;APPROVED, APPROVED_BUT_REVISING, APPROVED_BUT_DELETING:Approved;DENIED:Denied;APPROVED_BUT_REVISING:Approved But Being Revised;APPROVED_BUT_DELETING:Approved But Being Deleted;DENIED:Denied;DELETED:Deleted;OLD:Obsolete"
+                            sopt: ['eq'],
+                            value: ":[All];CREATING, DENIED, APPROVED, APPROVED_BUT_REVISING:Creating or Approved;CREATING, DENIED: Creating;IN_WORKFLOW:In Approval Workflow;APPROVED, APPROVED_BUT_REVISING, APPROVED_BUT_DELETING:Approved;DENIED:Denied;APPROVED_BUT_REVISING:Approved But Being Revised;APPROVED_BUT_DELETING:Approved But Being Deleted;DENIED:Denied;DELETED:Deleted;OLD:Obsolete",
+                            dataInit: function (elem) {
+                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem,
+                                    { includeSelectAllOption: false }, function (elem) {
+                                        $(elem).multiselect('select', "[All]");
+                                        var elemInput = $(elem).parent().parent().find('input[value=""]');
+                                        elemInput.prop('checked', true);
+                                        elemInput.parent().parent().parent().addClass('active');
+                                    });
+                            }
                         },
                         align: 'center'
                     },

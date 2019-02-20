@@ -109,9 +109,9 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.ProcedureName.ToLower().Contains(rule.data.ToLower()));
                     }
-                    else if (rule.field == nameof(CustomerRequirementView.Status))
+                    else if (rule.field == nameof(CustomerRequirementView.Status) && rule.data != "")
                     {
-                        var statusList = rule.data.Split(',').Select(x => x.Trim().ToLower());
+                        var statusList = rule.data.Split(',').Select(x => x.Trim().ToLower()).ToArray();
 
                         if (statusList.Any())
                         {
@@ -344,7 +344,7 @@ namespace Answer.Web.Controllers
 
                 return View(vm);
             }
-      
+
             if (ModelState.IsValid)
             {
                 vm.LoginId = currentUser.Id;

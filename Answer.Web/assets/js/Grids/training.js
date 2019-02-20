@@ -72,8 +72,22 @@ Msr.TrainingGrid = Msr.TrainingGrid ||
                         colmenu: false,
                         width: 150,
                         formatter: changeStatusName,
+                        stype: "select",
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                        searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                        multiselect: true,
+                        searchoptions: {
+                            sopt: ['eq'],
+                            value: ':[All];Active:Active;Deactive:Inactive',
+                            dataInit: function (elem) {
+                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem,
+                                    { includeSelectAllOption: false }, function (elem) {
+                                        $(elem).multiselect('select', "[All]");
+                                        var elemInput = $(elem).parent().parent().find('input[value=""]');
+                                        elemInput.prop('checked', true);
+                                        elemInput.parent().parent().parent().addClass('active');
+                                    });
+                            }
+                        },
                         align: 'center'
                     }
                 ],
