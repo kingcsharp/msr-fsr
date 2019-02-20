@@ -30,6 +30,7 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
     $scope.mode = 'preview';
     $scope.pager = {};
     $scope.filters = [];
+    $scope.barDrChange = barDrChange;
 
     $scope.textAlign = [
         { name: 'left', value: 'left' },
@@ -246,7 +247,8 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
         }
     };
 
-    $scope.saveToExcel = function (reportHash, reportId) {
+    $scope.saveToExcel = function (reportHash, reportId, reportCreatedId) {
+
         var reports = $scope.selectedDashboard.reports;
         var length = reports.length;
         var currReport = {};
@@ -255,7 +257,10 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
                 currReport = reports[length];
             }
         }
-        report_v2Model.saveToExcel($scope, reportHash, currReport);
+        //we need to filter the original grid to export to excel
+        var copyReport = angular.copy(currReport);
+        copyReport.query.data = filterGridToExport($scope[reportCreatedId], $scope['gridFilters' + reportCreatedId]);
+        report_v2Model.saveToExcel($scope, reportHash, copyReport);
     }
     $scope.orderColumn = function (columnIndex, desc, hashedID) {
         report_v2Model.orderColumn($scope.selectedReport, columnIndex, desc, hashedID);
@@ -340,7 +345,7 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
     }
 
     $scope.updateDtFilter = function (domElemId, $item, colId, gridId) {
-        //debugger;
+
         var elem = getElemOfArr($scope['gridFilters' + gridId], 'elementID', colId);
         if (elem !== -1 && $item) {
             elem.val = moment($item._d).format('M/D/YYYY');
@@ -355,10 +360,9 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
     }
     $scope.clearDt = function (colIndex, colId, gridId, dtNr, domElemId) {
         //debugger;
-        $scope['dimf'][colId + colIndex] = undefined;
+        $scope['dimf'][colId.toString() + colIndex.toString() + gridId.toString() + (dtNr === "1" ? '_' : '')] = undefined;
 
         $timeout(function () {
-            //$scope['gridFilters' + gridId][(colId)] = undefined;
             var elem = getElemOfArr($scope['gridFilters' + gridId], 'elementID', colId + (dtNr === "1" ? dtNr : ''));
             if (elem !== -1) {
                 elem.val = undefined;
@@ -382,7 +386,6 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
         //focus and open dropdown
         $select.activate();
         //debugger;
-        //$scope['gridFilters' + gridId][(colId)] = undefined;
         var elem = getElemOfArr($scope['gridFilters' + gridId], 'elementID', colId);
         if (elem !== -1) {
             elem.val = undefined;
@@ -413,23 +416,81 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
     }
 
     function filterBarchart(chartId, filters) {
-        //debugger;
-        //an option would be to equal the filters
-        //var length = filters.length;
-        //while (length--) {
-        //    var gridFilter = filters[length];
-        //    var id = gridFilter.elementID;
-        //    var elem = getElemOfArr($scope.filters[chartId].filters, 'elementID', id);
-        //    if (elem !== -1) {
-        //        elem.val = gridFilter.val;
-        //    }
-        //}
-        //$scope.searchChanged({}, chartId);
+        //From Date", elementID: "wstwstybb", val: "1/1/2019", fromDate: "Tue Feb 19 2019 19:11:29 GMT-0300 (Uruguay Standard Time)"}
 
         var filtersChart = angular.copy($scope.filters[chartId]);
         var data = filtersChart.report.query.data;
         var output = [];
+        var monthFilter = getElemOfArr(filters == undefined ? filtersChart.filters : filters, 'text', "From Date");
         angular.forEach(data, function (item) {
+            var filtersLength = filters == undefined ? filtersChart.filters.length : filters.length;
+            var addItem = true;
+            while (filtersLength--) {
+                var filterElem = filters == undefined ? filtersChart.filters[filtersLength] : filters[filtersLength];
+                //debugger;
+                if (filterElem.fromDate !== undefined) {
+                    var d1 = moment(item[filterElem.elementID], 'MMMM-YY')._d;
+                    var d2 = moment(filterElem.val, 'M/D/YYYY')._d;
+
+                    addItem = filterElem.val === '' || filterElem.val === undefined ||
+                        d1.getFullYear() > d2.getFullYear() ||
+                        d1.getFullYear() === d2.getFullYear() &&
+                        d1.getMonth() >= d2.getMonth();
+                } else if (filterElem.toDate !== undefined) {
+                    //need to remove the 1 to get the value of the item to check out
+                    var d3 = moment(item[filterElem.elementID.replace('1', '')], 'MMMM-YY')._d;
+                    var d4 = moment(filterElem.val, 'M/D/YYYY')._d;
+
+                    addItem = filterElem.val === '' || filterElem.val === undefined ||
+                        d3.getFullYear() < d4.getFullYear() ||
+                        d3.getFullYear() === d4.getFullYear() &&
+                        d3.getMonth() <= d4.getMonth();
+                } else {
+                    if (filterElem.val !== undefined && filterElem.val !== '') {
+                        var type = typeof item[filterElem.elementID];
+                        if (type == "number" && (item[filterElem.elementID]).toString().indexOf((filterElem.val).toString()) === -1) {
+                            addItem = false;
+                        }
+                        if (type == "string" && item[filterElem.elementID].toLowerCase().indexOf(filterElem.val.toLowerCase()) === -1) {
+                            addItem = false;
+                        }
+                    }
+                }
+                if (!addItem) {
+                    filtersLength = 0;
+                }
+            }
+            if (addItem) {
+                output.push(item);
+            }
+        });
+        if (monthFilter !== -1) {
+            output.sort(compare(monthFilter.elementID));
+        }
+
+        filtersChart.report.query.data = output;
+        c3Charts.rebuildChart(filtersChart.report);
+        return output;
+    }
+
+    function compare(key) {
+        return function (a, b) {
+            if (!a.hasOwnProperty(key) ||
+                !b.hasOwnProperty(key)) {
+                return 0;
+            }
+            var isAfter = moment(a[key], 'MMMM-YY').isAfter(moment(b[key], 'MMMM-YY'));
+            return isAfter ? 1 : -1;
+        }
+    }
+
+    function filterGridToExport(collection, filters) {
+        // we define our output and keys array;
+        var output = [], keys = [];
+        // we utilize angular's foreach function
+        // this takes in our original collection and an iterator function
+
+        angular.forEach(collection, function (item) {
             var filtersLength = filters.length;
             var addItem = true;
             while (filtersLength--) {
@@ -471,8 +532,8 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
                 output.unshift(item);
             }
         });
-        filtersChart.report.query.data = output;
-        c3Charts.rebuildChart(filtersChart.report);
+        // return our array which should be devoid of
+        // any duplicates
         return output;
     }
 
@@ -1121,7 +1182,7 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
                                         } else {
                                             $scope.filters[theChart.chartID].filters.push({
                                                 "text": elem.elementLabel,
-                                                "elementID": elem.id,
+                                                "elementID": elem.id + (elem.aggregation !== undefined ? 'sum' : ''),
                                                 "val": '',
                                                 "id": id + elem.elementName
                                             });
@@ -1130,23 +1191,24 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
 
                                     $scope.selectedDashboard.reports[i].properties.ykeys.forEach(function (elem) {
                                         $scope.filters[theChart.chartID].filters.push({
-                                            "text": elem.elementName,
-                                            "elementID": elem.id,
-                                            "val": ''
+                                            "text": elem.elementLabel,
+                                            "elementID": elem.id + (elem.aggregation !== undefined ? 'sum' : ''),
+                                            "val": '',
+                                            "id": id + elem.elementName
                                         });
                                     });
                                 }
 
                                 var displayChartWithFilters = $scope.isOperationsDashboard ? 'style="display:none;' : '';
-                                debugger;
                                 //var displayChartWithFilters = '';
+
                                 var filterDiv = $('<div ' + displayChartWithFilters + '" data-chart="' + theChart.chartID + '" style="position:relative;z-index:99999">' +
                                     '<div style="float: left;margin: 5px;margin-left: 15px;width:110px;" ng-repeat="filter in filters[\'' + theChart.chartID + '\'].filters">' +
                                     '<label style="width:100%;" class="filterNames" ng-bind="filter.text"></label>' +
                                     '<div style="position:relative;display:inline-block">' +
                                     getinputSearch(theChart.chartID) + getDtPicker(theChart.chartID) +
                                     '<a class="btn btn-xs btn-link pull-right delbtn" ng-click="filter.val =\'\';' +
-                                    'searchChanged' + '(filter,\'' + theChart.chartID + '\')">' +
+                                    'searchChanged(\'' + theChart.chartID + '\')">' +
                                     '<i class=" glyphicon glyphicon-remove"></i></a>' +
                                     '</div></div></div>');
                                 angular.element(el).prepend(filterDiv);
@@ -1168,57 +1230,38 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
     }
 
     function getinputSearch(chartId) {
-        return '<input id="{{filter.id}}" style="height: 34px;width: 100%;" ng-if="filter.fromDate == undefined && filter.toDate == undefined" type="text" ng-model="filter.val" ng-change="searchChanged(filter,\'' +
-            chartId + '\')" ng-model-options="{debounce: 750}" />';
+        return smartDropdownFilter(chartId);
+    }
+
+    function barDrChange(filter, itemVal, chartId) {
+        filter.val = itemVal;
+        $scope.searchChanged(chartId);
+    }
+
+    function smartDropdownFilter(chartId) {
+        var id = "dr_" + new Date().getTime().toString();
+        //elem.val = $item[colId];
+        return '<div id="' + id + '" class="ui-selectDr" ng-if="filter.fromDate == undefined && filter.toDate == undefined">' +
+            '<ui-select append-to-body="true" ng-model="filter.val" on-select="barDrChange(filter,$item[filter.elementID],\'' + chartId + '\')">' +
+            '<ui-select-match placeholder="Search...">{{ $select.selected[filter.elementID]}} ' +
+            //'<a class="btn btn-xs btn-link pull-right delbtn" ng-click="clear($event, $select,\'' + column.id + '\',\'' + reportId + '\',\'' + id + '\') "> <i class=" glyphicon glyphicon-remove"></i></a >' +
+            '</ui-select-match>' +
+            '<ui-select-choices repeat="elem[filter.elementID] as item in filters[\'' + chartId + '\'].report.query.data | filterDr: filters[\'' + chartId + '\'].filters | unique:filter.elementID | filter:$select.search">' +
+            '<div ng-bind="item[filter.elementID]"></div>' +
+            '</ui-select-choices>' +
+            '</ui-select>' +
+            '</div>';
     }
 
     function getDtPicker(chartId) {
-        return '<input id="{{filter.id}}" ng-if="filter.fromDate !== undefined || filter.toDate !== undefined" change="searchChanged(filter,\'' + chartId + '\')" ' +
+        return '<input id="{{filter.id}}" ng-if="filter.fromDate !== undefined || filter.toDate !== undefined" change="searchChanged(\'' + chartId + '\')" ' +
             'class="form-control" format="M/D/YYYY" ng-model="filter.val"' +
             ' "ng-model-options="{ updateOn: \'blur\' }" placeholder="M/D/YYYY" moment-picker="filter.val">';
     }
 
 
-    $scope.searchChanged = function (elem, chartId) {
-        //filter shit
-        var filtersChart = angular.copy($scope.filters[chartId]);
-        var data = filtersChart.report.query.data;
-        var newData = [];
-        var length = data.length;
-        while (length--) {
-            var filtersLength = filtersChart.filters.length;
-            var addItem = true;
-            while (filtersLength--) {
-                var filterElem = filtersChart.filters[filtersLength];
-                //debugger;
-                if (filterElem.fromDate !== undefined) {
-                    var d1 = moment(data[length][filterElem.elementID], 'MMMM-YY')._d;
-                    var d2 = moment(filterElem.val, 'MMMM-YY')._d;
-
-                    addItem = filterElem.val === '' || d1.getFullYear() >= d2.getFullYear() &&
-                        d1.getFullYear() >= d2.getFullYear() &&
-                        d1.getMonth() >= d2.getMonth();
-                }
-                else if (filterElem.toDate !== undefined) {
-                    var d3 = moment(data[length][filterElem.elementID], 'MMMM-YY')._d;
-                    var d4 = moment(filterElem.val, 'MMMM-YY')._d;
-
-                    addItem = filterElem.val === '' || d3.getFullYear() <= d4.getFullYear() &&
-                        d3.getFullYear() <= d4.getFullYear() &&
-                        d3.getMonth() <= d4.getMonth();
-                } else if (filterElem.val !== '' && data[length][filterElem.elementID].toLowerCase().indexOf(filterElem.val.toLowerCase()) === -1) {
-                    addItem = false;
-                }
-                if (!addItem) {
-                    filtersLength = 0;
-                }
-            }
-            if (addItem) {
-                newData.unshift(data[length]);
-            }
-        }
-        filtersChart.report.query.data = newData;
-        c3Charts.rebuildChart(filtersChart.report);
+    $scope.searchChanged = function (chartId) {
+        return filterBarchart(chartId);
     }
 
     $scope.getLastXMonths = function (xMonths) {

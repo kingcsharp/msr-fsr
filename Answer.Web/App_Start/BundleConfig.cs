@@ -26,6 +26,7 @@ namespace Answer.Web
                 .Include("~/assets/js/jquery.jqGrid.js")
                 .Include("~/assets/js/i18n/grid.locale-en.js")
                 .Include("~/assets/js/msr/grid-common.js")
+                .Include("~/assets/js/grids/jgrid.defaults.js")
             );
 
             bundles.Add(new ScriptBundle("~/bundles/js/jqgrid-wip")
@@ -183,8 +184,12 @@ namespace Answer.Web
                 .Include("~/assets/js/bootstrap-datepicker.min.js")
                 .Include("~/assets/js/plugins/jquery.blockUI.js")
            );
-            bundles.Add(new ScriptBundle("~/bundles/js/jgridDefaults")
-                .Include("~/assets/js/grids/jgrid.defaults.js"));
+            //bundles.Add(new ScriptBundle("~/bundles/js/jgridDefaults")
+            //    .Include("~/assets/js/grids/jgrid.defaults.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/js/interceptors")
+                .Include("~/assets/js/blockLayout.ui.js"));
+            
 
             bundles.Add(new ScriptBundle("~/bundles/js/jquery-ui")
                 .Include("~/assets/js/jquery-ui/jquery-ui.min.js")

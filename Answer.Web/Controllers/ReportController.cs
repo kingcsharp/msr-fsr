@@ -28,14 +28,14 @@ namespace Msr.Web.Controllers
 
         public ActionResult Findreport(string data, string id)
         { //'/api/reports/get-report/' + id, { id: id, mode: 'preview', linked: isLinked }
-            var client = new RestClient("http://reports.msr-fsr.com/api/reports/get-report/" + id + "?data=" + HttpUtility.UrlEncode(data));
+            var client = new RestClient("http://dev.reports.msr-fsr.com/api/reports/get-report/" + id + "?data=" + HttpUtility.UrlEncode(data));
             var request = new RestRequest(Method.GET);
             request.AddHeader("cache-control", "no-cache");
             SetCookiesForWidestageRequests(request);
 
             request.AddHeader("accept-language", "en-US,en;q=0.9,es-UY;q=0.8,es;q=0.7");
             request.AddHeader("accept-encoding", "gzip, deflate");
-            request.AddHeader("referer", "http://reports.msr-fsr.com/login");
+            request.AddHeader("referer", "http://dev.reports.msr-fsr.com/login");
             request.AddHeader("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36");
             request.AddHeader("accept", "application/json, text/plain, */*");
 
@@ -46,14 +46,14 @@ namespace Msr.Web.Controllers
 
         public ActionResult Findallreports(string data)
         {
-            var client = new RestClient("http://reports.msr-fsr.com/api/reports/find-all?data=" + HttpUtility.UrlEncode(data));
+            var client = new RestClient("http://dev.reports.msr-fsr.com/api/reports/find-all?data=" + HttpUtility.UrlEncode(data));
             var request = new RestRequest(Method.GET);
             request.AddHeader("cache-control", "no-cache");
             SetCookiesForWidestageRequests(request);
 
             request.AddHeader("accept-language", "en-US,en;q=0.9,es-UY;q=0.8,es;q=0.7");
             request.AddHeader("accept-encoding", "gzip, deflate");
-            request.AddHeader("referer", "http://reports.msr-fsr.com/login");
+            request.AddHeader("referer", "http://dev.reports.msr-fsr.com/login");
             request.AddHeader("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36");
             request.AddHeader("accept", "application/json, text/plain, */*");
 
@@ -64,14 +64,14 @@ namespace Msr.Web.Controllers
 
         public ActionResult Dashboardsv2get(string id, string data)
         {
-            var client = new RestClient("http://reports.msr-fsr.com/api/dashboardsv2/get/" + id + "?data=" + HttpUtility.UrlEncode(data));
+            var client = new RestClient("http://dev.reports.msr-fsr.com/api/dashboardsv2/get/" + id + "?data=" + HttpUtility.UrlEncode(data));
             var request = new RestRequest(Method.GET);
             request.AddHeader("cache-control", "no-cache");
             SetCookiesForWidestageRequests(request);
 
             request.AddHeader("accept-language", "en-US,en;q=0.9,es-UY;q=0.8,es;q=0.7");
             request.AddHeader("accept-encoding", "gzip, deflate");
-            request.AddHeader("referer", "http://reports.msr-fsr.com/login");
+            request.AddHeader("referer", "http://dev.reports.msr-fsr.com/login");
             request.AddHeader("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36");
             request.AddHeader("accept", "application/json, text/plain, */*");
 
@@ -88,14 +88,14 @@ namespace Msr.Web.Controllers
         [HttpPost]
         public ActionResult getreportsdata(string data)
         {
-            var client = new RestClient("http://reports.msr-fsr.com/api/reports/get-data/?data=" + HttpUtility.UrlEncode(data));
+            var client = new RestClient("http://dev.reports.msr-fsr.com/api/reports/get-data/?data=" + HttpUtility.UrlEncode(data));
             var request = new RestRequest(Method.GET);
             request.AddHeader("cache-control", "no-cache");
             SetCookiesForWidestageRequests(request);
 
             request.AddHeader("accept-language", "en-US,en;q=0.9,es-UY;q=0.8,es;q=0.7");
             request.AddHeader("accept-encoding", "gzip, deflate");
-            request.AddHeader("referer", "http://reports.msr-fsr.com/login");
+            request.AddHeader("referer", "http://dev.reports.msr-fsr.com/login");
             request.AddHeader("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36");
             request.AddHeader("accept", "application/json, text/plain, */*");
 
@@ -131,14 +131,14 @@ namespace Msr.Web.Controllers
         public ActionResult dashboardsv2findall(string data)
         {
 
-            var client = new RestClient("http://reports.msr-fsr.com/api/dashboardsv2/find-all?data=" + HttpUtility.UrlEncode(data));
+            var client = new RestClient("http://dev.reports.msr-fsr.com/api/dashboardsv2/find-all?data=" + HttpUtility.UrlEncode(data));
             var request = new RestRequest(Method.GET);
             request.AddHeader("cache-control", "no-cache");
             SetCookiesForWidestageRequests(request);
 
             request.AddHeader("accept-language", "en-US,en;q=0.9,es-UY;q=0.8,es;q=0.7");
             request.AddHeader("accept-encoding", "gzip, deflate");
-            request.AddHeader("referer", "http://reports.msr-fsr.com/login");
+            request.AddHeader("referer", "http://dev.reports.msr-fsr.com/login");
             request.AddHeader("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36");
             request.AddHeader("accept", "application/json, text/plain, */*");
 
@@ -149,16 +149,16 @@ namespace Msr.Web.Controllers
 
         public ActionResult GetUserData(string data)
         {
-            var client = new RestClient("http://reports.msr-fsr.com/api/get-user-data?data=" + HttpUtility.UrlEncode(data));
+            var client = new RestClient("http://dev.reports.msr-fsr.com/api/get-user-data?data=" + HttpUtility.UrlEncode(data));
 
-            //var client = new RestClient("http://reports.msr-fsr.com/api/get-user-data?data=U2FsdGVkX19sUL12lTKj9FEriHlH%2FX%2F4DIDMS8IiKws%3D");
+            //var client = new RestClient("http://dev.reports.msr-fsr.com/api/get-user-data?data=U2FsdGVkX19sUL12lTKj9FEriHlH%2FX%2F4DIDMS8IiKws%3D");
             var request = new RestRequest(Method.GET);
             request.AddHeader("cache-control", "no-cache");
             SetCookiesForWidestageRequests(request);
 
             request.AddHeader("accept-language", "en-US,en;q=0.9,es-UY;q=0.8,es;q=0.7");
             request.AddHeader("accept-encoding", "gzip, deflate");
-            request.AddHeader("referer", "http://reports.msr-fsr.com/login");
+            request.AddHeader("referer", "http://dev.reports.msr-fsr.com/login");
             request.AddHeader("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36");
             request.AddHeader("accept", "application/json, text/plain, */*");
 
@@ -216,7 +216,7 @@ namespace Msr.Web.Controllers
 
         private IRestResponse LoginToWidestage()
         {
-            var client = new RestClient("http://reports.msr-fsr.com/api/login");
+            var client = new RestClient("http://dev.reports.msr-fsr.com/api/login");
             var request = new RestRequest(Method.POST);
             var cookies = Request.Cookies;
             foreach (var cookieKey in cookies.AllKeys)
@@ -229,7 +229,7 @@ namespace Msr.Web.Controllers
 
             request.AddHeader("accept-language", "en-US,en;q=0.9,es-UY;q=0.8,es;q=0.7");
             request.AddHeader("accept-encoding", "gzip, deflate");
-            request.AddHeader("referer", "http://reports.msr-fsr.com/login");
+            request.AddHeader("referer", "http://dev.reports.msr-fsr.com/login");
             request.AddHeader("content-type", "application/json;charset=UTF-8");
             request.AddHeader("user-agent",
                 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36");
