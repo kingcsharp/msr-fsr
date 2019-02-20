@@ -162,9 +162,18 @@ Msr.WipGrid = Msr.WipGrid ||
                             freeze: false
                         },
                         stype: "select",
+                        multiselect: true,
                         searchoptions: {
+                            sopt: ['eq'],
+                            attr: { multiple: 'multiple', size: 4 },
                             value: "All:[All];REQUESTED,ACCEPTED:In Progress;PENDING_PARENT_ACCEPTANCE,REQUESTED:Waiting to Start;CLOSED,FINISHED:Completed",
-                            defaultValue: 'In Progress'
+                            defaultValue: 'In Progress',
+                            dataInit: function (elem) {
+                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem,
+                                    { includeSelectAllOption: false }, function (elem) {
+                                        $(elem).multiselect('select', "REQUESTED,ACCEPTED");
+                                    });
+                            }
                         },
                         formatter: currentStepFormatter,
                         align: 'center'

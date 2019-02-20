@@ -335,11 +335,11 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                         }
                     });
         },
-        DataInitBootstrapMultiselect: function (elem) {
+        DataInitBootstrapMultiselect: function (elem, options, callback) {
             setTimeout(function () {
                 $(document).ready(function () {
                     $(elem).attr('multiple', 'multiple');
-                    $(elem).multiselect({
+                    var multiselectOptions = {
                         includeSelectAllOption: true,
                         onInitialized: function ($aSelect, $aContainer) {
                             var $dropdown = $aContainer.find('.btn'),
@@ -350,12 +350,17 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                                 left: offset.left
                             });
                         }
-                    });
+                    };
+                    Object.assign(multiselectOptions, options);
+                    $(elem).multiselect(multiselectOptions);
                     //$('.multiselect-container.dropdown-menu li:eq(1) input').hide();
                     setTimeout(function () {
                         $(elem).parent().parent().find('button>span').text('None Selected');
                         $(elem).parent().parent().find('input').prop('checked', false);
                         $(elem).parent().parent().find('.multiselect-container.dropdown-menu>li').removeClass('active');
+                        if (callback) {
+                            callback(elem);
+                        }
                     }, 100);
                 });
             }, 100);
@@ -423,18 +428,35 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                 rulesArraystring = rulesArraystring.replace("[", "").replace("]", "");
 
                 //multiselect-container dropdown-menu
-                $('.multiselect-container.dropdown-menu li input[type=checkbox]:checked').each(function (e) {
-                    if (jQuery.inArray($(this).val(), statusArray) !== -1) {
+                $('.multiselect-native-select').each(function (e) {
+                    if ($(this).find('select[name="LocationNames"]').length > 0) {
+                        $(this).find('.multiselect-container.dropdown-menu li input[type=checkbox]:checked').each(function (e) {
+                            if (jQuery.inArray($(this).val(), statusArray) !== -1) {
 
-                    } else {
-                        if ($(this).val() === "") {
-                            statusArray.push("true");
-                        }
-                        else {
-                            statusArray.push($(this).val());
-                        }
+                            } else {
+                                if ($(this).val() === "") {
+                                    statusArray.push("true");
+                                }
+                                else {
+                                    statusArray.push($(this).val());
+                                }
+                            }
+                        });
                     }
                 });
+
+                //$('.multiselect-container.dropdown-menu li input[type=checkbox]:checked').each(function (e) {
+                //    if (jQuery.inArray($(this).val(), statusArray) !== -1) {
+
+                //    } else {
+                //        if ($(this).val() === "") {
+                //            statusArray.push("true");
+                //        }
+                //        else {
+                //            statusArray.push($(this).val());
+                //        }
+                //    }
+                //});
 
                 $('.ui-multiselect-checkboxes li input[type=checkbox]:checked').each(function (e) {
                     if (jQuery.inArray($(this).val(), statusArray) !== -1) {
