@@ -144,29 +144,6 @@
             });
     };
 
-    var addNcrModel = function () {
-
-        $('#addNcrModal').on('show.bs.modal',
-            function (event) {
-                var button = $(event.relatedTarget);
-                var id = button.data('id');
-                var fillId = button.data('fill-id');
-                var modal = $(this);
-
-                $.ajax({
-                    type: "GET",
-                    url: '/Wip/AddNcrModel?parentId=' + id + '&fillid=' + fillId,
-                    dataType: 'html',
-                    success: function (data) {
-                        modal.find('.modal-body').html(data);
-                    },
-                    error: function (error) {
-                        eLoaderError(error);
-                    }
-                });
-            });
-    };
-
     function timerVisibility(data, taskId) {
 
         if (data.ErrorMessage !== '') {
@@ -238,7 +215,6 @@
         UpdateSerialNum: updateSerialNumber,
         StepAssumeClick: stepAssume,
         AddNewEquipmentModel: addNewEquipmentModel,
-        AddNcrModel: addNcrModel,
         StepPauseClick: stepPause,
         StepResumeClick: stepResume
     }
