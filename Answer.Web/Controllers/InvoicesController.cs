@@ -42,9 +42,13 @@ namespace Answer.Web.Controllers
                 foreach (var rule in param.where.rules)
                 {
 
-                    if (rule.field == nameof(InvoiceView.Status))
+                    if (rule.field == nameof(InvoiceView.Status) && rule.data != "")
                     {
-                        totalRows = totalRows.Where(x => x.Status.ToLower().Contains(rule.data.ToLower()));
+                        var list = rule.data.Split(',').Select(x => x.Trim().ToLower()).ToArray();
+                        if (list.Any())
+                        {
+                            totalRows = totalRows.Where(x => list.Contains(x.Status.ToLower()));
+                        }
                     }
                     else if (rule.field == nameof(InvoiceView.CustPo))
                     {

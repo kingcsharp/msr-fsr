@@ -120,9 +120,13 @@ namespace Answer.Web.Controllers
                             totalRows = totalRows.Where(x => x.TotalPurchaseLimit == -1);
                         }
                     }
-                    else if (rule.field == nameof(PurchesOrderView.AccType))
+                    else if (rule.field == nameof(PurchesOrderView.AccType) && rule.data != "")
                     {
-                        totalRows = totalRows.Where(x => x.AccType.ToLower().Contains(rule.data.ToLower()));
+                        var list = rule.data.Split(',').Select(x => x.Trim().ToLower()).ToArray();
+                        if (list.Any())
+                        {
+                            totalRows = totalRows.Where(x => list.Contains(x.AccType.ToLower()));
+                        }
                     }
                     else if (rule.field == nameof(PurchesOrderView.InvoiceTrigger))
                     {
@@ -146,13 +150,12 @@ namespace Answer.Web.Controllers
                         }
                     }
 
-                    else if (rule.field == nameof(PurchesOrderView.Status))
+                    else if (rule.field == nameof(PurchesOrderView.Status) && rule.data != "")
                     {
-                        var statusList = rule.data.Split(',').Select(x => x.Trim().ToLower());
-
-                        if (statusList.Any())
+                        var list = rule.data.Split(',').Select(x => x.Trim().ToLower()).ToArray();
+                        if (list.Any())
                         {
-                            totalRows = totalRows.Where(x => statusList.Contains(x.Status.ToLower()));
+                            totalRows = totalRows.Where(x => list.Contains(x.Status.ToLower()));
                         }
                     }
 
@@ -526,9 +529,13 @@ namespace Answer.Web.Controllers
                         totalRows = totalRows.Where(x => x.Description.ToLower().Contains(rule.data.ToLower()));
                     }
 
-                    else if (rule.field == nameof(PurchaseView.PurchaseStatus))
+                    else if (rule.field == nameof(PurchaseView.PurchaseStatus) && rule.data != "")
                     {
-                        totalRows = totalRows.Where(x => x.PurchaseStatus.ToLower().Contains(rule.data.ToLower()));
+                        var list = rule.data.Split(',').Select(x => x.Trim().ToLower()).ToArray();
+                        if (list.Any())
+                        {
+                            totalRows = totalRows.Where(x => list.Contains(x.PurchaseStatus.ToLower()));
+                        }
                     }
                     else if (rule.field == nameof(PurchaseView.DateCreated))
                     {
@@ -548,13 +555,12 @@ namespace Answer.Web.Controllers
                                                              x.DateCreated.Year == value.Year);
                         }
                     }
-                    else if (rule.field == nameof(PurchaseView.Status))
+                    else if (rule.field == nameof(PurchaseView.Status) && rule.data != "")
                     {
-                        var statusList = rule.data.Split(',').Select(x => x.Trim().ToLower());
-
-                        if (statusList.Any())
+                        var list = rule.data.Split(',').Select(x => x.Trim().ToLower()).ToArray();
+                        if (list.Any())
                         {
-                            totalRows = totalRows.Where(x => statusList.Contains(x.Status.ToLower()));
+                            totalRows = totalRows.Where(x => list.Contains(x.Status.ToLower()));
                         }
                     }
                 }

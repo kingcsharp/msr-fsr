@@ -64,7 +64,7 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                         align: 'left'
                     },
-                   
+
                     {
                         label: 'Workflow Group',
                         name: 'GroupName',
@@ -92,7 +92,21 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
                         colmenu: false,
                         width: 200,
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                        searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                        stype: "select",
+                        multiselect: true,
+                        searchoptions: {
+                            sopt: ['eq'],
+                            value: Msr.JqGridCommon.GetStatusFilters(),
+                            dataInit: function (elem) {
+                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem,
+                                    { includeSelectAllOption: false }, function (elem) {
+                                        $(elem).multiselect('select', "[All]");
+                                        var elemInput = $(elem).parent().parent().find('input[value=""]');
+                                        elemInput.prop('checked', true);
+                                        elemInput.parent().parent().parent().addClass('active');
+                                    });
+                            }
+                        },
                         align: 'left'
                     },
                     { name: 'Actions', index: 'ID', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: approvalEditFormatter, width: 200, align: 'center' }
@@ -150,7 +164,7 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
                 }).trigger("reloadGrid");
 
             });
-    },
+        },
 
         SetUpProductGrid: function (returnUrl, itemType) {
             $.jgrid.defaults.styleUI = 'Bootstrap';
@@ -240,7 +254,21 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
                         colmenu: false,
                         width: 200,
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                        searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                        stype: "select",
+                        multiselect: true,
+                        searchoptions: {
+                            sopt: ['eq'],
+                            value: Msr.JqGridCommon.GetStatusFilters(),
+                            dataInit: function (elem) {
+                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem,
+                                    { includeSelectAllOption: false }, function (elem) {
+                                        $(elem).multiselect('select', "[All]");
+                                        var elemInput = $(elem).parent().parent().find('input[value=""]');
+                                        elemInput.prop('checked', true);
+                                        elemInput.parent().parent().parent().addClass('active');
+                                    });
+                            }
+                        },
                         align: 'left'
                     },
                     { name: 'Actions', index: 'ID', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: approvalEditFormatter, width: 200, align: 'center' }
@@ -265,12 +293,12 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
                 }
             });
             $('#jqProductGrid').navGrid("#jqGridProductPager", {
-                    search: false, // show search button on the toolbar
-                    add: false,
-                    edit: false,
-                    del: false,
-                    refresh: true
-                },
+                search: false, // show search button on the toolbar
+                add: false,
+                edit: false,
+                del: false,
+                refresh: true
+            },
                 {}, // edit options
                 {}, // add options
                 {}, // delete options
@@ -288,7 +316,7 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
 
             }
             function itemNameFormatter(cellvalue, options, rowObject) {
-                var itemName = 'Approving Changes to approval_' + rowObject.ItemType + ' Called ' + '<a href="">' + rowObject.ItemName+" "+  rowObject.Revision + '</a>';
+                var itemName = 'Approving Changes to approval_' + rowObject.ItemType + ' Called ' + '<a href="">' + rowObject.ItemName + " " + rowObject.Revision + '</a>';
                 return itemName;
             }
 
@@ -303,7 +331,7 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
 
         }
 
-    , ActionLinks: function ActionLinks(cellvalue, options, rowObject, returnUrl) {
+        , ActionLinks: function ActionLinks(cellvalue, options, rowObject, returnUrl) {
             var urlApprove;
             var approvalWorkflows;
             var deleteworkflow;

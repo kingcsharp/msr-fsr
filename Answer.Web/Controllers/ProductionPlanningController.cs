@@ -115,17 +115,17 @@ namespace Answer.Web.Controllers
 
                         if (statusList.Any())
                         {
-                            if (statusList.Any(x => x.Contains("received")))
+                            if (statusList.Any(z => z.Contains("received") && statusList.Any(u => u.Contains("creating"))))
                             {
-                                totalRows = totalRows.Where(x => x.Status == "creating" && x.IsProduct == false);
+                                totalRows = totalRows.Where(x => statusList.Contains(x.Status.ToLower()));
                             }
-                            else if (statusList.Any(x => x.Contains("creating")))
+                            else if (statusList.Any(x => x.Contains("received")))
                             {
-                                totalRows = totalRows.Where(x => x.Status == "creating" && x.IsProduct);
+                                totalRows = totalRows.Where(x => statusList.Contains(x.Status.ToLower()) && !x.IsProduct);
                             }
                             else
                             {
-                                totalRows = totalRows.Where(x => statusList.Contains(x.Status.ToLower()));
+                                totalRows = totalRows.Where(x => statusList.Contains(x.Status.ToLower()) && x.IsProduct);
                             }
                         }
                     }

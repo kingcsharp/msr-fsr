@@ -72,8 +72,20 @@ Msr.InvoicesGrid = Msr.InvoicesGrid || {
                     colmenu: false,
                     stype: "select",
                     coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                    searchoptions: { value: ":[All];INVOICED:INVOICED;OUTSTANDING:OUTSTANDING;OVERDUE:OVERDUE;CLOSED:CLOSED" },
-
+                    multiselect: true,
+                    searchoptions: {
+                        sopt: ['eq'],
+                        value: ":[All];INVOICED:INVOICED;OUTSTANDING:OUTSTANDING;OVERDUE:OVERDUE;CLOSED:CLOSED",
+                        dataInit: function (elem) {
+                            Msr.JqGridCommon.DataInitBootstrapMultiselect(elem,
+                                { includeSelectAllOption: false }, function (elem) {
+                                    $(elem).multiselect('select', "[All]");
+                                    var elemInput = $(elem).parent().parent().find('input[value=""]');
+                                    elemInput.prop('checked', true);
+                                    elemInput.parent().parent().parent().addClass('active');
+                                });
+                        }
+                    },
                     width: 120,
                     align: 'left'
                 },

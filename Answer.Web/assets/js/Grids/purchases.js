@@ -65,7 +65,20 @@
                 stype: "select",
                 width: 90,
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                searchoptions: { value: ":[ALL STATUSES];CLOSED:CLOSED;ALL_FILLED:ALL_FILLED;EXECUTING:EXECUTING;WAITING_FILLS:WAITING_FILLS" },
+                multiselect: true,
+                searchoptions: {
+                    sopt: ['eq'],
+                    value: ":[ALL STATUSES];ITEM_NEEDS_ACCOUNT:NEEDS ACCOUNT;CLOSED:CLOSED;ALL_FILLED:ALL_FILLED;EXECUTING:EXECUTING;WAITING_FILLS:WAITING_FILLS",
+                    dataInit: function (elem) {
+                        Msr.JqGridCommon.DataInitBootstrapMultiselect(elem,
+                            { includeSelectAllOption: false }, function (elem) {
+                                $(elem).multiselect('select', "[All]");
+                                var elemInput = $(elem).parent().parent().find('input[value=""]');
+                                elemInput.prop('checked', true);
+                                elemInput.parent().parent().parent().addClass('active');
+                            });
+                    }
+                },
                 align: 'center'
             },
             {
@@ -80,7 +93,7 @@
                 formatoptions: { srcformat: "m/d/Y H:i", newformat: "m/d/Y" },
                 width: 90,
                 align: 'center',
-            
+
             },
             {
                 label: 'Approval Status',
@@ -90,7 +103,20 @@
                 stype: "select",
                 width: '130',
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                searchoptions: { value: Msr.JqGridCommon.GetStatusFilters() },
+                multiselect: true,
+                searchoptions: {
+                    sopt: ['eq'],
+                    value: Msr.JqGridCommon.GetStatusFilters(),
+                    dataInit: function (elem) {
+                        Msr.JqGridCommon.DataInitBootstrapMultiselect(elem,
+                            { includeSelectAllOption: false }, function (elem) {
+                                $(elem).multiselect('select', "[All]");
+                                var elemInput = $(elem).parent().parent().find('input[value=""]');
+                                elemInput.prop('checked', true);
+                                elemInput.parent().parent().parent().addClass('active');
+                            });
+                    }
+                },
                 align: 'center'
             },
 
@@ -126,12 +152,12 @@
 
     });
     $('#jqGrid').navGrid("#jqGridPager", {
-            search: false,
-            add: false,
-            edit: false,
-            del: false,
-            refresh: true
-        },
+        search: false,
+        add: false,
+        edit: false,
+        del: false,
+        refresh: true
+    },
         {},  // edit options
         {}, // add options
         {}, // delete options

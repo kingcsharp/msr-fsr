@@ -38,7 +38,8 @@ namespace Answer.Web.Controllers
 
             ViewBag.HasMaintenanceTechnicianRole = myRoles.Any(x => x.Role_Name.Contains(RoleConstants.MaintenanceTechnician));
             ViewBag.HasProductionManagerRole = myRoles.Any(x => x.Role_Name.Contains(RoleConstants.ProductionManager));
-
+            ViewBag.AssignedTo = _equipmentMaintenanceService.GetEquipmentsQueryable().Where(x => x.AssignedTo != null).Select(x => x.AssignedTo).Distinct()
+                .ToArray();
             return View();
         }
 
@@ -50,8 +51,8 @@ namespace Answer.Web.Controllers
             {
                 foreach (var rule in param.where.rules)
                 {
-                
-                     if (rule.field == nameof(EquipmentMaintenanceView.ParentLocation))
+
+                    if (rule.field == nameof(EquipmentMaintenanceView.ParentLocation))
                     {
                         totalRows = totalRows.Where(x => x.ParentLocation.ToLower().Contains(rule.data.ToLower()));
                     }
@@ -76,25 +77,37 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.RequestedBy.ToLower().Contains(rule.data.ToLower()));
                     }
-                    else if (rule.field == nameof(EquipmentMaintenanceView.AssignedTo))
+                    else if (rule.field == nameof(EquipmentMaintenanceView.AssignedTo) && rule.data != "")
                     {
-                        totalRows = totalRows.Where(x => x.AssignedTo.ToLower().Contains(rule.data.ToLower()));
+                        var list = rule.data.Split(',').Select(x => x.Trim().ToLower()).ToArray();
+                        if (list.Any())
+                        {
+                            totalRows = totalRows.Where(x => list.Contains(x.AssignedTo.ToLower()));
+                        }
                     }
-                    else if (rule.field == nameof(EquipmentMaintenanceView.TroubleState))
+                    else if (rule.field == nameof(EquipmentMaintenanceView.TroubleState) && rule.data != "")
                     {
-                        totalRows = totalRows.Where(x => x.TroubleState.ToString().ToLower().Contains(rule.data.ToLower()));
+                        var list = rule.data.Split(',').Select(x => Boolean.Parse(x.Trim().ToLower())).ToArray();
+                        if (list.Any() && list.Length < 2)
+                        {
+                            totalRows = totalRows.Where(x => list.Contains(x.TroubleState));
+                        }
                     }
                     else if (rule.field == nameof(EquipmentMaintenanceView.Comments))
                     {
                         totalRows = totalRows.Where(x => x.Comments.ToLower().Contains(rule.data.ToLower()));
                     }
-                    else if (rule.field == nameof(EquipmentMaintenanceView.MaintenanceTask))
+                    else if (rule.field == nameof(EquipmentMaintenanceView.MaintenanceTask) && rule.data != "")
                     {
-                        totalRows = totalRows.Where(x => x.MaintenanceTask.ToLower().Contains(rule.data.ToLower()));
+                        var list = rule.data.Split(',').Select(x => x.Trim().ToLower()).ToArray();
+                        if (list.Any())
+                        {
+                            totalRows = totalRows.Where(x => list.Contains(x.MaintenanceTask.ToLower()));
+                        }
                     }
-                    else if (rule.field == nameof(EquipmentMaintenanceView.Status))
+                    else if (rule.field == nameof(EquipmentMaintenanceView.Status) && rule.data != "")
                     {
-                        var statusList = rule.data.Split(',').Select(x => x.Trim().ToLower()).ToList();
+                        var statusList = rule.data.Split(',').Select(x => x.Trim().ToLower()).ToArray();
 
                         if (statusList.Any())
                         {
