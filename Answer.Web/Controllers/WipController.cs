@@ -89,13 +89,12 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.SupplierName.ToLower().Contains(rule.data.ToLower()));
                     }
-                    else if (rule.field == nameof(WorkOrderView.LocationName))
+                    else if (rule.field == nameof(WorkOrderView.LocationName) && rule.data != "")
                     {
-                        var locationList = GetMultiLocationList(param);
-
-                        if (locationList.Any())
+                        var list = rule.data.Split(',').Select(x => x.Trim().ToLower()).ToArray();
+                        if (list.Any())
                         {
-                            totalRows = totalRows.Where(x => locationList.Contains(x.LocationName));
+                            totalRows = totalRows.Where(x => list.Contains(x.LocationName.ToLower()));
                         }
                     }
                     else if (rule.field == nameof(WorkOrderView.Serial))
@@ -960,16 +959,6 @@ namespace Answer.Web.Controllers
             }
 
             return photos;
-        }
-
-        private List<string> GetMultiLocationList(JqGridParam param)
-        {
-
-            var locationFilterValues = param.where.rules.Where(x => x.field == nameof(WorkOrderView.LocationName))
-                .Where(itemRule => !string.IsNullOrWhiteSpace(itemRule.data) && itemRule.data != "HiddenOption")
-                .Select(itemRule => itemRule.data.ToLower()).ToList();
-
-            return locationFilterValues;
         }
     }
 }
