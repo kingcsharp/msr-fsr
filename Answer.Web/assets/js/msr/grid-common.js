@@ -332,9 +332,9 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                     searchOperators: true
                 });
         },
-        DataInitDatePicker: function (elem) {
+        DataInitDatePicker: function (elem, format) {
             $(elem).datepicker({
-                format: 'm/d/yyyy',
+                format: format || 'mm/dd/yyyy',
                 autoclose: true
             })
                 .on('hide',

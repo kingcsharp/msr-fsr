@@ -103,6 +103,7 @@ Msr.WipGrid = Msr.WipGrid ||
                             }
                         },
                         formatter: 'date',
+                        formatoptions: { srcformat: 'm/d/Y', newformat: 'm/d/Y' },
                         width: 90,
                         align: 'center'
                     },
@@ -123,7 +124,7 @@ Msr.WipGrid = Msr.WipGrid ||
                             }
                         },
                         formatter: 'date',
-                        //formatoptions: { srcformat: "m/d/Y", newformat: "m/d/Y" },
+                        formatoptions: { srcformat: 'm/d/Y', newformat: 'm/d/Y' },
                         editoptions: { dataInit: initDateEdit, readonly: 'readonly' },
                         width: 90,
                         align: 'center'
@@ -212,7 +213,7 @@ Msr.WipGrid = Msr.WipGrid ||
 
                     if (cellname === 'DueDate') {
                         //value = $("#" + Msr.WipGrid.GetGridId()).jqGrid('getCell', rowid, cellname);
-                        value = moment($("#" + Msr.WipGrid.GetGridId()).jqGrid('getCell', rowid, cellname), 'MM/DD/YYYY').format();
+                        value = moment(value, 'MM/DD/YYYY').format();
                     }
 
                     var options = {
@@ -307,7 +308,7 @@ Msr.WipGrid = Msr.WipGrid ||
 
 
 function initDateEdit(el, options) {
-    Msr.JqGridCommon.DataInitDatePicker(el);
+    Msr.JqGridCommon.DataInitDatePicker(el, 'mm/dd/yyyy');
 };
 
 function currentStepFormatter(cellvalue, options, rowObject) {
