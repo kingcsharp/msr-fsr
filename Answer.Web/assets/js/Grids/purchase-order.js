@@ -271,17 +271,12 @@ Msr.PurchaseOrderGrid = Msr.PurchaseOrderGrid ||
                         grouping: false,
                         freeze: false
                     },
+                    multiselect: true,
                     searchoptions: {
                         sopt: ['eq'],
-                        value: ":[All];CUSTOMER_ACCOUNT:Customer Account;PRODUCT_ACCOUNT:Product Account;PURCHASING_ACCOUNT:Purchasing Account",
+                        value: "CUSTOMER_ACCOUNT:Customer Account;PRODUCT_ACCOUNT:Product Account;PURCHASING_ACCOUNT:Purchasing Account",
                         dataInit: function (elem) {
-                            Msr.JqGridCommon.DataInitBootstrapMultiselect(elem,
-                                { includeSelectAllOption: false }, function (elem) {
-                                    $(elem).multiselect('select', "[All]");
-                                    var elemInput = $(elem).parent().parent().find('input[value=""]');
-                                    elemInput.prop('checked', true);
-                                    elemInput.parent().parent().parent().addClass('active');
-                                });
+                            Msr.JqGridCommon.DataInitBootstrapMultiselect(elem);
                         }
                     },
                     align: 'left'
@@ -336,13 +331,7 @@ Msr.PurchaseOrderGrid = Msr.PurchaseOrderGrid ||
                         sopt: ['eq'],
                         value: Msr.JqGridCommon.GetStatusFilters(),
                         dataInit: function (elem) {
-                            Msr.JqGridCommon.DataInitBootstrapMultiselect(elem,
-                                { includeSelectAllOption: false }, function (elem) {
-                                    $(elem).multiselect('select', "[All]");
-                                    var elemInput = $(elem).parent().parent().find('input[value=""]');
-                                    elemInput.prop('checked', true);
-                                    elemInput.parent().parent().parent().addClass('active');
-                                });
+                            Msr.JqGridCommon.DataInitBootstrapMultiselect(elem);
                         }
                     },
                     align: 'center'
@@ -393,8 +382,10 @@ Msr.PurchaseOrderGrid = Msr.PurchaseOrderGrid ||
 
                         }
                     });
+            },
+            beforeRequest: function () {
+                Msr.JqGridCommon.ModifyMultiselectData.call(this);
             }
-
         });
 
         Msr.JqGridCommon.BindGridEvents(Msr.PurchaseOrderGrid.GetGridId());

@@ -289,13 +289,7 @@ Msr.PeopleGrid = Msr.PeopleGrid ||
                             sopt: ['eq'],
                             value: Msr.JqGridCommon.GetStatusFilters(),
                             dataInit: function (elem) {
-                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem,
-                                    { includeSelectAllOption: false }, function (elem) {
-                                        $(elem).multiselect('select', "[All]");
-                                        var elemInput = $(elem).parent().parent().find('input[value=""]');
-                                        elemInput.prop('checked', true);
-                                        elemInput.parent().parent().parent().addClass('active');
-                                    });
+                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem);
                             }
                         },
                         align: 'left'
@@ -373,11 +367,13 @@ Msr.PeopleGrid = Msr.PeopleGrid ||
                 autowidth: true,
                 colMenu: true,
                 gridComplete: function () {
-
                     Msr.JqGridCommon.TriggerSaveLoadGridState(Msr.PeopleGrid.GetGridId());
                     Msr.JqGridCommon.SetupGridLock(Msr.PeopleGrid.GetGridEditUrl());
                     Msr.JqGridCommon.UnLockWorkflow(Msr.PeopleGrid.GetReturnUrl());
                     Msr.JqGridCommon.DocPreview();
+                },
+                beforeRequest: function () {
+                    Msr.JqGridCommon.ModifyMultiselectData.call(this);
                 }
 
             });

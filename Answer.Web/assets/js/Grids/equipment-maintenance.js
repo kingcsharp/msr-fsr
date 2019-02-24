@@ -109,15 +109,9 @@ Msr.EquipmentGrid = Msr.EquipmentGrid ||
                         multiselect: true,
                         searchoptions: {
                             sopt: ['eq'],
-                            value: ":[All];true:Yes;false:No",
+                            value: "true:Yes;false:No",
                             dataInit: function (elem) {
-                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem,
-                                    { includeSelectAllOption: false }, function (elem) {
-                                        $(elem).multiselect('select', "[All]");
-                                        var elemInput = $(elem).parent().parent().find('input[value=""]');
-                                        elemInput.prop('checked', true);
-                                        elemInput.parent().parent().parent().addClass('active');
-                                    });
+                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem);
                             }
                         },
                         align: 'center',
@@ -136,15 +130,9 @@ Msr.EquipmentGrid = Msr.EquipmentGrid ||
                         multiselect: true,
                         searchoptions: {
                             sopt: ['eq'],
-                            value: ":[All];Routine Maintenance:Routine Maintenance;Repair:Repair",
+                            value: "Routine Maintenance:Routine Maintenance;Repair:Repair",
                             dataInit: function (elem) {
-                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem,
-                                    { includeSelectAllOption: false }, function (elem) {
-                                        $(elem).multiselect('select', "[All]");
-                                        var elemInput = $(elem).parent().parent().find('input[value=""]');
-                                        elemInput.prop('checked', true);
-                                        elemInput.parent().parent().parent().addClass('active');
-                                    });
+                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem);
                             }
                         },
                         align: 'left'
@@ -193,15 +181,9 @@ Msr.EquipmentGrid = Msr.EquipmentGrid ||
                         multiselect: true,
                         searchoptions: {
                             sopt: ['eq'],
-                            value: ":[All];REQUESTED:Requested;ASSIGNED:Assigned;COMPLETED:Completed;SCHEDULED:Scheduled",
+                            value: "REQUESTED:Requested;ASSIGNED:Assigned;COMPLETED:Completed;SCHEDULED:Scheduled",
                             dataInit: function (elem) {
-                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem,
-                                    { includeSelectAllOption: false }, function (elem) {
-                                        $(elem).multiselect('select', "[All]");
-                                        var elemInput = $(elem).parent().parent().find('input[value=""]');
-                                        elemInput.prop('checked', true);
-                                        elemInput.parent().parent().parent().addClass('active');
-                                    });
+                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem);
                             }
                         },
                         align: 'left'
@@ -335,8 +317,10 @@ Msr.EquipmentGrid = Msr.EquipmentGrid ||
                         });
 
                     $("#jqGrid").trigger("resize");
+                },
+                beforeRequest: function () {
+                    Msr.JqGridCommon.ModifyMultiselectData.call(this);
                 }
-
             });
             $('#jqGrid').navGrid("#jqGridPager", {
                 search: false,

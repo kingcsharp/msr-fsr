@@ -430,7 +430,7 @@
             preventInputChangeEvent: false,
             nonSelectedText: 'None selected',
             nSelectedText: 'selected',
-            allSelectedText: 'All selected',
+            allSelectedText: '[All]',
             numberDisplayed: 3,
             disableIfEmpty: false,
             disabledText: '',
@@ -1369,7 +1369,9 @@
                 this.updateOptGroups();
             }
         },
-
+        areAllSelected: function () {
+            return this.$ul.find("input:checkbox").length === this.$ul.find("input:checkbox:checked").length;
+        },
         /**
          * Selects all enabled & visible options.
          *
@@ -1746,6 +1748,11 @@
     };
 
     $.fn.multiselect = function (option, parameter, extraOptions) {
+        if (option === 'areAllSelected') {
+            var data = $(this).data('multiselect');
+            return data[option](parameter, extraOptions);
+        }
+
         return this.each(function () {
             var data = $(this).data('multiselect');
             var options = typeof option === 'object' && option;
@@ -1758,6 +1765,7 @@
 
             // Call multiselect method.
             if (typeof option === 'string') {
+
                 data[option](parameter, extraOptions);
 
                 if (option === 'destroy') {

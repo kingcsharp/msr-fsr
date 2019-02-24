@@ -197,16 +197,9 @@ Msr.ActualPartsGrid = Msr.ActualPartsGrid ||
                         multiselect: true,
                         searchoptions: {
                             sopt: ['eq'],
-                            attr: { multiple: 'multiple', size: 4 },
-                            value: ":[All];ap_available:ap_available;ap_installed:ap_installed;ap_consumed:ap_consumed;ap_filled:ap_filled;ap_filled:ap_filled;ap_held:ap_held;ap_installed:ap_installed;ap_received:ap_received",
+                            value: "ap_available:ap_available;ap_installed:ap_installed;ap_consumed:ap_consumed;ap_filled:ap_filled;ap_held:ap_held;ap_received:ap_received",
                             dataInit: function (elem) {
-                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem,
-                                    { includeSelectAllOption: false }, function (elem) {
-                                        $(elem).multiselect('select', "[All]");
-                                        var elemInput = $(elem).parent().parent().find('input[value=""]');
-                                        elemInput.prop('checked', true);
-                                        elemInput.parent().parent().parent().addClass('active');
-                                    });
+                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem);
                             }
                         },
                         width: 150,
@@ -254,13 +247,7 @@ Msr.ActualPartsGrid = Msr.ActualPartsGrid ||
                             attr: { multiple: 'multiple', size: 4 },
                             value: Msr.JqGridCommon.GetStatusFilters(),
                             dataInit: function (elem) {
-                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem,
-                                    { includeSelectAllOption: false }, function (elem) {
-                                        $(elem).multiselect('select', "[All]");
-                                        var elemInput = $(elem).parent().parent().find('input[value=""]');
-                                        elemInput.prop('checked', true);
-                                        elemInput.parent().parent().parent().addClass('active');
-                                    });
+                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem);
                             }
                         },
                         width: 150,
@@ -326,6 +313,9 @@ Msr.ActualPartsGrid = Msr.ActualPartsGrid ||
                     Msr.JqGridCommon.TriggerSaveLoadGridState(Msr.ActualPartsGrid.GetGridId());
                     Msr.JqGridCommon.SetupGridLock(Msr.ActualPartsGrid.GetGridEditUrl());
                     Msr.JqGridCommon.UnLockWorkflow(Msr.ActualPartsGrid.GetReturnUrl());
+                },
+                beforeRequest: function () {
+                    Msr.JqGridCommon.ModifyMultiselectData.call(this);
                 }
             });
 

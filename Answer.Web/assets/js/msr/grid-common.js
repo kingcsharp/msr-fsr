@@ -213,10 +213,33 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
 
                 });
         },
+        GetOBJTypesFilters: function () {
+            var ret = 'A_ACTUAL_PARTS_HISTORY:A_ACTUAL_PARTS_HISTORY;' +
+                'A_PRODUCTS_HISTORY:A_PRODUCTS_HISTORY;' +
+                'A_ROLES_HISTORY:A_ROLES_HISTORY;' +
+                'A_PEOPLE_HISTORY:A_PEOPLE_HISTORY;' +
+                'A_PROCEDURES_HISTORY:A_PROCEDURES_HISTORY;' +
+                'A_LOCATIONS_HISTORY:A_LOCATIONS_HISTORY;' +
+                'A_THEORY_HISTORY:A_THEORY_HISTORY;' +
+                'A_QUOTES_HISTORY:A_QUOTES_HISTORY;' +
+                'A_TT_VERBS_HISTORY:A_TT_VERBS_HISTORY;' +
+                'A_ACCOUNTS_HISTORY:A_ACCOUNTS_HISTORY;' +
+                'A_COMPANIES_HISTORY:A_COMPANIES_HISTORY;' +
+                'A_REGIONS_HISTORY:A_REGIONS_HISTORY;' +
+                'A_PROD_PRICE_LIST_HISTORY:A_PROD_PRICE_LIST_HISTORY;' +
+                'A_DOCUMENTS:A_DOCUMENTS;' +
+                'A_PURCHASES_HISTORY:A_PURCHASES_HISTORY;' +
+                'A_PARTS_HISTORY:A_PARTS_HISTORY;' +
+                'A_WORKFLOWS:A_WORKFLOWS;' +
+                'A_WF_STAGES:A_WF_STAGES;' +
+                'A_PART_TYPES_HISTORY:A_PART_TYPES_HISTORY;' +
+                'A_WF_GROUPS:A_WF_GROUPS;' +
+                'A_PREPOP_HISTORY:A_PREPOP_HISTORY;' +
+                'A_ORDERS_HISTORY:A_ORDERS_HISTORY';
+            return ret;
+        },
         GetStatusFilters: function () {
-
             var filterList =
-                ':[All];' +
                 'CREATING, DENIED, APPROVED, APPROVED_BUT_REVISING, APPROVED_BUT_DELETING:Creating or Approved;' +
                 'CREATING, DENIED: Creating;' +
                 'IN_WORKFLOW:In Approval Workflow;' +
@@ -224,7 +247,6 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                 'DENIED:Denied;' +
                 'APPROVED_BUT_REVISING:Approved But Being Revised;' +
                 'APPROVED_BUT_DELETING:Approved But Being Deleted;' +
-                'DENIED:Denied;' +
                 'DELETED:Deleted;' +
                 'OLD:Obsolete';
 
@@ -349,15 +371,29 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                                 top: (offset.top + $dropdown.outerHeight()),
                                 left: offset.left
                             });
-                        }
+                            $(window).scroll(function () {
+                                var $dropdown = $aContainer.find('.btn'),
+                                    offset = $dropdown.offset();
+                                $aContainer.find('.dropdown-menu').css({
+                                    position: 'fixed',
+                                    top: (offset.top + $dropdown.outerHeight() - $(window).scrollTop()),
+                                    left: offset.left
+                                });
+                            });
+                        },
+                        selectAllValue: 'All',
+                        selectAllText: '[All]',
+                        allSelectedText: '[All]'
                     };
-                    Object.assign(multiselectOptions, options);
+
                     $(elem).multiselect(multiselectOptions);
-                    //$('.multiselect-container.dropdown-menu li:eq(1) input').hide();
                     setTimeout(function () {
-                        $(elem).parent().parent().find('button>span').text('None Selected');
-                        $(elem).parent().parent().find('input').prop('checked', false);
-                        $(elem).parent().parent().find('.multiselect-container.dropdown-menu>li').removeClass('active');
+
+                        $(elem).multiselect('deselectAll', false);
+                        $(elem).multiselect('selectAll', false);
+                        $(elem).multiselect('updateButtonText');
+
+                        //$(elem).multiselect('select', ['All']);
                         if (callback) {
                             callback(elem);
                         }
@@ -407,6 +443,34 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
             }
             return -1;
         },
+        ModifyMultiselectData: function () {
+            var rulesArray = [];
+            var filters;
+
+            if (this.p != undefined && this.p.postData.filters != undefined && this.p.postData.filters.length > 0) {
+                var string = new String(this.p.postData.filters);
+                filters = $.parseJSON(string);
+
+                for (var key in filters.rules) {
+                    if (filters.rules.hasOwnProperty(key)) {
+                        var wasFound = false;
+                        $('.multiselect-native-select>select').each(function (e, o) {
+                            if ($(o).attr('name') === filters.rules[key].field) {
+                                wasFound = true;
+                                if (!$(o).multiselect('areAllSelected')) {
+                                    rulesArray.push(filters.rules[key]);
+                                }
+                            }
+                        });
+                        if (!wasFound) {
+                            rulesArray.push(filters.rules[key]);
+                        }
+                    }
+                }
+                filters.rules = rulesArray;
+                this.p.postData.filters = JSON.stringify(filters);
+            }
+        },
         ModifySearchingFilter: function (separator, column) {
 
             var myDefaultSearch = "cn";
@@ -444,19 +508,6 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                         });
                     }
                 });
-
-                //$('.multiselect-container.dropdown-menu li input[type=checkbox]:checked').each(function (e) {
-                //    if (jQuery.inArray($(this).val(), statusArray) !== -1) {
-
-                //    } else {
-                //        if ($(this).val() === "") {
-                //            statusArray.push("true");
-                //        }
-                //        else {
-                //            statusArray.push($(this).val());
-                //        }
-                //    }
-                //});
 
                 $('.ui-multiselect-checkboxes li input[type=checkbox]:checked').each(function (e) {
                     if (jQuery.inArray($(this).val(), statusArray) !== -1) {

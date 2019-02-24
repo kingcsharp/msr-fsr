@@ -52,9 +52,7 @@ Msr.WipGrid = Msr.WipGrid ||
                         multiselect: true,
                         searchoptions: {
                             sopt: ['eq'],
-                            attr: { multiple: 'multiple', size: 4 },
                             value: locations,
-                            //attr: { multiple: 'multiple', size: 4 },
                             dataInit: function (elem) {
                                 Msr.JqGridCommon.DataInitBootstrapMultiselect(elem);
                             }
@@ -165,14 +163,12 @@ Msr.WipGrid = Msr.WipGrid ||
                         multiselect: true,
                         searchoptions: {
                             sopt: ['eq'],
-                            attr: { multiple: 'multiple', size: 4 },
-                            value: "All:[All];REQUESTED,ACCEPTED:In Progress;PENDING_PARENT_ACCEPTANCE,REQUESTED:Waiting to Start;CLOSED,FINISHED:Completed",
+                            value: "REQUESTED,ACCEPTED:In Progress;PENDING_PARENT_ACCEPTANCE,REQUESTED:Waiting to Start;CLOSED,FINISHED:Completed",
                             defaultValue: 'In Progress',
                             dataInit: function (elem) {
-                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem,
-                                    { includeSelectAllOption: false }, function (elem) {
-                                        $(elem).multiselect('select', "REQUESTED,ACCEPTED");
-                                    });
+                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem, {}, function (elem) {
+                                    $(elem).multiselect('select', "REQUESTED,ACCEPTED");
+                                });
                             }
                         },
                         formatter: currentStepFormatter,
@@ -292,6 +288,7 @@ Msr.WipGrid = Msr.WipGrid ||
                     }, 10);
                 },
                 beforeRequest: function () {
+                    Msr.JqGridCommon.ModifyMultiselectData.call(this);
                     Msr.JqGridCommon.ModifySearchingFilter.call(this, ',', 'LocationName');
                 }
             });

@@ -75,21 +75,14 @@ Msr.InvoicesGrid = Msr.InvoicesGrid || {
                     multiselect: true,
                     searchoptions: {
                         sopt: ['eq'],
-                        value: ":[All];INVOICED:INVOICED;OUTSTANDING:OUTSTANDING;OVERDUE:OVERDUE;CLOSED:CLOSED",
+                        value: "INVOICED:INVOICED;OUTSTANDING:OUTSTANDING;OVERDUE:OVERDUE;CLOSED:CLOSED",
                         dataInit: function (elem) {
-                            Msr.JqGridCommon.DataInitBootstrapMultiselect(elem,
-                                { includeSelectAllOption: false }, function (elem) {
-                                    $(elem).multiselect('select', "[All]");
-                                    var elemInput = $(elem).parent().parent().find('input[value=""]');
-                                    elemInput.prop('checked', true);
-                                    elemInput.parent().parent().parent().addClass('active');
-                                });
+                            Msr.JqGridCommon.DataInitBootstrapMultiselect(elem);
                         }
                     },
                     width: 120,
                     align: 'left'
                 },
-
                 {
                     label: 'Due Date',
                     name: 'InvoiceDate',
@@ -120,6 +113,9 @@ Msr.InvoicesGrid = Msr.InvoicesGrid || {
             colMenu: true,
             gridComplete: function () {
                 Msr.JqGridCommon.TriggerSaveLoadGridState(Msr.InvoicesGrid.GetGridId());
+            },
+            beforeRequest: function () {
+                Msr.JqGridCommon.ModifyMultiselectData.call(this);
             }
         });
 

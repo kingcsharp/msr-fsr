@@ -77,15 +77,9 @@ Msr.TrainingGrid = Msr.TrainingGrid ||
                         multiselect: true,
                         searchoptions: {
                             sopt: ['eq'],
-                            value: ':[All];Active:Active;Deactive:Inactive',
+                            value: 'Active:Active;Deactive:Inactive',
                             dataInit: function (elem) {
-                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem,
-                                    { includeSelectAllOption: false }, function (elem) {
-                                        $(elem).multiselect('select', "[All]");
-                                        var elemInput = $(elem).parent().parent().find('input[value=""]');
-                                        elemInput.prop('checked', true);
-                                        elemInput.parent().parent().parent().addClass('active');
-                                    });
+                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem);
                             }
                         },
                         align: 'center'
@@ -110,6 +104,9 @@ Msr.TrainingGrid = Msr.TrainingGrid ||
                     Msr.JqGridCommon.TriggerSaveLoadGridState(Msr.TrainingGrid.GetGridId());
                     Msr.JqGridCommon.SetupGridLock(Msr.TrainingGrid.GetGridEditUrl());
                     Msr.JqGridCommon.UnLockWorkflow(Msr.TrainingGrid.GetReturnUrl());
+                },
+                beforeRequest: function () {
+                    Msr.JqGridCommon.ModifyMultiselectData.call(this);
                 }
             });
 

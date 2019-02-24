@@ -55,15 +55,9 @@ Msr.PartTypeGrid = Msr.PartTypeGrid ||
                         multiselect: true,
                         searchoptions: {
                             sopt: ['eq'],
-                            value: ":[All];PTSPARE_NO:Not Typically a Spare Part;PTSPARE_1:L1 - Stock in location with 1 machine;PTSPARE_2:L2 - Stock in location with 10 machine;PTSPARE_3:L3 - Stock in location with 50 machine",
+                            value: "PTSPARE_NO:Not Typically a Spare Part;PTSPARE_1:L1 - Stock in location with 1 machine;PTSPARE_2:L2 - Stock in location with 10 machine;PTSPARE_3:L3 - Stock in location with 50 machine",
                             dataInit: function (elem) {
-                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem,
-                                    { includeSelectAllOption: false }, function (elem) {
-                                        $(elem).multiselect('select', "[All]");
-                                        var elemInput = $(elem).parent().parent().find('input[value=""]');
-                                        elemInput.prop('checked', true);
-                                        elemInput.parent().parent().parent().addClass('active');
-                                    });
+                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem);
                             }
                         },
                         align: 'left',
@@ -82,15 +76,9 @@ Msr.PartTypeGrid = Msr.PartTypeGrid ||
                         multiselect: true,
                         searchoptions: {
                             sopt: ['eq'],
-                            value: ":[All];PTCON_NO:Not Consumable Part;PTCON_YES:Consumable Part",
+                            value: "PTCON_NO:Not Consumable Part;PTCON_YES:Consumable Part",
                             dataInit: function (elem) {
-                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem,
-                                    { includeSelectAllOption: false }, function (elem) {
-                                        $(elem).multiselect('select', "[All]");
-                                        var elemInput = $(elem).parent().parent().find('input[value=""]');
-                                        elemInput.prop('checked', true);
-                                        elemInput.parent().parent().parent().addClass('active');
-                                    });
+                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem);
                             }
                         },
                         align: 'left'
@@ -128,13 +116,7 @@ Msr.PartTypeGrid = Msr.PartTypeGrid ||
                             sopt: ['eq'],
                             value: Msr.JqGridCommon.GetStatusFilters(),
                             dataInit: function (elem) {
-                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem,
-                                    { includeSelectAllOption: false }, function (elem) {
-                                        $(elem).multiselect('select', "[All]");
-                                        var elemInput = $(elem).parent().parent().find('input[value=""]');
-                                        elemInput.prop('checked', true);
-                                        elemInput.parent().parent().parent().addClass('active');
-                                    });
+                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem);
                             }
                         },
                         align: 'left'
@@ -178,6 +160,9 @@ Msr.PartTypeGrid = Msr.PartTypeGrid ||
                     Msr.JqGridCommon.TriggerSaveLoadGridState(Msr.PartTypeGrid.GetGridId());
                     Msr.JqGridCommon.SetupGridLock(Msr.PartTypeGrid.GetGridEditUrl());
                     Msr.JqGridCommon.UnLockWorkflow(Msr.PartTypeGrid.GetReturnUrl());
+                },
+                beforeRequest: function () {
+                    Msr.JqGridCommon.ModifyMultiselectData.call(this);
                 }
             });
             Msr.JqGridCommon.BindGridEvents(Msr.PartTypeGrid.GetGridId());

@@ -68,15 +68,9 @@
                 multiselect: true,
                 searchoptions: {
                     sopt: ['eq'],
-                    value: ":[ALL STATUSES];ITEM_NEEDS_ACCOUNT:NEEDS ACCOUNT;CLOSED:CLOSED;ALL_FILLED:ALL_FILLED;EXECUTING:EXECUTING;WAITING_FILLS:WAITING_FILLS",
+                    value: "ITEM_NEEDS_ACCOUNT:NEEDS ACCOUNT;CLOSED:CLOSED;ALL_FILLED:ALL_FILLED;EXECUTING:EXECUTING;WAITING_FILLS:WAITING_FILLS",
                     dataInit: function (elem) {
-                        Msr.JqGridCommon.DataInitBootstrapMultiselect(elem,
-                            { includeSelectAllOption: false }, function (elem) {
-                                $(elem).multiselect('select', "[All]");
-                                var elemInput = $(elem).parent().parent().find('input[value=""]');
-                                elemInput.prop('checked', true);
-                                elemInput.parent().parent().parent().addClass('active');
-                            });
+                        Msr.JqGridCommon.DataInitBootstrapMultiselect(elem);
                     }
                 },
                 align: 'center'
@@ -108,13 +102,7 @@
                     sopt: ['eq'],
                     value: Msr.JqGridCommon.GetStatusFilters(),
                     dataInit: function (elem) {
-                        Msr.JqGridCommon.DataInitBootstrapMultiselect(elem,
-                            { includeSelectAllOption: false }, function (elem) {
-                                $(elem).multiselect('select', "[All]");
-                                var elemInput = $(elem).parent().parent().find('input[value=""]');
-                                elemInput.prop('checked', true);
-                                elemInput.parent().parent().parent().addClass('active');
-                            });
+                        Msr.JqGridCommon.DataInitBootstrapMultiselect(elem);
                     }
                 },
                 align: 'center'
@@ -145,11 +133,10 @@
         autowidth: true,
         colMenu: true,
         gridComplete: function () {
-
-
-
+        },
+        beforeRequest: function () {
+            Msr.JqGridCommon.ModifyMultiselectData.call(this);
         }
-
     });
     $('#jqGrid').navGrid("#jqGridPager", {
         search: false,
