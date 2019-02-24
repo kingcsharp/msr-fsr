@@ -521,6 +521,7 @@
     <Content Include="assets\js\bootbox.min.js" />
     <Content Include="assets\js\bootstrap-datepicker.min.js" />
     <Content Include="assets\js\bootstrap-datetimepicker.min.js" />
+    <Content Include="assets\js\blockLayout.ui.js" />
     <Content Include="assets\js\grids\jgrid.defaults.js" />
     <Content Include="assets\js\grids\training.js" />
     <Content Include="assets\js\plugins\bootstrap3\bootstrap-multiselect.css" />
@@ -918,7 +919,6 @@
     <Content Include="assets\js\reports\public\js\directives\tabs.js" />
     <Content Include="assets\js\reports\public\js\directives\wst-directives.js" />
     <Content Include="assets\js\reports\public\js\files\controller.js" />
-    <Content Include="assets\js\reports\public\js\filters\unique.js" />
     <Content Include="assets\js\reports\public\js\home\controller.js" />
     <Content Include="assets\js\reports\public\js\inspector\colors.js" />
     <Content Include="assets\js\reports\public\js\inspector\icons.js" />
@@ -2667,6 +2667,7 @@
     <Content Include="Views\People\_Roles.cshtml" />
     <Content Include="Views\Training\Index.cshtml" />
     <Content Include="Views\Wip\_StatusItems.cshtml" />
+    <Content Include="Views\Shared\_PersonDate.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -2677,6 +2678,7 @@
   <ItemGroup>
     <Folder Include="assets\css\dropzone\" />
     <Folder Include="assets\js\dropzone\" />
+    <Folder Include="assets\js\reports\public\js\filters\" />
     <Folder Include="assets\js\tinymce\plugins\codesample\css\" />
     <Folder Include="assets\js\tinymce\plugins\colorpicker\" />
     <Folder Include="assets\js\tinymce\plugins\compat3x\css\" />

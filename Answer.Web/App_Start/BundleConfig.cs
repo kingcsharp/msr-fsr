@@ -185,8 +185,13 @@ namespace Answer.Web
                 .Include("~/assets/js/plugins/jquery.blockUI.js")
                 .Include("~/assets/js/plugins/bootstrap3/bootstrap-multiselect.js")
            );
+
             bundles.Add(new ScriptBundle("~/bundles/js/jgridDefaults")
                 .Include("~/assets/js/grids/jgrid.defaults.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/js/interceptors")
+                .Include("~/assets/js/blockLayout.ui.js"));
+            
 
             bundles.Add(new ScriptBundle("~/bundles/js/jquery-ui")
                 .Include("~/assets/js/jquery-ui/jquery-ui.min.js")

@@ -7,6 +7,9 @@
 <link rel="stylesheet" type="text/css" href="/assets/css/ui.jqgrid.css">
 <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
 <link rel="stylesheet" type="text/css" href="/assets/css/hopscotch.css">
+
+@Styles.Render("~/bundles/css/fileinput")
+
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="row">
@@ -19,71 +22,82 @@
                 {
                     @Html.AntiForgeryToken()
 
-                    <div class="form-horizontal addpart">
-                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.ParentRoles, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-8">
-                                @Html.TextBoxFor(model => model.ParentRoles, null, new { @class = "form-control", @readonly = "readonly" })
-                                @Html.ValidationMessageFor(model => model.ParentRoles, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-8">
-                                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-                                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.SecurityLevel, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-8">
-                                @Html.DropDownListFor(model => model.SecurityLevel, Model.SecurityLevels, new { @class = "form-control select" })
-                                @Html.ValidationMessageFor(model => model.SecurityLevel, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.ChildRoles, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-8">
-                                @Html.DropDownListFor(model => model.ChildRoles, Model.ListChildRoles, new { @class = "form-control select selectchildRoles", multiple = "multiple" })
-                                @Html.ValidationMessageFor(model => model.ChildRoles, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.PeopleAssigned, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-8">
-                                @Html.DropDownListFor(model => model.PeopleAssigned, Model.ListPeopleAssigned, new { @class = "form-control select", multiple = "multiple" })
-                                @Html.ValidationMessageFor(model => model.PeopleAssigned, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.PeoplePosAssigned, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-8">
-                                @Html.TextBoxFor(model => model.PeoplePosAssigned, null, new { @class = "form-control", @readonly = "readonly" })
-                                @Html.ValidationMessageFor(model => model.PeoplePosAssigned, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.StartDate, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-8">
-                                @Html.TextBoxFor(model => model.StartDate, "{0:MM/dd/yyyy}", new { @class = "form-control date-picker" })
-                                @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.EndDate, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-8">
-                                @Html.TextBoxFor(model => model.EndDate, "{0:MM/dd/yyyy}", new { @class = "form-control date-picker" })
-                                @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-offset-2 col-md-8">
-                                <input type="submit" value="Submit" class="btn btn-success" />
-                                @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-warning" })
-                            </div>
+                <div class="form-horizontal addpart">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ParentRoles, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(model => model.ParentRoles, null, new { @class = "form-control", @readonly = "readonly" })
+                            @Html.ValidationMessageFor(model => model.ParentRoles, "", new { @class = "text-danger" })
                         </div>
                     </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.SecurityLevel, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-8">
+                            @Html.DropDownListFor(model => model.SecurityLevel, Model.SecurityLevels, new { @class = "form-control select" })
+                            @Html.ValidationMessageFor(model => model.SecurityLevel, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ChildRoles, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-8">
+                            @Html.DropDownListFor(model => model.ChildRoles, Model.ListChildRoles, new { @class = "form-control select selectchildRoles", multiple = "multiple" })
+                            @Html.ValidationMessageFor(model => model.ChildRoles, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.PeopleAssigned, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-8">
+                            @Html.DropDownListFor(model => model.PeopleAssigned, Model.ListPeopleAssigned, new { @class = "form-control select selectassignedpeoples", multiple = "multiple" })
+                            @Html.ValidationMessageFor(model => model.PeopleAssigned, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.TrainingIdRev, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(model => model.TrainingIdRev, null, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.TrainingIdRev, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ReferenceFiles, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-8">
+                            @Html.Partial("_FileUpload")
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Comments, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-8">
+                            @Html.Partial("_TextAdder")
+                            @Html.TextAreaFor(model => model.Comments, new { onBlur = "checkMaxSize(this, 4000);;lastTextArea = 'document.editForm.Comments';", name = "Comments", rows = "10", cols = "80", @class = "text-formatter form-control", })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.PeoplePosAssigned, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(model => model.PeoplePosAssigned, null, new { @class = "form-control", @readonly = "readonly" })
+                            @Html.ValidationMessageFor(model => model.PeoplePosAssigned, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div id="person" class="form-group">
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-8">
+                            <input type="submit" value="Submit" class="btn btn-success" />
+                            @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-warning" })
+                        </div>
+                    </div>
+                </div>
                 }
             </div>
         </div>
@@ -91,14 +105,23 @@
 </div>
 @section scripts
 {
+    <script src="~/assets/js/common/documentFile.js"></script>
+
     @{
         var childRoles = string.Join(",", Model.ChildRoles);
     }
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+
+    @Scripts.Render("~/bundles/js/fileinput")
+    @Scripts.Render("~/bundles/js/jqueryval")
     <script type="text/javascript">
+        var fileUploader = new FileUploader();
+
         $(document).ready(function (parameters) {
             $('.select').select2();
+
+            fileUploader.InitUploader($('#input-files'), '@Url.Action("FileUploaderBootstrap", "Doc")', [], []);
 
             var selectPeoples = $(".selectchildRoles").select2({
                 tags: [],
@@ -114,11 +137,72 @@
             var selectedPeoples = values.split(",");
 
             selectPeoples.val(selectedPeoples).trigger("change");
+            $(".selectassignedpeoples").trigger("change");
+            var currentPeopleList = selectedPeoples;
+
+            var IDs = [];
+            $("#person>div").each(function (i) {
+                IDs[i] = $(this).prop('id');
+            });
+
+            $(".selectassignedpeoples").change(function (e) {
+                IDs = [];
+                $("#person>div").each(function (i) {
+                    IDs[i] = $(this).prop('id');
+                });
+
+                /* Logic here does not execute when val() is used */
+                if ($(this).val() != null) {
+                    currentPeopleList = $(this).val().toString().split(",");
+                } else {
+                    currentPeopleList = [];
+                }
+
+                //currentPeopleList not in the DIVS
+                //This would be someone was added to the people list
+                for (var i = currentPeopleList.length; i--;) {
+                    if (IDs.indexOf(currentPeopleList[i]) === -1) {
+
+                        var roleId = window.location.href.match(/(\d+)$/g);
+
+                        $.ajax({
+                            url: '@Url.Action("LoadPersonDate", "Roles")?RoleId=' + roleId + '&userId=' + currentPeopleList[i],
+                            type: 'GET',
+                            error: function (xhr) {
+                                alert('Error: ' + xhr.statusText);
+                            },
+                            success: function (result) {
+                                $('#person').append(result);
+
+                                $('.date-picker').datepicker({
+                                    format: 'mm/dd/yyyy',
+                                    autoclose: true
+                                });
+                            }
+                        });
+                    }
+                }
+                
+                //Needs to be removed
+                //Someone was removed from the people list
+                for (var i = IDs.length; i--;) {
+                    if (currentPeopleList.indexOf(IDs[i]) === -1) {
+                        $('#' + IDs[i]).remove();
+                    } else if (currentPeopleList.length == 0) {
+                        $('#' + IDs[i]).remove();
+                    }
+                }
+            });
 
             $('.date-picker').datepicker({
                 format: 'mm/dd/yyyy',
                 autoclose: true
             });
         });
+
+        function SelectIds() {
+            FileUploaderGrid().SelectIdsForAdd('@Url.Action("FileUploaderBootstrap", "Doc")');
+        }
+
     </script>
 }

@@ -125,9 +125,9 @@ namespace Msr.Services.Invoices
                 invoice.Supplier = model.Supplier;
                 invoice.InvoiceClass = model.InvoiceClass;
                 _dbContext.Invoices.Add(invoice);
+                _dbContext.SaveChanges();
 
                 var invoiceItem = model.Items.Split(',');
-
 
                 foreach (var item in invoiceItem)
                 {
@@ -137,7 +137,7 @@ namespace Msr.Services.Invoices
                         InvoiceId = invoice.Id.ToString(),
                         RefPo = invoice.CustPo,
                     };
-           
+
                     _dbContext.InvoiceWorkItems.Add(invoiceWorkItem);
                 }
 
