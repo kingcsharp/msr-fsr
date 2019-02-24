@@ -30,7 +30,7 @@ namespace Msr.Web.Controllers
         public ActionResult Findreport(string data, string id)
         { //'/api/reports/get-report/' + id, { id: id, mode: 'preview', linked: isLinked }
             var reportURL = ConfigurationManager.AppSettings["ReportingURL"].ToString();
-            var client = new RestClient("http://"+ reportURL +"/ api/reports/get-report/" + id + "?data=" + HttpUtility.UrlEncode(data));
+            var client = new RestClient("http://"+ reportURL +"/api/reports/get-report/" + id + "?data=" + HttpUtility.UrlEncode(data));
             var request = new RestRequest(Method.GET);
             request.AddHeader("cache-control", "no-cache");
             SetCookiesForWidestageRequests(request);
