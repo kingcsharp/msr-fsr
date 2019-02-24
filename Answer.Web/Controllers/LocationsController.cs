@@ -205,28 +205,8 @@ namespace Answer.Web.Controllers
                     return View(model);
                 }
             }
-            else
-            {
-                if (model.Parent != "" && ModelState["InternalAddress"].Errors.Count == 0 && ModelState["Name"].Errors.Count == 0)
-                {
-                    model.LoggedUserIdResult = GetCurrentUser();
-                    var response = _locationService.Save(model);
-
-                    if (response)
-                    {
-                        TempData["SuccessMessage"] = "Location has been created successfully.";
-
-                        return RedirectToAction("Index");
-                    }
-
-                    TempData["ErrorMessage"] = "Something went wrong.";
-
-                    return View(model);
-                }
-            }
-
+            model.Setup(_regionService, _locationService, GetCurrentUser().Id);
             return View(model);
-
         }
 
         public ActionResult Edit(string id)
@@ -292,51 +272,6 @@ namespace Answer.Web.Controllers
                 }
             }
 
-                    if (response)
-                    {
-                        TempData["SuccessMessage"] = "Location has been updated successfully.";
-
-                        return RedirectToAction("Index");
-                    }
-
-                    TempData["ErrorMessage"] = "Something went wrong.";
-
-
-                    return View(model);
-                }
-                else
-                {
-                    if (model.Parent != "" && ModelState["InternalAddress"].Errors.Count == 0 && ModelState["Name"].Errors.Count == 0)
-                    {
-                        model.LoggedUserIdResult = GetCurrentUser();
-
-                        var locationData = _locationService.GetById(model.Parent);
-
-                        model.Address1 = locationData.Address1;
-                        model.Address2 = locationData.Address2;
-                        model.City = locationData.City;
-                        model.Country = locationData.Country;
-                        model.PostalCode = locationData.PostalCode;
-                        model.Region = locationData.Region;
-                        model.State = locationData.State;
-
-                        var response = _locationService.Save(model);
-
-                        if (response)
-                        {
-                            TempData["SuccessMessage"] = "Location has been updated successfully.";
-
-                            return RedirectToAction("Index");
-                        }
-
-                        TempData["ErrorMessage"] = "Something went wrong.";
-
-                        return View(model);
-                    }
-                }
-
-            }
-
             model.Setup(_regionService, _locationService, GetCurrentUser().Id);
             return View(model);
         }
@@ -363,8 +298,6 @@ namespace Answer.Web.Controllers
             var location = new SaveLocationViewModel();
 
             location = location.MapToDto(model);
-
-            //location.Setup(new DocumentFilesService(), new LocationService(), new LocationTypeService());
 
             return View(location);
         }
