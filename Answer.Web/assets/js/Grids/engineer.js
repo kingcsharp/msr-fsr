@@ -11,7 +11,6 @@ Msr.WipGrid = Msr.WipGrid ||
         LoadWipGrid: function (url, locations) {
 
             $.jgrid.defaults.responsive = true;
-
             $("#" + Msr.WipGrid.GetGridId()).jqGrid({
                 url: url,
                 mtype: "GET",
@@ -27,7 +26,7 @@ Msr.WipGrid = Msr.WipGrid ||
                         colmenu: false,
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                        width: 144,
+                        //width: '*',
                         align: 'center',
                         formatter: workItemFormatter
                     },
@@ -124,14 +123,14 @@ Msr.WipGrid = Msr.WipGrid ||
                         colmenu: true,
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                        width: 250,
-                        align: 'left',
+                        width: 230,
+                        align: 'left'
                     },
                     {
                         label: 'Procedure',
                         name: 'ProcName',
                         index: 'ProcName',
-                        colmenu: false, width: 180,
+                        colmenu: false, width: 140,
                         align: 'left'
                     },
                     {
@@ -181,6 +180,7 @@ Msr.WipGrid = Msr.WipGrid ||
                 cellEdit: true,
                 cellsubmit: 'clientArray',
                 editurl: 'clientArray',
+                //shrinkToFit:true,
                 autowidth: true,
                 colMenu: true,
                 key: true,
@@ -213,26 +213,40 @@ Msr.WipGrid = Msr.WipGrid ||
                 },
                 gridComplete: function () {
                     Msr.JqGridCommon.TriggerSaveLoadGridState(Msr.WipGrid.GetGridId());
-
                     $('div.meter').each(function (index) {
                         var tooltiptime = '';
                         var type = $(this).data('type');
                         var progVal = parseFloat($(this).text()).toFixed(2);
                         var statClass = 'danger';
-                        if (progVal > 25) { statClass = 'warning'; }
-                        if (progVal > 50) { statClass = 'info'; }
-                        if (progVal > 75) { statClass = 'success'; }
+                        if (progVal > 25) {
+                            statClass = 'warning';
+                        }
+                        if (progVal > 50) {
+                            statClass = 'info';
+                        }
+                        if (progVal > 75) {
+                            statClass = 'success';
+                        }
                         if (type === 'pre-complete-text') {
                             tooltiptime = $(this).data('tooltip-pre');
-                        }
-                        else {
+                        } else {
                             tooltiptime = $(this).data('tooltip-time');
                         }
                         $(this).replaceWith(
-                            '<div class = "progress" title="' + tooltiptime + '">' +
-                            '<div class = "progress-bar progress-bar-' + statClass + '" role = "progressbar" aria-valuenow = "' + progVal + '" ' +
-                            'aria-valuemin = "0" aria-valuemax = "100" style = "width: ' + progVal + '%;"> ' +
-                            '<span>' + progVal + '%</span>' +
+                            '<div class = "progress" title="' +
+                            tooltiptime +
+                            '">' +
+                            '<div class = "progress-bar progress-bar-' +
+                            statClass +
+                            '" role = "progressbar" aria-valuenow = "' +
+                            progVal +
+                            '" ' +
+                            'aria-valuemin = "0" aria-valuemax = "100" style = "width: ' +
+                            progVal +
+                            '%;"> ' +
+                            '<span>' +
+                            progVal +
+                            '%</span>' +
                             '</div>' +
                             '</div>'
                         );
@@ -240,6 +254,23 @@ Msr.WipGrid = Msr.WipGrid ||
 
                     $('.ui-multiselect-checkboxes li:first-child').hide();
 
+                    var isGridDone = false;
+                    var time = new Date().getTime();
+                    var gridComplete = setInterval(function () {
+                        var maxWidth = 150;
+                        $('[aria-describedby*="jq-grid-wip_WoItem"] span').each(function (index, elem) {
+                            maxWidth = $(elem).width() > maxWidth ? $(elem).width() : maxWidth;
+                            isGridDone = true;
+                        });
+                        if (isGridDone) {
+                            $("#" + Msr.WipGrid.GetGridId()).jqGrid('resizeColumn', 'WoItem', maxWidth+25, true);
+                            clearInterval(gridComplete);
+                        }
+                        //after 50 secs do not execute function anymore.
+                        if (time > time + 1000 * 50) {
+                            clearInterval(gridComplete);
+                        }
+                    }, 10);
                 },
                 beforeRequest: function () {
 

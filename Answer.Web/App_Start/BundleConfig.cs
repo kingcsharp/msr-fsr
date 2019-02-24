@@ -181,7 +181,15 @@ namespace Answer.Web
                 .Include("~/assets/js/printThis.js")
                 .Include("~/assets/js/comman.js")
                 .Include("~/assets/js/bootstrap-datepicker.min.js")
+                .Include("~/assets/js/plugins/jquery.blockUI.js")
            );
+
+            bundles.Add(new ScriptBundle("~/bundles/js/jgridDefaults")
+                .Include("~/assets/js/grids/jgrid.defaults.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/js/interceptors")
+                .Include("~/assets/js/blockLayout.ui.js"));
+            
 
             bundles.Add(new ScriptBundle("~/bundles/js/jquery-ui")
                 .Include("~/assets/js/jquery-ui/jquery-ui.min.js")
@@ -189,12 +197,12 @@ namespace Answer.Web
             );
 
             bundles.Add(new StyleBundle("~/bundles/css/jquery-ui")
-                .Include("~/assets/css/jquery-ui/jquery-ui.css")
+                .Include("~/assets/css/jquery-ui/jquery-ui.css", new CssRewriteUrlTransform())
                 .Include("~/assets/css/jquery-ui/jquery.multiselect.css"));
 
-               bundles.Add(new ScriptBundle("~/bundles/js/invoice-setup")
-		        .Include("~/assets/js/invoice-setup.js")
-	        );
+            bundles.Add(new ScriptBundle("~/bundles/js/invoice-setup")
+             .Include("~/assets/js/invoice-setup.js")
+         );
 
             bundles.Add(new ScriptBundle("~/bundles/js/jqgrid-training")
                .Include("~/assets/js/grids/training.js")
@@ -202,9 +210,9 @@ namespace Answer.Web
 
 #if DEBUG
             BundleTable.EnableOptimizations = false;
-            #else
+#else
                             BundleTable.EnableOptimizations = true;
-            #endif
+#endif
         }
     }
 }

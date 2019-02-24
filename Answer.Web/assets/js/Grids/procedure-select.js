@@ -1,7 +1,6 @@
 ﻿
 function LoadSelectProcedureGrid(parentId, fillId, procedureType) {
     $.jgrid.defaults.styleUI = 'Bootstrap';
-
     $("#jqGridFiles").jqGrid({
         url: '/wip/AddNcrModelData',
         mtype: "GET",
@@ -68,16 +67,20 @@ function LoadSelectProcedureGrid(parentId, fillId, procedureType) {
         key: true,
         ajaxCellOptions: {},
         gridComplete: function () {
-          }
+            $('.ui-jqgrid').unblock();
+        },
+        beforeRequest: function () {
+            $('.ui-jqgrid').block({ message: '<h1><img src="/assets/img/nice_loader.gif" />  Loading. Please wait...</h1>' });
+        }
     });
     $('#jqGridFiles').navGrid("#jqGridPagerFiles", {
-            refresh: true,
-            search: false, // show search button on the toolbar
-            add: false,
-            edit: false,
-            del: false,
+        refresh: true,
+        search: false, // show search button on the toolbar
+        add: false,
+        edit: false,
+        del: false,
 
-        },
+    },
         {}, // edit options
         {}, // add options
         {}, // delete options

@@ -73,7 +73,7 @@ namespace Msr.Services.EquipmentMaintenances
         {
             return _dbContext.LocationViews.Where(x => x.ParentLocation == null && x.Name != "").ToList();
         }
-
+         
         public List<LocationView> GetSubLocation1(string locationId)
         {
             if (locationId == null)

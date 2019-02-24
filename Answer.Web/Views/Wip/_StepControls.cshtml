@@ -13,7 +13,7 @@
     if (Model.TaskRunningDto != null)
     {
         taskId = Model.TaskRunningDto.Id;
-        
+
     }
 }
 
@@ -52,6 +52,7 @@
 
             <button class="timer-btn btn btn-warning btn-lg print-btn pull-left @resumeButton" data-task-log-id="@taskId" id="resume-step"><i class="glyphicon glyphicon-step-forward"></i> Resume</button>
 
+
             @if (Model.TaskRunningDto != null && Model.TaskRunningDto.StatusId == TimerStatuseConstants.InProgress)
             {
                 pauseButton = "show";
@@ -72,7 +73,7 @@
 
         @if (Model.TaskEditDataResult.Status == "ACCEPTED" || Model.TaskEditDataResult.Status == "REQUESTED")
         {
-            <button data-toggle="modal" data-fill-id="@ViewBag.FillId" data-id="@Model.StepId" data-target="#addNcrModal" class="btn btn-danger btn-lg print-btn pull-right"><i class="fa fa-plus-square"></i> Add NCR</button>
+            <button id="addNcrModal_" class="btn btn-danger btn-lg print-btn pull-right"><i class="fa fa-plus-square"></i> Add NCR</button>
             <button data-toggle="modal" data-fill-id="@ViewBag.FillId" data-target="#add-new-equipment-model" class="btn btn-info btn-lg print-btn pull-right"><i class="fa fa-plus-square"></i> EM/PM</button>
         }
 
@@ -86,6 +87,17 @@
 
 
 @Scripts.Render("~/bundles/js/wip-step-controls")
+@*<script src="//cdn.rawgit.com/noelboss/featherlight/1.6.1/release/featherlight.min.js" type="text/javascript" charset="utf-8"></script>*@
+@*<script type="text/javascript" src="~/assets/js/grids/files-dialog.js"></script>*@
+@*<script type="text/javascript" src="~/assets/js/jquery.flexslider.js"></script>*@
+@*<script type="text/javascript" src="~/assets/js/bootstrap-select.js"></script>*@
+@*<script type="text/javascript" src="~/assets/js/finger.min.js"></script>*@
+@*<script type="text/javascript" src="~/assets/js/timer.jquery.min.js"></script>*@
+@*<script src="~/assets/js/plugins/bootstrap3/bootstrap-dialog.min.js"></script>*@
+
+<script type="text/javascript" src="~/assets/js/grids/files-dialog.js"></script>
+<script src="~/assets/js/grids/procedure-select.js"></script>
+@Scripts.Render("~/bundles/js/jqgrid")
 
 <script type="text/javascript">
 	$(document).ready(function () {
@@ -148,11 +160,16 @@
 		    stepControls.StepAssumeClick(stepId, fillId);
 		});
 
-		$('#addNcrModal').on('hidden.bs.modal',function() {
-			$(this).data('bs.modal', null);
-		});
+        $('#addNcrModal_').on('click', function () {
+            $('#addNcrModal').modal('show');
+            $('#addNcrModal').find('.modal-body').empty()
+                .html('<table id="jqGridFiles"></table><div id="jqGridPagerFiles"></div>');
 
-		stepControls.AddNcrModel();
+            setTimeout(function() {
+                    LoadSelectProcedureGrid('@Model.StepId', '@Model.FillId', 'ncr');
+            },300);
+	    });
+		//stepControls.AddNcrModel();
 		stepControls.AddNewEquipmentModel();
 	});
 

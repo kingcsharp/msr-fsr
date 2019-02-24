@@ -18,7 +18,7 @@ return {
         isPrompt: '@'
     },
 
-   templateUrl: "partials/prompts/promptsDirective.html",
+    templateUrl: "assets/js/reports/partials/prompts/promptsDirective.html",
 
     // append
     replace: true,

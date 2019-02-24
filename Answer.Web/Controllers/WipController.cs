@@ -371,7 +371,7 @@ namespace Answer.Web.Controllers
 
             var stringFillId = id.ToString();
 
-            var actualPartId = _orderService.GetWorkOrderQueryable().Where(x => x.FillId == stringFillId).Select(a => a.ActualPartId).SingleOrDefault();
+            var actualPartId = _orderService.GetWorkOrderQueryable().Where(x => x.FillId == stringFillId).Select(a => a.ActualPartId).FirstOrDefault();
 
             vm.ActualPartId = actualPartId;
 
@@ -553,23 +553,32 @@ namespace Answer.Web.Controllers
             var procedureRoles = _proceduresService.GetSelectedRoles(objId.Id, loggedUserId.Id)?.Select(x => x.Role_Id).ToList();
             response.HasStepRoles = myRoles.Select(x => x.Role_Id).ToList().Intersect(procedureRoles).Any();
 
-            if (response.HasStepRoles) {
-                var myCertifications = myRoles.Where(x => x.StartDate != null && x.EndDate != null).ToList();
+            if (!response.HasStepRoles)
+            {
 
-                foreach (var item in myCertifications)
+                var steptRoles = currentStep.Roles?.Split(',');
+
+                foreach (var item in myRoles)
                 {
-                    var steptRoles = currentStep.Roles?.Split(',');
+                    if (steptRoles.Any(x => x == item.Role_Id))
+                    {
 
-                    if (steptRoles.Any(x => x == item.Role_Id)) {
-
-                        if (DateTime.Today >= item.StartDate && item.EndDate.Value.Date < DateTime.Today.Date.AddDays(1))
+                        if (item.StartDate.HasValue && item.EndDate.HasValue)
                         {
-                            response.HasStepRoles = false;
+                            if (DateTime.Today.Date >= item.StartDate.Value.Date && DateTime.Today.Date < item.EndDate.Value.Date.AddDays(1))
+                            {
+                                response.HasStepRoles = true;
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            response.HasStepRoles = true;
+                            break;
                         }
                     }
                 }
             }
-            
 
             response.LoggedUserIdResult = loggedUserId;
             response.TaskEditDataResult.StepTitle = currentStep.Title;

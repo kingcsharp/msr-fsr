@@ -89,6 +89,8 @@ if @strOwner is null
 	UPDATE A_OBJECTS SET STATUS = 'APPROVED',UNLOCKED_BY = @strNTLogin,LOCKED_BY = NULL,LOCKED_BY_NAME = NULL
 		WHERE ID = @actPartRootObjID
 	exec A_SP_ACTUAL_PARTS_FINISH_WF 	null,@actPartRootObjID,@strNTLogin
+
+    DELETE FROM Portal_AddSubPartQtyCount WHERE Portal_AddSubPartQtyCount.ParentId IN (select ParentId from Portal_AddSubPartQtyCount WHERE dbo.Portal_AddSubPartQtyCount.ParentId=@actPartRootObjID)
 	end
 else
 	begin

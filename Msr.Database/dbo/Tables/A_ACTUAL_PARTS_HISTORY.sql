@@ -24,11 +24,7 @@
     [CHILD_PERCENT_COMPLETE] FLOAT (53)      NULL,
     CONSTRAINT [PK_A_ACTUAL_PARTS_HISTORY] PRIMARY KEY CLUSTERED ([ID] ASC)
 );
-
-
 GO
-
-
 
 CREATE              TRIGGER A_ACTUAL_PARTS_HISTORY_INSERT
 ON dbo.A_ACTUAL_PARTS_HISTORY
@@ -49,19 +45,7 @@ SELECT @NAME = @NAME + ISNULL(NAME,'') + ISNULL('(' + COMPANY_PART_NUMBER + ')',
 
 exec A_SP_OBJECT_ADD 'A_ACTUAL_PARTS_HISTORY',@ID,@NAME,@MODBY,null,null,null
 
-
-
-
 GO
-
-
-
-
-
-
-
-
-
 
 CREATE               TRIGGER A_ACTUAL_PARTS_HISTORY_UPDATE
 ON dbo.A_ACTUAL_PARTS_HISTORY
@@ -110,7 +94,84 @@ print 'Old PID = ' + @oldPartID
 exec A_SP_PART_SAFETY_STOCK_LEVEL_UPDATE_FOR_LOCATION_AND_PART @newLoc,@newPartID
 exec A_SP_PART_SAFETY_STOCK_LEVEL_UPDATE_FOR_LOCATION_AND_PART @oldLoc,@oldPartID
 print 'Out of the  Actual PArts History Update Trigger'
+GO
+
+CREATE TRIGGER [dbo].[Portal_Actual_Part_Insert_SubPart]
+ON [dbo].[A_ACTUAL_PARTS_HISTORY]
+AFTER update
+AS
+declare @ID as nvarchar(50),@NICK_NAME as nvarchar(2000),@MODBY as nvarchar(50),@newID varchar(50),
+@ROOT_SUB_PART varchar(50),@partID varchar(50),@Serial nvarchar(100),@strNTLogin varchar(50),@PARENT_ID varchar(100),@QTY int,
+@count int,@SysName nvarchar(500),@CurOwner varchar(50),@NAME nvarchar(100),@ApStatus nvarchar(50),@myRoot varchar(50),@rev int,@AID varchar(50),@flag int,
+@OldQty int
 
 
+SET @count=1;
 
+SELECT 
+	@MODBY = MODBY,
+	@NICK_NAME =NICK_NAME,
+	@Serial=  SERIAL,
+	@partID = PART_ID ,
+	@strNTLogin=MODBY,
+	@PARENT_ID=PARENT_ID,
+	@QTY=QTY,
+	@SysName=SYS_NAME,
+	@CurOwner=CUR_OWNER,
+	@ApStatus=AP_STATUS,
+	@PARENT_ID=PARENT_ID
+FROM INSERTED
+
+
+IF @QTY>@count
+BEGIN
+
+SET @OldQty=@QTY
+
+ SET @flag=(SELECT max(CountValue) FROM Portal_AddSubPartQtyCount WHERE ParentId=@PARENT_ID AND Qty=@QTY AND PartId=@partID)
+
+ IF @flag IS NULL
+
+ BEGIN
+   SET @flag=1;
+ END
+  
+   WHILE @QTY >@flag AND  @Serial is NULL
+
+   BEGIN 
+   SET @flag=null;
+   SET @count=@count+1;
+
+    exec sp_GetUniqueID3 @newID OUTPUT
+  
+  INSERT INTO Portal_AddSubPartQtyCount (CountValue,ParentId,Qty,ActualPartId,PartId) 
+  VALUES(@count, @PARENT_ID,@OldQty,@newID,@partID)
+
+  SET @flag=(SELECT max(CountValue) FROM Portal_AddSubPartQtyCount WHERE ParentId=@PARENT_ID )
+
+   INSERT INTO A_ACTUAL_PARTS_HISTORY (ID,NICK_NAME,SERIAL,MODBY,DRCM,PARENT_ID) 
+			values(@newID,@NICK_NAME,@SERIAL,@strNTLogin,getDATE(),@PARENT_ID)
+
+	SELECT @NAME = dbo.A_FN_ACTUAL_PART_GET_NAME_FROM_HIST_ID_OR_ID (null,@newID)
+
+	UPDATE A_ACTUAL_PARTS_HISTORY SET QTY=1,SYS_NAME = @NAME,PART_ID=@partID,CUR_OWNER=@CurOwner,AP_STATUS=@ApStatus WHERE ID=@newID
+
+	UPDATE A_OBJECTS SET STATUS = 'APPROVED',LOCKED_BY = NULL WHERE A_OBJECTS.OBJ_ID  = @newID
+
+	SELECT @myRoot = ROOT,@ID = OBJ_ID,@rev = REV FROM A_OBJECTS WHERE OBJ_ID = @newID
+
+	declare @tester as nvarchar(50) --Test to see if it is in the table
+    SELECT @tester = ID FROM A_ACTUAL_PARTS WHERE ID = @myRoot 
+
+	if @tester is Null --it is not so add it
+	begin
+		print 'tester was null so i need to go ahead and make a record'
+		INSERT INTO A_ACTUAL_PARTS(ID,HISTORY_REF_ID,DRCM,MODBY) VALUES (@myRoot,@ID,getDate(),@strNTLogin)
+	END
+	
+	UPDATE A_ACTUAL_PARTS SET STATUS = 'APPROVED' WHERE ID = @myRoot
+
+END
+END
+GO
 

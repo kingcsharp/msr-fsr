@@ -26,6 +26,15 @@ namespace Msr.Services.Roles.Procedures
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "SECURITY_LEVEL")]
         public string SecurityLevel { get; set; }
 
+        [StoredProcedureParameter(SqlDbType.VarChar, Size = 8000, ParameterName = "REFERENCE_FILES")]
+        public string ReferenceFiles { get; set; }
+        
+        [StoredProcedureParameter(SqlDbType.VarChar, Size = 100, ParameterName = "TrainingIDRev")]
+        public string TrainingIDRev { get; set; }
+
+        [StoredProcedureParameter(SqlDbType.VarChar, Size = 4000, ParameterName = "COMMENTS")]
+        public string Comments { get; set; }
+
         [StoredProcedureParameter(SqlDbType.VarChar, Size = 50, ParameterName = "strNTLogin")]
         public string NTLogin { get; set; }
     }
