@@ -2860,3 +2860,11 @@ span.fa.fa-arrows.handle.sortable-fa {
 .datepicker-dropdown {
     z-index: 101!important;
 }
+
+.multiselect.dropdown-toggle {
+    top: 5px;
+    padding: 5px 12px;
+}
+.multiselect-container.dropdown-menu > .active > a {
+    background-color: #22A7F0;
+}
