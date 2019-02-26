@@ -131,7 +131,7 @@ namespace Msr.Services.Roles.ViewModels
         public void Read(RolesView role)
         {
             Id = role.Id;
-            WfId = role.Id;
+            WfId = role.Role_ID;
             Name = role.RoleName;
             Comments = role.Comments;
             TrainingIdRev = role.TrainingIdRev;
