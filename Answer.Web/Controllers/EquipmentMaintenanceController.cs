@@ -52,19 +52,7 @@ namespace Answer.Web.Controllers
                 foreach (var rule in param.where.rules)
                 {
 
-                    if (rule.field == nameof(EquipmentMaintenanceView.ParentLocation))
-                    {
-                        totalRows = totalRows.Where(x => x.ParentLocation.ToLower().Contains(rule.data.ToLower()));
-                    }
-                    else if (rule.field == nameof(EquipmentMaintenanceView.SubLocationFirst))
-                    {
-                        totalRows = totalRows.Where(x => x.SubLocationFirst.ToLower().Contains(rule.data.ToLower()));
-                    }
-                    else if (rule.field == nameof(EquipmentMaintenanceView.SubLocationSecond))
-                    {
-                        totalRows = totalRows.Where(x => x.SubLocationSecond.ToLower().Contains(rule.data.ToLower()));
-                    }
-                    else if (rule.field == nameof(EquipmentMaintenanceView.DateTime))
+                   if (rule.field == nameof(EquipmentMaintenanceView.DateTime))
                     {
                         DateTime value;
                         if (DateTime.TryParse(rule.data, out value))

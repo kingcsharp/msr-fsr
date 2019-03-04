@@ -25,30 +25,9 @@ Msr.EquipmentGrid = Msr.EquipmentGrid ||
                         align: 'left'
                     },
                     {
-                        label: 'Primary Location',
-                        name: 'ParentLocation',
-                        index: 'ParentLocation',
-                        colmenu: false,
-                        editable: true,
-                        coloptions: { sorting: false, columns: true, filtering: false, seraching: true, grouping: false, freeze: false },
-                        searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                        align: 'left',
-                        hidedlg: false
-                    },
-                    {
-                        label: 'Sub Location 1',
-                        name: 'SubLocationFirst',
-                        index: 'SubLocationFirst',
-                        colmenu: false,
-                        editable: true,
-                        coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                        searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                        align: 'left'
-                    },
-                    {
-                        label: 'Sub Location 2',
-                        name: 'SubLocationSecond',
-                        index: 'SubLocationSecond',
+                        label: 'Room/Equipment',
+                        name: 'RoomEquipment',
+                        index: 'RoomEquipment',
                         colmenu: false,
                         editable: true,
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
