@@ -140,13 +140,11 @@ namespace Msr.Services.Orders.Procedures
                 Value = x.Id.ToString()
             }).OrderBy(o => o.Text).ToList();
 
-            //bpp
-            //TODO:  Revisit this
-            //EquipmentMaintenanceList = equipmentMaintenanceService.GetEquipmentsQueryable().ToList().Select(x => new SelectListItem
-            //{
-            //    Text = x.ParentLocation + " (" + x.Id.ToString() + ")",
-            //    Value = x.Id.ToString()
-            //}).OrderBy(o => o.Text).ToList();
+            EquipmentMaintenanceList = equipmentMaintenanceService.GetEquipmentsQueryable().ToList().Select(x => new SelectListItem
+            {
+                Text = x.RoomEquipment + " (" + x.Id.ToString() + ")",
+                Value = x.Id.ToString()
+            }).OrderBy(o => o.Text).ToList();
         }
     }
 }

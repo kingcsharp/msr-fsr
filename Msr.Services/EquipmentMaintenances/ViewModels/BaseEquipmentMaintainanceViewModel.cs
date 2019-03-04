@@ -69,17 +69,11 @@ namespace Msr.Services.EquipmentMaintenances.ViewModels
 
             Roles = roleService.GetAssignedRoles(NTLogin);
 
-
-            //bpp
-            //if (!string.IsNullOrWhiteSpace(RoomEquipmentId))
-            //{
-            //    LocationView loc = equipmentMaintenanceService.GetSingleLocation(RoomEquipmentId);
-                RoomEquipmentList.AddRange(equipmentMaintenanceService.GetEquipmentRoom().Select(x => new SelectListItem
-                {
-                    Text = x.Name,
-                    Value = x.ObjectId,
-                }).OrderBy(o => o.Text).ToList());
-            // }
+            RoomEquipmentList.AddRange(equipmentMaintenanceService.GetEquipmentRoom().Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.ObjectId,
+            }).OrderBy(o => o.Text).ToList());
 
             MaintenanceTaskList = new List<SelectListItem>
             {

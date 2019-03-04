@@ -137,24 +137,15 @@
                     eLoaderOpen();
                     $.ajax({
                         type: "POST",
-                        url: "/EquipmentMaintenance/GetChildLocations/" + id,
+                        url: "/EquipmentMaintenance/GetScanBarCodeLocations/" + id,
                         success: function (data) {
-                            if (data.locations === "") {
+                            if (data.locationId === "") {
                                 $('#error').html('Location not found, please select manually');
                                 $('#error').show();
-                                //$("#RoomEquipmentId").empty();
-
-                                //$("#RoomEquipmentId").prop('disabled', true);
-                            } else {
-                                //$("#RoomEquipmentId").empty();
-
-                                //if (data.locations !== "") {
-                                //    $.each(data.locations, function (i, row) {
-                                //        $("#RoomEquipmentId").append("<option value='" + row.Value + "'>" + row.Text + "</option>");
-                                //    });
-                                //    var id1 = $("#RoomEquipmentId").val();
-                                //}
-
+                            } else {data.locationId
+                                if (data.locationId !== "") {
+                                    $("#RoomEquipmentId").val(data.locationId).trigger('change');
+                                }
                             }
                             eLoaderClose();
                         },

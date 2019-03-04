@@ -114,26 +114,21 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "/EquipmentMaintenance/GetChildLocations/" + id,
+                    url: "/EquipmentMaintenance/GetScanBarCodeLocations/" + id,
                     success: function (data) {
-                        if (data.locations === "") {
-                            $('#error').html('Location not found select manually');
+                        if (data.locationId === "") {
+                            $('#error').html('Location not found, please select manually');
                             $('#error').show();
-                            //$("#RoomEquipmentId").empty();
-                           // $("#RoomEquipmentId").prop('disabled', true);
-
                         } else {
-
-                            if (data.locations !== "") {
-                                $.each(data.locations, function (i, row) {
-                                    $("#RoomEquipmentId").append("<option value='" + row.Value + "'>" + row.Text + "</option>");
-                                });
+                            data.locationId
+                            if (data.locationId !== "") {
+                                $("#RoomEquipmentId").val(data.locationId).trigger('change');
                             }
                         }
                         eLoaderClose();
                     },
                     error: function (error) {
-                        eLoaderError(error)
+                        eLoaderError(error);
                     }
                 });
             }

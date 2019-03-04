@@ -6,6 +6,7 @@ namespace Msr.Models.EquipmentMaintenances
     {
         public int Id { get; set; }
         public string ObjectId { get; set; }
+        public string ScanBarcode { get; set; }
         public string RoomEquipment { get; set; }
         public string RoomEquipmentId { get; set; }
         public DateTime? DateTime { get; set; }
