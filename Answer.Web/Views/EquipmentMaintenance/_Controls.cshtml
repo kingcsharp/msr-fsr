@@ -1,24 +1,11 @@
 ﻿@using Msr.Infrastructure.Common.Constansts
 @model Msr.Services.EquipmentMaintenances.ViewModels.BaseEquipmentMaintainanceViewModel
+
 <div class="form-group">
-    <label class="col-md-2 control-label" for="selectbasic">Primary Location</label>
+    <label class="col-md-2 control-label" for="Sublocation2">Room/Equipment</label>
     <div class="col-md-8">
-        @Html.DropDownListFor(model => model.PrimaryLocationId, Model.PrimaryLocationList, "Please Select", new { @class = "form-control readonly" })
-        @Html.ValidationMessageFor(model => model.PrimaryLocationId, "", new { @class = "text-danger" })
-    </div>
-</div>
-<div class="form-group">
-    <label class="col-md-2 control-label" for="Sublocation1">Select Sublocation 1</label>
-    <div class="col-md-8">
-        @Html.DropDownListFor(model => model.SubLocationFirstId, Model.SubLocationFirstList, new { @class = "form-control readonly" })
-        @Html.ValidationMessageFor(model => model.SubLocationFirstId, "", new { @class = "text-danger" })
-    </div>
-</div>
-<div class="form-group">
-    <label class="col-md-2 control-label" for="Sublocation2">Select Sublocation 2</label>
-    <div class="col-md-8">
-        @Html.DropDownListFor(model => model.SubLocationSecondId, Model.SubLocationSecondList, new { @class = "form-control readonly" })
-        @Html.ValidationMessageFor(model => model.SubLocationSecondId, "", new { @class = "text-danger" })
+        @Html.DropDownListFor(model => model.RoomEquipmentId, Model.RoomEquipmentList, new { @class = "form-control select selectroomequipment readonly" })
+        @Html.ValidationMessageFor(model => model.RoomEquipmentId, "", new { @class = "text-danger" })
     </div>
 </div>
 <div class="form-group">
@@ -103,7 +90,7 @@ else
     <div class="col-md-8">
 
 
-        <input type="submit" name="btn" value="Submit" class="btn btn-success submit-form-equipment" />
+        <input type="submit" name="btn" id="btnSubmit" value="Submit" class="btn btn-success submit-form-equipment" />
 
         @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-danger" })
     </div>

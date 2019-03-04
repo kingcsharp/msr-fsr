@@ -885,7 +885,7 @@ namespace Answer.Web.Controllers
         [HttpPost]
         public JsonResult CheckEquipmentStatusById(string id)
         {
-            var equipmentMaintenance = _equipmentMaintenanceService.GetEquipmentsQueryable().Where(x => x.SubLocationSecondId == id || x.SubLocationFirstId == id).OrderBy(x => x.DateTime).FirstOrDefault();
+            var equipmentMaintenance = _equipmentMaintenanceService.GetEquipmentsQueryable().Where(x => x.RoomEquipmentId == id).OrderBy(x => x.DateTime).FirstOrDefault();
 
             var canUsed = false;
             var errorMessage = string.Empty;

@@ -28,9 +28,7 @@ namespace Msr.Services.EquipmentMaintenances
                 var entity = new Models.EquipmentMaintenances.EquipmentMaintenance
                 {
                     ScanBarcode = model.ScanBarcode,
-                    ParentLocation = model.PrimaryLocationId,
-                    SubLocationFirst = model.SubLocationFirstId,
-                    SubLocationSecond = model.SubLocationSecondId,
+                    RoomEquipment = model.RoomEquipmentId,
                     DateTime = model.DateTime,
                     TroubleState = model.TroubleState,
                     MaintenanceTask = model.MaintenanceTask,
@@ -73,15 +71,10 @@ namespace Msr.Services.EquipmentMaintenances
         {
             return _dbContext.LocationViews.Where(x => x.ParentLocation == null && x.Name != "").ToList();
         }
-         
-        public List<LocationView> GetSubLocation1(string locationId)
-        {
-            if (locationId == null)
-            {
-                return new List<LocationView>();
-            }
 
-            return _dbContext.LocationViews.Where(x => x.ParentLocation == locationId).ToList();
+        public List<LocationView> GetEquipmentRoom()
+        {
+            return _dbContext.LocationViews.Where(x => x.ParentLocation != null).ToList();
         }
 
         public List<LocationView> GetPrimaryLocation()
@@ -102,18 +95,6 @@ namespace Msr.Services.EquipmentMaintenances
             {
                 var equipment = _dbContext.EquipmentMaintenances.Single(x => x.Id == model.Id);
 
-                //equipment.ObjectId = model.ObjectId;
-                //equipment.ScanBarcode = model.ScanBarcode;
-                //equipment.ParentLocation = model.PrimaryLocationId;
-                //equipment.SubLocationFirst = model.SubLocationFirstId;
-                //equipment.SubLocationSecond = model.SubLocationSecondId;
-                //equipment.RequestedById = equipment.RequestedById;
-                //equipment.TroubleState = model.TroubleState;
-                //equipment.MaintenanceTask = model.MaintenanceTask;
-                //equipment.DateTime = model.DateTime;
-                //equipment.Comments = model.Comments;
-                //equipment.Status = model.Status;
-                //equipment.StrNTLogin = model.NTLogin;
                 equipment.UpdatedDate = DateTime.Now;
                 equipment.PemLastCompletedDate = model.PemLastCompletedDate;
                 equipment.Comments = model.Comments;

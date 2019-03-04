@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Mvc;
 using Msr.Infrastructure.Common.Constansts;
+using Msr.Models.Locations;
 using Msr.Services.Roles;
 using Msr.Services.Roles.Procedures;
 
@@ -14,18 +15,13 @@ namespace Msr.Services.EquipmentMaintenances.ViewModels
     {
         public BaseEquipmentMaintainanceViewModel()
         {
-            PrimaryLocationList = new List<SelectListItem>();
-            SubLocationFirstList = new List<SelectListItem>();
-            SubLocationSecondList = new List<SelectListItem>();
+            RoomEquipmentList = new List<SelectListItem>();
             MaintenanceTaskList = new List<SelectListItem>();
         }
 
         public int Id { get; set; }
 
         public string ObjectId { get; set; }
-
-        [Required]
-        public string PrimaryLocationId { get; set; }
 
         public string RequestedById { get; set; }
 
@@ -35,9 +31,9 @@ namespace Msr.Services.EquipmentMaintenances.ViewModels
 
         public string ScanBarcode { get; set; }
 
-        public string SubLocationFirstId { get; set; }
-
-        public string SubLocationSecondId { get; set; }
+        [DisplayName("Room/Equipment")]
+        [Required]
+        public string RoomEquipmentId { get; set; }
 
         [Required]
         public DateTime? DateTime { get; set; }
@@ -65,9 +61,7 @@ namespace Msr.Services.EquipmentMaintenances.ViewModels
 
         public DateTime? UpdatedDate { get; set; }
 
-        public IEnumerable<SelectListItem> PrimaryLocationList { get; set; }
-        public List<SelectListItem> SubLocationFirstList { get; set; }
-        public List<SelectListItem> SubLocationSecondList { get; set; }
+        public List<SelectListItem> RoomEquipmentList { get; set; }
         public List<SelectListItem> MaintenanceTaskList { get; set; }
 
         public void Setup(EquipmentMaintenanceService equipmentMaintenanceService, RoleService roleService)
@@ -75,28 +69,11 @@ namespace Msr.Services.EquipmentMaintenances.ViewModels
 
             Roles = roleService.GetAssignedRoles(NTLogin);
 
-            PrimaryLocationList = equipmentMaintenanceService.GetLocation().Select(x => new SelectListItem
-            {
-                Text = x.Name,
-                Value = x.ObjectId,
-            }).OrderBy(o => o.Text).ToList();
-
-            SubLocationFirstList.Add(new SelectListItem { Value = "", Text = @"Select a Sublocation" });
-
-            SubLocationFirstList.AddRange(equipmentMaintenanceService.GetSubLocation1(PrimaryLocationId).Select(x => new SelectListItem
+            RoomEquipmentList.AddRange(equipmentMaintenanceService.GetEquipmentRoom().Select(x => new SelectListItem
             {
                 Text = x.Name,
                 Value = x.ObjectId,
             }).OrderBy(o => o.Text).ToList());
-
-            if (!string.IsNullOrWhiteSpace(SubLocationFirstId))
-            {
-                SubLocationSecondList.AddRange(equipmentMaintenanceService.GetSubLocation1(SubLocationFirstId).Select(x => new SelectListItem
-                {
-                    Text = x.Name,
-                    Value = x.ObjectId,
-                }).OrderBy(o => o.Text).ToList());
-            }
 
             MaintenanceTaskList = new List<SelectListItem>
             {
@@ -138,9 +115,7 @@ namespace Msr.Services.EquipmentMaintenances.ViewModels
         {
             Id = model.Id;
             ScanBarcode = model.ScanBarcode;
-            PrimaryLocationId = model.ParentLocation;
-            SubLocationFirstId = model.SubLocationFirst;
-            SubLocationSecondId = model.SubLocationSecond;
+            RoomEquipmentId = model.RoomEquipment;
             DateTime = model.DateTime;
             RequestedById = model.RequestedById;
             AssignedToId = model.AssignedToId;
