@@ -4,6 +4,12 @@
     ViewBag.Title = "Create Equipment Maintenance";
 }
 <link href="~/assets/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" href="/assets/css/themes/flat-blue.css">
+<link rel="stylesheet" type="text/css" href="/assets/css/ui.jqgrid-bootstrap-ui.css">
+<link rel="stylesheet" type="text/css" href="/assets/css/ui.jqgrid.css">
+<link rel="stylesheet" type="text/css" href="/assets/css/style.css">
+<link rel="stylesheet" type="text/css" href="/assets/css/hopscotch.css">
+
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="row">
@@ -27,24 +33,10 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-2 control-label" for="selectbasic">Primary Location</label>
+                            <label class="col-md-2 control-label" for="Sublocation2">Select Room/Equipment</label>
                             <div class="col-md-8">
-                                @Html.DropDownListFor(model => model.PrimaryLocationId, Model.PrimaryLocationList, "Please Select", new { @class = "form-control" })
-                                @Html.ValidationMessageFor(model => model.PrimaryLocationId, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label" for="Sublocation1">Select Sublocation 1</label>
-                            <div class="col-md-8">
-                                @Html.DropDownListFor(model => model.SubLocationFirstId, Model.SubLocationFirstList, new { @class = "form-control" })
-                                @Html.ValidationMessageFor(model => model.SubLocationFirstId, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label" for="Sublocation2">Select Sublocation 2</label>
-                            <div class="col-md-8">
-                                @Html.DropDownListFor(model => model.SubLocationSecondId, Model.SubLocationSecondList, new { @class = "form-control" })
-                                @Html.ValidationMessageFor(model => model.SubLocationSecondId, "", new { @class = "text-danger" })
+                                @Html.DropDownListFor(model => model.RoomEquipmentId, Model.RoomEquipmentList, "Please Select a Room/Equipment", new { @class = "form-control select selectroomequipment" })
+                                @Html.ValidationMessageFor(model => model.RoomEquipmentId, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">
@@ -130,6 +122,7 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
+            $('.select').select2();
             $('#error').hide();
             $('.datepick').datetimepicker();
 
@@ -144,76 +137,15 @@
                     eLoaderOpen();
                     $.ajax({
                         type: "POST",
-                        url: "/EquipmentMaintenance/GetChildLocations/" + id,
+                        url: "/EquipmentMaintenance/GetScanBarCodeLocations/" + id,
                         success: function (data) {
-                            if (data.locations === "") {
+                            if (data.locationId === "") {
                                 $('#error').html('Location not found, please select manually');
                                 $('#error').show();
-                                $('#PrimaryLocationId').prop('selectedIndex', 0);
-                                $("#SubLocationFirstId").empty();
-                                $("#SubLocationSecondId").empty();
-
-                                $("#SubLocationFirstId").prop('disabled', true);
-                                $("#SubLocationSecondId").prop('disabled', true);
-
-
-                            } else {
-                                $("#SubLocationFirstId").empty();
-                                $("#SubLocationSecondId").empty();
-
-                                if (data.locations !== "") {
-                                    $.each(data.locations, function (i, row) {
-                                        $("#SubLocationSecondId").append("<option value='" + row.Value + "'>" + row.Text + "</option>");
-                                    });
-                                    var id1 = $("#SubLocationSecondId").val();
-                                    $.ajax({
-                                        type: 'POST',
-                                        url: "/EquipmentMaintenance/GetSecoundLocations/" + id1,
-                                        success: function (data) {
-                                            $.each(data.locations,
-                                                function (i, row) {
-                                                    $("#SubLocationFirstId")
-                                                        .append("<option value='" + row.Value + "'>" + row.Text + "</option>");
-                                                });
-
-                                            var id2 = $("#SubLocationFirstId").val();
-
-                                            if (id2 == null) {
-                                                $('#error').html('Location not found, please select manually');
-                                            } else {
-
-                                                $.ajax({
-                                                    type: 'POST',
-                                                    url: "/EquipmentMaintenance/GetParentLocations/" + id2,
-                                                    success: function (data) {
-                                                        var parentLocation = data.locations;
-
-                                                        var index;
-                                                        $("#PrimaryLocationId option").each(function (i) {
-                                                            if (this.text === parentLocation) {
-                                                                index = i;
-                                                                return this.text === parentLocation;
-                                                            }
-                                                        }).attr('selected', true);
-                                                        $('#PrimaryLocationId option').eq(index).prop('selected', true);
-                                                        $('#error').hide();
-                                                        $("#SubLocationFirstId").prop('disabled', false);
-                                                        $("#SubLocationSecondId").prop('disabled', false);
-                                                    },
-                                                    error: function (error) {
-                                                        eLoaderError(error);
-                                                    }
-                                                });
-                                            }
-
-
-                                        },
-                                        error: function (error) {
-                                            eLoaderError(error);
-                                        }
-                                    });
+                            } else {data.locationId
+                                if (data.locationId !== "") {
+                                    $("#RoomEquipmentId").val(data.locationId).trigger('change');
                                 }
-
                             }
                             eLoaderClose();
                         },
@@ -226,70 +158,24 @@
         });
 
 
-        $("#PrimaryLocationId").change(function () {
+        //var selectRoomEquipment = $(".selectroomequipment").select2({
+        //    tags: [],
+        //    tokenSeparators: [','],
+        //    multiple: false,
+        //    allowClear: true,
+        //    placeholder: "Select Room/Equipment",
+        //    formatNoMatches: function () {
+        //        return '';
+        //    }
+        //});
 
-            var id = $("#PrimaryLocationId").val();
-            eLoaderOpen();
+        @*var valueRoomEquipment = '@selectRoomEquipment';
+        var selectedRoomEquipmentList = valueRoomEquipment.split(",");
+        var currentRoomEquipmentList = selectedRoomEquipmentList;*@
 
-            $.ajax({
-                type: 'POST',
-                url: "/EquipmentMaintenance/GetSecoundLocationsManually/" + id,
-                success: function (data) {
-                    $("#SubLocationFirstId").empty();
-                    $("#SubLocationSecondId").empty();
-
-                    if (data === '' || data.locations ==='') {
-                        $("#SubLocationFirstId").prop('disabled', true);
-                        $("#SubLocationSecondId").prop('disabled', true);
-                    } else {
-                        $("#SubLocationFirstId").prop('disabled', false);
-                        $("#SubLocationSecondId").prop('disabled', false);
-
-                        $.each(data.locations, function (i, row) {
-                                $("#SubLocationFirstId")
-                                    .append("<option value='" + row.Value + "'>" + row.Text + "</option>");
-                            });
-                    }
-                    eLoaderClose();
-                },
-                error: function (error) {
-                    eLoaderError(error);
-                }
-            });
-
-        });
+        //$(".selectroomequipment").val(selectedRoomEquipmentList).trigger("change");
 
 
-        $("#SubLocationFirstId").change(function () {
-
-            var id = $("#SubLocationFirstId").val();
-            eLoaderOpen();
-            $.ajax({
-                type: 'POST',
-                url: "/EquipmentMaintenance/GetthirdLocationsManually/" + id,
-                success: function (data) {
-
-                    $("#SubLocationSecondId").empty();
-
-                    if (data === '') {
-                        $("#SubLocationSecondId").prop('disabled', true);
-                    } else {
-                        $("#SubLocationSecondId").prop('disabled', false);
-                        $.each(data.locations,
-                            function (i, row) {
-                                $("#SubLocationSecondId")
-                                    .append("<option value='" + row.Value + "'>" + row.Text + "</option>");
-                            });
-                    }
-                    eLoaderClose();
-                },
-                error: function (error) {
-                    eLoaderError(error);
-                }
-            });
-
-
-        });
 
 
     </script>

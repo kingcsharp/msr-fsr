@@ -3,6 +3,13 @@
 @{
     ViewBag.Title = "Update Equipment Maintenance";
 }
+<link rel="stylesheet" type="text/css" href="/assets/css/themes/flat-blue.css">
+<link rel="stylesheet" type="text/css" href="/assets/css/ui.jqgrid-bootstrap-ui.css">
+<link rel="stylesheet" type="text/css" href="/assets/css/ui.jqgrid.css">
+<link rel="stylesheet" type="text/css" href="/assets/css/style.css">
+<link rel="stylesheet" type="text/css" href="/assets/css/hopscotch.css">
+
+
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="row">
@@ -14,7 +21,6 @@
                 {
                     <input type="hidden" name="Id" value="@Model.Id" />
                     <input type="hidden" name="ObjectId" value="@Model.ObjectId" />
-                    <input type="hidden" name="PrimaryLocationId" value="@Model.PrimaryLocationId" />
                     @Html.Partial("Message")
 
                     <fieldset>
@@ -30,13 +36,19 @@
     <script src="~/assets/js/moment.min.js"></script>
     <script src="~/assets/js/bootstrap-datetimepicker.min.js"></script>
     @Scripts.Render("~/bundles/js/jqueryval")
+    @Scripts.Render("~/bundles/js/fileinput")
 
     <script type="text/javascript">
 
         $(document).ready(function () {
+            $('.select').select2();
 
             var hasProductionManagerRole = '@Model.Roles.Any(x => x.Role_Name == RoleConstants.ProductionManager)'
             var hasMaintenanceTechnician = '@Model.Roles.Any(x => x.Role_Name == RoleConstants.MaintenanceTechnician)'
+
+            $("#PrimaryLocation").hide();
+            $("#SubLocation1").hide();
+
 
             if (hasProductionManagerRole === 'True') {
                 $('.readonly').attr("disabled", true);
@@ -58,71 +70,21 @@
             });
 
 
-            $("#PrimaryLocationId").change(function() {
-
-                var id = $("#PrimaryLocationId").val();
-                eLoaderOpen()
-                $.ajax({
-                    type: 'POST',
-                    url: "/EquipmentMaintenance/GetChildLocations/" + id,
-                    success: function(data) {
-
-                        $("#SubLocationFirstId").empty();
-                        $("#SubLocationSecondId").empty();
-
-                        if (data === '') {
-                            $("#SubLocationFirstId").prop('disabled', true);
-                            $("#SubLocationSecondId").prop('disabled', true);
-                        } else {
-                            $("#SubLocationFirstId").prop('disabled', false);
-                            $("#SubLocationSecondId").prop('disabled', false);
-
-                            $.each(data.locations,
-                                function(i, row) {
-                                    $("#SubLocationFirstId")
-                                        .append("<option value='" + row.Value + "'>" + row.Text + "</option>");
-                                });
-                        }
-                        eLoaderClose()
-                    },
-                    error: function (error) {
-                        eLoaderError(error)
-                    }
-                });
-
+            var selectRoomEquipment = $(".selectroomequipment").select2({
+                tags: [],
+                tokenSeparators: [','],
+                multiple: false,
+                allowClear: true,
+                placeholder: "Select Room/Equipment",
+                formatNoMatches: function () {
+                    return '';
+                }
             });
 
 
-            $("#SubLocationFirstId").change(function() {
-
-                var id = $("#SubLocationFirstId").val();
-                eLoaderOpen()
-                $.ajax({
-                    type: 'POST',
-                    url: "/EquipmentMaintenance/GetChildLocations/" + id,
-                    success: function(data) {
-
-                        $("#SubLocationSecondId").empty();
-
-                        if (data === '') {
-                            $("#SubLocationSecondId").prop('disabled', true);
-                        } else {
-                            $("#SubLocationSecondId").prop('disabled', false);
-                            $.each(data.locations,
-                                function(i, row) {
-                                    $("#SubLocationSecondId")
-                                        .append("<option value='" + row.Value + "'>" + row.Text + "</option>");
-                                });
-                        }
-                        eLoaderClose()
-                    },
-                    error: function (error) {
-                        eLoaderError(error)
-                    }
-                });
-
-            });
-
+            $("#btnSubmit").click(function () {
+                $(".selectroomequipment").prop("disabled", false);
+            }); 
         });
     </script>
 }

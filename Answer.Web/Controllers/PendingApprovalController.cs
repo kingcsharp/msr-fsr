@@ -92,7 +92,7 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.WfName == rule.data.ToLower());
                     }
-                   
+
                     else if (rule.field == nameof(PendingApprovalView.Revision))
                     {
                         int value;
@@ -106,25 +106,24 @@ namespace Answer.Web.Controllers
                             totalRows = totalRows.Where(x => x.Revision.ToString().Contains(rule.data.ToLower()));
                         }
                     }
-                    else if (rule.field == nameof(PendingApprovalView.Status))
+                    else if (rule.field == nameof(PendingApprovalView.Status) && rule.data != "")
                     {
-                        var statusList = rule.data.Split(',').Select(x => x.Trim().ToLower());
-
-                        if (statusList.Any())
+                        var list = rule.data.Split(',').Select(x => x.Trim().ToLower()).ToArray();
+                        if (list.Any())
                         {
-                            totalRows = totalRows.Where(x => statusList.Contains(x.Status.ToLower()));
+                            totalRows = totalRows.Where(x => list.Contains(x.Status.ToLower()));
                         }
                     }
                 }
             }
-           
+
             if (!string.IsNullOrWhiteSpace(param.sortColumn))
             {
                 param.sortColumn = nameof(PendingApprovalView.ObjectId);
             }
 
             var result = totalRows.ApplyPaging(param);
-            
+
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 

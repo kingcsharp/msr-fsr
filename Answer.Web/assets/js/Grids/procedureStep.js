@@ -24,7 +24,7 @@ Msr.ProcedureStepGrid = Msr.ProcedureStepGrid ||
                         name: 'Root',
                         index: 'Root',
                         key: true,
-                        colmenu: false,
+                        colmenu: true,
                         coloptions: {
                             sorting: false,
                             columns: true,
@@ -42,7 +42,7 @@ Msr.ProcedureStepGrid = Msr.ProcedureStepGrid ||
                         name: 'Title',
                         index: 'Title',
                         key: true,
-                        colmenu: true,
+                        colmenu: false,
                         coloptions: {
                             sorting: false,
                             columns: true,
@@ -94,9 +94,13 @@ Msr.ProcedureStepGrid = Msr.ProcedureStepGrid ||
                         index: 'Status',
                         colmenu: false,
                         stype: "select",
+                        multiselect: true,
                         searchoptions: {
-                            value:
-                            ":[All];CREATING, DENIED, APPROVED, APPROVED_BUT_REVISING, APPROVED_BUT_DELETING:Creating or Approved;CREATING, DENIED:Creating;IN_WORKFLOW:In Approval Workflow;APPROVED, APPROVED_BUT_REVISING, APPROVED_BUT_DELETING:Approved;DENIED:Denied;APPROVED_BUT_REVISING:Approved But Being Revised;APPROVED_BUT_DELETING:Approved But Being Deleted;DENIED:Denied;DELETED:Deleted;OLD:Obsolete"
+                            sopt: ['eq'],
+                            value: "CREATING, DENIED, APPROVED, APPROVED_BUT_REVISING, APPROVED_BUT_DELETING:Creating or Approved;CREATING, DENIED:Creating;IN_WORKFLOW:In Approval Workflow;APPROVED, APPROVED_BUT_REVISING, APPROVED_BUT_DELETING:Approved;APPROVED_BUT_REVISING:Approved But Being Revised;APPROVED_BUT_DELETING:Approved But Being Deleted;DENIED:Denied;DELETED:Deleted;OLD:Obsolete",
+                            dataInit: function (elem) {
+                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem);
+                            }
                         },
                         coloptions: {
                             sorting: false,
@@ -160,6 +164,9 @@ Msr.ProcedureStepGrid = Msr.ProcedureStepGrid ||
                     Msr.JqGridCommon.SetupGridLock(Msr.ProcedureStepGrid.GetGridEditUrl());
                     Msr.JqGridCommon.UnLockWorkflow(Msr.ProcedureStepGrid.GetReturnUrl());
                     Msr.JqGridCommon.DocPreview();
+                },
+                beforeRequest: function () {
+                    Msr.JqGridCommon.ModifyMultiselectData.call(this);
                 }
             });
 

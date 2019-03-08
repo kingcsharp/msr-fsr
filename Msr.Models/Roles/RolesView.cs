@@ -26,6 +26,8 @@ namespace Msr.Models.Roles
 
         public string RoleName { get; set; }
 
+        public string Role_ID{ get; set; }
+
         public string Status { get; set; }
 
         public string LockedBy { get; set; }

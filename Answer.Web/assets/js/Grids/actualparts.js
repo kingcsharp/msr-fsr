@@ -27,7 +27,7 @@ Msr.ActualPartsGrid = Msr.ActualPartsGrid ||
                         name: 'Root',
                         index: 'Root',
                         key: true,
-                        colmenu: false,
+                        colmenu: true,
                         coloptions: {
                             sorting: false,
                             columns: true,
@@ -86,7 +86,7 @@ Msr.ActualPartsGrid = Msr.ActualPartsGrid ||
                         label: 'Part Description',
                         name: 'PartDesc',
                         index: 'PartDesc',
-                        colmenu: true,
+                        colmenu: false,
                         editable: true, // must set editable to true if you want to make the field editable
                         editrules: { required: true },
                         coloptions: {
@@ -194,7 +194,14 @@ Msr.ActualPartsGrid = Msr.ActualPartsGrid ||
                             freeze: false
                         },
                         stype: "select",
-                        searchoptions: { value: ":[All];ap_available:ap_available;ap_installed:ap_installed;ap_consumed:ap_consumed;ap_filled:ap_filled;ap_filled:ap_filled;ap_held:ap_held;ap_installed:ap_installed;ap_received:ap_received" },
+                        multiselect: true,
+                        searchoptions: {
+                            sopt: ['eq'],
+                            value: "ap_available:ap_available;ap_installed:ap_installed;ap_consumed:ap_consumed;ap_filled:ap_filled;ap_held:ap_held;ap_received:ap_received",
+                            dataInit: function (elem) {
+                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem);
+                            }
+                        },
                         width: 150,
                         align: 'left',
                         hidedlg: false
@@ -234,7 +241,15 @@ Msr.ActualPartsGrid = Msr.ActualPartsGrid ||
                             freeze: false
                         },
                         stype: "select",
-                        searchoptions: { value: Msr.JqGridCommon.GetStatusFilters() },
+                        multiselect: true,
+                        searchoptions: {
+                            sopt: ['eq'],
+                            attr: { multiple: 'multiple', size: 4 },
+                            value: Msr.JqGridCommon.GetStatusFilters(),
+                            dataInit: function (elem) {
+                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem);
+                            }
+                        },
                         width: 150,
                         align: 'left'
                     },
@@ -298,6 +313,9 @@ Msr.ActualPartsGrid = Msr.ActualPartsGrid ||
                     Msr.JqGridCommon.TriggerSaveLoadGridState(Msr.ActualPartsGrid.GetGridId());
                     Msr.JqGridCommon.SetupGridLock(Msr.ActualPartsGrid.GetGridEditUrl());
                     Msr.JqGridCommon.UnLockWorkflow(Msr.ActualPartsGrid.GetReturnUrl());
+                },
+                beforeRequest: function () {
+                    Msr.JqGridCommon.ModifyMultiselectData.call(this);
                 }
             });
 

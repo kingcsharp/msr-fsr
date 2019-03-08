@@ -320,7 +320,7 @@ namespace Msr.Services.Orders
         {
             try
             {
-                var saveOrderItemPurchaseDueDateProcedure = new SaveOrderItemPurchaseDueDateProcedure { purchItemID = model.PurchaseItemId, DueDate = model.Value, NTLogin = model.NTLogin };
+                var saveOrderItemPurchaseDueDateProcedure = new SaveOrderItemPurchaseDueDateProcedure { purchItemID = model.PurchaseItemId, DueDate = DateTime.Parse(model.Value), NTLogin = model.NTLogin };
 
                 _dbContext.Database.ExecuteStoredProcedure(saveOrderItemPurchaseDueDateProcedure);
 

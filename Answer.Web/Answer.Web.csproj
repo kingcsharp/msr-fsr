@@ -524,6 +524,8 @@
     <Content Include="assets\js\blockLayout.ui.js" />
     <Content Include="assets\js\grids\jgrid.defaults.js" />
     <Content Include="assets\js\grids\training.js" />
+    <Content Include="assets\js\plugins\bootstrap3\bootstrap-multiselect.css" />
+    <Content Include="assets\js\plugins\bootstrap3\bootstrap-multiselect.js" />
     <Content Include="assets\js\plugins\jquery.blockUI.js" />
     <Content Include="assets\js\reports\libs\angular-bootstrap-colorpicker\bootstrap-colorpicker-module.min.js" />
     <Content Include="assets\js\reports\libs\angular-bootstrap-datetimepicker\bootstrap-datetimepicker.min.js" />

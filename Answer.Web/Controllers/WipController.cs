@@ -89,13 +89,12 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.SupplierName.ToLower().Contains(rule.data.ToLower()));
                     }
-                    else if (rule.field == nameof(WorkOrderView.LocationName))
+                    else if (rule.field == nameof(WorkOrderView.LocationName) && rule.data != "")
                     {
-                        var locationList = GetMultiLocationList(param);
-
-                        if (locationList.Any())
+                        var list = rule.data.Split(',').Select(x => x.Trim().ToLower()).ToArray();
+                        if (list.Any())
                         {
-                            totalRows = totalRows.Where(x => locationList.Contains(x.LocationName));
+                            totalRows = totalRows.Where(x => list.Contains(x.LocationName.ToLower()));
                         }
                     }
                     else if (rule.field == nameof(WorkOrderView.Serial))
@@ -514,8 +513,7 @@ namespace Answer.Web.Controllers
                 if (response)
                 {
                     TempData["SuccessMessage"] = "Part has been created successfully.";
-
-                    return RedirectToAction("Index");
+                    return Json(new { success = true, responseText = "Part has been created successfully." }, JsonRequestBehavior.AllowGet);
                 }
                 else
                 {
@@ -887,7 +885,7 @@ namespace Answer.Web.Controllers
         [HttpPost]
         public JsonResult CheckEquipmentStatusById(string id)
         {
-            var equipmentMaintenance = _equipmentMaintenanceService.GetEquipmentsQueryable().Where(x => x.SubLocationSecondId == id || x.SubLocationFirstId == id).OrderBy(x => x.DateTime).FirstOrDefault();
+            var equipmentMaintenance = _equipmentMaintenanceService.GetEquipmentsQueryable().Where(x => x.RoomEquipmentId == id).OrderBy(x => x.DateTime).FirstOrDefault();
 
             var canUsed = false;
             var errorMessage = string.Empty;
@@ -961,16 +959,6 @@ namespace Answer.Web.Controllers
             }
 
             return photos;
-        }
-
-        private List<string> GetMultiLocationList(JqGridParam param)
-        {
-
-            var locationFilterValues = param.where.rules.Where(x => x.field == nameof(WorkOrderView.LocationName))
-                .Where(itemRule => !string.IsNullOrWhiteSpace(itemRule.data) && itemRule.data != "HiddenOption")
-                .Select(itemRule => itemRule.data.ToLower()).ToList();
-
-            return locationFilterValues;
         }
     }
 }

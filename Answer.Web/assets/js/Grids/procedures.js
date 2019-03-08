@@ -24,7 +24,7 @@ Msr.ProceduresGrid = Msr.ProceduresGrid ||
                         name: 'Root',
                         index: 'Root',
                         key: true,
-                        colmenu: false,
+                        colmenu: true,
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                         width: 100,
@@ -34,7 +34,7 @@ Msr.ProceduresGrid = Msr.ProceduresGrid ||
                         label: 'Procedure Name ',
                         name: 'Name',
                         index: 'Name',
-                        colmenu: true,
+                        colmenu: false,
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                         width: 250,
@@ -76,7 +76,14 @@ Msr.ProceduresGrid = Msr.ProceduresGrid ||
                         colmenu: false,
                         stype: "select",
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                        searchoptions: { value: ":[All];1: View What All Users Are Allowed to View;2: View What Managers & Above Are Allowed to View;3: Only Directors & Above Allowed To View;4 :View What VP's & Above Are Allowed to View" },
+                        multiselect: true,
+                        searchoptions: {
+                            sopt: ['eq'],
+                            value: "1: View What All Users Are Allowed to View;2: View What Managers & Above Are Allowed to View;3: Only Directors & Above Allowed To View;4 :View What VP's & Above Are Allowed to View",
+                            dataInit: function (elem) {
+                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem);
+                            }
+                        },
                         align: 'center'
                     },
                     {
@@ -95,7 +102,14 @@ Msr.ProceduresGrid = Msr.ProceduresGrid ||
                         colmenu: false,
                         stype: "select",
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                        searchoptions: { value: ":[All];CREATING, DENIED, APPROVED, APPROVED_BUT_REVISING:Creating or Approved;CREATING, DENIED: Creating;IN_WORKFLOW:In Approval Workflow;APPROVED, APPROVED_BUT_REVISING, APPROVED_BUT_DELETING:Approved;DENIED:Denied;APPROVED_BUT_REVISING:Approved But Being Revised;APPROVED_BUT_DELETING:Approved But Being Deleted;DENIED:Denied;DELETED:Deleted;OLD:Obsolete" },
+                        multiselect: true,
+                        searchoptions: {
+                            sopt: ['eq'],
+                            value: "CREATING, DENIED, APPROVED, APPROVED_BUT_REVISING:Creating or Approved;CREATING, DENIED: Creating;IN_WORKFLOW:In Approval Workflow;APPROVED, APPROVED_BUT_REVISING, APPROVED_BUT_DELETING:Approved;DENIED:Denied;APPROVED_BUT_REVISING:Approved But Being Revised;APPROVED_BUT_DELETING:Approved But Being Deleted;DELETED:Deleted;OLD:Obsolete",
+                            dataInit: function (elem) {
+                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem);
+                            }
+                        },
                         align: 'center'
                     },
                     {
@@ -131,6 +145,9 @@ Msr.ProceduresGrid = Msr.ProceduresGrid ||
                     Msr.JqGridCommon.SetupGridLock(Msr.ProceduresGrid.GetGridEditUrl());
                     Msr.JqGridCommon.UnLockWorkflow(Msr.ProceduresGrid.GetReturnUrl());
                     Msr.JqGridCommon.DocPreview();
+                },
+                beforeRequest: function () {
+                    Msr.JqGridCommon.ModifyMultiselectData.call(this);
                 }
             });
 

@@ -15,7 +15,7 @@ namespace Msr.Services.Orders.Procedures
         public string purchItemID { get; set; }
 
         [StoredProcedureParameter(SqlDbType.DateTime, ParameterName = "myDate")]
-        public string DueDate { get; set; }
+        public DateTime DueDate { get; set; }
 
         [StoredProcedureParameter(SqlDbType.VarChar, Size = 50, ParameterName = "strNTLogin")]
         public string NTLogin { get; set; }

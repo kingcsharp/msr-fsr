@@ -17,7 +17,7 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
                         name: 'ObjectId',
                         index: 'ObjectId',
                         key: true,
-                        colmenu: false,
+                        colmenu: true,
                         coloptions: { sorting: false, columns: true, filtering: true, seraching: false, grouping: false, freeze: false },
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                         width: 100,
@@ -27,9 +27,18 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
                         label: "Item Type",
                         name: 'ItemType',
                         index: 'ItemType',
-                        colmenu: true,
+                        colmenu: false,
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                        searchoptions: { defaultValue: itemType },
+                        stype: "select",
+                        multiselect: true,
+                        searchoptions: {
+                            sopt: ['eq'],
+                            //list of the vaules you want
+                            value: Msr.JqGridCommon.GetOBJTypesFilters(),
+                            dataInit: function (elem) {
+                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem);
+                            }
+                        },
                         width: 200,
                         align: 'left'
                     },
@@ -64,7 +73,7 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                         align: 'left'
                     },
-                   
+
                     {
                         label: 'Workflow Group',
                         name: 'GroupName',
@@ -92,7 +101,15 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
                         colmenu: false,
                         width: 200,
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                        searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                        stype: "select",
+                        multiselect: true,
+                        searchoptions: {
+                            sopt: ['eq'],
+                            value: Msr.JqGridCommon.GetStatusFilters(),
+                            dataInit: function (elem) {
+                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem);
+                            }
+                        },
                         align: 'left'
                     },
                     { name: 'Actions', index: 'ID', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: approvalEditFormatter, width: 200, align: 'center' }
@@ -150,7 +167,7 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
                 }).trigger("reloadGrid");
 
             });
-    },
+        },
 
         SetUpProductGrid: function (returnUrl, itemType) {
             $.jgrid.defaults.styleUI = 'Bootstrap';
@@ -166,7 +183,7 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
                         name: 'ObjectId',
                         index: 'ObjectId',
                         key: true,
-                        colmenu: false,
+                        colmenu: true,
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                         width: 100,
@@ -176,11 +193,20 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
                         label: "Item Type",
                         name: 'ItemType',
                         index: 'ItemType',
-                        colmenu: true,
+                        colmenu: false,
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                        searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                         width: 200,
-                        align: 'left'
+                        align: 'left',
+                        stype: "select",
+                        multiselect: true,
+                        searchoptions: {
+                            sopt: ['eq'],
+                            //list of the vaules you want
+                            value: Msr.JqGridCommon.GetOBJTypesFilters(),
+                            dataInit: function (elem) {
+                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem);
+                            }
+                        },
                     },
                     {
                         label: "Item Name",
@@ -240,7 +266,15 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
                         colmenu: false,
                         width: 200,
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                        searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                        stype: "select",
+                        multiselect: true,
+                        searchoptions: {
+                            sopt: ['eq'],
+                            value: Msr.JqGridCommon.GetStatusFilters(),
+                            dataInit: function (elem) {
+                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem);
+                            }
+                        },
                         align: 'left'
                     },
                     { name: 'Actions', index: 'ID', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: approvalEditFormatter, width: 200, align: 'center' }
@@ -262,15 +296,18 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
                 colMenu: true,
                 gridComplete: function () {
                     Msr.JqGridCommon.UnLockWorkflow("/PendingApproval?itemType=" + itemType);
+                },
+                beforeRequest: function () {
+                    Msr.JqGridCommon.ModifyMultiselectData.call(this);
                 }
             });
             $('#jqProductGrid').navGrid("#jqGridProductPager", {
-                    search: false, // show search button on the toolbar
-                    add: false,
-                    edit: false,
-                    del: false,
-                    refresh: true
-                },
+                search: false, // show search button on the toolbar
+                add: false,
+                edit: false,
+                del: false,
+                refresh: true
+            },
                 {}, // edit options
                 {}, // add options
                 {}, // delete options
@@ -288,7 +325,7 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
 
             }
             function itemNameFormatter(cellvalue, options, rowObject) {
-                var itemName = 'Approving Changes to approval_' + rowObject.ItemType + ' Called ' + '<a href="">' + rowObject.ItemName+" "+  rowObject.Revision + '</a>';
+                var itemName = 'Approving Changes to approval_' + rowObject.ItemType + ' Called ' + '<a href="">' + rowObject.ItemName + " " + rowObject.Revision + '</a>';
                 return itemName;
             }
 
@@ -303,7 +340,7 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
 
         }
 
-    , ActionLinks: function ActionLinks(cellvalue, options, rowObject, returnUrl) {
+        , ActionLinks: function ActionLinks(cellvalue, options, rowObject, returnUrl) {
             var urlApprove;
             var approvalWorkflows;
             var deleteworkflow;

@@ -60,9 +60,13 @@ namespace Answer.Web.Controllers
                                                              q.StartDate.Month == value.Month && q.StartDate.Year == value.Year);
                         }
                     }
-                    else if (rule.field == nameof(TrainingView.Status))
+                    else if (rule.field == nameof(TrainingView.Status) && rule.data != "")
                     {
-                        totalRows = totalRows.Where(x => x.Status.ToLower() == rule.data.ToLower());
+                        var list = rule.data.Split(',').Select(x => x.Trim().ToLower()).ToArray();
+                        if (list.Any())
+                        {
+                            totalRows = totalRows.Where(x => list.Contains(x.Status.ToLower()));
+                        }
                     }
 
                 }

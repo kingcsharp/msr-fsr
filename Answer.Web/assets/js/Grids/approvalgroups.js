@@ -26,7 +26,7 @@ Msr.ApprovalGroupsGrid = Msr.ApprovalGroupsGrid || {
                     name: 'Id',
                     index: 'Id',
                     key: true,
-                    colmenu: false,
+                    colmenu: true,
                     coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                     searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                     width: 50,
@@ -36,7 +36,7 @@ Msr.ApprovalGroupsGrid = Msr.ApprovalGroupsGrid || {
                     label: 'Approval Group Name',
                     name: 'Name',
                     index: 'Name',
-                    colmenu: true,
+                    colmenu: false,
                     editable: true, // must set editable to true if you want to make the field editable
                     editrules: { required: true },
                     coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },

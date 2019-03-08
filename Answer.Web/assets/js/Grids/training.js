@@ -25,7 +25,7 @@ Msr.TrainingGrid = Msr.TrainingGrid ||
                         name: 'FullName',
                         index: 'FullName',
                         key: true,
-                        colmenu: false,
+                        colmenu: true,
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                         width: 100,
@@ -35,7 +35,7 @@ Msr.TrainingGrid = Msr.TrainingGrid ||
                         label: "Certification",
                         name: 'PositionName',
                         index: 'PositionName',
-                        colmenu: true,
+                        colmenu: false,
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                         width: 200,
@@ -84,8 +84,16 @@ Msr.TrainingGrid = Msr.TrainingGrid ||
                         colmenu: false,
                         width: 150,
                         formatter: changeStatusName,
+                        stype: "select",
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                        searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                        multiselect: true,
+                        searchoptions: {
+                            sopt: ['eq'],
+                            value: 'Active:Active;Deactive:Inactive',
+                            dataInit: function (elem) {
+                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem);
+                            }
+                        },
                         align: 'center'
                     }
                 ],
@@ -108,6 +116,9 @@ Msr.TrainingGrid = Msr.TrainingGrid ||
                     Msr.JqGridCommon.TriggerSaveLoadGridState(Msr.TrainingGrid.GetGridId());
                     Msr.JqGridCommon.SetupGridLock(Msr.TrainingGrid.GetGridEditUrl());
                     Msr.JqGridCommon.UnLockWorkflow(Msr.TrainingGrid.GetReturnUrl());
+                },
+                beforeRequest: function () {
+                    Msr.JqGridCommon.ModifyMultiselectData.call(this);
                 }
             });
 

@@ -26,7 +26,7 @@ Msr.InvoicesGrid = Msr.InvoicesGrid || {
                     name: 'Client',
                     index: 'Client',
                     key: true,
-                    colmenu: false,
+                    colmenu: true,
                     coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                     searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                     width: 100,
@@ -37,7 +37,7 @@ Msr.InvoicesGrid = Msr.InvoicesGrid || {
                     label: 'Description',
                     name: 'Description',
                     index: 'Description',
-                    colmenu: true,
+                    colmenu: false,
                     width: 160,
                     coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                     searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
@@ -72,12 +72,17 @@ Msr.InvoicesGrid = Msr.InvoicesGrid || {
                     colmenu: false,
                     stype: "select",
                     coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                    searchoptions: { value: ":[All];INVOICED:INVOICED;OUTSTANDING:OUTSTANDING;OVERDUE:OVERDUE;CLOSED:CLOSED" },
-
+                    multiselect: true,
+                    searchoptions: {
+                        sopt: ['eq'],
+                        value: "INVOICED:INVOICED;OUTSTANDING:OUTSTANDING;OVERDUE:OVERDUE;CLOSED:CLOSED",
+                        dataInit: function (elem) {
+                            Msr.JqGridCommon.DataInitBootstrapMultiselect(elem);
+                        }
+                    },
                     width: 120,
                     align: 'left'
                 },
-
                 {
                     label: 'Due Date',
                     name: 'InvoiceDate',
@@ -108,6 +113,9 @@ Msr.InvoicesGrid = Msr.InvoicesGrid || {
             colMenu: true,
             gridComplete: function () {
                 Msr.JqGridCommon.TriggerSaveLoadGridState(Msr.InvoicesGrid.GetGridId());
+            },
+            beforeRequest: function () {
+                Msr.JqGridCommon.ModifyMultiselectData.call(this);
             }
         });
 

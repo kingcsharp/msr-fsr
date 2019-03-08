@@ -137,12 +137,12 @@ namespace Answer.Web.Controllers
                             totalRows = totalRows.Where(x => x.Rev == -1);
                         }
                     }
-                    else if (rule.field == nameof(PeopleObjectView.Status))
+                    else if (rule.field == nameof(PeopleObjectView.Status) && rule.data != "")
                     {
-                        var statusList = rule.data.Split(',').Select(x => x.Trim().ToLower());
-                        if (statusList.Any())
+                        var list = rule.data.Split(',').Select(x => x.Trim().ToLower()).ToArray();
+                        if (list.Any())
                         {
-                            totalRows = totalRows.Where(x => statusList.Contains(x.Status.ToLower()));
+                            totalRows = totalRows.Where(x => list.Contains(x.Status.ToLower()));
                         }
                     }
 

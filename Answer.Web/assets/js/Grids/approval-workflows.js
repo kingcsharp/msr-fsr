@@ -24,7 +24,7 @@ Msr.ApprovalWorkflowsGrid = Msr.ApprovalWorkflowsGrid || {
                     name: 'Name',
                     index: 'Name',
                     key: true,
-                    colmenu: false,
+                    colmenu: true,
                     coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                     searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                     width: 100,
@@ -34,7 +34,7 @@ Msr.ApprovalWorkflowsGrid = Msr.ApprovalWorkflowsGrid || {
                     label: 'Approval Stamp Name',
                     name: 'Stamp_Name',
                     index: 'Stamp_Name',
-                    colmenu: true,
+                    colmenu: false,
                     editable: true, // must set editable to true if you want to make the field editable
                     editrules: { required: true },
                     coloptions: { sorting: false, columns: true, filtering: false, seraching: true, grouping: false, freeze: false },

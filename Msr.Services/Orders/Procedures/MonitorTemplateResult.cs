@@ -142,7 +142,7 @@ namespace Msr.Services.Orders.Procedures
 
             EquipmentMaintenanceList = equipmentMaintenanceService.GetEquipmentsQueryable().ToList().Select(x => new SelectListItem
             {
-                Text = x.ParentLocation + " (" + x.Id.ToString() + ")",
+                Text = x.RoomEquipment + " (" + x.Id.ToString() + ")",
                 Value = x.Id.ToString()
             }).OrderBy(o => o.Text).ToList();
         }

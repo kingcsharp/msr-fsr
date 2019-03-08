@@ -25,7 +25,7 @@ Msr.PartTypeGrid = Msr.PartTypeGrid ||
                         name: 'Root',
                         index: 'Root',
                         key: true,
-                        colmenu: false,
+                        colmenu: true,
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                         width: 100,
@@ -35,7 +35,7 @@ Msr.PartTypeGrid = Msr.PartTypeGrid ||
                         label: 'Part Type Name',
                         name: 'Name',
                         index: 'Name',
-                        colmenu: true,
+                        colmenu: false,
                         editable: true, // must set editable to true if you want to make the field editable
                         editrules: { required: true },
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
@@ -51,7 +51,15 @@ Msr.PartTypeGrid = Msr.PartTypeGrid ||
                         editable: true,
                         stype: "select",
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: true, grouping: false, freeze: false },
-                        searchoptions: { value: ":[All];PTSPARE_NO:Not Typically a Spare Part;PTSPARE_1:L1 - Stock in location with 1 machine;PTSPARE_2:L2 - Stock in location with 10 machine;PTSPARE_3:L3 - Stock in location with 50 machine" },
+                        //searchoptions: { value: ":[All];PTSPARE_NO:Not Typically a Spare Part;PTSPARE_1:L1 - Stock in location with 1 machine;PTSPARE_2:L2 - Stock in location with 10 machine;PTSPARE_3:L3 - Stock in location with 50 machine" },
+                        multiselect: true,
+                        searchoptions: {
+                            sopt: ['eq'],
+                            value: "PTSPARE_NO:Not Typically a Spare Part;PTSPARE_1:L1 - Stock in location with 1 machine;PTSPARE_2:L2 - Stock in location with 10 machine;PTSPARE_3:L3 - Stock in location with 50 machine",
+                            dataInit: function (elem) {
+                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem);
+                            }
+                        },
                         align: 'left',
                         width: 100,
                         hidedlg: false
@@ -64,7 +72,15 @@ Msr.PartTypeGrid = Msr.PartTypeGrid ||
                         editable: true,
                         stype: "select",
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                        searchoptions: { value: ":[All];PTCON_NO:Not Consumable Part;PTCON_YES:Consumable Part" },
+                        //searchoptions: { value: ":[All];PTCON_NO:Not Consumable Part;PTCON_YES:Consumable Part" },
+                        multiselect: true,
+                        searchoptions: {
+                            sopt: ['eq'],
+                            value: "PTCON_NO:Not Consumable Part;PTCON_YES:Consumable Part",
+                            dataInit: function (elem) {
+                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem);
+                            }
+                        },
                         align: 'left'
                     },
                     {
@@ -95,7 +111,14 @@ Msr.PartTypeGrid = Msr.PartTypeGrid ||
                         editable: true,
                         stype: "select",
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                        searchoptions: { value: Msr.JqGridCommon.GetStatusFilters() },
+                        multiselect: true,
+                        searchoptions: {
+                            sopt: ['eq'],
+                            value: Msr.JqGridCommon.GetStatusFilters(),
+                            dataInit: function (elem) {
+                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem);
+                            }
+                        },
                         align: 'left'
                     },
                     {
@@ -137,6 +160,9 @@ Msr.PartTypeGrid = Msr.PartTypeGrid ||
                     Msr.JqGridCommon.TriggerSaveLoadGridState(Msr.PartTypeGrid.GetGridId());
                     Msr.JqGridCommon.SetupGridLock(Msr.PartTypeGrid.GetGridEditUrl());
                     Msr.JqGridCommon.UnLockWorkflow(Msr.PartTypeGrid.GetReturnUrl());
+                },
+                beforeRequest: function () {
+                    Msr.JqGridCommon.ModifyMultiselectData.call(this);
                 }
             });
             Msr.JqGridCommon.BindGridEvents(Msr.PartTypeGrid.GetGridId());
@@ -174,7 +200,7 @@ Msr.PartTypeGrid = Msr.PartTypeGrid ||
 
             function partTypesEditFormatter(cellvalue, options, rowObject) {
 
-                var actions = Msr.JqGridCommon.ActionFormtter(cellvalue, options, rowObject, Msr.PartTypeGrid.GetReturnUrl(), Msr.PartTypeGrid.GetGridEditUrl(),true);
+                var actions = Msr.JqGridCommon.ActionFormtter(cellvalue, options, rowObject, Msr.PartTypeGrid.GetReturnUrl(), Msr.PartTypeGrid.GetGridEditUrl(), true);
 
                 return actions;
 

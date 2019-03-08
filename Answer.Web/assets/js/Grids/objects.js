@@ -12,7 +12,7 @@
                 name: 'Id',
                 index: 'Id',
                 key: true,
-                colmenu: false,
+                colmenu: true,
                 search: false,
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
@@ -35,7 +35,7 @@
                 label: 'Object Table Title',
                 name: 'ObjectTable',
                 index: 'ObjectTable',
-                colmenu: true,
+                colmenu: false,
                 editable: true, // must set editable to true if you want to make the field editable
                 editrules: { required: true },
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },

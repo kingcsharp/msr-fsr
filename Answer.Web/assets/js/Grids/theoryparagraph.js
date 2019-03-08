@@ -12,7 +12,7 @@
                 name: 'Root',
                 index: 'Root',
                 key: true,
-                colmenu: false,
+                colmenu: true,
                 search: false,
                 coloptions: {
                     sorting: false,
@@ -49,7 +49,7 @@
                 label: 'Theory Name',
                 name: 'Name',
                 index: 'Name',
-                colmenu: true,
+                colmenu: false,
                 editable: true, // must set editable to true if you want to make the field editable
                 editrules: { required: true },
                 coloptions: {
@@ -68,7 +68,7 @@
                 label: 'Creating Co',
                 name: 'Creating_Co_Name',
                 index: 'Creating_Co_Name',
-                colmenu: true,
+                colmenu: false,
                 editable: true, // must set editable to true if you want to make the field editable
                 editrules: { required: true },
                 coloptions: {
@@ -87,7 +87,7 @@
                 label: 'Approval Status',
                 name: 'Status',
                 index: 'Status',
-                colmenu: true,
+                colmenu: false,
                 editable: true, // must set editable to true if you want to make the field editable
                 editrules: { required: true },
                 coloptions: {

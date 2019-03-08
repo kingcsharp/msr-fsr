@@ -84,7 +84,14 @@ Msr.RoleGrid = Msr.RoleGrid ||
                         editable: true,
                         stype: "select",
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                        searchoptions: { value: Msr.JqGridCommon.GetStatusFilters() },
+                        multiselect: true,
+                        searchoptions: {
+                            sopt: ['eq'],
+                            value: Msr.JqGridCommon.GetStatusFilters(),
+                            dataInit: function (elem) {
+                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem);
+                            }
+                        },
                         align: 'left'
                     },
                     {
@@ -137,8 +144,10 @@ Msr.RoleGrid = Msr.RoleGrid ||
                     Msr.JqGridCommon.TriggerSaveLoadGridState(Msr.RoleGrid.GetGridId());
                     Msr.JqGridCommon.SetupGridLock(Msr.RoleGrid.GetGridEditUrl());
                     Msr.JqGridCommon.UnLockWorkflow(Msr.RoleGrid.GetReturnUrl());
+                },
+                beforeRequest: function () {
+                    Msr.JqGridCommon.ModifyMultiselectData.call(this);
                 }
-
             });
 
             Msr.JqGridCommon.BindGridEvents(Msr.RoleGrid.GetGridId());

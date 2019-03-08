@@ -109,23 +109,23 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.ProcedureName.ToLower().Contains(rule.data.ToLower()));
                     }
-                    else if (rule.field == nameof(CustomerRequirementView.Status))
+                    else if (rule.field == nameof(CustomerRequirementView.Status) && rule.data != "")
                     {
-                        var statusList = rule.data.Split(',').Select(x => x.Trim().ToLower());
+                        var statusList = rule.data.Split(',').Select(x => x.Trim().ToLower()).ToArray();
 
                         if (statusList.Any())
                         {
-                            if (statusList.Any(x => x.Contains("received")))
+                            if (statusList.Any(z => z.Contains("received") && statusList.Any(u => u.Contains("creating"))))
                             {
-                                totalRows = totalRows.Where(x => x.Status == "creating" && x.IsProduct == false);
+                                totalRows = totalRows.Where(x => statusList.Contains(x.Status.ToLower()));
                             }
-                            else if (statusList.Any(x => x.Contains("creating")))
+                            else if (statusList.Any(x => x.Contains("received")))
                             {
-                                totalRows = totalRows.Where(x => x.Status == "creating" && x.IsProduct);
+                                totalRows = totalRows.Where(x => statusList.Contains(x.Status.ToLower()) && !x.IsProduct);
                             }
                             else
                             {
-                                totalRows = totalRows.Where(x => statusList.Contains(x.Status.ToLower()));
+                                totalRows = totalRows.Where(x => statusList.Contains(x.Status.ToLower()) && x.IsProduct);
                             }
                         }
                     }
@@ -344,7 +344,7 @@ namespace Answer.Web.Controllers
 
                 return View(vm);
             }
-      
+
             if (ModelState.IsValid)
             {
                 vm.LoginId = currentUser.Id;

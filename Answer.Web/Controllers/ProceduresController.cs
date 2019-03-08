@@ -137,9 +137,13 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.VerbName.ToLower().Contains(rule.data.ToLower()));
                     }
-                    else if (rule.field == nameof(ProcedureView.SecurityLevel))
+                    else if (rule.field == nameof(ProcedureView.SecurityLevel) && rule.data != "")
                     {
-                        totalRows = totalRows.Where(x => x.SecurityLevel.ToLower().Contains(rule.data.ToLower()));
+                        var list = rule.data.Split(',').Select(x => x.Trim().ToLower()).ToArray();
+                        if (list.Any())
+                        {
+                            totalRows = totalRows.Where(x => list.Contains(x.SecurityLevel.ToLower()));
+                        }
                     }
                     else if (rule.field == nameof(ProcedureView.Rev))
                     {
@@ -154,12 +158,12 @@ namespace Answer.Web.Controllers
                             totalRows = totalRows.Where(x => x.Rev.ToString().ToLower() == rule.data.ToLower());
                         }
                     }
-                    else if (rule.field == nameof(ProcedureView.Status))
+                    else if (rule.field == nameof(ProcedureView.Status) && rule.data != "")
                     {
-                        var statusList = rule.data.Split(',').Select(x => x.Trim().ToLower());
-                        if (statusList.Any())
+                        var list = rule.data.Split(',').Select(x => x.Trim().ToLower()).ToArray();
+                        if (list.Any())
                         {
-                            totalRows = totalRows.Where(x => statusList.Contains(x.Status.ToLower()));
+                            totalRows = totalRows.Where(x => list.Contains(x.Status.ToLower()));
                         }
                     }
                     else if (rule.field == nameof(ProcedureView.CreatingCoName))
@@ -340,7 +344,7 @@ namespace Answer.Web.Controllers
                 var steps = _proceduresService.GetStepsData(model.ObjectId, currentUser.Id);
 
                 var stepsOrders = steps.ToDictionary(x => x.Id, x => x.Print_Order);
-                
+
                 _proceduresService.SaveReorderSteps(stepsOrders, model.ObjectId, currentUser.Id);
 
                 TempData["SuccessMessage"] = "Step has been Created successfully.";
@@ -589,7 +593,7 @@ namespace Answer.Web.Controllers
                     AddErrorNotification("Something went wrong.");
                 }
 
-                return RedirectToAction("Edit", "Procedures", new {Id = procedureId});
+                return RedirectToAction("Edit", "Procedures", new { Id = procedureId });
             }
 
             viewModel.Id = id;
@@ -598,7 +602,7 @@ namespace Answer.Web.Controllers
 
             TempData["SuccessMessage"] = "Procedure step has been updated successfully.";
 
-            return RedirectToAction("Edit", "Procedures", new {Id = procedureId});
+            return RedirectToAction("Edit", "Procedures", new { Id = procedureId });
         }
 
         public ActionResult EditProcedureObject(string pid, string relationship)
@@ -1171,7 +1175,7 @@ namespace Answer.Web.Controllers
             var stepsToOrders = new Dictionary<string, double?>();
 
             double index = 0;
-            foreach (var step in array.Where(x=> !string.IsNullOrWhiteSpace(x)))
+            foreach (var step in array.Where(x => !string.IsNullOrWhiteSpace(x)))
             {
                 var stepParts = step.Split(',');
 

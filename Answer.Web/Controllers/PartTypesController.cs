@@ -52,13 +52,21 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.Name.ToLower().Contains(rule.data.ToLower()));
                     }
-                    else if (rule.field == nameof(PartTypesView.Spare))
+                    else if (rule.field == nameof(PartTypesView.Spare) && rule.data != "")
                     {
-                        totalRows = totalRows.Where(x => x.Spare.ToLower().Contains(rule.data.ToLower()));
+                        var list = rule.data.Split(',').Select(x => x.Trim().ToLower());
+                        if (list.Any())
+                        {
+                            totalRows = totalRows.Where(x => list.Contains(x.Spare.ToLower()));
+                        }
                     }
-                    else if (rule.field == nameof(PartTypesView.Consumable))
+                    else if (rule.field == nameof(PartTypesView.Consumable) && rule.data != "")
                     {
-                        totalRows = totalRows.Where(x => x.Consumable.ToLower().Contains(rule.data.ToLower()));
+                        var list = rule.data.Split(',').Select(x => x.Trim().ToLower());
+                        if (list.Any())
+                        {
+                            totalRows = totalRows.Where(x => list.Contains(x.Consumable.ToLower()));
+                        }
                     }
                     else if (rule.field == nameof(PartTypesView.Unit))
                     {
@@ -73,7 +81,7 @@ namespace Answer.Web.Controllers
                         }
 
                     }
-                    else if (rule.field == nameof(PartTypesView.Status))
+                    else if (rule.field == nameof(PartTypesView.Status) && rule.data != "")
                     {
                         var statusList = rule.data.Split(',').Select(x => x.Trim().ToLower());
                         if (statusList.Any())

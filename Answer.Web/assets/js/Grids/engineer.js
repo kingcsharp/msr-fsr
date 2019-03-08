@@ -17,13 +17,14 @@ Msr.WipGrid = Msr.WipGrid ||
                 styleUI: 'Bootstrap',
                 datatype: "local",
                 colModel: [
+                    { name: 'Id', index: 'Id', hidden: true, key: true, editable: false, editrules: { edithidden: true } },
+                    { name: 'PurchaseItemId', index: 'PurchaseItemId', hidden: true, editable: false, editrules: { edithidden: true } },
                     { name: 'FillId', index: 'FillId', width: 60, align: 'center', hidden: true, edittype: 'text', editable: true, editrules: { edithidden: true } },
                     {
                         label: 'WO Item #',
                         name: 'WoItem',
                         index: 'WoItem',
-                        key: true,
-                        colmenu: false,
+                        colmenu: true,
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                         //width: '*',
@@ -51,10 +52,9 @@ Msr.WipGrid = Msr.WipGrid ||
                         multiselect: true,
                         searchoptions: {
                             sopt: ['eq'],
-                            value: 'HiddenOption:;' + locations,
-                            attr: { multiple: 'multiple', size: 4 },
+                            value: locations,
                             dataInit: function (elem) {
-                                Msr.JqGridCommon.DataInitMultiselect(elem);
+                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem);
                             }
                         }
                     },
@@ -95,9 +95,15 @@ Msr.WipGrid = Msr.WipGrid ||
                         colmenu: false,
                         sorttype: 'date',
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                        searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                        searchoptions: {
+                            searchOperMenu: false,
+                            sopt: ['eq', 'gt', 'lt', 'ge', 'le'],
+                            dataInit: function (elem) {
+                                Msr.JqGridCommon.DataInitDatePicker(elem);
+                            }
+                        },
                         formatter: 'date',
-                        formatoptions: { srcformat: "m/d/Y H:i", newformat: "m/d/Y" },
+                        formatoptions: { srcformat: 'm/d/Y', newformat: 'm/d/Y' },
                         width: 90,
                         align: 'center'
                     },
@@ -109,9 +115,16 @@ Msr.WipGrid = Msr.WipGrid ||
                         editable: true,
                         sorttype: 'date',
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                        searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                        // edittype: 'text', editable: true, editrules: { edithidden: true }
+                        searchoptions: {
+                            searchOperMenu: false,
+                            sopt: ['eq', 'gt', 'lt', 'ge', 'le'],
+                            dataInit: function (elem) {
+                                Msr.JqGridCommon.DataInitDatePicker(elem);
+                            }
+                        },
                         formatter: 'date',
-                        formatoptions: { srcformat: "m/d/Y", newformat: "m/d/Y" },
+                        formatoptions: { srcformat: 'm/d/Y', newformat: 'm/d/Y' },
                         editoptions: { dataInit: initDateEdit, readonly: 'readonly' },
                         width: 90,
                         align: 'center'
@@ -120,7 +133,7 @@ Msr.WipGrid = Msr.WipGrid ||
                         label: 'Product Name',
                         name: 'ProductName',
                         index: 'ProductName',
-                        colmenu: true,
+                        colmenu: false,
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                         width: 230,
@@ -148,9 +161,13 @@ Msr.WipGrid = Msr.WipGrid ||
                             freeze: false
                         },
                         stype: "select",
+                        multiselect: true,
                         searchoptions: {
-                            value: "All:[All];REQUESTED,ACCEPTED:In Progress;PENDING_PARENT_ACCEPTANCE,REQUESTED:Waiting to Start;CLOSED,FINISHED:Completed",
-                            defaultValue: 'In Progress'
+                            sopt: ['eq'],
+                            value: "ACCEPTED:In Progress;PENDING_PARENT_ACCEPTANCE,REQUESTED:Waiting to Start;CLOSED,FINISHED:Completed",
+                            dataInit: function (elem) {
+                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem);
+                            }
                         },
                         formatter: currentStepFormatter,
                         align: 'center'
@@ -191,6 +208,11 @@ Msr.WipGrid = Msr.WipGrid ||
 
                     var purchaseItemId = $("#" + Msr.WipGrid.GetGridId()).jqGrid('getCell', rowid, 'PurchaseItemId');
 
+                    if (cellname === 'DueDate') {
+                        //value = $("#" + Msr.WipGrid.GetGridId()).jqGrid('getCell', rowid, cellname);
+                        value = moment(value, 'MM/DD/YYYY').format();
+                    }
+
                     var options = {
                         FillId: fillId,
                         PurchaseItemId: purchaseItemId,
@@ -204,12 +226,13 @@ Msr.WipGrid = Msr.WipGrid ||
                         data: options,
                         dataType: 'JSON',
                         success: function (resultData) {
-                            console.log("row with rowid=" + rowid + " is successfuly modified.")
+                            $("#" + Msr.WipGrid.GetGridId()).jqGrid().trigger('reloadGrid');
+                            console.log("row with rowid=" + rowid + " is successfuly modified.");
                         }
                     });
                 },
                 afterSaveCell: function (rowid, cellname, value, iRow, iCol) {
-                    $("#" + Msr.WipGrid.GetGridId()).jqGrid().trigger('reloadGrid');
+                    //$("#" + Msr.WipGrid.GetGridId()).jqGrid().trigger('reloadGrid');
                 },
                 gridComplete: function () {
                     Msr.JqGridCommon.TriggerSaveLoadGridState(Msr.WipGrid.GetGridId());
@@ -233,26 +256,16 @@ Msr.WipGrid = Msr.WipGrid ||
                             tooltiptime = $(this).data('tooltip-time');
                         }
                         $(this).replaceWith(
-                            '<div class = "progress" title="' +
-                            tooltiptime +
-                            '">' +
-                            '<div class = "progress-bar progress-bar-' +
-                            statClass +
-                            '" role = "progressbar" aria-valuenow = "' +
-                            progVal +
-                            '" ' +
-                            'aria-valuemin = "0" aria-valuemax = "100" style = "width: ' +
-                            progVal +
-                            '%;"> ' +
-                            '<span>' +
-                            progVal +
-                            '%</span>' +
+                            '<div class = "progress" title="' + tooltiptime + '">' +
+                            '<div class = "progress-bar progress-bar-' + statClass +
+                            '" role = "progressbar" aria-valuenow = "' + progVal + '" '
+                            + 'aria-valuemin = "0" aria-valuemax = "100" style = "width: ' +
+                            progVal + '%;"> ' +
+                            '<span>' + progVal + '%</span>' +
                             '</div>' +
                             '</div>'
                         );
                     });
-
-                    $('.ui-multiselect-checkboxes li:first-child').hide();
 
                     var isGridDone = false;
                     var time = new Date().getTime();
@@ -263,7 +276,7 @@ Msr.WipGrid = Msr.WipGrid ||
                             isGridDone = true;
                         });
                         if (isGridDone) {
-                            $("#" + Msr.WipGrid.GetGridId()).jqGrid('resizeColumn', 'WoItem', maxWidth+25, true);
+                            $("#" + Msr.WipGrid.GetGridId()).jqGrid('resizeColumn', 'WoItem', maxWidth + 25, true);
                             clearInterval(gridComplete);
                         }
                         //after 50 secs do not execute function anymore.
@@ -273,7 +286,7 @@ Msr.WipGrid = Msr.WipGrid ||
                     }, 10);
                 },
                 beforeRequest: function () {
-
+                    Msr.JqGridCommon.ModifyMultiselectData.call(this);
                     Msr.JqGridCommon.ModifySearchingFilter.call(this, ',', 'LocationName');
                 }
             });
@@ -287,23 +300,12 @@ Msr.WipGrid = Msr.WipGrid ||
                 event.preventDefault();
                 // Do something
             });
-
-
         }
     }
 
 
-function initDateEdit(elem, options) {
-    $(elem).datepicker({
-        maxDate: "10/27/2015",
-        dateFormat: "mm/dd/yy",
-        autoSize: true,
-        changeYear: true,
-        changeMonth: true,
-        showButtonPanel: true,
-        showWeek: true
-    });
-
+function initDateEdit(el, options) {
+    Msr.JqGridCommon.DataInitDatePicker(el, 'mm/dd/yyyy');
 };
 
 function currentStepFormatter(cellvalue, options, rowObject) {

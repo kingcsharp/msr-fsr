@@ -108,7 +108,14 @@ Msr.LocationsGrid = Msr.LocationsGrid ||
                             index: 'Status',
                             colmenu: false,
                             stype: "select",
-                            searchoptions: { value: Msr.JqGridCommon.GetStatusFilters() },
+                            multiselect: true,
+                            searchoptions: {
+                                sopt: ['eq'],
+                                value: Msr.JqGridCommon.GetStatusFilters(),
+                                dataInit: function (elem) {
+                                    Msr.JqGridCommon.DataInitBootstrapMultiselect(elem);
+                                }
+                            },
                             coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                             align: 'center'
                         },
@@ -163,8 +170,10 @@ Msr.LocationsGrid = Msr.LocationsGrid ||
                         Msr.JqGridCommon.TriggerSaveLoadGridState(Msr.LocationsGrid.GetGridId());
                         Msr.JqGridCommon.SetupGridLock(Msr.LocationsGrid.GetGridEditUrl());
                         Msr.JqGridCommon.UnLockWorkflow(Msr.LocationsGrid.GetReturnUrl());
+                    },
+                    beforeRequest: function () {
+                        Msr.JqGridCommon.ModifyMultiselectData.call(this);
                     }
-
                 });
                 Msr.JqGridCommon.BindGridEvents(Msr.LocationsGrid.GetGridId());
 

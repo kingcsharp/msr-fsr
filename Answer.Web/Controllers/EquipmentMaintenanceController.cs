@@ -38,7 +38,8 @@ namespace Answer.Web.Controllers
 
             ViewBag.HasMaintenanceTechnicianRole = myRoles.Any(x => x.Role_Name.Contains(RoleConstants.MaintenanceTechnician));
             ViewBag.HasProductionManagerRole = myRoles.Any(x => x.Role_Name.Contains(RoleConstants.ProductionManager));
-
+            ViewBag.AssignedTo = _equipmentMaintenanceService.GetEquipmentsQueryable().Where(x => x.AssignedTo != null).Select(x => x.AssignedTo).Distinct()
+                .ToArray();
             return View();
         }
 
@@ -50,20 +51,8 @@ namespace Answer.Web.Controllers
             {
                 foreach (var rule in param.where.rules)
                 {
-                
-                     if (rule.field == nameof(EquipmentMaintenanceView.ParentLocation))
-                    {
-                        totalRows = totalRows.Where(x => x.ParentLocation.ToLower().Contains(rule.data.ToLower()));
-                    }
-                    else if (rule.field == nameof(EquipmentMaintenanceView.SubLocationFirst))
-                    {
-                        totalRows = totalRows.Where(x => x.SubLocationFirst.ToLower().Contains(rule.data.ToLower()));
-                    }
-                    else if (rule.field == nameof(EquipmentMaintenanceView.SubLocationSecond))
-                    {
-                        totalRows = totalRows.Where(x => x.SubLocationSecond.ToLower().Contains(rule.data.ToLower()));
-                    }
-                    else if (rule.field == nameof(EquipmentMaintenanceView.DateTime))
+
+                   if (rule.field == nameof(EquipmentMaintenanceView.DateTime))
                     {
                         DateTime value;
                         if (DateTime.TryParse(rule.data, out value))
@@ -76,25 +65,37 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.RequestedBy.ToLower().Contains(rule.data.ToLower()));
                     }
-                    else if (rule.field == nameof(EquipmentMaintenanceView.AssignedTo))
+                    else if (rule.field == nameof(EquipmentMaintenanceView.AssignedTo) && rule.data != "")
                     {
-                        totalRows = totalRows.Where(x => x.AssignedTo.ToLower().Contains(rule.data.ToLower()));
+                        var list = rule.data.Split(',').Select(x => x.Trim().ToLower()).ToArray();
+                        if (list.Any())
+                        {
+                            totalRows = totalRows.Where(x => list.Contains(x.AssignedTo.ToLower()));
+                        }
                     }
-                    else if (rule.field == nameof(EquipmentMaintenanceView.TroubleState))
+                    else if (rule.field == nameof(EquipmentMaintenanceView.TroubleState) && rule.data != "")
                     {
-                        totalRows = totalRows.Where(x => x.TroubleState.ToString().ToLower().Contains(rule.data.ToLower()));
+                        var list = rule.data.Split(',').Select(x => Boolean.Parse(x.Trim().ToLower())).ToArray();
+                        if (list.Any() && list.Length < 2)
+                        {
+                            totalRows = totalRows.Where(x => list.Contains(x.TroubleState));
+                        }
                     }
                     else if (rule.field == nameof(EquipmentMaintenanceView.Comments))
                     {
                         totalRows = totalRows.Where(x => x.Comments.ToLower().Contains(rule.data.ToLower()));
                     }
-                    else if (rule.field == nameof(EquipmentMaintenanceView.MaintenanceTask))
+                    else if (rule.field == nameof(EquipmentMaintenanceView.MaintenanceTask) && rule.data != "")
                     {
-                        totalRows = totalRows.Where(x => x.MaintenanceTask.ToLower().Contains(rule.data.ToLower()));
+                        var list = rule.data.Split(',').Select(x => x.Trim().ToLower()).ToArray();
+                        if (list.Any())
+                        {
+                            totalRows = totalRows.Where(x => list.Contains(x.MaintenanceTask.ToLower()));
+                        }
                     }
-                    else if (rule.field == nameof(EquipmentMaintenanceView.Status))
+                    else if (rule.field == nameof(EquipmentMaintenanceView.Status) && rule.data != "")
                     {
-                        var statusList = rule.data.Split(',').Select(x => x.Trim().ToLower()).ToList();
+                        var statusList = rule.data.Split(',').Select(x => x.Trim().ToLower()).ToArray();
 
                         if (statusList.Any())
                         {
@@ -286,126 +287,17 @@ namespace Answer.Web.Controllers
 
             return Json(new { locations = locationsList }, JsonRequestBehavior.AllowGet);
         }
-        public JsonResult GetChildLocations(string id)
+
+        public JsonResult GetScanBarCodeLocations(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
             {
                 return Json("", JsonRequestBehavior.AllowGet);
             }
 
-            var locations = _locationService.GetLocationsQueryable().Where(x => x.ObjectId == id).Select(
-                x => new SelectListItem
-                {
-                    Text = x.Name,
-                    Value = x.ParentLocation,
-                }).OrderBy(o => o.Text).ToList();
+            EquipmentMaintenanceView equipmentMaintenanceView = _equipmentMaintenanceService.GetEquipmentsQueryable().Where(x => x.ScanBarcode == id).FirstOrDefault();
 
-            if (!locations.Any())
-            {
-                return Json(new { locations = "" }, JsonRequestBehavior.AllowGet);
-            }
-
-            var locationsList = new List<SelectListItem>();
-
-            locationsList.AddRange(locations);
-
-
-            return Json(new { locations = locationsList }, JsonRequestBehavior.AllowGet);
-        }
-        public JsonResult GetSecoundLocationsManually(string id)
-        {
-            if (string.IsNullOrWhiteSpace(id))
-            {
-                return Json("", JsonRequestBehavior.AllowGet);
-            }
-
-            var locations = _locationService.GetLocationsQueryable().Where(x => x.ParentLocation == id).Select(
-                x => new SelectListItem
-                {
-                    Text = x.Name,
-                    Value = x.ObjectId,
-                }).OrderBy(o => o.Text).ToList();
-
-            if (!locations.Any())
-            {
-                return Json(new { locations = "" }, JsonRequestBehavior.AllowGet);
-            }
-
-            var locationsList =
-                new List<SelectListItem> { new SelectListItem { Value = "", Text = @"Select a Sublocation" } };
-
-            locationsList.AddRange(locations);
-
-
-            return Json(new { locations = locationsList }, JsonRequestBehavior.AllowGet);
-        }
-        public JsonResult GetthirdLocationsManually(string id)
-        {
-            if (string.IsNullOrWhiteSpace(id))
-            {
-                return Json("", JsonRequestBehavior.AllowGet);
-            }
-
-            var locations = _locationService.GetLocationsQueryable().Where(x => x.ParentLocation == id).Select(
-                x => new SelectListItem
-                {
-                    Text = x.Name,
-                    Value = x.ObjectId,
-                }).OrderBy(o => o.Text).ToList();
-
-            if (!locations.Any())
-            {
-                return Json("", JsonRequestBehavior.AllowGet);
-            }
-
-            var locationsList = new List<SelectListItem>();
-
-            locationsList.AddRange(locations);
-
-
-            return Json(new { locations = locationsList }, JsonRequestBehavior.AllowGet);
-        }
-        public JsonResult GetSecoundLocations(string id)
-        {
-            if (string.IsNullOrWhiteSpace(id))
-            {
-                return Json("", JsonRequestBehavior.AllowGet);
-            }
-
-            var locations = _locationService.GetSecoundLocations(id).Select(
-                x => new SelectListItem
-                {
-                    Text = x.Name,
-                    Value = x.ObjectId,
-                }).OrderBy(o => o.Text).ToList();
-
-            if (!locations.Any())
-            {
-                return Json("", JsonRequestBehavior.AllowGet);
-            }
-
-            var locationsList = new List<SelectListItem>();
-
-            locationsList.AddRange(locations);
-
-
-            return Json(new { locations = locationsList }, JsonRequestBehavior.AllowGet);
-        }
-        public JsonResult GetParentLocations(string id)
-        {
-            if (string.IsNullOrWhiteSpace(id))
-            {
-                return Json("", JsonRequestBehavior.AllowGet);
-            }
-
-            var locations = _locationService.GetParentLocations(id);
-
-            if (!locations.Any())
-            {
-                return Json(new { locations = "" }, JsonRequestBehavior.AllowGet);
-            }
-
-            return Json(new { locations }, JsonRequestBehavior.AllowGet);
+            return Json(new { locationId = equipmentMaintenanceView.RoomEquipmentId }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]

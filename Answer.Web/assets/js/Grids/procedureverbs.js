@@ -25,7 +25,7 @@ Msr.ProcedureVerbsGrid = Msr.ProcedureVerbsGrid ||
                         name: 'Root',
                         index: 'Root',
                         key: true,
-                        colmenu: false,
+                        colmenu: true,
                         coloptions: {
                             sorting: false,
                             columns: true,
@@ -42,7 +42,7 @@ Msr.ProcedureVerbsGrid = Msr.ProcedureVerbsGrid ||
                         label: 'Name',
                         name: 'Name',
                         index: 'Name',
-                        colmenu: true,
+                        colmenu: false,
                         coloptions: {
                             sorting: false,
                             columns: true,
@@ -103,9 +103,13 @@ Msr.ProcedureVerbsGrid = Msr.ProcedureVerbsGrid ||
                             grouping: false,
                             freeze: false
                         },
+                        multiselect: true,
                         searchoptions: {
-                            value:
-                            ":[All];CREATING, DENIED, APPROVED, APPROVED_BUT_REVISING:Creating or Approved;CREATING, DENIED: Creating;IN_WORKFLOW:In Approval Workflow;APPROVED, APPROVED_BUT_REVISING, APPROVED_BUT_DELETING:Approved;DENIED:Denied;APPROVED_BUT_REVISING:Approved But Being Revised;APPROVED_BUT_DELETING:Approved But Being Deleted;DENIED:Denied;DELETED:Deleted;OLD:Obsolete"
+                            sopt: ['eq'],
+                            value: "CREATING, DENIED, APPROVED, APPROVED_BUT_REVISING:Creating or Approved;CREATING, DENIED: Creating;IN_WORKFLOW:In Approval Workflow;APPROVED, APPROVED_BUT_REVISING, APPROVED_BUT_DELETING:Approved;DENIED:Denied;APPROVED_BUT_REVISING:Approved But Being Revised;APPROVED_BUT_DELETING:Approved But Being Deleted;DELETED:Deleted;OLD:Obsolete",
+                            dataInit: function (elem) {
+                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem);
+                            }
                         },
                         align: 'center'
                     },
@@ -142,6 +146,9 @@ Msr.ProcedureVerbsGrid = Msr.ProcedureVerbsGrid ||
                     Msr.JqGridCommon.TriggerSaveLoadGridState(Msr.ProcedureVerbsGrid.GetGridId());
                     Msr.JqGridCommon.SetupGridLock(Msr.ProcedureVerbsGrid.GetGridEditUrl());
                     Msr.JqGridCommon.UnLockWorkflow(Msr.ProcedureVerbsGrid.GetReturnUrl());
+                },
+                beforeRequest: function () {
+                    Msr.JqGridCommon.ModifyMultiselectData.call(this);
                 }
             });
 

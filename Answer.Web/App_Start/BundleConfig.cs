@@ -160,6 +160,7 @@ namespace Answer.Web
                .Include("~/assets/css/hopscotch.css")
                .Include("~/assets/css/bootstrap-datepicker.min.css")
                .Include("~/assets/css/wip-detail.css", new CssRewriteUrlTransform())
+                .Include("~/assets/js/plugins/bootstrap3/bootstrap-multiselect.css", new CssRewriteUrlTransform())
            );
 
             bundles.Add(new ScriptBundle("~/bundles/js/main")
@@ -182,6 +183,7 @@ namespace Answer.Web
                 .Include("~/assets/js/comman.js")
                 .Include("~/assets/js/bootstrap-datepicker.min.js")
                 .Include("~/assets/js/plugins/jquery.blockUI.js")
+                .Include("~/assets/js/plugins/bootstrap3/bootstrap-multiselect.js")
            );
 
             bundles.Add(new ScriptBundle("~/bundles/js/jgridDefaults")

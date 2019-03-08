@@ -16,7 +16,7 @@
                 index: 'Order_id' +
                     '',
                 key: true,
-                colmenu: false,
+                colmenu: true,
                 search: false,
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
@@ -39,7 +39,7 @@
                 label: 'Supplier',
                 name: 'supplier_name',
                 index: 'supplier_name',
-                colmenu: true,
+                colmenu: false,
                 editable: true, // must set editable to true if you want to make the field editable
                 editrules: { required: true },
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
@@ -117,8 +117,7 @@
         cellsubmit: 'clientArray',
         editurl: 'clientArray',
         autowidth: true,
-        colMenu: true,
-
+        colMenu: true
     });
     function selectFormatter(cellvalue, options, rowObject) {
         var html = "";

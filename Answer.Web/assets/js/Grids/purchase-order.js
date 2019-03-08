@@ -22,7 +22,7 @@ Msr.PurchaseOrderGrid = Msr.PurchaseOrderGrid ||
                     name: 'Root',
                     index: 'Root',
                     key: true,
-                    colmenu: false,
+                    colmenu: true,
                     sortable: false,
                     coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                     searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
@@ -159,7 +159,7 @@ Msr.PurchaseOrderGrid = Msr.PurchaseOrderGrid ||
                     label: 'Cust/Co/Dept',
                     name: 'CustomerCo',
                     index: 'CustomerCo',
-                    colmenu: true,
+                    colmenu: false,
                     editable: false,
                     editrules: { required: true },
                     coloptions: {
@@ -271,7 +271,14 @@ Msr.PurchaseOrderGrid = Msr.PurchaseOrderGrid ||
                         grouping: false,
                         freeze: false
                     },
-                    searchoptions: { value: ":[All];CUSTOMER_ACCOUNT:Customer Account;PRODUCT_ACCOUNT:Product Account;PURCHASING_ACCOUNT:Purchasing Account" },
+                    multiselect: true,
+                    searchoptions: {
+                        sopt: ['eq'],
+                        value: "CUSTOMER_ACCOUNT:Customer Account;PRODUCT_ACCOUNT:Product Account;PURCHASING_ACCOUNT:Purchasing Account",
+                        dataInit: function (elem) {
+                            Msr.JqGridCommon.DataInitBootstrapMultiselect(elem);
+                        }
+                    },
                     align: 'left'
                 },
                 {
@@ -319,7 +326,14 @@ Msr.PurchaseOrderGrid = Msr.PurchaseOrderGrid ||
                     stype: "select",
                     width: '130',
                     coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                    searchoptions: { value: Msr.JqGridCommon.GetStatusFilters() },
+                    multiselect: true,
+                    searchoptions: {
+                        sopt: ['eq'],
+                        value: Msr.JqGridCommon.GetStatusFilters(),
+                        dataInit: function (elem) {
+                            Msr.JqGridCommon.DataInitBootstrapMultiselect(elem);
+                        }
+                    },
                     align: 'center'
                 },
                 { name: 'Actions', index: 'ID', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: ActionFormatter, width: 100, align: 'center' }
@@ -368,8 +382,10 @@ Msr.PurchaseOrderGrid = Msr.PurchaseOrderGrid ||
 
                         }
                     });
+            },
+            beforeRequest: function () {
+                Msr.JqGridCommon.ModifyMultiselectData.call(this);
             }
-
         });
 
         Msr.JqGridCommon.BindGridEvents(Msr.PurchaseOrderGrid.GetGridId());

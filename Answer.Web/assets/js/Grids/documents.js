@@ -23,7 +23,7 @@ Msr.DocumentsGrid = Msr.DocumentsGrid ||
                         name: 'Root',
                         index: 'Root',
                         key: true,
-                        colmenu: false,
+                        colmenu: true,
                         coloptions: {
                             sorting: false,
                             columns: true,
@@ -33,13 +33,13 @@ Msr.DocumentsGrid = Msr.DocumentsGrid ||
                             freeze: false
                         },
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                        align: 'center',
+                        align: 'center'
                     },
                     {
                         label: 'Name',
                         name: 'Name',
                         index: 'Name',
-                        colmenu: true,
+                        colmenu: false,
                         coloptions: {
                             sorting: false,
                             columns: true,
@@ -122,7 +122,14 @@ Msr.DocumentsGrid = Msr.DocumentsGrid ||
                         index: 'Status',
                         colmenu: false,
                         stype: "select",
-                        searchoptions: { value: Msr.JqGridCommon.GetStatusFilters() },
+                        multiselect: true,
+                        searchoptions: {
+                            sopt: ['eq'],
+                            value: Msr.JqGridCommon.GetStatusFilters(),
+                            dataInit: function (elem) {
+                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem);
+                            }
+                        },
                         coloptions: {
                             sorting: false,
                             columns: true,
@@ -253,8 +260,10 @@ Msr.DocumentsGrid = Msr.DocumentsGrid ||
                     Msr.JqGridCommon.SetupGridLock(Msr.DocumentsGrid.GetGridEditUrl());
                     Msr.JqGridCommon.UnLockWorkflow(Msr.DocumentsGrid.GetReturnUrl());
                     Msr.JqGridCommon.DocPreview();
+                },
+                beforeRequest: function () {
+                    Msr.JqGridCommon.ModifyMultiselectData.call(this);
                 }
-
             });
 
 

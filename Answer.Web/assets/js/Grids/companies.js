@@ -25,7 +25,7 @@ Msr.CompanyGrid = Msr.CompanyGrid ||
                         name: 'Root',
                         index: 'Root',
                         key: true,
-                        colmenu: false,
+                        colmenu: true,
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                         width: 50,
@@ -35,7 +35,7 @@ Msr.CompanyGrid = Msr.CompanyGrid ||
                         label: 'Company Name',
                         name: 'Name',
                         index: 'Name',
-                        colmenu: true,
+                        colmenu: false,
                         editable: true, // must set editable to true if you want to make the field editable
                         editrules: { required: true },
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
@@ -104,7 +104,14 @@ Msr.CompanyGrid = Msr.CompanyGrid ||
                         editable: true,
                         stype: "select",
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                        searchoptions: { value: ":[All];CREATING, DENIED, APPROVED, APPROVED_BUT_REVISING:Creating or Approved;CREATING, DENIED: Creating;IN_WORKFLOW:In Approval Workflow;APPROVED, APPROVED_BUT_REVISING, APPROVED_BUT_DELETING:Approved;DENIED:Denied;APPROVED_BUT_REVISING:Approved But Being Revised;APPROVED_BUT_DELETING:Approved But Being Deleted;DENIED:Denied;DELETED:Deleted;OLD:Obsolete" },
+                        multiselect: true,
+                        searchoptions: {
+                            sopt: ['eq'],
+                            value: "CREATING, DENIED, APPROVED, APPROVED_BUT_REVISING:Creating or Approved;CREATING, DENIED: Creating;IN_WORKFLOW:In Approval Workflow;APPROVED, APPROVED_BUT_REVISING, APPROVED_BUT_DELETING:Approved;APPROVED_BUT_REVISING:Approved But Being Revised;APPROVED_BUT_DELETING:Approved But Being Deleted;DENIED:Denied;DELETED:Deleted;OLD:Obsolete",
+                            dataInit: function (elem) {
+                                Msr.JqGridCommon.DataInitBootstrapMultiselect(elem);
+                            }
+                        },
                         align: 'left'
                     },
                     {
@@ -161,7 +168,9 @@ Msr.CompanyGrid = Msr.CompanyGrid ||
                     Msr.JqGridCommon.SetupGridLock(Msr.CompanyGrid.GetGridEditUrl());
                     Msr.JqGridCommon.UnLockWorkflow(Msr.CompanyGrid.GetReturnUrl());
                     Msr.JqGridCommon.DocPreview();
-
+                },
+                beforeRequest: function () {
+                    Msr.JqGridCommon.ModifyMultiselectData.call(this);
                 }
 
             });
@@ -196,7 +205,7 @@ function LoadCompanyDialogGrid() {
                 name: 'ObjectId',
                 index: 'ObjectId',
                 key: true,
-                colmenu: false,
+                colmenu: true,
                 search: false,
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                 searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
@@ -219,7 +228,7 @@ function LoadCompanyDialogGrid() {
                 label: 'Name',
                 name: 'Name',
                 index: 'Name',
-                colmenu: true,
+                colmenu: false,
                 editable: true, // must set editable to true if you want to make the field editable
                 editrules: { required: true },
                 coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
