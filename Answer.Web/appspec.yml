@@ -1,8 +1,8 @@
 version: 0.0
 os: linux
 files:
-  - source: Answer.Web.2.0.2.nupkg
-    destination: D:\MSRFSR\test\Answer.Web.2.0.2.nupkg
+#  - source: Answer.Web.2.0.2.nupkg
+#    destination: D:\MSRFSR\test\Answer.Web.2.0.2.nupkg
 #  - source: source
 #    destination: /webapps/myApp
 #hooks:
