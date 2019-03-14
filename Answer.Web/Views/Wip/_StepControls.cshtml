@@ -107,8 +107,7 @@
         var stepId = @Model.StepId;
 
 		var stepControls = new StepControls();
-        console.log("stepId: " + stepId);
-        console.log("fillId: " + fillId);
+
 		@if (Model.TaskRunningDto!=null)
         {
             <text>
@@ -164,9 +163,6 @@
             $('#@Model.StepId #start-step').addClass('hidden');
 
         });
-
-
-
 
         $('#@Model.StepId #done-step').on('click', function () {
             var parentPartId = @Model.ParentPartId;
