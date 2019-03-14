@@ -129,10 +129,13 @@
         $('#@Model.StepId #pause-step').on('click', function () {
                 eLoaderOpen();
                 var id = $(this).data('task-log-id');
+                var taskLogId = $('#taskLogId').val();
 
-                if (id == null) {
-                    id = $('#taskLogId').val();
-                }
+                if (taskLogId)
+                  {        
+                    id = taskLogId;
+                  }
+
                 stepControls.StepPauseClick(id, fillId, stepId);
 				$('#step-@Model.StepId .timer').timer('pause');
 			});
@@ -140,10 +143,12 @@
 		$('#@Model.StepId #resume-step').on('click', function () {
 				eLoaderOpen();
                 var id = $(this).data('task-log-id');
+                var taskLogId = $('#taskLogId').val();
 
-                if (id == null) {
-                    id = $('#taskLogId').val();
+                if (taskLogId) {
+                    id = taskLogId;
                 }
+
                 stepControls.StepResumeClick(id, stepId, fillId);
 				$('#step-@Model.StepId .timer').timer('resume');
 			});
