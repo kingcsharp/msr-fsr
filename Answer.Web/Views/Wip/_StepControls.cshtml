@@ -83,6 +83,7 @@
         }
 
     </div>
+    <input type="hidden" id="taskLogId" name="taskLogId" value="">
 </div>
 
 
@@ -106,7 +107,8 @@
         var stepId = @Model.StepId;
 
 		var stepControls = new StepControls();
-
+        console.log("stepId: " + stepId);
+        console.log("fillId: " + fillId);
 		@if (Model.TaskRunningDto!=null)
         {
             <text>
@@ -125,16 +127,24 @@
             }
         }
 
-		$('#@Model.StepId #pause-step').on('click', function () {
-				var id = $(this).data('task-log-id');
-				eLoaderOpen();
+        $('#@Model.StepId #pause-step').on('click', function () {
+                eLoaderOpen();
+                var id = $(this).data('task-log-id');
+
+                if (id == null) {
+                    id = $('#taskLogId').val();
+                }
                 stepControls.StepPauseClick(id, fillId, stepId);
 				$('#step-@Model.StepId .timer').timer('pause');
 			});
 
 		$('#@Model.StepId #resume-step').on('click', function () {
 				eLoaderOpen();
-				var id = $(this).data('task-log-id');
+                var id = $(this).data('task-log-id');
+
+                if (id == null) {
+                    id = $('#taskLogId').val();
+                }
                 stepControls.StepResumeClick(id, stepId, fillId);
 				$('#step-@Model.StepId .timer').timer('resume');
 			});
@@ -143,7 +153,20 @@
                 var parentId=@Model.ParentId;
 				eLoaderOpen();
                 stepControls.StepStartClick(stepId, fillId, parentId);
-			});
+              	$('#step-@Model.StepId .timer').timer({
+		            seconds: @Math.Round(Model.TaskRunningDto?.TotalSeconds ?? 0),
+		            duration: '@(Model.TaskRunningDto?.Duration ?? "0")'
+            });
+
+            $('#@Model.StepId #done-step').removeClass('hidden');
+            $('#@Model.StepId #pause-step').removeClass('hidden');
+            $('#@Model.StepId #start-step').removeClass('show');
+            $('#@Model.StepId #start-step').addClass('hidden');
+
+        });
+
+
+
 
         $('#@Model.StepId #done-step').on('click', function () {
             var parentPartId = @Model.ParentPartId;
