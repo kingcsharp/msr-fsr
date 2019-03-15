@@ -15,6 +15,7 @@
                     $(currentStep).removeClass('waiting');
                     $(currentStep).addClass('requested');
                     $(currentStep).trigger("click");
+                    $('#taskLogId').val(data.Entity.Id);
                 }
             },
             error: function (error) {
