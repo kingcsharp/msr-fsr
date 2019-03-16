@@ -11,9 +11,7 @@ function eLoaderClose() {
 
 function eLoaderError(value) {
     var model = $("#emodel");
-    model.on('shown.bs.modal', function () {
-        model.find('.modal-body').html('').append(value);
-    });
+    model.find('.modal-body').html('').append(value);
 }
 
 $('.page-help').on('click', function () {
