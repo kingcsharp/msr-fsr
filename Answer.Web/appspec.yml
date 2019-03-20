@@ -1,5 +1,5 @@
 version: 0.0
-os: linux
+os: windows
 files:
   - source: \obj\octopacked\
     destination: d:\websites\
