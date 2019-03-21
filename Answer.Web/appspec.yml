@@ -2,7 +2,7 @@ version: 0.0
 os: windows
 files:
   - source: \obj\octopacked\
-    destination: d:\websites\
+    destination: d:\MSRFSR\
 #  - source: source
 #    destination: /webapps/myApp
 #hooks:
