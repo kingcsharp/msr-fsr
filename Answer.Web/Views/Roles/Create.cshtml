@@ -129,25 +129,28 @@
     @Scripts.Render("~/bundles/js/jqueryval")
     <script type="text/javascript">
         var fileUploader = new FileUploader();
-
+        
         $(document).ready(function (parameters) {
             $('.select').select2();
-
+           
+            var isCertificationRole = 0;           
             //HIDE FORM FIELDS INITIALLY
             $('.personRole, .certificationRole').hide();
             if($(this).val() == 'personRole'){
                 $('.personRole').show();
             }
             if($(this).val() == 'certificationRole'){
-                $('.certificationRole').show();
+                $('.certificationRole').show(); 
             }
              $('#roleTypeSelect').change(function() {
                 $('.personRole, .certificationRole').hide();
                 if($(this).val() == 'personRole'){
                     $('.personRole').show();
+                    var isCertificationRole = 0;   
                 }
                 if($(this).val() == 'certificationRole'){
                     $('.certificationRole').show();
+                    var isCertificationRole = 1;   
                 }
             });
             
@@ -175,44 +178,45 @@
                 IDs[i] = $(this).prop('id');
             });
 
-            $(".selectassignedpeoples").change(function (e) {
-                IDs = [];
-                $("#person>div").each(function (i) {
-                    IDs[i] = $(this).prop('id');
-                });
+            if (isCertificationRole ==1 )_ {
+                $(".selectassignedpeoples").change(function (e) {
+                    IDs = [];
+                    $("#person>div").each(function (i) {
+                        IDs[i] = $(this).prop('id');
+                    });
 
-                /* Logic here does not execute when val() is used */
-                if ($(this).val() != null) {
-                    currentPeopleList = $(this).val().toString().split(",");
-                } else {
-                    currentPeopleList = [];
-                }
-
-                //currentPeopleList not in the DIVS
-                //This would be someone was added to the people list
-                for (var i = currentPeopleList.length; i--;) {
-                    if (IDs.indexOf(currentPeopleList[i]) === -1) {
-
-                        var roleId = window.location.href.match(/(\d+)$/g);
-
-                        $.ajax({
-                            url: '@Url.Action("LoadPersonDate", "Roles")?RoleId=' + roleId + '&userId=' + currentPeopleList[i],
-                            type: 'GET',
-                            error: function (xhr) {
-                                alert('Error: ' + xhr.statusText);
-                            },
-                            success: function (result) {
-                                $('#person').append(result);
-
-                                $('.date-picker').datepicker({
-                                    format: 'mm/dd/yyyy',
-                                    autoclose: true
-                                });
-                            }
-                        });
+                    /* Logic here does not execute when val() is used */
+                    if ($(this).val() != null) {
+                        currentPeopleList = $(this).val().toString().split(",");
+                    } else {
+                        currentPeopleList = [];
                     }
-                }
-                
+
+                    //currentPeopleList not in the DIVS
+                    //This would be someone was added to the people list
+                    for (var i = currentPeopleList.length; i--;) {
+                        if (IDs.indexOf(currentPeopleList[i]) === -1) {
+
+                            var roleId = window.location.href.match(/(\d+)$/g);
+
+                            $.ajax({
+                                url: '@Url.Action("LoadPersonDate", "Roles")?RoleId=' + roleId + '&userId=' + currentPeopleList[i],
+                                type: 'GET',
+                                error: function (xhr) {
+                                    alert('Error: ' + xhr.statusText);
+                                },
+                                success: function (result) {
+                                    $('#person').append(result);
+
+                                    $('.date-picker').datepicker({
+                                        format: 'mm/dd/yyyy',
+                                        autoclose: true
+                                    });
+                                }
+                            });
+                        }
+                    }
+                }//end if certificationRole
                 //Needs to be removed
                 //Someone was removed from the people list
                 for (var i = IDs.length; i--;) {
