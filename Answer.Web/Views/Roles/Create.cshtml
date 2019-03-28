@@ -173,12 +173,13 @@
             $(".selectassignedpeoples").trigger("change");
             var currentPeopleList = selectedPeoples;
 
-            var IDs = [];
-            $("#person>div").each(function (i) {
-                IDs[i] = $(this).prop('id');
-            });
-
             if (isCertificationRole ==1 )_ {
+                console.log('In cert role');
+                var IDs = [];
+                $("#person>div").each(function (i) {
+                    IDs[i] = $(this).prop('id');
+                });
+
                 $(".selectassignedpeoples").change(function (e) {
                     IDs = [];
                     $("#person>div").each(function (i) {
@@ -217,6 +218,9 @@
                         }
                     }
                 }//end if certificationRole
+                else {
+                    console.log('In User role');
+                }
                 //Needs to be removed
                 //Someone was removed from the people list
                 for (var i = IDs.length; i--;) {
