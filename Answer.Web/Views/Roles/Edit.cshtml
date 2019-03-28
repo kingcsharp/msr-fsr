@@ -29,12 +29,7 @@
                         @Html.HiddenFor(x => x.Id)
                         @Html.HiddenFor(x => x.ObjectId)
                         @Html.HiddenFor(x => x.WfId)
-
-                         @if (Model.CertificationRoleList != null && Model.CertificationRoleList.Count() > 0)
-                         {
-                            isCertificationRole = true;
-                         }
-                        
+                       
                         <div class="form-group">
                             @Html.LabelFor(model => model.ParentRoles, htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-8">
@@ -71,7 +66,7 @@
                             </div>
                         </div>
                         @*  *@
-                        @if (isCertificationRole == true ) 
+                        @if (Model.CertificationRoleList != null && Model.CertificationRoleList.Count() > 0)
                         {
                             <div class="form-group">
                                 @Html.LabelFor(model => model.TrainingIdRev, htmlAttributes: new { @class = "control-label col-md-2" })
