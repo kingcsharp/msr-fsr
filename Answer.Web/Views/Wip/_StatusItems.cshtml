@@ -1,7 +1,7 @@
 ﻿@using Msr.Models.Orders
 @model Answer.Web.ViewModel.Wip.WipStatusViewModel
 
-@foreach (var groupItem in Model.WipStatusViewItems.OrderBy(x => x.DueDate).GroupBy(x => new { x.Id, x.ProductName, x.ProcedureName, x.CompanyPartNumber, x.LocationName }))
+@foreach (var groupItem in Model.WipStatusViewItems.OrderBy(x => x.DueDate).GroupBy(x => new { x.ProductName, x.ProcedureName, x.CompanyPartNumber, x.LocationName }))
 {
     var item = groupItem.Key;
     <div class="row wip-status">
