@@ -217,26 +217,27 @@
                             });
                         }
                     }
-                }//end if certificationRole
-                else {
-                    console.log('In User role');
-                }
-                //Needs to be removed
-                //Someone was removed from the people list
-                for (var i = IDs.length; i--;) {
-                    if (currentPeopleList.indexOf(IDs[i]) === -1) {
-                        $('#' + IDs[i]).remove();
-                    } else if (currentPeopleList.length == 0) {
-                        $('#' + IDs[i]).remove();
-                    }
-                }
-            });
 
-            $('.date-picker').datepicker({
-                format: 'mm/dd/yyyy',
-                autoclose: true
+                    //Needs to be removed
+                    //Someone was removed from the people list
+                    for (var i = IDs.length; i--;) {
+                        if (currentPeopleList.indexOf(IDs[i]) === -1) {
+                            $('#' + IDs[i]).remove();
+                        } else if (currentPeopleList.length == 0) {
+                            $('#' + IDs[i]).remove();
+                        }
+                    }
+                });
+
+                $('.date-picker').datepicker({
+                    format: 'mm/dd/yyyy',
+                    autoclose: true
+                });
             });
-        });
+        }//end if certificationRole
+        else {
+            console.log('In User role');
+        }
 
         function SelectIds() {
             FileUploaderGrid().SelectIdsForAdd('@Url.Action("FileUploaderBootstrap", "Doc")');
