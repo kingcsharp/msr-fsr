@@ -5,11 +5,9 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Web;
-using Dapper;
 using Msr.Services.Parts.Procedures;
 using EntityFrameworkExtras.EF6;
 using Msr.Services.Parts.ViewModels;
@@ -420,7 +418,6 @@ namespace Msr.Services.Parts
         private void ProcessRow(string ntLogin, List<ImportPartViewModel> parts,
             ResultNotification<List<ImportPartViewModel>> result)
         {
-            Debug.WriteLine("Start: " + DateTime.Now);
             foreach (var part in parts)
             {
                 if (string.IsNullOrWhiteSpace(part.PartId))
@@ -466,7 +463,6 @@ namespace Msr.Services.Parts
                     }
                 }
             }
-            Debug.WriteLine("End: " + DateTime.Now);
         }
 
         public ResultNotification<string> SubPartDeleteById(string id)
