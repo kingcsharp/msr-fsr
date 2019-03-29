@@ -1,13 +1,14 @@
 ﻿<input type="hidden" value="@ViewBag.CallBackId" id="target-control-id" />
 
 <div class="col-lg-12">
-    <table id="jqGridTheory"></table>
-    <div id="jqGridPagerTheory"></div>
+    <table id="jqGridTheory" style="width: 100%"></table>
+    <div id="jqGridPagerTheory" style="width: 100%"></div>
 </div>
 @Scripts.Render("~/bundles/js/jqgrid")
 <script src="~/assets/js/grids/theoryparagraph.js"></script>
 <script>
     $(document).ready(function () {
         LoadTheoryParagraphDialogGrid();
+        $('#jqGridTheory').jqGrid('setGridWidth', '100%');
     });
 </script>
