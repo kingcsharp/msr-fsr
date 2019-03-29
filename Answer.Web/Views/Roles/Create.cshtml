@@ -133,7 +133,7 @@
         $(document).ready(function (parameters) {
             $('.select').select2();
            
-            var isCertificationRole = 0;           
+            var isCertificationRole = 0;
             //HIDE FORM FIELDS INITIALLY
             $('.personRole, .certificationRole').hide();
             if($(this).val() == 'personRole'){
@@ -142,15 +142,16 @@
             if($(this).val() == 'certificationRole'){
                 $('.certificationRole').show(); 
             }
-             $('#roleTypeSelect').change(function() {
+            
+            $('#roleTypeSelect').change(function() {
                 $('.personRole, .certificationRole').hide();
                 if($(this).val() == 'personRole'){
                     $('.personRole').show();
-                    var isCertificationRole = 0;   
+                    isCertificationRole = 0;   
                 }
                 if($(this).val() == 'certificationRole'){
                     $('.certificationRole').show();
-                    var isCertificationRole = 1;   
+                    isCertificationRole = 1;   
                 }
             });
             
@@ -173,14 +174,14 @@
             $(".selectassignedpeoples").trigger("change");
             var currentPeopleList = selectedPeoples;
 
-            if (isCertificationRole == 1 ) {
-                console.log('In cert role');
-                var IDs = [];
-                $("#person>div").each(function (i) {
-                    IDs[i] = $(this).prop('id');
-                });
+            var IDs = [];
+            $("#person>div").each(function (i) {
+                IDs[i] = $(this).prop('id');
+            });
 
+            if (isCertificationRole == 1) {
                 $(".selectassignedpeoples").change(function (e) {
+                    console.log('In certification role');
                     IDs = [];
                     $("#person>div").each(function (i) {
                         IDs[i] = $(this).prop('id');
@@ -228,16 +229,16 @@
                         }
                     }
                 });
+            }// end if isCertificationRole
+            else {
+                console.log('NOT certification role');
+            }
 
-                $('.date-picker').datepicker({
-                    format: 'mm/dd/yyyy',
-                    autoclose: true
-                });
+            $('.date-picker').datepicker({
+                format: 'mm/dd/yyyy',
+                autoclose: true
             });
-        }//end if certificationRole
-        else {
-            console.log('In User role');
-        }
+
 
         function SelectIds() {
             FileUploaderGrid().SelectIdsForAdd('@Url.Action("FileUploaderBootstrap", "Doc")');
