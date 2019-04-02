@@ -131,7 +131,7 @@
                 var taskLogId = $('#taskLogId').val();
 
                 if (taskLogId)
-                  {        
+                  {
                     id = taskLogId;
                   }
 
@@ -183,14 +183,14 @@
 		    stepControls.StepAssumeClick(stepId, fillId);
 		});
 
-        $('#addNcrModal_').on('click', function () {
-            $('#addNcrModal').modal('show');
-            $('#addNcrModal').find('.modal-body').empty()
-                .html('<table id="jqGridFiles"></table><div id="jqGridPagerFiles"></div>');
+	    $(document).on("click","#addNcrModal_", function () {
+	        $('#addNcrModal').modal('show');
+	        $('#addNcrModal').find('.modal-body').empty()
+	            .html('<table id="jqGridFiles"></table><div id="jqGridPagerFiles"></div>');
 
-            setTimeout(function() {
-                    LoadSelectProcedureGrid('@Model.StepId', '@Model.FillId', 'ncr');
-            },300);
+	        setTimeout(function() {
+	            LoadSelectProcedureGrid('@Model.StepId', '@Model.FillId', 'ncr');
+	        },300);
 	    });
 		//stepControls.AddNcrModel();
 		stepControls.AddNewEquipmentModel();
