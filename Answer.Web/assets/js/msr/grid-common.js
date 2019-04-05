@@ -245,7 +245,7 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                 'APPROVED:Approved;' +
                 'APPROVED_BUT_REVISING:Approved But Being Revised;' +
                 'APPROVED_BUT_DELETING:Approved But Being Deleted;' +
-                'DENIED:Denied; +
+                'DENIED:Denied;' +
                 'DELETED:Deleted;' +
                 'OLD:Old';
             return filterList;
