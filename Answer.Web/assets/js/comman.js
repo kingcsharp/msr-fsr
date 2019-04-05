@@ -307,9 +307,8 @@ $(document).ready(function () {
         });
 
 
-    $('#select-theory').on('show.bs.modal',
+    $('#select-theory').on('shown.bs.modal',
         function (event) {
-
             var button = $(event.relatedTarget);
             var callBackId = button.data('call-back-id');
             var modal = $(this);
