@@ -248,7 +248,7 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                 'APPROVED_BUT_REVISING:Approved But Being Revised;' +
                 'APPROVED_BUT_DELETING:Approved But Being Deleted;' +
                 'DELETED:Deleted;' +
-                'OLD:Obsolete';
+                'OLD:Old';
 
             return filterList;
         },
