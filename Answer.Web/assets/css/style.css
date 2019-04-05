@@ -2872,3 +2872,5 @@ span.fa.fa-arrows.handle.sortable-fa {
 .personRole .select2-selection__choice__remove{
     color: #fff !important;
 }
+td.ui-search-input > span > div { width: 100%;}
+td.ui-search-input > span > div > button { width: 100%;}
