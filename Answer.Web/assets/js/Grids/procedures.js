@@ -105,7 +105,7 @@ Msr.ProceduresGrid = Msr.ProceduresGrid ||
                         multiselect: true,
                         searchoptions: {
                             sopt: ['eq'],
-                            value: "CREATING, DENIED, APPROVED, APPROVED_BUT_REVISING:Creating or Approved;CREATING, DENIED: Creating;IN_WORKFLOW:In Approval Workflow;APPROVED, APPROVED_BUT_REVISING, APPROVED_BUT_DELETING:Approved;DENIED:Denied;APPROVED_BUT_REVISING:Approved But Being Revised;APPROVED_BUT_DELETING:Approved But Being Deleted;DELETED:Deleted;OLD:Old",
+                            value: "CREATING: Creating;IN_WORKFLOW:In Approval Workflow;APPROVED:Approved;APPROVED_BUT_REVISING:Approved But Being Revised;APPROVED_BUT_DELETING:Approved But Being Deleted;DENIED:Denied;DELETED:Deleted;OLD:Old",
                             dataInit: function (elem) {
                                 Msr.JqGridCommon.DataInitBootstrapMultiselect(elem);
                             }
