@@ -20,6 +20,7 @@ namespace Msr.Services.Roles.ViewModels
             PeopleAssigned = new List<string>();
             ReferenceFiles = new List<string>();
             CertificationRoleList = new List<CertificationRole>();
+            DocLinks = new List<DocLink>();
         }
 
         public string Id { get; set; }
@@ -59,7 +60,7 @@ namespace Msr.Services.Roles.ViewModels
         public List<CertificationRole> CertificationRoleList { get; set; }
 
         public IEnumerable<DateTime?> StartDate { get; set; }
-        public IEnumerable<DateTime?>  EndDate { get; set; }
+        public IEnumerable<DateTime?> EndDate { get; set; }
         public IEnumerable<string> CalendarUserId { get; set; }
 
         [Display(Name = "Training ID and Rev :")]
