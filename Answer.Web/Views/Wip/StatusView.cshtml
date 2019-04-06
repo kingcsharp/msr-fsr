@@ -35,11 +35,6 @@
             {
                 <div>No records to view</div>
             }
-            <div class="row">
-                <div  style="width: 200px; float: right;">
-                    @Html.DropDownListFor(model => model.Location, Model.LocationList, new { @class = "form-control location-name" })    
-                </div>
-            </div>
             <div class="row" style="width: 100%; margin-top: 30px;">
                 <div class="col-lg-3 col-md-3 col-sm-3 wip-status-header" style="width: 24%;">
                     Product
@@ -50,12 +45,29 @@
                 <div class="col-lg-2 col-md-2 col-sm-2 wip-status-header" style="width: 17%;">
                     Procedure
                 </div>
+                <div div class="col-lg-5 col-md-5 col-sm-5 wip-status-header" style="width: 12%;">
+                    <select class="form-control location-name">
+                        @foreach (var location in Model.LocationList)
+                        {
+                            if (location.Selected)
+                            {
+                            <option value="@location.Value" selected="selected">@location.Text</option>
+                            }
+                            else
+                            {
+                            <option value="@location.Value">@location.Text</option>
+                            }
+                        }
+
+                    </select>
+                   @* @Html.DropDownListFor(model => model.Location, Model.LocationList, new { @class = "form-control location-name" })*@
+                </div>
                 <div class="col-lg-5 col-md-5 col-sm-5 wip-status-header" style="width: 20%;">
                     Open WO's
                 </div>
-                <div id="status-items">
-                    @Html.Partial("_StatusItems")
-                </div>
+            </div>
+            <div id="status-items">
+                @Html.Partial("_StatusItems")
             </div>
         </div>
     </div>
@@ -64,9 +76,56 @@
 {
     <script type="text/javascript">
 
-        setTimeout(function() { location.reload(true); }, 300000);
+        setTimeout(function () { location.reload(true); }, 300000);
+
+        function DataInitBootstrapMultiselect(elem, options, callback) {
+            setTimeout(function () {
+                $(document).ready(function () {
+                    $(elem).attr('multiple', 'multiple');
+                    var multiselectOptions = {
+                        includeSelectAllOption: true,
+                        onInitialized: function ($aSelect, $aContainer) {
+                            var $dropdown = $aContainer.find('.btn'),
+                                offset = $dropdown.offset();
+                            $aContainer.find('.dropdown-menu').css({
+                                position: 'fixed',
+                                top: (offset.top + $dropdown.outerHeight()),
+                                left: offset.left
+                            });
+                            $(window).scroll(function () {
+                                var $dropdown = $aContainer.find('.btn'),
+                                    offset = $dropdown.offset();
+                                $aContainer.find('.dropdown-menu').css({
+                                    position: 'fixed',
+                                    top: (offset.top + $dropdown.outerHeight() - $(window).scrollTop()),
+                                    left: offset.left
+                                });
+                            });
+                        },
+                        selectAllValue: 'All',
+                        selectAllText: '[All]',
+                        allSelectedText: '[All]'
+                    };
+
+                    $(elem).multiselect(multiselectOptions);
+                    setTimeout(function () {
+
+                        $(elem).multiselect('deselectAll', false);
+                        $(elem).multiselect('selectAll', false);
+                        $(elem).multiselect('updateButtonText');
+
+                        if (callback) {
+                            callback(elem);
+                        }
+                    }, 100);
+                });
+            }, 100);
+        };
 
         $(function() {
+            var Msr = Msr || {};
+
+            DataInitBootstrapMultiselect($(".location-name"));
 
             $('[data-toggle="tooltip"]').tooltip();
 
@@ -104,9 +163,12 @@
 
 	        $('.location-name').change(function() {
                 var location = $(this).val();
-
-	            window.location.href ='/wip/StatusView?locationName=' + location;
-		    
+                if (location != null) { 
+                    var locations = location.filter(function (el) {
+                        return el;
+                    }).join(", ");
+                    window.location.href = '/wip/StatusView?locationName=' + locations;
+                }
 	        });
         });
     </script>
