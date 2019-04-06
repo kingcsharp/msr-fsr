@@ -3,7 +3,7 @@
 
 @{
     ViewBag.Title = "Update Role or Certification";
-    var isCertificateRole = Model.Comments.Length == 0 && Model.TrainingIdRev.Length == 0 && (Model.CertificationRoleList != null ? Model.CertificationRoleList.Any(x => x.StartDate.HasValue) : false);
+    var isCertificateRole = !string.IsNullOrEmpty(Model.Comments) || !string.IsNullOrEmpty(Model.TrainingIdRev) || (Model.CertificationRoleList != null ? Model.CertificationRoleList.Any(x => x.StartDate.HasValue) : false);
 }
 <link rel="stylesheet" type="text/css" href="/assets/css/themes/flat-blue.css">
 <link rel="stylesheet" type="text/css" href="/assets/css/ui.jqgrid-bootstrap-ui.css">
