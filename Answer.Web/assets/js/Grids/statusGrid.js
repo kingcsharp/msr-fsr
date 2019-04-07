@@ -104,7 +104,7 @@ $(function () {
 
     $('.location-name').change(function () {
         var location = $(this).val();
-        if (location != null) {
+        if (location !== null) {
             var locations = location.filter(function (el) {
                 return el;
             }).join(",");
