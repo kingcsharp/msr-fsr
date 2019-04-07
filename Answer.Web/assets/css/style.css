@@ -2780,6 +2780,7 @@ input.pre-populated {
 .krajee-default.file-preview-frame {
     padding: 2px !important;
     margin: 2px !important;
+    overflow: hidden;
 }
 
 
