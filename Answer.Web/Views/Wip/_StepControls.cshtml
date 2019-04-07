@@ -86,7 +86,6 @@
     <input type="hidden" id="taskLogId" name="taskLogId" value="">
 </div>
 
-
 @Scripts.Render("~/bundles/js/wip-step-controls")
 @*<script src="//cdn.rawgit.com/noelboss/featherlight/1.6.1/release/featherlight.min.js" type="text/javascript" charset="utf-8"></script>*@
 @*<script type="text/javascript" src="~/assets/js/grids/files-dialog.js"></script>*@
@@ -125,16 +124,16 @@
                  <text> $('#step-@Model.StepId .timer').timer('pause'); </text>
             }
         }
-
-       $('#@Model.StepId #pause-step').on('click', function () {
+        $('#@Model.StepId #pause-step').on('click', function () {
                 eLoaderOpen();
                 var id = $(this).data('task-log-id');
                 var taskLogId = $('#taskLogId').val();
+
                 if (taskLogId)
                   {        
                     id = taskLogId;
                   }
-                stepControls.StepPauseClick(id, fillId, stepId);
+        stepControls.StepPauseClick(id, fillId, stepId);
 				$('#step-@Model.StepId .timer').timer('pause');
         });
 
@@ -142,6 +141,7 @@
 				eLoaderOpen();
                 var id = $(this).data('task-log-id');
                 var taskLogId = $('#taskLogId').val();
+
                 if (taskLogId) {
                     id = taskLogId;
                 }

@@ -416,8 +416,7 @@ namespace Answer.Web.Controllers
 
             var procs = viewModel.WipStatusViewItems.Select(p => p.ProcedureName).ToList();
 
-            viewModel.WoItemsByProcedures = _orderService
-                .GetWorkOrderQueryable()
+            viewModel.WoItemsByProcedures = _orderService.GetWorkOrderQueryable()
                 .Where(x => procs.Contains(x.ProcName))
                 .Where(x => x.Status == WorkItemStatusConstants.Accepted ||
                             x.Status == WorkItemStatusConstants.WaitingToStart ||

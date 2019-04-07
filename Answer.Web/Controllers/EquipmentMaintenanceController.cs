@@ -11,6 +11,7 @@ using Msr.Services.EquipmentMaintenances;
 using Msr.Services.EquipmentMaintenances.ViewModels;
 using Msr.Services.Locations;
 using Msr.Services.Roles;
+using Msr.Models.Locations;
 
 namespace Answer.Web.Controllers
 {
@@ -295,9 +296,9 @@ namespace Answer.Web.Controllers
                 return Json("", JsonRequestBehavior.AllowGet);
             }
 
-            EquipmentMaintenanceView equipmentMaintenanceView = _equipmentMaintenanceService.GetEquipmentsQueryable().Where(x => x.ScanBarcode == id).FirstOrDefault();
+            LocationView locationView = _equipmentMaintenanceService.GetEquipmentRoom().Where(x => x.InternalAddress.ToLower() == id.ToLower()).FirstOrDefault();
 
-            return Json(new { locationId = equipmentMaintenanceView.RoomEquipmentId }, JsonRequestBehavior.AllowGet);
+            return Json(new { locationId = locationView?.ObjectId }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]
