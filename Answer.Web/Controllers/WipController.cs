@@ -391,6 +391,7 @@ namespace Answer.Web.Controllers
                 locationList = new List<string>();
             }
 
+            locationList.ForEach(x => x.Trim());
             var viewModel = new WipStatusViewModel
             {
                 Location = locationName,
@@ -408,7 +409,7 @@ namespace Answer.Web.Controllers
 
             if (locationList.Count > 0)
             {
-                workOrdersQueryable = workOrdersQueryable.Where(x => locationList.Any(i => i.ToLower() == x.LocationName.ToLower()));
+                workOrdersQueryable = workOrdersQueryable.Where(x => locationList.Select(y => y.ToLower()).Contains(x.LocationName.ToLower()));
             }
 
             viewModel.CurrentUser = currentUser;

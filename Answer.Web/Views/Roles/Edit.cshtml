@@ -3,7 +3,7 @@
 
 @{
     ViewBag.Title = "Update Role or Certification";
-    var isCertificateRole = Model.CertificationRoleList != null ? Model.CertificationRoleList.Any(x => x.StartDate.HasValue) : false;
+    var isCertificateRole = !string.IsNullOrEmpty(Model.Comments) || !string.IsNullOrEmpty(Model.TrainingIdRev) || (Model.CertificationRoleList != null ? Model.CertificationRoleList.Any(x => x.StartDate.HasValue) : false);
 }
 <link rel="stylesheet" type="text/css" href="/assets/css/themes/flat-blue.css">
 <link rel="stylesheet" type="text/css" href="/assets/css/ui.jqgrid-bootstrap-ui.css">
@@ -66,8 +66,7 @@
                                 @Html.ValidationMessageFor(model => model.PeopleAssigned, "", new { @class = "text-danger" })
                             </div>
                         </div>
-                        @*  *@
-                        @if (Model.CertificationRoleList != null && Model.CertificationRoleList.Count() > 0)
+                        @if (isCertificateRole)
                         {
                             <div class="form-group">
                                 @Html.LabelFor(model => model.TrainingIdRev, htmlAttributes: new { @class = "control-label col-md-2" })

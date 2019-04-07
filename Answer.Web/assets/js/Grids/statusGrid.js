@@ -31,16 +31,23 @@ function DataInitBootstrapMultiselect(elem, options, callback) {
 
             $(elem).multiselect(multiselectOptions);
             setTimeout(function () {
-                var pageHasParams = getUrlParams('locationName').split(',');
+                var pageHasParams = getUrlParams('locationName').split(',').filter(Boolean);
                 var paramsLength = pageHasParams.length;
                 var items = [];
                 if (paramsLength > 0) {
                     while (paramsLength--) {
                         items.push(pageHasParams[paramsLength].trim());
                     }
+                    $(elem).multiselect('select', items);
+                    $(elem).multiselect('updateButtonText');
+
                 }
-                $(elem).multiselect('select', items);
-                $(elem).multiselect('updateButtonText');
+                else {
+                    $(elem).multiselect('deselectAll', false);
+                    $(elem).multiselect('selectAll', false);
+                    $(elem).multiselect('updateButtonText');
+                }
+
                 if (callback) {
                     callback(elem);
                 }
@@ -50,8 +57,10 @@ function DataInitBootstrapMultiselect(elem, options, callback) {
 };
 //
 function getUrlParams(name) {
-    var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(decodeURIComponent(window.location.href));
-    return results[1] || 0;
+    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+    var results = regex.exec(location.search);
+    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
 }
 
 $(function () {
@@ -95,10 +104,10 @@ $(function () {
 
     $('.location-name').change(function () {
         var location = $(this).val();
-        if (location != null) {
+        if (location !== null) {
             var locations = location.filter(function (el) {
                 return el;
-            }).join(", ");
+            }).join(",");
             window.location.href = '/wip/StatusView?locationName=' + locations;
         }
     });
