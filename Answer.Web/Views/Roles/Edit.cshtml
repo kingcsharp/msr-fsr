@@ -29,7 +29,7 @@
                         @Html.HiddenFor(x => x.Id)
                         @Html.HiddenFor(x => x.ObjectId)
                         @Html.HiddenFor(x => x.WfId)
-
+                       
                         <div class="form-group">
                             @Html.LabelFor(model => model.ParentRoles, htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-8">
@@ -66,27 +66,29 @@
                             </div>
                         </div>
                         @*  *@
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.TrainingIdRev, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-8">
-                                @Html.TextBoxFor(model => model.TrainingIdRev, null, new { @class = "form-control" })
-                                @Html.ValidationMessageFor(model => model.TrainingIdRev, "", new { @class = "text-danger" })
+                        @if (Model.CertificationRoleList != null && Model.CertificationRoleList.Count() > 0)
+                        {
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.TrainingIdRev, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-8">
+                                    @Html.TextBoxFor(model => model.TrainingIdRev, null, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.TrainingIdRev, "", new { @class = "text-danger" })
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.ReferenceFiles, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-8">
-                                @Html.Partial("_FileUpload")
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ReferenceFiles, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-8">
+                                    @Html.Partial("_FileUpload")
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.Comments, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-8">
-                                @Html.Partial("_TextAdder")
-                                @Html.TextAreaFor(model => model.Comments, new { onBlur = "checkMaxSize(this, 4000);;lastTextArea = 'document.editForm.Comments';", name = "Comments", rows = "10", cols = "80", @class = "text-formatter form-control", })
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Comments, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-8">
+                                    @Html.Partial("_TextAdder")
+                                    @Html.TextAreaFor(model => model.Comments, new { onBlur = "checkMaxSize(this, 4000);;lastTextArea = 'document.editForm.Comments';", name = "Comments", rows = "10", cols = "80", @class = "text-formatter form-control", })
+                                </div>
                             </div>
-                        </div>
-
+                        }
                         <div class="form-group">
                             @Html.LabelFor(model => model.PeoplePosAssigned, htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-8">

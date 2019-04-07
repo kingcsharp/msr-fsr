@@ -24,35 +24,47 @@
 
                 <div class="form-horizontal addpart">
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                    <div class="form-group">
+                    
+                    <div class="form-group ">
+                        <label class="control-label col-md-2" for="ParentRoles">Role Type :</label>
+                        <div class="col-md-8">
+                            <select id="roleTypeSelect" class="form-control">
+                                <option value="">Please Select...</option>
+                                <option value="personRole">User Role</option>
+                                <option value="certificationRole">Cerification Role</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group personRole certificationRole">
                         @Html.LabelFor(model => model.ParentRoles, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-8">
                             @Html.TextBoxFor(model => model.ParentRoles, null, new { @class = "form-control", @readonly = "readonly" })
                             @Html.ValidationMessageFor(model => model.ParentRoles, "", new { @class = "text-danger" })
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group personRole certificationRole">
                         @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-8">
                             @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group personRole certificationRole">
                         @Html.LabelFor(model => model.SecurityLevel, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-8">
                             @Html.DropDownListFor(model => model.SecurityLevel, Model.SecurityLevels, new { @class = "form-control select" })
                             @Html.ValidationMessageFor(model => model.SecurityLevel, "", new { @class = "text-danger" })
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group personRole">
                         @Html.LabelFor(model => model.ChildRoles, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-8">
                             @Html.DropDownListFor(model => model.ChildRoles, Model.ListChildRoles, new { @class = "form-control select selectchildRoles", multiple = "multiple" })
                             @Html.ValidationMessageFor(model => model.ChildRoles, "", new { @class = "text-danger" })
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group personRole certificationRole">
                         @Html.LabelFor(model => model.PeopleAssigned, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-8">
                             @Html.DropDownListFor(model => model.PeopleAssigned, Model.ListPeopleAssigned, new { @class = "form-control select selectassignedpeoples", multiple = "multiple" })
@@ -60,7 +72,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group certificationRole">
                         @Html.LabelFor(model => model.TrainingIdRev, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-8">
                             @Html.TextBoxFor(model => model.TrainingIdRev, null, new { @class = "form-control" })
@@ -68,13 +80,13 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group certificationRole">
                         @Html.LabelFor(model => model.ReferenceFiles, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-8">
                             @Html.Partial("_FileUpload")
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group certificationRole">
                         @Html.LabelFor(model => model.Comments, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-8">
                             @Html.Partial("_TextAdder")
@@ -82,7 +94,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group certificationRole">
                         @Html.LabelFor(model => model.PeoplePosAssigned, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-8">
                             @Html.TextBoxFor(model => model.PeoplePosAssigned, null, new { @class = "form-control", @readonly = "readonly" })
@@ -121,6 +133,24 @@
         $(document).ready(function (parameters) {
             $('.select').select2();
 
+            //HIDE FORM FIELDS INITIALLY
+            $('.personRole, .certificationRole').hide();
+            if($(this).val() == 'personRole'){
+                $('.personRole').show();
+            }
+            if($(this).val() == 'certificationRole'){
+                $('.certificationRole').show();
+            }
+             $('#roleTypeSelect').change(function() {
+                $('.personRole, .certificationRole').hide();
+                if($(this).val() == 'personRole'){
+                    $('.personRole').show();
+                }
+                if($(this).val() == 'certificationRole'){
+                    $('.certificationRole').show();
+                }
+            });
+            
             fileUploader.InitUploader($('#input-files'), '@Url.Action("FileUploaderBootstrap", "Doc")', [], []);
 
             var selectPeoples = $(".selectchildRoles").select2({
