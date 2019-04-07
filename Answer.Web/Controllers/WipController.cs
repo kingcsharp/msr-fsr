@@ -384,7 +384,7 @@ namespace Answer.Web.Controllers
             List<string> locationList;
             if (!string.IsNullOrWhiteSpace(locationName))
             {
-                locationList = locationName.Split(',').ToList();
+                locationList = locationName.Replace(" ", "").Split(',').ToList();
             }
             else
             {
@@ -408,7 +408,7 @@ namespace Answer.Web.Controllers
 
             if (locationList.Count > 0)
             {
-                workOrdersQueryable = workOrdersQueryable.Where(x => locationList.Any(i => i.ToLower() == x.LocationName.ToLower()));
+                workOrdersQueryable = workOrdersQueryable.Where(x => locationList.Select(y => y.ToLower()).Contains(x.LocationName.ToLower()));
             }
 
             viewModel.CurrentUser = currentUser;
