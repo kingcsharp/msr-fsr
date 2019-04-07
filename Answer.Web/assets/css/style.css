@@ -2869,7 +2869,7 @@ span.fa.fa-arrows.handle.sortable-fa {
     background-color: #22A7F0;
 }
 
-.personRole .select2-selection__choice__remove{
+.select2-selection__choice__remove{
     color: #fff !important;
 }
 
