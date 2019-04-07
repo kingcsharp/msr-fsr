@@ -51,16 +51,16 @@
                         {
                             if (location.Selected)
                             {
-                            <option value="@location.Value" selected="selected">@location.Text</option>
+                                <option value="@location.Value" selected="selected">@location.Text</option>
                             }
                             else
                             {
-                            <option value="@location.Value">@location.Text</option>
+                                <option value="@location.Value">@location.Text</option>
                             }
                         }
 
                     </select>
-                   @* @Html.DropDownListFor(model => model.Location, Model.LocationList, new { @class = "form-control location-name" })*@
+                    @* @Html.DropDownListFor(model => model.Location, Model.LocationList, new { @class = "form-control location-name" })*@
                 </div>
                 <div class="col-lg-5 col-md-5 col-sm-5 wip-status-header" style="width: 30%;margin-top:24px;">
                     Open WO's
@@ -74,102 +74,5 @@
 </div>
 @section scripts
 {
-    <script type="text/javascript">
-
-        setTimeout(function () { location.reload(true); }, 300000);
-
-        function DataInitBootstrapMultiselect(elem, options, callback) {
-            setTimeout(function () {
-                $(document).ready(function () {
-                    $(elem).attr('multiple', 'multiple');
-                    var multiselectOptions = {
-                        includeSelectAllOption: true,
-                        onInitialized: function ($aSelect, $aContainer) {
-                            var $dropdown = $aContainer.find('.btn'),
-                                offset = $dropdown.offset();
-                            $aContainer.find('.dropdown-menu').css({
-                                position: 'fixed',
-                                top: (offset.top + $dropdown.outerHeight()),
-                                left: offset.left
-                            });
-                            $(window).scroll(function () {
-                                var $dropdown = $aContainer.find('.btn'),
-                                    offset = $dropdown.offset();
-                                $aContainer.find('.dropdown-menu').css({
-                                    position: 'fixed',
-                                    top: (offset.top + $dropdown.outerHeight() - $(window).scrollTop()),
-                                    left: offset.left
-                                });
-                            });
-                        },
-                        selectAllValue: 'All',
-                        selectAllText: '[All]',
-                        allSelectedText: '[All]'
-                    };
-
-                    $(elem).multiselect(multiselectOptions);
-                    setTimeout(function () {
-
-                        $(elem).multiselect('deselectAll', false);
-                        $(elem).multiselect('selectAll', false);
-                        $(elem).multiselect('updateButtonText');
-
-                        if (callback) {
-                            callback(elem);
-                        }
-                    }, 100);
-                });
-            }, 100);
-        };
-
-        $(function() {
-            var Msr = Msr || {};
-
-            DataInitBootstrapMultiselect($(".location-name"));
-
-            $('[data-toggle="tooltip"]').tooltip();
-
-            $('.wip-button').on('click', function () {
-
-                var fillId = $(this).data('fill-id');
-
-                if ($(this).hasClass('btn-accepted')) {
-
-                    eModal.confirm('Do you want to take ownership of this WO Item?')
-                        .then(function () {
-
-                            eLoaderOpen();
-
-                            $.ajax({
-                                type: "POST",
-                                url: "/wip/TakeTaskOwnersShip?fillId=" + fillId,
-                                dataType: 'json',
-                                success: function (data) {
-                                    if (data.Code === "OK") {
-                                        window.location.href = '/wip/Details/' + fillId;
-                                    } else {
-                                        eLoaderError(data.Message);
-                                    }
-                                },
-                                error: function (error) {
-                                    eLoaderError(error);
-                                }
-                            });
-                        }, null);
-                } else {
-                    window.location.href = '/wip/Details/' + fillId;
-                }
-			});
-
-	        $('.location-name').change(function() {
-                var location = $(this).val();
-                if (location != null) { 
-                    var locations = location.filter(function (el) {
-                        return el;
-                    }).join(", ");
-                    window.location.href = '/wip/StatusView?locationName=' + locations;
-                }
-	        });
-        });
-    </script>
+    <script src="~/assets/js/grids/statusGrid.js"></script>
 }
