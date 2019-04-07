@@ -21,7 +21,7 @@ $('.page-help').on('click', function () {
     var options = {
         url: '/Help/GetHelpDetails?pageUrl=' + pageUrl,
         title: 'Help',
-        size: eModal.size.lg,       
+        size: eModal.size.lg,
     };
 
     eModal.ajax(options);
@@ -313,7 +313,7 @@ $(document).ready(function () {
             var button = $(event.relatedTarget);
             var callBackId = button.data('call-back-id');
             var modal = $(this);
-
+            modal.find('.modal-body').empty();
             $.ajax({
                 type: "GET",
                 url: '/TheoryParagraph/GetTheoryParagraphs?callBackId=' + callBackId,
@@ -375,5 +375,5 @@ $(document).ready(function () {
             });
         }
     });
-    
+
 });

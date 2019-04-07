@@ -119,7 +119,13 @@
         autowidth: true,
         colMenu: true,
         key: true,
-        ajaxCellOptions: {}
+        ajaxCellOptions: {},
+        gridComplete: function () {
+            $('.ui-jqgrid').unblock();
+        },
+        beforeRequest: function () {
+            $('.ui-jqgrid').block({ message: '<h1><img src="/assets/img/nice_loader.gif" />  Loading. Please wait...</h1>' });
+        }
 
     });
     $('#jqGridTheory').navGrid("#jqGridPagerTheory",
