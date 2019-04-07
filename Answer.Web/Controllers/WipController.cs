@@ -381,23 +381,34 @@ namespace Answer.Web.Controllers
         {
             var currentUser = GetCurrentUser();
 
+            List<string> locationList;
+            if (!string.IsNullOrWhiteSpace(locationName))
+            {
+                locationList = locationName.Replace(" ", "").Split(',').ToList();
+            }
+            else
+            {
+                locationList = new List<string>();
+            }
+
             var viewModel = new WipStatusViewModel
             {
                 Location = locationName,
                 LocationList = _locationService.GetParentLocations().Select(x => new SelectListItem
                 {
                     Text = x.Name,
-                    Value = x.Name
+                    Value = x.Name,
+                    Selected = locationList.Count > 0 ? locationName.Contains(x.Name) : true
                 }).OrderBy(o => o.Text).ToList()
             };
 
-            viewModel.LocationList.Insert(0, new SelectListItem { Text = "--Please Select--", Value = "" });
+            //viewModel.LocationList.Insert(0, new SelectListItem { Text = "--Please Select--", Value = "" });
 
             var workOrdersQueryable = _orderService.GetWorkOrderQueryable();
 
-            if (!string.IsNullOrWhiteSpace(locationName))
+            if (locationList.Count > 0)
             {
-                workOrdersQueryable = workOrdersQueryable.Where(x => x.LocationName.ToLower() == locationName.ToLower());
+                workOrdersQueryable = workOrdersQueryable.Where(x => locationList.Select(y => y.ToLower()).Contains(x.LocationName.ToLower()));
             }
 
             viewModel.CurrentUser = currentUser;
