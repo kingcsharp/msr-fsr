@@ -69,22 +69,19 @@ namespace Msr.Services.Roles
         {
             try
             {
-                var documentFilesService = new DocumentFilesService();
                 var refFile = string.Join(", ", model.ReferenceFiles);
 
-                var saveUserRoleProcedure = new SaveUserRoleProcedure { Name = model.Name,
-                                                                        SecurityLevel = model.SecurityLevel,
-                                                                        TrainingIDRev = model.TrainingIdRev,
-                                                                        Comments = model.Comments,
-                                                                        ReferenceFiles = refFile,
-                                                                        NTLogin = model.NTLogin };
+                var saveUserRoleProcedure = new SaveUserRoleProcedure
+                {
+                    Name = model.Name,
+                    SecurityLevel = model.SecurityLevel,
+                    TrainingIDRev = model.TrainingIdRev,
+                    Comments = model.Comments,
+                    ReferenceFiles = refFile,
+                    NTLogin = model.NTLogin
+                };
 
                 _dbContext.Database.ExecuteStoredProcedure(saveUserRoleProcedure);
-
-                var sql =
-                    "SELECT OBJECT_ID as ObjectId FROM A_ROLES_HISTORY WHERE ID = '" + saveUserRoleProcedure.ReturnID + "'";
-
-                var ObjectId = _dbContext.Database.SqlQuery<string>(sql);
 
                 var deleteRoleParentSaveProcedure = new DeleteRoleParentProcedure() { ObjId = saveUserRoleProcedure.ReturnID, NTLogin = model.NTLogin };
 
@@ -101,19 +98,24 @@ namespace Msr.Services.Roles
                     _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
                 }
 
-                foreach (var file in model.PeopleAssigned)
+                foreach (var personAssigned in model.PeopleAssigned)
                 {
-                    int index = model.CalendarUserId.ToList().FindIndex(x => x == file);
- 
-                    var saveFileProcedure = new SaveRoleAssignPersonRoleProcedure() { Child = file, StrId = saveUserRoleProcedure.ReturnID,
-                                                                                      NTLogin = model.NTLogin,
-                                                                                      StartDate = model.StartDate.ToArray()[index],
-                                                                                      EndDate = model.EndDate.ToArray()[index]
-                                                                                    };
+                    var saveFileProcedure = new SaveRoleAssignPersonRoleProcedure()
+                    {
+                        Child = personAssigned,
+                        StrId = saveUserRoleProcedure.ReturnID,
+                        NTLogin = model.NTLogin,
+
+                    };
+                    if (model.CalendarUserId != null && model.CalendarUserId.Any())
+                    {
+                        var index = model.CalendarUserId.ToList().FindIndex(x => x == personAssigned);
+                        saveFileProcedure.StartDate = model.StartDate.ToArray()[index];
+                        saveFileProcedure.EndDate = model.EndDate.ToArray()[index];
+                    }
 
                     _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
                 }
-
 
                 return true;
             }
@@ -162,22 +164,24 @@ namespace Msr.Services.Roles
                     _dbContext.Database.ExecuteStoredProcedure(saveRoleToRoleProcedure);
                 }
 
-                foreach (var personId in model.PeopleAssigned)
+                foreach (var personAssigned in model.PeopleAssigned)
                 {
-
-                    int index = model.CalendarUserId.ToList().FindIndex(x => x == personId);
-                    var saveRoleAssignPersonRoleProcedure = new SaveRoleAssignPersonRoleProcedure
-                    {                
-                        Child = personId,
+                    var saveFileProcedure = new SaveRoleAssignPersonRoleProcedure()
+                    {
+                        Child = personAssigned,
                         StrId = model.WfId,
                         NTLogin = model.NTLogin,
-                        StartDate = model.StartDate.ToArray()[index],
-                        EndDate = model.EndDate.ToArray()[index]
+
                     };
+                    if (model.CalendarUserId != null && model.CalendarUserId.Any())
+                    {
+                        var index = model.CalendarUserId.ToList().FindIndex(x => x == personAssigned);
+                        saveFileProcedure.StartDate = model.StartDate.ToArray()[index];
+                        saveFileProcedure.EndDate = model.EndDate.ToArray()[index];
+                    }
 
-                    _dbContext.Database.ExecuteStoredProcedure(saveRoleAssignPersonRoleProcedure);
-
-                    RefreshUserRoles(personId);
+                    _dbContext.Database.ExecuteStoredProcedure(saveFileProcedure);
+                    RefreshUserRoles(personAssigned);
                 }
 
                 return true;

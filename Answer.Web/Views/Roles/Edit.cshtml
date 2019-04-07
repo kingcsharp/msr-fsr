@@ -3,6 +3,7 @@
 
 @{
     ViewBag.Title = "Update Role or Certification";
+    var isCertificateRole = !string.IsNullOrEmpty(Model.Comments) || !string.IsNullOrEmpty(Model.TrainingIdRev) || (Model.CertificationRoleList != null ? Model.CertificationRoleList.Any(x => x.StartDate.HasValue) : false);
 }
 <link rel="stylesheet" type="text/css" href="/assets/css/themes/flat-blue.css">
 <link rel="stylesheet" type="text/css" href="/assets/css/ui.jqgrid-bootstrap-ui.css">
@@ -29,7 +30,7 @@
                         @Html.HiddenFor(x => x.Id)
                         @Html.HiddenFor(x => x.ObjectId)
                         @Html.HiddenFor(x => x.WfId)
-                       
+
                         <div class="form-group">
                             @Html.LabelFor(model => model.ParentRoles, htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-8">
@@ -65,8 +66,7 @@
                                 @Html.ValidationMessageFor(model => model.PeopleAssigned, "", new { @class = "text-danger" })
                             </div>
                         </div>
-                        @*  *@
-                        @if (Model.CertificationRoleList != null && Model.CertificationRoleList.Count() > 0)
+                        @if (isCertificateRole)
                         {
                             <div class="form-group">
                                 @Html.LabelFor(model => model.TrainingIdRev, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -97,12 +97,15 @@
                             </div>
                         </div>
 
-                        <div id="person" class="form-group">              
+                        <div id="person" class="form-group">
                             @if (Model.CertificationRoleList != null && Model.CertificationRoleList.Count() > 0)
                             {
                                 foreach (CertificationRole certRole in Model.CertificationRoleList)
                                 {
-                                    @Html.Partial("_PersonDate", certRole);
+                                    if (isCertificateRole)
+                                    {
+                                        @Html.Partial("_PersonDate", certRole);
+                                    }
                                 }
                             }
                         </div>
@@ -181,13 +184,19 @@
             $("#person>div").each(function (i) {
                 IDs[i] = $(this).prop('id');
             });
+            var isCertificateRole = '@isCertificateRole';
+
 
             $(".selectassignedpeoples").change(function (e) {
+
+                if (isCertificateRole === 'False') {
+                    return;
+                }
                 IDs = [];
                 $("#person>div").each(function (i) {
                     IDs[i] = $(this).prop('id');
                 });
-                
+
                 /* Logic here does not execute when val() is used */
                 if ($(this).val() != null) {
                     currentPeopleList = $(this).val().toString().split(",");
@@ -219,7 +228,7 @@
                         });
                     }
                 }
-                
+
                 //Needs to be removed
                 //Someone was removed from the people list
                 for (var i = IDs.length; i--;) {
