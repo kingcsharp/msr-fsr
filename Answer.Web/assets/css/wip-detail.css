@@ -84,7 +84,7 @@
         font-family: 'Lato', sans-serif;
 }
 .step-container {
-    min-height: 400px;
+    min-height: 65vh;
     border: 1px solid;
     border-color: rgb(221, 221, 221);
     font-size:16px;
@@ -144,7 +144,8 @@
 .task-window {
     overflow-y: scroll;
     position: relative;
-    max-height: 400px;
+    /*max-height: 400px;*/
+    min-height: 65vh;
 }
 .dropdown-header {
     font-size: 16px;
