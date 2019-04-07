@@ -384,13 +384,14 @@ namespace Answer.Web.Controllers
             List<string> locationList;
             if (!string.IsNullOrWhiteSpace(locationName))
             {
-                locationList = locationName.Replace(" ", "").Split(',').ToList();
+                locationList = locationName.Split(',').ToList();
             }
             else
             {
                 locationList = new List<string>();
             }
 
+            locationList.ForEach(x => x.Trim());
             var viewModel = new WipStatusViewModel
             {
                 Location = locationName,
