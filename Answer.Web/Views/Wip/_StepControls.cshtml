@@ -122,13 +122,13 @@
                  <text> $('#step-@Model.StepId .timer').timer('pause'); </text>
             }
         }
+
         $('#@Model.StepId #pause-step').on('click', function () {
                 eLoaderOpen();
                 var id = $(this).data('task-log-id');
                 var taskLogId = $('#taskLogId').val();
-
                 if (taskLogId)
-                  {
+                  {        
                     id = taskLogId;
                   }
         stepControls.StepPauseClick(id, fillId, stepId);
