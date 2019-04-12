@@ -8,7 +8,6 @@ using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
 using System.Web;
-using Dapper;
 using Msr.Services.Parts.Procedures;
 using EntityFrameworkExtras.EF6;
 using Msr.Services.Parts.ViewModels;
@@ -371,17 +370,17 @@ namespace Msr.Services.Parts
                     return result;
                 }
 
-                var reader = ExcelReaderFactory.CreateCsvReader(postedFile.InputStream);
-
-                var resultAsDataSet = reader.AsDataSet(new ExcelDataSetConfiguration()
+                DataSet resultAsDataSet;
+                using (var reader = ExcelReaderFactory.CreateCsvReader(postedFile.InputStream))
                 {
-                    ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+                    resultAsDataSet = reader.AsDataSet(new ExcelDataSetConfiguration()
                     {
-                        UseHeaderRow = true
-                    }
-                });
-
-                reader.Close();
+                        ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+                        {
+                            UseHeaderRow = true
+                        }
+                    });
+                }
 
                 var columnNames = (from dc in resultAsDataSet.Tables[0].Columns.Cast<DataColumn>() select dc.ColumnName)
                     .ToList();
@@ -421,51 +420,47 @@ namespace Msr.Services.Parts
         {
             foreach (var part in parts)
             {
-                try
+                if (string.IsNullOrWhiteSpace(part.PartId))
                 {
-                    if (string.IsNullOrWhiteSpace(part.PartId))
+                    part.Messages.Add("PartId is required");
+                }
+
+                if (string.IsNullOrWhiteSpace(part.Name))
+                {
+                    part.Messages.Add("Name is required");
+                }
+
+                if (!part.Messages.Any()) continue;
+                result.Entity.Add(part);
+                return;
+            }
+
+            var connectionStr = ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString;
+            using (var conn = new SqlConnection(connectionStr))
+            {
+                using (var cmd = new SqlCommand("A_SP_PARTS_IMPORT_AND_UPDATE_AN_EXTERNAL_PART", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    conn.Open();
+                    foreach (var part in parts)
                     {
-                        part.Messages.Add("PartId is required");
-                    }
-
-                    if (string.IsNullOrWhiteSpace(part.Name))
-                    {
-                        part.Messages.Add("Name is required");
-                    }
-
-                    if (part.Messages.Any())
-                    {
-                        result.Entity.Add(part);
-                        continue;
-                    }
-
-                    var p = new DynamicParameters();
-
-                    p.Add("@newID", dbType: DbType.String, direction: ParameterDirection.Output, size: 500);
-                    p.Add("@retPartID", dbType: DbType.String, direction: ParameterDirection.Output, size: 500);
-                    p.Add("@externalPartID", part.PartId.Trim(), DbType.String, ParameterDirection.Input, size: 50);
-                    p.Add("@partName", part.Name.Trim(), DbType.String, ParameterDirection.Input, size: 50);
-                    p.Add("@strNTLogin", ntLogin, DbType.String, ParameterDirection.Input, size: 50);
-
-                    using (IDbConnection conn =
-                        new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
-                    {
-                        conn.Query("A_SP_PARTS_IMPORT_AND_UPDATE_AN_EXTERNAL_PART", p, commandType: CommandType.StoredProcedure);
-
-                        var newId = p.Get<string>("newID");
-                        var externalPartId = p.Get<string>("externalPartID");
-
-                        if (string.IsNullOrWhiteSpace(externalPartId))
+                        try
                         {
-                            part.Messages.Add(newId);
+                            cmd.Parameters.Clear();
+                            cmd.Parameters.Add("@newID", SqlDbType.VarChar, 2000).Direction = ParameterDirection.Output;
+                            cmd.Parameters.Add("@retPartID", SqlDbType.VarChar, 2000).Direction = ParameterDirection.Output;
+                            cmd.Parameters.Add("@externalPartID", SqlDbType.VarChar, 100).Value = part.PartId.Trim();
+                            cmd.Parameters.Add("@partName", SqlDbType.VarChar, 2000).Value = part.Name.Trim();
+                            cmd.Parameters.Add("@strNTLogin", SqlDbType.VarChar, 50).Value = ntLogin;
+                            cmd.ExecuteNonQuery();
+                        }
+                        catch (Exception e)
+                        {
+                            part.Messages.Add($"Unable to process part, PartName:'{part.Name}' PartId:'{part.PartId}' ");
                             result.Entity.Add(part);
                         }
                     }
-                }
-                catch (Exception ex)
-                {
-                    part.Messages.Add($"Unable to process part, PartName:'{part.Name}' PartId:'{part.PartId}' ");
-                    result.Entity.Add(part);
                 }
             }
         }

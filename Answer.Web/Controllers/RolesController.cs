@@ -224,15 +224,15 @@ namespace Answer.Web.Controllers
                 }
             }
 
-            model.Setup(_documentFilesService , _roleService, _userService, currentUser);
+            model.Setup(_documentFilesService, _roleService, _userService, currentUser);
 
             return View(model);
         }
 
 
-        public ActionResult RoleDelete(string id,string ntlogin)
+        public ActionResult RoleDelete(string id, string ntlogin)
         {
-            var response = _roleService.Delete(id: id,ntlogin:ntlogin);
+            var response = _roleService.Delete(id: id, ntlogin: ntlogin);
 
             if (response)
             {
@@ -263,11 +263,16 @@ namespace Answer.Web.Controllers
         public ActionResult LoadPersonDate(string roleId, string userId)
         {
             var currentUser = GetCurrentUser();
-            string fullName = _roleService.GetPeopleAssigned(userId, currentUser.Company).Where(x => x.Root == userId).Select(x => x.Full_Name).FirstOrDefault();
-        
-            CertificationRole certificationRole = new CertificationRole();
-            certificationRole.Show = fullName;
-            certificationRole.Value = userId;
+            string fullName = _roleService.GetPeopleAssigned(userId, currentUser.Company)
+                .Where(x => x.Root == userId)
+                .Select(x => x.Full_Name)
+                .FirstOrDefault();
+
+            var certificationRole = new CertificationRole
+            {
+                Show = fullName,
+                Value = userId
+            };
 
             return PartialView("_PersonDate", certificationRole);
         }
