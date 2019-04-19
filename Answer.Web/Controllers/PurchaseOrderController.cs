@@ -494,13 +494,10 @@ namespace Answer.Web.Controllers
         {
             var currentUser = GetCurrentUser();
 
-            var refId = _purchesOrderService.GetHistId(currentUser.Id, id);
-
-            var purchaseApprovedData = _purchesOrderService.PurchasedApprovedDataById(refId);
+            var purchaseApprovedData = _purchesOrderService.PurchasedApprovedDataByObjId(id);
 
             var workflowService = new WorkflowService();
 
-            workflowService.SpRunAdminSql();
             workflowService.SpRunAdminSql();
 
             return View(purchaseApprovedData);
