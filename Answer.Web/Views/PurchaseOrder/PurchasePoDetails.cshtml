@@ -89,13 +89,13 @@
                                     @Html.TextBoxFor(x => Model.ProductPo[i].Name, new { @class = "form-control", @readonly = "readonly" })
                                 </td>
                                 <td style="width:150px;">
-                                    @Html.TextBoxFor(x => Model.ProductPo[i].Qty, new { @class = "form-control", @required = "", @style = "width:150px;", @id = "Qty" })
+                                    @Html.TextBoxFor(x => Model.ProductPo[i].Qty, new { @class = "form-control qty", @required = "", @style = "width:150px;" })
                                     @Html.ValidationMessageFor(x => Model.ProductPo[i].Qty, "", new { @class = "text-danger" })
                                 </td>
                                 <td style="width:400px;">
-                                    <div style="display: inline-block;" id="show-hide-button">
+                                    <div style="display: none" class="show-hide-button">
                                         <div class="make-switch switch-small" data-on="success" data-off="warning" style="display: inline-block">
-                                            <input id="show-switch-button" type="checkbox" name="completed-switch">
+                                            <input class="show-switch-button" type="checkbox" name="completed-switch">
                                         </div>
                                         <label>Group Quantity on One WO</label>
                                     </div>
@@ -121,26 +121,18 @@
     <script type="text/javascript" src="~/assets/js/bootstrap-select.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
+            $('.show-switch-button').bootstrapSwitch();
 
-            $('#show-switch-button').bootstrapSwitch();
-
-            $('#show-switch-button').on('switchchange.bootstrapswitch',
+            $('.show-switch-button').on('switchchange.bootstrapswitch',
                 function (e, state) {
                     e.preventDefault();
                     LoadShowHideButton(state);
                 });
 
-            $('#show-hide-button,#show-hide').hide();
-
-            $("#Qty").keyup(function () {
-
-                if ($('#Qty').val() > 1) {
-                    $('#show-hide-button,#show-hide').show();
-                } else {
-                    $('#show-hide-button,#show-hide').hide();
-                }
+            $(".qty").keyup(function () {
+                var elem = $(this).parent().next().find('div');
+                $(this).val() > 1 ? elem.show() : elem.hide();
             });
-
         });
 
         function LoadShowHideButton(state) {
