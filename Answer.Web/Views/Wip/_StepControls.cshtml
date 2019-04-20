@@ -67,22 +67,21 @@
 
         </div>
     }
-    <div class="col-sm-5 pull-right">
+        <div class="col-sm-5 pull-right">
 
-        @if (Model.TaskEditDataResult.Status == "ACCEPTED" || Model.TaskEditDataResult.Status == "REQUESTED")
-        {
-            <button id="addNcrModal_" class="btn btn-danger btn-lg print-btn pull-right"><i class="fa fa-plus-square"></i> Add NCR</button>
-            <button data-toggle="modal" data-fill-id="@ViewBag.FillId" data-target="#add-new-equipment-model" class="btn btn-info btn-lg print-btn pull-right"><i class="fa fa-plus-square"></i> EM/PM</button>
-        }
+            <div id="showNCREMPM" style="@(Model.TaskEditDataResult.Status == "ACCEPTED" || Model.TaskEditDataResult.Status == "REQUESTED" ? "display:block" : "display:none")">
+                <button id="addNcrModal_" class="btn btn-danger btn-lg print-btn pull-right"><i class="fa fa-plus-square"></i> Add NCR</button>
+                <button data-toggle="modal" data-fill-id="@ViewBag.FillId" data-target="#add-new-equipment-model" class="btn btn-info btn-lg print-btn pull-right"><i class="fa fa-plus-square"></i> EM/PM</button>
+            </div>
 
-        @if (Model.TaskEditDataResult.RequesteeId != Model.LoggedUserIdResult.Id)
-        {
-            <button class="btn btn-warning btn-lg print-btn pull-right show-timer-btn" id="assume-step"><i class="glyphicon glyphicon-step-forward"></i> Take over this task</button>
-        }
+                @if (Model.TaskEditDataResult.RequesteeId != Model.LoggedUserIdResult.Id)
+                {
+                    <button class="btn btn-warning btn-lg print-btn pull-right show-timer-btn" id="assume-step"><i class="glyphicon glyphicon-step-forward"></i> Take over this task</button>
+                }
 
-    </div>
-    <input type="hidden" id="taskLogId" name="taskLogId" value="">
-</div>
+            </div>
+            <input type="hidden" id="taskLogId" name="taskLogId" value="">
+        </div>
 
 @Scripts.Render("~/bundles/js/wip-step-controls")
 @*<script src="//cdn.rawgit.com/noelboss/featherlight/1.6.1/release/featherlight.min.js" type="text/javascript" charset="utf-8"></script>*@
@@ -159,6 +158,8 @@
             $('#@Model.StepId #pause-step').removeClass('hidden');
             $('#@Model.StepId #start-step').removeClass('show');
             $('#@Model.StepId #start-step').addClass('hidden');
+            $('#showNCREMPM').show();
+
         });
 
         $('#@Model.StepId #done-step').on('click', function () {
