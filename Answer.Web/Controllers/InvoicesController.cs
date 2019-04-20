@@ -218,7 +218,7 @@ namespace Answer.Web.Controllers
 
         public ActionResult ExportFile(int? id, string po)
         {
-            var items = _invoicesService.InvoiceExportByPo(po);
+            var items = _invoicesService.InvoiceExportByPo(po, id);
 
             var delimiter = "\t";
             var invoice = _invoicesService.GetInvoiceViewQueryable().Where(x => x.Id == id).SingleOrDefault();
