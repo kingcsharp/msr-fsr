@@ -1,9 +1,14 @@
 ﻿var Invoice = function () {
 
     var loadInvoiceModal = function () {
-        $('#invModal').on('show.bs.modal',
+        $('#invModal').on('show.bs.modal', function (event) {
+            clearModal($(this));
+        });
+
+        $('#invModal').on('shown.bs.modal',
             function (event) {
                 var modal = $(this);
+                modal.find('.modal-body').block({ message: '<h1><img src="/assets/img/nice_loader.gif" />  Loading. Please wait...</h1>' });
                 $.ajax({
                     type: "GET",
                     url: '/Invoices/LoadInvoice',
@@ -12,21 +17,27 @@
                     success: function (data) {
                         eLoaderClose();
                         modal.find('.modal-body').html(data);
+                        modal.find('.modal-body').unblock();
                     },
                     error: function (error) {
                         eLoaderError(error);
+                        modal.find('.modal-body').unblock();
                     }
                 });
             });
     };
 
     var editInvoiceModal = function () {
-        $('#editInvModal').on('show.bs.modal',
-            function (event) {
+        $('#editInvModal').on('show.bs.modal', function (event) {
+            clearModal($(this));
+        });
 
+        $('#editInvModal').on('shown.bs.modal',
+            function (event) {
                 var button = $(event.relatedTarget);
                 var id = button.data('call-id');
                 var modal = $(this);
+                modal.find('.modal-body').block({ message: '<h1><img src="/assets/img/nice_loader.gif" />  Loading. Please wait...</h1>' });
                 $.ajax({
                     type: "GET",
                     url: '/Invoices/LoadInvoiceById?id=' + id + '&hasValue=' + true,
@@ -34,9 +45,11 @@
                     cache: false,
                     success: function (data) {
                         modal.find('.modal-body').html(data);
+                        modal.find('.modal-body').unblock();
                     },
                     error: function (error) {
                         eLoaderError(error);
+                        modal.find('.modal-body').unblock();
                     }
                 });
 
@@ -122,6 +135,10 @@
                 });
             });
     };
+
+    function clearModal(modal) {
+        modal.find('.modal-body').empty();
+    }
 
     return {
         LoadInvoiceModal: loadInvoiceModal,
