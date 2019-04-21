@@ -1,7 +1,7 @@
 version: 0.0
 os: windows
 files:
-  - source: \obj\octopacked\
+  - source: \publish\publish.zip
     destination: d:\websites\
 hooks:
   BeforeInstall:
