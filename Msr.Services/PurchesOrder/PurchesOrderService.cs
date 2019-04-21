@@ -120,24 +120,85 @@ namespace Msr.Services.PurchesOrder
 
             return result;
         }
-        public List<PurchaseOrderFill> PurchasedOrderSearchTasks(string id, string ntLogin)
+
+        public PurchaseApprovedData PurchasedApprovedDataByObjId(string objectId)
+        {
+            var sql = $"SELECT* FROM A_V_PURCHASES_APPROVED_DATA WHERE HISTORY_REF_ID = " +
+                      $"(SELECT TOP 1 PURCHASE_HIST_ID FROM A_TASK_ORDER_INFORMATION " +
+                      $"WHERE TASK_ID IN(SELECT  TOP 1 TASK_ID FROM A_V_FILL_TASKS " +
+                      $"WHERE PURCH_ITEM_ID IN(SELECT ID FROM A_ORDER_ITEMS " +
+                      $"WHERE PURCHASE_HIST_ID IN(SELECT OBJ_ID FROM A_OBJECTS WHERE ID = '{objectId}'))))";
+
+            var result = _dbContext.Database.SqlQuery<PurchaseApprovedData>(sql).SingleOrDefault();
+
+            return result;
+        }
+
+        public List<PurchaseOrderFillViewModel> PurchasedOrderSearchTasks(string id, string ntLogin)
         {
             var result = _dbContext.Database.SqlQuery<Task>($"EXEC A_SP_TASKS_SEARCH NULL,'S','(ID IN (SELECT TASK_ID FROM A_TASK_ORDER_INFORMATION WHERE PURCHASE_HIST_ID = ''{id}'') OR ID IN (SELECT TASK_ID FROM A_TASK_ORDER_INFORMATION WHERE FILL_ID IN (SELECT ID FROM A_FILLS WHERE PURCH_ITEM_ID IN (SELECT ID FROM A_ORDER_ITEMS WHERE PURCHASE_HIST_ID = ''{id}''))))',NULL,NULL,NULL,' ORDER BY COLOR_CODE,SORT_ID DESC','{ntLogin }'").ToList();
 
             var ids = result.Where(x => x.FILL_ID != null).Select(x => x.FILL_ID).ToArray();
             var str = string.Join(",", ids);
 
-            if (!string.IsNullOrEmpty(str))
+            if (string.IsNullOrEmpty(str))
             {
-                var sql = $"SELECT * FROM A_V_FILLS_SEARCH WHERE ID IN(" + str + ") AND FILL_OBJ_ID IS NULL";
-                var fills = _dbContext.Database.SqlQuery<PurchaseOrderFill>(sql).ToList();
+                return new List<PurchaseOrderFillViewModel>();
+            }
 
-                return fills;
-            }
-            else
+            var sql = $"SELECT * FROM A_V_FILLS_SEARCH WHERE ID IN(" + str + ") AND FILL_OBJ_ID IS NULL and QTY_NEEDS_FILLING > 0";
+            var fills = _dbContext.Database.SqlQuery<PurchaseOrderFill>(sql).Select(x => new PurchaseOrderFillViewModel()
             {
-                return new List<PurchaseOrderFill>();
-            }
+                CUST_NAME = x.CUST_NAME,
+                SUP_NAME = x.SUP_NAME,
+                OBJ_DESC = x.OBJ_DESC,
+                FULL_NAME = x.FULL_NAME,
+                PRODUCT_ID = x.PRODUCT_ID,
+                PURCHASER_ID = x.PURCHASER_ID,
+                PROC_NAME = x.PROC_NAME,
+                PROC_ID = x.PROC_ID,
+                SYS_PROC_ID = x.SYS_PROC_ID,
+                APP_OBJ_DESC = x.APP_OBJ_DESC,
+                PRICING_TABLE_ID = x.PRICING_TABLE_ID,
+                CUSTOMER = x.CUSTOMER,
+                SUPPLIER = x.SUPPLIER,
+                PURCHASE_QTY = x.PURCHASE_QTY,
+                UNIT_PRICE = x.UNIT_PRICE,
+                TOTAL_PRICE = x.TOTAL_PRICE,
+                DEST = x.DEST,
+                FROM_LOC = x.FROM_LOC,
+                TO_LOC = x.TO_LOC,
+                PURCHASE_HIST_ID = x.PURCHASE_HIST_ID,
+                ACCOUNT_ID = x.ACCOUNT_ID,
+                TOT_QTY = x.TOT_QTY,
+                PARENT_QTY = x.PARENT_QTY,
+                WEIGHT = x.WEIGHT,
+                WEIGHT_UNIT = x.WEIGHT_UNIT,
+                OBJ_PROD_APPLIES_TO = x.OBJ_PROD_APPLIES_TO,
+                PROCEDURE_HIST_ID = x.PROCEDURE_HIST_ID,
+                STEPS_IN_AP = x.STEPS_IN_AP,
+                PROD_HIST_ID = x.PROD_HIST_ID,
+                CUSTOMER_PERSON = x.CUSTOMER_PERSON,
+                PURCHASE_ID = x.PURCHASE_ID,
+                ID = x.ID,
+                PURCH_ITEM_ID = x.PURCH_ITEM_ID,
+                FILL_BY = x.FILL_BY,
+                FILL_OBJ_ID = x.FILL_OBJ_ID,
+                FILL_QTY = x.FILL_QTY,
+                FILLER = x.FILLER,
+                TASK_ID = x.TASK_ID,
+                QTY_FILLED = x.QTY_FILLED,
+                QTY_NEEDS_FILLING = x.QTY_NEEDS_FILLING,
+                SUB_FILL_FOR = x.SUB_FILL_FOR,
+                FILL_DATE = x.FILL_DATE,
+                PURCHASE_ITEM_PARENT_ID = x.PURCHASE_ITEM_PARENT_ID,
+                PROD_PRICE_LIST = x.PROD_PRICE_LIST,
+                CUST_LINE_ITEM = x.CUST_LINE_ITEM,
+                BATCH_FILL = x.BATCH_FILL,
+                BATCH_PARENT = x.BATCH_PARENT,
+            }).ToList();
+
+            return fills;
         }
 
 
@@ -262,9 +323,6 @@ namespace Msr.Services.PurchesOrder
                     strNTLogin = ntLogin
                 };
                 _dbContext.Database.ExecuteStoredProcedure(checkForValidityProcedure);
-
-
-
             }
             catch (Exception ex)
             {
