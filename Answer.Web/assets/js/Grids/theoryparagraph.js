@@ -117,30 +117,36 @@
         cellsubmit: 'clientArray',
         editurl: 'clientArray',
         autowidth: true,
+        loadui: 'disable',
         colMenu: true,
         key: true,
-        ajaxCellOptions: {}
+        ajaxCellOptions: {},
+        gridComplete: function () {
+            $('.ui-jqgrid').unblock();
+
+        },
+        beforeRequest: function () {
+            $('.ui-jqgrid').block({ message: '<h1><img src="/assets/img/nice_loader.gif" />  Loading. Please wait...</h1>' });
+        }
 
     });
-    $('#jqGridTheory').navGrid("#jqGridPagerTheory",
-        {
-            refresh: true,
-            search: false, // show search button on the toolbar
-            add: false,
-            edit: false,
-            del: false,
-        },
+    $('#jqGridTheory').navGrid("#jqGridPagerTheory", {
+        refresh: true,
+        search: false, // show search button on the toolbar
+        add: false,
+        edit: false,
+        del: false,
+    },
         {}, // edit options
         {}, // add options
         {}, // delete options
         { multipleSearch: true }
     );
-    $('#jqGridTheory').jqGrid('filterToolbar',
-        {
-            stringResult: true,
-            searchOnEnter: true,
-            searchOperators: true
-        });
+    $('#jqGridTheory').jqGrid('filterToolbar', {
+        stringResult: true,
+        searchOnEnter: true,
+        searchOperators: true
+    });
 
 
     function selectFormatter(cellvalue, options, rowObject) {

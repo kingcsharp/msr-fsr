@@ -523,6 +523,7 @@
     <Content Include="assets\js\bootstrap-datetimepicker.min.js" />
     <Content Include="assets\js\blockLayout.ui.js" />
     <Content Include="assets\js\grids\jgrid.defaults.js" />
+    <Content Include="assets\js\grids\statusGrid.js" />
     <Content Include="assets\js\grids\training.js" />
     <Content Include="assets\js\plugins\bootstrap3\bootstrap-multiselect.css" />
     <Content Include="assets\js\plugins\bootstrap3\bootstrap-multiselect.js" />
@@ -2212,6 +2213,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="info.txt" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="assets\components\ace\completions.php" />

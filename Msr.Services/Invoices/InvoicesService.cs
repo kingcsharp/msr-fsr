@@ -46,11 +46,14 @@ namespace Msr.Services.Invoices
             return result;
         }
 
-        public List<InvoicePoWorkItem> InvoiceExportByPo(string po)
+        public List<InvoicePoWorkItem> InvoiceExportByPo(string po, int? invoiceId)
         {
-            var result = InvoiceViewList().Where(x => x.CustPurchNum == po && x.Status == "FINISHED" && _dbContext.InvoiceWorkItems.Select(y => y.ItemId).Contains(x.FillItemId)).ToList();
-
-            return result;
+            var ret = InvoiceViewList().Where(x => x.Status == "FINISHED" && x.CustPurchNum == po
+             && _dbContext.InvoiceWorkItems.Where(z => z.InvoiceId == invoiceId.Value.ToString()).Distinct()
+             .Select(z => z.ItemId)
+             .Contains(x.FillItemId))
+                .Distinct().ToList();
+            return ret;
         }
 
         public List<string> InvoicePoList(bool onEdit)

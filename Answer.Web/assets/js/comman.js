@@ -11,9 +11,7 @@ function eLoaderClose() {
 
 function eLoaderError(value) {
     var model = $("#emodel");
-    model.on('shown.bs.modal', function () {
-        model.find('.modal-body').html('').append(value);
-    });
+    model.find('.modal-body').html('').append(value);
 }
 
 $('.page-help').on('click', function () {
@@ -23,7 +21,7 @@ $('.page-help').on('click', function () {
     var options = {
         url: '/Help/GetHelpDetails?pageUrl=' + pageUrl,
         title: 'Help',
-        size: eModal.size.lg,       
+        size: eModal.size.lg,
     };
 
     eModal.ajax(options);
@@ -265,9 +263,8 @@ $(document).ready(function () {
 
         });
 
-    $('#select-images').on('show.bs.modal',
+    $('#select-images').on('shown.bs.modal',
         function (event) {
-
             var button = $(event.relatedTarget);
             var callBackId = button.data('call-back-id');
             var targetCallBackId = button.data('file-select-target-id');
@@ -282,19 +279,19 @@ $(document).ready(function () {
                     modal.find('.modal-body').html(data);
                 },
                 error: function () {
-
                 }
             });
-
         });
 
-    $('#select-objects').on('show.bs.modal',
-        function (event) {
+    $('#select-images').on('show.bs.modal', function (event) {
+        clearModal($(this));
+    });
 
+    $('#select-objects').on('shown.bs.modal',
+        function (event) {
             var button = $(event.relatedTarget);
             var callBackId = button.data('call-back-id');
             var modal = $(this);
-
             $.ajax({
                 type: "GET",
                 url: '/Objects/GetObjects?callBackId=' + callBackId,
@@ -303,19 +300,20 @@ $(document).ready(function () {
                     modal.find('.modal-body').html(data);
                 },
                 error: function () {
-
                 }
             });
         });
 
+    $('#select-objects').on('show.bs.modal', function (event) {
+        clearModal($(this));
+    });
 
-    $('#select-theory').on('show.bs.modal',
+
+    $('#select-theory').on('shown.bs.modal',
         function (event) {
-
             var button = $(event.relatedTarget);
             var callBackId = button.data('call-back-id');
             var modal = $(this);
-
             $.ajax({
                 type: "GET",
                 url: '/TheoryParagraph/GetTheoryParagraphs?callBackId=' + callBackId,
@@ -328,6 +326,15 @@ $(document).ready(function () {
                 }
             });
         });
+
+    $('#select-theory').on('show.bs.modal', function (event) {
+        clearModal($(this));
+    });
+
+    function clearModal(modal) {
+        modal.find('.modal-body').empty();
+    }
+
     $("form").submit(function (e) {
         $('.submitselect option').prop('selected', true);
     });
@@ -377,5 +384,5 @@ $(document).ready(function () {
             });
         }
     });
-    
+
 });

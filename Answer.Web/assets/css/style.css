@@ -2189,8 +2189,6 @@ input.pre-populated {
     z-index: 99;
 }
 
-}
-
 .ace_cursor-layer {
     z-index: 4;
 }
@@ -2782,6 +2780,7 @@ input.pre-populated {
 .krajee-default.file-preview-frame {
     padding: 2px !important;
     margin: 2px !important;
+    overflow: hidden;
 }
 
 
@@ -2857,14 +2856,42 @@ span.fa.fa-arrows.handle.sortable-fa {
     padding: 2px 6px 5px;
     font-size: 14px;
 }
+
 .datepicker-dropdown {
-    z-index: 101!important;
+    z-index: 101 !important;
 }
 
 .multiselect.dropdown-toggle {
     top: 5px;
     padding: 5px 12px;
 }
+
 .multiselect-container.dropdown-menu > .active > a {
     background-color: #22A7F0;
+}
+
+.select2-selection__choice__remove {
+    color: #fff !important;
+}
+
+
+.ui-jqgrid {
+    min-height: 150px;
+}
+
+td.ui-search-input > span > div {
+    width: 100%;
+}
+
+    td.ui-search-input > span > div > button {
+        width: 100%;
+    }
+
+
+.multiselect-native-select .btn-group, .multiselect-native-select button {
+    width: 100%;
+}
+
+#invModal .modal-body, #editInvModal .modal-body {
+    min-height: 250px;
 }

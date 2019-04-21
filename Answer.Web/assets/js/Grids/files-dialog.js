@@ -67,7 +67,15 @@ function LoadGrid() {
         autowidth: true,
         colMenu: true,
         key: true,
-        ajaxCellOptions: {}
+        loadui: 'disable',
+        ajaxCellOptions: {},
+        gridComplete: function () {
+            $('.ui-jqgrid').unblock();
+
+        },
+        beforeRequest: function () {
+            $('.ui-jqgrid').block({ message: '<h1><img src="/assets/img/nice_loader.gif" />  Loading. Please wait...</h1>' });
+        }
 
     });
     $('#jqGridFiles').navGrid("#jqGridPagerFiles", {

@@ -118,24 +118,5 @@ namespace Msr.Services.PurchesOrder.ViewModels
         public List<SelectListItem> LocationList { get; set; }
 
         public List<SelectListItem> OwnerList { get; set; }
-
-        public void SetUp(PurchesOrderService purchesOrderService)
-        {
-
-            OwnerList = purchesOrderService.PurchasedOrderOwnerList().Select(x => new SelectListItem
-            {
-                Text = x.Name,
-                Value = x.Id.ToString()
-            }).OrderBy(o => o.Text).ToList();
-
-            LocationList = purchesOrderService.PurchasedOrderLocationList()
-                .Select(x => new SelectListItem
-                {
-                    Text = x.Name,
-                    Value = x.Id.ToString()
-                }).OrderBy(o => o.Text).ToList();
-
-            LocationList.Insert(0, new SelectListItem { Value = "", Text = "Select" });
-        }
     }
 }

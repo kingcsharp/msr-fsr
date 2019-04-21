@@ -21,7 +21,18 @@ namespace Msr.Services.PurchesOrder.ViewModels
         public string KitCount { get; set; }
         public List<SelectListItem> KitCountList { get; set; }
 
-        public List<PurchaseOrderFillViewModel> MapToDto(List<PurchaseOrderFill> purchaseOrderFill)
+        public void SetSelectListsForAllPurchaseOrders(List<PurchaseOrderFill> purchaseOrderFill)
+        {
+
+        }
+
+        /// <summary>
+        /// For every purchaseOrderFill if the Qty needs filling is >1 it creates a new purchaseOrderFillViewModel
+        /// For every purchaseOrder it sets 2 select Lists
+        /// </summary>
+        /// <param name="purchaseOrderFill"></param>
+        /// <returns></returns>
+        public void SetList(List<PurchaseOrderFillViewModel> purchaseOrderFill, List<SelectListItem> locationList, List<SelectListItem> ownerList)
         {
             var purchaseOrderFillViewModelList = new List<PurchaseOrderFillViewModel>();
 
@@ -29,63 +40,76 @@ namespace Msr.Services.PurchesOrder.ViewModels
             {
                 for (int i = 0; i < item.QTY_NEEDS_FILLING; i++)
                 {
-                    var purchaseOrderFillViewModel = new PurchaseOrderFillViewModel();
-                    purchaseOrderFillViewModel.CUST_NAME = item.CUST_NAME;
-                    purchaseOrderFillViewModel.SUP_NAME = item.SUP_NAME;
-                    purchaseOrderFillViewModel.OBJ_DESC = item.OBJ_DESC;
-                    purchaseOrderFillViewModel.FULL_NAME = item.FULL_NAME;
-                    purchaseOrderFillViewModel.PRODUCT_ID = item.PRODUCT_ID;
-                    purchaseOrderFillViewModel.PURCHASER_ID = item.PURCHASER_ID;
-                    purchaseOrderFillViewModel.PROC_NAME = item.PROC_NAME;
-                    purchaseOrderFillViewModel.PROC_ID = item.PROC_ID;
-                    purchaseOrderFillViewModel.SYS_PROC_ID = item.SYS_PROC_ID;
-                    purchaseOrderFillViewModel.APP_OBJ_DESC = item.APP_OBJ_DESC;
-                    purchaseOrderFillViewModel.PRICING_TABLE_ID = item.PRICING_TABLE_ID;
-                    purchaseOrderFillViewModel.CUSTOMER = item.CUSTOMER;
-                    purchaseOrderFillViewModel.SUPPLIER = item.SUPPLIER;
-                    purchaseOrderFillViewModel.PURCHASE_QTY = item.PURCHASE_QTY;
-                    purchaseOrderFillViewModel.UNIT_PRICE = item.UNIT_PRICE;
-                    purchaseOrderFillViewModel.TOTAL_PRICE = item.TOTAL_PRICE;
-                    purchaseOrderFillViewModel.DEST = item.DEST;
-                    purchaseOrderFillViewModel.FROM_LOC = item.FROM_LOC;
-                    purchaseOrderFillViewModel.TO_LOC = item.TO_LOC;
-                    purchaseOrderFillViewModel.PURCHASE_HIST_ID = item.PURCHASE_HIST_ID;
-                    purchaseOrderFillViewModel.ACCOUNT_ID = item.ACCOUNT_ID;
-                    purchaseOrderFillViewModel.TOT_QTY = item.TOT_QTY;
-                    purchaseOrderFillViewModel.PARENT_QTY = item.PARENT_QTY;
-                    purchaseOrderFillViewModel.WEIGHT = item.WEIGHT;
-                    purchaseOrderFillViewModel.WEIGHT_UNIT = item.WEIGHT_UNIT;
-                    purchaseOrderFillViewModel.OBJ_PROD_APPLIES_TO = item.OBJ_PROD_APPLIES_TO;
-                    purchaseOrderFillViewModel.PROCEDURE_HIST_ID = item.PROCEDURE_HIST_ID;
-                    purchaseOrderFillViewModel.STEPS_IN_AP = item.STEPS_IN_AP;
-                    purchaseOrderFillViewModel.PROC_NAME = item.PROC_NAME;
-                    purchaseOrderFillViewModel.PROD_HIST_ID = item.PROD_HIST_ID;
-                    purchaseOrderFillViewModel.CUSTOMER_PERSON = item.CUSTOMER_PERSON;
-                    purchaseOrderFillViewModel.PURCHASE_ID = item.PURCHASE_ID;
-                    purchaseOrderFillViewModel.ID = item.ID;
-                    purchaseOrderFillViewModel.PURCH_ITEM_ID = item.PURCH_ITEM_ID;
-                    purchaseOrderFillViewModel.FILL_BY = item.FILL_BY;
-                    purchaseOrderFillViewModel.FILL_OBJ_ID = item.FILL_OBJ_ID;
-                    purchaseOrderFillViewModel.FILL_QTY = item.FILL_QTY;
-                    purchaseOrderFillViewModel.FILLER = item.FILLER;
-                    purchaseOrderFillViewModel.TASK_ID = item.TASK_ID;
-                    purchaseOrderFillViewModel.QTY_FILLED = item.QTY_FILLED;
-                    purchaseOrderFillViewModel.QTY_NEEDS_FILLING = item.QTY_NEEDS_FILLING;
-                    purchaseOrderFillViewModel.SUB_FILL_FOR = item.SUB_FILL_FOR;
-                    purchaseOrderFillViewModel.FILL_DATE = item.FILL_DATE;
-                    purchaseOrderFillViewModel.PURCHASE_ITEM_PARENT_ID = item.PURCHASE_ITEM_PARENT_ID;
-                    purchaseOrderFillViewModel.PROD_PRICE_LIST = item.PROD_PRICE_LIST;
-                    purchaseOrderFillViewModel.CUST_LINE_ITEM = item.CUST_LINE_ITEM;
-                    purchaseOrderFillViewModel.BATCH_FILL = item.BATCH_FILL;
-                    purchaseOrderFillViewModel.BATCH_PARENT = item.BATCH_PARENT;
-
-                    purchaseOrderFillViewModel.SetUp(new PurchesOrderService());
-
-                    purchaseOrderFillViewModelList.Add(purchaseOrderFillViewModel);
+                    if (i > 0)
+                    {
+                        var purchaseOrderFillViewModel = new PurchaseOrderFillViewModel
+                        {
+                            CUST_NAME = item.CUST_NAME,
+                            SUP_NAME = item.SUP_NAME,
+                            OBJ_DESC = item.OBJ_DESC,
+                            FULL_NAME = item.FULL_NAME,
+                            PRODUCT_ID = item.PRODUCT_ID,
+                            PURCHASER_ID = item.PURCHASER_ID,
+                            PROC_NAME = item.PROC_NAME,
+                            PROC_ID = item.PROC_ID,
+                            SYS_PROC_ID = item.SYS_PROC_ID,
+                            APP_OBJ_DESC = item.APP_OBJ_DESC,
+                            PRICING_TABLE_ID = item.PRICING_TABLE_ID,
+                            CUSTOMER = item.CUSTOMER,
+                            SUPPLIER = item.SUPPLIER,
+                            PURCHASE_QTY = item.PURCHASE_QTY,
+                            UNIT_PRICE = item.UNIT_PRICE,
+                            TOTAL_PRICE = item.TOTAL_PRICE,
+                            DEST = item.DEST,
+                            FROM_LOC = item.FROM_LOC,
+                            TO_LOC = item.TO_LOC,
+                            PURCHASE_HIST_ID = item.PURCHASE_HIST_ID,
+                            ACCOUNT_ID = item.ACCOUNT_ID,
+                            TOT_QTY = item.TOT_QTY,
+                            PARENT_QTY = item.PARENT_QTY,
+                            WEIGHT = item.WEIGHT,
+                            WEIGHT_UNIT = item.WEIGHT_UNIT,
+                            OBJ_PROD_APPLIES_TO = item.OBJ_PROD_APPLIES_TO,
+                            PROCEDURE_HIST_ID = item.PROCEDURE_HIST_ID,
+                            STEPS_IN_AP = item.STEPS_IN_AP,
+                            PROD_HIST_ID = item.PROD_HIST_ID,
+                            CUSTOMER_PERSON = item.CUSTOMER_PERSON,
+                            PURCHASE_ID = item.PURCHASE_ID,
+                            ID = item.ID,
+                            PURCH_ITEM_ID = item.PURCH_ITEM_ID,
+                            FILL_BY = item.FILL_BY,
+                            FILL_OBJ_ID = item.FILL_OBJ_ID,
+                            FILL_QTY = item.FILL_QTY,
+                            FILLER = item.FILLER,
+                            TASK_ID = item.TASK_ID,
+                            QTY_FILLED = item.QTY_FILLED,
+                            QTY_NEEDS_FILLING = item.QTY_NEEDS_FILLING,
+                            SUB_FILL_FOR = item.SUB_FILL_FOR,
+                            FILL_DATE = item.FILL_DATE,
+                            PURCHASE_ITEM_PARENT_ID = item.PURCHASE_ITEM_PARENT_ID,
+                            PROD_PRICE_LIST = item.PROD_PRICE_LIST,
+                            CUST_LINE_ITEM = item.CUST_LINE_ITEM,
+                            BATCH_FILL = item.BATCH_FILL,
+                            BATCH_PARENT = item.BATCH_PARENT,
+                            LocationList = locationList,
+                            OwnerList = ownerList,
+                        };
+                        this.FillList.Add(purchaseOrderFillViewModel);
+                    }
+                    else
+                    {
+                        item.LocationList = locationList;
+                        item.OwnerList = ownerList;
+                        this.FillList.Add(item);
+                    }
                 }
             }
-            return purchaseOrderFillViewModelList;
+
+            this.FillList = purchaseOrderFill;
+            SetUp();
         }
+
+
         public void SetUp()
         {
             KitCountList = new List<SelectListItem>

@@ -1,0 +1,12 @@
+﻿block ui items:
+-block specific Item
+request starting:
+	$('.ui-jqgrid').block({ message: '<h1><img src="/assets/img/nice_loader.gif" />  Loading. Please wait...</h1>' });
+request Complete:
+	$('.ui-jqgrid').unblock();
+-block hole page
+	$.blockUI({ message: '<h1><img src="/assets/img/nice_loader.gif" />  Loading. Please wait...</h1>' });
+		-unblock
+		$.unblockUI();
+ 
+       

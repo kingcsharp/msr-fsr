@@ -35,79 +35,44 @@
             {
                 <div>No records to view</div>
             }
-            <div class="row">
-                <div  style="width: 200px; float: right;">
-                    @Html.DropDownListFor(model => model.Location, Model.LocationList, new { @class = "form-control location-name" })    
-                </div>
-            </div>
             <div class="row" style="width: 100%; margin-top: 30px;">
-                <div class="col-lg-3 col-md-3 col-sm-3 wip-status-header" style="width: 24%;">
+                <div class="col-lg-3 col-md-3 col-sm-3 wip-status-header" style="width: 24%;margin-top:24px;">
                     Product
                 </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 wip-status-header" style="width: 17%;">
+                <div class="col-lg-2 col-md-2 col-sm-2 wip-status-header" style="width: 17%;margin-top:24px;">
                     PN/IPN
                 </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 wip-status-header" style="width: 17%;">
+                <div class="col-lg-2 col-md-2 col-sm-2 wip-status-header" style="width: 17%;margin-top:24px;">
                     Procedure
                 </div>
-                <div class="col-lg-5 col-md-5 col-sm-5 wip-status-header" style="width: 20%;">
+                <div div class="col-lg-5 col-md-5 col-sm-5 wip-status-header" style="width: 12%;">
+                    <select class="form-control location-name">
+                        @foreach (var location in Model.LocationList)
+                        {
+                            if (location.Selected)
+                            {
+                                <option value="@location.Value" selected="selected">@location.Text</option>
+                            }
+                            else
+                            {
+                                <option value="@location.Value">@location.Text</option>
+                            }
+                        }
+
+                    </select>
+                    @* @Html.DropDownListFor(model => model.Location, Model.LocationList, new { @class = "form-control location-name" })*@
+                </div>
+                <div class="col-lg-5 col-md-5 col-sm-5 wip-status-header" style="width: 30%;margin-top:24px;">
                     Open WO's
                 </div>
-                <div id="status-items">
-                    @Html.Partial("_StatusItems")
-                </div>
+            </div>
+            <div id="status-items">
+                @Html.Partial("_StatusItems")
             </div>
         </div>
     </div>
 </div>
 @section scripts
 {
-    <script type="text/javascript">
-
-        setTimeout(function() { location.reload(true); }, 300000);
-
-        $(function() {
-
-            $('[data-toggle="tooltip"]').tooltip();
-
-            $('.wip-button').on('click', function () {
-
-                var fillId = $(this).data('fill-id');
-
-                if ($(this).hasClass('btn-accepted')) {
-
-                    eModal.confirm('Do you want to take ownership of this WO Item?')
-                        .then(function () {
-
-                            eLoaderOpen();
-
-                            $.ajax({
-                                type: "POST",
-                                url: "/wip/TakeTaskOwnersShip?fillId=" + fillId,
-                                dataType: 'json',
-                                success: function (data) {
-                                    if (data.Code === "OK") {
-                                        window.location.href = '/wip/Details/' + fillId;
-                                    } else {
-                                        eLoaderError(data.Message);
-                                    }
-                                },
-                                error: function (error) {
-                                    eLoaderError(error);
-                                }
-                            });
-                        }, null);
-                } else {
-                    window.location.href = '/wip/Details/' + fillId;
-                }
-			});
-
-	        $('.location-name').change(function() {
-                var location = $(this).val();
-
-	            window.location.href ='/wip/StatusView?locationName=' + location;
-		    
-	        });
-        });
-    </script>
+    <script src="~/assets/js/grids/statusGrid.js"></script>
 }

@@ -381,23 +381,35 @@ namespace Answer.Web.Controllers
         {
             var currentUser = GetCurrentUser();
 
+            List<string> locationList;
+            if (!string.IsNullOrWhiteSpace(locationName))
+            {
+                locationList = locationName.Split(',').ToList();
+            }
+            else
+            {
+                locationList = new List<string>();
+            }
+
+            locationList.ForEach(x => x.Trim());
             var viewModel = new WipStatusViewModel
             {
                 Location = locationName,
                 LocationList = _locationService.GetParentLocations().Select(x => new SelectListItem
                 {
                     Text = x.Name,
-                    Value = x.Name
+                    Value = x.Name,
+                    Selected = locationList.Count > 0 ? locationName.Contains(x.Name) : true
                 }).OrderBy(o => o.Text).ToList()
             };
 
-            viewModel.LocationList.Insert(0, new SelectListItem { Text = "--Please Select--", Value = "" });
+            //viewModel.LocationList.Insert(0, new SelectListItem { Text = "--Please Select--", Value = "" });
 
             var workOrdersQueryable = _orderService.GetWorkOrderQueryable();
 
-            if (!string.IsNullOrWhiteSpace(locationName))
+            if (locationList.Count > 0)
             {
-                workOrdersQueryable = workOrdersQueryable.Where(x => x.LocationName.ToLower() == locationName.ToLower());
+                workOrdersQueryable = workOrdersQueryable.Where(x => locationList.Select(y => y.ToLower()).Contains(x.LocationName.ToLower()));
             }
 
             viewModel.CurrentUser = currentUser;
@@ -416,8 +428,7 @@ namespace Answer.Web.Controllers
 
             var procs = viewModel.WipStatusViewItems.Select(p => p.ProcedureName).ToList();
 
-            viewModel.WoItemsByProcedures = _orderService
-                .GetWorkOrderQueryable()
+            viewModel.WoItemsByProcedures = _orderService.GetWorkOrderQueryable()
                 .Where(x => procs.Contains(x.ProcName))
                 .Where(x => x.Status == WorkItemStatusConstants.Accepted ||
                             x.Status == WorkItemStatusConstants.WaitingToStart ||
