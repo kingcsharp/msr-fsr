@@ -1,8 +1,8 @@
 version: 0.0
 os: windows
 files:
-  - source: \publish.zip
-    destination: d:\websites\
+  - source: \Answer.Web
+    destination: d:\websites
 hooks:
   BeforeInstall:
     - location: pre.bat
