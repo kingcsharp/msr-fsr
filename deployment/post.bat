@@ -1,5 +1,5 @@
 ::ren D:\websites\*.nupkg  Publish.zip
-::echo a | d:\tools\7-Zip\7z x D:\websites\publish.zip -oD:\websites\answer2-admin\
+echo a | d:\tools\7-Zip\7z x D:\websites\publish.zip -oD:\websites\answer2-admin\
 
 echo "Rename Answer.Web to answer2-admin"
 ren D:\Answer.Web answer2-admin

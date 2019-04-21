@@ -1,7 +1,7 @@
 version: 0.0
 os: windows
 files:
-  - source: \publish\publish.zip
+  - source: \publish.zip
     destination: d:\websites\
 hooks:
   BeforeInstall:
