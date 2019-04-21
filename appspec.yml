@@ -2,7 +2,7 @@ version: 0.0
 os: windows
 files:
   - source: \Answer.Web
-    destination: d:\websites\answer2-admin
+    destination: d:\MSRFSR\answer2-admin
 hooks:
   BeforeInstall:
     - location: pre.bat
