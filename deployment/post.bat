@@ -1,4 +1,4 @@
-#ren D:\websites\*.nupkg  Publish.zip
+::ren D:\websites\*.nupkg  Publish.zip
 echo a | d:\tools\7-Zip\7z x D:\websites\publish.zip -oD:\websites\answer2-admin\
 
 echo "Copy Web.config from old to new"
