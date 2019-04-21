@@ -5,6 +5,6 @@ files:
     destination: d:\websites\
 hooks:
   BeforeInstall:
-    - location: \deployment\pre.bat
+    - location: pre.bat
   AfterInstall:
-    - location: \deployment\post.bat
+    - location: post.bat
