@@ -220,6 +220,7 @@ namespace Answer.Web.Controllers
         {
             var items = _invoicesService.InvoiceExportByPo(po, id);
 
+
             var delimiter = "\t";
             var invoice = _invoicesService.GetInvoiceViewQueryable().Where(x => x.Id == id).SingleOrDefault();
 
