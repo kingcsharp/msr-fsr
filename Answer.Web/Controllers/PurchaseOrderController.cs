@@ -388,7 +388,7 @@ namespace Answer.Web.Controllers
             if (!response.HasErrors())
             {
                 return RedirectToAction("CreatePurchase", "PurchaseOrder",
-                    new {id = response.Entity, oldId = model.OBJECT_ID, refrencePo = model.REFERENCE_PO, model.Root});
+                    new { id = response.Entity, oldId = model.OBJECT_ID, refrencePo = model.REFERENCE_PO, model.Root });
             }
             TempData["ErrorMessage"] = response.ErrorMessage;
 
@@ -416,8 +416,6 @@ namespace Answer.Web.Controllers
         {
             var currentUser = GetCurrentUser();
 
-            var modelpo = _purchesOrderService.PurchasedOrderById(model.ID);
-
             var data = _purchesOrderService.CreatePurchaseSaveUpdate(model, currentUser.Id);
 
             if (!data.HasErrors())
@@ -432,6 +430,7 @@ namespace Answer.Web.Controllers
 
 
                 }
+                var modelpo = _purchesOrderService.PurchasedOrderById(model.ID);
                 modelpo.Setup(_purchesOrderService, currentUser);
             }
 
@@ -453,19 +452,26 @@ namespace Answer.Web.Controllers
 
             var purchaseOrderMultiFillViewModel = new PurchaseOrderMultiFillViewModel();
 
-            var refId = _purchesOrderService.GetHistId(currentUser.Id, id);
+            var OwnerList = _purchesOrderService.PurchasedOrderOwnerList().Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.Id.ToString()
+            }).OrderBy(o => o.Text).ToList();
 
-            var purchaseApprovedData = _purchesOrderService.PurchasedApprovedDataById(refId); 
+            var locList = _purchesOrderService.PurchasedOrderLocationList()
+                .Select(x => new SelectListItem
+                {
+                    Text = x.Name,
+                    Value = x.Id.ToString()
+                }).OrderBy(o => o.Text).ToList();
+            locList.Insert(0, new SelectListItem { Value = "", Text = "Select" });
 
-            var fillList = _purchesOrderService.PurchasedOrderSearchTasks(purchaseApprovedData.HISTORY_REF_ID, currentUser.Id);
-
-            var purchaseOrderFillViewModel = purchaseOrderMultiFillViewModel.MapToDto(fillList);
+            var purchaseApprovedData = _purchesOrderService.PurchasedApprovedDataByObjId(id);
 
             purchaseOrderMultiFillViewModel.PurchaseApprovedData = purchaseApprovedData;
+            var purchaseOrderFillViewModel = _purchesOrderService.PurchasedOrderSearchTasks(purchaseApprovedData.HISTORY_REF_ID, currentUser.Id);
 
-            purchaseOrderMultiFillViewModel.FillList = purchaseOrderFillViewModel;
-
-            purchaseOrderMultiFillViewModel.SetUp();
+            purchaseOrderMultiFillViewModel.SetList(purchaseOrderFillViewModel, locList, OwnerList);
 
             return View(purchaseOrderMultiFillViewModel);
         }
@@ -488,13 +494,10 @@ namespace Answer.Web.Controllers
         {
             var currentUser = GetCurrentUser();
 
-            var refId = _purchesOrderService.GetHistId(currentUser.Id, id);
-
-            var purchaseApprovedData = _purchesOrderService.PurchasedApprovedDataById(refId);
+            var purchaseApprovedData = _purchesOrderService.PurchasedApprovedDataByObjId(id);
 
             var workflowService = new WorkflowService();
 
-            workflowService.SpRunAdminSql();
             workflowService.SpRunAdminSql();
 
             return View(purchaseApprovedData);
