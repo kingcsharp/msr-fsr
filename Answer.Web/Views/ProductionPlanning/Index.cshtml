@@ -29,10 +29,10 @@
     @Scripts.Render("~/bundles/js/jqgrid-production-planning")
 
     <script type="text/javascript">
-
+        var hasAdministratorRole = '@User.IsInRole("Administrators")' === 'True';
         $(document).ready(function () {
 
-            Msr.QuotesGrid.LoadGrid('@Url.Action("ProductionPlanningData", "ProductionPlanning")');
+            Msr.QuotesGrid.LoadGrid('@Url.Action("ProductionPlanningData", "ProductionPlanning")',hasAdministratorRole);
         });
     </script>
 
