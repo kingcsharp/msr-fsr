@@ -122,7 +122,7 @@
             }
         }
 
-       $('#@Model.StepId #pause-step').on('click', function () {
+        $('#@Model.StepId #pause-step').on('click', function () {
                 eLoaderOpen();
                 var id = $(this).data('task-log-id');
                 var taskLogId = $('#taskLogId').val();
@@ -130,7 +130,7 @@
                   {        
                     id = taskLogId;
                   }
-                stepControls.StepPauseClick(id, fillId, stepId);
+        stepControls.StepPauseClick(id, fillId, stepId);
 				$('#step-@Model.StepId .timer').timer('pause');
         });
 
@@ -154,12 +154,12 @@
 		            seconds: @Math.Round(Model.TaskRunningDto?.TotalSeconds ?? 0),
 		            duration: '@(Model.TaskRunningDto?.Duration ?? "0")'
             });
-
             $('#@Model.StepId #done-step').removeClass('hidden');
             $('#@Model.StepId #pause-step').removeClass('hidden');
             $('#@Model.StepId #start-step').removeClass('show');
             $('#@Model.StepId #start-step').addClass('hidden');
             $('#showNCREMPM').show();
+
         });
 
         $('#@Model.StepId #done-step').on('click', function () {
