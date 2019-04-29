@@ -1,0 +1,10 @@
+version: 0.0
+os: windows
+files:
+  - source: \Answer.Web
+    destination: d:\MSRFSR\answer2-admin
+hooks:
+  BeforeInstall:
+    - location: pre.bat
+  AfterInstall:
+    - location: post.bat
