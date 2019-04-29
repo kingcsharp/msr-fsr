@@ -4,6 +4,7 @@ using Msr.Services.Invoices.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace Msr.Services.Invoices
 {
@@ -53,7 +54,7 @@ namespace Msr.Services.Invoices
             return result;
         }
 
-        private System.Linq.Expressions.Expression<Func<InvoicePoWorkItem, bool>> invoiceExportFilter(string po, int? invoiceId)
+        private Expression<Func<InvoicePoWorkItem, bool>> invoiceExportFilter(string po, int? invoiceId)
         {
             if (invoiceId.HasValue)
             {
