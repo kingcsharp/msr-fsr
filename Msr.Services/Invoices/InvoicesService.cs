@@ -4,6 +4,7 @@ using Msr.Services.Invoices.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace Msr.Services.Invoices
 {
@@ -48,12 +49,24 @@ namespace Msr.Services.Invoices
 
         public List<InvoicePoWorkItem> InvoiceExportByPo(string po, int? invoiceId)
         {
-            var ret = InvoiceViewList().Where(x => x.Status == "FINISHED" && x.CustPurchNum == po
-             && _dbContext.InvoiceWorkItems.Where(z => z.InvoiceId == invoiceId.Value.ToString()).Distinct()
-             .Select(z => z.ItemId)
-             .Contains(x.FillItemId))
-                .Distinct().ToList();
-            return ret;
+            var result = InvoiceViewList().Where(invoiceExportFilter(po, invoiceId)).ToList();
+
+            return result;
+        }
+
+        private Expression<Func<InvoicePoWorkItem, bool>> invoiceExportFilter(string po, int? invoiceId)
+        {
+            if (invoiceId.HasValue)
+            {
+                return x => x.CustPurchNum == po && x.Status == "FINISHED" &&
+                                                                  _dbContext.InvoiceWorkItems.Where(y => y.InvoiceId == invoiceId.Value.ToString())
+                                                                      .Select(y => y.ItemId).Contains(x.FillItemId);
+            }
+            else
+            {
+                return x => x.CustPurchNum == po && x.Status == "FINISHED" &&
+                                                                  _dbContext.InvoiceWorkItems.Select(y => y.ItemId).Contains(x.FillItemId);
+            }
         }
 
         public List<string> InvoicePoList(bool onEdit)
