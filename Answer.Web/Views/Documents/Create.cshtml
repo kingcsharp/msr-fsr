@@ -9,7 +9,8 @@
     <div class="side-body padding-top">
         <div class="row">
             <h2 class="page-header">
-                Add Document<button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
+                Add Document
+                @Html.Partial("_HelpViewButton")
             </h2>
             <div class="col-lg-10">
                 @using (Html.BeginForm("Create", "Documents", FormMethod.Post, new { @class = "form form-horizontal", @onSubmit = "escapeAllSelects();;", @name = "editForm", @target = "", @action = "" }))
