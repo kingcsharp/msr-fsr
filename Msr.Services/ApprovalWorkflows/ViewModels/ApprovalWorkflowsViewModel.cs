@@ -58,7 +58,7 @@ namespace Msr.Services.ApprovalWorkflows.ViewModels
 
             ListActivities = approvalWorkflowsService.GetActivitiesList().Select(x => new SelectListItem
             {
-                Text = x.Activity,
+                Text = x.TitleActivity,
                 Value = x.Id
             }).OrderBy(o => o.Text).ToList();   
             ListPictureFiles = approvalWorkflowsService.GetFilesById(id: Stamp_Id).Select(x => new SelectListItem
