@@ -5,7 +5,10 @@
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="row">
-            <h2 class="page-header">Parts Monitor Trending <button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button></h2>
+            <h2 class="page-header">
+                Parts Monitor Trending
+                @Html.Partial("_HelpViewButton")
+            </h2>
             <div class="col-md-3 col-sm-12">
                 @using (Html.BeginForm("Index", "PartsReporting", FormMethod.Post, new { @class = "form form-horizontal", role = "form", id = "report-form" }))
                 {
