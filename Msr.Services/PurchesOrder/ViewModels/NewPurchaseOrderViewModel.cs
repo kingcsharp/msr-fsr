@@ -85,10 +85,10 @@ namespace Msr.Services.PurchesOrder.ViewModels
 
             SupplierDepartmentList.Insert(0, new SelectListItem() { Value = "", Text = @"Select Supplier Department" });
 
-            ProductsList = purchesOrderService.GetCompinesProducts(Client, SupplierDepartment).Select(x => new SelectListItem
+            ProductsList = purchesOrderService.GetCompanyProducts(Client, SupplierDepartment).Select(x => new SelectListItem
             {
                 Text = x.Name,
-                Value = x.Order_id.ToString()
+                Value = x.OrderId
             }).OrderBy(o => o.Text).ToList();
 
             Products = purchesOrderService.GetProductsById(ObjId);
