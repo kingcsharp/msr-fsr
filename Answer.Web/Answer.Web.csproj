@@ -2605,7 +2605,6 @@
     <Content Include="Views\PurchaseOrder\Index.cshtml" />
     <Content Include="Views\PurchaseOrder\Create.cshtml" />
     <Content Include="Views\PurchaseOrder\Edit.cshtml" />
-    <Content Include="Views\PurchaseOrder\_Products.cshtml" />
     <Content Include="Views\PurchaseOrder\_Controls.cshtml" />
     <Content Include="Views\EquipmentMaintenance\Create.cshtml" />
     <Content Include="Views\EquipmentMaintenance\Edit.cshtml" />

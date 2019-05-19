@@ -70,5 +70,6 @@ namespace Msr.Models.Products
         public string Division { get; set; }
         public string LocationId { get; set; }
         public int? CycleTime { get; set; }
+        public string OrderId { get; set; }
     }
 }
