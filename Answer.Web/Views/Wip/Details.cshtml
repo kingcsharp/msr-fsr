@@ -113,7 +113,7 @@
                     <!-- Step Navigation -->
                     <div id="carousel" class="flexslider">
                         <ul class="slides">
-                            @foreach (var step in Model.TaskStepResults)
+                            @foreach (var step in Model.TaskStepResults.OrderBy(x=>x.PRINT_ORDER))
                             {
                                 var stepCss = "";
 
@@ -153,7 +153,7 @@
                     <div id="slider" class="flexslider step-container">
                         <ul class="slides">
 
-                            @foreach (var step in Model.TaskStepResults)
+                            @foreach (var step in Model.TaskStepResults.OrderBy(x => x.PRINT_ORDER))
                             {
                                 <li id="step-@step.StepId">
                                 </li>
