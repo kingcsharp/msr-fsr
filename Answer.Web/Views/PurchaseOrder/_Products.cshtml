@@ -1,0 +1,23 @@
+﻿<input type="hidden" value="@ViewBag.CallBackId" id="target-control-id" />
+<input type="hidden" value="@ViewBag.Client" id="Client" />
+<input type="hidden" value="@ViewBag.SupplierDepartment" id="SupplierDepartment" />
+<div class="col-lg-12">
+    <table id="jqGridProducts"></table>
+    <div id="jqGridProductsPager"></div>
+</div>
+@Scripts.Render("~/bundles/js/jqgrid")
+<script type="text/javascript" src="~/assets/js/Grids/products.js"></script>
+<script>
+
+    var selectedValue = $('#SupplierDepartment').val();
+        var clientValue = $('#Client').val();
+
+        if (selectedValue != null && clientValue != null) {
+            LoadProductsGrid('@Url.Action("ProductsData", "PurchaseOrder")' +
+                "/" +
+                selectedValue +
+                "?clientValue=" +
+                clientValue);
+        }
+
+</script>

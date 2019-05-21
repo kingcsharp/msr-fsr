@@ -13,20 +13,20 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
                 datatype: "json",
                 colModel: [
                     {
-                        label: 'Object ID',
+                        label: 'Object Id',
                         name: 'ObjectId',
                         index: 'ObjectId',
                         key: true,
                         colmenu: true,
                         coloptions: { sorting: false, columns: true, filtering: true, seraching: false, grouping: false, freeze: false },
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                        width: 120,
+                        width: 100,
                         align: 'left'
                     },
                     {
                         label: "Item Type",
-                        name: 'ItemTypeTitle',
-                        index: 'ItemTypeTitle',
+                        name: 'ItemType',
+                        index: 'ItemType',
                         colmenu: false,
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                         stype: "select",
@@ -39,7 +39,7 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
                                 Msr.JqGridCommon.DataInitBootstrapMultiselect(elem);
                             }
                         },
-                        width: 120,
+                        width: 200,
                         align: 'left'
                     },
                     {
@@ -50,25 +50,15 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: true, grouping: false, freeze: false },
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                         align: 'left',
-                        width: 600,
+                        width: 300,
                         formatter: itemNameFormatter,
                         hidedlg: false
                     },
-                    //{
-                    //    label: 'Item #',
-                    //    name: 'ItemNumber',
-                    //    index: 'ItemNumber',
-                    //    colmenu: false,
-                    //    coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                    //    searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                    //    align: 'left'
-                    //},
                     {
-                        label: 'Revision Comments',
-                        name: 'RevInfo',
-                        index: 'RevInfo',
+                        label: 'Item #',
+                        name: 'ItemNumber',
+                        index: 'ItemNumber',
                         colmenu: false,
-                        width: 200,
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                         align: 'left'
@@ -78,7 +68,7 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
                         name: 'WfName',
                         index: 'WfName',
                         colmenu: false,
-                        width: 120,
+                        width: 150,
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                         align: 'left'
@@ -89,7 +79,7 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
                         name: 'GroupName',
                         index: 'GroupName',
                         colmenu: false,
-                        width: 120,
+                        width: 150,
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                         align: 'left'
@@ -99,7 +89,7 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
                         name: 'Initiator',
                         index: 'Initiator',
                         colmenu: false,
-                        width: 120,
+                        width: 150,
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                         align: 'left'
@@ -109,7 +99,7 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
                         name: 'Status',
                         index: 'Status',
                         colmenu: false,
-                        width: 120,
+                        width: 200,
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                         stype: "select",
                         multiselect: true,
@@ -122,7 +112,7 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
                         },
                         align: 'left'
                     },
-                    { name: 'Actions', index: 'ID', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: approvalEditFormatter, width: 120, align: 'center' }
+                    { name: 'Actions', index: 'ID', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: approvalEditFormatter, width: 200, align: 'center' }
                 ],
 
                 viewrecords: true, // show the current page, data rang and total records on the toolbar
@@ -166,8 +156,7 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
                 return Msr.PendingApprovalsGrid.ActionLinks(cellvalue, options, rowObject, returnUrl);
             }
             function itemNameFormatter(cellvalue, options, rowObject) {
-                // var itemName = 'Approving Changes to approval_' + rowObject.ItemType + ' Called ' + rowObject.ItemName + " " + rowObject.Revision;
-                var itemName = 'Approving Changes to ' + rowObject.ItemTypeTitle + ' Called ' + rowObject.ItemName + " " + rowObject.Revision;
+                var itemName = 'Approving Changes to approval_' + rowObject.ItemType + ' Called ' + rowObject.ItemName + " " + rowObject.Revision;
                 return itemName;
             }
 
@@ -190,23 +179,23 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
                 datatype: "json",
                 colModel: [
                     {
-                        label: 'Object ID',
+                        label: 'Database Id',
                         name: 'ObjectId',
                         index: 'ObjectId',
                         key: true,
                         colmenu: true,
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                        width: 120,
+                        width: 100,
                         align: 'left'
                     },
                     {
                         label: "Item Type",
-                        name: 'ItemTypeTitle',
-                        index: 'ItemTypeTitle',
+                        name: 'ItemType',
+                        index: 'ItemType',
                         colmenu: false,
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                        width: 120,
+                        width: 200,
                         align: 'left',
                         stype: "select",
                         multiselect: true,
@@ -227,25 +216,15 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: true, grouping: false, freeze: false },
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                         align: 'left',
-                        width: 600,
+                        width: 300,
                         formatter: itemNameFormatter,
                         hidedlg: false
                     },
-                    //{
-                    //    label: 'Item #',
-                    //    name: 'ItemNumber',
-                    //    index: 'ItemNumber',
-                    //    colmenu: false,
-                    //    coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                    //    searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                    //    align: 'left'
-                    //},
                     {
-                        label: 'Revision Comments',
-                        name: 'RevInfo',
-                        index: 'RevInfo',
+                        label: 'Item #',
+                        name: 'ItemNumber',
+                        index: 'ItemNumber',
                         colmenu: false,
-                        width: 200,
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                         align: 'left'
@@ -255,7 +234,7 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
                         name: 'WfName',
                         index: 'WfName',
                         colmenu: false,
-                        width: 120,
+                        width: 150,
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                         align: 'left'
@@ -265,7 +244,7 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
                         name: 'GroupName',
                         index: 'GroupName',
                         colmenu: false,
-                        width: 120,
+                        width: 150,
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                         align: 'left'
@@ -275,7 +254,7 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
                         name: 'Initiator',
                         index: 'Initiator',
                         colmenu: false,
-                        width: 120,
+                        width: 150,
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                         align: 'left'
@@ -285,7 +264,7 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
                         name: 'Status',
                         index: 'Status',
                         colmenu: false,
-                        width: 120,
+                        width: 200,
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                         stype: "select",
                         multiselect: true,
@@ -298,7 +277,7 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
                         },
                         align: 'left'
                     },
-                    { name: 'Actions', index: 'ID', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: approvalEditFormatter, width: 120, align: 'center' }
+                    { name: 'Actions', index: 'ID', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: approvalEditFormatter, width: 200, align: 'center' }
                 ],
 
                 viewrecords: true, // show the current page, data rang and total records on the toolbar
@@ -346,8 +325,7 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
 
             }
             function itemNameFormatter(cellvalue, options, rowObject) {
-                // var itemName = 'Approving Changes to approval_' + rowObject.ItemType + ' Called ' + '<a href="">' + rowObject.ItemName + " " + rowObject.Revision + '</a>';
-                var itemName = 'Approving Changes to ' + rowObject.ItemTypeTitle + ' Called ' + rowObject.ItemName + " " + rowObject.Revision;
+                var itemName = 'Approving Changes to approval_' + rowObject.ItemType + ' Called ' + '<a href="">' + rowObject.ItemName + " " + rowObject.Revision + '</a>';
                 return itemName;
             }
 
