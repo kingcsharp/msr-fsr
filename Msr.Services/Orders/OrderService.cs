@@ -595,6 +595,9 @@ namespace Msr.Services.Orders
                         }
                     }
                 }
+
+                detailsResponse.HasPreviousStepCompleted = HasPreviousStepCompleted(detailsResponse.TaskItemParts, stepId);
+
             }
 
             return detailsResponse;
@@ -1145,5 +1148,27 @@ namespace Msr.Services.Orders
             return GetTotalTime(taskLog);
         }
 
+        private bool HasPreviousStepCompleted(List<TaskItemPart> taskItemParts, int currentStepId)
+        {
+            const int firstStep = 1;
+
+            var currentStep = taskItemParts.SingleOrDefault(x => x.STEP_ID == currentStepId.ToString());
+
+            if (currentStep.Print_Order == firstStep)
+            {
+                return !IsDone(currentStep.Status);
+            }
+
+            var previousStep = taskItemParts
+                .Where(x => x.Print_Order < currentStep.Print_Order)
+                .OrderByDescending(x => x.Print_Order).FirstOrDefault();
+
+            return IsDone(previousStep.Status);
+        }
+
+        private bool IsDone(string status)
+        {
+          return status == WorkItemStatusConstants.Finished || status == WorkItemStatusConstants.Closed;
+        }
     }
 }
