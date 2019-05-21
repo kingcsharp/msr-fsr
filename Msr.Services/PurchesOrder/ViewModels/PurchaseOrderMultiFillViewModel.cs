@@ -25,7 +25,6 @@ namespace Msr.Services.PurchesOrder.ViewModels
         {
 
         }
-
         /// <summary>
         /// For every purchaseOrderFill if the Qty needs filling is >1 it creates a new purchaseOrderFillViewModel
         /// For every purchaseOrder it sets 2 select Lists

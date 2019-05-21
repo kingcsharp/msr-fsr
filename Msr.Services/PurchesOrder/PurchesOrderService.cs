@@ -11,7 +11,9 @@ using System.Data.SqlClient;
 using System.Data;
 using Msr.Models.Orders;
 using Msr.Models.Tasks;
+using Msr.Models.Workflows;
 using Msr.Services.Users.Messages;
+using Msr.Models.Products;
 
 namespace Msr.Services.PurchesOrder
 {
@@ -46,17 +48,18 @@ namespace Msr.Services.PurchesOrder
             return result;
         }
 
-        public List<ProductsCanPurchase> GetCompinesProducts(string clientCo, string supplierCo)
+        public List<ProductsSearchDataView> GetCompanyProducts(string customerId, string supplierId)
         {
-            if (!string.IsNullOrWhiteSpace(clientCo) && !string.IsNullOrWhiteSpace(supplierCo))
+            if (!string.IsNullOrWhiteSpace(customerId) && !string.IsNullOrWhiteSpace(supplierId))
             {
-                var sql =
-                    $"SELECT DISTINCT TOP 500 * FROM A_V_ORDERS_LOOK_UP_FOR_ACCOUNT WHERE ORDER_ID IS NOT NULL AND (( CUSTOMER_CO LIKE '%{clientCo}%' ) ) AND (( SUPPLIER_ID LIKE '%{supplierCo}%' ) ) ORDER BY NAME";
-                var result = _dbContext.Database.SqlQuery<ProductsCanPurchase>(sql).ToList();
+                var products = _dbContext.ProductsSearchDataView
+                    .Where(x => x.CustomerId == customerId && x.SupplierId == supplierId)
+                    .Where(x => x.Status == WorkflowStatusConstants.Approved ||
+                                x.Status == WorkflowStatusConstants.ApprovedButRevisiing).ToList();
 
-                return result;
+                return products;
             }
-            return new List<ProductsCanPurchase>();
+            return new List<ProductsSearchDataView>();
         }
 
         public List<string> GetProductsById(string accountObjId)
@@ -127,9 +130,9 @@ namespace Msr.Services.PurchesOrder
                       $"(SELECT TOP 1 PURCHASE_HIST_ID FROM A_TASK_ORDER_INFORMATION " +
                       $"WHERE TASK_ID IN(SELECT  TOP 1 TASK_ID FROM A_V_FILL_TASKS " +
                       $"WHERE PURCH_ITEM_ID IN(SELECT ID FROM A_ORDER_ITEMS " +
-                      $"WHERE PURCHASE_HIST_ID IN(SELECT OBJ_ID FROM A_OBJECTS WHERE ID = '{objectId}'))))";
-
-            var result = _dbContext.Database.SqlQuery<PurchaseApprovedData>(sql).SingleOrDefault();
+                      $"WHERE PURCHASE_HIST_ID IN(SELECT OBJ_ID FROM A_OBJECTS WHERE ID = '@ID'))))";
+            var param = new SqlParameter("ID", objectId);
+            var result = _dbContext.Database.SqlQuery<PurchaseApprovedData>(sql, param).SingleOrDefault();
 
             return result;
         }
@@ -146,8 +149,9 @@ namespace Msr.Services.PurchesOrder
                 return new List<PurchaseOrderFillViewModel>();
             }
 
-            var sql = $"SELECT * FROM A_V_FILLS_SEARCH WHERE ID IN(" + str + ") AND FILL_OBJ_ID IS NULL and QTY_NEEDS_FILLING > 0";
-            var fills = _dbContext.Database.SqlQuery<PurchaseOrderFill>(sql).Select(x => new PurchaseOrderFillViewModel()
+            var sql = $"SELECT * FROM A_V_FILLS_SEARCH WHERE ID IN(@idsSearch) AND FILL_OBJ_ID IS NULL and QTY_NEEDS_FILLING > 0";
+            var param = new SqlParameter("idsSearch", str);
+            var fills = _dbContext.Database.SqlQuery<PurchaseOrderFill>(sql, param).Select(x => new PurchaseOrderFillViewModel()
             {
                 CUST_NAME = x.CUST_NAME,
                 SUP_NAME = x.SUP_NAME,

@@ -196,15 +196,6 @@ namespace Answer.Web.Controllers
             return Json(json, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult GetProducts(string callBackId, string client, string supplierdepartment)
-        {
-            ViewBag.CallBackId = callBackId;
-            ViewBag.Client = client;
-            ViewBag.SupplierDepartment = supplierdepartment;
-
-            return PartialView("_Products");
-        }
-
         [HttpGet]
         public ActionResult Create()
         {
@@ -280,89 +271,15 @@ namespace Answer.Web.Controllers
         }
         public JsonResult ProductsList(string id, string supplierCo)
         {
-            var products = _purchesOrderService.GetCompinesProducts(id, supplierCo).Select(x => new SelectListItem
-            {
-                Text = x.Name,
-                Value = x.Order_id.ToString()
-            }).OrderBy(o => o.Text).ToList();
+            var products = _purchesOrderService
+                .GetCompanyProducts(id,supplierCo)
+                .Select(x => new SelectListItem
+                {
+                    Text = x.Name,
+                    Value = x.OrderId
+                }).OrderBy(o => o.Text).ToList();
 
             return Json(products, JsonRequestBehavior.AllowGet);
-        }
-
-        [AcceptVerbs(HttpVerbs.Get)]
-        public ActionResult ProductsData(JqGridParam param, string id, string clientValue)
-        {
-            var currentUser = GetCurrentUser();
-
-            var newPurchaseOrderViewModel = new NewPurchaseOrderViewModel();
-
-            newPurchaseOrderViewModel.Setup(_purchesOrderService, _productionPlanningService, currentUser);
-
-            var totalRows = _purchesOrderService.GetCompinesProducts(id, clientValue).AsQueryable();
-
-            if (param.where != null && param.where.rules.Any())
-            {
-                foreach (var rule in param.where.rules)
-                {
-
-                    if (rule.field == nameof(ProductsCanPurchase.Order_id))
-                    {
-                        totalRows = totalRows.Where(x => x.Order_id == rule.data.ToLower());
-                    }
-                    else if (rule.field == nameof(ProductsCanPurchase.supplier_name))
-                    {
-                        totalRows = totalRows.Where(x => x.supplier_name.ToLower().Contains(rule.data.ToLower()));
-                    }
-                    else if (rule.field == nameof(ProductsCanPurchase.Customer_root_name))
-                    {
-                        totalRows = totalRows.Where(x => x.Customer_root_name.ToLower().Contains(rule.data.ToLower()));
-                    }
-                    else if (rule.field == nameof(ProductsCanPurchase.supplier_name))
-                    {
-                        totalRows = totalRows.Where(x => x.supplier_name.ToLower().Contains(rule.data.ToLower()));
-                    }
-                    else if (rule.field == nameof(ProductsCanPurchase.Name))
-                    {
-                        totalRows = totalRows.Where(x => x.Name.ToLower().Contains(rule.data.ToLower()));
-                    }
-                    else if (rule.field == nameof(ProductsCanPurchase.Customer_root_name))
-                    {
-                        totalRows = totalRows.Where(x => x.Customer_root_name.ToLower().Contains(rule.data.ToLower()));
-                    }
-                }
-            }
-            var orderBy = nameof(ProductsCanPurchase.Name);
-
-            if (!string.IsNullOrWhiteSpace(param.sortColumn))
-            {
-                orderBy = param.sortColumn;
-            }
-            if (param.sortOrder == "desc")
-            {
-                totalRows = totalRows.OrderByDescending(orderBy);
-            }
-            else
-            {
-                totalRows = totalRows.OrderBy(orderBy);
-            }
-
-            var totalRecords = totalRows.Count();
-            totalRows = totalRows.Skip(param.pageSize * (param.pageIndex - 1));
-
-            totalRows = totalRows.Take(param.pageSize);
-            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)param.pageSize);
-
-            var results = totalRows.ToList();
-
-            var json = new
-            {
-                total = totalPages,
-                page = param.pageIndex,
-                records = totalRecords,
-                rows = results
-            };
-
-            return Json(json, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]
