@@ -11,7 +11,9 @@ using System.Data.SqlClient;
 using System.Data;
 using Msr.Models.Orders;
 using Msr.Models.Tasks;
+using Msr.Models.Workflows;
 using Msr.Services.Users.Messages;
+using Msr.Models.Products;
 
 namespace Msr.Services.PurchesOrder
 {
@@ -46,17 +48,18 @@ namespace Msr.Services.PurchesOrder
             return result;
         }
 
-        public List<ProductsCanPurchase> GetCompinesProducts(string clientCo, string supplierCo)
+        public List<ProductsSearchDataView> GetCompanyProducts(string customerId, string supplierId)
         {
-            if (!string.IsNullOrWhiteSpace(clientCo) && !string.IsNullOrWhiteSpace(supplierCo))
+            if (!string.IsNullOrWhiteSpace(customerId) && !string.IsNullOrWhiteSpace(supplierId))
             {
-                var sql =
-                    $"SELECT DISTINCT TOP 500 * FROM A_V_ORDERS_LOOK_UP_FOR_ACCOUNT WHERE ORDER_ID IS NOT NULL AND (( CUSTOMER_CO LIKE '%{clientCo}%' ) ) AND (( SUPPLIER_ID LIKE '%{supplierCo}%' ) ) ORDER BY NAME";
-                var result = _dbContext.Database.SqlQuery<ProductsCanPurchase>(sql).ToList();
+                var products = _dbContext.ProductsSearchDataView
+                    .Where(x => x.CustomerId == customerId && x.SupplierId == supplierId)
+                    .Where(x => x.Status == WorkflowStatusConstants.Approved ||
+                                x.Status == WorkflowStatusConstants.ApprovedButRevisiing).ToList();
 
-                return result;
+                return products;
             }
-            return new List<ProductsCanPurchase>();
+            return new List<ProductsSearchDataView>();
         }
 
         public List<string> GetProductsById(string accountObjId)
