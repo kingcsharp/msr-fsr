@@ -7,7 +7,8 @@
     <div class="side-body padding-top">
         <div class="row">
             <h2 class="page-header">
-                Edit Help Page<button class="btn btn-info help-btn pull-right" data-call-back-id="@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString()/@HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString()" data-toggle="modal" data-target="#wipHelpModal">Help</button>
+                Edit Help Page
+                @Html.Partial("_HelpViewButton")
             </h2>
             <div class="col-lg-10">
                 @using (Html.BeginForm())

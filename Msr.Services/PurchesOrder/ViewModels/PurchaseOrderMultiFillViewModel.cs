@@ -21,11 +21,6 @@ namespace Msr.Services.PurchesOrder.ViewModels
         public string KitCount { get; set; }
         public List<SelectListItem> KitCountList { get; set; }
 
-        public void SetSelectListsForAllPurchaseOrders(List<PurchaseOrderFill> purchaseOrderFill)
-        {
-
-        }
-
         /// <summary>
         /// For every purchaseOrderFill if the Qty needs filling is >1 it creates a new purchaseOrderFillViewModel
         /// For every purchaseOrder it sets 2 select Lists
