@@ -198,10 +198,14 @@ Msr.QuotesGrid = Msr.QuotesGrid ||
                 if (rowObject.IsProduct === false) {
                     var startButton = '<a href="/ProductionPlanning/Edit/' + rowObject.ObjectId + '" class="btn btn-xs btn-primary" title="Start" style="margin:2px;font-size: .8em;"><i class="fa fa-play-circle"> Start</i></a>';
 
-                    url = '/workflow/delete?objId=' + rowObject.ObjectId + '&returnUrl=' + Msr.QuotesGrid.GetReturnUrl();
-                    deleteButton = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-danger" title="Proceed to delete." style="margin:2px;font-size: .8em;"><i class="fa fa fa-trash-o"></i></a>';
-
-                    return startButton + deleteButton;
+                    var url = '/workflow/delete?objId=' + rowObject.ObjectId + '&returnUrl=' + Msr.QuotesGrid.GetReturnUrl();
+                    var deleteButton = '<a href="' + url + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-danger" title="Proceed to delete." style="margin:2px;font-size: .8em;"><i class="fa fa fa-trash-o"></i></a>';
+                    if (deleteButton) {
+                        return startButton + deleteButton;
+                    }
+                    else {
+                        return startButton;
+                    }
                 } else {
                     var viewButton = '<a href="/ProductionPlanning/view/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" title="View" style="margin:2px;font-size: .8em;"><i class="fa fa-eye"></i></a>';
                     var actions = Msr.JqGridCommon.ActionFormtter(cellvalue, options, rowObject, Msr.QuotesGrid.GetReturnUrl(), Msr.QuotesGrid.GetGridEditUrl(), hasAdministratorRole);
