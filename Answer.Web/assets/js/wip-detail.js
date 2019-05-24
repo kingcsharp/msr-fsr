@@ -393,13 +393,11 @@
             });
 
         } else {
-
             containerUl.find('li').each(function (index, value) {
                 if ($(this).find('a span.label').html() === "FINISHED" || $(this).find('a span.label').html() === "CLOSED") {
                     $(this).show();
                 }
             });
-
         }
     }
 })();

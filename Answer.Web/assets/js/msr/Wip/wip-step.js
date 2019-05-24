@@ -30,7 +30,7 @@
 
         $.ajax({
             type: "POST",
-            url: '/wip/StepDoneClick?stepId=' + stepId + '&fillId=' + fillId + '&parentPartId=' + parentPartId +'&isSerilizeStep='+ isSerilizeStep,
+            url: '/wip/StepDoneClick?stepId=' + stepId + '&fillId=' + fillId + '&parentPartId=' + parentPartId + '&isSerilizeStep=' + isSerilizeStep,
             dataType: 'json',
             success: function (data) {
                 if (data.ErrorMessage !== '') {
@@ -94,7 +94,7 @@
                 data: $('#Update-root-part').serialize(),
                 dataType: 'json',
                 success: function (data) {
-                    stepDone(stepId, fillId, parentPartId,true);
+                    stepDone(stepId, fillId, parentPartId, true);
                 },
                 error: function (error) {
                     eLoaderError(error);
