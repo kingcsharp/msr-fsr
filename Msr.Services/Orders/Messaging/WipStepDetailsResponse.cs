@@ -31,5 +31,6 @@ namespace Msr.Services.Orders.Messaging
         public bool HasStepRolesCertification { get; set; }
         public string ParentPartId { get; set; }
         public string ParentId { get; set; }
+        public bool HasPreviousStepCompleted { get; set; }
     }
 }
