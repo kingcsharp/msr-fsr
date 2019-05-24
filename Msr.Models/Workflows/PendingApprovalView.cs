@@ -8,6 +8,7 @@ namespace Msr.Models.Workflows
         [Key]
         public string ObjectId { get; set; }
         public string ItemType { get; set; }
+        public string ItemTypeTitle { get; set; }
         public string ItemName { get; set; }
         public string ItemNumber { get; set; }
         public string WfName { get; set; }

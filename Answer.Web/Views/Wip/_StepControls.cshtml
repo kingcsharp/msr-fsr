@@ -34,7 +34,7 @@
 
 <div class="row" id="@Model.StepId">
 
-    @if (Model.HasStepRoles)
+    @if (Model.HasStepRoles && Model.HasPreviousStepCompleted)
     {
         <div id="timer-input" class="col-sm-4 timer-input @timerInput">
             <input type="text" name="timer" class="form-control timer input-lg" width="120">
@@ -67,30 +67,26 @@
 
         </div>
     }
-        <div class="col-sm-5 pull-right">
+    
+     @if (Model.HasPreviousStepCompleted)
+     {
+         <div class="col-sm-5 pull-right">
+             <div id="showNCREMPM" style="@(Model.TaskEditDataResult.Status == "ACCEPTED" || Model.TaskEditDataResult.Status == "REQUESTED" ? "display:block" : "display:none")">
+                 <button id="addNcrModal_" class="btn btn-danger btn-lg print-btn pull-right"><i class="fa fa-plus-square"></i> Add NCR</button>
+                 <button data-toggle="modal" data-fill-id="@ViewBag.FillId" data-target="#add-new-equipment-model" class="btn btn-info btn-lg print-btn pull-right"><i class="fa fa-plus-square"></i> EM/PM</button>
+             </div>
 
-            <div id="showNCREMPM" style="@(Model.TaskEditDataResult.Status == "ACCEPTED" || Model.TaskEditDataResult.Status == "REQUESTED" ? "display:block" : "display:none")">
-                <button id="addNcrModal_" class="btn btn-danger btn-lg print-btn pull-right"><i class="fa fa-plus-square"></i> Add NCR</button>
-                <button data-toggle="modal" data-fill-id="@ViewBag.FillId" data-target="#add-new-equipment-model" class="btn btn-info btn-lg print-btn pull-right"><i class="fa fa-plus-square"></i> EM/PM</button>
-            </div>
+             @if (Model.TaskEditDataResult.RequesteeId != Model.LoggedUserIdResult.Id)
+             {
+                 <button class="btn btn-warning btn-lg print-btn pull-right show-timer-btn" id="assume-step"><i class="glyphicon glyphicon-step-forward"></i> Take over this task</button>
+             }
 
-                @if (Model.TaskEditDataResult.RequesteeId != Model.LoggedUserIdResult.Id)
-                {
-                    <button class="btn btn-warning btn-lg print-btn pull-right show-timer-btn" id="assume-step"><i class="glyphicon glyphicon-step-forward"></i> Take over this task</button>
-                }
-
-            </div>
-            <input type="hidden" id="taskLogId" name="taskLogId" value="">
+         </div>
+         <input type="hidden" id="taskLogId" name="taskLogId" value="">
+     }
         </div>
 
 @Scripts.Render("~/bundles/js/wip-step-controls")
-@*<script src="//cdn.rawgit.com/noelboss/featherlight/1.6.1/release/featherlight.min.js" type="text/javascript" charset="utf-8"></script>*@
-@*<script type="text/javascript" src="~/assets/js/grids/files-dialog.js"></script>*@
-@*<script type="text/javascript" src="~/assets/js/jquery.flexslider.js"></script>*@
-@*<script type="text/javascript" src="~/assets/js/bootstrap-select.js"></script>*@
-@*<script type="text/javascript" src="~/assets/js/finger.min.js"></script>*@
-@*<script type="text/javascript" src="~/assets/js/timer.jquery.min.js"></script>*@
-@*<script src="~/assets/js/plugins/bootstrap3/bootstrap-dialog.min.js"></script>*@
 
 <script type="text/javascript" src="~/assets/js/grids/files-dialog.js"></script>
 <script src="~/assets/js/grids/procedure-select.js"></script>
@@ -122,7 +118,7 @@
             }
         }
 
-       $('#@Model.StepId #pause-step').on('click', function () {
+        $('#@Model.StepId #pause-step').on('click', function () {
                 eLoaderOpen();
                 var id = $(this).data('task-log-id');
                 var taskLogId = $('#taskLogId').val();
@@ -130,7 +126,7 @@
                   {        
                     id = taskLogId;
                   }
-                stepControls.StepPauseClick(id, fillId, stepId);
+        stepControls.StepPauseClick(id, fillId, stepId);
 				$('#step-@Model.StepId .timer').timer('pause');
         });
 
@@ -154,12 +150,12 @@
 		            seconds: @Math.Round(Model.TaskRunningDto?.TotalSeconds ?? 0),
 		            duration: '@(Model.TaskRunningDto?.Duration ?? "0")'
             });
-
             $('#@Model.StepId #done-step').removeClass('hidden');
             $('#@Model.StepId #pause-step').removeClass('hidden');
             $('#@Model.StepId #start-step').removeClass('show');
             $('#@Model.StepId #start-step').addClass('hidden');
             $('#showNCREMPM').show();
+
         });
 
         $('#@Model.StepId #done-step').on('click', function () {
