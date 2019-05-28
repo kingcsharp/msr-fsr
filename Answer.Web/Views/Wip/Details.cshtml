@@ -106,14 +106,14 @@
                         }
                     </div>
                 </div>
-                <!-- <div class="col-lg-2 col-md-2"> @Html.Partial("_HelpViewButton")</div> -->
+                <!-- <div class="col-lg-2 col-md-2"><button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button></div> -->
             </div>
             <div class="row">
                 <div class="col-lg-12">
                     <!-- Step Navigation -->
                     <div id="carousel" class="flexslider">
                         <ul class="slides">
-                            @foreach (var step in Model.TaskStepResults)
+                            @foreach (var step in Model.TaskStepResults.OrderBy(x=>x.PRINT_ORDER))
                             {
                                 var stepCss = "";
 
@@ -153,7 +153,7 @@
                     <div id="slider" class="flexslider step-container">
                         <ul class="slides">
 
-                            @foreach (var step in Model.TaskStepResults)
+                            @foreach (var step in Model.TaskStepResults.OrderBy(x => x.PRINT_ORDER))
                             {
                                 <li id="step-@step.StepId">
                                 </li>

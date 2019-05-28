@@ -121,7 +121,6 @@ namespace Msr.Repositories
             modelBuilder.Entity<InvoiceWorkItem>().ToTable("Portal_InvoiceWorkItem");
             modelBuilder.Entity<TrainingView>().ToTable("Portal_TrainingView");
             modelBuilder.Entity<ApprovedSitesAndRoomsView>().ToTable("A_V_LOCATIONS_APPROVED_SITES_AND_ROOMS");
-            modelBuilder.Entity<ProductsSearchDataView>().ToTable("Portal_ProductsSearchDataView");
     }
 
         public DbSet<AspNetUser> AspNetUsers { get; set; }
@@ -195,6 +194,5 @@ namespace Msr.Repositories
         public DbSet<InvoiceWorkItem> InvoiceWorkItems { get; set; }
         public DbSet<TrainingView> TrainingViews { get; set; }
         public DbSet<ApprovedSitesAndRoomsView> ApprovedSitesAndRoomsViews { get; set; }
-        public DbSet<ProductsSearchDataView> ProductsSearchDataView { get; set; }
     }
 }
