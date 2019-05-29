@@ -130,9 +130,9 @@ namespace Msr.Services.PurchesOrder
                       $"(SELECT TOP 1 PURCHASE_HIST_ID FROM A_TASK_ORDER_INFORMATION " +
                       $"WHERE TASK_ID IN(SELECT  TOP 1 TASK_ID FROM A_V_FILL_TASKS " +
                       $"WHERE PURCH_ITEM_ID IN(SELECT ID FROM A_ORDER_ITEMS " +
-                      $"WHERE PURCHASE_HIST_ID IN(SELECT OBJ_ID FROM A_OBJECTS WHERE ID = '@ID'))))";
-            var param = new SqlParameter("ID", objectId);
-            var result = _dbContext.Database.SqlQuery<PurchaseApprovedData>(sql, param).SingleOrDefault();
+                      $"WHERE PURCHASE_HIST_ID IN(SELECT OBJ_ID FROM A_OBJECTS WHERE ID = '{objectId}'))))";
+
+            var result = _dbContext.Database.SqlQuery<PurchaseApprovedData>(sql).SingleOrDefault();
 
             return result;
         }
@@ -149,9 +149,8 @@ namespace Msr.Services.PurchesOrder
                 return new List<PurchaseOrderFillViewModel>();
             }
 
-            var sql = $"SELECT * FROM A_V_FILLS_SEARCH WHERE ID IN(@idsSearch) AND FILL_OBJ_ID IS NULL and QTY_NEEDS_FILLING > 0";
-            var param = new SqlParameter("idsSearch", str);
-            var fills = _dbContext.Database.SqlQuery<PurchaseOrderFill>(sql, param).Select(x => new PurchaseOrderFillViewModel()
+            var sql = $"SELECT * FROM A_V_FILLS_SEARCH WHERE ID IN(" + str + ") AND FILL_OBJ_ID IS NULL and QTY_NEEDS_FILLING > 0";
+            var fills = _dbContext.Database.SqlQuery<PurchaseOrderFill>(sql).Select(x => new PurchaseOrderFillViewModel()
             {
                 CUST_NAME = x.CUST_NAME,
                 SUP_NAME = x.SUP_NAME,
@@ -384,6 +383,7 @@ namespace Msr.Services.PurchesOrder
 
                 for (int i = 0; i < model.ProductPo.Count; i++)
                 {
+
                     //count++;
                     var poCreations = model.ProductPo[i].GroupPo ? 1 : model.ProductPo[i].Qty;
                     for (var j = 0; j < poCreations; j++)
@@ -410,7 +410,6 @@ namespace Msr.Services.PurchesOrder
                         purchasePoDetailProcedure.orderID = model.ProductPo[i].ORDER_ID;
                         purchasePoDetailProcedure.Strntlogin = ntLogin;
                         _dbContext.Database.ExecuteStoredProcedure(purchasePoDetailProcedure);
-                        //}
                     }
                 }
 

@@ -12,6 +12,6 @@ namespace Msr.Services.Orders.Procedures
         public string RawDescription { get; set; }
         public string Title { get; set; }
         public string Roles { get; set; }
-        public string PRINT_ORDER { get; set; }
+        public int? PRINT_ORDER { get; set; }
     }
 }

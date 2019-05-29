@@ -7,8 +7,7 @@
         <div class="row">
             <h2 class="page-header">
                 <span class="icon fa fa-paper-plane-o"></span>
-                Quotes
-                @Html.Partial("_HelpViewButton")
+                Quotes @Html.Partial("_HelpViewButton")
             </h2>
             <div class="col-lg-12">
                 @Html.Partial("Message")
@@ -30,10 +29,10 @@
     @Scripts.Render("~/bundles/js/jqgrid-production-planning")
 
     <script type="text/javascript">
-        var hasAdministratorRole = '@User.IsInRole("Administrators")' === 'True';
+
         $(document).ready(function () {
 
-            Msr.QuotesGrid.LoadGrid('@Url.Action("ProductionPlanningData", "ProductionPlanning")',hasAdministratorRole);
+            Msr.QuotesGrid.LoadGrid('@Url.Action("ProductionPlanningData", "ProductionPlanning")');
         });
     </script>
 

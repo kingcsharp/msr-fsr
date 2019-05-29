@@ -17,7 +17,8 @@ CREATE            PROCEDURE DBO.A_SP_PURCHASE_ITEM_UPDATE_ITEM
 @acct varchar(50),
 @toLoc varchar(50),
 @fromLoc varchar(50),
-@strNTLogin varchar(50)
+@strNTLogin varchar(50),
+@groupWO bit
 AS
 print 'Updating a Purchase item'
 if not exists(SELECT * FROM A_ORDER_ITEMS WHERE ID = @ID)
@@ -40,13 +41,15 @@ if @parentID is NULL
 		ACCOUNT_ID = @acct,
 		QTY = @qty,
 		TO_LOC = @toLoc,
-		FROM_LOC = @fromLoc
+		FROM_LOC = @fromLoc,
+		GroupWO = @groupWO
 		WHERE ID = @ID
 else
 	UPDATE A_ORDER_ITEMS SET 
 		ACCOUNT_ID = @acct,
 		TO_LOC = @toLoc,
-		FROM_LOC = @fromLoc
+		FROM_LOC = @fromLoc,
+		GroupWO  = @groupWO
 		WHERE ID = @ID
 	
 exec A_SP_ORDER_ITEM_UPDATE_QTYS @ID
