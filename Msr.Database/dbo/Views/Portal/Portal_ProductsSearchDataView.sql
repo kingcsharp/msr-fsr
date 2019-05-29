@@ -3,6 +3,7 @@ AS
 
 SELECT     
 o.Id,
+
 '(' + orders.CUSTOMER_ROOT_CO_NAME + ') ' + ph.NAME +  ' (R-' + CONVERT(varchar(MAX),o.rev) + ') [supplier: ' + ad.NAME + ']' AS NAME,
 ph.SUPPLIER_ID AS SupplierId,
 pqp.CUST_ID AS CustomerId,
