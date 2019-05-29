@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Msr.Services.PurchesOrder.ViewModels
 {
@@ -17,5 +13,6 @@ namespace Msr.Services.PurchesOrder.ViewModels
         public DateTime? Expration_Date { get; set; }
         [Required]
         public float? Qty { get; set; }
+        public bool GroupWO { get; set; }
     }
 }

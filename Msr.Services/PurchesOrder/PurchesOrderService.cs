@@ -397,8 +397,9 @@ namespace Msr.Services.PurchesOrder
                     purchasePoViewItemProcedure.qty = model.ProductPo[i].Qty.ToString();
                     purchasePoViewItemProcedure.acctID = model.Root;
                     purchasePoViewItemProcedure.strNTLogin = ntLogin;
-                    _dbContext.Database.ExecuteStoredProcedure(purchasePoViewItemProcedure);
+                    purchasePoViewItemProcedure.GroupWO = model.ProductPo[i].GroupWO;
 
+                    _dbContext.Database.ExecuteStoredProcedure(purchasePoViewItemProcedure);
 
                     if (count != model.ProductPo.Count)
                     {
@@ -406,7 +407,6 @@ namespace Msr.Services.PurchesOrder
                         purchasePoDetailProcedure.orderID = model.ProductPo[i + 1].ORDER_ID;
                         purchasePoDetailProcedure.Strntlogin = ntLogin;
                         _dbContext.Database.ExecuteStoredProcedure(purchasePoDetailProcedure);
-
                     }
 
                 }

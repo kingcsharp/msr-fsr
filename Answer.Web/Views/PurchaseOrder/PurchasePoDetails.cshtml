@@ -1,6 +1,6 @@
 ﻿@model Msr.Services.PurchesOrder.ViewModels.PurchaseFormAccountViewModel
 @{
-    ViewBag.Title = "Purchase Order Details";
+                ViewBag.Title = "Purchase Order Details";
 }
 <div class="container-fluid">
     <div class="side-body padding-top">
@@ -96,7 +96,7 @@
                                 <td style="width:400px;">
                                     <div style="display: none" class="show-hide-button">
                                         <div class="make-switch switch-small" data-on="success" data-off="warning" style="display: inline-block">
-                                            <input class="show-switch-button" type="checkbox" name="completed-switch">
+                                            @Html.CheckBoxFor(x => Model.ProductPo[i].GroupWO, new { @class = "show-switch-button", @name = "completed-switch" })
                                         </div>
                                         <label>Group Quantity on One WO</label>
                                     </div>
@@ -131,6 +131,11 @@
                 });
 
             $(".qty").keyup(function () {
+                var elem = $(this).parent().next().find('div');
+                $(this).val() > 1 ? elem.show() : elem.hide();
+            });
+
+            $(".qty").each(function () {
                 var elem = $(this).parent().next().find('div');
                 $(this).val() > 1 ? elem.show() : elem.hide();
             });
