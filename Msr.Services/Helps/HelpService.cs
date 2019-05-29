@@ -1,14 +1,14 @@
-﻿using System;
-using System.Linq;
-using Msr.Models.Helps;
+﻿using Msr.Models.Helps;
 using Msr.Repositories;
 using Msr.Services.Helps.ViewModels;
 using Msr.Services.Roles;
 using Msr.Services.Users;
+using System;
+using System.Linq;
 
 namespace Msr.Services.Helps
 {
-   public class HelpService
+    public class HelpService
     {
         private readonly MsrDbContext _dbContext;
 
@@ -96,6 +96,7 @@ namespace Msr.Services.Helps
                 return result;
             }
         }
+
         public ResultNotification<string> Delete(int id)
         {
             var result = new ResultNotification<string>();
@@ -115,11 +116,35 @@ namespace Msr.Services.Helps
                 return result;
             }
         }
+
         public HelpPage GetHelp(string pageUrl)
         {
-            var result = _dbContext.Helps.Where(x => x.FriendlyUrl.Contains(pageUrl)).SingleOrDefault();
+            HelpPage helpPage = null;
 
-            return result;
+            // var result = _dbContext.Helps.Where(x => x.FriendlyUrl.Contains(pageUrl)).SingleOrDefault();
+
+            if (string.IsNullOrWhiteSpace(pageUrl) == true) { pageUrl = string.Empty; } else { pageUrl = pageUrl.Trim().ToLower(); }
+
+            if (pageUrl.Length > 1)
+            {
+
+                if (pageUrl.StartsWith("/") == false) { pageUrl = "/" + pageUrl; }
+
+                if (pageUrl.Contains("?") == true)
+                {
+                    pageUrl = pageUrl.Substring(0, pageUrl.IndexOf("?"));
+                }
+
+                if (pageUrl.EndsWith("/") == true)
+                {
+                    pageUrl = pageUrl.Substring(0, pageUrl.Length - 1);
+                }
+
+                helpPage = _dbContext.Helps.Where(x => x.FriendlyUrl.Equals(pageUrl)).SingleOrDefault();
+
+            }
+
+            return helpPage;
         }
 
         public HelpViewModel CheckUrl(string friendlyUrl)
@@ -132,11 +157,13 @@ namespace Msr.Services.Helps
         {
             var vm = new ViewHelpPage();
 
-            var userervice = new UserService();
+            var userService = new UserService();
 
-            var user = userervice.GetUserId(userId);
+            var user = userService.GetUserId(userId);
 
-            var result = _dbContext.Helps.SingleOrDefault(x => x.FriendlyUrl == pageUrl);
+            // var result = _dbContext.Helps.SingleOrDefault(x => x.FriendlyUrl == pageUrl);
+
+            var result = GetHelp(pageUrl);
 
             var roles = _roleService.GetAssignedRoles(user.Id);
 
@@ -148,7 +175,8 @@ namespace Msr.Services.Helps
 
                 foreach (var role in roles)
                 {
-                    if (helpRoles.Any(x => x == role.Role_Id)) {
+                    if (helpRoles.Any(x => x == role.Role_Id))
+                    {
                         vm.CanView = true;
                         return vm;
                     }
