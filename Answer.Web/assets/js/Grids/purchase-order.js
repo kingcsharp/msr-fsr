@@ -432,6 +432,7 @@ Msr.PurchaseOrderGrid = Msr.PurchaseOrderGrid ||
             var actions = Msr.JqGridCommon.ActionFormtter(cellvalue, options, rowObject, Msr.PurchaseOrderGrid.GetReturnUrl(), '/PurchaseOrder/Edit/', true);
 
             // JUSTIN G. FIX (REQ20:  Purchase Order: Only purchase orders in Approved state will show the "$" indicating they can be purchases against)
+
             // if (rowObject.Product !== null) {
             if (rowObject.Product !== null && rowObject.Status === "APPROVED") {
                 showPoButton = '<a  title="Purchase On this PO" href="/PurchaseOrder/PurchasePoDetails/' + rowObject.Root + '" data-call-back-id ="' + rowObject.Root + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-dollar"></i></a>';
