@@ -195,7 +195,7 @@
             var reportType = $('#PrintOtherId').val();
 
             var url = '/PrintOther/';
-            if (reportType == "WORK_REPORT") {
+            if (reportType === "WORK_REPORT") {
                 var purchaseItemId = $('#PURCH_ITEM_ID').val();
                 var tsrType = $('#TSR_TYPE').val();
                 var showSteps = $('#SHOW_STEPS').val();
@@ -393,13 +393,11 @@
             });
 
         } else {
-
             containerUl.find('li').each(function (index, value) {
                 if ($(this).find('a span.label').html() === "FINISHED" || $(this).find('a span.label').html() === "CLOSED") {
                     $(this).show();
                 }
             });
-
         }
     }
 })();

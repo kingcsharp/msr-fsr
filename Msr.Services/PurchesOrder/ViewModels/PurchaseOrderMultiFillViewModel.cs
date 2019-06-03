@@ -57,7 +57,7 @@ namespace Msr.Services.PurchesOrder.ViewModels
                             PRICING_TABLE_ID = item.PRICING_TABLE_ID,
                             CUSTOMER = item.CUSTOMER,
                             SUPPLIER = item.SUPPLIER,
-                            PURCHASE_QTY = item.PURCHASE_QTY,
+                            PURCHASE_QTY = item.GroupWO ? item.PURCHASE_QTY : 1,
                             UNIT_PRICE = item.UNIT_PRICE,
                             TOTAL_PRICE = item.TOTAL_PRICE,
                             DEST = item.DEST,
@@ -94,8 +94,13 @@ namespace Msr.Services.PurchesOrder.ViewModels
                             LocationList = locationList,
                             OwnerList = ownerList,
                         };
-                        this.FillList.Add(purchaseOrderFillViewModel);
+                    this.FillList.Add(purchaseOrderFillViewModel);
+
+                    if (item.GroupWO)
+                    {
+                        break;
                     }
+                    } 
                     else
                     {
                         item.LocationList = locationList;

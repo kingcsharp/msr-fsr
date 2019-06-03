@@ -87,12 +87,14 @@
                                     @Html.ValidationMessageFor(model => Model.FillList[i].SERIAL_NUMBER, "", new {@class = "text-danger"})
                                 }
                             </td>
-                            <td>@Html.TextBoxFor(modelItem => Model.FillList[i].PURCHASE_QTY, new { @Value="1", @class = "form-control" })</td>
+                            <td>@Html.TextBoxFor(modelItem => Model.FillList[i].PURCHASE_QTY, new { @class = "form-control" })</td>
                             <td>@Html.TextBoxFor(modelItem => Model.FillList[i].APP_OBJ_DESC, new { @class = "form-control", @readonly = "readonly" })</td>
                             <td>@Html.TextBoxFor(modelItem => Model.FillList[i].PROC_NAME, new { @class = "form-control", @readonly = "readonly" })</td>
                             <td>@Html.DropDownListFor(modelItem => Model.FillList[i].CO_ID, Model.FillList[i].OwnerList, new { @class = "form-control" })</td>
                             <td>@Html.DropDownListFor(modelItem => Model.FillList[i].LOCATION_ID, Model.FillList[i].LocationList, new { @class = "form-control" })</td>
                         </tr>
+
+                      
                     }
                     </tbody>
                 </table>

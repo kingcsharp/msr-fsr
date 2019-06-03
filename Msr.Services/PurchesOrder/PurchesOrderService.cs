@@ -11,7 +11,9 @@ using System.Data.SqlClient;
 using System.Data;
 using Msr.Models.Orders;
 using Msr.Models.Tasks;
+using Msr.Models.Workflows;
 using Msr.Services.Users.Messages;
+using Msr.Models.Products;
 
 namespace Msr.Services.PurchesOrder
 {
@@ -46,17 +48,18 @@ namespace Msr.Services.PurchesOrder
             return result;
         }
 
-        public List<ProductsCanPurchase> GetCompinesProducts(string clientCo, string supplierCo)
+        public List<ProductsSearchDataView> GetCompanyProducts(string customerId, string supplierId)
         {
-            if (!string.IsNullOrWhiteSpace(clientCo) && !string.IsNullOrWhiteSpace(supplierCo))
+            if (!string.IsNullOrWhiteSpace(customerId) && !string.IsNullOrWhiteSpace(supplierId))
             {
-                var sql =
-                    $"SELECT DISTINCT TOP 500 * FROM A_V_ORDERS_LOOK_UP_FOR_ACCOUNT WHERE ORDER_ID IS NOT NULL AND (( CUSTOMER_CO LIKE '%{clientCo}%' ) ) AND (( SUPPLIER_ID LIKE '%{supplierCo}%' ) ) ORDER BY NAME";
-                var result = _dbContext.Database.SqlQuery<ProductsCanPurchase>(sql).ToList();
+                var products = _dbContext.ProductsSearchDataView
+                    .Where(x => x.CustomerId == customerId && x.SupplierId == supplierId)
+                    .Where(x => x.Status == WorkflowStatusConstants.Approved ||
+                                x.Status == WorkflowStatusConstants.ApprovedButRevisiing).ToList();
 
-                return result;
+                return products;
             }
-            return new List<ProductsCanPurchase>();
+            return new List<ProductsSearchDataView>();
         }
 
         public List<string> GetProductsById(string accountObjId)
@@ -360,7 +363,7 @@ namespace Msr.Services.PurchesOrder
         public ResultNotification<string> PurchasedOrderUpdateAndShowOrderItemList(PurchaseFormAccountViewModel model, string ntLogin)
         {
             var responsePurchase = new ResultNotification<string>();
-            int count = 0;
+            //int count = 0;
             try
             {
 
@@ -380,31 +383,34 @@ namespace Msr.Services.PurchesOrder
 
                 for (int i = 0; i < model.ProductPo.Count; i++)
                 {
-                    count++;
-                    purchasePoViewItemProcedure.purchObjID = purchasePoProcedure.NewID;
-                    if (purchasePoDetailProcedure.NewID == null)
+
+                    //count++;
+                    var poCreations = model.ProductPo[i].GroupPo ? 1 : model.ProductPo[i].Qty;
+                    for (var j = 0; j < poCreations; j++)
                     {
-                        purchasePoViewItemProcedure.orderItemID = null;
-                    }
-                    else
-                    {
-                        purchasePoViewItemProcedure.orderItemID = purchasePoDetailProcedure.NewID;
-                    }
-                    purchasePoViewItemProcedure.qty = model.ProductPo[i].Qty.ToString();
-                    purchasePoViewItemProcedure.acctID = model.Root;
-                    purchasePoViewItemProcedure.strNTLogin = ntLogin;
-                    _dbContext.Database.ExecuteStoredProcedure(purchasePoViewItemProcedure);
+                        purchasePoViewItemProcedure.purchObjID = purchasePoProcedure.NewID;
+
+                        if (purchasePoDetailProcedure.NewID == null)
+                        {
+                            purchasePoViewItemProcedure.orderItemID = null;
+                        }
+                        else
+                        {
+                            purchasePoViewItemProcedure.orderItemID = purchasePoDetailProcedure.NewID;
+                        }
+                        purchasePoViewItemProcedure.qty = model.ProductPo[i].GroupPo ? model.ProductPo[i].Qty.ToString() : "1";
+                        purchasePoViewItemProcedure.acctID = model.Root;
+                        purchasePoViewItemProcedure.strNTLogin = ntLogin;
+                        _dbContext.Database.ExecuteStoredProcedure(purchasePoViewItemProcedure);
 
 
-                    if (count != model.ProductPo.Count)
-                    {
+                        //if (i != model.ProductPo.Count - 1 || j != poCreations - 1)
+                        //{
                         purchasePoDetailProcedure.strPurchaseObjID = purchasePoProcedure.NewID;
-                        purchasePoDetailProcedure.orderID = model.ProductPo[i + 1].ORDER_ID;
+                        purchasePoDetailProcedure.orderID = model.ProductPo[i].ORDER_ID;
                         purchasePoDetailProcedure.Strntlogin = ntLogin;
                         _dbContext.Database.ExecuteStoredProcedure(purchasePoDetailProcedure);
-
                     }
-
                 }
 
                 _dbContext.Database.ExecuteSqlCommand("UPDATE A_PURCHASES_HISTORY SET  CUST_PURCH_NUM = '" + model.REFERENCE_PO + "', ACCT_FOR_ALL = '" + model.Root + "' WHERE OBJECT_ID = '" + responsePurchase.Entity + "'");

@@ -99,5 +99,7 @@ namespace Msr.Models.PurchesOrder
         public Int16? BATCH_FILL { get; set; }
 
         public string BATCH_PARENT { get; set; }
+
+        public bool  GroupWO { get; set; }
     }
 }

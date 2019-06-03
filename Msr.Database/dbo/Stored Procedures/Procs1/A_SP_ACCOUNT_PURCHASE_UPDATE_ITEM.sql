@@ -4,7 +4,8 @@ CREATE  PROCEDURE dbo.A_SP_ACCOUNT_PURCHASE_UPDATE_ITEM
 @orderItemID varchar(50),
 @qty float,
 @acctID varchar(50),
-@strNTLogin varchar(50)
+@strNTLogin varchar(50),
+@groupWO bit
 AS
 print 'Updating an Order Item on a purchase'
 print 'Order Item ID = ' + isNull(@orderItemID,'NULL')
@@ -27,7 +28,9 @@ null, --@messages nvarchar(2000) OUTPUT,
 null, --@acct varchar(50),
 null, --@toLoc varchar(50),
 null, --@fromLoc
-@strNTLogin --@strNTLogin varchar(50)
+@strNTLogin, --@strNTLogin varchar(50)
+@groupWO
+
 SELECT * FROM A_ORDER_ITEMS 
 		WHERE PURCHASE_HIST_ID = @phID and ADD_COST_ID IS not NULL
 declare @curs as cursor, @it varchar(50)
