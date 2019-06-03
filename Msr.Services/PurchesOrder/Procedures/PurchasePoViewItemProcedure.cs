@@ -26,5 +26,8 @@ namespace Msr.Services.PurchesOrder.Procedures
 
         [StoredProcedureParameter(SqlDbType.VarChar, Size = 50, ParameterName = "strNTLogin")]
         public string strNTLogin { get; set; }
+
+        [StoredProcedureParameter(SqlDbType.Bit, ParameterName = "groupWO")]
+        public bool GroupWO { get; set; }
     }
 }

@@ -9,6 +9,8 @@ namespace Msr.Services.PurchesOrder.ViewModels
 {
     public class PurchaseOrderFillViewModel
     {
+        public bool GroupWO;
+
         public PurchaseOrderFillViewModel()
         {
 
