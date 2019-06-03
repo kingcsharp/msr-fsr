@@ -13,6 +13,7 @@ namespace Msr.Services.PurchesOrder.ViewModels
         public DateTime? Expration_Date { get; set; }
         [Required]
         public float? Qty { get; set; }
-        public bool GroupWO { get; set; }
+        public bool GroupPo { get; set; }
+
     }
 }

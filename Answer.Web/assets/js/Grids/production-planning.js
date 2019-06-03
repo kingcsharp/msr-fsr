@@ -208,7 +208,7 @@ Msr.QuotesGrid = Msr.QuotesGrid ||
                     }
                 } else {
                     var viewButton = '<a href="/ProductionPlanning/view/' + rowObject.ObjectId + '" class="btn btn-xs btn-success" title="View" style="margin:2px;font-size: .8em;"><i class="fa fa-eye"></i></a>';
-                    var actions = Msr.JqGridCommon.ActionFormtter(cellvalue, options, rowObject, Msr.QuotesGrid.GetReturnUrl(), Msr.QuotesGrid.GetGridEditUrl(), hasAdministratorRole);
+                    var actions = Msr.JqGridCommon.ActionFormtter(cellvalue, options, rowObject, Msr.QuotesGrid.GetReturnUrl(), Msr.QuotesGrid.GetGridEditUrl());
 
                     return actions + viewButton;
                 }

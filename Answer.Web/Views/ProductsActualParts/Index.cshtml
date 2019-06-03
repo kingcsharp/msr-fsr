@@ -8,8 +8,7 @@
         <div class="row">
             @Html.Partial("_ActualPart", Model)
             <h2 class="page-header">
-                Products Actual Part
-                @Html.Partial("_HelpViewButton")
+                Products Actual Part <button class="btn btn-info help-btn pull-right" data-toggle="modal" data-target="#wipHelpModal">Help</button>
             </h2>
             <div class="col-lg-12">
                 @Html.Partial("Message")

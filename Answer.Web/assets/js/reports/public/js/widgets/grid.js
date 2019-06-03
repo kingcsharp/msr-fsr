@@ -125,8 +125,9 @@
                 var addItem = true;
                 while (filtersLength--) {
                     var filterElem = filters[filtersLength];
-                    //debugger;
+                    
                     if (filterElem.fromDate !== undefined) {
+                        debugger;
                         var d1 = moment(item[filterElem.elementID], 'MMMM-YY')._d;
                         var d2 = moment(filterElem.val, 'M/D/YYYY')._d;
 
@@ -308,7 +309,7 @@ app.service('grid', ['$sce', function ($sce) {
         var length = columns.length;
         while (length--) {
             var col = columns[length];
-            if (col.elementName.toLocaleLowerCase() === "month") {
+            if (col.elementName.toLocaleLowerCase() === "month" || col.elementName.toLocaleLowerCase() === "shipdate") {
                 filtersToAdd.push({
                     "text": "From Date",
                     "elementID": col.id,
@@ -408,7 +409,7 @@ app.service('grid', ['$sce', function ($sce) {
             return smartDropdownFilter(column, columnIndex, reportId);
         }
 
-        var valIsDate = moment(report.query.data[0][column.id], "MMMM-YY", true).isValid();
+        var valIsDate = moment(report.query.data[0][column.id]).isValid();
         if (valIsDate) {
             return getDateTimeFilter(column, columnIndex, reportId);
         } else {
