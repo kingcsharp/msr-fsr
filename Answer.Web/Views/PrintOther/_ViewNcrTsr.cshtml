@@ -46,27 +46,27 @@
         {
             <table class="ncrAttachments">
                 <tbody>
-                <tr>
-                    <td colspan="2">
-                        Attachments:<br>
-                        @foreach (var fileId in Model.AttachmentFileIds)
-                        {
-                            <table class="ncr_attachment">
-                                <tbody>
-                                <tr>
-                                    <td><img class="printable" src="@fileId.Path" alt="@fileId.File_Id"></td>
-                                </tr>
-                                <tr>
-                                    <td style="text-align: center;"></td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        }
-                    </td>
-                </tr>
+                    <tr>
+                        <td colspan="2">
+                            Attachments:<br>
+                            @foreach (var fileId in Model.AttachmentFileIds)
+                            {
+                                <table class="ncr_attachment">
+                                    <tbody>
+                                        <tr>
+                                            <td><img class="printable" src="@fileId.Path" alt="@fileId.File_Id"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: center;"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            }
+                        </td>
+                    </tr>
                 </tbody>
             </table>
-            <br/>
+            <br />
         }
 
         <table class="table table-bordered">
@@ -82,21 +82,21 @@
                 </tr>
                 @foreach (var result in Model.TasksFindForFillIdResult)
                 {
-                <tr>
-                    <td class="ncr_Label">@result.Print_Order</td>
-                    <td class="ncr_data">@result.Title</td>
-                    <!--
-                    <td class="normalTable">
-                        <step_text_html type="202"><span style="font-weight: bold">@Html.Raw(result.Step_Text_Html)</span></step_text_html>
-                        @foreach (var monitorDescription in result.FillGetMonitorsForNcrResult)
-                        {
-                            <div class="monitor" style="padding-left: 20px; color: green">
-                                @monitorDescription.Description
-                            </div>
-                        }
-                    </td>
-                    -->
-                </tr>
+                    <tr>
+                        <td class="ncr_Label">@result.Print_Order</td>
+                        <td class="ncr_data">@result.Title</td>
+                        <!--
+                        <td class="normalTable">
+                            <step_text_html type="202"><span style="font-weight: bold">@Html.Raw(result.Step_Text_Html)</span></step_text_html>
+                            @foreach (var monitorDescription in result.FillGetMonitorsForNcrResult)
+                            {
+                                <div class="monitor" style="padding-left: 20px; color: green">
+                                    @monitorDescription.Description
+                                </div>
+                            }
+                        </td>
+                        -->
+                    </tr>
                 }
             </tbody>
         </table>
