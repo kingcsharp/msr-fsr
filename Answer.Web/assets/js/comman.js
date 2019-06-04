@@ -1,5 +1,7 @@
 ﻿function eLoaderOpen() {
-    $("#emodel").modal({
+    var model = $("#emodel");
+    model.find('.modal-body').empty().append('<span class="fa fa-circle-o-notch fa-spin fa-3x text-primary"></span><span class="h4"> Operations are in progress, please wait</span>');
+    model.modal({
         backdrop: 'static',
         keyboard: false
     });
@@ -11,7 +13,7 @@ function eLoaderClose() {
 
 function eLoaderError(value) {
     var model = $("#emodel");
-    model.find('.modal-body').html('').append(value);
+    model.find('.modal-body').empty().append(value);
 }
 
 $('.page-help').on('click', function () {
