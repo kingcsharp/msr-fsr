@@ -69,28 +69,34 @@
             <br/>
         }
 
-        <table class="table-bordered">
+        <table class="table table-bordered">
             <tbody>
-            <tr>
-                <td style="padding-left: 15px;">Procedure:</td>
-                <td class="normalTable">
-                    <step_text_html type="202">@Model.FillsSearchResult.ProcedureName</step_text_html>
-                </td>
-            </tr>
+                <tr>
+                    <td class="ncr_Label">Procedure #</td>
+                    <td class="ncr_data">Procedure Title</td>
+                    <!--
+                    <td class="normalTable">
+                        <step_text_html type="202">@Model.FillsSearchResult.ProcedureName</step_text_html>
+                    </td>
+                    -->
+                </tr>
                 @foreach (var result in Model.TasksFindForFillIdResult)
                 {
-                    <tr>
-                        <td style="padding-left: 30px;">@result.Print_Order</td>
-                        <td class="normalTable">
-                            <step_text_html type="202"><span style="font-weight: bold">@Html.Raw(result.Step_Text_Html)</span></step_text_html>
-                            @foreach (var monitorDescription in result.FillGetMonitorsForNcrResult)
-                            {
-                                <div class="monitor" style="padding-left: 20px; color: green">
-                                    @monitorDescription.Description
-                                </div>
-                            }
-                        </td>
-                    </tr>
+                <tr>
+                    <td class="ncr_Label">@result.Print_Order</td>
+                    <td class="ncr_data">@result.Title</td>
+                    <!--
+                    <td class="normalTable">
+                        <step_text_html type="202"><span style="font-weight: bold">@Html.Raw(result.Step_Text_Html)</span></step_text_html>
+                        @foreach (var monitorDescription in result.FillGetMonitorsForNcrResult)
+                        {
+                            <div class="monitor" style="padding-left: 20px; color: green">
+                                @monitorDescription.Description
+                            </div>
+                        }
+                    </td>
+                    -->
+                </tr>
                 }
             </tbody>
         </table>
