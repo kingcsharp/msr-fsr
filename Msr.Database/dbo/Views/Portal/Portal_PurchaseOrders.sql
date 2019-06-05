@@ -1,4 +1,6 @@
-﻿CREATE VIEW Portal_PurchaseOrders
+﻿
+
+CREATE VIEW [dbo].[Portal_PurchaseOrders]
 AS
 
 SELECT    
