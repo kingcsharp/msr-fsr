@@ -1,3 +1,17 @@
-﻿CREATE VIEW [dbo].[Portal_ActivitiesView]
-	as
-	select ID as Id, ACTIVITY as Activity from A_WF_ACTIVITIES
+﻿
+
+CREATE VIEW [dbo].[Portal_ActivitiesView]
+AS
+
+-- JUSTIN TITLE FIX - 05-11-2019
+
+SELECT A.ID
+	, A.ACTIVITY
+	, A.TITLE
+	, A.TITLE + ' (' + A.ACTIVITY + ')' AS TITLEACTIVITY
+	, A.MODBY
+	, A.DRCM
+FROM A_WF_ACTIVITIES A
+
+-- PREV
+-- SELECT ID AS ID, ACTIVITY AS ACTIVITY FROM A_WF_ACTIVITIES
