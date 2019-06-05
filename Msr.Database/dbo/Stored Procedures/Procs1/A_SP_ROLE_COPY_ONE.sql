@@ -1,13 +1,5 @@
 ﻿
-
-
-
-
-
-
-
-
-CREATE            procedure A_SP_ROLE_COPY_ONE
+CREATE procedure [dbo].[A_SP_ROLE_COPY_ONE]
 	@newObjID nvarchar(50) OUTPUT,
 	@strID nvarchar(50),
 	@strNTLogin nvarchar(50),
@@ -16,9 +8,11 @@ as
 --Make a new ID for the copy
 declare @newID as nvarchar(50)
 exec sp_getUniqueID3 @newID OUTPUT
---Insert the new one
-INSERT INTO A_ROLES_HISTORY (ID,NAME,SOURCE,HIDDEN,DRCM,MODBY,IS_ADMIN,SECURITY_LEVEL)
-SELECT @newID as ID,NAME + @copyPrefix as NAME,'A_SP_COPY' as SOURCE,HIDDEN,DRCM,@strNTLogin,IS_ADMIN,SECURITY_LEVEL FROM A_ROLES_HISTORY WHERE ID = @strID
+--Insert the new one         INSERT INTO A_ROLES_HISTORY (ID,NAME,SOURCE,HIDDEN,SECURITY_LEVEL,TRAININGIDREV,COMMENTS,MODBY,DRCM) VALUES
+--(@ID,@NAME,'A_SP_UPDATE_ROLE',0,@SECURITY_LEVEL,@TrainingIDRev,@Comments,@strNTLogin,getDate())
+
+INSERT INTO A_ROLES_HISTORY (ID,NAME,SOURCE,HIDDEN,DRCM,MODBY,IS_ADMIN,SECURITY_LEVEL,TRAININGIDREV,COMMENTS)
+SELECT @newID as ID,NAME + @copyPrefix as NAME,'A_SP_COPY' as SOURCE,HIDDEN,DRCM,@strNTLogin,IS_ADMIN,SECURITY_LEVEL,TRAININGIDREV,COMMENTS FROM A_ROLES_HISTORY WHERE ID = @strID
 --find out what object id the new one got
 SELECT @newObjID = OBJECT_ID FROM A_ROLES_HISTORY WHERE ID = @newID
 print 'The new object ID is ' + @newObjID

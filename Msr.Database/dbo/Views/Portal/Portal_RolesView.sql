@@ -1,11 +1,16 @@
-﻿CREATE VIEW [dbo].[Portal_RolesView]
+﻿
+
+CREATE VIEW [dbo].[Portal_RolesView]
 AS
 SELECT DISTINCT 
                          SECURITY_LEVEL AS SecurityLevel, 
 						 SECURITY_LEVEL_NAME AS SecurityLevelName, 
 						 ROOT AS Root, 
 						 ID AS Id, 
+						 ROLE_ID,
 						 ROLE_NAME AS RoleName, 
+						 COMMENTS as Comments,
+						 TRAININGIDREV as TrainingIdRev,
 						 OBJ_ID AS ObjectId, 
 						 STATUS AS Status, 
 						 LOCKED_BY AS LockedBy, 
