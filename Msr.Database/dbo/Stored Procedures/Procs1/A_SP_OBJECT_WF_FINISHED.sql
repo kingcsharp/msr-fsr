@@ -1,6 +1,5 @@
 ﻿
-
-CREATE                                PROCEDURE A_SP_OBJECT_WF_FINISHED
+CREATE PROCEDURE [dbo].[A_SP_OBJECT_WF_FINISHED]
 @wfsID nvarchar(50),
 @strNTLogin  nvarchar(50)
 as
@@ -87,8 +86,10 @@ if @myTable = 'A_THEORY_HISTORY'
 	end
 if @myTable = 'A_PRODUCTS_HISTORY'
 	begin
+		PRINT 'STARTED - A_SP_OBJECT_WF_FINISHED - A_PRODUCTS_HISTORY'
 		print 'Finishing the WF for A_PRODUCTS_HISTORY' + @myID
 		exec A_SP_PRODUCTS_FINISH_WF @myID,@objID,@strNTLogin
+		PRINT 'COMPLETED - A_SP_OBJECT_WF_FINISHED - A_PRODUCTS_HISTORY'
 		if @@ERROR <> 0 goto problem
 	end
 

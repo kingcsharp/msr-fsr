@@ -1,7 +1,7 @@
 ﻿
 
 
-CREATE        PROCEDURE A_SP_LOCATIONS_UPDATE_ONE_LOCATION
+CREATE        PROCEDURE [dbo].[A_SP_LOCATIONS_UPDATE_ONE_LOCATION]
 	@newObjID varchar(50) OUTPUT,
 	@messages varchar(500) OUTPUT,
 	@objID varchar(50),
@@ -24,14 +24,21 @@ SELECT @regionName = NAME FROM A_APPROVED_REGIONS
 WHERE OBJECT_ID = @REGION
 
 
+/**** Added population of address fields for children to interit from the parent ****/
 if @PARENT is not null
 begin
 	declare @parentLocationName varchar (50)
 	SELECT @parentLocationName = NAME
+		,@ADDRESS_1 = ADDRESS_1
+		,@ADDRESS_2 = ADDRESS_2
+		,@CITY = CITY
+		,@STATE = STATE
+		,@COUNTRY = COUNTRY
+		,@POSTAL_CODE = POSTAL_CODE
+		,@REGION = REGION
 		FROM A_LOCATIONS_HISTORY
 	WHERE @PARENT = OBJECT_ID
 end
-
 
 
 if @objID is null
