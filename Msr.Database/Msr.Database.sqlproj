@@ -25,6 +25,7 @@
     <TargetDatabaseSet>True</TargetDatabaseSet>
     <DefaultCollation>SQL_Latin1_General_CP1_CI_AS</DefaultCollation>
     <DefaultFilegroup>PRIMARY</DefaultFilegroup>
+    <GenerateCreateScript>True</GenerateCreateScript>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>
@@ -2865,7 +2866,6 @@
     <Build Include="dbo\Stored Procedures\Portal_Actula_Part_Related_Files.sql" />
     <Build Include="dbo\Stored Procedures\Portal_A_SP_PROCEDURE_IMPORT_STEP_FROM_EXTERNAL_SOURCE.sql" />
     <Build Include="dbo\Stored Procedures\DatabaseSchema_SelectMultipleTriggers.sql" />
-    <Build Include="Security\HangFire.sql" />
     <Build Include="dbo\Stored Procedures\sp_CopyProdToStage.sql" />
   </ItemGroup>
   <ItemGroup>
