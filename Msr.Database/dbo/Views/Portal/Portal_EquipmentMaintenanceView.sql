@@ -1,15 +1,13 @@
 ﻿
+
 CREATE VIEW [dbo].[Portal_EquipmentMaintenanceView]
 AS
 SELECT        
 em.Id,
 em.ObjectId,
 em.ScanBarcode,
-(SELECT        Name FROM            dbo.Portal_LocationsView WHERE        (ObjectId = em.ParentLocation)) AS ParentLocation,
-(SELECT        Name FROM            dbo.Portal_LocationsView WHERE        (ObjectId = em.SubLocationFirst)) AS SubLocationFirst,
-(SELECT        Name FROM            dbo.Portal_LocationsView WHERE        (ObjectId = em.SubLocationSecond)) AS SubLocationSecond, 
-em.SubLocationFirst AS SubLocationFirstId,
-em.SubLocationSecond AS SubLocationSecondId,
+(SELECT        Name FROM            dbo.Portal_LocationsView WHERE        (ObjectId = em.RoomEquipment)) AS RoomEquipment, 
+em.RoomEquipment AS RoomEquipmentId,
 em.DateTime,
 ap.FULL_NAME AS RequestedBy, 
 em.RequestedById, 

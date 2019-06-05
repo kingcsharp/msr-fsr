@@ -1,4 +1,5 @@
-﻿CREATE   PROCEDURE A_SP_TASK_QUICK_CLOSE
+﻿
+CREATE   PROCEDURE [dbo].[A_SP_TASK_QUICK_CLOSE]
 @RET_STATUS as varchar(500) OUTPUT,
 @MSGS as varchar(50) OUTPUT,
 @ID as varchar(50),
@@ -14,7 +15,7 @@ if @curPerReq is not null
 	begin
 	if @curPerReq != @strNTLogin  
 		begin
-		set @RET_STATUS = 'ERROR - You are not the assignee You are ' + @strNTLogin + ' and the assignee is ' + @curPerReq
+		set @RET_STATUS = 'ERROR - You are not the assignee. You are ' + @strNTLogin + ' and the assignee is ' + @curPerReq
 		goto fin
 		end
 	end
@@ -23,7 +24,7 @@ else
 	print 'You are not the assignee...  so are you in the group assigned'
 	if not exists (SELECT ID FROM A_PERSON_ROLES WHERE PERSON_ID = @strNTLogin AND ROLE_ID = @curGroupReq)
 		begin
-		set @RET_STATUS = 'ERROR - You are nto in this asssigned Group'
+		set @RET_STATUS = 'ERROR - You are not in the assigned group and cannot perform this task.'
 		goto fin
 		end
 	else

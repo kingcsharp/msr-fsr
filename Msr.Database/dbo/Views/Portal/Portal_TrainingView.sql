@@ -1,4 +1,5 @@
-﻿CREATE VIEW Portal_TrainingView
+﻿
+CREATE VIEW [dbo].[Portal_TrainingView]
 
 AS 
 SELECT 
@@ -7,6 +8,7 @@ RA.StartDate,
 RA.EndDate,
 PST.FULL_NAME AS FullName,
 rv.RoleName AS PositionName,
+rv.TRAININGIDREV as TrainingIdRev,
 CASE
     WHEN
       RA.EndDate >=  CAST(GetDate() AS DATE)
@@ -24,3 +26,10 @@ INNER JOIN dbo.A_PEOPLE_SEARCH_TABLE AS PST ON RA.PERSON = PST.OBJ_ID
 INNER JOIN Portal_RolesView rv ON rv.Id = ra.ROLE
 WHERE RA.STATUS ='ACTIVE' 
 AND RA.EndDate IS NOT NULL AND RA.StartDate IS NOT NULL
+GO
+
+
+
+GO
+
+

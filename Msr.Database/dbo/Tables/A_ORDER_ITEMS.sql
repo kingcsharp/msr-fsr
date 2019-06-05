@@ -51,9 +51,11 @@
     [SHIP_DATE]               DATETIME        NULL,
     [SUPPLIER_ID]             VARCHAR (50)    NULL,
     [PROD_PRICE_LIST_HIST_ID] VARCHAR (50)    NULL,
-	[GroupWO]				  BIT 
-    CONSTRAINT [PK_A_ORDER_ITEMS] PRIMARY KEY CLUSTERED ([ID] ASC) DEFAULT 0
+    [GroupWO]                 BIT             DEFAULT ((0)) NOT NULL,
+    CONSTRAINT [PK_A_ORDER_ITEMS] PRIMARY KEY CLUSTERED ([ID] ASC)
 );
+
+
 
 
 GO
