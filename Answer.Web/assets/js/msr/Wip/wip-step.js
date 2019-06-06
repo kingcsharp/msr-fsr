@@ -33,10 +33,11 @@
             url: '/wip/StepDoneClick?stepId=' + stepId + '&fillId=' + fillId + '&parentPartId=' + parentPartId + '&isSerilizeStep=' + isSerilizeStep,
             dataType: 'json',
             success: function (data) {
+                
                 if (data.ErrorMessage !== '') {
                     eLoaderError(data.ErrorMessage);
                 }
-                else {
+                else {                   
 
                     var stepInProgress = $('#carousel ul.slides').find(".waiting").first();
 
@@ -60,9 +61,14 @@
                     if (stepRequested.length > 0) {
                         $(stepRequested).addClass('step-complete');
                         $(stepRequested).removeClass('waiting');
+
                         ////When last step done
                         if (stepInProgress.length === 0) {
+
                             $(stepRequested).trigger("click");
+
+                            location.reload(true);
+
                         }
                     }
 
