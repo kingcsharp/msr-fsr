@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Msr.Services.Orders.Procedures
@@ -9,6 +8,8 @@ namespace Msr.Services.Orders.Procedures
         public string Id { get; set; }
 
         public string ParentId { get; set; }
+
+        public string Title { get; set; }
 
         public string Description { get; set; }
 
