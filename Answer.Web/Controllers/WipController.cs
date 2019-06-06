@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Web.Mvc;
-using Answer.Web.Filters;
+﻿using Answer.Web.Filters;
 using Answer.Web.ViewModel.Wip;
 using Msr.Infrastructure.Common.Constansts;
 using Msr.Models.Orders;
@@ -25,6 +20,11 @@ using Msr.Services.Procedures;
 using Msr.Services.Procedures.Messages;
 using Msr.Services.Roles;
 using Msr.Web.ViewModel.Engineering;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Web.Mvc;
 
 namespace Answer.Web.Controllers
 {
@@ -733,13 +733,13 @@ namespace Answer.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult CancelUnfinishedSteps(int fillId)
+        public ActionResult CancelRemainingSteps(int fillId)
         {
             var loggedUserId = GetCurrentUser().Id;
 
             _orderService.CancelUnfinishedSteps(fillId, loggedUserId);
 
-            return Json("OK", JsonRequestBehavior.AllowGet);
+            return RedirectToAction("", "wip");
         }
 
         public ActionResult GetReferenceTheory(int theoryId)
