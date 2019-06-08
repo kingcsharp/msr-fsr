@@ -221,11 +221,14 @@
     <Compile Include="Parts\Procedures\UpdateSubPartProcedure.cs" />
     <Compile Include="Parts\ViewModels\SaveSubPartViewModel.cs" />
     <Compile Include="Parts\ViewModels\ImportPartViewModel.cs" />
+    <Compile Include="Procedures\Procedures\ProcedureStepsImportExternalProcedure.cs" />
     <Compile Include="Procedures\Procedures\DeleteProcedure.cs" />
     <Compile Include="Procedures\Procedures\ProcedureImportExternalProcedure.cs" />
     <Compile Include="Procedures\Procedures\ProcedureStepDelete.cs" />
+    <Compile Include="Procedures\Procedures\ProcedureStepImportProcedure.cs" />
     <Compile Include="Procedures\ViewModels\ProcedureImportViewModel.cs" />
     <Compile Include="Procedures\ViewModels\ProcedureStepMonitorsViewModel.cs" />
+    <Compile Include="Procedures\ViewModels\StepsImportViewModel.cs" />
     <Compile Include="ProductionPlanning\Procedures\ProductImportUpdateExternalProcedure.cs" />
     <Compile Include="ProductionPlanning\ProductionPlanningService.cs" />
     <Compile Include="ProductionPlanning\ViewModels\ProductImportViewModel.cs" />
