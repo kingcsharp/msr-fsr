@@ -1,5 +1,5 @@
-﻿
-CREATE                 procedure dbo.A_SP_PROCEDURE_IMPORT_STEP_FROM_EXTERNAL_SOURCE
+﻿CREATE PROCEDURE [dbo].[Portal_A_SP_PROCEDURE_IMPORT_STEP_FROM_EXTERNAL_SOURCE]
+
 @newID varchar(2000) OUTPUT,
 @msgs varchar(2000)OUTPUT,
 @PROCEDURE_HIST_ID varchar(50),
@@ -15,7 +15,8 @@ CREATE                 procedure dbo.A_SP_PROCEDURE_IMPORT_STEP_FROM_EXTERNAL_SO
 @SUCCESS_MONITOR varchar(50),
 @INTERNAL_LOCATION varchar(50),
 @LOC_TYPE varchar(50),
-@strNTLogin varchar(50)
+@strNTLogin varchar(50),
+@Roles nvarchar(200)        -----------Add column mainual for insert role in A_PROCEDURE_STEPS table
 AS
 declare @rootCo varchar(50),@procObjID varchar(50)
 SELECT @procObjID = OBJECT_ID FROM A_PROCEDURES_HISTORY WHERE ID = @PROCEDURE_HIST_ID
@@ -26,7 +27,7 @@ set @sText = isNull(@STEP_TEXT,'') + '<<nl/>>' + isNull(@COMMENT + '<<nl/>><<nl/
 declare @stepID varchar(50)
 exec sp_getUniqueID3 @stepID output
 INSERT INTO A_PROCEDURE_STEPS
-	(ID,PROCEDURE_ID,STEP_TEXT,PRINT_ORDER,DRCM,MODBY,DURATION,DURATION_TYPE,TITLE)
+	(ID,PROCEDURE_ID,STEP_TEXT,PRINT_ORDER,DRCM,MODBY,DURATION,DURATION_TYPE,TITLE,Roles)
 VALUES
 	(
 	@stepID,
@@ -36,8 +37,9 @@ VALUES
 	getDate(),
 	@strNTLogin,
 	@STEP_TIME,
-	'TIME_SYS_HOURS',
-	@Title
+	'TIME_SYS_MINUTES',--change TIME_SYS_HOURS to TIME_SYS_MINUTES mainualy
+	@Title,
+	@Roles
 	)
 
 INSERT INTO A_PROCEDURE_OBJECT_LINK
@@ -66,7 +68,6 @@ if @STEP_TEXT LIKE '<<bb>>In Process Inspections<</bb>><<nl/>>%' OR
 	null, --@messages nvarchar(2000) OUTPUT,
 	null, --@ID nvarchar(50),
 	'YES_NO', --@MONITOR_TYPE  nvarchar(50),
-	null, --@INPUT_TYPE  nvarchar(50),
 	'Pass inspection?  If not, describe problem.', --@DESCRIPTION nvarchar(2000),
 	null, --@START_SYSTEM_TASK nvarchar(50),
 	null, --@START_TYPE nvarchar(50),
@@ -107,7 +108,6 @@ if @STEP_TEXT LIKE '<<bb>>Test<</bb>><<nl/>>%'
 	null, --@messages nvarchar(2000) OUTPUT,
 	null, --@ID nvarchar(50),
 	'YES_NO', --@MONITOR_TYPE  nvarchar(50),
-	null, --@INPUT_TYPE  nvarchar(50),
 	'All Test Items Pass? Record all test data in the comment.', --@DESCRIPTION nvarchar(2000),
 	null, --@START_SYSTEM_TASK nvarchar(50),
 	null, --@START_TYPE nvarchar(50),
@@ -147,7 +147,6 @@ if @STEP_TEXT LIKE '<<bb>>Certify<</bb>><<nl/>>%'
 	null, --@messages nvarchar(2000) OUTPUT,
 	null, --@ID nvarchar(50),
 	'YES_NO', --@MONITOR_TYPE  nvarchar(50),
-	null, --@INPUT_TYPE  nvarchar(50),
 	'Certified?  If not, describe problem.', --@DESCRIPTION nvarchar(2000),
 	null, --@START_SYSTEM_TASK nvarchar(50),
 	null, --@START_TYPE nvarchar(50),
@@ -188,7 +187,6 @@ if @STEP_TEXT like '%Serialize%'
 			null, --@messages nvarchar(2000) OUTPUT,
 			null, --@ID nvarchar(50),
 			'TEXT', --@MONITOR_TYPE  nvarchar(50),
-			null, --@INPUT_TYPE  nvarchar(50),
 			'Record the serial numbers in the comments section of this monitor.', --@DESCRIPTION nvarchar(2000),
 			null, --@START_SYSTEM_TASK nvarchar(50),
 			null, --@START_TYPE nvarchar(50),
@@ -231,7 +229,6 @@ if isNull(@SUCCESS_MONITOR,'0') = '1'
 	null, --@messages nvarchar(2000) OUTPUT,
 	null, --@ID nvarchar(50),
 	'YES_NO', --@MONITOR_TYPE  nvarchar(50),
-	null, --@INPUT_TYPE  nvarchar(50),
 	'Completed Step Successfully?', --@DESCRIPTION nvarchar(2000),
 	null, --@START_SYSTEM_TASK nvarchar(50),
 	null, --@START_TYPE nvarchar(50),
@@ -322,20 +319,4 @@ if @LOC_TYPE is not null
 	end
 
 fin:
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+GO
