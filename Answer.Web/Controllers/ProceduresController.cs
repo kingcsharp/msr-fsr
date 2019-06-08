@@ -22,6 +22,7 @@ using Msr.Services.ProcedureVerbs;
 using Msr.Services.Roles;
 using Msr.Services.Users;
 using Msr.Services.EquipmentMaintenances;
+using System.IO;
 
 namespace Answer.Web.Controllers
 {
@@ -1336,10 +1337,10 @@ namespace Answer.Web.Controllers
 
         public void ImportSampleFile()
         {
-            Response.Clear();
-            Response.ContentType = "text/csv";
-            Response.AddHeader("Content-Disposition", "attachment;filename=procedures-upload.csv");
-            Response.Write(string.Join(",", ProcedureImportViewModel.GetHeaderColumns()));
+            string filePath = "~/Assets/sample-files/procedures-upload.xls";
+            Response.ContentType = "text/xls";
+            Response.AppendHeader("Content-Disposition", "attachment; filename=" + Path.GetFileName(filePath));
+            Response.WriteFile(filePath);
             Response.End();
         }
     }
