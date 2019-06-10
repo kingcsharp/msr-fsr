@@ -2392,6 +2392,7 @@
     <Content Include="assets\js\reports\libs\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="assets\js\reports\libs\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="assets\js\reports\libs\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="assets\sample-files\procedures-upload.xls" />
     <None Include="Properties\PublishProfiles\dev.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />

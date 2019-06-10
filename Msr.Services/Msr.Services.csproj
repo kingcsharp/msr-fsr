@@ -241,7 +241,6 @@
     <Compile Include="PurchesOrder\Procedures\PurchasePoDetailProcedure.cs" />
     <Compile Include="PurchesOrder\Procedures\PurchasePoProcedure.cs" />
     <Compile Include="PurchesOrder\Procedures\PurchasePoViewItemProcedure.cs" />
-    <Compile Include="PurchesOrder\PurchesOrderService_AlecBackup.cs" />
     <Compile Include="PurchesOrder\ViewModels\PurchaseFormAccountViewModel.cs" />
     <Compile Include="PurchesOrder\ViewModels\PurchaseOrderFillViewModel.cs" />
     <Compile Include="PurchesOrder\ViewModels\PurchaseOrderMultiFillViewModel.cs" />

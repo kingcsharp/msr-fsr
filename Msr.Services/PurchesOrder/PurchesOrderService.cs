@@ -199,6 +199,7 @@ namespace Msr.Services.PurchesOrder
                 CUST_LINE_ITEM = x.CUST_LINE_ITEM,
                 BATCH_FILL = x.BATCH_FILL,
                 BATCH_PARENT = x.BATCH_PARENT,
+                GroupWO = x.GroupWO
             }).ToList();
 
             return fills;
@@ -395,6 +396,8 @@ namespace Msr.Services.PurchesOrder
                     purchasePoViewItemProcedure.qty = model.ProductPo[i].Qty.ToString();
                     purchasePoViewItemProcedure.acctID = model.Root;
                     purchasePoViewItemProcedure.strNTLogin = ntLogin;
+                    purchasePoViewItemProcedure.GroupWO = model.ProductPo[i].GroupWO;
+
                     _dbContext.Database.ExecuteStoredProcedure(purchasePoViewItemProcedure);
 
 
