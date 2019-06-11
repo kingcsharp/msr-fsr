@@ -34,14 +34,11 @@ namespace Msr.Services.PurchesOrder.ViewModels
         /// <returns></returns>
         public void SetList(List<PurchaseOrderFillViewModel> purchaseOrderFill, List<SelectListItem> locationList, List<SelectListItem> ownerList)
         {
-            var purchaseOrderFillViewModelList = new List<PurchaseOrderFillViewModel>();
-
             foreach (var item in purchaseOrderFill)
             {
                 for (int i = 0; i < item.QTY_NEEDS_FILLING; i++)
                 {
-                    if (i > 0)
-                    {
+                  
                         var purchaseOrderFillViewModel = new PurchaseOrderFillViewModel
                         {
                             CUST_NAME = item.CUST_NAME,
@@ -100,17 +97,10 @@ namespace Msr.Services.PurchesOrder.ViewModels
                     {
                         break;
                     }
-                    } 
-                    else
-                    {
-                        item.LocationList = locationList;
-                        item.OwnerList = ownerList;
-                        this.FillList.Add(item);
-                    }
+                    
                 }
             }
 
-            this.FillList = purchaseOrderFill;
             SetUp();
         }
 

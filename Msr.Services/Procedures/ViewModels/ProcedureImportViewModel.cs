@@ -25,7 +25,7 @@ namespace Msr.Services.Procedures.ViewModels
 
         public static List<string> GetHeaderColumns()
         {
-            return new List<string> { "ProcedureId", "ProcedureName", "AnsId", "ProcType" };
+            return new List<string> { "PROCEDURE_ID", "PROCEDURE_NAME", "ANS_ID", "PROC_TYPE_ID" };
         }
     }
 }
