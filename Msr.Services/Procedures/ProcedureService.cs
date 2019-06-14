@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -1060,7 +1061,7 @@ namespace Msr.Services.Procedures
             return result;
         }
 
-        public ResultNotification<List<ProcedureImportViewModel>> ImportProcedures(HttpPostedFileBase postedFile, LoggedUserIdResult ntLogin)
+        public ResultNotification<List<ProcedureImportViewModel>> ImportProcedures(HttpPostedFileBase file, LoggedUserIdResult ntLogin)
         {
             var result = new ResultNotification<List<ProcedureImportViewModel>>
             {
@@ -1069,13 +1070,20 @@ namespace Msr.Services.Procedures
 
             try
             {
-                if (!postedFile.FileName.EndsWith(".csv"))
+                Stream stream = file.InputStream;
+
+                IExcelDataReader reader = null;
+
+                if (file.FileName.ToLower().EndsWith(".xls"))
+                {
+                    reader = ExcelReaderFactory.CreateBinaryReader(stream);
+                }
+                else
                 {
                     result.AddError("The import file must be a tab delimited text file");
                     return result;
                 }
 
-                var reader = ExcelReaderFactory.CreateCsvReader(postedFile.InputStream);
 
                 var ds = reader.AsDataSet(new ExcelDataSetConfiguration()
                 {
@@ -1087,7 +1095,7 @@ namespace Msr.Services.Procedures
 
                 reader.Close();
 
-                var columnNames = (from dc in ds.Tables[0].Columns.Cast<DataColumn>()
+                var columnNames = (from dc in ds.Tables[1].Columns.Cast<DataColumn>()
                                    select dc.ColumnName).ToList();
 
                 var primes = ProcedureImportViewModel.GetHeaderColumns();
@@ -1101,15 +1109,32 @@ namespace Msr.Services.Procedures
                     return result;
                 }
 
-                var modelList = Enumerable.Select(ds.Tables[0].AsEnumerable(), item => new ProcedureImportViewModel
+                var modelList = Enumerable.Select(ds.Tables[1].AsEnumerable(), item => new ProcedureImportViewModel
                 {
-                    ProcedureId = item["ProcedureId"].ToString(),
-                    ProcedureName = item["ProcedureName"].ToString(),
-                    AnsId = item["AnsId"].ToString(),
-                    ProcType = item["ProcType"].ToString()
+                    ProcedureId = item["PROCEDURE_ID"].ToString(),
+                    ProcedureName = item["PROCEDURE_NAME"].ToString(),
+                    AnsId = item["ANS_ID"].ToString(),
+                    ProcType = item["PROC_TYPE_ID"].ToString()
                 }).ToList();
 
-                ProcessRow(ntLogin, modelList, result);
+                var stepList = Enumerable.Select(ds.Tables[0].AsEnumerable(), item => new StepsImportViewModel
+                {
+                    PROCEDURE_ID = item["PROCEDURE_ID"].ToString(),
+                    Title = item["Title"].ToString(),
+                    STEP_TEXT = item["STEP_TEXT"].ToString(),
+                    COMMENT = item["COMMENT"].ToString(),
+                    PRINT_ORDER = item["PRINT_ORDER"].ToString(),
+                    REF_DOC_ID = item["REF_DOC_ID"].ToString(),
+                    STEP_TIME = Convert.ToSingle(item["STEP_TIME"]),
+                    EXTRA_NOTE1 = item["EXTRA_NOTE1"].ToString(),
+                    DefaultRoleId = item["DEFAULT_ROLE_ID"].ToString(),
+                    SERIALIZE = item["SERIALIZE"].ToString(),
+                    SUCCESS_MONITOR = item["SUCCESS_MONITOR"].ToString(),
+                    INTERNAL_LOCATION = item["INTERNAL_LOCATION"].ToString(),
+                    LOC_TYPE = item["LOC_TYPE"].ToString(),
+                }).ToList();
+
+                ProcessRow(ntLogin, modelList, result, stepList);
 
                 return result;
             }
@@ -1141,7 +1166,7 @@ namespace Msr.Services.Procedures
             }
         }
 
-        private void ProcessRow(LoggedUserIdResult ntLogin, List<ProcedureImportViewModel> modelList, ResultNotification<List<ProcedureImportViewModel>> result)
+        private void ProcessRow(LoggedUserIdResult ntLogin, List<ProcedureImportViewModel> modelList, ResultNotification<List<ProcedureImportViewModel>> result, List<StepsImportViewModel> stepList)
         {
             foreach (var model in modelList)
             {
@@ -1165,7 +1190,6 @@ namespace Msr.Services.Procedures
                     model.Messages.Add("ProcType is required");
                 }
 
-
                 if (model.Messages.Any())
                 {
                     result.Entity.Add(model);
@@ -1178,11 +1202,33 @@ namespace Msr.Services.Procedures
                 procedureImportExternalProcedure.AnsId = model.AnsId;
                 procedureImportExternalProcedure.ProcType = model.ProcType;
                 procedureImportExternalProcedure.NtLogin = ntLogin.Id;
+
                 _dbContext.Database.ExecuteStoredProcedure(procedureImportExternalProcedure);
 
                 model.Processed = true;
                 model.Messages.Add(procedureImportExternalProcedure.NewId);
                 result.Entity.Add(model);
+
+                foreach (var item in stepList.Where(x => x.PROCEDURE_ID == model.ProcedureId))
+                {
+                    var procedureStepImportProcedure = new ProcedureStepImportProcedure();
+                    procedureStepImportProcedure.ProcedureHistId = procedureImportExternalProcedure.NewId;
+                    procedureStepImportProcedure.StepText = item.STEP_TEXT;
+                    procedureStepImportProcedure.Title = item.Title;
+                    procedureStepImportProcedure.PrintOrder = item.PRINT_ORDER;
+                    procedureStepImportProcedure.RefDocId = item.REF_DOC_ID;
+                    procedureStepImportProcedure.Comment = item.COMMENT;
+                    procedureStepImportProcedure.StepTime = Convert.ToSingle(0.3);
+                    procedureStepImportProcedure.ExteraNote = item.EXTRA_NOTE1;
+                    procedureStepImportProcedure.DefaultRoleId = item.DefaultRoleId;
+                    procedureStepImportProcedure.Serialize = item.SERIALIZE;
+                    procedureStepImportProcedure.SuccessMonitor = item.SUCCESS_MONITOR;
+                    procedureStepImportProcedure.InternalLocation = item.INTERNAL_LOCATION;
+                    procedureStepImportProcedure.LocType = item.LOC_TYPE;
+                    procedureStepImportProcedure.NtLogin = ntLogin.Id;
+                    _dbContext.Database.ExecuteStoredProcedure(procedureStepImportProcedure);
+                }
+
             }
         }
 
