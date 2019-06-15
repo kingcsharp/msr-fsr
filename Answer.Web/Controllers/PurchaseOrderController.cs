@@ -11,6 +11,7 @@ using Msr.Models.PurchesOrder;
 using Msr.Services.PurchesOrder.ViewModels;
 using Msr.Services.ProductionPlanning;
 using Msr.Services.Workflows;
+using System.Web.Helpers;
 
 namespace Answer.Web.Controllers
 {
@@ -385,11 +386,15 @@ namespace Answer.Web.Controllers
 
             var purchaseApprovedData = _purchesOrderService.PurchasedApprovedDataByObjId(id);
 
-            purchaseOrderMultiFillViewModel.PurchaseApprovedData = purchaseApprovedData;
-            var purchaseOrderFillViewModel = _purchesOrderService.PurchasedOrderSearchTasks(purchaseApprovedData.HISTORY_REF_ID, currentUser.Id);
+            if (purchaseApprovedData != null)
+            {
+                purchaseOrderMultiFillViewModel.PurchaseApprovedData = purchaseApprovedData;
 
-            purchaseOrderMultiFillViewModel.SetList(purchaseOrderFillViewModel, locList, OwnerList);
+                var purchaseOrderFillViewModel = _purchesOrderService.PurchasedOrderSearchTasks(purchaseApprovedData.HISTORY_REF_ID, currentUser.Id);
 
+                purchaseOrderMultiFillViewModel.SetList(purchaseOrderFillViewModel, locList, OwnerList);
+            }
+            
             return View(purchaseOrderMultiFillViewModel);
         }
 
