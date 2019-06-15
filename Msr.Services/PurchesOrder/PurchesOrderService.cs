@@ -126,7 +126,7 @@ namespace Msr.Services.PurchesOrder
 
         public PurchaseApprovedData PurchasedApprovedDataByObjId(string objectId)
         {
-            var sql = $"SELECT* FROM A_V_PURCHASES_APPROVED_DATA WHERE HISTORY_REF_ID = " +
+            var sql = $"SELECT * FROM A_V_PURCHASES_APPROVED_DATA WHERE HISTORY_REF_ID = " +
                       $"(SELECT TOP 1 PURCHASE_HIST_ID FROM A_TASK_ORDER_INFORMATION " +
                       $"WHERE TASK_ID IN(SELECT  TOP 1 TASK_ID FROM A_V_FILL_TASKS " +
                       $"WHERE PURCH_ITEM_ID IN(SELECT ID FROM A_ORDER_ITEMS " +
@@ -585,6 +585,11 @@ namespace Msr.Services.PurchesOrder
             {
                 foreach (var item in model.FillList)
                 {
+                    if (string.IsNullOrWhiteSpace(item.LOCATION_ID) == true)
+                    {
+                        throw new ArgumentNullException("The Site (LOCATION_ID) is required.");
+                    }
+
                     var fillWithPartAndSerialNumberProcedure = new FillWithPartAndSerialNumberProcedure
                     {
                         FillId = item.ID,
