@@ -40,18 +40,20 @@
                 var addItem = true;
                 while (filtersLength--) {
                     var filterElem = filters[filtersLength];
-                    //debugger;
+                    
                     if (filterElem.fromDate !== undefined) {
-                        var d1 = moment(item[filterElem.elementID], 'MMMM-YY')._d;
+                        
+                        var d1 = moment(item[filterElem.elementID], 'M/D/YYYY')._d;
                         var d2 = moment(filterElem.val, 'M/D/YYYY')._d;
 
                         addItem = filterElem.val === '' || filterElem.val === undefined ||
                             d1.getFullYear() > d2.getFullYear() ||
                             d1.getFullYear() === d2.getFullYear() &&
                             d1.getMonth() >= d2.getMonth();
+                        
                     } else if (filterElem.toDate !== undefined) {
                         //need to remove the 1 to get the value of the item to check out
-                        var d3 = moment(item[filterElem.elementID.replace('1', '')], 'MMMM-YY')._d;
+                        var d3 = moment(item[filterElem.elementID.replace('1', '')], 'M/D/YYYY')._d;
                         var d4 = moment(filterElem.val, 'M/D/YYYY')._d;
 
                         addItem = filterElem.val === '' || filterElem.val === undefined ||
@@ -72,7 +74,8 @@
                     if (!addItem) {
                         filtersLength = 0;
                     }
-                }
+                }                
+
                 if (addItem) {
                     output.push(item);
                 }
