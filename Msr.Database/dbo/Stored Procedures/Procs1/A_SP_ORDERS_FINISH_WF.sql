@@ -1,4 +1,4 @@
-﻿CREATE                PROCEDURE DBO.A_SP_ORDERS_FINISH_WF
+﻿CREATE PROCEDURE [dbo].[A_SP_ORDERS_FINISH_WF]
 	@myID nvarchar(50),
 	@objID nvarchar(50),
 	@strNTLogin nvarchar(50)
@@ -42,19 +42,26 @@ UPDATE A_ORDERS_HISTORY
 exec A_SP_ORDER_LOCK_IN_PRICE_LISTS @myRoot,@strNTLogin
 exec A_SP_QUOTE_ORDER_LINK_CREATE_LINK_FOR_ORDER @myRoot,@strNTLogin
 exec A_SP_ORDER_UPDATE_FORECAST_FUNNEL_FOR_ORDER_ITEMS @myID,@strNTLogin
+
 print 'creating the parts'
+
 exec A_SP_ORDER_SET_UP_CUSTOMER_PARTS @myRoot,@strNTLogin
+
+PRINT 'UPDATE RELATED PRODUCTS TO THE LATEST REV'
+
+EXEC A_SP_ORDER_UPDATE_PURCHASE_ORDER_LINK @MYID, @STRNTLOGIN
+
+
 if @@ERROR <> 0 GOTO problem
 UPDATE A_ORDERS SET STATUS = (SELECT STATUS FROM A_OBJECTS WHERE ROOT = @myRoot) WHERE ID = @myRoot
 if @@ERROR <> 0 GOTO problem
-
 
 fin:
 if @@trancount > 0 	commit transaction
 return 0
 problem:
 if @@trancount > 0 	ROLLBACK TRANSACTION
-print ' There was a problem in A_SP_ORDERS_FINISH_WF and we will terminate and not finish anything '
+print 'There was a problem in A_SP_ORDERS_FINISH_WF and we will terminate and not finish anything '
 return 1
 
 
