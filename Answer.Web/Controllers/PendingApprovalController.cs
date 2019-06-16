@@ -72,6 +72,10 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.ItemType.ToLower().Contains(rule.data.ToLower()));
                     }
+                    else if (rule.field == nameof(PendingApprovalView.ItemTypeTitle))
+                    {
+                        totalRows = totalRows.Where(x => x.ItemTypeTitle.ToLower().Contains(rule.data.ToLower()));
+                    }
                     else if (rule.field == nameof(PendingApprovalView.ItemName))
                     {
                         totalRows = totalRows.Where(x => x.ItemName.ToLower().Contains(rule.data.ToLower()));
