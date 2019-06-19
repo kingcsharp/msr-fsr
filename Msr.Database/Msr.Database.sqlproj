@@ -2866,7 +2866,6 @@
     <Build Include="dbo\Stored Procedures\Portal_Actula_Part_Related_Files.sql" />
     <Build Include="dbo\Stored Procedures\DatabaseSchema_SelectMultipleTriggers.sql" />
     <Build Include="dbo\Stored Procedures\sp_CopyProdToStage.sql" />
-    <Build Include="dbo\Stored Procedures\A_SP_ORDER_UPDATE_PURCHASE_ORDER_LINK.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Msr.Database.refactorlog" />
