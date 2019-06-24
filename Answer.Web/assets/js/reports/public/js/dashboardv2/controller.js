@@ -429,7 +429,7 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
                 var filterElem = filters == undefined ? filtersChart.filters[filtersLength] : filters[filtersLength];
                 //debugger;
                 if (filterElem.fromDate !== undefined) {
-                    var d1 = moment(item[filterElem.elementID], 'MMMM-YY')._d;
+                    var d1 = moment(item[filterElem.elementID], 'M/D/YYYY')._d;
                     var d2 = moment(filterElem.val, 'M/D/YYYY')._d;
 
                     addItem = filterElem.val === '' || filterElem.val === undefined ||
@@ -438,7 +438,7 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
                         d1.getMonth() >= d2.getMonth();
                 } else if (filterElem.toDate !== undefined) {
                     //need to remove the 1 to get the value of the item to check out
-                    var d3 = moment(item[filterElem.elementID.replace('1', '')], 'MMMM-YY')._d;
+                    var d3 = moment(item[filterElem.elementID.replace('1', '')], 'M/D/YYYY')._d;
                     var d4 = moment(filterElem.val, 'M/D/YYYY')._d;
 
                     addItem = filterElem.val === '' || filterElem.val === undefined ||
@@ -497,7 +497,7 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
                 var filterElem = filters[filtersLength];
                 //debugger;
                 if (filterElem.fromDate !== undefined) {
-                    var d1 = moment(item[filterElem.elementID], 'MMMM-YY')._d;
+                    var d1 = moment(item[filterElem.elementID], 'M/D/YYYY')._d;
                     var d2 = moment(filterElem.val, 'M/D/YYYY')._d;
 
                     addItem = filterElem.val === '' || filterElem.val === undefined ||
@@ -506,7 +506,7 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
                         d1.getMonth() >= d2.getMonth();
                 } else if (filterElem.toDate !== undefined) {
                     //need to remove the 1 to get the value of the item to check out
-                    var d3 = moment(item[filterElem.elementID.replace('1', '')], 'MMMM-YY')._d;
+                    var d3 = moment(item[filterElem.elementID.replace('1', '')], 'M/D/YYYY')._d;
                     var d4 = moment(filterElem.val, 'M/D/YYYY')._d;
 
                     addItem = filterElem.val === '' || filterElem.val === undefined ||
