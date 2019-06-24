@@ -72,11 +72,16 @@
                         }
                     }
 
+                    location.reload(true);
+
                     eLoaderClose();
                 }
             },
             error: function (error) {
                 eLoaderError(error);
+
+                location.reload(true);
+
             }
         });
     };
