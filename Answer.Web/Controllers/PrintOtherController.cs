@@ -1,7 +1,10 @@
 ﻿using System.Web.Mvc;
+using System.Collections.Generic;
+using System.Linq;
 using Answer.Web.Filters;
 using Msr.Models.Menus;
 using Msr.Services.Orders;
+using Msr.Services.Orders.Messaging;
 
 namespace Answer.Web.Controllers
 {
@@ -67,8 +70,41 @@ namespace Answer.Web.Controllers
 
         public ActionResult NcrTsr(int id)
         {
-            var response = _orderService.GetNcrTsrDetails(id);
-            return PartialView("_ViewNcrTsr", response);
+            var orderService = new OrderService();
+            var taskService = new TaskService();
+            var ncrDetails = orderService.GetNcrDetails(id.ToString());
+
+            var docs = orderService.GetDocuments(ncrDetails.Details.FillObjId);
+
+            var photos = GetDocViewModel(docs, orderService, 400);
+            ncrDetails.Photos = photos;
+
+            var response = taskService.GetTaskWithMonitors(id.ToString());
+
+            ncrDetails.MonitorItem = response.MonitorItem.Where(x => x.Description.Contains("Nonconformity") || x.Description.Contains("NCR")).ToList();
+
+            return PartialView("_ViewNcrTsr", ncrDetails);
+        }
+
+        private List<DocumentView> GetDocViewModel(List<DocumentView> docs, OrderService orderService, int width)
+        {
+            var photos = new List<DocumentView>();
+
+            foreach (var doc in docs)
+            {
+                if (doc.ContentType == "image/jpeg" || doc.ContentType == "image/gif" || doc.ContentType == "image/png")
+                {
+                    var photo = orderService.GetDocumentBase64(doc.ServerPath, null);
+
+                    photos.Add(new DocumentView
+                    {
+                        FileArray = photo,
+                        Name = doc.Name
+                    });
+                }
+            }
+
+            return photos;
         }
 
         public ActionResult PartLabelTsr(int id)
