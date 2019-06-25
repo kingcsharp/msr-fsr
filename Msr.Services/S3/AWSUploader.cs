@@ -10,14 +10,19 @@ namespace Msr.Services.S3
     {
         public void UploadToCloud(HttpPostedFileBase file, string bucketName, string keyName)
         {
-            TransferUtility fileTransferUtility = new  TransferUtility(new AmazonS3Client(Amazon.RegionEndpoint.USEast1));
+            UploadToCloud(file.InputStream, bucketName, keyName);
+        }
+
+        public void UploadToCloud(Stream file, string bucketName, string keyName)
+        {
+            TransferUtility fileTransferUtility = new TransferUtility(new AmazonS3Client(Amazon.RegionEndpoint.USEast1));
 
             TransferUtilityUploadRequest request = new TransferUtilityUploadRequest()
             {
                 BucketName = bucketName,
                 CannedACL = S3CannedACL.PublicRead,
                 Key = keyName,
-                InputStream = file.InputStream
+                InputStream = file
             };
 
             fileTransferUtility.Upload(request);
