@@ -959,7 +959,7 @@ namespace Answer.Web.Controllers
             {
                 if (doc.ContentType == "image/jpeg" || doc.ContentType == "image/gif" || doc.ContentType == "image/png")
                 {
-                    var photo = orderService.GetDocumentBase64(doc.ServerPath, width);
+                    var photo = orderService.GetDocumentBase64(doc.ServerPath);
 
                     photos.Add(new DocumentView
                     {

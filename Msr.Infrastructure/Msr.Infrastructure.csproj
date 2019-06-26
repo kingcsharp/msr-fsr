@@ -72,6 +72,7 @@
     <Compile Include="Common\Constansts\RoleConstants.cs" />
     <Compile Include="Common\Constansts\NotificationConstants.cs" />
     <Compile Include="Email\EmailService.cs" />
+    <Compile Include="Files\MimeTypes.cs" />
     <Compile Include="Helpers\AuthenticationHelper.cs" />
     <Compile Include="Helpers\EncryptionHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
