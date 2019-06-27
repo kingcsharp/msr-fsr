@@ -213,6 +213,34 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
 
                 });
         },
+        GetWorkflowActivitiesByTitleFilters: function () {
+            var ret = 'Account Payment Approval:Account Payment Approval;' +
+                'Actual Parts:Actual Parts;' +
+                'Companies:Companies;' +
+                'Documents:Documents;' +
+                'Equip Exp:Equip Exp;' +
+                'Forecasts:Forecasts;' +
+                'Locations:Locations;' +
+                'Needs:Needs;' +
+                'Noun Hierarchies:Noun Hierarchies;' +
+                'Orders:Orders;' +
+                'Part Types:Part Types;' +
+                'Parts:Parts;' +
+                'People:People;' +
+                'Prepop:Prepop;' +
+                'Procedures:Procedures;' +
+                'Product Price List:Product Price List;' +
+                'Products:Products;' +
+                'Proposals:Proposals;' +
+                'Purchase Orders:Purchase Orders;' +
+                'Purchases:Purchases;' +
+                'Quotes:Quotes;' +
+                'Regions:Regions;' +
+                'Roles:Roles;' +
+                'Template Tasks:Template Tasks;' +
+                'Verbs:Verbs;';
+            return ret;
+        },
         GetOBJTypesFilters: function () {
             var ret = 'A_ACTUAL_PARTS_HISTORY:A_ACTUAL_PARTS_HISTORY;' +
                 'A_PRODUCTS_HISTORY:A_PRODUCTS_HISTORY;' +

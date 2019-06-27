@@ -40,18 +40,20 @@
                 var addItem = true;
                 while (filtersLength--) {
                     var filterElem = filters[filtersLength];
-                    //debugger;
+                    
                     if (filterElem.fromDate !== undefined) {
-                        var d1 = moment(item[filterElem.elementID], 'MMMM-YY')._d;
+                        
+                        var d1 = moment(item[filterElem.elementID], 'M/D/YYYY')._d;
                         var d2 = moment(filterElem.val, 'M/D/YYYY')._d;
 
                         addItem = filterElem.val === '' || filterElem.val === undefined ||
                             d1.getFullYear() > d2.getFullYear() ||
                             d1.getFullYear() === d2.getFullYear() &&
                             d1.getMonth() >= d2.getMonth();
+                        
                     } else if (filterElem.toDate !== undefined) {
                         //need to remove the 1 to get the value of the item to check out
-                        var d3 = moment(item[filterElem.elementID.replace('1', '')], 'MMMM-YY')._d;
+                        var d3 = moment(item[filterElem.elementID.replace('1', '')], 'M/D/YYYY')._d;
                         var d4 = moment(filterElem.val, 'M/D/YYYY')._d;
 
                         addItem = filterElem.val === '' || filterElem.val === undefined ||
@@ -72,7 +74,8 @@
                     if (!addItem) {
                         filtersLength = 0;
                     }
-                }
+                }                
+
                 if (addItem) {
                     output.push(item);
                 }
@@ -127,7 +130,7 @@
                     var filterElem = filters[filtersLength];
                     
                     if (filterElem.fromDate !== undefined) {
-                        debugger;
+                        // debugger;
                         var d1 = moment(item[filterElem.elementID], 'MMMM-YY')._d;
                         var d2 = moment(filterElem.val, 'M/D/YYYY')._d;
 
@@ -404,18 +407,45 @@ app.service('grid', ['$sce', function ($sce) {
     }
 
     function renderFilter(column, columnIndex, report, reportId) {
-        //5be2442a4f625d000b986c89
         if (report.query.data.length < 1) {
             return smartDropdownFilter(column, columnIndex, reportId);
         }
 
-        var valIsDate = moment(report.query.data[0][column.id]).isValid();
-        if (valIsDate) {
+        // var valIsDate = moment(report.query.data[0][column.id]).isValid();
+        const cellValueIsDate = isValidDate(report.query.data[0][column.id]);
+
+        if (cellValueIsDate === true) {
             return getDateTimeFilter(column, columnIndex, reportId);
         } else {
             return smartDropdownFilter(column, columnIndex, reportId);
         }
+
     }
+
+    function isValidDate(dateString) {
+        // First check for the pattern
+        if (!/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(dateString))
+            return false;
+
+        // Parse the date parts to integers
+        var parts = dateString.split("/");
+        var day = parseInt(parts[1], 10);
+        var month = parseInt(parts[0], 10);
+        var year = parseInt(parts[2], 10);
+
+        // Check the ranges of month and year
+        if (year < 1000 || year > 3000 || month == 0 || month > 12)
+            return false;
+
+        var monthLength = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+        // Adjust for leap years
+        if (year % 400 == 0 || (year % 100 != 0 && year % 4 == 0))
+            monthLength[1] = 29;
+
+        // Check the range of the day
+        return day > 0 && day <= monthLength[month - 1];
+    };
 
     function getDateTimeFilter(column, columnIndex, reportId) {
         var id = "dr_" + new Date().getTime().toString();

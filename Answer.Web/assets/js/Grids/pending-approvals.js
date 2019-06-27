@@ -33,8 +33,8 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
                         multiselect: true,
                         searchoptions: {
                             sopt: ['eq'],
-                            //list of the vaules you want
-                            value: Msr.JqGridCommon.GetOBJTypesFilters(),
+                            // list of the vaules you want
+                            value: Msr.JqGridCommon.GetWorkflowActivitiesByTitleFilters(),
                             dataInit: function (elem) {
                                 Msr.JqGridCommon.DataInitBootstrapMultiselect(elem);
                             }
@@ -213,7 +213,7 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
                         searchoptions: {
                             sopt: ['eq'],
                             //list of the vaules you want
-                            value: Msr.JqGridCommon.GetOBJTypesFilters(),
+                            value: Msr.JqGridCommon.GetWorkflowActivitiesByTitleFilters(),
                             dataInit: function (elem) {
                                 Msr.JqGridCommon.DataInitBootstrapMultiselect(elem);
                             }

@@ -2,6 +2,7 @@
 using Answer.Web.Filters;
 using Msr.Infrastructure.Common.Constansts;
 using Msr.Models.Menus;
+using Msr.Services.Documents;
 using Msr.Services.Workflows;
 using Msr.Services.Workflows.ViewModels;
 
@@ -11,10 +12,12 @@ namespace Answer.Web.Controllers
     public class WorkflowController : BaseController
     {
         private readonly WorkflowService _workflowService;
+        private readonly DocumentService _documentService;
 
         public WorkflowController()
         {
             _workflowService = new WorkflowService();
+            _documentService = new DocumentService();
         }
 
         public ActionResult Submit(string objId, string returnUrl, bool showCancel = false)
@@ -49,9 +52,16 @@ namespace Answer.Web.Controllers
             vm.LoginId = vm.LoggedUserIdResult.Id;
 
             var result = _workflowService.SubmitWorkflow(vm);
-
             if (!result.HasErrors())
             {
+                var docObject = _documentService.GetById(vm.ObjectId);
+                
+                if(docObject != null && docObject.Status == "APPROVED")
+                {
+                    //it's a doc and it's approved
+                    _documentService.AddUpdateDocumentHeaderFooter(docObject, GetCurrentUser().Id);
+                }
+
                 TempData["SuccessMessage"] = result.SuccessMessage;
 
                 return RedirectPermanent(vm.ReturnUrl);
