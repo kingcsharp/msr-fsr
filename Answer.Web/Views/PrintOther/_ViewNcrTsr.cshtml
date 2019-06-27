@@ -1,13 +1,16 @@
 ﻿@model Msr.Services.Orders.Messaging.NcrReportResponse
+
 <style>
-@media print {
-      .img-wrapper,
-      img {
-        max-height: none !important;
-        max-width: none !important;
-        width: 30% !important;
-}
+    @@media print {
+        .img-wrapper,
+        img {
+            max-height: none !important;
+            max-width: none !important;
+            width: 30% !important;
+        }
+    }
 </style>
+
 <h4>Part Non Conformance Report - Work Order #@Model.Details.PurchItemId</h4>
 
 <table class="table table-bordered">
