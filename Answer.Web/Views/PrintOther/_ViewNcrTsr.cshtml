@@ -1,4 +1,13 @@
 ﻿@model Msr.Services.Orders.Messaging.NcrReportResponse
+<style>
+@media print {
+      .img-wrapper,
+      img {
+        max-height: none !important;
+        max-width: none !important;
+        width: 30% !important;
+}
+</style>
 <h4>Part Non Conformance Report - Work Order #@Model.Details.PurchItemId</h4>
 
 <table class="table table-bordered">
@@ -69,8 +78,8 @@
             <td colspan="2">
                 @foreach (var photo in Model.Photos)
                 {
-                    <a href="@photo.FileArray" data-featherlight="image">
-                        <img src="@photo.FileArray" width="30%" class="img-responsive img-rounded pull-left" alt="" style="margin-left: 10px; margin-bottom: 10px">
+                    <a class="img-wrapper" href="@photo.FileArray" data-featherlight="image">
+                        <img src="@photo.FileArray" width="30%" class="img-responsive pull-left" alt="" style="margin-left: 10px; margin-bottom: 10px">
                     </a>
                 }
             </td>
