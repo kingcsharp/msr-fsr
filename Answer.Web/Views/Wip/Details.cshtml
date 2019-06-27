@@ -297,7 +297,7 @@
 
 <script type="text/javascript">
     $('#print-other-report').on('click', function () {
-        $('#print-other-content').printThis();
+        $('#print-other-content').printThis({ canvas: true, printDelay: 5000 });
     });
 
     $('#ncr-print-button').on('click', function () {
@@ -305,7 +305,7 @@
     });
 
     $('#print-traveler-report').on('click', function () {
-        $('#print-traveler-container').printThis({ canvas: true });
+        $('#print-traveler-container').printThis({ canvas: true, printDelay: 5000 });
     });
 </script>
 }
