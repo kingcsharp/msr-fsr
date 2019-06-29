@@ -219,7 +219,9 @@ namespace Msr.Services.Documents
         public bool AddUpdateDocumentHeaderFooter(DocumentView doc, string currentUserId)
         {
             if (doc == null || doc.Status != "APPROVED") return false;
-            License.IsValidLicense(ConfigurationManager.AppSettings.Get("IronPdf.LicenseKey"));
+            if(!License.IsValidLicense("IRONPDF-138372CE75-686825-423338-419A44C0B1-F5AA4668-UEx8129778D4BA18D8-CMHWORKSLLC.IRO190627.4855.33211.PRO.1DEV.1YR.SUPPORTED.UNTIL.27.JUN.2020"){
+                IronPdf.License.LicenseKey = "IRONPDF-138372CE75-686825-423338-419A44C0B1-F5AA4668-UEx8129778D4BA18D8-CMHWORKSLLC.IRO190627.4855.33211.PRO.1DEV.1YR.SUPPORTED.UNTIL.27.JUN.2020";
+            }
             //Get the Document Data: 
             var approvals = _dbContext.Database.SqlQuery<Approval>(@"SELECT 
 	                                                                    o.APPROVAL_DATE AS ApprovalDate
