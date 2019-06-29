@@ -219,7 +219,7 @@ namespace Msr.Services.Documents
         public bool AddUpdateDocumentHeaderFooter(DocumentView doc, string currentUserId)
         {
             if (doc == null || doc.Status != "APPROVED") return false;
-
+            License.IsValidLicense(ConfigurationManager.AppSettings.Get("IronPdf.LicenseKey"));
             //Get the Document Data: 
             var approvals = _dbContext.Database.SqlQuery<Approval>(@"SELECT 
 	                                                                    o.APPROVAL_DATE AS ApprovalDate
@@ -271,18 +271,20 @@ namespace Msr.Services.Documents
             }
 
             foreach (var file in files) {
-                if (file.ContentType.ToLower() != "application/pdf") continue;
-                var renderer = new HtmlToPdf();
-                //TODO: Get the file Path
-                var stream = _fileHandler.DownloadFromCloud(ConfigurationManager.AppSettings.Get("AWSBuketName"), file.FileKey);
-                MemoryStream memStream = new MemoryStream();
-                stream.CopyTo(memStream);
-                var pdfDoc = new PdfDocument(memStream.ToArray());
-                pdfDoc.AppendPdf(renderer.RenderHtmlAsPdf(GetRevisionTable(doc.Root)));
+                try
+                {
+                    if (file.ContentType.ToLower() != "application/pdf") continue;
+                    var renderer = new HtmlToPdf();
+                    //TODO: Get the file Path
+                    var stream = _fileHandler.DownloadFromCloud(ConfigurationManager.AppSettings.Get("AWSBuketName"), file.FileKey);
+                    MemoryStream memStream = new MemoryStream();
+                    stream.CopyTo(memStream);
+                    var pdfDoc = new PdfDocument(memStream.ToArray());
+                    pdfDoc.AppendPdf(renderer.RenderHtmlAsPdf(GetRevisionTable(doc.Root)));
 
-                var creator = _userService.GetUserByObjectId(doc.CreatedBy);
-                //TODO: Save document back to 
-                var fragment = @"<style>
+                    var creator = _userService.GetUserByObjectId(doc.CreatedBy);
+                    //TODO: Save document back to 
+                    var fragment = @"<style>
 			                        .data > div {
 				                        outline: 2px solid black;
 				                        outline-offset: -1px;
@@ -311,36 +313,36 @@ namespace Msr.Services.Documents
 					                        <td style=""font-size:12px;font-weight:bold;"" colspan=5>" + doc.Name + @"</td>
 				                        </tr>
 				                        <tr class=""data"">
-					                        <td colspan=3 style=""font-size:10px;"">Issued by: " + creator.FullName +". "+creator.Title+@"</td>
-					                        <td style=""font-size:10px;font-weight:bold;"">Effective Date: "+doc.ApprovalDate.GetValueOrDefault(default(DateTime)).ToString("MM/dd/yyyy")+@"</td>
-                                            <td style=""font-size:10px;font-weight:bold;"">Rev. "+doc.Rev+@"</td>
+					                        <td colspan=3 style=""font-size:10px;"">Issued by: " + creator.FullName + ". " + creator.Title + @"</td>
+					                        <td style=""font-size:10px;font-weight:bold;"">Effective Date: " + doc.ApprovalDate.GetValueOrDefault(default(DateTime)).ToString("MM/dd/yyyy") + @"</td>
+                                            <td style=""font-size:10px;font-weight:bold;"">Rev. " + doc.Rev + @"</td>
 					                        <td style=""font-size:10px;font-weight:bold;""> pg. {page} of {total-pages}</td>
 				                        </tr><tr class=""data"">";
-                int count = 1;
-                foreach (var approval in approvals)
-                {
-                    if(count % 6 == 0)
+                    int count = 1;
+                    foreach (var approval in approvals)
                     {
-                        fragment += "</tr><tr>";
-                    }
-                    fragment += @"<td style=""font-size:8px;font-weight:bold;"">
-					                    Approved: "+approval.ApproveDate+@"<br/>
-					                    "+approval.FullName+", "+approval.Position+@"
+                        if (count % 6 == 0)
+                        {
+                            fragment += "</tr><tr>";
+                        }
+                        fragment += @"<td style=""font-size:8px;font-weight:bold;"">
+					                    Approved: " + approval.ApproveDate + @"<br/>
+					                    " + approval.FullName + ", " + approval.Position + @"
 					                </td>";
-                    count++;
-                }
+                        count++;
+                    }
 
-                fragment += "</tr></table></div>";
-                pdfDoc = pdfDoc.AddHTMLHeaders(new HtmlHeaderFooter()
-                {
-                    Height = 30,
-                    HtmlFragment = fragment
-                }, false, new int[] { 0 });
+                    fragment += "</tr></table></div>";
+                    pdfDoc = pdfDoc.AddHTMLHeaders(new HtmlHeaderFooter()
+                    {
+                        Height = 30,
+                        HtmlFragment = fragment
+                    }, false, new int[] { 0 });
 
-                pdfDoc = pdfDoc.AddHTMLHeaders(new HtmlHeaderFooter()
-                {
-                    Height = 27,
-                    HtmlFragment = @"<style>
+                    pdfDoc = pdfDoc.AddHTMLHeaders(new HtmlHeaderFooter()
+                    {
+                        Height = 27,
+                        HtmlFragment = @"<style>
 		                            table > td {
 			                            outline: 2px solid black;
 			                            outline-offset: -1px;
@@ -368,17 +370,17 @@ namespace Msr.Services.Documents
 		                            <table class=""container"">
 			                            <tr>
 				                            <td>WI-0083</td>
-				                            <td style=""text-align:center;"">" + doc.Name+@"</td>
-				                            <td style=""font-size:10px;"">Rev. "+doc.Rev+@"</td>
+				                            <td style=""text-align:center;"">" + doc.Name + @"</td>
+				                            <td style=""font-size:10px;"">Rev. " + doc.Rev + @"</td>
 				                            <td style=""font-size:10px;""> pg. {page} of {total-pages}</td>
 			                            </tr>
 		                            </table>
 	                            </div>"
-                }, false, Enumerable.Range(1, pdfDoc.PageCount - 1).ToList());
+                    }, false, Enumerable.Range(1, pdfDoc.PageCount - 1).ToList());
 
-                pdfDoc = pdfDoc.AddHTMLFooters(new HtmlHeaderFooter()
-                {
-                    HtmlFragment = $@"<div style=""border: .25px solid red;padding-bottom:10px;"" >
+                    pdfDoc = pdfDoc.AddHTMLFooters(new HtmlHeaderFooter()
+                    {
+                        HtmlFragment = $@"<div style=""border: .25px solid red;padding-bottom:10px;"" >
                                     <hr style=""background-color: blue;height:2px;"" />
                                     <font color=""red"" style=""font-weight:bold;margin-left:50px;"">
                                         Printed copies of this document are not controlled.
@@ -387,10 +389,14 @@ namespace Msr.Services.Documents
                                         MSR-FSR Confidential
                                     </font>
                                 </div>"
-                }, false, Enumerable.Range(0, pdfDoc.PageCount).ToList());
+                    }, false, Enumerable.Range(0, pdfDoc.PageCount).ToList());
 
-                _fileHandler.UploadToCloud(pdfDoc.Stream, ConfigurationManager.AppSettings.Get("AWSBuketName"), file.FileKey);
-
+                    _fileHandler.UploadToCloud(pdfDoc.Stream, ConfigurationManager.AppSettings.Get("AWSBuketName"), file.FileKey);
+                }
+                catch(Exception ex)
+                {
+                    var message = "Error occured:" + ex.Message;
+                }
             }
 
             return true;
