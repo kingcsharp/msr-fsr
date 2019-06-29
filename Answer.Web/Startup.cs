@@ -3,6 +3,7 @@ using Hangfire.Dashboard;
 using Microsoft.Owin;
 using Msr.Services.Jobs;
 using Owin;
+using System.Configuration;
 
 [assembly: OwinStartupAttribute(typeof(Msr.Web.Startup))]
 namespace Msr.Web
@@ -12,7 +13,7 @@ namespace Msr.Web
         public void Configuration(IAppBuilder app)
         {
             ConfigureAuth(app);
-
+            IronPdf.License.LicenseKey = ConfigurationManager.AppSettings["IronPdf.LicenseKey"];
             ////var options = new DashboardOptions
             ////{
             ////    AuthorizationFilters = new[]
@@ -25,7 +26,7 @@ namespace Msr.Web
             ////app.UseHangfireDashboard("/hangfire",options);
             ////app.UseHangfireServer();
 
-           //// RecurringJob.AddOrUpdate("A_SP_ADMIN_SQL_TO_RUN_EXECUTE", () => SpAdminJob.Run(), "*/1 * * * *");
+            //// RecurringJob.AddOrUpdate("A_SP_ADMIN_SQL_TO_RUN_EXECUTE", () => SpAdminJob.Run(), "*/1 * * * *");
         }
     }
 }
