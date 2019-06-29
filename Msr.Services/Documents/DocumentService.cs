@@ -413,10 +413,10 @@ namespace Msr.Services.Documents
                                                                         FROM A_OBJECTS o
                                                                         WHERE[ROOT] = @Root
                                                                         ORDER BY REV, o.DRCM DESC", new SqlParameter("@Root", root)).ToList();
-            var historyTable = "<style> table { border-collapse: collapse; } td, th { border: 1px solid black; } th { background: lightgrey;}</style><table><thead><th>Rev. ID</th><th>Date</th><th>Changes</th></thead><tbody>";
+            var historyTable = @"<style> table { border-collapse: collapse; } td, th { border: 1px solid black; } th { background: lightgrey;}</style><h1 style=""margin-top:100px"">Revision History</h1><table><thead><th width=""10%"">Rev. ID</th><th width=""10%"">Date</th><th width=""80%"">Changes</th></thead><tbody>";
             foreach (var history in historyList)
             {
-                historyTable += "<tr><td>" + history.Rev.ToString() + "</td><td>" + (history.Approval_Date.HasValue ? history.Approval_Date.Value.ToString("MMMM dd, yyyy") : "&nbsp;") + "</td><td>" + history.Rev_Info + "</td></tr>";
+                historyTable += @"<tr><td align=""center""><strong>" + history.Rev.ToString() + @"</strong></td><td align=""center"">" + (history.Approval_Date.HasValue ? history.Approval_Date.Value.ToString("MM/dd/yyyy") : "&nbsp;") + "</td><td>" + history.Rev_Info + "</td></tr>";
             }
             
             historyTable += "</tbody></table>";
