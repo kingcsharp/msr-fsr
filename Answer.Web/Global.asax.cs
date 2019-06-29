@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Linq;
 using System.Security.Principal;
 using System.Web;
@@ -23,6 +24,8 @@ namespace Answer.Web
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             ModelBinders.Binders.Add(typeof(JqGridParam), new JqGridParamConverter());
+
+            IronPdf.License.LicenseKey = ConfigurationManager.AppSettings["IronPdf.LicenseKey"];
         }
 
         protected void Application_AuthenticateRequest(Object sender, EventArgs e)
