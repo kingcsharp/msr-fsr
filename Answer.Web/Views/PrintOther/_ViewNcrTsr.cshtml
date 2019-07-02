@@ -1,104 +1,142 @@
-﻿@using System.Threading
-@model Msr.Services.Orders.Messaging.NcrTsrDetailsResponse
+﻿@model Msr.Services.Orders.Messaging.NcrReportResponse
 
-<div class="printable_body">
-    <div class="printableReport">
-        <table>
-            <tbody>
-                <tr>
-                    <td>
-                        <div class="ncr_supplierName"></div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <table class="table table-bordered">
-            <tbody>
-                <tr>
-                    <td class="ncr_Label">Customer:</td>
-                    <td class="ncr_data">@Model.FillsSearchResult.CustomerName</td>
-                </tr>
-                <tr>
-                    <td class="ncr_Label">Product:</td>
-                    <td class="ncr_data">@Model.FillsSearchResult.ProductName</td>
-                </tr>
-                <tr>
-                    <td class="ncr_Label">Part Info:</td>
-                    <td class="ncr_data">@Model.FillsSearchResult.PartInfo</td>
-                </tr>
-                <tr>
-                    <td class="ncr_Label">Procedure:</td>
-                    <td class="ncr_data">@Model.FillsSearchResult.ProcedureName</td>
-                </tr>
-                <tr>
-                    <td class="ncr_Label">Customer PO#:</td>
-                    <td class="ncr_data">@Model.FillsSearchResult.CustomerPo</td>
-                </tr>
-                <tr>
-                    <td class="ncr_Label">Technician:</td>
-                    <td class="ncr_data"></td>
-                </tr>
-            </tbody>
-        </table>
-        <br>
-
-        @if (Model.AttachmentFileIds.Any())
-        {
-            <table class="ncrAttachments">
-                <tbody>
-                    <tr>
-                        <td colspan="2">
-                            Attachments:<br>
-                            @foreach (var fileId in Model.AttachmentFileIds)
-                            {
-                                <table class="ncr_attachment">
-                                    <tbody>
-                                        <tr>
-                                            <td><img class="printable" src="@fileId.Path" alt="@fileId.File_Id"></td>
-                                        </tr>
-                                        <tr>
-                                            <td style="text-align: center;"></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            }
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <br />
+@*<style>
+    @@media print {
+        .img-wrapper,
+        img {
+            max-height: none !important;
+            max-width: none !important;
+            width: 30% !important;
         }
+    }
+</style>*@
 
-        <table class="table table-bordered">
-            <tbody>
-                <tr>
-                    <td class="ncr_Label">Procedure #</td>
-                    <td class="ncr_data">Procedure Title</td>
-                    <!--
-                    <td class="normalTable">
-                        <step_text_html type="202">@Model.FillsSearchResult.ProcedureName</step_text_html>
-                    </td>
-                    -->
-                </tr>
-                @foreach (var result in Model.TasksFindForFillIdResult)
+<h4>Part Non Conformance Report - Work Order #@Model.Details.PurchItemId</h4>
+
+<table class="table table-bordered">
+    <tr>
+        <td>@Model.Details.SupName</td>
+        <td>@Model.Details.FillObjDesc</td>
+    </tr>
+</table>
+
+<table class="table table-bordered">
+    <tbody>
+        <tr>
+            <td class="theader">Date Report Prepared:</td>
+            <td>@DateTime.UtcNow</td>
+        </tr>
+        <tr>
+            <td class="theader">Work Order #:</td>
+            <td>@Model.Details.PurchItemId</td>
+        </tr>
+        <tr>
+            <td class="theader">Customer:</td>
+            <td>@Model.Details.CustName</td>
+        </tr>
+        <tr>
+            <td class="theader">Technician:</td>
+            <td>@Model.Details.Technician</td>
+        </tr>
+    </tbody>
+</table>
+
+<table class="table table-bordered ncr-report">
+    <thead>
+        <tr>
+            <th>Part #</th>
+            <th>Tool Description</th>
+            <th>Serial Number</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>@Model.Details.PartDesc</td>
+            <td>@Model.Details.PartDesc</td>
+            <td>@Model.Details.Serial</td>
+        </tr>
+    </tbody>
+</table>
+
+<table class="table table-bordered">
+    <tbody>
+        <tr>
+            <td class="theader">Tool Crated Date:</td>
+            <td>@Model.Details.DateComplete</td>
+        </tr>
+        <tr>
+            <td class="theader">Associated Documents:</td>
+            <td>
+                @foreach (var doc in Model.StepPics)
                 {
-                    <tr>
-                        <td class="ncr_Label">@result.Print_Order</td>
-                        <td class="ncr_data">@result.Title</td>
-                        <!--
-                        <td class="normalTable">
-                            <step_text_html type="202"><span style="font-weight: bold">@Html.Raw(result.Step_Text_Html)</span></step_text_html>
-                            @foreach (var monitorDescription in result.FillGetMonitorsForNcrResult)
-                            {
-                                <div class="monitor" style="padding-left: 20px; color: green">
-                                    @monitorDescription.Description
-                                </div>
-                            }
-                        </td>
-                        -->
-                    </tr>
+                    <a href="~/doc/view?filePath=@doc.ServerPath&fileType=@doc.ContentType&fileName=@doc.Name">
+                        @(doc.Name + " - " + doc.Description )
+                    </a>
+                    <br />
                 }
-            </tbody>
-        </table>
-    </div>
-</div>
+            </td>
+        </tr>
+        <tr>
+            <td class="theader">Associated Digital Pictures:</td>
+            <td colspan="2">
+                @foreach (var photo in Model.Photos)
+                {
+                    <a href="@photo.FileArray" data-featherlight="image">
+                        <img src="@photo.FileArray" width="30%" class="img-responsive pull-left" alt="" style="margin-left: 10px; margin-bottom: 10px">
+                    </a>
+                }
+            </td>
+        </tr>
+        <tr>
+            <td class="theader">Comments:</td>
+            <td>
+                @if (!string.IsNullOrWhiteSpace(Model.Details.Comments))
+                {
+                    foreach (var comment in Model.Details.Comments.Split('|'))
+                    {
+                        @comment
+                        <br />
+                    }
+                }
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<table class="table table-bordered monitor-tabel">
+    @foreach (var task in Model.MonitorItem)
+    {
+        <thead>
+            <tr>
+                <th colspan=4>@task.Description</th>
+            </tr>
+            <tr>
+                <th>Monitor @task.TaskId</th>
+                <th>Result</th>
+                <th>Pass/Fail</th>
+                <th>Comment</th>
+        </thead>
+        <tbody>
+            @foreach (var monitor in task.MonitorResults)
+            {
+                var cssClass = "";
+
+                if (monitor.IsPassing == "Pass")
+                {
+                    cssClass = "success";
+                }
+                else if (monitor.IsPassing == "Fail")
+                {
+                    cssClass = "danger";
+                }
+
+                <tr>
+                    <td>@monitor.Description</td>
+                    <td>@monitor.PrintResult</td>
+                    <td class="@cssClass">@monitor.IsPassing</td>
+                    <td>@monitor.Comment</td>
+                </tr>
+            }
+        </tbody>
+    }
+</table>
