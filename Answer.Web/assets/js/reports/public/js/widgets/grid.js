@@ -70,7 +70,9 @@
                                     d1.getMonth() >= d2.getMonth();
                             }
 
-                        } else if (filterElem.toDate !== undefined) {
+                        }
+
+                        if (filterElem.toDate !== undefined) {
                             //need to remove the 1 to get the value of the item to check out
                             var d3 = moment(item[filterElem.elementID.replace('1', '')], dateFormats)._d;
                             var d4 = moment(filterElem.val, dateFormats)._d;
@@ -202,7 +204,9 @@
                                     d1.getMonth() >= d2.getMonth();
                             }
 
-                        } else if (filterElem.toDate !== undefined) {
+                        }
+
+                        if (filterElem.toDate !== undefined) {
                             //need to remove the 1 to get the value of the item to check out
                             var d3 = moment(item[filterElem.elementID.replace('1', '')], dateFormats)._d;
                             var d4 = moment(filterElem.val, dateFormats)._d;
