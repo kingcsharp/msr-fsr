@@ -30,47 +30,90 @@
         // we will return a function which will take in a collection
         // and a keyname
         return function (collection, filters) {
+
             // we define our output and keys array;
             var output = [], keys = [];
+
             // we utilize angular's foreach function
             // this takes in our original collection and an iterator function
             var monthFilter = getElemOfArr(filters, 'text', "From Date");
+
             angular.forEach(collection, function (item) {
                 var filtersLength = filters.length;
                 var addItem = true;
+
+                const dateFormats = ["MMMM-YY", "M/D/YYYY", "MM-DD-YYYY"];
+
                 while (filtersLength--) {
                     var filterElem = filters[filtersLength];
-                    
-                    if (filterElem.fromDate !== undefined) {
-                        
-                        var d1 = moment(item[filterElem.elementID], 'M/D/YYYY')._d;
-                        var d2 = moment(filterElem.val, 'M/D/YYYY')._d;
 
-                        addItem = filterElem.val === '' || filterElem.val === undefined ||
-                            d1.getFullYear() > d2.getFullYear() ||
-                            d1.getFullYear() === d2.getFullYear() &&
-                            d1.getMonth() >= d2.getMonth();
-                        
-                    } else if (filterElem.toDate !== undefined) {
-                        //need to remove the 1 to get the value of the item to check out
-                        var d3 = moment(item[filterElem.elementID.replace('1', '')], 'M/D/YYYY')._d;
-                        var d4 = moment(filterElem.val, 'M/D/YYYY')._d;
+                    if (filterElem.val !== undefined && filterElem.val !== '') {
+                        var cellValue = item[filterElem.elementID];
+                        var filterValue = filterElem.val;
 
-                        addItem = filterElem.val === '' || filterElem.val === undefined ||
-                            d3.getFullYear() < d4.getFullYear() ||
-                            d3.getFullYear() === d4.getFullYear() &&
-                            d3.getMonth() <= d4.getMonth();
-                    } else {
-                        if (filterElem.val !== undefined && filterElem.val !== '') {
-                            var type = typeof item[filterElem.elementID];
-                            if (type == "number" && (item[filterElem.elementID]).toString().indexOf((filterElem.val).toString()) === -1) {
-                                addItem = false;
+                        if (filterElem.fromDate !== undefined) {
+                            var d1 = moment(item[filterElem.elementID], dateFormats)._d;
+                            var d2 = moment(filterElem.val, dateFormats)._d;
+
+                            // THE FILTER AND THE VALUE ARE IN THIS FORMAT: "June-19"
+                            // WHICH MEANS WE WANT TO CHECK ON EQUALS AND NOT GREATER THAN \ LESS THAN
+
+                            if (cellValue.indexOf("-") > -1 && filterValue.indexOf("-") > -1) {                                
+                                addItem = filterElem.val === '' || filterElem.val === undefined ||
+                                    d1.getFullYear() > d2.getFullYear() ||
+                                    d1.getFullYear() === d2.getFullYear() &&
+                                    d1.getMonth() === d2.getMonth();
+                            } else {
+                                addItem = filterElem.val === '' || filterElem.val === undefined ||
+                                    d1.getFullYear() > d2.getFullYear() ||
+                                    d1.getFullYear() === d2.getFullYear() &&
+                                    d1.getMonth() >= d2.getMonth();
                             }
-                            if (type == "string" && item[filterElem.elementID].toLowerCase().indexOf(filterElem.val.toLowerCase()) === -1) {
-                                addItem = false;
+
+                        } else if (filterElem.toDate !== undefined) {
+                            //need to remove the 1 to get the value of the item to check out
+                            var d3 = moment(item[filterElem.elementID.replace('1', '')], dateFormats)._d;
+                            var d4 = moment(filterElem.val, dateFormats)._d;
+
+                            // THE FILTER AND THE VALUE ARE IN THIS FORMAT: "June-19"
+                            // WHICH MEANS WE WANT TO CHECK ON EQUALS AND NOT GREATER THAN \ LESS THAN
+
+                            if (cellValue.indexOf("-") > -1 && filterValue.indexOf("-") > -1) {
+                                addItem = filterElem.val === '' || filterElem.val === undefined ||
+                                    d3.getFullYear() < d4.getFullYear() ||
+                                    d3.getFullYear() === d4.getFullYear() &&
+                                    d3.getMonth() === d4.getMonth();
+                            } else {
+                                addItem = filterElem.val === '' || filterElem.val === undefined ||
+                                    d3.getFullYear() < d4.getFullYear() ||
+                                    d3.getFullYear() === d4.getFullYear() &&
+                                    d3.getMonth() <= d4.getMonth();
                             }
+
                         }
+
+                        if (filterElem.fromDate === undefined && filterElem.toDate === undefined) {
+
+                            console.log("in = gridjs = filterGrid");
+
+                            if (item[filterElem.elementID] == null) {
+                                addItem = false;
+                            } else {
+                                var type = typeof item[filterElem.elementID];
+
+                                if (type === "number" && (item[filterElem.elementID]).toString().indexOf((filterElem.val).toString()) === -1) {
+                                    addItem = false;
+                                }
+
+                                if (type === "string" && item[filterElem.elementID].toLowerCase().indexOf(filterElem.val.toLowerCase()) === -1) {
+                                    addItem = false;
+                                }
+                            }
+
+                        }
+
                     }
+
                     if (!addItem) {
                         filtersLength = 0;
                     }
@@ -96,7 +139,9 @@
                 !b.hasOwnProperty(key)) {
                 return 0;
             }
-            var isAfter = moment(a[key], 'MMMM-YY').isAfter(moment(b[key], 'MMMM-YY'));
+            // var isAfter = moment(a[key], 'MMMM-YY').isAfter(moment(b[key], 'MMMM-YY'));
+            const dateFormats = ["MMMM-YY", "M/D/YYYY", "MM-DD-YYYY"];
+            var isAfter = moment(a[key], dateFormats).isAfter(moment(b[key], dateFormats));
             return isAfter ? 1 : -1;
         }
     }
@@ -124,43 +169,89 @@
             // this takes in our original collection and an iterator function
 
             angular.forEach(collection, function (item) {
+
+                const dateFormats = ["MMMM-YY", "M/D/YYYY", "MM-DD-YYYY"];
+
                 var filtersLength = filters.length;
                 var addItem = true;
+
                 while (filtersLength--) {
                     var filterElem = filters[filtersLength];
-                    
-                    if (filterElem.fromDate !== undefined) {
-                        // debugger;
-                        var d1 = moment(item[filterElem.elementID], 'MMMM-YY')._d;
-                        var d2 = moment(filterElem.val, 'M/D/YYYY')._d;
 
-                        addItem = filterElem.val === '' || filterElem.val === undefined ||
-                            d3.getFullYear() < d4.getFullYear() ||
-                            d3.getFullYear() === d4.getFullYear() &&
-                            d3.getMonth() <= d4.getMonth();
-                    } else if (filterElem.toDate !== undefined) {
-                        var d3 = moment(item[filterElem.elementID.replace('1', '')], 'MMMM-YY')._d;
-                        var d4 = moment(filterElem.val, 'M/D/YYYY')._d;
+                    if (filterElem.val !== undefined && filterElem.val !== '') {
+                        
+                        var cellValue = item[filterElem.elementID];
+                        var filterValue = filterElem.val;
 
-                        addItem = filterElem.val === '' || filterElem.val === undefined ||
-                            d3.getFullYear() < d4.getFullYear() ||
-                            d3.getFullYear() === d4.getFullYear() &&
-                            d3.getMonth() <= d4.getMonth();
-                    } else {
-                        if (filterElem.val !== undefined && filterElem.val !== '') {
-                            var type = typeof item[filterElem.elementID];
-                            if (type == "number" && (item[filterElem.elementID]).toString().indexOf((filterElem.val).toString()) === -1) {
-                                addItem = false;
+                        if (filterElem.fromDate !== undefined) {
+                            var d1 = moment(item[filterElem.elementID], dateFormats)._d;
+                            var d2 = moment(filterElem.val, dateFormats)._d;
+
+                            // THE FILTER AND THE VALUE ARE IN THIS FORMAT: "June-19"
+                            // WHICH MEANS WE WANT TO CHECK ON EQUALS AND NOT GREATER THAN \ LESS THAN
+
+                            if (cellValue.indexOf("-") > -1 && filterValue.indexOf("-") > -1) {
+                                addItem = filterElem.val === '' || filterElem.val === undefined ||
+                                    d1.getFullYear() > d2.getFullYear() ||
+                                    d1.getFullYear() === d2.getFullYear() &&
+                                    d1.getMonth() === d2.getMonth();
+                            } else {
+                                addItem = filterElem.val === '' || filterElem.val === undefined ||
+                                    d1.getFullYear() > d2.getFullYear() ||
+                                    d1.getFullYear() === d2.getFullYear() &&
+                                    d1.getMonth() >= d2.getMonth();
                             }
-                            if (type == "string" && item[filterElem.elementID].toLowerCase().indexOf(filterElem.val.toLowerCase()) === -1) {
-                                addItem = false;
+
+                        } else if (filterElem.toDate !== undefined) {
+                            //need to remove the 1 to get the value of the item to check out
+                            var d3 = moment(item[filterElem.elementID.replace('1', '')], dateFormats)._d;
+                            var d4 = moment(filterElem.val, dateFormats)._d;
+
+                            // THE FILTER AND THE VALUE ARE IN THIS FORMAT: "June-19"
+                            // WHICH MEANS WE WANT TO CHECK ON EQUALS AND NOT GREATER THAN \ LESS THAN
+
+                            if (cellValue.indexOf("-") > -1 && filterValue.indexOf("-") > -1) {
+                                addItem = filterElem.val === '' || filterElem.val === undefined ||
+                                    d3.getFullYear() < d4.getFullYear() ||
+                                    d3.getFullYear() === d4.getFullYear() &&
+                                    d3.getMonth() === d4.getMonth();
+                            } else {
+                                addItem = filterElem.val === '' || filterElem.val === undefined ||
+                                    d3.getFullYear() < d4.getFullYear() ||
+                                    d3.getFullYear() === d4.getFullYear() &&
+                                    d3.getMonth() <= d4.getMonth();
                             }
+
                         }
+
+                        if (filterElem.fromDate === undefined && filterElem.toDate === undefined) {
+
+                            console.log("in = gridjs = filterDr");
+
+                            if (item[filterElem.elementID] == null) {
+                                addItem = false;
+                            } else {
+                                var type = typeof item[filterElem.elementID];
+
+                                if (type === "number" && (item[filterElem.elementID]).toString().indexOf((filterElem.val).toString()) === -1) {
+                                    addItem = false;
+                                }
+
+                                if (type === "string" && item[filterElem.elementID].toLowerCase().indexOf(filterElem.val.toLowerCase()) === -1) {
+                                    addItem = false;
+                                }
+                            }
+
+                        }
+
                     }
+
                     if (!addItem) {
                         filtersLength = 0;
                     }
                 }
+
+
                 if (addItem) {
                     output.unshift(item);
                 }
@@ -312,7 +403,8 @@ app.service('grid', ['$sce', function ($sce) {
         var length = columns.length;
         while (length--) {
             var col = columns[length];
-            if (col.elementName.toLocaleLowerCase() === "month" || col.elementName.toLocaleLowerCase() === "shipdate") {
+            // if (col.elementName.toLocaleLowerCase() === "month" || col.elementName.toLocaleLowerCase() === "shipdate") {
+            if (col.elementName.toLocaleLowerCase() === "month" || col.elementName.toLocaleLowerCase().includes("date")) {
                 filtersToAdd.push({
                     "text": "From Date",
                     "elementID": col.id,
