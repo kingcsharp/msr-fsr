@@ -436,6 +436,8 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
                     var cellValue = item[filterElem.elementID];
                     var filterValue = filterElem.val;
 
+                    if (cellValue === undefined || cellValue === null) { cellValue = item[filterElem.elementID.replace('1', '')]; }
+
                     if (filterElem.fromDate !== undefined) {
                         var d1 = moment(item[filterElem.elementID], dateFormats)._d;
                         var d2 = moment(filterElem.val, dateFormats)._d;
@@ -544,28 +546,55 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
 
                 if (filterElem.val !== undefined && filterElem.val !== '') {
 
+                    var cellValue = item[filterElem.elementID];
+                    var filterValue = filterElem.val;
+
+                    if (cellValue === undefined || cellValue === null) { cellValue = item[filterElem.elementID.replace('1', '')]; }
+
                     if (filterElem.fromDate !== undefined) {
-                        var d1 = moment(item[filterElem.elementID], 'MMMM-YY')._d;
-                        var d2 = moment(filterElem.val, 'MMMM-YY')._d;
+                        var d1 = moment(item[filterElem.elementID], dateFormats)._d;
+                        var d2 = moment(filterElem.val, dateFormats)._d;
 
-                        addItem = filterElem.val === '' || filterElem.val === undefined ||
-                            d1.getFullYear() > d2.getFullYear() ||
-                            d1.getFullYear() === d2.getFullYear() &&
-                            d1.getMonth() >= d2.getMonth();
-                    }
+                        // THE FILTER AND THE VALUE ARE IN THIS FORMAT: "June-19"
+                        // WHICH MEANS WE WANT TO CHECK ON EQUALS AND NOT GREATER THAN \ LESS THAN                            
 
-                    if (filterElem.toDate !== undefined) {
+                        if (cellValue.indexOf("-") > -1 && filterValue.indexOf("-") > -1) {
+                            addItem = filterElem.val === '' || filterElem.val === undefined ||
+                                d1.getFullYear() > d2.getFullYear() ||
+                                d1.getFullYear() === d2.getFullYear() &&
+                                d1.getMonth() === d2.getMonth();
+                        } else {
+                            addItem = filterElem.val === '' || filterElem.val === undefined ||
+                                d1.getFullYear() > d2.getFullYear() ||
+                                d1.getFullYear() === d2.getFullYear() &&
+                                d1.getMonth() >= d2.getMonth();
+                        }
+
+                    } else if (filterElem.toDate !== undefined) {
                         //need to remove the 1 to get the value of the item to check out
-                        var d3 = moment(item[filterElem.elementID.replace('1', '')], 'MMMM-YY')._d;
-                        var d4 = moment(filterElem.val, 'MMMM-YY')._d;
+                        var d3 = moment(item[filterElem.elementID.replace('1', '')], dateFormats)._d;
+                        var d4 = moment(filterElem.val, dateFormats)._d;
 
-                        addItem = filterElem.val === '' || filterElem.val === undefined ||
-                            d3.getFullYear() < d4.getFullYear() ||
-                            d3.getFullYear() === d4.getFullYear() &&
-                            d3.getMonth() <= d4.getMonth();
+                        // THE FILTER AND THE VALUE ARE IN THIS FORMAT: "June-19"
+                        // WHICH MEANS WE WANT TO CHECK ON EQUALS AND NOT GREATER THAN \ LESS THAN
+
+                        if (cellValue.indexOf("-") > -1 && filterValue.indexOf("-") > -1) {
+                            addItem = filterElem.val === '' || filterElem.val === undefined ||
+                                d3.getFullYear() < d4.getFullYear() ||
+                                d3.getFullYear() === d4.getFullYear() &&
+                                d3.getMonth() === d4.getMonth();
+                        } else {
+                            addItem = filterElem.val === '' || filterElem.val === undefined ||
+                                d3.getFullYear() < d4.getFullYear() ||
+                                d3.getFullYear() === d4.getFullYear() &&
+                                d3.getMonth() <= d4.getMonth();
+                        }
+
                     }
 
                     if (filterElem.fromDate === undefined && filterElem.toDate === undefined) {
+
+                        console.log("in = gridjs = filterDr");
 
                         if (item[filterElem.elementID] == null) {
                             addItem = false;
@@ -583,7 +612,7 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
 
                     }
 
-                }
+                }                
 
                 if (!addItem) {
                     filtersLength = 0;
