@@ -538,6 +538,9 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
         // this takes in our original collection and an iterator function
 
         angular.forEach(collection, function (item) {
+
+            const dateFormats = ["MMMM-YY", "M/D/YYYY", "MM-DD-YYYY"];
+
             var filtersLength = filters.length;
             var addItem = true;            
 
