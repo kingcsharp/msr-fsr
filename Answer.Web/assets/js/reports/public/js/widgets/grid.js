@@ -51,6 +51,8 @@
                         var cellValue = item[filterElem.elementID];
                         var filterValue = filterElem.val;
 
+                        if (cellValue === undefined || cellValue === null) { cellValue = item[filterElem.elementID.replace('1', '')]; }
+
                         if (filterElem.fromDate !== undefined) {
                             var d1 = moment(item[filterElem.elementID], dateFormats)._d;
                             var d2 = moment(filterElem.val, dateFormats)._d;
@@ -183,12 +185,14 @@
                         var cellValue = item[filterElem.elementID];
                         var filterValue = filterElem.val;
 
+                        if (cellValue === undefined || cellValue === null) { cellValue = item[filterElem.elementID.replace('1', '')]; }
+
                         if (filterElem.fromDate !== undefined) {
                             var d1 = moment(item[filterElem.elementID], dateFormats)._d;
                             var d2 = moment(filterElem.val, dateFormats)._d;
 
                             // THE FILTER AND THE VALUE ARE IN THIS FORMAT: "June-19"
-                            // WHICH MEANS WE WANT TO CHECK ON EQUALS AND NOT GREATER THAN \ LESS THAN
+                            // WHICH MEANS WE WANT TO CHECK ON EQUALS AND NOT GREATER THAN \ LESS THAN                            
 
                             if (cellValue.indexOf("-") > -1 && filterValue.indexOf("-") > -1) {
                                 addItem = filterElem.val === '' || filterElem.val === undefined ||
