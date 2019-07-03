@@ -51,6 +51,8 @@
                         var cellValue = item[filterElem.elementID];
                         var filterValue = filterElem.val;
 
+                        if (cellValue === undefined || cellValue === null) { cellValue = item[filterElem.elementID.replace('1', '')]; }
+
                         if (filterElem.fromDate !== undefined) {
                             var d1 = moment(item[filterElem.elementID], dateFormats)._d;
                             var d2 = moment(filterElem.val, dateFormats)._d;
@@ -70,9 +72,7 @@
                                     d1.getMonth() >= d2.getMonth();
                             }
 
-                        }
-
-                        if (filterElem.toDate !== undefined) {
+                        } else if (filterElem.toDate !== undefined) {
                             //need to remove the 1 to get the value of the item to check out
                             var d3 = moment(item[filterElem.elementID.replace('1', '')], dateFormats)._d;
                             var d4 = moment(filterElem.val, dateFormats)._d;
@@ -185,12 +185,14 @@
                         var cellValue = item[filterElem.elementID];
                         var filterValue = filterElem.val;
 
+                        if (cellValue === undefined || cellValue === null) { cellValue = item[filterElem.elementID.replace('1', '')]; }
+
                         if (filterElem.fromDate !== undefined) {
                             var d1 = moment(item[filterElem.elementID], dateFormats)._d;
                             var d2 = moment(filterElem.val, dateFormats)._d;
 
                             // THE FILTER AND THE VALUE ARE IN THIS FORMAT: "June-19"
-                            // WHICH MEANS WE WANT TO CHECK ON EQUALS AND NOT GREATER THAN \ LESS THAN
+                            // WHICH MEANS WE WANT TO CHECK ON EQUALS AND NOT GREATER THAN \ LESS THAN                            
 
                             if (cellValue.indexOf("-") > -1 && filterValue.indexOf("-") > -1) {
                                 addItem = filterElem.val === '' || filterElem.val === undefined ||
@@ -204,9 +206,7 @@
                                     d1.getMonth() >= d2.getMonth();
                             }
 
-                        }
-
-                        if (filterElem.toDate !== undefined) {
+                        } else if (filterElem.toDate !== undefined) {
                             //need to remove the 1 to get the value of the item to check out
                             var d3 = moment(item[filterElem.elementID.replace('1', '')], dateFormats)._d;
                             var d4 = moment(filterElem.val, dateFormats)._d;
