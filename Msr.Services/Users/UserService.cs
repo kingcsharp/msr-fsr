@@ -41,7 +41,7 @@ namespace Msr.Services.Users
                 CompanyId = s.CompanyId,
                 CreatedDate = s.CreatedDate,
                 RoleName = s.AspNetRoles.FirstOrDefault().Name
-            }).SingleOrDefault();
+            }).OrderByDescending(x => x.Id).FirstOrDefault();
 
             return user;
         }
@@ -62,7 +62,7 @@ namespace Msr.Services.Users
                 CompanyName = s.CompanyName,
                 Login = s.Login,
                 Title = s.Title
-            }).SingleOrDefault();
+            }).OrderByDescending(x => x.Id).FirstOrDefault();
 
             return user;
         }
@@ -88,7 +88,7 @@ namespace Msr.Services.Users
                 RoleName = s.AspNetRoles.FirstOrDefault().Name,
                 PortalUser = s.PortalUser,
                 Login = s.UserName
-            }).SingleOrDefault();
+            }).OrderByDescending(x => x.Id).FirstOrDefault();
 
             return user;
         }
@@ -98,7 +98,7 @@ namespace Msr.Services.Users
         {
             var compannyId = _dbContext.AspNetUsers.Where(x => x.Id.ToLower() == id.ToLower()).Select(x => x.CompanyId).First();
 
-            return _dbContext.CompanyViews.SingleOrDefault(x => x.Id == compannyId);
+            return _dbContext.CompanyViews.FirstOrDefault(x => x.Id == compannyId);
         }
 
 
@@ -131,7 +131,7 @@ namespace Msr.Services.Users
 
             var result = _dbContext.Database
                 .SqlQuery<int>("Portal_CheckModulePermissions @userId, @moduleName", userIdParam, moduleNameParam)
-                .SingleOrDefault();
+                .FirstOrDefault();
 
             return result > 0;
         }
@@ -144,7 +144,7 @@ namespace Msr.Services.Users
         public bool ValidatePassword(string id, string password)
         {
             var curentPassword = _dbContext.Peoples.Where(x => x.Id == id).Select(x => x.Password)
-                .SingleOrDefault();
+                .FirstOrDefault();
 
             var encryptedPasswod = AuthenticationHelper.PasswordEncrypt(password);
 
