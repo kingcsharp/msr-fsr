@@ -81,8 +81,8 @@
             <td colspan="2">
                 @foreach (var photo in Model.Photos)
                 {
-                    <a href="@photo.FileArray" data-featherlight="image">
-                        <img src="@photo.FileArray" width="30%" class="img-responsive pull-left" alt="" style="margin-left: 10px; margin-bottom: 10px">
+                    <a href="@photo.DocumentURL" data-featherlight="image">
+                        <img src="@photo.DocumentURL" width="30%" class="img-responsive img-rounded pull-left" alt="" style="margin-left: 10px; margin-bottom: 10px">
                     </a>
                 }
             </td>

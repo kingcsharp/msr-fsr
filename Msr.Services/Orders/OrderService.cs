@@ -100,6 +100,11 @@ namespace Msr.Services.Orders
 
             var extension = Path.GetExtension(url);
 
+            if (extension.StartsWith(".") == true)
+            {
+                extension = extension.Substring(1);
+            }
+
             var data = "";
             var fileName = MimeTypes.GetTypes(extension.Replace(".", ""));
             if (fileName == "application/pdf")
@@ -121,6 +126,11 @@ namespace Msr.Services.Orders
             }
             else if (fileName == "jpg" || fileName == "png" || fileName == "jpeg" || fileName == "gif")
             {
+                if (extension.ToLower() == "jpg")
+                {
+                    extension = "jpeg";
+                }
+
                 data = $"data:image/{extension};base64,";
             }
 

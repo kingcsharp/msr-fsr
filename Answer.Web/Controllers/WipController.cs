@@ -957,17 +957,27 @@ namespace Answer.Web.Controllers
 
             foreach (var doc in docs)
             {
-                if (doc.ContentType == "image/jpeg" || doc.ContentType == "image/gif" || doc.ContentType == "image/png")
+                if (string.IsNullOrWhiteSpace(doc.ContentType) == true) { doc.ContentType = string.Empty; } else { doc.ContentType = doc.ContentType.Trim().ToLower(); }
+
+                if (doc.ContentType == "image/jpg" || doc.ContentType == "image/jpeg" || doc.ContentType == "image/gif" || doc.ContentType == "image/png")
                 {
-                    var photo = orderService.GetDocumentBase64(doc.ServerPath);
+                    // var photo = orderService.GetDocumentBase64(doc.ServerPath);
 
                     photos.Add(new DocumentView
                     {
-                        FileArray = photo,
-                        Name = doc.Name
+                        // FileArray = photo,
+                        Name = doc.Name,
+                        DocumentURL = Uri.EscapeUriString(doc.ServerPath)
                     });
                 }
             }
+
+            photos.Add(new DocumentView
+            {
+                // FileArray = photo,
+                Name = "Test Doc",
+                DocumentURL = Uri.EscapeUriString("https://ultimateindulgenceacademy.co.uk/wp-content/uploads/2018/02/test.jpg")
+            });
 
             return photos;
         }
