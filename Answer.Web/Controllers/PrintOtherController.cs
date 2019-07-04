@@ -1,10 +1,10 @@
-﻿using System.Web.Mvc;
-using System.Collections.Generic;
-using System.Linq;
-using Answer.Web.Filters;
-using Msr.Models.Menus;
+﻿using Answer.Web.Filters;
 using Msr.Services.Orders;
 using Msr.Services.Orders.Messaging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web.Mvc;
 
 namespace Answer.Web.Controllers
 {
@@ -86,20 +86,44 @@ namespace Answer.Web.Controllers
             return PartialView("_ViewNcrTsr", ncrDetails);
         }
 
+        //private List<DocumentView> GetDocViewModel(List<DocumentView> docs, OrderService orderService, int width)
+        //{
+        //    var photos = new List<DocumentView>();
+
+        //    foreach (var doc in docs)
+        //    {
+        //        if (doc.ContentType == "image/jpeg" || doc.ContentType == "image/gif" || doc.ContentType == "image/png")
+        //        {
+        //            var photo = orderService.GetDocumentBase64(doc.ServerPath);
+
+        //            photos.Add(new DocumentView
+        //            {
+        //                FileArray = photo,
+        //                Name = doc.Name
+        //            });
+        //        }
+        //    }
+
+        //    return photos;
+        //}
+
         private List<DocumentView> GetDocViewModel(List<DocumentView> docs, OrderService orderService, int width)
         {
             var photos = new List<DocumentView>();
 
             foreach (var doc in docs)
             {
-                if (doc.ContentType == "image/jpeg" || doc.ContentType == "image/gif" || doc.ContentType == "image/png")
+                if (string.IsNullOrWhiteSpace(doc.ContentType) == true) { doc.ContentType = string.Empty; } else { doc.ContentType = doc.ContentType.Trim().ToLower(); }
+
+                if (doc.ContentType == "image/jpg" || doc.ContentType == "image/jpeg" || doc.ContentType == "image/gif" || doc.ContentType == "image/png")
                 {
-                    var photo = orderService.GetDocumentBase64(doc.ServerPath);
+                    // var photo = orderService.GetDocumentBase64(doc.ServerPath);
 
                     photos.Add(new DocumentView
                     {
-                        FileArray = photo,
-                        Name = doc.Name
+                        // FileArray = photo,
+                        Name = doc.Name,
+                        DocumentURL = Uri.EscapeUriString(doc.ServerPath)
                     });
                 }
             }

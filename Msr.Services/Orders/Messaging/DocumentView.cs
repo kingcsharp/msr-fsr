@@ -10,5 +10,6 @@ namespace Msr.Services.Orders.Messaging
         public string ServerPath { get; set; }
         public string ContentType { get; set; }
         public string FileArray { get; set; }
+        public string DocumentURL { get; set; }
     }
 }
