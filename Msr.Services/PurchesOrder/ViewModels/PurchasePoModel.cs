@@ -99,6 +99,8 @@ namespace Msr.Services.PurchesOrder.ViewModels
 
         public int? CycleTime { get; set; }
 
+        public string MATERIAL_TRANSFER_TICKET_NUMBER { get; set; }
+
         public List<PurchasePoModel> OrderItems { get; set; }
 
         public List<SelectListItem> NewPoList { get; set; }
