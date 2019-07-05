@@ -1,7 +1,5 @@
-﻿--   exec Portal_GetNcrReport '109815'
-
-CREATE procedure [dbo].[Portal_GetNcrReport]
-@FileId nvarchar(50)
+﻿CREATE procedure [dbo].[Portal_GetNcrReport]
+	@FileId nvarchar(50)
 AS
 
 DECLARE 
@@ -12,6 +10,7 @@ DECLARE
 @Technician nvarchar(50),
 @FillObjId nvarchar(50),
 @Serial nvarchar(50),
+@PartNumber nvarchar(50),
 @PartDesc nvarchar(50),
 @Comments nvarchar(MAX),
 @NickName nvarchar(50),
@@ -27,7 +26,7 @@ FROM A_V_FILLS_SEARCH WHERE ID = @FileId
 
 SELECT TOP 1 @Technician=LATEST_REQUESTEE_NAME FROM A_TASKS WHERE PARENT_ID = (SELECT TASK_ID FROM A_TASK_ORDER_INFORMATION with (noLock) WHERE FILL_ITEM_ID = @FileId)
 
-SELECT @Serial=SERIAL, @PartDesc= PART_DESC, @NickName = NICK_NAME  FROM A_V_ACTUAL_PARTS_APPROVED_DATA WHERE ID = @FillObjId
+SELECT @Serial=SERIAL, @PartNumber = COMPANY_PART_NUMBER, @PartDesc= PART_DESC, @NickName = NICK_NAME  FROM A_V_ACTUAL_PARTS_APPROVED_DATA WHERE ID = @FillObjId
 
 SELECT @DateComplete = max(ACTUAL_STOP_DATE) FROM A_TASKS WHERE ID IN (SELECT TASK_ID FROM A_TASK_ORDER_INFORMATION WHERE FILL_ITEM_ID = @FileId)
 
@@ -37,12 +36,11 @@ SELECT @Comments =ISNULL(STUFF((
             FOR XML PATH('')
             ), 1, 1, ''),'')
 
-			
-
 SELECT @PurchItemId AS PurchItemId,
 @SupName AS SupName,
  @FillObjDesc AS FillObjDesc, @CustName As CustName, @Technician AS Technician,
  @Serial AS Serial,
+ @PartNumber AS PartNumber,
   @PartDesc AS PartDesc,
 @NickName As NickName,
  @FillObjId AS FillObjId
