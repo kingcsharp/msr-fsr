@@ -1,25 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Linq;
-using EntityFrameworkExtras.EF6;
+﻿using EntityFrameworkExtras.EF6;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Msr.Infrastructure.Email;
 using Msr.Infrastructure.Helpers;
-using Msr.Models.Parts;
 using Msr.Models.People;
+using Msr.Models.Training;
 using Msr.Models.Users;
 using Msr.Repositories;
 using Msr.Services.Orders.Messaging;
 using Msr.Services.Parts.Procedures;
 using Msr.Services.People.Procedures;
 using Msr.Services.People.ViewModels;
-using System.Configuration;
-using System.IO;
-using Msr.Infrastructure.Email;
 using Msr.Services.Roles;
 using Msr.Services.Users;
-using Msr.Models.Training;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data.SqlClient;
+using System.Linq;
 
 namespace Msr.Services.Orders
 {
@@ -252,6 +250,11 @@ namespace Msr.Services.Orders
                 var websiteUrl = ConfigurationManager.AppSettings["WebsiteUrl"];
                 var loginLink = $"<a href='{websiteUrl}/Account/login'>Login</a>";
 
+                if (websiteUrl.Trim().EndsWith("/") == true)
+                {
+                    websiteUrl = websiteUrl.Substring(0, websiteUrl.Length - 1);
+                }
+
                 var bodyUsername = $@"<div>
                <p>Hello ANSWER user,<br/></p>
                <p>Your username is : {user.UserName}</p>
@@ -259,7 +262,6 @@ namespace Msr.Services.Orders
                </div>";
 
                 EmailService.SendEmail(from, email, "ANSWER - Username", bodyUsername, null, true);
-
 
                 var lnkHref = $"<a href='{websiteUrl}/Account/ResetPassword?token={EncryptionHelper.Encrypt(userName).Replace('/', '*')}'>Reset Password</a>";
 
