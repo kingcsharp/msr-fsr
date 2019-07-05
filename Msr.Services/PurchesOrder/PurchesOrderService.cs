@@ -288,6 +288,7 @@ namespace Msr.Services.PurchesOrder
                     var dueDate = new SqlParameter();
                     var qty = new SqlParameter();
                     var custLintItem = new SqlParameter();
+                    var materialTransferTicketNumber = new SqlParameter();
 
                     if (model.OrderItems[i].DUE_DATE == null)
                     {
@@ -316,9 +317,18 @@ namespace Msr.Services.PurchesOrder
                         custLintItem = new SqlParameter("@CUST_LINE_ITEM", model.OrderItems[i].CUST_LINE_ITEM);
                     }
 
+                    if (string.IsNullOrWhiteSpace(model.OrderItems[i].MATERIAL_TRANSFER_TICKET_NUMBER) == true)
+                    {
+                        materialTransferTicketNumber = new SqlParameter("@MATERIAL_TRANSFER_TICKET_NUMBER", DBNull.Value);
+                    }
+                    else
+                    {
+                        materialTransferTicketNumber = new SqlParameter("@MATERIAL_TRANSFER_TICKET_NUMBER", model.OrderItems[i].MATERIAL_TRANSFER_TICKET_NUMBER);
+                    }
+
                     var orderId = new SqlParameter("@ID", model.OrderItems[i].ID);
 
-                    _dbContext.Database.ExecuteSqlCommand("exec Portal_UpdateOrderItem @DUE_DATE,@QTY,@CUST_LINE_ITEM,@ID", dueDate, qty, custLintItem, orderId);
+                    _dbContext.Database.ExecuteSqlCommand("exec Portal_UpdateOrderItem @DUE_DATE,@QTY,@CUST_LINE_ITEM, @MATERIAL_TRANSFER_TICKET_NUMBER,@ID", dueDate, qty, custLintItem, materialTransferTicketNumber, orderId);
                 }
 
                 var checkForValidityProcedure = new PoCheckForValidityProcedure
