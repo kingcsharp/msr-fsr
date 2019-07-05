@@ -10,6 +10,7 @@ namespace Msr.Services.Orders.Messaging
         public string FillObjDesc { get; set; }
         public string AppObjDesc { get; set; }
         public string PurchItemId { get; set; }
+        public string PartNumber { get; set; }
         public string PartDesc { get; set; }
         public string NickName { get; set; }
         public string FillObjId { get; set; }
