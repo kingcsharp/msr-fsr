@@ -1,4 +1,5 @@
-﻿CREATE VIEW [dbo].[Portal_WorkOrders]
+﻿
+CREATE VIEW [dbo].[Portal_WorkOrders]
 
 AS
 SELECT DISTINCT
@@ -82,8 +83,11 @@ CONVERT(nvarchar(100),A_TASK_COMPLETION_STATS.MY_TOT_HOURS)+ ' hours complete'
 ) AS TimeCompletedText,
 dbo.A_FILLS.PRICE AS Amount,
 purch.PURCHASER AS Purchaser,
-Account.CUSTOMER_BILL_CO AS CustMttn,
-PA.PartId
+--Account.CUSTOMER_BILL_CO AS CustMttn,
+PURCHITEM.MATERIAL_TRANSFER_TICKET_NUMBER AS CUSTMTTN,
+PA.PartId,
+PA.PartName,
+Product.CycleTime AS CycleCount 
 FROM         dbo.A_V_COMPANIES_APPROVED_DATA_QUICK AS customer 
 INNER JOIN dbo.A_V_PURCHASES_APPROVED_DATA AS purch ON customer.ID = purch.CUSTOMER_CO 
 RIGHT OUTER JOIN dbo.A_TASK_COMPLETION_STATS 
