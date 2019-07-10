@@ -219,7 +219,10 @@ namespace Msr.Services.Documents
         public bool AddUpdateDocumentHeaderFooter(DocumentView doc, string currentUserId)
         {
             if (doc == null || doc.Status != "APPROVED") return false;
-
+            if (!License.IsValidLicense("IRONPDF-138372CE75-686825-423338-419A44C0B1-F5AA4668-UEx8129778D4BA18D8-CMHWORKSLLC.IRO190627.4855.33211.PRO.1DEV.1YR.SUPPORTED.UNTIL.27.JUN.2020"))
+            {
+                IronPdf.License.LicenseKey = "IRONPDF-138372CE75-686825-423338-419A44C0B1-F5AA4668-UEx8129778D4BA18D8-CMHWORKSLLC.IRO190627.4855.33211.PRO.1DEV.1YR.SUPPORTED.UNTIL.27.JUN.2020";
+            }
             //Get the Document Data: 
             var approvals = _dbContext.Database.SqlQuery<Approval>(@"SELECT 
 	                                                                    o.APPROVAL_DATE AS ApprovalDate
@@ -244,7 +247,7 @@ namespace Msr.Services.Documents
                 {
                     var fileGroups = doc.ReferenceFiles.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
-                    foreach(var filegroup in fileGroups)
+                    foreach (var filegroup in fileGroups)
                     {
                         var split = filegroup.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
                         if (split.Count() > 1)
@@ -265,24 +268,27 @@ namespace Msr.Services.Documents
 
             var files = new List<DocFile>();
 
-            foreach(var id in fileIds)
+            foreach (var id in fileIds)
             {
                 files.Add(_fileService.GetSelectedRefFile(id));
             }
 
-            foreach (var file in files) {
-                if (file.ContentType.ToLower() != "application/pdf") continue;
-                var renderer = new HtmlToPdf();
-                //TODO: Get the file Path
-                var stream = _fileHandler.DownloadFromCloud(ConfigurationManager.AppSettings.Get("AWSBuketName"), file.FileKey);
-                MemoryStream memStream = new MemoryStream();
-                stream.CopyTo(memStream);
-                var pdfDoc = new PdfDocument(memStream.ToArray());
-                pdfDoc.AppendPdf(renderer.RenderHtmlAsPdf(GetRevisionTable(doc.Root)));
+            foreach (var file in files)
+            {
+                try
+                {
+                    if (file.ContentType.ToLower() != "application/pdf") continue;
+                    var renderer = new HtmlToPdf();
+                    //TODO: Get the file Path
+                    var stream = _fileHandler.DownloadFromCloud(ConfigurationManager.AppSettings.Get("AWSBuketName"), file.FileKey);
+                    MemoryStream memStream = new MemoryStream();
+                    stream.CopyTo(memStream);
+                    var pdfDoc = new PdfDocument(memStream.ToArray());
+                    pdfDoc.AppendPdf(renderer.RenderHtmlAsPdf(GetRevisionTable(doc.Root)));
 
-                var creator = _userService.GetUserByObjectId(doc.CreatedBy);
-                //TODO: Save document back to 
-                var fragment = @"<style>
+                    var creator = _userService.GetUserByObjectId(doc.CreatedBy);
+                    //TODO: Save document back to 
+                    var fragment = @"<style>
 			                        .data > div {
 				                        outline: 2px solid black;
 				                        outline-offset: -1px;
@@ -311,36 +317,36 @@ namespace Msr.Services.Documents
 					                        <td style=""font-size:12px;font-weight:bold;"" colspan=5>" + doc.Name + @"</td>
 				                        </tr>
 				                        <tr class=""data"">
-					                        <td colspan=3 style=""font-size:10px;"">Issued by: " + creator.FullName +". "+creator.Title+@"</td>
-					                        <td style=""font-size:10px;font-weight:bold;"">Effective Date: "+doc.ApprovalDate.GetValueOrDefault(default(DateTime)).ToString("MM/dd/yyyy")+@"</td>
-                                            <td style=""font-size:10px;font-weight:bold;"">Rev. "+doc.Rev+@"</td>
+					                        <td colspan=3 style=""font-size:10px;"">Issued by: " + creator.FullName + ". " + creator.Title + @"</td>
+					                        <td style=""font-size:10px;font-weight:bold;"">Effective Date: " + doc.ApprovalDate.GetValueOrDefault(default(DateTime)).ToString("MM/dd/yyyy") + @"</td>
+                                            <td style=""font-size:10px;font-weight:bold;"">Rev. " + doc.Rev + @"</td>
 					                        <td style=""font-size:10px;font-weight:bold;""> pg. {page} of {total-pages}</td>
 				                        </tr><tr class=""data"">";
-                int count = 1;
-                foreach (var approval in approvals)
-                {
-                    if(count % 6 == 0)
+                    int count = 1;
+                    foreach (var approval in approvals)
                     {
-                        fragment += "</tr><tr>";
-                    }
-                    fragment += @"<td style=""font-size:8px;font-weight:bold;"">
-					                    Approved: "+approval.ApproveDate+@"<br/>
-					                    "+approval.FullName+", "+approval.Position+@"
+                        if (count % 6 == 0)
+                        {
+                            fragment += "</tr><tr>";
+                        }
+                        fragment += @"<td style=""font-size:8px;font-weight:bold;"">
+					                    Approved: " + approval.ApproveDate + @"<br/>
+					                    " + approval.FullName + ", " + approval.Position + @"
 					                </td>";
-                    count++;
-                }
+                        count++;
+                    }
 
-                fragment += "</tr></table></div>";
-                pdfDoc = pdfDoc.AddHTMLHeaders(new HtmlHeaderFooter()
-                {
-                    Height = 30,
-                    HtmlFragment = fragment
-                }, false, new int[] { 0 });
+                    fragment += "</tr></table></div>";
+                    pdfDoc = pdfDoc.AddHTMLHeaders(new HtmlHeaderFooter()
+                    {
+                        Height = 30,
+                        HtmlFragment = fragment
+                    }, false, new int[] { 0 });
 
-                pdfDoc = pdfDoc.AddHTMLHeaders(new HtmlHeaderFooter()
-                {
-                    Height = 27,
-                    HtmlFragment = @"<style>
+                    pdfDoc = pdfDoc.AddHTMLHeaders(new HtmlHeaderFooter()
+                    {
+                        Height = 27,
+                        HtmlFragment = @"<style>
 		                            table > td {
 			                            outline: 2px solid black;
 			                            outline-offset: -1px;
@@ -368,17 +374,17 @@ namespace Msr.Services.Documents
 		                            <table class=""container"">
 			                            <tr>
 				                            <td>WI-0083</td>
-				                            <td style=""text-align:center;"">" + doc.Name+@"</td>
-				                            <td style=""font-size:10px;"">Rev. "+doc.Rev+@"</td>
+				                            <td style=""text-align:center;"">" + doc.Name + @"</td>
+				                            <td style=""font-size:10px;"">Rev. " + doc.Rev + @"</td>
 				                            <td style=""font-size:10px;""> pg. {page} of {total-pages}</td>
 			                            </tr>
 		                            </table>
 	                            </div>"
-                }, false, Enumerable.Range(1, pdfDoc.PageCount - 1).ToList());
+                    }, false, Enumerable.Range(1, pdfDoc.PageCount - 1).ToList());
 
-                pdfDoc = pdfDoc.AddHTMLFooters(new HtmlHeaderFooter()
-                {
-                    HtmlFragment = $@"<div style=""border: .25px solid red;padding-bottom:10px;"" >
+                    pdfDoc = pdfDoc.AddHTMLFooters(new HtmlHeaderFooter()
+                    {
+                        HtmlFragment = $@"<div style=""border: .25px solid red;padding-bottom:10px;"" >
                                     <hr style=""background-color: blue;height:2px;"" />
                                     <font color=""red"" style=""font-weight:bold;margin-left:50px;"">
                                         Printed copies of this document are not controlled.
@@ -387,10 +393,14 @@ namespace Msr.Services.Documents
                                         MSR-FSR Confidential
                                     </font>
                                 </div>"
-                }, false, Enumerable.Range(0, pdfDoc.PageCount).ToList());
+                    }, false, Enumerable.Range(0, pdfDoc.PageCount).ToList());
 
-                _fileHandler.UploadToCloud(pdfDoc.Stream, ConfigurationManager.AppSettings.Get("AWSBuketName"), file.FileKey);
-
+                    _fileHandler.UploadToCloud(pdfDoc.Stream, ConfigurationManager.AppSettings.Get("AWSBuketName"), file.FileKey);
+                }
+                catch (Exception ex)
+                {
+                    var message = "Error occured:" + ex.Message;
+                }
             }
 
             return true;
@@ -405,12 +415,12 @@ namespace Msr.Services.Documents
                                                                         FROM A_OBJECTS o
                                                                         WHERE[ROOT] = @Root
                                                                         ORDER BY REV, o.DRCM DESC", new SqlParameter("@Root", root)).ToList();
-            var historyTable = "<style> table { border-collapse: collapse; } td, th { border: 1px solid black; } th { background: lightgrey;}</style><table><thead><th>Rev. ID</th><th>Date</th><th>Changes</th></thead><tbody>";
+            var historyTable = @"<style> table { border-collapse: collapse; } td, th { border: 1px solid black; } th { background: lightgrey;}</style><h1 style=""margin-top:100px"">Revision History</h1><table><thead><th width=""10%"">Rev. ID</th><th width=""10%"">Date</th><th width=""80%"">Changes</th></thead><tbody>";
             foreach (var history in historyList)
             {
-                historyTable += "<tr><td>" + history.Rev.ToString() + "</td><td>" + (history.Approval_Date.HasValue ? history.Approval_Date.Value.ToString("MMMM dd, yyyy") : "&nbsp;") + "</td><td>" + history.Rev_Info + "</td></tr>";
+                historyTable += @"<tr><td align=""center""><strong>" + history.Rev.ToString() + @"</strong></td><td align=""center"">" + (history.Approval_Date.HasValue ? history.Approval_Date.Value.ToString("MM/dd/yyyy") : "&nbsp;") + "</td><td>" + history.Rev_Info + "</td></tr>";
             }
-            
+
             historyTable += "</tbody></table>";
 
             return historyTable;
