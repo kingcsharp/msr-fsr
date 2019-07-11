@@ -117,6 +117,7 @@
                             <th>Description</th>
                             <th>Account</th>
                             <th>Cust Line</th>
+                            <th>Material Transfer #</th>
                             <th>Due Date</th>
                             <th>Qty</th>
                             <th>Unit Price</th>
@@ -138,6 +139,9 @@
                                 </td>
                                 <td>
                                     @Html.TextBoxFor(modelItem => Model.OrderItems[i].CUST_LINE_ITEM, new { @class = "form-control disable" })
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(modelItem => Model.OrderItems[i].MATERIAL_TRANSFER_TICKET_NUMBER, new { @class = "form-control disable" })
                                 </td>
                                 <td>
                                     <div class="input-group datepick">
