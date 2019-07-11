@@ -17,6 +17,8 @@ namespace Msr.Services.PurchesOrder.ViewModels
             OrderItems = new List<PurchasePoModel>();
         }
 
+        public string PURCHASE_ORDER_NAME { get; set; }
+
         public string ID { get; set; }
 
         public DateTime? DATE_CREATED { get; set; }
