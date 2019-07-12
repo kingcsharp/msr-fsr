@@ -10,6 +10,7 @@ using Msr.Infrastructure.Helpers;
 using Msr.Models.Companies;
 using Msr.Models.Orders;
 using Msr.Models.People;
+using Msr.Models.Users;
 using Msr.Repositories;
 using Msr.Services.Users.Messages;
 
@@ -45,7 +46,12 @@ namespace Msr.Services.Users
 
             return user;
         }
-
+        
+        public PeopleView GetUserByObjectId(string objId)
+        {
+            var user = _dbContext.Peoples.Where(i => i.ObjectId == objId).FirstOrDefault();
+            return user; 
+        }
         public UserSummary GetAnserByUserName(string userName)
         {
             userName = userName.ToLower().Trim();

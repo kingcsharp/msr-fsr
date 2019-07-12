@@ -60,24 +60,6 @@ Msr.PurchaseOrderGrid = Msr.PurchaseOrderGrid ||
                     align: 'left'
                 },
                 {
-                    label: 'Reference',
-                    name: 'ReferenceName',
-                    index: 'ReferenceName',
-                    colmenu: false,
-                    editable: true,
-                    width: 110,
-                    coloptions: {
-                        sorting: false,
-                        columns: true,
-                        filtering: false,
-                        seraching: false,
-                        grouping: false,
-                        freeze: false
-                    },
-                    searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                    align: 'left'
-                },
-                {
                     label: 'Invoiced',
                     name: 'InvoicedBalance',
                     index: 'InvoicedBalance',
@@ -431,8 +413,6 @@ Msr.PurchaseOrderGrid = Msr.PurchaseOrderGrid ||
             var showPoButton = '';
             var actions = Msr.JqGridCommon.ActionFormtter(cellvalue, options, rowObject, Msr.PurchaseOrderGrid.GetReturnUrl(), '/PurchaseOrder/Edit/', true);
 
-            // JUSTIN G. FIX (REQ20:  Purchase Order: Only purchase orders in Approved state will show the "$" indicating they can be purchases against)
-            // if (rowObject.Product !== null) {
             if (rowObject.Product !== null && rowObject.Status === "APPROVED") {
                 showPoButton = '<a  title="Purchase On this PO" href="/PurchaseOrder/PurchasePoDetails/' + rowObject.Root + '" data-call-back-id ="' + rowObject.Root + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-dollar"></i></a>';
             }

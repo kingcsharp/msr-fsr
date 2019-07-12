@@ -123,6 +123,7 @@
     <Compile Include="CustomerRequirements\ProcessInfoView.cs" />
     <Compile Include="CustomerRequirements\CustomerSubmittedRequirementConstants.cs" />
     <Compile Include="Delivery\DeliveryScreenView.cs" />
+    <Compile Include="Documents\DocHistory.cs" />
     <Compile Include="Documents\DocumentFilesView.cs" />
     <Compile Include="Documents\DocumentView.cs" />
     <Compile Include="Documents\SelectRole.cs" />
@@ -221,6 +222,7 @@
     <Compile Include="Users\AspNetUserLogin.cs" />
     <Compile Include="Users\RolesConstants.cs" />
     <Compile Include="Users\PeopleView.cs" />
+    <Compile Include="Workflows\Approval.cs" />
     <Compile Include="Workflows\NotificationItemView.cs" />
     <Compile Include="Workflows\PendingApprovalView.cs" />
     <Compile Include="Workflows\TableConstants.cs" />

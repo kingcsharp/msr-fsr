@@ -17,6 +17,8 @@ namespace Msr.Services.PurchesOrder.ViewModels
             OrderItems = new List<PurchasePoModel>();
         }
 
+        public string PURCHASE_ORDER_NAME { get; set; }
+
         public string ID { get; set; }
 
         public DateTime? DATE_CREATED { get; set; }
@@ -96,6 +98,8 @@ namespace Msr.Services.PurchesOrder.ViewModels
         public DateTime? all_date { get; set; }
 
         public int? CycleTime { get; set; }
+
+        public string MATERIAL_TRANSFER_TICKET_NUMBER { get; set; }
 
         public List<PurchasePoModel> OrderItems { get; set; }
 

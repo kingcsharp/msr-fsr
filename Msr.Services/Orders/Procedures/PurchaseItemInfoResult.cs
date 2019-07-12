@@ -9,5 +9,6 @@
         public string CustomerWoItemNumber { get; set; }
         public string CompanyPartNumber { get; set; }
         public string Serial { get; set; }
+        public string MaterialTransferTicketNumber { get; set; }
     }
 }
