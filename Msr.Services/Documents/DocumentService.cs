@@ -219,7 +219,8 @@ namespace Msr.Services.Documents
         public bool AddUpdateDocumentHeaderFooter(DocumentView doc, string currentUserId)
         {
             if (doc == null || doc.Status != "APPROVED") return false;
-            if(!License.IsValidLicense("IRONPDF-138372CE75-686825-423338-419A44C0B1-F5AA4668-UEx8129778D4BA18D8-CMHWORKSLLC.IRO190627.4855.33211.PRO.1DEV.1YR.SUPPORTED.UNTIL.27.JUN.2020")){
+            if (!License.IsValidLicense("IRONPDF-138372CE75-686825-423338-419A44C0B1-F5AA4668-UEx8129778D4BA18D8-CMHWORKSLLC.IRO190627.4855.33211.PRO.1DEV.1YR.SUPPORTED.UNTIL.27.JUN.2020"))
+            {
                 IronPdf.License.LicenseKey = "IRONPDF-138372CE75-686825-423338-419A44C0B1-F5AA4668-UEx8129778D4BA18D8-CMHWORKSLLC.IRO190627.4855.33211.PRO.1DEV.1YR.SUPPORTED.UNTIL.27.JUN.2020";
             }
             //Get the Document Data: 
@@ -246,7 +247,7 @@ namespace Msr.Services.Documents
                 {
                     var fileGroups = doc.ReferenceFiles.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
-                    foreach(var filegroup in fileGroups)
+                    foreach (var filegroup in fileGroups)
                     {
                         var split = filegroup.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
                         if (split.Count() > 1)
@@ -267,12 +268,13 @@ namespace Msr.Services.Documents
 
             var files = new List<DocFile>();
 
-            foreach(var id in fileIds)
+            foreach (var id in fileIds)
             {
                 files.Add(_fileService.GetSelectedRefFile(id));
             }
 
-            foreach (var file in files) {
+            foreach (var file in files)
+            {
                 try
                 {
                     if (file.ContentType.ToLower() != "application/pdf") continue;
@@ -395,7 +397,7 @@ namespace Msr.Services.Documents
 
                     _fileHandler.UploadToCloud(pdfDoc.Stream, ConfigurationManager.AppSettings.Get("AWSBuketName"), file.FileKey);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     var message = "Error occured:" + ex.Message;
                 }
@@ -418,7 +420,7 @@ namespace Msr.Services.Documents
             {
                 historyTable += @"<tr><td align=""center""><strong>" + history.Rev.ToString() + @"</strong></td><td align=""center"">" + (history.Approval_Date.HasValue ? history.Approval_Date.Value.ToString("MM/dd/yyyy") : "&nbsp;") + "</td><td>" + history.Rev_Info + "</td></tr>";
             }
-            
+
             historyTable += "</tbody></table>";
 
             return historyTable;
