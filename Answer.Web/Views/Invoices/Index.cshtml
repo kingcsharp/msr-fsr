@@ -1,6 +1,6 @@
 ﻿@model Msr.Services.Invoices.ViewModel.InvoiceViewModel
 @{
-    ViewBag.Title = "Invoice";
+    ViewBag.Title = "Invoices";
 }
 
 <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/redmond/jquery-ui.css" />
@@ -13,6 +13,8 @@
             <h2 class="page-header">
                 <span class="icon fa fa-exchange"></span>
                 Invoices @Html.Partial("_HelpViewButton")
+                <input type="button" class="btn btn-primary help-btn pull-right" value="Download All Invoices" onclick="location.href='@Url.Action("DownloadAllInvoices", "Invoices")'" />
+                &nbsp;
                 <button class="btn btn-primary help-btn pull-right" data-toggle="modal" data-target="#invModal" data-intro="Create a New Invoice" data-position="bottom" style="margin-right: 10px"><i class="fa fa-plus"></i> New</button>
             </h2>
             <div class="col-lg-12">

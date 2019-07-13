@@ -3,7 +3,10 @@ using Msr.Repositories;
 using Msr.Services.Invoices.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Text;
 
 namespace Msr.Services.Invoices
 {
@@ -110,6 +113,7 @@ namespace Msr.Services.Invoices
 
             return result;
         }
+
         public ResultNotification<string> Create(InvoiceViewModel model)
         {
             var result = new ResultNotification<string>();
@@ -199,5 +203,186 @@ namespace Msr.Services.Invoices
                 return result;
             }
         }
+
+        public MemoryStream GetInvoicesZippedArchive(ref List<InvoiceQuickbooksFileModel> invoiceQuickbooksFileModels)
+        {
+            var invoiceArchiveMemoryStream = new MemoryStream();
+
+            using (var invoiceArchive = new ZipArchive(invoiceArchiveMemoryStream, ZipArchiveMode.Create, true))
+            {
+
+                foreach (InvoiceQuickbooksFileModel invoiceQuickbooksFileModel in invoiceQuickbooksFileModels)
+                {
+                    ZipArchiveEntry invoiceFile = invoiceArchive.CreateEntry(invoiceQuickbooksFileModel.InvoiceFileName);
+
+                    using (var invoiceZipArchiveEntryStream = invoiceFile.Open())
+
+                    using (var invoiceZipArchiveEntryStreamWriter = new StreamWriter(invoiceZipArchiveEntryStream))
+                    {
+                        invoiceZipArchiveEntryStreamWriter.Write(invoiceQuickbooksFileModel.InvoiceQuickbooksFileText);
+                    }
+
+                }
+
+            }
+
+            invoiceArchiveMemoryStream.Seek(0, SeekOrigin.Begin);
+            
+            return invoiceArchiveMemoryStream;
+        }
+
+        public List<InvoiceQuickbooksFileModel> GetAllInvoicesInQuickbooksFormat()
+        {
+            List<InvoiceQuickbooksFileModel> invoiceQuickbooksFileModels = new List<InvoiceQuickbooksFileModel>();
+
+            List<InvoiceView> invoiceList = GetInvoiceViewQueryable().ToList();
+
+            foreach (InvoiceView invoiceView in invoiceList)
+            {
+                InvoiceQuickbooksFileModel invoiceQuickbooksFileModel = new InvoiceQuickbooksFileModel();
+
+                invoiceQuickbooksFileModel.InvoiceView = invoiceView;
+                invoiceQuickbooksFileModel.InvoiceQuickbooksFileText = GetInvoiceQuickbooksFormat(invoiceView.Id, invoiceView.CustPo);
+
+                invoiceQuickbooksFileModels.Add(invoiceQuickbooksFileModel);
+            }
+
+            return invoiceQuickbooksFileModels;
+        }
+
+        public string GetInvoiceQuickbooksFormat(int? id, string po)
+        {
+            string invoiceQuickbooksFormat = string.Empty;
+
+            StringBuilder invoiceFileText = new StringBuilder();
+
+            var invoiceDelimiter = "\t";
+
+            var invoiceDetails = GetInvoiceViewQueryable().Where(x => x.Id == id).SingleOrDefault();
+            var invoiceItems = InvoiceExportByPo(po, id);
+
+            invoiceFileText.Append(string.Format("!TRNS{0}", invoiceDelimiter));
+            invoiceFileText.Append(string.Format("TRNSID{0}", invoiceDelimiter));
+            invoiceFileText.Append(string.Format("TRNSTYPE{0}", invoiceDelimiter));
+            invoiceFileText.Append(string.Format("DATE{0}", invoiceDelimiter));
+            invoiceFileText.Append(string.Format("ACCNT{0}", invoiceDelimiter));
+            invoiceFileText.Append(string.Format("NAME{0}", invoiceDelimiter));
+            invoiceFileText.Append(string.Format("CLASS{0}", invoiceDelimiter));
+            invoiceFileText.Append(string.Format("AMOUNT{0}", invoiceDelimiter));
+            invoiceFileText.Append(string.Format("DOCNUM{0}", invoiceDelimiter));
+            invoiceFileText.Append(string.Format("MEMO{0}", invoiceDelimiter));
+            invoiceFileText.Append(string.Format("CLEAR{0}", invoiceDelimiter));
+            invoiceFileText.Append(string.Format("TOPRINT{0}", invoiceDelimiter));
+            invoiceFileText.Append(string.Format("ADDR1{0}", invoiceDelimiter));
+            invoiceFileText.Append(string.Format("ADDR2{0}", invoiceDelimiter));
+            invoiceFileText.Append(string.Format("ADDR3{0}", invoiceDelimiter));
+            invoiceFileText.Append(string.Format("ADDR4{0}", invoiceDelimiter));
+            invoiceFileText.Append(string.Format("ADDR5{0}", invoiceDelimiter));
+            invoiceFileText.Append(string.Format("DUEDATE{0}", invoiceDelimiter));
+            invoiceFileText.Append(string.Format("TERMS{0}", invoiceDelimiter));
+            invoiceFileText.Append(string.Format("PAID{0}", invoiceDelimiter));
+            invoiceFileText.Append(string.Format("SHIPDATE{0}", invoiceDelimiter));
+            invoiceFileText.Append(Environment.NewLine);
+
+            invoiceFileText.Append(string.Format("!SPL{0}", invoiceDelimiter));
+            invoiceFileText.Append(string.Format("SPLID{0}", invoiceDelimiter));
+            invoiceFileText.Append(string.Format("TRNSTYPE{0}", invoiceDelimiter));
+            invoiceFileText.Append(string.Format("DATE{0}", invoiceDelimiter));
+            invoiceFileText.Append(string.Format("ACCNT{0}", invoiceDelimiter));
+            invoiceFileText.Append(string.Format("NAME{0}", invoiceDelimiter));
+            invoiceFileText.Append(string.Format("CLASS{0}", invoiceDelimiter));
+            invoiceFileText.Append(string.Format("AMOUNT{0}", invoiceDelimiter));
+            invoiceFileText.Append(string.Format("DOCNUM{0}", invoiceDelimiter));
+            invoiceFileText.Append(string.Format("MEMO{0}", invoiceDelimiter));
+            invoiceFileText.Append(string.Format("CLEAR{0}", invoiceDelimiter));
+            invoiceFileText.Append(string.Format("QNTY{0}", invoiceDelimiter));
+            invoiceFileText.Append(string.Format("PRICE{0}", invoiceDelimiter));
+            invoiceFileText.Append(string.Format("INVITEM{0}", invoiceDelimiter));
+            invoiceFileText.Append(string.Format("PAYMETH{0}", invoiceDelimiter));
+            invoiceFileText.Append(string.Format("TAXABLE{0}", invoiceDelimiter));
+            invoiceFileText.Append(string.Format("REIMBEXP{0}", invoiceDelimiter));
+            invoiceFileText.Append(string.Format("EXTRA{0}", invoiceDelimiter));
+            invoiceFileText.Append(Environment.NewLine);
+            invoiceFileText.Append(string.Format("!ENDTRNS"));
+            invoiceFileText.Append(Environment.NewLine);
+
+            invoiceFileText.Append(string.Format("TRNS{0}", invoiceDelimiter)); //TRNS
+            invoiceFileText.Append(string.Format("{0}{1}", invoiceDetails.InvoiceNumber, invoiceDelimiter)); //TRNSID
+            invoiceFileText.Append(string.Format("{0}{1}", "INVOICE", invoiceDelimiter)); //TRNSTYPE
+            invoiceFileText.Append(string.Format("{0:d}{1}", invoiceDetails.InvoiceDate, invoiceDelimiter)); //DATE
+            invoiceFileText.Append(string.Format("{0}{1}", "1100", invoiceDelimiter)); //ACCNT
+            invoiceFileText.Append(string.Format("{0}{1}", "", invoiceDelimiter)); //NAME
+            invoiceFileText.Append(string.Format("{0}{1}", invoiceDetails.InvoiceClass, invoiceDelimiter)); //CLASS
+            invoiceFileText.Append(string.Format("{0}{1}", invoiceDetails.SubTotal, invoiceDelimiter)); //AMOUNT
+            invoiceFileText.Append(string.Format("{0}{1}", "", invoiceDelimiter)); //DOCNUM
+            invoiceFileText.Append(string.Format("{0}{1}", "", invoiceDelimiter)); //MEMO
+            invoiceFileText.Append(string.Format("{0}{1}", "", invoiceDelimiter)); //CLEAR
+            invoiceFileText.Append(string.Format("{0}{1}", "", invoiceDelimiter)); //TOPRINT
+            invoiceFileText.Append(string.Format("{0}{1}", "", invoiceDelimiter)); //ADDR1
+            invoiceFileText.Append(string.Format("{0}{1}", "", invoiceDelimiter)); //ADDR2
+            invoiceFileText.Append(string.Format("{0}{1}", "", invoiceDelimiter)); //ADDR3
+            invoiceFileText.Append(string.Format("{0}{1}", "", invoiceDelimiter)); //ADDR4
+            invoiceFileText.Append(string.Format("{0}{1}", "", invoiceDelimiter)); //ADDR5
+            invoiceFileText.Append(string.Format("{0:d}{1}", "", invoiceDelimiter)); //DUEDATE
+            invoiceFileText.Append(string.Format("{0}{1}", "", invoiceDelimiter)); //TERMS
+            invoiceFileText.Append(string.Format("{0}{1}", "", invoiceDelimiter)); //PAID
+            invoiceFileText.Append(string.Format("{0:d}{1}", "", invoiceDelimiter)); //SHIPDATE
+
+            invoiceFileText.Append(Environment.NewLine);
+
+            foreach (var item in invoiceItems)
+            {
+                if (!string.IsNullOrWhiteSpace(item.ToString()))
+                {
+                    invoiceFileText.Append(string.Format("SPL{0}", invoiceDelimiter)); //SPL
+                    invoiceFileText.Append(string.Format("{0}{1}", invoiceDetails.InvoiceNumber, invoiceDelimiter)); //SPLID
+                    invoiceFileText.Append(string.Format("{0}", "INVOICE")); //TRNSTYPE
+                    invoiceFileText.Append(string.Format("{0:d}{1}", invoiceDetails.InvoiceDate, invoiceDelimiter)); //DATE
+                    invoiceFileText.Append(string.Format("{0}{1}", "1100", invoiceDelimiter)); //ACCNT
+                    invoiceFileText.Append(string.Format("{0}{1}", item.Purchaser, invoiceDelimiter)); //NAME
+                    invoiceFileText.Append(string.Format("{0}{1}", invoiceDetails.InvoiceClass, invoiceDelimiter)); //CLASS
+                    invoiceFileText.Append(string.Format("{0}{1}", item.Amount, invoiceDelimiter)); //AMOUNT
+                    invoiceFileText.Append(string.Format("{0}{1}", "", invoiceDelimiter)); //DOCNUM
+                    invoiceFileText.Append(string.Format("{0}{1}", "", invoiceDelimiter)); //MEMO
+                    invoiceFileText.Append(string.Format("{0}{1}", item.FillQty, invoiceDelimiter)); //MEMO
+                    invoiceFileText.Append(string.Format("{0}{1}", item.TotalSalePrice, invoiceDelimiter)); //QNTY
+                    invoiceFileText.Append(string.Format("{0}{1}", "", invoiceDelimiter)); //PRICE
+                    invoiceFileText.Append(string.Format("{0}{1}", "Y", invoiceDelimiter)); //INVITEM
+                    invoiceFileText.Append(string.Format("{0}{1}", "", invoiceDelimiter)); //PAYMETH
+                    invoiceFileText.Append(string.Format("{0}{1}", "", invoiceDelimiter)); //TAXABLE
+                    invoiceFileText.Append(string.Format("{0}{1}", "", invoiceDelimiter)); //REIMBEXP
+                    invoiceFileText.Append(string.Format("{0}{1}", "", invoiceDelimiter)); //EXTRA
+                    invoiceFileText.Append(Environment.NewLine);
+                }
+            }
+
+            invoiceFileText.Append(string.Format("SPL{0}", invoiceDelimiter));
+            invoiceFileText.Append(string.Format("{0}{1}", invoiceDetails.InvoiceNumber, invoiceDelimiter));
+            invoiceFileText.Append(string.Format("{0:d}{1}", "INVOICE", invoiceDelimiter));
+            invoiceFileText.Append(string.Format("{0:d}{1}", invoiceDetails.InvoiceDate, invoiceDelimiter));
+            invoiceFileText.Append(string.Format("{0}{1}", "1100", invoiceDelimiter)); //ACCNT
+            invoiceFileText.Append(string.Format("{0}{1}", "Sales Tax Payable", invoiceDelimiter)); //NAME
+            invoiceFileText.Append(string.Format("{0}{1}", invoiceDetails.InvoiceClass, invoiceDelimiter)); //CLASS
+            invoiceFileText.Append(string.Format("{0}{1}", "", invoiceDelimiter)); //AMOUNT
+            invoiceFileText.Append(string.Format("{0}{1}", "", invoiceDelimiter)); //DOCNUM
+            invoiceFileText.Append(string.Format("{0}{1}", "", invoiceDelimiter)); //MEMO
+            invoiceFileText.Append(string.Format("{0}{1}", "", invoiceDelimiter)); //MEMO
+            invoiceFileText.Append(string.Format("{0}{1}", "", invoiceDelimiter)); //Qty
+            invoiceFileText.Append(string.Format("{0}%", invoiceDetails.Tax)); //PRICE
+            invoiceFileText.Append(string.Format("{0}{1}", "", invoiceDelimiter));//INVITEM
+            invoiceFileText.Append(string.Format("{0}{1}", "N", invoiceDelimiter)); //PAYMETH
+            invoiceFileText.Append(string.Format("{0}{1}", "Y", invoiceDelimiter));//TAXABLE
+            invoiceFileText.Append(string.Format("{0}{1}", "", invoiceDelimiter)); //REIMBEXP
+            invoiceFileText.Append(string.Format("{0}{1}", "", invoiceDelimiter)); //EXTRA
+
+            invoiceFileText.Append(Environment.NewLine);
+
+            invoiceFileText.Append(string.Format("ENDTRNS"));
+
+            invoiceQuickbooksFormat = invoiceFileText.ToString();
+
+            return invoiceQuickbooksFormat;
+        }
+
     }
 }
