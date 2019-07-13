@@ -34,7 +34,7 @@ namespace Answer.Web
             {
                 var user = HttpContext.Current.User;
 
-                var  roleService = new RoleService();
+                var roleService = new RoleService();
 
                 var userRoles = roleService.GetAssignedRolesByLogin(user.Identity.Name);
 
