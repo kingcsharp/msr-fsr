@@ -451,10 +451,15 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
                                 d1.getFullYear() === d2.getFullYear() &&
                                 d1.getMonth() === d2.getMonth();
                         } else {
-                            addItem = filterElem.val === '' || filterElem.val === undefined ||
-                                d1.getFullYear() > d2.getFullYear() ||
-                                d1.getFullYear() === d2.getFullYear() &&
-                                d1.getMonth() >= d2.getMonth();
+
+                            // CHANGE CAME IN TO CHANGE LOGIC TO A STRAIGHT DATE COMPARISON RATHER THAN BY SIMPLY THE MONTH AND THE YEAR
+
+                            if (d1 >= d2) { addItem = true; } else { addItem = false; }
+
+                            //addItem = filterElem.val === '' || filterElem.val === undefined ||
+                            //    d1.getFullYear() > d2.getFullYear() ||
+                            //    d1.getFullYear() === d2.getFullYear() &&
+                            //    d1.getMonth() >= d2.getMonth();
                         }
 
                     } else if (filterElem.toDate !== undefined) {
@@ -471,10 +476,15 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
                                 d3.getFullYear() === d4.getFullYear() &&
                                 d3.getMonth() === d4.getMonth();
                         } else {
-                            addItem = filterElem.val === '' || filterElem.val === undefined ||
-                                d3.getFullYear() < d4.getFullYear() ||
-                                d3.getFullYear() === d4.getFullYear() &&
-                                d3.getMonth() <= d4.getMonth();
+
+                            // CHANGE CAME IN TO CHANGE LOGIC TO A STRAIGHT DATE COMPARISON RATHER THAN BY SIMPLY THE MONTH AND THE YEAR
+
+                            if (d3 <= d4) { addItem = true; } else { addItem = false; }
+
+                            //addItem = filterElem.val === '' || filterElem.val === undefined ||
+                            //    d3.getFullYear() < d4.getFullYear() ||
+                            //    d3.getFullYear() === d4.getFullYear() &&
+                            //    d3.getMonth() <= d4.getMonth();
                         }
 
                     }
@@ -567,10 +577,16 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
                                 d1.getFullYear() === d2.getFullYear() &&
                                 d1.getMonth() === d2.getMonth();
                         } else {
-                            addItem = filterElem.val === '' || filterElem.val === undefined ||
-                                d1.getFullYear() > d2.getFullYear() ||
-                                d1.getFullYear() === d2.getFullYear() &&
-                                d1.getMonth() >= d2.getMonth();
+
+                            // CHANGE CAME IN TO CHANGE LOGIC TO A STRAIGHT DATE COMPARISON RATHER THAN BY SIMPLY THE MONTH AND THE YEAR
+
+                            if (d1 >= d2) { addItem = true; } else { addItem = false; }
+
+                            //addItem = filterElem.val === '' || filterElem.val === undefined ||
+                            //    d1.getFullYear() > d2.getFullYear() ||
+                            //    d1.getFullYear() === d2.getFullYear() &&
+                            //    d1.getMonth() >= d2.getMonth();
+
                         }
 
                     } else if (filterElem.toDate !== undefined) {
@@ -587,10 +603,15 @@ app.controller('dashBoardv2Ctrl', function ($scope, reportService, connection, $
                                 d3.getFullYear() === d4.getFullYear() &&
                                 d3.getMonth() === d4.getMonth();
                         } else {
-                            addItem = filterElem.val === '' || filterElem.val === undefined ||
-                                d3.getFullYear() < d4.getFullYear() ||
-                                d3.getFullYear() === d4.getFullYear() &&
-                                d3.getMonth() <= d4.getMonth();
+
+                            // CHANGE CAME IN TO CHANGE LOGIC TO A STRAIGHT DATE COMPARISON RATHER THAN BY SIMPLY THE MONTH AND THE YEAR
+
+                            if (d3 <= d4) { addItem = true; } else { addItem = false; }
+
+                            //addItem = filterElem.val === '' || filterElem.val === undefined ||
+                            //    d3.getFullYear() < d4.getFullYear() ||
+                            //    d3.getFullYear() === d4.getFullYear() &&
+                            //    d3.getMonth() <= d4.getMonth();
                         }
 
                     }
