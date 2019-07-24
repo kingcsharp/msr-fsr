@@ -231,11 +231,14 @@ namespace Msr.Services.Invoices
             return invoiceArchiveMemoryStream;
         }
 
-        public List<InvoiceQuickbooksFileModel> GetAllInvoicesInQuickbooksFormat()
+        public List<InvoiceQuickbooksFileModel> GetAllInvoicesInQuickbooksFormat(List<InvoiceView> invoiceList = null)
         {
             List<InvoiceQuickbooksFileModel> invoiceQuickbooksFileModels = new List<InvoiceQuickbooksFileModel>();
 
-            List<InvoiceView> invoiceList = GetInvoiceViewQueryable().ToList();
+            if (invoiceList == null )
+            {
+                invoiceList = GetInvoiceViewQueryable().ToList();
+            }
 
             foreach (InvoiceView invoiceView in invoiceList)
             {
