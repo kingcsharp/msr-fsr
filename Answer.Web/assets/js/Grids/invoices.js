@@ -10,6 +10,24 @@ Msr.InvoicesGrid = Msr.InvoicesGrid || {
     GetGridEditUrl: function () {
         return "/Invoices/Edit/";
     },
+    DownloadAllInvoices: function () {
+        const baseURL = window.location.protocol + "//" + window.location.host + "/Invoices/DownloadFilteredInvoices";
+        const postData = $("#" + Msr.InvoicesGrid.GetGridId()).jqGrid('getGridParam', 'postData');
+        
+        let downloadInvoicesURL = baseURL + '?';
+
+        $.each(postData, function (key, value) {
+
+            if (downloadInvoicesURL.endsWith("?") === true) {
+                downloadInvoicesURL += key + "=" + encodeURIComponent(value);
+            } else {
+                downloadInvoicesURL += "&" + key + "=" + encodeURIComponent(value);
+            }
+
+        });
+
+        window.location.href = downloadInvoicesURL;
+    },
     LoadInvoices: function (url) {
 
         $.jgrid.defaults.styleUI = 'Bootstrap';

@@ -373,5 +373,98 @@ namespace Answer.Web.Controllers
             return File(compressedInvoices, "text/plain", string.Format("All Invoices - {0}.zip", DateTime.Now.ToShortDateString()));
         }
 
+        [HttpGet]
+        public ActionResult DownloadFilteredInvoices(JqGridParam jqGridParam)
+        {
+            List<InvoiceView> invoiceList = GetFilteredInvoices(jqGridParam);
+
+            List<InvoiceQuickbooksFileModel> invoiceQuickbooksFileModels = _invoicesService.GetAllInvoicesInQuickbooksFormat(invoiceList);
+
+            MemoryStream compressedInvoices = _invoicesService.GetInvoicesZippedArchive(ref invoiceQuickbooksFileModels);
+
+            return File(compressedInvoices, "text/plain", string.Format("All Invoices - {0}.zip", DateTime.Now.ToShortDateString()));
+        }
+
+        public List<InvoiceView> GetFilteredInvoices(JqGridParam jqGridParam)
+        {
+
+            var invoicesQueryable = _invoicesService.GetInvoiceViewQueryable();
+
+            if (jqGridParam.where != null && jqGridParam.where.rules.Any())
+            {
+                foreach (var rule in jqGridParam.where.rules)
+                {
+
+                    if (rule.field == nameof(InvoiceView.Status) && rule.data != "")
+                    {
+                        var list = rule.data.Split(',').Select(x => x.Trim().ToLower()).ToArray();
+                        if (list.Any())
+                        {
+                            invoicesQueryable = invoicesQueryable.Where(x => list.Contains(x.Status.ToLower()));
+                        }
+                    }
+                    else if (rule.field == nameof(InvoiceView.CustPo))
+                    {
+                        invoicesQueryable = invoicesQueryable.Where(x => x.CustPo.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(InvoiceView.Client))
+                    {
+                        invoicesQueryable = invoicesQueryable.Where(x => x.Client.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(InvoiceView.Description))
+                    {
+                        invoicesQueryable = invoicesQueryable.Where(x => x.Description.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(InvoiceView.InvoiceNumber))
+                    {
+                        invoicesQueryable = invoicesQueryable.Where(x => x.InvoiceNumber.ToLower().Contains(rule.data.ToLower()));
+                    }
+                    else if (rule.field == nameof(InvoiceView.Total))
+                    {
+                        decimal value;
+                        if (decimal.TryParse(rule.data, out value))
+                        {
+                            invoicesQueryable = invoicesQueryable.Where(x => x.Total == value);
+                        }
+                        else
+                        {
+                            invoicesQueryable = invoicesQueryable.Where(x => x.Total == -1);
+                        }
+                    }
+                    else if (rule.field == nameof(InvoiceView.InvoiceDate))
+                    {
+                        DateTime value;
+                        if (DateTime.TryParse(rule.data, out value))
+                        {
+                            invoicesQueryable = invoicesQueryable.Where(x => x.InvoiceDate.Day == value.Day &&
+                                                             x.InvoiceDate.Month == value.Month &&
+                                                             x.InvoiceDate.Year == value.Year);
+                        }
+                    }
+
+                }
+            }
+
+            var orderBy = nameof(InvoiceView.Id);
+
+            if (!string.IsNullOrWhiteSpace(jqGridParam.sortColumn))
+            {
+                orderBy = jqGridParam.sortColumn;
+            }
+
+            if (jqGridParam.sortOrder == "desc")
+            {
+                invoicesQueryable = invoicesQueryable.OrderByDescending(orderBy);
+            }
+            else
+            {
+                invoicesQueryable = invoicesQueryable.OrderBy(orderBy);
+            }
+
+            var invoiceList = invoicesQueryable.ToList();
+
+            return invoiceList;
+        }
+
     }
 }
