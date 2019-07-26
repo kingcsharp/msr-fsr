@@ -135,6 +135,7 @@
     <Compile Include="Helps\HelpView.cs" />
     <Compile Include="Invoices\Invoice.cs" />
     <Compile Include="Invoices\InvoicePoWorkItem.cs" />
+    <Compile Include="Invoices\InvoiceQuickbooksFileModel.cs" />
     <Compile Include="Invoices\InvoiceView.cs" />
     <Compile Include="Invoices\InvoiceWorkItem.cs" />
     <Compile Include="Locations\ApprovedSitesAndRoomsView.cs" />
