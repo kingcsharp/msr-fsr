@@ -76,7 +76,7 @@ app.service('report_v2Model', function (queryModel, c3Charts, reportHtmlWidgets,
                                     $("#" + report.parentDiv + " .filters").each(function (index, elem) {
                                         var name = $(elem).parent().text();
                                         if (name.toLowerCase() == "month") {
-                                            name = "Date From - To";
+                                            name = "Month";
                                         }
                                         var col = $('<div style="float:left;width:25%;"><span style="font-weight:bold;color:#000000;">' + name + '<span><div>');
                                         $(elem).appendTo(col);
