@@ -1,0 +1,4 @@
+﻿CREATE TABLE [dbo].[A_POS_WITH_COMPLETED_WOS] (
+    [ReferencePo] VARCHAR (50) NULL
+);
+

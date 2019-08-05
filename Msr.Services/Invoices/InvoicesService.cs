@@ -65,6 +65,8 @@ namespace Msr.Services.Invoices
 
             var woItem = _dbContext.InvoiceWorkItems.ToList();
 
+            // JG: I ADDED THE BREAK STATEMENT LOGIC BELOW, IT SEEMED LIKE ONCE THE FLAG WAS SET TO TRUE NO NEED TO KEEP ITERATING
+            
             foreach (var item in woItem)
             {
                 var invoicePoWorkItems = InvoiceViewList().Where(x => x.Status == "FINISHED" && x.CustPurchNum == item.RefPo).Distinct().ToList();
@@ -76,7 +78,14 @@ namespace Msr.Services.Invoices
                     if (invoicePoWorkItems.Count == woItemCount)
                     {
                         flag = true;
+
+                        break;
                     }
+                }
+
+                if (flag == true)
+                {
+                    break;
                 }
             }
 
@@ -87,7 +96,18 @@ namespace Msr.Services.Invoices
                 .Select(x => x.CustPurchNum).Distinct().ToList();
             }
 
-            return InvoiceViewList().Where(x => x.Status == "FINISHED" && x.CustPurchNum != null).Select(x => x.CustPurchNum).Distinct().ToList();
+            // return InvoiceViewList().Where(x => x.Status == "FINISHED" && x.CustPurchNum != null).Select(x => x.CustPurchNum).Distinct().ToList();
+
+            return GetDistinctPOList();
+        }
+
+        public List<string> GetDistinctPOList()
+        {
+            string sql = $"SELECT REFERENCEPO FROM A_POS_WITH_COMPLETED_WOS ORDER BY REFERENCEPO";
+
+            List<string> distinctPOList = _dbContext.Database.SqlQuery<String>(sql).Distinct().OrderBy(x => x).ToList();
+
+            return distinctPOList;
         }
 
         public IQueryable<InvoicePoWorkItem> InvoiceViewList()
@@ -231,11 +251,14 @@ namespace Msr.Services.Invoices
             return invoiceArchiveMemoryStream;
         }
 
-        public List<InvoiceQuickbooksFileModel> GetAllInvoicesInQuickbooksFormat()
+        public List<InvoiceQuickbooksFileModel> GetAllInvoicesInQuickbooksFormat(List<InvoiceView> invoiceList = null)
         {
             List<InvoiceQuickbooksFileModel> invoiceQuickbooksFileModels = new List<InvoiceQuickbooksFileModel>();
 
-            List<InvoiceView> invoiceList = GetInvoiceViewQueryable().ToList();
+            if (invoiceList == null )
+            {
+                invoiceList = GetInvoiceViewQueryable().ToList();
+            }
 
             foreach (InvoiceView invoiceView in invoiceList)
             {
