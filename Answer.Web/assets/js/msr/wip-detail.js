@@ -320,9 +320,8 @@
 
     function init() {
         if (parseInt($('#ncr-count').val()) > 0) {
-          //  Client asked to disable popup
-          //  eModal.confirm('There are NCRs associated to this part. Would you like to view them?', 'NCR Check')
-          //      .then(handleNCRButtonPush, null);
+           // eModal.confirm('There are NCRs associated to this part. Would you like to view them?', 'NCR Check')
+           //     .then(handleNCRButtonPush, null);
         }
 
         LoadMyItems(true);
