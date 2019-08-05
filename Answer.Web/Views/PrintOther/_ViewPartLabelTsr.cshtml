@@ -4,11 +4,21 @@
         font: small Arial, Helvetica, sans-serif !important;
         font-size: 7px !important;
     }
+    .avery-5160 {
+        height:1in;
+        width:2.625in;
+        padding-top:.25in;
+        padding-left:.3in;
+        margin-right:.14in;
+        left:0in;
+        top:0in;
+        float:left;
+    }
 </style>
-<div style="top:0px;left:0px;width:7.95in;height:9.95in;">
+<div style="top:.5in;left:.5in;width:8.5in;height:9.95in;">
     @foreach (var partLabel in Model.GetPartsAndKitsLabelsResult)
     {
-        <div style="padding-left:.3in;height:0.995in;width:2.35in;padding-top:0;padding-bottom:0;padding-right:0;margin:0;left:0in;top:0in;float:left">
+        <div class="avery-5160">
             <br>
             <table class="tight" style="font-size: 7px; width: 100%;">
                 <tbody>

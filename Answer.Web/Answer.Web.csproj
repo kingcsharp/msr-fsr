@@ -504,6 +504,7 @@
     <Content Include="assets\img\jpg.png" />
     <Content Include="assets\img\loading.gif" />
     <Content Include="assets\img\msr-ccs.png" />
+    <Content Include="assets\img\NCR.PNG" />
     <Content Include="assets\img\nice_loader.gif" />
     <Content Include="assets\img\profile-avatar.jpg" />
     <Content Include="assets\img\profile-widget-avatar.jpg" />
