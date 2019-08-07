@@ -313,6 +313,21 @@
 
         });
 
+        $('#ncr-notification-button').on('click', function () {
+            var id = $('#fill-id').val();
+
+            $.ajax({
+                type: "GET",
+                url: '/wip/getncrmodel?id=' + id,
+                dataType: 'html',
+                success: function (data) {
+                    $('#ncrModal').modal("show");
+                    $('#ncrModal').find('.modal-body').html(data);
+                },
+                error: function () { }
+            });
+        });
+
         init();
 
 
@@ -361,21 +376,6 @@
             error: function (error) {
                 $('.step-container').unblock();
             }
-        });
-    }
-
-    function handleNCRButtonPush() {
-        var id = $('#fill-id').val();
-
-        $.ajax({
-            type: "GET",
-            url: '/wip/getncrmodel?id=' + id,
-            dataType: 'html',
-            success: function (data) {
-                $('#ncrModal').modal("show");
-                $('#ncrModal').find('.modal-body').html(data);
-            },
-            error: function () { }
         });
     }
 
