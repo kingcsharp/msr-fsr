@@ -313,6 +313,21 @@
 
         });
 
+        $('#ncr-notification-button').on('click', function () {
+            var id = $('#fill-id').val();
+
+            $.ajax({
+                type: "GET",
+                url: '/wip/getncrmodel?id=' + id,
+                dataType: 'html',
+                success: function (data) {
+                    $('#ncrModal').modal("show");
+                    $('#ncrModal').find('.modal-body').html(data);
+                },
+                error: function () { }
+            });
+        });
+
         init();
 
 
@@ -320,9 +335,7 @@
 
     function init() {
         if (parseInt($('#ncr-count').val()) > 0) {
-          //  Client asked to disable popup
-          //  eModal.confirm('There are NCRs associated to this part. Would you like to view them?', 'NCR Check')
-          //      .then(handleNCRButtonPush, null);
+            $('#ncr-notification-button').removeClass('hidden');
         }
 
         LoadMyItems(true);
@@ -363,21 +376,6 @@
             error: function (error) {
                 $('.step-container').unblock();
             }
-        });
-    }
-
-    function handleNCRButtonPush() {
-        var id = $('#fill-id').val();
-
-        $.ajax({
-            type: "GET",
-            url: '/wip/getncrmodel?id=' + id,
-            dataType: 'html',
-            success: function (data) {
-                $('#ncrModal').modal("show");
-                $('#ncrModal').find('.modal-body').html(data);
-            },
-            error: function () { }
         });
     }
 
