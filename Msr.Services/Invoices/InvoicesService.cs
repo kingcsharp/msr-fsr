@@ -61,40 +61,40 @@ namespace Msr.Services.Invoices
 
         public List<string> InvoicePoList(bool onEdit)
         {
-            var flag = false;
+            //var flag = false;
 
-            var woItem = _dbContext.InvoiceWorkItems.ToList();
+            //var woItem = _dbContext.InvoiceWorkItems.ToList();
 
-            // JG: I ADDED THE BREAK STATEMENT LOGIC BELOW, IT SEEMED LIKE ONCE THE FLAG WAS SET TO TRUE NO NEED TO KEEP ITERATING
+            //// JG: I ADDED THE BREAK STATEMENT LOGIC BELOW, IT SEEMED LIKE ONCE THE FLAG WAS SET TO TRUE NO NEED TO KEEP ITERATING
             
-            foreach (var item in woItem)
-            {
-                var invoicePoWorkItems = InvoiceViewList().Where(x => x.Status == "FINISHED" && x.CustPurchNum == item.RefPo).Distinct().ToList();
+            //foreach (var item in woItem)
+            //{
+            //    var invoicePoWorkItems = InvoiceViewList().Where(x => x.Status == "FINISHED" && x.CustPurchNum == item.RefPo).Distinct().ToList();
 
-                foreach (var refPo in invoicePoWorkItems)
-                {
-                    var woItemCount = _dbContext.InvoiceWorkItems.Count(x => x.RefPo == refPo.CustPurchNum);
+            //    foreach (var refPo in invoicePoWorkItems)
+            //    {
+            //        var woItemCount = _dbContext.InvoiceWorkItems.Count(x => x.RefPo == refPo.CustPurchNum);
 
-                    if (invoicePoWorkItems.Count == woItemCount)
-                    {
-                        flag = true;
+            //        if (invoicePoWorkItems.Count == woItemCount)
+            //        {
+            //            flag = true;
 
-                        break;
-                    }
-                }
+            //            break;
+            //        }
+            //    }
 
-                if (flag == true)
-                {
-                    break;
-                }
-            }
+            //    if (flag == true)
+            //    {
+            //        break;
+            //    }
+            //}
 
-            if (flag && !onEdit)
-            {
-                return InvoiceViewList().Where(x => x.Status == "FINISHED" && x.CustPurchNum != null &&
-                !_dbContext.InvoiceWorkItems.Where(y => y.RefPo == x.CustPurchNum && y.ItemId == x.FillItemId).Select(y => y.RefPo).Contains(x.CustPurchNum))
-                .Select(x => x.CustPurchNum).Distinct().ToList();
-            }
+            //if (flag && !onEdit)
+            //{
+            //    return InvoiceViewList().Where(x => x.Status == "FINISHED" && x.CustPurchNum != null &&
+            //    !_dbContext.InvoiceWorkItems.Where(y => y.RefPo == x.CustPurchNum && y.ItemId == x.FillItemId).Select(y => y.RefPo).Contains(x.CustPurchNum))
+            //    .Select(x => x.CustPurchNum).Distinct().ToList();
+            //}
 
             // return InvoiceViewList().Where(x => x.Status == "FINISHED" && x.CustPurchNum != null).Select(x => x.CustPurchNum).Distinct().ToList();
 
