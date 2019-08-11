@@ -15,9 +15,10 @@
                 Invoices @Html.Partial("_HelpViewButton")
                 <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#invModal" data-intro="Create a New Invoice" data-position="bottom" style="margin-left: 10px"><i class="fa fa-plus"></i> New</button>
                 &nbsp;
-                <input type="button" class="btn btn-primary pull-right" style="margin-left: 10px" value="Download All Invoices" onclick="location.href='@Url.Action("DownloadAllInvoices", "Invoices")'" />
+
+                <button id="butDownloadAllInvoices" class="btn btn-primary pull-right" style="margin-left: 10px" value="Download All Invoices" onclick="Msr.InvoicesGrid.DownloadAllInvoices();">Download All Invoices</button>
                 &nbsp;
-                <input type="button" class="btn btn-primary pull-right" style="margin-left: 10px" value="Download Filtered Invoices" onclick="Msr.InvoicesGrid.DownloadAllInvoices();" />
+                <button id="butDownloadFilteredInvoices" class="btn btn-primary pull-right" style="margin-left: 10px" value="Download Filtered Invoices" onclick="Msr.InvoicesGrid.DownloadFilteredInvoices();">Download Filtered Invoices</button>
                 &nbsp;
             </h2>
             <div class="col-lg-12">
