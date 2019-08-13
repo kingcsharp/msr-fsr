@@ -30,6 +30,12 @@
             $('.yes-no').hide();
             $('.target-obj').show();
         }
+        if ($('#AddMonitorForProcedureViewModel_Monitor_Type').val() === 'SELECT') {
+            $('.if-number').hide();
+            $('.text-target').hide();
+            $('.yes-no').hide();
+            $('.target-obj').show();
+        }
 
         if ($('#AddMonitorForProcedureViewModel_Should_Be').val() === 'BETWEEN' && $('#AddMonitorForProcedureViewModel_Monitor_Type').val() === 'NUMBER') {
             $('.if-not-between').hide();
@@ -88,6 +94,15 @@
                 $('.yes-no').hide();
             }
 
+            if (this.value === 'SELECT') {
+                $('.if-number').hide();
+                $('.if-between').hide();
+                $('.if-not-number').show();
+                $('.text-target').hide();
+                $('.target-obj').show();
+            }
+
+
             $('#AddMonitorForProcedureViewModel_Target_Object').val('');
         });
 
@@ -113,7 +128,7 @@
 
     return {
         Initialize: initialize
-    }
+    };
 
-}
+};
 
