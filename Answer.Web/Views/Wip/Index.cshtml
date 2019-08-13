@@ -8,8 +8,7 @@
     <div class="side-body padding-top">
         <div class="row">
             <h2 class="page-header">
-                <span class="icon fa fa-list"></span>
-                WIP Menu
+                <i class='icon fa fa-cogs' aria-hidden='true'></i> Work Orders
                 @Html.Partial("_HelpViewButton")
             </h2>
             <div class="col-lg-12">
@@ -85,7 +84,8 @@
             return elem+":"+elem+";";
         });
         locations = locations.join('');
-        locations = locations.substr(0, locations.length - 1);
+    locations = locations.substr(0, locations.length - 1);
+    console.log('Locations: ' + locations);
         $(document).ready(function() {
             Msr.WipGrid.LoadWipGrid('@Url.Action("EngineeringData", "wip", new {step = Request.QueryString["step"]})', locations);
         });

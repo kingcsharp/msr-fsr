@@ -7,34 +7,14 @@ $(function() {
     $(".navbar-right").toggleClass("expanded");
     return $(".navbar-right-expand-toggle").toggleClass("fa-rotate-90");
   });
-  
 });
 
-//$(function() {
-//   return $('select.select2').select2();
-//});
 
-//$(function() {
-//  return $('.toggle-checkbox').bootstrapSwitch({
-//    size: "small"
-//  });
-//});
-
-//$(function() {
-//  return $('.match-height').matchHeight();
-//});
-
-//$(function() {
-//  return $('.datatable').DataTable({
-//    "dom": '<"top"fl<"clear">>rt<"bottom"ip<"clear">>'
-//  });
-//});
-
-//$(function() {
-//  return $(".side-menu .nav .dropdown").on('show.bs.collapse', function() {
-//    return $(".side-menu .nav .dropdown .collapse").collapse('hide');
-//  });
-//});
 $(function() {
     $("[data-toggle=tooltip]").tooltip();
+});
+
+$(function () {
+    $('li.active').removeClass('active');
+    $('a[href="' + location.pathname + '"]').closest('li.panel.panel-default.dropdown').addClass('active');
 });

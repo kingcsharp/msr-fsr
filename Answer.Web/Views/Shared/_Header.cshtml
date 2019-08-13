@@ -20,7 +20,7 @@
             </button>
         </div>
         <ul class="nav navbar-nav navbar-right">
-            <button type="button" class="navbar-right-expand-toggle pull-right visible-xs">
+            <li><button type="button" class="navbar-right-expand-toggle pull-right visible-xs">
                 <i class="fa fa-times icon"></i>
             </button>
             <li>
@@ -46,17 +46,21 @@
                             <ul class="list-group notifications">
                                 @foreach (var item in notifications.Items)
                                 {
-                                    <a href="~/PendingApproval?itemType=@item.ItemType">
+                                    
                                         <li class="list-group-item">
-                                            <span class="@notifications.IconCssList.Dequeue()">@item.ItemCount</span> <i class="@(item.ItemType.GetNotificationIconCss())"></i> @item.Title
+                                            <a href="~/PendingApproval?itemType=@item.ItemType">
+                                                <span class="@notifications.IconCssList.Dequeue()">@item.ItemCount</span> <i class="@(item.ItemType.GetNotificationIconCss())"></i> @item.Title
+                                            </a>
                                         </li>
-                                    </a>
+                                    
                                 }
+                                
+                            <li class="list-group-item message">
                                 <a href="~/PendingApproval">
-                                    <li class="list-group-item message">
-                                        View all
-                                    </li>
+                                    View all
                                 </a>
+                            </li>
+                                
                             </ul>
                         </li>
                     }

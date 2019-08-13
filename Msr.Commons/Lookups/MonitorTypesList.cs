@@ -9,11 +9,12 @@ namespace Msr.Commons.Lookups
         {
             return new List<SelectListItem>
             {
-                new SelectListItem {Text = "EQUIPMENT", Value = "EQUIPMENT"},
-                new SelectListItem {Text = "NUMBER", Value = "NUMBER"},
-                new SelectListItem {Text = "YES_NO", Value = "YES_NO"},
-                new SelectListItem {Text = "TEXT", Value = "TEXT"},
-                new SelectListItem {Text = "PASS_FAIL", Value = "PASS_FAIL"}
+                new SelectListItem {Text = "Equipment", Value = "EQUIPMENT"},
+                new SelectListItem {Text = "Number", Value = "NUMBER"},
+                new SelectListItem {Text = "Yes or No", Value = "YES_NO"},
+                new SelectListItem {Text = "Text", Value = "TEXT"},
+                new SelectListItem {Text = "Pass or Fail", Value = "PASS_FAIL"},
+                new SelectListItem {Text = "Select", Value = "SELECT"}
             };
         }
     }
