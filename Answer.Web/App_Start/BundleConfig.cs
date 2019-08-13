@@ -157,7 +157,6 @@ namespace Answer.Web
                .Include("~/assets/css/style.css")
                .Include("~/assets/css/flexslider.css", new CssRewriteUrlTransform())
                .Include("~/assets/css/bootstrap-select.css")
-               .Include("~/assets/css/hopscotch.css")
                .Include("~/assets/css/bootstrap-datepicker.min.css")
                .Include("~/assets/css/wip-detail.css", new CssRewriteUrlTransform())
                 .Include("~/assets/js/plugins/bootstrap3/bootstrap-multiselect.css", new CssRewriteUrlTransform())

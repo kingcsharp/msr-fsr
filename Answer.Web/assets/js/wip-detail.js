@@ -35,25 +35,6 @@
 
                 if (!exists) {
                     $('.wip-detail-item-controls').show();
-                    bootbox.confirm({
-                        message: "There is one or more NCR's related to this WO Item. would you like to view them now?",
-                        buttons: {
-                            confirm: {
-                                label: 'Yes',
-                                className: 'btn-success'
-                            },
-                            cancel: {
-                                label: 'No',
-                                className: 'btn-danger'
-                            }
-                        },
-                        callback: function (result) {
-
-                            if (result) {
-                                $("#ncrModal").modal();
-                            }
-                        }
-                    });
                 } else {
                     $('.wip-detail-item-controls').hide();
                 }
@@ -226,8 +207,8 @@
 
             if (!hasCompleted) {
                 $('#carousel ul.slides li').each(function (i, obj) {
-                    var hasRequiested = $(this).hasClass('requested');
-                    if (hasRequiested) {
+                    var hasRequested = $(this).hasClass('requested');
+                    if (hasRequested) {
                         $(this).removeClass('requested');
                         $(this).addClass('waiting');
                     }
@@ -329,6 +310,21 @@
         });
 
         init();
+
+        $('#ncr-notification-button').on('click', function () {
+            var id = $('#fill-id').val();
+
+            $.ajax({
+                type: "GET",
+                url: '/wip/getncrmodel?id=' + id,
+                dataType: 'html',
+                success: function (data) {
+                    $('#ncrModal').modal("show");
+                    $('#ncrModal').find('.modal-body').html(data);
+                },
+                error: function () { }
+            });
+        });
 
 
     });

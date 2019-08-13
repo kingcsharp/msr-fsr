@@ -1,6 +1,12 @@
 @using Msr.Models.Menus
 @model Answer.Web.ViewModel.BaseViewModel
 
+<style>
+    a.menu-parent-item::after {
+        content: '' !important;
+    }
+</style>
+
 <div class="side-menu sidebar-inverse">
     <nav class="navbar navbar-default" role="navigation">
         <div class="side-menu-container">
@@ -22,11 +28,12 @@
                         if (menuGroup.First().IsParent)
                         {
                             <li class="panel panel-default dropdown">
-                                <a href="~/@menuGroup.First().Url">
-                                    <span class="icon fa @menuGroup.First().Icon"></span><span class="title">@menuGroup.First().Name</span>
+                                <a href="~/@menuGroup.First().Url" class="menu-parent-item">
+                                    <span class="icon fa @menuGroup.First().Icon"></span><span class="title ">@menuGroup.First().Name</span>
                                 </a>
                             </li>
                         }
+
                         else
                         {
                             <li class="panel panel-default dropdown">

@@ -454,6 +454,12 @@ a {
     margin-right: -15px;
 }
 
+.page-header {
+    padding-bottom: 9px;
+    margin: 0 0 20px 10px;
+    border-bottom: 1px solid #eee;
+}
+
 .page-title {
     font-family: 'Lato', sans-serif;
     margin-left: -10px;
