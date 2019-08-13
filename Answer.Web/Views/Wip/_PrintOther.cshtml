@@ -14,7 +14,7 @@
         </div>
     </div>
 
-    <div class="form-group" id="work-report-filters col-md-12" style="display: none">
+    <div class="form-group col-md-12" id="work-report-filters" style="display: none">
         <table class="table table-bordered report-table">
             <tbody>
                 <tr>
@@ -39,7 +39,7 @@
                         </select>
                     </td>
                 </tr>
-                <input type="hidden" name="PRINTABLE" value="YES">
+                <input type="hidden" name="PRINTABLE" value="YES"/>
                 <tr>
                     <td>
                         <div class="norm">Show Procedure Steps?:</div>
@@ -86,4 +86,13 @@
             $("#label-report-filters").hide();
         }
     });
+
+    $('#TSR_TYPE').on('change', function () {
+        $("#print-other-content").html("");
+        $('#print-other-report').hide();
+        $('#display-report').show();
+    });
+
+    
+
 </script>
