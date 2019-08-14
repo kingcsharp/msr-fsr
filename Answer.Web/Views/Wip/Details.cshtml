@@ -55,6 +55,13 @@
                 <ul class="nav nav-tabs">
                     <li class="active"><a data-toggle="tab" href="#parts">Parts Info:</a></li>
                     <li><a data-toggle="tab" href="#purchase">Purchase Item Info:</a></li>
+                    <li>
+                        <div id="ncr-notification-button" class="badge hidden" title="There is at least One NCR on the WO. Click to view" style="background-color: #ff0000;margin-top: 10px;display: block;position: fixed;right: 45px;">
+                            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                            <span style="font-size:1.5em">&nbsp;NC</span>
+                        </div>
+
+</li>
                 </ul>
                 <div class="tab-content">
                     <div id="parts" class="tab-pane fade in active">
@@ -67,12 +74,12 @@
                                 <tbody>
                                     @if (Model.FileSearchResult != null)
                                     {
-                                    <tr><td>@Model.FileSearchResult.FillObjDesc qty:@Model.FileSearchResult.Qty </td></tr>
+                                        <tr><td>@Model.FileSearchResult.FillObjDesc qty:@Model.FileSearchResult.Qty </td></tr>
                                     }
 
                                     @foreach (var part in Model.Parts)
                                     {
-                                    <tr><td>@part</td></tr>
+                                        <tr><td>@part</td></tr>
                                     }
                                 </tbody>
                             </table>
@@ -80,29 +87,29 @@
                     </div>
                     @if (Model.FileSearchResult != null)
                     {
-                    <div id="purchase" class="tab-pane fade">
-                        <table class="table table-responsive table-condensed table-bordered">
-                            <tbody>
-                                <tr>
-                                    <th nowrap style="text-align: right">Customer:</th>
-                                    <td>@Model.FileSearchResult.CustomerName</td>
-                                </tr>
-                                <tr>
-                                    <th nowrap style="text-align: right">Product:</th>
-                                    <td>@Model.FileSearchResult.ProductName</td>
-                                </tr>
-                                <tr>
-                                    <th nowrap style="text-align: right">Procedure:</th>
-                                    <td>@Model.FileSearchResult.ProcedureName</td>
-                                </tr>
-                                <tr>
-                                    <th nowrap style="text-align: right">Purchase Item #:</th>
-                                    <td>@Model.FileSearchResult.PurchItemId</td>
-                                </tr>
+                        <div id="purchase" class="tab-pane fade">
+                            <table class="table table-responsive table-condensed table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <th nowrap style="text-align: right">Customer:</th>
+                                        <td>@Model.FileSearchResult.CustomerName</td>
+                                    </tr>
+                                    <tr>
+                                        <th nowrap style="text-align: right">Product:</th>
+                                        <td>@Model.FileSearchResult.ProductName</td>
+                                    </tr>
+                                    <tr>
+                                        <th nowrap style="text-align: right">Procedure:</th>
+                                        <td>@Model.FileSearchResult.ProcedureName</td>
+                                    </tr>
+                                    <tr>
+                                        <th nowrap style="text-align: right">Purchase Item #:</th>
+                                        <td>@Model.FileSearchResult.PurchItemId</td>
+                                    </tr>
 
-                            </tbody>
-                        </table>
-                    </div>
+                                </tbody>
+                            </table>
+                        </div>
                     }
                 </div>
             </div>
@@ -290,8 +297,7 @@
 <script type="text/javascript" src="~/assets/js/ObjectAssign.js"></script>
 <script type="text/javascript" src="~/assets/js/wip-detail.js"></script>
 <script type="text/javascript" src="~/assets/js/printThis.js"></script>
-    //
-<script type="text/javascript" src="~/assets/js/timer.jquery.min.js"></script>
+
 <script type="text/javascript" src="~/assets/js/msr/grid-common.js"></script>
     @Scripts.Render("~/bundles/js/fileinput")
 

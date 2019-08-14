@@ -1,0 +1,188 @@
+[
+  {
+    "outputFileName": "assets/js/wip-detail.min.js",
+    "inputFiles": [
+      "assets/js/wip-detail.js"
+    ]
+  },
+  {
+    "outputFileName": "assets/css/flexslider.min.css",
+    "inputFiles": [
+      "assets/css/flexslider.css"
+    ]
+  },
+  {
+    "outputFileName": "assets/css/ui.jqgrid-bootstrap-ui.min.css",
+    "inputFiles": [
+      "assets/css/ui.jqgrid-bootstrap-ui.css"
+    ]
+  },
+  {
+    "outputFileName": "assets/css/ui.jqgrid-bootstrap.min.css",
+    "inputFiles": [
+      "assets/css/ui.jqgrid-bootstrap.css"
+    ]
+  },
+  {
+    "outputFileName": "assets/css/ui.jqgrid.min.css",
+    "inputFiles": [
+      "assets/css/ui.jqgrid.css"
+    ]
+  },
+  {
+    "outputFileName": "assets/css/login.min.css",
+    "inputFiles": [
+      "assets/css/login.css"
+    ]
+  },
+  {
+    "outputFileName": "assets/css/jquery.fileupload.min.css",
+    "inputFiles": [
+      "assets/css/jquery.fileupload.css"
+    ]
+  },
+  {
+    "outputFileName": "assets/css/jquery.fileupload-ui.min.css",
+    "inputFiles": [
+      "assets/css/jquery.fileupload-ui.css"
+    ]
+  },
+  {
+    "outputFileName": "assets/css/jquery.fileupload-noscript.min.css",
+    "inputFiles": [
+      "assets/css/jquery.fileupload-noscript.css"
+    ]
+  },
+  {
+    "outputFileName": "assets/css/step-monitor.min.css",
+    "inputFiles": [
+      "assets/css/step-monitor.css"
+    ]
+  },
+  {
+    "outputFileName": "assets/css/style.min.css",
+    "inputFiles": [
+      "assets/css/style.css"
+    ]
+  },
+  {
+    "outputFileName": "assets/css/themes.min.css",
+    "inputFiles": [
+      "assets/css/themes.css"
+    ]
+  },
+  {
+    "outputFileName": "assets/css/wip-detail.min.css",
+    "inputFiles": [
+      "assets/css/wip-detail.css"
+    ]
+  },
+  {
+    "outputFileName": "assets/css/font-awesome.min.css",
+    "inputFiles": [
+      "assets/css/font-awesome.css"
+    ]
+  },
+  {
+    "outputFileName": "assets/css/bootstrap-editable.min.css",
+    "inputFiles": [
+      "assets/css/bootstrap-editable.css"
+    ]
+  },
+  {
+    "outputFileName": "assets/css/bootstrap-datepicker.min.css",
+    "inputFiles": [
+      "assets/css/bootstrap-datepicker.css"
+    ]
+  },
+  {
+    "outputFileName": "assets/css/animate.min.css",
+    "inputFiles": [
+      "assets/css/animate.css"
+    ]
+  },
+  {
+    "outputFileName": "assets/css/bootstrap-datetimepicker.min.css",
+    "inputFiles": [
+      "assets/css/bootstrap-datetimepicker.css"
+    ]
+  },
+  {
+    "outputFileName": "assets/css/bootstrap-print-fix.min.css",
+    "inputFiles": [
+      "assets/css/bootstrap-print-fix.css"
+    ]
+  },
+  {
+    "outputFileName": "assets/css/bootstrap-select.min.css",
+    "inputFiles": [
+      "assets/css/bootstrap-select.css"
+    ]
+  },
+  {
+    "outputFileName": "assets/css/dataTables.bootstrap.min.css",
+    "inputFiles": [
+      "assets/css/dataTables.bootstrap.css"
+    ]
+  },
+  {
+    "outputFileName": "assets/css/themes/flat-blue.min.css",
+    "inputFiles": [
+      "assets/css/themes/flat-blue.css"
+    ]
+  },
+  {
+    "outputFileName": "assets/css/themes/flat-green.min.css",
+    "inputFiles": [
+      "assets/css/themes/flat-green.css"
+    ]
+  },
+  {
+    "outputFileName": "assets/js/ace/ace.min.js",
+    "inputFiles": [
+      "assets/js/ace/ace.js"
+    ]
+  },
+  {
+    "outputFileName": "assets/js/ace/mode-html.min.js",
+    "inputFiles": [
+      "assets/js/ace/mode-html.js"
+    ]
+  },
+  {
+    "outputFileName": "assets/js/ace/theme-github.min.js",
+    "inputFiles": [
+      "assets/js/ace/theme-github.js"
+    ]
+  },
+  {
+    "outputFileName": "assets/js/BootstrapFileInput/js/fileinput-custom.min.js",
+    "inputFiles": [
+      "assets/js/BootstrapFileInput/js/fileinput-custom.js"
+    ]
+  },
+  {
+    "outputFileName": "assets/js/msr/fileupload/uploader.min.js",
+    "inputFiles": [
+      "assets/js/msr/fileupload/uploader.js"
+    ]
+  },
+  {
+    "outputFileName": "assets/js/msr/fileupload/uploader-grid.min.js",
+    "inputFiles": [
+      "assets/js/msr/fileupload/uploader-grid.js"
+    ]
+  },
+  {
+    "outputFileName": "assets/js/plugins/bootstrap3/bootstrap-multiselect.min.css",
+    "inputFiles": [
+      "assets/js/plugins/bootstrap3/bootstrap-multiselect.css"
+    ]
+  },
+  {
+    "outputFileName": "assets/js/grids/engineer.min.js",
+    "inputFiles": [
+      "assets/js/grids/engineer.js"
+    ]
+  }
+]

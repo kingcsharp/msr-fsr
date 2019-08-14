@@ -4,7 +4,7 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
     {
         FilePreview: function (cellvalue, options, rowObject) {
 
-            if (cellvalue == '' || cellvalue == null) {
+            if (cellvalue === '' || cellvalue === null) {
                 return '';
             }
 
@@ -115,7 +115,7 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                     '" class="btn btn-xs btn-success" title="Proceed to approval workflow for release." style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-right"></i></a>';
             }
 
-            if (rowObject.Status == 'APPROVED') {
+            if (rowObject.Status === 'APPROVED') {
                 editButton = '<a href="#" data-call-back-id ="' +
                     rowObject.ObjectId +
                     '"  class="btn btn-xs btn-success editpeople" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
@@ -213,6 +213,7 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
 
                 });
         },
+
         GetWorkflowActivitiesByTitleFilters: function () {
             var ret = 'Account Payment Approval:Account Payment Approval;' +
                 'Actual Parts:Actual Parts;' +
@@ -241,6 +242,7 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                 'Verbs:Verbs;';
             return ret;
         },
+
         GetOBJTypesFilters: function () {
             var ret = 'A_ACTUAL_PARTS_HISTORY:A_ACTUAL_PARTS_HISTORY;' +
                 'A_PRODUCTS_HISTORY:A_PRODUCTS_HISTORY;' +
@@ -266,6 +268,7 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                 'A_ORDERS_HISTORY:A_ORDERS_HISTORY';
             return ret;
         },
+
         GetStatusFilters: function () {
             var filterList =
                 'CREATING: Creating;' +
@@ -278,15 +281,18 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                 'OLD:Old';
             return filterList;
         },
+
         SaveGridSate: function (type) {
             $.jgrid.saveState(type, { saveData: false });
         },
+
         LoadGridSate: function (type) {
             var loadGridSate = $.jgrid.loadState(type);
             if (loadGridSate !== null) {
                 $.jgrid.loadState(type, { restoreData: false });
             }
         },
+
         TriggerSaveLoadGridState: function (id) {
 
             $('#' + id).jqGrid('setGridWidth', $(window).innerWidth() - 100);
@@ -311,6 +317,7 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                 Msr.JqGridCommon.SaveGridSate(id);
             }
         },
+
         ClearGridState: function (gridId) {
             var storageRemoveElement = "jqGrid" + gridId;
             localStorage.removeItem(storageRemoveElement);
@@ -320,18 +327,19 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
 
             location.reload();
         },
+
         UpdateGridStateOnColumnsHideShow: function (id) {
-            $("body").click(function (event) {
-                if (event.target.type === 'checkbox' && (event.target.checked === true || event.target.checked === false)) {
-                    Msr.JqGridCommon.TriggerSaveLoadGridState(id);
-                }
+            $(document).on('click', '.multiselect-update', function () {
+                Msr.JqGridCommon.TriggerSaveLoadGridState(id);
             });
         },
+
         BindClearGridState: function (id) {
             $('#clear-state').click(function () {
                 Msr.JqGridCommon.ClearGridState(id);
             });
         },
+
         BindGridEvents: function (id) {
 
             Msr.JqGridCommon.UpdateGridStateOnColumnsHideShow(id);
@@ -358,6 +366,7 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                     searchOperators: true
                 });
         },
+
         DataInitDatePicker: function (elem, format) {
             $(elem).datepicker({
                 format: format || 'mm/dd/yyyy',
@@ -368,7 +377,6 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                         if (!this.firstHide) {
                             if (!$(this).is(":focus")) {
                                 this.firstHide = true;
-                                // this will inadvertently call show (we're trying to hide!)
                                 this.focus();
                             }
                         } else {
@@ -378,11 +386,11 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                 .on('show',
                     function () {
                         if (this.firstHide) {
-                            // careful, we have an infinite loop!
                             $(this).datepicker('hide');
                         }
                     });
         },
+
         DataInitBootstrapMultiselect: function (elem, options, callback) {
             setTimeout(function () {
                 $(document).ready(function () {
@@ -397,6 +405,7 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                                 top: (offset.top + $dropdown.outerHeight()),
                                 left: offset.left
                             });
+            
                             $(window).scroll(function () {
                                 var $dropdown = $aContainer.find('.btn'),
                                     offset = $dropdown.offset();
@@ -409,57 +418,31 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                         },
                         selectAllValue: 'All',
                         selectAllText: '[All]',
-                        allSelectedText: '[All]'
+                        allSelectedText: '[All]',
+                        onDropdownShow: function () {
+                            $('.multiselect-container.dropdown-menu').append('<li><button class="btn btn-primary btn-xs multiselect-update">Go</button></p>');
+                        },
+                        onDropdownHidden: function () {
+                            console.log('Here is where the post event to update the grid should fire.');
+                            $('.multiselect-update').parent().remove();
+                        }
                     };
 
                     $(elem).multiselect(multiselectOptions);
-                    setTimeout(function () {
+                    /*setTimeout(function () {
 
                         $(elem).multiselect('deselectAll', false);
                         $(elem).multiselect('selectAll', false);
                         $(elem).multiselect('updateButtonText');
 
-                        //$(elem).multiselect('select', ['All']);
                         if (callback) {
                             callback(elem);
                         }
-                    }, 100);
+                    }, 100);*/
                 });
             }, 100);
         },
-        DataInitMultiselect: function (elem) {
-            setTimeout(function () {
-                var $elem = $(elem), id = elem.id,
-                    inToolbar = typeof id === "string" && id.substr(0, 3) === "gs_",
-                    options = {
-                        selectedList: 2,
-                        height: "auto",
-                        noneSelectedText: "",
-                        //header: false,
-                        open: function () {
-                            var $menu = $(".ui-multiselect-menu:visible");
-                            $menu.width("auto");
-                            return;
-                        }
-                    },
-                    $options = $elem.find("option");
-                if ($options.length > 0 && $options[0].selected) {
-                    $options[0].selected = false; // unselect the first selected option
 
-                }
-                if (inToolbar) {
-                    options.minWidth = 'auto';
-                }
-                $elem.multiselect(options);
-                $elem.multiselect("uncheckAll");
-                $elem.siblings('button.ui-multiselect').css({
-                    width: inToolbar ? "98%" : "100%",
-                    marginTop: "1px",
-                    marginBottom: "1px",
-                    paddingTop: "3px"
-                });
-            }, 2000);
-        },
         GetColumnIndexByName: function (columnName) {
             var cm = $(this).jqGrid('getGridParam', 'colModel'), i, l = cm.length;
             for (i = 0; i < l; i += 1) {
@@ -469,11 +452,12 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
             }
             return -1;
         },
+
         ModifyMultiselectData: function () {
             var rulesArray = [];
             var filters;
 
-            if (this.p != undefined && this.p.postData.filters != undefined && this.p.postData.filters.length > 0) {
+            if (this.p !== undefined && this.p.postData.filters !== undefined && this.p.postData.filters.length > 0) {
                 var string = new String(this.p.postData.filters);
                 filters = $.parseJSON(string);
 
@@ -497,6 +481,7 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                 this.p.postData.filters = JSON.stringify(filters);
             }
         },
+
         ModifySearchingFilter: function (separator, column) {
 
             var myDefaultSearch = "cn";
@@ -504,7 +489,7 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
             var statusArray = [];
             var i, r, l, rules, rule, parts, j, str, iCol, cmi, cm = this.p.colModel, filters, rulesArraystring;
 
-            if (this.p.postData.filters != undefined) {
+            if (this.p.postData.filters !== undefined) {
                 var string = new String(this.p.postData.filters);
                 filters = $.parseJSON(string);
 
@@ -521,9 +506,7 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                 $('.multiselect-native-select').each(function (e) {
                     if ($(this).find('select[name="LocationNames"]').length > 0) {
                         $(this).find('.multiselect-container.dropdown-menu li input[type=checkbox]:checked').each(function (e) {
-                            if (jQuery.inArray($(this).val(), statusArray) !== -1) {
-
-                            } else {
+                            if (jQuery.inArray($(this).val(), statusArray) === -1) {
                                 if ($(this).val() === "") {
                                     statusArray.push("true");
                                 }
@@ -536,9 +519,7 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                 });
 
                 $('.ui-multiselect-checkboxes li input[type=checkbox]:checked').each(function (e) {
-                    if (jQuery.inArray($(this).val(), statusArray) !== -1) {
-
-                    } else {
+                    if (jQuery.inArray($(this).val(), statusArray) === -1) {
                         if ($(this).val() === "") {
                             statusArray.push("true");
                         }
@@ -606,4 +587,4 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                 this.p.postData.filters = JSON.stringify(filters);
             }
         }
-    }
+    };
