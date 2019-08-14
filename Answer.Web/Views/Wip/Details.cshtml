@@ -52,23 +52,6 @@
 
             </div>
             <div class="col-lg-6 col-md-6 col-sm-6 ">
-                <script type="text/javascript">
-                        function handleNCRButtonPush() {
-                           // alert('xxx' +@Model.FillId)
-                            var id = @Model.FillId;
-
-                            $.ajax({
-                                type: "GET",
-                                url: '/wip/getncrmodel?id=' + id,
-                                dataType: 'html',
-                                success: function (data) {
-                                    $('#ncrModal').modal("show");
-                                    $('#ncrModal').find('.modal-body').html(data);
-                                },
-                                error: function () { alert('error');}
-                            });
-                         }
-                </script>
                 <ul class="nav nav-tabs">
                     <li class="active"><a data-toggle="tab" href="#parts">Parts Info:</a></li>
                     <li><a data-toggle="tab" href="#purchase">Purchase Item Info:</a></li>
