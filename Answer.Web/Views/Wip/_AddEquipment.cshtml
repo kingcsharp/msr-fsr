@@ -25,115 +25,105 @@
         </div>
         <div class="form-group">
             <label class="col-md-2 control-label" for="DateTime">Created On</label>
-            <div class="input-group datepick col-md-8">
-                <div style="width: 70%; float: left">
-                    @Html.EditorFor(model => model.DateTime, new { htmlAttributes = new { @class = "form-control datepick ", @placeholder = "Current Date Time", @style = "", } })
-                </div>
-                <div style="width: 30%; height: 35px; float: left">
-                    <span class="input-group-addon"><i class="fa fa-calendar" style="height: 19px;"></i></span>
-                </div>
+            <div class="datepick col-md-8">
+                @Html.EditorFor(model => model.DateTime, new { htmlAttributes = new { @class = "form-control datepick ", @placeholder = "Current Date Time", @style = "", } })
             </div>
         </div>
         <div class="form-group">
             <label class="col-md-2 control-label" for="EquipmentTroubleState">Trouble State</label>
             <div class="col-md-8">
-                <div class="checkbox">
-                    <label for="EquipmentState-0">
-                        @Html.CheckBoxFor(model => model.TroubleState, new { @class = "checkbox" })
-                        @Html.ValidationMessageFor(model => model.TroubleState, "", new { @class = "text-danger" })
-                        Yes
-                    </label>
+                <div class="make-switch switch-small" data-on="success" data-off="warning" data-on-text="Yes" data-off-text="No" style="display: inline-block">
+                    @Html.CheckBoxFor(model => model.TroubleState, new { @class = "checkbox", @id = "troubleStateSwitch" })
                 </div>
+                @Html.ValidationMessageFor(model => model.TroubleState, "", new { @class = "text-danger" })
             </div>
         </div>
 
         @if (Model.Roles.Any(x => x.Role_Name == RoleConstants.ProductionManager || x.Role_Name == RoleConstants.MaintenanceTechnician))
-                {
-                <div class="form-group">
-                    <label class="col-md-2 control-label" for="comments">Comments</label>
-                    <div class="col-md-8">
-                        @Html.TextAreaFor(model => model.Comments, new { @class = "form-control input-md" })
-                    </div>
+        {
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="comments">Comments</label>
+                <div class="col-md-8">
+                    @Html.TextAreaFor(model => model.Comments, new { @class = "form-control input-md" })
                 </div>
+            </div>
         }
         else
         {
             @Html.HiddenFor(model => model.Comments)
         }
         @if (Model.Roles.Any(x => x.Role_Name == RoleConstants.ProductionManager))
-                {
+        {
             <div class="form-group">
                 <label class="col-md-2 control-label" for="PMLastCompletedDate">PM Last Completed Date</label>
-                <div class="input-group datepick col-md-8">
-                    <div style="width: 91%; float: left">
-                        @Html.EditorFor(model => model.PemLastCompletedDate, new { htmlAttributes = new { @class = "form-control datepick lastcompletedate", @placeholder = "PM Last Completed Date", @style = "", } })
-                        @Html.ValidationMessageFor(model => model.PemLastCompletedDate, "", new { @class = "text-danger" })
-                    </div>
-                    <div style="width: 9%; height: 35px; float: left">
-                        <span class="input-group-addon"><i class="fa fa-calendar" style="height: 19px;"></i></span>
-                    </div>
+                <div class="datepick col-md-8">
+                    @Html.EditorFor(model => model.PemLastCompletedDate, new { htmlAttributes = new { @class = "form-control datepick lastcompletedate", @placeholder = "PM Last Completed Date", @style = "", } })
                 </div>
             </div>
 
-                    <div class="form-group">
-                        <label class="col-md-2 control-label" for="scancode">Frequency Field:</label>
-                        <div class="col-md-8">
-                            @Html.EditorFor(model => model.FrequencyField, new { htmlAttributes = new { @class = "form-control input-md", @placeholder = "" } })
-                            @Html.ValidationMessageFor(model => model.FrequencyField, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="scancode">Frequency Field:</label>
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.FrequencyField, new { htmlAttributes = new { @class = "form-control input-md", @placeholder = "" } })
+                    @Html.ValidationMessageFor(model => model.FrequencyField, "", new { @class = "text-danger" })
+                </div>
+            </div>
         }
 
 
 
     </fieldset>
 }
-<script src="~/assets/js/moment.min.js"></script>
-<script src="~/assets/js/bootstrap-datetimepicker.min.js"></script>
-<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
-<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
-<script type="text/javascript">
 
-    $(document).ready(function () {
+@section scripts
+{
 
-        $('#add-equipment-maintenace').on('click', function () {
-            $('.add-equipment-maintenace').submit();
-        });
+    <script src="~/assets/js/bootstrap-datetimepicker.js"></script>
+    @Scripts.Render("~/bundles/js/jqueryval")
+    <script type="text/javascript">
 
-        $('#error').hide();
-        $('.datepick').datetimepicker();
+        $(document).ready(function () {
 
-        $('.dateSelecter').click(function (parameters) {
-            $(this).find('.datepick').focus();
-        });
-        $('#ScanBarcode').on('keyup', function () {
-            if ($(this).val().length > 3) {
+            $('#add-equipment-maintenace').on('click', function () {
+                $('.add-equipment-maintenace').submit();
+            });
 
-                var id = $(this).val();
-                eLoaderOpen()
+            $('#error').hide();
+            $('.datepick').datetimepicker();
 
-                $.ajax({
-                    type: "POST",
-                    url: "/EquipmentMaintenance/GetScanBarCodeLocations/" + id,
-                    success: function (data) {
-                        if (data.locationId === "") {
-                            $('#error').html('Location not found, please select manually');
-                            $('#error').show();
-                        } else {
-                            data.locationId
-                            if (data.locationId !== "") {
-                                $("#RoomEquipmentId").val(data.locationId).trigger('change');
+            $('.dateSelecter').click(function (parameters) {
+                $(this).find('.datepick').focus();
+            });
+
+            $('#troubleStateSwitch').bootstrapSwitch();
+
+            $('#ScanBarcode').on('keyup', function () {
+                if ($(this).val().length > 3) {
+
+                    var id = $(this).val();
+                    eLoaderOpen()
+
+                    $.ajax({
+                        type: "POST",
+                        url: "/EquipmentMaintenance/GetScanBarCodeLocations/" + id,
+                        success: function (data) {
+                            if (data.locationId === "") {
+                                $('#error').html('Location not found, please select manually');
+                                $('#error').show();
+                            } else {
+                                data.locationId
+                                if (data.locationId !== "") {
+                                    $("#RoomEquipmentId").val(data.locationId).trigger('change');
+                                }
                             }
+                            eLoaderClose();
+                        },
+                        error: function (error) {
+                            eLoaderError(error);
                         }
-                        eLoaderClose();
-                    },
-                    error: function (error) {
-                        eLoaderError(error);
-                    }
-                });
-            }
+                    });
+                }
+            });
         });
-    });
-
-
-</script>
+    </script>
+}
