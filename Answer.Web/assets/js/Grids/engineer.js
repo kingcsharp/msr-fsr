@@ -113,6 +113,7 @@ Msr.WipGrid = Msr.WipGrid ||
                         index: 'DueDate',
                         colmenu: false,
                         editable: true,
+                        width: 110,
                         sorttype: 'date',
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                         // edittype: 'text', editable: true, editrules: { edithidden: true }
@@ -126,7 +127,6 @@ Msr.WipGrid = Msr.WipGrid ||
                         formatter: 'date',
                         formatoptions: { srcformat: 'm/d/Y', newformat: 'm/d/Y' },
                         editoptions: { dataInit: initDateEdit, readonly: 'readonly' },
-                        width: 90,
                         align: 'center'
                     },
                     {
@@ -136,7 +136,7 @@ Msr.WipGrid = Msr.WipGrid ||
                         colmenu: false,
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                        width: 230,
+                        width: 210,
                         align: 'left'
                     },
                     {
@@ -218,7 +218,7 @@ Msr.WipGrid = Msr.WipGrid ||
                         PurchaseItemId: purchaseItemId,
                         ColumnName: cellname,
                         Value: value
-                    }
+                    };
 
                     $.ajax({
                         type: 'POST',

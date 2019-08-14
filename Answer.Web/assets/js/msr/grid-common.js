@@ -329,10 +329,8 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
         },
 
         UpdateGridStateOnColumnsHideShow: function (id) {
-            $("body").click(function (event) {
-                if (event.target.type === 'checkbox' && (event.target.checked === true || event.target.checked === false)) {
-                    Msr.JqGridCommon.TriggerSaveLoadGridState(id);
-                }
+            $(document).on('click', '.multiselect-update', function () {
+                Msr.JqGridCommon.TriggerSaveLoadGridState(id);
             });
         },
 
@@ -379,7 +377,6 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                         if (!this.firstHide) {
                             if (!$(this).is(":focus")) {
                                 this.firstHide = true;
-                                // this will inadvertently call show (we're trying to hide!)
                                 this.focus();
                             }
                         } else {
@@ -389,7 +386,6 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                 .on('show',
                     function () {
                         if (this.firstHide) {
-                            // careful, we have an infinite loop!
                             $(this).datepicker('hide');
                         }
                     });
@@ -409,6 +405,7 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                                 top: (offset.top + $dropdown.outerHeight()),
                                 left: offset.left
                             });
+            
                             $(window).scroll(function () {
                                 var $dropdown = $aContainer.find('.btn'),
                                     offset = $dropdown.offset();
@@ -421,58 +418,30 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                         },
                         selectAllValue: 'All',
                         selectAllText: '[All]',
-                        allSelectedText: '[All]'
+                        allSelectedText: '[All]',
+                        onDropdownShow: function () {
+                            $('.multiselect-container.dropdown-menu').append('<li><button class="btn btn-primary btn-xs multiselect-update">Go</button></p>');
+                        },
+                        onDropdownHidden: function () {
+                            console.log('Here is where the post event to update the grid should fire.');
+                            $('.multiselect-update').parent().remove();
+                        }
                     };
 
                     $(elem).multiselect(multiselectOptions);
-                    setTimeout(function () {
+                    /*setTimeout(function () {
 
                         $(elem).multiselect('deselectAll', false);
                         $(elem).multiselect('selectAll', false);
                         $(elem).multiselect('updateButtonText');
 
-                        //$(elem).multiselect('select', ['All']);
                         if (callback) {
                             callback(elem);
                         }
-                    }, 100);
+                    }, 100);*/
                 });
             }, 100);
         },
-
-        /*DataInitMultiselect: function (elem) {
-            setTimeout(function () {
-                var $elem = $(elem), id = elem.id,
-                    inToolbar = typeof id === "string" && id.substr(0, 3) === "gs_",
-                    options = {
-                        selectedList: 2,
-                        height: "auto",
-                        noneSelectedText: "",
-                        //header: false,
-                        open: function () {
-                            var $menu = $(".ui-multiselect-menu:visible");
-                            $menu.width("auto");
-                            return;
-                        }
-                    },
-                    $options = $elem.find("option");
-                if ($options.length > 0 && $options[0].selected) {
-                    $options[0].selected = false; // unselect the first selected option
-
-                }
-                if (inToolbar) {
-                    options.minWidth = 'auto';
-                }
-                $elem.multiselect(options);
-                $elem.multiselect("uncheckAll");
-                $elem.siblings('button.ui-multiselect').css({
-                    width: inToolbar ? "98%" : "100%",
-                    marginTop: "1px",
-                    marginBottom: "1px",
-                    paddingTop: "3px"
-                });
-            }, 2000);
-        },*/
 
         GetColumnIndexByName: function (columnName) {
             var cm = $(this).jqGrid('getGridParam', 'colModel'), i, l = cm.length;

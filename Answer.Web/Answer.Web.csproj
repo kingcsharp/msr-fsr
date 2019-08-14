@@ -383,81 +383,115 @@
     <Content Include="assets\components\ace\emmet\emmet.js" />
     <Content Include="assets\components\ace\modx.texteditor.js" />
     <Content Include="assets\css\ajax-loader.gif" />
-    <Content Include="assets\css\animate.css\animate.css" />
-    <Content Include="assets\css\animate.css\animate.min.css" />
-    <Content Include="assets\css\animate.min.css" />
-    <Content Include="assets\css\bootstrap-datepicker.min.css" />
-    <Content Include="assets\css\bootstrap-datetimepicker.min.css" />
+    <Content Include="assets\css\animate.css" />
+    <Content Include="assets\css\animate.min.css">
+      <DependentUpon>animate.css</DependentUpon>
+    </Content>
+    <Content Include="assets\css\bootstrap-datepicker.css" />
+    <Content Include="assets\css\bootstrap-datepicker.min.css">
+      <DependentUpon>bootstrap-datepicker.css</DependentUpon>
+    </Content>
+    <Content Include="assets\css\bootstrap-datetimepicker.css" />
+    <Content Include="assets\css\bootstrap-datetimepicker.min.css">
+      <DependentUpon>bootstrap-datetimepicker.css</DependentUpon>
+    </Content>
     <Content Include="assets\css\bootstrap-editable.css" />
+    <Content Include="assets\css\bootstrap-editable.min.css">
+      <DependentUpon>bootstrap-editable.css</DependentUpon>
+    </Content>
     <Content Include="assets\css\bootstrap-print-fix.css" />
+    <Content Include="assets\css\bootstrap-print-fix.min.css">
+      <DependentUpon>bootstrap-print-fix.css</DependentUpon>
+    </Content>
     <Content Include="assets\css\bootstrap-select.css" />
+    <Content Include="assets\css\bootstrap-select.min.css">
+      <DependentUpon>bootstrap-select.css</DependentUpon>
+    </Content>
     <Content Include="assets\css\bootstrap-switch.css" />
     <Content Include="assets\css\bootstrap-switch.min.css" />
     <Content Include="assets\css\bootstrap-theme.css" />
     <Content Include="assets\css\bootstrap-theme.min.css" />
     <Content Include="assets\css\bootstrap.css" />
     <Content Include="assets\css\bootstrap.min.css" />
+    <Content Include="assets\css\checkbox3.css" />
     <Content Include="assets\css\checkbox3.min.css" />
     <Content Include="assets\css\dataTables.bootstrap.css" />
+    <Content Include="assets\css\dataTables.bootstrap.min.css">
+      <DependentUpon>dataTables.bootstrap.css</DependentUpon>
+    </Content>
     <Content Include="assets\css\elegant-icons-style.css" />
     <Content Include="assets\css\flexslider.css" />
-    <Content Include="assets\css\font-awesome.min.css" />
+    <Content Include="assets\css\flexslider.min.css">
+      <DependentUpon>flexslider.css</DependentUpon>
+    </Content>
+    <Content Include="assets\css\font-awesome.min.css">
+      <DependentUpon>font-awesome.css</DependentUpon>
+    </Content>
     <Content Include="assets\css\fonts\ElegantIcons.svg" />
     <Content Include="assets\css\fonts\flexslider-icon.svg" />
     <Content Include="assets\css\fonts\fontawesome-webfont.svg" />
     <Content Include="assets\css\fonts\glyphicons-halflings-regular.svg" />
-    <Content Include="assets\css\hopscotch.css" />
-    <Content Include="assets\css\hopscotch.min.css" />
-    <Content Include="assets\css\jquery-ui\images\ui-bg_diagonals-thick_18_b81900_40x40.png" />
-    <Content Include="assets\css\jquery-ui\images\ui-bg_diagonals-thick_20_666666_40x40.png" />
-    <Content Include="assets\css\jquery-ui\images\ui-bg_flat_0_aaaaaa_40x100.png" />
-    <Content Include="assets\css\jquery-ui\images\ui-bg_flat_10_000000_40x100.png" />
-    <Content Include="assets\css\jquery-ui\images\ui-bg_flat_55_fbec88_40x100.png" />
-    <Content Include="assets\css\jquery-ui\images\ui-bg_glass_100_f6f6f6_1x400.png" />
-    <Content Include="assets\css\jquery-ui\images\ui-bg_glass_100_fdf5ce_1x400.png" />
-    <Content Include="assets\css\jquery-ui\images\ui-bg_glass_65_ffffff_1x400.png" />
-    <Content Include="assets\css\jquery-ui\images\ui-bg_glass_75_d0e5f5_1x400.png" />
-    <Content Include="assets\css\jquery-ui\images\ui-bg_glass_85_dfeffc_1x400.png" />
-    <Content Include="assets\css\jquery-ui\images\ui-bg_glass_95_fef1ec_1x400.png" />
-    <Content Include="assets\css\jquery-ui\images\ui-bg_gloss-wave_35_f6a828_500x100.png" />
-    <Content Include="assets\css\jquery-ui\images\ui-bg_gloss-wave_55_5c9ccc_500x100.png" />
-    <Content Include="assets\css\jquery-ui\images\ui-bg_highlight-soft_100_eeeeee_1x100.png" />
-    <Content Include="assets\css\jquery-ui\images\ui-bg_highlight-soft_75_ffe45c_1x100.png" />
-    <Content Include="assets\css\jquery-ui\images\ui-bg_inset-hard_100_f5f8f9_1x100.png" />
-    <Content Include="assets\css\jquery-ui\images\ui-bg_inset-hard_100_fcfdfd_1x100.png" />
-    <Content Include="assets\css\jquery-ui\images\ui-icons_217bc0_256x240.png" />
-    <Content Include="assets\css\jquery-ui\images\ui-icons_222222_256x240.png" />
-    <Content Include="assets\css\jquery-ui\images\ui-icons_228ef1_256x240.png" />
-    <Content Include="assets\css\jquery-ui\images\ui-icons_2e83ff_256x240.png" />
-    <Content Include="assets\css\jquery-ui\images\ui-icons_469bdd_256x240.png" />
-    <Content Include="assets\css\jquery-ui\images\ui-icons_6da8d5_256x240.png" />
-    <Content Include="assets\css\jquery-ui\images\ui-icons_cd0a0a_256x240.png" />
-    <Content Include="assets\css\jquery-ui\images\ui-icons_d8e7f3_256x240.png" />
-    <Content Include="assets\css\jquery-ui\images\ui-icons_ef8c08_256x240.png" />
-    <Content Include="assets\css\jquery-ui\images\ui-icons_f9bd01_256x240.png" />
-    <Content Include="assets\css\jquery-ui\images\ui-icons_ffd27a_256x240.png" />
-    <Content Include="assets\css\jquery-ui\images\ui-icons_ffffff_256x240.png" />
-    <Content Include="assets\css\jquery-ui\jquery-ui.css" />
-    <Content Include="assets\css\jquery-ui\jquery.multiselect.css" />
     <Content Include="assets\css\jquery.dataTables.min.css" />
     <Content Include="assets\css\jquery.fileupload-noscript.css" />
+    <Content Include="assets\css\jquery.fileupload-noscript.min.css">
+      <DependentUpon>jquery.fileupload-noscript.css</DependentUpon>
+    </Content>
     <Content Include="assets\css\jquery.fileupload-ui.css" />
+    <Content Include="assets\css\jquery.fileupload-ui.min.css">
+      <DependentUpon>jquery.fileupload-ui.css</DependentUpon>
+    </Content>
     <Content Include="assets\css\jquery.fileupload.css" />
+    <Content Include="assets\css\jquery.fileupload.min.css">
+      <DependentUpon>jquery.fileupload.css</DependentUpon>
+    </Content>
     <Content Include="assets\css\line-icons.css" />
     <Content Include="assets\css\login.css" />
+    <Content Include="assets\css\login.min.css">
+      <DependentUpon>login.css</DependentUpon>
+    </Content>
     <Content Include="assets\css\main-menu.css" />
+    <Content Include="assets\css\print.css" />
     <Content Include="assets\css\procedures.css" />
     <Content Include="assets\css\profile.css" />
+    <Content Include="assets\css\select2.css" />
     <Content Include="assets\css\select2.min.css" />
+    <Content Include="assets\css\step-monitor.min.css">
+      <DependentUpon>step-monitor.css</DependentUpon>
+    </Content>
     <Content Include="assets\css\style.css" />
+    <Content Include="assets\css\font-awesome.css" />
+    <Content Include="assets\css\style.min.css">
+      <DependentUpon>style.css</DependentUpon>
+    </Content>
     <Content Include="assets\css\themes.css" />
+    <Content Include="assets\css\themes.min.css">
+      <DependentUpon>themes.css</DependentUpon>
+    </Content>
     <Content Include="assets\css\themes\flat-blue.css" />
+    <Content Include="assets\css\themes\flat-blue.min.css">
+      <DependentUpon>flat-blue.css</DependentUpon>
+    </Content>
     <Content Include="assets\css\themes\flat-green.css" />
+    <Content Include="assets\css\themes\flat-green.min.css">
+      <DependentUpon>flat-green.css</DependentUpon>
+    </Content>
     <Content Include="assets\css\ui.jqgrid-bootstrap-ui.css" />
+    <Content Include="assets\css\ui.jqgrid-bootstrap-ui.min.css">
+      <DependentUpon>ui.jqgrid-bootstrap-ui.css</DependentUpon>
+    </Content>
     <Content Include="assets\css\ui.jqgrid-bootstrap.css" />
+    <Content Include="assets\css\ui.jqgrid-bootstrap.min.css">
+      <DependentUpon>ui.jqgrid-bootstrap.css</DependentUpon>
+    </Content>
     <Content Include="assets\css\ui.jqgrid.css" />
     <Content Include="assets\css\step-monitor.css" />
+    <Content Include="assets\css\ui.jqgrid.min.css">
+      <DependentUpon>ui.jqgrid.css</DependentUpon>
+    </Content>
     <Content Include="assets\css\wip-detail.css" />
+    <Content Include="assets\css\wip-detail.min.css">
+      <DependentUpon>wip-detail.css</DependentUpon>
+    </Content>
     <Content Include="assets\fonts\ElegantIcons.svg" />
     <Content Include="assets\fonts\fontawesome-webfont.svg" />
     <Content Include="assets\fonts\glyphicons-halflings-regular.svg" />
@@ -516,21 +550,123 @@
     <Content Include="assets\img\thumbnails\picjumbo.com_IMG_3241.jpg" />
     <Content Include="assets\img\thumbnails\picjumbo.com_IMG_4566.jpg" />
     <Content Include="assets\js\ace\ace.js" />
+    <Content Include="assets\js\ace\ace.min.js">
+      <DependentUpon>ace.js</DependentUpon>
+    </Content>
     <Content Include="assets\js\ace\mode-html.js" />
+    <Content Include="assets\js\ace\mode-html.min.js">
+      <DependentUpon>mode-html.js</DependentUpon>
+    </Content>
     <Content Include="assets\js\ace\theme-github.js" />
+    <Content Include="assets\js\ace\theme-github.min.js">
+      <DependentUpon>theme-github.js</DependentUpon>
+    </Content>
     <Content Include="assets\js\admin_users.js" />
     <Content Include="assets\js\alert.js" />
     <Content Include="assets\js\app.js" />
     <Content Include="assets\js\bluebird.min.js" />
     <Content Include="assets\js\bootbox.min.js" />
+    <Content Include="assets\js\bootstrap-datepicker.js" />
     <Content Include="assets\js\bootstrap-datepicker.min.js" />
     <Content Include="assets\js\bootstrap-datetimepicker.min.js" />
     <Content Include="assets\js\blockLayout.ui.js" />
+    <Content Include="assets\js\BootstrapFileInput\js\fileinput-custom.min.js">
+      <DependentUpon>fileinput-custom.js</DependentUpon>
+    </Content>
+    <Content Include="assets\js\Chart.js" />
+    <Content Include="assets\js\grids\engineer.min.js">
+      <DependentUpon>engineer.js</DependentUpon>
+    </Content>
     <Content Include="assets\js\grids\jgrid.defaults.js" />
     <Content Include="assets\js\grids\statusGrid.js" />
     <Content Include="assets\js\grids\training.js" />
+    <Content Include="assets\js\jquery.js" />
+    <Content Include="assets\js\jquery.dataTables.js" />
+    <Content Include="assets\js\jquery.matchHeight.js" />
+    <Content Include="assets\js\jquery.timeago.js" />
+    <Content Include="assets\js\livestamp.js" />
+    <Content Include="assets\js\locales\jquery.timeago.af.js" />
+    <Content Include="assets\js\locales\jquery.timeago.am.js" />
+    <Content Include="assets\js\locales\jquery.timeago.ar.js" />
+    <Content Include="assets\js\locales\jquery.timeago.az-short.js" />
+    <Content Include="assets\js\locales\jquery.timeago.az.js" />
+    <Content Include="assets\js\locales\jquery.timeago.be.js" />
+    <Content Include="assets\js\locales\jquery.timeago.bg.js" />
+    <Content Include="assets\js\locales\jquery.timeago.bs.js" />
+    <Content Include="assets\js\locales\jquery.timeago.ca.js" />
+    <Content Include="assets\js\locales\jquery.timeago.cs.js" />
+    <Content Include="assets\js\locales\jquery.timeago.cy.js" />
+    <Content Include="assets\js\locales\jquery.timeago.da.js" />
+    <Content Include="assets\js\locales\jquery.timeago.de-short.js" />
+    <Content Include="assets\js\locales\jquery.timeago.de.js" />
+    <Content Include="assets\js\locales\jquery.timeago.dv.js" />
+    <Content Include="assets\js\locales\jquery.timeago.el.js" />
+    <Content Include="assets\js\locales\jquery.timeago.en-short.js" />
+    <Content Include="assets\js\locales\jquery.timeago.en.js" />
+    <Content Include="assets\js\locales\jquery.timeago.es-short.js" />
+    <Content Include="assets\js\locales\jquery.timeago.es.js" />
+    <Content Include="assets\js\locales\jquery.timeago.et.js" />
+    <Content Include="assets\js\locales\jquery.timeago.eu.js" />
+    <Content Include="assets\js\locales\jquery.timeago.fa-short.js" />
+    <Content Include="assets\js\locales\jquery.timeago.fa.js" />
+    <Content Include="assets\js\locales\jquery.timeago.fi.js" />
+    <Content Include="assets\js\locales\jquery.timeago.fr-short.js" />
+    <Content Include="assets\js\locales\jquery.timeago.fr.js" />
+    <Content Include="assets\js\locales\jquery.timeago.gl.js" />
+    <Content Include="assets\js\locales\jquery.timeago.he.js" />
+    <Content Include="assets\js\locales\jquery.timeago.hr.js" />
+    <Content Include="assets\js\locales\jquery.timeago.hu.js" />
+    <Content Include="assets\js\locales\jquery.timeago.hy.js" />
+    <Content Include="assets\js\locales\jquery.timeago.id.js" />
+    <Content Include="assets\js\locales\jquery.timeago.is.js" />
+    <Content Include="assets\js\locales\jquery.timeago.it-short.js" />
+    <Content Include="assets\js\locales\jquery.timeago.it.js" />
+    <Content Include="assets\js\locales\jquery.timeago.ja.js" />
+    <Content Include="assets\js\locales\jquery.timeago.jv.js" />
+    <Content Include="assets\js\locales\jquery.timeago.ko.js" />
+    <Content Include="assets\js\locales\jquery.timeago.ky.js" />
+    <Content Include="assets\js\locales\jquery.timeago.lt.js" />
+    <Content Include="assets\js\locales\jquery.timeago.lv.js" />
+    <Content Include="assets\js\locales\jquery.timeago.mk.js" />
+    <Content Include="assets\js\locales\jquery.timeago.nl.js" />
+    <Content Include="assets\js\locales\jquery.timeago.no.js" />
+    <Content Include="assets\js\locales\jquery.timeago.pl.js" />
+    <Content Include="assets\js\locales\jquery.timeago.pt-br-short.js" />
+    <Content Include="assets\js\locales\jquery.timeago.pt-br.js" />
+    <Content Include="assets\js\locales\jquery.timeago.pt-short.js" />
+    <Content Include="assets\js\locales\jquery.timeago.pt.js" />
+    <Content Include="assets\js\locales\jquery.timeago.ro.js" />
+    <Content Include="assets\js\locales\jquery.timeago.rs.js" />
+    <Content Include="assets\js\locales\jquery.timeago.ru.js" />
+    <Content Include="assets\js\locales\jquery.timeago.rw.js" />
+    <Content Include="assets\js\locales\jquery.timeago.si.js" />
+    <Content Include="assets\js\locales\jquery.timeago.sk.js" />
+    <Content Include="assets\js\locales\jquery.timeago.sl.js" />
+    <Content Include="assets\js\locales\jquery.timeago.sq.js" />
+    <Content Include="assets\js\locales\jquery.timeago.sr.js" />
+    <Content Include="assets\js\locales\jquery.timeago.sv.js" />
+    <Content Include="assets\js\locales\jquery.timeago.th.js" />
+    <Content Include="assets\js\locales\jquery.timeago.tr-short.js" />
+    <Content Include="assets\js\locales\jquery.timeago.tr.js" />
+    <Content Include="assets\js\locales\jquery.timeago.uk.js" />
+    <Content Include="assets\js\locales\jquery.timeago.ur.js" />
+    <Content Include="assets\js\locales\jquery.timeago.uz.js" />
+    <Content Include="assets\js\locales\jquery.timeago.vi.js" />
+    <Content Include="assets\js\locales\jquery.timeago.zh-CN.js" />
+    <Content Include="assets\js\locales\jquery.timeago.zh-TW.js" />
+    <Content Include="assets\js\msr\fileupload\uploader-grid.min.js">
+      <DependentUpon>uploader-grid.js</DependentUpon>
+    </Content>
+    <Content Include="assets\js\msr\fileupload\uploader.min.js">
+      <DependentUpon>uploader.js</DependentUpon>
+    </Content>
+    <Content Include="assets\js\plugins\bootstrap3\bootstrap-dialog.css" />
+    <Content Include="assets\js\plugins\bootstrap3\bootstrap-dialog.js" />
     <Content Include="assets\js\plugins\bootstrap3\bootstrap-multiselect.css" />
     <Content Include="assets\js\plugins\bootstrap3\bootstrap-multiselect.js" />
+    <Content Include="assets\js\plugins\bootstrap3\bootstrap-multiselect.min.css">
+      <DependentUpon>bootstrap-multiselect.css</DependentUpon>
+    </Content>
     <Content Include="assets\js\plugins\jquery.blockUI.js" />
     <Content Include="assets\js\reports\libs\angular-bootstrap-colorpicker\bootstrap-colorpicker-module.min.js" />
     <Content Include="assets\js\reports\libs\angular-bootstrap-datetimepicker\bootstrap-datetimepicker.min.js" />
@@ -551,7 +687,7 @@
     <Content Include="assets\js\Chart.min.js" />
     <Content Include="assets\js\chartjs.js" />
     <Content Include="assets\js\client_users.js" />
-    <Content Include="assets\js\comman.js" />
+    <Content Include="assets\js\common.js" />
     <Content Include="assets\js\common\documentFile.js" />
     <Content Include="assets\js\common\documentFiles.js" />
     <Content Include="assets\js\dashboard.js" />
@@ -613,8 +749,6 @@
     <Content Include="assets\js\grids\regions.js" />
     <Content Include="assets\js\grids\requirement-steps.js" />
     <Content Include="assets\js\invoice-setup.js" />
-    <Content Include="assets\js\jquery-ui\jquery-ui.min.js" />
-    <Content Include="assets\js\jquery-ui\jquery.multiselect.js" />
     <Content Include="assets\js\jquery.jqGrid.js" />
     <Content Include="assets\js\JqueryConfirm\jquery-confirm.min.css" />
     <Content Include="assets\js\JqueryConfirm\jquery-confirm.min.js" />
@@ -1888,8 +2022,6 @@
     <Content Include="assets\js\grids\theoryparagraph.js" />
     <Content Include="assets\js\grids\user-roles.js" />
     <Content Include="assets\js\help_form.js" />
-    <Content Include="assets\js\hopscotch.js" />
-    <Content Include="assets\js\hopscotch.min.js" />
     <Content Include="assets\js\i18n\defaults-da_DK.js" />
     <Content Include="assets\js\i18n\defaults-da_DK.min.js" />
     <Content Include="assets\js\i18n\defaults-de_DE.js" />
@@ -2031,6 +2163,7 @@
     <Content Include="assets\js\purchase_orders.js" />
     <Content Include="assets\js\qrcode.js" />
     <Content Include="assets\js\runnable-procedures.js" />
+    <Content Include="assets\js\select2.full.js" />
     <Content Include="assets\js\select2.full.min.js" />
     <Content Include="assets\js\Templates\monitor-form.html" />
     <Content Include="assets\js\theming.js" />
@@ -2150,6 +2283,9 @@
     <Content Include="assets\js\vendor\jquery.ui.widget.js" />
     <Content Include="assets\js\wip-detail-print-other.js" />
     <Content Include="assets\js\wip-detail.js" />
+    <Content Include="assets\js\wip-detail.min.js">
+      <DependentUpon>wip-detail.js</DependentUpon>
+    </Content>
     <Content Include="assets\styles\xslt\calendar.xsl" />
     <Content Include="assets\styles\xslt\delivery.xsl" />
     <Content Include="assets\styles\xslt\EditStringsXMLPage.xsl" />
@@ -2397,6 +2533,8 @@
     <Content Include="assets\js\reports\libs\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="assets\js\reports\libs\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="assets\sample-files\procedures-upload.xls" />
+    <Content Include="assets\js\locales\README.md" />
+    <None Include="bundleconfig.json" />
     <None Include="Properties\PublishProfiles\dev.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
