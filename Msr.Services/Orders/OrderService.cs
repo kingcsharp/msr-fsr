@@ -53,7 +53,7 @@ namespace Msr.Services.Orders
 
             var fileIdParm = new SqlParameter("@FileId", fileId);
 
-            response.Details = _dbContext.Database.SqlQuery<NcrDetails>("Portal_GetNcrReport @FileId", fileIdParm).Single();
+            response.Details = _dbContext.Database.SqlQuery<NcrDetails>("Portal_GetNcrReports @FileId", fileIdParm).Single();
 
             response.StepPics = GetStepPics(fileId);
 

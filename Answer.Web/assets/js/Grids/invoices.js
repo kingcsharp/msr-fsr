@@ -10,7 +10,7 @@ Msr.InvoicesGrid = Msr.InvoicesGrid || {
     GetGridEditUrl: function () {
         return "/Invoices/Edit/";
     },
-    DownloadAllInvoices: function () {
+    DownloadFilteredInvoices: function () {
         const baseURL = window.location.protocol + "//" + window.location.host + "/Invoices/DownloadFilteredInvoices";
         const postData = $("#" + Msr.InvoicesGrid.GetGridId()).jqGrid('getGridParam', 'postData');
         
@@ -26,7 +26,16 @@ Msr.InvoicesGrid = Msr.InvoicesGrid || {
 
         });
 
-        window.location.href = downloadInvoicesURL;
+        // window.location.href = downloadInvoicesURL;
+        window.open(downloadInvoicesURL);
+    },
+    DownloadAllInvoices: function () {
+        const baseURL = window.location.protocol + "//" + window.location.host + "/Invoices/DownloadAllInvoices";
+
+        let downloadInvoicesURL = baseURL;
+
+        // window.location.href = downloadInvoicesURL;
+        window.open(downloadInvoicesURL);
     },
     LoadInvoices: function (url) {
 
@@ -58,7 +67,7 @@ Msr.InvoicesGrid = Msr.InvoicesGrid || {
                     colmenu: false,
                     width: 160,
                     coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                    searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                    searchoptions:  { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                     align: 'left'
                 },
                 {
