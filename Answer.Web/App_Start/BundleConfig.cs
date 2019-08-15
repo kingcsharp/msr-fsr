@@ -204,7 +204,7 @@ namespace Answer.Web
 #if DEBUG
             BundleTable.EnableOptimizations = true;
 #else
-                            BundleTable.EnableOptimizations = true;
+                            BundleTable.EnableOptimizations = false;
 #endif
         }
     }
