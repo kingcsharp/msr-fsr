@@ -103,6 +103,7 @@
     <Compile Include="Lookups\ListSubPartActions.cs" />
     <Compile Include="Lookups\MaintenanceTaskList.cs" />
     <Compile Include="Lookups\MonitorTypesList.cs" />
+    <Compile Include="Lookups\NCRCategories.cs" />
     <Compile Include="Lookups\OrderingUnits.cs" />
     <Compile Include="Lookups\PhoneTypes.cs" />
     <Compile Include="Lookups\ProductTypes.cs" />
