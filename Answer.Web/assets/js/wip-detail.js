@@ -309,8 +309,6 @@
             });
         });
 
-        init();
-
         $('#ncr-notification-button').on('click', function () {
             var id = $('#fill-id').val();
 
@@ -326,6 +324,7 @@
             });
         });
 
+        init();
 
     });
 
@@ -405,4 +404,3 @@ function openNav() {
 function closeNav() {
     document.getElementById("wip-side-nav").style.width = "0";
 }
-
