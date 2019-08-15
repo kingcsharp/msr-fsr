@@ -1,4 +1,14 @@
-$(function() {
+$(function () {
+    $('.navbar-nav').find('li.active').removeClass('active');
+    $('.navbar-nav li a[href^="' + location.pathname + '"]').parent('li').addClass('active');
+
+    $('.navbar-nav li a').click(function () {
+        $('.navbar-nav').find('li.active').removeClass('active');
+        $(this).parent('li').addClass('active');
+    });
+});
+
+$(function () {
   $(".navbar-expand-toggle").click(function() {
     $(".app-container").toggleClass("expanded");
     return $(".navbar-expand-toggle").toggleClass("fa-rotate-90");

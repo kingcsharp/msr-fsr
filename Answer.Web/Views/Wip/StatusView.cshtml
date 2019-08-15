@@ -4,75 +4,76 @@
 }
 
 <style>
-    .wip-status, .wip-status-header {
-        font-size: 1.4em;
-        font-weight: 700;
+    .table > tbody > tr > td {
+        vertical-align: middle;
     }
 
-    .wip-status-header {
-        color: #777 !important;
-        border-bottom: 1px solid #777;
-        line-height: 1em;
-        margin-bottom: .2em !important;
-    }
-
-    .vcenter {
-        margin-top: 7px;
-        white-space: nowrap;
-        overflow-x: hidden;
-    }
-
-    .row.wip-status > [class*="col-"] {
-        line-height: 19px;
-        margin-bottom: -.2em !important;
+    .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+        padding: 0 6px;
     }
 </style>
 <div class="container-fluid">
     <div class="side-body padding-top">
         @Html.Partial("Message")
-        <div class="col-lg-12 wip-detail-header-left">
-            @if (!Model.WipStatusViewItems.Any())
-            {
-                <div>No records to view</div>
-            }
-            <div class="row" style="width: 100%; margin-top: 30px;">
-                <div class="col-lg-3 col-md-3 col-sm-3 wip-status-header" style="width: 24%;margin-top:24px;">
-                    Product
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 wip-status-header" style="width: 17%;margin-top:24px;">
-                    PN/IPN
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 wip-status-header" style="width: 17%;margin-top:24px;">
-                    Procedure
-                </div>
-                <div div class="col-lg-5 col-md-5 col-sm-5 wip-status-header" style="width: 12%;">
-                    <select class="form-control location-name">
-                        @foreach (var location in Model.LocationList)
-                        {
-                            if (location.Selected)
-                            {
-                                <option value="@location.Value" selected="selected">@location.Text</option>
-                            }
-                            else
-                            {
-                                <option value="@location.Value">@location.Text</option>
-                            }
-                        }
+        <table class="table table-reposnsive table-striped wip-status">
+            <thead>
 
-                    </select>
-                    @* @Html.DropDownListFor(model => model.Location, Model.LocationList, new { @class = "form-control location-name" })*@
-                </div>
-                <div class="col-lg-5 col-md-5 col-sm-5 wip-status-header" style="width: 30%;margin-top:24px;">
-                    Open WO's
-                </div>
-            </div>
-            <div id="status-items">
+                <tr>
+                    <th>
+                        Product
+                    </th>
+                    <th>
+                        PN/IPN
+                    </th>
+                    <th>
+                        Procedure
+                    </th>
+                    <th>
+                        <select class="form-control location-name">
+                            @foreach (var location in Model.LocationList)
+                            {
+                                if (location.Selected)
+                                {
+                                    <option value="@location.Value" selected="selected">@location.Text</option>
+                                }
+                                else
+                                {
+                                    <option value="@location.Value">@location.Text</option>
+                                }
+                            }
+
+                        </select>
+                        @* @Html.DropDownListFor(model => model.Location, Model.LocationList, new { @class = "form-control location-name" })*@
+                    </th>
+                    <th colspan="4">
+                        Open WO's
+                        <div class="pull-right">Last Updated : <span class="livestamp now livestamp-display"></span></div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
                 @Html.Partial("_StatusItems")
-            </div>
-        </div>
+            </tbody>
+        </table>
     </div>
 </div>
 @section scripts
 {
     <script src="~/assets/js/grids/statusGrid.js"></script>
+    <script src="~/assets/js/moment.min.js"></script>
+    <script src="~/assets/js/livestamp.js"></script>
+    <script>
+        $(document).ready(function () {
+            var nowMs = +new Date(),
+                now = Math.floor(nowMs / 1000);
+            //update trhe time stamp every minute
+            $.livestamp.interval(30);
+            $('.now').livestamp(now);
+            $('.now-display').text(now);
+            //refresh every 15 minutes
+            setInterval(function () {
+                window.location.reload();
+            }, 900000);
+        });
+    </script>
 }

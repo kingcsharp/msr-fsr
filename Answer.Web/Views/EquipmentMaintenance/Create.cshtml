@@ -8,8 +8,7 @@
 <link rel="stylesheet" type="text/css" href="/assets/css/ui.jqgrid-bootstrap-ui.css">
 <link rel="stylesheet" type="text/css" href="/assets/css/ui.jqgrid.css">
 <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
-<link rel="stylesheet" type="text/css" href="/assets/css/hopscotch.css">
-
+<link href="~/assets/css/bootstrap-datetimepicker.css" rel="stylesheet" />
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="row">
@@ -51,13 +50,10 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label" for="EquipmentTroubleState">Trouble State</label>
                             <div class="col-md-8">
-                                <div class="checkbox">
-                                    <label for="EquipmentState-0">
-                                        @Html.CheckBoxFor(model => model.TroubleState, new { @class = "checkbox" })
-                                        @Html.ValidationMessageFor(model => model.TroubleState, "", new { @class = "text-danger" })
-                                        Yes
-                                    </label>
+                                <div class="make-switch switch-small" data-on="success" data-off="warning" data-on-text="Yes" data-off-text="No" style="display: inline-block">
+                                    @Html.CheckBoxFor(model => model.TroubleState, new { @class = "checkbox", @id = "troubleStateSwitch" })
                                 </div>
+                                @Html.ValidationMessageFor(model => model.TroubleState, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         @if (Model.Roles.Any(x => x.Role_Name == RoleConstants.ProductionManager || x.Role_Name == RoleConstants.MaintenanceTechnician))
@@ -129,6 +125,8 @@
             $('.dateSelecter').click(function (parameters) {
                 $(this).find('.datepick').focus();
             });
+
+            $('#troubleStateSwitch').bootstrapSwitch();
 
             $('#ScanBarcode').on('keyup', function () {
                 if ($(this).val().length > 3) {
