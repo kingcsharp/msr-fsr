@@ -1,12 +1,12 @@
 ﻿@{
-    ViewBag.Title = "Training";
+    ViewBag.Title = "People";
 }
 
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="row">
             <h2 class="page-header">
-                <span class="icon fa fa-cog"></span>
+                <i class="fa fa-sun-o" aria-hidden="true"></i>
                 Training Certifications
                 @Html.Partial("_HelpViewButton")
             </h2>
@@ -17,11 +17,10 @@
             </div>
         </div>
 
-        <div class="row">
-            <button type="button" id="clear-state" class="btn btn-success help-btn">Clear State</button>
+        <div class="row row-bottom-buttons">
+                <button type="button" id="clear-state" class="btn btn-success help-btn">Clear State</button>
         </div>
     </div>
-</div>
 @section scripts
 {
     @Scripts.Render("~/bundles/js/jqgrid")

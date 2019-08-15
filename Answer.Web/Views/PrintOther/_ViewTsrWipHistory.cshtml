@@ -1,7 +1,10 @@
 ﻿@model Msr.Services.Orders.Messaging.WipHistoryTsrResponse
 
-<div class="row">
-    <table class="table table-bordered">
+<div class="col-md-12 col-sm-12 visible-print" style="margin-top:20px;">
+    <h2>WIP History Report</h2>
+</div>
+<div class="col-md-12 col-sm-12" style="margin-bottom:5px;">
+    <table class="table table-bordered report-table">
         <tbody>
         <tr>
             <td rowspan="2" style="border: 1px solid #ccc">@Model.WipHistoryDetailResult.SupplierName</td>
@@ -16,8 +19,8 @@
     </table>
 </div>
 
-<div class="row">
-    <table class="table table-bordered">
+<div class="col-md-12 col-sm-12">
+    <table class="table table-bordered report-table">
         <tr>
             <th>Step</th>
             <th>Title</th>
@@ -41,11 +44,11 @@
                 <td>@task.Location</td>
                 <td>@task.Status</td>
             </tr>
-            <tr>
-                <td></td>
-                <td colspan="6">
-                    @if (task.WipSubTasks.Any())
-                    {
+            if (task.WipSubTasks.Any())
+            {
+                <tr>
+                    <td></td>
+                    <td colspan="6">
                         <table class="table-bordered table">
                             <tr>
                                 <th>Monitor @task.Id</th>
@@ -61,10 +64,10 @@
                                 </tr>
                             }
                         </table>
-                    }
-                </td>
-            </tr>
+                    </td>
+                </tr>
+            }
             i++;
-        }
-    </table>
+         }
+        </table>
 </div>

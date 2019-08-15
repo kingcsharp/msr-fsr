@@ -372,8 +372,8 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
             if (rowObject.Status === 'IN_WORKFLOW') {
                 var urlDelete = '/workflow/Denied?objId=' + rowObject.ObjectId + '&WfsId=' + rowObject.WfsId + '&WfStageId=' + rowObject.WfStageId + '&WfGroupId=' + rowObject.WfGroupId + '&returnUrl=' + returnUrl;
                 urlApprove = '/workflow/submit?objId=' + rowObject.ObjectId + '&returnUrl=' + returnUrl;
-                approvalWorkflows = '<a href="' + urlApprove + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-success" title="Approve this item" style="margin:2px;font-size: .8em;"><i class="fa fa-smile-o fa-2x" aria-hidden="true"></i></a>';
-                deleteworkflow = '<a href="' + urlDelete + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-danger" title="Deny this item" style="margin:2px;font-size: .8em;"><i class="fa fa-frown-o fa-2x" aria-hidden="true"></i></a>';
+                approvalWorkflows = '<a href="' + urlApprove + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-success" title="Approve this item" style="margin:2px;font-size: .8em;"><i class="fa fa-thumbs-up" aria-hidden="true"></i></a>';
+                deleteworkflow = '<a href="' + urlDelete + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-danger" title="Deny this item" style="margin:2px;font-size: .8em;"><i class="fa fa-thumbs-down" aria-hidden="true"></i></i></a>';
 
                 return approvalWorkflows + deleteworkflow;
             }
@@ -381,7 +381,7 @@ Msr.PendingApprovalsGrid = Msr.PendingApprovalsGrid ||
             if (rowObject.NotificationType === 'CREATING') {
                 urlApprove = '/workflow/submit?objId=' + rowObject.ObjectId + '&returnUrl=' + returnUrl;
 
-                buttonWorkflowLeft = '<a href="' + urlApprove + '" data-call-back-name="' + rowObject.Name + '"  data-call-back-id="' + rowObject.ObjectId + '" class="btn btn-xs btn-success unlock" title="Cancel Creation. Edit will be lost" style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-left"></i></a>';
+                buttonWorkflowLeft = '<a href="' + urlApprove + '" data-call-back-name="' + rowObject.Name + '"  data-call-back-id="' + rowObject.ObjectId + '" class="btn btn-xs btn-warning unlock" title="Cancel Creation. Edit will be lost" style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-left"></i></a>';
 
                 buttonWorkflowRight = '<a href="' + urlApprove + '" data-call-back-name="' + rowObject.Name + '" class="btn btn-xs btn-success" title="Proceed to approval workflow for release." style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-right"></i></a>';
 

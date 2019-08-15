@@ -4,11 +4,9 @@ namespace Answer.Web
 {
     public class BundleConfig
     {
-        // For more information on bundling, visit http://go.microsoft.com/fwlink/?LinkId=301862
+        // DO NOT INCLUDE MINIFIED SOURCE FILES IN BUNDLES
         public static void RegisterBundles(BundleCollection bundles)
         {
-            bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                        "~/Scripts/jquery-{version}.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/js/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
@@ -22,7 +20,7 @@ namespace Answer.Web
             );
 
             bundles.Add(new ScriptBundle("~/bundles/js/jqgrid")
-                .Include("~/assets/js/plugins/bootstrap3/bootstrap-dialog.min.js")
+                .Include("~/assets/js/plugins/bootstrap3/bootstrap-dialog.js")
                 .Include("~/assets/js/jquery.jqGrid.js")
                 .Include("~/assets/js/i18n/grid.locale-en.js")
                 .Include("~/assets/js/msr/grid-common.js")
@@ -117,23 +115,6 @@ namespace Answer.Web
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
                         "~/Scripts/modernizr-*"));
 
-            bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
-                      "~/Scripts/bootstrap.js",
-                      "~/Scripts/respond.js"));
-
-            bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap.css",
-                      "~/Content/site.css"));
-
-            bundles.Add(new StyleBundle("~/bundles/css/fileinput").Include(
-                "~/assets/js/BootstrapFileInput/css/fileinput.min.css",
-                "~/assets/js/JqueryConfirm/jquery-confirm.min.css")
-            );
-
-            bundles.Add(new ScriptBundle("~/bundles/js/comman-js")
-                .Include("~/assets/js/comman.js")
-            );
-
             bundles.Add(new ScriptBundle("~/bundles/js/pending-approvals")
                 .Include("~/assets/js/grids/pending-approvals.js")
             );
@@ -142,65 +123,78 @@ namespace Answer.Web
                 .Include("~/assets/js/grids/object-search.js")
             );
 
-            bundles.Add(new StyleBundle("~/bundles/css/main")
-               .Include("~/assets/css/bootstrap.min.css", new CssRewriteUrlTransform())
-               .Include("~/assets/css/font-awesome.min.css", new CssRewriteUrlTransform())
-               .Include("~/assets/css/animate.min.css")
-               .Include("~/assets/css/bootstrap-switch.min.css")
-               .Include("~/assets/css/checkbox3.min.css")
-               .Include("~/assets/css/dataTables.bootstrap.css")
-               .Include("~/assets/css/select2.min.css")
-               .Include("~/assets/css/themes/flat-blue.css")
-               .Include("~/assets/css/ui.jqgrid-bootstrap-ui.css")
-                .Include("~/assets/css/ui.jqgrid-bootstrap.css")
-               .Include("~/assets/css/ui.jqgrid.css")
+            //LOGIN
+            bundles.Add(new StyleBundle("~/assets/css/login")
+               .Include("~/assets/css/animate.css")
+               .Include("~/assets/css/login.css")
                .Include("~/assets/css/style.css")
+            );
+
+            bundles.Add(new ScriptBundle("~/assets/js/login")
+                .Include("~/assets/js/jquery.js")
+                .Include("~/assets/js/bootstrap.js")
+            );
+
+            //MAIN Layout
+
+            // bootstrap by itself to solve import hella and default to min of minification fails
+            bundles.Add(new StyleBundle("~/assets/css/bootstrap")
+                .Include("~/assets/css/bootstrap.css", new CssRewriteUrlTransform())
+            );
+            bundles.Add(new StyleBundle("~/bundles/css/fileinput").Include(
+                "~/assets/js/BootstrapFileInput/css/fileinput.min.css",
+                "~/assets/js/JqueryConfirm/jquery-confirm.min.css")
+            );
+
+            bundles.Add(new StyleBundle("~/assets/css/main")
+               .Include("~/assets/css/font-awesome.css", new CssRewriteUrlTransform())
+               .Include("~/assets/css/animate.css")
+               .Include("~/assets/css/bootstrap-switch.css")
+               .Include("~/assets/css/checkbox3.css")
+               .Include("~/assets/css/dataTables.bootstrap.css")
+               .Include("~/assets/css/select2.css")
+               .Include("~/assets/css/themes/flat-blue.css")
+               .Include("~/assets/css/ui.jqgrid.css")
+               .Include("~/assets/css/ui.jqgrid-bootstrap-ui.css")
+               .Include("~/assets/css/ui.jqgrid-bootstrap.css")
+               .Include("~/assets/css/style.css")
+               .Include("~/assets/css/print.css")
                .Include("~/assets/css/flexslider.css", new CssRewriteUrlTransform())
                .Include("~/assets/css/bootstrap-select.css")
-               .Include("~/assets/css/hopscotch.css")
-               .Include("~/assets/css/bootstrap-datepicker.min.css")
+               .Include("~/assets/css/bootstrap-datepicker.css")
+               .Include("~/assets/css/bootstrap-datetimepicker.css")
                .Include("~/assets/css/wip-detail.css", new CssRewriteUrlTransform())
-                .Include("~/assets/js/plugins/bootstrap3/bootstrap-multiselect.css", new CssRewriteUrlTransform())
+               .Include("~/assets/js/plugins/bootstrap3/bootstrap-multiselect.css", new CssRewriteUrlTransform())
            );
 
-            bundles.Add(new ScriptBundle("~/bundles/js/main")
-                .Include("~/assets/js/jquery.min.js")
-                .Include("~/assets/js/bootstrap.min.js")
-                .Include("~/assets/js/Chart.min.js")
-                .Include("~/assets/js/bootstrap-switch.min.js")
-                .Include("~/assets/js/jquery.matchHeight-min.js")
-                .Include("~/assets/js/jquery.dataTables.min.js")
-                .Include("~/assets/js/select2.full.min.js")
+            bundles.Add(new ScriptBundle("~/assets/js/main")
+                .Include("~/assets/js/jquery.js")
+                .Include("~/assets/js/bootstrap.js")
+                .Include("~/assets/js/Chart.js")
+                .Include("~/assets/js/bootstrap-switch.js")
+                .Include("~/assets/js/jquery.matchHeight.js")
+                .Include("~/assets/js/jquery.dataTables.js")
+                .Include("~/assets/js/select2.full.js")
                 .Include("~/assets/js/ace/ace.js")
                 .Include("~/assets/js/ace/mode-html.js")
                 .Include("~/assets/js/ace/theme-github.js")
                 .Include("~/assets/js/app.js")
                 .Include("~/assets/js/help_form.js")
                 .Include("~/assets/js/eModal.min.js")
-                .Include("~/assets/js/hopscotch.js")
                 .Include("~/assets/js/docviewer.js")
                 .Include("~/assets/js/printThis.js")
-                .Include("~/assets/js/comman.js")
-                .Include("~/assets/js/bootstrap-datepicker.min.js")
+                .Include("~/assets/js/common.js")
+                .Include("~/assets/js/bootstrap-datepicker.js")
                 .Include("~/assets/js/plugins/jquery.blockUI.js")
                 .Include("~/assets/js/plugins/bootstrap3/bootstrap-multiselect.js")
            );
 
-            bundles.Add(new ScriptBundle("~/bundles/js/jgridDefaults")
+            bundles.Add(new ScriptBundle("~/assets/js/jgridDefaults")
                 .Include("~/assets/js/grids/jgrid.defaults.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/js/interceptors")
                 .Include("~/assets/js/blockLayout.ui.js"));
-            
-
-            bundles.Add(new ScriptBundle("~/bundles/js/jquery-ui")
-                .Include("~/assets/js/jquery-ui/jquery-ui.min.js")
-                .Include("~/assets/js/jquery-ui/jquery.multiselect.js")
-            );
-
-            bundles.Add(new StyleBundle("~/bundles/css/jquery-ui")
-                .Include("~/assets/css/jquery-ui/jquery-ui.css", new CssRewriteUrlTransform())
-                .Include("~/assets/css/jquery-ui/jquery.multiselect.css"));
+       
 
             bundles.Add(new ScriptBundle("~/bundles/js/invoice-setup")
              .Include("~/assets/js/invoice-setup.js")
@@ -213,7 +207,7 @@ namespace Answer.Web
 #if DEBUG
             BundleTable.EnableOptimizations = false;
 #else
-                            BundleTable.EnableOptimizations = true;
+                            BundleTable.EnableOptimizations = false;
 #endif
         }
     }

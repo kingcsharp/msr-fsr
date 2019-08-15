@@ -1,7 +1,11 @@
 ﻿@model IEnumerable<Msr.Services.Orders.Procedures.GetPurchaseWorkReportTsrDetailsResult>
+    <div class="col-md-12 col-sm-12 visible-print" style="margin-top:20px;">
+        <h2>Work Report - Purchase Summary</h2>
+    </div>
+
 <div id="work-report-technical-summary">
-    <div>
-        <table class="table table-bordered">
+    <div class="col-md-12 col-sm-12">
+        <table class="table table-bordered report-table">
             <thead>
                 <tr>
                     <th>Purchase #</th>
@@ -33,7 +37,7 @@
             </tbody>
         </table>
         <br />
-        <table style="width: 8in">
+        <table class="table table-bordered report-table">
             <tbody>
             <tr>
                 <td>
@@ -64,7 +68,7 @@
             </tbody>
         </table>
         <br/>
-        <table class="table table-bordered">
+        <table class="table table-bordered report-table">
             <tbody>
                 <tr>
                     <td class="bold standard">Product Name (#):</td>
