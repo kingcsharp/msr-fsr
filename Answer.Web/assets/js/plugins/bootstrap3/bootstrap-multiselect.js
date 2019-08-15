@@ -650,7 +650,7 @@
                     }
                 }
 
-                this.$select.change();
+                //this.$select.change();
                 this.updateButtonText();
 
                 if (this.options.preventInputChangeEvent) {
