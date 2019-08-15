@@ -425,6 +425,7 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                         onDropdownHidden: function () {
                             console.log('Here is where the post event to update the grid should fire.');
                             $('.multiselect-update').parent().remove();
+                            $(elem).attr('multiple', 'multiple').change();
                         }
                     };
 
