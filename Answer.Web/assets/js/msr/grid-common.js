@@ -430,6 +430,7 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                     $(elem).multiselect(multiselectOptions);
                 });
             }, 100);
+
         },
 
         GetColumnIndexByName: function (columnName) {
