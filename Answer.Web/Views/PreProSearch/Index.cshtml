@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Templates";
+    ViewBag.Title = "Procedures";
 }
 
 <div class="container-fluid">
@@ -7,7 +7,7 @@
         <div class="row">
             <h2 class="page-header">
                 <span class="icon fa fa-file-text"></span>
-                Templates @Html.Partial("_HelpViewButton")
+                Procedure Templates @Html.Partial("_HelpViewButton")
             </h2>
             <div style="width:100%;">
                 @Html.Partial("Message")
@@ -15,7 +15,7 @@
                 <div id="jq-grid-pager"></div>
             </div>
         </div>
-        <div class="row">
+        <div class="row row-bottom-buttons">
             <a href="@Url.Action("Create", "PreProSearch")" class="btn btn-success help-btn">Add</a>
             <button type="button" id="clear-state" class="btn btn-success help-btn">Clear State</button>
         </div>
