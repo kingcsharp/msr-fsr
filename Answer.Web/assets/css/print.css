@@ -1,8 +1,5 @@
 ﻿@page {
-    size: auto; /* auto is the initial value */
+    /*size: auto; /* auto is the initial value */
     /* this affects the margin in the printer settings */
-    margin-top: 2cm;
-    margin-bottom: 2cm;
-    margin-left: 2cm;
-    margin-right: 2cm;
+    margin: 0;
 } 

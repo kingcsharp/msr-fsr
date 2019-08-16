@@ -1,9 +1,10 @@
 ﻿@model Msr.Services.Orders.Messaging.WipHistoryTsrResponse
-<link href="~/assets/css/print.css" rel="stylesheet" />
+
+
 <div class="col-md-12 col-sm-12 visible-print" style="margin-top:20px;">
     <h2>WIP History Report</h2>
 </div>
-<div class="col-md-12 col-sm-12" style="margin-bottom:5px;">
+<div class="col-md-12 col-sm-12">
     <table class="table table-bordered report-table">
         <tbody>
             <tr>
@@ -48,19 +49,31 @@
             {
                 <tr>
                     <td></td>
-                    <td colspan="6">
-                        <table class="table-bordered table">
+                    <td colspan="6" style="padding:0;">
+                        <table class="table table-bordered table-striped">
                             <tr>
                                 <th>Monitor @task.Id</th>
                                 <th>Result</th>
                                 <th>Pass/Fail</th>
                             </tr>
                             @foreach (var subTask in task.WipSubTasks)
+
                             {
+
+                             var cssClass = "";
+
+                                if (subTask.IsPassing == "Pass")
+                                {
+                                    cssClass = "success";
+                                }
+                                else if (subTask.IsPassing == "Fail")
+                                {
+                                    cssClass = "danger";
+                                }
                                 <tr>
                                     <td>@subTask.Description </td>
                                     <td>@subTask.PrintResult</td>
-                                    <td>@subTask.IsPassing</td>
+                                    <td class="@cssClass">@subTask.IsPassing</td>
                                 </tr>
                             }
                         </table>
