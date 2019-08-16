@@ -392,43 +392,44 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
         },
 
         DataInitBootstrapMultiselect: function (elem, options, callback) {
-            $(document).ready(function () {
-                $(elem).attr('multiple', 'multiple');
-                var multiselectOptions = {
-                    includeSelectAllOption: true,
-                    onInitialized: function ($aSelect, $aContainer) {
-                        var $dropdown = $aContainer.find('.btn'),
-                            offset = $dropdown.offset();
-                        $aContainer.find('.dropdown-menu').css({
-                            position: 'fixed',
-                            top: (offset.top + $dropdown.outerHeight()),
-                            left: offset.left
-                        });
-            
-                        $(window).scroll(function () {
+            setTimeout(function () {
+                $(document).ready(function () {
+                    $(elem).attr('multiple', 'multiple');
+                    var multiselectOptions = {
+                        includeSelectAllOption: true,
+                        onInitialized: function ($aSelect, $aContainer) {
                             var $dropdown = $aContainer.find('.btn'),
                                 offset = $dropdown.offset();
                             $aContainer.find('.dropdown-menu').css({
                                 position: 'fixed',
-                                top: (offset.top + $dropdown.outerHeight() - $(window).scrollTop()),
+                                top: (offset.top + $dropdown.outerHeight()),
                                 left: offset.left
                             });
-                        });
-                    },
-                    selectAllValue: 'All',
-                    selectAllText: '[All]',
-                    allSelectedText: '[All]',
-                    onDropdownShow: function () {
-                        $('.multiselect-container.dropdown-menu').append('<li><button class="btn btn-primary btn-xs multiselect-update">Go</button></p>');
-                    },
-                    onDropdownHidden: function () {
-                        $('.multiselect-update').parent().remove();
-                        $(elem).attr('multiple', 'multiple').change();
-                    }
-                };
-
-                $(elem).multiselect(multiselectOptions);
-            });
+            
+                            $(window).scroll(function () {
+                                var $dropdown = $aContainer.find('.btn'),
+                                    offset = $dropdown.offset();
+                                $aContainer.find('.dropdown-menu').css({
+                                    position: 'fixed',
+                                    top: (offset.top + $dropdown.outerHeight() - $(window).scrollTop()),
+                                    left: offset.left
+                                });
+                            });
+                        },
+                        selectAllValue: 'All',
+                        selectAllText: '[All]',
+                        allSelectedText: '[All]',
+                        onDropdownShow: function () {
+                            $('.multiselect-container.dropdown-menu').append('<li><button class="btn btn-primary btn-xs multiselect-update">Go</button></p>');
+                        },
+                        onDropdownHidden: function () {
+                            $('.multiselect-update').parent().remove();
+                            $(elem).attr('multiple', 'multiple').change();
+                        }
+                    };
+                    $(elem).multiselect(multiselectOptions);
+                });
+            }, 100);
         },
 
         GetColumnIndexByName: function (columnName) {

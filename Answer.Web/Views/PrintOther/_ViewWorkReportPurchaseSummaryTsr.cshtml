@@ -38,36 +38,20 @@
             </tbody>
         </table>
         <br />
+
         <table class="table table-bordered report-table">
             <tbody>
                 <tr>
-                    <td>
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <td class="subTitle">Supplier:</td>
-                                </tr>
-                                <tr>
-                                    <td>@Model.FirstOrDefault().SupplierName</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </td>
-                    <td style="padding-left: 5px;">
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <td class="subTitle">Customer:</td>
-                                </tr>
-                                <tr>
-                                    <td>@Model.FirstOrDefault().CustomerName</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </td>
+                    <td class="subTitle">Supplier:</td>
+                    <td>@Model.FirstOrDefault().SupplierName</td>
+                </tr>
+                <tr>
+                    <td class="subTitle">Customer: </td>
+                    <td>@Model.FirstOrDefault().CustomerName</td>
                 </tr>
             </tbody>
         </table>
+
         <br />
         <table class="table table-bordered report-table">
             <tbody>
