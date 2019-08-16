@@ -159,7 +159,6 @@ namespace Answer.Web
                .Include("~/assets/css/ui.jqgrid-bootstrap-ui.css")
                .Include("~/assets/css/ui.jqgrid-bootstrap.css")
                .Include("~/assets/css/style.css")
-               .Include("~/assets/css/print.css")
                .Include("~/assets/css/flexslider.css", new CssRewriteUrlTransform())
                .Include("~/assets/css/bootstrap-select.css")
                .Include("~/assets/css/bootstrap-datepicker.css")
