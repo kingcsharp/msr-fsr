@@ -1,20 +1,20 @@
 ﻿@model Msr.Services.Orders.Messaging.WipHistoryTsrResponse
-
+<link href="~/assets/css/print.css" rel="stylesheet" />
 <div class="col-md-12 col-sm-12 visible-print" style="margin-top:20px;">
     <h2>WIP History Report</h2>
 </div>
 <div class="col-md-12 col-sm-12" style="margin-bottom:5px;">
     <table class="table table-bordered report-table">
         <tbody>
-        <tr>
-            <td rowspan="2" style="border: 1px solid #ccc">@Model.WipHistoryDetailResult.SupplierName</td>
-            <td> @Model.WipHistoryDetailResult.ProcedureName</td>
-            <td style="padding-left: 5px; padding-right: 5px;">Rev #:</td>
-            <td>@Model.WipHistoryDetailResult.Rev</td>
-        </tr>
-        <tr>
-            <td colspan="3" style="border: 1px solid #ccc">@Model.WipHistoryDetailResult.FillObjectDescription</td>
-        </tr>
+            <tr>
+                <td rowspan="2" style="border: 1px solid #ccc">@Model.WipHistoryDetailResult.SupplierName</td>
+                <td> @Model.WipHistoryDetailResult.ProcedureName</td>
+                <td style="padding-left: 5px; padding-right: 5px;">Rev #:</td>
+                <td>@Model.WipHistoryDetailResult.Rev</td>
+            </tr>
+            <tr>
+                <td colspan="3" style="border: 1px solid #ccc">@Model.WipHistoryDetailResult.FillObjectDescription</td>
+            </tr>
         </tbody>
     </table>
 </div>
@@ -68,6 +68,6 @@
                 </tr>
             }
             i++;
-         }
-        </table>
+        }
+    </table>
 </div>

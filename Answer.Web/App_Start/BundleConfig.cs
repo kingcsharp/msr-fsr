@@ -142,6 +142,10 @@ namespace Answer.Web
                 .Include("~/assets/css/bootstrap.css", new CssRewriteUrlTransform())
             );
 
+            bundles.Add(new StyleBundle("~/bundles/css/fileinput").Include(
+                "~/assets/js/BootstrapFileInput/css/fileinput.min.css",
+                "~/assets/js/JqueryConfirm/jquery-confirm.min.css")
+            );
 
             bundles.Add(new StyleBundle("~/assets/css/main")
                .Include("~/assets/css/font-awesome.css", new CssRewriteUrlTransform())
@@ -155,7 +159,6 @@ namespace Answer.Web
                .Include("~/assets/css/ui.jqgrid-bootstrap-ui.css")
                .Include("~/assets/css/ui.jqgrid-bootstrap.css")
                .Include("~/assets/css/style.css")
-               .Include("~/assets/css/print.css")
                .Include("~/assets/css/flexslider.css", new CssRewriteUrlTransform())
                .Include("~/assets/css/bootstrap-select.css")
                .Include("~/assets/css/bootstrap-datepicker.css")
