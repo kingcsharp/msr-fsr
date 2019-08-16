@@ -142,6 +142,10 @@ namespace Answer.Web
                 .Include("~/assets/css/bootstrap.css", new CssRewriteUrlTransform())
             );
 
+            bundles.Add(new StyleBundle("~/bundles/css/fileinput").Include(
+                "~/assets/js/BootstrapFileInput/css/fileinput.min.css",
+                "~/assets/js/JqueryConfirm/jquery-confirm.min.css")
+            );
 
             bundles.Add(new StyleBundle("~/assets/css/main")
                .Include("~/assets/css/font-awesome.css", new CssRewriteUrlTransform())
