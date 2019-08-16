@@ -392,7 +392,6 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
         },
 
         DataInitBootstrapMultiselect: function (elem, options, callback) {
-            setTimeout(function () {
                 $(document).ready(function () {
                     $(elem).attr('multiple', 'multiple');
                     var multiselectOptions = {
@@ -423,24 +422,11 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                             $('.multiselect-container.dropdown-menu').append('<li><button class="btn btn-primary btn-xs multiselect-update">Go</button></p>');
                         },
                         onDropdownHidden: function () {
-                            console.log('Here is where the post event to update the grid should fire.');
                             $('.multiselect-update').parent().remove();
                         }
                     };
-
                     $(elem).multiselect(multiselectOptions);
-                    /*setTimeout(function () {
-
-                        $(elem).multiselect('deselectAll', false);
-                        $(elem).multiselect('selectAll', false);
-                        $(elem).multiselect('updateButtonText');
-
-                        if (callback) {
-                            callback(elem);
-                        }
-                    }, 100);*/
                 });
-            }, 100);
         },
 
         GetColumnIndexByName: function (columnName) {
