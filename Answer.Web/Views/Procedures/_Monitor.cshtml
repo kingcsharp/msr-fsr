@@ -22,7 +22,7 @@
                 @Html.ValidationMessageFor(model => model.AddMonitorForProcedureViewModel.Input_Type, "", new { @class = "text-danger" })
             </div>
         </div>
-        <div class="form-group">
+        <div class="form-group list-source">
             @Html.LabelFor(model => model.AddMonitorForProcedureViewModel.List_Source, htmlAttributes: new { @class = "control-label col-md-4" })
             <div class="col-md-5">
                 @Html.DropDownListFor(model => model.AddMonitorForProcedureViewModel.List_Source, Model.AddMonitorForProcedureViewModel.ListSourceList, new { @class = "form-control selectroles" })

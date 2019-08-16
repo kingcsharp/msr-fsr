@@ -1217,6 +1217,7 @@ namespace Answer.Web.Controllers
                     Id = objectId,
                     Monitor_Type = result.Monitor_Type,
                     Input_Type = result.Input_Type,
+                    List_Source = result.List_Source,
                     Fail_Action = result.Fail_Action,
                     Description = result.Description,
                     Related_Object_Id = result.Related_Object_Id,
@@ -1241,7 +1242,7 @@ namespace Answer.Web.Controllers
         {
             var currentUser = GetCurrentUser();
 
-            if (model.AddMonitorForProcedureViewModel.Monitor_Type == "EQUIPMENT" || model.AddMonitorForProcedureViewModel.Monitor_Type == "PASS_FAIL" || model.AddMonitorForProcedureViewModel.Monitor_Type == "NUMBER" && model.AddMonitorForProcedureViewModel.Should_Be != "BETWEEN")
+            if (model.AddMonitorForProcedureViewModel.Monitor_Type == "SELECT" || model.AddMonitorForProcedureViewModel.Monitor_Type == "EQUIPMENT" || model.AddMonitorForProcedureViewModel.Monitor_Type == "PASS_FAIL" || model.AddMonitorForProcedureViewModel.Monitor_Type == "NUMBER" && model.AddMonitorForProcedureViewModel.Should_Be != "BETWEEN")
             {
                 ModelState.Remove("AddMonitorForProcedureViewModel.Highest_Threshold");
                 ModelState.Remove("AddMonitorForProcedureViewModel.Lowest_Threshold");

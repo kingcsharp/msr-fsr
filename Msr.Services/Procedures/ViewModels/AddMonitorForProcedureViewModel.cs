@@ -180,6 +180,7 @@ namespace Msr.Services.Procedures.ViewModels
             ListSourceList = new List<SelectListItem>
             {
                 new SelectListItem {Text = "NCR Category", Value = "NCR_CATEGORY"},
+                new SelectListItem {Text = "Other Test", Value = "OTHER_TEST"}
             };
 
             MonitorTypesList = Commons.Lookups.LookupItems.MonitorTypesList();
@@ -201,6 +202,7 @@ namespace Msr.Services.Procedures.ViewModels
 
                 Monitor_Type = model.Monitor_Type,
                 Input_Type = model.Input_Type,
+                List_Source = model.List_Source,
                 Description = model.Description,
                 Start_System_Task = model.Start_System_Task,
                 Start_Type = model.Start_Type,
