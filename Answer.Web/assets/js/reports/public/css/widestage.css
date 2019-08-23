@@ -3664,6 +3664,7 @@ label[for] {
     .container-fluid.featurette.ndContainer {
         width: 99%;
         padding-right: 0 !important;
+        min-height:600px;
     }
 
 .dropdown-menu.dropdown-blue.multi-level {
