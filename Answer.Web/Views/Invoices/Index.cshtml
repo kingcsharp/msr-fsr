@@ -1,6 +1,6 @@
 ﻿@model Msr.Services.Invoices.ViewModel.InvoiceViewModel
 @{
-    ViewBag.Title = "Invoices";
+    ViewBag.Title = "Billing";
 }
 
 <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/redmond/jquery-ui.css" />
@@ -13,11 +13,12 @@
             <h2 class="page-header">
                 <span class="icon fa fa-exchange"></span>
                 Invoices @Html.Partial("_HelpViewButton")
-                <button class="btn btn-primary help-btn pull-right" data-toggle="modal" data-target="#invModal" data-intro="Create a New Invoice" data-position="bottom" style="margin-left: 10px"><i class="fa fa-plus"></i> New</button>
+                <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#invModal" data-intro="Create a New Invoice" data-position="bottom" style="margin-left: 10px;margin-top: -5px;"><i class="fa fa-plus"></i> New</button>
                 &nbsp;
-                <button id="butDownloadAllInvoices" class="btn btn-primary help-btn pull-right" style="margin-left: 10px" value="Download All Invoices" onclick="Msr.InvoicesGrid.DownloadAllInvoices();">Download All Invoices</button>
+                <input type="button" class="btn btn-primary pull-right" style="margin-left: 10px;margin-top: -5px;" value="Download All Invoices" onclick="location.href='@Url.Action("DownloadAllInvoices", "Invoices")'" />
                 &nbsp;
-                <button id="butDownloadFilteredInvoices" class="btn btn-primary help-btn pull-right" style="margin-left: 10px" value="Download Filtered Invoices" onclick="Msr.InvoicesGrid.DownloadFilteredInvoices();">Download Filtered Invoices</button>
+                <input type="button" class="btn btn-primary pull-right" style="margin-left: 10px;margin-top: -5px;" value="Download Filtered Invoices" onclick="Msr.InvoicesGrid.DownloadAllInvoices();" />
+
                 &nbsp;
             </h2>
             <div class="col-lg-12">
@@ -27,7 +28,7 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row row-bottom-buttons">
             <button type="button" id="clear-state" class="btn btn-success help-btn">Clear State</button>
         </div>
     </div>

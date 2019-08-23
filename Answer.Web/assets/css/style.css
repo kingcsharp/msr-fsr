@@ -454,6 +454,12 @@ a {
     margin-right: -15px;
 }
 
+.page-header {
+    padding-bottom: 9px;
+    margin: 0 0 20px 10px;
+    border-bottom: 1px solid #eee;
+}
+
 .page-title {
     font-family: 'Lato', sans-serif;
     margin-left: -10px;
@@ -825,13 +831,6 @@ a {
             margin-top: 15px;
         }
 
-body.login-page {
-    background: url(../../img/background-network-electronics.jpg) no-repeat center center fixed;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-}
 
     body.login-page .login-box {
         width: 100%;
@@ -2191,7 +2190,7 @@ input.pre-populated {
 }
 
 .hilightyellow {
-    background-color: #FFFAF692;
+    background-color: #FAF692;
 }
 
 .navbar {
@@ -2209,7 +2208,7 @@ input.pre-populated {
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
     border-left: 2px solid;
-    transform: translatez(0);
+    transform: translate(0);
 }
 
 .ace_slim-cursors .ace_cursor {
@@ -2903,4 +2902,18 @@ td.ui-search-input > span > div {
 
 #invModal .modal-body, #editInvModal .modal-body {
     min-height: 250px;
+}
+
+table.table.table-bordered.report-table {
+    margin-bottom: 10px !important;
+    border: 2px solid #000;
+}
+
+.row.row-bottom-buttons {
+    margin-left: 0px;
+}
+
+.wip-status, .wip-status-header {
+    font-size: 1.4em;
+    font-weight: 700;
 }

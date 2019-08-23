@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Bootstrap Multiselect (http://davidstutz.de/bootstrap-multiselect/)
  *
  * Apache License, Version 2.0:
@@ -650,7 +650,7 @@
                     }
                 }
 
-                this.$select.change();
+                //this.$select.change();
                 this.updateButtonText();
 
                 if (this.options.preventInputChangeEvent) {
