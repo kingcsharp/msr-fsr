@@ -323,9 +323,7 @@
                 error: function () { }
             });
         });
-
         init();
-
     });
 
     function init() {
