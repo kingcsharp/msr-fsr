@@ -113,6 +113,7 @@ Msr.WipGrid = Msr.WipGrid ||
                         index: 'DueDate',
                         colmenu: false,
                         editable: true,
+                        width: 110,
                         sorttype: 'date',
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                         // edittype: 'text', editable: true, editrules: { edithidden: true }
@@ -126,7 +127,6 @@ Msr.WipGrid = Msr.WipGrid ||
                         formatter: 'date',
                         formatoptions: { srcformat: 'm/d/Y', newformat: 'm/d/Y' },
                         editoptions: { dataInit: initDateEdit, readonly: 'readonly' },
-                        width: 90,
                         align: 'center'
                     },
                     {
@@ -136,7 +136,7 @@ Msr.WipGrid = Msr.WipGrid ||
                         colmenu: false,
                         coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                        width: 230,
+                        width: 210,
                         align: 'left'
                     },
                     {
@@ -218,7 +218,7 @@ Msr.WipGrid = Msr.WipGrid ||
                         PurchaseItemId: purchaseItemId,
                         ColumnName: cellname,
                         Value: value
-                    }
+                    };
 
                     $.ajax({
                         type: 'POST',
@@ -264,7 +264,7 @@ Msr.WipGrid = Msr.WipGrid ||
                             '<span>' + progVal + '%</span>' +
                             '</div>' +
                             '</div>'
-                        );
+                        )
                     });
 
                     var isGridDone = false;
@@ -284,6 +284,7 @@ Msr.WipGrid = Msr.WipGrid ||
                             clearInterval(gridComplete);
                         }
                     }, 10);
+                    $('[data-toggle="tooltip"]').tooltip();
                 },
                 beforeRequest: function () {
                     Msr.JqGridCommon.ModifyMultiselectData.call(this);
@@ -292,8 +293,6 @@ Msr.WipGrid = Msr.WipGrid ||
             });
 
             Msr.JqGridCommon.BindGridEvents(Msr.WipGrid.GetGridId());
-
-            $("#" + Msr.WipGrid.GetGridId()).tooltip();
 
             $('a.colmenu').click(function (event) {
                 //event.stopPropagation();
@@ -350,8 +349,8 @@ function dispositionFormatter(cellvalue, options, rowObject) {
 }
 
 function workItemFormatter(cellvalue, options, rowObject) {
-
-    var thisCellVal = '<span class="badge info"><a style="color:white;" href="/wip/details/' + rowObject.FillId + '">' + cellvalue + '</a><span>';
-
+    var hasNCR = (rowObject.HasNcr > 0) ? 'warning' : 'info';
+    var hasNCRTooltip = (rowObject.HasNcr > 0) ? 'data-placement="right" data-toggle="tooltip" title="This WO has an NCR Reported"' : '';
+    var thisCellVal = '<span class="badge '+ hasNCR + '" '+ hasNCRTooltip + '><a style="color:white;" href="/wip/details/' + rowObject.FillId + '">' + cellvalue + '</a><span>';
     return thisCellVal;
 }

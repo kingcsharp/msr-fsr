@@ -25,6 +25,7 @@
                     else
                     {
                         <span>Monitor @(i + 1)</span>
+
                     }
                 </div>
                 <div class="panel-body panel-height monitor-body">
@@ -83,7 +84,7 @@
                                         <td class="nw-rght"><label class="control-label">Correct Answer</label></td>
                                         <td class="text-td">
                                             <div class="col-lg-2" style="font-weight: bold;">
-                                                @Html.HiddenFor(x => Model[i].Yes_No_Answer,new {@id="yes-no-answer"})
+                                                @Html.HiddenFor(x => Model[i].Yes_No_Answer, new { @id = "yes-no-answer" })
                                                 @if (@Model[i].Yes_No_Answer == "1")
                                                 {
                                                     <text>YES</text>
@@ -108,15 +109,15 @@
                                         <td class="nw-rght"><label class="control-label">Should be:</label></td>
                                         @if (Model[i].Should_Be == "BETWEEN")
                                         {
-                                        <td class="text-td">
-                                           Between @Model[i].Lowest_Threshold and @Model[i].Highest_Threshold
-                                        </td>
+                                            <td class="text-td">
+                                                Between @Model[i].Lowest_Threshold and @Model[i].Highest_Threshold
+                                            </td>
                                         }
                                         else
                                         {
-                                        <td class="text-td">
-                                            @Model[i].Should_Be  To @Model[i].Target
-                                        </td> 
+                                            <td class="text-td">
+                                                @Model[i].Should_Be  To @Model[i].Target
+                                            </td>
                                         }
                                     </tr>
 
@@ -150,6 +151,55 @@
                                         </td>
                                     </tr>
                                 }
+                                else if (Model[i].Monitor_Type == "YES_NO")
+                                {
+                                    <tr>
+                                        <td class="nw-rght"><label class="control-label">Correct Answer</label></td>
+                                        <td class="text-td">
+                                            <div class="col-lg-2" style="font-weight: bold;">
+                                                @Html.HiddenFor(x => Model[i].Yes_No_Answer, new { @id = "yes-no-answer" })
+                                                @if (@Model[i].Yes_No_Answer == "1")
+                                                {
+                                                    <text>YES</text>
+                                                }
+                                                else
+                                                {
+                                                    <text>NO</text>
+                                                }
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="nw-rght"><label class="control-label">Your Answer:</label></td>
+                                        <td class="text-td">
+                                            @Html.DropDownListFor(x => Model[i].Print_Result, Model[i].ResultList, new { @class = "form-control", @id = "yes-no-monitor" })
+                                        </td>
+                                    </tr>
+                                }
+                                else if (Model[i].Monitor_Type == "SELECT")
+                                {
+                                    <tr>
+                                        <td class="nw-rght"><label class="control-label">List Source:</label></td>
+                                        <td class="text-td">
+                                            <div style="font-weight: bold;">
+                                                @if (Model[i].List_Source?.Trim().ToUpper() == "NCR_CATEGORY" || Model[i].List_Source?.Trim().ToUpper() == "NCR_CATEGORIES")
+                                                {
+                                                    <text>NCR Category</text>
+                                                }
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="nw-rght"><label class="control-label">Select:</label></td>
+                                        <td class="text-td">
+                                            @if (Model[i].List_Source?.Trim().ToUpper() == "NCR_CATEGORY" || Model[i].List_Source?.Trim().ToUpper() == "NCR_CATEGORIES")
+                                            {
+                                                @Html.DropDownListFor(x => Model[i].Print_Result, new SelectList(Model[i].NCRCategoryList, "Value", "Text", Model[i].Print_Result), new { @class = "form-control", @id = "list-ncr-category" })
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+
                                 @if (Model[i].Monitor_Type == "EQUIPMENT")
                                 {
                                     <tr>
@@ -167,10 +217,10 @@
                                     <tr class="equipmentresult">
                                         <td class="nw-rght">
                                             <label class="control-label">Result:</label>
-                                            <td class="text-td">
-                                                @Html.TextBoxFor(x => Model[i].Print_Result, new { @class = !isPassing ? "form-control input-validation-error" : String.Empty, @id = "equipment" })
-                                                <span id="print-result-message"></span>
-                                            </td>
+                                        <td class="text-td">
+                                            @Html.TextBoxFor(x => Model[i].Print_Result, new { @class = !isPassing ? "form-control input-validation-error" : String.Empty, @id = "equipment" })
+                                            <span id="print-result-message"></span>
+                                        </td>
                                         </td>
                                     </tr>
                                 }

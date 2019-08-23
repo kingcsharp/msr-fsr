@@ -15,6 +15,8 @@ namespace Msr.Services.Procedures.ViewModels
 
             MonitorTypesList = new List<SelectListItem>();
 
+            ListSourceList = new List<SelectListItem>();
+
             ShouldBeList = new List<SelectListItem>();
 
             BasedOPionList = new List<SelectListItem>();
@@ -49,6 +51,9 @@ namespace Msr.Services.Procedures.ViewModels
 
         [DisplayName("Input Type")]
         public string Input_Type { get; set; }
+
+        [DisplayName("List Source")]
+        public string List_Source { get; set; }
 
         public string Start_System_Task { get; set; }
 
@@ -140,6 +145,8 @@ namespace Msr.Services.Procedures.ViewModels
 
         public List<SelectListItem> MonitorTypesList { get; set; }
 
+        public List<SelectListItem> ListSourceList { get; set; }
+
         public List<SelectListItem> InputTypesList { get; set; }
 
         public List<SelectListItem> ShouldBeList { get; set; }
@@ -159,6 +166,7 @@ namespace Msr.Services.Procedures.ViewModels
         public List<SelectListItem> EquipmentMaintenanceList { get; set; }
 
         public List<SelectListItem> CorrectAnsList { get; set; }
+
         public void Setup(EquipmentMaintenanceService equipmentMaintenanceService)
         {
             InputTypesList = new List<SelectListItem>
@@ -166,6 +174,11 @@ namespace Msr.Services.Procedures.ViewModels
                 new SelectListItem {Text = "Manual", Value = "MANUAL"},
                 new SelectListItem {Text = "QR Code", Value = "QR_CODE"},
                 new SelectListItem {Text = "Sensor", Value = "SENSOR"}
+            };
+
+            ListSourceList = new List<SelectListItem>
+            {
+                new SelectListItem {Text = "NCR Category", Value = "NCR_CATEGORY"}
             };
 
             MonitorTypesList = Commons.Lookups.LookupItems.MonitorTypesList();
@@ -178,6 +191,7 @@ namespace Msr.Services.Procedures.ViewModels
             AlwaysPassList = Commons.Lookups.LookupItems.YesNo();
             CorrectAnsList = Commons.Lookups.LookupItems.YesNo();
         }
+
         public AddMonitorForProcedureViewModel MapToDto(GetMoniterViewModel model)
         {
             return new AddMonitorForProcedureViewModel
@@ -186,6 +200,7 @@ namespace Msr.Services.Procedures.ViewModels
 
                 Monitor_Type = model.Monitor_Type,
                 Input_Type = model.Input_Type,
+                List_Source = model.List_Source,
                 Description = model.Description,
                 Start_System_Task = model.Start_System_Task,
                 Start_Type = model.Start_Type,

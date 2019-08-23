@@ -1,23 +1,27 @@
 ﻿@model Msr.Services.Orders.Messaging.WipHistoryTsrResponse
 
-<div class="row">
-    <table class="table table-bordered">
+
+<div class="col-md-12 col-sm-12 visible-print" style="margin-top:20px;">
+    <h2>WIP History Report</h2>
+</div>
+<div class="col-md-12 col-sm-12">
+    <table class="table table-bordered report-table">
         <tbody>
-        <tr>
-            <td rowspan="2" style="border: 1px solid #ccc">@Model.WipHistoryDetailResult.SupplierName</td>
-            <td> @Model.WipHistoryDetailResult.ProcedureName</td>
-            <td style="padding-left: 5px; padding-right: 5px;">Rev #:</td>
-            <td>@Model.WipHistoryDetailResult.Rev</td>
-        </tr>
-        <tr>
-            <td colspan="3" style="border: 1px solid #ccc">@Model.WipHistoryDetailResult.FillObjectDescription</td>
-        </tr>
+            <tr>
+                <td rowspan="2" style="border: 1px solid #ccc">@Model.WipHistoryDetailResult.SupplierName</td>
+                <td> @Model.WipHistoryDetailResult.ProcedureName</td>
+                <td style="padding-left: 5px; padding-right: 5px;">Rev #:</td>
+                <td>@Model.WipHistoryDetailResult.Rev</td>
+            </tr>
+            <tr>
+                <td colspan="3" style="border: 1px solid #ccc">@Model.WipHistoryDetailResult.FillObjectDescription</td>
+            </tr>
         </tbody>
     </table>
 </div>
 
-<div class="row">
-    <table class="table table-bordered">
+<div class="col-md-12 col-sm-12">
+    <table class="table table-bordered report-table">
         <tr>
             <th>Step</th>
             <th>Title</th>
@@ -41,29 +45,41 @@
                 <td>@task.Location</td>
                 <td>@task.Status</td>
             </tr>
-            <tr>
-                <td></td>
-                <td colspan="6">
-                    @if (task.WipSubTasks.Any())
-                    {
-                        <table class="table-bordered table">
+            if (task.WipSubTasks.Any())
+            {
+                <tr>
+                    <td></td>
+                    <td colspan="6" style="padding:0;">
+                        <table class="table table-bordered table-striped">
                             <tr>
                                 <th>Monitor @task.Id</th>
                                 <th>Result</th>
                                 <th>Pass/Fail</th>
                             </tr>
                             @foreach (var subTask in task.WipSubTasks)
+
                             {
+
+                             var cssClass = "";
+
+                                if (subTask.IsPassing == "Pass")
+                                {
+                                    cssClass = "success";
+                                }
+                                else if (subTask.IsPassing == "Fail")
+                                {
+                                    cssClass = "danger";
+                                }
                                 <tr>
                                     <td>@subTask.Description </td>
                                     <td>@subTask.PrintResult</td>
-                                    <td>@subTask.IsPassing</td>
+                                    <td class="@cssClass">@subTask.IsPassing</td>
                                 </tr>
                             }
                         </table>
-                    }
-                </td>
-            </tr>
+                    </td>
+                </tr>
+            }
             i++;
         }
     </table>

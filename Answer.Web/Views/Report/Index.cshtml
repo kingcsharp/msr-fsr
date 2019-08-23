@@ -54,7 +54,7 @@
 <link rel="stylesheet" type="text/css" href="~/assets/js/reports/public/js/datepicker/angular-moment-picker.min.css"/>
 
 <div>
-    <div ng-app="WideStage" style="padding: 74px 0px 14px 60px;">
+    <div ng-app="WideStage" style="padding: 60px 0 0 60px;">
         <div id="angularAppDiv" ng-view>
         </div>
     </div>
@@ -226,6 +226,13 @@
     <script>
         $(document).ready(function () {
             $('[data-toggle="tooltip"]').tooltip();
+
+            //fixes for crap layout
+            setTimeout(function() {
+                $('container-fluid.featurette.ndContainer.ng-scope').remove();
+                $('.container-fluid.featurette.ndContainer.ng-scope').css({ 'height': '60vh'});
+                $('hr.featurette-divider').css({ 'display': 'none' });
+            }, 10000);
         });
     </script>
 }

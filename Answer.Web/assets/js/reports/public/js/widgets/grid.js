@@ -371,8 +371,8 @@ app.service('grid', ['$sce', function ($sce) {
         var reportId = 'report' + createId();
         var htmlCode = '<div ' + pageBlock + ' id="REPORT_' + id + '" ndType="extendedGrid" class="container-fluid report-container" style="min-height: 60vh;' + reportStyle + '">';
         htmlCode +=
-            '<a class="btn btn-success help-btn" style="top:-41px;right: 5px;position: absolute;' +
-            'cursor: pointer;font-size: 18px;width: 187px;height: 32px;padding-top:3px;" ' +
+            '<a class="btn btn-success help-btn" style="top:-75px;right: 0;position: absolute;' +
+            'cursor: pointer;font-size: 18px;width: 187px;height: 35px;padding-top:3px;" ' +
             'title="Export table to excel" ' +
             'ng-click="saveToExcel(\'' + hashedID + '\',\'' + report.id + '\',\'' + reportId + '\')">' +
             '<i class="fa fa-file-excel-o"></i> Export to Excel</a>';

@@ -1,7 +1,8 @@
 ﻿CREATE TABLE [dbo].[A_MONITOR_TEMPLATES] (
     [ID]                         VARCHAR (50)   NOT NULL,
     [MONITOR_TYPE]               VARCHAR (50)   NULL,
-    [Input_type]               VARCHAR (50)   NULL,
+    [Input_type]                 VARCHAR (50)   NULL,
+    [LIST_SOURCE]                VARCHAR (50)   NULL,
     [DESCRIPTION]                VARCHAR (2000) NULL,
     [START_SYSTEM_TASK]          VARCHAR (50)   NULL,
     [START_TYPE]                 VARCHAR (50)   NULL,
@@ -49,4 +50,6 @@
     [CANT_CHANGE]                TINYINT        NULL,
     CONSTRAINT [PK_A_KPI_TEMPLATES] PRIMARY KEY CLUSTERED ([ID] ASC)
 );
+
+
 

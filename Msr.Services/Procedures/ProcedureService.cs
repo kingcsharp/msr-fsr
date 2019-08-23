@@ -117,6 +117,7 @@ namespace Msr.Services.Procedures
                     Id = model.Id,
                     Monitor_Type = model.Monitor_Type,
                     Input_Type = model.Input_Type,
+                    List_Source = model.List_Source,
                     Description = model.Description,
                     Start_System_Task = model.Start_System_Task,
                     Start_Type = model.Start_Type,
