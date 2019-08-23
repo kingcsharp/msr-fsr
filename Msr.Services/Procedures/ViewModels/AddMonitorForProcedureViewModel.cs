@@ -173,14 +173,12 @@ namespace Msr.Services.Procedures.ViewModels
             {
                 new SelectListItem {Text = "Manual", Value = "MANUAL"},
                 new SelectListItem {Text = "QR Code", Value = "QR_CODE"},
-                new SelectListItem {Text = "Sensor", Value = "SENSOR"},
-                new SelectListItem {Text = "List", Value = "LIST"}
+                new SelectListItem {Text = "Sensor", Value = "SENSOR"}
             };
 
             ListSourceList = new List<SelectListItem>
             {
-                new SelectListItem {Text = "NCR Category", Value = "NCR_CATEGORY"},
-                new SelectListItem {Text = "Other Test", Value = "OTHER_TEST"}
+                new SelectListItem {Text = "NCR Category", Value = "NCR_CATEGORY"}
             };
 
             MonitorTypesList = Commons.Lookups.LookupItems.MonitorTypesList();

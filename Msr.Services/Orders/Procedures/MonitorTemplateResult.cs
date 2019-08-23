@@ -13,6 +13,8 @@ namespace Msr.Services.Orders.Procedures
 
         public string Id { get; set; }
 
+        public string List_Source { get; set; }
+
         public string Step_Id { get; set; }
 
         public int Opinion { get; set; }
@@ -83,6 +85,8 @@ namespace Msr.Services.Orders.Procedures
 
         public string Target_Object { get; set; }
 
+        public List<SelectListItem> NCRCategoryList { get; set; }
+
         public List<SelectListItem> EquipmentMaintenanceList { get; set; }
 
         public List<SelectListItem> ResultList { get; set; }
@@ -93,6 +97,8 @@ namespace Msr.Services.Orders.Procedures
 
         public void Setup(EquipmentMaintenanceService equipmentMaintenanceService, OrderService orderService)
         {
+            NCRCategoryList = Msr.Commons.Lookups.LookupItems.NCRCategories();
+
             ResultList = new List<SelectListItem>
             {
                 new SelectListItem

@@ -1270,6 +1270,11 @@ namespace Answer.Web.Controllers
                 ModelState.Remove("AddMonitorForProcedureViewModel.Correct_Answer");
             }
 
+            if (model.AddMonitorForProcedureViewModel.Monitor_Type == "SELECT")
+            {
+                ModelState.Remove("AddMonitorForProcedureViewModel.Target_Object");
+            }
+
             if (ModelState.IsValid)
             {
                 model.AddMonitorForProcedureViewModel.StrNTLogin = currentUser.Id;
