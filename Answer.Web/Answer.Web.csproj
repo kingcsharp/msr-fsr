@@ -703,7 +703,6 @@
     <Content Include="assets\js\grids\approvalgroups.js" />
     <Content Include="assets\js\grids\approvalstages.js" />
     <Content Include="assets\js\grids\buyer_grid.js" />
-    <Content Include="assets\js\grids\comman.js" />
     <Content Include="assets\js\grids\equipment-maintenance.js" />
     <Content Include="assets\js\grids\help.js" />
     <Content Include="assets\js\grids\invoice-tax-edit.js" />

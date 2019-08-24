@@ -405,7 +405,7 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                                 top: (offset.top + $dropdown.outerHeight()),
                                 left: offset.left
                             });
-            
+
                             $(window).scroll(function () {
                                 var $dropdown = $aContainer.find('.btn'),
                                     offset = $dropdown.offset();
