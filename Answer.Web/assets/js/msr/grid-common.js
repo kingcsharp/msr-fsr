@@ -405,7 +405,7 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                                 top: (offset.top + $dropdown.outerHeight()),
                                 left: offset.left
                             });
-            
+
                             $(window).scroll(function () {
                                 var $dropdown = $aContainer.find('.btn'),
                                     offset = $dropdown.offset();
@@ -430,6 +430,7 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                     $(elem).multiselect(multiselectOptions);
                 });
             }, 100);
+
         },
 
         GetColumnIndexByName: function (columnName) {
