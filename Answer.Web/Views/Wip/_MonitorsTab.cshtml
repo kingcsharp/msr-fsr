@@ -194,7 +194,7 @@
                                         <td class="text-td">
                                             @if (Model[i].List_Source?.Trim().ToUpper() == "NCR_CATEGORY" || Model[i].List_Source?.Trim().ToUpper() == "NCR_CATEGORIES")
                                             {
-                                                @Html.DropDownListFor(x => Model[i].Print_Result, new SelectList(Model[i].NCRCategoryList, "Value", "Text", Model[i].Print_Result), new { @class = "form-control", @id = "list-ncr-category" })
+                                                @Html.DropDownListFor(x => Model[i].Print_Result, new SelectList(Model[i].NCRCategoryList, "Value", "Text", Model[i].Print_Result),"Select Category", new { @class = "form-control", @id = "list-ncr-category" })
                                             }
                                         </td>
                                     </tr>
@@ -207,7 +207,7 @@
                                         <td class="text-td">
                                             @if (Model[i].SensorDataModels != null && Model[i].SensorDataModels.Any())
                                             {
-                                                @Html.DropDownListFor(x => Model[i].Print_Result, new SelectList(Model[i].SensorDataModels, "SensorMappingID", "SiteSensorName", string.Empty), new { @class = "form-control", @id = "equipment-sensor-list" })
+                                                @Html.DropDownListFor(x => Model[i].Print_Result, new SelectList(Model[i].SensorDataModels, "SensorMappingID", "SiteSensorName", string.Empty),"Select Sensor", new { @class = "form-control", @id = "equipment-sensor-list" })
                                             }
                                             else
                                             {
