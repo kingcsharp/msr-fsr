@@ -199,8 +199,55 @@
                                         </td>
                                     </tr>
                                 }
+                                else if (Model[i].Monitor_Type?.Trim().ToUpper() == "EQUIPMENT" && Model[i].Input_Type?.Trim().ToUpper() == "SENSOR")
+                                {
 
-                                @if (Model[i].Monitor_Type == "EQUIPMENT")
+                                    <tr>
+                                        <td class="nw-rght"><label class="control-label">Sensor Name:</label></td>
+                                        <td class="text-td">
+                                            @if (Model[i].SensorDataModels != null && Model[i].SensorDataModels.Any())
+                                            {
+                                                @Html.DropDownListFor(x => Model[i].Print_Result, new SelectList(Model[i].SensorDataModels, "SensorMappingID", "SiteSensorName", string.Empty), new { @class = "form-control", @id = "equipment-sensor-list" })
+                                            }
+                                            else
+                                            {
+                                                <text>No sensors retrieved for this Site.</text>
+                                            }
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="nw-rght"><label class="control-label">Sensor Value:</label></td>
+                                        <td class="text-td">
+                                            <span id="spanSensorValue"></span>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="nw-rght"><label class="control-label">Target Value:</label></td>
+                                        <td class="text-td">
+                                            @Model[i].Target
+                                        </td>
+                                    </tr>
+                                    <!--
+                                    <tr>
+                                        <td class="nw-rght"><label class="control-label">Target:</label></td>
+                                        <td class="text-td">
+                                            @Html.TextBoxFor(x => Model[i].Target_Object, new { @class = "form-control monitorTemplate_Target" })
+                                        </td>
+                                    </tr>
+                                    -->
+                                    <tr class="equipmentresult">
+                                        <td class="nw-rght">
+                                            <label class="control-label">Result:</label>
+                                        </td>
+                                        <td class="text-td">
+                                            @Html.TextBoxFor(x => Model[i].Print_Result, new { @class = !isPassing ? "form-control input-validation-error" : String.Empty, @id = "equipment-sensor-result" })
+                                            <span id="print-result-message"></span>
+                                        </td>
+                                    </tr>
+                                }
+                                else if (Model[i].Monitor_Type == "EQUIPMENT")
                                 {
                                     <tr>
                                         <td class="nw-rght"><label class="control-label">Target Value:</label></td>
@@ -217,13 +264,14 @@
                                     <tr class="equipmentresult">
                                         <td class="nw-rght">
                                             <label class="control-label">Result:</label>
+                                        </td>
                                         <td class="text-td">
                                             @Html.TextBoxFor(x => Model[i].Print_Result, new { @class = !isPassing ? "form-control input-validation-error" : String.Empty, @id = "equipment" })
                                             <span id="print-result-message"></span>
                                         </td>
-                                        </td>
                                     </tr>
                                 }
+
                                 <tr>
                                     <td class="nw-rght"><label class="control-label">If fails:</label></td>
                                     <td class="text-td">
@@ -315,11 +363,13 @@
 
         ApplyCssForMonitor($('#yes-no-monitor'));
 
+        UpdateSensorCurrentValue();
+
         $('#yes-no-monitor').change(function () {
             ApplyCssForMonitor($(this));
         });
 
-        $('.equipmentresult').hide();
+        // $('.equipmentresult').hide();
 
         $(".number").on("keyup keypress blur change",function (e) {
             if (isNaN($(this).val())) {
@@ -335,9 +385,36 @@
             }
         });
 
-
-
     });
+
+    $("#equipment-sensor-list").on('change', function () {
+        UpdateSensorCurrentValue();
+    });
+
+    function UpdateSensorCurrentValue() {
+        var sensorMappingID = $("#equipment-sensor-list").val();
+
+        if (sensorMappingID != null && sensorMappingID != '' && sensorMappingID >= 1) {
+            eLoaderOpen();
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("GetSensorCurrentValue", "Wip")",
+                dataType: 'json',
+                data: { 'sensorMappingID': sensorMappingID },
+                success: function (data) {
+                    $('#spanSensorValue').text(data.SensorCurrentValue);
+                    $('#equipment-sensor-result').val(data.SensorCurrentValue);
+                    eLoaderClose();
+                },
+                error: function (error) {
+                    $('#spanSensorValue').text("");
+                    $('#equipment-sensor-result').val("");
+                    eLoaderError(error);
+                }
+            });
+        }
+    }
 
     $(".monitor-save").on('click', function () {
         var form = $(this).parents('form:first');
