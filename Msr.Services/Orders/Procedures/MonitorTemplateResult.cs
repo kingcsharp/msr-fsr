@@ -1,14 +1,16 @@
-﻿
-using Msr.Services.EquipmentMaintenances;
+﻿using Msr.Services.EquipmentMaintenances;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web.Mvc;
+using Msr.Models.Sensor;
 
 namespace Msr.Services.Orders.Procedures
 {
     public class MonitorTemplateResult
     {
+
+        public List<SensorDataModel> SensorDataModels { get; set; }
+
         public int FillId { get; set; }
 
         public string Id { get; set; }
@@ -26,6 +28,8 @@ namespace Msr.Services.Orders.Procedures
         public string Target { get; set; }
 
         public string Monitor_Type { get; set; }
+
+        public string Input_Type { get; set; }
 
         public string Should_Be { get; set; }
 
