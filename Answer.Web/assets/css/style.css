@@ -2771,8 +2771,8 @@ input.pre-populated {
 }
 
 .auth-roles-container {
-    position: absolute;
-    top: 225px;
+    position: relative;
+    top: 6px;
 }
 
 .file-drop-zone {
@@ -2916,4 +2916,20 @@ table.table.table-bordered.report-table {
 .wip-status, .wip-status-header {
     font-size: 1.4em;
     font-weight: 700;
+}
+
+.monitor-table tbody {
+    display: block;
+    overflow-y: scroll;
+    height: 138px;
+    width: 100%;
+}
+
+.monitor-table thead tr {
+    display: table-header-group;
+    width:100% !important;
+    position:relative;
+}
+.monitor-table thead tr th {
+    border-bottom: 0;
 }
