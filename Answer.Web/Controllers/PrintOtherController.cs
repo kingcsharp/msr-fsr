@@ -44,6 +44,10 @@ namespace Answer.Web.Controllers
             {
                 return PartLabelTsr(id);
             }
+            if (reportType == "PART_LABEL_ROLL")
+            {
+                return PartLabelRollTsr(id);
+            }
 
             return Content("Report Type not found");
         }
@@ -86,27 +90,6 @@ namespace Answer.Web.Controllers
             return PartialView("_ViewNcrTsr", ncrDetails);
         }
 
-        //private List<DocumentView> GetDocViewModel(List<DocumentView> docs, OrderService orderService, int width)
-        //{
-        //    var photos = new List<DocumentView>();
-
-        //    foreach (var doc in docs)
-        //    {
-        //        if (doc.ContentType == "image/jpeg" || doc.ContentType == "image/gif" || doc.ContentType == "image/png")
-        //        {
-        //            var photo = orderService.GetDocumentBase64(doc.ServerPath);
-
-        //            photos.Add(new DocumentView
-        //            {
-        //                FileArray = photo,
-        //                Name = doc.Name
-        //            });
-        //        }
-        //    }
-
-        //    return photos;
-        //}
-
         private List<DocumentView> GetDocViewModel(List<DocumentView> docs, OrderService orderService, int width)
         {
             var photos = new List<DocumentView>();
@@ -135,6 +118,12 @@ namespace Answer.Web.Controllers
         {
             var response = _orderService.GetPartLabelTsrDetails(id);
             return PartialView("_ViewPartLabelTsr", response);
+        }
+
+        public ActionResult PartLabelRollTsr(int id)
+        {
+            var response = _orderService.GetPartLabelRollTsrDetails(id);
+            return PartialView("_ViewPartLabelRollTsr", response);
         }
 
         public ActionResult MonitorLabelTsr(int id)

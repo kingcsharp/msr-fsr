@@ -1,0 +1,62 @@
+﻿@model Msr.Services.Orders.Messaging.PartLabelTsrDetailsResponse
+<style>
+    table.tight {
+        font: small Arial, Helvetica, sans-serif !important;
+        font-size: 9px !important;
+        width:100%;
+    }
+    .roll-label {
+        height:1in;
+        width:4in;
+        margin-top:0.0625in;
+        margin-left:0.0625in;
+        margin-right:0.0625in;
+        margin-bottom:0.0625in;
+        padding:.25in;
+        left:0in;
+        top:0in;
+        float:left;
+    }
+</style>
+<div style="top:.5in;left:.5in;width:4in;">
+    @foreach (var partLabel in Model.GetPartsAndKitsLabelsResult)
+    {
+        <div class="roll-label">
+            <table class="tight">
+                <tbody>
+                    <tr>
+                        <td colspan="2"><b>MSR-FSR</b></td>
+                    </tr>
+                    <tr>
+                        <td style="width: 30%"><div style="text-align: left">Procedure***</div></td>
+                        <td style="width: 70%">
+                            <div style="text-align: left">@partLabel.Proc_Name</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border-top: thin black solid;">
+                            <div style="text-align: left">Part Number:***</div>
+                        </td>
+                        <td style="border-top: thin black solid;">
+                            @partLabel.Company_Part_Number<br>@partLabel.Part_Desc
+                        </td>
+                    </tr>
+                    <tr>
+                        @if (!string.IsNullOrWhiteSpace(partLabel.Serial))
+                        {
+                            <td>
+                                <div style="text-align: left">Serial***</div>
+                            </td>
+                            <td>
+                                <div style="text-align: left">@partLabel.Serial</div>
+                            </td>
+                        }
+                    </tr>
+                    <tr>
+                        <td colspan="2">This Part Processed @partLabel.Count times </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
