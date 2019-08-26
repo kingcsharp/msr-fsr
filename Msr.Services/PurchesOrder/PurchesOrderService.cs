@@ -111,7 +111,7 @@ namespace Msr.Services.PurchesOrder
         }
         public List<SelectFile> PurchasedOrderLocationList()
         {
-            var result = _dbContext.Database.SqlQuery<SelectFile>($"SELECT DISTINCT  NAME as Name,ID as Id FROM A_O_LOCATIONS WHERE PARENT_LOCATION IS NULL AND isChildLocation = 1 ORDER BY NAME").ToList();
+            var result = _dbContext.Database.SqlQuery<SelectFile>("SELECT DISTINCT ID, [NAME] FROM A_V_LOCATIONS_APPROVED_DATA_QUICK WHERE PARENT_LOCATION IS NULL ORDER BY NAME").ToList();
 
             return result;
         }
