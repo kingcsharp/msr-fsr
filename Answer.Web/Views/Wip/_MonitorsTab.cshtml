@@ -207,19 +207,26 @@
                                         <td class="text-td">
                                             @if (Model[i].SensorDataModels != null && Model[i].SensorDataModels.Any())
                                             {
-                                                @Html.DropDownListFor(x => Model[i].Print_Result, new SelectList(Model[i].SensorDataModels, "SensorMappingID", "SiteSensorName", string.Empty),"Select Sensor", new { @class = "form-control", @id = "equipment-sensor-list" })
+                                                if (string.IsNullOrWhiteSpace(Model[i].Print_Result) == false)
+                                                {
+                                                    @Html.DropDownListFor(x => Model[i].SensorMappingID, new SelectList(Model[i].SensorDataModels, "SensorMappingID", "SiteSensorName", Model[i].SENSOR_MAPPING_ID), "Select Sensor", new { @class = "form-control", @id = "equipment-sensor-list" })
+                                                }
+                                                else
+                                                {
+                                                    @Html.DropDownListFor(x => Model[i].SensorMappingID, new SelectList(Model[i].SensorDataModels, "SensorMappingID", "SiteSensorName", Model[i].SENSOR_MAPPING_ID), "Select Sensor", new { @class = "form-control", @id = "equipment-sensor-list" })
+                                                }
                                             }
                                             else
                                             {
                                                 <text>No sensors retrieved for this Site.</text>
-                                            }
+                                            }                                            
                                         </td>
                                     </tr>
 
                                     <tr>
                                         <td class="nw-rght"><label class="control-label">Sensor Value:</label></td>
                                         <td class="text-td">
-                                            <span id="spanSensorValue"></span>
+                                            <span id="spanSensorValue">@Model[i].Print_Result</span>&nbsp;&nbsp;&nbsp;<i class="fas fa-sync" onclick="UpdateSensorCurrentValue();" style="cursor: pointer;"></i>
                                         </td>
                                     </tr>
 
@@ -242,7 +249,7 @@
                                             <label class="control-label">Result:</label>
                                         </td>
                                         <td class="text-td">
-                                            @Html.TextBoxFor(x => Model[i].Print_Result, new { @class = !isPassing ? "form-control input-validation-error" : String.Empty, @id = "equipment-sensor-result" })
+                                            @Html.TextBoxFor(x => Model[i].Print_Result, new { @class = !isPassing ? "form-control input-validation-error" : String.Empty, @id = "equipment-sensor-result", @readonly = "true" })
                                             <span id="print-result-message"></span>
                                         </td>
                                     </tr>
@@ -363,7 +370,7 @@
 
         ApplyCssForMonitor($('#yes-no-monitor'));
 
-        UpdateSensorCurrentValue();
+        // UpdateSensorCurrentValue();
 
         $('#yes-no-monitor').change(function () {
             ApplyCssForMonitor($(this));
