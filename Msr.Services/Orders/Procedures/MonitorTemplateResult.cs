@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Msr.Models.Sensor;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Msr.Services.Orders.Procedures
 {
@@ -88,6 +89,12 @@ namespace Msr.Services.Orders.Procedures
         public string Mult_Choice_Answer { get; set; }
 
         public string Target_Object { get; set; }
+
+        //[Column("SENSOR_MAPPING_ID")]
+
+        public int? SensorMappingID { get; set; }
+
+        public int? SENSOR_MAPPING_ID { get; set; }
 
         public List<SelectListItem> NCRCategoryList { get; set; }
 

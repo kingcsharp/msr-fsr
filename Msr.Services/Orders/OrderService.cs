@@ -707,6 +707,7 @@ namespace Msr.Services.Orders
                 p.Add("@target", request.Target, DbType.String, ParameterDirection.Input);
                 p.Add("@tolerance", request.Tolerance, DbType.String, ParameterDirection.Input);
                 p.Add("@theSaurusId", request.TheSaurusId, DbType.String, ParameterDirection.Input);
+                p.Add("@SENSOR_MAPPING_ID", request.SensorMappingID, DbType.Int32, ParameterDirection.Input);
                 p.Add("@strNTLogin", request.StrNtLogin, DbType.String, ParameterDirection.Input);
 
                 using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
