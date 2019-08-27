@@ -48,8 +48,11 @@
     [SKIP_MODE]                  VARCHAR (10)   NULL,
     [ALWAYS_PASS]                TINYINT        NULL,
     [CANT_CHANGE]                TINYINT        NULL,
+    [SENSOR_MAPPING_ID]          INT            NULL,
     CONSTRAINT [PK_A_KPI_TEMPLATES] PRIMARY KEY CLUSTERED ([ID] ASC)
 );
+
+
 
 
 
