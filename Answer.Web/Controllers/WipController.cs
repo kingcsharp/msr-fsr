@@ -597,7 +597,7 @@ namespace Answer.Web.Controllers
             response.TaskEditDataResult.StepTitle = currentStep.Title;
             response.TaskEditDataResult.Description = currentStep.Description;
 
-            
+
 
             //var actualPartId = _orderService.GetWorkOrderQueryable().Where(x => x.FillId == stringFillId).Select(a => a.ActualPartId).FirstOrDefault();
 
@@ -650,10 +650,28 @@ namespace Answer.Web.Controllers
 
             var result = new ResultNotification<string>();
 
+            bool updateMonitor = true;
+
             foreach (var monitorTemplate in monitorTemplates)
             {
+                updateMonitor = true;
+
                 monitorTemplate.StrNtLogin = currentUser.Id;
-                result = _orderService.UpdateStepMonitor(monitorTemplate);
+
+                // FOR THE EQUIPMENT SENSOR MONITOR AFTER THE FIRST UPDATE IT'S READ-ONLY, I.E., IT SHOULD NOT BE UPDATED AFTER IT'S BEEN SET THE FIRST TIME
+
+                if (monitorTemplate.Monitor_Type.Trim().ToUpper() == "EQUIPMENT" && monitorTemplate.Input_Type.Trim().ToUpper() == "SENSOR")
+                {
+                    if (string.IsNullOrWhiteSpace(monitorTemplate.Monitor_Result_ID) == false && monitorTemplate.Monitor_Result_ID.Length > 1)
+                    {
+                        updateMonitor = false;
+                    }
+                }
+
+                if (updateMonitor == true)
+                {
+                    result = _orderService.UpdateStepMonitor(monitorTemplate);
+                }
 
                 if (result.HasErrors())
                 {
@@ -956,7 +974,7 @@ namespace Answer.Web.Controllers
 
             SensorDataModel sensorDataModel = _sensorService.GetSensor(Convert.ToInt32(sensorMappingID));
 
-            return Json(new { SensorCurrentValue = sensorDataModel.SensorCurrentValue}, JsonRequestBehavior.AllowGet);
+            return Json(new { SensorCurrentValue = sensorDataModel.SensorCurrentValue }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]
