@@ -35,6 +35,8 @@
                     @Html.HiddenFor(x => Model[i].FillId)
                     @Html.HiddenFor(x => Model[i].TASK_ID)
                     @Html.HiddenFor(x => Model[i].Monitor_Type)
+                    @Html.HiddenFor(x => Model[i].Input_Type)
+                    @Html.HiddenFor(x => Model[i].Monitor_Result_ID)
 
                     <div class="form-group">
                         <table width="100%" border="0">
@@ -211,26 +213,26 @@
                                                 <div style="font-weight: bold; color: red;">This Monitor has already been saved and is in read-only mode.</div>
                                             </td>
                                         </tr>
-                                        }
+                                    }
 
-                                        <td class="nw-rght"><label class="control-label">Sensor Name:</label></td>
-                                        <td class="text-td">
-                                            @if (Model[i].SensorDataModels != null && Model[i].SensorDataModels.Any())
+                                    <td class="nw-rght"><label class="control-label">Sensor Name:</label></td>
+                                    <td class="text-td">
+                                        @if (Model[i].SensorDataModels != null && Model[i].SensorDataModels.Any())
+                                        {
+                                            if (Model[i].SENSOR_MAPPING_ID > 0)  // if (string.IsNullOrWhiteSpace(Model[i].Print_Result) == false)
                                             {
-                                                if (Model[i].SENSOR_MAPPING_ID > 0)  // if (string.IsNullOrWhiteSpace(Model[i].Print_Result) == false)
-                                                    {
-                                                        @Html.DropDownListFor(x => Model[i].SensorMappingID, new SelectList(Model[i].SensorDataModels, "SensorMappingID", "SiteSensorName", Model[i].SENSOR_MAPPING_ID), "Select Sensor", new { @class = "form-control", @id = "equipment-sensor-list", @readonly = "", @disabled = "" })
-                                                    }
-                                                    else
-                                                    {
-                                                        @Html.DropDownListFor(x => Model[i].SensorMappingID, new SelectList(Model[i].SensorDataModels, "SensorMappingID", "SiteSensorName", Model[i].SENSOR_MAPPING_ID), "Select Sensor", new { @class = "form-control", @id = "equipment-sensor-list" })
-                                                    }
+                                                @Html.DropDownListFor(x => Model[i].SensorMappingID, new SelectList(Model[i].SensorDataModels, "SensorMappingID", "SiteSensorName", Model[i].SENSOR_MAPPING_ID), "Select Sensor", new { @class = "form-control", @id = "equipment-sensor-list", @readonly = "", @disabled = "" })
                                             }
                                             else
                                             {
-                                                <text>No sensors retrieved for this Site.</text>
+                                                @Html.DropDownListFor(x => Model[i].SensorMappingID, new SelectList(Model[i].SensorDataModels, "SensorMappingID", "SiteSensorName", Model[i].SENSOR_MAPPING_ID), "Select Sensor", new { @class = "form-control", @id = "equipment-sensor-list" })
                                             }
-                                        </td>
+                                        }
+                                        else
+                                        {
+                                            <text>No sensors retrieved for this Site.</text>
+                                        }
+                                    </td>
                                     </tr>
 
                                     <tr>
@@ -382,10 +384,10 @@
                                         }
                                     </td>
                                 </tr>
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
             </div>
         </div>
     }

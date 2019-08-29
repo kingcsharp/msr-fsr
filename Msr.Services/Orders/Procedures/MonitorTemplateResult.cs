@@ -12,6 +12,8 @@ namespace Msr.Services.Orders.Procedures
 
         public List<SensorDataModel> SensorDataModels { get; set; }
 
+        public string Monitor_Result_ID { get; set; }
+
         public int FillId { get; set; }
 
         public string Id { get; set; }
