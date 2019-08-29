@@ -1,28 +1,28 @@
-﻿using Msr.Models.Procedures;
-using Msr.Services.jqGrid;
-using Msr.Services.Procedures;
-using Msr.Web.ViewModel.Engineering;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Script.Serialization;
-using Answer.Web.Filters;
+﻿using Answer.Web.Filters;
 using Answer.Web.ViewModel;
 using Msr.Commons.Files;
 using Msr.Infrastructure.Common.Constansts;
 using Msr.Models.ActualParts;
 using Msr.Models.Menus;
+using Msr.Models.Procedures;
 using Msr.Services.Documents;
+using Msr.Services.EquipmentMaintenances;
+using Msr.Services.jqGrid;
+using Msr.Services.Procedures;
 using Msr.Services.Procedures.Messages;
 using Msr.Services.Procedures.ViewModels;
 using Msr.Services.ProcedureVerbs;
 using Msr.Services.Roles;
 using Msr.Services.Users;
-using Msr.Services.EquipmentMaintenances;
+using Msr.Web.ViewModel.Engineering;
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Net;
+using System.Web;
+using System.Web.Mvc;
+using System.Web.Script.Serialization;
 
 namespace Answer.Web.Controllers
 {
@@ -1242,12 +1242,20 @@ namespace Answer.Web.Controllers
         {
             var currentUser = GetCurrentUser();
 
-            if (model.AddMonitorForProcedureViewModel.Monitor_Type == "SELECT" || model.AddMonitorForProcedureViewModel.Monitor_Type == "EQUIPMENT" || model.AddMonitorForProcedureViewModel.Monitor_Type == "PASS_FAIL" || model.AddMonitorForProcedureViewModel.Monitor_Type == "NUMBER" && model.AddMonitorForProcedureViewModel.Should_Be != "BETWEEN")
+            if (model.AddMonitorForProcedureViewModel.Monitor_Type == "SELECT" || model.AddMonitorForProcedureViewModel.Monitor_Type == "EQUIPMENT" || model.AddMonitorForProcedureViewModel.Monitor_Type == "PASS_FAIL" || model.AddMonitorForProcedureViewModel.Monitor_Type == "NUMBER")
             {
-                ModelState.Remove("AddMonitorForProcedureViewModel.Highest_Threshold");
-                ModelState.Remove("AddMonitorForProcedureViewModel.Lowest_Threshold");
-                ModelState.Remove("AddMonitorForProcedureViewModel.Text_Target");
-                ModelState.Remove("AddMonitorForProcedureViewModel.Correct_Answer");
+                if (model.AddMonitorForProcedureViewModel.Should_Be == "BETWEEN")
+                {
+                    ModelState.Remove("AddMonitorForProcedureViewModel.Text_Target");
+                    ModelState.Remove("AddMonitorForProcedureViewModel.Target_Object");
+                    ModelState.Remove("AddMonitorForProcedureViewModel.Correct_Answer");
+                }
+                else
+                {
+                    ModelState.Remove("AddMonitorForProcedureViewModel.Highest_Threshold");
+                    ModelState.Remove("AddMonitorForProcedureViewModel.Lowest_Threshold");
+                    ModelState.Remove("AddMonitorForProcedureViewModel.Correct_Answer");
+                }
             }
             else if (model.AddMonitorForProcedureViewModel.Monitor_Type == "YES_NO")
             {
@@ -1279,7 +1287,7 @@ namespace Answer.Web.Controllers
             {
                 model.AddMonitorForProcedureViewModel.StrNTLogin = currentUser.Id;
 
-                if (model.AddMonitorForProcedureViewModel.Monitor_Type != "NUMBER")
+                if (model.AddMonitorForProcedureViewModel.Monitor_Type != "NUMBER" && model.AddMonitorForProcedureViewModel.Monitor_Type != "EQUIPMENT")
                 {
                     model.AddMonitorForProcedureViewModel.Should_Be = "EQUAL";
                     model.AddMonitorForProcedureViewModel.Highest_Threshold = null;
@@ -1287,6 +1295,10 @@ namespace Answer.Web.Controllers
                     model.AddMonitorForProcedureViewModel.Target = null;
                     model.AddMonitorForProcedureViewModel.Low_Threshold = null;
                     model.AddMonitorForProcedureViewModel.Lowest_Threshold = null;
+                }
+                else if (model.AddMonitorForProcedureViewModel.Monitor_Type != "LIST")
+                {
+                    model.AddMonitorForProcedureViewModel.List_Source = null;
                 }
 
                 var response = _proceduresService.AddMonitorForProcedure(model.AddMonitorForProcedureViewModel);

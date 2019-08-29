@@ -35,6 +35,8 @@
                     @Html.HiddenFor(x => Model[i].FillId)
                     @Html.HiddenFor(x => Model[i].TASK_ID)
                     @Html.HiddenFor(x => Model[i].Monitor_Type)
+                    @Html.HiddenFor(x => Model[i].Input_Type)
+                    @Html.HiddenFor(x => Model[i].Monitor_Result_ID)
 
                     <div class="form-group">
                         <table width="100%" border="0">
@@ -194,7 +196,7 @@
                                         <td class="text-td">
                                             @if (Model[i].List_Source?.Trim().ToUpper() == "NCR_CATEGORY" || Model[i].List_Source?.Trim().ToUpper() == "NCR_CATEGORIES")
                                             {
-                                                @Html.DropDownListFor(x => Model[i].Print_Result, new SelectList(Model[i].NCRCategoryList, "Value", "Text", Model[i].Print_Result),"Select Category", new { @class = "form-control", @id = "list-ncr-category" })
+                                                @Html.DropDownListFor(x => Model[i].Print_Result, new SelectList(Model[i].NCRCategoryList, "Value", "Text", Model[i].Print_Result), "Select Category", new { @class = "form-control", @id = "list-ncr-category" })
                                             }
                                         </td>
                                     </tr>
@@ -203,47 +205,75 @@
                                 {
 
                                     <tr>
-                                        <td class="nw-rght"><label class="control-label">Sensor Name:</label></td>
-                                        <td class="text-td">
-                                            @if (Model[i].SensorDataModels != null && Model[i].SensorDataModels.Any())
+                                        @if (Model[i].SENSOR_MAPPING_ID > 0)
+                                        {
+                                        <tr>
+                                            <td class="nw-rght"><label class="control-label">Note:</label></td>
+                                            <td class="text-td">
+                                                <div style="font-weight: bold; color: red;">This Monitor has already been saved and is in read-only mode.</div>
+                                            </td>
+                                        </tr>
+                                    }
+
+                                    <td class="nw-rght"><label class="control-label">Sensor Name:</label></td>
+                                    <td class="text-td">
+                                        @if (Model[i].SensorDataModels != null && Model[i].SensorDataModels.Any())
+                                        {
+                                            if (Model[i].SENSOR_MAPPING_ID > 0)  // if (string.IsNullOrWhiteSpace(Model[i].Print_Result) == false)
                                             {
-                                                if (string.IsNullOrWhiteSpace(Model[i].Print_Result) == false)
-                                                {
-                                                    @Html.DropDownListFor(x => Model[i].SensorMappingID, new SelectList(Model[i].SensorDataModels, "SensorMappingID", "SiteSensorName", Model[i].SENSOR_MAPPING_ID), "Select Sensor", new { @class = "form-control", @id = "equipment-sensor-list" })
-                                                }
-                                                else
-                                                {
-                                                    @Html.DropDownListFor(x => Model[i].SensorMappingID, new SelectList(Model[i].SensorDataModels, "SensorMappingID", "SiteSensorName", Model[i].SENSOR_MAPPING_ID), "Select Sensor", new { @class = "form-control", @id = "equipment-sensor-list" })
-                                                }
+                                                @Html.DropDownListFor(x => Model[i].SensorMappingID, new SelectList(Model[i].SensorDataModels, "SensorMappingID", "SiteSensorName", Model[i].SENSOR_MAPPING_ID), "Select Sensor", new { @class = "form-control", @id = "equipment-sensor-list", @readonly = "", @disabled = "" })
                                             }
                                             else
                                             {
-                                                <text>No sensors retrieved for this Site.</text>
-                                            }                                            
-                                        </td>
+                                                @Html.DropDownListFor(x => Model[i].SensorMappingID, new SelectList(Model[i].SensorDataModels, "SensorMappingID", "SiteSensorName", Model[i].SENSOR_MAPPING_ID), "Select Sensor", new { @class = "form-control", @id = "equipment-sensor-list" })
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <text>No sensors retrieved for this Site.</text>
+                                        }
+                                    </td>
                                     </tr>
 
                                     <tr>
                                         <td class="nw-rght"><label class="control-label">Sensor Value:</label></td>
                                         <td class="text-td">
-                                            <span id="spanSensorValue">@Model[i].Print_Result</span>&nbsp;&nbsp;&nbsp;<i class="fas fa-sync" onclick="UpdateSensorCurrentValue();" style="cursor: pointer;"></i>
+                                            <span id="spanSensorValue">@Model[i].Print_Result</span>&nbsp;&nbsp;&nbsp;
+                                            @if (Model[i].SENSOR_MAPPING_ID <= 0)
+                                            {
+                                                <i class="fas fa-sync" onclick="UpdateSensorCurrentValue();" style="cursor: pointer;"></i>
+                                            }
                                         </td>
                                     </tr>
 
                                     <tr>
                                         <td class="nw-rght"><label class="control-label">Target Value:</label></td>
-                                        <td class="text-td">
-                                            @Model[i].Target
-                                        </td>
+                                        @if (Model[i].Should_Be == "EQUAL")
+                                        {
+                                            <td class="text-td">
+                                                Equal to @Model[i].Target
+                                            </td>
+                                        }
+                                        else if (Model[i].Should_Be == "BELOW")
+                                        {
+                                            <td class="text-td">
+                                                Below @Model[i].Target
+                                            </td>
+                                        }
+                                        else if (Model[i].Should_Be == "ABOVE")
+                                        {
+                                            <td class="text-td">
+                                                Above @Model[i].Target
+                                            </td>
+                                        }
+                                        else if (Model[i].Should_Be == "BETWEEN")
+                                        {
+                                            <td class="text-td">
+                                                Between @Model[i].Lowest_Threshold and @Model[i].Highest_Threshold
+                                            </td>
+                                        }
                                     </tr>
-                                    <!--
-                                    <tr>
-                                        <td class="nw-rght"><label class="control-label">Target:</label></td>
-                                        <td class="text-td">
-                                            @Html.TextBoxFor(x => Model[i].Target_Object, new { @class = "form-control monitorTemplate_Target" })
-                                        </td>
-                                    </tr>
-                                    -->
+
                                     <tr class="equipmentresult">
                                         <td class="nw-rght">
                                             <label class="control-label">Result:</label>
@@ -343,12 +373,21 @@
                                 }
                                 <tr>
                                     <td class="nw-rght"><label class="control-label">Comments:</label></td>
-                                    <td>@Html.TextAreaFor(x => Model[i].Comment, new { @class = "form-control" })</td>
+                                    <td>
+                                        @if (Model[i].SENSOR_MAPPING_ID > 0)
+                                        {
+                                            @Html.TextAreaFor(x => Model[i].Comment, new { @class = "form-control", @readonly = "" })
+                                        }
+                                        else
+                                        {
+                                            @Html.TextAreaFor(x => Model[i].Comment, new { @class = "form-control" })
+                                        }
+                                    </td>
                                 </tr>
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
             </div>
         </div>
     }

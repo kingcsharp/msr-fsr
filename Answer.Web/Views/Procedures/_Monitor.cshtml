@@ -6,88 +6,91 @@
     @Html.HiddenFor(x => x.AddMonitorForProcedureViewModel.Related_Object_Id)
     @Html.HiddenFor(x => x.AddMonitorForProcedureViewModel.Step_Id)
     @Html.HiddenFor(x => x.AddMonitorForProcedureViewModel.ProcedureName)
-    <div class="form-horizontal">
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(model => model.AddMonitorForProcedureViewModel.Monitor_Type, htmlAttributes: new { @class = "control-label col-md-4" })
-            <div class="col-md-5">
-                @Html.DropDownListFor(model => model.AddMonitorForProcedureViewModel.Monitor_Type, Model.AddMonitorForProcedureViewModel.MonitorTypesList, new { @class = "form-control selectroles" })
-                @Html.ValidationMessageFor(model => model.AddMonitorForProcedureViewModel.Monitor_Type, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(model => model.AddMonitorForProcedureViewModel.Input_Type, htmlAttributes: new { @class = "control-label col-md-4" })
-            <div class="col-md-5">
-                @Html.DropDownListFor(model => model.AddMonitorForProcedureViewModel.Input_Type, Model.AddMonitorForProcedureViewModel.InputTypesList, new { @class = "form-control selectroles" })
-                @Html.ValidationMessageFor(model => model.AddMonitorForProcedureViewModel.Input_Type, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <div class="form-group list-source">
-            @Html.LabelFor(model => model.AddMonitorForProcedureViewModel.List_Source, htmlAttributes: new { @class = "control-label col-md-4" })
-            <div class="col-md-5">
-                @Html.DropDownListFor(model => model.AddMonitorForProcedureViewModel.List_Source, Model.AddMonitorForProcedureViewModel.ListSourceList, new { @class = "form-control selectroles" })
-                @Html.ValidationMessageFor(model => model.AddMonitorForProcedureViewModel.List_Source, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <div class="form-group if-number">
-            @Html.LabelFor(model => model.AddMonitorForProcedureViewModel.Should_Be, htmlAttributes: new { @class = "control-label col-md-4" })
-            <div class="col-md-5">
-                @Html.DropDownListFor(model => model.AddMonitorForProcedureViewModel.Should_Be, Model.AddMonitorForProcedureViewModel.ShouldBeList, new { @class = "form-control ", @id = "AddMonitorForProcedureViewModel_Should_Be" })
-                @Html.ValidationMessageFor(model => model.AddMonitorForProcedureViewModel.Should_Be, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <div class="form-group if-between" style="display:none">
-            @Html.LabelFor(model => model.AddMonitorForProcedureViewModel.Highest_Threshold, htmlAttributes: new { @class = "control-label col-md-4" })
-            <div class="col-md-5">
-                @Html.EditorFor(model => model.AddMonitorForProcedureViewModel.Highest_Threshold, new { htmlAttributes = new { @class = "form-control", data_content = "Description" } })
-                @Html.ValidationMessageFor(model => model.AddMonitorForProcedureViewModel.Highest_Threshold, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <div class="form-group if-between" style="display:none">
-            @Html.LabelFor(model => model.AddMonitorForProcedureViewModel.Lowest_Threshold, htmlAttributes: new { @class = "control-label col-md-4" })
-            <div class="col-md-5">
-                @Html.EditorFor(model => model.AddMonitorForProcedureViewModel.Lowest_Threshold, new { htmlAttributes = new { @class = "form-control", data_content = "Description" } })
-                @Html.ValidationMessageFor(model => model.AddMonitorForProcedureViewModel.Lowest_Threshold, "", new { @class = "text-danger low-threshold" })
-            </div>
-        </div>
-        <div class="form-group if-not-between text-target">
-            @Html.LabelFor(model => model.AddMonitorForProcedureViewModel.Text_Target, htmlAttributes: new { @class = "control-label col-md-4" })
-            <div class="col-md-5">
-                @Html.TextBoxFor(model => model.AddMonitorForProcedureViewModel.Text_Target, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.AddMonitorForProcedureViewModel.Text_Target, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <div class="form-group if-not-between yes-no">
-            @Html.LabelFor(model => model.AddMonitorForProcedureViewModel.Correct_Answer, htmlAttributes: new { @class = "control-label col-md-4" })
-            <div class="col-md-5">
-                @Html.DropDownListFor(model => model.AddMonitorForProcedureViewModel.Correct_Answer, Model.AddMonitorForProcedureViewModel.CorrectAnsList, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.AddMonitorForProcedureViewModel.Correct_Answer, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <div class="form-group if-not-between target-obj">
-            @Html.LabelFor(model => model.AddMonitorForProcedureViewModel.Target_Object, htmlAttributes: new { @class = "control-label col-md-4" })
-            <div class="col-md-5">
-                @Html.TextBoxFor(model => model.AddMonitorForProcedureViewModel.Target_Object, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.AddMonitorForProcedureViewModel.Target_Object, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(model => model.AddMonitorForProcedureViewModel.Fail_Action, htmlAttributes: new { @class = "control-label col-md-4" })
-            <div class="col-md-5">
-                @Html.DropDownListFor(model => model.AddMonitorForProcedureViewModel.Fail_Action, Model.AddMonitorForProcedureViewModel.FailNextActionList, new { @class = "form-control selectroles" })
-                @Html.ValidationMessageFor(model => model.AddMonitorForProcedureViewModel.Fail_Action, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.AddMonitorForProcedureViewModel.Description, htmlAttributes: new { @class = "control-label col-md-4" })
-            <div class="col-md-5">
-                @Html.TextAreaFor(model => model.AddMonitorForProcedureViewModel.Description, new { @class = "form-control", data_content = "Description" })
-                @Html.ValidationMessageFor(model => model.AddMonitorForProcedureViewModel.Description, "", new { @class = "text-danger" })
-            </div>
+<div class="form-horizontal">
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.LabelFor(model => model.AddMonitorForProcedureViewModel.Monitor_Type, htmlAttributes: new { @class = "control-label col-md-4" })
+        <div class="col-md-5">
+            @Html.DropDownListFor(model => model.AddMonitorForProcedureViewModel.Monitor_Type, Model.AddMonitorForProcedureViewModel.MonitorTypesList, new { @class = "form-control selectroles" })
+            @Html.ValidationMessageFor(model => model.AddMonitorForProcedureViewModel.Monitor_Type, "", new { @class = "text-danger" })
         </div>
     </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.AddMonitorForProcedureViewModel.Input_Type, htmlAttributes: new { @class = "control-label col-md-4" })
+        <div class="col-md-5">
+            @Html.DropDownListFor(model => model.AddMonitorForProcedureViewModel.Input_Type, Model.AddMonitorForProcedureViewModel.InputTypesList, new { @class = "form-control selectroles" })
+            @Html.ValidationMessageFor(model => model.AddMonitorForProcedureViewModel.Input_Type, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group list-source">
+        @Html.LabelFor(model => model.AddMonitorForProcedureViewModel.List_Source, htmlAttributes: new { @class = "control-label col-md-4" })
+        <div class="col-md-5">
+            @Html.DropDownListFor(model => model.AddMonitorForProcedureViewModel.List_Source, Model.AddMonitorForProcedureViewModel.ListSourceList, new { @class = "form-control selectroles" })
+            @Html.ValidationMessageFor(model => model.AddMonitorForProcedureViewModel.List_Source, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group if-number">
+        @Html.LabelFor(model => model.AddMonitorForProcedureViewModel.Should_Be, htmlAttributes: new { @class = "control-label col-md-4" })
+        <div class="col-md-5">
+            @Html.DropDownListFor(model => model.AddMonitorForProcedureViewModel.Should_Be, Model.AddMonitorForProcedureViewModel.ShouldBeList, new { @class = "form-control ", @id = "AddMonitorForProcedureViewModel_Should_Be" })
+            @Html.ValidationMessageFor(model => model.AddMonitorForProcedureViewModel.Should_Be, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group if-between" style="display:none">
+        @Html.LabelFor(model => model.AddMonitorForProcedureViewModel.Lowest_Threshold, htmlAttributes: new { @class = "control-label col-md-4" })
+        <div class="col-md-5">
+            @Html.EditorFor(model => model.AddMonitorForProcedureViewModel.Lowest_Threshold, new { htmlAttributes = new { @class = "form-control", data_content = "Description" } })
+            @Html.ValidationMessageFor(model => model.AddMonitorForProcedureViewModel.Lowest_Threshold, "", new { @class = "text-danger low-threshold" })
+        </div>
+    </div>
+
+    <div class="form-group if-between" style="display:none">
+        @Html.LabelFor(model => model.AddMonitorForProcedureViewModel.Highest_Threshold, htmlAttributes: new { @class = "control-label col-md-4" })
+        <div class="col-md-5">
+            @Html.EditorFor(model => model.AddMonitorForProcedureViewModel.Highest_Threshold, new { htmlAttributes = new { @class = "form-control", data_content = "Description" } })
+            @Html.ValidationMessageFor(model => model.AddMonitorForProcedureViewModel.Highest_Threshold, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group if-not-between text-target">
+        @Html.LabelFor(model => model.AddMonitorForProcedureViewModel.Text_Target, htmlAttributes: new { @class = "control-label col-md-4" })
+        <div class="col-md-5">
+            @Html.TextBoxFor(model => model.AddMonitorForProcedureViewModel.Text_Target, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.AddMonitorForProcedureViewModel.Text_Target, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group if-not-between yes-no">
+        @Html.LabelFor(model => model.AddMonitorForProcedureViewModel.Correct_Answer, htmlAttributes: new { @class = "control-label col-md-4" })
+        <div class="col-md-5">
+            @Html.DropDownListFor(model => model.AddMonitorForProcedureViewModel.Correct_Answer, Model.AddMonitorForProcedureViewModel.CorrectAnsList, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.AddMonitorForProcedureViewModel.Correct_Answer, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group if-not-between target-obj">
+        @Html.LabelFor(model => model.AddMonitorForProcedureViewModel.Target_Object, htmlAttributes: new { @class = "control-label col-md-4" })
+        <div class="col-md-5">
+            @Html.TextBoxFor(model => model.AddMonitorForProcedureViewModel.Target_Object, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.AddMonitorForProcedureViewModel.Target_Object, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.AddMonitorForProcedureViewModel.Fail_Action, htmlAttributes: new { @class = "control-label col-md-4" })
+        <div class="col-md-5">
+            @Html.DropDownListFor(model => model.AddMonitorForProcedureViewModel.Fail_Action, Model.AddMonitorForProcedureViewModel.FailNextActionList, new { @class = "form-control selectroles" })
+            @Html.ValidationMessageFor(model => model.AddMonitorForProcedureViewModel.Fail_Action, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.AddMonitorForProcedureViewModel.Description, htmlAttributes: new { @class = "control-label col-md-4" })
+        <div class="col-md-5">
+            @Html.TextAreaFor(model => model.AddMonitorForProcedureViewModel.Description, new { @class = "form-control", data_content = "Description" })
+            @Html.ValidationMessageFor(model => model.AddMonitorForProcedureViewModel.Description, "", new { @class = "text-danger" })
+        </div>
+    </div>
+</div>
 }
 @Scripts.Render("~/bundles/js/procedure-monitor")
 @Scripts.Render("~/bundles/js/jqueryval")
