@@ -239,7 +239,7 @@
                                         <td class="nw-rght"><label class="control-label">Sensor Value:</label></td>
                                         <td class="text-td">
                                             <span id="spanSensorValue">@Model[i].Print_Result</span>&nbsp;&nbsp;&nbsp;
-                                            @if (Model[i].SENSOR_MAPPING_ID <= 0)
+                                            @if (Model[i].SENSOR_MAPPING_ID == null || Model[i].SENSOR_MAPPING_ID <= 0)
                                             {
                                                 <i class="fas fa-sync" onclick="UpdateSensorCurrentValue();" style="cursor: pointer;"></i>
                                             }

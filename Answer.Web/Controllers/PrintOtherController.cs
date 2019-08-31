@@ -81,7 +81,9 @@ namespace Answer.Web.Controllers
 
             var response = taskService.GetTaskWithMonitors(id.ToString());
 
-            ncrDetails.MonitorItem = response.MonitorItem.Where(x => x.Description.Contains("Nonconformity") || x.Description.Contains("NCR")).ToList();
+            ncrDetails.MonitorItem = response.MonitorItem;
+
+            // ncrDetails.MonitorItem = response.MonitorItem.Where(x => x.Description.Contains("Nonconformity") || x.Description.Contains("NCR")).ToList();
 
             return PartialView("_ViewNcrTsr", ncrDetails);
         }
