@@ -23,5 +23,6 @@ namespace Msr.Models.Tasks
         public byte? CantChange { get; set; }
         public byte? AlwaysPass { get; set; }
         public string PrintResult { get; set; }
+        public string ListSource { get; set; }
     }
 }
