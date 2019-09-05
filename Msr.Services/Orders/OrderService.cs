@@ -707,6 +707,7 @@ namespace Msr.Services.Orders
                 p.Add("@target", request.Target, DbType.String, ParameterDirection.Input);
                 p.Add("@tolerance", request.Tolerance, DbType.String, ParameterDirection.Input);
                 p.Add("@theSaurusId", request.TheSaurusId, DbType.String, ParameterDirection.Input);
+                p.Add("@SENSOR_MAPPING_ID", request.SensorMappingID, DbType.Int32, ParameterDirection.Input);
                 p.Add("@strNTLogin", request.StrNtLogin, DbType.String, ParameterDirection.Input);
 
                 using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
@@ -989,7 +990,7 @@ namespace Msr.Services.Orders
             var fill_Id = new SqlParameter("@fillID", fillId);
             var ntLogin = new SqlParameter("@strNTLogin", login);
             var result = _dbContext.Database.SqlQuery<TaskItemPart>("exec A_SP_TASKS_FIND_FOR_PURCHASE_ITEM_AND_ACT_PART @fillID,@strNTLogin", fill_Id, ntLogin).ToList();
-            var parentTask = result.Where(x => x.HAS_CHILD.HasValue && x.HAS_CHILD == 1).SingleOrDefault();
+            var parentTask = result.Where(x => x.HAS_CHILD.HasValue && x.HAS_CHILD == 1).FirstOrDefault();
             var p = new DynamicParameters();
 
             foreach (var item in result.Where(x=> x.Status != "CLOSED"))
@@ -1221,6 +1222,11 @@ namespace Msr.Services.Orders
             {
                 taskLog.EndTime = DateTime.Now;
                 taskLog.TotalTime = TimeSpan.FromSeconds((taskLog.EndTime.Value - taskLog.StartTime).TotalSeconds);
+
+                if (taskLog.TotalTime.Days > 0)
+                {
+                    taskLog.TotalTime = new TimeSpan(0, 23, 59, 59, 0);
+                }
             }
 
             taskLog.StatusId = TimerStatuseConstants.Stopped;
