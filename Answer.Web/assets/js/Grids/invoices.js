@@ -34,7 +34,6 @@ Msr.InvoicesGrid = Msr.InvoicesGrid || {
 
         let downloadInvoicesURL = baseURL;
 
-        // window.location.href = downloadInvoicesURL;
         window.open(downloadInvoicesURL);
     },
     LoadInvoices: function (url) {
