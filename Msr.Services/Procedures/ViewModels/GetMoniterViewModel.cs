@@ -37,8 +37,6 @@ namespace Msr.Services.Procedures.ViewModels
 
         public string Input_Type { get; set; }
 
-        public string List_Source { get; set; }
-
         public string Description { get; set; }
 
         public string Start_System_Task { get; set; }
