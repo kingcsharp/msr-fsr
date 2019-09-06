@@ -382,7 +382,7 @@ namespace Answer.Web.Controllers
 
             MemoryStream compressedInvoices = _invoicesService.GetInvoicesZippedArchive(ref invoiceQuickbooksFileModels);
 
-            return File(compressedInvoices, "text/plain", string.Format("All Invoices - {0}.zip", DateTime.Now.ToShortDateString()));
+            return File(compressedInvoices, "text/plain", string.Format("Invoices - {0}.zip", DateTime.Now.ToShortDateString()));
         }
 
         public List<InvoiceView> GetFilteredInvoices(JqGridParam jqGridParam)

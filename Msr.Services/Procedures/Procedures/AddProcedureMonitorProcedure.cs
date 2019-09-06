@@ -26,6 +26,9 @@ namespace Msr.Services.Procedures.Procedures
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "Input_Type")]
         public string Input_Type { get; set; }
 
+        [StoredProcedureParameter(SqlDbType.VarChar, Size = 50, ParameterName = "LIST_SOURCE")]
+        public string List_Source { get; set; }
+
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 2000, ParameterName = "DESCRIPTION")]
         public string Description { get; set; }
 
