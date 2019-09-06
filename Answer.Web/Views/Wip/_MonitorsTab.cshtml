@@ -25,7 +25,6 @@
                     else
                     {
                         <span>Monitor @(i + 1)</span>
-
                     }
                 </div>
                 <div class="panel-body panel-height monitor-body">
@@ -35,8 +34,6 @@
                     @Html.HiddenFor(x => Model[i].FillId)
                     @Html.HiddenFor(x => Model[i].TASK_ID)
                     @Html.HiddenFor(x => Model[i].Monitor_Type)
-                    @Html.HiddenFor(x => Model[i].Input_Type)
-                    @Html.HiddenFor(x => Model[i].Monitor_Result_ID)
 
                     <div class="form-group">
                         <table width="100%" border="0">
@@ -86,7 +83,7 @@
                                         <td class="nw-rght"><label class="control-label">Correct Answer</label></td>
                                         <td class="text-td">
                                             <div class="col-lg-2" style="font-weight: bold;">
-                                                @Html.HiddenFor(x => Model[i].Yes_No_Answer, new { @id = "yes-no-answer" })
+                                                @Html.HiddenFor(x => Model[i].Yes_No_Answer,new {@id="yes-no-answer"})
                                                 @if (@Model[i].Yes_No_Answer == "1")
                                                 {
                                                     <text>YES</text>
@@ -111,15 +108,15 @@
                                         <td class="nw-rght"><label class="control-label">Should be:</label></td>
                                         @if (Model[i].Should_Be == "BETWEEN")
                                         {
-                                            <td class="text-td">
-                                                Between @Model[i].Lowest_Threshold and @Model[i].Highest_Threshold
-                                            </td>
+                                        <td class="text-td">
+                                           Between @Model[i].Lowest_Threshold and @Model[i].Highest_Threshold
+                                        </td>
                                         }
                                         else
                                         {
-                                            <td class="text-td">
-                                                @Model[i].Should_Be  To @Model[i].Target
-                                            </td>
+                                        <td class="text-td">
+                                            @Model[i].Should_Be  To @Model[i].Target
+                                        </td> 
                                         }
                                     </tr>
 
@@ -153,138 +150,7 @@
                                         </td>
                                     </tr>
                                 }
-                                else if (Model[i].Monitor_Type == "YES_NO")
-                                {
-                                    <tr>
-                                        <td class="nw-rght"><label class="control-label">Correct Answer</label></td>
-                                        <td class="text-td">
-                                            <div class="col-lg-2" style="font-weight: bold;">
-                                                @Html.HiddenFor(x => Model[i].Yes_No_Answer, new { @id = "yes-no-answer" })
-                                                @if (@Model[i].Yes_No_Answer == "1")
-                                                {
-                                                    <text>YES</text>
-                                                }
-                                                else
-                                                {
-                                                    <text>NO</text>
-                                                }
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="nw-rght"><label class="control-label">Your Answer:</label></td>
-                                        <td class="text-td">
-                                            @Html.DropDownListFor(x => Model[i].Print_Result, Model[i].ResultList, new { @class = "form-control", @id = "yes-no-monitor" })
-                                        </td>
-                                    </tr>
-                                }
-                                else if (Model[i].Monitor_Type == "SELECT")
-                                {
-                                    <tr>
-                                        <td class="nw-rght"><label class="control-label">List Source:</label></td>
-                                        <td class="text-td">
-                                            <div style="font-weight: bold;">
-                                                @if (Model[i].List_Source?.Trim().ToUpper() == "NCR_CATEGORY" || Model[i].List_Source?.Trim().ToUpper() == "NCR_CATEGORIES")
-                                                {
-                                                    <text>NCR Category</text>
-                                                }
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="nw-rght"><label class="control-label">Select:</label></td>
-                                        <td class="text-td">
-                                            @if (Model[i].List_Source?.Trim().ToUpper() == "NCR_CATEGORY" || Model[i].List_Source?.Trim().ToUpper() == "NCR_CATEGORIES")
-                                            {
-                                                @Html.DropDownListFor(x => Model[i].Print_Result, new SelectList(Model[i].NCRCategoryList, "Value", "Text", Model[i].Print_Result), "Select Category", new { @class = "form-control", @id = "list-ncr-category" })
-                                            }
-                                        </td>
-                                    </tr>
-                                }
-                                else if (Model[i].Monitor_Type?.Trim().ToUpper() == "EQUIPMENT" && Model[i].Input_Type?.Trim().ToUpper() == "SENSOR")
-                                {
-
-                                    <tr>
-                                        @if (Model[i].SENSOR_MAPPING_ID > 0)
-                                        {
-                                        <tr>
-                                            <td class="nw-rght"><label class="control-label">Note:</label></td>
-                                            <td class="text-td">
-                                                <div style="font-weight: bold; color: red;">This Monitor has already been saved and is in read-only mode.</div>
-                                            </td>
-                                        </tr>
-                                    }
-
-                                    <td class="nw-rght"><label class="control-label">Sensor Name:</label></td>
-                                    <td class="text-td">
-                                        @if (Model[i].SensorDataModels != null && Model[i].SensorDataModels.Any())
-                                        {
-                                            if (Model[i].SENSOR_MAPPING_ID > 0)  // if (string.IsNullOrWhiteSpace(Model[i].Print_Result) == false)
-                                            {
-                                                @Html.DropDownListFor(x => Model[i].SensorMappingID, new SelectList(Model[i].SensorDataModels, "SensorMappingID", "SiteSensorName", Model[i].SENSOR_MAPPING_ID), "Select Sensor", new { @class = "form-control", @id = "equipment-sensor-list", @readonly = "", @disabled = "" })
-                                            }
-                                            else
-                                            {
-                                                @Html.DropDownListFor(x => Model[i].SensorMappingID, new SelectList(Model[i].SensorDataModels, "SensorMappingID", "SiteSensorName", Model[i].SENSOR_MAPPING_ID), "Select Sensor", new { @class = "form-control", @id = "equipment-sensor-list" })
-                                            }
-                                        }
-                                        else
-                                        {
-                                            <text>No sensors retrieved for this Site.</text>
-                                        }
-                                    </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td class="nw-rght"><label class="control-label">Sensor Value:</label></td>
-                                        <td class="text-td">
-                                            <span id="spanSensorValue">@Model[i].Print_Result</span>&nbsp;&nbsp;&nbsp;
-                                            @if (Model[i].SENSOR_MAPPING_ID == null || Model[i].SENSOR_MAPPING_ID <= 0)
-                                            {
-                                                <i class="fas fa-sync" onclick="UpdateSensorCurrentValue();" style="cursor: pointer;"></i>
-                                            }
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td class="nw-rght"><label class="control-label">Target Value:</label></td>
-                                        @if (Model[i].Should_Be == "EQUAL")
-                                        {
-                                            <td class="text-td">
-                                                Equal to @Model[i].Target
-                                            </td>
-                                        }
-                                        else if (Model[i].Should_Be == "BELOW")
-                                        {
-                                            <td class="text-td">
-                                                Below @Model[i].Target
-                                            </td>
-                                        }
-                                        else if (Model[i].Should_Be == "ABOVE")
-                                        {
-                                            <td class="text-td">
-                                                Above @Model[i].Target
-                                            </td>
-                                        }
-                                        else if (Model[i].Should_Be == "BETWEEN")
-                                        {
-                                            <td class="text-td">
-                                                Between @Model[i].Lowest_Threshold and @Model[i].Highest_Threshold
-                                            </td>
-                                        }
-                                    </tr>
-
-                                    <tr class="equipmentresult">
-                                        <td class="nw-rght">
-                                            <label class="control-label">Result:</label>
-                                        </td>
-                                        <td class="text-td">
-                                            @Html.TextBoxFor(x => Model[i].Print_Result, new { @class = !isPassing ? "form-control input-validation-error" : String.Empty, @id = "equipment-sensor-result", @readonly = "true" })
-                                            <span id="print-result-message"></span>
-                                        </td>
-                                    </tr>
-                                }
-                                else if (Model[i].Monitor_Type == "EQUIPMENT")
+                                @if (Model[i].Monitor_Type == "EQUIPMENT")
                                 {
                                     <tr>
                                         <td class="nw-rght"><label class="control-label">Target Value:</label></td>
@@ -301,14 +167,13 @@
                                     <tr class="equipmentresult">
                                         <td class="nw-rght">
                                             <label class="control-label">Result:</label>
-                                        </td>
-                                        <td class="text-td">
-                                            @Html.TextBoxFor(x => Model[i].Print_Result, new { @class = !isPassing ? "form-control input-validation-error" : String.Empty, @id = "equipment" })
-                                            <span id="print-result-message"></span>
+                                            <td class="text-td">
+                                                @Html.TextBoxFor(x => Model[i].Print_Result, new { @class = !isPassing ? "form-control input-validation-error" : String.Empty, @id = "equipment" })
+                                                <span id="print-result-message"></span>
+                                            </td>
                                         </td>
                                     </tr>
                                 }
-
                                 <tr>
                                     <td class="nw-rght"><label class="control-label">If fails:</label></td>
                                     <td class="text-td">
@@ -373,21 +238,12 @@
                                 }
                                 <tr>
                                     <td class="nw-rght"><label class="control-label">Comments:</label></td>
-                                    <td>
-                                        @if (Model[i].SENSOR_MAPPING_ID > 0)
-                                        {
-                                            @Html.TextAreaFor(x => Model[i].Comment, new { @class = "form-control", @readonly = "" })
-                                        }
-                                        else
-                                        {
-                                            @Html.TextAreaFor(x => Model[i].Comment, new { @class = "form-control" })
-                                        }
-                                    </td>
+                                    <td>@Html.TextAreaFor(x => Model[i].Comment, new { @class = "form-control" })</td>
                                 </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                            </tbody>
+                        </table>
                     </div>
+                </div>
             </div>
         </div>
     }
@@ -409,13 +265,11 @@
 
         ApplyCssForMonitor($('#yes-no-monitor'));
 
-        // UpdateSensorCurrentValue();
-
         $('#yes-no-monitor').change(function () {
             ApplyCssForMonitor($(this));
         });
 
-        // $('.equipmentresult').hide();
+        $('.equipmentresult').hide();
 
         $(".number").on("keyup keypress blur change",function (e) {
             if (isNaN($(this).val())) {
@@ -431,36 +285,9 @@
             }
         });
 
+
+
     });
-
-    $("#equipment-sensor-list").on('change', function () {
-        UpdateSensorCurrentValue();
-    });
-
-    function UpdateSensorCurrentValue() {
-        var sensorMappingID = $("#equipment-sensor-list").val();
-
-        if (sensorMappingID != null && sensorMappingID != '' && sensorMappingID >= 1) {
-            eLoaderOpen();
-
-            $.ajax({
-                type: "POST",
-                url: "@Url.Action("GetSensorCurrentValue", "Wip")",
-                dataType: 'json',
-                data: { 'sensorMappingID': sensorMappingID },
-                success: function (data) {
-                    $('#spanSensorValue').text(data.SensorCurrentValue);
-                    $('#equipment-sensor-result').val(data.SensorCurrentValue);
-                    eLoaderClose();
-                },
-                error: function (error) {
-                    $('#spanSensorValue').text("");
-                    $('#equipment-sensor-result').val("");
-                    eLoaderError(error);
-                }
-            });
-        }
-    }
 
     $(".monitor-save").on('click', function () {
         var form = $(this).parents('form:first');

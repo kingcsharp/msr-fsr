@@ -117,7 +117,6 @@ namespace Msr.Services.Procedures
                     Id = model.Id,
                     Monitor_Type = model.Monitor_Type,
                     Input_Type = model.Input_Type,
-                    List_Source = model.List_Source,
                     Description = model.Description,
                     Start_System_Task = model.Start_System_Task,
                     Start_Type = model.Start_Type,
@@ -142,39 +141,19 @@ namespace Msr.Services.Procedures
                     StrNTLogin = model.StrNTLogin
                 };
 
-                //if (model.Monitor_Type == "NUMBER" && model.Should_Be == "BETWEEN")
-                //{
-                //    addProcedureMonitorProcedure.Target_Object = null;
-                //    addProcedureMonitorProcedure.Highest_Threshold = model.Highest_Threshold;
-                //    addProcedureMonitorProcedure.Lowest_Threshold = model.Lowest_Threshold;
-                //}
-                //else if (model.Monitor_Type == "NUMBER" && model.Should_Be != "BETWEEN" || model.Monitor_Type == "EQUIPMENT")
-                //{
-                //    addProcedureMonitorProcedure.Target = Convert.ToSingle(model.Target_Object);
-                //    addProcedureMonitorProcedure.Highest_Threshold = null;
-                //    addProcedureMonitorProcedure.Lowest_Threshold = null;
-                //    addProcedureMonitorProcedure.Correct_Answer = null;
-                //    addProcedureMonitorProcedure.Text_Target = null;
-                //}
-
-                if (model.Monitor_Type == "NUMBER" || model.Monitor_Type == "EQUIPMENT")
+                if (model.Monitor_Type == "NUMBER" && model.Should_Be == "BETWEEN")
                 {
-                    if (model.Should_Be == "BETWEEN")
-                    {
-                        addProcedureMonitorProcedure.Highest_Threshold = model.Highest_Threshold;
-                        addProcedureMonitorProcedure.Lowest_Threshold = model.Lowest_Threshold;
-
-                        addProcedureMonitorProcedure.Target_Object = null;
-                    }
-                    else
-                    {
-                        addProcedureMonitorProcedure.Target = Convert.ToSingle(model.Target_Object);
-
-                        addProcedureMonitorProcedure.Highest_Threshold = null;
-                        addProcedureMonitorProcedure.Lowest_Threshold = null;
-                        addProcedureMonitorProcedure.Correct_Answer = null;
-                        addProcedureMonitorProcedure.Text_Target = null;
-                    }
+                    addProcedureMonitorProcedure.Target_Object = null;
+                    addProcedureMonitorProcedure.Highest_Threshold = model.Highest_Threshold;
+                    addProcedureMonitorProcedure.Lowest_Threshold = model.Lowest_Threshold;
+                }
+                else if (model.Monitor_Type == "NUMBER" && model.Should_Be != "BETWEEN" || model.Monitor_Type == "EQUIPMENT")
+                {
+                    addProcedureMonitorProcedure.Target = Convert.ToSingle(model.Target_Object);
+                    addProcedureMonitorProcedure.Highest_Threshold = null;
+                    addProcedureMonitorProcedure.Lowest_Threshold = null;
+                    addProcedureMonitorProcedure.Correct_Answer = null;
+                    addProcedureMonitorProcedure.Text_Target = null;
                 }
                 else if (model.Monitor_Type == "YES_NO")
                 {

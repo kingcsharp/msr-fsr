@@ -1,24 +1,17 @@
-﻿using Msr.Services.EquipmentMaintenances;
+﻿
+using Msr.Services.EquipmentMaintenances;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web.Mvc;
-using Msr.Models.Sensor;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Msr.Services.Orders.Procedures
 {
     public class MonitorTemplateResult
     {
-
-        public List<SensorDataModel> SensorDataModels { get; set; }
-
-        public string Monitor_Result_ID { get; set; }
-
         public int FillId { get; set; }
 
         public string Id { get; set; }
-
-        public string List_Source { get; set; }
 
         public string Step_Id { get; set; }
 
@@ -31,8 +24,6 @@ namespace Msr.Services.Orders.Procedures
         public string Target { get; set; }
 
         public string Monitor_Type { get; set; }
-
-        public string Input_Type { get; set; }
 
         public string Should_Be { get; set; }
 
@@ -92,14 +83,6 @@ namespace Msr.Services.Orders.Procedures
 
         public string Target_Object { get; set; }
 
-        //[Column("SENSOR_MAPPING_ID")]
-
-        public int? SensorMappingID { get; set; }
-
-        public int? SENSOR_MAPPING_ID { get; set; }
-
-        public List<SelectListItem> NCRCategoryList { get; set; }
-
         public List<SelectListItem> EquipmentMaintenanceList { get; set; }
 
         public List<SelectListItem> ResultList { get; set; }
@@ -110,8 +93,6 @@ namespace Msr.Services.Orders.Procedures
 
         public void Setup(EquipmentMaintenanceService equipmentMaintenanceService, OrderService orderService)
         {
-            NCRCategoryList = Msr.Commons.Lookups.LookupItems.NCRCategories();
-
             ResultList = new List<SelectListItem>
             {
                 new SelectListItem

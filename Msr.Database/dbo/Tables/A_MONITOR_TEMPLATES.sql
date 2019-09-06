@@ -1,8 +1,7 @@
 ﻿CREATE TABLE [dbo].[A_MONITOR_TEMPLATES] (
     [ID]                         VARCHAR (50)   NOT NULL,
     [MONITOR_TYPE]               VARCHAR (50)   NULL,
-    [Input_type]                 VARCHAR (50)   NULL,
-    [LIST_SOURCE]                VARCHAR (50)   NULL,
+    [Input_type]               VARCHAR (50)   NULL,
     [DESCRIPTION]                VARCHAR (2000) NULL,
     [START_SYSTEM_TASK]          VARCHAR (50)   NULL,
     [START_TYPE]                 VARCHAR (50)   NULL,
@@ -48,11 +47,6 @@
     [SKIP_MODE]                  VARCHAR (10)   NULL,
     [ALWAYS_PASS]                TINYINT        NULL,
     [CANT_CHANGE]                TINYINT        NULL,
-    [SENSOR_MAPPING_ID]          INT            NULL,
     CONSTRAINT [PK_A_KPI_TEMPLATES] PRIMARY KEY CLUSTERED ([ID] ASC)
 );
-
-
-
-
 
