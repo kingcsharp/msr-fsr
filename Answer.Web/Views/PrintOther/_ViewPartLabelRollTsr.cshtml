@@ -1,59 +1,67 @@
 ﻿@model Msr.Services.Orders.Messaging.PartLabelTsrDetailsResponse
 <style>
+    @@media print {
+
+        @@page {
+            size:4.125in auto;
+        }
+        body {
+           margin-top:.0625in;
+           margin-left:.0625in;
+        }
+    }
+    .roll-container {
+       display: table-cell;
+       vertical-align: middle;
+       margin-top:.0625in;
+       margin-left:.0625in;
+       width:4.125in;
+    }
     table.tight {
         font: small Arial, Helvetica, sans-serif !important;
-        font-size: 9px !important;
+        font-size: 12px !important;
         width:100%;
     }
+    tr {
+        height:20px;
+    }
+    td {
+      text-align: left;
+    }
+    .date {
+        float:right;
+    }
     .roll-label {
-        height:1in;
+        height:1.5in;
         width:4in;
-        margin-top:0.0625in;
-        margin-left:0.0625in;
-        margin-right:0.0625in;
-        margin-bottom:0.0625in;
+        margin-bottom:0.125in;
         padding:.25in;
         left:0in;
         top:0in;
-        float:left;
+        border:1px dashed #ccc;
+        border-radius:6px;
     }
 </style>
-<div style="top:.5in;left:.5in;width:4in;">
+<div class="roll-container">
     @foreach (var partLabel in Model.GetPartsAndKitsLabelsResult)
     {
+
         <div class="roll-label">
             <table class="tight">
                 <tbody>
                     <tr>
-                        <td colspan="2"><b>MSR-FSR</b></td>
+                        <td width="35%"><strong>MSR-FSR @partLabel.Site_Name</strong></td>
+                        <td width="65%">Customer: <strong>@partLabel.WO_Item_Number</strong></td>
                     </tr>
                     <tr>
-                        <td style="width: 30%"><div style="text-align: left">Procedure***</div></td>
-                        <td style="width: 70%">
-                            <div style="text-align: left">@partLabel.Proc_Name</div>
-                        </td>
+                        <td>Part #: <strong>@partLabel.Company_Part_Number</strong></td>
+                        <td>Serial #: <strong>@(partLabel.Serial != null ? @partLabel.Serial : "N/A")</strong></td>
                     </tr>
                     <tr>
-                        <td style="border-top: thin black solid;">
-                            <div style="text-align: left">Part Number:***</div>
-                        </td>
-                        <td style="border-top: thin black solid;">
-                            @partLabel.Company_Part_Number<br>@partLabel.Part_Desc
-                        </td>
-                    </tr>
+                        <td colspan="2">Part Desc: <strong>@partLabel.Part_Desc</strong></td>
                     <tr>
-                        @if (!string.IsNullOrWhiteSpace(partLabel.Serial))
-                        {
-                            <td>
-                                <div style="text-align: left">Serial***</div>
-                            </td>
-                            <td>
-                                <div style="text-align: left">@partLabel.Serial</div>
-                            </td>
-                        }
-                    </tr>
-                    <tr>
-                        <td colspan="2">This Part Processed @partLabel.Count times </td>
+                        <td>PO #: <strong>@partLabel.PO_Number</strong></td>
+                        <td><span class="date">Date:<strong>@partLabel.Due_Date</strong></span></td>
                     </tr>
                 </tbody>
             </table>
