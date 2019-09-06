@@ -51,7 +51,7 @@
 <link rel="stylesheet" type="text/css" href="~/assets/js/reports/public/css/inspector.css" />
 <link rel="stylesheet" type="text/css" href="~/assets/js/reports/public/css/custom.css" />
 <link rel="stylesheet" type="text/css" href="~/assets/js/reports/public/js/ui-select/select.min.css" />
-<link rel="stylesheet" type="text/css" href="~/assets/js/reports/public/js/datepicker/angular-moment-picker.min.css"/>
+<link rel="stylesheet" type="text/css" href="~/assets/js/reports/public/js/datepicker/angular-moment-picker.min.css" />
 
 <div>
     <div ng-app="WideStage" style="padding: 60px 0 0 60px;">
@@ -226,13 +226,15 @@
     <script>
         $(document).ready(function () {
             $('[data-toggle="tooltip"]').tooltip();
-
-            //fixes for crap layout
-            setTimeout(function() {
-                $('container-fluid.featurette.ndContainer.ng-scope').remove();
-                $('.container-fluid.featurette.ndContainer.ng-scope').css({ 'height': '60vh'});
-                $('hr.featurette-divider').css({ 'display': 'none' });
-            }, 10000);
+            //financial dashboard
+            if (window.location.href.indexOf("5be2441e4f625d000b986c88") > -1) {
+                //fixes for crap layout of financial
+                setTimeout(function () {
+                    $('container-fluid.featurette.ndContainer.ng-scope').remove();
+                    $('.container-fluid.featurette.ndContainer.ng-scope').css({ 'height': '60vh' });
+                    $('hr.featurette-divider').css({ 'display': 'none' });
+                }, 10000);
+            }
         });
     </script>
 }
