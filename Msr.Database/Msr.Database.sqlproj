@@ -2884,7 +2884,6 @@
     <None Include="Script.PostDeployment1.sql" />
   </ItemGroup>
 
-</Project>
   <ItemGroup>
     <SqlCmdVariable Include="EquipmentMonitoring">
       <DefaultValue>EquipmentMonitoring</DefaultValue>
