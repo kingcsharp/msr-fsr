@@ -3,42 +3,46 @@
 @foreach (var item in Model)
 {
     <tr>
-        <td>@item.Monitor_Type</td>
-        <td>@item.Description</td>
-        <td>@item.Input_Type</td>
-        
+        <td width="17%">@item.Monitor_Type</td>
+        <td width="38%">@item.Description</td>
+        <td width="15%">@item.Input_Type</td>
+
         @if (item.Monitor_Type == "NUMBER" && item.Should_Be == "BETWEEN")
         {
-            <td>Between @item.Lowest_Threshold and @item.Highest_Threshold</td>
+            <td width="15%">Between @item.Lowest_Threshold and @item.Highest_Threshold</td>
         }
-        else if (item.Monitor_Type == "NUMBER" && item.Should_Be != "BETWEEN" )
+        else if (item.Monitor_Type == "NUMBER" && item.Should_Be != "BETWEEN")
         {
-            <td>@item.Target</td>
+            <td width="15%">@item.Target</td>
         }
         else if (item.Monitor_Type == "EQUIPMENT")
         {
-            <td>@item.Target</td>
+            <td width="15%">@item.Target</td>
         }
         else if (item.Monitor_Type == "TEXT")
         {
-            <td>@item.Text_Target</td>
+            <td width="15%">@item.Text_Target</td>
         }
         else if (item.Monitor_Type == "YES_NO")
         {
             if (item.YES_NO_ANSWER == 1)
             {
-                <td>Yes</td>
+                <td width="15%">Yes</td>
             }
             else
             {
-                <td>No</td>
+                <td width="15%">No</td>
             }
+        }
+        else if (item.Monitor_Type == "SELECT")
+        {
+            <td width="15%">From List</td>
         }
         else if (item.Monitor_Type == "PASS_FAIL")
         {
-            <td>@item.Target_Object</td>
+            <td width="15%">@item.Target_Object</td>
         }
-        <td>
+        <td width="13%">
             <span title="Edit Monitor" class="btn btn-xs btn-success edit-monitor" data-toggle="modal"
                   data-object-id="@item.Id"
                   data-target="#editMoniterModal"

@@ -2,6 +2,7 @@
 using Answer.Web.ViewModel.Wip;
 using Msr.Infrastructure.Common.Constansts;
 using Msr.Models.Orders;
+using Msr.Models.Sensor;
 using Msr.Services;
 using Msr.Services.Documents;
 using Msr.Services.Documents.ViewModels;
@@ -19,6 +20,7 @@ using Msr.Services.Orders.ViewModels;
 using Msr.Services.Procedures;
 using Msr.Services.Procedures.Messages;
 using Msr.Services.Roles;
+using Msr.Services.Sensor;
 using Msr.Web.ViewModel.Engineering;
 using System;
 using System.Collections.Generic;
@@ -39,6 +41,7 @@ namespace Answer.Web.Controllers
         private EquipmentMaintenanceService _equipmentMaintenanceService;
         private readonly DocumentFilesService _documentFilesService;
         private LocationService _locationService;
+        private SensorService _sensorService;
 
         public WipController()
         {
@@ -49,6 +52,7 @@ namespace Answer.Web.Controllers
             _proceduresService = new ProceduresService();
             _roleService = new RoleService();
             _documentFilesService = new DocumentFilesService();
+            _sensorService = new SensorService();
         }
 
         public ActionResult Index()
@@ -593,9 +597,17 @@ namespace Answer.Web.Controllers
             response.TaskEditDataResult.StepTitle = currentStep.Title;
             response.TaskEditDataResult.Description = currentStep.Description;
 
+
+
+            //var actualPartId = _orderService.GetWorkOrderQueryable().Where(x => x.FillId == stringFillId).Select(a => a.ActualPartId).FirstOrDefault();
+
+            List<SensorDataModel> sensorDataModels = _sensorService.GetSensorCurrentValues();
+
             foreach (var monitorTemplate in response.MonitorTemplateResult)
             {
                 monitorTemplate.Setup(_equipmentMaintenanceService, _orderService);
+
+                monitorTemplate.SensorDataModels = sensorDataModels;
 
                 for (int i = 0; i < monitorTemplate.FailActionList.Count; i++)
                 {
@@ -638,10 +650,28 @@ namespace Answer.Web.Controllers
 
             var result = new ResultNotification<string>();
 
+            bool updateMonitor = true;
+
             foreach (var monitorTemplate in monitorTemplates)
             {
+                updateMonitor = true;
+
                 monitorTemplate.StrNtLogin = currentUser.Id;
-                result = _orderService.UpdateStepMonitor(monitorTemplate);
+
+                // FOR THE EQUIPMENT SENSOR MONITOR AFTER THE FIRST UPDATE IT'S READ-ONLY, I.E., IT SHOULD NOT BE UPDATED AFTER IT'S BEEN SET THE FIRST TIME
+
+                if (monitorTemplate.Monitor_Type.Trim().ToUpper() == "EQUIPMENT" && monitorTemplate.Input_Type.Trim().ToUpper() == "SENSOR")
+                {
+                    if (string.IsNullOrWhiteSpace(monitorTemplate.Monitor_Result_ID) == false && monitorTemplate.Monitor_Result_ID.Length > 1)
+                    {
+                        updateMonitor = false;
+                    }
+                }
+
+                if (updateMonitor == true)
+                {
+                    result = _orderService.UpdateStepMonitor(monitorTemplate);
+                }
 
                 if (result.HasErrors())
                 {
@@ -893,6 +923,7 @@ namespace Answer.Web.Controllers
 
             return RedirectToAction("Details", "Wip", new { id = id });
         }
+
         [HttpPost]
         public JsonResult CheckEquipmentStatusById(string id)
         {
@@ -936,6 +967,15 @@ namespace Answer.Web.Controllers
             return Json(new { CanUsed = canUsed, ErrorMessage = errorMessage }, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
+        public JsonResult GetSensorCurrentValue(string sensorMappingID)
+        {
+            string sensorCurrentValue = string.Empty;
+
+            SensorDataModel sensorDataModel = _sensorService.GetSensor(Convert.ToInt32(sensorMappingID));
+
+            return Json(new { SensorCurrentValue = sensorDataModel.SensorCurrentValue }, JsonRequestBehavior.AllowGet);
+        }
 
         [HttpGet]
         public JsonResult GetLocations()
