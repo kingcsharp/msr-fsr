@@ -2883,14 +2883,6 @@
     <None Include="Script.PostDeployment1.sql" />
   </ItemGroup>
   <ItemGroup>
-    <ArtifactReference Include="..\..\..\..\Users\Justin\Documents\SQL Server Management Studio\DAC Packages\EquipmentMonitoring.dacpac">
-      <HintPath>..\..\..\..\Users\Justin\Documents\SQL Server Management Studio\DAC Packages\EquipmentMonitoring.dacpac</HintPath>
-      <SuppressMissingDependenciesErrors>True</SuppressMissingDependenciesErrors>
-      <DatabaseSqlCmdVariable>EquipmentMonitoring</DatabaseSqlCmdVariable>
-      <Private>True</Private>
-    </ArtifactReference>
-  </ItemGroup>
-  <ItemGroup>
     <SqlCmdVariable Include="EquipmentMonitoring">
       <DefaultValue>EquipmentMonitoring</DefaultValue>
       <Value>$(SqlCmdVar__1)</Value>
