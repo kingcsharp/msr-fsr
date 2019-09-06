@@ -226,6 +226,15 @@
     <script>
         $(document).ready(function () {
             $('[data-toggle="tooltip"]').tooltip();
+            //financial dashboard
+            if (window.location.href.indexOf("5be2441e4f625d000b986c88") > -1) {
+                //fixes for crap layout of financial
+                setTimeout(function () {
+                    $('container-fluid.featurette.ndContainer.ng-scope').remove();
+                    $('.container-fluid.featurette.ndContainer.ng-scope').css({ 'height': '60vh' });
+                    $('hr.featurette-divider').css({ 'display': 'none' });
+                }, 10000);
+            }
         });
     </script>
 }
