@@ -466,7 +466,6 @@
     <Compile Include="Roles\Procedures\SaveRoleProcedure.cs" />
     <Compile Include="Roles\Procedures\DeleteRoleParentProcedure.cs" />
     <Compile Include="Roles\Procedures\FetchRoleProcedure.cs" />
-    <Compile Include="Sensor\SensorService.cs" />
     <Compile Include="Workflows\Messages\ObjectDataResult.cs" />
     <Compile Include="Workflows\Messages\ShowApplicableWorkflowsResult.cs" />
     <Compile Include="Regions\ViewModels\SaveRegionViewModel.cs" />

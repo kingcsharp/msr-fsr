@@ -203,7 +203,6 @@
     <Compile Include="Regions\RegionsView.cs" />
     <Compile Include="Roles\CertificationRole.cs" />
     <Compile Include="Roles\RolesView.cs" />
-    <Compile Include="Sensor\SensorDataModel.cs" />
     <Compile Include="ShowPurchaseStatus\PurchaseItem.cs" />
     <Compile Include="ShowPurchaseStatus\ShowPurchaseStatusView.cs" />
     <Compile Include="Tasks\Task.cs" />

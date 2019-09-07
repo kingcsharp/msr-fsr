@@ -1,4 +1,5 @@
 ﻿@model Msr.Services.Procedures.Messages.GetStepDataResult
+
 <li id="@Model.Print_Order,@Model.Id" data-MainObjectId="@ViewBag.ProcObjectId" class="sortable-item">
     <div class="procedure-step row" id='step1'>
         <span class="fa fa-arrows handle sortable-fa" style="float: left; margin: -4px;"></span>
@@ -110,14 +111,14 @@
                 </a>
 
                 <div style="height:200px;">
-                    <table id="@Model.Id" style="width: 94%" class="table table-condensed table-bordered table-striped table-responsive monitor-table">
+                    <table id="@Model.Id" style="width: 100%" class="table table-bordered table-striped monitor-table">
                         <thead>
-                            <tr>
-                                <th>Type</th>
-                                <th>Description</th>
-                                <th>Input Type</th>
-                                <th>Target Value</th>
-                                <th></th>
+                            <tr width="100%">
+                                <th width="17.5%">Type</th>
+                                <th width="38%">Description</th>
+                                <th width="15%">Input Type</th>
+                                <th width="15%">Target</th>
+                                <th width="15%" style="border-right:0">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -131,7 +132,7 @@
                             <tr>
                                 <th nowrap="">Roles:</th>
                                 <td style="width: 500px;">
-                                    @Html.ListBoxFor(x => x.Role, Model.RolesList, new { @class = "form-control select selectroles_" + Model.Index })
+                                    @Html.ListBoxFor(x => x.Role, Model.RolesList, new { @class = "form-control select selectroles_" + Model.Index, @id = "select" + Model.Index })
                                     @Html.ValidationMessageFor(m => m.Role, "", new { @class = "text-danger" })
                                 </td>
                             </tr>
