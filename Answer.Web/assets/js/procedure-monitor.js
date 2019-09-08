@@ -1,51 +1,40 @@
 ﻿var ProcedureMonitor = function () {
 
-    var setFormState = function () {
+    var initialize = function () {
 
         if ($('#AddMonitorForProcedureViewModel_Monitor_Type').val() === 'EQUIPMENT') {
-            $('.if-number').show();
+            $('.if-number').hide();
             $('.text-target').hide();
             $('.yes-no').hide();
-            $('.list-source').hide();
         }
-
         if ($('#AddMonitorForProcedureViewModel_Monitor_Type').val() === 'NUMBER') {
             $('.if-number').show();
             $('.text-target').hide();
             $('.yes-no').hide();
-            $('.list-source').hide();
         }
-
         if ($('#AddMonitorForProcedureViewModel_Monitor_Type').val() === 'YES_NO') {
             $('.if-number').hide();
             $('.text-target').hide();
             $('.yes-no').show();
             $('.target-obj').hide();
-            $('.list-source').hide();
         }
-
         if ($('#AddMonitorForProcedureViewModel_Monitor_Type').val() === 'TEXT') {
             $('.if-number').hide();
             $('.text-target').show();
             $('.yes-no').hide();
             $('.target-obj').hide();
-            $('.list-source').hide();
         }
-
         if ($('#AddMonitorForProcedureViewModel_Monitor_Type').val() === 'PASS_FAIL') {
             $('.if-number').hide();
             $('.text-target').hide();
             $('.yes-no').hide();
             $('.target-obj').show();
-            $('.list-source').hide();
         }
-
         if ($('#AddMonitorForProcedureViewModel_Monitor_Type').val() === 'SELECT') {
-            $('.list-source').show();
             $('.if-number').hide();
             $('.text-target').hide();
             $('.yes-no').hide();
-            $('.target-obj').hide();
+            $('.target-obj').show();
         }
 
         if ($('#AddMonitorForProcedureViewModel_Should_Be').val() === 'BETWEEN' && $('#AddMonitorForProcedureViewModel_Monitor_Type').val() === 'NUMBER') {
@@ -53,138 +42,6 @@
             $('.if-between').show();
             $('.target-obj').hide();
         }
-
-        // ON CHANGE FUNCTIONS
-
-        if ($('#AddMonitorForProcedureViewModel_Monitor_Type').val() === 'NUMBER' && $('#AddMonitorForProcedureViewModel_Should_Be').val() === 'BETWEEN') {
-            $('.if-number').show();
-            $('.if-not-number').show();
-            $('.yes-no').hide();
-            $('.if-between').show();
-            $('.target-obj').hide();
-            $('.if-not-between').hide();
-            $('.list-source').hide();
-        }
-
-        if ($('#AddMonitorForProcedureViewModel_Monitor_Type').val() === 'NUMBER' && $('#AddMonitorForProcedureViewModel_Should_Be').val() !== 'BETWEEN') {
-            $('.if-number').show();
-            $('.if-not-number').show();
-            $('.yes-no').hide();
-            $('.text-target').hide();
-            $('.target-obj').show();
-            $('.list-source').hide();
-        }
-
-        if ($('#AddMonitorForProcedureViewModel_Monitor_Type').val() === 'EQUIPMENT') {
-            $('.if-between').hide();
-            $('.if-not-between').show();
-            $('.if-number').hide();
-            $('.text-target').hide();
-            $('.yes-no').hide();
-            $('.list-source').hide();
-        }
-
-        if ($('#AddMonitorForProcedureViewModel_Monitor_Type').val() === 'YES_NO') {
-            $('.if-between').hide();
-            $('.if-not-between').show();
-            $('.if-number').hide();
-            $('.text-target').hide();
-            $('.yes-no').show();
-            $('.target-obj').hide();
-            $('.list-source').hide();
-        }
-
-        if ($('#AddMonitorForProcedureViewModel_Monitor_Type').val() === 'TEXT') {
-            $('.if-between').hide();
-            $('.if-not-between').show();
-            $('.if-number').hide();
-            $('.text-target').show();
-            $('.target-obj').hide();
-            $('.yes-no').hide();
-            $('.list-source').hide();
-        }
-
-        if ($('#AddMonitorForProcedureViewModel_Monitor_Type').val() === 'PASS_FAIL') {
-            $('.if-number').hide();
-            $('.if-between').hide();
-            $('.if-not-number').show();
-            $('.text-target').hide();
-            $('.target-obj').show();
-            $('.yes-no').hide();
-            $('.list-source').hide();
-        }
-
-        if ($('#AddMonitorForProcedureViewModel_Monitor_Type').val() === 'SELECT') {
-            $('.list-source').show();
-            $('.if-number').hide();
-            $('.if-between').hide();
-            $('.if-not-number').show();
-            $('.text-target').hide();
-            $('.target-obj').hide();
-        }
-
-        $('#AddMonitorForProcedureViewModel_Target_Object').val('');
-
-    }
-
-    var initialize = function () {
-
-        if ($('#AddMonitorForProcedureViewModel_Monitor_Type').val() === 'EQUIPMENT') {
-            $('.if-number').show();
-            $('.text-target').hide();
-            $('.yes-no').hide();
-            $('.list-source').hide();
-        }
-        if ($('#AddMonitorForProcedureViewModel_Monitor_Type').val() === 'NUMBER') {
-            $('.if-number').show();
-            $('.text-target').hide();
-            $('.yes-no').hide();
-            $('.list-source').hide();
-        }
-        if ($('#AddMonitorForProcedureViewModel_Monitor_Type').val() === 'YES_NO') {
-            $('.if-number').hide();
-            $('.text-target').hide();
-            $('.yes-no').show();
-            $('.target-obj').hide();
-            $('.list-source').hide();
-        }
-        if ($('#AddMonitorForProcedureViewModel_Monitor_Type').val() === 'TEXT') {
-            $('.if-number').hide();
-            $('.text-target').show();
-            $('.yes-no').hide();
-            $('.target-obj').hide();
-            $('.list-source').hide();
-        }
-        if ($('#AddMonitorForProcedureViewModel_Monitor_Type').val() === 'PASS_FAIL') {
-            $('.if-number').hide();
-            $('.text-target').hide();
-            $('.yes-no').hide();
-            $('.target-obj').show();
-            $('.list-source').hide();
-        }
-        if ($('#AddMonitorForProcedureViewModel_Monitor_Type').val() === 'SELECT') {
-            $('.list-source').show();
-            $('.if-number').hide();
-            $('.text-target').hide();
-            $('.yes-no').hide();
-            $('.target-obj').hide();
-        }
-
-        if ($('#AddMonitorForProcedureViewModel_Monitor_Type').val() === 'NUMBER' || $('#AddMonitorForProcedureViewModel_Monitor_Type').val() === 'EQUIPMENT') {
-
-            if ($('#AddMonitorForProcedureViewModel_Should_Be').val() === 'BETWEEN') {
-                $('.if-not-between').hide();
-                $('.if-between').show();
-                $('.target-obj').hide();
-            }
-
-        }
-
-        //if ($('#AddMonitorForProcedureViewModel_Should_Be').val() === 'BETWEEN' && $('#AddMonitorForProcedureViewModel_Monitor_Type').val() === 'NUMBER') {
-        //    $('.if-not-between').hide();
-        //    $('.if-between').show();
-        //    $('.target-obj').hide();
-        //}
 
         $('#AddMonitorForProcedureViewModel_Monitor_Type').on('change', function () {
 
@@ -195,7 +52,6 @@
                 $('.if-between').show();
                 $('.target-obj').hide();
                 $('.if-not-between').hide();
-                $('.list-source').hide();
             }
             if (this.value === 'NUMBER' && $('#AddMonitorForProcedureViewModel_Should_Be').val() !== 'BETWEEN') {
                 $('.if-number').show();
@@ -203,7 +59,6 @@
                 $('.yes-no').hide();
                 $('.text-target').hide();
                 $('.target-obj').show();
-                $('.list-source').hide();
             }
             if (this.value === 'EQUIPMENT') {
                 $('.if-between').hide();
@@ -211,7 +66,6 @@
                 $('.if-number').hide();
                 $('.text-target').hide();
                 $('.yes-no').hide();
-                $('.list-source').hide();
 
             }
             if (this.value === 'YES_NO') {
@@ -221,7 +75,6 @@
                 $('.text-target').hide();
                 $('.yes-no').show();
                 $('.target-obj').hide();
-                $('.list-source').hide();
 
             }
             if (this.value === 'TEXT') {
@@ -231,7 +84,6 @@
                 $('.text-target').show();
                 $('.target-obj').hide();
                 $('.yes-no').hide();
-                $('.list-source').hide();
             }
             if (this.value === 'PASS_FAIL') {
                 $('.if-number').hide();
@@ -240,17 +92,16 @@
                 $('.text-target').hide();
                 $('.target-obj').show();
                 $('.yes-no').hide();
-                $('.list-source').hide();
             }
 
             if (this.value === 'SELECT') {
-                $('.list-source').show();
                 $('.if-number').hide();
                 $('.if-between').hide();
                 $('.if-not-number').show();
                 $('.text-target').hide();
-                $('.target-obj').hide();
+                $('.target-obj').show();
             }
+
 
             $('#AddMonitorForProcedureViewModel_Target_Object').val('');
         });

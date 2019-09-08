@@ -122,13 +122,7 @@
 
                     <tr>
                         <td>@monitor.Description</td>
-                        <td>
-                            @if (monitor.ListSource?.Trim().ToUpper().Contains("NCR_CATEGORY") == true || monitor.ListSource?.Trim().ToUpper().Contains("NCRCATEGORY") == true)
-                            {
-                                @Html.Raw(@"NCR Category:")
-                            }
-                            @monitor.PrintResult
-                        </td>
+                        <td>@monitor.PrintResult</td>
                         <td class="@cssClass">@monitor.IsPassing</td>
                         <td>@monitor.Comment</td>
                     </tr>
