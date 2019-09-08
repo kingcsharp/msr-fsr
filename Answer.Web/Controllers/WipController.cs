@@ -549,7 +549,7 @@ namespace Answer.Web.Controllers
 
             ViewBag.IsStepStatusClosed = response.TaskEditDataResult.Status == "CLOSED";
 
-            var myRoles = _roleService.GetAssignedRoles(loggedUserId.Id);
+            var currentUserRoles = _roleService.GetAssignedRoles(loggedUserId.Id);
 
             var vm = _orderService.GetPurchaseItemDetails(fillId, loggedUserId.Id);
 
@@ -559,35 +559,41 @@ namespace Answer.Web.Controllers
 
             var objId = _orderService.GetProcedureByObjId(vm.FileSearchResult.ProcObjId);
 
-            var procedureRoles = _proceduresService.GetSelectedRoles(objId.Id, loggedUserId.Id)?.Select(x => x.Role_Id).ToList();
-            response.HasStepRoles = myRoles.Select(x => x.Role_Id).ToList().Intersect(procedureRoles).Any();
+            // JG ADDED BELOW - DECIDED NOT TO USE SINCE IT EXECUTES A BUNCH OF QUERY AND IS LESS PERFORMANT
+            // var procedureStepsData = _proceduresService.GetStepsData(vm.FileSearchResult.ProcObjId, loggedUserId.Id).Where(x => x.Id == currentStep.PhStepId).FirstOrDefault();
 
-            if (!response.HasStepRoles)
+            // THE BELOW IS INCORRECT - WE NEED TO GET THE ROLE FOR THE TASK (OR STEP) NOT THE ENTIRE PROCEDURE 
+            // var procedureRoles = _proceduresService.GetSelectedRoles(objId.Id, loggedUserId.Id)?.Select(x => x.Role_Id).ToList();
+
+            // INCORRECT SINCE IT IS CHECKING THE ENTIRE PROCEDURE ROLE VS THE CURRENT STEP
+            // response.HasStepRoles = myRoles.Select(x => x.Role_Id).ToList().Intersect(procedureStepsData.Role).Any();
+
+            // if (!response.HasStepRoles)
+            // {
+
+            var currentStepRequiredRoles = currentStep.Roles?.Split(',');
+
+            foreach (var personRole in currentUserRoles)
             {
-
-                var steptRoles = currentStep.Roles?.Split(',');
-
-                foreach (var item in myRoles)
+                if (currentStepRequiredRoles.Any(x => x == personRole.Role_Id))
                 {
-                    if (steptRoles.Any(x => x == item.Role_Id))
+                    if (personRole.StartDate.HasValue && personRole.EndDate.HasValue)
                     {
-
-                        if (item.StartDate.HasValue && item.EndDate.HasValue)
-                        {
-                            if (DateTime.Today.Date >= item.StartDate.Value.Date && DateTime.Today.Date < item.EndDate.Value.Date.AddDays(1))
-                            {
-                                response.HasStepRoles = true;
-                                break;
-                            }
-                        }
-                        else
+                        if (DateTime.Today.Date >= personRole.StartDate.Value.Date && DateTime.Today.Date < personRole.EndDate.Value.Date.AddDays(1))
                         {
                             response.HasStepRoles = true;
                             break;
                         }
                     }
+                    else
+                    {
+                        response.HasStepRoles = true;
+                        break;
+                    }
                 }
             }
+
+            // }
 
             response.LoggedUserIdResult = loggedUserId;
             response.TaskEditDataResult.StepTitle = currentStep.Title;
