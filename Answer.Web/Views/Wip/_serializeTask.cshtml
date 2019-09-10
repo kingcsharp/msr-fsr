@@ -30,15 +30,12 @@
                         }
                         <input name="parts[@i].Id" type="hidden" value="@subPart.Id" />
                         <input name="parts[@i].TreeLevel" type="hidden" value="@subPart.Tree_Level" />
-                        @if (subPart.Tree_Level == 0)
-                        {
-                            <button type="button" class="btn-success btn change-button">Change</button>
-                            <div id="@subPart.Id" style="display: none" class="divshow">
-                                S/N: <input type="text" class="part-serail-number" />
-                                <button id="submit-serial-number" type="button" data-part-id="@subPart.Id" class="btn-success btn">Submit</button>
-                                <button type="button" class="btn-warning btn cancel-button">Cancel</button>
-                            </div>
-                        }
+                        <button id="@subPart.Id" type="button" class="btn-success btn change-button">Change</button>
+                        <div id="@subPart.Id" style="display: none" class="divshow">
+                            S/N: <input type="text" class="part-serail-number" />
+                            <button id="submit-serial-number" type="button" data-part-id="@subPart.Id" class="btn-success btn">Submit</button>
+                            <button type="button" class="btn-warning btn cancel-button">Cancel</button>
+                        </div>
                     </td>
                     i++;
                 }
@@ -61,12 +58,13 @@
 		}
 
 		$('.change-button').click(function () {
-			$('.divshow').css('display', 'block');
+                    id=$(this)[0].id;
+                    $("div[class='divshow'][id=" + id +"]").css('display', 'block');
 		});
 
 		$('.cancel-button').click(function () {
-            $('.divshow').css('display', 'none');
-		    $('.part-serail-number').val('');
+                    $('.divshow').css('display', 'none');
+                    $('.part-serail-number').val('');
 		});
 
 	    $('button#submit-serial-number').on('click', function (e) {
