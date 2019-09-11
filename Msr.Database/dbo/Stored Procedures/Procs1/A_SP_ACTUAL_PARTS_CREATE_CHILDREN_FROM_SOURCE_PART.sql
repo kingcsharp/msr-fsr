@@ -1,6 +1,5 @@
 ﻿
 
-
 CREATE    PROCEDURE DBO.A_SP_ACTUAL_PARTS_CREATE_CHILDREN_FROM_SOURCE_PART 
 @myRoot varchar(50),
 @strNTLogin varchar(50)
@@ -8,7 +7,7 @@ AS
 begin transaction
 declare @LOCATION varchar(50), @cPartID varchar(50), @pQty float, @cQty float,
 	@CUR_OWNER varchar(50),@apStat varchar(50),@pPartID varchar(50),
-	@cObjID varchar(50),@msgs varchar(4000)
+	@cObjID varchar(50),@msgs varchar(4000), @serial nvarchar(1000)
 
 SELECT @LOCATION = LOCATION, @pQty = Qty,@CUR_OWNER = CUR_OWNER,
 	@pPartID = PART_ID
@@ -21,6 +20,7 @@ print 'My Location is ' + @LOCATION
 print 'parent Quantity = ' + convert(varchar(50),@pQty)
 print 'Cur Owner = ' + @CUR_OWNER
 print 'Part ID = ' + @phPartID
+print 'Root ID = ' + @myRoot
 if @@ERROR <> 0 goto problem
 
 
@@ -32,7 +32,9 @@ if @@ERROR <> 0 goto problem
 Fetch Next from @curs Into @cPartID,@cQty,@cNickName
 while (@@fetch_status = 0)
 Begin
+	select top 1 @serial=SERIAL from A_ACTUAL_PARTS_HISTORY	where PART_ID=@cPartID order by DRCM desc
 	print 'Adding Child Part = ' + @cPartID
+	print 'with serial = ' + isnull(@serial,'NULL')
 	set @cQty = @cQty * @pQty
 	if @@ERROR <> 0 goto problem
 	exec A_SP_ACTUAL_PARTS_UPDATE_PART
@@ -41,7 +43,7 @@ Begin
 	NULL,
 	@cPartID,
 	@cQty,
-	NULL,
+	@serial,
 	@cNickName,
 	@LOCATION,
 	@CUR_OWNER,
