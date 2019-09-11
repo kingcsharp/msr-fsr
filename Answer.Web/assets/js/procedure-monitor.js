@@ -31,10 +31,13 @@
             $('.target-obj').show();
         }
         if ($('#AddMonitorForProcedureViewModel_Monitor_Type').val() === 'SELECT') {
+
+            $('.list-source').show();
             $('.if-number').hide();
             $('.text-target').hide();
             $('.yes-no').hide();
-            $('.target-obj').show();
+            $('.target-obj').hide();
+
         }
 
         if ($('#AddMonitorForProcedureViewModel_Should_Be').val() === 'BETWEEN' && $('#AddMonitorForProcedureViewModel_Monitor_Type').val() === 'NUMBER') {
