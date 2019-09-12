@@ -30,15 +30,12 @@
                         }
                         <input name="parts[@i].Id" type="hidden" value="@subPart.Id" />
                         <input name="parts[@i].TreeLevel" type="hidden" value="@subPart.Tree_Level" />
-                        @if (subPart.Tree_Level == 0)
-                        {
-                            <button type="button" class="btn-success btn change-button">Change</button>
-                            <div id="@subPart.Id" style="display: none" class="divshow">
-                                S/N: <input type="text" class="part-serail-number" />
-                                <button id="submit-serial-number" type="button" data-part-id="@subPart.Id" class="btn-success btn">Submit</button>
-                                <button type="button" class="btn-warning btn cancel-button">Cancel</button>
-                            </div>
-                        }
+                        <button id="@subPart.Id" type="button" class="btn-success btn change-button">Change</button>
+                        <div id="@subPart.Id" style="display: none" class="divshow">
+                            S/N: <input type="text" class="part-serial-number" />
+                            <button id="submit-serial-number" type="button" data-part-id="@subPart.Id" class="btn-success btn">Submit</button>
+                            <button type="button" class="btn-warning btn cancel-button">Cancel</button>
+                        </div>
                     </td>
                     i++;
                 }
@@ -61,39 +58,37 @@
 		}
 
 		$('.change-button').click(function () {
-			$('.divshow').css('display', 'block');
+                    var partId=$(this)[0].id;
+                    $("div[class='divshow'][id=" + partId +"]").css('display', 'block');
 		});
 
 		$('.cancel-button').click(function () {
-            $('.divshow').css('display', 'none');
-		    $('.part-serail-number').val('');
+                    $('.divshow').css('display', 'none');
+                    $('.part-serial-number').val('');
 		});
 
-	    $('button#submit-serial-number').on('click', function (e) {
-			var partId = $(this).data('part-id');
-			var serialNumber = $('div#' + partId).find('input').val();
-			var taskId = @Model.STEP_ID;
+        $('button#submit-serial-number').on('click', function (e) {
+            var partId = $(this).data('part-id');
+            var serialNumber = $('div[id=' + partId +']').find('input').val();
+            var taskId = @Model.STEP_ID;
 
-			eLoaderOpen();
-			var partSerailNum = $('.part-serail-number').val();
-			if (partSerailNum === '') {
-				eLoaderError('Please enter a serial number for parts in the screen before continuing');
-			}
-			else
-			{
-			$.ajax({
-				type: "POST",
-				url: "/wip/UpdateRootPart?partId=" + partId + "&serialNumber=" + serialNumber + "&taskId=" + taskId,
-				dataType: 'json',
-				success: function (data) {
-					location.reload();
-				},
-				error: function (data) {
-					eLoaderError(data);
-				}
-				});
-			}
-		});
+            eLoaderOpen();
+            if (serialNumber !== '') {
+                $.ajax({
+                    type: "POST",
+                    url: "/wip/UpdateRootPart?partId=" + partId + "&serialNumber=" + serialNumber + "&taskId=" + taskId,
+                    dataType: 'json',
+                    success: function (data) {
+                        location.reload();
+                    },
+                    error: function (data) {
+                        eLoaderError(data);
+                    }
+                });
+            } else {
+                eLoaderError('Please enter a serial number for parts in the screen before continuing');
+            }
+        });
 
 		$('#btn-save,#btn-save-complete-task').on('click',
 			function (e) {
