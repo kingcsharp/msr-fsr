@@ -1,65 +1,95 @@
-﻿@{
+﻿@using Msr.Services.Helps
+@{
+
+    @* var helpUrl = HttpContext.Current.Request.RequestContext.RouteData.Values["controller"] + "/" + @HttpContext.Current.Request.RequestContext.RouteData.Values["action"];*@
+
+    var helpUrl = "/Report/reports";
+
+    var helpService = new HelpService();
+
+    var vm = helpService.CanViewHelpPage(helpUrl, HttpContext.Current.User.Identity.Name);
+}
+
+
+
+@{
     ViewBag.Title = "Reporting";
 }
 
-<link href="~/assets/js/reports/libs/bootstrap/bootstrap.min.css" rel="stylesheet" />
-<link href="~/assets/js/reports/libs/angular-ui-select/select.min.css" rel="stylesheet" />
-<!-- font-awesome -->
-<link rel="stylesheet" type="text/css" href="~/assets/js/reports/public/css/font-awesome-4.4.0/css/font-awesome.min.css" />
-<!-- gridster -->
-<link href="~/assets/js/reports/libs/angular-gridster/angular-gridster.min.css" rel="stylesheet" />
-<!-- ui-layout -->
-<link href="~/assets/js/reports/libs/angular-ui-layout/ui-layout.css" rel="stylesheet" />
-<!-- angular.treeview -->
-<link href="~/assets/js/reports/libs/angular-treeview/angular.treeview.css" rel="stylesheet" />
-<!-- nestable -->
-<link rel="stylesheet" href="~/assets/js/reports/public/libs/jquery.nestable/jquery.nestable.css" />
-<!--font awesome icon picker -->
-<link rel="stylesheet" href="~/assets/js/reports/public/libs/fontawesome-icon-picker/fontawesome-iconpicker.min.css" />
-<!--slider-->
-<link href="~/assets/js/reports/libs/seiyria-bootstrap-slider/bootstrap-slider.css" rel="stylesheet" />
-<!--bootstrap dateTimePicker-->
-<link href="~/assets/js/reports/libs/angular-bootstrap-datetimepicker/datetimepicker.css" rel="stylesheet" />
-<!--angular ui tree-->
-<link href="~/assets/js/reports/libs/angular-ui-tree/angular-ui-tree.min.css" rel="stylesheet" />
-<!--jsPlumb-->
-<link rel="stylesheet" type="text/css" href="/assets/js/reports/public/libs/jsplumb/jsPlumb.css" />
-<!-- Load c3.css -->
-<link href="~/assets/js/reports/libs/c3/c3.css" rel="stylesheet" />
-<!--v-accordion -->
-<link href="~/assets/js/reports/libs/v-accordion/v-accordion.min.css" rel="stylesheet" />
-<!--ng-tags-input-->
-<link href="~/assets/js/reports/libs/ng-tags-input/ng-tags-input.bootstrap.min.css" rel="stylesheet" />
-<!--angular-ui-grid
-<link rel="stylesheet" type="text/css" href="angular-ui-grid/ui-grid.min.css">
--->
-<!--Angular Editable Text-->
-<link href="~/assets/js/reports/libs/angular-editable-text/angular-editable-text.min.css" rel="stylesheet" />
-<!--CodeMirror-->
-<link href="~/assets/js/reports/libs/codemirror/codemirror.css" rel="stylesheet" />
-<!--colorpicker--><!-- spectrum color picker -->
-<link href="~/assets/js/reports/libs/angular-bootstrap-colorpicker/colorpicker.min.css" rel="stylesheet" />
-<!-- spectrum color picker-->
-<link href="~/assets/js/reports/libs/spectrum/spectrum.css" rel="stylesheet" />
-<!--custom scroll bar -->
-<link href="~/assets/js/reports/libs/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css" rel="stylesheet" />
-<link href="~/assets/js/reports/libs/nodedream/nodedream.css" rel="stylesheet" />
-<link rel="stylesheet" type="text/css" href="~/assets/js/reports/public/css/components.css" />
-<link rel="stylesheet" type="text/css" href="~/assets/js/reports/public/css/forms.css" />
-<link rel="stylesheet" type="text/css" href="~/assets/js/reports/public/css/widestage.css" />
-<link rel="stylesheet" type="text/css" href="~/assets/js/reports/public/css/ndDesigner.css" />
-<link rel="stylesheet" type="text/css" href="~/assets/js/reports/public/css/inspector.css" />
-<link rel="stylesheet" type="text/css" href="~/assets/js/reports/public/css/custom.css" />
-<link rel="stylesheet" type="text/css" href="~/assets/js/reports/public/js/ui-select/select.min.css" />
-<link rel="stylesheet" type="text/css" href="~/assets/js/reports/public/js/datepicker/angular-moment-picker.min.css" />
+<div class="container-fluid">
+    <div class="side-body">
+        <div class="row">
+            <div class="col-xs-12">
+                <h2 class="page-header">
+                    <span class="icon fa fa-list-ol"></span>
+                    Ad-Hoc Reports
+                    @if (vm.CanView)
+                    {
+                        <button class="btn btn-info pull-right page-help" style="margin-left:10px;margin-top:-5px;" data-page-url="@helpUrl">Help</button>
+                    }
+                </h2>
+            </div>
+        </div>
+    </div>
 
-<div>
-    <div ng-app="WideStage" style="padding: 60px 0 0 60px;">
-        <div id="angularAppDiv" ng-view>
+    <link href="~/assets/js/reports/libs/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/assets/js/reports/libs/angular-ui-select/select.min.css" rel="stylesheet" />
+    <!-- font-awesome -->
+    <link rel="stylesheet" type="text/css" href="~/assets/js/reports/public/css/font-awesome-4.4.0/css/font-awesome.min.css" />
+    <!-- gridster -->
+    <link href="~/assets/js/reports/libs/angular-gridster/angular-gridster.min.css" rel="stylesheet" />
+    <!-- ui-layout -->
+    <link href="~/assets/js/reports/libs/angular-ui-layout/ui-layout.css" rel="stylesheet" />
+    <!-- angular.treeview -->
+    <link href="~/assets/js/reports/libs/angular-treeview/angular.treeview.css" rel="stylesheet" />
+    <!-- nestable -->
+    <link rel="stylesheet" href="~/assets/js/reports/public/libs/jquery.nestable/jquery.nestable.css" />
+    <!--font awesome icon picker -->
+    <link rel="stylesheet" href="~/assets/js/reports/public/libs/fontawesome-icon-picker/fontawesome-iconpicker.min.css" />
+    <!--slider-->
+    <link href="~/assets/js/reports/libs/seiyria-bootstrap-slider/bootstrap-slider.css" rel="stylesheet" />
+    <!--bootstrap dateTimePicker-->
+    <link href="~/assets/js/reports/libs/angular-bootstrap-datetimepicker/datetimepicker.css" rel="stylesheet" />
+    <!--angular ui tree-->
+    <link href="~/assets/js/reports/libs/angular-ui-tree/angular-ui-tree.min.css" rel="stylesheet" />
+    <!--jsPlumb-->
+    <link rel="stylesheet" type="text/css" href="/assets/js/reports/public/libs/jsplumb/jsPlumb.css" />
+    <!-- Load c3.css -->
+    <link href="~/assets/js/reports/libs/c3/c3.css" rel="stylesheet" />
+    <!--v-accordion -->
+    <link href="~/assets/js/reports/libs/v-accordion/v-accordion.min.css" rel="stylesheet" />
+    <!--ng-tags-input-->
+    <link href="~/assets/js/reports/libs/ng-tags-input/ng-tags-input.bootstrap.min.css" rel="stylesheet" />
+    <!--angular-ui-grid
+    <link rel="stylesheet" type="text/css" href="angular-ui-grid/ui-grid.min.css">
+    -->
+    <!--Angular Editable Text-->
+    <link href="~/assets/js/reports/libs/angular-editable-text/angular-editable-text.min.css" rel="stylesheet" />
+    <!--CodeMirror-->
+    <link href="~/assets/js/reports/libs/codemirror/codemirror.css" rel="stylesheet" />
+    <!--colorpicker--><!-- spectrum color picker -->
+    <link href="~/assets/js/reports/libs/angular-bootstrap-colorpicker/colorpicker.min.css" rel="stylesheet" />
+    <!-- spectrum color picker-->
+    <link href="~/assets/js/reports/libs/spectrum/spectrum.css" rel="stylesheet" />
+    <!--custom scroll bar -->
+    <link href="~/assets/js/reports/libs/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css" rel="stylesheet" />
+    <link href="~/assets/js/reports/libs/nodedream/nodedream.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="~/assets/js/reports/public/css/components.css" />
+    <link rel="stylesheet" type="text/css" href="~/assets/js/reports/public/css/forms.css" />
+    <link rel="stylesheet" type="text/css" href="~/assets/js/reports/public/css/widestage.css" />
+    <link rel="stylesheet" type="text/css" href="~/assets/js/reports/public/css/ndDesigner.css" />
+    <link rel="stylesheet" type="text/css" href="~/assets/js/reports/public/css/inspector.css" />
+    <link rel="stylesheet" type="text/css" href="~/assets/js/reports/public/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="~/assets/js/reports/public/js/ui-select/select.min.css" />
+    <link rel="stylesheet" type="text/css" href="~/assets/js/reports/public/js/datepicker/angular-moment-picker.min.css" />
+
+    <div>
+        <div ng-app="WideStage" style="padding: 60px 0 0 60px;">
+            <div id="angularAppDiv" ng-view>
+            </div>
         </div>
     </div>
 </div>
-
 
 @section scripts{
     <!-- jquery -->

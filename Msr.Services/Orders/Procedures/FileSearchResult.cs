@@ -3,6 +3,10 @@ namespace Msr.Services.Orders.Procedures
 {
     public class FileSearchResult
     {
+        public string LocationID { get; set; }
+
+        public string LocationName { get; set; }
+
         public string CustomerName { get; set; }
 
         public string ProductName { get; set; }

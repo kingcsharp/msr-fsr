@@ -1,5 +1,18 @@
 ﻿@Html.Partial("_StepControls")
 
+<style>
+    #step-tabs .tab-content {
+    padding: 10px 20px;
+    border: none !important;
+    overflow-y: hidden !important;
+}
+#step-tabs .tab-pane {
+    overflow-y: auto !important;
+    border: none !important;
+}
+
+</style>
+
 <div id="step-tabs" class="col-sm-12">
     <ul class="nav nav-tabs">
         <li class="active"><a data-toggle="tab" href="#description2">Task Description</a></li>

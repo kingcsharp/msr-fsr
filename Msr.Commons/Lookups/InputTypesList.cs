@@ -11,8 +11,7 @@ namespace Msr.Commons.Lookups
             {
                 new SelectListItem {Text = "Manual", Value = "MANUAL"},
                 new SelectListItem {Text = "QR Code", Value = "QR_CODE"},
-                new SelectListItem {Text = "Sensor", Value = "SENSOR"},
-                new SelectListItem {Text = "List", Value = "LIST"}
+                new SelectListItem {Text = "Sensor", Value = "SENSOR"}
             };
         }
     }

@@ -61,6 +61,8 @@
             }
         </td>
     </tr>
+</table>
+
     @foreach (var step in Model.TaskItemParts)
     {
         if (step.Status == "REQUESTED" || step.Status == "ACCEPTED" || step.Status == "PENDING_PARENT_ACCEPTANCE" || step.Status == "CLOSED")
@@ -79,8 +81,7 @@
             }
         }
     }
-    </tbody>
-</table>
+
 
 <script type="text/javascript">
 
