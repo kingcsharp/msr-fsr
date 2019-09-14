@@ -808,14 +808,13 @@ namespace Answer.Web.Controllers
         public ActionResult UpdateRootPart(int partId, string serialNumber, int taskId)
         {
             var loggedUserId = GetCurrentUser().Id;
-            var responce = _orderService.UpdateRootPart(partId, serialNumber, taskId, loggedUserId);
+            var response = _orderService.UpdateRootPart(partId, serialNumber, taskId, loggedUserId);
 
-            if (responce.HasErrors())
+            if (response.HasErrors())
             {
-                return Json(responce.ErrorMessage, JsonRequestBehavior.AllowGet);
+                return Json( new { success = false, responseText = "Serial Number could not be saved. Error: " + response.ErrorMessage}, JsonRequestBehavior.AllowGet);
             }
-
-            return Json(new { Code = "OK", Message = responce }, JsonRequestBehavior.AllowGet);
+            return Json( new { success = true, responseText = "Serial Number saved successfully." }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -838,11 +837,11 @@ namespace Answer.Web.Controllers
 
             if (type == "completeTask")
             {
-                var responce = _orderService.CloseTask(taskId.ToString(), loggedUserId.Id, fillId);
+                var response = _orderService.CloseTask(taskId.ToString(), loggedUserId.Id, fillId);
 
-                if (!string.IsNullOrWhiteSpace(responce))
+                if (!string.IsNullOrWhiteSpace(response))
                 {
-                    return Json(responce, JsonRequestBehavior.AllowGet);
+                    return Json(response, JsonRequestBehavior.AllowGet);
                 }
 
                 return Json("OK", JsonRequestBehavior.AllowGet);
