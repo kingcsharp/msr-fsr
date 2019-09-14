@@ -1132,7 +1132,7 @@ namespace Msr.Services.Procedures
 
                 var modelList = Enumerable.Select(ds.Tables[1].AsEnumerable(), item => new ProcedureImportViewModel
                 {
-                    ProcedureId = item["PROCEDURE_ID"].ToString(),
+                    ProcedureId = item["PROCEDURE_ID"].ToString().Trim().ToUpper(),
                     ProcedureName = item["PROCEDURE_NAME"].ToString(),
                     AnsId = item["ANS_ID"].ToString(),
                     ProcType = item["PROC_TYPE_ID"].ToString()
@@ -1140,7 +1140,7 @@ namespace Msr.Services.Procedures
 
                 var stepList = Enumerable.Select(ds.Tables[0].AsEnumerable(), item => new StepsImportViewModel
                 {
-                    PROCEDURE_ID = item["PROCEDURE_ID"].ToString(),
+                    PROCEDURE_ID = item["PROCEDURE_ID"].ToString().Trim().ToUpper(),
                     Title = item["Title"].ToString(),
                     STEP_TEXT = item["STEP_TEXT"].ToString(),
                     COMMENT = item["COMMENT"].ToString(),
