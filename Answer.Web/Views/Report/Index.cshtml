@@ -16,6 +16,18 @@
     ViewBag.Title = "Reporting";
 }
 
+<style>
+    .export-button {
+        top: -93px;
+        right: 60px;
+        position: absolute;
+        cursor: pointer;
+        font-size: 18px;
+        width: 187px;
+        height: 32px;
+    }
+</style>
+
 <div class="container-fluid">
     <div class="side-body">
         <div class="row">
@@ -84,7 +96,7 @@
     <link rel="stylesheet" type="text/css" href="~/assets/js/reports/public/js/datepicker/angular-moment-picker.min.css" />
 
     <div>
-        <div ng-app="WideStage" style="padding: 60px 0 0 60px;">
+        <div id="app-container" ng-app="WideStage" style="padding: 0 60px;">
             <div id="angularAppDiv" ng-view>
             </div>
         </div>
@@ -265,6 +277,11 @@
                     $('hr.featurette-divider').css({ 'display': 'none' });
                 }, 10000);
             }
+            //adhoc fail fixes
+            if (window.location.href.indexOf("5bf568ec683037004743ceeb") > -1) {
+                $('#app-container').css({ 'padding': '0 60px !important' });
+            }
+
         });
     </script>
 }

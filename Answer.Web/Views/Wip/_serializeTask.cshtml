@@ -37,7 +37,7 @@
         <thead>
             <tr>
                 <th class="dark">Part</th>
-                <th class="dark">Serial #</th>
+                <th colspan="2" class="dark">Serial #</th>
             </tr>
         </thead>
         <tbody>
@@ -49,19 +49,15 @@
                     </td>
                     @foreach (var subPart in part)
                     {
-                        <td class="text-td">
+                        <td class="text-td" style="width:15%;border-right: unset;">
                             <div id="@i-show" data-index="@i" class="form-group">
                                 @if (subPart.Tree_Level == 0)
                                 {
-
-                                    <input class="form-control" name="parts[@i].Serial" type="text" value="@subPart.Serial" disabled="disabled" />
-
+                                    <input id="@i-current-value" class="form-control" name="parts[@i].Serial" type="text" value="@subPart.Serial" disabled="disabled" />
                                 }
                                 else
                                 {
-
-                                    <input class="form-control serialize-serial-num" name="parts[@i].Serial" type="text" value="@subPart.Serial" disabled="disabled" />
-
+                                    <input id="@i-current-value" class="form-control serialize-serial-num" name="parts[@i].Serial" type="text" value="@subPart.Serial" disabled="disabled" />
                                 }
                                 <input name="parts[@i].Id" type="hidden" value="@subPart.Id" />
                                 <input name="parts[@i].TreeLevel" type="hidden" value="@subPart.Tree_Level" />
@@ -70,10 +66,14 @@
 
                             <div id="@i-change" class="hidden form-group" data-index="@i">
                                 <input id="@i-new-value" class="form-control part-serial-number" type="text" placeholder="@subPart.Serial" />
-                                <button id="submit-serial-number" type="button" data-index="@i" data-part-id="@subPart.Id" class="btn-success btn">Submit</button>
-                                <button type="button" class="btn-danger btn cancel-button">Cancel</button>
+                                <button id="@i-submit" type="button" data-index="@i" data-part-id="@subPart.Id" class="btn-success btn submit-serial-number">Submit</button>
+                                <button id="@i-cancel" type="button" class="btn-danger btn cancel-button">Cancel</button>
                             </div>
                         </td>
+                        <td style="border-left:unset;">
+                            <div id="@i-results" class="hidden" style="margin-top:10px;"></div>
+                        </td>
+
                         i++;
                     }
                 </tr>
@@ -88,46 +88,61 @@
 
 	$(document).ready(function () {
 
-		if ('@Model.Status' === "CLOSED") {
-			$('input.serialize-serial-num').attr("disabled", true);
-		}
-
-     $('.change-button').click(function () {
-        var thisId = $(this).parent().data('index');
-        $(this).parent('div').addClass('hidden');
-        $('#' + thisId + '-change').removeClass('hidden');
+        $('.change-button').click(function () {
+            var thisId = $(this).parent().data('index');
+            $(this).parent('div').addClass('hidden');
+            $('#'+thisId+'-change').removeClass('hidden');
 		});
 
 		$('.cancel-button').click(function () {
             var thisId = $(this).parent().data('index');
-            $('#' + thisId + '-show').removeClass('hidden');
+            $('#'+thisId+'-show').removeClass('hidden');
             $(this).parent('div').addClass('hidden');
 		});
 
-	    $('button#submit-serial-number').on('click', function (e) {
+        $('button.submit-serial-number').on('click', function (e) {
             var index = $(this).data('index');
+            $(this).attr("disabled", true).html('<i class="fa fa-refresh fa-spin fa-fw"></i><span class="sr-only">Saving...</span>');
+            $('#'+index+'-cancel').addClass('hidden');
             var partId = $(this).data('part-id');
-            console.log('PartId: ' + partId);
             var serialNumber = $('#' + index + '-new-value').val();
-            console.log('New Serial#: ' + serialNumber);
             var taskId = @Model.STEP_ID;
-            console.log('Task Id#: ' + taskId);
 
-			eLoaderOpen();
-			if (serialNumber === '') {
-				eLoaderError('Please enter a serial number for parts in the screen before continuing');
+			//eLoaderOpen();
+            if (serialNumber === '') {
+                $('#' + index + '-results').addClass('text-danger').html('Please enter a serial number for parts in the screen before saving');
+                $(this).attr("disabled", false).html('Change');
+                $('#'+index+'-cancel').removeClass('hidden');
+				//eLoaderError('Please enter a serial number for parts in the screen before continuing');
             }
 
 			else {
 			$.ajax({
 				type: "POST",
 				url: "/wip/UpdateRootPart?partId=" + partId + "&serialNumber=" + serialNumber + "&taskId=" + taskId,
-				dataType: 'json',
-				success: function (data) {
-					location.reload();
+                dataType: 'json',
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    console.log('Response :' + response.responseText);
+                    if (response.success) {
+                        $('#'+index+'-submit').attr("disabled", false).html('Submit');
+                        $('#' + index + '-cancel').removeClass('hidden');
+                        $('#' + index + '-change').addClass('hidden');
+                        $('#' + index + '-current-value').val(serialNumber);
+                        $('#' + index + '-show').removeClass('hidden');
+                        $('#' + index + '-results').addClass('text-success').removeClass('hidden').html(response.responseText).fadeIn(1000).delay(5000).fadeOut("slow");
+                    }
+                    else {
+                        $('#'+index+'-submit').attr("disabled", false).html('Submit');
+                        $('#'+index+'-cancel').removeClass('hidden');
+                        $('#' + index + '-results').addClass('text-danger').removeClass('hidden').html(response.responseText);
+                    }
 				},
-				error: function (data) {
-					eLoaderError(data);
+                error: function (data) {
+                    $('#'+index+'-submit').attr("disabled", false).html('Submit');
+                    $('#'+index+'-cancel').removeClass('hidden');
+                    $('#' + index + '-results').addClass('text-danger').html('Internal Error. Error:' +data);
 				}
 				});
 			}
