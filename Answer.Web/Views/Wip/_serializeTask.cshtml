@@ -36,17 +36,12 @@
     <table id="serials" class="table table-hover table-bordered" style="margin-top:15px;">
         <thead>
             <tr>
+
                 <th class="dark">Part</th>
                 <th colspan="2" class="dark">Serial #</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var part in Model.GetActualPartsShowHierarchys.GroupBy(x => x.Part_Desc))
-            {
-                <tr>
-                    <td>
-                        <label class="part-label">@part.FirstOrDefault().Part_Desc</label>
-                    </td>
+                <td>
+                    <label class="control-label">@part.FirstOrDefault().Part_Desc</label>
+                </td>
                     @foreach (var subPart in part)
                     {
                         <td class="text-td" style="width:15%;border-right: unset;">
@@ -88,7 +83,7 @@
 
 	$(document).ready(function () {
 
-        $('.change-button').click(function () {
+    $('.change-button').click(function () {
             var thisId = $(this).parent().data('index');
             $(this).parent('div').addClass('hidden');
             $('#'+thisId+'-change').removeClass('hidden');
