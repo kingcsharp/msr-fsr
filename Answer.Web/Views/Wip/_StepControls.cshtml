@@ -32,60 +32,61 @@
     timerInput = "";
 }
 
-<div class="row" id="@Model.StepId">
+    <div class="row" id="@Model.StepId">
+        <div class="col-xs-12" style="margin-bottom:0">
 
-    @if (Model.HasStepRoles && Model.HasPreviousStepCompleted)
-    {
-        <div id="timer-input" class="col-sm-4 timer-input @timerInput">
-            <input type="text" name="timer" class="form-control timer input-lg" width="120">
-        </div>
-        <div class="col-sm-3">
-            <button class="timer-btn btn btn-primary btn-lg print-btn pull-left start-timer-btn @startButton start-step" id="start-step"><i class="glyphicon glyphicon-step-forward"></i> Start</button>
-
-            @if (Model.TaskEditDataResult.RequesteeId == Model.LoggedUserIdResult.Id && ((Model.TaskRunningDto != null && Model.TaskRunningDto.StatusId == TimerStatuseConstants.Paused) || (Model.TaskEditDataResult.Status == "ACCEPTED" && Model.TaskRunningDto == null)))
+            @if (Model.HasStepRoles && Model.HasPreviousStepCompleted)
             {
-                resumeButton = "show";
-                doneButton = "show";
+                <div id="timer-input" class="col-sm-4 timer-input @timerInput" style="margin-left:-15px;">
+                    <input type="text" name="timer" class="form-control timer input-lg" width="120">
+                </div>
+                <div class="col-sm-3">
+                    <button class="timer-btn btn btn-primary btn-lg print-btn pull-left start-timer-btn @startButton start-step" id="start-step"><i class="glyphicon glyphicon-step-forward"></i> Start</button>
+
+                    @if (Model.TaskEditDataResult.RequesteeId == Model.LoggedUserIdResult.Id && ((Model.TaskRunningDto != null && Model.TaskRunningDto.StatusId == TimerStatuseConstants.Paused) || (Model.TaskEditDataResult.Status == "ACCEPTED" && Model.TaskRunningDto == null)))
+                    {
+                        resumeButton = "show";
+                        doneButton = "show";
+                    }
+
+                    <button class="timer-btn btn btn-warning btn-lg print-btn pull-left @resumeButton" data-task-log-id="@taskId" id="resume-step"><i class="glyphicon glyphicon-step-forward"></i> Resume</button>
+
+
+                    @if (Model.TaskEditDataResult.RequesteeId == Model.LoggedUserIdResult.Id && (Model.TaskRunningDto != null && Model.TaskRunningDto.StatusId == TimerStatuseConstants.InProgress))
+                    {
+                        pauseButton = "show";
+                        doneButton = "show";
+                    }
+
+                    <button class="timer-btn btn btn-warning btn-lg print-btn pull-left @pauseButton" data-task-log-id="@taskId" id="pause-step"><i class="glyphicon glyphicon-pause"></i> Pause</button>
+                    <button class="timer-btn btn btn-primary btn-lg print-btn pull-left @doneButton"
+                            data-task-log-id="@taskId"
+                            data-system-task="@Model.TaskEditDataResult.SystemTask"
+                            id="done-step">
+                        <i class="glyphicon glyphicon-stop"></i> Done
+                    </button>
+
+                </div>
             }
 
-            <button class="timer-btn btn btn-warning btn-lg print-btn pull-left @resumeButton" data-task-log-id="@taskId" id="resume-step"><i class="glyphicon glyphicon-step-forward"></i> Resume</button>
-
-
-            @if (Model.TaskEditDataResult.RequesteeId == Model.LoggedUserIdResult.Id && (Model.TaskRunningDto != null && Model.TaskRunningDto.StatusId == TimerStatuseConstants.InProgress))
+            @if (Model.HasPreviousStepCompleted)
             {
-                pauseButton = "show";
-                doneButton = "show";
+                <div class="col-sm-5 pull-right" style="margin-right:-10px;">
+                    <div id="showNCREMPM" style="@(Model.TaskEditDataResult.Status == "ACCEPTED" || Model.TaskEditDataResult.Status == "REQUESTED" ? "display:block" : "display:none")">
+                        <button id="addNcrModal_" class="btn btn-danger btn-lg print-btn pull-right"><i class="fa fa-plus-square"></i> Add NCR</button>
+                        <button data-toggle="modal" data-fill-id="@ViewBag.FillId" data-target="#add-new-equipment-model" class="btn btn-info btn-lg print-btn pull-right"><i class="fa fa-plus-square"></i> EM/PM</button>
+                    </div>
+
+                    @if (Model.TaskEditDataResult.RequesteeId != Model.LoggedUserIdResult.Id)
+                    {
+                        <button class="btn btn-warning btn-lg print-btn pull-right show-timer-btn" id="assume-step"><i class="glyphicon glyphicon-step-forward"></i> Take over this task</button>
+                    }
+
+                </div>
+                <input type="hidden" id="taskLogId" name="taskLogId" value="">
             }
-
-            <button class="timer-btn btn btn-warning btn-lg print-btn pull-left @pauseButton" data-task-log-id="@taskId" id="pause-step"><i class="glyphicon glyphicon-pause"></i> Pause</button>
-            <button class="timer-btn btn btn-primary btn-lg print-btn pull-left @doneButton"
-                    data-task-log-id="@taskId"
-                    data-system-task="@Model.TaskEditDataResult.SystemTask"
-                    id="done-step">
-                <i class="glyphicon glyphicon-stop"></i> Done
-            </button>
-
         </div>
-    }
-    
-     @if (Model.HasPreviousStepCompleted)
-     {
-         <div class="col-sm-5 pull-right">
-             <div id="showNCREMPM" style="@(Model.TaskEditDataResult.Status == "ACCEPTED" || Model.TaskEditDataResult.Status == "REQUESTED" ? "display:block" : "display:none")">
-                 <button id="addNcrModal_" class="btn btn-danger btn-lg print-btn pull-right"><i class="fa fa-plus-square"></i> Add NCR</button>
-                 <button data-toggle="modal" data-fill-id="@ViewBag.FillId" data-target="#add-new-equipment-model" class="btn btn-info btn-lg print-btn pull-right"><i class="fa fa-plus-square"></i> EM/PM</button>
-             </div>
-
-             @if (Model.TaskEditDataResult.RequesteeId != Model.LoggedUserIdResult.Id)
-             {
-                 <button class="btn btn-warning btn-lg print-btn pull-right show-timer-btn" id="assume-step"><i class="glyphicon glyphicon-step-forward"></i> Take over this task</button>
-             }
-
-         </div>
-         <input type="hidden" id="taskLogId" name="taskLogId" value="">
-     }
-        </div>
-
+    </div>
 @Scripts.Render("~/bundles/js/wip-step-controls")
 
 <script type="text/javascript" src="~/assets/js/grids/files-dialog.js"></script>

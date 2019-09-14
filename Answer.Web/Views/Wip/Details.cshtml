@@ -1,3 +1,13 @@
+@using Msr.Services.Helps
+@{
+
+    var helpUrl = "/wip/details/";
+
+    var helpService = new HelpService();
+
+    var vm = helpService.CanViewHelpPage(helpUrl, HttpContext.Current.User.Identity.Name);
+}
+
 @model  Msr.Services.Orders.Messaging.WorkOrderDetailsResponse
 @{
     ViewBag.Title = "Work Order Details " + Model.FileSearchResult?.FillObjDesc + " qty:" + Model.FileSearchResult?.Qty;
@@ -5,6 +15,12 @@
 }
 
 @Styles.Render("~/bundles/css/fileinput")
+
+<style>
+    .row > [class*="col-"] {
+        margin-bottom: 0!important;
+    }
+</style>
 
 <div class="container-fluid">
     <div class="side-body padding-top">
@@ -22,7 +38,6 @@
                             </div>
                             <button type="button" data-toggle="modal" data-target="#wipListModal" class="btn btn-info cancel-btn pull-right wip-view-button"><i class="fa fa-list" aria-hidden="true"></i> WIP List</button>
                         </div>
-
                         <label>My WO Items</label>
                         <select id="wip-item-select" class="selectpicker form-control" name="wo-item">
                             <option data-content="<strong>Select an Item...</strong>">Select an Item</option>
@@ -43,76 +58,78 @@
                         </select>
                     </div>
 
+
+                    <button class="btn btn-info btn-sm print-btn pull-right" data-toggle="modal" data-id="@Model.FillId" data-target="#wioDetailPrintOther"><i class="fa fa-print"></i> Print Other</button>
+                    <button class="btn btn-info btn-sm print-btn pull-right" data-toggle="modal" data-id="@Model.FillId" data-target="#wioDetailPrintTraveler"><i class="fa fa-print"></i> Print Traveler</button>
+                    
                     @if (Model.TaskStepResults.Any(x => !status.Contains(x.Status)) && Model.HasProcedureRoles)
                     {
-                        <div class="">
-                            <button data-id="@Model.FillId" class="btn btn-danger btn-sm cancel-btn pull-right" data-toggle="modal" data-target="#widDetailCancelStepsModal"><i class="fa fa-close"></i> Cancel Remaining Steps</button>
-                        </div>
+
+                        <button data-id="@Model.FillId" class="btn btn-danger btn-sm cancel-btn pull-right" data-toggle="modal" data-target="#widDetailCancelStepsModal"><i class="fa fa-close"></i> Cancel Remaining Steps</button>
+
                     }
 
                 </div>
-                <div class="col-lg-6 col-md-6 col-sm-6 ">
-                    <ul class="nav nav-tabs">
-                        <li class="active"><a data-toggle="tab" href="#parts">Parts Info:</a></li>
-                        <li><a data-toggle="tab" href="#purchase">Purchase Item Info:</a></li>
-                        <li>
-                            <div id="ncr-notification-button" class="badge hidden" title="There is at least One NCR on the WO. Click to view" style="background-color: #ff0000;margin-top: 10px;display: block;position: fixed;right: 45px;">
-                                <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
-                                <span style="font-size:1.5em">&nbsp;NC</span>
-                            </div>
-                        </li>
-                    </ul>
-                    <div class="tab-content">
-                        <div id="parts" class="tab-pane fade in active">
-                            <div id="part-tab-controls" class="col-sm-12">
-                                <button class="btn btn-info btn-xs print-btn pull-right" data-toggle="modal" data-id="@Model.FillId" data-target="#wioDetailPrintOther"><i class="fa fa-print"></i> Print Other</button>
-                                <button class="btn btn-info btn-xs print-btn pull-right" data-toggle="modal" data-id="@Model.FillId" data-target="#wioDetailPrintTraveler"><i class="fa fa-print"></i> Print Traveler</button>
-                            </div>
-                            <div id="parts-table" class="col-sm-12">
-                                <table class="table table-responsive table-condensed table-bordered">
-                                    <tbody>
-                                        @if (Model.FileSearchResult != null)
-                                        {
-                                            <tr><td>@Model.FileSearchResult.FillObjDesc qty:@Model.FileSearchResult.Qty </td></tr>
-                                        }
-
-                                        @foreach (var part in Model.Parts)
-                                        {
-                                            <tr><td>@part</td></tr>
-                                        }
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        @if (Model.FileSearchResult != null)
+                <div class="col-lg-6 col-md-6 col-sm-6 wip-detail-header-right">
+                        @if (vm.CanView)
                         {
-                            <div id="purchase" class="tab-pane fade">
-                                <table class="table table-responsive table-condensed table-bordered">
-                                    <tbody>
-                                        <tr>
-                                            <th nowrap style="text-align: right">Customer:</th>
-                                            <td>@Model.FileSearchResult.CustomerName</td>
-                                        </tr>
-                                        <tr>
-                                            <th nowrap style="text-align: right">Product:</th>
-                                            <td>@Model.FileSearchResult.ProductName</td>
-                                        </tr>
-                                        <tr>
-                                            <th nowrap style="text-align: right">Procedure:</th>
-                                            <td>@Model.FileSearchResult.ProcedureName</td>
-                                        </tr>
-                                        <tr>
-                                            <th nowrap style="text-align: right">Purchase Item #:</th>
-                                            <td>@Model.FileSearchResult.PurchItemId</td>
-                                        </tr>
-
-                                    </tbody>
-                                </table>
-                            </div>
+                            <button class="btn btn-info pull-right page-help" style="margin:2px 2px 0 10px;" data-page-url="@helpUrl">Help</button>
                         }
+                        <div id="ncr-notification-button" class="badge hidden pull-right" title="There is at least One NCR on the WO. Click to view" style="background-color: #ff0000;margin:8px 0 0 0;">
+                            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                            <span style="font-size:1.5em">&nbsp;NC</span>
+                        </div>
+                        <ul class="nav nav-tabs" role="tablist" id="header-tabs">
+                            <li role="presentation" id="parts-tab" class="active"><a id="header-parts" data-toggle="tab" href="#parts" aria-controls="parts" role="tab">Parts Info:</a></li>
+                            <li role="presentation"><a id="header-purchase" data-toggle="tab" href="#purchase" aria-controls="parts" role="tab">Purchase Item Info:</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div role="tabpanel" id="parts" class="tab-pane fade in active">
+                                <div id="parts-table" class="col-sm-12">
+                                    <table class="table table-responsive table-hover table-condensed">
+                                        <tbody>
+                                            @if (Model.FileSearchResult != null)
+                                            {
+                                                <tr><td>@Model.FileSearchResult.FillObjDesc qty:@Model.FileSearchResult.Qty </td></tr>
+                                            }
+
+                                            @foreach (var part in Model.Parts)
+                                            {
+                                                <tr><td>@part</td></tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            @if (Model.FileSearchResult != null)
+                            {
+                                <div role="tabpanel" id="purchase" class="tab-pane fade">
+                                    <table id="purchase-table" class="table table-responsive table-hover table-condensed">
+                                        <tbody>
+                                            <tr>
+                                                <th nowrap style="text-align: right">Customer:</th>
+                                                <td>@Model.FileSearchResult.CustomerName</td>
+                                            </tr>
+                                            <tr>
+                                                <th nowrap style="text-align: right">Product:</th>
+                                                <td>@Model.FileSearchResult.ProductName</td>
+                                            </tr>
+                                            <tr>
+                                                <th nowrap style="text-align: right">Procedure:</th>
+                                                <td>@Model.FileSearchResult.ProcedureName</td>
+                                            </tr>
+                                            <tr>
+                                                <th nowrap style="text-align: right">Purchase Item #:</th>
+                                                <td>@Model.FileSearchResult.PurchItemId</td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
+                        </div>
                     </div>
-                </div>
-                <!-- <div class="col-lg-2 col-md-2"> @Html.Partial("_HelpViewButton")</div> -->
+
             </div>
             <div class="row">
                 <div class="col-lg-12">
@@ -164,7 +181,6 @@
                                 <li id="step-@step.StepId">
                                 </li>
                             }
-
                         </ul>
                     </div>
                 </div>
@@ -313,5 +329,12 @@
         $('#print-traveler-report').on('click', function () {
             $('#print-traveler-container').printThis({ canvas: true, printDelay: 1000 });
         });
+
+        // tab failure fix
+        $(function () {
+            setTimeout(function () {
+                $("#parts-tab").tab('show');
+            }, 1000);
+        }); 
     </script>
 }

@@ -311,6 +311,30 @@ namespace Msr.Services.Orders
             return detailsResponse;
         }
 
+        public PartLabelTsrDetailsResponse GetPartLabelRollTsrDetails(int fillId)
+        {
+            var detailsResponse = new PartLabelTsrDetailsResponse { FillId = fillId };
+
+            using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
+            {
+                var p = new DynamicParameters();
+
+                p.Add("@fileId", fillId, DbType.Int32, ParameterDirection.Input);
+
+                detailsResponse.GetPartsAndKitsLabelsResult =
+                    conn.Query<GetPartsAndKitsLabelsResult>("GetPartsAndKitsLabels", p,
+                        commandType: CommandType.StoredProcedure).ToList();
+            }
+
+            foreach (var getPartsAndKitsLabelsResult in detailsResponse.GetPartsAndKitsLabelsResult)
+            {
+                getPartsAndKitsLabelsResult.Count = _dbContext.Database.SqlQuery<int>($"SELECT COUNT(SerialNumber) as COUNT FROM[PartsTransactionLog] WHERE PARTID = '{ getPartsAndKitsLabelsResult.Actual_Part_ID}' AND SerialNumber = '{ getPartsAndKitsLabelsResult.Serial}'").Single();
+            }
+
+            return detailsResponse;
+        }
+
+
         public MonitorLabelTsrDetailsResponse GetMonitorLabelTsrDetails(int fillId)
         {
             var detailsResponse = new MonitorLabelTsrDetailsResponse { FillId = fillId };
