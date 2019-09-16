@@ -28,3 +28,12 @@ $(function () {
     $('li.active').removeClass('active');
     $('a[href="' + location.pathname + '"]').closest('li.panel.panel-default.dropdown').addClass('active');
 });
+
+// fix for wip detail header
+$(function () {
+    if (document.location.pathname.indexOf('/wip/details/') === 0) {
+        $('li#search-control').addClass('hidden');
+
+    }
+
+});
