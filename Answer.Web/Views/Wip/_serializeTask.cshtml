@@ -8,12 +8,6 @@
         margin: 15px 0 0 0;
     }
 
-    #serials .form-control {
-        display: inline-block;
-        width: unset !important;
-        margin-bottom: 0 !important;
-    }
-
     #serials .form-group {
         margin-bottom: 0 !important;
     }
@@ -22,18 +16,13 @@
         margin-top: 4px;
     }
 
-    th.dark {
-        background-color: #353D47;
-        color: white;
-        text-align: left;
-    }
 </style>
 
 
 @using (Html.BeginForm("UpdateRootParts", "Wip", FormMethod.Post, new { id = "Update-root-part" }))
 {
     <input type="hidden" name="taskId" value="@Model.STEP_ID" />
-    <table id="serials" class="table table-hover table-bordered" style="margin-top:15px;">
+    <table id="serials" class="table table-hover table-responsive table-bordered" style="margin-top:15px;">
         <thead>
             <tr>
                 <th class="dark">Part</th>
@@ -44,12 +33,12 @@
             @foreach (var part in Model.GetActualPartsShowHierarchys.GroupBy(x => x.Part_Desc))
             {
                 <tr>
-                    <td>
+                    <td class="part-label-td">
                         <label class="part-label">@part.FirstOrDefault().Part_Desc</label>
                     </td>
                     @foreach (var subPart in part)
                     {
-                        <td class="text-td" style="width:15%;border-right: unset;">
+                        <td class="text-td" style="border-right: unset;">
                             <div id="@i-show" data-index="@i" class="form-group">
                                 @if (subPart.Tree_Level == 0)
                                 {

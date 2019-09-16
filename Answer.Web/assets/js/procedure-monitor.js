@@ -1,4 +1,4 @@
-﻿var ProcedureMonitor = function () {
+var ProcedureMonitor = function () {
 
     var setFormState = function () {
 
