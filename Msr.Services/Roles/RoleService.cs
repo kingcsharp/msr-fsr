@@ -11,6 +11,7 @@ using Msr.Models.Common;
 using Msr.Models.People;
 using Msr.Services.Roles.Messages;
 using Msr.Services.Documents;
+using LazyCache;
 
 namespace Msr.Services.Roles
 {
@@ -251,11 +252,22 @@ namespace Msr.Services.Roles
 
         public List<GetMyRolesResult> GetAssignedRoles(string personId)
         {
+            IAppCache cachingService = new CachingService();
+
+            Func<List<GetMyRolesResult>> getUserIDDelegate = () => GetAssignedRolesDB(personId);
+
+            List<GetMyRolesResult> loggedUserIdResult = cachingService.GetOrAdd(personId, getUserIDDelegate, DateTimeOffset.Now.AddHours(1));
+
+            return loggedUserIdResult;
+        }
+
+        private List<GetMyRolesResult> GetAssignedRolesDB(string personId)
+        {
             RefreshUserRoles(personId);
 
-            var personIdParam = new SqlParameter("@personId", personId);
+            SqlParameter personIdParam = new SqlParameter("@personId", personId);
 
-            var result = _dbContext.Database.SqlQuery<GetMyRolesResult>($"SELECT distinct ROLE_ID, ROLE, PERSON, STATUS, ROLE_NAME, StartDate, EndDate FROM A_APPROVED_ROLE_ASSIGNEES WHERE PERSON = {personId}").ToList();
+            List<GetMyRolesResult> result = _dbContext.Database.SqlQuery<GetMyRolesResult>($"SELECT distinct ROLE_ID, ROLE, PERSON, STATUS, ROLE_NAME, StartDate, EndDate FROM A_APPROVED_ROLE_ASSIGNEES WHERE PERSON = {personId}").ToList();
 
             return result.Where(x => x.Status == "ACTIVE").ToList();
         }
