@@ -8,9 +8,13 @@
     var vm = helpService.CanViewHelpPage(helpUrl, HttpContext.Current.User.Identity.Name);
 }
 
+@{
+    string LabelStatus = "";
+}
+
 @model  Msr.Services.Orders.Messaging.WorkOrderDetailsResponse
 @{
-    ViewBag.Title = "Work Order Details " + Model.FileSearchResult?.FillObjDesc + " qty:" + Model.FileSearchResult?.Qty;
+    ViewBag.Title = @*"Work Order Details " +*@ Model.FileSearchResult?.FillObjDesc @*+ " qty:" + Model.FileSearchResult?.Qty*@;
     var status = new string[] { "COMPLETED", "FINISHED", "CLOSED" };
 }
 
@@ -29,7 +33,7 @@
         @if (Model.FillId > 0)
         {
             <div class="row wip-detail-header">
-                <div class="col-lg-6 col-md-6 col-sm-6 wip-detail-header-left">
+                <div class="col-lg-6 col-md-5 col-sm-6 wip-detail-header-left">
                     <div class="form-group">
                         <div style="display: inline-block; float: right;">
                             <label>Hide Completed </label>
@@ -38,15 +42,19 @@
                             </div>
                             <button type="button" data-toggle="modal" data-target="#wipListModal" class="btn btn-info cancel-btn pull-right wip-view-button"><i class="fa fa-list" aria-hidden="true"></i> WIP List</button>
                         </div>
-                        <label>My WO Items</label>
+
+                        
                         <select id="wip-item-select" class="selectpicker form-control" name="wo-item">
-                            <option data-content="<strong>Select an Item...</strong>">Select an Item</option>
+                            <option data-content="<strong>Select Another WO Item...</strong>">Select an Item</option>
                             <optgroup label="Items Assigned to Me">
                                 @if (Model.MyWoItems.Any())
                                 {
                                     foreach (var item in Model.MyWoItems)
                                     {
-                                        <option data-content="<strong data-fill-id='@item.FillId'>@item.PurchaseItemId</strong><br>Proc: @item.ProcName<br>Serial: @item.Serial<span class='label label-success pull-right'>@item.Status</span>" data-status="@item.Status" data-fill-id="@Model.FillId">@item.FillId</option>
+                                        if (@item.Status == "ACCEPTED") {LabelStatus = "label-info"; }
+                                        else if (@item.Status == "REQUESTED"){ LabelStatus = "label-warning"; }
+                                        else { LabelStatus = "label-success"; }
+                                        <option data-content="<strong data-fill-id='@item.FillId'>@item.PurchaseItemId</strong><br>Proc: @item.ProcName<br>Serial: @item.Serial<span class='label @LabelStatus pull-right'>@item.Status</span>" data-status="@item.Status" data-fill-id="@Model.FillId">@item.FillId</option>
                                     }
                                 }
                                 else
@@ -57,8 +65,7 @@
                             </optgroup>
                         </select>
                     </div>
-
-
+                    
                     <button class="btn btn-info btn-sm print-btn pull-right" data-toggle="modal" data-id="@Model.FillId" data-target="#wioDetailPrintOther"><i class="fa fa-print"></i> Print Other</button>
                     <button class="btn btn-info btn-sm print-btn pull-right" data-toggle="modal" data-id="@Model.FillId" data-target="#wioDetailPrintTraveler"><i class="fa fa-print"></i> Print Traveler</button>
                     
@@ -70,7 +77,7 @@
                     }
 
                 </div>
-                <div class="col-lg-6 col-md-6 col-sm-6 wip-detail-header-right">
+                <div class="col-lg-6 col-md-7 col-sm-6 wip-detail-header-right">
                         @if (vm.CanView)
                         {
                             <button class="btn btn-info pull-right page-help" style="margin:2px 2px 0 10px;" data-page-url="@helpUrl">Help</button>
@@ -181,6 +188,7 @@
                                 <li id="step-@step.StepId">
                                 </li>
                             }
+
                         </ul>
                     </div>
                 </div>
@@ -267,7 +275,9 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Add Maintenance Task</h4>
                 </div>
+
                 <div class="modal-body" style="width: 100%;"></div>
+
                 <div class="modal-footer">
                     <button id="add-equipment-maintenace" type="button" class="btn btn-success">Submit</button>
                     <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-close-o"></i> Cancel</button>
@@ -336,5 +346,6 @@
                 $("#parts-tab").tab('show');
             }, 1000);
         }); 
+
     </script>
 }
