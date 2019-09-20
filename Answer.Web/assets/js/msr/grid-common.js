@@ -432,17 +432,6 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                     $(elem).multiselect('deselectAll', false);
                     $(elem).multiselect('selectAll', false);
                     $(elem).multiselect('updateButtonText');
-
-                    /*setTimeout(function () {
-
-                        $(elem).multiselect('deselectAll', false);
-                        $(elem).multiselect('selectAll', false);
-                        $(elem).multiselect('updateButtonText');
-
-                        if (callback) {
-                            callback(elem);
-                        }
-                    }, 100);*/
                 });
             }, 100);
 

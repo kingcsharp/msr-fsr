@@ -244,3 +244,4 @@ ModelManifest.xml
 # FAKE - F# Make
 .fake/
 *.jfm
+/Msr.Commons/Controllers/ReportController.cs
