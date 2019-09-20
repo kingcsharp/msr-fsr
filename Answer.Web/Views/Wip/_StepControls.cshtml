@@ -9,6 +9,9 @@
     var doneButton = "hidden";
     var timerInput = "hidden";
     int? taskId = null;
+    string controlLeft = "";
+    string controlRight = "";
+    string controlCenter = "";
 
     if (Model.TaskRunningDto != null)
     {
@@ -20,6 +23,7 @@
 {
     startButton = "show";
     timerInput = "";
+
 }
 
 @if (Model.TaskEditDataResult.RequesteeId == Model.LoggedUserIdResult.Id && (Model.TaskEditDataResult.Status == "ACCEPTED" && Model.TaskRunningDto == null))
@@ -32,15 +36,28 @@
     timerInput = "";
 }
 
+@if (Model.TaskEditDataResult.RequesteeId != Model.LoggedUserIdResult.Id)
+{
+    controlLeft = "col-md-1";
+    controlCenter = "col-md-1";
+    controlRight = "col-md-10";
+}
+else
+{
+    controlLeft = "col-md-3";
+    controlCenter = "col-md-4";
+    controlRight = "col-md-5";
+}
+
     <div class="row" id="@Model.StepId">
         <div class="col-xs-12" style="margin-bottom:0">
 
             @if (Model.HasStepRoles && Model.HasPreviousStepCompleted)
             {
-                <div id="timer-input" class="col-sm-4 timer-input @timerInput" style="margin-left:-15px;">
+                <div id="timer-input" class="@controlLeft timer-input timer-col @timerInput" style="margin-left:-15px;">
                     <input type="text" name="timer" class="form-control timer input-lg" width="120">
                 </div>
-                <div class="col-sm-3">
+                <div class="@controlCenter timer-col btn-group" role="group" style="margin-left:5px">
                     <button class="timer-btn btn btn-primary btn-lg print-btn pull-left start-timer-btn @startButton start-step" id="start-step"><i class="glyphicon glyphicon-step-forward"></i> Start</button>
 
                     @if (Model.TaskEditDataResult.RequesteeId == Model.LoggedUserIdResult.Id && ((Model.TaskRunningDto != null && Model.TaskRunningDto.StatusId == TimerStatuseConstants.Paused) || (Model.TaskEditDataResult.Status == "ACCEPTED" && Model.TaskRunningDto == null)))
@@ -71,8 +88,8 @@
 
             @if (Model.HasPreviousStepCompleted)
             {
-                <div class="col-sm-5 pull-right" style="margin-right:-10px;">
-                    <div id="showNCREMPM" style="@(Model.TaskEditDataResult.Status == "ACCEPTED" || Model.TaskEditDataResult.Status == "REQUESTED" ? "display:block" : "display:none")">
+                <div class="@controlRight pull-right" style="margin-right:-10px;">
+                    <div class="btn-grp"  role="group" id="showNCREMPM" style="@(Model.TaskEditDataResult.Status == "ACCEPTED" || Model.TaskEditDataResult.Status == "REQUESTED" ? "display:block" : "display:none")">
                         <button id="addNcrModal_" class="btn btn-danger btn-lg print-btn pull-right"><i class="fa fa-plus-square"></i> Add NCR</button>
                         <button data-toggle="modal" data-fill-id="@ViewBag.FillId" data-target="#add-new-equipment-model" class="btn btn-info btn-lg print-btn pull-right"><i class="fa fa-plus-square"></i> EM/PM</button>
                     </div>
@@ -124,7 +141,7 @@
                 var id = $(this).data('task-log-id');
                 var taskLogId = $('#taskLogId').val();
                 if (taskLogId)
-                  {        
+                  {
                     id = taskLogId;
                   }
         stepControls.StepPauseClick(id, fillId, stepId);
