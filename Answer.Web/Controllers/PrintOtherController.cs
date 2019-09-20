@@ -39,7 +39,10 @@ namespace Answer.Web.Controllers
             {
                 return MonitorLabelTsr(id);
             }
-
+            if (reportType == "PART_LABEL_ORIG")
+            {
+                return PartLabelOrigTsr(id);
+            }
             if (reportType == "PART_LABEL")
             {
                 return PartLabelTsr(id);
@@ -116,6 +119,12 @@ namespace Answer.Web.Controllers
             return photos;
         }
 
+        public ActionResult PartLabelOrigTsr(int id)
+        {
+            var response = _orderService.GetPartLabelTsrDetails(id);
+            return PartialView("_ViewPartLabelOrigTsr", response);
+        }
+
         public ActionResult PartLabelTsr(int id)
         {
             var response = _orderService.GetPartLabelTsrDetails(id);
@@ -124,7 +133,7 @@ namespace Answer.Web.Controllers
 
         public ActionResult PartLabelRollTsr(int id)
         {
-            var response = _orderService.GetPartLabelRollTsrDetails(id);
+            var response = _orderService.GetPartLabelTsrDetails(id);
             return PartialView("_ViewPartLabelRollTsr", response);
         }
 
