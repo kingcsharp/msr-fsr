@@ -1,0 +1,70 @@
+﻿@model Msr.Services.Orders.Messaging.PartLabelTsrDetailsResponse
+<style>
+    @@media print {
+
+        @@page {
+            size:4.125in auto;
+        }
+        body {
+           margin-top:.0625in;
+           margin-left:.0625in;
+        }
+    }
+    .roll-container {
+       display: table-cell;
+       vertical-align: middle;
+       margin-top:.0625in;
+       margin-left:.0625in;
+       width:4.125in;
+    }
+    table.tight {
+        font: small Arial, Helvetica, sans-serif !important;
+        font-size: 12px !important;
+        width:100%;
+    }
+    tr {
+        height:20px;
+    }
+    td {
+      text-align: left;
+    }
+    .date {
+        float:right;
+    }
+    .roll-label {
+        height:1.5in;
+        width:4in;
+        margin-bottom:0.125in;
+        padding:.25in;
+        left:0in;
+        top:0in;
+        border:1px dashed #ccc;
+        border-radius:6px;
+    }
+</style>
+<div class="roll-container">
+    @foreach (var partLabel in Model.GetPartsAndKitsLabelsResult)
+    {
+
+        <div class="roll-label">
+            <table class="tight">
+                <tbody>
+                    <tr>
+                        <td width="35%"><strong>MSR-FSR @partLabel.Site_Name</strong></td>
+                        <td width="65%">Customer: <strong>@partLabel.WO_Item_Number</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Part #: <strong>@partLabel.Company_Part_Number</strong></td>
+                        <td>Serial #: <strong>@(partLabel.Serial != null ? @partLabel.Serial : "N/A")</strong></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">Part Desc: <strong>@partLabel.Part_Desc</strong></td>
+                    <tr>
+                        <td>PO #: <strong>@partLabel.PO_Number</strong></td>
+                        <td><span class="date">Date:<strong>@partLabel.Due_Date</strong></span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

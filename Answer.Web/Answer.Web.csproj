@@ -2814,6 +2814,7 @@
     <Content Include="Views\Training\Index.cshtml" />
     <Content Include="Views\Wip\_StatusItems.cshtml" />
     <Content Include="Views\Shared\_PersonDate.cshtml" />
+    <Content Include="Views\PrintOther\_ViewPartLabelRollTsr.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

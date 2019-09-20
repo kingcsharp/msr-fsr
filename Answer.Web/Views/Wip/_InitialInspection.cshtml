@@ -25,43 +25,38 @@
 <div class="row">
     @if (Model.TaskEditDataResult.Status == "CLOSED")
     {
-        <div id="timer-input" class="col-sm-4 timer-input @timerInput">
-            <input type="text" name="timer" class="form-control timer input-lg" width="120">
-        </div>
-    }
-
-    <div id="step-tabs" class="col-sm-12">
-        <ul class="nav nav-tabs">
-            <li class="active"><a data-toggle="tab" href="#@descriptionId">Task Description</a></li>
-            <li><a data-toggle="tab" href="#@monitorsId">Monitors</a></li>
-            <li><a data-toggle="tab" href="#@filesId">Files</a></li>
-        </ul>
-        <div class="tab-content">
-
-            <div id="@descriptionId" class="tab-pane fade task-window in active">
-                @Html.Partial("_InitialInspectionDetail", Model)
+        <div class="col-xs-12" style="margin-bottom: 10px !important;">
+            <div id="timer-input" class="col-sm-3 timer-input @timerInput" style="margin-left:-18px;">
+                <input type="text" name="timer" class="form-control timer input-lg" width="120" disabled="disabled"  style="background-color:#000;">
             </div>
+        </div>
+        }
 
-            <div id="@monitorsId" class="tab-pane fade task-window">
+        <div id="step-tabs" class="col-sm-12">
+            <ul class="nav nav-tabs" role="tablist" id="step-tabs">
+                <li id="task-description" class="active"><a id="step-description" data-toggle="tab" href="#@descriptionId">Task Description</a></li>
+                <li><a id="step-monitors" data-toggle="tab" href="#@monitorsId">Monitors</a></li>
+                <li><a id="step-files" data-toggle="tab" href="#@filesId">Files</a></li>
+            </ul>
+            <div class="tab-content">
 
-                @*@if (Model.TaskEditDataResult.HasMonitor == true)*@
-                <div class="col-sm-12">
-                    @Html.Partial("_MonitorsTab", Model.MonitorTemplateResult)
+                <div id="@descriptionId" class="tab-pane fade task-window in active">
+                    @Html.Partial("_InitialInspectionDetail", Model)
                 </div>
 
-                @*else
-                    {
-                        Html.RenderPartial("_AddMonitors", new MonitorTemplateResult {Step_Id = Model.StepId.ToString()});
-                    }*@
 
-            </div>
+                <div id="@monitorsId" class="tab-pane fade task-window">
+                    <div class="col-sm-12">
+                        @Html.Partial("_MonitorsTab", Model.MonitorTemplateResult)
+                    </div>
+                </div>
 
-            <div id="@filesId" class="tab-pane task-window fade">
-                @Html.Partial("_FilesTab", Model.Images)
+                <div id="@filesId" class="tab-pane task-window fade">
+                    @Html.Partial("_FilesTab", Model.Images)
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 @if (Model.TaskEditDataResult.Status == "CLOSED")
 {
