@@ -547,17 +547,17 @@ namespace Answer.Web.Controllers
         {
             ViewBag.FillId = fillId;
 
-            var loggedUserId = GetCurrentUser();
+            var loggedUserIdResult = GetCurrentUser();
 
-            var myRoles = _roleService.GetAssignedRoles(loggedUserId.Id);
+            var userRoles = _roleService.GetAssignedRoles(loggedUserIdResult.Id);
 
-            var response = _orderService.GetWipStepDetails(stepId, fillId, loggedUserId.Id, phStepId);
+            var responseTemp = _orderService.GetWipStepDetailsREFACTOR(stepId, fillId, loggedUserIdResult.Id, phStepId);
+
+            var response = _orderService.GetWipStepDetails(stepId, fillId, loggedUserIdResult.Id, phStepId);
 
             ViewBag.IsStepStatusClosed = response.TaskEditDataResult.Status == "CLOSED";
 
-            var currentUserRoles = _roleService.GetAssignedRoles(loggedUserId.Id);
-
-            var vm = _orderService.GetPurchaseItemDetails(fillId, loggedUserId.Id);
+            var vm = _orderService.GetPurchaseItemDetails(fillId, loggedUserIdResult.Id);
 
             response.ParentPartId = vm.FileSearchResult.FillObjectId.ToString();
 
@@ -579,7 +579,7 @@ namespace Answer.Web.Controllers
 
             var currentStepRequiredRoles = currentStep.Roles?.Split(',');
 
-            foreach (var personRole in currentUserRoles)
+            foreach (var personRole in userRoles)
             {
                 if (currentStepRequiredRoles.Any(x => x == personRole.Role_Id))
                 {
@@ -601,27 +601,30 @@ namespace Answer.Web.Controllers
 
             // }
 
-            response.LoggedUserIdResult = loggedUserId;
+            response.LoggedUserIdResult = loggedUserIdResult;
             response.TaskEditDataResult.StepTitle = currentStep.Title;
             response.TaskEditDataResult.Description = currentStep.Description;
 
-
-
             //var actualPartId = _orderService.GetWorkOrderQueryable().Where(x => x.FillId == stringFillId).Select(a => a.ActualPartId).FirstOrDefault();
+            
+            // PERF IMPROVEMENT - ADDED IF .ANY CHECK - DON'T GET THE SENSOR VALUES IF THERE AREN'T ANY MONITORS
 
-            List<SensorDataModel> sensorDataModels = _sensorService.GetSensorCurrentValues();
-
-            foreach (var monitorTemplate in response.MonitorTemplateResult)
+            if (response.MonitorTemplateResult != null && response.MonitorTemplateResult.Any() == true)
             {
-                monitorTemplate.Setup(_equipmentMaintenanceService, _orderService);
+                List<SensorDataModel> sensorDataModels = _sensorService.GetSensorCurrentValues();
 
-                monitorTemplate.SensorDataModels = sensorDataModels;
-
-                for (int i = 0; i < monitorTemplate.FailActionList.Count; i++)
+                foreach (var monitorTemplate in response.MonitorTemplateResult)
                 {
-                    if (monitorTemplate.FailActionList[i].Value == monitorTemplate.Fail_Action)
+                    monitorTemplate.Setup(_equipmentMaintenanceService, _orderService);
+
+                    monitorTemplate.SensorDataModels = sensorDataModels;
+
+                    for (int i = 0; i < monitorTemplate.FailActionList.Count; i++)
                     {
-                        monitorTemplate.FailActionList[i].Selected = true;
+                        if (monitorTemplate.FailActionList[i].Value == monitorTemplate.Fail_Action)
+                        {
+                            monitorTemplate.FailActionList[i].Selected = true;
+                        }
                     }
                 }
             }
@@ -641,8 +644,7 @@ namespace Answer.Web.Controllers
                 CONTENTTYPE = itemImage.ContentType,
                 LINKED_DOC_ID = itemImage.Id,
                 NAME = itemImage.FILE_NAME
-            })
-                .ToList();
+            }).ToList();
 
             response.Images.PreviewConfig = FileInputConfigHelper.GetPreviewConfigValue(dockLinks, Url.Action("DeleteImageById", "Doc"), Url.Action("Download", "Doc"));
 

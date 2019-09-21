@@ -1,27 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Net;
-using System.IO;
-using Msr.Models.Orders;
-using Msr.Repositories;
-using Msr.Services.Orders.Messaging;
-using System.Data.SqlClient;
-using System.Web.Configuration;
-using System.Web.Mvc;
-using Dapper;
+﻿using Dapper;
 using EntityFrameworkExtras.EF6;
+using Msr.Infrastructure.Files;
+using Msr.Models.Comman;
+using Msr.Models.Orders;
+using Msr.Models.Procedures;
 using Msr.Models.Tasks;
+using Msr.Repositories;
+using Msr.Services.Documents;
+using Msr.Services.Orders.Messaging;
 using Msr.Services.Orders.Procedures;
 using Msr.Services.Orders.ViewModels;
 using RestSharp;
-using Msr.Models.Comman;
-using Msr.Models.Procedures;
-using Msr.Services.Documents;
-using Msr.Infrastructure.Files;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Text;
+using System.Web.Configuration;
+using System.Web.Mvc;
 
 namespace Msr.Services.Orders
 {
@@ -219,7 +219,7 @@ namespace Msr.Services.Orders
                     }
                 }
                 SearchNcrs(fillId, ntlogin);
-              //  FormatHtml(detailsResponse);
+                //  FormatHtml(detailsResponse);
 
                 return detailsResponse;
             }
@@ -460,7 +460,8 @@ namespace Msr.Services.Orders
                     p.Add("@FileId", saveWorkItemImagesProcedure.NewId, DbType.String, ParameterDirection.Input);
                     p.Add("@ModBy", model.NTLogin, DbType.String, ParameterDirection.Input);
 
-                    var resultAddPartFile = conn.Execute("Portal_Actual_Part_Related_Files", p, commandType: CommandType.StoredProcedure);}
+                    var resultAddPartFile = conn.Execute("Portal_Actual_Part_Related_Files", p, commandType: CommandType.StoredProcedure);
+                }
 
                 return saveWorkItemImagesProcedure.NewId;
             }
@@ -567,6 +568,65 @@ namespace Msr.Services.Orders
             return detailsResponse;
         }
 
+        public WipStepDetailsResponse GetWipStepDetailsREFACTOR(int stepId, int fillId, string login, int? phStepId)
+        {
+            WipStepDetailsResponse wipStepDetailsResponse = new WipStepDetailsResponse();
+
+            wipStepDetailsResponse.LoginId = login;
+            wipStepDetailsResponse.StepId = stepId;
+            wipStepDetailsResponse.FillId = fillId;
+
+            using (IDbConnection sqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
+            {
+
+                DynamicParameters dynamicParameters = new DynamicParameters();
+
+                phStepId = 155162;
+
+                dynamicParameters.Add("@STRNTLOGIN", login, DbType.String, ParameterDirection.Input);
+                dynamicParameters.Add("@STEPID", stepId, DbType.String, ParameterDirection.Input);
+                dynamicParameters.Add("@PHSTEPID", phStepId, DbType.String, ParameterDirection.Input);
+                dynamicParameters.Add("@FILLID", fillId, DbType.String, ParameterDirection.Input);
+                dynamicParameters.Add("@PROCSTEPID", phStepId, DbType.String, ParameterDirection.Input);
+
+                using (var gridReader = sqlConnection.QueryMultiple("REFACTOR_GET_STEP_DETAILS", dynamicParameters, commandType: CommandType.StoredProcedure))
+                {
+
+                    // TASK DESCRIPTION TAB DETAILS
+                    // PORTAL_GETSTEPDETAILS SPROC - 1ST RESULT SET
+
+                    wipStepDetailsResponse.TaskEditDataResult = gridReader.Read<TaskEditDataResult>().Single();
+
+                    gridReader.Read();
+
+                    gridReader.Read();
+
+                    // A_SP_TASKS_FIND_FOR_PURCHASE_ITEM_AND_ACT_PART - 4TH RESULT SET
+
+                    wipStepDetailsResponse.TaskItemParts = gridReader.Read<TaskItemPart>().ToList();
+
+                    wipStepDetailsResponse.ParentId = wipStepDetailsResponse.TaskItemParts.Select(x => x.PARENT_ID.ToString()).FirstOrDefault();
+
+                    // A_SP_PROCEDURE_GET_REFERENCE_FILES - 5TH RESULT SET
+
+                    wipStepDetailsResponse.ReferenceFiles = gridReader.Read<GetReferenceFiles>().ToList();
+
+                    // A_V_THEORY_APPROVED_DATA QUERY
+
+                    wipStepDetailsResponse.ReferenceTheories = gridReader.Read<GetReferenceTheories>().ToList();
+
+                    foreach (var referenceTheories in wipStepDetailsResponse.ReferenceTheories.AsQueryable())
+                    {
+                        referenceTheories.DocLinks = _documentFilesService.GetDocByObjectId(referenceTheories.ObjectId);
+                    }
+
+                }
+
+            }
+
+            return wipStepDetailsResponse;
+        }
+
         public WipStepDetailsResponse GetWipStepDetails(int stepId, int fillId, string login, int? phStepId)
         {
             var detailsResponse = new WipStepDetailsResponse { StepId = stepId, FillId = fillId, LoginId = login };
@@ -580,34 +640,42 @@ namespace Msr.Services.Orders
 
                 using (var multi = conn.QueryMultiple("Portal_GetStepDetails", p, commandType: CommandType.StoredProcedure))
                 {
+                    // DONE
                     detailsResponse.TaskEditDataResult = multi.Read<TaskEditDataResult>().Single();
-
                 }
 
                 var taskLog = _dbContext.TaskLogs.FirstOrDefault(x => x.TaskId == stepId && x.FillId == fillId);
 
+                // TO DO
                 detailsResponse.TaskRunningDto = GetTotalTime(taskLog);
 
                 var p1 = new DynamicParameters();
-
+ 
                 p1.Add("@fillID", fillId, DbType.String, ParameterDirection.Input);
                 p1.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input);
 
-                using (var multi = conn.QueryMultiple("A_SP_TASKS_FIND_FOR_PURCHASE_ITEM_AND_ACT_PART", p1,
-                    commandType: CommandType.StoredProcedure))
+                using (var multi = conn.QueryMultiple("A_SP_TASKS_FIND_FOR_PURCHASE_ITEM_AND_ACT_PART", p1, commandType: CommandType.StoredProcedure))
                 {
+                    // DONE
                     detailsResponse.TaskItemParts = multi.Read<TaskItemPart>().ToList();
                 }
 
+                // DONE
                 detailsResponse.ParentId = detailsResponse.TaskItemParts.Select(x => x.PARENT_ID.ToString()).FirstOrDefault();
 
                 var p2 = new DynamicParameters();
+
                 p2.Add("@procStepID", phStepId, DbType.String, ParameterDirection.Input);
                 p2.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input);
 
+                // DONE
                 detailsResponse.ReferenceFiles = conn.Query<GetReferenceFiles>("A_SP_PROCEDURE_GET_REFERENCE_FILES", p2, commandType: CommandType.StoredProcedure).ToList();
 
+                // DONE
                 detailsResponse.ReferenceTheories = conn.Query<GetReferenceTheories>("SELECT l.THEORY_ID AS TheoryId,t.NAME AS TheoryName,OBJECT_ID AS ObjectId FROM A_PROCEDURE_STEP_THEORY_LINK l, A_V_THEORY_APPROVED_DATA t WHERE l.THEORY_ID = t.ID AND l.PROC_STEP_ID = @stepId", new { stepId = phStepId }, commandType: CommandType.Text).ToList();
+
+                // TODO: CONFIRM WE DON'T NEED THIS
+                // WE JUST GOT THE REF THEORIES IN THE STEP ABOVE -- CONFIRM STEP ID'S ARE THE SAME
 
                 foreach (var item in detailsResponse.TaskItemParts)
                 {
@@ -616,18 +684,25 @@ namespace Msr.Services.Orders
                         detailsResponse.ReferenceTheories = conn.Query<GetReferenceTheories>($"SELECT l.THEORY_ID AS TheoryId,t.NAME AS TheoryName,OBJECT_ID AS ObjectId FROM A_PROCEDURE_STEP_THEORY_LINK l, A_V_THEORY_APPROVED_DATA t WHERE l.THEORY_ID = t.ID AND l.PROC_STEP_ID ='{item.OldStepId}'").ToList();
                     }
                 }
-                foreach (var referenceTheoriese in detailsResponse.ReferenceTheories.AsQueryable())
+
+                // DONE
+
+                foreach (var referenceTheories in detailsResponse.ReferenceTheories.AsQueryable())
                 {
-                    referenceTheoriese.DocLinks = _documentFilesService.GetDocByObjectId(referenceTheoriese.ObjectId);
+                    referenceTheories.DocLinks = _documentFilesService.GetDocByObjectId(referenceTheories.ObjectId);
                 }
 
                 if (detailsResponse.TaskEditDataResult.Status != "FINISHED")
                 {
-                    foreach (var task in detailsResponse.TaskItemParts.Where(x => x.Print_Order != null))
+
+                    // PERF IMPROVEMENT - ADDED x.STEP_ID == stepId.ToString() - FUNC IS TO GET THIS SPECIFIC STEP DETAILS
+                    // WHY ARE WE GETTING ALL OF THEM STEPS AND PROCESSING ALL OF THE STEPS?  DIDN'T SEEM TO BREAK ANYTHING
+
+                    foreach (var task in detailsResponse.TaskItemParts.Where(x => x.STEP_ID == stepId.ToString() && x.Print_Order != null))
                     {
                         if ((task.Status == "REQUESTED" || task.Status == "ACCEPTED" ||
                              task.Status == "PENDING_PARENT_ACCEPTANCE" || task.Status == "CLOSED")
-                            && task.Print_Order.HasValue && task.HAS_MONITOR.HasValue && task.HAS_MONITOR ==1)
+                            && task.Print_Order.HasValue && task.HAS_MONITOR.HasValue && task.HAS_MONITOR == 1)
                         {
                             var monitorParams = new DynamicParameters();
 
@@ -654,7 +729,7 @@ namespace Msr.Services.Orders
                                         monitorTemplate.MonitorTemplateMultiChoices = conn
                                             .Query<MonitorTemplateMultiChoiceResult>(
                                                 @"SELECT TXT AS Text, IS_ANSWER AS IsAnswer FROM A_MONITOR_TEMPLATES_MULT_CHOICE WHERE MONITOR_ID = @monitorId  ORDER BY ORD",
-                                                new {monitorId = monitorTemplate.Id})
+                                                new { monitorId = monitorTemplate.Id })
                                             .Select(x => new SelectListItem
                                             {
                                                 Value = x.Id,
@@ -775,7 +850,7 @@ namespace Msr.Services.Orders
 
                 if (retStatus != null && !retStatus.Contains("ERROR") || retStatus == null)
                 {
-                   StopTimer(taskId, fillId);
+                    StopTimer(taskId, fillId);
                 }
 
                 var p2 = new DynamicParameters();
@@ -810,7 +885,7 @@ namespace Msr.Services.Orders
                     }
                 }
             }
-            
+
             return StepStart(stepId, login, fillId);
         }
 
@@ -1017,7 +1092,7 @@ namespace Msr.Services.Orders
             var parentTask = result.Where(x => x.HAS_CHILD.HasValue && x.HAS_CHILD == 1).FirstOrDefault();
             var p = new DynamicParameters();
 
-            foreach (var item in result.Where(x=> x.Status != "CLOSED"))
+            foreach (var item in result.Where(x => x.Status != "CLOSED"))
             {
                 p.Add("@RET_STATUS", dbType: DbType.String, direction: ParameterDirection.Output, size: 500);
                 p.Add("@MSGS", dbType: DbType.String, direction: ParameterDirection.Output, size: 100);
@@ -1280,7 +1355,7 @@ namespace Msr.Services.Orders
 
         private bool IsDone(string status)
         {
-          return status == WorkItemStatusConstants.Finished || status == WorkItemStatusConstants.Closed;
+            return status == WorkItemStatusConstants.Finished || status == WorkItemStatusConstants.Closed;
         }
     }
 }
