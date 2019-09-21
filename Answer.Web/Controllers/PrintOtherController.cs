@@ -124,7 +124,7 @@ namespace Answer.Web.Controllers
 
         public ActionResult PartLabelOrigTsr(int id)
         {
-            var response = _orderService.GetPartLabelTsrDetails(id);
+            var response = _orderService.GetPartLabelOrigTsrDetails(id);
             return PartialView("_ViewPartLabelOrigTsr", response);
         }
 
@@ -136,7 +136,7 @@ namespace Answer.Web.Controllers
 
         public ActionResult PartLabelRollTsr(int id)
         {
-            var response = _orderService.GetPartLabelTsrDetails(id);
+            var response = _orderService.GetPartLabelRollTsrDetails(id);
             return PartialView("_ViewPartLabelRollTsr", response);
         }
 
