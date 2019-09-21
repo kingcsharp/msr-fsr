@@ -223,6 +223,8 @@
     <Compile Include="jqGrid\PageResult.cs" />
     <Compile Include="jqGrid\Pagination.cs" />
     <Compile Include="Menus\MenuService.cs" />
+    <Compile Include="Orders\Messaging\PartLabelOrigTsrDetailsResponse.cs" />
+    <Compile Include="Orders\Messaging\PartLabelRollTsrDetailsResponse.cs" />
     <Compile Include="Orders\Messaging\TaskLogDto.cs" />
     <Compile Include="Parts\Procedures\PartsImportAndUpdateExternalPartProcedure.cs" />
     <Compile Include="Parts\Procedures\UpdateSubPartProcedure.cs" />

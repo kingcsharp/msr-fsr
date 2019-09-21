@@ -306,14 +306,16 @@ namespace Msr.Services.Orders
             foreach (var getPartsAndKitsLabelsResult in detailsResponse.GetPartsAndKitsLabelsResult)
             {
                 getPartsAndKitsLabelsResult.Count = _dbContext.Database.SqlQuery<int>($"SELECT COUNT(SerialNumber) as COUNT FROM[PartsTransactionLog] WHERE PARTID = '{ getPartsAndKitsLabelsResult.Actual_Part_ID}' AND SerialNumber = '{ getPartsAndKitsLabelsResult.Serial}'").Single();
+                
             }
-
+            
             return detailsResponse;
         }
 
-        public PartLabelTsrDetailsResponse GetPartLabelRollTsrDetails(int fillId)
+
+        public PartLabelRollTsrDetailsResponse GetPartLabelRollTsrDetails(int fillId)
         {
-            var detailsResponse = new PartLabelTsrDetailsResponse { FillId = fillId };
+            var detailsResponse = new PartLabelRollTsrDetailsResponse { FillId = fillId };
 
             using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
             {
@@ -329,6 +331,31 @@ namespace Msr.Services.Orders
             foreach (var getPartsAndKitsLabelsResult in detailsResponse.GetPartsAndKitsLabelsResult)
             {
                 getPartsAndKitsLabelsResult.Count = _dbContext.Database.SqlQuery<int>($"SELECT COUNT(SerialNumber) as COUNT FROM[PartsTransactionLog] WHERE PARTID = '{ getPartsAndKitsLabelsResult.Actual_Part_ID}' AND SerialNumber = '{ getPartsAndKitsLabelsResult.Serial}'").Single();
+
+            }
+
+            return detailsResponse;
+        }
+
+        public PartLabelOrigTsrDetailsResponse GetPartLabelOrigTsrDetails(int fillId)
+        {
+            var detailsResponse = new PartLabelOrigTsrDetailsResponse { FillId = fillId };
+
+            using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
+            {
+                var p = new DynamicParameters();
+
+                p.Add("@fileId", fillId, DbType.Int32, ParameterDirection.Input);
+
+                detailsResponse.GetPartsAndKitsLabelsResult =
+                    conn.Query<GetPartsAndKitsLabelsResult>("GetPartsAndKitsLabels", p,
+                        commandType: CommandType.StoredProcedure).ToList();
+            }
+
+            foreach (var getPartsAndKitsLabelsResult in detailsResponse.GetPartsAndKitsLabelsResult)
+            {
+                getPartsAndKitsLabelsResult.Count = _dbContext.Database.SqlQuery<int>($"SELECT COUNT(SerialNumber) as COUNT FROM[PartsTransactionLog] WHERE PARTID = '{ getPartsAndKitsLabelsResult.Actual_Part_ID}' AND SerialNumber = '{ getPartsAndKitsLabelsResult.Serial}'").Single();
+
             }
 
             return detailsResponse;
