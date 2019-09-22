@@ -1,17 +1,17 @@
 ﻿using EntityFrameworkExtras.EF6;
+using LazyCache;
+using Msr.Models.Common;
+using Msr.Models.People;
 using Msr.Models.Roles;
 using Msr.Repositories;
+using Msr.Services.Documents;
+using Msr.Services.Roles.Messages;
 using Msr.Services.Roles.Procedures;
 using Msr.Services.Roles.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using Msr.Models.Common;
-using Msr.Models.People;
-using Msr.Services.Roles.Messages;
-using Msr.Services.Documents;
-using LazyCache;
 
 namespace Msr.Services.Roles
 {
@@ -248,7 +248,9 @@ namespace Msr.Services.Roles
 
             Func<List<GetMyRolesResult>> refreshUserRolesDelegate = () => RefreshUserRolesDB(personId);
 
-            List<GetMyRolesResult> getMyRolesResult = cachingService.GetOrAdd(personId, refreshUserRolesDelegate, DateTimeOffset.Now.AddHours(1));
+            string globallyUniqueCacheItemName = $"RefreshUserRoles({personId})".Trim().ToUpper();
+
+            List<GetMyRolesResult> getMyRolesResult = cachingService.GetOrAdd(globallyUniqueCacheItemName, refreshUserRolesDelegate, DateTimeOffset.Now.AddHours(1));
 
             return getMyRolesResult;
         }
@@ -269,7 +271,9 @@ namespace Msr.Services.Roles
 
             Func<List<GetMyRolesResult>> getUserIDDelegate = () => GetAssignedRolesDB(personId);
 
-            List<GetMyRolesResult> getMyRolesResult = cachingService.GetOrAdd(personId, getUserIDDelegate, DateTimeOffset.Now.AddHours(1));
+            string globallyUniqueCacheItemName = $"GetAssignedRoles({personId})".Trim().ToUpper();
+
+            List<GetMyRolesResult> getMyRolesResult = cachingService.GetOrAdd(globallyUniqueCacheItemName, getUserIDDelegate, DateTimeOffset.Now.AddHours(1));
 
             return getMyRolesResult;
         }
@@ -286,6 +290,19 @@ namespace Msr.Services.Roles
         }
 
         public List<GetMyRolesResult> GetAssignedRolesByLogin(string personId)
+        {
+            IAppCache cachingService = new CachingService();
+
+            Func<List<GetMyRolesResult>> getAssignedRolesByLoginDBDelegate = () => GetAssignedRolesByLoginDB(personId);
+
+            string globallyUniqueCacheItemName = $"GetAssignedRolesByLogin({personId})".Trim().ToUpper();
+
+            List<GetMyRolesResult> getMyRolesResult = cachingService.GetOrAdd(globallyUniqueCacheItemName, getAssignedRolesByLoginDBDelegate, DateTimeOffset.Now.AddHours(1));
+
+            return getMyRolesResult;
+        }
+
+        public List<GetMyRolesResult> GetAssignedRolesByLoginDB(string personId)
         {
             RefreshUserRoles(personId);
 

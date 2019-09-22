@@ -128,6 +128,8 @@ namespace Msr.Services.Users
 
             Func<LoggedUserIdResult> getUserIDDelegate = () => GetUserIDDB(userId);
 
+            string globallyUniqueCacheItemName = $"GetUserId({userId})".Trim().ToUpper();
+
             LoggedUserIdResult loggedUserIdResult = cachingService.GetOrAdd(userId, getUserIDDelegate, DateTimeOffset.Now.AddHours(1));
 
             if (loggedUserIdResult == null )
