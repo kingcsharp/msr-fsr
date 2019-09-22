@@ -22,6 +22,7 @@ using System.Net;
 using System.Text;
 using System.Web.Configuration;
 using System.Web.Mvc;
+using Msr.Models.Sensor;
 
 namespace Msr.Services.Orders
 {
@@ -572,27 +573,30 @@ namespace Msr.Services.Orders
         {
             WipStepDetailsResponse wipStepDetailsResponse = new WipStepDetailsResponse();
 
+            GetTaskDetailResult taskData = null;
+            TaskItemPart taskItemPart = null;
+
             wipStepDetailsResponse.LoginId = login;
             wipStepDetailsResponse.StepId = stepId;
             wipStepDetailsResponse.FillId = fillId;
+            wipStepDetailsResponse.WorkOrderDetailsResponse.FillId = fillId;
 
             using (IDbConnection sqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
             {
 
-                DynamicParameters dynamicParameters = new DynamicParameters();
+                DynamicParameters refactorGetStepDetailsParameters = new DynamicParameters();
 
-                phStepId = 155162;
+                refactorGetStepDetailsParameters.Add("@STRNTLOGIN", login, DbType.String, ParameterDirection.Input);
+                refactorGetStepDetailsParameters.Add("@STEPID", stepId, DbType.String, ParameterDirection.Input);
+                refactorGetStepDetailsParameters.Add("@PHSTEPID", phStepId, DbType.String, ParameterDirection.Input);
+                refactorGetStepDetailsParameters.Add("@FILLID", fillId, DbType.String, ParameterDirection.Input);
+                refactorGetStepDetailsParameters.Add("@PROCSTEPID", phStepId, DbType.String, ParameterDirection.Input);
 
-                dynamicParameters.Add("@STRNTLOGIN", login, DbType.String, ParameterDirection.Input);
-                dynamicParameters.Add("@STEPID", stepId, DbType.String, ParameterDirection.Input);
-                dynamicParameters.Add("@PHSTEPID", phStepId, DbType.String, ParameterDirection.Input);
-                dynamicParameters.Add("@FILLID", fillId, DbType.String, ParameterDirection.Input);
-                dynamicParameters.Add("@PROCSTEPID", phStepId, DbType.String, ParameterDirection.Input);
-
-                using (var gridReader = sqlConnection.QueryMultiple("REFACTOR_GET_STEP_DETAILS", dynamicParameters, commandType: CommandType.StoredProcedure))
+                using (var gridReader = sqlConnection.QueryMultiple("REFACTOR_GET_STEP_DETAILS", refactorGetStepDetailsParameters, commandType: CommandType.StoredProcedure))
                 {
 
                     // TASK DESCRIPTION TAB DETAILS
+
                     // PORTAL_GETSTEPDETAILS SPROC - 1ST RESULT SET
 
                     wipStepDetailsResponse.TaskEditDataResult = gridReader.Read<TaskEditDataResult>().Single();
@@ -615,14 +619,98 @@ namespace Msr.Services.Orders
 
                     wipStepDetailsResponse.ReferenceTheories = gridReader.Read<GetReferenceTheories>().ToList();
 
-                    foreach (var referenceTheories in wipStepDetailsResponse.ReferenceTheories.AsQueryable())
-                    {
-                        referenceTheories.DocLinks = _documentFilesService.GetDocByObjectId(referenceTheories.ObjectId);
-                    }
+                    // MONITOR TAB DETAILS
+                    // A_SP_MONITOR_TEMPLATES_GET_DATA_FOR_OBJECT
+
+                    taskItemPart = wipStepDetailsResponse.TaskItemParts.FirstOrDefault();
+
+                    // if ((task.Status == "REQUESTED" || task.Status == "ACCEPTED" || task.Status == "PENDING_PARENT_ACCEPTANCE" || task.Status == "CLOSED") && task.Print_Order.HasValue && task.HAS_MONITOR.HasValue && task.HAS_MONITOR == 1)
+                    // {
+
+                    wipStepDetailsResponse.MonitorTemplateResult = gridReader.Read<MonitorTemplateResult>().ToList();
+
+                    // }
+
+                    // TASK DATA
+
+                    taskData = gridReader.Read<GetTaskDetailResult>().SingleOrDefault();
+
+                    // A_SP_ACTUAL_PARTS_SHOW_HIERARCHY
+
+                    taskItemPart.GetActualPartsShowHierarchys = gridReader.Read<GetActualPartsShowHierarchy>().ToList();
+
+                    // EXEC DBO.PORTAL_GETPURCHASEITEMDETAILS - 1ST RESULT SET
+
+                    wipStepDetailsResponse.WorkOrderDetailsResponse.FileSearchResult = gridReader.Read<FileSearchResult>().SingleOrDefault();
+
+                    // EXEC DBO.PORTAL_GETPURCHASEITEMDETAILS - 2ND RESULT SET
+
+                    wipStepDetailsResponse.WorkOrderDetailsResponse.Parts = gridReader.Read<string>().ToList();
+
+                    // EXEC DBO.PORTAL_GETPURCHASEITEMDETAILS - 3RD RESULT SET
+
+                    wipStepDetailsResponse.WorkOrderDetailsResponse.TaskStepResults = gridReader.Read<TaskStepResult>().Where(x => x.PRINT_ORDER != null).ToList();
+
+                    // PORTAL_WORKITEMIMAGESBYID - REFACTOR _orderService.GetOrderItemImagesById(stepId.ToString());
+
+                    wipStepDetailsResponse.DocLinkImages = gridReader.Read<WorkOrderImageView>().ToList();
+
+                    // CURRENT SENSOR VALUES
+
+                    wipStepDetailsResponse.SensorDataModels = gridReader.Read<SensorDataModel>().ToList();
 
                 }
 
+                // ADDITIONAL MONITOR DATA PROCESSING
+                // TO DO: CONFIRM WITH MIKE WE DON'T NEED THIS - HE MENTIONED BEFORE THAT THE MULTI CHOICE MONITORS ARE NOT BEING USED
+
+                if (wipStepDetailsResponse.MonitorTemplateResult.Any())
+                {
+                    foreach (var monitorTemplate in wipStepDetailsResponse.MonitorTemplateResult)
+                    {
+                        monitorTemplate.FillId = fillId;
+
+                        //monitorTemplate.MonitorTemplateMultiChoices = sqlConnection
+                        //    .Query<MonitorTemplateMultiChoiceResult>(
+                        //        @"SELECT TXT AS Text, IS_ANSWER AS IsAnswer FROM A_MONITOR_TEMPLATES_MULT_CHOICE WHERE MONITOR_ID = @monitorId  ORDER BY ORD",
+                        //        new { monitorId = monitorTemplate.Id })
+                        //    .Select(x => new SelectListItem
+                        //    {
+                        //        Value = x.Id,
+                        //        Text = x.Text
+                        //    }).ToList();
+
+                    }
+                }
+
             }
+
+            // ADDITIONAL TASK DATA PROCESSING
+
+            if (taskData != null)
+            {
+                taskItemPart.IsEditable = false;
+
+                if (taskData.Status == "ACCEPTED" && taskData.REQUESTEE_ID == login)
+                {
+                    taskItemPart.IsEditable = true;
+                }
+                else if (taskData.Status == "REQUESTED" && taskData.GROUP_REQUESTEE_ID == login) // Need to check this GroupRequesteeId in Roles from session
+                {
+                    taskItemPart.IsEditable = true;
+                }
+            }
+
+            // ADDITIONAL REFERENCE DOCUMENT PROCESSING
+
+            // TODO: THIS IS ANOTHER DB QUERY, CALL OUTSIDE OF THE CURRENT USING
+            // TODO: BETTER YET INCLUDE IN THE ONE DATABASE HIT
+
+            foreach (var referenceTheories in wipStepDetailsResponse.ReferenceTheories.AsQueryable())
+            {
+                referenceTheories.DocLinks = _documentFilesService.GetDocByObjectId(referenceTheories.ObjectId);
+            }
+
 
             return wipStepDetailsResponse;
         }
@@ -650,7 +738,7 @@ namespace Msr.Services.Orders
                 detailsResponse.TaskRunningDto = GetTotalTime(taskLog);
 
                 var p1 = new DynamicParameters();
- 
+
                 p1.Add("@fillID", fillId, DbType.String, ParameterDirection.Input);
                 p1.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input);
 
@@ -676,6 +764,7 @@ namespace Msr.Services.Orders
 
                 // TODO: CONFIRM WE DON'T NEED THIS
                 // WE JUST GOT THE REF THEORIES IN THE STEP ABOVE -- CONFIRM STEP ID'S ARE THE SAME
+                // LOOKS LIKE A DOUBLE QUERY SAME THING AS ABOVE BASICALLY
 
                 foreach (var item in detailsResponse.TaskItemParts)
                 {
@@ -713,12 +802,10 @@ namespace Msr.Services.Orders
 
                             if (task.STEP_ID == detailsResponse.StepId.ToString())
                             {
-                                using (var multi = conn.QueryMultiple("A_SP_MONITOR_TEMPLATES_GET_DATA_FOR_OBJECT",
-                                    monitorParams,
-                                    commandType: CommandType.StoredProcedure))
+
+                                using (var multi = conn.QueryMultiple("A_SP_MONITOR_TEMPLATES_GET_DATA_FOR_OBJECT", monitorParams, commandType: CommandType.StoredProcedure))
                                 {
-                                    detailsResponse.MonitorTemplateResult =
-                                        multi.Read<MonitorTemplateResult>().ToList();
+                                    detailsResponse.MonitorTemplateResult = multi.Read<MonitorTemplateResult>().ToList();
                                 }
 
                                 if (detailsResponse.MonitorTemplateResult.Any())
