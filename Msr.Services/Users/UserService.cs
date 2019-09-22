@@ -13,6 +13,7 @@ using Msr.Models.People;
 using Msr.Models.Users;
 using Msr.Repositories;
 using Msr.Services.Users.Messages;
+using LazyCache;
 
 namespace Msr.Services.Users
 {
@@ -123,9 +124,20 @@ namespace Msr.Services.Users
 
         public LoggedUserIdResult GetUserId(string userId)
         {
-            var sql = $"exec Portal_GetCurrentUser {userId}";
+            IAppCache cachingService = new CachingService();
 
-            var result = _dbContext.Database.SqlQuery<LoggedUserIdResult>(sql).Single();
+            Func<LoggedUserIdResult> getUserIDDelegate = () => GetUserIDDB(userId);
+
+            LoggedUserIdResult loggedUserIdResult = cachingService.GetOrAdd(userId, getUserIDDelegate, DateTimeOffset.Now.AddHours(1));
+
+            return loggedUserIdResult;
+        }
+
+        private  LoggedUserIdResult GetUserIDDB(string userId)
+        {
+            string sql = $"exec Portal_GetCurrentUser {userId}";
+
+            LoggedUserIdResult result = _dbContext.Database.SqlQuery<LoggedUserIdResult>(sql).Single();
 
             return result;
         }

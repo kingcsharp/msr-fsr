@@ -11,6 +11,7 @@ using Msr.Models.Common;
 using Msr.Models.People;
 using Msr.Services.Roles.Messages;
 using Msr.Services.Documents;
+using LazyCache;
 
 namespace Msr.Services.Roles
 {
@@ -239,23 +240,46 @@ namespace Msr.Services.Roles
             return result;
         }
 
+        // TODO: WHEN I TRY TO ADDING CACHIGN TO THIS THE APP ERRORS OUT - COME BACK TO
+        //public List<GetMyRolesResult> RefreshUserRoles(string personId)
+        //{
+        //    IAppCache cachingService = new CachingService();
+
+        //    Func<List<GetMyRolesResult>> refreshUserRolesDelegate = () => RefreshUserRolesDB(personId);
+
+        //    List<GetMyRolesResult> getMyRolesResult = cachingService.GetOrAdd(personId, refreshUserRolesDelegate, DateTimeOffset.Now.AddHours(1));
+
+        //    return getMyRolesResult;
+        //}
+
         public List<GetMyRolesResult> RefreshUserRoles(string personId)
         {
             var myID = new SqlParameter("@myID", personId);
             var strNTLogin = new SqlParameter("@strNTLogin", personId);
 
-            var result = _dbContext.Database.SqlQuery<GetMyRolesResult>("EXEC A_SP_ROLES_GET_MY_ROLES @myID, @strNTLogin", myID, strNTLogin).ToList();
+            List<GetMyRolesResult> getMyRolesResult = _dbContext.Database.SqlQuery<GetMyRolesResult>("EXEC A_SP_ROLES_GET_MY_ROLES @myID, @strNTLogin", myID, strNTLogin).ToList();
 
-            return result;
+            return getMyRolesResult;
         }
 
         public List<GetMyRolesResult> GetAssignedRoles(string personId)
         {
+            IAppCache cachingService = new CachingService();
+
+            Func<List<GetMyRolesResult>> getUserIDDelegate = () => GetAssignedRolesDB(personId);
+
+            List<GetMyRolesResult> getMyRolesResult = cachingService.GetOrAdd(personId, getUserIDDelegate, DateTimeOffset.Now.AddHours(1));
+
+            return getMyRolesResult;
+        }
+
+        private List<GetMyRolesResult> GetAssignedRolesDB(string personId)
+        {
             RefreshUserRoles(personId);
 
-            var personIdParam = new SqlParameter("@personId", personId);
+            SqlParameter personIdParam = new SqlParameter("@personId", personId);
 
-            var result = _dbContext.Database.SqlQuery<GetMyRolesResult>($"SELECT distinct ROLE_ID, ROLE, PERSON, STATUS, ROLE_NAME, StartDate, EndDate FROM A_APPROVED_ROLE_ASSIGNEES WHERE PERSON = {personId}").ToList();
+            List<GetMyRolesResult> result = _dbContext.Database.SqlQuery<GetMyRolesResult>($"SELECT distinct ROLE_ID, ROLE, PERSON, STATUS, ROLE_NAME, StartDate, EndDate FROM A_APPROVED_ROLE_ASSIGNEES WHERE PERSON = {personId}").ToList();
 
             return result.Where(x => x.Status == "ACTIVE").ToList();
         }
