@@ -2,14 +2,21 @@
 using EntityFrameworkExtras.EF6;
 using Msr.Infrastructure.Files;
 using Msr.Models.Comman;
+using Msr.Models.EquipmentMaintenances;
 using Msr.Models.Orders;
 using Msr.Models.Procedures;
+using Msr.Models.Sensor;
 using Msr.Models.Tasks;
 using Msr.Repositories;
 using Msr.Services.Documents;
+using Msr.Services.Documents.ViewModels;
+using Msr.Services.EquipmentMaintenances;
+using Msr.Services.Helpers;
 using Msr.Services.Orders.Messaging;
 using Msr.Services.Orders.Procedures;
 using Msr.Services.Orders.ViewModels;
+using Msr.Services.Roles.Procedures;
+using Msr.Services.Users.Messages;
 using RestSharp;
 using System;
 using System.Collections.Generic;
@@ -22,7 +29,6 @@ using System.Net;
 using System.Text;
 using System.Web.Configuration;
 using System.Web.Mvc;
-using Msr.Models.Sensor;
 
 namespace Msr.Services.Orders
 {
@@ -596,7 +602,7 @@ namespace Msr.Services.Orders
             return detailsResponse;
         }
 
-        public WipStepDetailsResponse GetWipStepDetailsREFACTOR(int stepId, int fillId, string login, int? phStepId)
+        public WipStepDetailsResponse GetWipStepDetailsREFACTOR(ref LoggedUserIdResult loggedUserIdResult, ref List<GetMyRolesResult> userRoles, int stepId, int fillId, string login, int? phStepId)
         {
             WipStepDetailsResponse wipStepDetailsResponse = new WipStepDetailsResponse();
 
@@ -686,29 +692,88 @@ namespace Msr.Services.Orders
 
                     wipStepDetailsResponse.SensorDataModels = gridReader.Read<SensorDataModel>().ToList();
 
+                    // SELECT * FROM DBO.PORTAL_EQUIPMENTMAINTENANCEVIEW
+
+                    wipStepDetailsResponse.EquipmentMaintenanceView = gridReader.Read<EquipmentMaintenanceView>().ToList();
+
+                }
+
+                TaskStepResult currentStep = wipStepDetailsResponse.WorkOrderDetailsResponse.TaskStepResults.SingleOrDefault(x => x.StepId == stepId.ToString());
+
+                wipStepDetailsResponse.ParentPartId = wipStepDetailsResponse.WorkOrderDetailsResponse.FileSearchResult.FillObjectId.ToString();
+
+                wipStepDetailsResponse.LoggedUserIdResult = loggedUserIdResult;
+                wipStepDetailsResponse.TaskEditDataResult.StepTitle = currentStep.Title;
+                wipStepDetailsResponse.TaskEditDataResult.Description = currentStep.Description;
+
+                // USER PERMISSIONS PROCESSING
+
+                var currentStepRequiredRoles = currentStep.Roles?.Split(',');
+
+                foreach (var personRole in userRoles)
+                {
+                    if (currentStepRequiredRoles.Any(x => x == personRole.Role_Id))
+                    {
+                        if (personRole.StartDate.HasValue && personRole.EndDate.HasValue)
+                        {
+                            if (DateTime.Today.Date >= personRole.StartDate.Value.Date && DateTime.Today.Date < personRole.EndDate.Value.Date.AddDays(1))
+                            {
+                                wipStepDetailsResponse.HasStepRoles = true;
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            wipStepDetailsResponse.HasStepRoles = true;
+                            break;
+                        }
+                    }
+                }
+
+                // SETUP THE MONITOR TEMPLATES
+
+                // PERF IMPROVEMENT - ADDED IF .ANY CHECK - DON'T GET THE SENSOR VALUES IF THERE AREN'T ANY MONITORS
+
+                if (wipStepDetailsResponse.MonitorTemplateResult != null && wipStepDetailsResponse.MonitorTemplateResult.Any() == true)
+                {
+                    foreach (var monitorTemplate in wipStepDetailsResponse.MonitorTemplateResult)
+                    {
+                        monitorTemplate.FillId = fillId;
+                        monitorTemplate.SensorDataModels = wipStepDetailsResponse.SensorDataModels;
+
+                        monitorTemplate.Setup(wipStepDetailsResponse.EquipmentMaintenanceView);
+
+                        for (int i = 0; i < monitorTemplate.FailActionList.Count; i++)
+                        {
+                            if (monitorTemplate.FailActionList[i].Value == monitorTemplate.Fail_Action)
+                            {
+                                monitorTemplate.FailActionList[i].Selected = true;
+                            }
+                        }
+                    }
                 }
 
                 // ADDITIONAL MONITOR DATA PROCESSING
                 // TO DO: CONFIRM WITH MIKE WE DON'T NEED THIS - HE MENTIONED BEFORE THAT THE MULTI CHOICE MONITORS ARE NOT BEING USED
 
-                if (wipStepDetailsResponse.MonitorTemplateResult.Any())
-                {
-                    foreach (var monitorTemplate in wipStepDetailsResponse.MonitorTemplateResult)
-                    {
-                        monitorTemplate.FillId = fillId;
+                //if (wipStepDetailsResponse.MonitorTemplateResult.Any())
+                //{
+                //    foreach (var monitorTemplate in wipStepDetailsResponse.MonitorTemplateResult)
+                //    {
+                //        monitorTemplate.FillId = fillId;
 
-                        //monitorTemplate.MonitorTemplateMultiChoices = sqlConnection
-                        //    .Query<MonitorTemplateMultiChoiceResult>(
-                        //        @"SELECT TXT AS Text, IS_ANSWER AS IsAnswer FROM A_MONITOR_TEMPLATES_MULT_CHOICE WHERE MONITOR_ID = @monitorId  ORDER BY ORD",
-                        //        new { monitorId = monitorTemplate.Id })
-                        //    .Select(x => new SelectListItem
-                        //    {
-                        //        Value = x.Id,
-                        //        Text = x.Text
-                        //    }).ToList();
+                //        //monitorTemplate.MonitorTemplateMultiChoices = sqlConnection
+                //        //    .Query<MonitorTemplateMultiChoiceResult>(
+                //        //        @"SELECT TXT AS Text, IS_ANSWER AS IsAnswer FROM A_MONITOR_TEMPLATES_MULT_CHOICE WHERE MONITOR_ID = @monitorId  ORDER BY ORD",
+                //        //        new { monitorId = monitorTemplate.Id })
+                //        //    .Select(x => new SelectListItem
+                //        //    {
+                //        //        Value = x.Id,
+                //        //        Text = x.Text
+                //        //    }).ToList();
 
-                    }
-                }
+                //    }
+                //}
 
             }
 
@@ -738,6 +803,26 @@ namespace Msr.Services.Orders
                 referenceTheories.DocLinks = _documentFilesService.GetDocByObjectId(referenceTheories.ObjectId);
             }
 
+            // IMAGE PROCESSING
+
+            wipStepDetailsResponse.Images = new ImageViewModel
+            {
+                FillId = fillId,
+                TaskId = stepId,
+                ActualPartId = wipStepDetailsResponse.ParentPartId
+            };
+
+            var dockLinks = wipStepDetailsResponse.DocLinkImages.Select(itemImage => new DocLink
+            {
+                SERVER_PATH = itemImage.Path,
+                CONTENTTYPE = itemImage.ContentType,
+                LINKED_DOC_ID = itemImage.Id,
+                NAME = itemImage.FILE_NAME
+            }).ToList();
+
+            wipStepDetailsResponse.Images.PreviewConfig = FileInputConfigHelper.GetPreviewConfigValue(dockLinks, "/Doc/DeleteImageById", "/Doc/Download");
+
+            wipStepDetailsResponse.Images.Preview = FileInputConfigHelper.GetPreviewValue(dockLinks, _documentFilesService);
 
             return wipStepDetailsResponse;
         }

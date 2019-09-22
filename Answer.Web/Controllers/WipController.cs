@@ -547,101 +547,17 @@ namespace Answer.Web.Controllers
 
         public ActionResult GetWipStepDetails(int stepId, int fillId, int? phStepId)
         {
-            LoggedUserIdResult loggedUserIdResult = GetCurrentUser();
+            LoggedUserIdResult loggedUserIdResult = this.LoggedUserIdResult;
 
             List<GetMyRolesResult> userRoles = _roleService.GetAssignedRoles(loggedUserIdResult.Id);
 
-            WipStepDetailsResponse wipStepDetailsResponse = _orderService.GetWipStepDetailsREFACTOR(stepId, fillId, loggedUserIdResult.Id, phStepId);
-
-            // WorkOrderDetailsResponse workOrderDetailsResponse = _orderService.GetPurchaseItemDetails(fillId, loggedUserIdResult.Id);
-
-            wipStepDetailsResponse.ParentPartId = wipStepDetailsResponse.WorkOrderDetailsResponse.FileSearchResult.FillObjectId.ToString();
-
-            var currentStep = wipStepDetailsResponse.WorkOrderDetailsResponse.TaskStepResults.SingleOrDefault(x => x.StepId == stepId.ToString());
-
-            var objId = _orderService.GetProcedureByObjId(wipStepDetailsResponse.WorkOrderDetailsResponse.FileSearchResult.ProcObjId);
-
-
-
-
-            var currentStepRequiredRoles = currentStep.Roles?.Split(',');
-
-            foreach (var personRole in userRoles)
-            {
-                if (currentStepRequiredRoles.Any(x => x == personRole.Role_Id))
-                {
-                    if (personRole.StartDate.HasValue && personRole.EndDate.HasValue)
-                    {
-                        if (DateTime.Today.Date >= personRole.StartDate.Value.Date && DateTime.Today.Date < personRole.EndDate.Value.Date.AddDays(1))
-                        {
-                            wipStepDetailsResponse.HasStepRoles = true;
-                            break;
-                        }
-                    }
-                    else
-                    {
-                        wipStepDetailsResponse.HasStepRoles = true;
-                        break;
-                    }
-                }
-            }
-
-            wipStepDetailsResponse.LoggedUserIdResult = loggedUserIdResult;
-            wipStepDetailsResponse.TaskEditDataResult.StepTitle = currentStep.Title;
-            wipStepDetailsResponse.TaskEditDataResult.Description = currentStep.Description;
-
-            // PERF IMPROVEMENT - ADDED IF .ANY CHECK - DON'T GET THE SENSOR VALUES IF THERE AREN'T ANY MONITORS
-
-            if (wipStepDetailsResponse.MonitorTemplateResult != null && wipStepDetailsResponse.MonitorTemplateResult.Any() == true)
-            {
-                List<SensorDataModel> sensorDataModels = wipStepDetailsResponse.SensorDataModels; _sensorService.GetSensorCurrentValues();
-
-                foreach (var monitorTemplate in wipStepDetailsResponse.MonitorTemplateResult)
-                {
-                    monitorTemplate.Setup(_equipmentMaintenanceService, _orderService);
-
-                    monitorTemplate.SensorDataModels = sensorDataModels;
-
-                    for (int i = 0; i < monitorTemplate.FailActionList.Count; i++)
-                    {
-                        if (monitorTemplate.FailActionList[i].Value == monitorTemplate.Fail_Action)
-                        {
-                            monitorTemplate.FailActionList[i].Selected = true;
-                        }
-                    }
-                }
-            }
-
-            wipStepDetailsResponse.Images = new ImageViewModel
-            {
-                FillId = fillId,
-                TaskId = stepId,
-                ActualPartId = wipStepDetailsResponse.ParentPartId
-            };
-
-            //List<WorkOrderImageView> images = _orderService.GetOrderItemImagesById(stepId.ToString());
-
-            var dockLinks = wipStepDetailsResponse.DocLinkImages.Select(itemImage => new DocLink
-            {
-                SERVER_PATH = itemImage.Path,
-                CONTENTTYPE = itemImage.ContentType,
-                LINKED_DOC_ID = itemImage.Id,
-                NAME = itemImage.FILE_NAME
-            }).ToList();
-
-            wipStepDetailsResponse.Images.PreviewConfig = FileInputConfigHelper.GetPreviewConfigValue(dockLinks, Url.Action("DeleteImageById", "Doc"), Url.Action("Download", "Doc"));
-
-            wipStepDetailsResponse.Images.Preview = FileInputConfigHelper.GetPreviewValue(dockLinks, _documentFilesService);
-
+            WipStepDetailsResponse wipStepDetailsResponse = _orderService.GetWipStepDetailsREFACTOR(ref loggedUserIdResult, ref userRoles, stepId, fillId, loggedUserIdResult.Id, phStepId);
 
             ViewBag.FillId = fillId;
             ViewBag.IsStepStatusClosed = wipStepDetailsResponse.TaskEditDataResult.Status == "CLOSED";
 
-
             return PartialView("_InitialInspection", wipStepDetailsResponse);
         }
-
-
 
         // BACKUP
         //public ActionResult GetWipStepDetails(int stepId, int fillId, int? phStepId)
@@ -753,7 +669,6 @@ namespace Answer.Web.Controllers
 
         //    return PartialView("_InitialInspection", response);
         //}
-
 
         [HttpPost]
         public ActionResult UpdateStepMonitor(List<MonitorTemplateResult> monitorTemplates)

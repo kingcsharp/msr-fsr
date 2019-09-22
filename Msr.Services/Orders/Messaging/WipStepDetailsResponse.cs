@@ -4,6 +4,7 @@ using Msr.Services.Orders.ViewModels;
 using Msr.Services.Users.Messages;
 using Msr.Models.Orders;
 using Msr.Models.Sensor;
+using Msr.Models.EquipmentMaintenances;
 
 namespace Msr.Services.Orders.Messaging
 {
@@ -19,6 +20,7 @@ namespace Msr.Services.Orders.Messaging
             ReferenceTheories = new List<GetReferenceTheories>();
             DocLinkImages = new List<WorkOrderImageView>();
             SensorDataModels = new List<SensorDataModel>();
+            EquipmentMaintenanceView = new List<EquipmentMaintenanceView>();
         }
 
         public string LoginId { get; set; }
@@ -39,6 +41,7 @@ namespace Msr.Services.Orders.Messaging
         public TaskLogDto TaskRunningDto { get; set; }
         public List<WorkOrderImageView> DocLinkImages { get; set; }
         public ImageViewModel Images { get; set; }
+        public List<EquipmentMaintenanceView> EquipmentMaintenanceView { get; set; }
 
         public List<SensorDataModel> SensorDataModels { get; set; }
 

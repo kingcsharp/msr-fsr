@@ -241,18 +241,19 @@ namespace Msr.Services.Roles
         }
 
         // TODO: WHEN I TRY TO ADDING CACHIGN TO THIS THE APP ERRORS OUT - COME BACK TO
-        //public List<GetMyRolesResult> RefreshUserRoles(string personId)
-        //{
-        //    IAppCache cachingService = new CachingService();
-
-        //    Func<List<GetMyRolesResult>> refreshUserRolesDelegate = () => RefreshUserRolesDB(personId);
-
-        //    List<GetMyRolesResult> getMyRolesResult = cachingService.GetOrAdd(personId, refreshUserRolesDelegate, DateTimeOffset.Now.AddHours(1));
-
-        //    return getMyRolesResult;
-        //}
 
         public List<GetMyRolesResult> RefreshUserRoles(string personId)
+        {
+            IAppCache cachingService = new CachingService();
+
+            Func<List<GetMyRolesResult>> refreshUserRolesDelegate = () => RefreshUserRolesDB(personId);
+
+            List<GetMyRolesResult> getMyRolesResult = cachingService.GetOrAdd(personId, refreshUserRolesDelegate, DateTimeOffset.Now.AddHours(1));
+
+            return getMyRolesResult;
+        }
+
+        public List<GetMyRolesResult> RefreshUserRolesDB(string personId)
         {
             var myID = new SqlParameter("@myID", personId);
             var strNTLogin = new SqlParameter("@strNTLogin", personId);
