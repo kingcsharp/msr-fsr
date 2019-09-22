@@ -1,13 +1,22 @@
-﻿using System.Collections.Generic;
+﻿using Msr.Services.Users;
+using Msr.Services.Users.Messages;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
-using Msr.Services.Users;
-using Msr.Services.Users.Messages;
 
 namespace Answer.Web.Controllers
 {
     public class BaseController : Controller
     {
+
+        public LoggedUserIdResult LoggedUserIdResult
+        {
+            get
+            {
+                return GetCurrentUser();
+            }
+        }
+
         public LoggedUserIdResult GetCurrentUser()
         {
             var userService = new UserService();
@@ -19,7 +28,7 @@ namespace Answer.Web.Controllers
 
         public List<string> GetDefaultStatus()
         {
-            return new[] {"CREATING", "DENIED", "APPROVED", "APPROVED_BUT_REVISING", "APPROVED_BUT_DELETING"}.ToList();
+            return new[] { "CREATING", "DENIED", "APPROVED", "APPROVED_BUT_REVISING", "APPROVED_BUT_DELETING" }.ToList();
         }
 
         public void AddErrorNotification(string message)
