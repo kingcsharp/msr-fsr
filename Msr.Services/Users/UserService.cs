@@ -130,6 +130,13 @@ namespace Msr.Services.Users
 
             LoggedUserIdResult loggedUserIdResult = cachingService.GetOrAdd(userId, getUserIDDelegate, DateTimeOffset.Now.AddHours(1));
 
+            if (loggedUserIdResult == null )
+            {
+                loggedUserIdResult = GetUserIDDB(userId);
+
+                cachingService.Add(userId, loggedUserIdResult);
+            }
+
             return loggedUserIdResult;
         }
 
