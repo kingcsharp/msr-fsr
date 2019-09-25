@@ -551,7 +551,7 @@ namespace Answer.Web.Controllers
 
             List<GetMyRolesResult> userRoles = _roleService.GetAssignedRoles(loggedUserIdResult.Id);
 
-            WipStepDetailsResponse wipStepDetailsResponse = _orderService.GetWipStepDetailsREFACTOR(ref loggedUserIdResult, ref userRoles, stepId, fillId, loggedUserIdResult.Id, phStepId);
+            WipStepDetailsResponse wipStepDetailsResponse = _orderService.GetWipStepDetails(ref loggedUserIdResult, ref userRoles, stepId, fillId, loggedUserIdResult.Id, phStepId);
 
             ViewBag.FillId = fillId;
             ViewBag.IsStepStatusClosed = wipStepDetailsResponse.TaskEditDataResult.Status == "CLOSED";
