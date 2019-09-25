@@ -12,6 +12,7 @@ using Msr.Services.Users;
 using Msr.Services.Documents;
 using System.Web.Script.Serialization;
 using Msr.Commons.Files;
+using Msr.Models.Orders;
 
 namespace Answer.Web.Controllers
 {
@@ -210,6 +211,14 @@ namespace Answer.Web.Controllers
                 model.NTLogin = currentUser.Id;
 
                 var response = _roleService.Update(model);
+
+                foreach (string userID in model.PeopleAssigned)
+                {
+                    string userLoginName = _userService.GetUserLoginByAnswerUserRootID(userID);
+
+                    _userService.RemoveUserCacheItems(userID, userLoginName);
+                    _roleService.RemoveRoleCacheItems(userID, userLoginName);
+                }
 
                 if (response)
                 {

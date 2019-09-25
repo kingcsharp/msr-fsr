@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data.Entity;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using LazyCache;
 using Msr.Infrastructure.Email;
 using Msr.Infrastructure.Helpers;
 using Msr.Models.Companies;
@@ -13,7 +7,13 @@ using Msr.Models.People;
 using Msr.Models.Users;
 using Msr.Repositories;
 using Msr.Services.Users.Messages;
-using LazyCache;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data.Entity;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Msr.Services.Users
 {
@@ -47,11 +47,33 @@ namespace Msr.Services.Users
 
             return user;
         }
-        
+
+        public UserSummary GetUserByAnswerID(string answerUserID)
+        {
+            var user = _dbContext.AspNetUsers.Where(x => x.AnswerId.ToLower() == answerUserID.ToLower()).Select(s => new UserSummary
+            {
+                Id = s.Id,
+                FirstName = s.FirstName,
+                LastName = s.LastName,
+                FullName = s.FirstName + " " + s.LastName,
+                Phone = s.PhoneNumber,
+                Phone2 = s.UserName,
+                Email = s.Email,
+                UserName = s.UserName,
+                IsActive = s.IsActive,
+                TimeZone = s.TimeZone,
+                CompanyId = s.CompanyId,
+                CreatedDate = s.CreatedDate,
+                RoleName = s.AspNetRoles.FirstOrDefault().Name
+            }).OrderByDescending(x => x.Id).FirstOrDefault();
+
+            return user;
+        }
+
         public PeopleView GetUserByObjectId(string objId)
         {
             var user = _dbContext.Peoples.Where(i => i.ObjectId == objId).FirstOrDefault();
-            return user; 
+            return user;
         }
         public UserSummary GetAnserByUserName(string userName)
         {
@@ -111,7 +133,7 @@ namespace Msr.Services.Users
 
         public List<SearchPeopleResult> GetSearchUser()
         {
-          var users = _dbContext.PeopleObjectViews.Where(x=> x.Status == PeopleStatusConstants.Approved || x.Status == PeopleStatusConstants.ApprovedButRevising) .Select(x => new SearchPeopleResult
+            var users = _dbContext.PeopleObjectViews.Where(x => x.Status == PeopleStatusConstants.Approved || x.Status == PeopleStatusConstants.ApprovedButRevising).Select(x => new SearchPeopleResult
             {
                 Id = x.Id,
                 Full_Name = x.FirstName + " " + x.LastName,
@@ -130,25 +152,34 @@ namespace Msr.Services.Users
 
             string globallyUniqueCacheItemName = $"GetUserId({userId})".Trim().ToUpper();
 
-            LoggedUserIdResult loggedUserIdResult = cachingService.GetOrAdd(userId, getUserIDDelegate, DateTimeOffset.Now.AddHours(1));
+            LoggedUserIdResult loggedUserIdResult = cachingService.GetOrAdd(globallyUniqueCacheItemName, getUserIDDelegate, DateTimeOffset.Now.AddHours(1));
 
-            if (loggedUserIdResult == null )
+            if (loggedUserIdResult == null)
             {
                 loggedUserIdResult = GetUserIDDB(userId);
 
-                cachingService.Add(userId, loggedUserIdResult);
+                cachingService.Add(globallyUniqueCacheItemName, loggedUserIdResult);
             }
 
             return loggedUserIdResult;
         }
 
-        private  LoggedUserIdResult GetUserIDDB(string userId)
+        private LoggedUserIdResult GetUserIDDB(string userId)
         {
             string sql = $"exec Portal_GetCurrentUser {userId}";
 
             LoggedUserIdResult result = _dbContext.Database.SqlQuery<LoggedUserIdResult>(sql).Single();
 
             return result;
+        }
+
+        public string GetUserLoginByAnswerUserRootID(string answerUserRootID)
+        {
+            string sql = $"SELECT [LOGIN] FROM A_APPROVED_PEOPLE WHERE ID = '{answerUserRootID}' ORDER BY ID";
+
+            string loginName = _dbContext.Database.SqlQuery<string>(sql).FirstOrDefault();
+
+            return loginName;
         }
 
         public bool CheckModulePermissions(string userId, string moduleName)
@@ -187,9 +218,9 @@ namespace Msr.Services.Users
             var user = await _dbContext.Peoples
               .Where(x => x.EmailAddress.ToLower() == email && (x.Status == PeopleStatusConstants.Approved || x.Status == PeopleStatusConstants.ApprovedButRevising))
              .Select(s => new UserSummary
-            {
-                UserName = s.Login
-            }).FirstOrDefaultAsync();
+             {
+                 UserName = s.Login
+             }).FirstOrDefaultAsync();
 
             if (user == null)
             {
@@ -214,5 +245,31 @@ namespace Msr.Services.Users
 
             return result;
         }
+
+        public void RemoveUserCacheItems(string userID, string userName)
+        {
+            IAppCache cachingService = new CachingService();
+
+            string getUserIDCacheItemName = string.Empty;
+
+            if (string.IsNullOrWhiteSpace(userID) == false)
+            {
+                userID = userID.Trim();
+
+                getUserIDCacheItemName = $"GetUserId({userID})".Trim().ToUpper();
+
+                cachingService.Remove(getUserIDCacheItemName);
+            }
+
+            if (string.IsNullOrWhiteSpace(userName) == false)
+            {
+                userName = userName.Trim();
+
+                getUserIDCacheItemName = $"GetUserId({userName})".Trim().ToUpper();
+
+                cachingService.Remove(getUserIDCacheItemName);
+            }
+        }
+
     }
 }

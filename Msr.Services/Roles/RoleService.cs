@@ -325,5 +325,40 @@ namespace Msr.Services.Roles
             return _dbContext.Database.SqlQuery<PeopleApprovedSearch>($"exec A_SP_PEOPLE_SEARCH ' (FULL_NAME LIKE ''%%'' OR FULL_NAME is NULL ) AND  (ROOT LIKE ''%%'' OR ROOT is NULL ) AND  (POSITION_NAME LIKE ''%%'' OR POSITION_NAME is NULL ) AND  (BOSS_NAME LIKE ''%%'' OR BOSS_NAME is NULL ) AND  (COMPANY_NAME LIKE ''%%'' OR COMPANY_NAME is NULL ) AND (( ROOT_CO_ID LIKE ''%{co}%'' ) ) AND  STATUS LIKE ''APPROVED%'' AND  (LOGIN IS NOT NULL) AND  (LOCATION_NAME LIKE ''%%'' OR LOCATION_NAME is NULL )',' ORDER BY LAST_NAME,NAME',NULL,NULL,'{ntlogin}'").ToList();
         }
 
+        public void RemoveRoleCacheItems(string userID, string userName)
+        {
+            IAppCache cachingService = new CachingService();
+
+            string refreshUserRolesCacheItemName = string.Empty;
+            string getAssignedRolesCacheItemName = string.Empty;
+            string getAssignedRolesByLoginCacheItemName = string.Empty;
+
+            if (string.IsNullOrWhiteSpace(userID) == false)
+            {
+                userID = userID.Trim();
+
+                refreshUserRolesCacheItemName = $"RefreshUserRoles({userID})".Trim().ToUpper();
+                getAssignedRolesCacheItemName = $"GetAssignedRoles({userID})".Trim().ToUpper();
+                getAssignedRolesByLoginCacheItemName = $"GetAssignedRolesByLogin({userID})".Trim().ToUpper();
+
+                cachingService.Remove(refreshUserRolesCacheItemName);
+                cachingService.Remove(getAssignedRolesCacheItemName);
+                cachingService.Remove(getAssignedRolesByLoginCacheItemName);
+            }
+
+            if (string.IsNullOrWhiteSpace(userName) == false)
+            {
+                userName = userName.Trim();
+
+                refreshUserRolesCacheItemName = $"RefreshUserRoles({userName})".Trim().ToUpper();
+                getAssignedRolesCacheItemName = $"GetAssignedRoles({userName})".Trim().ToUpper();
+                getAssignedRolesByLoginCacheItemName = $"GetAssignedRolesByLogin({userName})".Trim().ToUpper();
+
+                cachingService.Remove(refreshUserRolesCacheItemName);
+                cachingService.Remove(getAssignedRolesCacheItemName);
+                cachingService.Remove(getAssignedRolesByLoginCacheItemName);
+            }
+        }
+
     }
 }
