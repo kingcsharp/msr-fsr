@@ -1,4 +1,6 @@
 ﻿
+
+
 CREATE VIEW [dbo].[Portal_WorkOrders]
 
 AS
@@ -66,7 +68,9 @@ isnull('['+STUFF((    SELECT ',' + '{"Date":"'+  FORMAT ( n.CreatedDate, 'MM/dd/
 ,0 AS HasMonitor
 ,1 AS HasNcr
 ,[PROC].Threshold
-,part.CompanyPartNumber
+,PART.COMPANYPARTNUMBER
+,PA.[LOCATION]
+,PA.LOCATIONOBJECTID
 ,pa.LocationName
 ,[PROC].OBJECT_ID as ProcObjId
 ,Product.TotalSalePrice
