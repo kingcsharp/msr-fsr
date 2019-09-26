@@ -8,6 +8,8 @@
 );
 
 
+
+
 GO
 
 
@@ -19,4 +21,9 @@ declare @ID varchar(50)
 SELECT @ID = ID FROM INSERTED
 print'The ID of the inserted ACTUAL_PART is ' + @ID
 exec dbo.A_SP_ACTUAL_PART_UPDATE_MY_CHILDREN_PARTS @ID
+
+
+GO
+CREATE NONCLUSTERED INDEX [IX_A_ACTUAL_PARTS_EXECPLAN_01]
+    ON [dbo].[A_ACTUAL_PARTS]([HISTORY_REF_ID] ASC, [STATUS] ASC);
 

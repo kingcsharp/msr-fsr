@@ -602,7 +602,7 @@ namespace Msr.Services.Orders
             return detailsResponse;
         }
 
-        public WipStepDetailsResponse GetWipStepDetailsREFACTOR(ref LoggedUserIdResult loggedUserIdResult, ref List<GetMyRolesResult> userRoles, int stepId, int fillId, string login, int? phStepId)
+        public WipStepDetailsResponse GetWipStepDetails(ref LoggedUserIdResult loggedUserIdResult, ref List<GetMyRolesResult> userRoles, int stepId, int fillId, string login, int? phStepId)
         {
             WipStepDetailsResponse wipStepDetailsResponse = new WipStepDetailsResponse();
 
@@ -616,7 +616,6 @@ namespace Msr.Services.Orders
 
             using (IDbConnection sqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
             {
-
                 DynamicParameters refactorGetStepDetailsParameters = new DynamicParameters();
 
                 refactorGetStepDetailsParameters.Add("@STRNTLOGIN", login, DbType.String, ParameterDirection.Input);
@@ -625,7 +624,7 @@ namespace Msr.Services.Orders
                 refactorGetStepDetailsParameters.Add("@FILLID", fillId, DbType.String, ParameterDirection.Input);
                 refactorGetStepDetailsParameters.Add("@PROCSTEPID", phStepId, DbType.String, ParameterDirection.Input);
 
-                using (var gridReader = sqlConnection.QueryMultiple("REFACTOR_GET_STEP_DETAILS", refactorGetStepDetailsParameters, commandType: CommandType.StoredProcedure))
+                using (var gridReader = sqlConnection.QueryMultiple("WIP_GET_STEP_DETAILS", refactorGetStepDetailsParameters, commandType: CommandType.StoredProcedure))
                 {
 
                     // TASK DESCRIPTION TAB DETAILS
