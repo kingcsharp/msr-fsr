@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Mvc;
 using Msr.Models.Sensor;
 using System.ComponentModel.DataAnnotations.Schema;
+using Msr.Models.EquipmentMaintenances;
 
 namespace Msr.Services.Orders.Procedures
 {
@@ -107,6 +108,58 @@ namespace Msr.Services.Orders.Procedures
         public List<SelectListItem> FailActionList { get; set; }
 
         public List<SelectListItem> MonitorTemplateMultiChoices { get; set; }
+
+        public void Setup(List<EquipmentMaintenanceView> equipmentMaintenanceView)
+        {
+            NCRCategoryList = Msr.Commons.Lookups.LookupItems.NCRCategories();
+
+            ResultList = new List<SelectListItem>
+            {
+                new SelectListItem
+                {
+                    Text = @"YES",
+                    Value = "1",
+                    Selected = this.Print_Result == "1"
+                },
+                new SelectListItem
+                {
+                    Text = @"NO",
+                    Value = "0",
+                    Selected = this.Print_Result == "0"
+                }
+            };
+
+            FailActionList = new List<SelectListItem>
+            {
+                new SelectListItem
+                {
+                    Text = @"Continue to next step.",
+                    Value = "CONTINUE"
+                },
+                new SelectListItem
+                {
+                    Text = @"Stay at this step until passing result is entered.",
+                    Value = "DONOTCLOSE"
+                },
+                new SelectListItem
+                {
+                    Text = @"Start Diagnose & Repair Tool.",
+                    Value = "DNR"
+                },
+                new SelectListItem
+                {
+                    Text = @"Skip all steps and end procedure.",
+                    Value = "ENDPROCEDURE"
+                }
+
+            };
+
+            EquipmentMaintenanceList = equipmentMaintenanceView.Select(x => new SelectListItem
+            {
+                Text = x.RoomEquipment + " (" + x.Id.ToString() + ")",
+                Value = x.Id.ToString()
+            }).OrderBy(o => o.Text).ToList();
+        }
 
         public void Setup(EquipmentMaintenanceService equipmentMaintenanceService, OrderService orderService)
         {
