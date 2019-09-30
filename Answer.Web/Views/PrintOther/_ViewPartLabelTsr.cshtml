@@ -20,6 +20,7 @@
     table.tight {
         font: small Arial, Helvetica, sans-serif !important;
         font-size: 12px !important;
+        width: 100%;
     }
     tr {
         height:20px;
@@ -33,11 +34,12 @@
     .OL250 {
         height:1.495in;
         width:4in;
-        padding:.25in;
+        padding:.2in;
         float:left;
         border:1px dashed #ccc;
         border-radius:0.0625in;
     }
+ 
     .OL250:nth-child(odd){
         margin-right:.155in;
     }
@@ -61,6 +63,9 @@
                 <tr>
                     <td>PO #: <strong>@partLabel.PO_Number</strong></td>
                     <td><span class="date">Date:<strong>@partLabel.Due_Date</strong></span></td>
+                </tr>
+                <tr>
+                    <td colspan="2">This Part Processed <strong>@partLabel.Count</strong> time(s) </td>
                 </tr>
             </tbody>
         </table>
