@@ -7,6 +7,8 @@ pipeline {
     }
     environment {
         WEBHOOK_URL = 'https://outlook.office.com/webhook/19c3ea6c-d421-4b34-bf8b-9188e9e5c729@f139f56d-9238-4269-8e2e-8b0f314429cb/JenkinsCI/a8556c572acf47fdaa48888079cd22f5/73b18003-3808-48a4-bf4d-a0fc2650baa5'
+        APP_NAME_DEV = 'AnswerDev'
+        DEPLOY_GROUP_DEV = 'AnswerDevDeployment'
         APP_NAME_STAGE = 'AnswerStage'
         DEPLOY_GROUP_STAGE = 'AnswerDeploymentStage'
         GREEN = '#008000'
@@ -85,6 +87,8 @@ pipeline {
                             } else if (env.JOB_NAME == "MSR-FSR/Answer2.0-pipeline") {
                                 echo "There is no deployment for this branch."
                                 //deploy("${APP_NAME_STAGE}","${DEPLOY_GROUP_STAGE}")
+                            } else if(env.JOB_NAME == "MSR-FSR/Answer2.0/dev") {
+                                deploy("${APP_NAME_DEV}","${DEPLOY_GROUP_DEV}")
                             } else {
                                 echo "There is no deployment for this branch."
                             }
