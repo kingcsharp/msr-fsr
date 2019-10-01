@@ -11,6 +11,11 @@ pipeline {
         DEPLOY_GROUP_DEV = 'AnswerDevDeployment'
         APP_NAME_STAGE = 'AnswerStage'
         DEPLOY_GROUP_STAGE = 'AnswerDeploymentStage'
+        APP_NAME_PROD = 'AnswerProd'
+        DEPLOY_GROUP_PROD = 'AnswerProdDeployment'
+        CATALOG_DEV = 'Answer2_Dev'
+        CATALOG_STAGE = 'Answer2_Stage'
+        CATALOG_PROD = 'Answer2_Prod'
         GREEN = '#008000'
         RED = '#FF0000'
     }
@@ -31,10 +36,21 @@ pipeline {
                 script {
                     try {
                         bat "\"${tool 'v2019'}\" Msr.Database/Msr.Database.sqlproj /t:Build /p:Configuration=Release"
-                        echo "Generate script"
-                        bat label: '', script: 'sqlpackage.exe /a:script /SourceFile:%WORKSPACE%\\Msr.Database\\bin\\Release\\Msr.Database.dacpac /TargetConnectionString:"Data Source=bang.msr-fsr.com;Initial Catalog=Answer2_Stage;User Id=sa;Password=L8xvg2FGqs7CEQ+s;Integrated Security=true" /OutputPath:temp.sql'
                     } catch(e) {
                         office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED building Msr.Database. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                    }
+                }
+            }
+        }
+        stage("Generate SQL Script") {
+            steps {
+                script {
+                    try {
+                        withCredentials([usernamePassword(credentialsId: '20d94a70-d354-4154-b896-72b12943f904', passwordVariable: 'DB_PASS', usernameVariable: 'DB_USER')]) {
+                            bat label: '', script: 'sqlpackage.exe /a:script /SourceFile:%WORKSPACE%\\Msr.Database\\bin\\Release\\Msr.Database.dacpac /TargetConnectionString:"Data Source=bang.msr-fsr.com;Initial Catalog=${CATALOG_DEV};User Id=${DB_USER};Password=${DB_PASS};Integrated Security=true" /OutputPath:temp.sql'
+                        }
+                    } catch(e) {
+                        office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED generating SQL script from Msr.Database. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
                     }
                 }
             }
@@ -77,18 +93,17 @@ pipeline {
                 }
             }
         }
-        stage("Deploy to Stage server") {
+        stage("Deploy to server") {
             steps {
                 script {
                     script {
                         try {
-                            if (env.JOB_NAME == "MSR-FSR/Answer-Stage") {
-                                deploy("${APP_NAME_STAGE}", "${DEPLOY_GROUP_STAGE}")
-                            } else if (env.JOB_NAME == "MSR-FSR/Answer2.0-pipeline") {
-                                echo "There is no deployment for this branch."
-                                //deploy("${APP_NAME_STAGE}","${DEPLOY_GROUP_STAGE}")
-                            } else if(env.JOB_NAME == "MSR-FSR/Answer2.0/dev") {
+                            if(env.JOB_NAME == "MSR-FSR/Answer2.0/dev") {
                                 deploy("${APP_NAME_DEV}","${DEPLOY_GROUP_DEV}")
+                            } else if(env.JOB_NAME == "MSR-FSR/Answer2.0/Stage") {
+                                deploy("${APP_NAME_STAGE}","${DEPLOY_GROUP_STAGE}")
+                            } else if(env.JOB_NAME == "MSR-FSR/Answer2.0/master") {
+                                deploy("${APP_NAME_PROD}","${DEPLOY_GROUP_PROD}")
                             } else {
                                 echo "There is no deployment for this branch."
                             }
