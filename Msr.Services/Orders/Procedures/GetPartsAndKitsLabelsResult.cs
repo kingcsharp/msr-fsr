@@ -13,8 +13,6 @@ namespace Msr.Services.Orders.Procedures
 
         public string Actual_Part_ID { get; set; }
 
-        public int Count { get; set; }
-
         public string Site_Name { get; set; }
 
         public string Due_Date { get; set; }
@@ -22,6 +20,8 @@ namespace Msr.Services.Orders.Procedures
         public string WO_Item_Number { get; set; }
 
         public string PO_Number { get; set; }
+
+        public int Cycle_Count { get; set; }
     }
 
 }
