@@ -556,9 +556,6 @@ namespace Answer.Web.Controllers
             ViewBag.FillId = fillId;
             ViewBag.IsStepStatusClosed = wipStepDetailsResponse.TaskEditDataResult.Status == "CLOSED";
 
-            //wipStepDetailsResponse.HasStepRoles = true;
-            //wipStepDetailsResponse.HasPreviousStepCompleted = true;
-
             return PartialView("_InitialInspection", wipStepDetailsResponse);
         }
 
