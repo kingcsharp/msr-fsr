@@ -10,7 +10,6 @@ using Msr.Models.Tasks;
 using Msr.Repositories;
 using Msr.Services.Documents;
 using Msr.Services.Documents.ViewModels;
-using Msr.Services.EquipmentMaintenances;
 using Msr.Services.Helpers;
 using Msr.Services.Orders.Messaging;
 using Msr.Services.Orders.Procedures;
@@ -750,6 +749,13 @@ namespace Msr.Services.Orders
             }
 
             // ADDITIONAL TASK DATA PROCESSING
+
+            foreach (var x in wipStepDetailsResponse.TaskItemParts)
+            {
+
+                x.GetActualPartsShowHierarchys = taskItemPart.GetActualPartsShowHierarchys;
+
+            }
 
             if (taskData != null)
             {
