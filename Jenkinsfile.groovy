@@ -27,6 +27,7 @@ pipeline {
                         bat label: '', script: '.nuget\\Nuget.exe install packages.config -o packages'
                     } catch(e) {
                         office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED installing packages. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                        currentBuild.result = 'FAILURE'
                     }
                 }
             }
@@ -38,6 +39,7 @@ pipeline {
                         bat "\"${tool 'v2019'}\" Msr.Database/Msr.Database.sqlproj /t:Build /p:Configuration=Release"
                     } catch(e) {
                         office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED building Msr.Database. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                        currentBuild.result = 'FAILURE'
                     }
                 }
             }
@@ -55,6 +57,7 @@ pipeline {
                         }
                     } catch(e) {
                         office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED generating SQL script from Msr.Database. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                        currentBuild.result = 'FAILURE'
                     }
                 }
             }
@@ -66,6 +69,7 @@ pipeline {
                         bat "\"${tool 'v14-amd64'}\" Answer.Web/transform.stage.proj /t:Stage"
                     } catch(e) {
                         office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED processing transforms. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                        currentBuild.result = 'FAILURE'
                     }
                 }
             }
@@ -77,6 +81,7 @@ pipeline {
                         bat "\"${tool 'v14-amd64'}\" Answer.Web/Answer.Web.csproj /t:Build /p:Configuration=Release /p:DeployOnBuild=true /p:OutputPath=${WORKSPACE}/publish"
                     } catch(e) {
                         office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED building Answer.Web. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                        currentBuild.result = 'FAILURE'
                     }
                 }
             }
@@ -93,6 +98,7 @@ pipeline {
                         bat label: '', script: 'd:\\tools\\7-Zip\\7z a %WORKSPACE%\\publish\\publish.zip publish\\_PublishedWebsites\\'
                     } catch(e) {
                         office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED packaging the release. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                        currentBuild.result = 'FAILURE'
                     }
                 }
             }
@@ -113,6 +119,7 @@ pipeline {
                             }
                         } catch(e) {
                             office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED deploying to server. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                            currentBuild.result = 'FAILURE'
                         }
                     }
 
