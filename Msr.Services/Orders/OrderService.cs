@@ -823,6 +823,8 @@ namespace Msr.Services.Orders
 
             wipStepDetailsResponse.Images.Preview = FileInputConfigHelper.GetPreviewValue(dockLinks, _documentFilesService);
 
+            wipStepDetailsResponse.HasPreviousStepCompleted = HasPreviousStepCompleted(wipStepDetailsResponse.TaskItemParts, stepId);
+
             return wipStepDetailsResponse;
         }
 
