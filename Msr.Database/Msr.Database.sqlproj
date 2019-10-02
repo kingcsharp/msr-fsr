@@ -2884,10 +2884,10 @@
   <ItemGroup>
     <None Include="Script.PostDeployment1.sql" />
   </ItemGroup>
-  <ItemGroup>
+  <!--<ItemGroup>
     <SqlCmdVariable Include="EquipmentMonitoring">
       <DefaultValue>EquipmentMonitoring</DefaultValue>
       <Value>$(SqlCmdVar__1)</Value>
     </SqlCmdVariable>
-  </ItemGroup>
+  </ItemGroup>-->
 </Project>
