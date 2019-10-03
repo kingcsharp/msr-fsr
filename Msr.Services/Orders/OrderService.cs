@@ -10,7 +10,6 @@ using Msr.Models.Tasks;
 using Msr.Repositories;
 using Msr.Services.Documents;
 using Msr.Services.Documents.ViewModels;
-using Msr.Services.EquipmentMaintenances;
 using Msr.Services.Helpers;
 using Msr.Services.Orders.Messaging;
 using Msr.Services.Orders.Procedures;
@@ -608,6 +607,7 @@ namespace Msr.Services.Orders
 
             GetTaskDetailResult taskData = null;
             TaskItemPart taskItemPart = null;
+            TaskLog taskLog = null;
 
             wipStepDetailsResponse.LoginId = login;
             wipStepDetailsResponse.StepId = stepId;
@@ -695,6 +695,10 @@ namespace Msr.Services.Orders
 
                     wipStepDetailsResponse.EquipmentMaintenanceView = gridReader.Read<EquipmentMaintenanceView>().ToList();
 
+                    // TASK LOG FOR TIMES
+
+                    taskLog = gridReader.Read<TaskLog>().SingleOrDefault();
+
                 }
 
                 TaskStepResult currentStep = wipStepDetailsResponse.WorkOrderDetailsResponse.TaskStepResults.SingleOrDefault(x => x.StepId == stepId.ToString());
@@ -778,6 +782,13 @@ namespace Msr.Services.Orders
 
             // ADDITIONAL TASK DATA PROCESSING
 
+            foreach (var stepTaskItemPart in wipStepDetailsResponse.TaskItemParts)
+            {
+
+                stepTaskItemPart.GetActualPartsShowHierarchys = taskItemPart.GetActualPartsShowHierarchys;
+
+            }
+
             if (taskData != null)
             {
                 taskItemPart.IsEditable = false;
@@ -824,6 +835,12 @@ namespace Msr.Services.Orders
             wipStepDetailsResponse.Images.Preview = FileInputConfigHelper.GetPreviewValue(dockLinks, _documentFilesService);
 
             wipStepDetailsResponse.HasPreviousStepCompleted = HasPreviousStepCompleted(wipStepDetailsResponse.TaskItemParts, stepId);
+            
+            // TO DO!!!!
+
+            // var taskLog = _dbContext.TaskLogs.FirstOrDefault(x => x.TaskId == stepId && x.FillId == fillId);
+
+            wipStepDetailsResponse.TaskRunningDto = GetTotalTime(taskLog);
 
             return wipStepDetailsResponse;
         }
