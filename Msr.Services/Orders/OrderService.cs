@@ -750,10 +750,10 @@ namespace Msr.Services.Orders
 
             // ADDITIONAL TASK DATA PROCESSING
 
-            foreach (var x in wipStepDetailsResponse.TaskItemParts)
+            foreach (var stepTaskItemPart in wipStepDetailsResponse.TaskItemParts)
             {
 
-                x.GetActualPartsShowHierarchys = taskItemPart.GetActualPartsShowHierarchys;
+                stepTaskItemPart.GetActualPartsShowHierarchys = taskItemPart.GetActualPartsShowHierarchys;
 
             }
 
@@ -803,6 +803,12 @@ namespace Msr.Services.Orders
             wipStepDetailsResponse.Images.Preview = FileInputConfigHelper.GetPreviewValue(dockLinks, _documentFilesService);
 
             wipStepDetailsResponse.HasPreviousStepCompleted = HasPreviousStepCompleted(wipStepDetailsResponse.TaskItemParts, stepId);
+            
+            // TO DO!!!!
+
+            var taskLog = _dbContext.TaskLogs.FirstOrDefault(x => x.TaskId == stepId && x.FillId == fillId);
+
+            wipStepDetailsResponse.TaskRunningDto = GetTotalTime(taskLog);
 
             return wipStepDetailsResponse;
         }
