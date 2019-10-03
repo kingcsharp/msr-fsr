@@ -580,6 +580,7 @@ namespace Msr.Services.Orders
 
             GetTaskDetailResult taskData = null;
             TaskItemPart taskItemPart = null;
+            TaskLog taskLog = null;
 
             wipStepDetailsResponse.LoginId = login;
             wipStepDetailsResponse.StepId = stepId;
@@ -666,6 +667,10 @@ namespace Msr.Services.Orders
                     // SELECT * FROM DBO.PORTAL_EQUIPMENTMAINTENANCEVIEW
 
                     wipStepDetailsResponse.EquipmentMaintenanceView = gridReader.Read<EquipmentMaintenanceView>().ToList();
+
+                    // TASK LOG FOR TIMES
+
+                    taskLog = gridReader.Read<TaskLog>().SingleOrDefault();
 
                 }
 
@@ -806,7 +811,7 @@ namespace Msr.Services.Orders
             
             // TO DO!!!!
 
-            var taskLog = _dbContext.TaskLogs.FirstOrDefault(x => x.TaskId == stepId && x.FillId == fillId);
+            // var taskLog = _dbContext.TaskLogs.FirstOrDefault(x => x.TaskId == stepId && x.FillId == fillId);
 
             wipStepDetailsResponse.TaskRunningDto = GetTotalTime(taskLog);
 
