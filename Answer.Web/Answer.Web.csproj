@@ -2624,7 +2624,7 @@
     <Content Include="Views\PrintOther\_ViewTsrWipHistory.cshtml" />
     <Content Include="Views\PrintOther\_ViewDeliveryTsr.cshtml" />
     <Content Include="Views\PrintOther\_ViewNcrTsr.cshtml" />
-    <Content Include="Views\PrintOther\_ViewPartLabelTsr.cshtml" />
+    <Content Include="Views\PrintOther\_ViewPartLabelSheetTsr.cshtml" />
     <Content Include="Views\PrintOther\_ViewMonitorLabelTsr.cshtml" />
     <Content Include="Views\Wip\_PrintOther.cshtml" />
     <Content Include="Views\Parts\AddPart.cshtml" />
@@ -2815,7 +2815,7 @@
     <Content Include="Views\Wip\_StatusItems.cshtml" />
     <Content Include="Views\Shared\_PersonDate.cshtml" />
     <Content Include="Views\PrintOther\_ViewPartLabelRollTsr.cshtml" />
-    <Content Include="Views\PrintOther\_ViewPartLabelOrigTsr.cshtml" />
+    <Content Include="Views\PrintOther\_ViewPartLabelTsr.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
