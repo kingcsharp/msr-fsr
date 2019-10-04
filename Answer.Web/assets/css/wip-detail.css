@@ -269,3 +269,6 @@ input.timer {
 #step-description {
     border-left:unset;
 }
+#print-other-content {
+    min-height:250px;
+}
