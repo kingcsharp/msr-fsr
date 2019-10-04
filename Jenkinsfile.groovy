@@ -63,7 +63,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        bat "\"${tool 'v14-amd64'}\" Answer.Web/transform.stage.proj /t:Stage"
+                        bat "\"${tool 'v14-amd64'}\" Answer.Web/transform.stage.proj /t:Dev"
                     } catch(e) {
                         office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED processing transforms. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
                     }
