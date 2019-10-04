@@ -33,6 +33,8 @@
                     @Html.HiddenFor(x => Model[i].TheSaurusId)
                     @Html.HiddenFor(x => Model[i].StrNtLogin)
                     @Html.HiddenFor(x => Model[i].FillId)
+                    @Html.HiddenFor(x => Model[i].Step_Id)
+                    @Html.HiddenFor(x => Model[i].Ph_Step_Id)
                     @Html.HiddenFor(x => Model[i].TASK_ID)
                     @Html.HiddenFor(x => Model[i].Monitor_Type)
                     @Html.HiddenFor(x => Model[i].Input_Type)
@@ -392,7 +394,7 @@
         </div>
     }
     </div>
-    if (Model.Count > 0  && !ViewBag.IsStepStatusClosed)
+    if (Model.Count > 0  && !ViewBag.IsStepStatusClosed && ViewBag.HasStepRoles == true)
     {
         <div class="row">
             <div class="col-lg-offset-1 col-lg-8">

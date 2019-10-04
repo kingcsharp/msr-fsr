@@ -5,10 +5,8 @@ using Msr.Models.Orders;
 using Msr.Models.Sensor;
 using Msr.Services;
 using Msr.Services.Documents;
-using Msr.Services.Documents.ViewModels;
 using Msr.Services.EquipmentMaintenances;
 using Msr.Services.EquipmentMaintenances.ViewModels;
-using Msr.Services.Helpers;
 using Msr.Services.jqGrid;
 using Msr.Services.Locations;
 using Msr.Services.Notes;
@@ -555,6 +553,7 @@ namespace Answer.Web.Controllers
 
             ViewBag.FillId = fillId;
             ViewBag.IsStepStatusClosed = wipStepDetailsResponse.TaskEditDataResult.Status == "CLOSED";
+            ViewBag.HasStepRoles = wipStepDetailsResponse.HasStepRoles;
 
             return PartialView("_InitialInspection", wipStepDetailsResponse);
         }
@@ -673,36 +672,53 @@ namespace Answer.Web.Controllers
         [HttpPost]
         public ActionResult UpdateStepMonitor(List<MonitorTemplateResult> monitorTemplates)
         {
-            var currentUser = GetCurrentUser();
-
             var result = new ResultNotification<string>();
 
-            bool updateMonitor = true;
-
-            foreach (var monitorTemplate in monitorTemplates)
+            if (monitorTemplates != null && monitorTemplates.Any() == true)
             {
-                updateMonitor = true;
+                LoggedUserIdResult loggedUserIdResult = this.LoggedUserIdResult;
 
-                monitorTemplate.StrNtLogin = currentUser.Id;
+                List<GetMyRolesResult> userRoles = _roleService.GetAssignedRoles(loggedUserIdResult.Id);
 
-                // FOR THE EQUIPMENT SENSOR MONITOR AFTER THE FIRST UPDATE IT'S READ-ONLY, I.E., IT SHOULD NOT BE UPDATED AFTER IT'S BEEN SET THE FIRST TIME
+                MonitorTemplateResult monitorTemplateResult = monitorTemplates.FirstOrDefault();
 
-                if (monitorTemplate.Monitor_Type.Trim().ToUpper() == "EQUIPMENT" && monitorTemplate.Input_Type.Trim().ToUpper() == "SENSOR")
+                WipStepDetailsResponse wipStepDetailsResponse = _orderService.GetWipStepDetails(ref loggedUserIdResult, ref userRoles, Convert.ToInt32(monitorTemplateResult.Step_Id), monitorTemplateResult.FillId, loggedUserIdResult.Id, Convert.ToInt32(monitorTemplateResult.Ph_Step_Id));
+
+                if (wipStepDetailsResponse.HasStepRoles == true)
                 {
-                    if (string.IsNullOrWhiteSpace(monitorTemplate.Monitor_Result_ID) == false && monitorTemplate.Monitor_Result_ID.Length > 1)
+
+                    bool updateMonitor = true;
+
+                    foreach (var monitorTemplate in monitorTemplates)
                     {
-                        updateMonitor = false;
+                        updateMonitor = true;
+
+                        monitorTemplate.StrNtLogin = loggedUserIdResult.Id;
+
+                        // FOR THE EQUIPMENT SENSOR MONITOR AFTER THE FIRST UPDATE IT'S READ-ONLY, I.E., IT SHOULD NOT BE UPDATED AFTER IT'S BEEN SET THE FIRST TIME
+
+                        if (monitorTemplate.Monitor_Type.Trim().ToUpper() == "EQUIPMENT" && monitorTemplate.Input_Type.Trim().ToUpper() == "SENSOR")
+                        {
+                            if (string.IsNullOrWhiteSpace(monitorTemplate.Monitor_Result_ID) == false && monitorTemplate.Monitor_Result_ID.Length > 1)
+                            {
+                                updateMonitor = false;
+                            }
+                        }
+
+                        if (updateMonitor == true)
+                        {
+                            result = _orderService.UpdateStepMonitor(monitorTemplate);
+                        }
+
+                        if (result.HasErrors())
+                        {
+                            break;
+                        }
                     }
                 }
-
-                if (updateMonitor == true)
+                else
                 {
-                    result = _orderService.UpdateStepMonitor(monitorTemplate);
-                }
-
-                if (result.HasErrors())
-                {
-                    break;
+                    result.AddError("The user does not have permissions for the current step.");
                 }
             }
 
