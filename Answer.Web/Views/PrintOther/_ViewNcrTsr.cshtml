@@ -93,44 +93,42 @@
         </tbody>
     </table>
 
+    <p>&nbsp;</p>
+
     <table class="table table-bordered monitor-tabel">
         @foreach (var task in Model.MonitorItem)
         {
             <thead>
                 <tr>
-                    <th colspan=4>@task.Description</th>
+                    <th colspan=4>@task.TaskTitle</th>
                 </tr>
                 <tr>
                     <th>Monitor @task.TaskId</th>
                     <th>Result</th>
-                    <th>Pass/Fail</th>
                     <th>Comment</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var monitor in task.MonitorResults)
                 {
-                    var cssClass = "";
-
-                    if (monitor.IsPassing == "Pass")
-                    {
-                        cssClass = "success";
-                    }
-                    else if (monitor.IsPassing == "Fail")
-                    {
-                        cssClass = "danger";
-                    }
-
                     <tr>
-                        <td>@monitor.Description</td>
                         <td>
-                            @if (monitor.ListSource?.Trim().ToUpper().Contains("NCR_CATEGORY") == true || monitor.ListSource?.Trim().ToUpper().Contains("NCRCATEGORY") == true)
+                            @if (monitor.InputType?.Trim().ToUpper() == "SENSOR" && string.IsNullOrWhiteSpace(monitor.Description) == true)
+                            {
+                                @Html.Raw(@"Sensor Value")
+                            }
+                            else
+                            {
+                                @monitor.Description
+                            }
+                        </td>
+                        <td>
+                            @if (monitor.MonitorType?.Trim().ToUpper() == "SELECT" && (monitor.ListSource?.Trim().ToUpper().Contains("NCR_CATEGORY") == true || monitor.ListSource?.Trim().ToUpper().Contains("NCRCATEGORY") == true))
                             {
                                 @Html.Raw(@"NCR Category:")
                             }
                             @monitor.PrintResult
                         </td>
-                        <td class="@cssClass">@monitor.IsPassing</td>
                         <td>@monitor.Comment</td>
                     </tr>
                 }

@@ -6,6 +6,7 @@ namespace Msr.Models.Tasks
     {
         public string Id { get; set; }
         public string TaskId { get; set; }
+        public string InputType { get; set; }
         public string MonitorType { get; set; }
         public string Description { get; set; }
         public string ShouldBe { get; set; }

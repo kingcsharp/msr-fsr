@@ -13,6 +13,8 @@ namespace Msr.Services.Tasks.Messaging
 
         public string TaskId { get; set; }
 
+        public string TaskTitle { get; set; }
+
         public string Description { get; set; }
 
         public List<MonitorResult> MonitorResults { get; set; }
