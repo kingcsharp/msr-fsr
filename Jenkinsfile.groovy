@@ -115,8 +115,6 @@ pipeline {
                             office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED deploying to server. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
                         }
                     }
-
-                    office365ConnectorSend color: "${GREEN}", message: "${JOB_NAME} build completed.", status: 'Passed',webhookUrl: "${WEBHOOK_URL}"
                 }
             }
         }
@@ -144,6 +142,7 @@ void deploy(appName,deployName) {
               s3bucket: 'answer-deployments', s3prefix: 'publish', subdirectory: 'publish\\_PublishedWebsites',
               versionFileName: '', waitForCompletion: true])
     }
+    office365ConnectorSend color: "${GREEN}", message: "${JOB_NAME} build completed.", status: 'Passed',webhookUrl: "${WEBHOOK_URL}"
 }
 
 void notify(branch, commit) {
