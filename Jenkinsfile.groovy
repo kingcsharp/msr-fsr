@@ -6,7 +6,7 @@ pipeline {
         buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '10', numToKeepStr: '10'))
     }
     environment {
-        WEBHOOK_URL = 'https://outlook.office.com/webhook/19c3ea6c-d421-4b34-bf8b-9188e9e5c729@f139f56d-9238-4269-8e2e-8b0f314429cb/JenkinsCI/a8556c572acf47fdaa48888079cd22f5/73b18003-3808-48a4-bf4d-a0fc2650baa5'
+        WEBHOOK_URL = 'https://outlook.office.com/webhook/19c3ea6c-d421-4b34-bf8b-9188e9e5c729@f139f56d-9238-4269-8e2e-8b0f314429cb/JenkinsCI/076036d41c7a4379af57ab9be2c4a2aa/73b18003-3808-48a4-bf4d-a0fc2650baa5'
         APP_NAME_DEV = 'AnswerDev'
         DEPLOY_GROUP_DEV = 'AnswerDevDeployment'
         APP_NAME_STAGE = 'AnswerStage'
