@@ -22,8 +22,8 @@ pipeline {
     stages {
         stage('Install Packages') {
             steps {
+                office365ConnectorSend message: "Build starting test.", status: 'Success', webhookUrl: "https://outlook.office.com/webhook/19c3ea6c-d421-4b34-bf8b-9188e9e5c729@f139f56d-9238-4269-8e2e-8b0f314429cb/JenkinsCI/a991ea49102149179a225dc021b868e4/73b18003-3808-48a4-bf4d-a0fc2650baa5"
                 script {
-                    office365ConnectorSend message: "Build starting test.", status: 'Success', webhookUrl: "https://outlook.office.com/webhook/19c3ea6c-d421-4b34-bf8b-9188e9e5c729@f139f56d-9238-4269-8e2e-8b0f314429cb/JenkinsCI/a991ea49102149179a225dc021b868e4/73b18003-3808-48a4-bf4d-a0fc2650baa5"
                     try {
                         bat label: '', script: '.nuget\\Nuget.exe install packages.config -o packages'
                     } catch(e) {
