@@ -111,7 +111,16 @@
                 @foreach (var monitor in task.MonitorResults)
                 {
                     <tr>
-                        <td>@monitor.Description</td>
+                        <td>
+                            @if (monitor.InputType?.Trim().ToUpper() == "SENSOR" && string.IsNullOrWhiteSpace(monitor.Description) == true)
+                            {
+                                @Html.Raw(@"Sensor Value")
+                            }
+                            else
+                            {
+                                @monitor.Description
+                            }
+                        </td>
                         <td>
                             @if (monitor.MonitorType?.Trim().ToUpper() == "SELECT" && (monitor.ListSource?.Trim().ToUpper().Contains("NCR_CATEGORY") == true || monitor.ListSource?.Trim().ToUpper().Contains("NCRCATEGORY") == true))
                             {
