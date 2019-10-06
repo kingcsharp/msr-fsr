@@ -144,7 +144,7 @@ void deploy(appName,deployName) {
               s3bucket: 'answer-deployments', s3prefix: 'publish', subdirectory: 'publish\\_PublishedWebsites',
               versionFileName: '', waitForCompletion: true])
     }
-    office365ConnectorSend color: "${GREEN}", message: "${JOB_NAME} build completed.", status: 'Passed',webhookUrl: "${WEBHOOK_URL}"
+    office365ConnectorSend color: "${GREEN}", message: "${JOB_NAME} build completed.", status: 'Passed', webhookUrl: "https://outlook.office.com/webhook/19c3ea6c-d421-4b34-bf8b-9188e9e5c729@f139f56d-9238-4269-8e2e-8b0f314429cb/JenkinsCI/076036d41c7a4379af57ab9be2c4a2aa/73b18003-3808-48a4-bf4d-a0fc2650baa5"
 }
 
 void notify(branch, commit) {
