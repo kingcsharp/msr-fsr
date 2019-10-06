@@ -63,10 +63,12 @@ namespace Msr.Services.Orders
 
             if (tasks.Any())
             {
-                foreach (var task in tasks)
+                foreach (GetTaskWithMonitorsResult task in tasks)
                 {
                     var item = new MonitorItem();
+
                     item.TaskId = task.TaskId;
+                    item.TaskTitle = task.TaskTitle;
                     item.Description = task.Description;
 
                     var monitors = _dbContext.MonitorResults.Where(x => x.TaskId == task.TaskId).ToList();

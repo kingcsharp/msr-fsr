@@ -91,7 +91,7 @@ namespace Answer.Web.Controllers
 
             var response = taskService.GetTaskWithMonitors(id.ToString());
 
-            ncrDetails.MonitorItem = response.MonitorItem.OrderByDescending(x => x.TaskId).ToList();
+            ncrDetails.MonitorItem = response.MonitorItem.OrderBy(x => x.TaskId).ToList();
 
             // ncrDetails.MonitorItem = response.MonitorItem.Where(x => x.Description.Contains("Nonconformity") || x.Description.Contains("NCR")).ToList();
 
