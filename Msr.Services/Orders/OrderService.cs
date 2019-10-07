@@ -305,7 +305,7 @@ namespace Msr.Services.Orders
                 p.Add("@fileId", fillId, DbType.Int32, ParameterDirection.Input);
 
                 detailsResponse.GetPartsAndKitsLabelsResult =
-                    conn.Query<GetPartsAndKitsLabelsResult>("GetPartsAndKitsLabels", p,
+                    conn.Query<GetPartsAndKitsLabelsResult>("Portal_GetPartsAndKitsLabels", p,
                         commandType: CommandType.StoredProcedure).ToList();
             }
             return detailsResponse;
