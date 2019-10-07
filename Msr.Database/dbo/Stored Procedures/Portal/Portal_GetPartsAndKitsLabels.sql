@@ -1,4 +1,5 @@
-﻿CREATE procedure [dbo].[Portal_GetPartsAndKitsLabels]
+
+CREATE procedure [dbo].[Portal_GetPartsAndKitsLabels]
 @fileId int
 AS
 
@@ -11,12 +12,18 @@ print @parent_id;
 
 SELECT * FROM(
 
-SELECT * FROM A_V_ACTUAL_PARTS_APPROVED_DATA_FOR_EACH_PART 
-WHERE (PARENT_ID = @parent_id  or id =@parent_id)
-and
-HId in (select id from [A_ACTUAL_PARTS_HISTORY] where parent_id =@parent_id or object_id=@parent_id)
+SELECT t1.id, t1.PROC_NAME, t1.SERIAL, T1.COMPANY_PART_NUMBER, t1.PART_DESC, t1.ACTUAL_PART_ID,
+ (SELECT COUNT(SerialNumber) FROM PartsTransactionLog L WHERE L.PartId = t1.ACTUAL_PART_ID AND L.SerialNumber = t1.SERIAL) AS CYCLE_COUNT,
+  t2.LocationName AS SITE_NAME, t2.DueDate AS DUE_DATE, t2.WOItem AS WO_ITEM_NUMBER, t2.ReferencePO AS PO_NUMBER
 
- ) AS Parts ORDER BY Id ASC
+FROM A_V_ACTUAL_PARTS_APPROVED_DATA_FOR_EACH_PART t1 
+INNER JOIN Portal_WorkOrders t2 ON t2.FillId = @fileId
+
+WHERE (t1.PARENT_ID = @parent_id  or t1.id =@parent_id)
+and
+t1.HId in (select id from [A_ACTUAL_PARTS_HISTORY] where parent_id =@parent_id or object_id=@parent_id)
+
+) AS Parts ORDER BY id ASC
 
 
 GO
