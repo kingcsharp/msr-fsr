@@ -742,6 +742,8 @@ namespace Msr.Services.Orders
                     foreach (var monitorTemplate in wipStepDetailsResponse.MonitorTemplateResult)
                     {
                         monitorTemplate.FillId = fillId;
+                        monitorTemplate.Step_Id = stepId.ToString();
+                        monitorTemplate.Ph_Step_Id = phStepId.ToString();
                         monitorTemplate.SensorDataModels = wipStepDetailsResponse.SensorDataModels;
 
                         monitorTemplate.Setup(wipStepDetailsResponse.EquipmentMaintenanceView);
