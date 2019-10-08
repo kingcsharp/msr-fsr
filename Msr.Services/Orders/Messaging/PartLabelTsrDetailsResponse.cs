@@ -14,6 +14,5 @@ namespace Msr.Services.Orders.Messaging
 
         public List<GetPartsAndKitsLabelsResult> GetPartsAndKitsLabelsResult { get; set; }
 
-        public int Count { get; set; }
     }
 }
