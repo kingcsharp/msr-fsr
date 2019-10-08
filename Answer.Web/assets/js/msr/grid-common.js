@@ -425,7 +425,8 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                         onDropdownHidden: function () {
                             $('.multiselect-update').parent().remove();
                             $(elem).attr('multiple', 'multiple').change();
-                        }
+                        },
+                        preventSelectChangeEvent: true,
                     };
                     $(elem).multiselect(multiselectOptions);
 
