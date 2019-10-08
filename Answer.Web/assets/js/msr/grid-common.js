@@ -1,4 +1,6 @@
-﻿var Msr = Msr || {};
+﻿/*global $,jQuery*/
+
+var Msr = Msr || {};
 var hasGridLoaded = false;
 Msr.JqGridCommon = Msr.JqGridCommon ||
     {
@@ -299,7 +301,7 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
 
             if (!hasGridLoaded) {
                 hasGridLoaded = true;
-                var intervalInMilliSeconds = 100;
+                let intervalInMilliSeconds = 100;
 
                 var myinterval = setInterval(function () {
 
@@ -311,7 +313,8 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                         datatype: 'json'
                     }).trigger("reloadGrid");
                 },
-                    intervalInMilliSeconds);
+                    intervalInMilliSeconds
+                );
 
             } else {
                 Msr.JqGridCommon.SaveGridSate(id);
@@ -319,10 +322,10 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
         },
 
         ClearGridState: function (gridId) {
-            var storageRemoveElement = "jqGrid" + gridId;
+            let storageRemoveElement = "jqGrid" + gridId;
             localStorage.removeItem(storageRemoveElement);
 
-            var storageRemoveElementData = storageRemoveElement + "_data";
+            let storageRemoveElementData = storageRemoveElement + "_data";
             localStorage.removeItem(storageRemoveElementData);
 
             location.reload();
@@ -457,7 +460,7 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                 filters = $.parseJSON(string);
 
                 for (var key in filters.rules) {
-                    if (filters.rules.hasOwnProperty(key)) {
+                    if (Object.prototype.hasOwnProperty.call(filters.rules, key)) {
                         var wasFound = false;
                         $('.multiselect-native-select>select').each(function (e, o) {
                             if ($(o).attr('name') === filters.rules[key].field) {
@@ -489,7 +492,7 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                 filters = $.parseJSON(string);
 
                 for (var key in filters.rules) {
-                    if (filters.rules.hasOwnProperty(key)) {
+                    if (Object.prototype.hasOwnProperty.call(filters.rules, key)) {
                         rulesArray.push(filters.rules[key]);
                     }
                 }
@@ -498,9 +501,9 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                 rulesArraystring = rulesArraystring.replace("[", "").replace("]", "");
 
                 //multiselect-container dropdown-menu
-                $('.multiselect-native-select').each(function (e) {
+                $('.multiselect-native-select').each(function () {
                     if ($(this).find('select[name="LocationNames"]').length > 0) {
-                        $(this).find('.multiselect-container.dropdown-menu li input[type=checkbox]:checked').each(function (e) {
+                        $(this).find('.multiselect-container.dropdown-menu li input[type=checkbox]:checked').each(function () {
                             if (jQuery.inArray($(this).val(), statusArray) === -1) {
                                 if ($(this).val() === "") {
                                     statusArray.push("true");
@@ -513,7 +516,7 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                     }
                 });
 
-                $('.ui-multiselect-checkboxes li input[type=checkbox]:checked').each(function (e) {
+                $('.ui-multiselect-checkboxes li input[type=checkbox]:checked').each(function () {
                     if (jQuery.inArray($(this).val(), statusArray) === -1) {
                         if ($(this).val() === "") {
                             statusArray.push("true");
