@@ -428,6 +428,7 @@
             filterBehavior: 'text',
             includeFilterClearBtn: true,
             preventInputChangeEvent: false,
+            preventSelectChangeEvent: false,
             nonSelectedText: 'None selected',
             nSelectedText: 'selected',
             allSelectedText: '[All]',
@@ -650,7 +651,9 @@
                     }
                 }
 
-                //this.$select.change();
+                if (!this.options.preventSelectChangeEvent) {
+                    this.$select.change();
+                }
                 this.updateButtonText();
 
                 if (this.options.preventInputChangeEvent) {

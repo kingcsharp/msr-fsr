@@ -216,7 +216,6 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ActualPartsController.cs" />
     <Compile Include="Controllers\AdminCostSettingsController.cs" />
-    <Compile Include="Controllers\BuyerController - Copy.cs" />
     <Compile Include="Controllers\CustomerRequirementController.cs" />
     <Compile Include="Controllers\DeliveryController.cs" />
     <Compile Include="Controllers\AdministrationController.cs" />
