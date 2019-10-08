@@ -3,9 +3,10 @@ using Msr.Services.Orders.Procedures;
 
 namespace Msr.Services.Orders.Messaging
 {
-    public class PartLabelTsrDetailsResponse
+
+    public class PartLabelRollTsrDetailsResponse
     {
-        public PartLabelTsrDetailsResponse()
+        public PartLabelRollTsrDetailsResponse()
         {
             GetPartsAndKitsLabelsResult = new List<GetPartsAndKitsLabelsResult>();
         }

@@ -40,19 +40,19 @@ namespace Answer.Web.Controllers
                 return MonitorLabelTsr(id);
             }
 
-            if (reportType == "ORIG_PART_LABEL")
+            if (reportType == "PART_LABEL_ORIG")
             {
-                return OrigLabelTsr(id);
+                return PartLabelOrigTsr(id);
             }
 
-            if (reportType == "SHEET_PART_LABEL")
+            if (reportType == "PART_LABEL")
             {
-                return SheetLabelTsr(id);
+                return PartLabelTsr(id);
             }
 
-            if (reportType == "ROLL_PART_LABEL")
+            if (reportType == "PART_LABEL_ROLL")
             {
-                return RollLabelTsr(id);
+                return PartLabelRollTsr(id);
             }
 
             return Content("Report Type not found");
@@ -122,21 +122,21 @@ namespace Answer.Web.Controllers
             return photos;
         }
 
-        public ActionResult OrigLabelTsr(int id)
+        public ActionResult PartLabelOrigTsr(int id)
+        {
+            var response = _orderService.GetPartLabelOrigTsrDetails(id);
+            return PartialView("_ViewPartLabelOrigTsr", response);
+        }
+
+        public ActionResult PartLabelTsr(int id)
         {
             var response = _orderService.GetPartLabelTsrDetails(id);
             return PartialView("_ViewPartLabelTsr", response);
         }
 
-        public ActionResult SheetLabelTsr(int id)
+        public ActionResult PartLabelRollTsr(int id)
         {
-            var response = _orderService.GetPartLabelTsrDetails(id);
-            return PartialView("_ViewPartLabelSheetTsr", response);
-        }
-
-        public ActionResult RollLabelTsr(int id)
-        {
-            var response = _orderService.GetPartLabelTsrDetails(id);
+            var response = _orderService.GetPartLabelRollTsrDetails(id);
             return PartialView("_ViewPartLabelRollTsr", response);
         }
 

@@ -22,9 +22,9 @@ namespace Answer.Web.ViewModel.Wip
                 new SelectListItem {Text = "WIP History Report", Value = "WIP_HIST"},
                 new SelectListItem {Text = "NCR", Value = "HISTORY_LABEL"},
                 new SelectListItem {Text = "Technical Data Label", Value = "MONITOR_LABEL"},
-                new SelectListItem {Text = "Part Label (Original 1 in.)", Value = "ORIG_PART_LABEL"},
-                new SelectListItem {Text = "Part Label Sheet", Value = "SHEET_PART_LABEL"},
-                new SelectListItem {Text = "Part Label Roll", Value="ROLL_PART_LABEL"}
+                new SelectListItem {Text = "Part Label Sheet (Original 1\")", Value = "PART_LABEL_ORIG"},
+                new SelectListItem {Text = "Part Label Sheet", Value = "PART_LABEL"},
+                new SelectListItem {Text = "Part Label Roll", Value="PART_LABEL_ROLL"}
             };
         }
     }

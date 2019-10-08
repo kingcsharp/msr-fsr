@@ -171,7 +171,7 @@
         });
 
         $('#display-report').on('click', function () {
-            $('#print-other-content').block({ message: '<h5><img src="/assets/img/nice_loader.gif" />  Loading. Please wait...</h5>' });
+            $('#print-other-content').html('<img src="/assets/img/loading.gif"  style="width:32px;height:32px;" />');
             var id = $('.print-other-fill-id').val();
             var reportType = $('#PrintOtherId').val();
 
@@ -191,7 +191,7 @@
                 url: url,
                 dataType: 'html',
                 success: function (data) {
-                    $('#print-other-content').unblock().html(data);
+                    $('#print-other-content').html(data);
                     $('#print-other-report').show();
                     $('#display-report').hide();
                 },
@@ -339,12 +339,7 @@
             $(stepInProgress).removeClass('waiting');
             $(stepInProgress).addClass('requested');
             $(stepInProgress).trigger("click");
-        }
-        // if is complete, dont set currStep MH
-        else if (stepInProgress.length === 0) {
-            loadStep($('#carousel ul.slides li.step').first());
-        }
-        else {
+        } else {
             var step = $('#carousel ul.slides li.step').first();
             if ($(step).data("stepid") === currStepId) {
                 return;
@@ -359,6 +354,7 @@
         var stepId = $(step).data("stepid");
         var phStepId = $(step).data("phstepid");
         var fillId = $(step).data("fill-id");
+        //$('#step-' + stepId).html('<img src="/assets/img/loading.gif"  style="width:32px;height:32px;" />');
         $('#step-' + stepId).empty().html('');
         $('.step-container').block({ message: '<h1><img src="/assets/img/nice_loader.gif" />  Loading. Please wait...</h1>' });
         $.ajax({

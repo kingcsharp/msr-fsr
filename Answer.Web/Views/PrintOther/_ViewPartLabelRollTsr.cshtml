@@ -1,4 +1,4 @@
-﻿@model Msr.Services.Orders.Messaging.PartLabelTsrDetailsResponse
+﻿@model Msr.Services.Orders.Messaging.PartLabelRollTsrDetailsResponse
 <style>
     @@media print {
 
@@ -43,28 +43,28 @@
     }
 </style>
 <div class="roll-container">
-    @foreach (var rollLabel in Model.GetPartsAndKitsLabelsResult)
+    @foreach (var partLabel in Model.GetPartsAndKitsLabelsResult)
     {
 
         <div class="roll-label">
             <table class="tight">
                 <tbody>
                     <tr>
-                        <td width="38%"><strong>MSR-FSR @rollLabel.Site_Name</strong></td>
-                        <td width="62%">Customer: <strong>@rollLabel.WO_Item_Number</strong></td>
+                        <td width="35%"><strong>MSR-FSR @partLabel.Site_Name</strong></td>
+                        <td width="65%">Customer: <strong>@partLabel.WO_Item_Number</strong></td>
                     </tr>
                     <tr>
-                        <td>Part #: <strong>@rollLabel.Company_Part_Number</strong></td>
-                        <td>Serial #: <strong>@(rollLabel.Serial != null ? rollLabel.Serial : "N/A")</strong></td>
+                        <td>Part #: <strong>@partLabel.Company_Part_Number</strong></td>
+                        <td>Serial #: <strong>@(partLabel.Serial != null ? @partLabel.Serial : "N/A")</strong></td>
                     </tr>
                     <tr>
-                        <td colspan="2">Part Desc: <strong>@rollLabel.Part_Desc</strong></td>
+                        <td colspan="2">Part Desc: <strong>@partLabel.Part_Desc</strong></td>
                     <tr>
-                        <td>PO #: <strong>@rollLabel.PO_Number</strong></td>
-                        <td><span class="date">Date:<strong>@rollLabel.Due_Date</strong></span></td>
+                        <td>PO #: <strong>@partLabel.PO_Number</strong></td>
+                        <td><span class="date">Date:<strong>@partLabel.Due_Date</strong></span></td>
                     </tr>
                     <tr>
-                        <td colspan="2">This Part Processed <strong>@rollLabel.Cycle_Count</strong> time(s) </td>
+                        <td colspan="2">This Part Processed <strong>@partLabel.Count</strong> time(s) </td>
                     </tr>
                 </tbody>
             </table>
