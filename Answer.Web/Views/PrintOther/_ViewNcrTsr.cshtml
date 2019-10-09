@@ -100,7 +100,10 @@
         {
             <thead>
                 <tr>
-                    <th colspan="4">@task.TaskTitle @if (task.IsNCRTask == true) { Html.Raw("&nbsp;(NCR Task)"); }</th>
+                    <th colspan="4">
+                        @task.TaskTitle
+                        @if (task.IsNCRTask == true) { @Html.Raw("&nbsp;(NCR Task)"); }
+                    </th>
                 </tr>
                 @if (task.MonitorResults?.Any() == true)
                 {

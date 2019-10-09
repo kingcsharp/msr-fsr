@@ -74,6 +74,7 @@ namespace Msr.Services.Orders
                     monitorItem.TaskId = task.TaskId;
                     monitorItem.TaskTitle = task.Title;
                     monitorItem.Description = task.Description;
+                    monitorItem.IsNCRTask = task.IsNCRTask;
 
                     if (String.IsNullOrWhiteSpace(monitorItem.TaskId) == false)
                     {
