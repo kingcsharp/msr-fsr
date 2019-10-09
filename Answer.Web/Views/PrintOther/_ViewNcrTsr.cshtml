@@ -100,35 +100,48 @@
         {
             <thead>
                 <tr>
-                    <th colspan=4>@task.TaskTitle</th>
+                    <th colspan="4">@task.TaskTitle @if (task.IsNCRTask == true) { Html.Raw("&nbsp;(NCR Task)"); }</th>
                 </tr>
+                @if (task.MonitorResults?.Any() == true)
+                {
                 <tr>
                     <th>Monitor @task.TaskId</th>
                     <th>Result</th>
                     <th>Comment</th>
+                </tr>
+                }
             </thead>
             <tbody>
-                @foreach (var monitor in task.MonitorResults)
+                @if (task.MonitorResults?.Any() == true)
+                {
+                    foreach (var monitor in task.MonitorResults)
+                    {
+                        <tr>
+                            <td>
+                                @if (monitor.InputType?.Trim().ToUpper() == "SENSOR" && string.IsNullOrWhiteSpace(monitor.Description) == true)
+                                {
+                                    @Html.Raw(@"Sensor Value")
+                                }
+                                else
+                                {
+                                    @monitor.Description
+                                }
+                            </td>
+                            <td>
+                                @if (monitor.MonitorType?.Trim().ToUpper() == "SELECT" && (monitor.ListSource?.Trim().ToUpper().Contains("NCR_CATEGORY") == true || monitor.ListSource?.Trim().ToUpper().Contains("NCRCATEGORY") == true))
+                                {
+                                    @Html.Raw(@"NCR Category:")
+                                }
+                                @monitor.PrintResult
+                            </td>
+                            <td>@monitor.Comment</td>
+                        </tr>
+                    }
+                }
+                else
                 {
                     <tr>
-                        <td>
-                            @if (monitor.InputType?.Trim().ToUpper() == "SENSOR" && string.IsNullOrWhiteSpace(monitor.Description) == true)
-                            {
-                                @Html.Raw(@"Sensor Value")
-                            }
-                            else
-                            {
-                                @monitor.Description
-                            }
-                        </td>
-                        <td>
-                            @if (monitor.MonitorType?.Trim().ToUpper() == "SELECT" && (monitor.ListSource?.Trim().ToUpper().Contains("NCR_CATEGORY") == true || monitor.ListSource?.Trim().ToUpper().Contains("NCRCATEGORY") == true))
-                            {
-                                @Html.Raw(@"NCR Category:")
-                            }
-                            @monitor.PrintResult
-                        </td>
-                        <td>@monitor.Comment</td>
+                        <td colspan="3">&nbsp;</td>
                     </tr>
                 }
             </tbody>

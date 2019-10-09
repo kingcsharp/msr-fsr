@@ -80,6 +80,8 @@ namespace Answer.Web.Controllers
 
         public ActionResult NcrTsr(int id)
         {
+            var currentUser = GetCurrentUser();
+
             var orderService = new OrderService();
             var taskService = new TaskService();
             var ncrDetails = orderService.GetNcrDetails(id.ToString());
@@ -89,9 +91,22 @@ namespace Answer.Web.Controllers
             var photos = GetDocViewModel(docs, orderService, 400);
             ncrDetails.Photos = photos;
 
-            var response = taskService.GetTaskWithMonitors(id.ToString());
+            var response = taskService.GetTaskWithMonitors(id.ToString(), currentUser.Id);
 
-            ncrDetails.MonitorItem = response.MonitorItem.OrderBy(x => x.TaskId).ToList();
+            // ADDED FOR THE PROOF OF CONCEPT MOCK-UP - MANUALLY ADDING THE PARENT TASK
+
+            //Msr.Services.Tasks.Messaging.MonitorItem monitorItem = new Msr.Services.Tasks.Messaging.MonitorItem();
+
+            //ncrDetails.MonitorItem = response.MonitorItem.OrderBy(x => x.TaskId).ToList();
+
+            ncrDetails.MonitorItem = response.MonitorItem;
+
+            //monitorItem.Description = "Class 1000 Operations";
+            //monitorItem.TaskId = "12345";
+            //monitorItem.TaskTitle = "Class 1000 Operations";
+            //monitorItem.IsNCRTask = false;
+
+            //ncrDetails.MonitorItem.Insert(0, monitorItem);
 
             // ncrDetails.MonitorItem = response.MonitorItem.Where(x => x.Description.Contains("Nonconformity") || x.Description.Contains("NCR")).ToList();
 
