@@ -100,7 +100,7 @@
         {
             <thead>
                 <tr>
-                    <th colspan="4">
+                    <th colspan="4" @if (task.IsNCRTask == true) { @Html.Raw("bgcolor='#030ffc'"); }>
                         @task.TaskTitle
                         @if (task.IsNCRTask == true) { @Html.Raw("&nbsp;(NCR Task)"); }
                     </th>
