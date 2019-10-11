@@ -1,27 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Net;
-using System.IO;
-using Msr.Models.Orders;
-using Msr.Repositories;
-using Msr.Services.Orders.Messaging;
-using System.Data.SqlClient;
-using System.Web.Configuration;
-using System.Web.Mvc;
-using Dapper;
+﻿using Dapper;
 using EntityFrameworkExtras.EF6;
+using Msr.Infrastructure.Files;
+using Msr.Models.Comman;
+using Msr.Models.Orders;
+using Msr.Models.Procedures;
 using Msr.Models.Tasks;
+using Msr.Repositories;
+using Msr.Services.Documents;
+using Msr.Services.Orders.Messaging;
 using Msr.Services.Orders.Procedures;
 using Msr.Services.Orders.ViewModels;
 using RestSharp;
-using Msr.Models.Comman;
-using Msr.Models.Procedures;
-using Msr.Services.Documents;
-using Msr.Infrastructure.Files;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Text;
+using System.Web.Configuration;
+using System.Web.Mvc;
 
 namespace Msr.Services.Orders
 {
@@ -219,7 +219,7 @@ namespace Msr.Services.Orders
                     }
                 }
                 SearchNcrs(fillId, ntlogin);
-              //  FormatHtml(detailsResponse);
+                //  FormatHtml(detailsResponse);
 
                 return detailsResponse;
             }
@@ -306,9 +306,9 @@ namespace Msr.Services.Orders
             foreach (var getPartsAndKitsLabelsResult in detailsResponse.GetPartsAndKitsLabelsResult)
             {
                 getPartsAndKitsLabelsResult.Count = _dbContext.Database.SqlQuery<int>($"SELECT COUNT(SerialNumber) as COUNT FROM[PartsTransactionLog] WHERE PARTID = '{ getPartsAndKitsLabelsResult.Actual_Part_ID}' AND SerialNumber = '{ getPartsAndKitsLabelsResult.Serial}'").Single();
-                
+
             }
-            
+
             return detailsResponse;
         }
 
@@ -487,7 +487,8 @@ namespace Msr.Services.Orders
                     p.Add("@FileId", saveWorkItemImagesProcedure.NewId, DbType.String, ParameterDirection.Input);
                     p.Add("@ModBy", model.NTLogin, DbType.String, ParameterDirection.Input);
 
-                    var resultAddPartFile = conn.Execute("Portal_Actual_Part_Related_Files", p, commandType: CommandType.StoredProcedure);}
+                    var resultAddPartFile = conn.Execute("Portal_Actual_Part_Related_Files", p, commandType: CommandType.StoredProcedure);
+                }
 
                 return saveWorkItemImagesProcedure.NewId;
             }
@@ -654,7 +655,7 @@ namespace Msr.Services.Orders
                     {
                         if ((task.Status == "REQUESTED" || task.Status == "ACCEPTED" ||
                              task.Status == "PENDING_PARENT_ACCEPTANCE" || task.Status == "CLOSED")
-                            && task.Print_Order.HasValue && task.HAS_MONITOR.HasValue && task.HAS_MONITOR ==1)
+                            && task.Print_Order.HasValue && task.HAS_MONITOR.HasValue && task.HAS_MONITOR == 1)
                         {
                             var monitorParams = new DynamicParameters();
 
@@ -681,7 +682,7 @@ namespace Msr.Services.Orders
                                         monitorTemplate.MonitorTemplateMultiChoices = conn
                                             .Query<MonitorTemplateMultiChoiceResult>(
                                                 @"SELECT TXT AS Text, IS_ANSWER AS IsAnswer FROM A_MONITOR_TEMPLATES_MULT_CHOICE WHERE MONITOR_ID = @monitorId  ORDER BY ORD",
-                                                new {monitorId = monitorTemplate.Id})
+                                                new { monitorId = monitorTemplate.Id })
                                             .Select(x => new SelectListItem
                                             {
                                                 Value = x.Id,
@@ -802,7 +803,7 @@ namespace Msr.Services.Orders
 
                 if (retStatus != null && !retStatus.Contains("ERROR") || retStatus == null)
                 {
-                   StopTimer(taskId, fillId);
+                    StopTimer(taskId, fillId);
                 }
 
                 var p2 = new DynamicParameters();
@@ -837,7 +838,7 @@ namespace Msr.Services.Orders
                     }
                 }
             }
-            
+
             return StepStart(stepId, login, fillId);
         }
 
@@ -1044,7 +1045,7 @@ namespace Msr.Services.Orders
             var parentTask = result.Where(x => x.HAS_CHILD.HasValue && x.HAS_CHILD == 1).FirstOrDefault();
             var p = new DynamicParameters();
 
-            foreach (var item in result.Where(x=> x.Status != "CLOSED"))
+            foreach (var item in result.Where(x => x.Status != "CLOSED"))
             {
                 p.Add("@RET_STATUS", dbType: DbType.String, direction: ParameterDirection.Output, size: 500);
                 p.Add("@MSGS", dbType: DbType.String, direction: ParameterDirection.Output, size: 100);
@@ -1307,7 +1308,7 @@ namespace Msr.Services.Orders
 
         private bool IsDone(string status)
         {
-          return status == WorkItemStatusConstants.Finished || status == WorkItemStatusConstants.Closed;
+            return status == WorkItemStatusConstants.Finished || status == WorkItemStatusConstants.Closed;
         }
     }
 }
