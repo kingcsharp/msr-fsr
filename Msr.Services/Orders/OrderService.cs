@@ -2,20 +2,14 @@
 using EntityFrameworkExtras.EF6;
 using Msr.Infrastructure.Files;
 using Msr.Models.Comman;
-using Msr.Models.EquipmentMaintenances;
 using Msr.Models.Orders;
 using Msr.Models.Procedures;
-using Msr.Models.Sensor;
 using Msr.Models.Tasks;
 using Msr.Repositories;
 using Msr.Services.Documents;
-using Msr.Services.Documents.ViewModels;
-using Msr.Services.Helpers;
 using Msr.Services.Orders.Messaging;
 using Msr.Services.Orders.Procedures;
 using Msr.Services.Orders.ViewModels;
-using Msr.Services.Roles.Procedures;
-using Msr.Services.Users.Messages;
 using RestSharp;
 using System;
 using System.Collections.Generic;
@@ -308,6 +302,13 @@ namespace Msr.Services.Orders
                     conn.Query<GetPartsAndKitsLabelsResult>("Portal_GetPartsAndKitsLabels", p,
                         commandType: CommandType.StoredProcedure).ToList();
             }
+
+            foreach (var getPartsAndKitsLabelsResult in detailsResponse.GetPartsAndKitsLabelsResult)
+            {
+                getPartsAndKitsLabelsResult.Count = _dbContext.Database.SqlQuery<int>($"SELECT COUNT(SerialNumber) as COUNT FROM[PartsTransactionLog] WHERE PARTID = '{ getPartsAndKitsLabelsResult.Actual_Part_ID}' AND SerialNumber = '{ getPartsAndKitsLabelsResult.Serial}'").Single();
+
+            }
+
             return detailsResponse;
         }
 
