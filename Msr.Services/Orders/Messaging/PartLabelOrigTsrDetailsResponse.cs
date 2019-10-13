@@ -3,11 +3,9 @@ using Msr.Services.Orders.Procedures;
 
 namespace Msr.Services.Orders.Messaging
 {
-
-    public class PartLabelTsrDetailsResponse
+    public class PartLabelOrigTsrDetailsResponse
     {
-
-        public PartLabelTsrDetailsResponse()
+        public PartLabelOrigTsrDetailsResponse()
         {
             GetPartsAndKitsLabelsResult = new List<GetPartsAndKitsLabelsResult>();
         }
@@ -17,7 +15,5 @@ namespace Msr.Services.Orders.Messaging
         public List<GetPartsAndKitsLabelsResult> GetPartsAndKitsLabelsResult { get; set; }
 
         public int Count { get; set; }
-
     }
-
 }
