@@ -1,23 +1,24 @@
-﻿
-CREATE                 procedure dbo.A_SP_PROCEDURE_IMPORT_STEP_FROM_EXTERNAL_SOURCE
-@newID varchar(2000) OUTPUT,
-@msgs varchar(2000)OUTPUT,
-@PROCEDURE_HIST_ID varchar(50),
-@STEP_TEXT varchar(4000),
-@Title nvarchar(2000),
-@PRINT_ORDER varchar(50),
-@REF_DOC_ID varchar(50),
-@COMMENT varchar(2000),
-@STEP_TIME float,
-@EXTRA_NOTE varchar(2400),
-@DEFAULT_ROLE_ID varchar(50),
-@SERIALIZE varchar(50),
-@SUCCESS_MONITOR varchar(50),
-@INTERNAL_LOCATION varchar(50),
-@LOC_TYPE varchar(50),
-@strNTLogin varchar(50)
+﻿CREATE PROCEDURE [DBO].[A_SP_PROCEDURE_IMPORT_STEP_FROM_EXTERNAL_SOURCE]
+	@newID varchar(2000) OUTPUT,
+	@msgs varchar(2000)OUTPUT,
+	@PROCEDURE_HIST_ID varchar(50),
+	@STEP_TEXT varchar(4000),
+	@Title nvarchar(2000),
+	@PRINT_ORDER varchar(50),
+	@REF_DOC_ID varchar(50),
+	@COMMENT varchar(2000),
+	@STEP_TIME INT,
+	@EXTRA_NOTE varchar(2400),
+	@DEFAULT_ROLE_ID varchar(50),
+	@SERIALIZE varchar(50),
+	@SUCCESS_MONITOR varchar(50),
+	@INTERNAL_LOCATION varchar(50),
+	@LOC_TYPE varchar(50),
+	@strNTLogin varchar(50)
 AS
+
 declare @rootCo varchar(50),@procObjID varchar(50)
+
 SELECT @procObjID = OBJECT_ID FROM A_PROCEDURES_HISTORY WHERE ID = @PROCEDURE_HIST_ID
 SELECT @rootCo = ROOT_COMPANY FROM A_V_PEOPLE_APPROVED_DATA WHERE ID = @strNTLogin
 declare @sql varchar(4000),@sText varchar(4000)
@@ -36,7 +37,7 @@ VALUES
 	getDate(),
 	@strNTLogin,
 	@STEP_TIME,
-	'TIME_SYS_HOURS',
+	'TIME_SYS_MINUTES',
 	@Title
 	)
 
@@ -49,7 +50,7 @@ VALUES
 	@stepID,
 	@DEFAULT_ROLE_ID,
 	@STEP_TIME,
-	'TIME_SYS_HOURS',
+	'TIME_SYS_MINUTES',
 	'LABOR_PROVIDE_TAKE_BACK',
 	getDate(),
 	@strNTLogin,
