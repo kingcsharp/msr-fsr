@@ -80,6 +80,8 @@ namespace Answer.Web.Controllers
 
         public ActionResult NcrTsr(int id)
         {
+            var currentUser = GetCurrentUser();
+
             var orderService = new OrderService();
             var taskService = new TaskService();
             var ncrDetails = orderService.GetNcrDetails(id.ToString());
@@ -89,11 +91,9 @@ namespace Answer.Web.Controllers
             var photos = GetDocViewModel(docs, orderService, 400);
             ncrDetails.Photos = photos;
 
-            var response = taskService.GetTaskWithMonitors(id.ToString());
+            var response = taskService.GetTaskWithMonitors(id.ToString(), currentUser.Id);
 
-            ncrDetails.MonitorItem = response.MonitorItem.OrderByDescending(x => x.TaskId).ToList();
-
-            // ncrDetails.MonitorItem = response.MonitorItem.Where(x => x.Description.Contains("Nonconformity") || x.Description.Contains("NCR")).ToList();
+            ncrDetails.MonitorItem = response.MonitorItem;
 
             return PartialView("_ViewNcrTsr", ncrDetails);
         }

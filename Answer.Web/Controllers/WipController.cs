@@ -228,6 +228,8 @@ namespace Answer.Web.Controllers
 
         public ActionResult GetNcrModel(string id)
         {
+            var currentUser = GetCurrentUser();
+
             var ncrDetails = _orderService.GetNcrDetails(id);
 
             var docs = _orderService.GetDocuments(ncrDetails.Details.FillObjId);
@@ -235,7 +237,7 @@ namespace Answer.Web.Controllers
             var photos = GetDocViewModel(docs, _orderService, 400);
             ncrDetails.Photos = photos;
 
-            var response = _taskService.GetTaskWithMonitors(id);
+            var response = _taskService.GetTaskWithMonitors(id, currentUser.Id);
 
             ncrDetails.MonitorItem = response.MonitorItem.Where(x => x.Description.Contains("Nonconformity") || x.Description.Contains("NCR")).ToList();
 
@@ -331,7 +333,9 @@ namespace Answer.Web.Controllers
 
         public ActionResult GetMonitorsModel(string id)
         {
-            var response = _taskService.GetTaskWithMonitors(id);
+            var currentUser = GetCurrentUser();
+
+            var response = _taskService.GetTaskWithMonitors(id, currentUser.Id);
 
             return PartialView("_Monitors", response);
         }
