@@ -311,7 +311,8 @@ namespace Msr.Services.Orders
 
             foreach (var getPartsAndKitsLabelsResult in detailsResponse.GetPartsAndKitsLabelsResult)
             {
-                getPartsAndKitsLabelsResult.Count = _dbContext.Database.SqlQuery<int>($"SELECT COUNT(SerialNumber) as COUNT FROM[PartsTransactionLog] WHERE PARTID = '{ getPartsAndKitsLabelsResult.Actual_Part_ID}' AND SerialNumber = '{ getPartsAndKitsLabelsResult.Serial}'").Single();
+
+                getPartsAndKitsLabelsResult.Cycle_Count = _dbContext.Database.SqlQuery<int>($"SELECT COUNT(SerialNumber) as COUNT FROM[PartsTransactionLog] WHERE PARTID = '{ getPartsAndKitsLabelsResult.Actual_Part_ID}' AND SerialNumber = '{ getPartsAndKitsLabelsResult.Serial}'").Single();
 
             }
 
@@ -336,7 +337,7 @@ namespace Msr.Services.Orders
 
             foreach (var getPartsAndKitsLabelsResult in detailsResponse.GetPartsAndKitsLabelsResult)
             {
-                getPartsAndKitsLabelsResult.Count = _dbContext.Database.SqlQuery<int>($"SELECT COUNT(SerialNumber) as COUNT FROM[PartsTransactionLog] WHERE PARTID = '{ getPartsAndKitsLabelsResult.Actual_Part_ID}' AND SerialNumber = '{ getPartsAndKitsLabelsResult.Serial}'").Single();
+                getPartsAndKitsLabelsResult.Cycle_Count = _dbContext.Database.SqlQuery<int>($"SELECT COUNT(SerialNumber) as COUNT FROM[PartsTransactionLog] WHERE PARTID = '{ getPartsAndKitsLabelsResult.Actual_Part_ID}' AND SerialNumber = '{ getPartsAndKitsLabelsResult.Serial}'").Single();
 
             }
 
@@ -360,7 +361,7 @@ namespace Msr.Services.Orders
 
             foreach (var getPartsAndKitsLabelsResult in detailsResponse.GetPartsAndKitsLabelsResult)
             {
-                getPartsAndKitsLabelsResult.Count = _dbContext.Database.SqlQuery<int>($"SELECT COUNT(SerialNumber) as COUNT FROM[PartsTransactionLog] WHERE PARTID = '{ getPartsAndKitsLabelsResult.Actual_Part_ID}' AND SerialNumber = '{ getPartsAndKitsLabelsResult.Serial}'").Single();
+                getPartsAndKitsLabelsResult.Cycle_Count = _dbContext.Database.SqlQuery<int>($"SELECT COUNT(SerialNumber) as COUNT FROM[PartsTransactionLog] WHERE PARTID = '{ getPartsAndKitsLabelsResult.Actual_Part_ID}' AND SerialNumber = '{ getPartsAndKitsLabelsResult.Serial}'").Single();
 
             }
 

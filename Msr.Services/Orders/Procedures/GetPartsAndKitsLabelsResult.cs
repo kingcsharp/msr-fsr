@@ -13,7 +13,7 @@ namespace Msr.Services.Orders.Procedures
 
         public string Actual_Part_ID { get; set; }
 
-        public int Count { get; set; }
+        public int Cycle_Count { get; set; }
 
         public string Site_Name { get; set; }
 
