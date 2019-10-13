@@ -22,6 +22,7 @@ namespace Msr.Services.Orders.Procedures
         public string WO_Item_Number { get; set; }
 
         public string PO_Number { get; set; }
+
     }
 
 }
