@@ -1,15 +1,24 @@
 ﻿@model Msr.Services.Orders.ViewModels.ImageViewModel
 
-<div id="file-tab-@Model.TaskId">
-    @Html.Partial("_FileUpload")
-</div>
+@if (ViewBag.HasStepRoles == true)
+{
+    <div id="file-tab-@Model.TaskId">
+        @Html.Partial("_FileUpload")
+    </div>
+}
+else
+{
+    <div id="file-tab-@Model.TaskId">
+        The current user does not have the proper roles for this task.
+    </div>
+}
 
 <script type="text/javascript">
 
     $(function () {
         var fileUploader = new FileUploader();
         var fileId = 'file-tab-@Model.TaskId' + ' #input-files';
-       
+
         fileUploader.InitEditUploader(fileId,
             '@Url.Action("FileUploaderForWipTask", "Doc")',
             [@Html.Raw(Model.Preview)],

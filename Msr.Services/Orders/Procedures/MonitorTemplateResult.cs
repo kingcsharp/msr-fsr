@@ -23,6 +23,8 @@ namespace Msr.Services.Orders.Procedures
 
         public string Step_Id { get; set; }
 
+        public string Ph_Step_Id { get; set; }
+
         public int Opinion { get; set; }
 
         public string Description { get; set; }
