@@ -386,10 +386,17 @@ namespace Msr.Services.Orders
 
                 }
 
+                _userService.RemoveUserCacheItems(model.LoginId, model.Root);
+                _roleService.RemoveRoleCacheItems(model.LoginId, model.Root);
+
                 return responsePeople;
             }
             catch (Exception ex)
             {
+
+                _userService.RemoveUserCacheItems(model.LoginId, model.Root);
+                _roleService.RemoveRoleCacheItems(model.LoginId, model.Root);
+
                 responsePeople.AddError("There is an error when editing user");
 
                 return responsePeople;
