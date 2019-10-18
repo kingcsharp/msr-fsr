@@ -5,10 +5,8 @@ using Msr.Models.Orders;
 using Msr.Models.Sensor;
 using Msr.Services;
 using Msr.Services.Documents;
-using Msr.Services.Documents.ViewModels;
 using Msr.Services.EquipmentMaintenances;
 using Msr.Services.EquipmentMaintenances.ViewModels;
-using Msr.Services.Helpers;
 using Msr.Services.jqGrid;
 using Msr.Services.Locations;
 using Msr.Services.Notes;
@@ -20,7 +18,9 @@ using Msr.Services.Orders.ViewModels;
 using Msr.Services.Procedures;
 using Msr.Services.Procedures.Messages;
 using Msr.Services.Roles;
+using Msr.Services.Roles.Procedures;
 using Msr.Services.Sensor;
+using Msr.Services.Users.Messages;
 using Msr.Web.ViewModel.Engineering;
 using System;
 using System.Collections.Generic;
@@ -228,6 +228,8 @@ namespace Answer.Web.Controllers
 
         public ActionResult GetNcrModel(string id)
         {
+            var currentUser = GetCurrentUser();
+
             var ncrDetails = _orderService.GetNcrDetails(id);
 
             var docs = _orderService.GetDocuments(ncrDetails.Details.FillObjId);
@@ -235,7 +237,7 @@ namespace Answer.Web.Controllers
             var photos = GetDocViewModel(docs, _orderService, 400);
             ncrDetails.Photos = photos;
 
-            var response = _taskService.GetTaskWithMonitors(id);
+            var response = _taskService.GetTaskWithMonitors(id, currentUser.Id);
 
             ncrDetails.MonitorItem = response.MonitorItem.Where(x => x.Description.Contains("Nonconformity") || x.Description.Contains("NCR")).ToList();
 
@@ -331,7 +333,9 @@ namespace Answer.Web.Controllers
 
         public ActionResult GetMonitorsModel(string id)
         {
-            var response = _taskService.GetTaskWithMonitors(id);
+            var currentUser = GetCurrentUser();
+
+            var response = _taskService.GetTaskWithMonitors(id, currentUser.Id);
 
             return PartialView("_Monitors", response);
         }
@@ -545,143 +549,180 @@ namespace Answer.Web.Controllers
 
         public ActionResult GetWipStepDetails(int stepId, int fillId, int? phStepId)
         {
+            LoggedUserIdResult loggedUserIdResult = this.LoggedUserIdResult;
+
+            List<GetMyRolesResult> userRoles = _roleService.GetAssignedRoles(loggedUserIdResult.Id);
+
+            WipStepDetailsResponse wipStepDetailsResponse = _orderService.GetWipStepDetails(ref loggedUserIdResult, ref userRoles, stepId, fillId, loggedUserIdResult.Id, phStepId);
+
             ViewBag.FillId = fillId;
+            ViewBag.IsStepStatusClosed = wipStepDetailsResponse.TaskEditDataResult.Status == "CLOSED";
+            ViewBag.HasStepRoles = wipStepDetailsResponse.HasStepRoles;
 
-            var loggedUserId = GetCurrentUser();
-
-            var response = _orderService.GetWipStepDetails(stepId, fillId, loggedUserId.Id, phStepId);
-
-            ViewBag.IsStepStatusClosed = response.TaskEditDataResult.Status == "CLOSED";
-
-            var currentUserRoles = _roleService.GetAssignedRoles(loggedUserId.Id);
-
-            var vm = _orderService.GetPurchaseItemDetails(fillId, loggedUserId.Id);
-
-            response.ParentPartId = vm.FileSearchResult.FillObjectId.ToString();
-
-            var currentStep = vm.TaskStepResults.SingleOrDefault(x => x.StepId == stepId.ToString());
-
-            var objId = _orderService.GetProcedureByObjId(vm.FileSearchResult.ProcObjId);
-
-            // JG ADDED BELOW - DECIDED NOT TO USE SINCE IT EXECUTES A BUNCH OF QUERY AND IS LESS PERFORMANT
-            // var procedureStepsData = _proceduresService.GetStepsData(vm.FileSearchResult.ProcObjId, loggedUserId.Id).Where(x => x.Id == currentStep.PhStepId).FirstOrDefault();
-
-            // THE BELOW IS INCORRECT - WE NEED TO GET THE ROLE FOR THE TASK (OR STEP) NOT THE ENTIRE PROCEDURE 
-            // var procedureRoles = _proceduresService.GetSelectedRoles(objId.Id, loggedUserId.Id)?.Select(x => x.Role_Id).ToList();
-
-            // INCORRECT SINCE IT IS CHECKING THE ENTIRE PROCEDURE ROLE VS THE CURRENT STEP
-            // response.HasStepRoles = myRoles.Select(x => x.Role_Id).ToList().Intersect(procedureStepsData.Role).Any();
-
-            // if (!response.HasStepRoles)
-            // {
-
-            var currentStepRequiredRoles = currentStep.Roles?.Split(',');
-
-            foreach (var personRole in currentUserRoles)
-            {
-                if (currentStepRequiredRoles.Any(x => x == personRole.Role_Id))
-                {
-                    if (personRole.StartDate.HasValue && personRole.EndDate.HasValue)
-                    {
-                        if (DateTime.Today.Date >= personRole.StartDate.Value.Date && DateTime.Today.Date < personRole.EndDate.Value.Date.AddDays(1))
-                        {
-                            response.HasStepRoles = true;
-                            break;
-                        }
-                    }
-                    else
-                    {
-                        response.HasStepRoles = true;
-                        break;
-                    }
-                }
-            }
-
-            // }
-
-            response.LoggedUserIdResult = loggedUserId;
-            response.TaskEditDataResult.StepTitle = currentStep.Title;
-            response.TaskEditDataResult.Description = currentStep.Description;
-
-
-
-            //var actualPartId = _orderService.GetWorkOrderQueryable().Where(x => x.FillId == stringFillId).Select(a => a.ActualPartId).FirstOrDefault();
-
-            List<SensorDataModel> sensorDataModels = _sensorService.GetSensorCurrentValues();
-
-            foreach (var monitorTemplate in response.MonitorTemplateResult)
-            {
-                monitorTemplate.Setup(_equipmentMaintenanceService, _orderService);
-
-                monitorTemplate.SensorDataModels = sensorDataModels;
-
-                for (int i = 0; i < monitorTemplate.FailActionList.Count; i++)
-                {
-                    if (monitorTemplate.FailActionList[i].Value == monitorTemplate.Fail_Action)
-                    {
-                        monitorTemplate.FailActionList[i].Selected = true;
-                    }
-                }
-            }
-
-            response.Images = new ImageViewModel
-            {
-                FillId = fillId,
-                TaskId = stepId,
-                ActualPartId = response.ParentPartId
-            };
-
-            var images = _orderService.GetOrderItemImagesById(stepId.ToString());
-
-            var dockLinks = images.Select(itemImage => new DocLink
-            {
-                SERVER_PATH = itemImage.Path,
-                CONTENTTYPE = itemImage.ContentType,
-                LINKED_DOC_ID = itemImage.Id,
-                NAME = itemImage.FILE_NAME
-            })
-                .ToList();
-
-            response.Images.PreviewConfig = FileInputConfigHelper.GetPreviewConfigValue(dockLinks, Url.Action("DeleteImageById", "Doc"), Url.Action("Download", "Doc"));
-
-            response.Images.Preview = FileInputConfigHelper.GetPreviewValue(dockLinks, _documentFilesService);
-
-            return PartialView("_InitialInspection", response);
+            return PartialView("_InitialInspection", wipStepDetailsResponse);
         }
+
+        // BACKUP
+        //public ActionResult GetWipStepDetails(int stepId, int fillId, int? phStepId)
+        //{
+        //    ViewBag.FillId = fillId;
+
+        //    var loggedUserIdResult = GetCurrentUser();
+
+        //    var userRoles = _roleService.GetAssignedRoles(loggedUserIdResult.Id);
+
+        //    var response = _orderService.GetWipStepDetailsREFACTOR(stepId, fillId, loggedUserIdResult.Id, phStepId);
+
+        //    // var response = _orderService.GetWipStepDetails(stepId, fillId, loggedUserIdResult.Id, phStepId);
+
+        //    ViewBag.IsStepStatusClosed = response.TaskEditDataResult.Status == "CLOSED";
+
+        //    var vm = _orderService.GetPurchaseItemDetails(fillId, loggedUserIdResult.Id);
+
+        //    response.ParentPartId = vm.FileSearchResult.FillObjectId.ToString();
+
+        //    var currentStep = vm.TaskStepResults.SingleOrDefault(x => x.StepId == stepId.ToString());
+
+        //    var objId = _orderService.GetProcedureByObjId(vm.FileSearchResult.ProcObjId);
+
+        //    // JG ADDED BELOW - DECIDED NOT TO USE SINCE IT EXECUTES A BUNCH OF QUERY AND IS LESS PERFORMANT
+        //    // var procedureStepsData = _proceduresService.GetStepsData(vm.FileSearchResult.ProcObjId, loggedUserId.Id).Where(x => x.Id == currentStep.PhStepId).FirstOrDefault();
+
+        //    // THE BELOW IS INCORRECT - WE NEED TO GET THE ROLE FOR THE TASK (OR STEP) NOT THE ENTIRE PROCEDURE 
+        //    // var procedureRoles = _proceduresService.GetSelectedRoles(objId.Id, loggedUserId.Id)?.Select(x => x.Role_Id).ToList();
+
+        //    // INCORRECT SINCE IT IS CHECKING THE ENTIRE PROCEDURE ROLE VS THE CURRENT STEP
+        //    // response.HasStepRoles = myRoles.Select(x => x.Role_Id).ToList().Intersect(procedureStepsData.Role).Any();
+
+        //    // if (!response.HasStepRoles)
+        //    // {
+
+        //    var currentStepRequiredRoles = currentStep.Roles?.Split(',');
+
+        //    foreach (var personRole in userRoles)
+        //    {
+        //        if (currentStepRequiredRoles.Any(x => x == personRole.Role_Id))
+        //        {
+        //            if (personRole.StartDate.HasValue && personRole.EndDate.HasValue)
+        //            {
+        //                if (DateTime.Today.Date >= personRole.StartDate.Value.Date && DateTime.Today.Date < personRole.EndDate.Value.Date.AddDays(1))
+        //                {
+        //                    response.HasStepRoles = true;
+        //                    break;
+        //                }
+        //            }
+        //            else
+        //            {
+        //                response.HasStepRoles = true;
+        //                break;
+        //            }
+        //        }
+        //    }
+
+        //    // }
+
+        //    response.LoggedUserIdResult = loggedUserIdResult;
+        //    response.TaskEditDataResult.StepTitle = currentStep.Title;
+        //    response.TaskEditDataResult.Description = currentStep.Description;
+
+        //    //var actualPartId = _orderService.GetWorkOrderQueryable().Where(x => x.FillId == stringFillId).Select(a => a.ActualPartId).FirstOrDefault();
+
+        //    // PERF IMPROVEMENT - ADDED IF .ANY CHECK - DON'T GET THE SENSOR VALUES IF THERE AREN'T ANY MONITORS
+
+        //    if (response.MonitorTemplateResult != null && response.MonitorTemplateResult.Any() == true)
+        //    {
+        //        List<SensorDataModel> sensorDataModels = _sensorService.GetSensorCurrentValues();
+
+        //        foreach (var monitorTemplate in response.MonitorTemplateResult)
+        //        {
+        //            monitorTemplate.Setup(_equipmentMaintenanceService, _orderService);
+
+        //            monitorTemplate.SensorDataModels = sensorDataModels;
+
+        //            for (int i = 0; i < monitorTemplate.FailActionList.Count; i++)
+        //            {
+        //                if (monitorTemplate.FailActionList[i].Value == monitorTemplate.Fail_Action)
+        //                {
+        //                    monitorTemplate.FailActionList[i].Selected = true;
+        //                }
+        //            }
+        //        }
+        //    }
+
+        //    response.Images = new ImageViewModel
+        //    {
+        //        FillId = fillId,
+        //        TaskId = stepId,
+        //        ActualPartId = response.ParentPartId
+        //    };
+
+        //    var images = _orderService.GetOrderItemImagesById(stepId.ToString());
+
+        //    var dockLinks = images.Select(itemImage => new DocLink
+        //    {
+        //        SERVER_PATH = itemImage.Path,
+        //        CONTENTTYPE = itemImage.ContentType,
+        //        LINKED_DOC_ID = itemImage.Id,
+        //        NAME = itemImage.FILE_NAME
+        //    }).ToList();
+
+        //    response.Images.PreviewConfig = FileInputConfigHelper.GetPreviewConfigValue(dockLinks, Url.Action("DeleteImageById", "Doc"), Url.Action("Download", "Doc"));
+
+        //    response.Images.Preview = FileInputConfigHelper.GetPreviewValue(dockLinks, _documentFilesService);
+
+        //    return PartialView("_InitialInspection", response);
+        //}
 
         [HttpPost]
         public ActionResult UpdateStepMonitor(List<MonitorTemplateResult> monitorTemplates)
         {
-            var currentUser = GetCurrentUser();
-
             var result = new ResultNotification<string>();
 
-            bool updateMonitor = true;
-
-            foreach (var monitorTemplate in monitorTemplates)
+            if (monitorTemplates != null && monitorTemplates.Any() == true)
             {
-                updateMonitor = true;
+                LoggedUserIdResult loggedUserIdResult = this.LoggedUserIdResult;
 
-                monitorTemplate.StrNtLogin = currentUser.Id;
+                List<GetMyRolesResult> userRoles = _roleService.GetAssignedRoles(loggedUserIdResult.Id);
 
-                // FOR THE EQUIPMENT SENSOR MONITOR AFTER THE FIRST UPDATE IT'S READ-ONLY, I.E., IT SHOULD NOT BE UPDATED AFTER IT'S BEEN SET THE FIRST TIME
+                MonitorTemplateResult monitorTemplateResult = monitorTemplates.FirstOrDefault();
 
-                if (monitorTemplate.Monitor_Type.Trim().ToUpper() == "EQUIPMENT" && monitorTemplate.Input_Type.Trim().ToUpper() == "SENSOR")
+                WipStepDetailsResponse wipStepDetailsResponse = _orderService.GetWipStepDetails(ref loggedUserIdResult, ref userRoles, Convert.ToInt32(monitorTemplateResult.Step_Id), monitorTemplateResult.FillId, loggedUserIdResult.Id, Convert.ToInt32(monitorTemplateResult.Ph_Step_Id));
+
+                if (wipStepDetailsResponse.HasStepRoles == true)
                 {
-                    if (string.IsNullOrWhiteSpace(monitorTemplate.Monitor_Result_ID) == false && monitorTemplate.Monitor_Result_ID.Length > 1)
+
+                    bool updateMonitor = true;
+
+                    foreach (var monitorTemplate in monitorTemplates)
                     {
-                        updateMonitor = false;
+                        updateMonitor = true;
+
+                        monitorTemplate.StrNtLogin = loggedUserIdResult.Id;
+
+                        // FOR THE EQUIPMENT SENSOR MONITOR AFTER THE FIRST UPDATE IT'S READ-ONLY, I.E., IT SHOULD NOT BE UPDATED AFTER IT'S BEEN SET THE FIRST TIME
+
+                        if (monitorTemplate.Monitor_Type.Trim().ToUpper() == "EQUIPMENT" && monitorTemplate.Input_Type.Trim().ToUpper() == "SENSOR")
+                        {
+                            if (string.IsNullOrWhiteSpace(monitorTemplate.Monitor_Result_ID) == false && monitorTemplate.Monitor_Result_ID.Length > 1)
+                            {
+                                updateMonitor = false;
+                            }
+                        }
+
+                        if (updateMonitor == true)
+                        {
+                            result = _orderService.UpdateStepMonitor(monitorTemplate);
+                        }
+
+                        if (result.HasErrors())
+                        {
+                            break;
+                        }
                     }
                 }
-
-                if (updateMonitor == true)
+                else
                 {
-                    result = _orderService.UpdateStepMonitor(monitorTemplate);
-                }
-
-                if (result.HasErrors())
-                {
-                    break;
+                    result.AddError("The user does not have permissions for the current step.");
                 }
             }
 
@@ -818,9 +859,9 @@ namespace Answer.Web.Controllers
 
             if (response.HasErrors())
             {
-                return Json( new { success = false, responseText = "Serial Number could not be saved. Error: " + response.ErrorMessage}, JsonRequestBehavior.AllowGet);
+                return Json(new { success = false, responseText = "Serial Number could not be saved. Error: " + response.ErrorMessage }, JsonRequestBehavior.AllowGet);
             }
-            return Json( new { success = true, responseText = "Serial Number saved successfully." }, JsonRequestBehavior.AllowGet);
+            return Json(new { success = true, responseText = "Serial Number saved successfully." }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]

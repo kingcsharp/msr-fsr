@@ -14,24 +14,25 @@ using Msr.Services.Companies;
 using Msr.Services.Documents;
 using Msr.Services.Locations;
 using Msr.Services.Roles;
+using Msr.Services.Users;
 
 namespace Answer.Web.Controllers
 {
     [AuthorizeUser(ModuleName = MenuGroupConstants.People)]
     public class PeopleController : BaseController
     {
+
+        private readonly UserService _userService;
         private readonly PeopleService _peopleService;
-
         private readonly CompanyService _companyService;
-
         private readonly DocumentFilesService _documentFilesService;
-
         private readonly LocationService _locationService;
 
         private RoleService _roleService;
 
         public PeopleController()
         {
+            _userService = new UserService();
             _peopleService = new PeopleService();
             _companyService = new CompanyService();
             _documentFilesService = new DocumentFilesService();
@@ -308,6 +309,8 @@ namespace Answer.Web.Controllers
 
             var response = _peopleService.Update(model);
 
+            _userService.RemoveUserCacheItems(model.LoginId, model.Root);
+
             if (!response.HasErrors())
             {
                 TempData["SuccessMessage"] = "User has been updated successfully.";
@@ -333,7 +336,7 @@ namespace Answer.Web.Controllers
             }));
 
             ViewBag.PreviewConfig = previewConfig;
-            TempData["ErrorMessage"] = response.ErrorMessage;
+            TempData["ErrorMessage"] = response.ErrorMessage;            
 
             return View(model);
         }

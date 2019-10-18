@@ -1,16 +1,18 @@
-﻿using System;
+﻿using Msr.Models.Tasks;
+using Msr.Repositories;
+using Msr.Services.Orders.Messaging;
+using Msr.Services.Orders.Procedures;
+using Msr.Services.Tasks.Messaging;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web.Mvc;
-using Msr.Models.Tasks;
-using Msr.Repositories;
-using Msr.Services.Orders.Messaging;
-using Msr.Services.Tasks.Messaging;
+using Msr.Models.Orders;
 
 namespace Msr.Services.Orders
 {
-   public class TaskService
+    public class TaskService
     {
         private readonly MsrDbContext _dbContext;
 
@@ -24,19 +26,19 @@ namespace Msr.Services.Orders
             return _dbContext.MonitorResults;
         }
 
-       public int? CheckHasMonitors(string fillId)
-       {
+        public int? CheckHasMonitors(string fillId)
+        {
             var fileIdParm = new SqlParameter("@fillID", fillId);
 
             var tasks = _dbContext.Database.SqlQuery<GetTaskWithMonitorsResult>("Portal_GetTaskWithMonitors @fillID", fileIdParm).ToList();
 
-           if (tasks.Any())
-           {
-               return 1;
-           }
+            if (tasks.Any())
+            {
+                return 1;
+            }
 
-           return null;
-       }
+            return null;
+        }
 
         public int CheckHasNcr(string partId)
         {
@@ -46,41 +48,103 @@ namespace Msr.Services.Orders
 
             return result;
         }
-        
-        public MonitorHistoryResponse GetTaskWithMonitors(string fileId)
+
+        public MonitorHistoryResponse GetTaskWithMonitors(string fileId, string ntlogin)
         {
-            var response = new MonitorHistoryResponse();
+            MonitorHistoryResponse monitorHistoryResponse = new MonitorHistoryResponse();
 
-            var fileSearch = _dbContext.FileSearchView.Single(x => x.Id == fileId);
+            List<TaskStepResult> parentAndNCRTaskStepResults = GetParentandNCRTasks(Convert.ToInt32(fileId), ntlogin);
 
-            response.SupName = fileSearch.SupName;
-            response.FillObjDesc = fileSearch.FillObjDesc;
-            response.PurchItemId = fileSearch.PurchItemId;
+            FileSearchView fileSearch = _dbContext.FileSearchView.Single(x => x.Id == fileId);
+
+            monitorHistoryResponse.SupName = fileSearch.SupName;
+            monitorHistoryResponse.FillObjDesc = fileSearch.FillObjDesc;
+            monitorHistoryResponse.PurchItemId = fileSearch.PurchItemId;
 
             var fileIdParm = new SqlParameter("@fillID", fileId);
 
             var tasks = _dbContext.Database.SqlQuery<GetTaskWithMonitorsResult>("Portal_GetTaskWithMonitors @fillID", fileIdParm).ToList();
 
-            if (tasks.Any())
+            if (parentAndNCRTaskStepResults.Any())
             {
-                foreach (var task in tasks)
+                foreach (TaskStepResult task in parentAndNCRTaskStepResults)
                 {
-                    var item = new MonitorItem();
-                    item.TaskId = task.TaskId;
-                    item.Description = task.Description;
+                    var monitorItem = new MonitorItem();
 
-                    var monitors = _dbContext.MonitorResults.Where(x => x.TaskId == task.TaskId).ToList();
+                    monitorItem.TaskId = task.TaskId;
+                    monitorItem.TaskTitle = task.Title;
+                    monitorItem.Description = task.Description;
+                    monitorItem.IsNCRTask = task.IsNCRTask;
 
-                    item.MonitorResults.AddRange(monitors);
+                    if (String.IsNullOrWhiteSpace(monitorItem.TaskId) == false)
+                    {
+                        var monitors = _dbContext.MonitorResults.Where(x => x.TaskId == task.TaskId).ToList();
 
-                    response.MonitorItem.Add(item);
+                        monitorItem.MonitorResults.AddRange(monitors);
+                    }
+                    else
+                    {
+                        monitorItem.MonitorResults = new List<MonitorResult>();
+                    }
+
+                    monitorHistoryResponse.MonitorItem.Add(monitorItem);
                 }
             }
 
-            return response;
+            //if (tasks.Any())
+            //{
+            //    foreach (GetTaskWithMonitorsResult task in tasks)
+            //    {
+            //        var item = new MonitorItem();
+
+            //        item.TaskId = task.TaskId;
+            //        item.TaskTitle = task.TaskTitle;
+            //        item.Description = task.Description;
+
+            //        var monitors = _dbContext.MonitorResults.Where(x => x.TaskId == task.TaskId).ToList();
+
+            //        item.MonitorResults.AddRange(monitors);
+
+            //        monitorHistoryResponse.MonitorItem.Add(item);
+            //    }
+            //}
+
+            return monitorHistoryResponse;
         }
 
-       public List<SelectListItem> GetMonitors(string input, int reportTypeId, int reportType)
+        private List<TaskStepResult> GetParentandNCRTasks(int fillID, string ntLogin)
+        {
+            List<TaskStepResult> parentAndNCRTaskStepResults = new List<TaskStepResult>();
+
+            OrderService orderService = new OrderService();
+
+            WorkOrderDetailsResponse workOrderDetailsResponse = orderService.GetPurchaseItemDetails(fillID, ntLogin);
+
+            List<TaskStepResult> taskStepResults = workOrderDetailsResponse.TaskStepResults;
+
+            TaskStepResult previousTaskStepResult = null;
+
+            foreach (TaskStepResult taskStepResult in taskStepResults)
+            {
+
+                if (taskStepResult.IsNCRTask == true)
+                {
+                    if (previousTaskStepResult.IsNCRTask == false)
+                    {
+                        parentAndNCRTaskStepResults.Add(previousTaskStepResult);
+                    }
+
+                    parentAndNCRTaskStepResults.Add(taskStepResult);
+                }
+
+                previousTaskStepResult = taskStepResult;
+
+            }
+
+            return parentAndNCRTaskStepResults;
+        }
+
+        public List<SelectListItem> GetMonitors(string input, int reportTypeId, int reportType)
         {
             var fillIds = new List<string>();
             var tasks = new List<GetTaskWithMonitorsResult>();
@@ -105,8 +169,8 @@ namespace Msr.Services.Orders
                 }
             }
 
-           foreach (var fillId in fillIds)
-           {
+            foreach (var fillId in fillIds)
+            {
                 var fileIdParm = new SqlParameter("@fillID", fillId);
                 var fillIdtasks = _dbContext.Database.SqlQuery<GetTaskWithMonitorsResult>("Portal_GetTaskWithMonitors @fillID", fileIdParm).ToList();
 
@@ -120,18 +184,18 @@ namespace Msr.Services.Orders
                 }
             }
 
-           var groupedTasks = tasks.GroupBy(x => x.Description).ToList();
+            var groupedTasks = tasks.GroupBy(x => x.Description).ToList();
 
-           foreach (var groupedTask in groupedTasks)
-           {
-               monitorList.Add(new SelectListItem
-               {
-                   Text = groupedTask.Key,
-                   Value = String.Join(",", groupedTask.Select(t => t.TaskId))
-               });
-           }
+            foreach (var groupedTask in groupedTasks)
+            {
+                monitorList.Add(new SelectListItem
+                {
+                    Text = groupedTask.Key,
+                    Value = String.Join(",", groupedTask.Select(t => t.TaskId))
+                });
+            }
 
-           return monitorList;
+            return monitorList;
         }
 
         public List<MonitorsWithTaskAndResult> GetReports(string serial, DateTime fromDate, DateTime toDate, int reportTypeId, string taskIds)
@@ -144,7 +208,7 @@ namespace Msr.Services.Orders
 
             if (reportTypeId == ReportTypeConstants.Graph)
             {
-                query = query.Where(x => x.MonitorType == "NUMBER");                
+                query = query.Where(x => x.MonitorType == "NUMBER");
             }
             else
             {
@@ -153,5 +217,6 @@ namespace Msr.Services.Orders
 
             return query.ToList();
         }
+
     }
 }

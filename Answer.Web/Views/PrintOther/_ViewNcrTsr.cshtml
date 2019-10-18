@@ -93,44 +93,58 @@
         </tbody>
     </table>
 
+    <p>&nbsp;</p>
+
     <table class="table table-bordered monitor-tabel">
         @foreach (var task in Model.MonitorItem)
         {
             <thead>
                 <tr>
-                    <th colspan=4>@task.Description</th>
+                    <th colspan="4" @if (task.IsNCRTask == true) { @Html.Raw("bgcolor='#030ffc'"); }>
+                        @task.TaskTitle
+                        @if (task.IsNCRTask == true) { @Html.Raw("&nbsp;(NCR Task)"); }
+                    </th>
                 </tr>
+                @if (task.MonitorResults?.Any() == true)
+                {
                 <tr>
                     <th>Monitor @task.TaskId</th>
                     <th>Result</th>
-                    <th>Pass/Fail</th>
                     <th>Comment</th>
+                </tr>
+                }
             </thead>
             <tbody>
-                @foreach (var monitor in task.MonitorResults)
+                @if (task.MonitorResults?.Any() == true)
                 {
-                    var cssClass = "";
-
-                    if (monitor.IsPassing == "Pass")
+                    foreach (var monitor in task.MonitorResults)
                     {
-                        cssClass = "success";
+                        <tr>
+                            <td>
+                                @if (monitor.InputType?.Trim().ToUpper() == "SENSOR" && string.IsNullOrWhiteSpace(monitor.Description) == true)
+                                {
+                                    @Html.Raw(@"Sensor Value")
+                                }
+                                else
+                                {
+                                    @monitor.Description
+                                }
+                            </td>
+                            <td>
+                                @if (monitor.MonitorType?.Trim().ToUpper() == "SELECT" && (monitor.ListSource?.Trim().ToUpper().Contains("NCR_CATEGORY") == true || monitor.ListSource?.Trim().ToUpper().Contains("NCRCATEGORY") == true))
+                                {
+                                    @Html.Raw(@"NCR Category:")
+                                }
+                                @monitor.PrintResult
+                            </td>
+                            <td>@monitor.Comment</td>
+                        </tr>
                     }
-                    else if (monitor.IsPassing == "Fail")
-                    {
-                        cssClass = "danger";
-                    }
-
+                }
+                else
+                {
                     <tr>
-                        <td>@monitor.Description</td>
-                        <td>
-                            @if (monitor.ListSource?.Trim().ToUpper().Contains("NCR_CATEGORY") == true || monitor.ListSource?.Trim().ToUpper().Contains("NCRCATEGORY") == true)
-                            {
-                                @Html.Raw(@"NCR Category:")
-                            }
-                            @monitor.PrintResult
-                        </td>
-                        <td class="@cssClass">@monitor.IsPassing</td>
-                        <td>@monitor.Comment</td>
+                        <td colspan="3">&nbsp;</td>
                     </tr>
                 }
             </tbody>
