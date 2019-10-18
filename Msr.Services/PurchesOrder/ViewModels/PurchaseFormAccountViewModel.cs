@@ -115,10 +115,17 @@ namespace Msr.Services.PurchesOrder.ViewModels
 
         public void Setup(PurchesOrderService purchesOrderService)
         {
-
             Products = purchesOrderService.PurchasedOrderProducts(OBJECT_ID).Select(x => x.Id).ToList();
 
             ProductPo = purchesOrderService.PurchasedOrderProductsPoList(id: ID).ToList();
+
+            foreach (var x in ProductPo)
+            {
+                if (x.Qty == null || x.Qty <= 0)
+                {
+                    x.Qty = 0;
+                }
+            }
         }
 
     }
