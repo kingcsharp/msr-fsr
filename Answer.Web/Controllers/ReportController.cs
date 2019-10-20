@@ -18,7 +18,12 @@ namespace Msr.Web.Controllers
         public ActionResult Index()
         {
             ViewBag.ActiveClass = "WIP";
+            return View();
+        }
 
+        public ActionResult FinancialDashboard()
+        {
+            ViewBag.ActiveClass = "WIP";
             return View();
         }
 

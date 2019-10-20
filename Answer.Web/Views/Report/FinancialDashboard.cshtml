@@ -1,0 +1,35 @@
+﻿@using Syncfusion.EJ2
+
+@{
+    ViewBag.Title = "FinancialDashboard";
+}
+
+<div class="side-body">
+    <div class="row">
+        <div class="col-xs-12">
+            @Html.EJS().Grid("FinancialDashboard").DataSource(dataManger =>
+            {
+                dataManger.Url("~/api/Reporting/CombinedFinancialData").CrossDomain(true).Adaptor("ODataV4Adaptor");
+            }).Columns(col =>
+            {
+                col.Field("WONumber").HeaderText("WO Item").Add();
+                col.Field("WOCreationDate").HeaderText("Creation Date").Add();
+                col.Field("DueDate").HeaderText("Due Date").Add();
+                col.Field("ShipDate").HeaderText("Ship Date").Add();
+                col.Field("MSRFSRFacility").HeaderText("Facility").Add();
+                col.Field("CustomerName").HeaderText("Customer").Add();
+                col.Field("specno").HeaderText("Specification").Add();
+                col.Field("KitName").HeaderText("Kit Name").Add();
+                col.Field("pono").HeaderText("Part #").Add();
+                col.Field("mttn").HeaderText("MTTN").Add();
+                col.Field("InvoiceId").HeaderText("Invoice #").Add();
+                col.Field("InvoiceDate").HeaderText("Invoice Date").Add();
+                col.Field("FillQty").HeaderText("Qty").Add();
+                col.Field("Amount").HeaderText("Amount").Add();
+                col.Field("SubTotal").HeaderText("SubTotal").Add();
+                col.Field("WTax").HeaderText("w/ Tax").Add();
+            }).AllowPaging().Render()
+        </div>
+    </div>
+
+</div>
