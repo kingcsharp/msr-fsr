@@ -19,8 +19,14 @@ namespace Answer.Web
         protected void Application_Start()
         {
             ContextDbInitializer.Seed(new ApplicationDbContext());
-            GlobalConfiguration.Configure(WebApiConfig.Register);
             AreaRegistration.RegisterAllAreas();
+
+            GlobalConfiguration.Configure(config =>
+            {
+                ODataConfig.Register(config);
+                WebApiConfig.Register(config);
+            });
+
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
