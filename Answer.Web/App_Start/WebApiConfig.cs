@@ -1,5 +1,5 @@
 ﻿using System.Web.Http;
-using System.Web.Http.OData.Builder;
+using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Msr.Models.Reporting;
 
@@ -18,7 +18,7 @@ namespace Answer.Web
             config.MapODataServiceRoute(
                 routeName: "CombinedFinancialData",
                 routePrefix: null,
-                model: (Microsoft.OData.Edm.IEdmModel)modelBuilder.GetEdmModel()
+                model: modelBuilder.GetEdmModel()
             );
 
             

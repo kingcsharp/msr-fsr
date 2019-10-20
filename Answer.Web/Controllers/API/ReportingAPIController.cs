@@ -1,12 +1,8 @@
-﻿using Msr.Models.Reporting;
+﻿using Microsoft.AspNet.OData;
+using Msr.Models.Reporting;
 using Msr.Services.Reporting;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
-using System.Web.Http.OData;
 
 namespace Answer.Web.Controllers.API
 {
