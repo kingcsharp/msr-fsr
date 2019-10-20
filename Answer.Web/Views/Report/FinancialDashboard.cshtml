@@ -2,8 +2,7 @@
 
 @{
     ViewBag.Title = "FinancialDashboard";
-    var reportingUrl = Url.RouteUrl("", new { httproute = "", controller = "/Reporting/CombinedFinancialData" });
-    var v = "";
+    var odataUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "Reporting/CombinedFinancialData" });
 }
 <link href="~/Content/ej/web/bootstrap-theme/ej.web.all.min.css" rel="stylesheet" />
 <div class="side-body">
@@ -36,35 +35,6 @@
                     <tbody></tbody>
                 </table>
             </div>
-
-            @*@{
-
-
-                     @Html.EJS().Grid("FinancialDashboard").DataSource(dataManger =>
-                {
-                    dataManger.Url(reportingUrl)
-                    .CrossDomain(true)
-                    .Adaptor("ODataV4Adaptor");
-                }).Columns(col =>
-                {
-                    col.Field("WONumber").HeaderText("WO Item").Add();
-                    col.Field("WOCreationDate").HeaderText("Creation Date").Add();
-                    col.Field("DueDate").HeaderText("Due Date").Add();
-                    col.Field("ShipDate").HeaderText("Ship Date").Add();
-                    col.Field("MSRFSRFacility").HeaderText("Facility").Add();
-                    col.Field("CustomerName").HeaderText("Customer").Add();
-                    col.Field("specno").HeaderText("Specification").Add();
-                    col.Field("KitName").HeaderText("Kit Name").Add();
-                    col.Field("pono").HeaderText("Part #").Add();
-                    col.Field("mttn").HeaderText("MTTN").Add();
-                    col.Field("InvoiceId").HeaderText("Invoice #").Add();
-                    col.Field("InvoiceDate").HeaderText("Invoice Date").Add();
-                    col.Field("FillQty").HeaderText("Qty").Add();
-                    col.Field("Amount").HeaderText("Amount").Add();
-                    col.Field("SubTotal").HeaderText("SubTotal").Add();
-                    col.Field("WTax").HeaderText("w/ Tax").Add();
-                }).AllowPaging().AllowGrouping().AllowSorting().AllowFiltering().Render();
-                 }*@
         </div>
     </div>
 
@@ -74,14 +44,13 @@
     <script src="http://cdn.syncfusion.com/js/assets/external/jquery.easing.1.3.min.js"></script>
     <script src="http://cdn.syncfusion.com/js/assets/external/jquery.globalize.min.js"></script>
     <script src="http://cdn.syncfusion.com/js/assets/external/jsrender.min.js"></script>
-    @*<script src="http://cdn.syncfusion.com/13.2.0.29/js/web/ej.web.all.min.js"></script>*@
     <script src="~/Scripts/ej/web/ej.web.all.min.js"></script>
-    @*<script src="~/Scripts/ej2/ej2.min.js"></script>*@
     <script type="text/javascript">
         $(function () {
             debugger;
             var dataManager = ej.DataManager({
-                url: "http://localhost:55170/api/Reporting/CombinedFinancialData", crossDomain: true, adaptor: new ej.WebApiAdaptor("ODataV4Adaptor")
+                url:'@odataUrl',
+                crossDomain: true, adaptor: new ej.WebApiAdaptor("ODataV4Adaptor")
             });
             var query = new ej.Query().take(5);
             var promise = dataManager.executeQuery(query);
