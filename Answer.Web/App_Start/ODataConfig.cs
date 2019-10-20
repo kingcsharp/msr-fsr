@@ -11,6 +11,7 @@ namespace Answer.Web
         {
             config.MapHttpAttributeRoutes();
             config.AddODataQueryFilter();
+            config.EnableDependencyInjection();
 
             ODataConventionModelBuilder modelBuilder = new ODataConventionModelBuilder();
             modelBuilder.EntitySet<CombinedFinancialData>("CombinedFinancialData");
