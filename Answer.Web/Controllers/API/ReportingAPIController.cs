@@ -1,13 +1,14 @@
 ﻿using Microsoft.AspNet.OData;
 using Msr.Models.Reporting;
 using Msr.Services.Reporting;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 
 namespace Answer.Web.Controllers.API
 {
     [RoutePrefix("api/Reporting")]
-    public class ReportingAPIController : ODataController
+    public class ReportingAPIController : ApiController
     {
         private ReportingService _reportingService;
 
@@ -16,11 +17,19 @@ namespace Answer.Web.Controllers.API
             _reportingService = new ReportingService();
         }
 
-        [HttpGet, Route("CombinedFinancialData")]
-        [EnableQuery()]
-        public IQueryable<CombinedFinancialData> GetCombinedFinancialData()
+        [HttpGet, EnableQuery, Route("CombinedFinancialData")]
+        public IQueryable<CombinedFinancialData> Get()
         {
-            return _reportingService.GetCombinedFinancialData();
+            try
+            {
+                var ret = _reportingService.GetCombinedFinancialData();
+                return ret;
+            }
+            catch (System.Exception e)
+            {
+
+                throw;
+            }
         }
     }
 }

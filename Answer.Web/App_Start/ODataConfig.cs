@@ -12,15 +12,17 @@ namespace Answer.Web
             config.MapHttpAttributeRoutes();
             config.AddODataQueryFilter();
             config.EnableDependencyInjection();
+            
 
-            ODataConventionModelBuilder modelBuilder = new ODataConventionModelBuilder();
-            modelBuilder.EntitySet<CombinedFinancialData>("CombinedFinancialData");
+            //ODataConventionModelBuilder modelBuilder = new ODataConventionModelBuilder();
+            //modelBuilder.EntitySet<CombinedFinancialData>("CombinedFinancialData");
 
-            config.MapODataServiceRoute(
-                routeName: "ODataRoute",
-                routePrefix: "api/Reporting",
-                model: modelBuilder.GetEdmModel()
-            );
+            //config.MapODataServiceRoute(
+            //    routeName: "ODataRoute",
+            //    routePrefix: "api/Reporting",
+            //    model: modelBuilder.GetEdmModel()
+            //);
+            //config.EnsureInitialized();
         }
     }
 }

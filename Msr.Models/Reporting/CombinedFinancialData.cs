@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Msr.Models.Reporting
 {
+   
     public class CombinedFinancialData
     {
         [Key]
