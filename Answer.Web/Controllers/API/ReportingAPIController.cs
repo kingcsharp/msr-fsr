@@ -18,18 +18,17 @@ namespace Answer.Web.Controllers.API
         }
 
         [HttpGet, EnableQuery, Route("CombinedFinancialData")]
-        public IQueryable<CombinedFinancialData> Get()
+        public IQueryable<CombinedFinancialData> GetCombinedFinancialData()
         {
-            try
-            {
-                var ret = _reportingService.GetCombinedFinancialData();
-                return ret;
-            }
-            catch (System.Exception e)
-            {
+            var ret = _reportingService.GetCombinedFinancialData();
+            return ret;
+        }
 
-                throw;
-            }
+        [HttpGet, EnableQuery, Route("WorkOrdersWithoutInvoices")]
+        public IQueryable<WorkOrdersWithoutInvoices> GetWorkOrdersWithoutInvoices()
+        {
+            var ret = _reportingService.GetWorkOrdersWithoutInvoices();
+            return ret;
         }
     }
 }

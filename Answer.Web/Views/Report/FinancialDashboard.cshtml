@@ -9,11 +9,18 @@
     <div class="row">
         <div class="col-xs-12">
             <div class="datatable" style="padding:10px">
-                <div id="FlatGrid"></div>
+                <div id="combinedFinancialGrid"></div>
             </div>
         </div>
     </div>
-
+    <br />
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="datatable" style="padding:10px">
+                <div id="wONoInvoiceURLGrid"></div>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Scripts{
@@ -22,28 +29,9 @@
     <script src="http://cdn.syncfusion.com/js/assets/external/jsrender.min.js"></script>
     <script src="~/Scripts/ej/web/ej.web.all.min.js"></script>
     <script type="text/javascript">
-
         $(function () {
-            //var dataManager = ej.DataManager({
-            //    url: 'http://localhost:55170/api/Reporting/CombinedFinancialData',
-            //    adaptor: new ej.ODataV4Adaptor(),
-            //    enableCaching: true,
-            //    cachingPageSize: 10,
-            //    crossDomain: true,
-            //    batch: false,
-            //    timeTillExpiration: 120000
-            //});
-
-            var dataManager = ej.DataManager({
-                url: 'http://localhost:55170/api/Reporting/CombinedFinancialData',
-                crossDomain: true, adaptor: new ej.ODataV4Adaptor()
-            });
-            var query = new ej.Query();
-            var promise = dataManager.executeQuery(query);
-            promise.done(function (e) {
-                $("#FlatGrid").ejGrid({
-                    dataSource: e.result,
-                    dataManager:dataManager,
+            function setGridOptions(options) {
+                var defaultGridOptions = {
                     enableLoadOnDemand: false,
                     allowPaging: true,
                     pageSettings: { enableQueryString: true },
@@ -55,26 +43,60 @@
                     allowSorting: true,
                     isResponsive: true,
                     enableResponsiveRow: true,
-                    columnLayout: ej.Grid.ColumnLayout.Auto,
-                    columns: [
-                        { field: "wONumber", headerText: 'WO Item', textAlign: ej.TextAlign.Right, width: 75 },
-                        { field: "wOCreationDate", headerText: 'Creation Date', textAlign: ej.TextAlign.Left, width: 100 },
-                        { field: "dueDate", headerText: 'Due Date', textAlign: ej.TextAlign.Left, width: 120 },
-                        { field: "shipDate", headerText: 'Ship Date', textAlign: ej.TextAlign.Left, width: 100 },
-                        { field: "mSRFSRFacility", headerText: 'Facility', textAlign: ej.TextAlign.Left, width: 100 },
-                        { field: "customerName", headerText: 'Customer', textAlign: ej.TextAlign.Left, width: 100 },
-                        { field: "specno", headerText: 'Specification', textAlign: ej.TextAlign.Left, width: 100 },
-                        { field: "kitName", headerText: 'Kit Name', textAlign: ej.TextAlign.Left, width: 100 },
-                        { field: "pono", headerText: 'Part #', textAlign: ej.TextAlign.Left, width: 100 },
-                        { field: "mttn", headerText: 'MTTN', textAlign: ej.TextAlign.Left, width: 100 },
-                        { field: "invoiceId", headerText: 'Invoice #', textAlign: ej.TextAlign.Left, width: 100 },
-                        { field: "invoiceDate", headerText: 'Invoice Date', textAlign: ej.TextAlign.Left, width: 100 },
-                        { field: "fillQty", headerText: 'Qty', textAlign: ej.TextAlign.Left, width: 100 },
-                        { field: "amount", headerText: 'Amount', textAlign: ej.TextAlign.Left, width: 100 },
-                        { field: "subTotal", headerText: 'SubTotal', textAlign: ej.TextAlign.Left, width: 100 },
-                        { field: "wTax", headerText: 'w/ Tax', textAlign: ej.TextAlign.Left, width: 100 }
-                    ]
-                });
+                    columnLayout: ej.Grid.ColumnLayout.Auto
+                };
+                Object.assign(defaultGridOptions, options);
+                return defaultGridOptions;
+            }
+
+            var dataManager = ej.DataManager({
+                url: '@ViewBag.CombinedURL',
+                crossDomain: true, adaptor: new ej.ODataV4Adaptor()
+            });
+            var query = new ej.Query();
+            var promise = dataManager.executeQuery(query);
+            promise.done(function (e) {
+                $("#combinedFinancialGrid").ejGrid(
+                    setGridOptions({
+                        dataSource: e.result, columns: [
+                            { field: "wONumber", headerText: 'WO Item', textAlign: ej.TextAlign.Right, width: 75 },
+                            { field: "wOCreationDate", headerText: 'Creation Date', textAlign: ej.TextAlign.Left, width: 100 },
+                            { field: "dueDate", headerText: 'Due Date', textAlign: ej.TextAlign.Left, width: 120 },
+                            { field: "shipDate", headerText: 'Ship Date', textAlign: ej.TextAlign.Left, width: 100 },
+                            { field: "mSRFSRFacility", headerText: 'Facility', textAlign: ej.TextAlign.Left, width: 100 },
+                            { field: "customerName", headerText: 'Customer', textAlign: ej.TextAlign.Left, width: 100 },
+                            { field: "specno", headerText: 'Specification', textAlign: ej.TextAlign.Left, width: 100 },
+                            { field: "kitName", headerText: 'Kit Name', textAlign: ej.TextAlign.Left, width: 100 },
+                            { field: "pono", headerText: 'Part #', textAlign: ej.TextAlign.Left, width: 100 },
+                            { field: "mttn", headerText: 'MTTN', textAlign: ej.TextAlign.Left, width: 100 },
+                            { field: "invoiceId", headerText: 'Invoice #', textAlign: ej.TextAlign.Left, width: 100 },
+                            { field: "invoiceDate", headerText: 'Invoice Date', textAlign: ej.TextAlign.Left, width: 100 },
+                            { field: "fillQty", headerText: 'Qty', textAlign: ej.TextAlign.Left, width: 100 },
+                            { field: "amount", headerText: 'Amount', textAlign: ej.TextAlign.Left, width: 100 },
+                            { field: "subTotal", headerText: 'SubTotal', textAlign: ej.TextAlign.Left, width: 100 },
+                            { field: "wTax", headerText: 'w/ Tax', textAlign: ej.TextAlign.Left, width: 100 }
+                        ]})
+                );
+            });
+
+            var dataManager = ej.DataManager({
+                url: '@ViewBag.WONoInvoiceURL',
+                crossDomain: true, adaptor: new ej.ODataV4Adaptor()
+            });
+            var query = new ej.Query();
+            var promise = dataManager.executeQuery(query);
+            promise.done(function (e) {
+                $("#wONoInvoiceURLGrid").ejGrid(
+                    setGridOptions({
+                        dataSource: e.result, columns: [
+                            { field: "cust_Purch_Num", headerText: 'Customer Purchase', textAlign: ej.TextAlign.Right, width: 75 },
+                            { field: "work_Order_Item", headerText: 'Work Order Iteme', textAlign: ej.TextAlign.Left, width: 100 },
+                            { field: "product_Name", headerText: 'Product Name', textAlign: ej.TextAlign.Left, width: 120 },
+                            { field: "work_Order_Completed_Date", headerText: 'WO Complete Date', textAlign: ej.TextAlign.Left, width: 100 },
+                            { field: "total_Sale_Price", headerText: 'Total', textAlign: ej.TextAlign.Left, width: 100 }
+                        ]
+                    })
+                );
             });
         });
 
