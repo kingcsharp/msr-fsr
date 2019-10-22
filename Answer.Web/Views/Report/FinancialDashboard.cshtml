@@ -5,10 +5,13 @@
     //var odataUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "Reporting/CombinedFinancialData" });
 }
 <link href="~/Content/ej/web/bootstrap-theme/ej.web.all.min.css" rel="stylesheet" />
+<link href="~/Content/ej/web/ej.web.overrides.css" rel="stylesheet" />
+<link href="#" rel="stylesheet" />
 <div id="gridsContainer" class="side-body">
     <div class="row">
         <div class="col-xs-12">
             <div class="datatable" style="padding:10px">
+                <div class="page-header"><h1 ndtype="heading">Combined Financial Data</h1></div>
                 <div id="combinedFinancialGrid"></div>
             </div>
         </div>
@@ -17,6 +20,7 @@
     <div class="row">
         <div class="col-xs-12">
             <div class="datatable" style="padding:10px">
+                <div class="page-header"><h1>Work Orders Not Invoiced</h1></div>
                 <div id="wONoInvoiceURLGrid"></div>
             </div>
         </div>
@@ -41,43 +45,26 @@
                     allowPaging: true,
                     pageSettings: { enableQueryString: true },
                     allowFiltering: true,
-                    allowScrolling:true,
-                    scrollSettings: {height: 400 },
                     allowResizeToFit: true,
                     filterSettings: {
                         filterType: "excel"
                     },
+
+                    allowScrolling: true,
+                    scrollSettings: { height: 840 },
                     allowSorting: true,
                     isResponsive: true,
                     enableResponsiveRow: true,
                     pageSettings: { pageSize: 25, pageSizeList: [25, 50, 100] },
                     columnLayout: ej.Grid.ColumnLayout.Auto,
-                    toolbarSettings: { showToolbar: true, toolbarItems: [ej.Grid.ToolBarItems.PrintGrid, ej.Grid.ToolBarItems.ExcelExport, ej.Grid.ToolBarItems.PdfExport, ej.Grid.ToolBarItems.Search] },
+                    toolbarSettings: { showToolbar: true, toolbarItems: [ej.Grid.ToolBarItems.ExcelExport,ej.Grid.ToolBarItems.Search] },
                     toolbarClick: function (args) {
-                        if (args.itemName == "Print") {
-                            var gridObj = $("#viewLista").data("ejGrid");
-                            gridObj.hideColumns("Foto");
-                            gridObj.hideColumns("BCI");
-                            gridObj.hideColumns("Mapa");
-                            gridObj.hideColumns("Croqui");
-                            $("#viewLista").ejGrid("print");
-                            args.cancel = true;
-                            gridObj.showColumns("Foto");
-                            gridObj.showColumns("BCI");
-                            gridObj.showColumns("Mapa");
-                            gridObj.showColumns("Croqui");
-                            //args.cancel = true;
-                        }
+
                         if (args.itemName == "Excel Export") {
                             //showMessage('Exportar para Excel');
                             args.cancel = true;
-                            doit(options.columns, 'xlsx');
+                            doit(options, 'xlsx');
                             //this.export("api/Export/ExcelExport"); // Excel Export method.
-                        }
-                        if (args.itemName == "PDF Export") {
-                            showMessage('Exportar para Pdf');
-                            args.cancel = true;
-                            //this.export("api/Export/PdfExport"); // PDF Export method.
                         }
                     },
                 };
@@ -85,18 +72,17 @@
                 return defaultGridOptions;
             }
 
-            function updateGridScroll(gridID, container) {
-                var gridObj = $("#" + gridID).ejGrid("instance");
-                let removalHeightNeeded = 170;
-                var scrollerheight = (($("." + container).height()) - ($(".e-gridheader").outerHeight()) - ($(".e-pager").outerHeight())) / 2 - removalHeightNeeded;//Obtain the height of the container and subtract it from gridheader and pager
-                gridObj.option({ allowScrolling: true, scrollSettings: {height: scrollerheight } });//pass the obtainer width and height to gridmodel options
-            }
-            
-            function doit(cols,type, fn, dl) {
-                //var elt2 = $('#combinedFinancialGrid table')[0];
-                var elt = $('#combinedFinancialGrid .e-gridcontent table');
+            //function updateGridScroll(gridID, container) {
+            //    var gridObj = $("#" + gridID).ejGrid("instance");
+            //    let removalHeightNeeded = 170;
+            //    var scrollerheight = (($("." + container).height()) - ($(".e-gridheader").outerHeight()) - ($(".e-pager").outerHeight())) / 2 - removalHeightNeeded;//Obtain the height of the container and subtract it from gridheader and pager
+            //    gridObj.option({ allowScrolling: true, scrollSettings: {height: scrollerheight } });//pass the obtainer width and height to gridmodel options
+            //}
+
+            function doit(options,type, fn, dl) {
+                var elt = $('#' + options.gridId+' .e-gridcontent table');
                 var clonedHtml = elt.clone();
-                clonedHtml.find('tbody').prepend($(getHeaders(cols)));
+                clonedHtml.find('tbody').prepend($(getHeaders(options.columns)));
                 var wb = XLSX.utils.table_to_book(clonedHtml[0], { sheet: "Sheet JS" });
                 return dl ?
                     XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
@@ -139,9 +125,9 @@
             promise.done(function (e) {
                 $("#combinedFinancialGrid").ejGrid(
                     setGridOptions({
-                        dataSource: e.result, columns: combinedFinancialGridCols})
+                        dataSource: e.result, columns: combinedFinancialGridCols, gridId:'combinedFinancialGrid'})
                 );
-                updateGridScroll('combinedFinancialGrid', 'app-container');
+                //updateGridScroll('combinedFinancialGrid', 'app-container');
             });
 
             var dataManager = ej.DataManager({url: '@ViewBag.WONoInvoiceURL',crossDomain: true, adaptor: new ej.ODataV4Adaptor() });
@@ -149,18 +135,19 @@
             var query = new ej.Query();
             var promise = dataManager.executeQuery(query);
             promise.done(function (e) {
+                var wONoInvoiceURLGridCols = [
+                    { field: "cust_Purch_Num", headerText: 'Customer Purchase', textAlign: ej.TextAlign.Right, width: 75 },
+                    { field: "work_Order_Item", headerText: 'Work Order Iteme', textAlign: ej.TextAlign.Left, width: 100 },
+                    { field: "product_Name", headerText: 'Product Name', textAlign: ej.TextAlign.Left, width: 120 },
+                    { field: "work_Order_Completed_Date", headerText: 'WO Complete Date', textAlign: ej.TextAlign.Left, width: 100 },
+                    { field: "total_Sale_Price", headerText: 'Total', textAlign: ej.TextAlign.Left, width: 100 }
+                ];
                 $("#wONoInvoiceURLGrid").ejGrid(
                     setGridOptions({
-                        dataSource: e.result, columns: [
-                            { field: "cust_Purch_Num", headerText: 'Customer Purchase', textAlign: ej.TextAlign.Right, width: 75 },
-                            { field: "work_Order_Item", headerText: 'Work Order Iteme', textAlign: ej.TextAlign.Left, width: 100 },
-                            { field: "product_Name", headerText: 'Product Name', textAlign: ej.TextAlign.Left, width: 120 },
-                            { field: "work_Order_Completed_Date", headerText: 'WO Complete Date', textAlign: ej.TextAlign.Left, width: 100 },
-                            { field: "total_Sale_Price", headerText: 'Total', textAlign: ej.TextAlign.Left, width: 100 }
-                        ]
+                        dataSource: e.result, columns: wONoInvoiceURLGridCols, gridId:'wONoInvoiceURLGrid'
                     })
                 );
-                updateGridScroll('wONoInvoiceURLGrid', 'app-container');
+                //updateGridScroll('wONoInvoiceURLGrid', 'app-container');
             });
         });
 

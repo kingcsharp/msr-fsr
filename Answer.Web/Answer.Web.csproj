@@ -2626,6 +2626,7 @@
     <Content Include="Content\ej\web\default-theme\images\rotator-icon.png" />
     <Content Include="Content\ej\web\default-theme\images\slider-tick.png" />
     <Content Include="Content\ej\web\default-theme\images\waitingpopup.gif" />
+    <Content Include="Content\ej\web\ej.web.overrides.css" />
     <Content Include="Content\ej\web\ej.widgets.core.bootstrap.min.css" />
     <Content Include="Content\ej\web\ej.widgets.core.material.min.css" />
     <Content Include="Content\ej\web\ej.widgets.core.min.css" />
