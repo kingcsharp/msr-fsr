@@ -201,6 +201,8 @@
     <Compile Include="PurchesOrder\PurchaseOrderFill.cs" />
     <Compile Include="PurchesOrder\PurchesOrderView.cs" />
     <Compile Include="Regions\RegionsView.cs" />
+    <Compile Include="Reporting\CombinedFinancialData.cs" />
+    <Compile Include="Reporting\WorkOrdersWithoutInvoices.cs" />
     <Compile Include="Roles\CertificationRole.cs" />
     <Compile Include="Roles\RolesView.cs" />
     <Compile Include="Sensor\SensorDataModel.cs" />

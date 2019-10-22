@@ -18,6 +18,14 @@ namespace Msr.Web.Controllers
         public ActionResult Index()
         {
             ViewBag.ActiveClass = "WIP";
+            return View();
+        }
+
+        public ActionResult FinancialDashboard()
+        {
+            ViewBag.ActiveClass = "WIP";
+            ViewBag.CombinedURL = ConfigurationManager.AppSettings["WebsiteUrl"].ToString() + "api/Reporting/CombinedFinancialData";
+            ViewBag.WONoInvoiceURL = ConfigurationManager.AppSettings["WebsiteUrl"].ToString() + "api/Reporting/WorkOrdersWithoutInvoices";
 
             return View();
         }
