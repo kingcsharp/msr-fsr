@@ -46,13 +46,11 @@ pipeline {
             steps {
                 script {
                     try {
-                        //if(env.JOB_NAME == "MSR-FSR/Answer2.0/Stage") {
-                            //withCredentials([usernamePassword(credentialsId: '20d94a70-d354-4154-b896-72b12943f904', passwordVariable: 'DB_PASS', usernameVariable: 'DB_USER')]) {
-                                bat label: '', script: 'sqlpackage.exe /a:script /SourceFile:%WORKSPACE%\\Msr.Database\\bin\\Release\\Msr.Database.dacpac /TargetConnectionString:"Data Source=bang.msr-fsr.com;Initial Catalog=Answer2_Stage;User Id=sa;Password=L8xvg2FGqs7CEQ+s;Integrated Security=true" /OutputPath:temp.sql'
-                            //}
-                        //} else {
-                            //echo "Not building script for env.JOB_NAME"
-                        //}
+                        if(env.JOB_NAME == "MSR-FSR/Answer2.0/Stage") {
+                            bat label: '', script: 'sqlpackage.exe /a:script /SourceFile:%WORKSPACE%\\Msr.Database\\bin\\Release\\Msr.Database.dacpac /TargetConnectionString:"Data Source=bang.msr-fsr.com;Initial Catalog=Answer2_Stage;User Id=sa;Password=L8xvg2FGqs7CEQ+s;Integrated Security=true" /OutputPath:temp.sql'
+                        } else {
+                            echo "Only generating a script for Stage"
+                        }
                     } catch(e) {
                         office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED generating SQL script from Msr.Database. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
                     }
@@ -63,27 +61,28 @@ pipeline {
             steps {
                 script {
                     try {
-                        //if(env.JOB_NAME == "MSR-FSR/Answer2.0/Stage") {
-                            //withCredentials([usernamePassword(credentialsId: '20d94a70-d354-4154-b896-72b12943f904', passwordVariable: 'DB_PASS', usernameVariable: 'DB_USER')]) {
-                            //bat label: '', script: 'sqlpackage.exe /a:script /SourceFile:%WORKSPACE%\\Msr.Database\\bin\\Release\\Msr.Database.dacpac /TargetConnectionString:"Data Source=bang.msr-fsr.com;Initial Catalog=Answer2_Stage;User Id=sa;Password=L8xvg2FGqs7CEQ+s;Integrated Security=true" /OutputPath:temp.sql'
+                        if(env.JOB_NAME == "MSR-FSR/Answer2.0/Stage") {
                             bat label: '', script: 'sqlpackage.exe /a:publish /SourceFile:%WORKSPACE%\\Msr.Database\\bin\\Release\\Msr.Database.dacpac /TargetConnectionString:"Data Source=bang.msr-fsr.com;Initial Catalog=Answer2_Stage;User Id=sa;Password=L8xvg2FGqs7CEQ+s;Integrated Security=true"'
-
-                            //}
-                        //} else {
-                          //  echo "Not building script for env.JOB_NAME"
-                        //}
+                        } else {
+                            echo "Only publishing a script for Stage"
+                        }
                     } catch(e) {
                         office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED publishing SQL script from Msr.Database. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
                     }
                 }
             }
         }
-        /*
         stage("Process Transforms") {
             steps {
                 script {
                     try {
-                        bat "\"${tool 'v14-amd64'}\" Answer.Web/transform.stage.proj /t:Stage"
+                        if(env.JOB_NAME == "MSR-FSR/Answer2.0/Stage") {
+                            bat "\"${tool 'v14-amd64'}\" Answer.Web/transform.stage.proj /t:Stage"
+                        } else if(env.JOB_NAME == "MSR-FSR/Answer2.0/master") {
+                            bat "\"${tool 'v14-amd64'}\" Answer.Web/transform.stage.proj /t:Prod"
+                        } else  {
+                            bat "\"${tool 'v14-amd64'}\" Answer.Web/transform.stage.proj /t:Dev"
+                        }
                     } catch(e) {
                         office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED processing transforms. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
                     }
@@ -138,7 +137,6 @@ pipeline {
                 }
             }
         }
-        */
         /*
         stage("Notify Rollbar") {
             agent { label 'master'}
