@@ -79,9 +79,9 @@ pipeline {
                         if(env.JOB_NAME == "MSR-FSR/Answer2.0/Stage") {
                             bat "\"${tool 'v14-amd64'}\" Answer.Web/transform.stage.proj /t:Stage"
                         } else if(env.JOB_NAME == "MSR-FSR/Answer2.0/master") {
-                            bat "\"${tool 'v14-amd64'}\" Answer.Web/transform.stage.proj /t:Prod"
+                            bat "\"${tool 'v14-amd64'}\" Answer.Web/transform.prod.proj /t:Prod"
                         } else  {
-                            bat "\"${tool 'v14-amd64'}\" Answer.Web/transform.stage.proj /t:Dev"
+                            bat "\"${tool 'v14-amd64'}\" Answer.Web/transform.dev.proj /t:Dev"
                         }
                     } catch(e) {
                         office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED processing transforms. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
