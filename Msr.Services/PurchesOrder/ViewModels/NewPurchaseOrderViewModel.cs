@@ -80,7 +80,8 @@ namespace Msr.Services.PurchesOrder.ViewModels
             SupplierDepartmentList = productionPlanningService.GetSupplierList(currentUser).Select(x => new SelectListItem
             {
                 Text = x.Name,
-                Value = x.Value.ToString()
+                Value = x.Value.ToString(),
+                Selected = x.Value == "2" // REQ TO ALWAYS DEFAULT TO MSR-FSR
             }).OrderBy(o => o.Text).ToList();
 
             SupplierDepartmentList.Insert(0, new SelectListItem() { Value = "", Text = @"Select Supplier Department" });

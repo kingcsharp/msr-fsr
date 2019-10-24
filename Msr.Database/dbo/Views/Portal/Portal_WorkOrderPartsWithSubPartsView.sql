@@ -1,4 +1,7 @@
 ﻿
+
+
+
 CREATE VIEW [dbo].[Portal_WorkOrderPartsWithSubPartsView]
 	AS 
 	SELECT 
@@ -62,8 +65,13 @@ p.CustMttn,
 p.PartId,
 p.FillItemId,
 p.CycleCount,
+pv.objectid as ApprovedObjectId,
 SubPart.SubPartCount
 FROM Portal_workOrders p 
+left join Portal_Partsview pv on (p.partid = pv.root and pv.status='APPROVED')
 OUTER APPLY (
-SELECT COUNT(*) AS SubPartCount FROM A_V_PARTS_GET_SUB_PART_DATA SP WHERE sp.PARENT_OBJECT_ID =p.PartId
+	SELECT COUNT(*) AS SubPartCount
+	FROM Portal_SubPartsGrid SP
+	WHERE sp.PARENT_OBJECT_ID = pv.objectid
+	AND sp.fill_id = p.fillid
 ) SubPart
