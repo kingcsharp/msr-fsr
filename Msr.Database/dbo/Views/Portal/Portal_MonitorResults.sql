@@ -1,4 +1,5 @@
 ﻿
+
 CREATE VIEW [dbo].[Portal_MonitorResults]
 
 AS
@@ -32,6 +33,7 @@ END AS IsPassing
 ,CANT_CHANGE AS CantChange
 ,ALWAYS_PASS AS AlwaysPass
 , LIST_SOURCE AS ListSource
+, Input_type AS InputType
 FROM [dbo].A_V_MONITOR_TEMPLATES_WITH_RESULTS
 GO
 
