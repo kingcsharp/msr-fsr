@@ -115,7 +115,8 @@ namespace Msr.Services.ProductionPlanning.ViewModels
             Suppliers = productionPlanningService.GetSupplierList(currentUser).Select(x => new SelectListItem
             {
                 Text = x.Name,
-                Value = x.Value.ToString()
+                Value = x.Value.ToString(),
+                Selected = x.Value == "2" // REQ TO ALWAYS DEFAULT TO MSR-FSR
             }).OrderBy(o => o.Text).ToList();
 
             Customers = productionPlanningService.GetCustomerList(currentUser).Select(x => new SelectListItem

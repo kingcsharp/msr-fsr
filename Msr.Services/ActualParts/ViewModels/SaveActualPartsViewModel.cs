@@ -33,34 +33,34 @@ namespace Msr.Services.ActualParts.ViewModels
         [Display(Name = "This Actual Part is a:")]
         public string PartId { get; set; }
 
-        [Display(Name = "QTY :")]
+        [Display(Name = "QTY:")]
         public double? Qty { get; set; }
 
         public string Serial { get; set; }
 
-        [Display(Name = "NICK NAME :")]
+        [Display(Name = "NICK NAME:")]
         public string NickName { get; set; }
 
-        [Display(Name = "Location :")]
+        [Display(Name = "Location:")]
         public string LocationId { get; set; }
 
         [Required]
-        [Display(Name = "Current OWner :")]
+        [Display(Name = "Current Owner:")]
         public string CurOwner { get; set; }
 
-        [Display(Name = "AP Status :")]
+        [Display(Name = "AP Status:")]
         public string APStatus { get; set; }
 
-        [Display(Name = "Products Installed :")]
+        [Display(Name = "Products Installed:")]
         public List<string> Products { get; set; }
 
         [Display(Name = "This Part installed in:")]
         public string ParentId { get; set; }
 
-        [Display(Name = "Sub Parts Action :")]
+        [Display(Name = "Sub Parts Action:")]
         public string SubpartAction { get; set; }
 
-        [Display(Name = "Responsible Person :")]
+        [Display(Name = "Responsible Person:")]
         public string ResponsiblePerson { get; set; }
 
         public string NTLogin { get; set; }
@@ -113,7 +113,8 @@ namespace Msr.Services.ActualParts.ViewModels
             {
                 Text = x.Name,
                 Value = x.Id,
-                Selected = x.Id == getCurrentUser.Root_Company
+                Selected = x.Id == "2" // REQ TO ALWAYS DEFAULT TO MSR-FSR
+                // Selected = x.Id getCurrentUser.Root_Company
             }).ToList());
 
             ListPersons.Insert(0, new SelectListItem { Text = @"Select Responsible Person", Value = "" });
