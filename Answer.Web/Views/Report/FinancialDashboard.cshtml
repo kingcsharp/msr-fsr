@@ -61,10 +61,8 @@
                     toolbarClick: function (args) {
 
                         if (args.itemName == "Excel Export") {
-                            //showMessage('Exportar para Excel');
                             args.cancel = true;
                             doit(options, 'xlsx');
-                            //this.export("api/Export/ExcelExport"); // Excel Export method.
                         }
                     },
                 };
@@ -72,28 +70,52 @@
                 return defaultGridOptions;
             }
 
-            //function updateGridScroll(gridID, container) {
-            //    var gridObj = $("#" + gridID).ejGrid("instance");
-            //    let removalHeightNeeded = 170;
-            //    var scrollerheight = (($("." + container).height()) - ($(".e-gridheader").outerHeight()) - ($(".e-pager").outerHeight())) / 2 - removalHeightNeeded;//Obtain the height of the container and subtract it from gridheader and pager
-            //    gridObj.option({ allowScrolling: true, scrollSettings: {height: scrollerheight } });//pass the obtainer width and height to gridmodel options
-            //}
-
             function doit(options,type, fn, dl) {
-                var elt = $('#' + options.gridId+' .e-gridcontent table');
-                var clonedHtml = elt.clone();
-                clonedHtml.find('tbody').prepend($(getHeaders(options.columns)));
-                var wb = XLSX.utils.table_to_book(clonedHtml[0], { sheet: "Sheet JS" });
-                return dl ?
-                    XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
-                    XLSX.writeFile(wb, fn || ('SheetJSTableExport.' + (type || 'xlsx')));
+                var grid = $('#' + options.gridId).ejGrid('instance');
+
+                const wb = { SheetNames: [], Sheets: {} };
+                wb.Props = {
+                    Title: "Stats from app",
+                    Author: "John Doe"
+                };
+                var data = grid.getFilteredRecords().length > 0 ? grid.getFilteredRecords() : grid.model.dataSource;
+
+                var colHeaders = {};
+                var colsLength = options.columns.length;
+
+                while(colsLength--){
+                    colHeaders[options.columns[colsLength].field] = options.columns[colsLength].headerText;
+                }
+
+                var updatedData = [];
+                for (var i = 0; i < data.length; i++) {
+                    updatedData.push(renameKeys(data[i], colHeaders));
+                }
+
+                var ws = XLSX.utils.json_to_sheet(updatedData);
+                var ws_name = "DataSheet1";
+                XLSX.utils.book_append_sheet(wb, ws, ws_name);
+
+                var colsLength = options.columns.length;
+                var wscols = [];
+                while (colsLength--) {
+                    wscols.push({ wpx: options.columns[colsLength].width });
+                }
+                wb.Sheets["DataSheet1"]["!cols"] = wscols;
+
+                return XLSX.writeFile(wb, options.title+'.xlsb');
             }
 
-            function getHeaders(cols) {
-                var cols = cols.map(function (elem) {
-                    return '<td>' + elem.headerText +'</td>';
+            function renameKeys(obj, newKeys) {
+                var retObj = {};
+                var keyValues = Object.keys(obj).map(function (key) {
+                    if (newKeys[key] !== undefined) {
+                        var newKey = newKeys[key];
+                        retObj[newKey] = obj[key];
+                    }
+                    return;
                 });
-                return '<tr>' + cols.join('') + '</tr>';
+                return retObj;
             }
 
             var dataManager = ej.DataManager({
@@ -102,22 +124,22 @@
             });
 
             var combinedFinancialGridCols = [
-                { field: "wONumber", headerText: 'WO Item', textAlign: ej.TextAlign.Right, width: 75 },
-                { field: "wOCreationDate", headerText: 'Creation Date', textAlign: ej.TextAlign.Left, width: 100 },
-                { field: "dueDate", headerText: 'Due Date', textAlign: ej.TextAlign.Left, width: 120 },
+                { field: "woNumber", headerText: 'WO Item', textAlign: ej.TextAlign.Right, width: 110},
+                { field: "woCreationDate", headerText: 'Creation Date', textAlign: ej.TextAlign.Left, width: 95 },
+                { field: "dueDate", headerText: 'Due Date', textAlign: ej.TextAlign.Left, width: 100 },
                 { field: "shipDate", headerText: 'Ship Date', textAlign: ej.TextAlign.Left, width: 100 },
-                { field: "mSRFSRFacility", headerText: 'Facility', textAlign: ej.TextAlign.Left, width: 100 },
+                { field: "msrfsrFacility", headerText: 'Facility', textAlign: ej.TextAlign.Left, width: 100 },
                 { field: "customerName", headerText: 'Customer', textAlign: ej.TextAlign.Left, width: 100 },
                 { field: "specno", headerText: 'Specification', textAlign: ej.TextAlign.Left, width: 100 },
                 { field: "kitName", headerText: 'Kit Name', textAlign: ej.TextAlign.Left, width: 100 },
                 { field: "pono", headerText: 'Part #', textAlign: ej.TextAlign.Left, width: 100 },
                 { field: "mttn", headerText: 'MTTN', textAlign: ej.TextAlign.Left, width: 100 },
-                { field: "invoiceId", headerText: 'Invoice #', textAlign: ej.TextAlign.Left, width: 100 },
+                { field: "invoiceId", headerText: 'Invoice #', textAlign: ej.TextAlign.Left, width: 95 },
                 { field: "invoiceDate", headerText: 'Invoice Date', textAlign: ej.TextAlign.Left, width: 100 },
-                { field: "fillQty", headerText: 'Qty', textAlign: ej.TextAlign.Left, width: 100 },
-                { field: "amount", headerText: 'Amount', textAlign: ej.TextAlign.Left, width: 100 },
-                { field: "subTotal", headerText: 'SubTotal', textAlign: ej.TextAlign.Left, width: 100 },
-                { field: "wTax", headerText: 'w/ Tax', textAlign: ej.TextAlign.Left, width: 100 }
+                { field: "fillQty", headerText: 'Qty', textAlign: ej.TextAlign.Left, width: 95 },
+                { field: "amount", headerText: 'Amount', textAlign: ej.TextAlign.Left, width: 95 },
+                { field: "subTotal", headerText: 'SubTotal', textAlign: ej.TextAlign.Left, width: 95 },
+                { field: "wTax", headerText: 'w/ Tax', textAlign: ej.TextAlign.Left, width: 80 }
             ];
 
             var query = new ej.Query();
@@ -125,9 +147,8 @@
             promise.done(function (e) {
                 $("#combinedFinancialGrid").ejGrid(
                     setGridOptions({
-                        dataSource: e.result, columns: combinedFinancialGridCols, gridId:'combinedFinancialGrid'})
+                        dataSource: e.result, columns: combinedFinancialGridCols, gridId: 'combinedFinancialGrid', title:'Combined_Financial_Data'})
                 );
-                //updateGridScroll('combinedFinancialGrid', 'app-container');
             });
 
             var dataManager = ej.DataManager({url: '@ViewBag.WONoInvoiceURL',crossDomain: true, adaptor: new ej.ODataV4Adaptor() });
@@ -136,7 +157,7 @@
             var promise = dataManager.executeQuery(query);
             promise.done(function (e) {
                 var wONoInvoiceURLGridCols = [
-                    { field: "cust_Purch_Num", headerText: 'Customer Purchase', textAlign: ej.TextAlign.Right, width: 75 },
+                    { field: "cust_Purch_Num", headerText: 'Customer Purchase', textAlign: ej.TextAlign.Right, width: 100 },
                     { field: "work_Order_Item", headerText: 'Work Order Iteme', textAlign: ej.TextAlign.Left, width: 100 },
                     { field: "product_Name", headerText: 'Product Name', textAlign: ej.TextAlign.Left, width: 120 },
                     { field: "work_Order_Completed_Date", headerText: 'WO Complete Date', textAlign: ej.TextAlign.Left, width: 100 },
@@ -144,10 +165,9 @@
                 ];
                 $("#wONoInvoiceURLGrid").ejGrid(
                     setGridOptions({
-                        dataSource: e.result, columns: wONoInvoiceURLGridCols, gridId:'wONoInvoiceURLGrid'
+                        dataSource: e.result, columns: wONoInvoiceURLGridCols, gridId: 'wONoInvoiceURLGrid', title: 'Work_Orders_Not_Invoiced'
                     })
                 );
-                //updateGridScroll('wONoInvoiceURLGrid', 'app-container');
             });
         });
 
