@@ -373,7 +373,8 @@ namespace Answer.Web.Controllers
             var OwnerList = _purchesOrderService.PurchasedOrderOwnerList().Select(x => new SelectListItem
             {
                 Text = x.Name,
-                Value = x.Id.ToString()
+                Value = x.Id.ToString(),
+                Selected = x.Id == "2" // DEFAULT TO MSR-FSR
             }).OrderBy(o => o.Text).ToList();
 
             var locList = _purchesOrderService.PurchasedOrderLocationList()

@@ -31,7 +31,7 @@
     <tr>
         <th align="right">Supplier / MSR-FSR Dept</th>
         <td>
-            @Html.DropDownListFor(model => model.SupplierDepartment, Model.SupplierDepartmentList, new { @class = "form-control" })
+            @Html.DropDownListFor(model => model.SupplierDepartment, Model.SupplierDepartmentList, new { @class = "form-control", @readonly = "", @disabled = "" })
             @Html.ValidationMessageFor(model => model.SupplierDepartment, "", new { @class = "text-danger" })
         </td>
         <th align="right">Cust Ref# / MTTN:</th>
