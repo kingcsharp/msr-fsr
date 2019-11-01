@@ -230,6 +230,9 @@ namespace Answer.Web.Controllers
         {
             var currentUser = GetCurrentUser();
 
+            // LISTBOX IS DISABLED AND SET TO READ-ONLY - VALUE IS NOT POSTED OR SET ON THE MODEL
+            model.SupplierDepartment = "2";
+
             if (ModelState.IsValid)
             {
                 model.NTLogin = currentUser.Id;
