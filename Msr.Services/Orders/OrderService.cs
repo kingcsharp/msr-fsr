@@ -1103,21 +1103,24 @@ namespace Msr.Services.Orders
         {
             var response = new ResultNotification<TaskLogDto>();
 
-            var p3 = new DynamicParameters();
-            p3.Add("@firstTime", null, DbType.String, ParameterDirection.Input);
-            p3.Add("@strAPart", parentPartId, DbType.String, ParameterDirection.Input);
-            p3.Add("@strListToexpand", parentPartId, DbType.String, ParameterDirection.Input);
-            p3.Add("@strExpandAllList", parentPartId, DbType.String, ParameterDirection.Input);
-            p3.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input);
-
-            using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
+            if (isSerilizeStep)
             {
-                var result = conn.Query<GetActualPartsShowHierarchy>("A_SP_ACTUAL_PARTS_SHOW_HIERARCHY", p3,
-                    commandType: CommandType.StoredProcedure).FirstOrDefault();
+                var p3 = new DynamicParameters();
+                p3.Add("@firstTime", null, DbType.String, ParameterDirection.Input);
+                p3.Add("@strAPart", parentPartId, DbType.String, ParameterDirection.Input);
+                p3.Add("@strListToexpand", parentPartId, DbType.String, ParameterDirection.Input);
+                p3.Add("@strExpandAllList", parentPartId, DbType.String, ParameterDirection.Input);
+                p3.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input);
 
-                if (result != null)
+                using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
                 {
-                    UpdateRootPart(result.Id, result.Serial, stepId, login);
+                    var result = conn.Query<GetActualPartsShowHierarchy>("A_SP_ACTUAL_PARTS_SHOW_HIERARCHY", p3,
+                        commandType: CommandType.StoredProcedure).FirstOrDefault();
+
+                    if (result != null && result.Tree_Level == 0 && result.TREE_HAS_CHILD == 0)
+                    {
+                        UpdateRootPart(result.Id, result.Serial, stepId, login);
+                    }
                 }
             }
 
