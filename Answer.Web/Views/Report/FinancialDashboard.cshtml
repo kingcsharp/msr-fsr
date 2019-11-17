@@ -124,22 +124,22 @@
             });
 
             var combinedFinancialGridCols = [
-                { field: "woNumber", headerText: 'WO Item', textAlign: ej.TextAlign.Right, width: 110},
-                { field: "woCreationDate", headerText: 'Creation Date', textAlign: ej.TextAlign.Left, width: 95 },
-                { field: "dueDate", headerText: 'Due Date', textAlign: ej.TextAlign.Left, width: 100 },
-                { field: "shipDate", headerText: 'Ship Date', textAlign: ej.TextAlign.Left, width: 100 },
+                { field: "woNumber", headerText: 'WO Item', textAlign: ej.TextAlign.Right, width: 130},
+                { field: "woCreationDate", headerText: 'Creation Date', textAlign: ej.TextAlign.Left, width: 60 },
+                { field: "dueDate", headerText: 'Due Date', textAlign: ej.TextAlign.Left, width: 60 },
+                { field: "shipDate", headerText: 'Ship Date', textAlign: ej.TextAlign.Left, width: 60 },
                 { field: "msrfsrFacility", headerText: 'Facility', textAlign: ej.TextAlign.Left, width: 100 },
-                { field: "customerName", headerText: 'Customer', textAlign: ej.TextAlign.Left, width: 100 },
+                { field: "customerName", headerText: 'Customer', textAlign: ej.TextAlign.Left, width: 90 },
                 { field: "specno", headerText: 'Specification', textAlign: ej.TextAlign.Left, width: 100 },
-                { field: "kitName", headerText: 'Kit Name', textAlign: ej.TextAlign.Left, width: 100 },
+                { field: "kitName", headerText: 'Kit Name', textAlign: ej.TextAlign.Left, width: 120 },
                 { field: "pono", headerText: 'Part #', textAlign: ej.TextAlign.Left, width: 100 },
-                { field: "mttn", headerText: 'MTTN', textAlign: ej.TextAlign.Left, width: 100 },
-                { field: "invoiceId", headerText: 'Invoice #', textAlign: ej.TextAlign.Left, width: 95 },
-                { field: "invoiceDate", headerText: 'Invoice Date', textAlign: ej.TextAlign.Left, width: 100 },
-                { field: "fillQty", headerText: 'Qty', textAlign: ej.TextAlign.Left, width: 95 },
-                { field: "amount", headerText: 'Amount', textAlign: ej.TextAlign.Left, width: 95 },
-                { field: "subTotal", headerText: 'SubTotal', textAlign: ej.TextAlign.Left, width: 95 },
-                { field: "wTax", headerText: 'w/ Tax', textAlign: ej.TextAlign.Left, width: 80 }
+                { field: "mttn", headerText: 'MTTN', textAlign: ej.TextAlign.Left, width: 70 },
+                { field: "invoiceId", headerText: 'Invoice #', textAlign: ej.TextAlign.Left, width: 50 },
+                { field: "invoiceDate", headerText: 'Invoice Date', textAlign: ej.TextAlign.Left, width: 60 },
+                { field: "fillQty", headerText: 'Qty', textAlign: ej.TextAlign.Left, width: 40 },
+                { field: "amount", headerText: 'Amount', textAlign: ej.TextAlign.Left, width: 55 },
+                { field: "subTotal", headerText: 'SubTotal', textAlign: ej.TextAlign.Left, width: 60 },
+                { field: "wTax", headerText: 'w/ Tax', textAlign: ej.TextAlign.Left, width: 60 }
             ];
 
             var query = new ej.Query();
@@ -157,11 +157,11 @@
             var promise = dataManager.executeQuery(query);
             promise.done(function (e) {
                 var wONoInvoiceURLGridCols = [
-                    { field: "cust_Purch_Num", headerText: 'Customer Purchase', textAlign: ej.TextAlign.Right, width: 100 },
-                    { field: "work_Order_Item", headerText: 'Work Order Items', textAlign: ej.TextAlign.Left, width: 100 },
-                    { field: "product_Name", headerText: 'Product Name', textAlign: ej.TextAlign.Left, width: 120 },
-                    { field: "work_Order_Completed_Date", headerText: 'WO Complete Date', textAlign: ej.TextAlign.Left, width: 100 },
-                    { field: "total_Sale_Price", headerText: 'Total', textAlign: ej.TextAlign.Left, width: 100 }
+                    { field: "cust_Purch_Num", headerText: 'Customer Purchase', textAlign: ej.TextAlign.Right, width: 70 },
+                    { field: "work_Order_Item", headerText: 'Work Order Items', textAlign: ej.TextAlign.Left, width: 70 },
+                    { field: "product_Name", headerText: 'Product Name', textAlign: ej.TextAlign.Left, width: 200 },
+                    { field: "work_Order_Completed_Date", headerText: 'WO Complete Date', textAlign: ej.TextAlign.Left, width: 40 },
+                    { field: "total_Sale_Price", headerText: 'Total', textAlign: ej.TextAlign.Left, width: 40 }
                 ];
                 $("#wONoInvoiceURLGrid").ejGrid(
                     setGridOptions({
