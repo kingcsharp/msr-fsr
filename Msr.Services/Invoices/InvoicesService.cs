@@ -1,4 +1,4 @@
-﻿using Msr.Models.Invoices;
+using Msr.Models.Invoices;
 using Msr.Repositories;
 using Msr.Services.Invoices.ViewModel;
 using System;
@@ -10,6 +10,10 @@ using System.Text;
 
 namespace Msr.Services.Invoices
 {
+    public class POListItem {
+        public string REFERENCEPO;
+        public int custid;
+    }
     public class InvoicesService
     {
         private readonly MsrDbContext _dbContext;
@@ -59,53 +63,17 @@ namespace Msr.Services.Invoices
             return ret;
         }
 
-        public List<string> InvoicePoList(bool onEdit)
+        public List<POListItem> InvoicePoList(bool onEdit)
         {
-            //var flag = false;
-
-            //var woItem = _dbContext.InvoiceWorkItems.ToList();
-
-            //// JG: I ADDED THE BREAK STATEMENT LOGIC BELOW, IT SEEMED LIKE ONCE THE FLAG WAS SET TO TRUE NO NEED TO KEEP ITERATING
-            
-            //foreach (var item in woItem)
-            //{
-            //    var invoicePoWorkItems = InvoiceViewList().Where(x => x.Status == "FINISHED" && x.CustPurchNum == item.RefPo).Distinct().ToList();
-
-            //    foreach (var refPo in invoicePoWorkItems)
-            //    {
-            //        var woItemCount = _dbContext.InvoiceWorkItems.Count(x => x.RefPo == refPo.CustPurchNum);
-
-            //        if (invoicePoWorkItems.Count == woItemCount)
-            //        {
-            //            flag = true;
-
-            //            break;
-            //        }
-            //    }
-
-            //    if (flag == true)
-            //    {
-            //        break;
-            //    }
-            //}
-
-            //if (flag && !onEdit)
-            //{
-            //    return InvoiceViewList().Where(x => x.Status == "FINISHED" && x.CustPurchNum != null &&
-            //    !_dbContext.InvoiceWorkItems.Where(y => y.RefPo == x.CustPurchNum && y.ItemId == x.FillItemId).Select(y => y.RefPo).Contains(x.CustPurchNum))
-            //    .Select(x => x.CustPurchNum).Distinct().ToList();
-            //}
-
-            // return InvoiceViewList().Where(x => x.Status == "FINISHED" && x.CustPurchNum != null).Select(x => x.CustPurchNum).Distinct().ToList();
-
             return GetDistinctPOList();
         }
 
-        public List<string> GetDistinctPOList()
+        public List<POListItem> GetDistinctPOList()
         {
-            string sql = $"SELECT REFERENCEPO FROM A_POS_WITH_COMPLETED_WOS ORDER BY REFERENCEPO";
+            string sql = $"SELECT REFERENCEPO, custid FROM A_POS_WITH_COMPLETED_WOS ORDER BY REFERENCEPO";
 
-            List<string> distinctPOList = _dbContext.Database.SqlQuery<String>(sql).Distinct().OrderBy(x => x).ToList();
+            List<POListItem> distinctPOList =
+                _dbContext.Database.SqlQuery<POListItem>(sql).Distinct().OrderBy(x => x.REFERENCEPO).ToList();
 
             return distinctPOList;
         }
@@ -247,7 +215,7 @@ namespace Msr.Services.Invoices
             }
 
             invoiceArchiveMemoryStream.Seek(0, SeekOrigin.Begin);
-            
+
             return invoiceArchiveMemoryStream;
         }
 

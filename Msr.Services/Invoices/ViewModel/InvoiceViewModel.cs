@@ -117,7 +117,7 @@ namespace Msr.Services.Invoices.ViewModel
                 Value = x.ToString()
             }).OrderBy(o => o.Text).ToList();
 
-            PoList.Insert(0, new SelectListItem() { Value = "", Text = @"Select Po" });
+            PoList.Insert(0, new SelectListItem() { Value = "", Text = @"Select Client" });
 
             ClientList = purchesOrderService.GetCompaniesList().Select(x => new SelectListItem
             {
