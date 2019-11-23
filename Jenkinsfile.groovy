@@ -46,7 +46,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        if(env.JOB_NAME == "MSR-FSR/Answer2.0/Stage") {
+                        if(env.JOB_NAME == "MSR-FSR/Answer2.0/Stage" || env.JOB_NAME == "MSR-FSR/Answer2.0/stage") {
                             bat label: '', script: 'sqlpackage.exe /a:script /SourceFile:%WORKSPACE%\\Msr.Database\\bin\\Release\\Msr.Database.dacpac /TargetConnectionString:"Data Source=bang.msr-fsr.com;Initial Catalog=Answer2_Stage;User Id=sa;Password=L8xvg2FGqs7CEQ+s;Integrated Security=true" /OutputPath:temp.sql'
                         } else {
                             echo "Only generating a script for Stage"
@@ -123,7 +123,7 @@ pipeline {
                         try {
                             if(env.JOB_NAME == "MSR-FSR/Answer2.0/dev") {
                                 deploy("${APP_NAME_DEV}","${DEPLOY_GROUP_DEV}")
-                            } else if(env.JOB_NAME == "MSR-FSR/Answer2.0/Stage") {
+                            } else if(env.JOB_NAME == "MSR-FSR/Answer2.0/Stage" || env.JOB_NAME == "MSR-FSR/Answer2.0/stage") {
                                 deploy("${APP_NAME_STAGE}","${DEPLOY_GROUP_STAGE}")
                             } else if(env.JOB_NAME == "MSR-FSR/Answer2.0/master") {
                                 deploy("${APP_NAME_PROD}","${DEPLOY_GROUP_PROD}")
