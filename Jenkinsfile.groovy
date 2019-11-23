@@ -61,7 +61,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        if(env.JOB_NAME == "MSR-FSR/Answer2.0/Stage") {
+                        if(env.JOB_NAME == "MSR-FSR/Answer2.0/Stage" || env.JOB_NAME == "MSR-FSR/Answer2.0/stage") {
                             bat label: '', script: 'sqlpackage.exe /a:publish /SourceFile:%WORKSPACE%\\Msr.Database\\bin\\Release\\Msr.Database.dacpac /TargetConnectionString:"Data Source=bang.msr-fsr.com;Initial Catalog=Answer2_Stage;User Id=sa;Password=L8xvg2FGqs7CEQ+s;Integrated Security=true"'
                         } else {
                             echo "Only publishing a script for Stage"
