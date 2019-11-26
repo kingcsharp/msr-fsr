@@ -230,6 +230,9 @@ namespace Answer.Web.Controllers
         {
             var currentUser = GetCurrentUser();
 
+            // LISTBOX IS DISABLED AND SET TO READ-ONLY - VALUE IS NOT POSTED OR SET ON THE MODEL
+            model.SupplierDepartment = "2";
+
             if (ModelState.IsValid)
             {
                 model.NTLogin = currentUser.Id;
@@ -373,7 +376,8 @@ namespace Answer.Web.Controllers
             var OwnerList = _purchesOrderService.PurchasedOrderOwnerList().Select(x => new SelectListItem
             {
                 Text = x.Name,
-                Value = x.Id.ToString()
+                Value = x.Id.ToString(),
+                Selected = x.Id == "2" // DEFAULT TO MSR-FSR
             }).OrderBy(o => o.Text).ToList();
 
             var locList = _purchesOrderService.PurchasedOrderLocationList()
