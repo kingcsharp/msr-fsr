@@ -67,19 +67,9 @@ namespace Msr.Services.EquipmentMaintenances
             return response;
         }
 
-        public List<LocationView> GetLocation()
-        {
-            return _dbContext.LocationViews.Where(x => x.ParentLocation == null && x.Name != "").ToList();
-        }
-
         public List<LocationView> GetEquipmentRoom()
         {
             return _dbContext.LocationViews.Where(x => x.ParentLocation != null).ToList();
-        }
-
-        public List<LocationView> GetPrimaryLocation()
-        {
-            return _dbContext.LocationViews.Where(x => x.ParentLocation == null).ToList();
         }
 
         public Models.EquipmentMaintenances.EquipmentMaintenance GetById(int id)
