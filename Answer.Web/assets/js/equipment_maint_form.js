@@ -1,9 +1,6 @@
 (function () {
     $(document).ready(function () {
-        $('#add-equipment-maintenace').on('click', function () {
-            $('#EquipmentMaintenance').submit();
-        });
-
+        
         $('.select').select2();
         $('#error').hide();
         $('.datepick').datetimepicker();
@@ -36,7 +33,7 @@
         $('#EquipmentMaintenance')
             .find('[name="RoomEquipmentId"]')
             .select2()
-            .change(function (e) {
+            .change(function () {
                 $('#EquipmentMaintenance').bootstrapValidator('revalidateField', 'RoomEquipmentId');
             })
             .end()
@@ -48,7 +45,6 @@
                     validating: 'glyphicon glyphicon-refresh'
                 },
                 live: 'enabled',
-                submitButtons: 'input[type="submit"]',
                 fields: {
                     RoomEquipmentId: {
                         validators: {
