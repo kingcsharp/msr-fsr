@@ -412,6 +412,7 @@
     <Content Include="assets\css\bootstrap-theme.min.css" />
     <Content Include="assets\css\bootstrap.css" />
     <Content Include="assets\css\bootstrap.min.css" />
+    <Content Include="assets\css\bootstrapValidator.min.css" />
     <Content Include="assets\css\checkbox3.css" />
     <Content Include="assets\css\checkbox3.min.css" />
     <Content Include="assets\css\dataTables.bootstrap.css" />
@@ -572,6 +573,7 @@
     <Content Include="assets\js\BootstrapFileInput\js\fileinput-custom.min.js">
       <DependentUpon>fileinput-custom.js</DependentUpon>
     </Content>
+    <Content Include="assets\js\bootstrapValidator.min.js" />
     <Content Include="assets\js\Chart.js" />
     <Content Include="assets\js\grids\engineer.min.js">
       <DependentUpon>engineer.js</DependentUpon>

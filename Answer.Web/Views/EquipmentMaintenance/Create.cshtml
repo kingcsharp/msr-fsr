@@ -6,9 +6,15 @@
 <link href="~/assets/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
 <link rel="stylesheet" type="text/css" href="/assets/css/themes/flat-blue.css">
 <link rel="stylesheet" type="text/css" href="/assets/css/ui.jqgrid-bootstrap-ui.css">
+<link rel="stylesheet" href="/assets/css/bootstrapValidator.min.css" />
 <link rel="stylesheet" type="text/css" href="/assets/css/ui.jqgrid.css">
 <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
 <link href="~/assets/css/bootstrap-datetimepicker.css" rel="stylesheet" />
+<style>
+    .form-horizontal .has-feedback .form-control-feedback {
+        right: 25px;
+    }
+</style>
 <div class="container-fluid">
     <div class="side-body padding-top">
         <div class="row">
@@ -16,7 +22,7 @@
         </div>
         <div class="row" id="maintenanceForm">
             <div class="col-lg-12">
-                @using (Html.BeginForm("Create", "EquipmentMaintenance", FormMethod.Post, new { @class = "form-horizontal" }))
+                @using (Html.BeginForm("Create", "EquipmentMaintenance", FormMethod.Post, new { @id = "EquipmentMaintenance", @class = "form-horizontal" }))
                 {
                     @Html.Partial("Message")
 
@@ -26,34 +32,29 @@
                             <div class="col-md-8">
                                 @Html.EditorFor(model => model.ScanBarcode, new { htmlAttributes = new { @class = "form-control input-md", @placeholder = "Put cursor here to scan" } })
                                 @Html.ValidationMessageFor(model => model.ScanBarcode, "", new { @class = "text-danger" })
-                                <span class="help-block">Or Manually select Location below</span>
-                                <div class="alert alert-info">Entry of barcode above will update the select values below on match</div>
-                                <div id="error" class="alert alert-danger"></div>
+                                <div id="barcode-info" class="alert alert-info" style="margin: 10px 0 0 0;">Entry of barcode above will update the select values below on match. Or you can manually select Location below.</div>
+                                <div id="error" class="alert alert-danger" style="margin: 10px 0 0 0;"></div>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-2 control-label" for="Sublocation2">Select Room/Equipment</label>
+                            <label class="col-md-2 control-label" for="RoomEquipmentId">Select Room/Equipment</label>
                             <div class="col-md-8">
-                                @Html.DropDownListFor(model => model.RoomEquipmentId, Model.RoomEquipmentList, "Please Select a Room/Equipment", new { @class = "form-control select selectroomequipment" })
+                                @Html.DropDownListFor(model => model.RoomEquipmentId, Model.RoomEquipmentList, "--Select Room or Equipment--", new { name = "RoomEquipmentId", @class = "form-control select selectroomequipment" })
                                 @Html.ValidationMessageFor(model => model.RoomEquipmentId, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-md-2 control-label" for="DateTime">Created On</label>
-                            <div class="input-group datepick  col-md-8">
-                                @Html.EditorFor(model => model.DateTime, new { htmlAttributes = new { @class = "form-control datepick ", @placeholder = "Current Date Time", @style = "width:530px; margin-left:13px;", } })
-                                <div style="width:80px; height:35px;margin-left:515px;">
-                                    <span class="input-group-addon"><span class="glyphicon glyphicon-th" style="height:20px;"></span></span>
-                                </div>
+                            <div class="col-md-4">
+                                @Html.EditorFor(model => model.DateTime, new { htmlAttributes = new { @class = "form-control datepick", @placeholder = "Current Date Time", required = "required" } })
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-2 control-label" for="EquipmentTroubleState">Trouble State</label>
+                            <label class="col-md-2 control-label" for="TroubleState">Trouble State</label>
                             <div class="col-md-8">
                                 <div class="make-switch switch-small" data-on="success" data-off="warning" data-on-text="Yes" data-off-text="No" style="display: inline-block">
                                     @Html.CheckBoxFor(model => model.TroubleState, new { @class = "checkbox", @id = "troubleStateSwitch" })
                                 </div>
-                                @Html.ValidationMessageFor(model => model.TroubleState, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         @if (Model.Roles.Any(x => x.Role_Name == RoleConstants.ProductionManager || x.Role_Name == RoleConstants.MaintenanceTechnician))
@@ -71,36 +72,29 @@
                         }
                         @if (Model.Roles.Any(x => x.Role_Name == RoleConstants.ProductionManager))
                         {
-                            <div class="form-group">
-                                <label class="col-md-2 control-label" for="PMLastCompletedDate">PM Last Completed Date</label>
-                                <div class="col-md-8">
-                                    <div style="width: 91%;float: left">
-                                        @Html.EditorFor(model => model.PemLastCompletedDate, new { htmlAttributes = new { @class = "form-control datepick lastcompletedate", @placeholder = "PM Last Completed Date", @style = "", } })
-                                        @Html.ValidationMessageFor(model => model.PemLastCompletedDate, "", new { @class = "text-danger" })
-                                    </div>
-                                    <div style="width: 9%; height: 35px;float: left">
-                                        <span class="input-group-addon"><i class="fa fa-calendar" style="height: 19px;"></i></span>
+                            <div id="preventative">
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label" for="PMLastCompletedDate">PM Last Completed Date</label>
+                                    <div class="col-md-4">
+                                        @Html.EditorFor(model => model.PemLastCompletedDate, new { htmlAttributes = new { @id = "PemLastCompletedDate", @class = "form-control datepick", @placeholder = "PM Last Completed Date", @style = "", } })
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="form-group">
-                                <label class="col-md-2 control-label" for="scancode">Frequency Field:</label>
-                                <div class="col-md-8">
-                                    @Html.EditorFor(model => model.FrequencyField, new { htmlAttributes = new { @class = "form-control input-md", @placeholder = "" } })
-                                    @Html.ValidationMessageFor(model => model.FrequencyField, "", new { @class = "text-danger" })
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label" for="scancode">Maintenance Frequency</label>
+                                    <div class="col-md-4">
+                                        @Html.EditorFor(model => model.FrequencyField, new { htmlAttributes = new { @id = "FrequencyField", @class = "form-control input-md required", @placeholder = "" } })
+                                        @Html.ValidationMessageFor(model => model.FrequencyField, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="col-md-1" style="margin:8px 0 0 -20px">Days</div>
                                 </div>
                             </div>
                         }
-                        else
-                        {
-                            @Html.HiddenFor(model => model.PemLastCompletedDate)
-                            @Html.HiddenFor(model => model.FrequencyField)
-                        }
+
                         <div class="form-group">
                             <label class="col-md-2 control-label" for="save"></label>
                             <div class="col-md-8">
-                                <input type="submit" value="Submit" class="btn btn-success" />
+                                <input id="add-equipment-maintenace" type="submit" name="submit" value="Submit" class="btn btn-success" />
                                 @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-danger" })
                             </div>
                         </div>
@@ -112,69 +106,8 @@
 </div>
 @section scripts
 {
-    <script src="~/assets/js/moment.min.js"></script>
-    <script src="~/assets/js/bootstrap-datetimepicker.min.js"></script>
-    @Scripts.Render("~/bundles/js/jqueryval")
-    <script type="text/javascript">
-
-        $(document).ready(function () {
-            $('.select').select2();
-            $('#error').hide();
-            $('.datepick').datetimepicker();
-
-            $('.dateSelecter').click(function (parameters) {
-                $(this).find('.datepick').focus();
-            });
-
-            $('#troubleStateSwitch').bootstrapSwitch();
-
-            $('#ScanBarcode').on('keyup', function () {
-                if ($(this).val().length > 3) {
-
-                    var id = $(this).val();
-                    eLoaderOpen();
-                    $.ajax({
-                        type: "POST",
-                        url: "/EquipmentMaintenance/GetScanBarCodeLocations/" + id,
-                        success: function (data) {
-                            if (data.locationId === "") {
-                                $('#error').html('Location not found, please select manually');
-                                $('#error').show();
-                            } else {data.locationId
-                                if (data.locationId !== "") {
-                                    $("#RoomEquipmentId").val(data.locationId).trigger('change');
-                                }
-                            }
-                            eLoaderClose();
-                        },
-                        error: function (error) {
-                            eLoaderError(error);
-                        }
-                    });
-                }
-            });
-        });
-
-
-        //var selectRoomEquipment = $(".selectroomequipment").select2({
-        //    tags: [],
-        //    tokenSeparators: [','],
-        //    multiple: false,
-        //    allowClear: true,
-        //    placeholder: "Select Room/Equipment",
-        //    formatNoMatches: function () {
-        //        return '';
-        //    }
-        //});
-
-        @*var valueRoomEquipment = '@selectRoomEquipment';
-        var selectedRoomEquipmentList = valueRoomEquipment.split(",");
-        var currentRoomEquipmentList = selectedRoomEquipmentList;*@
-
-        //$(".selectroomequipment").val(selectedRoomEquipmentList).trigger("change");
-
-
-
-
-    </script>
+    <script type="text/javascript" src="~/assets/js/moment.min.js"></script>
+    <script type="text/javascript" src="~/assets/js/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript" src="~/assets/js/bootstrapValidator.min.js"></script>
+    <script type="text/javascript" src="~/assets/js/equipment_maint_form.js"></script>
 }
