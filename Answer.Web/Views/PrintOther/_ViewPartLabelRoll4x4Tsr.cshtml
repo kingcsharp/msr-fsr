@@ -1,0 +1,133 @@
+﻿@model Msr.Services.Orders.Messaging.PartLabelTsrDetailsResponse
+<style>
+    @@media print {
+
+        @@page {
+            size: 4.125in auto;
+        }
+
+        body {
+            margin-top: .0625in;
+            margin-left: .0625in;
+        }
+    }
+
+    .roll-container {
+        display: table-cell;
+        vertical-align: middle;
+        margin-top: .0625in;
+        margin-left: .0625in;
+        width: 4.125in;
+    }
+
+    table.tight {
+        font: small Arial, Helvetica, sans-serif !important;
+        font-size: 12px !important;
+        width: 100%;
+    }
+
+    tr {
+        height: 20px;
+    }
+
+    td {
+        text-align: left;
+    }
+
+    .roll-label {
+        height: 4in;
+        width: 4in;
+        margin-bottom: 0.125in;
+        padding: .25in;
+        left: 0in;
+        top: 0in;
+        border: 1px dashed #ccc;
+        border-radius: 6px;
+    }
+
+    .coded {
+        border: 1px solid #000;
+        width: 100%;
+        display: block;
+    }
+</style>
+<div class="roll-container">
+    @foreach (var rollLabel in Model.GetPartsAndKitsLabelsResult)
+    {
+
+        <div class="roll-label">
+            <table class="tight">
+                <tbody>
+                    <tr>
+                        <td width="65%">
+                            <img src="~/assets/img/msr-label-logo.png" border="0" /><br />
+                            <span class="date">Date:<strong>@rollLabel.Due_Date</strong></span><br />
+                            Site: <strong>MSR-FSR @rollLabel.Site_Name</strong><br />
+                            Customer-WO: <strong>@rollLabel.WO_Item_Number</strong>
+                            <div class="coded">
+                                PO #: <strong>@rollLabel.PO_Number</strong><br />
+                                <svg class="barcode"
+                                    jsbarcode-value="@rollLabel.PO_Number"
+                                    jsbarcode-format="CODE128"
+                                    jsbarcode-displayValue="false"
+                                    jsbarcode-height="40">
+                                </svg>
+                            </div>
+
+                        </td>
+                        <td width="35%"></td>
+                            <img src="@rollLabel.Part_Image_URL" border="0" />
+                    </tr>
+
+                    <tr>
+                        <td width="100%">
+                            <div class="coded">
+                                Part Desc: <strong>@rollLabel.Part_Desc</strong><br />
+                                <div style="display:inline-block;width:50%">
+                                    Customer Part #: <strong>@rollLabel.Company_Part_Number</strong>
+                                    <svg class="barcode"
+                                         jsbarcode-value="@rollLabel.Company_Part_Number"
+                                         jsbarcode-format="CODE128"
+                                         jsbarcode-displayValue="false"
+                                         jsbarcode-height="40">
+                                    </svg>
+                                </div>
+
+                                <div style="display:inline-block;width:50%">
+                                    OEM Part #: <strong>@rollLabel.OEM_Part_Number</strong>
+                                    <svg class="barcode"
+                                         jsbarcode-value="@rollLabel.OEM_Part_Number"
+                                         jsbarcode-format="CODE128"
+                                         jsbarcode-displayValue="false"
+                                         jsbarcode-height="40">
+                                    </svg>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="50%">
+                            <div class="coded">
+                                Serial #: <strong>@(rollLabel.Serial != null ? rollLabel.Serial : "N/A")</strong><br />
+                                <svg class="barcode"
+                                     jsbarcode-value="@(rollLabel.Serial != null ? rollLabel.Serial : "N/A")"
+                                     jsbarcode-format="CODE128"
+                                     jsbarcode-displayValue="false"
+                                     jsbarcode-height="40">
+                                </svg><br />
+                                This Part Processed <strong>@rollLabel.Cycle_Count</strong> time(s)
+                            </div>
+                        </td>
+                        <td>CAN ONLY OPEN IN <br />CLASS 100 CLEANROOM <br />OR BETTER</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+<script src="~/assets/js/JsBarcode.all.min.js"></script>
+<script>
+    $(document).ready(function () {
+        JsBarcode(".barcode").init();
+    });
+</script>
