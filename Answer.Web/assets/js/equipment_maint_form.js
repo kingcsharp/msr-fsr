@@ -1,4 +1,4 @@
-(function () {
+
     $(document).ready(function () {
         
         $('.select').select2();
@@ -32,7 +32,7 @@
 
         $('#EquipmentMaintenance')
             .find('[name="RoomEquipmentId"]')
-            .select2()
+            .select()
             .change(function () {
                 $('#EquipmentMaintenance').bootstrapValidator('revalidateField', 'RoomEquipmentId');
             })
@@ -123,4 +123,3 @@
             }
         });
     });
-})();
