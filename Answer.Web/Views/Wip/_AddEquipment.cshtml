@@ -1,129 +1,98 @@
 ﻿@using Msr.Infrastructure.Common.Constansts
 @model Msr.Services.EquipmentMaintenances.ViewModels.CreateEquipmentMaintenanceViewModel
-@using (Html.BeginForm("AddEquipmentMaintenance", "Wip", FormMethod.Post, new { @class = "form-horizontal add-equipment-maintenace" }))
+
+<link rel="stylesheet" href="/assets/css/bootstrapValidator.min.css" />
+<style>
+    .form-horizontal .has-feedback .form-control-feedback {
+        right: 25px;
+    }
+</style>
+
+@using (Html.BeginForm("AddEquipmentMaintenance", "Wip", FormMethod.Post, new {@id = "EquipmentMaintenance", @class = "form-horizontal add-equipment-maintenace" }))
 {
     @Html.Partial("Message")
 
-    <fieldset>
-        <input type="hidden" name="id" value="@ViewBag.FillId " />
-        <div class="form-group">
-            <label class="col-md-2 control-label" for="scancode">Scan Barcode</label>
-            <div class="col-md-8">
-                @Html.EditorFor(model => model.ScanBarcode, new { htmlAttributes = new { @class = "form-control input-md", @placeholder = "Put cursor here to scan" } })
-                @Html.ValidationMessageFor(model => model.ScanBarcode, "", new { @class = "text-danger" })
-                <span class="help-block">Or Manually select Location below</span>
-                <div class="alert alert-info">Entry of barcode above will update the select values below on match</div>
-                <div id="error" class="alert alert-danger"></div>
+<fieldset>
+    <input type="hidden" name="id" value="@ViewBag.FillId " />
+    <div class="form-group">
+        <label class="col-md-2 control-label" for="scancode">Scan Barcode</label>
+        <div class="col-md-8">
+            @Html.EditorFor(model => model.ScanBarcode, new { htmlAttributes = new { @class = "form-control input-md", @placeholder = "Put cursor here to scan" } })
+            @Html.ValidationMessageFor(model => model.ScanBarcode, "", new { @class = "text-danger" })
+            <span class="help-block">Or Manually select Location below</span>
+            <div class="alert alert-info">Entry of barcode above will update the select values below on match</div>
+            <div id="error" class="alert alert-danger"></div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label" for="RoomEquipmentId">Select Room/Equipment</label>
+        <div class="col-md-8">
+            @Html.DropDownListFor(model => model.RoomEquipmentId, Model.RoomEquipmentList, "Please Select a Room/Equipment", new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.RoomEquipmentId, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label" for="DateTime">Created On</label>
+        <div class="datepick col-md-8">
+            @Html.EditorFor(model => model.DateTime, new { htmlAttributes = new { @class = "form-control datepick ", @placeholder = "Current Date Time", @style = "", } })
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label" for="TroubleState">Trouble State</label>
+        <div class="col-md-8">
+            <div class="make-switch switch-small" data-on="success" data-off="warning" data-on-text="Yes" data-off-text="No" style="display: inline-block">
+                @Html.CheckBoxFor(model => model.TroubleState, new { @class = "checkbox", @id = "troubleStateSwitch" })
             </div>
         </div>
-        <div class="form-group">
-            <label class="col-md-2 control-label" for="Sublocation2">Select Room/Equipment</label>
-            <div class="col-md-8">
-                @Html.DropDownListFor(model => model.RoomEquipmentId, Model.RoomEquipmentList, "Please Select a Room/Equipment", new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.RoomEquipmentId, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-md-2 control-label" for="DateTime">Created On</label>
-            <div class="datepick col-md-8">
-                @Html.EditorFor(model => model.DateTime, new { htmlAttributes = new { @class = "form-control datepick ", @placeholder = "Current Date Time", @style = "", } })
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-md-2 control-label" for="EquipmentTroubleState">Trouble State</label>
-            <div class="col-md-8">
-                <div class="make-switch switch-small" data-on="success" data-off="warning" data-on-text="Yes" data-off-text="No" style="display: inline-block">
-                    @Html.CheckBoxFor(model => model.TroubleState, new { @class = "checkbox", @id = "troubleStateSwitch" })
-                </div>
-                @Html.ValidationMessageFor(model => model.TroubleState, "", new { @class = "text-danger" })
-            </div>
-        </div>
+    </div>
 
-        @if (Model.Roles.Any(x => x.Role_Name == RoleConstants.ProductionManager || x.Role_Name == RoleConstants.MaintenanceTechnician))
-        {
-            <div class="form-group">
-                <label class="col-md-2 control-label" for="comments">Comments</label>
-                <div class="col-md-8">
-                    @Html.TextAreaFor(model => model.Comments, new { @class = "form-control input-md" })
-                </div>
+    @if (Model.Roles.Any(x => x.Role_Name == RoleConstants.ProductionManager || x.Role_Name == RoleConstants.MaintenanceTechnician))
+    {
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="comments">Comments</label>
+            <div class="col-md-8">
+                @Html.TextAreaFor(model => model.Comments, new { @class = "form-control input-md" })
             </div>
-        }
-        else
-        {
-            @Html.HiddenFor(model => model.Comments)
-        }
-        @if (Model.Roles.Any(x => x.Role_Name == RoleConstants.ProductionManager))
-        {
+        </div>
+    }
+    else
+    {
+        @Html.HiddenFor(model => model.Comments)
+    }
+    @if (Model.Roles.Any(x => x.Role_Name == RoleConstants.ProductionManager))
+    {
+        <div id="preventative">
             <div class="form-group">
                 <label class="col-md-2 control-label" for="PMLastCompletedDate">PM Last Completed Date</label>
-                <div class="datepick col-md-8">
-                    @Html.EditorFor(model => model.PemLastCompletedDate, new { htmlAttributes = new { @class = "form-control datepick lastcompletedate", @placeholder = "PM Last Completed Date", @style = "", } })
+                <div class="datepick col-md-4">
+                    @Html.EditorFor(model => model.PemLastCompletedDate, new { htmlAttributes = new { @class = "form-control datepick", @placeholder = "PM Last Completed Date", @style = "", } })
                 </div>
             </div>
 
             <div class="form-group">
-                <label class="col-md-2 control-label" for="scancode">Frequency Field:</label>
-                <div class="col-md-8">
-                    @Html.EditorFor(model => model.FrequencyField, new { htmlAttributes = new { @class = "form-control input-md", @placeholder = "" } })
+                <label class="col-md-2 control-label" for="scancode">Manintenance Frequency:</label>
+                <div class="col-md-4">
+                    @Html.EditorFor(model => model.FrequencyField, new { htmlAttributes = new { @class = "form-control input-sm", @placeholder = "" } })
                     @Html.ValidationMessageFor(model => model.FrequencyField, "", new { @class = "text-danger" })
                 </div>
+                <div class="col-md-1" style="margin:8px 0 0 -20px">Days</div>
             </div>
-        }
-
-
-
+        </div>
+    }
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="save"></label>
+            <div class="col-md-8">
+                <input  type="submit" name="go" value="Submit" class="btn btn-success" />
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-close-o"></i> Cancel</button>
+            </div>
+        </div>
+    
     </fieldset>
 }
 
-@section scripts
-{
+<script src="~/assets/js/moment.min.js"></script>
+<script src="~/assets/js/bootstrap-datetimepicker.min.js"></script>
+<script src="~/assets/js/bootstrap-switch.min.js"></script>
+<script type="text/javascript" src="~/assets/js/bootstrapValidator.min.js"></script>
+<script src="~/assets/js/equipment_maint_form.js"></script>
 
-    <script src="~/assets/js/bootstrap-datetimepicker.js"></script>
-    @Scripts.Render("~/bundles/js/jqueryval")
-    <script type="text/javascript">
-
-        $(document).ready(function () {
-
-            $('#add-equipment-maintenace').on('click', function () {
-                $('.add-equipment-maintenace').submit();
-            });
-
-            $('#error').hide();
-            $('.datepick').datetimepicker();
-
-            $('.dateSelecter').click(function (parameters) {
-                $(this).find('.datepick').focus();
-            });
-
-            $('#troubleStateSwitch').bootstrapSwitch();
-
-            $('#ScanBarcode').on('keyup', function () {
-                if ($(this).val().length > 3) {
-
-                    var id = $(this).val();
-                    eLoaderOpen()
-
-                    $.ajax({
-                        type: "POST",
-                        url: "/EquipmentMaintenance/GetScanBarCodeLocations/" + id,
-                        success: function (data) {
-                            if (data.locationId === "") {
-                                $('#error').html('Location not found, please select manually');
-                                $('#error').show();
-                            } else {
-                                data.locationId
-                                if (data.locationId !== "") {
-                                    $("#RoomEquipmentId").val(data.locationId).trigger('change');
-                                }
-                            }
-                            eLoaderClose();
-                        },
-                        error: function (error) {
-                            eLoaderError(error);
-                        }
-                    });
-                }
-            });
-        });
-    </script>
-}

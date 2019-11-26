@@ -13,20 +13,13 @@
     <div class="input-group date  col-md-8">
         @Html.EditorFor(model => model.DateTime, new { htmlAttributes = new { @class = "form-control datepick readonly", @placeholder = "Current Date Time", @style = "width:530px; margin-left:13px;", } })
         @Html.HiddenFor(model => model.DateTime)
-        <div style="width:80px; height:35px;margin-left:515px;">
-            <span class="input-group-addon"><span class="glyphicon glyphicon-th" style="height:20px;"></span></span>
-        </div>
     </div>
 </div>
 <div class="form-group">
     <label class="col-md-2 control-label" for="EquipmentTroubleState">Trouble State</label>
     <div class="col-md-8">
-        <div class="checkbox">
-            <label for="EquipmentState-0">
-                @Html.CheckBoxFor(model => model.TroubleState, new { @class = "checkbox readonly" })
-                @Html.ValidationMessageFor(model => model.TroubleState, "", new { @class = "text-danger " })
-                Yes
-            </label>
+        <div class="make-switch switch-small" data-on="success" data-off="warning" data-on-text="Yes" data-off-text="No" style="display: inline-block">
+            @Html.CheckBoxFor(model => model.TroubleState, new { @class = "checkbox readonly" })
         </div>
     </div>
 </div>
@@ -65,9 +58,6 @@ else
             <div style="width: 91%;float: left">
                 @Html.EditorFor(model => model.PemLastCompletedDate, new { htmlAttributes = new { @class = "form-control datepick lastcompletedate", @placeholder = "PM Last Completed Date", @style = "", } })
                 @Html.ValidationMessageFor(model => model.PemLastCompletedDate, "", new { @class = "text-danger" })
-            </div>
-            <div style="width: 9%; height: 35px;float: left">
-                <span class="input-group-addon"><i class="fa fa-calendar" style="height: 19px;"></i></span>
             </div>
         </div>
     </div>

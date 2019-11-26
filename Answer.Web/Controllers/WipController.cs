@@ -936,7 +936,7 @@ namespace Answer.Web.Controllers
 
             var hasProductionManagerRole = myRoles.Any(x => x.Role_Name.Contains(RoleConstants.ProductionManager));
 
-            if (hasProductionManagerRole)
+            if (hasProductionManagerRole && !model.TroubleState)
             {
                 if (!model.PemLastCompletedDate.HasValue)
                 {
