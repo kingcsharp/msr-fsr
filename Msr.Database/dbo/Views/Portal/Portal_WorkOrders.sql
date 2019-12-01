@@ -1,6 +1,4 @@
 ﻿
-
-
 CREATE VIEW [dbo].[Portal_WorkOrders]
 
 AS
@@ -91,7 +89,7 @@ purch.PURCHASER AS Purchaser,
 PURCHITEM.MATERIAL_TRANSFER_TICKET_NUMBER AS CUSTMTTN,
 PA.PartId,
 PA.PartName,
-Product.CycleTime AS CycleCount 
+cycle.CycleCount
 FROM         dbo.A_V_COMPANIES_APPROVED_DATA_QUICK AS customer 
 INNER JOIN dbo.A_V_PURCHASES_APPROVED_DATA AS purch ON customer.ID = purch.CUSTOMER_CO 
 RIGHT OUTER JOIN dbo.A_TASK_COMPLETION_STATS 
@@ -111,6 +109,13 @@ OUTER APPLY
 SELECT top 1 p.CompanyPartNumber FROM Portal_PartsView p
 WHERE p.ROOT = dbo.A_V_ACTUAL_PARTS_QUICK.PART_ID
 ) part
+OUTER APPLY
+(
+    SELECT count(1) AS CycleCount
+    FROM PartsTransactionLog p
+    WHERE p.serialnumber = dbo.A_V_ACTUAL_PARTS_QUICK.SERIAL
+    AND p.partid = PA.partid
+) cycle
 WHERE     (t.STATUS IN ('REQUESTED', 'ACCEPTED', 'CLOSED', 'FINISHED')) AND (toi.PURCHASE_ITEM_ID IS NOT NULL)
 
 GO
