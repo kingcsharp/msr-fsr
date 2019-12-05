@@ -233,6 +233,7 @@ namespace Answer.Web.Controllers
             if (ModelState.IsValid)
             {
                 model.NTLogin = currentUser.Id;
+                model.SupplierDepartment = "2";
 
                 var response = _purchesOrderService.Create(model);
 
