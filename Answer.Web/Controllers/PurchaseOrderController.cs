@@ -95,9 +95,9 @@ namespace Answer.Web.Controllers
                         totalRows = totalRows.Where(x => x.SupplierName.ToLower().Contains(rule.data.ToLower()));
                     }
 
-                    else if (rule.field == nameof(PurchesOrderView.CustomerCo))
+                    else if (rule.field == nameof(PurchesOrderView.CustomerName))
                     {
-                        totalRows = totalRows.Where(x => x.CustomerCo.ToLower().Contains(rule.data.ToLower()));
+                        totalRows = totalRows.Where(x => x.CustomerName.ToLower().Contains(rule.data.ToLower()));
                     }
 
                     else if (rule.field == nameof(PurchesOrderView.OpenDate))
