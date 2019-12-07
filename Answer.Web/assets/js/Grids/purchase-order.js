@@ -138,23 +138,21 @@ Msr.PurchaseOrderGrid = Msr.PurchaseOrderGrid ||
                     align: 'left'
                 },
                 {
-                    label: 'Cust/Co/Dept',
-                    name: 'CustomerCo',
-                    index: 'CustomerCo',
+                    label: 'Customer',
+                    name: 'CustomerName',
+                    index: 'CustomerName',
                     colmenu: false,
-                    editable: false,
-                    editrules: { required: true },
+                    editable: true,
                     coloptions: {
                         sorting: false,
                         columns: true,
                         filtering: false,
-                        seraching: true,
+                        seraching: false,
                         grouping: false,
                         freeze: false
                     },
                     searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                    align: 'left',
-                    hidedlg: false
+                    align: 'left'
                 },
                 {
                     label: 'Open Date',
