@@ -575,11 +575,7 @@
     <Content Include="assets\help\master-admin-6.jpg" />
     <Content Include="assets\help\master-admin-7.jpg" />
     <Content Include="assets\help\master-admin-8.PNG" />
-    <Content Include="assets\img\app-header-bg.jpg" />
-    <Content Include="assets\img\background-network-electronics.jpg" />
-    <Content Include="assets\img\bg.jpg" />
     <Content Include="assets\img\clear.png" />
-    <Content Include="assets\img\contact-us-bg.jpg" />
     <Content Include="assets\img\default.png" />
     <Content Include="assets\img\icon-doc.png" />
     <Content Include="assets\img\icon-pdf.png" />
@@ -589,17 +585,12 @@
     <Content Include="assets\img\jpg.png" />
     <Content Include="assets\img\loading.gif" />
     <Content Include="assets\img\msr-ccs.png" />
+    <Content Include="assets\img\msr-label-logo.png" />
+    <Content Include="assets\img\msr-label-no-parts-image.png" />
     <Content Include="assets\img\NCR.PNG" />
     <Content Include="assets\img\nice_loader.gif" />
-    <Content Include="assets\img\profile-avatar.jpg" />
-    <Content Include="assets\img\profile-widget-avatar.jpg" />
-    <Content Include="assets\img\profile\picjumbo.com_HNCK4153_resize.jpg" />
-    <Content Include="assets\img\profile\profile-1.jpg" />
     <Content Include="assets\img\sprite-green.png" />
     <Content Include="assets\img\sprite-orange.png" />
-    <Content Include="assets\img\thumbnails\picjumbo.com_HNCK4737.jpg" />
-    <Content Include="assets\img\thumbnails\picjumbo.com_IMG_3241.jpg" />
-    <Content Include="assets\img\thumbnails\picjumbo.com_IMG_4566.jpg" />
     <Content Include="assets\js\ace\ace.js" />
     <Content Include="assets\js\ace\ace.min.js">
       <DependentUpon>ace.js</DependentUpon>
@@ -3463,6 +3454,7 @@
     <Content Include="Views\PrintOther\_ViewPartLabelRollTsr.cshtml" />
     <Content Include="Views\PrintOther\_ViewPartLabelTsr.cshtml" />
     <Content Include="Views\Report\FinancialDashboard.cshtml" />
+    <Content Include="Views\PrintOther\_ViewPartLabelRoll4x4Tsr.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
