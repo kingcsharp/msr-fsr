@@ -139,8 +139,8 @@ Msr.PurchaseOrderGrid = Msr.PurchaseOrderGrid ||
                 },
                 {
                     label: 'Customer',
-                    name: 'CustomerCo',
-                    index: 'CustomerCo',
+                    name: 'CustomerName',
+                    index: 'CustomerName',
                     colmenu: false,
                     editable: false,
                     editrules: { required: true },
