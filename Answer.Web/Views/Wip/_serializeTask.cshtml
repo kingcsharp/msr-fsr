@@ -15,7 +15,6 @@
     #serials .change-button {
         margin-top: 4px;
     }
-
 </style>
 
 
@@ -38,26 +37,35 @@
                     </td>
                     @foreach (var subPart in part)
                     {
-                        <td class="text-td" style="border-right: unset;">
-                            <div id="@i-show" data-index="@i" class="form-group">
-                                @if (subPart.Tree_Level == 0)
-                                {
-                                    <input id="@i-current-value" class="form-control" name="parts[@i].Serial" type="text" value="@subPart.Serial" disabled="disabled" />
-                                }
-                                else
-                                {
-                                    <input id="@i-current-value" class="form-control serialize-serial-num" name="parts[@i].Serial" type="text" value="@subPart.Serial" disabled="disabled" />
-                                }
+                    <td class="text-td" style="border-right: unset;">
+                        <div id="@i-show" data-index="@i" class="form-group">
+                            @if (subPart.Tree_Level == 0)
+                            {
+                                <input id="@i-current-value" class="form-control" name="parts[@i].Serial" type="text" value="@subPart.Serial" disabled="disabled" />
+                            }
+                            else
+                            {
+                                <input id="@i-current-value" class="form-control serialize-serial-num" name="parts[@i].Serial" type="text" value="@subPart.Serial" disabled="disabled" />
+                            }
+
+                            @if (ViewBag.HasStepRoles == true)
+                            {
                                 <input name="parts[@i].Id" type="hidden" value="@subPart.Id" />
                                 <input name="parts[@i].TreeLevel" type="hidden" value="@subPart.Tree_Level" />
                                 <button id="@subPart.Id" type="button" class=" btn btn-warning change-button">Change</button>
-                            </div>
+                            }
 
-                            <div id="@i-change" class="hidden form-group" data-index="@i">
-                                <input id="@i-new-value" class="form-control part-serial-number" type="text" placeholder="@subPart.Serial" />
-                                <button id="@i-submit" type="button" data-index="@i" data-part-id="@subPart.Id" class="btn-success btn submit-serial-number">Submit</button>
-                                <button id="@i-cancel" type="button" class="btn-danger btn cancel-button">Cancel</button>
-                            </div>
+                        </div>
+
+                            @if (ViewBag.HasStepRoles == true)
+                            {
+                                <div id="@i-change" class="hidden form-group" data-index="@i">
+                                    <input id="@i-new-value" class="form-control part-serial-number" type="text" placeholder="@subPart.Serial" />
+                                    <button id="@i-submit" type="button" data-index="@i" data-part-id="@subPart.Id" class="btn-success btn submit-serial-number">Submit</button>
+                                    <button id="@i-cancel" type="button" class="btn-danger btn cancel-button">Cancel</button>
+                                </div>
+                            }
+
                         </td>
                         <td style="border-left:unset;">
                             <div id="@i-results" class="hidden" style="margin-top:10px;"></div>
@@ -69,11 +77,16 @@
             }
         </tbody>
     </table>
-    <button type="button" class="btn-success btn" id="btn-save">Save</button>
-    <button type="button" class="btn-success btn" id="btn-save-complete-task" data-button-id="completeTask">Save & complete task</button>
+
+    if (ViewBag.HasStepRoles == true)
+    {
+        <button type="button" class="btn-success btn" id="btn-save">Save</button>
+        <button type="button" class="btn-success btn" id="btn-save-complete-task" data-button-id="completeTask">Save & Complete Task</button>
+    }
+
 }
 
-<script type="text/javascript">
+    <script type="text/javascript">
 
 	$(document).ready(function () {
 
@@ -162,4 +175,4 @@
 				});
 			});
 	});
-</script>
+    </script>

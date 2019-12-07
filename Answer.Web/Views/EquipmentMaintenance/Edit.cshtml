@@ -7,7 +7,7 @@
 <link rel="stylesheet" type="text/css" href="/assets/css/ui.jqgrid-bootstrap-ui.css">
 <link rel="stylesheet" type="text/css" href="/assets/css/ui.jqgrid.css">
 <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
-<link rel="stylesheet" type="text/css" href="/assets/css/hopscotch.css">
+<link href="~/assets/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
 
 
 <div class="container-fluid">
@@ -35,13 +35,12 @@
 {
     <script src="~/assets/js/moment.min.js"></script>
     <script src="~/assets/js/bootstrap-datetimepicker.min.js"></script>
-    @Scripts.Render("~/bundles/js/jqueryval")
-    @Scripts.Render("~/bundles/js/fileinput")
+
 
     <script type="text/javascript">
-
         $(document).ready(function () {
             $('.select').select2();
+            $('#troubleState').bootstrapSwitch();
 
             var hasProductionManagerRole = '@Model.Roles.Any(x => x.Role_Name == RoleConstants.ProductionManager)'
             var hasMaintenanceTechnician = '@Model.Roles.Any(x => x.Role_Name == RoleConstants.MaintenanceTechnician)'

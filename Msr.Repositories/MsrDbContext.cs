@@ -37,6 +37,7 @@ using Msr.Models.Menus;
 using Msr.Models.PartTypes;
 using Msr.Models.Workflows;
 using Msr.Models.Training;
+using Msr.Models.Reporting;
 
 namespace Msr.Repositories
 {
@@ -122,7 +123,10 @@ namespace Msr.Repositories
             modelBuilder.Entity<TrainingView>().ToTable("Portal_TrainingView");
             modelBuilder.Entity<ApprovedSitesAndRoomsView>().ToTable("A_V_LOCATIONS_APPROVED_SITES_AND_ROOMS");
             modelBuilder.Entity<ProductsSearchDataView>().ToTable("Portal_ProductsSearchDataView");
-    }
+            modelBuilder.Entity<CombinedFinancialData>().ToTable("Report_CombinedFinancialData");
+            modelBuilder.Entity<WorkOrdersWithoutInvoices>().ToTable("Report_WorkOrdersWithoutInvoices");
+            modelBuilder.Entity<ActualPartsHistory>().ToTable("Report_ActualPartHistory");
+        }
 
         public DbSet<AspNetUser> AspNetUsers { get; set; }
         public DbSet<AspNetRole> AspNetRoles { get; set; }
@@ -196,5 +200,8 @@ namespace Msr.Repositories
         public DbSet<TrainingView> TrainingViews { get; set; }
         public DbSet<ApprovedSitesAndRoomsView> ApprovedSitesAndRoomsViews { get; set; }
         public DbSet<ProductsSearchDataView> ProductsSearchDataView { get; set; }
+        public DbSet<CombinedFinancialData> CombinedFinancialData { get; set; }
+        public DbSet<WorkOrdersWithoutInvoices> WorkOrdersWithoutInvoices { get; set; }
+        public DbSet<ActualPartsHistory> ActualPartsHistory { get; set; }
     }
 }

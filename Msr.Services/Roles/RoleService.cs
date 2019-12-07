@@ -1,16 +1,17 @@
 ﻿using EntityFrameworkExtras.EF6;
+using LazyCache;
+using Msr.Models.Common;
+using Msr.Models.People;
 using Msr.Models.Roles;
 using Msr.Repositories;
+using Msr.Services.Documents;
+using Msr.Services.Roles.Messages;
 using Msr.Services.Roles.Procedures;
 using Msr.Services.Roles.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using Msr.Models.Common;
-using Msr.Models.People;
-using Msr.Services.Roles.Messages;
-using Msr.Services.Documents;
 
 namespace Msr.Services.Roles
 {
@@ -239,28 +240,69 @@ namespace Msr.Services.Roles
             return result;
         }
 
+        // TODO: WHEN I TRY TO ADDING CACHIGN TO THIS THE APP ERRORS OUT - COME BACK TO
+
         public List<GetMyRolesResult> RefreshUserRoles(string personId)
+        {
+            IAppCache cachingService = new CachingService();
+
+            Func<List<GetMyRolesResult>> refreshUserRolesDelegate = () => RefreshUserRolesDB(personId);
+
+            string globallyUniqueCacheItemName = $"RefreshUserRoles({personId})".Trim().ToUpper();
+
+            List<GetMyRolesResult> getMyRolesResult = cachingService.GetOrAdd(globallyUniqueCacheItemName, refreshUserRolesDelegate, DateTimeOffset.Now.AddHours(1));
+
+            return getMyRolesResult;
+        }
+
+        public List<GetMyRolesResult> RefreshUserRolesDB(string personId)
         {
             var myID = new SqlParameter("@myID", personId);
             var strNTLogin = new SqlParameter("@strNTLogin", personId);
 
-            var result = _dbContext.Database.SqlQuery<GetMyRolesResult>("EXEC A_SP_ROLES_GET_MY_ROLES @myID, @strNTLogin", myID, strNTLogin).ToList();
+            List<GetMyRolesResult> getMyRolesResult = _dbContext.Database.SqlQuery<GetMyRolesResult>("EXEC A_SP_ROLES_GET_MY_ROLES @myID, @strNTLogin", myID, strNTLogin).ToList();
 
-            return result;
+            return getMyRolesResult;
         }
 
         public List<GetMyRolesResult> GetAssignedRoles(string personId)
         {
+            IAppCache cachingService = new CachingService();
+
+            Func<List<GetMyRolesResult>> getUserIDDelegate = () => GetAssignedRolesDB(personId);
+
+            string globallyUniqueCacheItemName = $"GetAssignedRoles({personId})".Trim().ToUpper();
+
+            List<GetMyRolesResult> getMyRolesResult = cachingService.GetOrAdd(globallyUniqueCacheItemName, getUserIDDelegate, DateTimeOffset.Now.AddHours(1));
+
+            return getMyRolesResult;
+        }
+
+        private List<GetMyRolesResult> GetAssignedRolesDB(string personId)
+        {
             RefreshUserRoles(personId);
 
-            var personIdParam = new SqlParameter("@personId", personId);
+            SqlParameter personIdParam = new SqlParameter("@personId", personId);
 
-            var result = _dbContext.Database.SqlQuery<GetMyRolesResult>($"SELECT distinct ROLE_ID, ROLE, PERSON, STATUS, ROLE_NAME, StartDate, EndDate FROM A_APPROVED_ROLE_ASSIGNEES WHERE PERSON = {personId}").ToList();
+            List<GetMyRolesResult> result = _dbContext.Database.SqlQuery<GetMyRolesResult>($"SELECT distinct ROLE_ID, ROLE, PERSON, STATUS, ROLE_NAME, StartDate, EndDate FROM A_APPROVED_ROLE_ASSIGNEES WHERE PERSON = {personId}").ToList();
 
             return result.Where(x => x.Status == "ACTIVE").ToList();
         }
 
         public List<GetMyRolesResult> GetAssignedRolesByLogin(string personId)
+        {
+            IAppCache cachingService = new CachingService();
+
+            Func<List<GetMyRolesResult>> getAssignedRolesByLoginDBDelegate = () => GetAssignedRolesByLoginDB(personId);
+
+            string globallyUniqueCacheItemName = $"GetAssignedRolesByLogin({personId})".Trim().ToUpper();
+
+            List<GetMyRolesResult> getMyRolesResult = cachingService.GetOrAdd(globallyUniqueCacheItemName, getAssignedRolesByLoginDBDelegate, DateTimeOffset.Now.AddHours(1));
+
+            return getMyRolesResult;
+        }
+
+        public List<GetMyRolesResult> GetAssignedRolesByLoginDB(string personId)
         {
             RefreshUserRoles(personId);
 
@@ -281,6 +323,41 @@ namespace Msr.Services.Roles
         public List<PeopleApprovedSearch> GetPeopleAssigned(string ntlogin, string co)
         {
             return _dbContext.Database.SqlQuery<PeopleApprovedSearch>($"exec A_SP_PEOPLE_SEARCH ' (FULL_NAME LIKE ''%%'' OR FULL_NAME is NULL ) AND  (ROOT LIKE ''%%'' OR ROOT is NULL ) AND  (POSITION_NAME LIKE ''%%'' OR POSITION_NAME is NULL ) AND  (BOSS_NAME LIKE ''%%'' OR BOSS_NAME is NULL ) AND  (COMPANY_NAME LIKE ''%%'' OR COMPANY_NAME is NULL ) AND (( ROOT_CO_ID LIKE ''%{co}%'' ) ) AND  STATUS LIKE ''APPROVED%'' AND  (LOGIN IS NOT NULL) AND  (LOCATION_NAME LIKE ''%%'' OR LOCATION_NAME is NULL )',' ORDER BY LAST_NAME,NAME',NULL,NULL,'{ntlogin}'").ToList();
+        }
+
+        public void RemoveRoleCacheItems(string userID, string userName)
+        {
+            IAppCache cachingService = new CachingService();
+
+            string refreshUserRolesCacheItemName = string.Empty;
+            string getAssignedRolesCacheItemName = string.Empty;
+            string getAssignedRolesByLoginCacheItemName = string.Empty;
+
+            if (string.IsNullOrWhiteSpace(userID) == false)
+            {
+                userID = userID.Trim();
+
+                refreshUserRolesCacheItemName = $"RefreshUserRoles({userID})".Trim().ToUpper();
+                getAssignedRolesCacheItemName = $"GetAssignedRoles({userID})".Trim().ToUpper();
+                getAssignedRolesByLoginCacheItemName = $"GetAssignedRolesByLogin({userID})".Trim().ToUpper();
+
+                cachingService.Remove(refreshUserRolesCacheItemName);
+                cachingService.Remove(getAssignedRolesCacheItemName);
+                cachingService.Remove(getAssignedRolesByLoginCacheItemName);
+            }
+
+            if (string.IsNullOrWhiteSpace(userName) == false)
+            {
+                userName = userName.Trim();
+
+                refreshUserRolesCacheItemName = $"RefreshUserRoles({userName})".Trim().ToUpper();
+                getAssignedRolesCacheItemName = $"GetAssignedRoles({userName})".Trim().ToUpper();
+                getAssignedRolesByLoginCacheItemName = $"GetAssignedRolesByLogin({userName})".Trim().ToUpper();
+
+                cachingService.Remove(refreshUserRolesCacheItemName);
+                cachingService.Remove(getAssignedRolesCacheItemName);
+                cachingService.Remove(getAssignedRolesByLoginCacheItemName);
+            }
         }
 
     }
