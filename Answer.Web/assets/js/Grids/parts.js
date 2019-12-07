@@ -42,7 +42,7 @@ Msr.PartsGrid = Msr.PartsGrid ||
                         align: 'left'
                     },
                     {
-                        label: "Part #",
+                        label: "Customer Part #",
                         name: 'CompanyPartNumber',
                         index: 'CompanyPartNumber',
                         colmenu: false,

@@ -38,7 +38,7 @@ namespace Msr.Services.Parts.ViewModels
 
         public string Company { get; set; }
 
-        [DisplayName("Part Number ( PN / IPN ) :")]
+        [DisplayName("Customer Part Number ( PN / IPN ) :")]
         public string CompanyPartNumber { get; set; }
 
         [DisplayName("OEM Part Number :")]
