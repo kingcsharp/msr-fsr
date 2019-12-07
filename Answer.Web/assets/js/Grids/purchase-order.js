@@ -138,7 +138,7 @@ Msr.PurchaseOrderGrid = Msr.PurchaseOrderGrid ||
                     align: 'left'
                 },
                 {
-                    label: 'Cust/Co/Dept',
+                    label: 'Customer',
                     name: 'CustomerCo',
                     index: 'CustomerCo',
                     colmenu: false,
