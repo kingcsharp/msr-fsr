@@ -126,6 +126,7 @@ namespace Msr.Repositories
             modelBuilder.Entity<CombinedFinancialData>().ToTable("Report_CombinedFinancialData");
             modelBuilder.Entity<WorkOrdersWithoutInvoices>().ToTable("Report_WorkOrdersWithoutInvoices");
             modelBuilder.Entity<ActualPartsHistory>().ToTable("Report_ActualPartHistory");
+
         }
 
         public DbSet<AspNetUser> AspNetUsers { get; set; }

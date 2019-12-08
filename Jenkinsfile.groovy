@@ -162,6 +162,7 @@ void deploy(appName,deployName) {
               versionFileName: '', waitForCompletion: true])
     }
     office365ConnectorSend color: "${GREEN}", message: "${JOB_NAME} build completed.", status: 'Passed',webhookUrl: "${WEBHOOK_URL}"
+
 }
 
 void notify(branch, commit) {
