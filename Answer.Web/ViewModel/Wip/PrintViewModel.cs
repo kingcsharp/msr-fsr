@@ -24,7 +24,8 @@ namespace Answer.Web.ViewModel.Wip
                 new SelectListItem {Text = "Technical Data Label", Value = "MONITOR_LABEL"},
                 new SelectListItem {Text = "Part Label (Original 1 in.)", Value = "ORIG_PART_LABEL"},
                 new SelectListItem {Text = "Part Label Sheet", Value = "SHEET_PART_LABEL"},
-                new SelectListItem {Text = "Part Label Roll", Value="ROLL_PART_LABEL"}
+                new SelectListItem {Text = "Part Label Roll", Value="ROLL_PART_LABEL"},
+                new SelectListItem {Text = "Part Label Roll 4 in.", Value="ROLL_PART_LABEL_4"}
             };
         }
     }
