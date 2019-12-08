@@ -27,7 +27,6 @@ namespace Msr.Models.Parts
         public string Company { get; set; }
         public double? UnitShippingWeight { get; set; }
         public string CompanyPartNumber { get; set; }
-        public string OemPartNumber { get; set; }
         public Int16? SupplierSeeInstallBase { get; set; }
         public Int16? SupplierSeeAvailability { get; set; }
         public Int16? CustomerSeeAvailability { get; set; }

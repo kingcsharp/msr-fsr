@@ -38,11 +38,8 @@ namespace Msr.Services.Parts.ViewModels
 
         public string Company { get; set; }
 
-        [DisplayName("Customer Part Number ( PN / IPN ) :")]
+        [DisplayName("Part Number ( PN / IPN ) :")]
         public string CompanyPartNumber { get; set; }
-
-        [DisplayName("OEM Part Number :")]
-        public string OemPartNumber { get; set; }
 
         [Required]
         [DisplayName("Part Name :")]
@@ -327,7 +324,6 @@ namespace Msr.Services.Parts.ViewModels
                 ObjID = model.ObjectId,
                 Company = model.CompanyName,
                 CompanyPartNumber = model.CompanyPartNumber,
-                OemPartNumber = model.OemPartNumber,
                 Name = model.Name,
                 PartType = model.PartType,
                 Spare = model.Spare,

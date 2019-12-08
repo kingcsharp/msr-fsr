@@ -21,7 +21,7 @@ Msr.PartsGrid = Msr.PartsGrid ||
                 datatype: "local",
                 colModel: [
                     {
-                        label: 'DB ID',
+                        label: 'Database Id',
                         name: 'Root',
                         index: 'Root',
                         key: true,
@@ -42,7 +42,7 @@ Msr.PartsGrid = Msr.PartsGrid ||
                         align: 'left'
                     },
                     {
-                        label: "Customer Part #",
+                        label: "Part #",
                         name: 'CompanyPartNumber',
                         index: 'CompanyPartNumber',
                         colmenu: false,
@@ -53,18 +53,7 @@ Msr.PartsGrid = Msr.PartsGrid ||
                         hidedlg: false
                     },
                     {
-                        label: "OEM Part #",
-                        name: 'OemPartNumber',
-                        index: 'OemPartNumber',
-                        colmenu: false,
-                        coloptions: { sorting: false, columns: false, visible: true, filtering: false, seraching: true, grouping: false, freeze: false },
-                        searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                        align: 'left',
-                        width: 200,
-                        hidedlg: false
-                    },
-                    {
-                        label: 'Company',
+                        label: 'Company #',
                         name: 'CompanyName',
                         index: 'CompanyName',
                         colmenu: false,
