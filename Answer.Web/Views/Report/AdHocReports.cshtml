@@ -41,7 +41,7 @@
                     {
                         <tr>
                             <td>@reportItem.Title</td>
-                            <td><a class="report btn btn-xs btn-success" id="report-@reportItem.Title.Replace(" ", "")" data-title="@reportItem.Title.Replace(" ", "")" data-header-title="@reportItem.Title">View</a></td>
+                            <td><button class="report btn btn-xs btn-success" id="report-@reportItem.Title.Replace(" ", "")" data-title="@reportItem.Title.Replace(" ", "")" data-header-title="@reportItem.Title">View</button></td>
                         </tr>
                     }
                 </table>
@@ -70,6 +70,10 @@
                 $(function () {
 
                     $(".report").bind("click", function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        $("button.report").attr("disabled", false);
+                        $(this).attr("disabled", "disabled");
                         $("#reportHeader").html("").html($(this).data("header-title"));
                         $.ajax({
                             url: '@ViewBag.ReportDataURL/' + $(this).data("title"),
