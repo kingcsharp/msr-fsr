@@ -172,7 +172,6 @@ namespace Msr.Repositories
         public DbSet<ActualPartViewHistoryView> ActualPartViewHistoryViews { get; set; }
         public DbSet<ProductsActualPartView> ProductsActualPartViews { get; set; }
         public DbSet<PrePropSearchView> PrePropSearchView { get; set; }
-
         public DbSet<LanguagesView> LanguagesViews { get; set; }
         public DbSet<TimeZonesView> TimeZonesViews { get; set; }
         public DbSet<OfficialPositionView> OfficialPositionViews { get; set; }
@@ -183,7 +182,6 @@ namespace Msr.Repositories
         public DbSet<CustomerRequirementView> CustomerRequirementViews { get; set; }
         public DbSet<ProcessInfoView> ProcessInfoViews { get; set; }
         public DbSet<PartInfoView> PartInfoViews { get; set; }
-
         public DbSet<CustomerSubmittedRequirement> CustomerSubmittedRequirements { get; set; }
         public DbSet<PurchaseView> PurchaseViews { get; set; }
         public DbSet<InvoiceView> InvoicesViews { get; set; }
