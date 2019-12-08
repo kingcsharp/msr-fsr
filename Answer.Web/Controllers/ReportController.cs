@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Net;
@@ -8,7 +7,6 @@ using System.Web.Mvc;
 using Answer.Web.Controllers;
 using Answer.Web.Filters;
 using Hangfire.Annotations;
-using Msr.Models.Reporting;
 using RestSharp;
 using HttpCookie = System.Web.HttpCookie;
 
@@ -35,16 +33,6 @@ namespace Msr.Web.Controllers
         public ActionResult WidestageLogin()
         {
             return WidestageLoginResult();
-        }
-
-        public ActionResult AdHocReports()
-        {
-            //list of reports
-            ViewBag.ReportDataURL = ConfigurationManager.AppSettings["WebsiteUrl"].ToString() + "api/Reporting/AdHocReport";
-            return View(new List<AdHocReportItem>() {
-                new AdHocReportItem() { Title = "Actual Parts History by Part Number" },
-                new AdHocReportItem() { Title = "Actual Parts History by Serial Number" }
-            });
         }
 
         public ActionResult Findreport(string data, string id)

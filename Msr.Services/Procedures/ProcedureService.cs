@@ -1,8 +1,18 @@
 ﻿using EntityFrameworkExtras.EF6;
-using ExcelDataReader;
-using Msr.Models.Common;
 using Msr.Models.Procedures;
 using Msr.Repositories;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Web;
+using System.Web.Mvc;
+using ExcelDataReader;
+using Msr.Models.Common;
 using Msr.Services.Documents;
 using Msr.Services.Objects;
 using Msr.Services.Parts;
@@ -15,16 +25,6 @@ using Msr.Services.Roles;
 using Msr.Services.Roles.Messages;
 using Msr.Services.TheoryParagraph;
 using Msr.Services.Users.Messages;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Web;
-using System.Web.Mvc;
 
 namespace Msr.Services.Procedures
 {
@@ -1146,7 +1146,7 @@ namespace Msr.Services.Procedures
                     COMMENT = item["COMMENT"].ToString(),
                     PRINT_ORDER = item["PRINT_ORDER"].ToString(),
                     REF_DOC_ID = item["REF_DOC_ID"].ToString(),
-                    STEP_TIME = Convert.ToInt32(item["STEP_TIME"]),
+                    STEP_TIME = Convert.ToSingle(item["STEP_TIME"]),
                     EXTRA_NOTE1 = item["EXTRA_NOTE1"].ToString(),
                     DefaultRoleId = item["DEFAULT_ROLE_ID"].ToString(),
                     SERIALIZE = item["SERIALIZE"].ToString(),
@@ -1154,8 +1154,6 @@ namespace Msr.Services.Procedures
                     INTERNAL_LOCATION = item["INTERNAL_LOCATION"].ToString(),
                     LOC_TYPE = item["LOC_TYPE"].ToString(),
                 }).ToList();
-
-                ValidatePrintOrder(stepList);
 
                 ProcessRow(ntLogin, modelList, result, stepList);
 
@@ -1186,23 +1184,6 @@ namespace Msr.Services.Procedures
             {
                 result.AddError("There is an error deleting procedure step");
                 return result;
-            }
-        }
-
-        private void ValidatePrintOrder(List<StepsImportViewModel> stepList)
-        {
-            int stepCount = stepList.Count;
-
-            for (int counter = 1; counter <= stepCount; counter++)
-            {
-
-                if (stepList.Exists(x => x.PRINT_ORDER.Trim() == counter.ToString()) == false)
-                {
-
-                    throw new Exception("The PRINT_ORDER column is invalid.  The Print Order must be sequential starting at 1.");
-
-                }
-
             }
         }
 
@@ -1252,14 +1233,13 @@ namespace Msr.Services.Procedures
                 foreach (var item in stepList.Where(x => x.PROCEDURE_ID == model.ProcedureId))
                 {
                     var procedureStepImportProcedure = new ProcedureStepImportProcedure();
-
                     procedureStepImportProcedure.ProcedureHistId = procedureImportExternalProcedure.NewId;
                     procedureStepImportProcedure.StepText = item.STEP_TEXT;
                     procedureStepImportProcedure.Title = item.Title;
                     procedureStepImportProcedure.PrintOrder = item.PRINT_ORDER;
                     procedureStepImportProcedure.RefDocId = item.REF_DOC_ID;
                     procedureStepImportProcedure.Comment = item.COMMENT;
-                    procedureStepImportProcedure.StepTime = item.STEP_TIME;
+                    procedureStepImportProcedure.StepTime = Convert.ToSingle(0.3);
                     procedureStepImportProcedure.ExteraNote = item.EXTRA_NOTE1;
                     procedureStepImportProcedure.DefaultRoleId = item.DefaultRoleId;
                     procedureStepImportProcedure.Serialize = item.SERIALIZE;
@@ -1267,7 +1247,6 @@ namespace Msr.Services.Procedures
                     procedureStepImportProcedure.InternalLocation = item.INTERNAL_LOCATION;
                     procedureStepImportProcedure.LocType = item.LOC_TYPE;
                     procedureStepImportProcedure.NtLogin = ntLogin.Id;
-
                     _dbContext.Database.ExecuteStoredProcedure(procedureStepImportProcedure);
                 }
 
