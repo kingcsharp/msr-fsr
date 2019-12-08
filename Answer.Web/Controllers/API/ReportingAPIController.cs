@@ -7,7 +7,6 @@ using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Results;
 
-
 namespace Answer.Web.Controllers.API
 {
     [RoutePrefix("api/Reporting")]
