@@ -1,42 +1,76 @@
 ﻿@model List<Msr.Models.Reporting.AdHocReportItem>
+
 <link href="~/Content/ej/web/bootstrap-theme/ej.web.all.min.css" rel="stylesheet" />
 <link href="~/Content/ej/web/ej.web.overrides.css" rel="stylesheet" />
 <link href="#" rel="stylesheet" />
-<div id="gridsContainer" class="side-body">
-    <div class="row">
-        <div class="col-xs-12">
-            <table width="25%">
-                        @foreach (var reportItem in Model)
-                        {
-                                <tr>
-                                   <td>@reportItem.Title</td>
-                                    <td><a class="report btn btn-xs btn-success" id="report-@reportItem.Title.Replace(" ", "")" data-title="@reportItem.Title.Replace(" ", "")">View</a></td>
-                                </tr>
-                        }
-            </table>
+@using Msr.Services.Helps
+@{
+    var helpUrl = "/Report/reports";
+    var helpService = new HelpService();
+    var vm = helpService.CanViewHelpPage(helpUrl, HttpContext.Current.User.Identity.Name);
+}
+
+@{
+    ViewBag.Title = "Reporting";
+}
+<style>
+    .page-header{
+        margin: 40px 0 20px -15px;
+    }
+</style>
+
+<div class="container-fluid">
+
+    <div id="gridsContainer" class="side-body">
+        <div class="row">
+            <div class="col-xs-12">
+                <h2 class="page-header">
+                    <span class="icon fa fa-list-ol"></span>
+                    Ad-Hoc Reports
+                    @if (vm.CanView)
+                    {
+                        <button class="btn btn-info pull-right page-help" style="margin-left:10px;margin-top:-5px;" data-page-url="@helpUrl">Help</button>
+                    }
+                </h2>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="datatable" style="padding:10px">
-                <div class="page-header"><h1 id="reportHeader"></h1></div>
-                <div id="AdHocReportGrid"></div>
+        <div class="row">
+            <div class="col-xs-12">
+                <table width="25%">
+                    @foreach (var reportItem in Model)
+                    {
+                        <tr>
+                            <td>@reportItem.Title</td>
+                            <td><a class="report btn btn-xs btn-success" id="report-@reportItem.Title.Replace(" ", "")" data-title="@reportItem.Title.Replace(" ", "")" data-header-title="@reportItem.Title">View</a></td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="datatable" style="padding:10px">
+                    <div class="page-header"><h1 id="reportHeader"></h1></div>
+                    <div id="AdHocReportGrid"></div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
     @section Scripts{
         <script src="//unpkg.com/xlsx/dist/shim.min.js"></script>
         <script src="//unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
 
-        <script src="http://cdn.syncfusion.com/js/assets/external/jquery.easing.1.3.min.js"></script>
-        <script src="http://cdn.syncfusion.com/js/assets/external/jquery.globalize.min.js"></script>
-        <script src="http://cdn.syncfusion.com/js/assets/external/jsrender.min.js"></script>
+        <script src="//cdn.syncfusion.com/js/assets/external/jquery.easing.1.3.min.js"></script>
+        <script src="//cdn.syncfusion.com/js/assets/external/jquery.globalize.min.js"></script>
+        <script src="//cdn.syncfusion.com/js/assets/external/jsrender.min.js"></script>
         <script src="~/Scripts/ej/web/ej.web.all.min.js"></script>
         <script type="text/javascript">
                 $(function () {
 
                     $(".report").bind("click", function (e) {
+                        $("#reportHeader").html("").html($(this).data("header-title"));
                         $.ajax({
                             url: '@ViewBag.ReportDataURL/' + $(this).data("title"),
                             type: "GET",
@@ -142,7 +176,7 @@
                         return retObj;
                     }
 
-                    
+
                 });
-            </script>
+        </script>
     }
