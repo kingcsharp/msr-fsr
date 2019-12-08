@@ -39,6 +39,8 @@ namespace Msr.Models.Parts
 
         public string CompanyPartNumber { get; set; }
 
+        public string OemPartNumber { get; set; }
+
         public Int16? CustomerSeeAvailability { get; set; }
 
         public Int16? SupplierSeeAvailability { get; set; }
