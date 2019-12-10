@@ -125,7 +125,7 @@ namespace Msr.Services.ProductionPlanning.ViewModels
                 Value = x.Value.ToString()
             }).OrderBy(o => o.Text).ToList();
 
-            ProductLocationList = productionPlanningService.GetLocationsQueryable().Where(x => x.Status == "APPROVED").Select(x => new SelectListItem
+            ProductLocationList = productionPlanningService.GetLocationsQueryable().Where(x => x.Status == "APPROVED" && x.ParentLocation == null).Select(x => new SelectListItem
             {
                 Text = x.Name,
                 Value = x.ObjId,
