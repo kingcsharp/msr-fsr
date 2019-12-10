@@ -3,6 +3,11 @@
     ViewBag.Title = "Pricing";
 }
 <link href="~/assets/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+<style>
+    table.quote-header {
+        width: 100%;
+    }
+</style>
 
 <div class="app-container">
     <div class="row content-container">
@@ -70,10 +75,9 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th align="right">Supplier :</th>
+                                    <th align="right">&nbsp;</th>
                                     <td>
-                                        @Html.DropDownListFor(model => model.Supplier, Model.Suppliers, "Select Supplier", new { @class = "form-control" })
-                                    @Html.ValidationMessageFor(model => model.Supplier, "", new { @class = "text-danger" })
+                                        <input type="hidden" name="Supplier" value="2" />
                                 </td>
 
                                     <th align="right">Title:</th>

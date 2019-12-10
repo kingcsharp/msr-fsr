@@ -5,7 +5,7 @@
 
 <table class="table" width="100%">
     <tr>
-        <th width="20%">Customer:</th>
+        <th width="20%">Client:</th>
         <td width="30%">
             @Html.DropDownListFor(model => model.Client, Model.ClientList, new { @class = "form-control" })
             @Html.ValidationMessageFor(model => model.Client, "", new { @class = "text-danger" })
@@ -29,6 +29,11 @@
         </td>
     </tr>
     <tr>
+        <th align="right">Supplier / MSR-FSR Dept</th>
+        <td>
+            @Html.DropDownListFor(model => model.SupplierDepartment, Model.SupplierDepartmentList, new { @class = "form-control", @readonly = "", @disabled = "" })
+            @Html.ValidationMessageFor(model => model.SupplierDepartment, "", new { @class = "text-danger" })
+        </td>
         <th align="right">Cust Ref# / MTTN:</th>
         <td>
             @Html.EditorFor(model => model.CustRefNum, new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter Reference Number" } })
@@ -123,7 +128,7 @@
     </tr>
     <tr>
         <th align="right">Products:</th>
-        <td colspan="4">
+        <td>
             <div>
                 @Html.DropDownListFor(m => m.Products, Model.ProductsList, new { @class = "form-control select select-products" })
             </div>

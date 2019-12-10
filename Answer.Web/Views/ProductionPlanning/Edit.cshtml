@@ -2,6 +2,7 @@
 @{
     ViewBag.Title = "Requirements Step Definition";
 }
+
 <div class="app-container">
     <div class="row content-container">
         <div class="container-fluid">
@@ -42,6 +43,7 @@
                             @Html.HiddenFor(x => x.PObjectId)
                             @Html.HiddenFor(x => x.OldProductProcedureId)
                             @Html.HiddenFor(x => x.HasQuote)
+                            @Html.HiddenFor(x => x.ProductSupplierId)
                             @Html.HiddenFor(x => x.SubmittedRequirement.Status)
                             @Html.HiddenFor(x => x.AdminCostSettings.RmAnnualRate, new { @class = "admin-cost-settings-rm-annual-rate" })
                             @Html.HiddenFor(x => x.AdminCostSettings.HourMinutes, new { @class = "admin-cost-settings-hour-minutes" })
@@ -84,25 +86,12 @@
     </div>
 </div>
 @Html.Partial("_Models")
-<div id="partmodel" class="modal fade" role="dialog">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Add Part</h4>
-            </div>
-            <div class="modal-body"></div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close-o"></i> Close</button>
-            </div>
-        </div>
-    </div>
-</div>
+
 @section scripts
 {
     <script type="text/javascript" src="~/assets/js/ObjectAssign.js"></script>
     <script type="text/javascript" src="~/assets/js/grids/requirement-steps.js"></script>
-    <script src="~/assets/js/grids/comman.js"></script>
+    <script src="~/assets/js/msr/grid-common.js"></script>
     @Scripts.Render("~/bundles/js/jqueryval")
 
     <script type="text/javascript">
@@ -133,23 +122,25 @@
                 $('.quote-requirements-print').printThis();
             });
 
-            $('#ProductProcedureId').on('change', function() {
+            $('#ProductProcedureId').on('change', function () {
+                $('#step-grid').block({ message: '<h1><img src="/assets/img/nice_loader.gif" />  Loading. Please wait...</h1>' });
                 $('#production-planning-form').removeData('validator');
                 $('#production-planning-form').removeData('unobtrusiveValidation');
                 $('#production-planning-form').validate().cancelSubmit = true;
                 $('#form-change').trigger('click');
             });
 
-            $('#new-procedure-icon').on('click', function () {
-                $('#production-planning-form').removeData('validator');
-                $('#production-planning-form').removeData('unobtrusiveValidation');
-                $('#production-planning-form').validate().cancelSubmit = true;
-                $('#form-change').trigger('click');
+            $('#new-procedure').on('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                window.open('/Procedures/Create', '_blank');
+            });
+
+            $('#new-part').on('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                window.open('/parts/AddPart', '_blank');
              });
-
-            $(".selectPart").select2();
-
-            $(".selectProcedure").select2();
 
             $(".selectroles").select2({
                 tags: [],
@@ -162,22 +153,73 @@
                 }
             });
 
-            $('#partmodel').on('show.bs.modal',
-                function(event) {
-                    var modal = $(this);
-                    $.ajax({
-                        type: "GET",
-                        url: '@Url.Action("AddPart", "ProductionPlanning")',
-                        dataType: 'html',
-                        success: function(data) {
-                            modal.find('.modal-body').html(data);
-
-                        },
-                        error: function(error) {
-                            eLoaderError(error);
-                        }
-                    });
+            $("#refresh-parts").on('click', function (e) {
+                e.preventDefault();
+                $this = $(this);
+                var url = "GetList";
+                $.ajax({
+                    data: {},
+                    type: 'POST',
+                    cache: false,
+                    dataType: 'json',
+                    url: url,
+                    beforeSend: function () {
+                        $this.attr('disabled', true);
+                        $this.children('i').addClass('fa-spin');
+                        $this.tooltip('hide');
+                    },
+                    success: function (result) {
+                        $('#partsList').empty();
+                        $('#partsList').append('<option value="">Select a Part</option>');
+                        $.each(result, function (i, item) {
+                            $('#partsList').append('<option value="' + item.Value + '">' +
+                                item.Text + '</option>');
+                        });
+                    },
+                    error: function (ex) {
+                        alert('Sorry, We could not update the list. Please contact support');
+                    },
+                    complete: function () {
+                        $this.attr('disabled', false).blur();
+                        $this.children('i').removeClass('fa-spin');
+                    }
                 });
+            });
+
+            $("#refresh-procedures").on('click', function (e) {
+                $this = $(this);
+                e.preventDefault();
+                var url = "GetList";
+                $.ajax({
+                    data: {},
+                    type: 'POST',
+                    cache: false,
+                    dataType: 'json',
+                    url: url,
+                    beforeSend: function () {
+                        $this.attr('disabled', true);
+                        $this.children('i').addClass('fa-spin');
+                        $this.tooltip('hide');
+                    },
+
+                    success: function (result) {
+                        $("#ProductProcedureId").empty();
+                        $("#ProductProcedureId").append('<option value="">Select a Procedure</option>');
+                        $.each(result, function (i, item) {
+                            $("#ProductProcedureId").append('<option value="' + item.Value + '">' +
+                                item.Text + '</option>');
+                        });
+                    },
+                    error: function (ex) {
+                        alert('Sorry, We could not update the list. Please contact support');
+                    },
+                    complete: function () {
+                        $this.attr('disabled', false);
+                        $this.children('i').removeClass('fa-spin');
+                    }
+                });
+            });
+
         });
     </script>
 }
