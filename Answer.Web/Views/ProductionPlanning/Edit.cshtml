@@ -110,6 +110,7 @@
             if (!isNaN(parseFloat('@Model.TotalSalePrice'))) {
                 $("#totalSalePrice").val(parseFloat(@Model.TotalSalePrice).toFixed(2));
             }
+
             $('#Print').on('click', function () {
                 $('#printThis').printThis();
             });
@@ -146,7 +147,7 @@
             $("#refresh-parts").on('click', function (e) {
                 e.preventDefault();
                 $this = $(this);
-                var url = "/Parts/ApprovedParts";
+                var url = "/ProductionPlanning/Parts";
                 $.ajax({
                     data: {},
                     type: 'POST',
@@ -160,12 +161,12 @@
                     },
                     success: function (result) {
                         $('#partsList').find('option').remove().end().append('<option value="">Select a Part</option>');
-                        $.each(result, function (i, item) {
-                            $('#partsList').append('<option value="' + item.Id + '">' +
-                                item.Name + '</option>');
+                        $.each(result.records, function (i, item) {
+                            $('#partsList').append('<option value="' + item.Value + '">' +
+                                item.Show + '</option>');
                         });
                     },
-                    error: function (ex) {
+                    error: function () {
                         alert('Sorry, We could not update the list. Please contact support');
                     },
                     complete: function () {
@@ -177,7 +178,7 @@
             $("#refresh-procedures").on('click', function (e) {
                 $this = $(this);
                 e.preventDefault();
-                var url = "/Procedures/ApprovedProcedures";
+                var url = "/ProductionPlanning/ApprovedProcedures";
                 $.ajax({
                     data: {},
                     type: 'POST',
@@ -191,9 +192,9 @@
                     },
                     success: function (result) {
                         $("#ProductProcedureId").find('option').remove().end().append('<option value="">Select a Procedure</option>');
-                        $.each(result, function (i, item) {
-                            $("#ProductProcedureId").append('<option value="' + item.Id + '">' +
-                                item.Name + '</option>');
+                        $.each(result.records, function (i, item) {
+                            $("#ProductProcedureId").append('<option value="' + item.Value + '">' +
+                                item.Show + '</option>');
                         });
                     },
                     error: function (ex) {
