@@ -55,6 +55,11 @@ namespace Answer.Web.Controllers
                 return RollLabelTsr(id);
             }
 
+            if (reportType == "ROLL_PART_LABEL_4")
+            {
+                return RollLabelTsr4(id);
+            }
+
             return Content("Report Type not found");
         }
 
@@ -138,6 +143,12 @@ namespace Answer.Web.Controllers
         {
             var response = _orderService.GetPartLabelTsrDetails(id);
             return PartialView("_ViewPartLabelRollTsr", response);
+        }
+
+        public ActionResult RollLabelTsr4(int id)
+        {
+            var response = _orderService.GetPartLabelTsrDetails(id);
+            return PartialView("_ViewPartLabelRoll4x4Tsr", response);
         }
 
         public ActionResult MonitorLabelTsr(int id)
