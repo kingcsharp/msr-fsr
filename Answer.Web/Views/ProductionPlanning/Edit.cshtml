@@ -24,12 +24,14 @@
                             @if (!Model.HasQuote)
                             {
                                 <div class="col-sm-3" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="View Orginally Submitted Requirements from Customer">
-                                    
+
                                     <button type="button" class="btn btn-primary pull-right"
-                                            data-id="@Model.Id" 
-                                            data-object="@Model.PObjectId" 
+                                            data-id="@Model.Id"
+                                            data-object="@Model.PObjectId"
                                             data-toggle="modal"
-                                            data-target="#userRequirementsModal"><i class="fa fa-eye"></i> View Requirements</button>
+                                            data-target="#userRequirementsModal">
+                                        <i class="fa fa-eye"></i> View Requirements
+                                    </button>
                                 </div>
                             }
                         </div>
@@ -45,6 +47,7 @@
                             @Html.HiddenFor(x => x.HasQuote)
                             @Html.HiddenFor(x => x.ProductSupplierId)
                             @Html.HiddenFor(x => x.SubmittedRequirement.Status)
+                            @Html.HiddenFor(x => x.ProductSupplierId)
                             @Html.HiddenFor(x => x.AdminCostSettings.RmAnnualRate, new { @class = "admin-cost-settings-rm-annual-rate" })
                             @Html.HiddenFor(x => x.AdminCostSettings.HourMinutes, new { @class = "admin-cost-settings-hour-minutes" })
                             @Html.HiddenFor(x => x.AdminCostSettings.LaborRateMinute, new { @class = "admin-cost-settings-labor-rate-minute" })
@@ -67,12 +70,12 @@
                                 }
                                 @if (Model.HasQuote)
                                 {
-                                    <span class="pull-right btn btn-primary" style="margin-left: 10px;" 
-                                          data-id="@Model.CustomerSubmitId" 
-                                          data-object="@Model.PObjectId" 
-                                          data-placement="top" title="" 
-                                          data-original-title="Generates a Quote Preview" 
-                                          data-toggle="modal" 
+                                    <span class="pull-right btn btn-primary" style="margin-left: 10px;"
+                                          data-id="@Model.CustomerSubmitId"
+                                          data-object="@Model.PObjectId"
+                                          data-placement="top" title=""
+                                          data-original-title="Generates a Quote Preview"
+                                          data-toggle="modal"
                                           data-target="#quoteModal">
                                         <i class="fa fa-eye"></i>Preview Quote
                                     </span>
@@ -95,9 +98,7 @@
     @Scripts.Render("~/bundles/js/jqueryval")
 
     <script type="text/javascript">
-
         $(document).ready(function() {
-
             @if (Model.Steps.Count > 0)
             {
                 <text>
@@ -106,9 +107,7 @@
             }
             var i = parseInt($('#totalRecords').val());
             var myoptions = $('#defaultProcessList').html();
-
             LoadSteps(i, myoptions);
-
             //override value if manually edited
             if (!isNaN(parseFloat('@Model.TotalSalePrice'))) {
                 $("#totalSalePrice").val(parseFloat(@Model.TotalSalePrice).toFixed(2));
@@ -117,7 +116,6 @@
             $('#Print').on('click', function () {
                 $('#printThis').printThis();
             });
-
             $('.quote-requirements-preview').on('click', function () {
                 $('.quote-requirements-print').printThis();
             });
@@ -152,11 +150,10 @@
                     return '';
                 }
             });
-
             $("#refresh-parts").on('click', function (e) {
                 e.preventDefault();
                 $this = $(this);
-                var url = "GetList";
+                var url = "/ProductionPlanning/Parts";
                 $.ajax({
                     data: {},
                     type: 'POST',
@@ -169,14 +166,14 @@
                         $this.tooltip('hide');
                     },
                     success: function (result) {
-                        $('#partsList').empty();
-                        $('#partsList').append('<option value="">Select a Part</option>');
-                        $.each(result, function (i, item) {
+                        $('#partsList').find('option').remove().end().append('<option value="">Select a Part</option>');
+                        $.each(result.records, function (i, item) {
                             $('#partsList').append('<option value="' + item.Value + '">' +
-                                item.Text + '</option>');
+                                item.Show + '</option>');
                         });
                     },
-                    error: function (ex) {
+                    error: function () {
+
                         alert('Sorry, We could not update the list. Please contact support');
                     },
                     complete: function () {
@@ -185,11 +182,10 @@
                     }
                 });
             });
-
             $("#refresh-procedures").on('click', function (e) {
                 $this = $(this);
                 e.preventDefault();
-                var url = "GetList";
+                var url = "/ProductionPlanning/ApprovedProcedures";
                 $.ajax({
                     data: {},
                     type: 'POST',
@@ -201,13 +197,11 @@
                         $this.children('i').addClass('fa-spin');
                         $this.tooltip('hide');
                     },
-
                     success: function (result) {
-                        $("#ProductProcedureId").empty();
-                        $("#ProductProcedureId").append('<option value="">Select a Procedure</option>');
-                        $.each(result, function (i, item) {
+                        $("#ProductProcedureId").find('option').remove().end().append('<option value="">Select a Procedure</option>');
+                        $.each(result.records, function (i, item) {
                             $("#ProductProcedureId").append('<option value="' + item.Value + '">' +
-                                item.Text + '</option>');
+                                item.Show + '</option>');
                         });
                     },
                     error: function (ex) {
@@ -219,7 +213,6 @@
                     }
                 });
             });
-
         });
     </script>
 }

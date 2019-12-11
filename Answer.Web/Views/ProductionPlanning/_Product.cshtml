@@ -1,39 +1,38 @@
 ﻿@model Msr.Services.ProductionPlanning.ViewModels.RequirementStepsViewModel
-    <div class="row">
-        <div class="col-md-4">
-            <div class="form-group">
-                <label>Customer :</label>
-                @Html.DropDownListFor(model => model.ProductCustomerId, Model.Customers, "Select Customer", new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.ProductCustomerId, "", new { @class = "text-danger" })
-            </div>
+<div class="row">
+    <div class="col-md-4">
+        <div class="form-group">
+            <label>Customer :</label>
+            @Html.DropDownListFor(model => model.ProductCustomerId, Model.Customers, "Select Customer", new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.ProductCustomerId, "", new { @class = "text-danger" })
         </div>
-        <div class="col-md-3">
-            <div class="form-group">
-                <label>Location :</label>
-                @Html.DropDownListFor(model => model.ProductLocationId, Model.ProductLocationList, "Select Location", new { @class = "form-control" })
-            </div>
-        </div>
-        <div class="col-md-2">
-            <div class="form-group">
-                <label>Division/Fab # :</label>
-                @Html.TextBoxFor(x => Model.ProductCustomerDivision, new { @class = "form-control", placeholder = "Division/Fab #", data_toggle = "tooltip", data_placement = "bottom" })
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="form-group">
-                <label>Cycle Time :</label>
-                <div class="input-group">
-                    @Html.TextBoxFor(x => Model.CycleTime, new { @class = "form-control", placeholder = "Cycle Time" })
-                    <span class="input-group-addon"> Days</span>
-                </div>
-                @Html.ValidationMessageFor(model => model.CycleTime, "", new { @class = "text-danger" })
-            </div>
     </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <label>Location :</label>
+            @Html.DropDownListFor(model => model.ProductLocationId, Model.ProductLocationList, "Select Location", new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="form-group">
+            <label>Division/Fab # :</label>
+            @Html.TextBoxFor(x => Model.ProductCustomerDivision, new { @class = "form-control", placeholder = "Division/Fab #", data_toggle = "tooltip", data_placement = "bottom" })
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <label>Cycle Time :</label>
+            <div class="input-group">
+                @Html.TextBoxFor(x => Model.CycleTime, new { @class = "form-control", placeholder = "Cycle Time" })
+                <span class="input-group-addon"> Days</span>
+            </div>
+            @Html.ValidationMessageFor(model => model.CycleTime, "", new { @class = "text-danger" })
+        </div>
     </div>
 <div class="row">
     <div class="col-md-4">
         <div class="form-group">
-            <label >Product Name :</label>
+            <label>Product Name :</label>
             @Html.TextBoxFor(x => Model.ProductName, new { @class = "form-control", data_toggle = "tooltip", data_placement = "bottom" })
             @Html.ValidationMessageFor(model => model.ProductName, "", new { @class = "text-danger" })
         </div>
@@ -43,9 +42,9 @@
         <div class="input-group">
             @Html.DropDownListFor(model => model.ProductPartId, Model.PartList, "Select a Part", new { @id = "partsList", @class = "form-control selectPart" })
             <div class="input-group-btn">
-                <button type="button" id="new-part" 
-                        class="btn btn-info" 
-                        style="margin:0" 
+                <button type="button" id="new-part"
+                        class="btn btn-info"
+                        style="margin:0"
                         data-toggle="tooltip" data-placement="top" title="Create a new Customer Part in a New Tab">
                     <i class="fa fa-plus-circle" aria-hidden="false"></i>
                 </button>
@@ -54,7 +53,7 @@
                 <button type="button" id="refresh-parts"
                         class="btn btn-primary"
                         style="margin:0"
-                        data-toggle="tooltip" data-placement="top" title="Refresh this List">
+                        data-toggle="tooltip" data-placement="top" title="Refresh List of Approved Parts">
                     <i id="parts-refresh-icon" class="fa fa-refresh" aria-hidden="false"></i>
                 </button>
             </div>
@@ -66,7 +65,7 @@
         <div class="input-group">
             @Html.DropDownListFor(model => model.ProductProcedureId, Model.ProcedureList, "Select a Procedure", new { @class = "form-control  selectProcedure" })
             <div class="input-group-btn">
-                <button type="button" id="new-procedure" 
+                <button type="button" id="new-procedure"
                         class="btn btn-info"
                         style="margin:0"
                         data-title="Create an new Procedure in a new Tab"
@@ -78,7 +77,8 @@
                 <button type="button" id="refresh-procedures"
                         class="btn btn-primary"
                         style="margin:0"
-                        data-toggle="tooltip" data-placement="top" title="Refresh this List">
+                        data-toggle="tooltip" data-placement="top" title="Refresh List of Approved Procedures">
+
                     <i id="procedures-refresh-icon" class="fa fa-refresh" aria-hidden="false"></i>
                 </button>
             </div>
@@ -86,3 +86,4 @@
         @Html.ValidationMessageFor(model => model.ProductProcedureId, "", new { @class = "text-danger" })
     </div>
 </div>
+

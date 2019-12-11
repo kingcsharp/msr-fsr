@@ -621,6 +621,7 @@
     <Content Include="assets\js\bootstrap-datepicker.min.js" />
     <Content Include="assets\js\bootstrap-datetimepicker.min.js" />
     <Content Include="assets\js\blockLayout.ui.js" />
+    <Content Include="assets\js\BootstrapFileInput\img\loading-sm.gif" />
     <Content Include="assets\js\BootstrapFileInput\js\fileinput-custom.min.js">
       <DependentUpon>fileinput-custom.js</DependentUpon>
     </Content>
@@ -3412,7 +3413,6 @@
     <Content Include="Views\Quote\Index.cshtml" />
     <Content Include="Views\Wip\_AddEquipment.cshtml" />
     <Content Include="Views\Procedures\_Monitor.cshtml" />
-    <Content Include="Views\ProductionPlanning\_Parts.cshtml" />
     <Content Include="Views\ProductionPlanning\_Product.cshtml" />
     <Content Include="Views\ProductionPlanning\_Models.cshtml" />
     <Content Include="Views\ProductionPlanning\_Steps.cshtml" />
