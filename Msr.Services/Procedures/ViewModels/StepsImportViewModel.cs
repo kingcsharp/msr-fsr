@@ -23,7 +23,7 @@ namespace Msr.Services.Procedures.ViewModels
 
         public string COMMENT { get; set; }
 
-        public int STEP_TIME { get; set; }
+        public Single STEP_TIME { get; set; }
 
         public string EXTRA_NOTE1 { get; set; }
 

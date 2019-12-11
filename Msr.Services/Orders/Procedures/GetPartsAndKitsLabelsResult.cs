@@ -1,4 +1,5 @@
-﻿namespace Msr.Services.Orders.Procedures
+﻿
+namespace Msr.Services.Orders.Procedures
 {
     public class GetPartsAndKitsLabelsResult
     {
@@ -21,10 +22,6 @@
         public string WO_Item_Number { get; set; }
 
         public string PO_Number { get; set; }
-
-        public string Part_Image_ID { get; set; }
-
-        public string Oem_Part_Number { get; set; }
 
     }
 
