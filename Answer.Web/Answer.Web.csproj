@@ -3452,6 +3452,7 @@
     <Content Include="Views\PrintOther\_ViewPartLabelRollTsr.cshtml" />
     <Content Include="Views\PrintOther\_ViewPartLabelTsr.cshtml" />
     <Content Include="Views\Report\FinancialDashboard.cshtml" />
+    <Content Include="Views\PrintOther\_ViewPartLabelRoll4x4Tsr.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
