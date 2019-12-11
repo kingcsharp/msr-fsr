@@ -29,7 +29,6 @@
             @Html.ValidationMessageFor(model => model.CycleTime, "", new { @class = "text-danger" })
         </div>
     </div>
-</div>
 <div class="row">
     <div class="col-md-4">
         <div class="form-group">
@@ -79,6 +78,7 @@
                         class="btn btn-primary"
                         style="margin:0"
                         data-toggle="tooltip" data-placement="top" title="Refresh List of Approved Procedures">
+
                     <i id="procedures-refresh-icon" class="fa fa-refresh" aria-hidden="false"></i>
                 </button>
             </div>
@@ -86,3 +86,4 @@
         @Html.ValidationMessageFor(model => model.ProductProcedureId, "", new { @class = "text-danger" })
     </div>
 </div>
+

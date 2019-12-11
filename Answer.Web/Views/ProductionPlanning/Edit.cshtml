@@ -2,6 +2,7 @@
 @{
     ViewBag.Title = "Requirements Step Definition";
 }
+
 <div class="app-container">
     <div class="row content-container">
         <div class="container-fluid">
@@ -44,6 +45,7 @@
                             @Html.HiddenFor(x => x.PObjectId)
                             @Html.HiddenFor(x => x.OldProductProcedureId)
                             @Html.HiddenFor(x => x.HasQuote)
+                            @Html.HiddenFor(x => x.ProductSupplierId)
                             @Html.HiddenFor(x => x.SubmittedRequirement.Status)
                             @Html.HiddenFor(x => x.ProductSupplierId)
                             @Html.HiddenFor(x => x.AdminCostSettings.RmAnnualRate, new { @class = "admin-cost-settings-rm-annual-rate" })
@@ -117,6 +119,7 @@
             $('.quote-requirements-preview').on('click', function () {
                 $('.quote-requirements-print').printThis();
             });
+
             $('#ProductProcedureId').on('change', function () {
                 $('#step-grid').block({ message: '<h1><img src="/assets/img/nice_loader.gif" />  Loading. Please wait...</h1>' });
                 $('#production-planning-form').removeData('validator');
@@ -124,16 +127,19 @@
                 $('#production-planning-form').validate().cancelSubmit = true;
                 $('#form-change').trigger('click');
             });
+
             $('#new-procedure').on('click', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
                 window.open('/Procedures/Create', '_blank');
             });
+
             $('#new-part').on('click', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
                 window.open('/parts/AddPart', '_blank');
              });
+
             $(".selectroles").select2({
                 tags: [],
                 tokenSeparators: [','],
@@ -167,6 +173,7 @@
                         });
                     },
                     error: function () {
+
                         alert('Sorry, We could not update the list. Please contact support');
                     },
                     complete: function () {
