@@ -146,7 +146,7 @@
             $("#refresh-parts").on('click', function (e) {
                 e.preventDefault();
                 $this = $(this);
-                var url = "GetList";
+                var url = "/Parts/ApprovedParts";
                 $.ajax({
                     data: {},
                     type: 'POST',
@@ -159,11 +159,10 @@
                         $this.tooltip('hide');
                     },
                     success: function (result) {
-                        $('#partsList').empty();
-                        $('#partsList').append('<option value="">Select a Part</option>');
+                        $('#partsList').find('option').remove().end().append('<option value="">Select a Part</option>');
                         $.each(result, function (i, item) {
-                            $('#partsList').append('<option value="' + item.Value + '">' +
-                                item.Text + '</option>');
+                            $('#partsList').append('<option value="' + item.Id + '">' +
+                                item.Name + '</option>');
                         });
                     },
                     error: function (ex) {
@@ -178,7 +177,7 @@
             $("#refresh-procedures").on('click', function (e) {
                 $this = $(this);
                 e.preventDefault();
-                var url = "GetList";
+                var url = "/Procedures/ApprovedProcedures";
                 $.ajax({
                     data: {},
                     type: 'POST',
@@ -191,11 +190,10 @@
                         $this.tooltip('hide');
                     },
                     success: function (result) {
-                        $("#ProductProcedureId").empty();
-                        $("#ProductProcedureId").append('<option value="">Select a Procedure</option>');
+                        $("#ProductProcedureId").find('option').remove().end().append('<option value="">Select a Procedure</option>');
                         $.each(result, function (i, item) {
-                            $("#ProductProcedureId").append('<option value="' + item.Value + '">' +
-                                item.Text + '</option>');
+                            $("#ProductProcedureId").append('<option value="' + item.Id + '">' +
+                                item.Name + '</option>');
                         });
                     },
                     error: function (ex) {
