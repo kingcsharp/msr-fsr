@@ -366,7 +366,7 @@ namespace Msr.Services.Parts
             {
                 if (!postedFile.FileName.EndsWith(".csv"))
                 {
-                    result.AddError("The import file must be a tab delimited text file");
+                    result.AddError("The import file must be a comma delimited text file");
                     return result;
                 }
 
@@ -400,7 +400,8 @@ namespace Msr.Services.Parts
                 var parts = resultAsDataSet.Tables[0].AsEnumerable().Select(item => new ImportPartViewModel
                 {
                     PartId = item[nameof(ImportPartViewModel.PartId)].ToString(),
-                    Name = item[nameof(ImportPartViewModel.Name)].ToString()
+                    Name = item[nameof(ImportPartViewModel.Name)].ToString(),
+                    OemPartNumber = item[nameof(ImportPartViewModel.OemPartNumber)].ToString()
                 }).ToList();
 
                 ProcessRow(ntLogin, parts, result);
@@ -453,11 +454,12 @@ namespace Msr.Services.Parts
                             cmd.Parameters.Add("@externalPartID", SqlDbType.VarChar, 100).Value = part.PartId.Trim();
                             cmd.Parameters.Add("@partName", SqlDbType.VarChar, 2000).Value = part.Name.Trim();
                             cmd.Parameters.Add("@strNTLogin", SqlDbType.VarChar, 50).Value = ntLogin;
+                            cmd.Parameters.Add("@oemPartNumber", SqlDbType.VarChar, 100).Value = part.OemPartNumber.Trim();
                             cmd.ExecuteNonQuery();
                         }
                         catch (Exception e)
                         {
-                            part.Messages.Add($"Unable to process part, PartName:'{part.Name}' PartId:'{part.PartId}' ");
+                            part.Messages.Add($"Unable to process part with PartName:'{part.Name}' PartId:'{part.PartId}' OemPartNumber:'{part.OemPartNumber}' Exception:'{e} ");
                             result.Entity.Add(part);
                         }
                     }

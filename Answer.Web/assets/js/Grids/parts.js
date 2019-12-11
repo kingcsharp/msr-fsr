@@ -25,8 +25,8 @@ Msr.PartsGrid = Msr.PartsGrid ||
                         name: 'Root',
                         index: 'Root',
                         key: true,
-                        colmenu: true,
-                        coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                        colmenu: true, 
+                        coloptions: { sorting: false, filtering: false, grouping: false, freeze: false },
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                         width: 100,
                         align: 'left'
@@ -35,8 +35,8 @@ Msr.PartsGrid = Msr.PartsGrid ||
                         label: "Part Name",
                         name: 'Name',
                         index: 'Name',
-                        colmenu: false,
-                        coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                        colmenu: false, 
+                        coloptions: { sorting: false, filtering: false, grouping: false, freeze: false },
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                         width: 300,
                         align: 'left'
@@ -46,18 +46,27 @@ Msr.PartsGrid = Msr.PartsGrid ||
                         name: 'CompanyPartNumber',
                         index: 'CompanyPartNumber',
                         colmenu: false,
-                        coloptions: { sorting: false, columns: true, filtering: false, seraching: true, grouping: false, freeze: false },
+                        coloptions: { sorting: false, filtering: false, grouping: false, freeze: false },
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                         align: 'left',
-                        width: 200,
-                        hidedlg: false
+                        width: 200
                     },
                     {
-                        label: 'Company #',
+                        label: "OEM Part #",
+                        name: 'OemPartNumber',
+                        index: 'OemPartNumber',
+                        colmenu: false,
+                        coloptions: { sorting: false, filtering: false, grouping: false, freeze: false },
+                        searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                        align: 'left',
+                        width: 200
+                    },
+                    {
+                        label: 'Company',
                         name: 'CompanyName',
                         index: 'CompanyName',
                         colmenu: false,
-                        coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                        coloptions: { sorting: false, filtering: false, grouping: false, freeze: false },
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                         align: 'left'
                     },
@@ -67,7 +76,7 @@ Msr.PartsGrid = Msr.PartsGrid ||
                         index: 'Consumable',
                         colmenu: false,
                         width: 150,
-                        coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                        coloptions: { sorting: false, filtering: false, grouping: false, freeze: false },
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                         align: 'left'
                     },
@@ -77,7 +86,7 @@ Msr.PartsGrid = Msr.PartsGrid ||
                         index: 'Spare',
                         colmenu: false,
                         width: 100,
-                        coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                        coloptions: { sorting: false, filtering: false, grouping: false, freeze: false },
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                         align: 'left'
                     },
@@ -87,7 +96,7 @@ Msr.PartsGrid = Msr.PartsGrid ||
                         index: 'Unit',
                         colmenu: false,
                         width: 150,
-                        coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                        coloptions: { sorting: false, filtering: false, grouping: false, freeze: false },
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                         align: 'left'
                     },
@@ -96,7 +105,7 @@ Msr.PartsGrid = Msr.PartsGrid ||
                         name: 'Rev',
                         index: 'Rev',
                         colmenu: false,
-                        coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                        coloptions: { sorting: false, filtering: false, grouping: false, freeze: false },
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                         align: 'left'
                     },
@@ -106,7 +115,7 @@ Msr.PartsGrid = Msr.PartsGrid ||
                         index: 'Status',
                         colmenu: false,
                         stype: "select",
-                        coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                        coloptions: { sorting: false, filtering: false, grouping: false, freeze: false },
                         //searchoptions: { value: Msr.JqGridCommon.GetStatusFilters() },
                         multiselect: true,
                         searchoptions: {
@@ -125,7 +134,7 @@ Msr.PartsGrid = Msr.PartsGrid ||
                         name: 'LockedByName',
                         index: 'LockedByName',
                         colmenu: false,
-                        coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                        coloptions: { sorting: false, filtering: false, grouping: false, freeze: false },
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                         align: 'left',
                         width: 190
@@ -135,7 +144,7 @@ Msr.PartsGrid = Msr.PartsGrid ||
                         name: 'ReferenceFiles',
                         index: 'ReferenceFiles',
                         colmenu: false,
-                        coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
+                        coloptions: { sorting: false, filtering: false, grouping: false, freeze: false },
                         searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                         formatter: FilePreviewFormatter,
                         align: 'center',
@@ -145,7 +154,8 @@ Msr.PartsGrid = Msr.PartsGrid ||
                     {
                         name: 'Actions', index: 'ID', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: PartEditFormatter, width: 200,
                         align: 'center',
-                        sortable: false
+                        sortable: false,
+                        colmenu: false
                     }
                 ],
 

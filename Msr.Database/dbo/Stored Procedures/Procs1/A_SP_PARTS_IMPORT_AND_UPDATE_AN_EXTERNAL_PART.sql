@@ -8,7 +8,8 @@ CREATE      procedure dbo.A_SP_PARTS_IMPORT_AND_UPDATE_AN_EXTERNAL_PART
 @retPartID varchar(2000)OUTPUT,
 @externalPartID varchar(100),
 @partName varchar(2000),
-@strNTLogin varchar(50)
+@strNTLogin varchar(50),
+@oemPartNumber varchar(100)
 AS
 declare @internalPartID varchar(50)
 declare @histID varchar(50),@objID varchar(50),@internalPartRootID varchar(50)
@@ -29,9 +30,9 @@ if @internalPartRootID is not null
 	print 'histid = ' + @histID
 	SELECT @objID = OBJECT_ID FROM A_PARTS_HISTORY WHERE ID = @histID
 	UPDATE A_PARTS_HISTORY SET 
-		NAME = @partName
+		NAME = @partName, OEM_PART_NUMBER = @oemPartNumber
 	WHERE ID = @histID
-	set @newID = 'Updated the part ' + @partName
+	set @newID = 'Updated the part ' + @partName 
 	end
 else
 	begin
@@ -43,6 +44,7 @@ else
 	@rootCo, --@COMPANY  nvarchar(50),
 	@externalPartID, --@COMPANY_PART_NUMBER  nvarchar(50),
 	@partName, --@NAME nvarchar(100),
+	@oemPartNumber,
 	null, --@PART_TYPE  nvarchar(50),
 	null, --@SPARE  nvarchar(50),
 	null, --@CONSUMABLE  nvarchar(50),

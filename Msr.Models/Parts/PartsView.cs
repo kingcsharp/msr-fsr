@@ -19,7 +19,6 @@ namespace Msr.Models.Parts
         public string ApprovalActivity { get; set; }
         public string ObjectId { get; set; }
         public string Id { get; set; }
-        //public string PartId { get; set; }
         public string Unit { get; set; }
         public string Name { get; set; }
         public string PartType { get; set; }
