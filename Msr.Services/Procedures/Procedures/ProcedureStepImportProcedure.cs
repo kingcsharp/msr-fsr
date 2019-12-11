@@ -35,8 +35,8 @@ namespace Msr.Services.Procedures.Procedures
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 2000, ParameterName = "COMMENT")]
         public string Comment { get; set; }
 
-        [StoredProcedureParameter(SqlDbType.Int, ParameterName = "STEP_TIME")]
-        public int StepTime { get; set; }
+        [StoredProcedureParameter(SqlDbType.Float, ParameterName = "STEP_TIME")]
+        public Single StepTime { get; set; }
 
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 2400, ParameterName = "EXTRA_NOTE")]
         public string ExteraNote { get; set; }

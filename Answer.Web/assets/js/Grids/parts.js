@@ -21,7 +21,7 @@ Msr.PartsGrid = Msr.PartsGrid ||
                 datatype: "local",
                 colModel: [
                     {
-                        label: 'DB ID',
+                        label: 'Database Id',
                         name: 'Root',
                         index: 'Root',
                         key: true,
@@ -42,7 +42,7 @@ Msr.PartsGrid = Msr.PartsGrid ||
                         align: 'left'
                     },
                     {
-                        label: "Customer Part #",
+                        label: "Part #",
                         name: 'CompanyPartNumber',
                         index: 'CompanyPartNumber',
                         colmenu: false,

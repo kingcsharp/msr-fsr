@@ -125,7 +125,6 @@ namespace Msr.Repositories
             modelBuilder.Entity<ProductsSearchDataView>().ToTable("Portal_ProductsSearchDataView");
             modelBuilder.Entity<CombinedFinancialData>().ToTable("Report_CombinedFinancialData");
             modelBuilder.Entity<WorkOrdersWithoutInvoices>().ToTable("Report_WorkOrdersWithoutInvoices");
-            modelBuilder.Entity<ActualPartsHistory>().ToTable("Report_ActualPartHistory");
         }
 
         public DbSet<AspNetUser> AspNetUsers { get; set; }
@@ -172,6 +171,7 @@ namespace Msr.Repositories
         public DbSet<ActualPartViewHistoryView> ActualPartViewHistoryViews { get; set; }
         public DbSet<ProductsActualPartView> ProductsActualPartViews { get; set; }
         public DbSet<PrePropSearchView> PrePropSearchView { get; set; }
+
         public DbSet<LanguagesView> LanguagesViews { get; set; }
         public DbSet<TimeZonesView> TimeZonesViews { get; set; }
         public DbSet<OfficialPositionView> OfficialPositionViews { get; set; }
@@ -182,6 +182,7 @@ namespace Msr.Repositories
         public DbSet<CustomerRequirementView> CustomerRequirementViews { get; set; }
         public DbSet<ProcessInfoView> ProcessInfoViews { get; set; }
         public DbSet<PartInfoView> PartInfoViews { get; set; }
+
         public DbSet<CustomerSubmittedRequirement> CustomerSubmittedRequirements { get; set; }
         public DbSet<PurchaseView> PurchaseViews { get; set; }
         public DbSet<InvoiceView> InvoicesViews { get; set; }
@@ -200,6 +201,5 @@ namespace Msr.Repositories
         public DbSet<ProductsSearchDataView> ProductsSearchDataView { get; set; }
         public DbSet<CombinedFinancialData> CombinedFinancialData { get; set; }
         public DbSet<WorkOrdersWithoutInvoices> WorkOrdersWithoutInvoices { get; set; }
-        public DbSet<ActualPartsHistory> ActualPartsHistory { get; set; }
     }
 }
