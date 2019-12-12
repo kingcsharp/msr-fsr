@@ -25,6 +25,8 @@ namespace Msr.Services.Orders.Procedures
 
         public string PO_Number { get; set; }
 
+        public string Part_Image_ID { get; set; }
+
     }
 
 }
