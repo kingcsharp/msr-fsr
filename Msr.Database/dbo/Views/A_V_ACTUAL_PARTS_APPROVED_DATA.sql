@@ -3,7 +3,7 @@ AS
 SELECT     AP.ID, AP.HISTORY_REF_ID, AP.OBJECT_ID, AP.LOCATION, AP.NICK_NAME, AP.MERGABLE, AP.PARENT_ID, AP.PART_ID, AP.QTY, AP.SERIAL, 
                       AP.CUR_OWNER, AP.ASSEMBLY_WT, AP.AP_STATUS, AP.ROOT_ID, AP.ROOT_STATUS, AP.MODIFIED, AP.SYS_NAME, AP.PREV_OWNER, 
                       AP.SUB_PART_ACTION, dbo.A_V_COMPANIES_APPROVED_DATA.NAME AS CURRENT_OWNER_NAME, part.NAME AS PART_DESC, 
-                      part.PART_TYPE_NAME, loc.NAME AS LOCATION_NAME, ISNULL('Actual Part # ' + AP.ID + ', ', '') + ISNULL('(Nick: ' + AP.NICK_NAME + '), ', '') 
+                      part.PART_TYPE_NAME, loc.NAME AS LOCATION_NAME, ISNULL('Customer Part # ' + part.COMPANY_PART_NUMBER + ', ', '') + ISNULL('(Nick: ' + AP.NICK_NAME + '), ', '') 
                       + ISNULL('(S/N:' + AP.SERIAL + '), ', '') + ISNULL(' ' + part.NAME + '  ', '') + ISNULL('(p/n ' + part.ID + ')  ', '') AS NAME, AP.STATUS, 
                       part.COMPANY_PART_NUMBER, AP.HAS_CHILD, AP.RESPONSIBLE_PERSON
 FROM         dbo.A_V_ACTUAL_PARTS_APPROVED_DATA_QUICK AP INNER JOIN
