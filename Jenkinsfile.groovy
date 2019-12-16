@@ -117,7 +117,7 @@ pipeline {
                         try {
                             if(env.JOB_NAME == "MSR-FSR/Answer2.0/dev") {
                                 deploy("${APP_NAME_DEV}","${DEPLOY_GROUP_DEV}")
-                            } else if(env.JOB_NAME == "MSR-FSR/Answer2.0/Stage") {
+                            } else if(env.JOB_NAME == "MSR-FSR/Answer2.0/stage") {
                                 deploy("${APP_NAME_STAGE}","${DEPLOY_GROUP_STAGE}")
                             } else if(env.JOB_NAME == "MSR-FSR/Answer2.0/master") {
                                 deploy("${APP_NAME_PROD}","${DEPLOY_GROUP_PROD}")
