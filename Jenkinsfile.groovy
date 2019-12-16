@@ -33,24 +33,6 @@ pipeline {
                 }
             }
         }
-        stage("Process Transforms") {
-            steps {
-                script {
-                    try {
-                        if(env.JOB_NAME == "MSR-FSR/Answer2.0/stage") {
-                            bat "\"${tool 'v14-amd64'}\" Answer.Web\\transform.stage.proj /t:Stage"
-                        } else if(env.JOB_NAME == "MSR-FSR/Answer2.0/stage") {
-                            bat "\"${tool 'v14-amd64'}\" Answer.Web\\transform.prod.proj /t:Prod"
-                        } else {
-                            bat "\"${tool 'v14-amd64'}\" Answer.Web\\transform.dev.proj /t:Dev"
-                        }
-                    } catch(e) {
-                        office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED processing transforms. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
-                        currentBuild.result = 'FAILURE'
-                    }
-                }
-            }
-        }
         stage("Build Msr.Database") {
             steps {
                 script {
@@ -85,7 +67,13 @@ pipeline {
             steps {
                 script {
                     try {
-                        bat "\"${tool 'v14-amd64'}\" Answer.Web/transform.stage.proj /t:Stage"
+                        if(env.JOB_NAME == "MSR-FSR/Answer2.0/stage") {
+                            bat "\"${tool 'v14-amd64'}\" Answer.Web\\transform.stage.proj /t:Stage"
+                        } else if(env.JOB_NAME == "MSR-FSR/Answer2.0/master") {
+                            bat "\"${tool 'v14-amd64'}\" Answer.Web\\transform.prod.proj /t:Prod"
+                        } else {
+                            bat "\"${tool 'v14-amd64'}\" Answer.Web\\transform.dev.proj /t:Dev"
+                        }
                     } catch(e) {
                         office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED processing transforms. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
                         currentBuild.result = 'FAILURE'
