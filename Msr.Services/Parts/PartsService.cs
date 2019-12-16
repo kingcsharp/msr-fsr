@@ -101,6 +101,7 @@ namespace Msr.Services.Parts
                     ObjID = model.ObjID,
                     Company = model.Company,
                     CompanyPartNumber = model.CompanyPartNumber,
+                    OemPartNumber = model.OemPartNumber,
                     Name = model.Name,
                     PartType = model.PartType,
                     Spare = model.Spare,
@@ -149,6 +150,7 @@ namespace Msr.Services.Parts
                 {
                     Company = model.Company,
                     CompanyPartNumber = model.CompanyPartNumber,
+                    OemPartNumber = model.OemPartNumber,
                     Name = model.Name,
                     PartType = model.PartType,
                     Spare = model.Spare,

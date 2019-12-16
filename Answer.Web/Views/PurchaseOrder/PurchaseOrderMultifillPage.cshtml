@@ -3,6 +3,15 @@
     ViewBag.Title = "Purchase Multi fill Page";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+    <style>
+        table.quote-header {
+            width: 540px;
+        }
+
+            table.quote-header th {
+                vertical-align: middle !important;
+            }
+    </style>
 
 <div class="container-fluid">
     <div class="side-body padding-top">
@@ -12,7 +21,7 @@
             </h2>
             @Html.Partial("Message")
 
-            <table class="table table-bordered">
+            <table class="table table-bordered quote-header">
                 <tbody>
                 <tr>
                     <th>
