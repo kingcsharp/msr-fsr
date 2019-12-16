@@ -25,7 +25,7 @@ pipeline {
                 script {
                     try {
                         //bat label: '', script: '.nuget\\Nuget.exe install packages.config -o packages'
-                        bat label: '', script: '.nuget\\Nuget.exe restore Answer.Web\packages.config -PackagesDirectory ..\\packages'
+                        bat label: '', script: '.nuget\\Nuget.exe restore Answer.Web\\packages.config -PackagesDirectory ..\\packages'
                     } catch(e) {
                         office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED installing packages. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
                         currentBuild.result = 'FAILURE'
