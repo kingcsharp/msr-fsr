@@ -56,9 +56,9 @@
             });
     };
 
-    var custPoChangeForAdd = function () {
+    var custChangeForAdd = function () {
 
-        $('#CustPo').on('change',
+        $('#Client').on('change',
             function () {
                 eLoaderOpen();
                 var po = $(this).val();
@@ -69,7 +69,7 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "/Invoices/InvoiceModelGetPoItems?id=" + po + '&hasValue=' + false,
+                    url: "/Invoices/InvoiceModelGetPoList?id=" + po,
                     dataType: 'html',
                     success: function (data) {
                         eLoaderClose();
@@ -143,7 +143,7 @@
     return {
         LoadInvoiceModal: loadInvoiceModal,
         EditInvoiceModal: editInvoiceModal,
-        CustPoChange: custPoChangeForAdd,
+        CustChange: custChangeForAdd,
         EditOnPageLoadCustPo: editOnPageLoadCustPo,
         SaveInvoice: saveInvoice,
         CustPoChangeForEdit: custPoChangeForEdit,

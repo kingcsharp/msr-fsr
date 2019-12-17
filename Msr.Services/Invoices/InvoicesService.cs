@@ -68,14 +68,16 @@ namespace Msr.Services.Invoices
             return GetDistinctPOList();
         }
 
-        public List<POListItem> GetDistinctPOList()
+        public List<POListItem> GetDistinctPOList(int custid = -1)
         {
             string sql = "SELECT DISTINCT REFERENCEPO, custid " +
-                "FROM A_POS_WITH_COMPLETED_WOS ORDER BY REFERENCEPO";
+                "FROM A_POS_WITH_COMPLETED_WOS " +
+                "WHERE (custid = @p0) or (@p0 = -1)" +
+                "ORDER BY REFERENCEPO";
 
             List<POListItem> distinctPOList = _dbContext
                 .Database
-                .SqlQuery<POListItem>(sql)
+                .SqlQuery<POListItem>(sql, custid)
                 .OrderBy(x => x.REFERENCEPO)
                 .ToList();
 
