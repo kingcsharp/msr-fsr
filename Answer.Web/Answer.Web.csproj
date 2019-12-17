@@ -192,6 +192,10 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
+    <Reference Include="WebGrease">
+      <Private>True</Private>
+      <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
+    </Reference>
     <Reference Include="Antlr3.Runtime">
       <Private>True</Private>
       <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
@@ -199,9 +203,6 @@
     <Reference Include="EntityFrameworkExtras.EF6, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFrameworkExtras.EF6.1.0.0\lib\net45\EntityFrameworkExtras.EF6.dll</HintPath>
       <Private>True</Private>
-    </Reference>
-    <Reference Include="WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -574,7 +575,11 @@
     <Content Include="assets\help\master-admin-6.jpg" />
     <Content Include="assets\help\master-admin-7.jpg" />
     <Content Include="assets\help\master-admin-8.PNG" />
+    <Content Include="assets\img\app-header-bg.jpg" />
+    <Content Include="assets\img\background-network-electronics.jpg" />
+    <Content Include="assets\img\bg.jpg" />
     <Content Include="assets\img\clear.png" />
+    <Content Include="assets\img\contact-us-bg.jpg" />
     <Content Include="assets\img\default.png" />
     <Content Include="assets\img\icon-doc.png" />
     <Content Include="assets\img\icon-pdf.png" />
@@ -584,12 +589,17 @@
     <Content Include="assets\img\jpg.png" />
     <Content Include="assets\img\loading.gif" />
     <Content Include="assets\img\msr-ccs.png" />
-    <Content Include="assets\img\msr-label-logo.png" />
-    <Content Include="assets\img\msr-label-no-parts-image.png" />
     <Content Include="assets\img\NCR.PNG" />
     <Content Include="assets\img\nice_loader.gif" />
+    <Content Include="assets\img\profile-avatar.jpg" />
+    <Content Include="assets\img\profile-widget-avatar.jpg" />
+    <Content Include="assets\img\profile\picjumbo.com_HNCK4153_resize.jpg" />
+    <Content Include="assets\img\profile\profile-1.jpg" />
     <Content Include="assets\img\sprite-green.png" />
     <Content Include="assets\img\sprite-orange.png" />
+    <Content Include="assets\img\thumbnails\picjumbo.com_HNCK4737.jpg" />
+    <Content Include="assets\img\thumbnails\picjumbo.com_IMG_3241.jpg" />
+    <Content Include="assets\img\thumbnails\picjumbo.com_IMG_4566.jpg" />
     <Content Include="assets\js\ace\ace.js" />
     <Content Include="assets\js\ace\ace.min.js">
       <DependentUpon>ace.js</DependentUpon>
@@ -611,6 +621,7 @@
     <Content Include="assets\js\bootstrap-datepicker.min.js" />
     <Content Include="assets\js\bootstrap-datetimepicker.min.js" />
     <Content Include="assets\js\blockLayout.ui.js" />
+    <Content Include="assets\js\BootstrapFileInput\img\loading-sm.gif" />
     <Content Include="assets\js\BootstrapFileInput\js\fileinput-custom.min.js">
       <DependentUpon>fileinput-custom.js</DependentUpon>
     </Content>
@@ -3402,7 +3413,6 @@
     <Content Include="Views\Quote\Index.cshtml" />
     <Content Include="Views\Wip\_AddEquipment.cshtml" />
     <Content Include="Views\Procedures\_Monitor.cshtml" />
-    <Content Include="Views\ProductionPlanning\_Parts.cshtml" />
     <Content Include="Views\ProductionPlanning\_Product.cshtml" />
     <Content Include="Views\ProductionPlanning\_Models.cshtml" />
     <Content Include="Views\ProductionPlanning\_Steps.cshtml" />
@@ -3453,9 +3463,6 @@
     <Content Include="Views\PrintOther\_ViewPartLabelRollTsr.cshtml" />
     <Content Include="Views\PrintOther\_ViewPartLabelTsr.cshtml" />
     <Content Include="Views\Report\FinancialDashboard.cshtml" />
-    <Content Include="Views\PrintOther\_ViewPartLabelRoll4x4Tsr.cshtml" />
-    <Content Include="Views\Report\AdHocReport.cshtml" />
-    <Content Include="Views\Report\AdHocReports.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

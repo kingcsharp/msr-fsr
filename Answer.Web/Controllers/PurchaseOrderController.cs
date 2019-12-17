@@ -95,9 +95,9 @@ namespace Answer.Web.Controllers
                         totalRows = totalRows.Where(x => x.SupplierName.ToLower().Contains(rule.data.ToLower()));
                     }
 
-                    else if (rule.field == nameof(PurchesOrderView.CustomerName))
+                    else if (rule.field == nameof(PurchesOrderView.CustomerCo))
                     {
-                        totalRows = totalRows.Where(x => x.CustomerName.ToLower().Contains(rule.data.ToLower()));
+                        totalRows = totalRows.Where(x => x.CustomerCo.ToLower().Contains(rule.data.ToLower()));
                     }
 
                     else if (rule.field == nameof(PurchesOrderView.OpenDate))
@@ -236,7 +236,6 @@ namespace Answer.Web.Controllers
             if (ModelState.IsValid)
             {
                 model.NTLogin = currentUser.Id;
-                model.SupplierDepartment = "2";
 
                 var response = _purchesOrderService.Create(model);
 

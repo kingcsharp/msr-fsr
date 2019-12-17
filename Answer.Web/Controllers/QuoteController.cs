@@ -72,7 +72,6 @@ namespace Answer.Web.Controllers
             vm.Setup(_productionPlanningService, currentUser);
 
             vm.CustomerName = vm.Customers.SingleOrDefault(x => x.Value == vm.CustomerId)?.Text;
-            vm.SupplierName = vm.Suppliers.SingleOrDefault(x => x.Value == vm.Supplier)?.Text;
             vm.ProductId = requirment.ProductId;
 
 
