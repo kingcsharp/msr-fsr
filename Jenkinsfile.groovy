@@ -38,7 +38,7 @@ pipeline {
                 script {
                     try {
                         if(env.JOB_NAME == "MSR-FSR/Answer2.0/stage") {
-                            bat "\"${tool 'v2019'}\" Msr.Database/Msr.Database.sqlproj /t:Build /p:Configuration=Release /TargetConnectionString:\"Data Source=bang.msr-fsr.com;Initial Catalog=Answer2_Stage;User Id=sa;Password=L8xvg2FGqs7CEQ+s;Integrated Security=true\""
+                            bat "\"${tool 'v2019'}\" Msr.Database/Msr.Database.sqlproj /t:Build /p:Configuration=Release"
                         } else {
                             echo "Not building database for ${env.JOB_NAME}"
                         }
