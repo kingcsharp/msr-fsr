@@ -3462,6 +3462,7 @@
     <None Include="Web.Prod.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
+    <None Include="Web.Stage.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="assets\css\dropzone\" />
