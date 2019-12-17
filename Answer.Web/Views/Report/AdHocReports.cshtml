@@ -74,6 +74,7 @@
                         e.stopPropagation();
                         $("button.report").attr("disabled", false);
                         $(this).attr("disabled", "disabled");
+
                         $("#reportHeader").html("").html($(this).data("header-title"));
                         $.ajax({
                             url: '@ViewBag.ReportDataURL/' + $(this).data("title"),
