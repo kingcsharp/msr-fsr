@@ -52,11 +52,11 @@ pipeline {
                 script {
                     try {
                         if(env.JOB_NAME == "MSR-FSR/Answer2.0/Stage" || env.JOB_NAME.startsWith("MSR-FSR/Answer2.0/Release/Release")) {
-                            withCredentials([usernamePassword(credentialsId: '20d94a70-d354-4154-b896-72b12943f904', passwordVariable: 'DB_PASS', usernameVariable: 'DB_USER')]) {
+                            //withCredentials([usernamePassword(credentialsId: '20d94a70-d354-4154-b896-72b12943f904', passwordVariable: 'DB_PASS', usernameVariable: 'DB_USER')]) {
                                 bat label: '', script: 'sqlpackage.exe /a:script /SourceFile:%WORKSPACE%\\Msr.Database\\bin\\Release\\Msr.Database.dacpac /TargetConnectionString:"Data Source=bang.msr-fsr.com;Initial Catalog=Answer2_Stage;User Id=sa;Password=L8xvg2FGqs7CEQ+s;Integrated Security=true" /OutputPath:temp.sql'
-                            }
+                            //}
                         } else {
-                            echo "Not building script for env.JOB_NAME"
+                            echo "Not building script for ${env.JOB_NAME}"
                         }
                     } catch(e) {
                         office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED generating SQL script from Msr.Database. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
