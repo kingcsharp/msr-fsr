@@ -107,17 +107,22 @@ namespace Msr.Services.Invoices.ViewModel
                     Text = "IRE",
                     Value = "05"
                 },
+                new SelectListItem
+                {
+                    Text = "ISL",
+                    Value = "06"
+                },
 
             };
 
 
             PoList = invoicesService.InvoicePoList(onEdit).Select(x => new SelectListItem
             {
-                Text = x.ToString(),
-                Value = x.ToString()
+                Text = x.REFERENCEPO,
+                Value = x.REFERENCEPO,
             }).OrderBy(o => o.Text).ToList();
 
-            PoList.Insert(0, new SelectListItem() { Value = "", Text = @"Select Client" });
+            PoList.Insert(0, new SelectListItem() { Value = "", Text = @"Select PO #" });
 
             ClientList = purchesOrderService.GetCompaniesList().Select(x => new SelectListItem
             {

@@ -11,8 +11,8 @@ using System.Text;
 namespace Msr.Services.Invoices
 {
     public class POListItem {
-        public string REFERENCEPO;
-        public int custid;
+        public string REFERENCEPO { get; set; }
+        public int custid { get; set; }
     }
     public class InvoicesService
     {
@@ -70,10 +70,14 @@ namespace Msr.Services.Invoices
 
         public List<POListItem> GetDistinctPOList()
         {
-            string sql = $"SELECT REFERENCEPO, custid FROM A_POS_WITH_COMPLETED_WOS ORDER BY REFERENCEPO";
+            string sql = "SELECT DISTINCT REFERENCEPO, custid " +
+                "FROM A_POS_WITH_COMPLETED_WOS ORDER BY REFERENCEPO";
 
-            List<POListItem> distinctPOList =
-                _dbContext.Database.SqlQuery<POListItem>(sql).Distinct().OrderBy(x => x.REFERENCEPO).ToList();
+            List<POListItem> distinctPOList = _dbContext
+                .Database
+                .SqlQuery<POListItem>(sql)
+                .OrderBy(x => x.REFERENCEPO)
+                .ToList();
 
             return distinctPOList;
         }
