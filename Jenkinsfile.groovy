@@ -37,7 +37,9 @@ pipeline {
             steps {
                 script {
                     try {
-                        bat "\"${tool 'v2019'}\" Msr.Database/Msr.Database.sqlproj /t:Build /p:Configuration=Release"
+                        withCredentials([usernamePassword(credentialsId: '20d94a70-d354-4154-b896-72b12943f904', passwordVariable: 'DB_PASS', usernameVariable: 'DB_USER')]) {
+                            bat label: '', '${tool 'v2019'}\" Msr.Database/Msr.Database.sqlproj /t:Build /p:Configuration=Release /TargetConnectionString:"Data Source=bang.msr-fsr.com;Initial Catalog=Answer2_Stage;User Id=sa;Password=L8xvg2FGqs7CEQ+s;Integrated Security=true"'
+                        }
                     } catch(e) {
                         office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED building Msr.Database. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
                         currentBuild.result = 'FAILURE'
@@ -59,6 +61,21 @@ pipeline {
                     } catch(e) {
                         office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED generating SQL script from Msr.Database. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
                         currentBuild.result = 'FAILURE'
+                    }
+                }
+            }
+        }
+        stage("Publish SQL Script") {
+            steps {
+                script {
+                    try {
+                        if(env.JOB_NAME == "MSR-FSR/Answer2.0/stage") {
+                            bat label: '', script: 'sqlpackage.exe /a:publish /SourceFile:%WORKSPACE%\\Msr.Database\\bin\\Release\\Msr.Database.dacpac /TargetConnectionString:"Data Source=bang.msr-fsr.com;Initial Catalog=Answer2_Stage;User Id=sa;Password=L8xvg2FGqs7CEQ+a;Integrated Security=true"'
+                        } else {
+                            echo "Only publishing a script for Stage"
+                        }
+                    } catch(e) {
+                        office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED publishing SQL script from Msr.Database. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
                     }
                 }
             }
