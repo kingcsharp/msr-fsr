@@ -37,7 +37,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        bat "\"${tool 'v2019'}\" Msr.Database/Msr.Database.sqlproj /t:Build /p:Configuration=Release"
+                        bat "\"${tool 'v2019'}\" Msr.Database/Msr.Database.sqlproj /t:Build /p:Configuration=Release /TargetConnectionString:\"Data Source=bang.msr-fsr.com;Initial Catalog=Answer2_Stage;User Id=sa;Password=L8xvg2FGqs7CEQ+s;Integrated Security=true\""
                     } catch(e) {
                         office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED building Msr.Database. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
                         currentBuild.result = 'FAILURE'
