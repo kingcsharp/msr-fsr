@@ -22,11 +22,11 @@ namespace Msr.Services.Parts.Procedures
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 100, ParameterName = "COMPANY_PART_NUMBER")]
         public string CompanyPartNumber { get; set; }
 
-        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 100, ParameterName = "OEM_PART_NUMBER")]
-        public string OemPartNumber { get; set; }
-
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 100, ParameterName = "NAME")]
         public string Name { get; set; }
+
+        [StoredProcedureParameter(SqlDbType.NVarChar, Size = 100, ParameterName = "OEM_PART_NUMBER")]
+        public string OemPartNumber { get; set; }
 
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "PART_TYPE")]
         public string PartType { get; set; }

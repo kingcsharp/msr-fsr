@@ -80,6 +80,10 @@ namespace Answer.Web.Controllers
                     {
                         totalRows = totalRows.Where(x => x.CompanyPartNumber.ToLower().Contains(rule.data.ToLower()));
                     }
+                    else if (rule.field == nameof(PartsView.OemPartNumber))
+                    {
+                        totalRows = totalRows.Where(x => x.OemPartNumber.ToLower().Contains(rule.data.ToLower()));
+                    }
                     else if (rule.field == nameof(PartsView.CompanyName))
                     {
                         totalRows = totalRows.Where(x => x.CompanyName.ToLower().Contains(rule.data.ToLower()));

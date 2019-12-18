@@ -12,13 +12,15 @@ namespace Msr.Services.Parts.ViewModels
 
         public string Name { get; set; }
 
+        public string OemPartNumber { get; set; }
+
         public bool Processed { get; set; }
 
         public List<string> Messages { get; set; }
 
         public static List<string> GetHeaderColumns()
         {
-            return new List<string> {nameof(PartId), nameof(Name)};
+            return new List<string> { nameof(PartId), nameof(Name), nameof(OemPartNumber) };
         }
     }
 }

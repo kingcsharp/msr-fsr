@@ -1,48 +1,32 @@
-﻿CREATE PROCEDURE [dbo].[A_SP_PROCEDURE_IMPORT_STEP_FROM_EXTERNAL_SOURCE]
-	@newID varchar(2000) OUTPUT,
-	@msgs varchar(2000)OUTPUT,
-	@PROCEDURE_HIST_ID varchar(50),
-	@STEP_TEXT varchar(4000),
-	@Title nvarchar(2000),
-	@PRINT_ORDER varchar(50),
-	@REF_DOC_ID varchar(50),
-	@COMMENT varchar(2000),
-	@STEP_TIME INT,
-	@EXTRA_NOTE varchar(2400),
-	@DEFAULT_ROLE_ID varchar(50),
-	@SERIALIZE varchar(50),
-	@SUCCESS_MONITOR varchar(50),
-	@INTERNAL_LOCATION varchar(50),
-	@LOC_TYPE varchar(50),
-	@strNTLogin varchar(50)
+﻿
+CREATE                 procedure dbo.A_SP_PROCEDURE_IMPORT_STEP_FROM_EXTERNAL_SOURCE
+@newID varchar(2000) OUTPUT,
+@msgs varchar(2000)OUTPUT,
+@PROCEDURE_HIST_ID varchar(50),
+@STEP_TEXT varchar(4000),
+@Title nvarchar(2000),
+@PRINT_ORDER varchar(50),
+@REF_DOC_ID varchar(50),
+@COMMENT varchar(2000),
+@STEP_TIME float,
+@EXTRA_NOTE varchar(2400),
+@DEFAULT_ROLE_ID varchar(50),
+@SERIALIZE varchar(50),
+@SUCCESS_MONITOR varchar(50),
+@INTERNAL_LOCATION varchar(50),
+@LOC_TYPE varchar(50),
+@strNTLogin varchar(50)
 AS
-
 declare @rootCo varchar(50),@procObjID varchar(50)
-
 SELECT @procObjID = OBJECT_ID FROM A_PROCEDURES_HISTORY WHERE ID = @PROCEDURE_HIST_ID
 SELECT @rootCo = ROOT_COMPANY FROM A_V_PEOPLE_APPROVED_DATA WHERE ID = @strNTLogin
 declare @sql varchar(4000),@sText varchar(4000)
 print '-- Start Importing a procedure Step -- '
 set @sText = isNull(@STEP_TEXT,'') + '<<nl/>>' + isNull(@COMMENT + '<<nl/>><<nl/>>','') + isNUll(@EXTRA_NOTE,'')
 declare @stepID varchar(50)
-
 exec sp_getUniqueID3 @stepID output
-
--- ON THE IMPORT THEY ARE PASSING IN THE DEFAULT ROLE ID BY NAME SOMETIMES NOT BY THE ID
--- SO IF IT'S A ROLEN NAME, LOOK UP THE ID
-
-SET @DEFAULT_ROLE_ID = LTRIM(RTRIM(@DEFAULT_ROLE_ID))
-
-IF ISNUMERIC(@DEFAULT_ROLE_ID) = 0
-BEGIN
-	SELECT TOP 1 @DEFAULT_ROLE_ID = R.ID
-	FROM A_V_ROLES_APPROVED_DATA R
-	WHERE R.[NAME] = @DEFAULT_ROLE_ID
-	ORDER BY R.ID
-END
-
 INSERT INTO A_PROCEDURE_STEPS
-	(ID,PROCEDURE_ID,STEP_TEXT,PRINT_ORDER,DRCM,MODBY,DURATION,DURATION_TYPE,TITLE, ROLES)
+	(ID,PROCEDURE_ID,STEP_TEXT,PRINT_ORDER,DRCM,MODBY,DURATION,DURATION_TYPE,TITLE)
 VALUES
 	(
 	@stepID,
@@ -52,9 +36,8 @@ VALUES
 	getDate(),
 	@strNTLogin,
 	@STEP_TIME,
-	'TIME_SYS_MINUTES',
-	@Title,
-	@DEFAULT_ROLE_ID
+	'TIME_SYS_HOURS',
+	@Title
 	)
 
 INSERT INTO A_PROCEDURE_OBJECT_LINK
@@ -66,11 +49,11 @@ VALUES
 	@stepID,
 	@DEFAULT_ROLE_ID,
 	@STEP_TIME,
-	'TIME_SYS_MINUTES',
-	'ROLE_TO_VIEW',
+	'TIME_SYS_HOURS',
+	'LABOR_PROVIDE_TAKE_BACK',
 	getDate(),
 	@strNTLogin,
-	NULL
+	'LABOR_OWNER'
 	)
 declare @monID varchar(50)
 

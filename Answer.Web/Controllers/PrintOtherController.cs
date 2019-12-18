@@ -54,6 +54,7 @@ namespace Answer.Web.Controllers
             {
                 return RollLabelTsr(id);
             }
+
             if (reportType == "ROLL_PART_LABEL_4")
             {
                 return RollLabelTsr4(id);
@@ -97,9 +98,7 @@ namespace Answer.Web.Controllers
 
             var response = taskService.GetTaskWithMonitors(id.ToString(), currentUser.Id);
 
-            ncrDetails.MonitorItem = response.MonitorItem.OrderByDescending(x => x.TaskId).ToList();
-
-            // ncrDetails.MonitorItem = response.MonitorItem.Where(x => x.Description.Contains("Nonconformity") || x.Description.Contains("NCR")).ToList();
+            ncrDetails.MonitorItem = response.MonitorItem;
 
             return PartialView("_ViewNcrTsr", ncrDetails);
         }
@@ -145,6 +144,7 @@ namespace Answer.Web.Controllers
             var response = _orderService.GetPartLabelTsrDetails(id);
             return PartialView("_ViewPartLabelRollTsr", response);
         }
+
         public ActionResult RollLabelTsr4(int id)
         {
             var response = _orderService.GetPartLabelTsrDetails(id);

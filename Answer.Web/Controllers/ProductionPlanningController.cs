@@ -493,5 +493,25 @@ namespace Answer.Web.Controllers
             Response.Write(string.Join(",", ProductImportViewModel.GetHeaderColumns()));
 
         }
+
+        public ActionResult ApprovedProcedures()
+        {
+            var products = _productionPlanService.GetProceduretList();
+            var json = new
+            {
+                records = products
+            };
+            return Json(json, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult Parts()
+        {
+            var products = _productionPlanService.GetPartList();
+            var json = new
+            {
+                records = products
+            };
+            return Json(json, JsonRequestBehavior.AllowGet);
+        }
     }
 }
