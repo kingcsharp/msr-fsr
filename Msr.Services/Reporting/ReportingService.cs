@@ -26,5 +26,21 @@ namespace Msr.Services.Reporting
         {
             return _dbContext.WorkOrdersWithoutInvoices.AsQueryable();
         }
+
+        public IQueryable<ActualPartsHistory> GetActualPartsHistory()
+        {
+            return _dbContext.ActualPartsHistory.AsQueryable();
+        }
+
+        public IQueryable<SerialNumberHistory> GetSerialNumberHistory()
+        {
+            return _dbContext.SerialNumberHistory.AsQueryable();
+        }
+
+        public IQueryable<WorkInProcess> GetWorkInProcess()
+        {
+            return _dbContext.WorkInProcess.AsQueryable();
+        }
+
     }
 }

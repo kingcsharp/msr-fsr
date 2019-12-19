@@ -2,6 +2,7 @@
 AS
 
 SELECT DISTINCT
+ROW_NUMBER() OVER(ORDER BY Serial ASC) AS Id,
 pwo.Serial AS SerialNumber,
 pwo.CustPurchNum AS WONumber,
 pwo.StartDate AS WOCreationDate,

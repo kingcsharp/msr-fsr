@@ -125,6 +125,9 @@ namespace Msr.Repositories
             modelBuilder.Entity<ProductsSearchDataView>().ToTable("Portal_ProductsSearchDataView");
             modelBuilder.Entity<CombinedFinancialData>().ToTable("Report_CombinedFinancialData");
             modelBuilder.Entity<WorkOrdersWithoutInvoices>().ToTable("Report_WorkOrdersWithoutInvoices");
+            modelBuilder.Entity<ActualPartsHistory>().ToTable("Report_ActualPartHistory");
+            modelBuilder.Entity<SerialNumberHistory>().ToTable("Report_SerialNumberHistory");
+            modelBuilder.Entity<WorkInProcess>().ToTable("Report_WorkInProgress");
         }
 
         public DbSet<AspNetUser> AspNetUsers { get; set; }
@@ -201,5 +204,8 @@ namespace Msr.Repositories
         public DbSet<ProductsSearchDataView> ProductsSearchDataView { get; set; }
         public DbSet<CombinedFinancialData> CombinedFinancialData { get; set; }
         public DbSet<WorkOrdersWithoutInvoices> WorkOrdersWithoutInvoices { get; set; }
+        public DbSet<ActualPartsHistory> ActualPartsHistory { get; set; }
+        public DbSet<SerialNumberHistory> SerialNumberHistory { get; set; }
+        public DbSet<WorkInProcess> WorkInProcess { get; set; }
     }
 }
