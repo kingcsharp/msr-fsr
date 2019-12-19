@@ -33,6 +33,7 @@ pipeline {
                 }
             }
         }
+        /*
         stage("Build Msr.Database") {
             steps {
                 script {
@@ -54,7 +55,7 @@ pipeline {
                 script {
                     try {
                         if(env.JOB_NAME == "MSR-FSR/Answer2.0/stage" || env.JOB_NAME.startsWith("MSR-FSR/Answer2.0/Release/Release")) {
-                                bat label: '', script: 'sqlpackage.exe /a:script /SourceFile:%WORKSPACE%\\Msr.Database\\bin\\Release\\Msr.Database.dacpac /TargetConnectionString:"Data Source=bang.msr-fsr.com;Initial Catalog=Answer2_Stage;User Id=sa;Password=L8xvg2FGqs7CEQ+a;Integrated Security=true" /OutputPath:temp.sql'
+                            bat label: '', script: 'sqlpackage.exe /a:script /SourceFile:%WORKSPACE%\\Msr.Database\\bin\\Release\\Msr.Database.dacpac /TargetConnectionString:"Data Source=bang.msr-fsr.com;Initial Catalog=Answer2_Stage;User Id=sa;Password=L8xvg2FGqs7CEQ+a;Integrated Security=true" /OutputPath:temp.sql'
                         } else {
                             echo "Not building script for ${env.JOB_NAME}"
                         }
@@ -80,6 +81,7 @@ pipeline {
                 }
             }
         }
+        */
         stage("Process Transforms") {
             steps {
                 script {

@@ -43,7 +43,9 @@ namespace Msr.Web.Controllers
             ViewBag.ReportDataURL = ConfigurationManager.AppSettings["WebsiteUrl"].ToString() + "api/Reporting/AdHocReport";
             return View(new List<AdHocReportItem>() {
                 new AdHocReportItem() { Title = "Actual Parts History by Part Number" },
-                new AdHocReportItem() { Title = "Actual Parts History by Serial Number" }
+                new AdHocReportItem() { Title = "Actual Parts History by Serial Number" },
+                new AdHocReportItem() { Title = "Serial Number History" },
+                new AdHocReportItem() { Title = "Work In Process" },
             });
         }
 

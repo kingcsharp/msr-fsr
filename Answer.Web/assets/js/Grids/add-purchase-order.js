@@ -6,7 +6,7 @@ Msr.AddPurchaseOrder = Msr.AddPurchaseOrder ||
 
             $('.datepick').datetimepicker();
 
-            $('.dateSelecter').click(function () {
+            $('.dateSelecter').click(function (parameters) {
                 $(this).closest('td').find('.datepick').focus();
             });
 
@@ -14,11 +14,11 @@ Msr.AddPurchaseOrder = Msr.AddPurchaseOrder ||
                 allowClear: false
             });
 
-            $('#Client').on('change',
-                function () {
+            $('#Client,#SupplierDepartment').on('change',
+                function (parameters) {
 
                     var clientValue = $('#Client').val();
-                    var supplierCoValue = "2";
+                    var supplierCoValue = $('#SupplierDepartment').val();
 
                     $.ajax({
                         type: "GET",
