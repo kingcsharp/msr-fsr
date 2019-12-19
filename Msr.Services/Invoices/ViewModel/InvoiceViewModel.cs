@@ -15,7 +15,7 @@ namespace Msr.Services.Invoices.ViewModel
             StatusList = new List<SelectListItem>();
             ClientList = new List<SelectListItem>();
             InvoiceIdList = new List<SelectListItem>();
-            PoList = new List<SelectListItem>();
+            PoList = new List<POListItem>();
             InvoiceWorkItem = new List<InvoiceWorkItem>();
             InvoiceItemList = new List<InvoicePoWorkItem>();
         }
@@ -58,7 +58,7 @@ namespace Msr.Services.Invoices.ViewModel
 
         public List<SelectListItem> InvoiceIdList { get; set; }
 
-        public List<SelectListItem> PoList { get; set; }
+        public List<POListItem> PoList { get; set; }
 
         public List<InvoiceWorkItem> InvoiceWorkItem { get; set; }
         public void SetUp(PurchesOrderService purchesOrderService, InvoicesService invoicesService, bool onEdit)
@@ -122,20 +122,6 @@ namespace Msr.Services.Invoices.ViewModel
                 Value = x.Id.ToString()
             }).OrderBy(o => o.Text).ToList();
             ClientList.Insert(0, new SelectListItem() { Value = "", Text = @"Select Client" });
-        }
-
-        public void setPoList(List<POListItem> items)
-        {
-            PoList = items.Select(x => new SelectListItem
-            {
-                Text = x.REFERENCEPO,
-                Value = x.REFERENCEPO,
-            }).OrderBy(o => o.Text).ToList();
-
-            PoList.Insert(0, new SelectListItem() { Value = "", Text = @"Select PO #" });
-
-            // NEXT:
-            throw new Exception("unimplemented");
         }
 
         public InvoiceViewModel MapToDto(Invoice invoiceView)

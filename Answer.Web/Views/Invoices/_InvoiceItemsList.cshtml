@@ -1,66 +1,39 @@
 ﻿@model Msr.Services.Invoices.ViewModel.InvoiceViewModel
-<h4>Purchase Items to Apply (Check All that Apply)</h4>
-@if (Model.InvoiceItemList != null)
+<h4>Purchase Orders</h4>
+@if (Model.PoList != null)
 {
     <table class="table table-bordered" id="records_table">
         <tr>
             <th></th>
             <th>Date Posted</th>
-            <th>Cust Purchase Number</th>
-            <th>AII Purchase Number</th>
-            <th>AII Item Id</th>
-            <th style="width:100px;">Description</th>
-            <th>Qty</th>
-            <th>Product Cost Calculation</th>
-            <th>Unit Price</th>
-            <th>Amt of Inv Items</th>
-
+            <th>Reference PO</th>
+            <th>Customer ID</th>
+            <th>Customer Name</th>
+            <th style="width:100px;">Name</th>
         </tr>
-        @for (int i = 0; i < Model.InvoiceItemList.Count; i++)
+        @foreach (var po in Model.PoList)
         {
 
             <tr>
                 <td class="get-id">
-                    <input name="invoiceDetailListStrings" class="check-amount" value="@Model.InvoiceItemList[i].FillItemId" id="po-id" type="checkBox">
-                    @Html.HiddenFor(x => Model.InvoiceItemList[i].FillItemId)
+                    <input name="invoiceDetailListStrings" class="check-amount" value="@po.REFERENCEPO" id="po-id" type="checkBox">
+                    @Html.HiddenFor(x => po.REFERENCEPO)
                 </td>
                 <td>
-                    @string.Format("{0:M/d/yyyy}", Model.InvoiceItemList[i].OpenDate)
+                    @string.Format("{0:M/d/yyyy}", po.OpenDate)
                 </td>
 
                 <td>
-                    @Model.InvoiceItemList[i].CustPurchNum
+                    @po.REFERENCEPO
                 </td>
                 <td>
-                    @Model.InvoiceItemList[i].PurchaseId
+                    @po.custid
                 </td>
                 <td>
-                    @Model.InvoiceItemList[i].PurchaseItemId
+                    @po.customername
                 </td>
                 <td>
-                    @Model.InvoiceItemList[i].Description
-                </td>
-                <td>
-                    @Model.InvoiceItemList[i].FillQty
-                </td>
-                <td class="po-amount">
-                    @if (Model.InvoiceItemList[i].TotalSalePrice.HasValue)
-                    {
-                        <span> $@Model.InvoiceItemList[i].TotalSalePrice</span>
-                        @Html.HiddenFor(x => Model.InvoiceItemList[i].TotalSalePrice, new { @id = "amount-po" })
-                    }
-                </td>
-                <td>
-                    @if (Model.InvoiceItemList[i].TotalSalePrice.HasValue)
-                    {
-                        <span> $@Model.InvoiceItemList[i].TotalSalePrice</span>
-                    }
-                </td>
-                <td>
-                    @if (Model.InvoiceItemList[i].Amount.HasValue)
-                    {
-                        <span> $@Model.InvoiceItemList[i].Amount</span>
-                    }
+                    @po.name
                 </td>
             </tr>
         }

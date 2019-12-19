@@ -7,12 +7,16 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text;
+using Msr.Models.PurchesOrder;
 
 namespace Msr.Services.Invoices
 {
     public class POListItem {
         public string REFERENCEPO { get; set; }
         public int custid { get; set; }
+        public string customername { get; set; }
+        public string name { get; set; }
+        public string OpenDate {get; set; }
     }
     public class InvoicesService
     {
@@ -70,15 +74,20 @@ namespace Msr.Services.Invoices
 
         public List<POListItem> GetDistinctPOList(int custid = -1)
         {
-            string sql = "SELECT DISTINCT REFERENCEPO, custid " +
-                "FROM A_POS_WITH_COMPLETED_WOS " +
-                "WHERE (custid = @p0) or (@p0 = -1)" +
-                "ORDER BY REFERENCEPO";
+            string sql =
+                "SELECT DISTINCT a.REFERENCEPO as REFERENCEPO, " +
+                    "a.custid as custid, a.customername as customername, " +
+                    "isnull(po.name, '') as name, " +
+                    "po.OpenDate as OpenDate " +
+                "FROM A_POS_WITH_COMPLETED_WOS a " +
+                "LEFT JOIN Portal_PurchaseOrders po ON (a.REFERENCEPO = po.ReferencePo) " +
+                "WHERE ((custid = @p0) OR (@p0 = -1)) " +
+                "AND po.OpenDate IS NOT NULL " +
+                "ORDER BY a.REFERENCEPO";
 
             List<POListItem> distinctPOList = _dbContext
                 .Database
                 .SqlQuery<POListItem>(sql, custid)
-                .OrderBy(x => x.REFERENCEPO)
                 .ToList();
 
             return distinctPOList;

@@ -133,7 +133,7 @@ namespace Answer.Web.Controllers
         {
             var invoiceViewModel = new InvoiceViewModel();
 
-            invoiceViewModel.setPoList(_invoicesService.GetDistinctPOList(id));
+            invoiceViewModel.PoList = _invoicesService.GetDistinctPOList(id);
 
             return PartialView("_InvoiceItemsList", invoiceViewModel);
         }
