@@ -373,7 +373,7 @@ namespace Msr.Services.Documents
 		                            </div>
 		                            <table class=""container"">
 			                            <tr>
-				                            <td>WI-0083</td>
+				                            <td></td>
 				                            <td style=""text-align:center;"">" + doc.Name + @"</td>
 				                            <td style=""font-size:10px;"">Rev. " + doc.Rev + @"</td>
 				                            <td style=""font-size:10px;""> pg. {page} of {total-pages}</td>
