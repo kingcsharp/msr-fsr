@@ -19,14 +19,16 @@
                 <div class="form-horizontal">
                     <div class="row">
                         @Html.Partial("Message")
-                        <div class="alert ">
-                            The import file must be a tab delimited text file (.csv)<br/>
-                            The file must have these columns in any order: PartId, PartName<br/>
-                            If the partID already exists it will be updated with the new name. If it does not it will be created.<br/>
-                            The file must have the column names as the first row capitalized and spelled like above.<br/>
-                            The field defiitions are:<br/>
-                            partID = The unique ID of the part in your external database.<br/>
-                            partName = The parts name or description.
+                        <div class="alert alert-info">
+                            1. The import file must be a tab delimited text file (.csv)<br />
+                            2. The file must have these columns in any order: PartId, PartName, OemPartNumber<br />
+                            3. If the partID already exists it will be updated with the new name. If it does not it will be created.<br />
+                            4. The file must have the column names as the first row capitalized and spelled like above.<br />
+                            5. The field definitions are:<ul>
+                                <li><strong>partID</strong> = The unique ID of the part in your external database.</li>
+                                <li><strong>partName</strong> = The parts name or description.</li>
+                                <li><strong>OEMPartNumber</strong> = <em>(optional)</em> OEM Part Number for the part.</li>
+                            </ul>
                         </div>
                     </div>
 
@@ -40,62 +42,82 @@
                             <tr>
                                 <td>
                                     <label class="btn btn-primary" for="postedFile">
-                                        <input id="postedFile" type="file" name="postedFile" accept=".csv" style="display:none"  />
+                                        <input id="postedFile" type="file" name="postedFile" accept=".csv" style="display:none" />
                                         Browse...
                                     </label>
                                 </td>
                                 <td style="padding-left: 5px;">
-                                    <input type="submit" class="btn btn-success" value="Process Import"/>
+                                    <input type="submit" class="btn btn-success" value="Process Import" />
                                 </td>
                                 <td style="padding-left: 5px;">
-                                    <a class="btn btn-link" href="~/Parts/ImportSampleFile" target="_blank">Download sample file </a>
+                                    <a class="btn btn-link" href="~/Parts/ImportSampleFile" style="font-weight:500; text-decoration:underline" target="_blank">Download sample file </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    <div id="file-upload-filename"></div>
                                 </td>
                             </tr>
                         </table>
                     }
                 </div>
 
-                @if (Model!= null && Model.Any())
-                    {
-                        <h2>Number of records failed :@Model.Count()</h2>
+                @if (Model != null && Model.Any())
+                {
+                    <h2>Number of records failed :@Model.Count()</h2>
 
-                        <table class="table">
-                            <thead>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.PartId)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Name)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Messages)
+                                </th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Where(x => x.Processed == false))
+                            {
                                 <tr>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.PartId)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.Name)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.Messages)
-                                    </th>
-                                  
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.PartId)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Name)
+                                    </td>
+                                    <td>
+                                        @foreach (var message in item.Messages)
+                                        {
+                                            @message <br />
+                                        }
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model.Where(x=> x.Processed == false))
-                                {
-                                    <tr>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.PartId)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Name)
-                                        </td>
-                                        <td>
-                                            @foreach (var message in item.Messages)
-                                            {
-                                                @message <br/>
-                                            }
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    }
+                            }
+                        </tbody>
+                    </table>
+                }
             </div>
         </div>
     </div>
 </div>
+@section scripts
+{
+    <script type="text/javascript">
+        var input = document.getElementById('postedFile');
+        var infoArea = document.getElementById('file-upload-filename');
+
+        input.addEventListener('change', showFileName);
+
+        function showFileName(event) {
+            var input = event.srcElement;
+            var fileName = input.files[0].name;
+            infoArea.innerHTML = 'File selected: <strong>' + fileName + '</strong>';
+        }
+    </script>
+}
