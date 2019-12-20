@@ -2853,7 +2853,6 @@
     <Build Include="dbo\Views\Portal\Portal_ProductsSearchDataView.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_A_SP_PROCEDURE_IMPORT_STEP_FROM_EXTERNAL_SOURCE.sql" />
     <Build Include="dbo\Tables\Answer_Locations_Import.sql" />
-    <Build Include="dbo\Views\Portal_ProductionPlanningView.sql" />
     <Build Include="dbo\Views\Portal_NotificationView.sql" />
     <Build Include="dbo\Views\A_V_LOCATIONS_APPROVED_SITES_AND_ROOMS.sql" />
     <Build Include="dbo\Stored Procedures\Portal_DeleteWorkItemImagesById1.sql" />
@@ -2892,7 +2891,6 @@
     <Build Include="dbo\Stored Procedures\sp_AllNightLog.sql" />
     <Build Include="dbo\Stored Procedures\Portal_GetNcrReports.sql" />
     <Build Include="dbo\Views\Reports\Report_ActualPartHistory.sql" />
-    <Build Include="dbo\Views\Sensor_Current_Values.sql" />
     <Build Include="dbo\Views\A_V_WF_GROUP_ROLE_PEOPLE_2.sql" />
     <Build Include="dbo\Views\A_V_ACTUAL_PARTS_APPROVED_DATA_FOR_EACH_PART_1.sql" />
     <Build Include="dbo\Views\A_V_ACTUAL_PARTS_APPROVED_DATA_FOR_EACH_PART.sql" />
