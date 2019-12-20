@@ -2897,9 +2897,6 @@
     <Build Include="dbo\Views\A_V_ACTUAL_PARTS_APPROVED_DATA_FOR_EACH_PART_1.sql" />
     <Build Include="dbo\Views\A_V_ACTUAL_PARTS_APPROVED_DATA_FOR_EACH_PART.sql" />
     <Build Include="dbo\Views\A_CUSTOMER_PART_FILE_LINK_2.sql" />
-    <Build Include="Security\sa.sql" />
-    <Build Include="Security\msrfsr.sql" />
-    <Build Include="Security\RoleMemberships.sql" />
     <Build Include="dbo\Stored Procedures\A_SP_DNR_PERMUTATION_FIND_MATCHING_CASES_PART_2.sql" />
     <Build Include="Database Triggers\rds_deny_backups_trigger.sql" />
   </ItemGroup>
