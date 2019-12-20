@@ -1999,7 +1999,6 @@
     <Build Include="dbo\Views\A_APPROVED_ROLES_WITH_ASSIGNEES.sql" />
     <Build Include="dbo\Views\A_APPROVED_VERBS.sql" />
     <Build Include="dbo\Views\A_APRROVED_PEOPLE.sql" />
-    <Build Include="dbo\Views\A_CUSTOMER_PART_FILE_LINK_2.sql" />
     <Build Include="dbo\Views\A_LOCATIONS_APPROVED_DATA.sql" />
     <Build Include="dbo\Views\A_O_ACCOUNTS.sql" />
     <Build Include="dbo\Views\A_O_ACTUAL_PARTS_HISTORY.sql" />
@@ -2267,7 +2266,6 @@
     <Build Include="dbo\Views\A_V_TT_VERBS_APPROVED_DATA.sql" />
     <Build Include="dbo\Views\A_V_WF_GROUP_MEMBERS.sql" />
     <Build Include="dbo\Views\A_V_WF_GROUP_ROLE_LINK.sql" />
-    <Build Include="dbo\Views\A_V_WF_GROUP_ROLE_PEOPLE_2.sql" />
     <Build Include="dbo\Views\A_V_WF_GROUP_ROLES_WITH_MEMBERS.sql" />
     <Build Include="dbo\Views\A_V_WF_GROUP_SPECIAL_MEMBERS.sql" />
     <Build Include="dbo\Views\A_V_WF_GROUPS.sql" />
@@ -2412,7 +2410,6 @@
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_DNR_FIND_TESTS_FROM_MATCHING_CASE_II.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_DNR_FIND_TESTS_FROM_SIMILAR_CASES.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_DNR_GET_PARTS_ON_THIS_CALL.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DNR_PERMUTATION_FIND_MATCHING_CASES_PART_2.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_DNR_PERMUTATION_FIND_MATCHING_CASES_PART_2_RESTORE.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_DNR_TASK_UPDATE_CHILDREN.sql" />
     <Build Include="dbo\Tables\Portal_RequirementSteps.sql" />
