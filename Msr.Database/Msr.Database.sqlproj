@@ -61,7 +61,6 @@
     <Folder Include="Properties" />
     <Folder Include="dbo\" />
     <Folder Include="dbo\Tables\" />
-    <Folder Include="Security\" />
     <Folder Include="dbo\Functions\" />
     <Folder Include="dbo\Stored Procedures\" />
     <Folder Include="dbo\Stored Procedures\Procs1\" />
@@ -1999,7 +1998,6 @@
     <Build Include="dbo\Views\A_APPROVED_ROLES_WITH_ASSIGNEES.sql" />
     <Build Include="dbo\Views\A_APPROVED_VERBS.sql" />
     <Build Include="dbo\Views\A_APRROVED_PEOPLE.sql" />
-    <Build Include="dbo\Views\A_CUSTOMER_PART_FILE_LINK_2.sql" />
     <Build Include="dbo\Views\A_LOCATIONS_APPROVED_DATA.sql" />
     <Build Include="dbo\Views\A_O_ACCOUNTS.sql" />
     <Build Include="dbo\Views\A_O_ACTUAL_PARTS_HISTORY.sql" />
@@ -2040,7 +2038,6 @@
     <Build Include="dbo\Views\A_V_ACCOUNTS_WITH_RELATED_OBJECTS.sql" />
     <Build Include="dbo\Views\A_V_ACTUAL_PARTS_APPROVED_DATA.sql" />
     <Build Include="dbo\Views\A_V_ACTUAL_PARTS_APPROVED_DATA_FOR_EACH_PART.sql" />
-    <Build Include="dbo\Views\A_V_ACTUAL_PARTS_APPROVED_DATA_FOR_EACH_PART_1.sql" />
     <Build Include="dbo\Views\A_V_ACTUAL_PARTS_APPROVED_DATA_QUICK.sql" />
     <Build Include="dbo\Views\A_V_ACTUAL_PARTS_CALL_DATA_COMPLETE.sql" />
     <Build Include="dbo\Views\A_V_ACTUAL_PARTS_QUICK.sql" />
@@ -2268,7 +2265,6 @@
     <Build Include="dbo\Views\A_V_TT_VERBS_APPROVED_DATA.sql" />
     <Build Include="dbo\Views\A_V_WF_GROUP_MEMBERS.sql" />
     <Build Include="dbo\Views\A_V_WF_GROUP_ROLE_LINK.sql" />
-    <Build Include="dbo\Views\A_V_WF_GROUP_ROLE_PEOPLE_2.sql" />
     <Build Include="dbo\Views\A_V_WF_GROUP_ROLES_WITH_MEMBERS.sql" />
     <Build Include="dbo\Views\A_V_WF_GROUP_SPECIAL_MEMBERS.sql" />
     <Build Include="dbo\Views\A_V_WF_GROUPS.sql" />
@@ -2413,7 +2409,6 @@
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_DNR_FIND_TESTS_FROM_MATCHING_CASE_II.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_DNR_FIND_TESTS_FROM_SIMILAR_CASES.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_DNR_GET_PARTS_ON_THIS_CALL.sql" />
-    <Build Include="dbo\Stored Procedures\Procs1\A_SP_DNR_PERMUTATION_FIND_MATCHING_CASES_PART_2.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_DNR_PERMUTATION_FIND_MATCHING_CASES_PART_2_RESTORE.sql" />
     <Build Include="dbo\Stored Procedures\Procs1\A_SP_DNR_TASK_UPDATE_CHILDREN.sql" />
     <Build Include="dbo\Tables\Portal_RequirementSteps.sql" />
@@ -2834,7 +2829,6 @@
     <Build Include="dbo\Views\Portal\Portal_PartTypesApprovedView.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_ActualPartApprovedView.sql" />
     <Build Include="dbo\Views\Portal\Portal_HelpView.sql" />
-    <Build Include="dbo\Views\Portal_CustomerRequirementView.sql" />
     <Build Include="dbo\Tables\AdminCostSettings.sql" />
     <Build Include="dbo\Functions\SplitString.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_Create_UpdateProduct.sql" />
@@ -2857,9 +2851,7 @@
     <Build Include="dbo\Tables\Portal_AddSubPartQtyCount.sql" />
     <Build Include="dbo\Views\Portal\Portal_ProductsSearchDataView.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_A_SP_PROCEDURE_IMPORT_STEP_FROM_EXTERNAL_SOURCE.sql" />
-    <Build Include="dbo\Tables\Portal_CustomerRequirement_1.sql" />
     <Build Include="dbo\Tables\Answer_Locations_Import.sql" />
-    <Build Include="dbo\Views\Portal_ProductionPlanningView.sql" />
     <Build Include="dbo\Views\Portal_NotificationView.sql" />
     <Build Include="dbo\Views\A_V_LOCATIONS_APPROVED_SITES_AND_ROOMS.sql" />
     <Build Include="dbo\Stored Procedures\Portal_DeleteWorkItemImagesById1.sql" />
@@ -2879,14 +2871,10 @@
     <Build Include="dbo\Stored Procedures\WIP_GET_STEP_DETAILS.sql" />
     <Build Include="dbo\Views\Report_WorkOrdersWithoutInvoices.sql" />
     <Build Include="dbo\Tables\NCR_Categories.sql" />
-    <Build Include="dbo\Views\Sensor_Current_Values_1.sql" />
     <Build Include="dbo\Views\Report_WorkOrdersWithoutInvoicesVIEW.sql" />
     <Build Include="dbo\Views\Report_CombinedFinancialData3.sql" />
     <Build Include="dbo\Views\A_O_ORDERS_JUSTIN_TEMP.sql" />
     <Build Include="dbo\Views\A_O_ORDERS_BACKUP_05142019.sql" />
-    <Build Include="Security\sa.sql" />
-    <Build Include="Security\msrfsr.sql" />
-    <Build Include="Security\RoleMemberships.sql" />
     <Build Include="dbo\Stored Procedures\sp_WhoIsActive.sql" />
     <Build Include="dbo\Stored Procedures\sp_ineachdb.sql" />
     <Build Include="dbo\Stored Procedures\sp_foreachdb.sql" />
@@ -2901,8 +2889,17 @@
     <Build Include="dbo\Stored Procedures\sp_AllNightLog_Setup.sql" />
     <Build Include="dbo\Stored Procedures\sp_AllNightLog.sql" />
     <Build Include="dbo\Stored Procedures\Portal_GetNcrReports.sql" />
-    <Build Include="Database Triggers\rds_deny_backups_trigger_1.sql" />
     <Build Include="dbo\Views\Reports\Report_ActualPartHistory.sql" />
+    <Build Include="dbo\Views\A_V_WF_GROUP_ROLE_PEOPLE_2.sql" />
+    <Build Include="dbo\Views\A_V_ACTUAL_PARTS_APPROVED_DATA_FOR_EACH_PART_1.sql" />
+    <Build Include="dbo\Views\A_V_ACTUAL_PARTS_APPROVED_DATA_FOR_EACH_PART.sql" />
+    <Build Include="dbo\Views\A_CUSTOMER_PART_FILE_LINK_2.sql" />
+    <Build Include="dbo\Stored Procedures\A_SP_DNR_PERMUTATION_FIND_MATCHING_CASES_PART_2.sql" />
+    <Build Include="Database Triggers\rds_deny_backups_trigger.sql" />
+    <Build Include="dbo\Tables\Portal_CustomerRequirement.sql" />
+    <Build Include="dbo\Views\Sensor_Current_Values.sql" />
+    <Build Include="dbo\Views\Portal_ProductionPlanningView.sql" />
+    <Build Include="dbo\Views\Portal_CustomerRequirementView.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Msr.Database.refactorlog" />

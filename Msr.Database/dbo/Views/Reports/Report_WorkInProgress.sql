@@ -1,4 +1,5 @@
-﻿CREATE VIEW Report_WorkInProgress
+﻿
+CREATE VIEW [dbo].[Report_WorkInProgress]
 AS
 
 SELECT 
