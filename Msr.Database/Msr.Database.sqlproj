@@ -61,7 +61,6 @@
     <Folder Include="Properties" />
     <Folder Include="dbo\" />
     <Folder Include="dbo\Tables\" />
-    <Folder Include="Security\" />
     <Folder Include="dbo\Functions\" />
     <Folder Include="dbo\Stored Procedures\" />
     <Folder Include="dbo\Stored Procedures\Procs1\" />
@@ -2897,6 +2896,10 @@
     <Build Include="dbo\Views\A_CUSTOMER_PART_FILE_LINK_2.sql" />
     <Build Include="dbo\Stored Procedures\A_SP_DNR_PERMUTATION_FIND_MATCHING_CASES_PART_2.sql" />
     <Build Include="Database Triggers\rds_deny_backups_trigger.sql" />
+    <Build Include="dbo\Tables\Portal_CustomerRequirement.sql" />
+    <Build Include="dbo\Views\Sensor_Current_Values.sql" />
+    <Build Include="dbo\Views\Portal_ProductionPlanningView.sql" />
+    <Build Include="dbo\Views\Portal_CustomerRequirementView.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Msr.Database.refactorlog" />
