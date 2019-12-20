@@ -2040,7 +2040,6 @@
     <Build Include="dbo\Views\A_V_ACCOUNTS_WITH_RELATED_OBJECTS.sql" />
     <Build Include="dbo\Views\A_V_ACTUAL_PARTS_APPROVED_DATA.sql" />
     <Build Include="dbo\Views\A_V_ACTUAL_PARTS_APPROVED_DATA_FOR_EACH_PART.sql" />
-    <Build Include="dbo\Views\A_V_ACTUAL_PARTS_APPROVED_DATA_FOR_EACH_PART_1.sql" />
     <Build Include="dbo\Views\A_V_ACTUAL_PARTS_APPROVED_DATA_QUICK.sql" />
     <Build Include="dbo\Views\A_V_ACTUAL_PARTS_CALL_DATA_COMPLETE.sql" />
     <Build Include="dbo\Views\A_V_ACTUAL_PARTS_QUICK.sql" />
@@ -2857,7 +2856,6 @@
     <Build Include="dbo\Tables\Portal_AddSubPartQtyCount.sql" />
     <Build Include="dbo\Views\Portal\Portal_ProductsSearchDataView.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_A_SP_PROCEDURE_IMPORT_STEP_FROM_EXTERNAL_SOURCE.sql" />
-    <Build Include="dbo\Tables\Portal_CustomerRequirement_1.sql" />
     <Build Include="dbo\Tables\Answer_Locations_Import.sql" />
     <Build Include="dbo\Views\Portal_ProductionPlanningView.sql" />
     <Build Include="dbo\Views\Portal_NotificationView.sql" />
@@ -2897,7 +2895,6 @@
     <Build Include="dbo\Stored Procedures\sp_AllNightLog_Setup.sql" />
     <Build Include="dbo\Stored Procedures\sp_AllNightLog.sql" />
     <Build Include="dbo\Stored Procedures\Portal_GetNcrReports.sql" />
-    <Build Include="Database Triggers\rds_deny_backups_trigger_1.sql" />
     <Build Include="dbo\Views\Reports\Report_ActualPartHistory.sql" />
   </ItemGroup>
   <ItemGroup>
