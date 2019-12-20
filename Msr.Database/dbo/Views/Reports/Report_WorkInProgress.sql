@@ -1,14 +1,17 @@
-﻿CREATE VIEW Report_WorkInProgress
+﻿
+CREATE VIEW [dbo].[Report_WorkInProgress]
 AS
 
-SELECT pwo.Serial AS [W/O #],
+SELECT 
+ROW_NUMBER() OVER(ORDER BY WoItem ASC) AS Id,
+pwo.WoItem,
 pwo.DueDate,
 ('Specification: '+ COALESCE(pwo.ProcName,'') + ' | '+
 '  ATTN: ' + 'N/A ' + ' | '+ 
 'P.O.: '+ COALESCE(pwo.CustPurchNum,'') + ' | '+
 'Kit: ' + COALESCE(pwo.ProductName,'') + ' | '+
 'Tool: ' + ' | '+
-'Mittn: '+ COALESCE(pwo.CustMttn,'')) AS Details,
+'MTTN: '+ COALESCE(pwo.CustMttn,'')) AS Details,
 Status,
 pwo.ProcName
 ,pwo.CustMttn

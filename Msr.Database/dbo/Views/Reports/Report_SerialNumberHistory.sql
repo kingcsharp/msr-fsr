@@ -1,7 +1,9 @@
-﻿CREATE VIEW Report_SerialNumberHistory
+﻿
+CREATE VIEW [dbo].[Report_SerialNumberHistory]
 AS
 
 SELECT DISTINCT
+ROW_NUMBER() OVER(ORDER BY Serial ASC) AS Id,
 pwo.Serial AS SerialNumber,
 pwo.CustPurchNum AS WONumber,
 pwo.StartDate AS WOCreationDate,
@@ -22,4 +24,5 @@ OUTER APPLY(
 			FROM PartsTransactionLog AS pt
 			WHERE pt.PartId = pwo.PartId AND pt.SerialNumber=pwo.Serial
 			) PTLCount
+WHERE pwo.CustPurchNum IS NOT NULL AND pwo.Serial IS NOT NULL
 GO

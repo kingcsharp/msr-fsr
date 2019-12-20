@@ -24,20 +24,28 @@ pipeline {
             steps {
                 script {
                     try {
-                        bat label: '', script: '.nuget\\Nuget.exe install packages.config -o packages'
+                        //bat label: '', script: '.nuget\\Nuget.exe install packages.config -o packages'
+                        bat label: '', script: '.nuget\\Nuget.exe restore Answer.Web\\packages.config -PackagesDirectory ..\\packages'
                     } catch(e) {
                         office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED installing packages. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                        currentBuild.result = 'FAILURE'
                     }
                 }
             }
         }
+        /*
         stage("Build Msr.Database") {
             steps {
                 script {
                     try {
-                        bat "\"${tool 'v2019'}\" Msr.Database/Msr.Database.sqlproj /t:Build /p:Configuration=Release"
+                        if(env.JOB_NAME == "MSR-FSR/Answer2.0/stage") {
+                            bat "\"${tool 'v2019'}\" Msr.Database/Msr.Database.sqlproj /t:Build /p:Configuration=Release"
+                        } else {
+                            echo "Not building database for ${env.JOB_NAME}"
+                        }
                     } catch(e) {
                         office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED building Msr.Database. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                        currentBuild.result = 'FAILURE'
                     }
                 }
             }
@@ -46,13 +54,14 @@ pipeline {
             steps {
                 script {
                     try {
-                        if(env.JOB_NAME == "MSR-FSR/Answer2.0/Stage" || env.JOB_NAME == "MSR-FSR/Answer2.0/stage") {
+                        if(env.JOB_NAME == "MSR-FSR/Answer2.0/stage" || env.JOB_NAME.startsWith("MSR-FSR/Answer2.0/Release/Release")) {
                             bat label: '', script: 'sqlpackage.exe /a:script /SourceFile:%WORKSPACE%\\Msr.Database\\bin\\Release\\Msr.Database.dacpac /TargetConnectionString:"Data Source=bang.msr-fsr.com;Initial Catalog=Answer2_Stage;User Id=sa;Password=L8xvg2FGqs7CEQ+a;Integrated Security=true" /OutputPath:temp.sql'
                         } else {
-                            echo "Only generating a script for Stage"
+                            echo "Not building script for ${env.JOB_NAME}"
                         }
                     } catch(e) {
                         office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED generating SQL script from Msr.Database. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                        currentBuild.result = 'FAILURE'
                     }
                 }
             }
@@ -61,7 +70,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        if(env.JOB_NAME == "MSR-FSR/Answer2.0/Stage" || env.JOB_NAME == "MSR-FSR/Answer2.0/stage") {
+                        if(env.JOB_NAME == "MSR-FSR/Answer2.0/stage") {
                             bat label: '', script: 'sqlpackage.exe /a:publish /SourceFile:%WORKSPACE%\\Msr.Database\\bin\\Release\\Msr.Database.dacpac /TargetConnectionString:"Data Source=bang.msr-fsr.com;Initial Catalog=Answer2_Stage;User Id=sa;Password=L8xvg2FGqs7CEQ+a;Integrated Security=true"'
                         } else {
                             echo "Only publishing a script for Stage"
@@ -72,19 +81,21 @@ pipeline {
                 }
             }
         }
+        */
         stage("Process Transforms") {
             steps {
                 script {
                     try {
-                        if(env.JOB_NAME == "MSR-FSR/Answer2.0/Stage" || env.JOB_NAME == "MSR-FSR/Answer2.0/stage") {
-                            bat "\"${tool 'v14-amd64'}\" Answer.Web/transform.stage.proj /t:Stage"
+                        if(env.JOB_NAME == "MSR-FSR/Answer2.0/stage") {
+                            bat "\"${tool 'v14-amd64'}\" Answer.Web\\transform.stage.proj /t:Stage"
                         } else if(env.JOB_NAME == "MSR-FSR/Answer2.0/master") {
-                            bat "\"${tool 'v14-amd64'}\" Answer.Web/transform.prod.proj /t:Prod"
-                        } else  {
-                            bat "\"${tool 'v14-amd64'}\" Answer.Web/transform.dev.proj /t:Dev"
+                            bat "\"${tool 'v14-amd64'}\" Answer.Web\\transform.prod.proj /t:Prod"
+                        } else {
+                            bat "\"${tool 'v14-amd64'}\" Answer.Web\\transform.dev.proj /t:Dev"
                         }
                     } catch(e) {
                         office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED processing transforms. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                        currentBuild.result = 'FAILURE'
                     }
                 }
             }
@@ -96,6 +107,7 @@ pipeline {
                         bat "\"${tool 'v14-amd64'}\" Answer.Web/Answer.Web.csproj /t:Build /p:Configuration=Release /p:DeployOnBuild=true /p:OutputPath=${WORKSPACE}/publish"
                     } catch(e) {
                         office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED building Answer.Web. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                        currentBuild.result = 'FAILURE'
                     }
                 }
             }
@@ -112,6 +124,7 @@ pipeline {
                         bat label: '', script: 'd:\\tools\\7-Zip\\7z a %WORKSPACE%\\publish\\publish.zip publish\\_PublishedWebsites\\'
                     } catch(e) {
                         office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED packaging the release. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                        currentBuild.result = 'FAILURE'
                     }
                 }
             }
@@ -123,7 +136,7 @@ pipeline {
                         try {
                             if(env.JOB_NAME == "MSR-FSR/Answer2.0/dev") {
                                 deploy("${APP_NAME_DEV}","${DEPLOY_GROUP_DEV}")
-                            } else if(env.JOB_NAME == "MSR-FSR/Answer2.0/Stage" || env.JOB_NAME == "MSR-FSR/Answer2.0/stage") {
+                            } else if(env.JOB_NAME == "MSR-FSR/Answer2.0/stage") {
                                 deploy("${APP_NAME_STAGE}","${DEPLOY_GROUP_STAGE}")
                             } else if(env.JOB_NAME == "MSR-FSR/Answer2.0/master") {
                                 deploy("${APP_NAME_PROD}","${DEPLOY_GROUP_PROD}")
@@ -132,8 +145,11 @@ pipeline {
                             }
                         } catch(e) {
                             office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED deploying to server. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                            currentBuild.result = 'FAILURE'
                         }
                     }
+
+                    office365ConnectorSend color: "${GREEN}", message: "${JOB_NAME} build completed.", status: 'Passed',webhookUrl: "${WEBHOOK_URL}"
                 }
             }
         }
@@ -161,7 +177,6 @@ void deploy(appName,deployName) {
               s3bucket: 'answer-deployments', s3prefix: 'publish', subdirectory: 'publish\\_PublishedWebsites',
               versionFileName: '', waitForCompletion: true])
     }
-    office365ConnectorSend color: "${GREEN}", message: "${JOB_NAME} build completed.", status: 'Passed',webhookUrl: "${WEBHOOK_URL}"
 }
 
 void notify(branch, commit) {

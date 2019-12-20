@@ -17,6 +17,5 @@ namespace Msr.Models.Reporting
         public DateTime? DateCompleted { get; set; }
         public int CycleCount { get; set; }
         public string NCDisposition { get; set; }
-
     }
 }

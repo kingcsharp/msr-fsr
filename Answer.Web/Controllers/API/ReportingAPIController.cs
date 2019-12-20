@@ -33,6 +33,20 @@ namespace Answer.Web.Controllers.API
             return ret;
         }
 
+        [HttpGet, EnableQuery, Route("SerialNumberHistory")]
+        public IQueryable<SerialNumberHistory> GetSerialNumberHistory()
+        {
+            var ret = _reportingService.GetSerialNumberHistory();
+            return ret;
+        }
+
+        [HttpGet, EnableQuery, Route("WorkInProcess")]
+        public IQueryable<WorkInProcess> GetWorkInProcess()
+        {
+            var ret = _reportingService.GetWorkInProcess();
+            return ret;
+        }
+
         [HttpGet, EnableQuery, Route("ActualPartsHistorybyPartNumber")]
         public IQueryable<ActualPartsHistory> GetActualPartsHistorybyPartNumber()
         {
@@ -47,12 +61,12 @@ namespace Answer.Web.Controllers.API
             return ret;
         }
 
-        [HttpGet,Route("AdHocReport/{title}")]
+        [HttpGet, Route("AdHocReport/{title}")]
         public JsonResult<AdHocReportItem> AdHocReport(string title)
         {
             var dict = new Dictionary<string, AdHocReportItem>() {
-                { 
-                    "ActualPartsHistorybyPartNumber", 
+                {
+                    "ActualPartsHistorybyPartNumber",
                     new AdHocReportItem()
                     {
                         Columns = new List<object>(){
@@ -65,10 +79,10 @@ namespace Answer.Web.Controllers.API
                         },
                         DataURL = ConfigurationManager.AppSettings["WebsiteUrl"].ToString() + "api/Reporting/ActualPartsHistorybyPartNumber",
                         Title = "Actual Parts History by Part Number"
-                    } 
+                    }
                 },
                 {
-                    "ActualPartsHistorybySerialNumber",   
+                    "ActualPartsHistorybySerialNumber",
                     new AdHocReportItem()
                     {
                         Columns = new List<object>(){
@@ -82,7 +96,43 @@ namespace Answer.Web.Controllers.API
                         DataURL = ConfigurationManager.AppSettings["WebsiteUrl"].ToString() + "api/Reporting/ActualPartsHistorybySerialNumber",
                         Title = "Actual Parts History by Serial Number"
                     }
-                } 
+                },
+                {
+                    "SerialNumberHistory",
+                    new AdHocReportItem()
+                    {
+                        Columns = new List<object>(){
+                        new { field = "serialNumber", headerText = "Serial #", width = 75 },
+                        new { field = "woNumber", headerText = "WO #", width = 75 },
+                        new { field = "woCreationDate", headerText = "Created", width = 70, format = "{0:MM/dd/yyyy}" },
+                        new { field = "dueDate", headerText = "Due Date", width = 70, format = "{0:MM/dd/yyyy}" },
+                        new { field = "shipDate", headerText = "Ship Date", width = 75, format = "{0:MM/dd/yyyy}" },
+                        new { field = "msrfsrFacility", headerText = "Facility", width = 60 },
+                        new { field = "customerName", headerText = "Customer", width = 100 },
+                        new { field = "specno", headerText = "Spec #", width = 100 },
+                        new { field = "kitName", headerText = "Kit Name", width = 100 },
+                        new { field = "ncrNumber", headerText = "NCR #", width = 75 },
+                        new { field = "pono", headerText = "PO #", width = 75 },
+                        new { field = "mttn", headerText = "MTTN", width = 75 },
+                        new { field = "cycleCount", headerText = "Cycle Count", width = 75 }
+                        },
+                        DataURL = ConfigurationManager.AppSettings["WebsiteUrl"].ToString() + "api/Reporting/SerialNumberHistory",
+                        Title = "Serial Number History"
+                    }
+                },
+                {
+                    "WorkInProcess",
+                    new AdHocReportItem()
+                    {
+                        Columns = new List<object>(){
+                        new { field = "woItem", headerText = "WO #", width = 100 },
+                        new { field = "dueDate", headerText = "Due Date", width = 75, format = "{0:MM/dd/yyyy}" },
+                        new { field = "details", headerText = "Details", width = 200, format = "{0:MM/dd/yyyy}" }
+                        },
+                        DataURL = ConfigurationManager.AppSettings["WebsiteUrl"].ToString() + "api/Reporting/WorkInProcess",
+                        Title = "Work in Process"
+                    }
+                }
             };
 
             return Json(dict[title]);

@@ -1,10 +1,11 @@
-﻿CREATE VIEW dbo.A_V_FILLS_ACTUAL_PART_SEARCH
+﻿
+CREATE VIEW [dbo].[A_V_FILLS_ACTUAL_PART_SEARCH]
 AS
 SELECT     AP.ID, AP.HISTORY_REF_ID, APH.LOCATION, APH.OBJECT_ID, APH.DRCM, APH.MODBY, APH.NICK_NAME, APH.MERGABLE, APH.PARENT_ID, 
                       APH.PART_ID, APH.QTY, APH.SERIAL, APH.CUR_OWNER, APH.ASSEMBLY_WT, APH.AP_STATUS, APH.ROOT_ID, APH.ROOT_STATUS, 
                       part.COMPANY_PART_NUMBER, part.NAME AS PART_DESC, part.PART_TYPE_NAME, loc.NAME AS LOCATION_NAME, 
                       dbo.A_V_COMPANIES_APPROVED_DATA.NAME AS CURRENT_OWNER_NAME, dbo.A_FN_ACTUAL_PART_HAS_CHILD(AP.ID) AS HAS_CHILD, 
-                      ISNULL('Actual Part # ' + AP.ID + ', ', '') + ISNULL('(Nick: ' + APH.NICK_NAME + '), ', '') + ISNULL('(S/N:' + APH.SERIAL + '), ', '') 
+                      ISNULL('Customer Part # ' + part.COMPANY_PART_NUMBER + ', ', '') + ISNULL('(Nick: ' + APH.NICK_NAME + '), ', '') + ISNULL('(S/N:' + APH.SERIAL + '), ', '') 
                       + ISNULL(' ' + part.NAME + '  ', '') + ISNULL('(p/n ' + part.ID + ')  ', '') AS NAME, AP.STATUS, dbo.A_OBJECTS.CREATING_CO, 
                       part.PART_TYPE AS PART_TYPE_ID
 FROM         dbo.A_ACTUAL_PARTS AP INNER JOIN

@@ -141,8 +141,3 @@ Deallocate @curs1
 
 
 SELECT CASE_ID AS [ID] FROM #DNRcases
-
-
-
-
-

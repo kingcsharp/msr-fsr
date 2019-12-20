@@ -1,4 +1,4 @@
-﻿CREATE VIEW dbo.A_APPROVED_PEOPLE
+﻿CREATE VIEW [dbo].[A_APPROVED_PEOPLE]
 AS
 SELECT     P.ID, PH.LOGIN, PH.NAME, PH.PASSWORD, PH.BOSS, PH.SOURCE, PH.LAST_NAME, PH.MIDDLE_NAME, PH.NICK_NAME, PH.LANG, PH.HIRE_DATE, PH.DRCM, 
                       PH.MODBY, PH.OBJECT_ID, PH.COMPANY, PH.TIME_ZONE, PH.FULL_NAME, PH.SYSTEM_STATUS, PH.CO_POSITION, PH.ROOT_COMPANY, 
@@ -159,6 +159,8 @@ Begin DesignProperties =
     ', @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'A_APPROVED_PEOPLE';
 
 
+
+
 GO
 EXECUTE sp_addextendedproperty @name = N'MS_DiagramPane2', @value = N'     Alias = 900
          Table = 1170
@@ -176,6 +178,8 @@ EXECUTE sp_addextendedproperty @name = N'MS_DiagramPane2', @value = N'     Alias
    End
 End
 ', @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'A_APPROVED_PEOPLE';
+
+
 
 
 GO

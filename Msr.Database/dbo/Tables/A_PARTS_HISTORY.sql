@@ -23,8 +23,11 @@
     [PRODUCT_TYPE]              VARCHAR (10)   NULL,
     [PROC_VERB]                 NVARCHAR (100) NULL,
     [PRICE]                     MONEY          NULL,
+    [OEM_PART_NUMBER]           VARCHAR (100)  NULL,
     CONSTRAINT [PK_A_PARTS_HISTORY] PRIMARY KEY CLUSTERED ([ID] ASC)
 );
+
+
 
 
 GO

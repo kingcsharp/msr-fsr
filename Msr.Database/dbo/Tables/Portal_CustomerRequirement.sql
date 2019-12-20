@@ -35,5 +35,3 @@
     CONSTRAINT [PK_Portal_CustomerRequirement] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
-
-

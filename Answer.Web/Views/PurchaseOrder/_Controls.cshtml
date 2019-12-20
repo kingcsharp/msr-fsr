@@ -3,7 +3,7 @@
 @Html.HiddenFor(x => x.ObjId)
 <input type="hidden" name="Id" id="Id" value="@Model.Id" />
 
-<table class="table quote-header" width="100%">
+<table class="table" width="100%">
     <tr>
         <th width="20%">Customer:</th>
         <td width="30%">
@@ -123,7 +123,7 @@
     </tr>
     <tr>
         <th align="right">Products:</th>
-        <td colspan="4">
+        <td>
             <div>
                 @Html.DropDownListFor(m => m.Products, Model.ProductsList, new { @class = "form-control select select-products" })
             </div>

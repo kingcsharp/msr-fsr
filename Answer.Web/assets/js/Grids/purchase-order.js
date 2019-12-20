@@ -142,17 +142,19 @@ Msr.PurchaseOrderGrid = Msr.PurchaseOrderGrid ||
                     name: 'CustomerName',
                     index: 'CustomerName',
                     colmenu: false,
-                    editable: true,
+                    editable: false,
+                    editrules: { required: true },
                     coloptions: {
                         sorting: false,
                         columns: true,
                         filtering: false,
-                        seraching: false,
+                        seraching: true,
                         grouping: false,
                         freeze: false
                     },
                     searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                    align: 'left'
+                    align: 'left',
+                    hidedlg: false
                 },
                 {
                     label: 'Open Date',

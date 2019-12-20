@@ -1,11 +1,15 @@
-﻿CREATE VIEW Report_CombinedFinancialData
-AS
+﻿
 
+
+
+CREATE VIEW [dbo].[Report_CombinedFinancialData]
+AS
 SELECT 
+ROW_NUMBER() OVER(ORDER BY WoItem ASC) AS Id,
 pwo.CustPurchNum AS WONumber,
-pwo.StartDate AS WOCreationDate,
-pwo.DueDate AS DueDate,
-pwo.OrigDueDate AS ShipDate, 
+FORMAT(pwo.StartDate,'MM/dd/yyyy') AS WOCreationDate,
+FORMAT(pwo.DueDate,'MM/dd/yyyy') AS DueDate,
+FORMAT(pwo.OrigDueDate,'MM/dd/yyyy') AS ShipDate, 
 pwo.LocationName AS MSRFSRFacility,
 pwo.CustomerName,
 pwo.ProcName AS specno,
@@ -15,9 +19,9 @@ pwo.CustMttn AS mttn,
 pwo.Amount,
 pwo.FillQty,
 i.Id AS InvoiceId,
-i.InvoiceDate AS InvoiceDate,
-i.SubTotal AS SubTotal,
-i.Tax AS WTax
+FORMAT(i.InvoiceDate,'MM/dd/yyyy') AS InvoiceDate,
+CONVERT(VARCHAR,i.SubTotal) AS SubTotal,
+CONVERT(VARCHAR,i.Tax) AS WTax
 FROM dbo.Portal_WorkOrders pwo 
 INNER JOIN Portal_InvoiceWorkItem iw ON iw.ItemId = pwo.FillItemId
 INNER JOIN Portal_Invoice i ON i.Id = iw.InvoiceId

@@ -1,4 +1,4 @@
-﻿CREATE VIEW dbo.A_V_COMPANIES_DROP_SEARCH
+﻿CREATE VIEW [dbo].[A_V_COMPANIES_DROP_SEARCH]
 AS
 SELECT     c.NAME AS ROOT_NAME, c.ROOT_CO_ID, c.ID, CASE WHEN (c.ROOT_CO_ID = c.ID) THEN c.NAME + ' - [ID:' + c.ID + ']' ELSE ISNULL('  [' + r.NAME + ']', '') 
                       + c.NAME + ' - [ID:' + c.ID + ']' END AS NAME
@@ -124,6 +124,8 @@ Begin DesignProperties =
    End
 End
 ', @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'A_V_COMPANIES_DROP_SEARCH';
+
+
 
 
 GO

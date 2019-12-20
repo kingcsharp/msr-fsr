@@ -1,4 +1,13 @@
 ﻿CREATE VIEW [dbo].[Sensor_Current_Values]
-	AS SELECT        S.Site, S.SensorName, m.ItemCurrentValue
-FROM            dbo.Sensor_Mapping AS S INNER JOIN
-                         EquipmentMonitoring.dbo.Hillsboro_UpdateTable AS m ON m.ItemID = S.MonitoringID
+AS
+
+SELECT 1 as dummy;
+
+-- the table HILLSBORO_UPDATETABLE doesn't exist!
+
+--SELECT S.SENSORMAPPINGID
+--	, S.[SITE] AS SITENAME
+--	, S.SENSORNAME
+--	, M.ITEMCURRENTVALUE AS SENSORCURRENTVALUE
+--FROM DBO.SENSOR_MAPPING AS S
+--INNER JOIN EQUIPMENTMONITORING.DBO.HILLSBORO_UPDATETABLE AS M ON M.ITEMID = S.MONITORINGID
