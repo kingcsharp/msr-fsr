@@ -2830,7 +2830,6 @@
     <Build Include="dbo\Views\Portal\Portal_PartTypesApprovedView.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_ActualPartApprovedView.sql" />
     <Build Include="dbo\Views\Portal\Portal_HelpView.sql" />
-    <Build Include="dbo\Views\Portal_CustomerRequirementView.sql" />
     <Build Include="dbo\Tables\AdminCostSettings.sql" />
     <Build Include="dbo\Functions\SplitString.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_Create_UpdateProduct.sql" />
@@ -2893,6 +2892,16 @@
     <Build Include="dbo\Stored Procedures\sp_AllNightLog.sql" />
     <Build Include="dbo\Stored Procedures\Portal_GetNcrReports.sql" />
     <Build Include="dbo\Views\Reports\Report_ActualPartHistory.sql" />
+    <Build Include="dbo\Views\Sensor_Current_Values.sql" />
+    <Build Include="dbo\Views\A_V_WF_GROUP_ROLE_PEOPLE_2.sql" />
+    <Build Include="dbo\Views\A_V_ACTUAL_PARTS_APPROVED_DATA_FOR_EACH_PART_1.sql" />
+    <Build Include="dbo\Views\A_V_ACTUAL_PARTS_APPROVED_DATA_FOR_EACH_PART.sql" />
+    <Build Include="dbo\Views\A_CUSTOMER_PART_FILE_LINK_2.sql" />
+    <Build Include="Security\sa.sql" />
+    <Build Include="Security\msrfsr.sql" />
+    <Build Include="Security\RoleMemberships.sql" />
+    <Build Include="dbo\Stored Procedures\A_SP_DNR_PERMUTATION_FIND_MATCHING_CASES_PART_2.sql" />
+    <Build Include="Database Triggers\rds_deny_backups_trigger.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Msr.Database.refactorlog" />
