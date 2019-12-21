@@ -7,7 +7,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text;
-using Msr.Models.PurchesOrder;
+using Newtonsoft.Json;
 
 namespace Msr.Services.Invoices
 {
@@ -17,6 +17,9 @@ namespace Msr.Services.Invoices
         public string customername { get; set; }
         public string name { get; set; }
         public string OpenDate {get; set; }
+        public string ToJSON() {
+            return JsonConvert.SerializeObject(this);
+        }
     }
     public class InvoicesService
     {
@@ -123,24 +126,27 @@ namespace Msr.Services.Invoices
 
             try
             {
-                var invoice = new Invoice();
-                invoice.Client = model.Client;
-                invoice.Description = model.InvoiceDescription;
-                invoice.Status = model.Status;
-                invoice.CustPo = model.CustPo;
-                invoice.InvoiceDate = model.InvoiceDate.Value;
-                invoice.Total = model.Total;
-                invoice.SubTotal = model.SubTotal;
-                invoice.Tax = model.Tax;
-                invoice.Supplier = model.Supplier;
-                invoice.InvoiceClass = model.InvoiceClass;
-                _dbContext.Invoices.Add(invoice);
-                _dbContext.SaveChanges();
+                // Iterate through the selected purchase orders and invoice
+                // all items for each one.
+                var poItem = model.Items.Split(',');
 
-                var invoiceItem = model.Items.Split(',');
-
-                foreach (var item in invoiceItem)
+                foreach (var item in poItem)
                 {
+                    var invoice = new Invoice();
+                    invoice.Client = model.Client;
+                    invoice.Description = model.InvoiceDescription;
+                    invoice.Status = model.Status;
+                    invoice.CustPo = item;
+                    invoice.InvoiceDate = model.InvoiceDate.Value;
+                    invoice.Total = 0;
+                    invoice.SubTotal = 0;
+                    invoice.Tax = 0;
+                    invoice.Supplier = model.Supplier;
+                    invoice.InvoiceClass = model.InvoiceClass;
+                    _dbContext.Invoices.Add(invoice);
+                    _dbContext.SaveChanges();
+
+                    /*
                     var invoiceWorkItem = new InvoiceWorkItem
                     {
                         ItemId = item,
@@ -149,6 +155,7 @@ namespace Msr.Services.Invoices
                     };
 
                     _dbContext.InvoiceWorkItems.Add(invoiceWorkItem);
+                    */
                 }
 
                 _dbContext.SaveChanges();
@@ -165,6 +172,7 @@ namespace Msr.Services.Invoices
 
         public ResultNotification<string> Edit(InvoiceViewModel model)
         {
+            throw new Exception("unimplemented");
             var result = new ResultNotification<string>();
             try
             {
@@ -172,13 +180,13 @@ namespace Msr.Services.Invoices
                 invoice.Client = model.Client;
                 invoice.Description = model.InvoiceDescription;
                 invoice.Status = model.Status;
-                invoice.CustPo = model.CustPo;
-                invoice.InvoiceDate = model.InvoiceDate.Value;
-                invoice.Total = model.Total;
-                invoice.SubTotal = model.SubTotal;
-                invoice.Tax = model.Tax;
-                invoice.InvoiceClass = model.InvoiceClass;
-                invoice.Supplier = model.Supplier;
+                //invoice.CustPo = model.CustPo;
+                //invoice.InvoiceDate = model.InvoiceDate.Value;
+                //invoice.Total = model.Total;
+                //invoice.SubTotal = model.SubTotal;
+                //invoice.Tax = model.Tax;
+                //invoice.InvoiceClass = model.InvoiceClass;
+                //invoice.Supplier = model.Supplier;
 
                 var invoiceItem = model.Items?.Split(',');
 

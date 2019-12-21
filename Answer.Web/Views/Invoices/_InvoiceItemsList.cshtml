@@ -15,6 +15,7 @@
         {
 
             <tr>
+                @Html.Hidden("po-data", po.ToJSON())
                 <td class="get-id">
                     <input name="invoiceDetailListStrings" class="check-amount" value="@po.REFERENCEPO" id="po-id" type="checkBox">
                     @Html.HiddenFor(x => po.REFERENCEPO)
@@ -46,7 +47,8 @@
 
     $(document).ready(function () {
         $('input[type="checkbox"]').click(function () {
-            CheckBoxSelection($('#addId').val(), this, $(this).closest('tr').find('.po-amount').find('#amount-po').val());
+            CheckBoxSelection($('#addId').val(), this, $(this).closest('tr').find('#po-data').val());
+            console.log($(this).closest('tr').find('#po-data').val());
         });
     });
 

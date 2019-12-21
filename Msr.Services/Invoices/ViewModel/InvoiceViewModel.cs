@@ -29,20 +29,9 @@ namespace Msr.Services.Invoices.ViewModel
         public string Status { get; set; }
 
         [Required]
-        public string CustPo { get; set; }
-
-        [Required]
         public DateTime? InvoiceDate { get; set; }
 
         public int InvoiceNumber { get; set; }
-
-        [Required]
-        public decimal? SubTotal { get; set; }
-
-        [Required]
-        public decimal? Total { get; set; }
-
-        public decimal? Tax { get; set; }
 
         public string Items { get; set; }
 
@@ -132,11 +121,7 @@ namespace Msr.Services.Invoices.ViewModel
                 Client = invoiceView.Client,
                 InvoiceDescription = invoiceView.Description,
                 Status = invoiceView.Status,
-                CustPo = invoiceView.CustPo,
-                SubTotal = invoiceView.SubTotal,
-                Total = invoiceView.Total,
                 InvoiceDate = invoiceView.InvoiceDate,
-                Tax = invoiceView.Tax,
                 InvoiceClass = invoiceView.InvoiceClass,
                 Items = invoiceView.Items,
                 Supplier = invoiceView.Supplier,

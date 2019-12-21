@@ -33,6 +33,7 @@
 @Html.Partial("Message")
 @using (Html.BeginForm("Create", "Invoices", FormMethod.Post, new { @class = "form-horizontal", @id = "FormId" }))
 {
+    <!-- TODO: I think this is now incorrect: -->
     @Html.HiddenFor(model => model.Items, new { @class = "form-control", @id = "addId" })
     @Html.HiddenFor(model => model.InvoiceNumber, new { @class = "form-control" })
     <table class="table quote-header" width="100%">
