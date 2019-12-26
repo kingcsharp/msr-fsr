@@ -63,9 +63,6 @@
                 eLoaderOpen();
                 var po = $(this).val();
                 $('#addId').val("");
-                $('#total-tax-amount').val("");
-                $('#total-add').val("");
-                $('#total-amount').val("0.00");
 
                 $.ajax({
                     type: "POST",
