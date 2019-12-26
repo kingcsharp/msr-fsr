@@ -1,15 +1,29 @@
 ﻿
 
 
+
 CREATE VIEW [dbo].[Report_CombinedFinancialData]
 AS
-SELECT        ROW_NUMBER() OVER(ORDER BY WoItem ASC) AS Id, pwo.WoItem AS WONumber, FORMAT(ISNULL(pwo.StartDate, ''), 'd', 'en-US') AS WOCreationDate, FORMAT(ISNULL(pwo.DueDate, ''), 'd', 'en-US') AS DueDate, FORMAT(ISNULL(pwo.OrigDueDate, ''), 'd', 'en-US') AS ShipDate, 
-                         pwo.LocationName AS MSRFSRFacility, pwo.CustomerName, pwo.ProcName AS specno, pwo.WoItem AS KitName, pwo.ReferencePo AS pono, pwo.CUSTMTTN AS mttn, pwo.Amount, pwo.FillQty, i.Id AS InvoiceId, 
-                         FORMAT(ISNULL(i.InvoiceDate, ''), 'd', 'en-US') AS InvoiceDate, FORMAT(pwo.FillQty * pwo.Amount, '$#,#.00') AS SubTotal, FORMAT(pwo.FillQty * pwo.Amount + pwo.FillQty * pwo.Amount * ISNULL(i.Tax, 0), '$#,#.00') 
-                         AS WTax
-FROM            dbo.Portal_WorkOrders AS pwo INNER JOIN
-                         dbo.Portal_InvoiceWorkItem AS iw ON iw.ItemId = pwo.FillItemId INNER JOIN
-                         dbo.Portal_Invoice AS i ON i.Id = iw.InvoiceId
-WHERE pwo.StartDate > '2019-08-01'
+SELECT 
+ROW_NUMBER() OVER(ORDER BY WoItem ASC) AS Id,
+pwo.CustPurchNum AS WONumber,
+FORMAT(pwo.StartDate,'MM/dd/yyyy') AS WOCreationDate,
+FORMAT(pwo.DueDate,'MM/dd/yyyy') AS DueDate,
+FORMAT(pwo.OrigDueDate,'MM/dd/yyyy') AS ShipDate, 
+pwo.LocationName AS MSRFSRFacility,
+pwo.CustomerName,
+pwo.ProcName AS specno,
+pwo.WoItem AS KitName,
+pwo.ReferencePo AS pono,
+pwo.CustMttn AS mttn,
+pwo.Amount,
+pwo.FillQty,
+i.Id AS InvoiceId,
+FORMAT(i.InvoiceDate,'MM/dd/yyyy') AS InvoiceDate,
+CONVERT(VARCHAR,i.SubTotal) AS SubTotal,
+CONVERT(VARCHAR,i.Tax) AS WTax
+FROM dbo.Portal_WorkOrders pwo 
+INNER JOIN Portal_InvoiceWorkItem iw ON iw.ItemId = pwo.FillItemId
+INNER JOIN Portal_Invoice i ON i.Id = iw.InvoiceId
 
 GO
