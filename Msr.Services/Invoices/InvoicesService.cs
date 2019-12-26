@@ -128,15 +128,15 @@ namespace Msr.Services.Invoices
             {
                 // Iterate through the selected purchase orders and invoice
                 // all items for each one.
-                var poItem = model.Items.Split(',');
+                var poItems = JsonConvert.DeserializeObject<POListItem[]>(model.Items);
 
-                foreach (var item in poItem)
+                foreach (var item in poItems)
                 {
                     var invoice = new Invoice();
                     invoice.Client = model.Client;
                     invoice.Description = model.InvoiceDescription;
                     invoice.Status = model.Status;
-                    invoice.CustPo = item;
+                    invoice.CustPo = item.REFERENCEPO;
                     invoice.InvoiceDate = model.InvoiceDate.Value;
                     invoice.Total = 0;
                     invoice.SubTotal = 0;

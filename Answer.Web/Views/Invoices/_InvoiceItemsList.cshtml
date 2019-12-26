@@ -48,7 +48,6 @@
     $(document).ready(function () {
         $('input[type="checkbox"]').click(function () {
             CheckBoxSelection($('#addId').val(), this, $(this).closest('tr').find('#po-data').val());
-            console.log($(this).closest('tr').find('#po-data').val());
         });
     });
 

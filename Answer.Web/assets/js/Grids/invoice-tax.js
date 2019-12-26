@@ -1,26 +1,24 @@
-﻿var inVoiceTax = {}
-inVoiceTax.values = [];
-inVoiceTax.total = 0;
+﻿var selItems = {}
+selItems.values = [];
+selItems.total = 0;
 
 function CheckBoxSelection(id, element, value) {
+console.log('CheckBoxSelection');
 
-    if (isNaN(value)) {
-        value = 0;
-    }
     //for add
     if ($(element).prop("checked") === true) {
-        AddItems($(element).closest('tr').find('.get-id').find('#po-id').val());
+        AddItems(value);
 
-        inVoiceTax.total = (parseFloat(inVoiceTax.total) + parseFloat(value)).toFixed(2);
-        $('#total-amount').val(inVoiceTax.total);
+        selItems.total = 0;
+        $('#total-amount').val(selItems.total);
 
         CalculateTax($('#total-amount').val(), $('#total-tax-amount').val());
     }
     else {
-        RemoveItems($(element).closest('tr').find('.get-id').find('#po-id').val());
+        RemoveItems(value);
 
-        inVoiceTax.total = (parseFloat(inVoiceTax.total) - parseFloat(value)).toFixed(2);
-        $('#total-amount').val(inVoiceTax.total);
+        selItems.total = 0;
+        $('#total-amount').val(selItems.total);
 
         CalculateTax($('#total-amount').val(), $('#total-tax-amount').val());
     }
@@ -38,15 +36,21 @@ $('#total-tax-amount').on('change', function () {
 });
 
 function AddItems(id) {
-    inVoiceTax.values.push(id);
-    $('#addId').val(inVoiceTax.values);
+    let data = JSON.parse(id);
+    selItems.values.push(data);
+    $('#addId').val(JSON.stringify(selItems.values));
 }
 
 function RemoveItems(id) {
-    inVoiceTax.values = inVoiceTax.values.filter(function (item) {
-        return item !== id;
+    let data = JSON.parse(id);
+    selItems.values = selItems.values.filter(function (item) {
+        return !(
+            item.REFERENCEPO == data.REFERENCEPO &&
+            item.name == data.name &&
+            item.OpenDate == data.OpenDate
+        );
     });
-    $('#addId').val(inVoiceTax.values);
+    $('#addId').val(selItems.values);
 }
 
 function CalculateTax(subTotal, tax) {
