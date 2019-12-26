@@ -132,6 +132,8 @@ namespace Msr.Services.Invoices
 
                 foreach (var item in poItems)
                 {
+                    var workItems = InvoiceItemsByPurchaseId(item.REFERENCEPO, false);
+
                     var invoice = new Invoice();
                     invoice.Client = model.Client;
                     invoice.Description = model.InvoiceDescription;
@@ -146,16 +148,18 @@ namespace Msr.Services.Invoices
                     _dbContext.Invoices.Add(invoice);
                     _dbContext.SaveChanges();
 
-                    /*
-                    var invoiceWorkItem = new InvoiceWorkItem
-                    {
-                        ItemId = item,
-                        InvoiceId = invoice.Id.ToString(),
-                        RefPo = invoice.CustPo,
-                    };
+                    Single totalPrice = 0;
+                    foreach (var wi in workItems) {
+                        var invoiceWorkItem = new InvoiceWorkItem
+                        {
+                            ItemId = wi.PurchaseId,
+                            InvoiceId = invoice.Id.ToString(),
+                            RefPo = invoice.CustPo,
+                        };
+                        totalPrice += wi.TotalSalePrice.GetValueOrDefault();
 
-                    _dbContext.InvoiceWorkItems.Add(invoiceWorkItem);
-                    */
+                        _dbContext.InvoiceWorkItems.Add(invoiceWorkItem);
+                    }
                 }
 
                 _dbContext.SaveChanges();
