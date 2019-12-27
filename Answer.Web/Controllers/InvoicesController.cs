@@ -176,7 +176,7 @@ namespace Answer.Web.Controllers
 
             invoiceViewModel.Items = string.Join(",", invoiceViewModel.InvoiceWorkItem.Select(x => x.ItemId));
 
-            return PartialView("_InvoiceEditModel ", invoiceViewModel);
+            return PartialView("_InvoiceEditModel", invoiceViewModel);
         }
 
         [HttpPost]

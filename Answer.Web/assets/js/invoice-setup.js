@@ -76,26 +76,6 @@
             });
     };
 
-    var editOnPageLoadCustPo = function (po, itemsId, hasEdit) {
-        eLoaderOpen();
-        $('#invoicePo form').clearQueue();
-        $.ajax({
-            type: "POST",
-            url: "/Invoices/InvoiceModelEditGetPoItems?id=" + po + '&hasValue=' + hasEdit,
-            dataType: 'html',
-            success: function (data) {
-                eLoaderClose();
-                var values = itemsId;
-                var items = values.split(",");
-                $("input:checkbox[class=checkAmount]").each(function () {
-                    if (jQuery.inArray($(this).val(), items) !== -1) {
-                        $(this).prop('checked', true);
-                    }
-                });
-            }
-        });
-    };
-
     var saveInvoice = function () {
 
         $('#invoice-submit').click(function (e) {
@@ -141,7 +121,6 @@
         LoadInvoiceModal: loadInvoiceModal,
         EditInvoiceModal: editInvoiceModal,
         CustChange: custChangeForAdd,
-        EditOnPageLoadCustPo: editOnPageLoadCustPo,
         SaveInvoice: saveInvoice,
         CustPoChangeForEdit: custPoChangeForEdit,
         UpdateInvoice: updateInvoice

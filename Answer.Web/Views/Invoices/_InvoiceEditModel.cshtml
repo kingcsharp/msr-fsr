@@ -118,11 +118,6 @@
 
 		$('.datepick').datetimepicker();
 
-		if ('@Model.CustPo' !== '') {
-
-			invoice.EditOnPageLoadCustPo('@Model.CustPo', '@Model.Items', true);
-		}
-
 		invoice.CustPoChangeForEdit();
 
 		invoice.UpdateInvoice();

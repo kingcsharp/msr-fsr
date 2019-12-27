@@ -178,7 +178,6 @@ namespace Msr.Services.Invoices
 
         public ResultNotification<string> Edit(InvoiceViewModel model)
         {
-            throw new Exception("unimplemented");
             var result = new ResultNotification<string>();
             try
             {
@@ -187,12 +186,12 @@ namespace Msr.Services.Invoices
                 invoice.Description = model.InvoiceDescription;
                 invoice.Status = model.Status;
                 //invoice.CustPo = model.CustPo;
-                //invoice.InvoiceDate = model.InvoiceDate.Value;
+                invoice.InvoiceDate = model.InvoiceDate.Value;
                 //invoice.Total = model.Total;
                 //invoice.SubTotal = model.SubTotal;
-                //invoice.Tax = model.Tax;
-                //invoice.InvoiceClass = model.InvoiceClass;
-                //invoice.Supplier = model.Supplier;
+                invoice.Tax = model.Tax;
+                invoice.InvoiceClass = model.InvoiceClass;
+                invoice.Supplier = model.Supplier;
 
                 var invoiceItem = model.Items?.Split(',');
 
@@ -210,15 +209,12 @@ namespace Msr.Services.Invoices
                         _dbContext.InvoiceWorkItems.Add(invoiceWorkItem);
                     }
                 _dbContext.SaveChanges();
-
-                return result;
             }
             catch (Exception ex)
             {
                 result.AddError(ex.Message);
-
-                return result;
             }
+            return result;
         }
 
         public MemoryStream GetInvoicesZippedArchive(ref List<InvoiceQuickbooksFileModel> invoiceQuickbooksFileModels)
