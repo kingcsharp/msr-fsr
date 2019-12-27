@@ -185,10 +185,7 @@ namespace Msr.Services.Invoices
                 invoice.Client = model.Client;
                 invoice.Description = model.InvoiceDescription;
                 invoice.Status = model.Status;
-                //invoice.CustPo = model.CustPo;
                 invoice.InvoiceDate = model.InvoiceDate.Value;
-                //invoice.Total = model.Total;
-                //invoice.SubTotal = model.SubTotal;
                 invoice.Tax = model.Tax;
                 invoice.InvoiceClass = model.InvoiceClass;
                 invoice.Supplier = model.Supplier;
