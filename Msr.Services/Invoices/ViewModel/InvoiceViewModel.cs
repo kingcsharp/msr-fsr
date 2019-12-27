@@ -33,6 +33,8 @@ namespace Msr.Services.Invoices.ViewModel
 
         public int InvoiceNumber { get; set; }
 
+        public decimal? Tax { get; set; }
+
         public string Items { get; set; }
 
         public string Supplier { get; set; }
@@ -122,6 +124,7 @@ namespace Msr.Services.Invoices.ViewModel
                 InvoiceDescription = invoiceView.Description,
                 Status = invoiceView.Status,
                 InvoiceDate = invoiceView.InvoiceDate,
+                Tax = invoiceView.Tax,
                 InvoiceClass = invoiceView.InvoiceClass,
                 Items = invoiceView.Items,
                 Supplier = invoiceView.Supplier,

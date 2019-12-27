@@ -91,6 +91,18 @@
             </td>
         </tr>
     </table>
+    <table>
+        <tr>
+            <th align="right">Tax %:</th>
+            <td>
+                <div class="input-group">
+
+                    @Html.EditorFor(model => model.Tax, new { htmlAttributes = new { @class = "form-control", @id = "total-tax-amount" } })
+                    <span class="input-group-addon">%</span>
+                </div>
+            </td>
+        </tr>
+    </table>
     <table class="table  no-border" width="100%">
         <tr>
             <td align="right">

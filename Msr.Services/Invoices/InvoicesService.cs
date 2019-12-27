@@ -140,9 +140,6 @@ namespace Msr.Services.Invoices
                     invoice.Status = model.Status;
                     invoice.CustPo = item.REFERENCEPO;
                     invoice.InvoiceDate = model.InvoiceDate.Value;
-                    invoice.Total = 0;
-                    invoice.SubTotal = 0;
-                    invoice.Tax = 0;
                     invoice.Supplier = model.Supplier;
                     invoice.InvoiceClass = model.InvoiceClass;
                     _dbContext.Invoices.Add(invoice);
@@ -160,18 +157,23 @@ namespace Msr.Services.Invoices
 
                         _dbContext.InvoiceWorkItems.Add(invoiceWorkItem);
                     }
+
+                    invoice.Total = (
+                        (decimal)totalPrice * ((model.Tax.GetValueOrDefault() / 100) + 1)
+                    );
+                    invoice.SubTotal = (decimal)totalPrice;
+                    invoice.Tax = model.Tax;
+
+                    _dbContext.SaveChanges();
+
                 }
-
-                _dbContext.SaveChanges();
-
-                return result;
             }
             catch (Exception ex)
             {
                 result.AddError(ex.Message);
 
-                return result;
             }
+            return result;
         }
 
         public ResultNotification<string> Edit(InvoiceViewModel model)
