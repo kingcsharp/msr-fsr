@@ -55,8 +55,6 @@
             </td>
             <th align="right">Cust PO #:</th>
             <td>
-                @Html.DropDownListFor(model => model.CustPo, Model.PoList, new { @class = "form-control", @id = "cust-po-edit" })
-                @Html.ValidationMessageFor(model => model.CustPo, "", new { @class = "text-danger" })
             </td>
         </tr>
         <tr>
@@ -94,40 +92,6 @@
             </td>
         </tr>
     </table>
-    <table>
-
-        <tr>
-            <th align="right">Sub Total:</th>
-            <td>
-                <div class="input-group">
-                    <span class="input-group-addon">$</span>
-                    @Html.EditorFor(model => model.SubTotal, new { htmlAttributes = new { @class = "form-control", @id = "totalAmount", @readonly = "readonly" } })
-                </div>
-            </td>
-            <th align="right">Tax %:</th>
-            <td>
-                <div class="input-group">
-
-                    @Html.EditorFor(model => model.Tax, new { htmlAttributes = new { @class = "form-control", @id = "totalTaxAmount" } })
-                    <span class="input-group-addon">%</span>
-                </div>
-            </td>
-            <th align="right">Total:</th>
-            <td>
-                <div class="input-group">
-                    <span class="input-group-addon">$</span>
-                    @Html.EditorFor(model => model.Total, new { htmlAttributes = new { @class = "form-control", @id = "total", @readonly = "readonly" } })
-
-                </div>
-            </td>
-        </tr>
-        <br />
-        <br />
-
-        <tr>
-            <td colspan="4"></td>
-        </tr>
-    </table>
     <table class="table  no-border" width="100%">
         <tr>
             <td align="right">
@@ -153,11 +117,6 @@
 		var invoice = new Invoice();
 
 		$('.datepick').datetimepicker();
-
-		if ('@Model.CustPo' !== '') {
-
-			invoice.EditOnPageLoadCustPo('@Model.CustPo', '@Model.Items', true);
-		}
 
 		invoice.CustPoChangeForEdit();
 

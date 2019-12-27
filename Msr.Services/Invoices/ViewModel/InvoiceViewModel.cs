@@ -15,7 +15,7 @@ namespace Msr.Services.Invoices.ViewModel
             StatusList = new List<SelectListItem>();
             ClientList = new List<SelectListItem>();
             InvoiceIdList = new List<SelectListItem>();
-            PoList = new List<SelectListItem>();
+            PoList = new List<POListItem>();
             InvoiceWorkItem = new List<InvoiceWorkItem>();
             InvoiceItemList = new List<InvoicePoWorkItem>();
         }
@@ -29,18 +29,9 @@ namespace Msr.Services.Invoices.ViewModel
         public string Status { get; set; }
 
         [Required]
-        public string CustPo { get; set; }
-
-        [Required]
         public DateTime? InvoiceDate { get; set; }
 
         public int InvoiceNumber { get; set; }
-
-        [Required]
-        public decimal? SubTotal { get; set; }
-
-        [Required]
-        public decimal? Total { get; set; }
 
         public decimal? Tax { get; set; }
 
@@ -58,7 +49,7 @@ namespace Msr.Services.Invoices.ViewModel
 
         public List<SelectListItem> InvoiceIdList { get; set; }
 
-        public List<SelectListItem> PoList { get; set; }
+        public List<POListItem> PoList { get; set; }
 
         public List<InvoiceWorkItem> InvoiceWorkItem { get; set; }
         public void SetUp(PurchesOrderService purchesOrderService, InvoicesService invoicesService, bool onEdit)
@@ -107,17 +98,14 @@ namespace Msr.Services.Invoices.ViewModel
                     Text = "IRE",
                     Value = "05"
                 },
+                new SelectListItem
+                {
+                    Text = "ISL",
+                    Value = "06"
+                },
 
             };
 
-
-            PoList = invoicesService.InvoicePoList(onEdit).Select(x => new SelectListItem
-            {
-                Text = x.ToString(),
-                Value = x.ToString()
-            }).OrderBy(o => o.Text).ToList();
-
-            PoList.Insert(0, new SelectListItem() { Value = "", Text = @"Select Po" });
 
             ClientList = purchesOrderService.GetCompaniesList().Select(x => new SelectListItem
             {
@@ -135,9 +123,6 @@ namespace Msr.Services.Invoices.ViewModel
                 Client = invoiceView.Client,
                 InvoiceDescription = invoiceView.Description,
                 Status = invoiceView.Status,
-                CustPo = invoiceView.CustPo,
-                SubTotal = invoiceView.SubTotal,
-                Total = invoiceView.Total,
                 InvoiceDate = invoiceView.InvoiceDate,
                 Tax = invoiceView.Tax,
                 InvoiceClass = invoiceView.InvoiceClass,

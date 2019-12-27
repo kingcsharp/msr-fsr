@@ -56,20 +56,17 @@
             });
     };
 
-    var custPoChangeForAdd = function () {
+    var custChangeForAdd = function () {
 
-        $('#CustPo').on('change',
+        $('#Client').on('change',
             function () {
                 eLoaderOpen();
                 var po = $(this).val();
                 $('#addId').val("");
-                $('#total-tax-amount').val("");
-                $('#total-add').val("");
-                $('#total-amount').val("0.00");
 
                 $.ajax({
                     type: "POST",
-                    url: "/Invoices/InvoiceModelGetPoItems?id=" + po + '&hasValue=' + false,
+                    url: "/Invoices/InvoiceModelGetPoList?id=" + po,
                     dataType: 'html',
                     success: function (data) {
                         eLoaderClose();
@@ -77,26 +74,6 @@
                     }
                 });
             });
-    };
-
-    var editOnPageLoadCustPo = function (po, itemsId, hasEdit) {
-        eLoaderOpen();
-        $('#invoicePo form').clearQueue();
-        $.ajax({
-            type: "POST",
-            url: "/Invoices/InvoiceModelEditGetPoItems?id=" + po + '&hasValue=' + hasEdit,
-            dataType: 'html',
-            success: function (data) {
-                eLoaderClose();
-                var values = itemsId;
-                var items = values.split(",");
-                $("input:checkbox[class=checkAmount]").each(function () {
-                    if (jQuery.inArray($(this).val(), items) !== -1) {
-                        $(this).prop('checked', true);
-                    }
-                });
-            }
-        });
     };
 
     var saveInvoice = function () {
@@ -143,8 +120,7 @@
     return {
         LoadInvoiceModal: loadInvoiceModal,
         EditInvoiceModal: editInvoiceModal,
-        CustPoChange: custPoChangeForAdd,
-        EditOnPageLoadCustPo: editOnPageLoadCustPo,
+        CustChange: custChangeForAdd,
         SaveInvoice: saveInvoice,
         CustPoChangeForEdit: custPoChangeForEdit,
         UpdateInvoice: updateInvoice

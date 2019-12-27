@@ -1,4 +1,4 @@
-﻿using Msr.Models.Invoices;
+using Msr.Models.Invoices;
 using Msr.Repositories;
 using Msr.Services.Invoices.ViewModel;
 using System;
@@ -7,9 +7,20 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace Msr.Services.Invoices
 {
+    public class POListItem {
+        public string REFERENCEPO { get; set; }
+        public int custid { get; set; }
+        public string customername { get; set; }
+        public string name { get; set; }
+        public string OpenDate {get; set; }
+        public string ToJSON() {
+            return JsonConvert.SerializeObject(this);
+        }
+    }
     public class InvoicesService
     {
         private readonly MsrDbContext _dbContext;
@@ -59,53 +70,30 @@ namespace Msr.Services.Invoices
             return ret;
         }
 
-        public List<string> InvoicePoList(bool onEdit)
+        public List<POListItem> InvoicePoList(bool onEdit)
         {
-            //var flag = false;
-
-            //var woItem = _dbContext.InvoiceWorkItems.ToList();
-
-            //// JG: I ADDED THE BREAK STATEMENT LOGIC BELOW, IT SEEMED LIKE ONCE THE FLAG WAS SET TO TRUE NO NEED TO KEEP ITERATING
-            
-            //foreach (var item in woItem)
-            //{
-            //    var invoicePoWorkItems = InvoiceViewList().Where(x => x.Status == "FINISHED" && x.CustPurchNum == item.RefPo).Distinct().ToList();
-
-            //    foreach (var refPo in invoicePoWorkItems)
-            //    {
-            //        var woItemCount = _dbContext.InvoiceWorkItems.Count(x => x.RefPo == refPo.CustPurchNum);
-
-            //        if (invoicePoWorkItems.Count == woItemCount)
-            //        {
-            //            flag = true;
-
-            //            break;
-            //        }
-            //    }
-
-            //    if (flag == true)
-            //    {
-            //        break;
-            //    }
-            //}
-
-            //if (flag && !onEdit)
-            //{
-            //    return InvoiceViewList().Where(x => x.Status == "FINISHED" && x.CustPurchNum != null &&
-            //    !_dbContext.InvoiceWorkItems.Where(y => y.RefPo == x.CustPurchNum && y.ItemId == x.FillItemId).Select(y => y.RefPo).Contains(x.CustPurchNum))
-            //    .Select(x => x.CustPurchNum).Distinct().ToList();
-            //}
-
-            // return InvoiceViewList().Where(x => x.Status == "FINISHED" && x.CustPurchNum != null).Select(x => x.CustPurchNum).Distinct().ToList();
-
             return GetDistinctPOList();
         }
 
-        public List<string> GetDistinctPOList()
+        public List<POListItem> GetDistinctPOList(int custid = -1)
         {
-            string sql = $"SELECT REFERENCEPO FROM A_POS_WITH_COMPLETED_WOS ORDER BY REFERENCEPO";
+            string sql =
+                "SELECT DISTINCT a.REFERENCEPO as REFERENCEPO, " +
+                    "a.custid as custid, a.customername as customername, " +
+                    "isnull(po.name, '') as name, " +
+                    "po.OpenDate as OpenDate " +
+                "FROM A_POS_WITH_COMPLETED_WOS a " +
+                "LEFT JOIN Portal_PurchaseOrders po ON (a.REFERENCEPO = po.ReferencePo) " +
+                "LEFT JOIN Portal_Invoice pi on (a.REFERENCEPO = pi.CustPo) " +
+                "WHERE po.OpenDate IS NOT NULL " +
+                "AND pi.Id IS NULL " +
+                "AND ((custid = @p0) OR (@p0 = -1)) " +
+                "ORDER BY a.REFERENCEPO";
 
-            List<string> distinctPOList = _dbContext.Database.SqlQuery<String>(sql).Distinct().OrderBy(x => x).ToList();
+            List<POListItem> distinctPOList = _dbContext
+                .Database
+                .SqlQuery<POListItem>(sql, custid)
+                .ToList();
 
             return distinctPOList;
         }
@@ -140,44 +128,54 @@ namespace Msr.Services.Invoices
 
             try
             {
-                var invoice = new Invoice();
-                invoice.Client = model.Client;
-                invoice.Description = model.InvoiceDescription;
-                invoice.Status = model.Status;
-                invoice.CustPo = model.CustPo;
-                invoice.InvoiceDate = model.InvoiceDate.Value;
-                invoice.Total = model.Total;
-                invoice.SubTotal = model.SubTotal;
-                invoice.Tax = model.Tax;
-                invoice.Supplier = model.Supplier;
-                invoice.InvoiceClass = model.InvoiceClass;
-                _dbContext.Invoices.Add(invoice);
-                _dbContext.SaveChanges();
+                // Iterate through the selected purchase orders and invoice
+                // all items for each one.
+                var poItems = JsonConvert.DeserializeObject<POListItem[]>(model.Items);
 
-                var invoiceItem = model.Items.Split(',');
-
-                foreach (var item in invoiceItem)
+                foreach (var item in poItems)
                 {
-                    var invoiceWorkItem = new InvoiceWorkItem
-                    {
-                        ItemId = item,
-                        InvoiceId = invoice.Id.ToString(),
-                        RefPo = invoice.CustPo,
-                    };
+                    var workItems = InvoiceItemsByPurchaseId(item.REFERENCEPO, false);
 
-                    _dbContext.InvoiceWorkItems.Add(invoiceWorkItem);
+                    var invoice = new Invoice();
+                    invoice.Client = model.Client;
+                    invoice.Description = model.InvoiceDescription;
+                    invoice.Status = model.Status;
+                    invoice.CustPo = item.REFERENCEPO;
+                    invoice.InvoiceDate = model.InvoiceDate.Value;
+                    invoice.Supplier = model.Supplier;
+                    invoice.InvoiceClass = model.InvoiceClass;
+                    _dbContext.Invoices.Add(invoice);
+                    _dbContext.SaveChanges();
+
+                    Single totalPrice = 0;
+                    foreach (var wi in workItems) {
+                        var invoiceWorkItem = new InvoiceWorkItem
+                        {
+                            ItemId = wi.PurchaseId,
+                            InvoiceId = invoice.Id.ToString(),
+                            RefPo = invoice.CustPo,
+                        };
+                        totalPrice += wi.TotalSalePrice.GetValueOrDefault();
+
+                        _dbContext.InvoiceWorkItems.Add(invoiceWorkItem);
+                    }
+
+                    invoice.Total = (
+                        (decimal)totalPrice * ((model.Tax.GetValueOrDefault() / 100) + 1)
+                    );
+                    invoice.SubTotal = (decimal)totalPrice;
+                    invoice.Tax = model.Tax;
+
+                    _dbContext.SaveChanges();
+
                 }
-
-                _dbContext.SaveChanges();
-
-                return result;
             }
             catch (Exception ex)
             {
                 result.AddError(ex.Message);
 
-                return result;
             }
+            return result;
         }
 
         public ResultNotification<string> Edit(InvoiceViewModel model)
@@ -189,10 +187,7 @@ namespace Msr.Services.Invoices
                 invoice.Client = model.Client;
                 invoice.Description = model.InvoiceDescription;
                 invoice.Status = model.Status;
-                invoice.CustPo = model.CustPo;
                 invoice.InvoiceDate = model.InvoiceDate.Value;
-                invoice.Total = model.Total;
-                invoice.SubTotal = model.SubTotal;
                 invoice.Tax = model.Tax;
                 invoice.InvoiceClass = model.InvoiceClass;
                 invoice.Supplier = model.Supplier;
@@ -213,15 +208,12 @@ namespace Msr.Services.Invoices
                         _dbContext.InvoiceWorkItems.Add(invoiceWorkItem);
                     }
                 _dbContext.SaveChanges();
-
-                return result;
             }
             catch (Exception ex)
             {
                 result.AddError(ex.Message);
-
-                return result;
             }
+            return result;
         }
 
         public MemoryStream GetInvoicesZippedArchive(ref List<InvoiceQuickbooksFileModel> invoiceQuickbooksFileModels)
@@ -247,7 +239,7 @@ namespace Msr.Services.Invoices
             }
 
             invoiceArchiveMemoryStream.Seek(0, SeekOrigin.Begin);
-            
+
             return invoiceArchiveMemoryStream;
         }
 

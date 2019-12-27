@@ -129,11 +129,11 @@ namespace Answer.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult InvoiceModelGetPoItems(string id, bool hasValue)
+        public ActionResult InvoiceModelGetPoList(int id)
         {
             var invoiceViewModel = new InvoiceViewModel();
 
-            invoiceViewModel.InvoiceItemList = _invoicesService.InvoiceItemsByPurchaseId(id, hasValue).ToList();
+            invoiceViewModel.PoList = _invoicesService.GetDistinctPOList(id);
 
             return PartialView("_InvoiceItemsList", invoiceViewModel);
         }
@@ -176,7 +176,7 @@ namespace Answer.Web.Controllers
 
             invoiceViewModel.Items = string.Join(",", invoiceViewModel.InvoiceWorkItem.Select(x => x.ItemId));
 
-            return PartialView("_InvoiceEditModel ", invoiceViewModel);
+            return PartialView("_InvoiceEditModel", invoiceViewModel);
         }
 
         [HttpPost]
