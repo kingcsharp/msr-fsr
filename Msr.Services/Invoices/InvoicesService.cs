@@ -84,8 +84,10 @@ namespace Msr.Services.Invoices
                     "po.OpenDate as OpenDate " +
                 "FROM A_POS_WITH_COMPLETED_WOS a " +
                 "LEFT JOIN Portal_PurchaseOrders po ON (a.REFERENCEPO = po.ReferencePo) " +
-                "WHERE ((custid = @p0) OR (@p0 = -1)) " +
-                "AND po.OpenDate IS NOT NULL " +
+                "LEFT JOIN Portal_Invoice pi on (a.REFERENCEPO = pi.CustPo) " +
+                "WHERE po.OpenDate IS NOT NULL " +
+                "AND pi.Id IS NULL " +
+                "AND ((custid = @p0) OR (@p0 = -1)) " +
                 "ORDER BY a.REFERENCEPO";
 
             List<POListItem> distinctPOList = _dbContext
