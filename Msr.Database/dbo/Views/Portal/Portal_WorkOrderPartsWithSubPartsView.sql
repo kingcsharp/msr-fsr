@@ -2,6 +2,7 @@
 
 
 
+
 CREATE VIEW [dbo].[Portal_WorkOrderPartsWithSubPartsView]
 	AS 
 	SELECT 
@@ -66,7 +67,8 @@ p.PartId,
 p.FillItemId,
 p.CycleCount,
 pv.objectid as ApprovedObjectId,
-SubPart.SubPartCount
+SubPart.SubPartCount,
+p.HasDocuments
 FROM Portal_workOrders p 
 left join Portal_Partsview pv on (p.partid = pv.root and pv.status='APPROVED')
 OUTER APPLY (

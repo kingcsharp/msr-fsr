@@ -1,5 +1,4 @@
-﻿
-CREATE VIEW [dbo].[Portal_WorkOrders]
+﻿CREATE VIEW [dbo].[Portal_WorkOrders]
 
 AS
 SELECT DISTINCT
@@ -55,6 +54,23 @@ ACTUAL_PART_ID = dbo.A_V_ACTUAL_PARTS_QUICK.ID
 AND STATUS = 'ACTIVE'
 )) > 0 THEN 1 ELSE 0 END 
 AS HasFile,
+CASE 
+	WHEN 
+	(     
+		SELECT 
+			COUNT(*)
+		FROM A_DOCUMENTS 
+		WHERE ID IN
+			(
+				SELECT 
+					[FILE_ID] 
+				FROM A_ACTUAL_PARTS_RELATED_FILES
+				WHERE ACTUAL_PART_ID = dbo.A_V_ACTUAL_PARTS_QUICK.ID
+						AND STATUS = 'ACTIVE'
+			)
+	) > 0 THEN 1 
+	ELSE 0 
+END AS HasDocuments,
 supp.ID as SupplierId,
 isnull('['+STUFF((    SELECT ',' + '{"Date":"'+  FORMAT ( n.CreatedDate, 'MM/dd/yyyy hh:mm') +'","Name":"'+ u.FirstName + ' '+ u.LastName + '","Message":"' +n.message  +'"}'
                         FROM [Portal_Note] n
@@ -111,10 +127,9 @@ WHERE p.ROOT = dbo.A_V_ACTUAL_PARTS_QUICK.PART_ID
 ) part
 OUTER APPLY
 (
-    SELECT count(1) AS CycleCount
-    FROM PartsTransactionLog p
-    WHERE p.serialnumber = dbo.A_V_ACTUAL_PARTS_QUICK.SERIAL
-    AND p.partid = PA.partid
+SELECT count(1) as CycleCount from PartsTransactionLog p
+where p.serialnumber = dbo.A_V_ACTUAL_PARTS_QUICK.SERIAL
+and p.partid = PA.partid
 ) cycle
 WHERE     (t.STATUS IN ('REQUESTED', 'ACCEPTED', 'CLOSED', 'FINISHED')) AND (toi.PURCHASE_ITEM_ID IS NOT NULL)
 
