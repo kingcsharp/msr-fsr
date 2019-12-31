@@ -12,7 +12,6 @@ namespace Msr.Services.Invoices.ViewModel
     {
         public InvoiceViewModel()
         {
-            StatusList = new List<SelectListItem>();
             ClientList = new List<SelectListItem>();
             InvoiceIdList = new List<SelectListItem>();
             PoList = new List<POListItem>();
@@ -25,8 +24,6 @@ namespace Msr.Services.Invoices.ViewModel
         public string Client { get; set; }
 
         public string InvoiceDescription { get; set; }
-
-        public string Status { get; set; }
 
         [Required]
         public DateTime? InvoiceDate { get; set; }
@@ -45,8 +42,6 @@ namespace Msr.Services.Invoices.ViewModel
         public List<InvoicePoWorkItem> InvoiceItemList { get; set; }
         public List<SelectListItem> ClientList { get; set; }
 
-        public List<SelectListItem> StatusList { get; set; }
-
         public List<SelectListItem> InvoiceIdList { get; set; }
 
         public List<POListItem> PoList { get; set; }
@@ -54,32 +49,6 @@ namespace Msr.Services.Invoices.ViewModel
         public List<InvoiceWorkItem> InvoiceWorkItem { get; set; }
         public void SetUp(PurchesOrderService purchesOrderService, InvoicesService invoicesService, bool onEdit)
         {
-
-            StatusList = new List<SelectListItem>
-            {
-                new SelectListItem
-                {
-                    Text = "INVOICED",
-                    Value = "INVOICED",
-                    Selected = true
-                },
-                new SelectListItem
-                {
-                    Text = "OUTSTANDING",
-                    Value = "OUTSTANDING"
-                },
-                new SelectListItem
-                {
-                    Text = "OVERDUE",
-                    Value = "OVERDUE"
-                },
-                new SelectListItem
-                {
-                    Text = "CLOSED",
-                    Value = "CLOSED"
-                }
-            };
-
             InvoiceIdList = new List<SelectListItem>
             {
                 new SelectListItem
@@ -122,7 +91,6 @@ namespace Msr.Services.Invoices.ViewModel
                 Id = invoiceView.Id,
                 Client = invoiceView.Client,
                 InvoiceDescription = invoiceView.Description,
-                Status = invoiceView.Status,
                 InvoiceDate = invoiceView.InvoiceDate,
                 Tax = invoiceView.Tax,
                 InvoiceClass = invoiceView.InvoiceClass,

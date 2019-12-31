@@ -139,7 +139,6 @@ namespace Msr.Services.Invoices
                     var invoice = new Invoice();
                     invoice.Client = model.Client;
                     invoice.Description = model.InvoiceDescription;
-                    invoice.Status = model.Status;
                     invoice.CustPo = item.REFERENCEPO;
                     invoice.InvoiceDate = model.InvoiceDate.Value;
                     invoice.Supplier = model.Supplier;
@@ -186,7 +185,6 @@ namespace Msr.Services.Invoices
                 var invoice = _dbContext.Invoices.Single(x => x.Id == model.Id);
                 invoice.Client = model.Client;
                 invoice.Description = model.InvoiceDescription;
-                invoice.Status = model.Status;
                 invoice.InvoiceDate = model.InvoiceDate.Value;
                 invoice.Tax = model.Tax;
                 invoice.InvoiceClass = model.InvoiceClass;
