@@ -5,11 +5,14 @@
     <table class="table table-bordered" id="records_table">
         <tr>
             <th></th>
-            <th>Date Posted</th>
-            <th>Reference PO</th>
-            <th>Customer ID</th>
-            <th>Customer Name</th>
-            <th style="width:100px;">Name</th>
+            <th>PO Name</th>
+            <th>PO #</th>
+            <th>Open Date</th>
+            <th>Close Date</th>
+            <th>$ Invoiced</th>
+            <th>$ Not Invoiced</th>
+            <th>$ Balance</th>
+            <th>Outstanding</th>
         </tr>
         @foreach (var po in Model.PoList)
         {
@@ -21,20 +24,35 @@
                     @Html.HiddenFor(x => po.REFERENCEPO)
                 </td>
                 <td>
-                    @string.Format("{0:M/d/yyyy}", po.OpenDate)
+                    @po.name
                 </td>
 
                 <td>
                     @po.REFERENCEPO
                 </td>
+
                 <td>
-                    @po.custid
+                    @string.Format("{0:M/d/yyyy}", po.OpenDate)
                 </td>
+
                 <td>
-                    @po.customername
+                    @string.Format("{0:M/d/yyyy}", po.CloseDate)
                 </td>
+
                 <td>
-                    @po.name
+                    @Math.Round(po.InvoicedBalance, 2)
+                </td>
+
+                <td>
+                    @Math.Round(po.UninvoicedBalance, 2)
+                </td>
+
+                <td>
+                    @Math.Round(po.Balance, 2)
+                </td>
+
+                <td>
+                    -1 unimplemented
                 </td>
             </tr>
         }

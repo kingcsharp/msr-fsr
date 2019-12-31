@@ -16,7 +16,12 @@ namespace Msr.Services.Invoices
         public int custid { get; set; }
         public string customername { get; set; }
         public string name { get; set; }
-        public string OpenDate {get; set; }
+        public string OpenDate { get; set; }
+        public string CloseDate { get; set; }
+        public Decimal InvoicedBalance { get; set; }
+        public Decimal UninvoicedBalance { get; set; }
+        public Decimal Balance { get; set; }
+        public Decimal UnusedAmount { get; set; }
         public string ToJSON() {
             return JsonConvert.SerializeObject(this);
         }
@@ -81,7 +86,13 @@ namespace Msr.Services.Invoices
                 "SELECT DISTINCT a.REFERENCEPO as REFERENCEPO, " +
                     "a.custid as custid, a.customername as customername, " +
                     "isnull(po.name, '') as name, " +
-                    "po.OpenDate as OpenDate " +
+                    "po.OpenDate as OpenDate, " +
+                    "po.CloseDate as CloseDate, " +
+                    "isnull(po.InvoicedBalance, 0.0) as InvoicedBalance, " +
+                    "isnull(po.UninvoicedBalance, 0.0) as UninvoicedBalance, " +
+                    "isnull(po.Balance, 0.0) as Balance, " +
+                    "isnull(po.UnusedAmount, 0.0) as UnusedAmount, " +
+                    "po.TotalPurchaseLimit as TotalPurchaseLimit " +
                 "FROM A_POS_WITH_COMPLETED_WOS a " +
                 "LEFT JOIN Portal_PurchaseOrders po ON (a.REFERENCEPO = po.ReferencePo) " +
                 "LEFT JOIN Portal_Invoice pi on (a.REFERENCEPO = pi.CustPo) " +
