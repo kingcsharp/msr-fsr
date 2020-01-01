@@ -46,15 +46,20 @@ namespace Msr.Services.Invoices
             return _dbContext.Invoices;
         }
 
-        public List<InvoicePoWorkItem> InvoiceItemsByPurchaseId(string purchaseId, bool hasValue)
+        // return list of items available for invoicing for a given PO
+        public IQueryable<InvoicePoWorkItem> InvoiceItemsClosedByPurchaseId(string referencePo)
         {
-            if (hasValue)
-            {
-                return InvoiceViewList().Where(x => x.Status == "FINISHED" && x.CustPurchNum == purchaseId).Distinct().ToList();
-            }
-
             return InvoiceViewList()
-                .Where(x => x.Status == "FINISHED" && x.CustPurchNum == purchaseId && !_dbContext.InvoiceWorkItems.Select(y => y.ItemId).Contains(x.FillItemId))
+                .Where(x => x.Status == "CLOSED" && x.CustPurchNum == referencePo)
+                .Distinct();
+        }
+
+        // return list of work items contained within a specific invoice and PO
+        public List<InvoicePoWorkItem> InvoiceItemsByPurchaseId(string referencePo, List<InvoiceWorkItem> hasValue)
+        {
+            var invoiceWorkItemIds = hasValue.Select(x => x.ItemId);
+            return InvoiceViewList()
+                .Where(x => x.Status == "CLOSED" && x.CustPurchNum == referencePo && invoiceWorkItemIds.Contains(x.PurchaseId))
                 .Distinct()
                 .ToList();
         }
@@ -68,7 +73,7 @@ namespace Msr.Services.Invoices
 
         public List<InvoicePoWorkItem> InvoiceExportByPo(string po, int? invoiceId)
         {
-            var ret = InvoiceViewList().Where(x => x.Status == "FINISHED" && x.CustPurchNum == po
+            var ret = InvoiceViewList().Where(x => x.Status == "CLOSED" && x.CustPurchNum == po
              && _dbContext.InvoiceWorkItems.Where(z => z.InvoiceId == invoiceId.Value.ToString()).Distinct()
              .Select(z => z.ItemId)
              .Contains(x.FillItemId))
@@ -112,9 +117,7 @@ namespace Msr.Services.Invoices
             // yet invoiced) WOs on that PO in the grid.
             // The "amount" field looks like it takes into account quantity and tax, so I'll use that.
             distinctPOList.ForEach(e => {
-                e.Outstanding = InvoiceViewList()
-                    .Where(x => x.Status == "CLOSED" && x.CustPurchNum == e.REFERENCEPO)
-                    .Distinct()
+                e.Outstanding = InvoiceItemsClosedByPurchaseId(e.REFERENCEPO)
                     .Select(x => x.Amount)
                     .Sum().GetValueOrDefault();
             });
@@ -158,20 +161,21 @@ namespace Msr.Services.Invoices
 
                 foreach (var item in poItems)
                 {
-                    var workItems = InvoiceItemsByPurchaseId(item.REFERENCEPO, false);
+                    var workItems = InvoiceItemsClosedByPurchaseId(item.REFERENCEPO).ToList();
 
-                    var invoice = new Invoice();
-                    invoice.Client = model.Client;
-                    invoice.Description = model.InvoiceDescription;
-                    invoice.Status = model.Status;
-                    invoice.CustPo = item.REFERENCEPO;
-                    invoice.InvoiceDate = model.InvoiceDate.Value;
-                    invoice.Supplier = model.Supplier;
-                    invoice.InvoiceClass = model.InvoiceClass;
+                    var invoice = new Invoice {
+                        Client = model.Client,
+                        Description = model.InvoiceDescription,
+                        Status = "INVOICED",
+                        CustPo = item.REFERENCEPO,
+                        InvoiceDate = model.InvoiceDate.Value,
+                        Supplier = model.Supplier,
+                        InvoiceClass = model.InvoiceClass
+                    };
                     _dbContext.Invoices.Add(invoice);
                     _dbContext.SaveChanges();
 
-                    Single totalPrice = 0;
+                    decimal totalPrice = 0;
                     foreach (var wi in workItems) {
                         var invoiceWorkItem = new InvoiceWorkItem
                         {
@@ -179,15 +183,15 @@ namespace Msr.Services.Invoices
                             InvoiceId = invoice.Id.ToString(),
                             RefPo = invoice.CustPo,
                         };
-                        totalPrice += wi.TotalSalePrice.GetValueOrDefault();
+                        totalPrice += wi.Amount.GetValueOrDefault();
 
                         _dbContext.InvoiceWorkItems.Add(invoiceWorkItem);
                     }
 
                     invoice.Total = (
-                        (decimal)totalPrice * ((model.Tax.GetValueOrDefault() / 100) + 1)
+                        totalPrice * ((model.Tax.GetValueOrDefault() / 100) + 1)
                     );
-                    invoice.SubTotal = (decimal)totalPrice;
+                    invoice.SubTotal = totalPrice;
                     invoice.Tax = model.Tax;
 
                     _dbContext.SaveChanges();

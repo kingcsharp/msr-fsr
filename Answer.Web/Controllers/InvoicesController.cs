@@ -143,7 +143,7 @@ namespace Answer.Web.Controllers
         {
             var invoiceViewModel = new InvoiceViewModel();
 
-            invoiceViewModel.InvoiceItemList = _invoicesService.InvoiceItemsByPurchaseId(id, hasValue).ToList();
+            invoiceViewModel.InvoiceItemList = _invoicesService.InvoiceItemsClosedByPurchaseId(id).ToList();
 
             return PartialView("_InvoiceEditItemsList", invoiceViewModel);
         }
@@ -170,9 +170,9 @@ namespace Answer.Web.Controllers
 
             invoiceViewModel.SetUp(new PurchesOrderService(), new InvoicesService(), true);
 
-            invoiceViewModel.InvoiceItemList = _invoicesService.InvoiceItemsByPurchaseId(model.CustPo, hasValue).ToList();
-
-            invoiceViewModel.InvoiceWorkItem = _invoicesService.InvoiceItemsById(model.Id.ToString()).ToList();
+            var invoiceWorkItems = _invoicesService.InvoiceItemsById(model.Id.ToString());
+            invoiceViewModel.InvoiceWorkItem = invoiceWorkItems;
+            invoiceViewModel.InvoiceItemList = _invoicesService.InvoiceItemsByPurchaseId(model.CustPo, invoiceWorkItems).ToList();
 
             invoiceViewModel.Items = string.Join(",", invoiceViewModel.InvoiceWorkItem.Select(x => x.ItemId));
 
