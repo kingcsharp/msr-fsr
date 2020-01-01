@@ -129,11 +129,11 @@ namespace Answer.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult InvoiceModelGetPoList(int id)
+        public ActionResult InvoiceModelGetPoList(int id, string fac)
         {
             var invoiceViewModel = new InvoiceViewModel();
 
-            invoiceViewModel.PoList = _invoicesService.GetDistinctPOList(id);
+            invoiceViewModel.PoList = _invoicesService.GetDistinctPOList(id, fac);
 
             return PartialView("_InvoiceItemsList", invoiceViewModel);
         }

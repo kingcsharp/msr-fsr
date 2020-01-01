@@ -86,7 +86,7 @@ namespace Msr.Services.Invoices
             return GetDistinctPOList();
         }
 
-        public List<POListItem> GetDistinctPOList(int custid = -1)
+        public List<POListItem> GetDistinctPOList(int custid = -1, string facilityCode = "03")
         {
             string sql =
                 "SELECT DISTINCT a.REFERENCEPO as REFERENCEPO, " +
@@ -113,14 +113,18 @@ namespace Msr.Services.Invoices
                 .SqlQuery<POListItem>(sql, custid)
                 .ToList();
 
-            // Outstanding - $ Totals will reflect the Product Price x QTY for all CLOSED (not
-            // yet invoiced) WOs on that PO in the grid.
-            // The "amount" field looks like it takes into account quantity and tax, so I'll use that.
             distinctPOList.ForEach(e => {
+                // Outstanding - $ Totals will reflect the Product Price x QTY for all CLOSED (not
+                // yet invoiced) WOs on that PO in the grid.
+                // The "amount" field looks like it takes into account quantity and tax, so I'll use that.
                 e.Outstanding = InvoiceItemsClosedByPurchaseId(e.REFERENCEPO)
                     .Select(x => x.Amount)
                     .Sum().GetValueOrDefault();
+
             });
+
+            // Filter by Facility (or NULL)
+            distinctPOList = facilityFilter(distinctPOList, facilityCode);
 
             return distinctPOList;
         }
@@ -425,6 +429,43 @@ namespace Msr.Services.Invoices
             invoiceQuickbooksFormat = invoiceFileText.ToString();
 
             return invoiceQuickbooksFormat;
+        }
+
+        private List<POListItem> facilityFilter(List<POListItem> list, string facilityCode) {
+            List<POListItem> poList = list;
+
+            // Filter by Facility (or NULL)
+            if (facilityCode != null) {
+                var facilities = new List<string>();
+
+                // See InvoiceViewModel.InvoiceIdList for these definitions
+                // TODO: this should probably be data driven and not hard-coded
+                switch (facilityCode) {
+                    case "04": // PHX
+                        facilities.Add("CHANDLER");
+                    break;
+                    case "05": // IRE
+                        facilities.Add("NAAS");
+                    break;
+                    case "06": // ISL
+                        facilities.Add("KIRYAT GAT");
+                    break;
+                    default: // 03, PDX
+                        facilities.Add("HILLSBORO");
+                    break;
+                }
+
+                poList = list.Where(x => {
+                    var locs = _dbContext
+                        .WorkOrders
+                        .Where(y => y.ReferencePo == x.REFERENCEPO)
+                        .Select(y => y.LocationName.ToUpper())
+                        .ToList();
+
+                    return locs.Contains(null) || (locs.Intersect(facilities).Count() > 0);
+                }).ToList();
+            }
+            return poList;
         }
 
     }
