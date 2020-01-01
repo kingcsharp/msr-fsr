@@ -22,6 +22,7 @@ namespace Msr.Services.Invoices
         public Decimal UninvoicedBalance { get; set; }
         public Decimal Balance { get; set; }
         public Decimal UnusedAmount { get; set; }
+        public Decimal Outstanding;
         public string ToJSON() {
             return JsonConvert.SerializeObject(this);
         }
@@ -97,6 +98,7 @@ namespace Msr.Services.Invoices
                 "LEFT JOIN Portal_PurchaseOrders po ON (a.REFERENCEPO = po.ReferencePo) " +
                 "LEFT JOIN Portal_Invoice pi on (a.REFERENCEPO = pi.CustPo) " +
                 "WHERE po.OpenDate IS NOT NULL " +
+                "AND po.status = 'APPROVED' " +
                 "AND pi.Id IS NULL " +
                 "AND ((custid = @p0) OR (@p0 = -1)) " +
                 "ORDER BY a.REFERENCEPO";
@@ -105,6 +107,17 @@ namespace Msr.Services.Invoices
                 .Database
                 .SqlQuery<POListItem>(sql, custid)
                 .ToList();
+
+            // Outstanding - $ Totals will reflect the Product Price x QTY for all CLOSED (not
+            // yet invoiced) WOs on that PO in the grid.
+            // The "amount" field looks like it takes into account quantity and tax, so I'll use that.
+            distinctPOList.ForEach(e => {
+                e.Outstanding = InvoiceViewList()
+                    .Where(x => x.Status == "CLOSED" && x.CustPurchNum == e.REFERENCEPO)
+                    .Distinct()
+                    .Select(x => x.Amount)
+                    .Sum().GetValueOrDefault();
+            });
 
             return distinctPOList;
         }
