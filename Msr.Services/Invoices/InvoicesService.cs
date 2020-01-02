@@ -59,8 +59,9 @@ namespace Msr.Services.Invoices
         public List<InvoicePoWorkItem> InvoiceItemsByPurchaseId(string referencePo, List<InvoiceWorkItem> hasValue)
         {
             var invoiceWorkItemIds = hasValue.Select(x => x.ItemId);
+            // Query "CLOSED" items, because at this point they've already been invoiced.
             return InvoiceViewList()
-                .Where(x => x.Status == "FINISHED" && x.CustPurchNum == referencePo && invoiceWorkItemIds.Contains(x.PurchaseId))
+                .Where(x => x.Status == "CLOSED" && x.CustPurchNum == referencePo && invoiceWorkItemIds.Contains(x.PurchaseId))
                 .Distinct()
                 .ToList();
         }
@@ -200,7 +201,6 @@ namespace Msr.Services.Invoices
                         _dbContext.InvoiceWorkItems.Add(invoiceWorkItem);
 
                         // mark the work item as having been invoiced
-                        //wi.Status = "CLOSED"; Doesn't work ***
                         TaskObject tobj = _dbContext.Tasks.Find(wi.TaskId);
                         tobj.STATUS = "CLOSED";
                         tobj.CLOSED = 1;

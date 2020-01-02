@@ -18,7 +18,7 @@ namespace Msr.Models.Tasks
 	public int? CHILD_ORDER { get; set; }
 	public string CREATED_BY { get; set; }
 	public DateTime? CREATE_DATE { get; set; }
-	public int? CLOSED { get; set; }
+	public Int16? CLOSED { get; set; }
 	public string OPENED_BY { get; set; }
 	public DateTime? OPEN_DATE { get; set; }
 	public string SYSTEM_TASK { get; set; }
