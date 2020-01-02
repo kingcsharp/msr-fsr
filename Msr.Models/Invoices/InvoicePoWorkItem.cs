@@ -4,6 +4,8 @@ namespace Msr.Models.Invoices
 {
     public class InvoicePoWorkItem
     {
+        public string TaskId { get; set; }
+
         public string FillItemId { get; set; }
 
         public string PurchaseId { get; set; }

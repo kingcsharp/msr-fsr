@@ -8,6 +8,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
+using Msr.Models.Tasks;
 
 namespace Msr.Services.Invoices
 {
@@ -145,7 +146,8 @@ namespace Msr.Services.Invoices
                              Amount = pwo.Amount,
                              Status = pwo.Status,
                              Purchaser = p.FullName,
-                             LocationName = pwo.LocationName
+                             LocationName = pwo.LocationName,
+                             TaskId = pwo.TaskId
                          };
 
             return result;
@@ -181,7 +183,9 @@ namespace Msr.Services.Invoices
                     decimal totalPrice = 0;
                     foreach (var wi in workItems) {
                         // Skip work items not for the selected location
-                        if (!facility.Contains(wi.LocationName.ToUpper())) {
+                        if (wi.LocationName != null &&
+                            !facility.Contains(wi.LocationName.ToUpper()))
+                        {
                             continue;
                         }
 
@@ -197,6 +201,9 @@ namespace Msr.Services.Invoices
 
                         // mark the work item as having been invoiced
                         //wi.Status = "CLOSED"; Doesn't work ***
+                        TaskObject tobj = _dbContext.Tasks.Find(wi.TaskId);
+                        tobj.STATUS = "CLOSED";
+                        tobj.CLOSED = 1;
                     }
 
                     invoice.Total = (
