@@ -47,10 +47,10 @@ namespace Msr.Services.Invoices
         }
 
         // return list of items available for invoicing for a given PO
-        public IQueryable<InvoicePoWorkItem> InvoiceItemsClosedByPurchaseId(string referencePo)
+        public IQueryable<InvoicePoWorkItem> InvoiceItemsFinishedByPurchaseId(string referencePo)
         {
             return InvoiceViewList()
-                .Where(x => x.Status == "CLOSED" && x.CustPurchNum == referencePo)
+                .Where(x => x.Status == "FINISHED" && x.CustPurchNum == referencePo)
                 .Distinct();
         }
 
@@ -59,7 +59,7 @@ namespace Msr.Services.Invoices
         {
             var invoiceWorkItemIds = hasValue.Select(x => x.ItemId);
             return InvoiceViewList()
-                .Where(x => x.Status == "CLOSED" && x.CustPurchNum == referencePo && invoiceWorkItemIds.Contains(x.PurchaseId))
+                .Where(x => x.Status == "FINISHED" && x.CustPurchNum == referencePo && invoiceWorkItemIds.Contains(x.PurchaseId))
                 .Distinct()
                 .ToList();
         }
@@ -73,7 +73,7 @@ namespace Msr.Services.Invoices
 
         public List<InvoicePoWorkItem> InvoiceExportByPo(string po, int? invoiceId)
         {
-            var ret = InvoiceViewList().Where(x => x.Status == "CLOSED" && x.CustPurchNum == po
+            var ret = InvoiceViewList().Where(x => x.Status == "FINISHED" && x.CustPurchNum == po
              && _dbContext.InvoiceWorkItems.Where(z => z.InvoiceId == invoiceId.Value.ToString()).Distinct()
              .Select(z => z.ItemId)
              .Contains(x.FillItemId))
@@ -101,10 +101,7 @@ namespace Msr.Services.Invoices
                     "po.TotalPurchaseLimit as TotalPurchaseLimit " +
                 "FROM A_POS_WITH_COMPLETED_WOS a " +
                 "LEFT JOIN Portal_PurchaseOrders po ON (a.REFERENCEPO = po.ReferencePo) " +
-                "LEFT JOIN Portal_Invoice pi on (a.REFERENCEPO = pi.CustPo) " +
-                "WHERE po.OpenDate IS NOT NULL " +
-                "AND po.status = 'APPROVED' " +
-                "AND pi.Id IS NULL " +
+                "WHERE po.status = 'APPROVED' " +
                 "AND ((custid = @p0) OR (@p0 = -1)) " +
                 "ORDER BY a.REFERENCEPO";
 
@@ -113,18 +110,18 @@ namespace Msr.Services.Invoices
                 .SqlQuery<POListItem>(sql, custid)
                 .ToList();
 
+            // Filter by Facility (or NULL)
+            distinctPOList = FacilityFilter(distinctPOList, facilityCode);
+
             distinctPOList.ForEach(e => {
-                // Outstanding - $ Totals will reflect the Product Price x QTY for all CLOSED (not
+                // Outstanding - $ Totals will reflect the Product Price x QTY for all FINISHED (not
                 // yet invoiced) WOs on that PO in the grid.
                 // The "amount" field looks like it takes into account quantity and tax, so I'll use that.
-                e.Outstanding = InvoiceItemsClosedByPurchaseId(e.REFERENCEPO)
+                e.Outstanding = InvoiceItemsFinishedByPurchaseId(e.REFERENCEPO)
                     .Select(x => x.Amount)
                     .Sum().GetValueOrDefault();
 
             });
-
-            // Filter by Facility (or NULL)
-            distinctPOList = facilityFilter(distinctPOList, facilityCode);
 
             return distinctPOList;
         }
@@ -147,7 +144,8 @@ namespace Msr.Services.Invoices
                              TotalSalePrice = pwo.TotalSalePrice,
                              Amount = pwo.Amount,
                              Status = pwo.Status,
-                             Purchaser = p.FullName
+                             Purchaser = p.FullName,
+                             LocationName = pwo.LocationName
                          };
 
             return result;
@@ -165,7 +163,7 @@ namespace Msr.Services.Invoices
 
                 foreach (var item in poItems)
                 {
-                    var workItems = InvoiceItemsClosedByPurchaseId(item.REFERENCEPO).ToList();
+                    var workItems = InvoiceItemsFinishedByPurchaseId(item.REFERENCEPO).ToList();
 
                     var invoice = new Invoice {
                         Client = model.Client,
@@ -179,8 +177,14 @@ namespace Msr.Services.Invoices
                     _dbContext.Invoices.Add(invoice);
                     _dbContext.SaveChanges();
 
+                    List<string> facility = FacilityCodeToString(model.InvoiceClass);
                     decimal totalPrice = 0;
                     foreach (var wi in workItems) {
+                        // Skip work items not for the selected location
+                        if (!facility.Contains(wi.LocationName.ToUpper())) {
+                            continue;
+                        }
+
                         var invoiceWorkItem = new InvoiceWorkItem
                         {
                             ItemId = wi.PurchaseId,
@@ -190,6 +194,9 @@ namespace Msr.Services.Invoices
                         totalPrice += wi.Amount.GetValueOrDefault();
 
                         _dbContext.InvoiceWorkItems.Add(invoiceWorkItem);
+
+                        // mark the work item as having been invoiced
+                        //wi.Status = "CLOSED"; Doesn't work ***
                     }
 
                     invoice.Total = (
@@ -431,34 +438,39 @@ namespace Msr.Services.Invoices
             return invoiceQuickbooksFormat;
         }
 
-        private List<POListItem> facilityFilter(List<POListItem> list, string facilityCode) {
+        private List<string> FacilityCodeToString(string facilityCode) {
+            var facilities = new List<string>();
+            // See InvoiceViewModel.InvoiceIdList for these definitions
+            // TODO: this should probably be data driven and not hard-coded
+            switch (facilityCode) {
+                case "04": // PHX
+                    facilities.Add("CHANDLER");
+                break;
+                case "05": // IRE
+                    facilities.Add("NAAS");
+                break;
+                case "06": // ISL
+                    facilities.Add("KIRYAT GAT");
+                break;
+                default: // 03, PDX
+                    facilities.Add("HILLSBORO");
+                break;
+            }
+
+            return facilities;
+        }
+
+        private List<POListItem> FacilityFilter(List<POListItem> list, string facilityCode) {
             List<POListItem> poList = list;
 
             // Filter by Facility (or NULL)
             if (facilityCode != null) {
-                var facilities = new List<string>();
-
-                // See InvoiceViewModel.InvoiceIdList for these definitions
-                // TODO: this should probably be data driven and not hard-coded
-                switch (facilityCode) {
-                    case "04": // PHX
-                        facilities.Add("CHANDLER");
-                    break;
-                    case "05": // IRE
-                        facilities.Add("NAAS");
-                    break;
-                    case "06": // ISL
-                        facilities.Add("KIRYAT GAT");
-                    break;
-                    default: // 03, PDX
-                        facilities.Add("HILLSBORO");
-                    break;
-                }
+                var facilities = FacilityCodeToString(facilityCode);
 
                 poList = list.Where(x => {
                     var locs = _dbContext
                         .WorkOrders
-                        .Where(y => y.ReferencePo == x.REFERENCEPO)
+                        .Where(y => y.ReferencePo == x.REFERENCEPO && y.Status == "FINISHED")
                         .Select(y => y.LocationName.ToUpper())
                         .ToList();
 

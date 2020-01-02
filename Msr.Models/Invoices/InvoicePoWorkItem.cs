@@ -25,5 +25,7 @@ namespace Msr.Models.Invoices
         public string Status { get; set; }
 
         public string Purchaser { get; set; }
+
+        public string LocationName { get ; set; }
     }
 }

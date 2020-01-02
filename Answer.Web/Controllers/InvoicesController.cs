@@ -143,7 +143,7 @@ namespace Answer.Web.Controllers
         {
             var invoiceViewModel = new InvoiceViewModel();
 
-            invoiceViewModel.InvoiceItemList = _invoicesService.InvoiceItemsClosedByPurchaseId(id).ToList();
+            invoiceViewModel.InvoiceItemList = _invoicesService.InvoiceItemsFinishedByPurchaseId(id).ToList();
 
             return PartialView("_InvoiceEditItemsList", invoiceViewModel);
         }
