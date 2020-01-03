@@ -36,11 +36,13 @@
             function (event) {
                 var button = $(event.relatedTarget);
                 var id = button.data('call-id');
+                var num = button.data('call-number');
+                console.log('XXXX ' + id);
                 var modal = $(this);
                 modal.find('.modal-body').block({ message: '<h1><img src="/assets/img/nice_loader.gif" />  Loading. Please wait...</h1>' });
                 $.ajax({
                     type: "GET",
-                    url: '/Invoices/LoadInvoiceById?id=' + id + '&hasValue=' + true,
+                    url: '/Invoices/LoadInvoiceById?id=' + id + '&num=' + num,
                     dataType: 'html',
                     cache: false,
                     success: function (data) {

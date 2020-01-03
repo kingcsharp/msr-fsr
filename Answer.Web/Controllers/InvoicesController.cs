@@ -159,7 +159,7 @@ namespace Answer.Web.Controllers
         }
 
         [HttpGet]
-        public ActionResult LoadInvoiceById(int? id, bool hasValue)
+        public ActionResult LoadInvoiceById(int? id, string num)
         {
 
             var invoiceViewModel = new InvoiceViewModel();
@@ -167,6 +167,11 @@ namespace Answer.Web.Controllers
             var model = _invoicesService.GetInvoicesQueryable().SingleOrDefault(x => x.Id == id);
 
             invoiceViewModel = invoiceViewModel.MapToDto(model);
+
+            // This is defined in Portal_InvoiceView view, but we use the value
+            // from the UI table here to avoid another lookup.  It is used only to provide
+            // info to the user of what invoice was selected.
+            invoiceViewModel.InvoiceIdString = num;
 
             invoiceViewModel.SetUp(new PurchesOrderService(), new InvoicesService(), true);
 

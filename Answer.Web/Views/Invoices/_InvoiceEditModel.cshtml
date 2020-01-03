@@ -33,6 +33,10 @@
 @Html.Partial("Message")
 @using (Html.BeginForm("Save", "Invoices", FormMethod.Post, new { @class = "form-horizontal", @id = "invoice-edit" }))
 {
+    <p>
+    <h4 class="modal-title">Invoice: @Model.InvoiceIdString</h4>
+    </p>
+
     @Html.HiddenFor(model => model.Id, new { @class = "form-control", @id = "editId" })
     @Html.HiddenFor(model => model.Items, new { @class = "form-control", @id = "itemId" })
     @Html.HiddenFor(model => model.InvoiceNumber, new { @class = "form-control" })

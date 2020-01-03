@@ -52,6 +52,9 @@ namespace Msr.Services.Invoices.ViewModel
         public List<POListItem> PoList { get; set; }
 
         public List<InvoiceWorkItem> InvoiceWorkItem { get; set; }
+
+        public string InvoiceIdString;
+
         public void SetUp(PurchesOrderService purchesOrderService, InvoicesService invoicesService, bool onEdit)
         {
 
