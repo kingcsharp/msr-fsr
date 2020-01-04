@@ -2,6 +2,16 @@
 <h4>Purchase Orders</h4>
 @if (Model.PoList != null)
 {
+    <label>
+        <input name="selectAllPOs" class="check-amount" type="checkbox">
+        Select All POs
+    </label>
+    <br/>
+    <label>
+        <input name="combineSelectedPOs" class="check-amount" type="checkbox">
+        Combine Selected POs
+    </label>
+
     <table class="table table-bordered" id="records_table">
         <tr>
             <th></th>
@@ -64,8 +74,19 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
-        $('input[type="checkbox"]').click(function () {
+        $('input#po-id').click(function () {
             CheckBoxSelection($('#addId').val(), this, $(this).closest('tr').find('#po-data').val());
+        });
+        $('[name="selectAllPOs"]').click(function(el) {
+            let ck = $(el.currentTarget).is(':checked');
+            $('input#po-id').each(function(i,e) {
+                e.checked = ck
+                CheckBoxSelection(
+                    $('#addId').val(),
+                    e,
+                    $(e).closest('tr').find('#po-data').val()
+                );
+            });
         });
     });
 
