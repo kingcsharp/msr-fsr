@@ -30,28 +30,6 @@ function DataInitBootstrapMultiselect(elem, options, callback) {
             };
 
             $(elem).multiselect(multiselectOptions);
-            setTimeout(function () {
-                var pageHasParams = getUrlParams('locationName').split(',').filter(Boolean);
-                var paramsLength = pageHasParams.length;
-                var items = [];
-                if (paramsLength > 0) {
-                    while (paramsLength--) {
-                        items.push(pageHasParams[paramsLength].trim());
-                    }
-                    $(elem).multiselect('select', items);
-                    $(elem).multiselect('updateButtonText');
-
-                }
-                else {
-                    $(elem).multiselect('deselectAll', false);
-                    $(elem).multiselect('selectAll', false);
-                    $(elem).multiselect('updateButtonText');
-                }
-
-                if (callback) {
-                    callback(elem);
-                }
-            }, 100);
         });
     }, 100);
 };
@@ -103,8 +81,17 @@ $(function () {
     });
 
     $('.location-name').change(function () {
+
+        
         var location = $(this).val();
+
+        if (location.length !== 0) {
+            window.Cookies.set('Locations', location.toString(), { expires: 365 });
+        }
+
         if (location !== null) {
+            
+
             var locations = location.filter(function (el) {
                 return el;
             }).join(",");

@@ -640,6 +640,7 @@
     <Content Include="assets\js\jquery.dataTables.js" />
     <Content Include="assets\js\jquery.matchHeight.js" />
     <Content Include="assets\js\jquery.timeago.js" />
+    <Content Include="assets\js\js.cookie-2.2.1.min.js" />
     <Content Include="assets\js\livestamp.js" />
     <Content Include="assets\js\locales\jquery.timeago.af.js" />
     <Content Include="assets\js\locales\jquery.timeago.am.js" />
