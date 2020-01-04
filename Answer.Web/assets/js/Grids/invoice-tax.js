@@ -3,7 +3,6 @@ selItems.values = [];
 selItems.total = 0;
 
 function CheckBoxSelection(id, element, value) {
-console.log('CheckBoxSelection');
 
     //for add
     if ($(element).prop("checked") === true) {

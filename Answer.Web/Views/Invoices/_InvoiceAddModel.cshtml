@@ -49,8 +49,6 @@
         <tr>
             <th align="right">Status:</th>
             <td>
-                @Html.DropDownListFor(model => model.Status, Model.StatusList, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
             </td>
             <th align="right">Cust PO #:</th>
             <td>
@@ -68,10 +66,9 @@
                 </div>
                 @Html.ValidationMessageFor(model => model.InvoiceDate, "", new { @class = "text-danger" })
             </td>
-            <th align="right">Invoice #:</th>
+            <th align="right">Facility:</th>
             <td>
                 @Html.DropDownListFor(model => model.InvoiceClass, Model.InvoiceIdList, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
             </td>
         </tr>
     </table>

@@ -36,11 +36,13 @@
             function (event) {
                 var button = $(event.relatedTarget);
                 var id = button.data('call-id');
+                var num = button.data('call-number');
+                console.log('XXXX ' + id);
                 var modal = $(this);
                 modal.find('.modal-body').block({ message: '<h1><img src="/assets/img/nice_loader.gif" />  Loading. Please wait...</h1>' });
                 $.ajax({
                     type: "GET",
-                    url: '/Invoices/LoadInvoiceById?id=' + id + '&hasValue=' + true,
+                    url: '/Invoices/LoadInvoiceById?id=' + id + '&num=' + num,
                     dataType: 'html',
                     cache: false,
                     success: function (data) {
@@ -57,23 +59,32 @@
     };
 
     var custChangeForAdd = function () {
+        var reloadTable = function () {
+            eLoaderOpen();
+            var po = $('#Client').val();
+            var fac = $('#InvoiceClass').val();
 
-        $('#Client').on('change',
-            function () {
-                eLoaderOpen();
-                var po = $(this).val();
-                $('#addId').val("");
+            if (po.length == 0) {
+                eLoaderClose();
+                return;
+            }
 
-                $.ajax({
-                    type: "POST",
-                    url: "/Invoices/InvoiceModelGetPoList?id=" + po,
-                    dataType: 'html',
-                    success: function (data) {
-                        eLoaderClose();
-                        $('#invoice-po').html(data);
-                    }
-                });
+            $('#addId').val("");
+
+            $.ajax({
+                type: "POST",
+                url: "/Invoices/InvoiceModelGetPoList" +
+                    "?id=" + po +
+                    "&fac=" + fac,
+                dataType: 'html',
+                success: function (data) {
+                    eLoaderClose();
+                    $('#invoice-po').html(data);
+                }
             });
+        }
+        $('#Client').on('change', reloadTable);
+        $('#InvoiceClass').on('change', reloadTable);
     };
 
     var saveInvoice = function () {

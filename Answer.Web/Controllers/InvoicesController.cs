@@ -129,11 +129,11 @@ namespace Answer.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult InvoiceModelGetPoList(int id)
+        public ActionResult InvoiceModelGetPoList(int id, string fac)
         {
             var invoiceViewModel = new InvoiceViewModel();
 
-            invoiceViewModel.PoList = _invoicesService.GetDistinctPOList(id);
+            invoiceViewModel.PoList = _invoicesService.GetDistinctPOList(id, fac);
 
             return PartialView("_InvoiceItemsList", invoiceViewModel);
         }
@@ -143,7 +143,7 @@ namespace Answer.Web.Controllers
         {
             var invoiceViewModel = new InvoiceViewModel();
 
-            invoiceViewModel.InvoiceItemList = _invoicesService.InvoiceItemsByPurchaseId(id, hasValue).ToList();
+            invoiceViewModel.InvoiceItemList = _invoicesService.InvoiceItemsFinishedByPurchaseId(id).ToList();
 
             return PartialView("_InvoiceEditItemsList", invoiceViewModel);
         }
@@ -159,7 +159,7 @@ namespace Answer.Web.Controllers
         }
 
         [HttpGet]
-        public ActionResult LoadInvoiceById(int? id, bool hasValue)
+        public ActionResult LoadInvoiceById(int? id, string num)
         {
 
             var invoiceViewModel = new InvoiceViewModel();
@@ -168,11 +168,16 @@ namespace Answer.Web.Controllers
 
             invoiceViewModel = invoiceViewModel.MapToDto(model);
 
+            // This is defined in Portal_InvoiceView view, but we use the value
+            // from the UI table here to avoid another lookup.  It is used only to provide
+            // info to the user of what invoice was selected.
+            invoiceViewModel.InvoiceIdString = num;
+
             invoiceViewModel.SetUp(new PurchesOrderService(), new InvoicesService(), true);
 
-            invoiceViewModel.InvoiceItemList = _invoicesService.InvoiceItemsByPurchaseId(model.CustPo, hasValue).ToList();
-
-            invoiceViewModel.InvoiceWorkItem = _invoicesService.InvoiceItemsById(model.Id.ToString()).ToList();
+            var invoiceWorkItems = _invoicesService.InvoiceItemsById(model.Id.ToString());
+            invoiceViewModel.InvoiceWorkItem = invoiceWorkItems;
+            invoiceViewModel.InvoiceItemList = _invoicesService.InvoiceItemsByPurchaseId(model.CustPo, invoiceWorkItems).ToList();
 
             invoiceViewModel.Items = string.Join(",", invoiceViewModel.InvoiceWorkItem.Select(x => x.ItemId));
 

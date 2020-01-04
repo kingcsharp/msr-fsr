@@ -2,14 +2,27 @@
 <h4>Purchase Orders</h4>
 @if (Model.PoList != null)
 {
+    <label>
+        <input name="selectAllPOs" class="check-amount" type="checkbox">
+        Select All POs
+    </label>
+    <br/>
+    <label>
+        <input name="multiPOInvoice" id="multiPOInvoice" class="check-amount" type="checkbox" value="true">
+        Combine Selected POs
+    </label>
+
     <table class="table table-bordered" id="records_table">
         <tr>
             <th></th>
-            <th>Date Posted</th>
-            <th>Reference PO</th>
-            <th>Customer ID</th>
-            <th>Customer Name</th>
-            <th style="width:100px;">Name</th>
+            <th>PO Name</th>
+            <th>PO #</th>
+            <th>Open Date</th>
+            <th>Close Date</th>
+            <th>$ Invoiced</th>
+            <th>$ Not Invoiced</th>
+            <th>$ Balance</th>
+            <th>Outstanding</th>
         </tr>
         @foreach (var po in Model.PoList)
         {
@@ -21,20 +34,35 @@
                     @Html.HiddenFor(x => po.REFERENCEPO)
                 </td>
                 <td>
-                    @string.Format("{0:M/d/yyyy}", po.OpenDate)
+                    @po.name
                 </td>
 
                 <td>
                     @po.REFERENCEPO
                 </td>
+
                 <td>
-                    @po.custid
+                    @string.Format("{0:M/d/yyyy}", po.OpenDate)
                 </td>
+
                 <td>
-                    @po.customername
+                    @string.Format("{0:M/d/yyyy}", po.CloseDate)
                 </td>
+
                 <td>
-                    @po.name
+                    @Math.Round(po.InvoicedBalance, 2)
+                </td>
+
+                <td>
+                    @Math.Round(po.UninvoicedBalance, 2)
+                </td>
+
+                <td>
+                    @Math.Round(po.Balance, 2)
+                </td>
+
+                <td>
+                    @Math.Round(po.Outstanding, 2)
                 </td>
             </tr>
         }
@@ -46,8 +74,19 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
-        $('input[type="checkbox"]').click(function () {
+        $('input#po-id').click(function () {
             CheckBoxSelection($('#addId').val(), this, $(this).closest('tr').find('#po-data').val());
+        });
+        $('[name="selectAllPOs"]').click(function(el) {
+            let ck = $(el.currentTarget).is(':checked');
+            $('input#po-id').each(function(i,e) {
+                e.checked = ck
+                CheckBoxSelection(
+                    $('#addId').val(),
+                    e,
+                    $(e).closest('tr').find('#po-data').val()
+                );
+            });
         });
     });
 
