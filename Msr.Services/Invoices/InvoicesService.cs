@@ -79,10 +79,10 @@ namespace Msr.Services.Invoices
                     z => z.InvoiceId == invoiceId.Value.ToString()
                 )
                 .Distinct()
-                .Select(z => z.ItemId);
+                .Select(z => z.ItemId).ToList();
             var ret = InvoiceViewList().Where(
-                x => x.Status == "FINISHED" && x.CustPurchNum == po &&
-                    items.Contains(x.FillItemId)
+                x => x.Status == "CLOSED" && x.CustPurchNum == po &&
+                    items.Contains(x.PurchaseId)
                 )
                 .Distinct()
                 .ToList();
