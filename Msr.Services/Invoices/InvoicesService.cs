@@ -169,25 +169,34 @@ namespace Msr.Services.Invoices
                 // Iterate through the selected purchase orders and invoice
                 // all items for each one.
                 var poItems = JsonConvert.DeserializeObject<POListItem[]>(model.Items);
+                bool combinePO = model.multiPOInvoice;
+                Invoice combinedInvoice = null;
 
                 foreach (var item in poItems)
                 {
                     var workItems = InvoiceItemsFinishedByPurchaseId(item.REFERENCEPO).ToList();
+                    decimal totalPrice = 0;
+                    Invoice invoice;
 
-                    var invoice = new Invoice {
-                        Client = model.Client,
-                        Description = model.InvoiceDescription,
-                        Status = "INVOICED",
-                        CustPo = item.REFERENCEPO,
-                        InvoiceDate = model.InvoiceDate.Value,
-                        Supplier = model.Supplier,
-                        InvoiceClass = model.InvoiceClass
-                    };
-                    _dbContext.Invoices.Add(invoice);
-                    _dbContext.SaveChanges();
+                    if (!combinePO || combinedInvoice == null) {
+                        invoice = new Invoice {
+                            Client = model.Client,
+                            Description = model.InvoiceDescription,
+                            Status = "INVOICED",
+                            CustPo = item.REFERENCEPO,
+                            InvoiceDate = model.InvoiceDate.Value,
+                            Supplier = model.Supplier,
+                            InvoiceClass = model.InvoiceClass
+                        };
+                        _dbContext.Invoices.Add(invoice);
+                        _dbContext.SaveChanges();
+                        combinedInvoice = invoice;
+                    } else {
+                        invoice = combinedInvoice;
+                        totalPrice = invoice.SubTotal.GetValueOrDefault();
+                    }
 
                     List<string> facility = FacilityCodeToString(model.InvoiceClass);
-                    decimal totalPrice = 0;
                     foreach (var wi in workItems) {
                         // Skip work items not for the selected location
                         if (wi.LocationName != null &&
