@@ -388,6 +388,7 @@ namespace Answer.Web.Controllers
 
         public ActionResult StatusView(string locationName)
         {
+
             var currentUser = GetCurrentUser();
 
             List<string> locationList;
@@ -412,13 +413,19 @@ namespace Answer.Web.Controllers
                 }).OrderBy(o => o.Text).ToList()
             };
 
+            
             if (string.IsNullOrWhiteSpace(Request.Cookies["Locations"]?.Value) || Request.Cookies["Locations"].Value == "undefined") 
             {
-                Request.Cookies["Locations"].Value = locationName;
+
+                if (Request.Cookies["Locations"] != null)
+                {
+                    Request.Cookies["Locations"].Value = locationList.ToString();
+                }
+
             }
             else
             {
-                var cookieLocations = System.Net.WebUtility.UrlDecode(Request.Cookies["Locations"].Value);
+                string  cookieLocations = System.Net.WebUtility.UrlDecode(Request.Cookies["Locations"].Value);
 
                 viewModel.LocationList.ForEach(s =>
                 {
@@ -432,6 +439,8 @@ namespace Answer.Web.Controllers
                     }
 
                 });
+
+                locationList = cookieLocations.Split(',').ToList();
             }
 
             var workOrdersQueryable = _orderService.GetWorkOrderQueryable();
