@@ -1,4 +1,6 @@
-﻿@model Answer.Web.ViewModel.Wip.WipStatusViewModel
+﻿@using System.Diagnostics
+@using Newtonsoft.Json;
+@model Answer.Web.ViewModel.Wip.WipStatusViewModel
 @{
     ViewBag.Title = "WIP Status";
 }
@@ -26,10 +28,11 @@
                         PN/IPN
                     </th>
                     <th>
-                        Procedure
+                        Procedure 
                     </th>
                     <th>
-                        <select class="form-control location-name">
+                        <select class="form-control location-name" multiple="multiple">
+
                             @foreach (var location in Model.LocationList)
                             {
                                 if (location.Selected)
@@ -42,8 +45,8 @@
                                 }
                             }
 
+
                         </select>
-                        @* @Html.DropDownListFor(model => model.Location, Model.LocationList, new { @class = "form-control location-name" })*@
                     </th>
                     <th colspan="4">
                         Open WO's
@@ -59,21 +62,27 @@
 </div>
 @section scripts
 {
+    <script src="~/assets/js/js.cookie-2.2.1.min.js"></script>
     <script src="~/assets/js/grids/statusGrid.js"></script>
     <script src="~/assets/js/moment.min.js"></script>
     <script src="~/assets/js/livestamp.js"></script>
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
+
             var nowMs = +new Date(),
                 now = Math.floor(nowMs / 1000);
-            //update trhe time stamp every minute
+
+            //update the time stamp every minute
             $.livestamp.interval(30);
             $('.now').livestamp(now);
             $('.now-display').text(now);
+
             //refresh every 15 minutes
-            setInterval(function () {
-                window.location.reload();
-            }, 900000);
+            setInterval(function() {
+                    window.location.reload();
+                },
+                900000);
+
         });
     </script>
 }
