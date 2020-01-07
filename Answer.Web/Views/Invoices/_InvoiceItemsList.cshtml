@@ -1,72 +1,78 @@
 ﻿@model Msr.Services.Invoices.ViewModel.InvoiceViewModel
-<h4>Purchase Orders</h4>
+<h4>Invoicable Purchase Orders</h4>
 @if (Model.PoList != null)
 {
-    <label>
-        <input name="selectAllPOs" class="check-amount" type="checkbox">
-        Select All POs
-    </label>
-    <br/>
-    <label>
-        <input name="multiPOInvoice" id="multiPOInvoice" class="check-amount" type="checkbox" value="true">
-        Combine Selected POs
-    </label>
+        <div class="row">
+            <div class="col-xs-2 control-label" style="margin-top: 4px;">
+                Select All POs:
+            </div>
+            <div class="make-switch switch-small col-xs-2" data-on="success" data-off="warning" style="display: inline-block">
+                <input name="selectAllPOs" class="check-amount" id="selectAllPOs" type="checkbox">
+            </div>
 
-    <table class="table table-bordered" id="records_table">
-        <tr>
-            <th></th>
-            <th>PO Name</th>
-            <th>PO #</th>
-            <th>Open Date</th>
-            <th>Close Date</th>
-            <th>$ Invoiced</th>
-            <th>$ Not Invoiced</th>
-            <th>$ Balance</th>
-            <th>Outstanding</th>
-        </tr>
-        @foreach (var po in Model.PoList)
-        {
+            <div class="col-xs-6 control-label" style="margin-top: 4px;">
+                Combine Selected POs:
+            </div>
+            <div class="make-switch switch-small col-xs-2" data-on="success" data-off="warning" style="display: inline-block">
+                <input name="multiPOInvoice" id="multiPOInvoice" class="check-amount" type="checkbox" value="true">
+            </div>
+        </div>
 
+        <table class="table table-bordered table-striped table-condensed" id="records_table">
             <tr>
-                @Html.Hidden("po-data", po.ToJSON())
-                <td class="get-id">
-                    <input name="invoiceDetailListStrings" class="check-amount" value="@po.REFERENCEPO" id="po-id" type="checkBox">
-                    @Html.HiddenFor(x => po.REFERENCEPO)
-                </td>
-                <td>
-                    @po.name
-                </td>
-
-                <td>
-                    @po.REFERENCEPO
-                </td>
-
-                <td>
-                    @string.Format("{0:M/d/yyyy}", po.OpenDate)
-                </td>
-
-                <td>
-                    @string.Format("{0:M/d/yyyy}", po.CloseDate)
-                </td>
-
-                <td>
-                    @Math.Round(po.InvoicedBalance, 2)
-                </td>
-
-                <td>
-                    @Math.Round(po.UninvoicedBalance, 2)
-                </td>
-
-                <td>
-                    @Math.Round(po.Balance, 2)
-                </td>
-
-                <td>
-                    @Math.Round(po.Outstanding, 2)
-                </td>
+                <th></th>
+                <th>PO Name</th>
+                <th>PO #</th>
+                <th>Open Date</th>
+                <th>Close Date</th>
+                <th>$ Invoiced</th>
+                <th>$ Not Invoiced</th>
+                <th>$ Balance</th>
+                <th>Outstanding</th>
             </tr>
-        }
-    </table>
+            @foreach (var po in Model.PoList)
+            {
+
+                <tr>
+                    @Html.Hidden("po-data", po.ToJSON())
+                    <td class="get-id">
+                        <input name="invoiceDetailListStrings" class="check-amount" value="@po.REFERENCEPO" id="po-id" type="checkBox">
+                        @Html.HiddenFor(x => po.REFERENCEPO)
+                    </td>
+                    <td>
+                        @po.name
+                    </td>
+
+                    <td>
+                        @po.REFERENCEPO
+                    </td>
+
+                    <td align="center">
+                        @string.Format("{0:M/d/yyyy}", po.OpenDate)
+                    </td>
+
+                    <td align="center">
+                        @string.Format("{0:M/d/yyyy}", po.CloseDate)
+                    </td>
+
+                    <td align="right">
+                        @Math.Round(po.InvoicedBalance, 2)
+                    </td>
+
+                    <td align="right">
+                        @Math.Round(po.UninvoicedBalance, 2)
+                    </td>
+
+                    <td align="right">
+                        @Math.Round(po.Balance, 2)
+                    </td>
+
+                    <td align="right">
+                        @Math.Round(po.Outstanding, 2)
+                    </td>
+                </tr>
+            }
+        </table>
 }
 
 <script src="~/assets/js/grids/invoice-tax.js"></script>
@@ -74,12 +80,15 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
-        $('input#po-id').click(function () {
-            CheckBoxSelection($('#addId').val(), this, $(this).closest('tr').find('#po-data').val());
-        });
-        $('[name="selectAllPOs"]').click(function(el) {
+
+        $('#selectAllPOs').bootstrapSwitch();
+
+        $('#multiPOInvoice').bootstrapSwitch();
+
+        $('#selectAllPOs').on('switchChange.bootstrapSwitch', function (el) {
+            el.preventDefault();
             let ck = $(el.currentTarget).is(':checked');
-            $('input#po-id').each(function(i,e) {
+            $('input#po-id').each(function (i, e) {
                 e.checked = ck
                 CheckBoxSelection(
                     $('#addId').val(),
@@ -88,6 +97,11 @@
                 );
             });
         });
+
+        $('input#po-id').click(function () {
+            CheckBoxSelection($('#addId').val(), this, $(this).closest('tr').find('#po-data').val());
+        });
+
     });
 
 </script>
