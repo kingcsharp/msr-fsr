@@ -49,13 +49,9 @@
         <tr>
             <th align="right">Status:</th>
             <td>
-                @Html.DropDownListFor(model => model.Status, Model.StatusList, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
             </td>
             <th align="right">Cust PO #:</th>
             <td>
-                @Html.DropDownListFor(model => model.CustPo, Model.PoList, new { @class = "form-control select" })
-                @Html.ValidationMessageFor(model => model.CustPo, "", new { @class = "text-danger" })
             </td>
         </tr>
         <tr>
@@ -70,10 +66,9 @@
                 </div>
                 @Html.ValidationMessageFor(model => model.InvoiceDate, "", new { @class = "text-danger" })
             </td>
-            <th align="right">Invoice #:</th>
+            <th align="right">Facility:</th>
             <td>
                 @Html.DropDownListFor(model => model.InvoiceClass, Model.InvoiceIdList, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
             </td>
         </tr>
     </table>
@@ -94,15 +89,7 @@
         </tr>
     </table>
     <table>
-
         <tr>
-            <th align="right">Sub Total:</th>
-            <td>
-                <div class="input-group">
-                    <span class="input-group-addon">$</span>
-                    @Html.EditorFor(model => model.SubTotal, new { htmlAttributes = new { @class = "form-control", @id = "total-amount", @readonly = "readonly" } })
-                </div>
-            </td>
             <th align="right">Tax %:</th>
             <td>
                 <div class="input-group">
@@ -111,20 +98,6 @@
                     <span class="input-group-addon">%</span>
                 </div>
             </td>
-            <th align="right">Total:</th>
-            <td>
-                <div class="input-group">
-                    <span class="input-group-addon">$</span>
-                    @Html.EditorFor(model => model.Total, new { htmlAttributes = new { @class = "form-control", @id = "total-add", @readonly = "readonly" } })
-
-                </div>
-            </td>
-        </tr>
-        <br />
-        <br />
-
-        <tr>
-            <td colspan="4"></td>
         </tr>
     </table>
     <table class="table  no-border" width="100%">
@@ -153,7 +126,7 @@
 
         $('.datepick').datetimepicker();
 
-        invoice.CustPoChange();
+        invoice.CustChange();
 
         invoice.SaveInvoice();
 

@@ -3459,7 +3459,7 @@
     <Content Include="Views\Documents\Details.cshtml" />
     <Content Include="Views\Invoices\_InvoiceAddModel.cshtml" />
     <Content Include="Views\Invoices\_InvoiceEditItemsList.cshtml" />
-    <Content Include="Views\Invoices\_InvoiceEditModel .cshtml" />
+    <Content Include="Views\Invoices\_InvoiceEditModel.cshtml" />
     <Content Include="Views\Account\ForgotUserNameConfirmation.cshtml" />
     <Content Include="Views\Account\ForgotUserName.cshtml" />
     <Content Include="Views\Report\Index.cshtml" />
