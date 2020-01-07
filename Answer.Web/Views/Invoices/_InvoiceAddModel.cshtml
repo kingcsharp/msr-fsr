@@ -1,30 +1,15 @@
 ﻿@model Msr.Services.Invoices.ViewModel.InvoiceViewModel
 
 <style>
-    .no-border {
-        border-bottom: 0px !important;
-    }
-
-        .no-border th, .no-border td {
-            border: 1px !important;
-        }
-
-    .quote-header th {
+    .control-label {
         text-align: right;
+        font-weight:700;
     }
 
-    .items-table th {
+    #records_table th {
         text-align: center;
-    }
-
-    .items-table > tbody > tr > td {
-        min-height: 35px;
-        height: 35px;
-    }
-
-    .line-caption {
-        font-size: 9px;
-        padding-top: 2px !important;
+        background-color: #353d47;
+        color:#fff;
     }
 </style>
 
@@ -35,102 +20,103 @@
 {
     @Html.HiddenFor(model => model.Items, new { @class = "form-control", @id = "addId" })
     @Html.HiddenFor(model => model.InvoiceNumber, new { @class = "form-control" })
-    <table class="table quote-header" width="100%">
-
-        <tr>
-            <th width="20%">Client:</th>
-            <td width="30%">
-                @Html.DropDownListFor(model => model.Client, Model.ClientList, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.Client, "", new { @class = "text-danger" })
-            </td>
-            <th style="width:200px;">Invoice Description:</th>
-            <td>@Html.EditorFor(model => model.InvoiceDescription, new { htmlAttributes = new { @class = "form-control" } })</td>
-        </tr>
-        <tr>
-            <th align="right">Status:</th>
-            <td>
-            </td>
-            <th align="right">Cust PO #:</th>
-            <td>
-            </td>
-        </tr>
-        <tr>
-            <th align="right">Invoice Date:</th>
-            <td>
-                <div class="input-group datepick">
-                    @Html.EditorFor(model => model.InvoiceDate, new { htmlAttributes = new { @class = "form-control datepick" } })
-                    @Html.ValidationMessageFor(model => model.InvoiceDate, "", new { @class = "text-danger" })
-                    <span class="input-group-addon">
-                        <span class="glyphicon glyphicon-calendar"></span>
-                    </span>
-                </div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12 alert alert-info alert alert-dismissible fade in">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <i class="fa fa-info"></i> <strong>Please Note!</strong>The following values entered here will apply to all invoices created upon submission.
+        </div>
+        <div class="col-xs-2 control-label">Invoice Date:</div>
+        <div class=" col-xs-4">
+            <div class="input-group datepick">
+                @Html.EditorFor(model => model.InvoiceDate, new { htmlAttributes = new { @class = "form-control datepick" } })
                 @Html.ValidationMessageFor(model => model.InvoiceDate, "", new { @class = "text-danger" })
-            </td>
-            <th align="right">Facility:</th>
-            <td>
-                @Html.DropDownListFor(model => model.InvoiceClass, Model.InvoiceIdList, new { @class = "form-control" })
-            </td>
-        </tr>
-    </table>
-    <table>
-        <tr>
-            <td colspan="4">
-                <div class="alert alert-info alert-dismissable">
-                    List all available (completed and not-yet invoiced) Purchase Items for this client
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <div id="invoice-po" style="height:400px;overflow-y:auto;">
-                    @Html.Partial("_InvoiceItemsList")
-                </div>
-            </td>
-        </tr>
-    </table>
-    <table>
-        <tr>
-            <th align="right">Tax %:</th>
-            <td>
-                <div class="input-group">
+                <span class="input-group-addon">
+                    <span class="fa fa-calendar"></span>
+                </span>
+            </div>
+            @Html.ValidationMessageFor(model => model.InvoiceDate, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-xs-2 control-label">Tax %:</div>
+        <div class="col-xs-4">
+            <div class="input-group">
+                @Html.EditorFor(model => model.Tax, new { htmlAttributes = new { @class = "form-control", @id = "total-tax-amount" } })
+                <span class="input-group-addon">%</span>
+            </div>
+        </div>
 
-                    @Html.EditorFor(model => model.Tax, new { htmlAttributes = new { @class = "form-control", @id = "total-tax-amount" } })
-                    <span class="input-group-addon">%</span>
-                </div>
-            </td>
-        </tr>
-    </table>
-    <table class="table  no-border" width="100%">
-        <tr>
-            <td align="right">
+    </div>
+    <div class="row">
 
-                <input id="invoice-submit" type="button" name="BSUBMIT" class="btn btn-primary" value="Submit">
+        <div class="col-xs-2 control-label">Description:</div>
+        <div class=" col-xs-10">
+            @Html.EditorFor(model => model.InvoiceDescription, new { htmlAttributes = new { @class = "form-control" } })
+        </div>
+    </div>
 
 
-                <input type="button" name="BCLOSE" class="btn btn-danger" data-dismiss="modal" value="Cancel">
-            </td>
-        </tr>
-    </table>
+    <div class="row">
+        <div class="col-xs-12 alert alert-info alert alert-dismissible fade in">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <i class="fa fa-info"></i> <strong>Please Note!</strong>The following values entered here will filter the PO results listed below
+        </div>
+        <div class="col-xs-2 control-label">Client:</div>
+        <div class="col-xs-5">
+            @Html.DropDownListFor(model => model.Client, Model.ClientList, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Client, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-xs-2 control-label">Facility:</div>
+        <div class="col-xs-3">
+            @Html.DropDownListFor(model => model.InvoiceClass, Model.InvoiceIdList, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-2 control-label">With Product(s):</div>
+        <div class="col-xs-10">
+            <!-- this is a placeholder for the model control -->
+            <select id="products" name="products[]" multiple="multiple">
+                <option value="1">Product 1</option>
+                <option value="2">Product 2</option>
+                <option value="3">Product 3</option>
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12" id="invoice-po" style="height:400px;overflow-y:auto;">
+            @Html.Partial("_InvoiceItemsList")
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <input type="button" name="BCLOSE" class="btn btn-danger pull-right" data-dismiss="modal" value="Cancel">
+            <input id="invoice-submit" type="button" name="BSUBMIT" class="btn btn-primary pull-right" value="Submit" style="margin-right:10px">
+        </div>
+    </div>
+</div>
 }
 
-@Scripts.Render("~/bundles/js/jqueryval")
-@Scripts.Render("~/bundles/js/invoice-setup")
-<script src="~/assets/js/moment.min.js"></script>
-<script src="~/assets/js/bootstrap-datetimepicker.min.js"></script>
-<script src="~/assets/js/dataTables.bootstrap.min.js"></script>
-<script>
+    @Scripts.Render("~/bundles/js/jqueryval")
+    @Scripts.Render("~/bundles/js/invoice-setup")
+    <script src="~/assets/js/moment.min.js"></script>
+    <script src="~/assets/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/assets/js/dataTables.bootstrap.min.js"></script>
+    <script>
 
-    $(document).ready(function () {
+        $(document).ready(function () {
 
-        var invoice = new Invoice();
+            var invoice = new Invoice();
 
-        $('.datepick').datetimepicker();
+            $('#products').select2({
+                placeholder: "Select Invoiceable Products to filter"
+            });
 
-        invoice.CustChange();
+            $('.datepick').datetimepicker();
 
-        invoice.SaveInvoice();
+            invoice.CustChange();
 
-    });
+            invoice.SaveInvoice();
+
+        });
 
 
-</script>
+    </script>
