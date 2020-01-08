@@ -216,6 +216,7 @@
     <Compile Include="ShowPurchaseStatus\PurchaseItem.cs" />
     <Compile Include="ShowPurchaseStatus\ShowPurchaseStatusView.cs" />
     <Compile Include="Tasks\Task.cs" />
+    <Compile Include="Tasks\TaskObject.cs" />
     <Compile Include="Tasks\TimerStatuseConstants.cs" />
     <Compile Include="Tasks\ReportTypeConstants.cs" />
     <Compile Include="Tasks\MonitorTypeConstants.cs" />

@@ -13,7 +13,7 @@ Msr.InvoicesGrid = Msr.InvoicesGrid || {
     DownloadFilteredInvoices: function () {
         const baseURL = window.location.protocol + "//" + window.location.host + "/Invoices/DownloadFilteredInvoices";
         const postData = $("#" + Msr.InvoicesGrid.GetGridId()).jqGrid('getGridParam', 'postData');
-        
+
         let downloadInvoicesURL = baseURL + '?';
 
         $.each(postData, function (key, value) {
@@ -157,8 +157,18 @@ Msr.InvoicesGrid = Msr.InvoicesGrid || {
 
         function invoiceEditFormatter(cellvalue, options, rowObject) {
 
-            var editButton = '<span data-call-id="' + rowObject.Id + '" data-toggle="modal"  data-target="#editInvModal" class="btn btn-xs btn-success"  title="Edit" style="margin:2px;font-size: .8em;"><i class="fa fa-edit" aria-hidden="true"></i></span>';
-            var exportButton = '<a href="/Invoices/ExportFile/' + rowObject.Id + '?&po=' + rowObject.CustPo + '"  class="btn btn-xs btn-info" title="Export" style="margin:2px;font-size: .8em;"><i class="fa fa-file-text" aria-hidden="true"></i></a>';
+            var editButton =
+                '<span data-call-id="' + rowObject.Id + '" ' +
+                'data-call-number="' + rowObject.InvoiceNumber + '" ' +
+                '" data-toggle="modal"  data-target="#editInvModal" ' +
+                'class="btn btn-xs btn-success"  title="Edit" ' +
+                'style="margin:2px;font-size: .8em;"><i class="fa ' +
+                'fa-edit" aria-hidden="true"></i></span>';
+            var exportButton =
+                '<a href="/Invoices/ExportFile/' + rowObject.Id +
+                '?&po=' + rowObject.CustPo + '"  class="btn btn-xs btn-info" ' +
+                'title="Export" style="margin:2px;font-size: .8em;">' +
+                '<i class="fa fa-file-text" aria-hidden="true"></i></a>';
 
             return editButton + exportButton;
         }

@@ -16,16 +16,17 @@
 <link href="~/assets/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
 
 @Html.Partial("Message")
-@using (Html.BeginForm("Create", "Invoices", FormMethod.Post, new { @class = "form-horizontal", @id = "FormId" }))
+@using (Html.BeginForm("Save", "Invoices", FormMethod.Post, new { @class = "form-horizontal", @id = "invoice-edit" }))
 {
-    @Html.HiddenFor(model => model.Items, new { @class = "form-control", @id = "addId" })
+    <p>
+    <h4 class="modal-title">Invoice: @Model.InvoiceIdString</h4>
+    </p>
+
+    @Html.HiddenFor(model => model.Id, new { @class = "form-control", @id = "editId" })
+    @Html.HiddenFor(model => model.Items, new { @class = "form-control", @id = "itemId" })
     @Html.HiddenFor(model => model.InvoiceNumber, new { @class = "form-control" })
 <div class="container-fluid">
     <div class="row">
-        <div class="col-xs-12 alert alert-info alert alert-dismissible fade in">
-            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            <i class="fa fa-info"></i> <strong>Please Note!</strong>The following values entered here will apply to all invoices created upon submission.
-        </div>
         <div class="col-xs-2 control-label">Invoice Date:</div>
         <div class=" col-xs-4">
             <div class="input-group datepick">
@@ -53,12 +54,12 @@
             @Html.EditorFor(model => model.InvoiceDescription, new { htmlAttributes = new { @class = "form-control" } })
         </div>
     </div>
-
-
     <div class="row">
-        <div class="col-xs-12 alert alert-info alert alert-dismissible fade in">
-            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            <i class="fa fa-info"></i> <strong>Please Note!</strong>The following values entered here will filter the PO results listed below
+        <div class="col-xs-12">
+            <div class="alert alert-info alert alert-dismissible fade in" style="margin-bottom:0">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <i class="fa fa-info"></i> <strong>Please Note!</strong>The following values entered here will filter the PO results listed below
+            </div>
         </div>
         <div class="col-xs-2 control-label">Client:</div>
         <div class="col-xs-5">
@@ -83,7 +84,7 @@
     </div>
     <div class="row">
         <div class="col-xs-12" id="invoice-po" style="height:400px;overflow-y:auto;">
-            @Html.Partial("_InvoiceItemsList")
+            @Html.Partial("_InvoiceEditItemsList")
         </div>
     </div>
     <div class="row">
@@ -95,28 +96,28 @@
 </div>
 }
 
-    @Scripts.Render("~/bundles/js/jqueryval")
-    @Scripts.Render("~/bundles/js/invoice-setup")
-    <script src="~/assets/js/moment.min.js"></script>
-    <script src="~/assets/js/bootstrap-datetimepicker.min.js"></script>
-    <script src="~/assets/js/dataTables.bootstrap.min.js"></script>
-    <script>
+@Scripts.Render("~/bundles/js/jqueryval")
+@Scripts.Render("~/bundles/js/invoice-setup")
+<script src="~/assets/js/moment.min.js"></script>
+<script src="~/assets/js/bootstrap-datetimepicker.min.js"></script>
+<script src="~/assets/js/dataTables.bootstrap.min.js"></script>
+<script>
 
-        $(document).ready(function () {
+	$(document).ready(function () {
 
-            var invoice = new Invoice();
+		var invoice = new Invoice();
 
-            $('#products').select2({
-                placeholder: "Select Invoiceable Products to filter"
-            });
+        $('.datepick').datetimepicker();
 
-            $('.datepick').datetimepicker();
-
-            invoice.CustChange();
-
-            invoice.SaveInvoice();
-
+        $('#products').select2({
+            placeholder: "Select Invoiceable Products to filter"
         });
 
+		invoice.CustPoChangeForEdit();
 
-    </script>
+		invoice.UpdateInvoice();
+
+	});
+
+
+</script>
