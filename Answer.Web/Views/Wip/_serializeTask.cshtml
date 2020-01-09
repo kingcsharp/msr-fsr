@@ -36,16 +36,7 @@
                 {
                     <tr>
                         <td class="part-label-td">
-                            @if (subPart.Qty > 1)
-                            {
-                                var thisLabel = string.Concat(@part.FirstOrDefault().Part_Desc, " &num;", @j);
-                                <label class="part-label">@thisLabel</label>
-                                j++;
-                            }
-                            else
-                            {
                                <label class="part-label">@part.FirstOrDefault().Part_Desc</label>
-                            }
                         </td>
                         <td class="text-td" style="border-right: unset;">
                             <div id="@i-show" data-index="@i" class="form-group">
