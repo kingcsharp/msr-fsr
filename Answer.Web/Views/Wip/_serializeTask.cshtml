@@ -54,8 +54,8 @@
                                     <input name="parts[@i].Status" type="hidden" value="@Model.Status" />
                                     <input id="@i-current-value" class="form-control" name="parts[@i].Serial" type="text" value="@subPart.Serial" disabled="disabled" />
                                 }
-                                @* MH- if is subpart part and step is FINISHED we can show subpart serials*@
-                                else if (@Model.Status == "FINISHED")
+                                @* MH- if is subpart part and step is CLOSED we can show subpart serials*@
+                                else if (@Model.Status == "CLOSED")
                                 {
                                     <input id="@i-current-value" class="form-control serialize-serial-num" name="parts[@i].Serial" type="text" value="@subPart.Serial" disabled="disabled" />
                                 }
