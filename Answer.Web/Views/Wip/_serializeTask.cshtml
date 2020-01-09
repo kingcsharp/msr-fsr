@@ -32,7 +32,7 @@
         <tbody>
             @foreach (var part in Model.GetActualPartsShowHierarchys.GroupBy(x => x.Part_Desc))
             {
-                @foreach (var subPart in part)
+                foreach (var subPart in part)
                 {
                     <tr>
                         <td class="part-label-td">
