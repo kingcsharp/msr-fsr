@@ -48,13 +48,16 @@
                         </td>
                         <td class="text-td" style="border-right: unset;">
                             <div id="@i-show" data-index="@i" class="form-group">
+                                @* if is parent part*@
                                 @if (subPart.Tree_Level == 0)
                                 {
+                                <input name="parts[@i].Status" type="hidden" value="parts[@i].Status" />
                                     <input id="@i-current-value" class="form-control" name="parts[@i].Serial" type="text" value="@subPart.Serial" disabled="disabled" />
                                 }
+                                @* MH- if is subpart part - do not prepop serials*@
                                 else
                                 {
-                                    <input id="@i-current-value" class="form-control serialize-serial-num" name="parts[@i].Serial" type="text" value="@subPart.Serial" disabled="disabled" />
+                                    <input id="@i-current-value" class="form-control serialize-serial-num" name="parts[@i].Serial" type="text" disabled="disabled" />
                                 }
 
                                 @if (ViewBag.HasStepRoles == true)
