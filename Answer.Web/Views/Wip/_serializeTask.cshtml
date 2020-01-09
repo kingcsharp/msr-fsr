@@ -43,9 +43,8 @@
                             }
                             else
                             {
-                                <label class="part-label">@part.FirstOrDefault().Part_Desc</label>
+                               <label class="part-label">@part.FirstOrDefault().Part_Desc</label>
                             }
-                            <label class="part-label">@part.FirstOrDefault().Part_Desc</label>
                         </td>
                         <td class="text-td" style="border-right: unset;">
                             <div id="@i-show" data-index="@i" class="form-group">
@@ -136,7 +135,6 @@
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    console.log('Response :' + response.responseText);
                     if (response.success) {
                         $('#'+index+'-submit').attr("disabled", false).html('Submit');
                         $('#' + index + '-cancel').removeClass('hidden');
@@ -162,7 +160,6 @@
 
 		$('#btn-save,#btn-save-complete-task').on('click',
 			function (e) {
-				console.log($('.serialize-serial-num').val());
 				var button = $(this).data('button-id');
 				e.preventDefault();
 				eLoaderOpen();
