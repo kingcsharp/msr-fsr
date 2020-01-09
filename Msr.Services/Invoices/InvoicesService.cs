@@ -109,8 +109,10 @@ namespace Msr.Services.Invoices
                     "po.TotalPurchaseLimit as TotalPurchaseLimit " +
                 "FROM A_POS_WITH_COMPLETED_WOS a " +
                 "LEFT JOIN Portal_PurchaseOrders po ON (a.REFERENCEPO = po.ReferencePo) " +
+                "LEFT JOIN Portal_workorders wo ON (a.REFERENCEPO = wo.ReferencePo) " +
                 "WHERE po.status = 'APPROVED' " +
-                "AND ((custid = @p0) OR (@p0 = -1)) " +
+                "AND wo.FILLITEMID NOT IN (SELECT ITEMID FROM PORTAL_INVOICEWORKITEM) " +
+                "AND ((a.custid = @p0) OR (@p0 = -1)) " +
                 "ORDER BY a.REFERENCEPO";
 
             List<POListItem> distinctPOList = _dbContext
