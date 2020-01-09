@@ -31,52 +31,62 @@
         <tbody>
             @foreach (var part in Model.GetActualPartsShowHierarchys.GroupBy(x => x.Part_Desc))
             {
-                <tr>
-                    <td class="part-label-td">
-                        <label class="part-label">@part.FirstOrDefault().Part_Desc</label>
-                    </td>
-                    @foreach (var subPart in part)
+
+                @foreach (var subPart in part)
+                {
+                    for (var j = 1; j <= subPart.Qty; j++)
                     {
-                        for (var j = 1; j <= subPart.Qty; j++)
-                        {
-                            <td class="text-td" style="border-right: unset;">
-                                <div id="@i-show" data-index="@i" class="form-group">
-                                    @if (subPart.Tree_Level == 0)
+                            <tr>
+                                <td class="part-label-td">
+                                    @if (subPart.Qty > 1)
                                     {
-                                        <input id="@i-current-value" class="form-control" name="parts[@i].Serial" type="text" value="@subPart.Serial" disabled="disabled" />
+                                        <label class="part-label">@part.FirstOrDefault().Part_Desc #@j</label>
                                     }
                                     else
                                     {
-                                        <input id="@i-current-value" class="form-control serialize-serial-num" name="parts[@i].Serial" type="text" value="@subPart.Serial" disabled="disabled" />
+                                        <label class="part-label">@part.FirstOrDefault().Part_Desc</label>
                                     }
+                                    <label class="part-label">@part.FirstOrDefault().Part_Desc</label>
+                                </td>
+                                <td class="text-td" style="border-right: unset;">
+                                    <div id="@i-show" data-index="@i" class="form-group">
+                                        @if (subPart.Tree_Level == 0)
+                                        {
+                                            <input id="@i-current-value" class="form-control" name="parts[@i].Serial" type="text" value="@subPart.Serial" disabled="disabled" />
+                                        }
+                                        else
+                                        {
+                                            <input id="@i-current-value" class="form-control serialize-serial-num" name="parts[@i].Serial" type="text" value="@subPart.Serial" disabled="disabled" />
+                                        }
+
+                                        @if (ViewBag.HasStepRoles == true)
+                                        {
+                                            <input name="parts[@i].Id" type="hidden" value="@subPart.Id" />
+                                            <input name="parts[@i].TreeLevel" type="hidden" value="@subPart.Tree_Level" />
+                                            <button id="@subPart.Id" type="button" class=" btn btn-warning change-button">Change</button>
+                                        }
+                                    </div>
 
                                     @if (ViewBag.HasStepRoles == true)
                                     {
-                                        <input name="parts[@i].Id" type="hidden" value="@subPart.Id" />
-                                        <input name="parts[@i].TreeLevel" type="hidden" value="@subPart.Tree_Level" />
-                                        <button id="@subPart.Id" type="button" class=" btn btn-warning change-button">Change</button>
+                                        <div id="@i-change" class="hidden form-group" data-index="@i">
+                                            <input id="@i-new-value" class="form-control part-serial-number" type="text" placeholder="@subPart.Serial" />
+                                            <button id="@i-submit" type="button" data-index="@i" data-part-id="@subPart.Id" class="btn-success btn submit-serial-number">Submit</button>
+                                            <button id="@i-cancel" type="button" class="btn-danger btn cancel-button">Cancel</button>
+                                        </div>
                                     }
-                                </div>
 
-                                @if (ViewBag.HasStepRoles == true)
-                                {
-                                    <div id="@i-change" class="hidden form-group" data-index="@i">
-                                        <input id="@i-new-value" class="form-control part-serial-number" type="text" placeholder="@subPart.Serial" />
-                                        <button id="@i-submit" type="button" data-index="@i" data-part-id="@subPart.Id" class="btn-success btn submit-serial-number">Submit</button>
-                                        <button id="@i-cancel" type="button" class="btn-danger btn cancel-button">Cancel</button>
-                                    </div>
-                                }
-
-                            </td>
-                            <td style="border-left:unset;">
-                                <div id="@i-results" class="hidden" style="margin-top:10px;"></div>
-                            </td>
+                                </td>
+                                <td style="border-left:unset;">
+                                    <div id="@i-results" class="hidden" style="margin-top:10px;"></div>
+                                </td>
+                            </tr>
                             i++;
-                        }
+                            }
+                            }
+
                     }
-                </tr>
-            }
-        </tbody>
+                </tbody>
     </table>
 
     if (ViewBag.HasStepRoles == true)
