@@ -34,7 +34,7 @@
 
                 @foreach (var subPart in part)
                 {
-                    for (var j = 1; j <= subPart.Qty; j++)
+                    @for (var j = 1; j <= subPart.Qty; j++)
                     {
                             <tr>
                                 <td class="part-label-td">
