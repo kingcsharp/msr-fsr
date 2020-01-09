@@ -38,7 +38,8 @@
                         <td class="part-label-td">
                             @if (subPart.Qty > 1)
                             {
-                                <label class="part-label">@part.FirstOrDefault().Part_Desc #@j</label>
+                                var thisLabel = string.Concat(@part.FirstOrDefault().Part_Desc, " &num;", @j);
+                                <label class="part-label">@thisLabel</label>
                                 j++;
                             }
                             else
@@ -54,12 +55,12 @@
                                     <input name="parts[@i].Status" type="hidden" value="@Model.Status" />
                                     <input id="@i-current-value" class="form-control" name="parts[@i].Serial" type="text" value="@subPart.Serial" disabled="disabled" />
                                 }
-                                @* MH- if is subpart part and step is CLOSED we can show subpart serials*@
+                                @* MH- if is subpart part and step is CLOSED, we can show subpart serials*@
                                 else if (@Model.Status == "CLOSED")
                                 {
                                     <input id="@i-current-value" class="form-control serialize-serial-num" name="parts[@i].Serial" type="text" value="@subPart.Serial" disabled="disabled" />
                                 }
-                                @* MH- if is subpart part and step is not FINISHED DO NOT prepop serials*@
+                                @* MH- if is subpart part and step is not CLOSED, DO NOT prepop serials*@
                                 else
                                 {
                                     <input id="@i-current-value" class="form-control serialize-serial-num" name="parts[@i].Serial" type="text" disabled="disabled" />
