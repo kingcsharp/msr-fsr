@@ -36,25 +36,25 @@
                 {
                     <tr>
                         <td class="part-label-td">
-                            @if (subPart.Qty > 1)
-                            {
-                                <label class="part-label">@part.FirstOrDefault().Part_Desc #@j</label>
-                                j++;
-                            }
-                            else
-                            {
                                <label class="part-label">@part.FirstOrDefault().Part_Desc</label>
-                            }
                         </td>
                         <td class="text-td" style="border-right: unset;">
                             <div id="@i-show" data-index="@i" class="form-group">
+                                @* if is parent part*@
                                 @if (subPart.Tree_Level == 0)
                                 {
+                                    <input name="parts[@i].Status" type="hidden" value="@Model.Status" />
                                     <input id="@i-current-value" class="form-control" name="parts[@i].Serial" type="text" value="@subPart.Serial" disabled="disabled" />
                                 }
-                                else
+                                @* MH- if is subpart part and step is CLOSED, we can show subpart serials*@
+                                else if (@Model.Status == "CLOSED")
                                 {
                                     <input id="@i-current-value" class="form-control serialize-serial-num" name="parts[@i].Serial" type="text" value="@subPart.Serial" disabled="disabled" />
+                                }
+                                @* MH- if is subpart part and step is not CLOSED, DO NOT prepop serials*@
+                                else
+                                {
+                                    <input id="@i-current-value" class="form-control serialize-serial-num" name="parts[@i].Serial" type="text" disabled="disabled" />
                                 }
 
                                 @if (ViewBag.HasStepRoles == true)
