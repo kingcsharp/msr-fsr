@@ -265,13 +265,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App_Start\BundleConfig.cs" />
+    <!--<Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\ODataConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
-    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />-->
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ActualPartsController.cs" />
     <Compile Include="Controllers\AdminCostSettingsController.cs" />
@@ -369,6 +369,13 @@
   <ItemGroup>
     <Content Include="App_Data\Emailer.xml" />
     <Content Include="App_Data\GlobalSettings.xml" />
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\IdentityConfig.cs" />
+    <Compile Include="App_Start\ODataConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
     <Content Include="assets\components\ace\ace\ace.min.js" />
     <Content Include="assets\components\ace\ace\ext-beautify.js" />
     <Content Include="assets\components\ace\ace\ext-chromevox.js" />
