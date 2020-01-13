@@ -59,9 +59,8 @@ namespace Msr.Services.Invoices
         public List<InvoicePoWorkItem> InvoiceItemsByPurchaseId(string referencePo, List<InvoiceWorkItem> hasValue)
         {
             var invoiceWorkItemIds = hasValue.Select(x => x.ItemId);
-            // Query "CLOSED" items, because at this point they've already been invoiced.
             return InvoiceViewList()
-                .Where(x => x.Status == "CLOSED" && x.CustPurchNum == referencePo && invoiceWorkItemIds.Contains(x.PurchaseId))
+                .Where(x => x.CustPurchNum == referencePo && invoiceWorkItemIds.Contains(x.FillItemId))
                 .Distinct()
                 .ToList();
         }
@@ -81,8 +80,8 @@ namespace Msr.Services.Invoices
                 .Distinct()
                 .Select(z => z.ItemId).ToList();
             var ret = InvoiceViewList().Where(
-                x => x.Status == "CLOSED" && x.CustPurchNum == po &&
-                    items.Contains(x.PurchaseId)
+                x => x.CustPurchNum == po &&
+                    items.Contains(x.FillItemId)
                 )
                 .Distinct()
                 .ToList();
@@ -209,7 +208,7 @@ namespace Msr.Services.Invoices
 
                         var invoiceWorkItem = new InvoiceWorkItem
                         {
-                            ItemId = wi.PurchaseId,
+                            ItemId = wi.FillItemId,
                             InvoiceId = invoice.Id.ToString(),
                             RefPo = invoice.CustPo,
                         };
