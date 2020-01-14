@@ -104,11 +104,18 @@ pipeline {
             steps {
                 script {
                     try {
-                        bat "\"${tool 'v14-amd64'}\" Answer.Web/Answer.Web.csproj /t:Build /p:AppxBundle=Always /p:AppxBundlePlatforms=\"x86|x64\" /p:Configuration=Release /p:DeployOnBuild=true /p:OutputPath=${WORKSPACE}/publish"
+                        bat "\"${tool 'v14-amd64'}\" Answer.Web/Answer.Web.csproj /t:Build /p:Configuration=Release /p:DeployOnBuild=true /p:OutputPath=${WORKSPACE}/publish"
                     } catch(e) {
                         office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED building Answer.Web. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
                         currentBuild.result = 'FAILURE'
                     }
+                }
+            }
+        }
+        stage("Bundling & Minification") {
+            steps {
+                script {
+                    bat label: '', script: 'dotnet bundle'
                 }
             }
         }
