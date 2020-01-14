@@ -115,6 +115,7 @@ pipeline {
         stage("Bundling & Minification") {
             steps {
                 script {
+                    bat label: '', script: 'dotnet restore'
                     bat label: '', script: 'dotnet bundle'
                 }
             }
