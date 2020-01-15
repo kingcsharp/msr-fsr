@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
+using Newtonsoft.Json;
 
 namespace Answer.Web.Controllers
 {
@@ -387,6 +388,7 @@ namespace Answer.Web.Controllers
 
         public ActionResult StatusView(string locationName)
         {
+
             var currentUser = GetCurrentUser();
 
             List<string> locationList;
@@ -411,7 +413,35 @@ namespace Answer.Web.Controllers
                 }).OrderBy(o => o.Text).ToList()
             };
 
-            //viewModel.LocationList.Insert(0, new SelectListItem { Text = "--Please Select--", Value = "" });
+            
+            if (string.IsNullOrWhiteSpace(Request.Cookies["Locations"]?.Value) || Request.Cookies["Locations"].Value == "undefined") 
+            {
+
+                if (Request.Cookies["Locations"] != null)
+                {
+                    Request.Cookies["Locations"].Value = locationList.ToString();
+                }
+
+            }
+            else
+            {
+                string  cookieLocations = System.Net.WebUtility.UrlDecode(Request.Cookies["Locations"].Value);
+
+                viewModel.LocationList.ForEach(s =>
+                {
+                    if (cookieLocations.Contains(s.Value))
+                    {
+                        s.Selected = true;
+                    }
+                    else
+                    {
+                        s.Selected = false;
+                    }
+
+                });
+
+                locationList = cookieLocations.Split(',').ToList();
+            }
 
             var workOrdersQueryable = _orderService.GetWorkOrderQueryable();
 

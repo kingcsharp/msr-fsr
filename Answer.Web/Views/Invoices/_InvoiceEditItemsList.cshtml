@@ -1,8 +1,8 @@
 ﻿@model Msr.Services.Invoices.ViewModel.InvoiceViewModel
-<h4>Purchase Items to Apply (Check All that Apply)</h4>
+    <h4>Invoiced Work Order Items </h4>
 @if (Model.InvoiceItemList != null)
 {
-    <table class="table table-bordered" id="records_table">
+    <table class="table table-bordered table-striped table condensed" id="records_table">
         <tr>
             <th></th>
             <th>Date Posted</th>
@@ -40,23 +40,23 @@
                 <td>
                     @Model.InvoiceItemList[i].Description
                 </td>
-                <td>
+                <td  align="center">
                     @Model.InvoiceItemList[i].FillQty
                 </td>
-                <td class="poAmount">
+                <td class="poAmount" align="right">
                     @if (Model.InvoiceItemList[i].TotalSalePrice.HasValue)
                     {
                         <span> $@Model.InvoiceItemList[i].TotalSalePrice</span>
                         @Html.HiddenFor(x => Model.InvoiceItemList[i].TotalSalePrice, new { @id = "amountPo" })
                     }
                 </td>
-                <td>
+                <td align="right">
                     @if (Model.InvoiceItemList[i].TotalSalePrice.HasValue)
                     {
                         <span> $@Model.InvoiceItemList[i].TotalSalePrice</span>
                     }
                 </td>
-                <td>
+                <td align="right">
                     @if (Model.InvoiceItemList[i].Amount.HasValue)
                     {
                         <span> $@Model.InvoiceItemList[i].Amount</span>
