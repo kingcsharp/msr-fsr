@@ -7,6 +7,7 @@
 <link href="@Url.Content("~/assets/css/select2.css")" rel="stylesheet" type="text/css" />
 
 
+
 <div class="app-container">
     <div class="row content-container">
         <div class="container-fluid">
@@ -51,7 +52,6 @@
                             @Html.HiddenFor(x => x.HasQuote)
                             @Html.HiddenFor(x => x.ProductSupplierId)
                             @Html.HiddenFor(x => x.SubmittedRequirement.Status)
-                            @Html.HiddenFor(x => x.ProductSupplierId)
                             @Html.HiddenFor(x => x.AdminCostSettings.RmAnnualRate, new { @class = "admin-cost-settings-rm-annual-rate" })
                             @Html.HiddenFor(x => x.AdminCostSettings.HourMinutes, new { @class = "admin-cost-settings-hour-minutes" })
                             @Html.HiddenFor(x => x.AdminCostSettings.LaborRateMinute, new { @class = "admin-cost-settings-labor-rate-minute" })
@@ -103,6 +103,7 @@
 
     <script type="text/javascript">
         $(document).ready(function() {
+
             $('.selectProcedure').select2();
             $('.selectPart').select2();
 
@@ -127,7 +128,7 @@
                 $('.quote-requirements-print').printThis();
             });
 
-            $('#ProductProcedureId').on('change', function () {
+            $('.selectProcedure').on('change', function () {
                 $('#step-grid').block({ message: '<h1><img src="/assets/img/nice_loader.gif" />  Loading. Please wait...</h1>' });
                 $('#production-planning-form').removeData('validator');
                 $('#production-planning-form').removeData('unobtrusiveValidation');
