@@ -88,13 +88,13 @@ namespace Msr.Services.Invoices
             return ret;
         }
 
-        public List<POListItem> InvoicePoList(bool onEdit)
+        public List<POListItem> GetDistinctPOList(
+            ref int nextpage,
+            int custid = -1,
+            string facilityCode = "03",
+            int page = 0)
         {
-            return GetDistinctPOList();
-        }
-
-        public List<POListItem> GetDistinctPOList(int custid = -1, string facilityCode = "03")
-        {
+            int pagesize = 50;
             string sql =
                 "SELECT DISTINCT a.REFERENCEPO as REFERENCEPO, " +
                     "a.custid as custid, a.customername as customername, " +
@@ -112,12 +112,23 @@ namespace Msr.Services.Invoices
                 "WHERE po.status = 'APPROVED' " +
                 "AND wo.FILLITEMID NOT IN (SELECT ITEMID FROM PORTAL_INVOICEWORKITEM) " +
                 "AND ((a.custid = @p0) OR (@p0 = -1)) " +
-                "ORDER BY a.REFERENCEPO";
+                "ORDER BY a.REFERENCEPO " +
+                "OFFSET " + (page * pagesize) +
+                " ROWS FETCH NEXT " + (pagesize + 1) + " ROWS ONLY";
 
             List<POListItem> distinctPOList = _dbContext
                 .Database
                 .SqlQuery<POListItem>(sql, custid)
                 .ToList();
+
+            // If we have more items than the page size, then trim the result
+            // set and flag that we have more data.
+            if (distinctPOList.Count > pagesize) {
+                nextpage = page + 1;
+                distinctPOList = distinctPOList.GetRange(0, pagesize);
+            } else {
+                nextpage = page;
+            }
 
             // Filter by Facility (or NULL)
             distinctPOList = FacilityFilter(distinctPOList, facilityCode);
