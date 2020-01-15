@@ -73,11 +73,35 @@
                 </tr>
             }
         </table>
+        if (Model.page > 0) {
+            <a href="#" id='polistprev'>prev</a>
+        }
+        if (Model.nextPage != Model.page) {
+            <a href="#" id='polistnext'>next</a>
+        }
 }
 
 <script src="~/assets/js/grids/invoice-tax.js"></script>
 
 <script type="text/javascript">
+    function changePage(page) {
+        console.log(page);
+        var po = $('#Client').val();
+        var fac = $('#InvoiceClass').val();
+        eLoaderOpen();
+        $.ajax({
+            type: "POST",
+            url: "/Invoices/InvoiceModelGetPoList" +
+                "?id=" + po +
+                "&fac=" + fac +
+                "&page=" + page,
+            dataType: 'html',
+            success: function (data) {
+                eLoaderClose();
+                $('#invoice-po').html(data);
+            }
+        });
+    }
 
     $(document).ready(function () {
 
@@ -100,6 +124,13 @@
 
         $('input#po-id').click(function () {
             CheckBoxSelection($('#addId').val(), this, $(this).closest('tr').find('#po-data').val());
+        });
+
+        $('#polistnext').click(function() {
+            changePage(@Model.page + 1);
+        });
+        $('#polistprev').click(function() {
+            changePage(@Model.page - 1);
         });
 
     });

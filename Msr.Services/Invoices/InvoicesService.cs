@@ -89,12 +89,14 @@ namespace Msr.Services.Invoices
         }
 
         public List<POListItem> GetDistinctPOList(
-            ref int nextpage,
+            InvoiceViewModel model,
             int custid = -1,
             string facilityCode = "03",
             int page = 0)
         {
             int pagesize = 50;
+            var facilities = FacilityCodeToString(facilityCode);
+
             string sql =
                 "SELECT DISTINCT a.REFERENCEPO as REFERENCEPO, " +
                     "a.custid as custid, a.customername as customername, " +
@@ -108,7 +110,7 @@ namespace Msr.Services.Invoices
                     "po.TotalPurchaseLimit as TotalPurchaseLimit " +
                 "FROM A_POS_WITH_COMPLETED_WOS a " +
                 "LEFT JOIN Portal_PurchaseOrders po ON (a.REFERENCEPO = po.ReferencePo) " +
-                "LEFT JOIN Portal_workorders wo ON (a.REFERENCEPO = wo.ReferencePo) " +
+                "LEFT JOIN Portal_WorkOrders wo ON (a.REFERENCEPO = wo.ReferencePo) " +
                 "WHERE po.status = 'APPROVED' " +
                 "AND wo.FILLITEMID NOT IN (SELECT ITEMID FROM PORTAL_INVOICEWORKITEM) " +
                 "AND ((a.custid = @p0) OR (@p0 = -1)) " +
@@ -123,11 +125,12 @@ namespace Msr.Services.Invoices
 
             // If we have more items than the page size, then trim the result
             // set and flag that we have more data.
+            model.page = page;
             if (distinctPOList.Count > pagesize) {
-                nextpage = page + 1;
+                model.nextPage = page + 1;
                 distinctPOList = distinctPOList.GetRange(0, pagesize);
             } else {
-                nextpage = page;
+                model.nextPage = page;
             }
 
             // Filter by Facility (or NULL)
