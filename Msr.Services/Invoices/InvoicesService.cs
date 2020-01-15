@@ -94,7 +94,7 @@ namespace Msr.Services.Invoices
             string facilityCode = "03",
             int page = 0)
         {
-            int pagesize = 50;
+            int pagesize = 20;
             var facilities = FacilityCodeToString(facilityCode);
 
             string sql =
@@ -114,6 +114,8 @@ namespace Msr.Services.Invoices
                 "WHERE po.status = 'APPROVED' " +
                 "AND wo.FILLITEMID NOT IN (SELECT ITEMID FROM PORTAL_INVOICEWORKITEM) " +
                 "AND ((a.custid = @p0) OR (@p0 = -1)) " +
+                "AND (wo.LocationName IS NULL OR UPPER(wo.LocationName) IN ('" +
+                String.Join("','", facilities) + "')) " +
                 "ORDER BY a.REFERENCEPO " +
                 "OFFSET " + (page * pagesize) +
                 " ROWS FETCH NEXT " + (pagesize + 1) + " ROWS ONLY";
@@ -132,9 +134,6 @@ namespace Msr.Services.Invoices
             } else {
                 model.nextPage = page;
             }
-
-            // Filter by Facility (or NULL)
-            distinctPOList = FacilityFilter(distinctPOList, facilityCode);
 
             distinctPOList.ForEach(e => {
                 // Outstanding - $ Totals will reflect the Product Price x QTY for all FINISHED (not
@@ -496,26 +495,5 @@ namespace Msr.Services.Invoices
 
             return facilities;
         }
-
-        private List<POListItem> FacilityFilter(List<POListItem> list, string facilityCode) {
-            List<POListItem> poList = list;
-
-            // Filter by Facility (or NULL)
-            if (facilityCode != null) {
-                var facilities = FacilityCodeToString(facilityCode);
-
-                poList = list.Where(x => {
-                    var locs = _dbContext
-                        .WorkOrders
-                        .Where(y => y.ReferencePo == x.REFERENCEPO && y.Status == "FINISHED")
-                        .Select(y => y.LocationName.ToUpper())
-                        .ToList();
-
-                    return locs.Contains(null) || (locs.Intersect(facilities).Count() > 0);
-                }).ToList();
-            }
-            return poList;
-        }
-
     }
 }

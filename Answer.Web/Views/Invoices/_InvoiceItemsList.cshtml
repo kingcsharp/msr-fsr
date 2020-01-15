@@ -76,6 +76,9 @@
         if (Model.page > 0) {
             <a href="#" id='polistprev'>prev</a>
         }
+        if (Model.PoList.Count > 0) {
+            <span>&vert; page @(Model.page + 1) &vert;</span>
+        }
         if (Model.nextPage != Model.page) {
             <a href="#" id='polistnext'>next</a>
         }
