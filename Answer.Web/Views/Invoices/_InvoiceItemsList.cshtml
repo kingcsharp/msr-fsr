@@ -25,9 +25,6 @@
                 <th>PO #</th>
                 <th>Open Date</th>
                 <th>Close Date</th>
-                <th>$ Invoiced</th>
-                <th>$ Not Invoiced</th>
-                <th>$ Balance</th>
                 <th>Outstanding</th>
             </tr>
             @foreach (var po in Model.PoList)
@@ -53,18 +50,6 @@
 
                     <td align="center">
                         @string.Format("{0:M/d/yyyy}", po.CloseDate)
-                    </td>
-
-                    <td align="right">
-                        @Math.Round(po.InvoicedBalance, 2)
-                    </td>
-
-                    <td align="right">
-                        @Math.Round(po.UninvoicedBalance, 2)
-                    </td>
-
-                    <td align="right">
-                        @Math.Round(po.Balance, 2)
                     </td>
 
                     <td align="right">
