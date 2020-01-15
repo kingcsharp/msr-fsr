@@ -112,13 +112,6 @@ pipeline {
                 }
             }
         }
-        stage("Bundling & Minification") {
-            steps {
-                script {
-                    bat label: '', script: 'dotnet bundle'
-                }
-            }
-        }
         stage("Packaging release") {
             steps {
                 script {
