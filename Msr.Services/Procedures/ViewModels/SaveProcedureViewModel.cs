@@ -45,7 +45,7 @@ namespace Msr.Services.Procedures.ViewModels
         [Display(Name = "Procedure System Task :")]
         public string SystemId { get; set; }
 
-        [Display(Name = "Comments (notes,warning,etc) :")]
+        [Display(Name = "Comments (notes, warnings) :")]
         public string Comments { get; set; }
 
         [Display(Name = "Security Clearance Level :")]
