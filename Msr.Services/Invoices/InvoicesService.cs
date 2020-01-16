@@ -89,6 +89,10 @@ namespace Msr.Services.Invoices
             return ret;
         }
 
+        // Fetch list of Purchase Orders.
+        // If existingItems is defined, then it includes POs with those items along
+        // with the others not billed.  Otherwise, it selects all POs not billed
+        // for the selected facility.
         public List<POListItem> GetDistinctPOList(
             InvoiceViewModel model,
             List<string> existingItems = null,
@@ -130,6 +134,7 @@ namespace Msr.Services.Invoices
                 "LEFT JOIN Portal_WorkOrders wo ON (a.REFERENCEPO = wo.ReferencePo) " +
                 "WHERE (po.status = 'APPROVED' " +
                 "AND wo.FILLITEMID NOT IN (SELECT ITEMID FROM PORTAL_INVOICEWORKITEM) " +
+                "AND wo.status = 'FINISHED' " +
                 "AND ((a.custid = @p0) OR (@p0 = -1)) " +
                 "AND (wo.LocationName IS NULL OR UPPER(wo.LocationName) IN ('" +
                 String.Join("','", facilities) + "'))) " +
