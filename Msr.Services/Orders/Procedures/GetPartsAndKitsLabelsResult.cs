@@ -3,6 +3,8 @@ namespace Msr.Services.Orders.Procedures
 {
     public class GetPartsAndKitsLabelsResult
     {
+        public string ID { get; set; }
+
         public string Proc_Name { get; set; }
 
         public string Serial { get; set; }
