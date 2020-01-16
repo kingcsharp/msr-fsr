@@ -3,7 +3,10 @@
     ViewBag.Title = "Requirements Step Definition";
 }
 
-    <link href="@Url.Content("~/assets/css/select2.css")" rel="stylesheet" type="text/css" />
+
+<link href="@Url.Content("~/assets/css/select2.css")" rel="stylesheet" type="text/css" />
+
+
 
 <div class="app-container">
     <div class="row content-container">
@@ -99,7 +102,8 @@
     @Scripts.Render("~/bundles/js/jqueryval")
 
     <script type="text/javascript">
-        $(document).ready(function () {
+        $(document).ready(function() {
+
             $('.selectProcedure').select2();
             $('.selectPart').select2();
 
