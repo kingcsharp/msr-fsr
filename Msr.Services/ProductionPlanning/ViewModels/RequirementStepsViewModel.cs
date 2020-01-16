@@ -82,8 +82,6 @@ namespace Msr.Services.ProductionPlanning.ViewModels
 
         public List<SelectListItem> ProcessList { get; set; }
 
-        public List<SelectListItem> Suppliers { get; set; }
-
         public List<SelectListItem> Customers { get; set; }
 
         public List<SelectListItem> ProductLocationList { get; set; }
@@ -101,7 +99,6 @@ namespace Msr.Services.ProductionPlanning.ViewModels
         {
             ProcedureList = productionPlanningService.GetProceduretList().Select(x => new SelectListItem
             {
-
                 Text = x.Show,
                 Value = x.Value.ToString()
             }).OrderBy(o => o.Text).ToList();
@@ -110,13 +107,6 @@ namespace Msr.Services.ProductionPlanning.ViewModels
             {
                 Text = x.Show,
                 Value = x.Value.ToString()
-            }).OrderBy(o => o.Text).ToList();
-
-            Suppliers = productionPlanningService.GetSupplierList(currentUser).Select(x => new SelectListItem
-            {
-                Text = x.Name,
-                Value = x.Value.ToString(),
-                Selected = x.Value == "2" // REQ TO ALWAYS DEFAULT TO MSR-FSR
             }).OrderBy(o => o.Text).ToList();
 
             Customers = productionPlanningService.GetCustomerList(currentUser).Select(x => new SelectListItem
@@ -146,7 +136,6 @@ namespace Msr.Services.ProductionPlanning.ViewModels
             Id = productsView.CustomerRequirementId.Value;
             CustomerSubmitId = productsView.CustomerRequirementId.GetValueOrDefault();
             ProductCustomerDivision = productsView.Division;
-            ProductSupplierId = productsView.Supplier_Id;
             ProductLocationId = productsView.LocationId;
             ProductCustomerId = productsView.CustomerId;
             ProductName = productsView.Name;
@@ -158,6 +147,7 @@ namespace Msr.Services.ProductionPlanning.ViewModels
             PObjectId = productsView.Object_Id;
             ProductStatus = productsView.Status;
             CycleTime = productsView.CycleTime;
+            SubmittedRequirement = requirment;
 
             if (!string.IsNullOrWhiteSpace(requirment.QuoteJson))
             {

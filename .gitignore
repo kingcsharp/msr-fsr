@@ -245,3 +245,4 @@ ModelManifest.xml
 .fake/
 *.jfm
 /Msr.Commons/Controllers/ReportController.cs
+tags
