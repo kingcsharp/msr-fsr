@@ -7,6 +7,7 @@
 <link href="@Url.Content("~/assets/css/select2.css")" rel="stylesheet" type="text/css" />
 
 
+
 <div class="app-container">
     <div class="row content-container">
         <div class="container-fluid">
@@ -43,15 +44,14 @@
                         @using (Html.BeginForm("Edit", "ProductionPlanning", FormMethod.Post, new { @id = "production-planning-form", @class = "production-planning-form", role = "form" }))
                         {
                             <input type="hidden" id="QuoteProcedureName" name="QuoteProcedureName" value="@ViewBag.QuoteProcedureName" />
+                            <input id="ProductSupplierId" name="ProductSupplierId" type="hidden" value="2">
                             @Html.HiddenFor(x => x.Id)
                             @Html.HiddenFor(x => x.CustomerSubmitId)
                             @Html.HiddenFor(x => x.NewProcedure)
                             @Html.HiddenFor(x => x.PObjectId)
                             @Html.HiddenFor(x => x.OldProductProcedureId)
                             @Html.HiddenFor(x => x.HasQuote)
-                            @Html.HiddenFor(x => x.ProductSupplierId)
                             @Html.HiddenFor(x => x.SubmittedRequirement.Status)
-                            @Html.HiddenFor(x => x.ProductSupplierId)
                             @Html.HiddenFor(x => x.AdminCostSettings.RmAnnualRate, new { @class = "admin-cost-settings-rm-annual-rate" })
                             @Html.HiddenFor(x => x.AdminCostSettings.HourMinutes, new { @class = "admin-cost-settings-hour-minutes" })
                             @Html.HiddenFor(x => x.AdminCostSettings.LaborRateMinute, new { @class = "admin-cost-settings-labor-rate-minute" })
@@ -103,6 +103,7 @@
 
     <script type="text/javascript">
         $(document).ready(function() {
+
             $('.selectProcedure').select2();
             $('.selectPart').select2();
 
@@ -127,7 +128,8 @@
                 $('.quote-requirements-print').printThis();
             });
 
-            $('#ProductProcedureId').on('change', function () {
+            $('.selectProcedure').on('change', function () {
+                console.log('changed');
                 $('#step-grid').block({ message: '<h1><img src="/assets/img/nice_loader.gif" />  Loading. Please wait...</h1>' });
                 $('#production-planning-form').removeData('validator');
                 $('#production-planning-form').removeData('unobtrusiveValidation');
