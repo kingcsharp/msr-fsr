@@ -24,6 +24,7 @@ namespace Msr.Services.Invoices
         public Decimal Balance { get; set; }
         public Decimal UnusedAmount { get; set; }
         public Decimal Outstanding;
+        public bool selected;
         public string ToJSON() {
             return JsonConvert.SerializeObject(this);
         }
@@ -48,10 +49,10 @@ namespace Msr.Services.Invoices
         }
 
         // return list of items available for invoicing for a given PO
-        public IQueryable<InvoicePoWorkItem> InvoiceItemsFinishedByPurchaseId(string referencePo)
+        public IQueryable<InvoicePoWorkItem> InvoiceItemsFinishedByPurchaseId(string referencePo, bool onlyFinished = true)
         {
             return InvoiceViewList()
-                .Where(x => x.Status == "FINISHED" && x.CustPurchNum == referencePo)
+                .Where(x => (!onlyFinished || x.Status == "FINISHED") && x.CustPurchNum == referencePo)
                 .Distinct();
         }
 
@@ -90,12 +91,28 @@ namespace Msr.Services.Invoices
 
         public List<POListItem> GetDistinctPOList(
             InvoiceViewModel model,
+            List<string> existingItems = null,
             int custid = -1,
             string facilityCode = "03",
             int page = 0)
         {
             int pagesize = 20;
             var facilities = FacilityCodeToString(facilityCode);
+            string existingItemsSQL = "";
+
+            if (existingItems != null && existingItems.Count > 0) {
+                try  {
+                    List<int> existingItemsInt =
+                        existingItems.ConvertAll(x => Int32.Parse(x));
+                    existingItemsSQL = "OR " +
+                        "(wo.FILLITEMID IN (" +
+                            String.Join(",", existingItems) +
+                        ")) ";
+                } catch (ArgumentException e) {
+                    // not an integer list
+                    existingItemsSQL = "";
+                }
+            }
 
             string sql =
                 "SELECT DISTINCT a.REFERENCEPO as REFERENCEPO, " +
@@ -111,11 +128,12 @@ namespace Msr.Services.Invoices
                 "FROM A_POS_WITH_COMPLETED_WOS a " +
                 "LEFT JOIN Portal_PurchaseOrders po ON (a.REFERENCEPO = po.ReferencePo) " +
                 "LEFT JOIN Portal_WorkOrders wo ON (a.REFERENCEPO = wo.ReferencePo) " +
-                "WHERE po.status = 'APPROVED' " +
+                "WHERE (po.status = 'APPROVED' " +
                 "AND wo.FILLITEMID NOT IN (SELECT ITEMID FROM PORTAL_INVOICEWORKITEM) " +
                 "AND ((a.custid = @p0) OR (@p0 = -1)) " +
                 "AND (wo.LocationName IS NULL OR UPPER(wo.LocationName) IN ('" +
-                String.Join("','", facilities) + "')) " +
+                String.Join("','", facilities) + "'))) " +
+                existingItemsSQL +
                 "ORDER BY a.REFERENCEPO " +
                 "OFFSET " + (page * pagesize) +
                 " ROWS FETCH NEXT " + (pagesize + 1) + " ROWS ONLY";
@@ -135,15 +153,64 @@ namespace Msr.Services.Invoices
                 model.nextPage = page;
             }
 
-            distinctPOList.ForEach(e => {
-                // Outstanding - $ Totals will reflect the Product Price x QTY for all FINISHED (not
-                // yet invoiced) WOs on that PO in the grid.
-                // The "amount" field looks like it takes into account quantity and tax, so I'll use that.
-                e.Outstanding = InvoiceItemsFinishedByPurchaseId(e.REFERENCEPO)
-                    .Select(x => x.Amount)
-                    .Sum().GetValueOrDefault();
+            // The REFERENCEPO field is the index, but is not guaranteed to be unique
+            // in this set.  To avoid calculating the same value multiple times,
+            // store the value the first time.
+            var outstandingCache = new Dictionary<string, decimal>();
+            var selectedCache = new Dictionary<string, bool>();
 
-            });
+            if (existingItems != null && existingItems.Count > 0) {
+
+                // Iterate through the existing items, flagging the WOs
+                // that are selected.  This is useful for checking the
+                // already selected invoices on the edit screen.
+                foreach (POListItem e in distinctPOList) {
+                    decimal os = 0;
+                    bool selected = false;
+
+                    if (outstandingCache.ContainsKey(e.REFERENCEPO) &&
+                        selectedCache.ContainsKey(e.REFERENCEPO))
+                    {
+                        os = outstandingCache[e.REFERENCEPO];
+                        selected = selectedCache[e.REFERENCEPO];
+                    } else {
+                        foreach (InvoicePoWorkItem item in InvoiceItemsFinishedByPurchaseId(e.REFERENCEPO, false)) {
+                            // If we have existing items, then we need to include closed items in the search.
+                            if (!(item.Status == "FINISHED" || item.Status == "CLOSED")) {
+                                continue;
+                            }
+
+                            var thisInvoice = existingItems.Contains(item.FillItemId);
+                            if (thisInvoice || item.Status == "FINISHED") {
+                                os += item.Amount.GetValueOrDefault();
+                            }
+                            // select this item if any of the fill item IDs are in the selected set.
+                            selected = selected || thisInvoice;
+                        }
+                        outstandingCache.Add(e.REFERENCEPO, os);
+                        selectedCache.Add(e.REFERENCEPO, selected);
+                    }
+
+                    e.Outstanding = os;
+                    e.selected = selected;
+                }
+            } else {
+                distinctPOList.ForEach(e => {
+                    // Outstanding - $ Totals will reflect the Product Price x QTY for all FINISHED (not
+                    // yet invoiced) WOs on that PO in the grid.
+                    // The "amount" field looks like it takes into account quantity and tax, so I'll use that.
+                    if (outstandingCache.ContainsKey(e.REFERENCEPO)) {
+                        e.Outstanding = outstandingCache[e.REFERENCEPO];
+                    } else {
+                        e.Outstanding = InvoiceItemsFinishedByPurchaseId(e.REFERENCEPO)
+                            .Select(x => x.Amount)
+                            .Sum().GetValueOrDefault();
+                        outstandingCache.Add(e.REFERENCEPO, e.Outstanding);
+                    }
+                    e.selected = false;
+
+                });
+            }
 
             return distinctPOList;
         }
