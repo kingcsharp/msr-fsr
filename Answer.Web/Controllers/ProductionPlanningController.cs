@@ -179,10 +179,10 @@ namespace Answer.Web.Controllers
             var currentUser = GetCurrentUser();
 
             vm.AdminCostSettings = _adminCostSettingService.GetAdminCostSettings();
-            var requirment = _quoteService.GetCustomerRequirementView(id);
+            var requirement = _quoteService.GetCustomerRequirementView(id);
             var productsView = _productService.GetProducts().SingleOrDefault(x => x.Object_Id == id.ToString());
 
-            vm.Read(_productionPlanService, productsView, requirment);
+            vm.Read(_productionPlanService, productsView, requirement);
 
             var procedureObjectId = "";
 
