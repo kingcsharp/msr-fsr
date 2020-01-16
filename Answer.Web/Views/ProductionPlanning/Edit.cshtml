@@ -3,10 +3,7 @@
     ViewBag.Title = "Requirements Step Definition";
 }
 
-
 <link href="@Url.Content("~/assets/css/select2.css")" rel="stylesheet" type="text/css" />
-
-
 
 <div class="app-container">
     <div class="row content-container">
@@ -68,7 +65,7 @@
                                 @if (Model.ProductStatus != "APPROVED")
                                 {
                                     @Html.ActionLink("Back", "Index", null, new { @class = "btn btn-warning back-step pull-right", title = "Back To Production Planning", style = "margin-left: 10px;" })
-                                    <button id="form-change" class="hidden" style="margin-left: 10px;" data-toggle="tooltip" data-placement="top" title="" data-original-title="Saves and Sends Quoation to Client" name="" value=""> Submit</button>
+                                    <button id="form-change" class="hidden" style="margin-left: 10px;" data-toggle="tooltip" data-placement="top" title="" data-original-title="Saves and Sends Quotation to Client" name="" value=""> Submit</button>
                                     <button id="submit" type="submit" class="pull-right btn btn-success" style="margin-left: 10px;" data-toggle="tooltip" data-placement="top" title="" data-original-title="Saves and Sends Quoation to Client" name="SaveSubmit" value="SaveSubmit"><i class="fa fa-send"></i> Save &amp; Submit</button>
                                     <button id="save_draft" class="pull-right btn btn-info" style="margin-left: 10px;" data-toggle="tooltip" data-placement="top" title="" data-original-title="Saves with In Progress Status" type="submit" name="SaveSubmit"><i class="fa fa-save"></i> Save Draft</button>
                                 }
@@ -103,7 +100,6 @@
 
     <script type="text/javascript">
         $(document).ready(function() {
-
             $('.selectProcedure').select2();
             $('.selectPart').select2();
 

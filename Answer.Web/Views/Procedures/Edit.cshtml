@@ -94,6 +94,10 @@
     .file-drop-zone-title {
         margin-top: -20px;
     }
+    .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-default, .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-default {
+        color: #fff;
+        background: #ff0000;
+    }
 
 </style>
 <link rel="stylesheet" type="text/css" href="/assets/css/themes/flat-blue.css">
@@ -117,116 +121,117 @@
                 <input type="hidden" id="ObjectId" name="ObjectId" value="@Model.ObjectId" />
                 <div class="form-horizontal">
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                    <div class="col-sm-6 col-md-8 col-lg-6">
+                    <div class="col-sm-6">
                         <div class="form-group">
-                            @Html.LabelFor(model => model.Verb, htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.LabelFor(model => model.Verb, htmlAttributes: new { @class = "control-label col-md-3" })
                             <div class="col-md-8">
                                 @Html.DropDownListFor(model => model.Verb, Model.VerbList, new { @class = "form-control select" })
                                 @Html.ValidationMessageFor(model => model.Verb, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(model => model.SystemId, htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.LabelFor(model => model.SystemId, htmlAttributes: new { @class = "control-label col-md-3" })
                             <div class="col-md-8">
                                 @Html.DropDownListFor(model => model.SystemId, Model.SystemList, new { @class = "form-control select" })
                                 @Html.ValidationMessageFor(model => model.SystemId, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-3" })
                             <div class="col-md-8">
                                 @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(model => model.ReferenceFiles, htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.LabelFor(model => model.ReferenceFiles, htmlAttributes: new { @class = "control-label col-md-3" })
                             <div class="col-md-8">
                                 @Html.Partial("_FileUpload")
                             </div>
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(model => model.Comments, htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.LabelFor(model => model.Comments, htmlAttributes: new { @class = "control-label col-md-3" })
                             <div class="col-md-8">
                                 @Html.TextAreaFor(model => model.Comments, new { @class = "form-control" })
                                 @Html.ValidationMessageFor(model => model.Comments, "", new { @class = "text-danger" })
                             </div>
                         </div>
-                    </div>
-                    <div class="col-sm-9 col-md-6 col-lg-6">
                         <div class="form-group">
-                            @Html.LabelFor(model => model.SecurityLevel, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <label class="control-label col-md-3">&nbsp;</label>
+                            <div class="col-md-8">
+                                <input type="submit" id="rollBackButton" value="Update" name="command" class="btn btn-success" />
+                                <a href="@Url.Action("Index", "Procedures")" class="btn btn-warning">Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.SecurityLevel, htmlAttributes: new { @class = "control-label col-md-3" })
                             <div class="col-md-8">
                                 @Html.DropDownListFor(model => model.SecurityLevel, Model.SecurityLevelList, new { @class = "form-control select" })
                                 @Html.ValidationMessageFor(model => model.SecurityLevel, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(model => model.Roles, htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.LabelFor(model => model.Roles, htmlAttributes: new { @class = "control-label col-md-3" })
                             <div class="col-md-8">
                                 @Html.DropDownListFor(model => model.Roles, Model.RolesList, new { @class = "form-control select selectroles" })
                                 @Html.ValidationMessageFor(model => model.Roles, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(model => model.StepInAp, htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.LabelFor(model => model.StepInAp, htmlAttributes: new { @class = "control-label col-md-3" })
                             <div class="col-md-8">
                                 @Html.DropDownListFor(model => model.StepInAp, Model.SetpInApList, new { @class = "form-control select" })
                                 @Html.ValidationMessageFor(model => model.StepInAp, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(model => model.Duration, htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.LabelFor(model => model.Duration, htmlAttributes: new { @class = "control-label col-md-3" })
                             <div class="col-md-8">
                                 @Html.EditorFor(model => model.Duration, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.Duration, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(model => model.DurationType, htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.LabelFor(model => model.DurationType, htmlAttributes: new { @class = "control-label col-md-3" })
                             <div class="col-md-8">
                                 @Html.DropDownListFor(model => model.DurationType, Model.DurationTypeList, new { @class = "form-control select" })
                                 @Html.ValidationMessageFor(model => model.DurationType, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(model => model.WipMsg, htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.LabelFor(model => model.WipMsg, htmlAttributes: new { @class = "control-label col-md-3" })
                             <div class="col-md-8">
                                 @Html.DropDownListFor(model => model.WipMsg, Model.WipMsgList, new { @class = "form-control select" })
                                 @Html.ValidationMessageFor(model => model.WipMsg, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(model => model.IsActive, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <label class="control-label col-md-3" for="IsActive">Active:</label>
                             <div class="col-md-8">
-                                @Html.EditorFor(model => model.IsActive, new { @class = "form-control select" })
+                                <div class="make-switch switch-small" data-on="success" data-off="warning" style="display: inline-block">
+                                    @Html.EditorFor(model => model.IsActive, new { @class = "form-control" })
+                                </div>
                                 @Html.ValidationMessageFor(model => model.IsActive, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-md-2">Step Template:</label>
+                            <label class="control-label col-md-3">Step Template:</label>
                             <div class="col-md-8">
                                 <div class="input-group">
-                                    @Html.DropDownListFor(x=>x.AddStepTemplateId, Model.StepTemplateList, null, new { @class = "form-control", name = "preProId" })
+                                    @Html.DropDownListFor(x => x.AddStepTemplateId, Model.StepTemplateList, null, new { @class = "form-control", name = "preProId" })
                                     <span class="input-group-btn"><button type="submit" value="addNewStep" name="addNewStep" class="btn btn-success" style="margin: 0px;"><i class="fa fa-plus"></i>Add New Step</button></span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="col-md-offset-1 col-md-8">
-                            <input type="submit" id="rollBackButton" value="Update" name="command" class="btn btn-success" />
-                            <a href="@Url.Action("Index", "Procedures")" class="btn btn-warning">Cancel</a>
-                        </div>
-                    </div>
                 </div>
-            }                
+            }
         </div>
-        
         <div class="row">
             @Html.Partial("Steps", Model.GetStepDataResults)
         </div>
-    </div>
 </div>
 @section scripts
 {
@@ -246,6 +251,12 @@
 
         $(document).ready(function() {
 
+            $('#IsActive').bootstrapSwitch();
+
+            $('#IsActive').on('switchChange.bootstrapSwitch', function (e, state) {
+                e.preventDefault();
+                LoadMyItems(state);
+            });
 
             $('.delete-step').on('click', function(e) {
                     e.preventDefault();

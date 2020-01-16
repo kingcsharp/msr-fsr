@@ -182,6 +182,13 @@ namespace Answer.Web.Controllers
             var requirement = _quoteService.GetCustomerRequirementView(id);
             var productsView = _productService.GetProducts().SingleOrDefault(x => x.Object_Id == id.ToString());
 
+            if (!productsView.IsProduct.GetValueOrDefault(false) && productsView.Status == "APPROVED") {
+                // This mirrors logic in the grid (production-planning.js).  The
+                // status of a "non-product" product (i.e. one being created) is
+                // "APPROVED".
+                productsView.Status = "RECEIVED";
+            }
+
             vm.Read(_productionPlanService, productsView, requirement);
 
             var procedureObjectId = "";
@@ -194,10 +201,9 @@ namespace Answer.Web.Controllers
 
             vm.Setup(_productionPlanService, _preProServices, currentUser);
 
-            var procedureSteps = _proceduresService.GetStepsData(procedureObjectId, currentUser.Id);
-
             if (!string.IsNullOrWhiteSpace(vm.ProductProcedureId))
             {
+                var procedureSteps = _proceduresService.GetStepsData(procedureObjectId, currentUser.Id);
                 foreach (var step in procedureSteps)
                 {
                     vm.Steps.Add(new RequirementStepsDetailsViewModel
