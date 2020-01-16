@@ -194,10 +194,9 @@ namespace Answer.Web.Controllers
 
             vm.Setup(_productionPlanService, _preProServices, currentUser);
 
-            var procedureSteps = _proceduresService.GetStepsData(procedureObjectId, currentUser.Id);
-
             if (!string.IsNullOrWhiteSpace(vm.ProductProcedureId))
             {
+                var procedureSteps = _proceduresService.GetStepsData(procedureObjectId, currentUser.Id);
                 foreach (var step in procedureSteps)
                 {
                     vm.Steps.Add(new RequirementStepsDetailsViewModel

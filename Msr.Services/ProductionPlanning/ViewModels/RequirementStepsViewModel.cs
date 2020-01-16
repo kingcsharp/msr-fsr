@@ -147,6 +147,7 @@ namespace Msr.Services.ProductionPlanning.ViewModels
             PObjectId = productsView.Object_Id;
             ProductStatus = productsView.Status;
             CycleTime = productsView.CycleTime;
+            SubmittedRequirement = requirment;
 
             if (!string.IsNullOrWhiteSpace(requirment.QuoteJson))
             {
