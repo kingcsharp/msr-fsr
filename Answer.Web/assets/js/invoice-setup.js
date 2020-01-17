@@ -37,7 +37,6 @@
                 var button = $(event.relatedTarget);
                 var id = button.data('call-id');
                 var num = button.data('call-number');
-                console.log('XXXX ' + id);
                 var modal = $(this);
                 modal.find('.modal-body').block({ message: '<h1><img src="/assets/img/nice_loader.gif" />  Loading. Please wait...</h1>' });
                 $.ajax({
@@ -97,7 +96,7 @@
 
     var updateInvoice = function () {
 
-        $('#invoice-update').click(function (e) {
+        $('#invoice-submit').click(function (e) {
             $('#invoice-edit').submit();
         });
     };

@@ -24,6 +24,7 @@ namespace Msr.Services.Invoices
         public Decimal Balance { get; set; }
         public Decimal UnusedAmount { get; set; }
         public Decimal Outstanding;
+        public bool selected;
         public string ToJSON() {
             return JsonConvert.SerializeObject(this);
         }
@@ -48,10 +49,10 @@ namespace Msr.Services.Invoices
         }
 
         // return list of items available for invoicing for a given PO
-        public IQueryable<InvoicePoWorkItem> InvoiceItemsFinishedByPurchaseId(string referencePo)
+        public IQueryable<InvoicePoWorkItem> InvoiceItemsFinishedByPurchaseId(string referencePo, bool onlyFinished = true)
         {
             return InvoiceViewList()
-                .Where(x => x.Status == "FINISHED" && x.CustPurchNum == referencePo)
+                .Where(x => (!onlyFinished || x.Status == "FINISHED") && x.CustPurchNum == referencePo)
                 .Distinct();
         }
 
@@ -72,29 +73,53 @@ namespace Msr.Services.Invoices
             return result;
         }
 
-        public List<InvoicePoWorkItem> InvoiceExportByPo(string po, int? invoiceId)
+        public List<InvoicePoWorkItem> InvoiceExportByPo(int invoiceId)
         {
             var items = _dbContext.InvoiceWorkItems.Where(
-                    z => z.InvoiceId == invoiceId.Value.ToString()
+                    z => z.InvoiceId == invoiceId.ToString()
                 )
                 .Distinct()
                 .Select(z => z.ItemId).ToList();
-            var ret = InvoiceViewList().Where(
-                x => x.CustPurchNum == po &&
+
+            // Note that we can't use PO here, because we
+            // may have selected items multipe POs.
+            var ret = InvoiceViewList().Where(x =>
+                    x.Status == "CLOSED" &&
                     items.Contains(x.FillItemId)
                 )
-                .Distinct()
                 .ToList();
             return ret;
         }
 
-        public List<POListItem> InvoicePoList(bool onEdit)
+        // Fetch list of Purchase Orders.
+        // If existingItems is defined, then it includes POs with those items along
+        // with the others not billed.  Otherwise, it selects all POs not billed
+        // for the selected facility.
+        public List<POListItem> GetDistinctPOList(
+            InvoiceViewModel model,
+            List<string> existingItems = null,
+            int custid = -1,
+            string facilityCode = "03",
+            int page = 0)
         {
-            return GetDistinctPOList();
-        }
+            int pagesize = 20;
+            var facilities = FacilityCodeToString(facilityCode);
+            string existingItemsSQL = "";
 
-        public List<POListItem> GetDistinctPOList(int custid = -1, string facilityCode = "03")
-        {
+            if (existingItems != null && existingItems.Count > 0) {
+                try  {
+                    List<int> existingItemsInt =
+                        existingItems.ConvertAll(x => Int32.Parse(x));
+                    existingItemsSQL = "OR " +
+                        "(wo.FILLITEMID IN (" +
+                            String.Join(",", existingItems) +
+                        ")) ";
+                } catch (ArgumentException e) {
+                    // not an integer list
+                    existingItemsSQL = "";
+                }
+            }
+
             string sql =
                 "SELECT DISTINCT a.REFERENCEPO as REFERENCEPO, " +
                     "a.custid as custid, a.customername as customername, " +
@@ -108,29 +133,91 @@ namespace Msr.Services.Invoices
                     "po.TotalPurchaseLimit as TotalPurchaseLimit " +
                 "FROM A_POS_WITH_COMPLETED_WOS a " +
                 "LEFT JOIN Portal_PurchaseOrders po ON (a.REFERENCEPO = po.ReferencePo) " +
-                "LEFT JOIN Portal_workorders wo ON (a.REFERENCEPO = wo.ReferencePo) " +
-                "WHERE po.status = 'APPROVED' " +
+                "LEFT JOIN Portal_WorkOrders wo ON (a.REFERENCEPO = wo.ReferencePo) " +
+                "WHERE (po.status = 'APPROVED' " +
                 "AND wo.FILLITEMID NOT IN (SELECT ITEMID FROM PORTAL_INVOICEWORKITEM) " +
+                "AND wo.status = 'FINISHED' " +
                 "AND ((a.custid = @p0) OR (@p0 = -1)) " +
-                "ORDER BY a.REFERENCEPO";
+                "AND (wo.LocationName IS NULL OR UPPER(wo.LocationName) IN ('" +
+                String.Join("','", facilities) + "'))) " +
+                existingItemsSQL +
+                "ORDER BY a.REFERENCEPO " +
+                "OFFSET " + (page * pagesize) +
+                " ROWS FETCH NEXT " + (pagesize + 1) + " ROWS ONLY";
 
             List<POListItem> distinctPOList = _dbContext
                 .Database
                 .SqlQuery<POListItem>(sql, custid)
                 .ToList();
 
-            // Filter by Facility (or NULL)
-            distinctPOList = FacilityFilter(distinctPOList, facilityCode);
+            // If we have more items than the page size, then trim the result
+            // set and flag that we have more data.
+            model.page = page;
+            if (distinctPOList.Count > pagesize) {
+                model.nextPage = page + 1;
+                distinctPOList = distinctPOList.GetRange(0, pagesize);
+            } else {
+                model.nextPage = page;
+            }
 
-            distinctPOList.ForEach(e => {
-                // Outstanding - $ Totals will reflect the Product Price x QTY for all FINISHED (not
-                // yet invoiced) WOs on that PO in the grid.
-                // The "amount" field looks like it takes into account quantity and tax, so I'll use that.
-                e.Outstanding = InvoiceItemsFinishedByPurchaseId(e.REFERENCEPO)
-                    .Select(x => x.Amount)
-                    .Sum().GetValueOrDefault();
+            // The REFERENCEPO field is the index, but is not guaranteed to be unique
+            // in this set.  To avoid calculating the same value multiple times,
+            // store the value the first time.
+            var outstandingCache = new Dictionary<string, decimal>();
+            var selectedCache = new Dictionary<string, bool>();
 
-            });
+            if (existingItems != null && existingItems.Count > 0) {
+
+                // Iterate through the existing items, flagging the WOs
+                // that are selected.  This is useful for checking the
+                // already selected invoices on the edit screen.
+                foreach (POListItem e in distinctPOList) {
+                    decimal os = 0;
+                    bool selected = false;
+
+                    if (outstandingCache.ContainsKey(e.REFERENCEPO) &&
+                        selectedCache.ContainsKey(e.REFERENCEPO))
+                    {
+                        os = outstandingCache[e.REFERENCEPO];
+                        selected = selectedCache[e.REFERENCEPO];
+                    } else {
+                        foreach (InvoicePoWorkItem item in InvoiceItemsFinishedByPurchaseId(e.REFERENCEPO, false)) {
+                            // If we have existing items, then we need to include closed items in the search.
+                            if (!(item.Status == "FINISHED" || item.Status == "CLOSED")) {
+                                continue;
+                            }
+
+                            var thisInvoice = existingItems.Contains(item.FillItemId);
+                            if (thisInvoice || item.Status == "FINISHED") {
+                                os += item.Amount.GetValueOrDefault();
+                            }
+                            // select this item if any of the fill item IDs are in the selected set.
+                            selected = selected || thisInvoice;
+                        }
+                        outstandingCache.Add(e.REFERENCEPO, os);
+                        selectedCache.Add(e.REFERENCEPO, selected);
+                    }
+
+                    e.Outstanding = os;
+                    e.selected = selected;
+                }
+            } else {
+                distinctPOList.ForEach(e => {
+                    // Outstanding - $ Totals will reflect the Product Price x QTY for all FINISHED (not
+                    // yet invoiced) WOs on that PO in the grid.
+                    // The "amount" field looks like it takes into account quantity and tax, so I'll use that.
+                    if (outstandingCache.ContainsKey(e.REFERENCEPO)) {
+                        e.Outstanding = outstandingCache[e.REFERENCEPO];
+                    } else {
+                        e.Outstanding = InvoiceItemsFinishedByPurchaseId(e.REFERENCEPO)
+                            .Select(x => x.Amount)
+                            .Sum().GetValueOrDefault();
+                        outstandingCache.Add(e.REFERENCEPO, e.Outstanding);
+                    }
+                    e.selected = false;
+
+                });
+            }
 
             return distinctPOList;
         }
@@ -165,72 +252,12 @@ namespace Msr.Services.Invoices
         {
             var result = new ResultNotification<string>();
 
-            try
-            {
+            try {
                 // Iterate through the selected purchase orders and invoice
                 // all items for each one.
                 var poItems = JsonConvert.DeserializeObject<POListItem[]>(model.Items);
-                bool combinePO = model.multiPOInvoice;
-                Invoice combinedInvoice = null;
 
-                foreach (var item in poItems)
-                {
-                    var workItems = InvoiceItemsFinishedByPurchaseId(item.REFERENCEPO).ToList();
-                    decimal totalPrice = 0;
-                    Invoice invoice;
-
-                    if (!combinePO || combinedInvoice == null) {
-                        invoice = new Invoice {
-                            Client = model.Client,
-                            Description = model.InvoiceDescription,
-                            Status = "INVOICED",
-                            CustPo = item.REFERENCEPO,
-                            InvoiceDate = model.InvoiceDate.Value,
-                            Supplier = model.Supplier,
-                            InvoiceClass = model.InvoiceClass
-                        };
-                        _dbContext.Invoices.Add(invoice);
-                        _dbContext.SaveChanges();
-                        combinedInvoice = invoice;
-                    } else {
-                        invoice = combinedInvoice;
-                        totalPrice = invoice.SubTotal.GetValueOrDefault();
-                    }
-
-                    List<string> facility = FacilityCodeToString(model.InvoiceClass);
-                    foreach (var wi in workItems) {
-                        // Skip work items not for the selected location
-                        if (wi.LocationName != null &&
-                            !facility.Contains(wi.LocationName.ToUpper()))
-                        {
-                            continue;
-                        }
-
-                        var invoiceWorkItem = new InvoiceWorkItem
-                        {
-                            ItemId = wi.FillItemId,
-                            InvoiceId = invoice.Id.ToString(),
-                            RefPo = invoice.CustPo,
-                        };
-                        totalPrice += wi.Amount.GetValueOrDefault();
-
-                        _dbContext.InvoiceWorkItems.Add(invoiceWorkItem);
-
-                        // mark the work item as having been invoiced
-                        TaskObject tobj = _dbContext.Tasks.Find(wi.TaskId);
-                        tobj.STATUS = "CLOSED";
-                        tobj.CLOSED = 1;
-                    }
-
-                    invoice.Total = (
-                        totalPrice * ((model.Tax.GetValueOrDefault() / 100) + 1)
-                    );
-                    invoice.SubTotal = totalPrice;
-                    invoice.Tax = model.Tax;
-
-                    _dbContext.SaveChanges();
-
-                }
+                addNewPOItems(poItems, model, model.multiPOInvoice);
             }
             catch (Exception ex)
             {
@@ -243,33 +270,22 @@ namespace Msr.Services.Invoices
         public ResultNotification<string> Edit(InvoiceViewModel model)
         {
             var result = new ResultNotification<string>();
-            try
-            {
+            try {
+                var poItems = JsonConvert.DeserializeObject<POListItem[]>(model.Items);
+
                 var invoice = _dbContext.Invoices.Single(x => x.Id == model.Id);
                 invoice.Client = model.Client;
                 invoice.Description = model.InvoiceDescription;
-                invoice.Status = model.Status;
                 invoice.InvoiceDate = model.InvoiceDate.Value;
                 invoice.Tax = model.Tax;
                 invoice.InvoiceClass = model.InvoiceClass;
                 invoice.Supplier = model.Supplier;
-
-                var invoiceItem = model.Items?.Split(',');
-
-                var workItem = _dbContext.InvoiceWorkItems.Where(x => x.InvoiceId == model.Id.ToString()).ToList();
-                _dbContext.InvoiceWorkItems.RemoveRange(workItem);
-
-                if (invoiceItem != null)
-                    foreach (var item in invoiceItem)
-                    {
-                        var invoiceWorkItem = new InvoiceWorkItem();
-
-                        invoiceWorkItem.ItemId = item;
-                        invoiceWorkItem.InvoiceId = invoice.Id.ToString();
-                        invoiceWorkItem.RefPo = invoice.CustPo;
-                        _dbContext.InvoiceWorkItems.Add(invoiceWorkItem);
-                    }
                 _dbContext.SaveChanges();
+
+                // we are always adding to one invoice, so force the model
+                model.multiPOInvoice = true;
+
+                addNewPOItems(poItems, model, model.multiPOInvoice, invoice);
             }
             catch (Exception ex)
             {
@@ -336,7 +352,14 @@ namespace Msr.Services.Invoices
             var invoiceDelimiter = "\t";
 
             var invoiceDetails = GetInvoiceViewQueryable().Where(x => x.Id == id).SingleOrDefault();
-            var invoiceItems = InvoiceExportByPo(po, id);
+            List<InvoicePoWorkItem> invoiceItems;
+
+            if (id == null) {
+                // nothing to export, but don't throw an exception.
+                invoiceItems = new List<InvoicePoWorkItem>();
+            } else {
+                invoiceItems = InvoiceExportByPo(id.Value);
+            }
 
             invoiceFileText.Append(string.Format("!TRNS{0}", invoiceDelimiter));
             invoiceFileText.Append(string.Format("TRNSID{0}", invoiceDelimiter));
@@ -483,25 +506,70 @@ namespace Msr.Services.Invoices
             return facilities;
         }
 
-        private List<POListItem> FacilityFilter(List<POListItem> list, string facilityCode) {
-            List<POListItem> poList = list;
+        private void addNewPOItems(
+            POListItem[] poItems,
+            InvoiceViewModel model,
+            bool combinePO,
+            Invoice existing = null)
+        {
+            Invoice combinedInvoice = existing;
+            foreach (var item in poItems)
+            {
+                var workItems = InvoiceItemsFinishedByPurchaseId(item.REFERENCEPO).ToList();
+                decimal totalPrice = 0;
+                Invoice invoice;
 
-            // Filter by Facility (or NULL)
-            if (facilityCode != null) {
-                var facilities = FacilityCodeToString(facilityCode);
+                if (!combinePO || combinedInvoice == null) {
+                    invoice = new Invoice {
+                        Client = model.Client,
+                        Description = model.InvoiceDescription,
+                        Status = "INVOICED",
+                        CustPo = item.REFERENCEPO,
+                        InvoiceDate = model.InvoiceDate.Value,
+                        Supplier = model.Supplier,
+                        InvoiceClass = model.InvoiceClass
+                    };
+                    _dbContext.Invoices.Add(invoice);
+                    _dbContext.SaveChanges();
+                    combinedInvoice = invoice;
+                } else {
+                    invoice = combinedInvoice;
+                    totalPrice = invoice.SubTotal.GetValueOrDefault();
+                }
 
-                poList = list.Where(x => {
-                    var locs = _dbContext
-                        .WorkOrders
-                        .Where(y => y.ReferencePo == x.REFERENCEPO && y.Status == "FINISHED")
-                        .Select(y => y.LocationName.ToUpper())
-                        .ToList();
+                List<string> facility = FacilityCodeToString(model.InvoiceClass);
+                foreach (var wi in workItems) {
+                    // Skip work items not for the selected location
+                    if (wi.LocationName != null &&
+                        !facility.Contains(wi.LocationName.ToUpper()))
+                    {
+                        continue;
+                    }
 
-                    return locs.Contains(null) || (locs.Intersect(facilities).Count() > 0);
-                }).ToList();
+                    var invoiceWorkItem = new InvoiceWorkItem
+                    {
+                        ItemId = wi.FillItemId,
+                        InvoiceId = invoice.Id.ToString(),
+                        RefPo = invoice.CustPo,
+                    };
+                    totalPrice += wi.Amount.GetValueOrDefault();
+
+                    _dbContext.InvoiceWorkItems.Add(invoiceWorkItem);
+
+                    // mark the work item as having been invoiced
+                    TaskObject tobj = _dbContext.Tasks.Find(wi.TaskId);
+                    tobj.STATUS = "CLOSED";
+                    tobj.CLOSED = 1;
+                }
+
+                invoice.Total = (
+                    totalPrice * ((model.Tax.GetValueOrDefault() / 100) + 1)
+                );
+                invoice.SubTotal = totalPrice;
+                invoice.Tax = model.Tax;
+
+                _dbContext.SaveChanges();
             }
-            return poList;
         }
-
     }
 }

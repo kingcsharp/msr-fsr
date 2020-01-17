@@ -25,9 +25,6 @@
                 <th>PO #</th>
                 <th>Open Date</th>
                 <th>Close Date</th>
-                <th>$ Invoiced</th>
-                <th>$ Not Invoiced</th>
-                <th>$ Balance</th>
                 <th>Outstanding</th>
             </tr>
             @foreach (var po in Model.PoList)
@@ -36,7 +33,7 @@
                 <tr>
                     @Html.Hidden("po-data", po.ToJSON())
                     <td class="get-id">
-                        <input name="invoiceDetailListStrings" class="check-amount" value="@po.REFERENCEPO" id="po-id" type="checkBox">
+                        <input name="invoiceDetailListStrings" class="check-amount" value="@po.REFERENCEPO" id="po-id" type="checkBox" @(po.selected?"disabled=\"true\" checked":"")>
                         @Html.HiddenFor(x => po.REFERENCEPO)
                     </td>
                     <td>
@@ -56,28 +53,42 @@
                     </td>
 
                     <td align="right">
-                        @Math.Round(po.InvoicedBalance, 2)
-                    </td>
-
-                    <td align="right">
-                        @Math.Round(po.UninvoicedBalance, 2)
-                    </td>
-
-                    <td align="right">
-                        @Math.Round(po.Balance, 2)
-                    </td>
-
-                    <td align="right">
                         @Math.Round(po.Outstanding, 2)
                     </td>
                 </tr>
             }
         </table>
+        if (Model.page > 0) {
+            <a href="#" id='polistprev'>prev</a>
+        }
+        if (Model.PoList.Count > 0) {
+            <span>&vert; page @(Model.page + 1) &vert;</span>
+        }
+        if (Model.nextPage != Model.page) {
+            <a href="#" id='polistnext'>next</a>
+        }
 }
 
 <script src="~/assets/js/grids/invoice-tax.js"></script>
 
 <script type="text/javascript">
+    function changePage(page) {
+        var po = $('#Client').val();
+        var fac = $('#InvoiceClass').val();
+        eLoaderOpen();
+        $.ajax({
+            type: "POST",
+            url: "/Invoices/InvoiceModelGetPoList" +
+                "?id=" + po +
+                "&fac=" + fac +
+                "&page=" + page,
+            dataType: 'html',
+            success: function (data) {
+                eLoaderClose();
+                $('#invoice-po').html(data);
+            }
+        });
+    }
 
     $(document).ready(function () {
 
@@ -100,6 +111,13 @@
 
         $('input#po-id').click(function () {
             CheckBoxSelection($('#addId').val(), this, $(this).closest('tr').find('#po-data').val());
+        });
+
+        $('#polistnext').click(function() {
+            changePage(@Model.page + 1);
+        });
+        $('#polistprev').click(function() {
+            changePage(@Model.page - 1);
         });
 
     });

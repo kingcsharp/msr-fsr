@@ -95,28 +95,26 @@
 </div>
 }
 
-    @Scripts.Render("~/bundles/js/jqueryval")
-    @Scripts.Render("~/bundles/js/invoice-setup")
-    <script src="~/assets/js/moment.min.js"></script>
-    <script src="~/assets/js/bootstrap-datetimepicker.min.js"></script>
-    <script src="~/assets/js/dataTables.bootstrap.min.js"></script>
-    <script>
+@Scripts.Render("~/bundles/js/jqueryval")
+@Scripts.Render("~/bundles/js/invoice-setup")
+<script src="~/assets/js/moment.min.js"></script>
+<script src="~/assets/js/bootstrap-datetimepicker.min.js"></script>
+<script src="~/assets/js/dataTables.bootstrap.min.js"></script>
+<script>
 
-        $(document).ready(function () {
+    $(document).ready(function () {
 
-            var invoice = new Invoice();
+        var invoice = new Invoice();
 
-            $('#products').select2({
-                placeholder: "Select Invoiceable Products to filter"
-            });
+        $('.datepick').datetimepicker();
 
-            $('.datepick').datetimepicker();
-
-            invoice.CustChange();
-
-            invoice.SaveInvoice();
-
+        $('#products').select2({
+            placeholder: "Select Invoiceable Products to filter"
         });
 
+        invoice.CustChange();
 
-    </script>
+        invoice.SaveInvoice();
+    });
+
+</script>

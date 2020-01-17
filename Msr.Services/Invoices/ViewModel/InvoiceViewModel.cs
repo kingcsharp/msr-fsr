@@ -17,7 +17,6 @@ namespace Msr.Services.Invoices.ViewModel
             InvoiceIdList = new List<SelectListItem>();
             PoList = new List<POListItem>();
             InvoiceWorkItem = new List<InvoiceWorkItem>();
-            InvoiceItemList = new List<InvoicePoWorkItem>();
         }
         public int? Id { get; set; }
 
@@ -42,7 +41,6 @@ namespace Msr.Services.Invoices.ViewModel
         public string InvoiceId { get; set; }
 
         public string InvoiceClass { get; set; }
-        public List<InvoicePoWorkItem> InvoiceItemList { get; set; }
         public List<SelectListItem> ClientList { get; set; }
 
         public List<SelectListItem> StatusList { get; set; }
@@ -56,6 +54,8 @@ namespace Msr.Services.Invoices.ViewModel
         public string InvoiceIdString = "";
 
         public bool multiPOInvoice { get; set; }
+
+        public int nextPage, page;
 
         public void SetUp(PurchesOrderService purchesOrderService, InvoicesService invoicesService, bool onEdit)
         {

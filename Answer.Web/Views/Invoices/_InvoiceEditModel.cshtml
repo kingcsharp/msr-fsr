@@ -23,7 +23,7 @@
     </p>
 
     @Html.HiddenFor(model => model.Id, new { @class = "form-control", @id = "editId" })
-    @Html.HiddenFor(model => model.Items, new { @class = "form-control", @id = "itemId" })
+    @Html.HiddenFor(model => model.Items, new { @class = "form-control", @id = "addId" })
     @Html.HiddenFor(model => model.InvoiceNumber, new { @class = "form-control" })
 <div class="container-fluid">
     <div class="row">
@@ -54,6 +54,8 @@
             @Html.EditorFor(model => model.InvoiceDescription, new { htmlAttributes = new { @class = "form-control" } })
         </div>
     </div>
+
+
     <div class="row">
         <div class="col-xs-12">
             <div class="alert alert-info alert alert-dismissible fade in" style="margin-bottom:0">
@@ -84,7 +86,7 @@
     </div>
     <div class="row">
         <div class="col-xs-12" id="invoice-po" style="height:400px;overflow-y:auto;">
-            @Html.Partial("_InvoiceEditItemsList")
+            @Html.Partial("_InvoiceItemsList")
         </div>
     </div>
     <div class="row">
@@ -103,9 +105,9 @@
 <script src="~/assets/js/dataTables.bootstrap.min.js"></script>
 <script>
 
-	$(document).ready(function () {
+    $(document).ready(function () {
 
-		var invoice = new Invoice();
+        var invoice = new Invoice();
 
         $('.datepick').datetimepicker();
 
@@ -113,11 +115,9 @@
             placeholder: "Select Invoiceable Products to filter"
         });
 
-		invoice.CustPoChangeForEdit();
+        invoice.CustPoChangeForEdit();
 
-		invoice.UpdateInvoice();
-
-	});
-
+        invoice.UpdateInvoice();
+    });
 
 </script>

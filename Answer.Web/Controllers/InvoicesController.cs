@@ -129,23 +129,23 @@ namespace Answer.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult InvoiceModelGetPoList(int id, string fac)
+        public ActionResult InvoiceModelGetPoList(int id, string fac, int page = 0)
         {
             var invoiceViewModel = new InvoiceViewModel();
 
-            invoiceViewModel.PoList = _invoicesService.GetDistinctPOList(id, fac);
+            invoiceViewModel.PoList = _invoicesService.GetDistinctPOList(invoiceViewModel, null, id, fac, page);
 
             return PartialView("_InvoiceItemsList", invoiceViewModel);
         }
 
         [HttpPost]
-        public ActionResult InvoiceModelEditGetPoItems(string id, bool hasValue)
+        public ActionResult InvoiceModelEditGetPoItems(string id, int custid, string fac, int page = 0)
         {
             var invoiceViewModel = new InvoiceViewModel();
 
-            invoiceViewModel.InvoiceItemList = _invoicesService.InvoiceItemsFinishedByPurchaseId(id).ToList();
+            invoiceViewModel.PoList = _invoicesService.GetDistinctPOList(invoiceViewModel, null, custid, fac, page);
 
-            return PartialView("_InvoiceEditItemsList", invoiceViewModel);
+            return PartialView("_InvoiceItemsList", invoiceViewModel);
         }
 
         [HttpGet]
@@ -159,7 +159,7 @@ namespace Answer.Web.Controllers
         }
 
         [HttpGet]
-        public ActionResult LoadInvoiceById(int? id, string num)
+        public ActionResult LoadInvoiceById(int? id, string num, int page = 0)
         {
 
             var invoiceViewModel = new InvoiceViewModel();
@@ -177,9 +177,20 @@ namespace Answer.Web.Controllers
 
             var invoiceWorkItems = _invoicesService.InvoiceItemsById(model.Id.ToString());
             invoiceViewModel.InvoiceWorkItem = invoiceWorkItems;
-            invoiceViewModel.InvoiceItemList = _invoicesService.InvoiceItemsByPurchaseId(model.CustPo, invoiceWorkItems).ToList();
+            // Note: to get the invoice items here, use something like:
+            //  list = _invoicesService.InvoiceItemsByPurchaseId(model.CustPo, invoiceWorkItems).ToList();
 
-            invoiceViewModel.Items = string.Join(",", invoiceViewModel.InvoiceWorkItem.Select(x => x.ItemId));
+            List<string> existingItems = invoiceWorkItems.Select(x => x.ItemId).ToList();
+            invoiceViewModel.PoList = _invoicesService.GetDistinctPOList(
+                invoiceViewModel,
+                existingItems,
+                Int32.Parse(model.Client),
+                model.InvoiceClass,
+                page);
+
+            // Items can only be added, so the VM starts with a blank list of items.
+            // The "checked" ones are selected using the POListItem.selected flag in the view.
+            invoiceViewModel.Items = "[]";
 
             return PartialView("_InvoiceEditModel", invoiceViewModel);
         }
