@@ -73,20 +73,18 @@ namespace Msr.Services.Invoices
             return result;
         }
 
-        public List<InvoicePoWorkItem> InvoiceExportByPo(int invoiceId)
+        public List<InvoicePoWorkItem> InvoiceExportByPo(string po, int? invoiceId)
         {
             var items = _dbContext.InvoiceWorkItems.Where(
-                    z => z.InvoiceId == invoiceId.ToString()
+                    z => z.InvoiceId == invoiceId.Value.ToString()
                 )
                 .Distinct()
                 .Select(z => z.ItemId).ToList();
-
-            // Note that we can't use PO here, because we
-            // may have selected items multipe POs.
-            var ret = InvoiceViewList().Where(x =>
-                    x.Status == "CLOSED" &&
+            var ret = InvoiceViewList().Where(
+                x => x.CustPurchNum == po &&
                     items.Contains(x.FillItemId)
                 )
+                .Distinct()
                 .ToList();
             return ret;
         }
