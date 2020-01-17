@@ -33,7 +33,7 @@
                 <tr>
                     @Html.Hidden("po-data", po.ToJSON())
                     <td class="get-id">
-                        <input name="invoiceDetailListStrings" class="check-amount" value="@po.REFERENCEPO" id="po-id" type="checkBox" @(po.selected?"checked":"")>
+                        <input name="invoiceDetailListStrings" class="check-amount" value="@po.REFERENCEPO" id="po-id" type="checkBox" @(po.selected?"disabled=\"true\" checked":"")>
                         @Html.HiddenFor(x => po.REFERENCEPO)
                     </td>
                     <td>
@@ -73,7 +73,6 @@
 
 <script type="text/javascript">
     function changePage(page) {
-        console.log(page);
         var po = $('#Client').val();
         var fac = $('#InvoiceClass').val();
         eLoaderOpen();

@@ -188,7 +188,9 @@ namespace Answer.Web.Controllers
                 model.InvoiceClass,
                 page);
 
-            invoiceViewModel.Items = string.Join(",", invoiceViewModel.InvoiceWorkItem.Select(x => x.ItemId));
+            // Items can only be added, so the VM starts with a blank list of items.
+            // The "checked" ones are selected using the POListItem.selected flag in the view.
+            invoiceViewModel.Items = "[]";
 
             return PartialView("_InvoiceEditModel", invoiceViewModel);
         }
