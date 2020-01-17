@@ -73,28 +73,22 @@ namespace Msr.Services.Invoices
             return result;
         }
 
-        public List<InvoicePoWorkItem> InvoiceExportByPo(int invoiceId)
+        public List<InvoicePoWorkItem> InvoiceExportByPo(string po, int? invoiceId)
         {
             var items = _dbContext.InvoiceWorkItems.Where(
-                    z => z.InvoiceId == invoiceId.ToString()
+                    z => z.InvoiceId == invoiceId.Value.ToString()
                 )
                 .Distinct()
                 .Select(z => z.ItemId).ToList();
-
-            // Note that we can't use PO here, because we
-            // may have selected items multipe POs.
-            var ret = InvoiceViewList().Where(x =>
-                    x.Status == "CLOSED" &&
+            var ret = InvoiceViewList().Where(
+                x => x.CustPurchNum == po &&
                     items.Contains(x.FillItemId)
                 )
+                .Distinct()
                 .ToList();
             return ret;
         }
 
-        // Fetch list of Purchase Orders.
-        // If existingItems is defined, then it includes POs with those items along
-        // with the others not billed.  Otherwise, it selects all POs not billed
-        // for the selected facility.
         public List<POListItem> GetDistinctPOList(
             InvoiceViewModel model,
             List<string> existingItems = null,
@@ -136,7 +130,6 @@ namespace Msr.Services.Invoices
                 "LEFT JOIN Portal_WorkOrders wo ON (a.REFERENCEPO = wo.ReferencePo) " +
                 "WHERE (po.status = 'APPROVED' " +
                 "AND wo.FILLITEMID NOT IN (SELECT ITEMID FROM PORTAL_INVOICEWORKITEM) " +
-                "AND wo.status = 'FINISHED' " +
                 "AND ((a.custid = @p0) OR (@p0 = -1)) " +
                 "AND (wo.LocationName IS NULL OR UPPER(wo.LocationName) IN ('" +
                 String.Join("','", facilities) + "'))) " +
@@ -252,12 +245,72 @@ namespace Msr.Services.Invoices
         {
             var result = new ResultNotification<string>();
 
-            try {
+            try
+            {
                 // Iterate through the selected purchase orders and invoice
                 // all items for each one.
                 var poItems = JsonConvert.DeserializeObject<POListItem[]>(model.Items);
+                bool combinePO = model.multiPOInvoice;
+                Invoice combinedInvoice = null;
 
-                addNewPOItems(poItems, model, model.multiPOInvoice);
+                foreach (var item in poItems)
+                {
+                    var workItems = InvoiceItemsFinishedByPurchaseId(item.REFERENCEPO).ToList();
+                    decimal totalPrice = 0;
+                    Invoice invoice;
+
+                    if (!combinePO || combinedInvoice == null) {
+                        invoice = new Invoice {
+                            Client = model.Client,
+                            Description = model.InvoiceDescription,
+                            Status = "INVOICED",
+                            CustPo = item.REFERENCEPO,
+                            InvoiceDate = model.InvoiceDate.Value,
+                            Supplier = model.Supplier,
+                            InvoiceClass = model.InvoiceClass
+                        };
+                        _dbContext.Invoices.Add(invoice);
+                        _dbContext.SaveChanges();
+                        combinedInvoice = invoice;
+                    } else {
+                        invoice = combinedInvoice;
+                        totalPrice = invoice.SubTotal.GetValueOrDefault();
+                    }
+
+                    List<string> facility = FacilityCodeToString(model.InvoiceClass);
+                    foreach (var wi in workItems) {
+                        // Skip work items not for the selected location
+                        if (wi.LocationName != null &&
+                            !facility.Contains(wi.LocationName.ToUpper()))
+                        {
+                            continue;
+                        }
+
+                        var invoiceWorkItem = new InvoiceWorkItem
+                        {
+                            ItemId = wi.FillItemId,
+                            InvoiceId = invoice.Id.ToString(),
+                            RefPo = invoice.CustPo,
+                        };
+                        totalPrice += wi.Amount.GetValueOrDefault();
+
+                        _dbContext.InvoiceWorkItems.Add(invoiceWorkItem);
+
+                        // mark the work item as having been invoiced
+                        TaskObject tobj = _dbContext.Tasks.Find(wi.TaskId);
+                        tobj.STATUS = "CLOSED";
+                        tobj.CLOSED = 1;
+                    }
+
+                    invoice.Total = (
+                        totalPrice * ((model.Tax.GetValueOrDefault() / 100) + 1)
+                    );
+                    invoice.SubTotal = totalPrice;
+                    invoice.Tax = model.Tax;
+
+                    _dbContext.SaveChanges();
+
+                }
             }
             catch (Exception ex)
             {
@@ -270,22 +323,33 @@ namespace Msr.Services.Invoices
         public ResultNotification<string> Edit(InvoiceViewModel model)
         {
             var result = new ResultNotification<string>();
-            try {
-                var poItems = JsonConvert.DeserializeObject<POListItem[]>(model.Items);
-
+            try
+            {
                 var invoice = _dbContext.Invoices.Single(x => x.Id == model.Id);
                 invoice.Client = model.Client;
                 invoice.Description = model.InvoiceDescription;
+                invoice.Status = model.Status;
                 invoice.InvoiceDate = model.InvoiceDate.Value;
                 invoice.Tax = model.Tax;
                 invoice.InvoiceClass = model.InvoiceClass;
                 invoice.Supplier = model.Supplier;
+
+                var invoiceItem = model.Items?.Split(',');
+
+                var workItem = _dbContext.InvoiceWorkItems.Where(x => x.InvoiceId == model.Id.ToString()).ToList();
+                _dbContext.InvoiceWorkItems.RemoveRange(workItem);
+
+                if (invoiceItem != null)
+                    foreach (var item in invoiceItem)
+                    {
+                        var invoiceWorkItem = new InvoiceWorkItem();
+
+                        invoiceWorkItem.ItemId = item;
+                        invoiceWorkItem.InvoiceId = invoice.Id.ToString();
+                        invoiceWorkItem.RefPo = invoice.CustPo;
+                        _dbContext.InvoiceWorkItems.Add(invoiceWorkItem);
+                    }
                 _dbContext.SaveChanges();
-
-                // we are always adding to one invoice, so force the model
-                model.multiPOInvoice = true;
-
-                addNewPOItems(poItems, model, model.multiPOInvoice, invoice);
             }
             catch (Exception ex)
             {
@@ -352,14 +416,7 @@ namespace Msr.Services.Invoices
             var invoiceDelimiter = "\t";
 
             var invoiceDetails = GetInvoiceViewQueryable().Where(x => x.Id == id).SingleOrDefault();
-            List<InvoicePoWorkItem> invoiceItems;
-
-            if (id == null) {
-                // nothing to export, but don't throw an exception.
-                invoiceItems = new List<InvoicePoWorkItem>();
-            } else {
-                invoiceItems = InvoiceExportByPo(id.Value);
-            }
+            var invoiceItems = InvoiceExportByPo(po, id);
 
             invoiceFileText.Append(string.Format("!TRNS{0}", invoiceDelimiter));
             invoiceFileText.Append(string.Format("TRNSID{0}", invoiceDelimiter));
@@ -504,72 +561,6 @@ namespace Msr.Services.Invoices
             }
 
             return facilities;
-        }
-
-        private void addNewPOItems(
-            POListItem[] poItems,
-            InvoiceViewModel model,
-            bool combinePO,
-            Invoice existing = null)
-        {
-            Invoice combinedInvoice = existing;
-            foreach (var item in poItems)
-            {
-                var workItems = InvoiceItemsFinishedByPurchaseId(item.REFERENCEPO).ToList();
-                decimal totalPrice = 0;
-                Invoice invoice;
-
-                if (!combinePO || combinedInvoice == null) {
-                    invoice = new Invoice {
-                        Client = model.Client,
-                        Description = model.InvoiceDescription,
-                        Status = "INVOICED",
-                        CustPo = item.REFERENCEPO,
-                        InvoiceDate = model.InvoiceDate.Value,
-                        Supplier = model.Supplier,
-                        InvoiceClass = model.InvoiceClass
-                    };
-                    _dbContext.Invoices.Add(invoice);
-                    _dbContext.SaveChanges();
-                    combinedInvoice = invoice;
-                } else {
-                    invoice = combinedInvoice;
-                    totalPrice = invoice.SubTotal.GetValueOrDefault();
-                }
-
-                List<string> facility = FacilityCodeToString(model.InvoiceClass);
-                foreach (var wi in workItems) {
-                    // Skip work items not for the selected location
-                    if (wi.LocationName != null &&
-                        !facility.Contains(wi.LocationName.ToUpper()))
-                    {
-                        continue;
-                    }
-
-                    var invoiceWorkItem = new InvoiceWorkItem
-                    {
-                        ItemId = wi.FillItemId,
-                        InvoiceId = invoice.Id.ToString(),
-                        RefPo = invoice.CustPo,
-                    };
-                    totalPrice += wi.Amount.GetValueOrDefault();
-
-                    _dbContext.InvoiceWorkItems.Add(invoiceWorkItem);
-
-                    // mark the work item as having been invoiced
-                    TaskObject tobj = _dbContext.Tasks.Find(wi.TaskId);
-                    tobj.STATUS = "CLOSED";
-                    tobj.CLOSED = 1;
-                }
-
-                invoice.Total = (
-                    totalPrice * ((model.Tax.GetValueOrDefault() / 100) + 1)
-                );
-                invoice.SubTotal = totalPrice;
-                invoice.Tax = model.Tax;
-
-                _dbContext.SaveChanges();
-            }
         }
     }
 }
