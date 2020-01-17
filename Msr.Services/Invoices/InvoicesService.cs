@@ -73,18 +73,20 @@ namespace Msr.Services.Invoices
             return result;
         }
 
-        public List<InvoicePoWorkItem> InvoiceExportByPo(string po, int? invoiceId)
+        public List<InvoicePoWorkItem> InvoiceExportByPo(int invoiceId)
         {
             var items = _dbContext.InvoiceWorkItems.Where(
-                    z => z.InvoiceId == invoiceId.Value.ToString()
+                    z => z.InvoiceId == invoiceId.ToString()
                 )
                 .Distinct()
                 .Select(z => z.ItemId).ToList();
-            var ret = InvoiceViewList().Where(
-                x => x.CustPurchNum == po &&
+
+            // Note that we can't use PO here, because we
+            // may have selected items multipe POs.
+            var ret = InvoiceViewList().Where(x =>
+                    x.Status == "CLOSED" &&
                     items.Contains(x.FillItemId)
                 )
-                .Distinct()
                 .ToList();
             return ret;
         }
@@ -436,7 +438,14 @@ namespace Msr.Services.Invoices
             var invoiceDelimiter = "\t";
 
             var invoiceDetails = GetInvoiceViewQueryable().Where(x => x.Id == id).SingleOrDefault();
-            var invoiceItems = InvoiceExportByPo(po, id);
+            List<InvoicePoWorkItem> invoiceItems;
+
+            if (id == null) {
+                // nothing to export, but don't throw an exception.
+                invoiceItems = new List<InvoicePoWorkItem>();
+            } else {
+                invoiceItems = InvoiceExportByPo(id.Value);
+            }
 
             invoiceFileText.Append(string.Format("!TRNS{0}", invoiceDelimiter));
             invoiceFileText.Append(string.Format("TRNSID{0}", invoiceDelimiter));
