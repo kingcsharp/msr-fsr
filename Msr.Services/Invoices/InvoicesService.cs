@@ -198,16 +198,25 @@ namespace Msr.Services.Invoices
                                 continue;
                             }
 
-                            if (InvoiceItemList != null) {
+                            var inThisInvoice = existingItems.Contains(item.FillItemId);
+                            item.selected = inThisInvoice;
+                            if (InvoiceItemList != null &&
+                                (
+                                    item.LocationName == null ||
+                                    facilities.Contains(
+                                        item.LocationName.ToUpper()
+                                    )
+                                )
+                               )
+                            {
                                 InvoiceItemList.Add(item);
                             }
 
-                            var thisInvoice = existingItems.Contains(item.FillItemId);
-                            if (thisInvoice || item.Status == "FINISHED") {
+                            if (inThisInvoice || item.Status == "FINISHED") {
                                 os += item.Amount.GetValueOrDefault();
                             }
                             // select this item if any of the fill item IDs are in the selected set.
-                            selected = selected || thisInvoice;
+                            selected = selected || inThisInvoice;
                         }
                         outstandingCache.Add(e.REFERENCEPO, os);
                         selectedCache.Add(e.REFERENCEPO, selected);

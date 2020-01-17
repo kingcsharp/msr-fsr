@@ -186,15 +186,21 @@ namespace Answer.Web.Controllers
                 .Distinct()
                 .ToList();
 
-            invoiceViewModel.InvoiceItemList  = new List<InvoicePoWorkItem>();
+            var iil = new List<InvoicePoWorkItem>();
             invoiceViewModel.PoList = _invoicesService.GetDistinctPOList(
                 invoiceViewModel,
                 existingItems,
                 Int32.Parse(model.Client),
                 model.InvoiceClass,
                 page,
-                invoiceViewModel.InvoiceItemList
+                iil
             );
+
+            // put selected items on the top
+            invoiceViewModel.InvoiceItemList = iil
+                .OrderByDescending(x => x.selected)
+                .ThenBy(x => x.CustPurchNum)
+                .ToList();
 
             invoiceViewModel.Items = string.Join(",", invoiceViewModel.InvoiceWorkItem.Select(x => x.ItemId));
 
