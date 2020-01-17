@@ -96,7 +96,7 @@
 
     var updateInvoice = function () {
 
-        $('#invoice-submit').click(function (e) {
+        $('#invoice-update').click(function (e) {
             $('#invoice-edit').submit();
         });
     };
