@@ -130,6 +130,12 @@ namespace Msr.Services.Invoices
                 }
             }
 
+            if (existingItems != null && existingItems.Count > 0) {
+                // When viewing invoice items, there is limited page support,
+                // so we force it a bit here.
+                pagesize = 1000;
+            }
+
             string sql =
                 "SELECT DISTINCT a.REFERENCEPO as REFERENCEPO, " +
                     "a.custid as custid, a.customername as customername, " +
