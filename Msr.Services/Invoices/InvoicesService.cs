@@ -359,7 +359,7 @@ namespace Msr.Services.Invoices
                 var invoice = _dbContext.Invoices.Single(x => x.Id == model.Id);
                 invoice.Client = model.Client;
                 invoice.Description = model.InvoiceDescription;
-                invoice.Status = model.Status;
+                invoice.Status = "INVOICED";
                 invoice.InvoiceDate = model.InvoiceDate.Value;
                 invoice.Tax = model.Tax;
                 invoice.InvoiceClass = model.InvoiceClass;
@@ -370,7 +370,20 @@ namespace Msr.Services.Invoices
                 var workItem = _dbContext.InvoiceWorkItems.Where(x => x.InvoiceId == model.Id.ToString()).ToList();
                 _dbContext.InvoiceWorkItems.RemoveRange(workItem);
 
-                if (invoiceItem != null)
+                // undo marking of the item closed.
+                foreach (InvoiceWorkItem wi in workItem) {
+                    // get original WO object
+                    IQueryable<InvoicePoWorkItem> woi = InvoiceViewList().Where(x => x.FillItemId == wi.ItemId);
+                    if (woi.Any()) {
+                        InvoicePoWorkItem woirow = woi.First();
+                        TaskObject tobj = _dbContext.Tasks.Find(woirow.TaskId);
+                        tobj.STATUS = "FINISHED";
+                        tobj.CLOSED = 0;
+                    }
+                }
+
+                decimal totalPrice = 0;
+                if (invoiceItem != null) {
                     foreach (var item in invoiceItem)
                     {
                         var invoiceWorkItem = new InvoiceWorkItem();
@@ -378,8 +391,25 @@ namespace Msr.Services.Invoices
                         invoiceWorkItem.ItemId = item;
                         invoiceWorkItem.InvoiceId = invoice.Id.ToString();
                         invoiceWorkItem.RefPo = invoice.CustPo;
+
+                        IQueryable<InvoicePoWorkItem> woi = InvoiceViewList().Where(x => x.FillItemId == item);
+                        if (woi.Any()) {
+                            InvoicePoWorkItem wi = woi.First();
+                            TaskObject tobj = _dbContext.Tasks.Find(wi.TaskId);
+                            tobj.STATUS = "CLOSED";
+                            tobj.CLOSED = 1;
+
+                            totalPrice += wi.Amount.GetValueOrDefault();
+                        }
                         _dbContext.InvoiceWorkItems.Add(invoiceWorkItem);
                     }
+                }
+
+                invoice.Total = (
+                    totalPrice * ((model.Tax.GetValueOrDefault() / 100) + 1)
+                );
+                invoice.SubTotal = totalPrice;
+                invoice.Tax = model.Tax;
                 _dbContext.SaveChanges();
             }
             catch (Exception ex)
