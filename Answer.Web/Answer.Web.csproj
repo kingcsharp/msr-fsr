@@ -2861,7 +2861,7 @@
     <Content Include="assets\css\fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="assets\data\customer-requirements.json" />
     <Content Include="assets\data\purchase_orders.json" />
-    <Content Include="assets\js\Sample Refactoring Project.zip" />
+    <!--<Content Include="assets\js\Sample Refactoring Project.zip" />-->
     <Content Include="assets\js\wip-detail-tooltip.js.old" />
     <Content Include="assets\js\tinymce\langs\readme.md" />
     <Content Include="assets\js\tinymce\plugins\moxiemanager\api.ashx" />
