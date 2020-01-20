@@ -2,26 +2,12 @@
     <h4>Invoiced Work Order Items </h4>
 @if (Model.InvoiceItemList != null)
 {
-    <table class="table table-bordered table-striped table condensed" id="records_table">
-        <tr>
-            <th></th>
-            <th>Date Posted</th>
-            <th>Cust Purchase Number</th>
-            <th>AII Purchase Number</th>
-            <th>AII Item Id</th>
-            <th style="width:100px;">Description</th>
-            <th>Qty</th>
-            <th>Product Cost Calculation</th>
-            <th>Unit Price</th>
-            <th>Amt of Inv Items</th>
-
-        </tr>
-        @for (int i = 0; i < Model.InvoiceItemList.Count; i++)
+        for (int i = 0; i < Model.InvoiceItemList.Count; i++)
         {
 
             <tr>
                 <td class="getId">
-                    <input name="invoiceDetailListStrings" class="checkAmount" value="@Model.InvoiceItemList[i].FillItemId" id="poId" type="checkBox">
+                    <input name="invoiceDetailListStrings" class="checkAmount" value="@Model.InvoiceItemList[i].FillItemId" id="poId" type="checkBox" @(Model.InvoiceItemList[i].selected ? "checked" : "")>
                     @Html.HiddenFor(x => Model.InvoiceItemList[i].FillItemId)
                 </td>
                 <td>
@@ -40,31 +26,23 @@
                 <td>
                     @Model.InvoiceItemList[i].Description
                 </td>
-                <td  align="center">
+                <td align="center">
                     @Model.InvoiceItemList[i].FillQty
-                </td>
-                <td class="poAmount" align="right">
-                    @if (Model.InvoiceItemList[i].TotalSalePrice.HasValue)
-                    {
-                        <span> $@Model.InvoiceItemList[i].TotalSalePrice</span>
-                        @Html.HiddenFor(x => Model.InvoiceItemList[i].TotalSalePrice, new { @id = "amountPo" })
-                    }
                 </td>
                 <td align="right">
                     @if (Model.InvoiceItemList[i].TotalSalePrice.HasValue)
                     {
-                        <span> $@Model.InvoiceItemList[i].TotalSalePrice</span>
+                        <span> @String.Format("{0:C}", @Model.InvoiceItemList[i].TotalSalePrice)</span>
                     }
                 </td>
                 <td align="right">
                     @if (Model.InvoiceItemList[i].Amount.HasValue)
                     {
-                        <span> $@Model.InvoiceItemList[i].Amount</span>
+                        <span> @String.Format("{0:C}", @Model.InvoiceItemList[i].Amount)</span>
                     }
                 </td>
             </tr>
         }
-    </table>
 }
 
 <script src="~/assets/js/grids/invoice-tax-edit.js"></script>
