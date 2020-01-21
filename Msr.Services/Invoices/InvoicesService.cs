@@ -150,7 +150,7 @@ namespace Msr.Services.Invoices
                 "FROM A_POS_WITH_COMPLETED_WOS a " +
                 "LEFT JOIN Portal_PurchaseOrders po ON (a.REFERENCEPO = po.ReferencePo) " +
                 "LEFT JOIN Portal_WorkOrders wo ON (a.REFERENCEPO = wo.ReferencePo) " +
-                "WHERE (po.status = 'APPROVED' " +
+                "WHERE ((po.status = 'APPROVED' OR po.status='APPROVED_BUT_REVISING') " +
                 "AND wo.FILLITEMID NOT IN (SELECT ITEMID FROM PORTAL_INVOICEWORKITEM) " +
                 "AND wo.status = 'FINISHED' " +
                 "AND ((a.custid = @p0) OR (@p0 = -1)) " +
