@@ -21,7 +21,7 @@
 
             <tr>
                 <td class="getId">
-                    <input name="invoiceDetailListStrings" class="checkAmount" value="@Model.InvoiceItemList[i].FillItemId" id="poId" type="checkBox">
+                    <input name="invoiceDetailListStrings" class="checkAmount" value="@Model.InvoiceItemList[i].FillItemId" id="poId" type="checkBox" @(Model.InvoiceItemList[i].selected?"checked":"")>
                     @Html.HiddenFor(x => Model.InvoiceItemList[i].FillItemId)
                 </td>
                 <td>
