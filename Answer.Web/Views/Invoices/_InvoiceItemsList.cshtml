@@ -1,42 +1,16 @@
 ﻿@model Msr.Services.Invoices.ViewModel.InvoiceViewModel
-<h4>Invoicable Purchase Orders</h4>
+
 @if (Model.PoList != null)
 {
-        <div class="row">
-            <div class="col-xs-2 control-label" style="margin-top: 4px;">
-                Select All POs:
-            </div>
-            <div class="make-switch switch-small col-xs-2" data-on="success" data-off="warning" style="display: inline-block">
-                <input name="selectAllPOs" class="check-amount" id="selectAllPOs" type="checkbox">
-            </div>
-
-            <div class="col-xs-6 control-label" style="margin-top: 4px;">
-                Combine Selected POs:
-            </div>
-            <div class="make-switch switch-small col-xs-2" data-on="success" data-off="warning" style="display: inline-block">
-                <input name="multiPOInvoice" id="multiPOInvoice" class="check-amount" type="checkbox" value="true">
-            </div>
-        </div>
-
-        <table class="table table-bordered table-striped table-condensed" id="records_table">
-            <tr>
-                <th></th>
-                <th>PO Name</th>
-                <th>PO #</th>
-                <th>Open Date</th>
-                <th>Close Date</th>
-                <th>Outstanding</th>
-            </tr>
-            @foreach (var po in Model.PoList)
-            {
-
+    foreach (var po in Model.PoList)
+    {
                 <tr>
-                    @Html.Hidden("po-data", po.ToJSON())
                     <td class="get-id">
+                        @Html.Hidden("po-data", po.ToJSON())
                         <input name="invoiceDetailListStrings" class="check-amount" value="@po.REFERENCEPO" id="po-id" type="checkBox">
                         @Html.HiddenFor(x => po.REFERENCEPO)
                     </td>
-                    <td>
+                    <td data-toggle="tooltip" title="@po.name">
                         @po.name
                     </td>
 
@@ -53,43 +27,13 @@
                     </td>
 
                     <td align="right">
-                        @Math.Round(po.Outstanding, 2)
+                        @String.Format("{0:C}", po.Outstanding)
                     </td>
                 </tr>
-            }
-        </table>
-        if (Model.page > 0) {
-            <a href="#" id='polistprev'>prev</a>
-        }
-        if (Model.PoList.Count > 0) {
-            <span>&vert; page @(Model.page + 1) &vert;</span>
-        }
-        if (Model.nextPage != Model.page) {
-            <a href="#" id='polistnext'>next</a>
-        }
-}
-
-<script src="~/assets/js/grids/invoice-tax.js"></script>
-
-<script type="text/javascript">
-    function changePage(page) {
-        var po = $('#Client').val();
-        var fac = $('#InvoiceClass').val();
-        eLoaderOpen();
-        $.ajax({
-            type: "POST",
-            url: "/Invoices/InvoiceModelGetPoList" +
-                "?id=" + po +
-                "&fac=" + fac +
-                "&page=" + page,
-            dataType: 'html',
-            success: function (data) {
-                eLoaderClose();
-                $('#invoice-po').html(data);
-            }
-        });
     }
-
+}
+<script src="~/assets/js/grids/invoice-tax.js"></script>
+<script type="text/javascript">
     $(document).ready(function () {
 
         $('#selectAllPOs').bootstrapSwitch();
@@ -112,14 +56,6 @@
         $('input#po-id').click(function () {
             CheckBoxSelection($('#addId').val(), this, $(this).closest('tr').find('#po-data').val());
         });
-
-        $('#polistnext').click(function() {
-            changePage(@Model.page + 1);
-        });
-        $('#polistprev').click(function() {
-            changePage(@Model.page - 1);
-        });
-
     });
 
 </script>
