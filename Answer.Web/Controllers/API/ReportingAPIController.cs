@@ -61,6 +61,13 @@ namespace Answer.Web.Controllers.API
             return ret;
         }
 
+        [HttpGet, EnableQuery, Route("RevenueByCustomerData")]
+        public IQueryable<OperationsData> GetRevenueByCustomerData()
+        {
+            var ret = _reportingService.GetRevenueByCustomerData();
+            return ret;
+        }
+
         [HttpGet, Route("AdHocReport/{title}")]
         public JsonResult<AdHocReportItem> AdHocReport(string title)
         {

@@ -1,6 +1,7 @@
 ﻿@{
-    ViewBag.Title = "FinancialDashboard";
+    ViewBag.Title = "Operations Dashboard";
 }
+
 <link href="~/Content/ej/web/bootstrap-theme/ej.web.all.min.css" rel="stylesheet" />
 <link href="~/Content/ej/web/ej.web.overrides.css" rel="stylesheet" />
 <link href="#" rel="stylesheet" />
@@ -8,8 +9,13 @@
     <div class="row">
         <div class="col-xs-12">
             <div class="datatable" style="padding:10px">
-                <div class="page-header"><h1 ndtype="heading">Combined Financial Data</h1></div>
-                <div id="combinedFinancialGrid"></div>
+                <div class="page-header"><h1 ndtype="heading">Revenue by Customer</h1></div>
+                <div class="col-xs-6">
+                    <div id="RevenueByCustomerChart"></div>
+                </div>
+                <div class="col-xs-6">
+                    <div id="RevenueByCustomerGrid"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -17,8 +23,13 @@
     <div class="row">
         <div class="col-xs-12">
             <div class="datatable" style="padding:10px">
-                <div class="page-header"><h1>Work Orders Not Invoiced</h1></div>
-                <div id="wONoInvoiceURLGrid"></div>
+                <div class="page-header"><h1 ndtype="heading">Revenue by Kit</h1></div>
+                <div class="col-xs-6">
+                    <div id="RevenueByKitChart"></div>
+                </div>
+                <div class="col-xs-6">
+                    <div id="RevenueByKitGrid"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -116,56 +127,81 @@
             }
 
             var dataManager = ej.DataManager({
-                url: '@ViewBag.CombinedURL',
+                url: '@ViewBag.RevenueByCustomerURL',
                 crossDomain: true, adaptor: new ej.ODataV4Adaptor()
             });
 
-            var combinedFinancialGridCols = [
-                { field: "woNumber", headerText: 'WO Item', textAlign: ej.TextAlign.Right, width: 130},
-                { field: "woCreationDate", headerText: 'Creation Date', textAlign: ej.TextAlign.Left, width: 60 },
-                { field: "dueDate", headerText: 'Due Date', textAlign: ej.TextAlign.Left, width: 60 },
-                { field: "shipDate", headerText: 'Ship Date', textAlign: ej.TextAlign.Left, width: 60 },
-                { field: "msrfsrFacility", headerText: 'Facility', textAlign: ej.TextAlign.Left, width: 100 },
-                { field: "customerName", headerText: 'Customer', textAlign: ej.TextAlign.Left, width: 90 },
-                { field: "specno", headerText: 'Specification', textAlign: ej.TextAlign.Left, width: 100 },
-                { field: "kitName", headerText: 'Kit Name', textAlign: ej.TextAlign.Left, width: 120 },
-                { field: "pono", headerText: 'Customer Part #', textAlign: ej.TextAlign.Left, width: 100 },
-                { field: "mttn", headerText: 'MTTN', textAlign: ej.TextAlign.Left, width: 70 },
-                { field: "invoiceId", headerText: 'Invoice #', textAlign: ej.TextAlign.Left, width: 50 },
-                { field: "invoiceDate", headerText: 'Invoice Date', textAlign: ej.TextAlign.Left, width: 60 },
-                { field: "fillQty", headerText: 'Qty', textAlign: ej.TextAlign.Left, width: 40 },
-                { field: "amount", headerText: 'Amount', textAlign: ej.TextAlign.Left, width: 55 },
-                { field: "subTotal", headerText: 'SubTotal', textAlign: ej.TextAlign.Left, width: 60 },
-                { field: "wTax", headerText: 'w/ Tax', textAlign: ej.TextAlign.Left, width: 60 }
+            var revenueByCustomerCols = [
+                { field: "month", headerText: 'Month', textAlign: ej.TextAlign.Right, width: 130},
+                { field: "customerName", headerText: 'Customer Name', textAlign: ej.TextAlign.Left, width: 60 },
+                { field: "revenue", headerText: 'Revenue', textAlign: ej.TextAlign.Left, width: 60 },
+                { field: "site", headerText: 'Site', textAlign: ej.TextAlign.Left, width: 60 }
+            ];
+            var revenueByKitCols = [
+                { field: "kitName", headerText: 'Kit Name', textAlign: ej.TextAlign.Left, width: 60 },
+                { field: "month", headerText: 'Month', textAlign: ej.TextAlign.Right, width: 130},
+                { field: "site", headerText: 'Site', textAlign: ej.TextAlign.Left, width: 60 },
+                { field: "revenue", headerText: 'Revenue', textAlign: ej.TextAlign.Left, width: 60 }
             ];
 
             var query = new ej.Query();
             var promise = dataManager.executeQuery(query);
             promise.done(function (e) {
-                $("#combinedFinancialGrid").ejGrid(
+                $("#RevenueByCustomerGrid").ejGrid(
                     setGridOptions({
-                        dataSource: e.result, columns: combinedFinancialGridCols, gridId: 'combinedFinancialGrid', title:'Combined_Financial_Data'})
-                );
-            });
+                        dataSource: e.result, columns: revenueByCustomerCols, gridId: 'revenueByCustomerGrid', title: 'Revenue_By_Customer',
+                        actionComplete: function (args) {
+                            if (args.model && args.requestType === "filtering") {
+                                debugger;
+                                var records = $("#RevenueByCustomerGrid").ejGrid("instance").getFilteredRecords();
 
-            var dataManager = ej.DataManager({url: '@ViewBag.WONoInvoiceURL',crossDomain: true, adaptor: new ej.ODataV4Adaptor() });
+                                if (!records || records.length === 0) {
+                                    records = args.model.dataSource;
+                                }
 
-            var query = new ej.Query();
-            var promise = dataManager.executeQuery(query);
-            promise.done(function (e) {
-                var wONoInvoiceURLGridCols = [
-                    { field: "cust_Purch_Num", headerText: 'Customer Purchase', textAlign: ej.TextAlign.Right, width: 70 },
-                    { field: "work_Order_Item", headerText: 'Work Order Item', textAlign: ej.TextAlign.Left, width: 70 },
-                    { field: "product_Name", headerText: 'Product Name', textAlign: ej.TextAlign.Left, width: 200 },
-                    { field: "work_Order_Completed_Date", headerText: 'WO Complete Date', textAlign: ej.TextAlign.Left, width: 40 },
-                    { field: "total_Sale_Price", headerText: 'Total', textAlign: ej.TextAlign.Left, width: 40 }
-                ];
-                $("#wONoInvoiceURLGrid").ejGrid(
-                    setGridOptions({
-                        dataSource: e.result, columns: wONoInvoiceURLGridCols, gridId: 'wONoInvoiceURLGrid', title: 'Work_Orders_Not_Invoiced'
+                                SetChart("#RevenueByCustomerChart",records,"month","revenue","Revenue");
+                            }
+                        }
                     })
                 );
+
+                $("#RevenueByKitGrid").ejGrid(
+                    setGridOptions({
+                        dataSource: e.result, columns: revenueByKitCols, gridId: 'revenueByKitGrid', title: 'Revenue_By_Kit',
+                        actionComplete: function (args) {
+                            if (args.model && args.requestType === "filtering") {
+                                debugger;
+                                var records = $("#RevenueByKitGrid").ejGrid("instance").getFilteredRecords();
+
+                                if (!records || records.length === 0) {
+                                    records = args.model.dataSource;
+                                }
+
+                                SetChart("#RevenueByKitChart",records,"month","revenue","Revenue");
+                            }
+                        }
+                    })
+                );
+                SetChart("#RevenueByCustomerChart",e.result,"month","revenue","Revenue");
+                SetChart("#RevenueByKitChart",e.result,"month","revenue","Revenue");
+                SetChart("#RevenueByCustomerChart",e.result,"month","revenue","Revenue");
             });
+
+            function SetChart(name,data,xName,yName,seriesName) {
+                $(name).ejChart({
+                    series: [{
+                        type: 'column',
+                        dataSource: data,
+                        xName: xName,
+                        yName: yName,
+                        name: seriesName
+                    }]
+                });
+            }
+
+            function SetGrid(name, data, columns, gridId, title) {
+
+            }
         });
 
     </script>

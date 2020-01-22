@@ -206,6 +206,7 @@
     <Compile Include="Regions\RegionsView.cs" />
     <Compile Include="Reporting\ActualPartsHistory.cs" />
     <Compile Include="Reporting\AdHocReportItem.cs" />
+    <Compile Include="Reporting\OperationsData.cs" />
     <Compile Include="Reporting\SerialNumberHistory.cs" />
     <Compile Include="Reporting\CombinedFinancialData.cs" />
     <Compile Include="Reporting\WorkInProcess.cs" />
