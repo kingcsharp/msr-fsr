@@ -210,6 +210,7 @@ namespace Msr.Services.Invoices
                             if (InvoiceItemList != null &&
                                 (
                                     inThisInvoice ||
+
                                     item.LocationName == null ||
                                     facilities.Contains(
                                         item.LocationName.ToUpper()
