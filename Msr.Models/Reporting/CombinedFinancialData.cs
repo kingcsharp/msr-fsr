@@ -18,9 +18,9 @@ namespace Msr.Models.Reporting
         public string KitName { get; set; }
         public string pono { get; set; }
         public string mttn { get; set; }
-        public decimal Amount { get; set; }
+        public string Amount { get; set; }
         public Single FillQty { get; set; }
-        public int? InvoiceId { get; set; }
+        public string InvoiceId { get; set; }
         public string InvoiceDate { get; set; }
         public string SubTotal { get; set; }
         public string WTax { get; set; }
