@@ -121,6 +121,9 @@ pipeline {
                         bat label: '', script: 'xcopy /y %WORKSPACE%\\deployment\\post.bat %WORKSPACE%\\publish\\_PublishedWebsites\\'
                         bat label: '', script: 'md "%WORKSPACE%\\publish\\_PublishedWebsites\\Answer.Web/bin\\roslyn"'
                         bat label: '', script: 'xcopy /s %WORKSPACE%\\Roslyn45 %WORKSPACE%\\publish\\_PublishedWebsites\\Answer.Web\\bin\\roslyn'
+                        //bat label: '', script: 'md "%WORKSPACE%\\publish\\_PublishedWebsites\\Answer.Web\\App_Start"'
+                        //bat label: '', script: 'xcopy /s %WORKSPACE%\\Answer.Web\\App_Start %WORKSPACE%\\publish\\_PublishedWebsites\\Answer.Web\\App_Start'
+                        //bat label: '', script: 'xcopy /y %WORKSPACE%\\Answer.Web\\bundleconfig.json %WORKSPACE%\\publish\\_PublishedWebsites\\Answer.Web\\'
                         bat label: '', script: 'd:\\tools\\7-Zip\\7z a %WORKSPACE%\\publish\\publish.zip publish\\_PublishedWebsites\\'
                     } catch(e) {
                         office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED packaging the release. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"

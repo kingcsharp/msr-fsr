@@ -29,15 +29,15 @@
             @Html.ValidationMessageFor(model => model.CycleTime, "", new { @class = "text-danger" })
         </div>
     </div>
-<div class="row">
-    <div class="col-md-4">
+<div class="row" style="margin-left:0; margin-right:0">
+    <div class="col-md-2">
         <div class="form-group">
             <label>Product Name :</label>
             @Html.TextBoxFor(x => Model.ProductName, new { @class = "form-control", data_toggle = "tooltip", data_placement = "bottom" })
             @Html.ValidationMessageFor(model => model.ProductName, "", new { @class = "text-danger" })
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-5">
         <label>Part :</label>
         <div class="input-group">
             @Html.DropDownListFor(model => model.ProductPartId, Model.PartList, "Select a Part", new { @id = "partsList", @class = "form-control selectPart" })
@@ -60,7 +60,7 @@
         </div>
         @Html.ValidationMessageFor(model => model.ProductPartId, "", new { @class = "text-danger" })
     </div>
-    <div class="col-md-4">
+    <div class="col-md-5">
         <label>Procedure :</label>
         <div class="input-group">
             @Html.DropDownListFor(model => model.ProductProcedureId, Model.ProcedureList, "Select a Procedure", new { @class = "form-control selectProcedure" })

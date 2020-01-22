@@ -1,19 +1,8 @@
 ﻿@model Msr.Services.Invoices.ViewModel.InvoiceViewModel
 
-<style>
-    .control-label {
-        text-align: right;
-        font-weight:700;
-    }
-
-    #records_table th {
-        text-align: center;
-        background-color: #353d47;
-        color:#fff;
-    }
-</style>
 
 <link href="~/assets/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+<link href="~/assets/css/invoice_tables.css" rel="stylesheet" />
 
 @Html.Partial("Message")
 @using (Html.BeginForm("Save", "Invoices", FormMethod.Post, new { @class = "form-horizontal", @id = "invoice-edit" }))
@@ -63,12 +52,12 @@
         </div>
         <div class="col-xs-2 control-label">Client:</div>
         <div class="col-xs-5">
-            @Html.DropDownListFor(model => model.Client, Model.ClientList, new { @class = "form-control" })
+            @Html.DropDownListFor(model => model.Client, Model.ClientList, new { @class = "form-control", @disabled = "disabled"})
             @Html.ValidationMessageFor(model => model.Client, "", new { @class = "text-danger" })
         </div>
         <div class="col-xs-2 control-label">Facility:</div>
         <div class="col-xs-3">
-            @Html.DropDownListFor(model => model.InvoiceClass, Model.InvoiceIdList, new { @class = "form-control" })
+            @Html.DropDownListFor(model => model.InvoiceClass, Model.InvoiceIdList, new { @class = "form-control", @disabled = "disabled" })
         </div>
     </div>
     <div class="row">
@@ -83,14 +72,32 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-xs-12" id="invoice-po" style="height:400px;overflow-y:auto;">
-            @Html.Partial("_InvoiceEditItemsList")
+        <div class="col-xs-12" id="invoice-po" style="height:400px;">
+            <table class="table table-bordered table-striped table-condensed" id="records_table">
+                <thead>
+                    <tr>
+                        <th><span data-toggle="tooltip" data-placement="right" title="Check to add to Invoice. Uncheck to remove."><i class="fa fa-check-square" aria-hidden="true"></i></span></th>
+                        <th>Closed On</th>
+                        <th>Cust PO #</th>
+                        <th>AII PO #</th>
+                        <th>AII Item Id</th>
+                        <th>Description</th>
+                        <th>Qty</th>
+                        <th>Unit Price</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody class="list-content">
+                    @Html.Partial("_InvoiceEditItemsList")
+                </tbody>
+            </table>
         </div>
     </div>
     <div class="row">
         <div class="col-xs-12">
             <input type="button" name="BCLOSE" class="btn btn-danger pull-right" data-dismiss="modal" value="Cancel">
-            <input id="invoice-submit" type="button" name="BSUBMIT" class="btn btn-primary pull-right" value="Submit" style="margin-right:10px">
+            <input id="invoice-update" type="button" name="BSUBMIT" class="btn btn-primary pull-right" value="Submit" style="margin-right:10px">
+            <div id="status-message" class="pull-right"></div>
         </div>
     </div>
 </div>
@@ -101,11 +108,14 @@
 <script src="~/assets/js/moment.min.js"></script>
 <script src="~/assets/js/bootstrap-datetimepicker.min.js"></script>
 <script src="~/assets/js/dataTables.bootstrap.min.js"></script>
+<script src="~/assets/js/scrollable_tables.js"  type="module"></script>
 <script>
 
 	$(document).ready(function () {
 
-		var invoice = new Invoice();
+        $('[data-toggle="tooltip"]').tooltip();
+
+        var invoice = new Invoice();
 
         $('.datepick').datetimepicker();
 
