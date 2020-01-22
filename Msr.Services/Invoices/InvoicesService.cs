@@ -137,8 +137,9 @@ namespace Msr.Services.Invoices
             }
 
             string sql =
-                "SELECT DISTINCT a.REFERENCEPO as REFERENCEPO, " +
-                    "a.custid as custid, a.customername as customername, " +
+                "SELECT DISTINCT po.REFERENCEPO as REFERENCEPO, " +
+                    "cast(wo.custid as integer) as custid, " +
+                    "wo.customername as customername, " +
                     "isnull(po.name, '') as name, " +
                     "po.OpenDate as OpenDate, " +
                     "po.CloseDate as CloseDate, " +
@@ -147,17 +148,17 @@ namespace Msr.Services.Invoices
                     "isnull(po.Balance, 0.0) as Balance, " +
                     "isnull(po.UnusedAmount, 0.0) as UnusedAmount, " +
                     "po.TotalPurchaseLimit as TotalPurchaseLimit " +
-                "FROM A_POS_WITH_COMPLETED_WOS a " +
-                "LEFT JOIN Portal_PurchaseOrders po ON (a.REFERENCEPO = po.ReferencePo) " +
-                "LEFT JOIN Portal_WorkOrders wo ON (a.REFERENCEPO = wo.ReferencePo) " +
-                "WHERE (po.status = 'APPROVED' " +
-                "AND wo.FILLITEMID NOT IN (SELECT ITEMID FROM PORTAL_INVOICEWORKITEM) " +
+                "FROM Portal_PurchaseOrders po " +
+                "LEFT JOIN Portal_WorkOrders wo ON (po.REFERENCEPO = wo.ReferencePo) " +
+                "WHERE ((wo.FILLITEMID NOT IN " +
+                    "(SELECT ITEMID FROM PORTAL_INVOICEWORKITEM) " +
                 "AND wo.status = 'FINISHED' " +
-                "AND ((a.custid = @p0) OR (@p0 = -1)) " +
+                "AND ((wo.custid = @p0) OR (@p0 = -1)) " +
                 "AND (wo.LocationName IS NULL OR UPPER(wo.LocationName) IN ('" +
                 String.Join("','", facilities) + "'))) " +
                 existingItemsSQL +
-                "ORDER BY a.REFERENCEPO " +
+                ") AND (po.status = 'APPROVED' OR po.status='APPROVED_BUT_REVISING') " +
+                "ORDER BY po.REFERENCEPO " +
                 "OFFSET " + (page * pagesize) +
                 " ROWS FETCH NEXT " + (pagesize + 1) + " ROWS ONLY";
 
@@ -208,6 +209,8 @@ namespace Msr.Services.Invoices
                             item.selected = inThisInvoice;
                             if (InvoiceItemList != null &&
                                 (
+                                    inThisInvoice ||
+
                                     item.LocationName == null ||
                                     facilities.Contains(
                                         item.LocationName.ToUpper()

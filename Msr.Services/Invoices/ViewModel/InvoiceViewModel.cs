@@ -108,7 +108,7 @@ namespace Msr.Services.Invoices.ViewModel
                 new SelectListItem
                 {
                     Text = "ISL",
-                    Value = "06"
+                    Value = "46"
                 },
 
             };
