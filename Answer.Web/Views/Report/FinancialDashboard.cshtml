@@ -1,6 +1,7 @@
 ﻿@{
     ViewBag.Title = "FinancialDashboard";
 }
+
 <link href="~/Content/ej/web/bootstrap-theme/ej.web.all.min.css" rel="stylesheet" />
 <link href="~/Content/ej/web/ej.web.overrides.css" rel="stylesheet" />
 <link href="#" rel="stylesheet" />
@@ -8,7 +9,10 @@
     <div class="row">
         <div class="col-xs-12">
             <div class="datatable" style="padding:10px">
-                <div class="page-header"><h1 ndtype="heading">Combined Financial Data</h1></div>
+                <div class="page-header">
+                    <h1 ndtype="heading">Combined Financial Data</h1>
+                    @Html.Partial("_HelpViewButton")
+                </div>
                 <div id="combinedFinancialGrid"></div>
             </div>
         </div>
@@ -36,6 +40,9 @@
     <script src="~/Scripts/ej/web/ej.web.all.min.js"></script>
     <script type="text/javascript">
         $(function () {
+            // haxors for help button alignment
+            $('.page-help').css("margin-top", "-40px");
+
             function setGridOptions(options) {
                 var defaultGridOptions = {
                     enableLoadOnDemand: false,
