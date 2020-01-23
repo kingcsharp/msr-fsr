@@ -136,7 +136,7 @@
     <Build Include="dbo\Tables\A_TT_VERBS_HISTORY.sql" />
     <Build Include="dbo\Tables\A_PROCEDURE_STEP_THEORY_LINK.sql" />
     <Build Include="dbo\Tables\A_MONITOR_TEMPLATES_MULT_CHOICE.sql" />
-    <Build Include="dbo\Tables\A_MACHINE_PARTS.sql" />
+    <!--<Build Include="dbo\Tables\A_MACHINE_PARTS.sql" />-->
     <Build Include="dbo\Tables\A_TASK_REFERENCE_PROCEDURES.sql" />
     <Build Include="dbo\Tables\A_MONITOR_SKIP_STEPS.sql" />
     <Build Include="dbo\Tables\A_FORECASTS_HISTORY.sql" />
