@@ -1,45 +1,16 @@
 ﻿@model Msr.Services.Invoices.ViewModel.InvoiceViewModel
-<h4>Invoicable Purchase Orders</h4>
+
 @if (Model.PoList != null)
 {
-        <div class="row">
-            <div class="col-xs-2 control-label" style="margin-top: 4px;">
-                Select All POs:
-            </div>
-            <div class="make-switch switch-small col-xs-2" data-on="success" data-off="warning" style="display: inline-block">
-                <input name="selectAllPOs" class="check-amount" id="selectAllPOs" type="checkbox">
-            </div>
-
-            <div class="col-xs-6 control-label" style="margin-top: 4px;">
-                Combine Selected POs:
-            </div>
-            <div class="make-switch switch-small col-xs-2" data-on="success" data-off="warning" style="display: inline-block">
-                <input name="multiPOInvoice" id="multiPOInvoice" class="check-amount" type="checkbox" value="true">
-            </div>
-        </div>
-
-        <table class="table table-bordered table-striped table-condensed" id="records_table">
-            <tr>
-                <th></th>
-                <th>PO Name</th>
-                <th>PO #</th>
-                <th>Open Date</th>
-                <th>Close Date</th>
-                <th>$ Invoiced</th>
-                <th>$ Not Invoiced</th>
-                <th>$ Balance</th>
-                <th>Outstanding</th>
-            </tr>
-            @foreach (var po in Model.PoList)
-            {
-
+    foreach (var po in Model.PoList)
+    {
                 <tr>
-                    @Html.Hidden("po-data", po.ToJSON())
                     <td class="get-id">
+                        @Html.Hidden("po-data", po.ToJSON())
                         <input name="invoiceDetailListStrings" class="check-amount" value="@po.REFERENCEPO" id="po-id" type="checkBox">
                         @Html.HiddenFor(x => po.REFERENCEPO)
                     </td>
-                    <td>
+                    <td data-toggle="tooltip" title="@po.name">
                         @po.name
                     </td>
 
@@ -56,29 +27,13 @@
                     </td>
 
                     <td align="right">
-                        @Math.Round(po.InvoicedBalance, 2)
-                    </td>
-
-                    <td align="right">
-                        @Math.Round(po.UninvoicedBalance, 2)
-                    </td>
-
-                    <td align="right">
-                        @Math.Round(po.Balance, 2)
-                    </td>
-
-                    <td align="right">
-                        @Math.Round(po.Outstanding, 2)
+                        @String.Format("{0:C}", po.Outstanding)
                     </td>
                 </tr>
-            }
-        </table>
+    }
 }
-
 <script src="~/assets/js/grids/invoice-tax.js"></script>
-
 <script type="text/javascript">
-
     $(document).ready(function () {
 
         $('#selectAllPOs').bootstrapSwitch();
@@ -101,7 +56,6 @@
         $('input#po-id').click(function () {
             CheckBoxSelection($('#addId').val(), this, $(this).closest('tr').find('#po-data').val());
         });
-
     });
 
 </script>

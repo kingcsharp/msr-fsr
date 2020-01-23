@@ -2868,7 +2868,7 @@
     <Build Include="dbo\Tables\Sensor_Mapping.sql" />
     <Build Include="dbo\Stored Procedures\Deployment_TestProc.sql" />
     <Build Include="dbo\Views\Report_WideStage_WorkOrdersWithoutInvoices.sql" />
-    <Build Include="dbo\Stored Procedures\WIP_GET_STEP_DETAILS.sql" />
+    <!--<Build Include="dbo\Stored Procedures\WIP_GET_STEP_DETAILS.sql" />-->
     <Build Include="dbo\Views\Report_WorkOrdersWithoutInvoices.sql" />
     <Build Include="dbo\Tables\NCR_Categories.sql" />
     <Build Include="dbo\Views\Report_WorkOrdersWithoutInvoicesVIEW.sql" />

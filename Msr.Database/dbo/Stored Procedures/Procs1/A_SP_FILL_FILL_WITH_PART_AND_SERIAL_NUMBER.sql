@@ -112,8 +112,8 @@ if @@ERROR <> 0 goto problem
 
  declare @myError int
 -- exec @myError = A_SP_FILL_FILL_WITH_ACTUAL_PART @fillID,@actPartRootObjID,@strNTLogin
-print 'exec A_SP_FILLS_UPDATE_FILL null,null,''' + @fillID + ''',''' + @actPartRootObjID + ''',''' + @strNTLogin + ''''
-exec A_SP_FILLS_UPDATE_FILL null,null,@fillID,@actPartRootObjID,@strNTLogin
+print 'exec A_SP_FILLS_UPDATE_FILL null,null,''' + @fillID + ''',''' + @actPartRootObjID + ''',''' + @strNTLogin + ''',''' + @strLoc + ''''
+exec A_SP_FILLS_UPDATE_FILL null,null,@fillID,@actPartRootObjID,@strNTLogin,@strLoc
 
 if isNull(@myError,0) = 1 goto PROBLEM
 fin:

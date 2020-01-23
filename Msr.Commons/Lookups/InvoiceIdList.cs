@@ -25,6 +25,11 @@ namespace Msr.Commons.Lookups
                     Text = "IRE",
                     Value = "05"
                 },
+                new SelectListItem
+                {
+                    Text = "ISL",
+                    Value = "46"
+                },
             };
         }
     }

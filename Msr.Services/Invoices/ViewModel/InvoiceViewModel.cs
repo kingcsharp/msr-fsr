@@ -57,6 +57,8 @@ namespace Msr.Services.Invoices.ViewModel
 
         public bool multiPOInvoice { get; set; }
 
+        public int nextPage, page;
+
         public void SetUp(PurchesOrderService purchesOrderService, InvoicesService invoicesService, bool onEdit)
         {
 
@@ -106,7 +108,7 @@ namespace Msr.Services.Invoices.ViewModel
                 new SelectListItem
                 {
                     Text = "ISL",
-                    Value = "06"
+                    Value = "46"
                 },
 
             };
