@@ -157,7 +157,7 @@
             promise.done(function (e) {
                 $("#RevenueByCustomerGrid").ejGrid(
                     setGridOptions({
-                        dataSource: e.result, columns: revenueByCustomerCols, gridId: 'revenueByCustomerGrid', title: 'Revenue_By_Customer',
+                        dataSource: e.result, columns: revenueByCustomerCols, gridId: 'RevenueByCustomerGrid', title: 'Revenue_By_Customer',
                         actionComplete: function (args) {
                             if (args.model && args.requestType === "filtering") {
                                 var records = $("#RevenueByCustomerGrid").ejGrid("instance").getFilteredRecords();
@@ -193,7 +193,7 @@
 
                 $("#RevenueByKitGrid").ejGrid(
                     setGridOptions({
-                        dataSource: e.result, columns: revenueByKitCols, gridId: 'revenueByKitGrid', title: 'Revenue_By_Kit',
+                        dataSource: e.result, columns: revenueByKitCols, gridId: 'RevenueByKitGrid', title: 'Revenue_By_Kit',
                         actionComplete: function (args) {
                             if (args.model && args.requestType === "filtering") {
                                 var records = $("#RevenueByKitGrid").ejGrid("instance").getFilteredRecords();
@@ -228,7 +228,7 @@
 
                 $("#CountofKitsGrid").ejGrid(
                     setGridOptions({
-                        dataSource: e.result, columns: CountofKitsCols, gridId: 'countofKitsGrid', title: 'Count_of_Kits',
+                        dataSource: e.result, columns: CountofKitsCols, gridId: 'CountofKitsGrid', title: 'Count_of_Kits',
                         actionComplete: function (args) {
                             if (args.model && args.requestType === "filtering") {
                                 var records = $("#CountofKitsGrid").ejGrid("instance").getFilteredRecords();
