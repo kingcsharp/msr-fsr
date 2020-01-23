@@ -33,7 +33,6 @@ pipeline {
                 }
             }
         }
-        /*
         stage("Build Msr.Database") {
             steps {
                 script {
@@ -70,7 +69,9 @@ pipeline {
             steps {
                 script {
                     try {
-                        if(env.JOB_NAME == "MSR-FSR/Answer2.0/stage") {
+                        if(env.JOB_NAME == "MSR-FSR/Answer2.0/st
+
+                        age") {
                             bat label: '', script: 'sqlpackage.exe /a:publish /SourceFile:%WORKSPACE%\\Msr.Database\\bin\\Release\\Msr.Database.dacpac /TargetConnectionString:"Data Source=bang.msr-fsr.com;Initial Catalog=Answer2_Stage;User Id=sa;Password=L8xvg2FGqs7CEQ+a;Integrated Security=true"'
                         } else {
                             echo "Only publishing a script for Stage"
@@ -81,8 +82,6 @@ pipeline {
                 }
             }
         }
-
-         */
         stage("Process Transforms") {
             steps {
                 script {
