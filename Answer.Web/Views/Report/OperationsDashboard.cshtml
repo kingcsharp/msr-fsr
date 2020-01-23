@@ -9,7 +9,10 @@
     <div class="row">
         <div class="col-xs-12">
             <div class="datatable" style="padding:10px">
-                <div class="page-header"><h1 ndtype="heading">Revenue by Customer</h1></div>
+                <div class="page-header">
+                    <h1 ndtype="heading">Revenue by Customer</h1>
+                    @Html.Partial("_HelpViewButton")
+                </div>
                 <div class="col-xs-6">
                     <div id="RevenueByCustomerChart"></div>
                 </div>
@@ -60,6 +63,9 @@
     <script src="~/Scripts/ej/web/ej.web.all.min.js"></script>
     <script type="text/javascript">
         $(function () {
+            // haxors for help button alignment
+            $('.page-help').css("margin-top", "-40px");
+
             function setGridOptions(options) {
                 var defaultGridOptions = {
                     enableLoadOnDemand: false,
