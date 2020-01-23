@@ -33,6 +33,7 @@ pipeline {
                 }
             }
         }
+        /*
         stage("Build Msr.Database") {
             steps {
                 script {
@@ -80,6 +81,8 @@ pipeline {
                 }
             }
         }
+
+         */
         stage("Process Transforms") {
             steps {
                 script {
