@@ -29,6 +29,7 @@ pipeline {
                     } catch(e) {
                         office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED installing packages. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
                         currentBuild.result = 'FAILURE'
+                        sh "exit 1"
                     }
                 }
             }
@@ -45,6 +46,7 @@ pipeline {
                     } catch(e) {
                         office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED building Msr.Database. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
                         currentBuild.result = 'FAILURE'
+                        sh "exit 1"
                     }
                 }
             }
@@ -61,6 +63,7 @@ pipeline {
                     } catch(e) {
                         office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED generating SQL script from Msr.Database. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
                         currentBuild.result = 'FAILURE'
+                        sh "exit 1"
                     }
                 }
             }
@@ -69,15 +72,15 @@ pipeline {
             steps {
                 script {
                     try {
-                        if(env.JOB_NAME == "MSR-FSR/Answer2.0/st
-
-                        age") {
+                        if(env.JOB_NAME == "MSR-FSR/Answer2.0/stage") {
                             bat label: '', script: 'sqlpackage.exe /a:publish /SourceFile:%WORKSPACE%\\Msr.Database\\bin\\Release\\Msr.Database.dacpac /TargetConnectionString:"Data Source=bang.msr-fsr.com;Initial Catalog=Answer2_Stage;User Id=sa;Password=L8xvg2FGqs7CEQ+a;Integrated Security=true"'
                         } else {
                             echo "Only publishing a script for Stage"
                         }
                     } catch(e) {
                         office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED publishing SQL script from Msr.Database. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                        currentBuild.result = 'FAILURE'
+                        sh "exit 1"
                     }
                 }
             }
@@ -96,6 +99,7 @@ pipeline {
                     } catch(e) {
                         office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED processing transforms. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
                         currentBuild.result = 'FAILURE'
+                        sh "exit 1"
                     }
                 }
             }
@@ -108,6 +112,7 @@ pipeline {
                     } catch(e) {
                         office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED building Answer.Web. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
                         currentBuild.result = 'FAILURE'
+                        sh "exit 1"
                     }
                 }
             }
@@ -128,6 +133,7 @@ pipeline {
                     } catch(e) {
                         office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED packaging the release. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
                         currentBuild.result = 'FAILURE'
+                        sh "exit 1"
                     }
                 }
             }
@@ -149,6 +155,7 @@ pipeline {
                         } catch(e) {
                             office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED deploying to server. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
                             currentBuild.result = 'FAILURE'
+                            sh "exit 1"
                         }
                     }
 
