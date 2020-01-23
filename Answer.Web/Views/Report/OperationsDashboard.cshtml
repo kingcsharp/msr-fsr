@@ -33,6 +33,19 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="datatable" style="padding:10px">
+                <div class="page-header"><h1 ndtype="heading">Count of Kits</h1></div>
+                <div class="col-xs-6">
+                    <div id="CountofKitsChart"></div>
+                </div>
+                <div class="col-xs-6">
+                    <div id="CountofKitsGrid"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Scripts{
@@ -126,22 +139,17 @@
                 return retObj;
             }
 
+            // revenue customer
             var dataManager = ej.DataManager({
                 url: '@ViewBag.RevenueByCustomerURL',
                 crossDomain: true, adaptor: new ej.ODataV4Adaptor()
             });
 
             var revenueByCustomerCols = [
-                { field: "month", headerText: 'Month', textAlign: ej.TextAlign.Right, width: 130},
-                { field: "customerName", headerText: 'Customer Name', textAlign: ej.TextAlign.Left, width: 60 },
-                { field: "revenue", headerText: 'Revenue', textAlign: ej.TextAlign.Left, width: 60 },
-                { field: "site", headerText: 'Site', textAlign: ej.TextAlign.Left, width: 60 }
-            ];
-            var revenueByKitCols = [
-                { field: "kitName", headerText: 'Kit Name', textAlign: ej.TextAlign.Left, width: 60 },
-                { field: "month", headerText: 'Month', textAlign: ej.TextAlign.Right, width: 130},
-                { field: "site", headerText: 'Site', textAlign: ej.TextAlign.Left, width: 60 },
-                { field: "revenue", headerText: 'Revenue', textAlign: ej.TextAlign.Left, width: 60 }
+                { field: "month", headerText: 'Year-Month', textAlign: ej.TextAlign.Right, width: 130},
+                { field: "customerName", headerText: 'Customer Name', textAlign: ej.TextAlign.Center, width: 80 },
+                { field: "site", headerText: 'Site', textAlign: ej.TextAlign.Center, width: 80 },
+                { field: "revenue", headerText: 'Revenue', textAlign: ej.TextAlign.Right, width: 80 }
             ];
 
             var query = new ej.Query();
@@ -152,55 +160,114 @@
                         dataSource: e.result, columns: revenueByCustomerCols, gridId: 'revenueByCustomerGrid', title: 'Revenue_By_Customer',
                         actionComplete: function (args) {
                             if (args.model && args.requestType === "filtering") {
-                                debugger;
                                 var records = $("#RevenueByCustomerGrid").ejGrid("instance").getFilteredRecords();
 
                                 if (!records || records.length === 0) {
                                     records = args.model.dataSource;
                                 }
 
-                                SetChart("#RevenueByCustomerChart",records,"month","revenue","Revenue");
+                                SetChartStacked("stackingcolumn", "#RevenueByCustomerChart", records, "month", "revenue", "Revenue", "customerName");
                             }
                         }
                     })
                 );
+                SetChartStacked("stackingcolumn", "#RevenueByCustomerChart", e.result, "month", "revenue", "Revenue", "customerName");
+            });
+
+            // kits revenue
+            var dataManager = ej.DataManager({
+                url: '@ViewBag.RevenueByKitURL',
+                crossDomain: true, adaptor: new ej.ODataV4Adaptor()
+            });
+
+            var revenueByKitCols = [
+                { field: "kitName", headerText: 'Kit Name', textAlign: ej.TextAlign.Left, width: 130 },
+                { field: "month", headerText: 'Year-Month', textAlign: ej.TextAlign.Center, width: 80},
+                { field: "site", headerText: 'Site', textAlign: ej.TextAlign.Center, width: 80 },
+                { field: "revenue", headerText: 'Revenue', textAlign: ej.TextAlign.Right, width: 80 }
+                ];
+
+            var query = new ej.Query();
+            var promise = dataManager.executeQuery(query);
+            promise.done(function (e) {
 
                 $("#RevenueByKitGrid").ejGrid(
                     setGridOptions({
                         dataSource: e.result, columns: revenueByKitCols, gridId: 'revenueByKitGrid', title: 'Revenue_By_Kit',
                         actionComplete: function (args) {
                             if (args.model && args.requestType === "filtering") {
-                                debugger;
                                 var records = $("#RevenueByKitGrid").ejGrid("instance").getFilteredRecords();
 
                                 if (!records || records.length === 0) {
                                     records = args.model.dataSource;
                                 }
-
-                                SetChart("#RevenueByKitChart",records,"month","revenue","Revenue");
+                                SetChartStacked("stackingcolumn","#RevenueByKitChart",records,"month","revenue","Revenue","kitName");
                             }
                         }
                     })
                 );
-                SetChart("#RevenueByCustomerChart",e.result,"month","revenue","Revenue");
-                SetChart("#RevenueByKitChart",e.result,"month","revenue","Revenue");
-                SetChart("#RevenueByCustomerChart",e.result,"month","revenue","Revenue");
+                SetChartStacked("stackingcolumn","#RevenueByKitChart",e.result,"month","revenue","Revenue","kitName");
             });
 
-            function SetChart(name,data,xName,yName,seriesName) {
+            // kits count
+            var dataManager = ej.DataManager({
+                url: '@ViewBag.CountofKitsURL',
+                crossDomain: true, adaptor: new ej.ODataV4Adaptor()
+            });
+
+            var CountofKitsCols = [
+                { field: "kitName", headerText: 'Kit Name', textAlign: ej.TextAlign.Left, width: 130 },
+                { field: "month", headerText: 'Year-Month', textAlign: ej.TextAlign.Center, width: 80},
+                { field: "site", headerText: 'Site', textAlign: ej.TextAlign.Center, width: 80 },
+                { field: "count", headerText: 'Count', textAlign: ej.TextAlign.Center, width: 80 }
+                ];
+
+            var query = new ej.Query();
+            var promise = dataManager.executeQuery(query);
+            promise.done(function (e) {
+
+                $("#CountofKitsGrid").ejGrid(
+                    setGridOptions({
+                        dataSource: e.result, columns: CountofKitsCols, gridId: 'countofKitsGrid', title: 'Count_of_Kits',
+                        actionComplete: function (args) {
+                            if (args.model && args.requestType === "filtering") {
+                                var records = $("#CountofKitsGrid").ejGrid("instance").getFilteredRecords();
+
+                                if (!records || records.length === 0) {
+                                    records = args.model.dataSource;
+                                }
+                                SetChartStacked("stackingcolumn","#CountofKitsChart",records,"month","count","Count","kitName");
+                            }
+                        }
+                    })
+                );
+                SetChartStacked("stackingcolumn","#CountofKitsChart",e.result,"month","count","Count","kitName");
+            });
+
+            function SetChartStacked(type,name,data,xName,yName,seriesName, stackBy) {
                 $(name).ejChart({
+                    
+                    primaryXAxis: {
+                        title: { text: 'Month (Previous 12 Months Rolling)' }
+                    },
+                    primaryYAxis: {
+                        title: { text: 'Revenue(%) Per Month' }
+                    },
                     series: [{
-                        type: 'column',
+                        type: type,
                         dataSource: data,
                         xName: xName,
                         yName: yName,
-                        name: seriesName
-                    }]
+                        name: seriesName,
+                        stackingGroup: stackBy,
+                        tooltip: { visible: true, format: "#series.name# <strong>#point.y#</strong>" },
+                    }],
+                    isResponsive: true,
+                    theme: "azure",
+                    load: "loadTheme",	 
+                    size: { height: "600"},                        
+                    legend: { visible: false }
                 });
-            }
-
-            function SetGrid(name, data, columns, gridId, title) {
-
             }
         });
 

@@ -35,7 +35,9 @@ namespace Msr.Web.Controllers
         public ActionResult OperationsDashboard()
         {
             ViewBag.ActiveClass = "WIP";
-            ViewBag.RevenueByCustomerURL = ConfigurationManager.AppSettings["WebsiteUrl"].ToString() + "api/Reporting/RevenueByCustomerData";
+            ViewBag.RevenueByCustomerURL = ConfigurationManager.AppSettings["WebsiteUrl"].ToString() + "api/Reporting/CustomerRevenueData";
+            ViewBag.RevenueByKitURL = ConfigurationManager.AppSettings["WebsiteUrl"].ToString() + "api/Reporting/KitRevenueData";
+            ViewBag.CountofKitsURL = ConfigurationManager.AppSettings["WebsiteUrl"].ToString() + "api/Reporting/KitCountsData";
             return View();
         }
         public ActionResult AdHocReports()
