@@ -168,7 +168,7 @@ pipeline {
 }
 
 void deploy(appName,deployName) {
-    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: '0ecdc6b1-481b-4af0-8897-ad528b954c49', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'msrfsr-aws-jenkins', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
         step([$class: 'AWSCodeDeployPublisher', applicationName: "${appName}",
               awsAccessKey: "${AWS_ACCESS_KEY_ID}", awsSecretKey: "${AWS_SECRET_ACCESS_KEY}",
               credentials: 'awsAccessKey', deploymentConfig: 'CodeDeployDefault.OneAtATime',
