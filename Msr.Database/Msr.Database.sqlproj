@@ -2900,6 +2900,9 @@
     <Build Include="dbo\Views\Sensor_Current_Values.sql" />
     <Build Include="dbo\Views\Portal_ProductionPlanningView.sql" />
     <Build Include="dbo\Views\Portal_CustomerRequirementView.sql" />
+    <Build Include="dbo\Views\Reports\Report_Operations_CustomerRevenue.sql" />
+    <Build Include="dbo\Views\Reports\Report_Operations_KitCount.sql" />
+    <Build Include="dbo\Views\Reports\Report_Operations_KitRevenue.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Msr.Database.refactorlog" />
