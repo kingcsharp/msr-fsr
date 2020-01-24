@@ -3477,6 +3477,7 @@
     <Content Include="Views\PrintOther\_ViewPartLabelRoll4x4Tsr.cshtml" />
     <!--<Content Include="Views\Report\AdHocReport.cshtml" />-->
     <Content Include="Views\Report\AdHocReports.cshtml" />
+    <Content Include="Views\Report\OperationsDashboard.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

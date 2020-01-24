@@ -2867,12 +2867,10 @@
     <Build Include="dbo\Views\Portal\Portal_WorkOrderPartsWithSubPartsView.sql" />
     <Build Include="dbo\Tables\Sensor_Mapping.sql" />
     <Build Include="dbo\Stored Procedures\Deployment_TestProc.sql" />
-    <Build Include="dbo\Views\Report_WideStage_WorkOrdersWithoutInvoices.sql" />
-    <Build Include="dbo\Stored Procedures\WIP_GET_STEP_DETAILS.sql" />
+    <!--<Build Include="dbo\Stored Procedures\WIP_GET_STEP_DETAILS.sql" />-->
     <Build Include="dbo\Views\Report_WorkOrdersWithoutInvoices.sql" />
     <Build Include="dbo\Tables\NCR_Categories.sql" />
     <Build Include="dbo\Views\Report_WorkOrdersWithoutInvoicesVIEW.sql" />
-    <Build Include="dbo\Views\Report_CombinedFinancialData3.sql" />
     <Build Include="dbo\Views\A_O_ORDERS_JUSTIN_TEMP.sql" />
     <Build Include="dbo\Views\A_O_ORDERS_BACKUP_05142019.sql" />
     <Build Include="dbo\Stored Procedures\sp_WhoIsActive.sql" />
@@ -2900,6 +2898,9 @@
     <Build Include="dbo\Views\Sensor_Current_Values.sql" />
     <Build Include="dbo\Views\Portal_ProductionPlanningView.sql" />
     <Build Include="dbo\Views\Portal_CustomerRequirementView.sql" />
+    <Build Include="dbo\Views\Reports\Report_Operations_CustomerRevenue.sql" />
+    <Build Include="dbo\Views\Reports\Report_Operations_KitCount.sql" />
+    <Build Include="dbo\Views\Reports\Report_Operations_KitRevenue.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Msr.Database.refactorlog" />

@@ -129,6 +129,9 @@ namespace Msr.Repositories
             modelBuilder.Entity<SerialNumberHistory>().ToTable("Report_SerialNumberHistory");
             modelBuilder.Entity<WorkInProcess>().ToTable("Report_WorkInProgress");
             modelBuilder.Entity<TaskObject>().ToTable("A_TASKS");
+            modelBuilder.Entity<OperationsCustomerRevenueData>().ToTable("Report_Operations_CustomerRevenue");
+            modelBuilder.Entity<OperationsKitRevenueData>().ToTable("Report_Operations_KitRevenue");
+            modelBuilder.Entity<OperationsKitCountData>().ToTable("Report_Operations_KitCount");
         }
 
         public DbSet<AspNetUser> AspNetUsers { get; set; }
@@ -209,5 +212,8 @@ namespace Msr.Repositories
         public DbSet<SerialNumberHistory> SerialNumberHistory { get; set; }
         public DbSet<WorkInProcess> WorkInProcess { get; set; }
         public DbSet<TaskObject> Tasks { get; set; }
+        public DbSet<OperationsCustomerRevenueData> OperationsCustomerRevenueData { get; set; }
+        public DbSet<OperationsKitRevenueData> OperationsKitRevenueData { get; set; }
+        public DbSet<OperationsKitCountData> OperationsKitCountData { get; set; }
     }
 }
