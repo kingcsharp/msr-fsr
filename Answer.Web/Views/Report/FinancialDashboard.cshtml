@@ -141,8 +141,8 @@
                 { field: "woNumber", headerText: 'WO Item', textAlign: ej.TextAlign.Right, width: 130 },
                 { field: "poNumber", headerText: 'PO #', textAlign: ej.TextAlign.Left, width: 60 },
                 { field: "woCreationDate", headerText: 'Creation Date', textAlign: ej.TextAlign.Left, width: 60 },
-                { field: "dueDate", headerText: 'Due Date', textAlign: ej.TextAlign.Left, width: 60 },
-                { field: "shipDate", headerText: 'Ship Date', textAlign: ej.TextAlign.Left, width: 60 },
+                { field: "dueDate", headerText: 'Due Date', textAlign: ej.TextAlign.Left, width: 60, type:Date },
+                { field: "shipDate", headerText: 'Ship Date', textAlign: ej.TextAlign.Left, width: 60, type:Date },
                 { field: "msrfsrFacility", headerText: 'Facility', textAlign: ej.TextAlign.Left, width: 60 },
                 { field: "customerName", headerText: 'Customer', textAlign: ej.TextAlign.Left, width: 90 },
                 { field: "customerPartNumber", headerText: 'Customer Part #', textAlign: ej.TextAlign.Left, width: 60 },
@@ -150,7 +150,7 @@
                 { field: "kitName", headerText: 'Kit Name', textAlign: ej.TextAlign.Left, width: 120 },
                 { field: "mttn", headerText: 'MTTN', textAlign: ej.TextAlign.Left, width: 70 },
                 { field: "invoiceId", headerText: 'Invoice #', textAlign: ej.TextAlign.Left, width: 70 },
-                { field: "invoiceDate", headerText: 'Invoice Date', textAlign: ej.TextAlign.Left, width: 60 },
+                { field: "invoiceDate", headerText: 'Invoice Date', textAlign: ej.TextAlign.Left, width: 60, type:Date },
                 { field: "fillQty", headerText: 'Qty', textAlign: ej.TextAlign.Left, width: 40 },
                 { field: "amount", headerText: 'Amount', textAlign: ej.TextAlign.Left, width: 55 },
                 { field: "subTotal", headerText: 'SubTotal', textAlign: ej.TextAlign.Left, width: 60 },
@@ -162,7 +162,12 @@
             promise.done(function (e) {
                 $("#combinedFinancialGrid").unblock().ejGrid(
                     setGridOptions({
-                        dataSource: e.result, columns: combinedFinancialGridCols, gridId: 'combinedFinancialGrid', title:'Combined_Financial_Data'})
+                        dataSource: e.result,
+                        sortSettings: { sortedColumns: [{ field: "invoiceDate", direction: "descending" }] },
+                        columns: combinedFinancialGridCols,
+                        gridId: 'combinedFinancialGrid',
+                        title: 'Combined_Financial_Data'
+                    })
                 );
             });
 
@@ -176,12 +181,16 @@
                     { field: "work_Order_Item", headerText: 'Work Order Item', textAlign: ej.TextAlign.Left, width: 70 },
                     { field: "location_Name", headerText: 'Location', textAlign: ej.TextAlign.Left, width: 70 },
                     { field: "product_Name", headerText: 'Product Name', textAlign: ej.TextAlign.Left, width: 200 },
-                    { field: "work_Order_Completed_Date", headerText: 'WO Complete Date', textAlign: ej.TextAlign.Left, width: 40 },
+                    { field: "work_Order_Completed_Date", headerText: 'WO Complete Date', textAlign: ej.TextAlign.Left, width: 40, type:Date },
                     { field: "total_Sale_Price", headerText: 'Total', textAlign: ej.TextAlign.Left, width: 40 }
                 ];
                 $("#wONoInvoiceURLGrid").unblock().ejGrid(
                     setGridOptions({
-                        dataSource: e.result, columns: wONoInvoiceURLGridCols, gridId: 'wONoInvoiceURLGrid', title: 'Work_Orders_Not_Invoiced'
+                        dataSource: e.result,
+                        sortSettings: { sortedColumns: [{ field: "work_Order_Completed_Date", direction: "descending" }] },
+                        columns: wONoInvoiceURLGridCols,
+                        gridId: 'wONoInvoiceURLGrid',
+                        title: 'Work_Orders_Not_Invoiced'
                     })
                 );
             });
