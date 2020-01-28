@@ -26,8 +26,16 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web.Mvc;
 using Newtonsoft.Json;
+using System.Web.Script.Serialization;
+using System.Web.UI;
+using Msr.Infrastructure.Email;
+using Msr.Services.CustomerRequirements.ViewModel;
+using Msr.Services.ProductionPlanning;
+using Msr.Services.Quotes;
+using Msr.Services.Users;
 
 namespace Answer.Web.Controllers
 {
@@ -43,6 +51,7 @@ namespace Answer.Web.Controllers
         private readonly DocumentFilesService _documentFilesService;
         private LocationService _locationService;
         private SensorService _sensorService;
+        private UserService _userService;
 
         public WipController()
         {
@@ -54,6 +63,8 @@ namespace Answer.Web.Controllers
             _roleService = new RoleService();
             _documentFilesService = new DocumentFilesService();
             _sensorService = new SensorService();
+            _userService = new UserService();
+            
         }
 
         public ActionResult Index()
@@ -227,6 +238,13 @@ namespace Answer.Web.Controllers
             return Json(json, JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult GetNcrNotificationModal()
+        {
+
+
+            return PartialView("_AddNcrNotificationModal");
+        }
+
         public ActionResult GetNcrModel(string id)
         {
             var currentUser = GetCurrentUser();
@@ -355,6 +373,7 @@ namespace Answer.Web.Controllers
 
         public ActionResult Details(int id)
         {
+            
             var vm = new WorkOrderDetailsResponse();
 
             var currentUser = GetCurrentUser();
@@ -579,11 +598,23 @@ namespace Answer.Web.Controllers
 
         public ActionResult GetWipStepDetails(int stepId, int fillId, int? phStepId)
         {
+            
             LoggedUserIdResult loggedUserIdResult = this.LoggedUserIdResult;
 
             List<GetMyRolesResult> userRoles = _roleService.GetAssignedRoles(loggedUserIdResult.Id);
 
             WipStepDetailsResponse wipStepDetailsResponse = _orderService.GetWipStepDetails(ref loggedUserIdResult, ref userRoles, stepId, fillId, loggedUserIdResult.Id, phStepId);
+            
+            //Set the title for the monitor so it can be passed into the close task web service
+            wipStepDetailsResponse.MonitorTemplateResult.ForEach(monitorTemplateResult =>
+                {
+                    monitorTemplateResult.MonitorTaskTitle = wipStepDetailsResponse.TaskEditDataResult.StepTitle;
+                });
+
+            //Get email for notification
+            var workOrder = _orderService.GetWorkOrderQueryable().FirstOrDefault(s => s.FillId == fillId.ToString());
+            var userView = _userService.GetEmailNotificationUserForWorkOrder(workOrder.CustId, workOrder.CustomerName ,workOrder.RequesteeName, "ClientEngineer");
+            wipStepDetailsResponse.CustomerEmailForNotification = userView.Email;
 
             ViewBag.FillId = fillId;
             ViewBag.IsStepStatusClosed = wipStepDetailsResponse.TaskEditDataResult.Status == "CLOSED";
@@ -592,116 +623,63 @@ namespace Answer.Web.Controllers
             return PartialView("_InitialInspection", wipStepDetailsResponse);
         }
 
-        // BACKUP
-        //public ActionResult GetWipStepDetails(int stepId, int fillId, int? phStepId)
-        //{
-        //    ViewBag.FillId = fillId;
+        private void SendNcrEmailNotification(string fillId, MonitorTemplateResult monitorTemplateResult)
+        {
+           
+            var loggedUser = GetCurrentUser();
+            var clientCustomerEmail = _userService.GetAnserByUserName(loggedUser.Login)?.Email;
+            var workOrder = _orderService.GetWorkOrderQueryable().FirstOrDefault(s => s.FillId == fillId);
+            var technicianEmail = _userService.GetEmailNotificationUserForWorkOrder(workOrder.CustId, workOrder.CustomerName,
+                workOrder.RequesteeName, "ClientEngineer").Email;
 
-        //    var loggedUserIdResult = GetCurrentUser();
+            if (workOrder != null)
+            {
+                AddNcrNotificationEmailViewModel addNcrNotificationEmailViewModel = new AddNcrNotificationEmailViewModel();
+                addNcrNotificationEmailViewModel.DateReported = DateTime.Now;
+                addNcrNotificationEmailViewModel.Technician = workOrder.CustomerName;
+                addNcrNotificationEmailViewModel.PartName = workOrder.ProductName;
+                addNcrNotificationEmailViewModel.PartNumber = workOrder.ProcId;
+                addNcrNotificationEmailViewModel.SerialNumber = workOrder.Serial;
+                addNcrNotificationEmailViewModel.WorkOrderNumber = fillId;
+                addNcrNotificationEmailViewModel.DescriptionOfNonCompliance = monitorTemplateResult.Comment;
 
-        //    var userRoles = _roleService.GetAssignedRoles(loggedUserIdResult.Id);
 
-        //    var response = _orderService.GetWipStepDetailsREFACTOR(stepId, fillId, loggedUserIdResult.Id, phStepId);
+                string str = RenderPartialToString(this, "_NcrEmailNotificationBodyContent", addNcrNotificationEmailViewModel, ViewData, TempData);
 
-        //    // var response = _orderService.GetWipStepDetails(stepId, fillId, loggedUserIdResult.Id, phStepId);
+                string fromEmail = technicianEmail;
+                string toEmail = clientCustomerEmail;
+                string subject = $"Non-Conformity Reported on {fillId}";
+                string body = str;
+                List<string> ccList = new List<string>();
+                bool isHtml = true;
 
-        //    ViewBag.IsStepStatusClosed = response.TaskEditDataResult.Status == "CLOSED";
+                EmailService.SendEmail(fromEmail, toEmail, subject, body, ccList, isHtml);
+            }
 
-        //    var vm = _orderService.GetPurchaseItemDetails(fillId, loggedUserIdResult.Id);
+        }
 
-        //    response.ParentPartId = vm.FileSearchResult.FillObjectId.ToString();
+        public static string RenderPartialToString(Controller controller, string partialViewName, object model, ViewDataDictionary viewData, TempDataDictionary tempData)
+        {
+            ViewEngineResult result = ViewEngines.Engines.FindPartialView(controller.ControllerContext, partialViewName);
 
-        //    var currentStep = vm.TaskStepResults.SingleOrDefault(x => x.StepId == stepId.ToString());
+            if (result.View != null)
+            {
+                controller.ViewData.Model = model;
+                StringBuilder sb = new StringBuilder();
+                using (StringWriter sw = new StringWriter(sb))
+                {
+                    using (HtmlTextWriter output = new HtmlTextWriter(sw))
+                    {
+                        ViewContext viewContext = new ViewContext(controller.ControllerContext, result.View, viewData, tempData, output);
+                        result.View.Render(viewContext, output);
+                    }
+                }
 
-        //    var objId = _orderService.GetProcedureByObjId(vm.FileSearchResult.ProcObjId);
+                return sb.ToString();
+            }
 
-        //    // JG ADDED BELOW - DECIDED NOT TO USE SINCE IT EXECUTES A BUNCH OF QUERY AND IS LESS PERFORMANT
-        //    // var procedureStepsData = _proceduresService.GetStepsData(vm.FileSearchResult.ProcObjId, loggedUserId.Id).Where(x => x.Id == currentStep.PhStepId).FirstOrDefault();
-
-        //    // THE BELOW IS INCORRECT - WE NEED TO GET THE ROLE FOR THE TASK (OR STEP) NOT THE ENTIRE PROCEDURE 
-        //    // var procedureRoles = _proceduresService.GetSelectedRoles(objId.Id, loggedUserId.Id)?.Select(x => x.Role_Id).ToList();
-
-        //    // INCORRECT SINCE IT IS CHECKING THE ENTIRE PROCEDURE ROLE VS THE CURRENT STEP
-        //    // response.HasStepRoles = myRoles.Select(x => x.Role_Id).ToList().Intersect(procedureStepsData.Role).Any();
-
-        //    // if (!response.HasStepRoles)
-        //    // {
-
-        //    var currentStepRequiredRoles = currentStep.Roles?.Split(',');
-
-        //    foreach (var personRole in userRoles)
-        //    {
-        //        if (currentStepRequiredRoles.Any(x => x == personRole.Role_Id))
-        //        {
-        //            if (personRole.StartDate.HasValue && personRole.EndDate.HasValue)
-        //            {
-        //                if (DateTime.Today.Date >= personRole.StartDate.Value.Date && DateTime.Today.Date < personRole.EndDate.Value.Date.AddDays(1))
-        //                {
-        //                    response.HasStepRoles = true;
-        //                    break;
-        //                }
-        //            }
-        //            else
-        //            {
-        //                response.HasStepRoles = true;
-        //                break;
-        //            }
-        //        }
-        //    }
-
-        //    // }
-
-        //    response.LoggedUserIdResult = loggedUserIdResult;
-        //    response.TaskEditDataResult.StepTitle = currentStep.Title;
-        //    response.TaskEditDataResult.Description = currentStep.Description;
-
-        //    //var actualPartId = _orderService.GetWorkOrderQueryable().Where(x => x.FillId == stringFillId).Select(a => a.ActualPartId).FirstOrDefault();
-
-        //    // PERF IMPROVEMENT - ADDED IF .ANY CHECK - DON'T GET THE SENSOR VALUES IF THERE AREN'T ANY MONITORS
-
-        //    if (response.MonitorTemplateResult != null && response.MonitorTemplateResult.Any() == true)
-        //    {
-        //        List<SensorDataModel> sensorDataModels = _sensorService.GetSensorCurrentValues();
-
-        //        foreach (var monitorTemplate in response.MonitorTemplateResult)
-        //        {
-        //            monitorTemplate.Setup(_equipmentMaintenanceService, _orderService);
-
-        //            monitorTemplate.SensorDataModels = sensorDataModels;
-
-        //            for (int i = 0; i < monitorTemplate.FailActionList.Count; i++)
-        //            {
-        //                if (monitorTemplate.FailActionList[i].Value == monitorTemplate.Fail_Action)
-        //                {
-        //                    monitorTemplate.FailActionList[i].Selected = true;
-        //                }
-        //            }
-        //        }
-        //    }
-
-        //    response.Images = new ImageViewModel
-        //    {
-        //        FillId = fillId,
-        //        TaskId = stepId,
-        //        ActualPartId = response.ParentPartId
-        //    };
-
-        //    var images = _orderService.GetOrderItemImagesById(stepId.ToString());
-
-        //    var dockLinks = images.Select(itemImage => new DocLink
-        //    {
-        //        SERVER_PATH = itemImage.Path,
-        //        CONTENTTYPE = itemImage.ContentType,
-        //        LINKED_DOC_ID = itemImage.Id,
-        //        NAME = itemImage.FILE_NAME
-        //    }).ToList();
-
-        //    response.Images.PreviewConfig = FileInputConfigHelper.GetPreviewConfigValue(dockLinks, Url.Action("DeleteImageById", "Doc"), Url.Action("Download", "Doc"));
-
-        //    response.Images.Preview = FileInputConfigHelper.GetPreviewValue(dockLinks, _documentFilesService);
-
-        //    return PartialView("_InitialInspection", response);
-        //}
+            return String.Empty;
+        }
 
         [HttpPost]
         public ActionResult UpdateStepMonitor(List<MonitorTemplateResult> monitorTemplates)
@@ -741,7 +719,9 @@ namespace Answer.Web.Controllers
 
                         if (updateMonitor == true)
                         {
+                            
                             result = _orderService.UpdateStepMonitor(monitorTemplate);
+
                         }
 
                         if (result.HasErrors())
@@ -769,6 +749,16 @@ namespace Answer.Web.Controllers
                 foreach (var monitorTemplate in monitorTemplates)
                 {
                     monitorTemplate.StrNtLogin = loggedUserId;
+
+                    var fillId = monitorTemplates.FirstOrDefault()?.FillId;
+
+                    if (monitorTemplate.MonitorTaskTitle == "Describe Non-Conformity")
+                    {
+                                
+                        SendNcrEmailNotification(monitorTemplate.FillId.ToString(),monitorTemplate);
+
+                    }
+
                     _orderService.UpdateStepMonitor(monitorTemplate);
                 }
 
@@ -935,6 +925,7 @@ namespace Answer.Web.Controllers
 
         public ActionResult AddProcedureToTask(string objId, string parentId, string fillId)
         {
+            
             _orderService.AddProcedureAsSubTask(objId, parentId, GetCurrentUser().Id);
 
             return RedirectToAction("Details", new { id = fillId });

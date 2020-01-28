@@ -360,6 +360,7 @@
     <Compile Include="ViewModel\DocViewModel.cs" />
     <Compile Include="ViewModel\EditUserViewModel.cs" />
     <Compile Include="ViewModel\AddUserViewModel.cs" />
+    <Compile Include="ViewModel\Wip\AddNcrNotificationEmailViewModel.cs" />
     <Compile Include="ViewModel\Wip\PrintViewModel.cs" />
     <Compile Include="ViewModel\Wip\WipStatusViewModel.cs" />
     <Compile Include="ViewModel\Wip\WipStatusViewItem.cs" />
@@ -3478,6 +3479,8 @@
     <!--<Content Include="Views\Report\AdHocReport.cshtml" />-->
     <Content Include="Views\Report\AdHocReports.cshtml" />
     <Content Include="Views\Report\OperationsDashboard.cshtml" />
+    <Content Include="Views\Wip\_AddNcrNotificationModal.cshtml" />
+    <Content Include="Views\Wip\_NcrEmailNotificationBodyContent.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -1,0 +1,36 @@
+﻿@using Answer.Web.ViewModel.Wip
+@model Answer.Web.ViewModel.Wip.AddNcrNotificationEmailViewModel
+
+Dear MSR-FSR Customer,
+<br />
+
+Date Reported: @Model.DateReported
+<br />
+Technician: @Model.Technician
+<br />
+Part Name: @Model.PartName
+<br />
+Part Number: @Model.PartNumber
+<br />
+Serial Number: @Model.SerialNumber
+<br />
+WO Number: @Model.WorkOrderNumber
+<br />
+Description of NC: @Model.DescriptionOfNonCompliance
+<br />
+<br />
+Please log into the MSR-FSR Portal at portal.msr-fsr.com for additional detail, to view photographs, and to enter a disposition.
+<br />
+<br />
+Alternatively you can email your local MSR-FSR Production Manager or call MSR-FSR at the numbers below:
+<br />
+<br />
+Hillsboro, OR @Location.PhoneNumber
+<br />
+Chandler , AZ @Location.PhoneNumber
+<br />
+Naas, Ireland @Location.PhoneNumber
+<br />
+Kiryat Gat, Israel @Location.PhoneNumber
+<br />
+<br />

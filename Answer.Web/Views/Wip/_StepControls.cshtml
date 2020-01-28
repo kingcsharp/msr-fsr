@@ -196,8 +196,9 @@ else
 	        $('#addNcrModal').find('.modal-body').empty()
 	            .html('<table id="jqGridFiles"></table><div id="jqGridPagerFiles"></div>');
 
+            
 	        setTimeout(function() {
-	            LoadSelectProcedureGrid('@Model.StepId', '@Model.FillId', 'ncr');
+	            LoadSelectProcedureGrid('@Model.StepId', '@Model.FillId', 'ncr','@Model.CustomerEmailForNotification');
 	        },300);
 	    });
 		//stepControls.AddNcrModel();
