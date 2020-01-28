@@ -10,9 +10,9 @@ namespace Msr.Models.Reporting
         public long Id { get; set; }
         public string WONumber { get; set; }
         public string PONumber { get; set; }
-        public string WOCreationDate { get; set; }
-        public string DueDate { get; set; }
-        public string ShipDate { get; set; }
+        public DateTime WOCreationDate { get; set; }
+        public DateTime DueDate { get; set; }
+        public DateTime ShipDate { get; set; }
         public string MSRFSRFacility { get; set; }
         public string CustomerName { get; set; }
         public string SpecificationNumber { get; set; }
@@ -22,7 +22,7 @@ namespace Msr.Models.Reporting
         public string Amount { get; set; }
         public Single FillQty { get; set; }
         public string InvoiceId { get; set; }
-        public string InvoiceDate { get; set; }
+        public DateTime InvoiceDate { get; set; }
         public string SubTotal { get; set; }
         public string WTax { get; set; }
     }
