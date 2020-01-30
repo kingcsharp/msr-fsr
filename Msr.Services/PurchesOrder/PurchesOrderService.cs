@@ -210,7 +210,12 @@ namespace Msr.Services.PurchesOrder
         public List<PurchasePoModel> PurchasedOrderOrderItems(string id)
         {
             var accName = "";
-            var result = _dbContext.Database.SqlQuery<PurchasePoModel>($"SELECT * FROM A_V_ORDER_ITEMS_ALL_DATA WHERE PURCHASE_HIST_ID = '{id}' AND PARENT IS NULL ").ToList();
+            var result = _dbContext.Database.SqlQuery<PurchasePoModel>(
+                "SELECT v.*, aoi.MATERIAL_TRANSFER_TICKET_NUMBER as MATERIAL_TRANSFER_TICKET_NUMBER " +
+                "FROM A_V_ORDER_ITEMS_ALL_DATA v " +
+                "LEFT JOIN A_ORDER_ITEMS aoi ON (v.id = aoi.id) " +
+                $"WHERE v.PURCHASE_HIST_ID = '{id}' AND v.PARENT IS NULL "
+            ).ToList();
 
             foreach (var item in result)
             {
