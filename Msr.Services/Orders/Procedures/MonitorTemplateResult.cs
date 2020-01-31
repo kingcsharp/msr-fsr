@@ -101,8 +101,6 @@ namespace Msr.Services.Orders.Procedures
 
         public int? SENSOR_MAPPING_ID { get; set; }
 
-        public string MonitorTaskTitle { get; set; }
-
         public List<SelectListItem> NCRCategoryList { get; set; }
 
         public List<SelectListItem> EquipmentMaintenanceList { get; set; }

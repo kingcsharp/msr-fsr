@@ -605,17 +605,6 @@ namespace Answer.Web.Controllers
 
             WipStepDetailsResponse wipStepDetailsResponse = _orderService.GetWipStepDetails(ref loggedUserIdResult, ref userRoles, stepId, fillId, loggedUserIdResult.Id, phStepId);
             
-            //Set the title for the monitor so it can be passed into the close task web service
-            wipStepDetailsResponse.MonitorTemplateResult.ForEach(monitorTemplateResult =>
-                {
-                    monitorTemplateResult.MonitorTaskTitle = wipStepDetailsResponse.TaskEditDataResult.StepTitle;
-                });
-
-            //Get email for notification
-            var workOrder = _orderService.GetWorkOrderQueryable().FirstOrDefault(s => s.FillId == fillId.ToString());
-            var userView = _userService.GetEmailNotificationUserForWorkOrder(workOrder.CustId, workOrder.CustomerName ,workOrder.RequesteeName, "ClientEngineer");
-            wipStepDetailsResponse.CustomerEmailForNotification = userView.Email;
-
             ViewBag.FillId = fillId;
             ViewBag.IsStepStatusClosed = wipStepDetailsResponse.TaskEditDataResult.Status == "CLOSED";
             ViewBag.HasStepRoles = wipStepDetailsResponse.HasStepRoles;
@@ -629,11 +618,13 @@ namespace Answer.Web.Controllers
             var loggedUser = GetCurrentUser();
             var clientCustomerEmail = _userService.GetAnserByUserName(loggedUser.Login)?.Email;
             var workOrder = _orderService.GetWorkOrderQueryable().FirstOrDefault(s => s.FillId == fillId);
-            var technicianEmail = _userService.GetEmailNotificationUserForWorkOrder(workOrder.CustId, workOrder.CustomerName,
-                workOrder.RequesteeName, "ClientEngineer").Email;
+            
 
             if (workOrder != null)
             {
+                var technicianEmail = _userService.GetEmailNotificationUserForWorkOrder(workOrder.CustId, workOrder.CustomerName,
+                    workOrder.RequesteeName, "ClientEngineer").Email;
+
                 AddNcrNotificationEmailViewModel addNcrNotificationEmailViewModel = new AddNcrNotificationEmailViewModel();
                 addNcrNotificationEmailViewModel.DateReported = DateTime.Now;
                 addNcrNotificationEmailViewModel.Technician = workOrder.CustomerName;
@@ -751,13 +742,6 @@ namespace Answer.Web.Controllers
                     monitorTemplate.StrNtLogin = loggedUserId;
 
                     var fillId = monitorTemplates.FirstOrDefault()?.FillId;
-
-                    if (monitorTemplate.MonitorTaskTitle == "Describe Non-Conformity")
-                    {
-                                
-                        SendNcrEmailNotification(monitorTemplate.FillId.ToString(),monitorTemplate);
-
-                    }
 
                     _orderService.UpdateStepMonitor(monitorTemplate);
                 }

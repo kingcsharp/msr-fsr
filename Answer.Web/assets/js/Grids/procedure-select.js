@@ -68,50 +68,8 @@ function LoadSelectProcedureGrid(parentId, fillId, procedureType, customerEmailF
         ajaxCellOptions: {},
         gridComplete: function () {
             $('.ui-jqgrid').unblock();
-            $(".showLoadingSpinner").on('click', function (arg) {
-
-                
-                if (arg.target.parentNode.dataset['addprocedure'] != null) {
-                    var addProcedureLink = arg.target.parentNode.dataset['addprocedure'];
-                    
-
-                    var customerEmail = arg.target.parentNode.dataset['customeremailfornotification'];
-
-                    if (customerEmail === "") {
-
-                        $.ajax({
-                            type: "GET",
-                            url: "/wip/GetNcrNotificationModal",
-                            dataType: 'html',
-                            success: function (data) {
-                                $('#addNcrModal').modal('hide');
-                                $("#notifyCustomerNcrWasAddedModal  div.modal-body").html(data);
-                                $('#notifyCustomerNcrWasAddedModal').modal('show');
-                                setTimeout(function() {
-                                        $('#addProcedureWithEmailNotification').on('click',
-                                            function(args) {
-                                                window.location = addProcedureLink;
-                                            });
-                                    },
-                                    300);
-                            },
-                            error: function (error) {
-                                
-                            }
-                        });
-                        
-
-                    } else {
-
-                        window.location = addProcedureLink;
-
-                    }
-
-
-                } else {
-                    $('#addNcrModal').modal('hide');
-                }
-
+            $(".addProcSubTask").on('click', function () {
+                $('.ui-jqgrid').block({ message: '<h1><img src="/assets/img/nice_loader.gif" />  Loading. Please wait...</h1>' });
             });
 
         },
@@ -139,7 +97,7 @@ function LoadSelectProcedureGrid(parentId, fillId, procedureType, customerEmailF
     });
 
     function ActionFormatter(cellvalue, options, rowObject) {
-        var attachStep = '<a title="Add Procedure as a Sub Task" data-customeremailfornotification="'+customerEmailForNotification+'" data-addprocedure="/wip/AddProcedureToTask?objId=' + rowObject.Id + '&parentId=' + parentId + '&fillId=' + fillId + '" class="btn btn-xs btn-success showLoadingSpinner" style="margin:2px;font-size: .8em;"><i class="fa fa-link"></i></a>';
+        var attachStep = '<a title="Add Procedure as a Sub Task" href="/wip/AddProcedureToTask?objId=' + rowObject.Id + '&parentId=' + parentId + '&fillId=' + fillId + '" class="btn btn-xs btn-success showLoadingSpinner" style="margin:2px;font-size: .8em;"><i class="fa fa-link"></i></a>';
 
         return attachStep;
     }
