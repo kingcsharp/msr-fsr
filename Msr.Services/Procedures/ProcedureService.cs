@@ -1239,7 +1239,7 @@ namespace Msr.Services.Procedures
                     procedureStepImportProcedure.PrintOrder = item.PRINT_ORDER;
                     procedureStepImportProcedure.RefDocId = item.REF_DOC_ID;
                     procedureStepImportProcedure.Comment = item.COMMENT;
-                    procedureStepImportProcedure.StepTime = item.STEP_TIME;
+                    procedureStepImportProcedure.StepTime = Convert.ToSingle(item.STEP_TIME);
                     procedureStepImportProcedure.ExteraNote = item.EXTRA_NOTE1;
                     procedureStepImportProcedure.DefaultRoleId = item.DefaultRoleId;
                     procedureStepImportProcedure.Serialize = item.SERIALIZE;
