@@ -150,6 +150,7 @@ namespace Msr.Services.PurchesOrder
             }
 
             var sql = $"SELECT * FROM A_V_FILLS_SEARCH WHERE ID IN(" + str + ") AND FILL_OBJ_ID IS NULL and QTY_NEEDS_FILLING > 0";
+
             var fills = _dbContext.Database.SqlQuery<PurchaseOrderFill>(sql).Select(x => new PurchaseOrderFillViewModel()
             {
                 CUST_NAME = x.CUST_NAME,
@@ -209,7 +210,12 @@ namespace Msr.Services.PurchesOrder
         public List<PurchasePoModel> PurchasedOrderOrderItems(string id)
         {
             var accName = "";
-            var result = _dbContext.Database.SqlQuery<PurchasePoModel>($"SELECT * FROM A_V_ORDER_ITEMS_ALL_DATA WHERE PURCHASE_HIST_ID = '{id}' AND PARENT IS NULL ").ToList();
+            var result = _dbContext.Database.SqlQuery<PurchasePoModel>(
+                "SELECT v.*, aoi.MATERIAL_TRANSFER_TICKET_NUMBER as MATERIAL_TRANSFER_TICKET_NUMBER " +
+                "FROM A_V_ORDER_ITEMS_ALL_DATA v " +
+                "LEFT JOIN A_ORDER_ITEMS aoi ON (v.id = aoi.id) " +
+                $"WHERE v.PURCHASE_HIST_ID = '{id}' AND v.PARENT IS NULL "
+            ).ToList();
 
             foreach (var item in result)
             {
@@ -377,7 +383,10 @@ namespace Msr.Services.PurchesOrder
             try
             {
 
-                var orderid = model.ProductPo.Select(x => x.ORDER_ID).FirstOrDefault();
+                var orderid = model
+                    .ProductPo
+                    .Select(x => x.ORDER_ID)
+                    .FirstOrDefault();
 
                 var purchasePoProcedure = new PurchasePoProcedure();
                 purchasePoProcedure.Orderid = orderid;
@@ -386,49 +395,60 @@ namespace Msr.Services.PurchesOrder
                 _dbContext.Database.ExecuteStoredProcedure(purchasePoProcedure);
                 responsePurchase.Entity = purchasePoProcedure.NewID;
 
-                _dbContext.Database.ExecuteSqlCommand("UPDATE A_PURCHASES_HISTORY SET  CUST_PURCH_NUM = '" + model.REFERENCE_PO + "', ACCT_FOR_ALL = '" + model.Root + "' WHERE OBJECT_ID = '" + responsePurchase.Entity + "'");
+                _dbContext.Database.ExecuteSqlCommand(
+                    "UPDATE A_PURCHASES_HISTORY " +
+                    "SET  CUST_PURCH_NUM = '" + model.REFERENCE_PO +
+                    "', ACCT_FOR_ALL = '" + model.Root +
+                    "' WHERE OBJECT_ID = '" + responsePurchase.Entity + "'"
+                );
 
                 var purchasePoViewItemProcedure = new PurchasePoViewItemProcedure();
                 var purchasePoDetailProcedure = new PurchasePoDetailProcedure();
 
-                for (int i = 0; i < model.ProductPo.Count; i++)
-                {
-                    count++;
-                    purchasePoViewItemProcedure.purchObjID = purchasePoProcedure.NewID;
-                    if (purchasePoDetailProcedure.NewID == null)
-                    {
-                        purchasePoViewItemProcedure.orderItemID = null;
+                for (int i = 0; i < model.ProductPo.Count; i++) {
+                    var poCreations = model.ProductPo[i].GroupWO ? 1 : model.ProductPo[i].Qty;
+                    for (var j = 0; j < poCreations; j++) {
+                        purchasePoViewItemProcedure.purchObjID = purchasePoProcedure.NewID;
+
+                        if (purchasePoDetailProcedure.NewID == null) {
+                            purchasePoViewItemProcedure.orderItemID = null;
+                        } else {
+                            purchasePoViewItemProcedure.orderItemID = purchasePoDetailProcedure.NewID;
+                        }
+                        purchasePoViewItemProcedure.qty = model.ProductPo[i].GroupWO ? model.ProductPo[i].Qty.ToString() : "1";
+                        purchasePoViewItemProcedure.acctID = model.Root;
+                        purchasePoViewItemProcedure.strNTLogin = ntLogin;
+                        purchasePoViewItemProcedure.GroupWO = model.ProductPo[i].GroupWO;
+
+                        _dbContext.Database.ExecuteStoredProcedure(purchasePoViewItemProcedure);
+
+                        // The root item (0) is already created, the rest need to be created here.
+                        if (count != 0) {
+                            purchasePoDetailProcedure.strPurchaseObjID = purchasePoProcedure.NewID;
+                            purchasePoDetailProcedure.orderID = model.ProductPo[i].ORDER_ID;
+                            purchasePoDetailProcedure.Strntlogin = ntLogin;
+                            _dbContext.Database.ExecuteStoredProcedure(purchasePoDetailProcedure);
+                        }
+
+                        count++;
                     }
-                    else
-                    {
-                        purchasePoViewItemProcedure.orderItemID = purchasePoDetailProcedure.NewID;
-                    }
-                    purchasePoViewItemProcedure.qty = model.ProductPo[i].Qty.ToString();
-                    purchasePoViewItemProcedure.acctID = model.Root;
-                    purchasePoViewItemProcedure.strNTLogin = ntLogin;
-                    purchasePoViewItemProcedure.GroupWO = model.ProductPo[i].GroupWO;
-
-                    _dbContext.Database.ExecuteStoredProcedure(purchasePoViewItemProcedure);
-
-
-                    if (count != model.ProductPo.Count)
-                    {
-                        purchasePoDetailProcedure.strPurchaseObjID = purchasePoProcedure.NewID;
-                        purchasePoDetailProcedure.orderID = model.ProductPo[i + 1].ORDER_ID;
-                        purchasePoDetailProcedure.Strntlogin = ntLogin;
-                        _dbContext.Database.ExecuteStoredProcedure(purchasePoDetailProcedure);
-
-                    }
-
                 }
 
-                _dbContext.Database.ExecuteSqlCommand("UPDATE A_PURCHASES_HISTORY SET  CUST_PURCH_NUM = '" + model.REFERENCE_PO + "', ACCT_FOR_ALL = '" + model.Root + "' WHERE OBJECT_ID = '" + responsePurchase.Entity + "'");
+                _dbContext.Database.ExecuteSqlCommand(
+                    "UPDATE A_PURCHASES_HISTORY " +
+                    "SET  CUST_PURCH_NUM = '" + model.REFERENCE_PO +
+                    "', ACCT_FOR_ALL = '" + model.Root +
+                    "' WHERE OBJECT_ID = '" + responsePurchase.Entity + "'"
+                );
 
                 var purchase = PurchasedOrderById(responsePurchase.Entity);
 
                 var id = new SqlParameter("@pHistID", purchase.ID);
                 var ntlog = new SqlParameter("@strNTLogin", ntLogin);
-                _dbContext.Database.ExecuteSqlCommand("exec A_SP_PURCHASES_UPDATE_ALL_ACCOUNTS_ON_PURCHASE_ITEMS @pHistID,@strNTLogin", id, ntlog);
+                _dbContext.Database.ExecuteSqlCommand(
+                    "exec A_SP_PURCHASES_UPDATE_ALL_ACCOUNTS_ON_PURCHASE_ITEMS " +
+                    "@pHistID,@strNTLogin", id, ntlog
+                );
 
             }
             catch (Exception ex)
@@ -440,78 +460,6 @@ namespace Msr.Services.PurchesOrder
             }
             return responsePurchase;
         }
-
-        //public ResultNotification<string> PurchasedOrderUpdateAndShowOrderItemList(PurchaseFormAccountViewModel model, string ntLogin)
-        //{
-        //    var responsePurchase = new ResultNotification<string>();
-        //    //int count = 0;
-        //    try
-        //    {
-
-        //        var orderid = model.ProductPo.Select(x => x.ORDER_ID).FirstOrDefault();
-
-        //        var purchasePoProcedure = new PurchasePoProcedure();
-        //        purchasePoProcedure.Orderid = orderid;
-        //        purchasePoProcedure.Strntlogin = ntLogin;
-
-        //        _dbContext.Database.ExecuteStoredProcedure(purchasePoProcedure);
-        //        responsePurchase.Entity = purchasePoProcedure.NewID;
-
-        //        _dbContext.Database.ExecuteSqlCommand("UPDATE A_PURCHASES_HISTORY SET  CUST_PURCH_NUM = '" + model.REFERENCE_PO + "', ACCT_FOR_ALL = '" + model.Root + "' WHERE OBJECT_ID = '" + responsePurchase.Entity + "'");
-
-        //        var purchasePoViewItemProcedure = new PurchasePoViewItemProcedure();
-        //        var purchasePoDetailProcedure = new PurchasePoDetailProcedure();
-
-        //        for (int i = 0; i < model.ProductPo.Count; i++)
-        //        {
-
-        //            //count++;
-        //            var poCreations = model.ProductPo[i].GroupPo ? 1 : model.ProductPo[i].Qty;
-        //            for (var j = 0; j < poCreations; j++)
-        //            {
-        //                purchasePoViewItemProcedure.purchObjID = purchasePoProcedure.NewID;
-
-        //                if (purchasePoDetailProcedure.NewID == null)
-        //                {
-        //                    purchasePoViewItemProcedure.orderItemID = null;
-        //                }
-        //                else
-        //                {
-        //                    purchasePoViewItemProcedure.orderItemID = purchasePoDetailProcedure.NewID;
-        //                }
-        //                purchasePoViewItemProcedure.qty = model.ProductPo[i].GroupPo ? model.ProductPo[i].Qty.ToString() : "1";
-        //                purchasePoViewItemProcedure.acctID = model.Root;
-        //                purchasePoViewItemProcedure.strNTLogin = ntLogin;
-        //                _dbContext.Database.ExecuteStoredProcedure(purchasePoViewItemProcedure);
-
-
-        //                //if (i != model.ProductPo.Count - 1 || j != poCreations - 1)
-        //                //{
-        //                purchasePoDetailProcedure.strPurchaseObjID = purchasePoProcedure.NewID;
-        //                purchasePoDetailProcedure.orderID = model.ProductPo[i].ORDER_ID;
-        //                purchasePoDetailProcedure.Strntlogin = ntLogin;
-        //                _dbContext.Database.ExecuteStoredProcedure(purchasePoDetailProcedure);
-        //            }
-        //        }
-
-        //        _dbContext.Database.ExecuteSqlCommand("UPDATE A_PURCHASES_HISTORY SET  CUST_PURCH_NUM = '" + model.REFERENCE_PO + "', ACCT_FOR_ALL = '" + model.Root + "' WHERE OBJECT_ID = '" + responsePurchase.Entity + "'");
-
-        //        var purchase = PurchasedOrderById(responsePurchase.Entity);
-
-        //        var id = new SqlParameter("@pHistID", purchase.ID);
-        //        var ntlog = new SqlParameter("@strNTLogin", ntLogin);
-        //        _dbContext.Database.ExecuteSqlCommand("exec A_SP_PURCHASES_UPDATE_ALL_ACCOUNTS_ON_PURCHASE_ITEMS @pHistID,@strNTLogin", id, ntlog);
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-
-        //        responsePurchase.AddError(ex.Message);
-
-        //        return responsePurchase;
-        //    }
-        //    return responsePurchase;
-        //}
 
         public ResultNotification<AddPurchaseResponse> Create(NewPurchaseOrderViewModel model)
         {
