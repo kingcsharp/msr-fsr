@@ -2,29 +2,30 @@
 @Html.AntiForgeryToken()
 @Html.HiddenFor(x => x.ObjId)
 <input type="hidden" name="Id" id="Id" value="@Model.Id" />
+<input type="hidden" name="AccountType" id="AccountType" value="PURCHASING_ACCOUNT" />
+<input type="hidden" name="InvoiceTrigger" id="InvoiceTrigger" value="ALL_PURCHASE_ITEMS">
 
 <table class="table" width="100%">
     <tr>
         <th width="20%">Customer:</th>
         <td width="30%">
-            @Html.DropDownListFor(model => model.Client, Model.ClientList, new { @class = "form-control" })
+            @Html.DropDownListFor(model => model.Client, Model.ClientList, new { @class = "form-control", @required="required" })
             @Html.ValidationMessageFor(model => model.Client, "", new { @class = "text-danger" })
         </td>
         <th>PO Name :</th>
         <td>
-            @Html.EditorFor(model => model.POName, new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter PO Name" } })
+            @Html.EditorFor(model => model.POName, new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter PO Name", @required="required" } })
             @Html.ValidationMessageFor(model => model.POName, "", new { @class = "text-danger" })
         </td>
     </tr>
     <tr>
-        <th align="right">Account Type:</th>
+        <th align="right">&nbsp;</th>
         <td>
-            @Html.DropDownListFor(model => model.AccountType, Model.AccountTypeList, new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.AccountType, "", new { @class = "text-danger" })
+            &nbsp;
         </td>
         <th align="right">Reference Cust PO #:</th>
         <td>
-            @Html.EditorFor(model => model.RefCustPO, new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter Reference Customer PO # (typically a blanket PO)" } })
+            @Html.EditorFor(model => model.RefCustPO, new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter Reference Customer PO # (typically a blanket PO)", @required="required" } })
             @Html.ValidationMessageFor(model => model.RefCustPO, "", new { @class = "text-danger" })
         </td>
     </tr>
@@ -39,7 +40,7 @@
         <th align="right">Open Date:</th>
         <td>
             <div class="input-group datepick">
-                @Html.EditorFor(model => model.OpenDate, new { htmlAttributes = new { @class = "form-control datepick" } })
+                @Html.EditorFor(model => model.OpenDate, new { htmlAttributes = new { @class = "form-control datepick", @required="required" } })
                 <span class="input-group-addon">
                     <span class="glyphicon glyphicon-calendar"></span>
                 </span>
@@ -76,56 +77,13 @@
             </div>
         </td>
     </tr>
-    <tr>
-        <th>Invoice Close / Cut Trigger:</th>
-        <td>
-            @Html.DropDownListFor(model => model.InvoiceTrigger, Model.InvoiceTriggerList, new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.InvoiceTrigger, "", new { @class = "text-danger" })
-        </td>
-        <th>Invoice Period :</th>
-        <td nowrap>
-            @Html.EditorFor(model => model.InvoicePeriod, new { htmlAttributes = new { @class = "form-control", @width = "2", @placeholder = "00", @style = "width: 30%;display: inline-block;" } })
-            @Html.ValidationMessageFor(model => model.InvoicePeriod, "", new { @class = "text-danger" })
-            @Html.DropDownListFor(model => model.InvoicePeriodType, Model.InvoicePeriodTypeList, new { @class = "form-control", @style = "width: 68%;display: inline-block;" })
-            @Html.ValidationMessageFor(model => model.InvoicePeriodType, "", new { @class = "text-danger" })
-        </td>
-    </tr>
-    <tr>
-        <th align="right">First Invoice Date:</th>
-        <td>
-            <div class="input-group datepick">
-                @Html.EditorFor(model => model.FirstInvoiceDate, new { htmlAttributes = new { @class = "form-control datepick" } })
-                <span class="input-group-addon">
-                    <span class="glyphicon glyphicon-calendar"></span>
-                </span>
-            </div>
-        </td>
-        <th align="right">Payment Grace Period:</th>
-        <td>
-            @Html.EditorFor(model => model.GracePeriod, new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter Grace Period Days %" } })
-            @Html.ValidationMessageFor(model => model.GracePeriod, "", new { @class = "text-danger" })
-        </td>
-    </tr>
-    <tr>
-        <th align="right">Late Payment Fee:</th>
-        <td>
-            <div class="input-group">
-                @Html.EditorFor(model => model.LatePaymentFee, new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter %" } })
-                @Html.ValidationMessageFor(model => model.LatePaymentFee, "", new { @class = "text-danger" })
-                <span class="input-group-addon">%</span>
-            </div>
-        </td>
-        <th align="right">Re-Apply Frequency:</th>
-        <td>
-            @Html.EditorFor(model => model.ReApplyFrequency, new { htmlAttributes = new { @class = "form-control", @placeholder = "In Days" } })
-            @Html.ValidationMessageFor(model => model.ReApplyFrequency, "", new { @class = "text-danger" })
-        </td>
-    </tr>
+
     <tr>
         <th align="right">Products:</th>
-        <td>
+        <td colspan="3">
             <div>
-                @Html.DropDownListFor(m => m.Products, Model.ProductsList, new { @class = "form-control select select-products" })
+                @Html.DropDownListFor(m => m.Products, Model.ProductsList, new { @class = "form-control select select-products", @required = "required" })
+                @Html.ValidationMessageFor(m => m.Products, "", new { @class = "text-danger" })
             </div>
             <div id="product-message" class="alert-info">
             </div>
