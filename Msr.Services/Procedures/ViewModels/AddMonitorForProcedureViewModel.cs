@@ -55,6 +55,9 @@ namespace Msr.Services.Procedures.ViewModels
         [DisplayName("List Source")]
         public string List_Source { get; set; }
 
+        [DisplayName("Send Notification Email")]
+        public bool SendNcrNotificationEmail { get; set; }
+
         public string Start_System_Task { get; set; }
 
         public string Start_Type { get; set; }

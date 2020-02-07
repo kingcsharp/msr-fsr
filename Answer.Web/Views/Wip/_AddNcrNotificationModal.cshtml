@@ -1,2 +1,64 @@
-﻿
-<p>There is currently no email available to notify the Client\Customer of this work order.</p>
+﻿@model Answer.Web.Controllers.WipController.NcrNotificationViewModel
+
+@using (Html.BeginForm("SendEmailNotification", "Wip", FormMethod.Post, new { @class = "form form-horizontal", role = "form", id="ncrnotificatioemail", name="ncrnotificatioemail" }))
+{
+    <div class="container-fluid">
+        <div class="form-group">
+            <div class="row">
+                @Html.HiddenFor(s => s.FillId)
+                @Html.HiddenFor(s => s.PhStepId)
+                @Html.HiddenFor(s => s.StepId)
+            </div>
+            <div class="row">
+                @if (Model.ClientEmails.Count > 1)
+                {
+                    <div class="col-md-5">
+                        <p>Please select a client/customer to send the notification to</p>
+                    </div>
+
+                }
+                else if (Model.ClientEmails.Count == 1)
+                {
+                    <div class="col-md-5">
+                        <span>Please verify the client/customer email address for this notification</span>
+                    </div>
+
+                }
+                else
+                {
+                    <div class="col-md-5">
+                        <span>There is currently no client\customer assigned to this work order, please enter a recipient for this email notification</span>
+                    </div>
+
+                }
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    @Html.LabelFor(s => Model.EmailDestination)
+                </div>
+            </div>
+            @if (Model.ClientEmails.Count > 1)
+            {
+                <div class="row">
+                    <div class="col-md-5">@Html.DropDownListFor(s => s.EmailDestination, Model.ClientEmails, new {@class = "form-control"})</div>
+                </div>
+
+            }
+            else
+            {
+                <div class="row">
+                    <div class="col-md-5">@Html.TextBoxFor(s => Model.EmailDestination)</div>
+                </div>
+            }
+
+        </div>
+    </div>
+}
+<script>
+
+
+
+
+</script>
+
+

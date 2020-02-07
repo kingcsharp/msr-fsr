@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Hangfire.Annotations;
+using Msr.Services.Orders.Procedures;
 
 namespace Answer.Web.ViewModel.Wip
 {
@@ -19,6 +20,6 @@ namespace Answer.Web.ViewModel.Wip
         public string PartNumber { get; set; }
         public string SerialNumber { get; set; } 
         public string WorkOrderNumber { get; set; }
-        public string DescriptionOfNonCompliance { get; set; }
+        public List<MonitorTemplateResult> MonitorTemplateResults { get; set; }
     }
 }

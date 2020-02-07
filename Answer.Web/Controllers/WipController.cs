@@ -24,6 +24,8 @@ using Msr.Services.Users.Messages;
 using Msr.Web.ViewModel.Engineering;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -238,12 +240,127 @@ namespace Answer.Web.Controllers
             return Json(json, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult GetNcrNotificationModal()
+        public class NcrNotificationViewModel
         {
+            [DisplayName("Client\\Customer Emails")]
+            public List<SelectListItem> ClientEmails { get; set; } = new List<SelectListItem>()
+            {
+                new SelectListItem()
+                {
+                    Text = "john.doe@cmhworks.com",
+                    Value = "robert.lara@cmhworks.com"
+                }
+                /*,
+                new SelectListItem()
+                {
+                    Text = "jane.doe@cmhworks.com",
+                    Value = "robert.lara@cmhworks.com"
+                }*/
+            };
+            
+            public string FillId { get; set; }
 
+            public string StepId { get; set; }
 
-            return PartialView("_AddNcrNotificationModal");
+            public string PhStepId { get; set; }
+
+            [DisplayName("Email Recipient")]
+            public string EmailDestination { get; set; }
+
         }
+
+        public ActionResult GetNcrNotificationModal(string fillId, string stepId, string phStepId)
+        {
+            NcrNotificationViewModel ncrNotificationViewModel = new NcrNotificationViewModel
+            {
+                FillId = fillId,
+                StepId = stepId,
+                PhStepId = phStepId
+            };
+
+            if (ncrNotificationViewModel.ClientEmails.Count == 1)
+            {
+                ncrNotificationViewModel.EmailDestination =
+                    ncrNotificationViewModel.ClientEmails.FirstOrDefault()?.Value;
+            }
+
+            return PartialView("_AddNcrNotificationModal",ncrNotificationViewModel);
+        }
+
+        public ActionResult SendEmailNotification(NcrNotificationViewModel ncrNotificationForm)
+        {
+            int id = Convert.ToInt32(ncrNotificationForm.FillId);
+
+            SendNcrEmailNotification(ncrNotificationForm);
+
+            return RedirectToAction("Details",new {id});
+        }
+
+        
+        private void SendNcrEmailNotification(NcrNotificationViewModel ncrNotificationViewModel)
+        {
+            LoggedUserIdResult loggedUserIdResult = this.LoggedUserIdResult;
+
+            List<GetMyRolesResult> userRoles = _roleService.GetAssignedRoles(loggedUserIdResult.Id);
+
+            WipStepDetailsResponse wipStepDetailsResponse = _orderService.GetWipStepDetails(ref loggedUserIdResult, ref userRoles, Convert.ToInt32(ncrNotificationViewModel.StepId), Convert.ToInt32(ncrNotificationViewModel.FillId), loggedUserIdResult.Id, Convert.ToInt32(ncrNotificationViewModel.PhStepId));
+
+
+            var workOrder = _orderService.GetWorkOrderQueryable().FirstOrDefault(s => s.FillId == ncrNotificationViewModel.FillId);
+            
+
+            if (workOrder != null)
+            {
+                var technicianEmail =
+                    _userService.GetUserByObjectId(wipStepDetailsResponse.LoggedUserIdResult.Object_Id)?.Email;
+
+                AddNcrNotificationEmailViewModel addNcrNotificationEmailViewModel = new AddNcrNotificationEmailViewModel();
+                addNcrNotificationEmailViewModel.DateReported = DateTime.Now;
+                addNcrNotificationEmailViewModel.Technician = workOrder.CustomerName;
+                addNcrNotificationEmailViewModel.PartName = workOrder.ProductName;
+                addNcrNotificationEmailViewModel.PartNumber = workOrder.ProcId;
+                addNcrNotificationEmailViewModel.SerialNumber = workOrder.Serial;
+                addNcrNotificationEmailViewModel.WorkOrderNumber = ncrNotificationViewModel.FillId;
+                addNcrNotificationEmailViewModel.MonitorTemplateResults = wipStepDetailsResponse.MonitorTemplateResult.ToList();
+
+
+                string str = RenderPartialToString(this, "_NcrEmailNotificationBodyContent", addNcrNotificationEmailViewModel, ViewData, TempData);
+
+                string fromEmail = technicianEmail;
+                string toEmail = ncrNotificationViewModel.EmailDestination;
+                string subject = $"Non-Conformity Reported on {ncrNotificationViewModel.FillId}";
+                string body = str;
+                List<string> ccList = new List<string>();
+                bool isHtml = true;
+
+                EmailService.SendEmail(fromEmail, toEmail, subject, body, ccList, isHtml);
+            }
+
+        }
+
+        public static string RenderPartialToString(Controller controller, string partialViewName, object model, ViewDataDictionary viewData, TempDataDictionary tempData)
+        {
+            ViewEngineResult result = ViewEngines.Engines.FindPartialView(controller.ControllerContext, partialViewName);
+
+            if (result.View != null)
+            {
+                controller.ViewData.Model = model;
+                StringBuilder sb = new StringBuilder();
+                using (StringWriter sw = new StringWriter(sb))
+                {
+                    using (HtmlTextWriter output = new HtmlTextWriter(sw))
+                    {
+                        ViewContext viewContext = new ViewContext(controller.ControllerContext, result.View, viewData, tempData, output);
+                        result.View.Render(viewContext, output);
+                    }
+                }
+
+                return sb.ToString();
+            }
+
+            return String.Empty;
+        }
+
 
         public ActionResult GetNcrModel(string id)
         {
@@ -612,66 +729,6 @@ namespace Answer.Web.Controllers
             return PartialView("_InitialInspection", wipStepDetailsResponse);
         }
 
-        private void SendNcrEmailNotification(string fillId, MonitorTemplateResult monitorTemplateResult)
-        {
-           
-            var loggedUser = GetCurrentUser();
-            var clientCustomerEmail = _userService.GetAnserByUserName(loggedUser.Login)?.Email;
-            var workOrder = _orderService.GetWorkOrderQueryable().FirstOrDefault(s => s.FillId == fillId);
-            
-
-            if (workOrder != null)
-            {
-                var technicianEmail = _userService.GetEmailNotificationUserForWorkOrder(workOrder.CustId, workOrder.CustomerName,
-                    workOrder.RequesteeName, "ClientEngineer").Email;
-
-                AddNcrNotificationEmailViewModel addNcrNotificationEmailViewModel = new AddNcrNotificationEmailViewModel();
-                addNcrNotificationEmailViewModel.DateReported = DateTime.Now;
-                addNcrNotificationEmailViewModel.Technician = workOrder.CustomerName;
-                addNcrNotificationEmailViewModel.PartName = workOrder.ProductName;
-                addNcrNotificationEmailViewModel.PartNumber = workOrder.ProcId;
-                addNcrNotificationEmailViewModel.SerialNumber = workOrder.Serial;
-                addNcrNotificationEmailViewModel.WorkOrderNumber = fillId;
-                addNcrNotificationEmailViewModel.DescriptionOfNonCompliance = monitorTemplateResult.Comment;
-
-
-                string str = RenderPartialToString(this, "_NcrEmailNotificationBodyContent", addNcrNotificationEmailViewModel, ViewData, TempData);
-
-                string fromEmail = technicianEmail;
-                string toEmail = clientCustomerEmail;
-                string subject = $"Non-Conformity Reported on {fillId}";
-                string body = str;
-                List<string> ccList = new List<string>();
-                bool isHtml = true;
-
-                EmailService.SendEmail(fromEmail, toEmail, subject, body, ccList, isHtml);
-            }
-
-        }
-
-        public static string RenderPartialToString(Controller controller, string partialViewName, object model, ViewDataDictionary viewData, TempDataDictionary tempData)
-        {
-            ViewEngineResult result = ViewEngines.Engines.FindPartialView(controller.ControllerContext, partialViewName);
-
-            if (result.View != null)
-            {
-                controller.ViewData.Model = model;
-                StringBuilder sb = new StringBuilder();
-                using (StringWriter sw = new StringWriter(sb))
-                {
-                    using (HtmlTextWriter output = new HtmlTextWriter(sw))
-                    {
-                        ViewContext viewContext = new ViewContext(controller.ControllerContext, result.View, viewData, tempData, output);
-                        result.View.Render(viewContext, output);
-                    }
-                }
-
-                return sb.ToString();
-            }
-
-            return String.Empty;
-        }
-
         [HttpPost]
         public ActionResult UpdateStepMonitor(List<MonitorTemplateResult> monitorTemplates)
         {
@@ -733,6 +790,7 @@ namespace Answer.Web.Controllers
         [HttpPost]
         public ActionResult UpdateStepMonitorAndClose(List<MonitorTemplateResult> monitorTemplates)
         {
+            
             if (ModelState.IsValid)
             {
                 var loggedUserId = GetCurrentUser().Id;
@@ -756,7 +814,7 @@ namespace Answer.Web.Controllers
                 if (returnValue == "NEW_TEXT")
                     return Json("OK", JsonRequestBehavior.AllowGet);
             }
-
+            
             return Json("OK", JsonRequestBehavior.AllowGet);
         }
 

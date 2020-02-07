@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Mvc;
 using Msr.Models.Sensor;
 using System.ComponentModel.DataAnnotations.Schema;
+using iTextSharp.text.pdf;
 using Msr.Models.EquipmentMaintenances;
 
 namespace Msr.Services.Orders.Procedures
@@ -94,6 +95,8 @@ namespace Msr.Services.Orders.Procedures
         public string Mult_Choice_Answer { get; set; }
 
         public string Target_Object { get; set; }
+        //TODO: Replace when you do database update
+        public bool SendEmailClient { get; set; } = true;
 
         //[Column("SENSOR_MAPPING_ID")]
 
