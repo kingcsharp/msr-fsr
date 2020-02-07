@@ -14,6 +14,8 @@ using Msr.Models.Tasks;
 using Msr.Models.Workflows;
 using Msr.Services.Users.Messages;
 using Msr.Models.Products;
+using Msr.Models.ActualParts;
+using Msr.Services.Orders.Procedures;
 
 namespace Msr.Services.PurchesOrder
 {
@@ -150,6 +152,7 @@ namespace Msr.Services.PurchesOrder
             }
 
             var sql = $"SELECT * FROM A_V_FILLS_SEARCH WHERE ID IN(" + str + ") AND FILL_OBJ_ID IS NULL and QTY_NEEDS_FILLING > 0";
+
             var fills = _dbContext.Database.SqlQuery<PurchaseOrderFill>(sql).Select(x => new PurchaseOrderFillViewModel()
             {
                 CUST_NAME = x.CUST_NAME,
@@ -209,7 +212,12 @@ namespace Msr.Services.PurchesOrder
         public List<PurchasePoModel> PurchasedOrderOrderItems(string id)
         {
             var accName = "";
-            var result = _dbContext.Database.SqlQuery<PurchasePoModel>($"SELECT * FROM A_V_ORDER_ITEMS_ALL_DATA WHERE PURCHASE_HIST_ID = '{id}' AND PARENT IS NULL ").ToList();
+            var result = _dbContext.Database.SqlQuery<PurchasePoModel>(
+                "SELECT v.*, aoi.MATERIAL_TRANSFER_TICKET_NUMBER as MATERIAL_TRANSFER_TICKET_NUMBER " +
+                "FROM A_V_ORDER_ITEMS_ALL_DATA v " +
+                "LEFT JOIN A_ORDER_ITEMS aoi ON (v.id = aoi.id) " +
+                $"WHERE v.PURCHASE_HIST_ID = '{id}' AND v.PARENT IS NULL "
+            ).ToList();
 
             foreach (var item in result)
             {
@@ -377,7 +385,10 @@ namespace Msr.Services.PurchesOrder
             try
             {
 
-                var orderid = model.ProductPo.Select(x => x.ORDER_ID).FirstOrDefault();
+                var orderid = model
+                    .ProductPo
+                    .Select(x => x.ORDER_ID)
+                    .FirstOrDefault();
 
                 var purchasePoProcedure = new PurchasePoProcedure();
                 purchasePoProcedure.Orderid = orderid;
@@ -386,49 +397,71 @@ namespace Msr.Services.PurchesOrder
                 _dbContext.Database.ExecuteStoredProcedure(purchasePoProcedure);
                 responsePurchase.Entity = purchasePoProcedure.NewID;
 
-                _dbContext.Database.ExecuteSqlCommand("UPDATE A_PURCHASES_HISTORY SET  CUST_PURCH_NUM = '" + model.REFERENCE_PO + "', ACCT_FOR_ALL = '" + model.Root + "' WHERE OBJECT_ID = '" + responsePurchase.Entity + "'");
+                _dbContext.Database.ExecuteSqlCommand(
+                    "UPDATE A_PURCHASES_HISTORY " +
+                    "SET CUST_PURCH_NUM = @p1 ," +
+                    "ACCT_FOR_ALL = @p2 " +
+                    "WHERE OBJECT_ID = @p3",
+                    new SqlParameter { ParameterName = "p1", Value = model.REFERENCE_PO},
+                    new SqlParameter { ParameterName = "p2", Value = model.Root},
+                    new SqlParameter { ParameterName = "p3", Value = responsePurchase.Entity}
+                );
 
                 var purchasePoViewItemProcedure = new PurchasePoViewItemProcedure();
                 var purchasePoDetailProcedure = new PurchasePoDetailProcedure();
 
-                for (int i = 0; i < model.ProductPo.Count; i++)
-                {
-                    count++;
-                    purchasePoViewItemProcedure.purchObjID = purchasePoProcedure.NewID;
-                    if (purchasePoDetailProcedure.NewID == null)
-                    {
-                        purchasePoViewItemProcedure.orderItemID = null;
+                for (int i = 0; i < model.ProductPo.Count; i++) {
+                    var poCreations = model.ProductPo[i].GroupWO ? 1 : model.ProductPo[i].Qty;
+                    for (var j = 0; j < poCreations; j++) {
+                        purchasePoViewItemProcedure.purchObjID = purchasePoProcedure.NewID;
+
+                        if (purchasePoDetailProcedure.NewID == null) {
+                            purchasePoViewItemProcedure.orderItemID = null;
+                        } else {
+                            purchasePoViewItemProcedure.orderItemID = purchasePoDetailProcedure.NewID;
+                        }
+                        purchasePoViewItemProcedure.qty = model.ProductPo[i].GroupWO ? model.ProductPo[i].Qty.ToString() : "1";
+                        purchasePoViewItemProcedure.acctID = model.Root;
+                        purchasePoViewItemProcedure.strNTLogin = ntLogin;
+                        purchasePoViewItemProcedure.GroupWO = model.ProductPo[i].GroupWO;
+
+                        _dbContext.Database.ExecuteStoredProcedure(purchasePoViewItemProcedure);
+
+                        // The root item (0) is already created, the rest need to be created here.
+                        if (count != 0) {
+                            purchasePoDetailProcedure.strPurchaseObjID = purchasePoProcedure.NewID;
+                            purchasePoDetailProcedure.orderID = model.ProductPo[i].ORDER_ID;
+                            purchasePoDetailProcedure.Strntlogin = ntLogin;
+                            _dbContext.Database.ExecuteStoredProcedure(purchasePoDetailProcedure);
+                        }
+
+                        count++;
                     }
-                    else
-                    {
-                        purchasePoViewItemProcedure.orderItemID = purchasePoDetailProcedure.NewID;
-                    }
-                    purchasePoViewItemProcedure.qty = model.ProductPo[i].Qty.ToString();
-                    purchasePoViewItemProcedure.acctID = model.Root;
-                    purchasePoViewItemProcedure.strNTLogin = ntLogin;
-                    purchasePoViewItemProcedure.GroupWO = model.ProductPo[i].GroupWO;
-
-                    _dbContext.Database.ExecuteStoredProcedure(purchasePoViewItemProcedure);
-
-
-                    if (count != model.ProductPo.Count)
-                    {
-                        purchasePoDetailProcedure.strPurchaseObjID = purchasePoProcedure.NewID;
-                        purchasePoDetailProcedure.orderID = model.ProductPo[i + 1].ORDER_ID;
-                        purchasePoDetailProcedure.Strntlogin = ntLogin;
-                        _dbContext.Database.ExecuteStoredProcedure(purchasePoDetailProcedure);
-
-                    }
-
                 }
 
-                _dbContext.Database.ExecuteSqlCommand("UPDATE A_PURCHASES_HISTORY SET  CUST_PURCH_NUM = '" + model.REFERENCE_PO + "', ACCT_FOR_ALL = '" + model.Root + "' WHERE OBJECT_ID = '" + responsePurchase.Entity + "'");
+                // TODO: this is a duplicate update statement to the one on line 400.
+                // It might not be necessary.  Or this might be the important one
+                // and the other is useless.  Who knows.
+                _dbContext.Database.ExecuteSqlCommand(
+                    "UPDATE A_PURCHASES_HISTORY " +
+                    "SET CUST_PURCH_NUM = @p1 ," +
+                    "ACCT_FOR_ALL = @p2 " +
+                    "WHERE OBJECT_ID = @p3",
+                    new SqlParameter { ParameterName = "p1", Value = model.REFERENCE_PO},
+                    new SqlParameter { ParameterName = "p2", Value = model.Root},
+                    new SqlParameter { ParameterName = "p3", Value = responsePurchase.Entity}
+                );
 
                 var purchase = PurchasedOrderById(responsePurchase.Entity);
 
                 var id = new SqlParameter("@pHistID", purchase.ID);
                 var ntlog = new SqlParameter("@strNTLogin", ntLogin);
-                _dbContext.Database.ExecuteSqlCommand("exec A_SP_PURCHASES_UPDATE_ALL_ACCOUNTS_ON_PURCHASE_ITEMS @pHistID,@strNTLogin", id, ntlog);
+                var s = "exec A_SP_PURCHASES_UPDATE_ALL_ACCOUNTS_ON_PURCHASE_ITEMS " +
+                        "@pHistID='" + purchase.ID + "', @strNTLogin='"+ntLogin+"'";
+                _dbContext.Database.ExecuteSqlCommand(
+                    "exec A_SP_PURCHASES_UPDATE_ALL_ACCOUNTS_ON_PURCHASE_ITEMS " +
+                    "@pHistID,@strNTLogin", id, ntlog
+                );
 
             }
             catch (Exception ex)
@@ -440,78 +473,6 @@ namespace Msr.Services.PurchesOrder
             }
             return responsePurchase;
         }
-
-        //public ResultNotification<string> PurchasedOrderUpdateAndShowOrderItemList(PurchaseFormAccountViewModel model, string ntLogin)
-        //{
-        //    var responsePurchase = new ResultNotification<string>();
-        //    //int count = 0;
-        //    try
-        //    {
-
-        //        var orderid = model.ProductPo.Select(x => x.ORDER_ID).FirstOrDefault();
-
-        //        var purchasePoProcedure = new PurchasePoProcedure();
-        //        purchasePoProcedure.Orderid = orderid;
-        //        purchasePoProcedure.Strntlogin = ntLogin;
-
-        //        _dbContext.Database.ExecuteStoredProcedure(purchasePoProcedure);
-        //        responsePurchase.Entity = purchasePoProcedure.NewID;
-
-        //        _dbContext.Database.ExecuteSqlCommand("UPDATE A_PURCHASES_HISTORY SET  CUST_PURCH_NUM = '" + model.REFERENCE_PO + "', ACCT_FOR_ALL = '" + model.Root + "' WHERE OBJECT_ID = '" + responsePurchase.Entity + "'");
-
-        //        var purchasePoViewItemProcedure = new PurchasePoViewItemProcedure();
-        //        var purchasePoDetailProcedure = new PurchasePoDetailProcedure();
-
-        //        for (int i = 0; i < model.ProductPo.Count; i++)
-        //        {
-
-        //            //count++;
-        //            var poCreations = model.ProductPo[i].GroupPo ? 1 : model.ProductPo[i].Qty;
-        //            for (var j = 0; j < poCreations; j++)
-        //            {
-        //                purchasePoViewItemProcedure.purchObjID = purchasePoProcedure.NewID;
-
-        //                if (purchasePoDetailProcedure.NewID == null)
-        //                {
-        //                    purchasePoViewItemProcedure.orderItemID = null;
-        //                }
-        //                else
-        //                {
-        //                    purchasePoViewItemProcedure.orderItemID = purchasePoDetailProcedure.NewID;
-        //                }
-        //                purchasePoViewItemProcedure.qty = model.ProductPo[i].GroupPo ? model.ProductPo[i].Qty.ToString() : "1";
-        //                purchasePoViewItemProcedure.acctID = model.Root;
-        //                purchasePoViewItemProcedure.strNTLogin = ntLogin;
-        //                _dbContext.Database.ExecuteStoredProcedure(purchasePoViewItemProcedure);
-
-
-        //                //if (i != model.ProductPo.Count - 1 || j != poCreations - 1)
-        //                //{
-        //                purchasePoDetailProcedure.strPurchaseObjID = purchasePoProcedure.NewID;
-        //                purchasePoDetailProcedure.orderID = model.ProductPo[i].ORDER_ID;
-        //                purchasePoDetailProcedure.Strntlogin = ntLogin;
-        //                _dbContext.Database.ExecuteStoredProcedure(purchasePoDetailProcedure);
-        //            }
-        //        }
-
-        //        _dbContext.Database.ExecuteSqlCommand("UPDATE A_PURCHASES_HISTORY SET  CUST_PURCH_NUM = '" + model.REFERENCE_PO + "', ACCT_FOR_ALL = '" + model.Root + "' WHERE OBJECT_ID = '" + responsePurchase.Entity + "'");
-
-        //        var purchase = PurchasedOrderById(responsePurchase.Entity);
-
-        //        var id = new SqlParameter("@pHistID", purchase.ID);
-        //        var ntlog = new SqlParameter("@strNTLogin", ntLogin);
-        //        _dbContext.Database.ExecuteSqlCommand("exec A_SP_PURCHASES_UPDATE_ALL_ACCOUNTS_ON_PURCHASE_ITEMS @pHistID,@strNTLogin", id, ntlog);
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-
-        //        responsePurchase.AddError(ex.Message);
-
-        //        return responsePurchase;
-        //    }
-        //    return responsePurchase;
-        //}
 
         public ResultNotification<AddPurchaseResponse> Create(NewPurchaseOrderViewModel model)
         {
@@ -613,7 +574,27 @@ namespace Msr.Services.PurchesOrder
                     };
                     _dbContext.Database.ExecuteStoredProcedure(fillWithPartAndSerialNumberProcedure);
 
+                    // We need to reset any existing serials in copied actual parts.
 
+                    // First, get object ID of actual part
+                    ActualPartsView apart = _dbContext.ActualPartsViews.Where(x =>
+                        x.PartId == item.OBJ_PROD_APPLIES_TO &&
+                        x.Serial == item.SERIAL_NUMBER
+                    ).First();
+
+                    if (apart != null) {
+                        // Next, get any sub parts
+                        IQueryable<ActualPartsView> subPartsQ = _dbContext.ActualPartsViews.Where(x =>
+                            x.ParentId == apart.ObjectId
+                        );
+
+                        if (subPartsQ.Any()) {
+                            // Finally, update the actual (sub) part with a blank serial and task
+                            foreach (ActualPartsView v in subPartsQ.ToList()){
+                                UpdatePart(Int32.Parse(v.ObjectId), "", ntLogin);
+                            }
+                        }
+                    }
                 }
                 responsePurchase.SuccessMessage = "Success";
                 return responsePurchase;
@@ -640,6 +621,28 @@ namespace Msr.Services.PurchesOrder
             _dbContext.Database.ExecuteSqlCommand($"UPDATE A_ACCOUNTS_HISTORY SET CLOSE_DATE = getDate(), DRCM = getDate(), modby= " + ntlogin + " WHERE OBJECT_ID = " + id + "");
 
             return "";
+        }
+
+        // Update info on a part, usually a sub-part.  This uses the
+        // same procedure as OrderService.UpdateRootPart, but the task ID
+        // is set to 0.
+        public int UpdatePart(int partObjectId, string serial, string login)
+        {
+            // Note the IDs used here.  The "partId" refers to an actual, physical
+            // part.  What we need is the "ObjectId" of the part, and pass that
+            // into the stored procedure, which will select the first partID + serial
+            // combo it finds, or create it if it doesn't exist.
+            // Later, in the "serialize" step of the WO, if the user changes the serial,
+            // this procedure will also be used to create a _new_ actual part with the
+            // new serial number.
+            int result = _dbContext.Database.ExecuteSqlCommand("exec A_SP_ACTUAL_PART_UPDATE_SERIAL_FROM_SERIALIZE_TASK " +
+                "@ID, @taskID, @SN, @strNTLogin",
+                new SqlParameter {ParameterName = "ID", Value = partObjectId},
+                new SqlParameter {ParameterName = "taskID", Value = 0},
+                new SqlParameter {ParameterName = "SN", Value = serial},
+                new SqlParameter {ParameterName = "strNTLogin", Value = login}
+            );
+            return result;
         }
 
     }

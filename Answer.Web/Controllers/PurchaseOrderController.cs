@@ -408,7 +408,10 @@ namespace Answer.Web.Controllers
         {
             if (model.FillList.Count > 0)
             {
-                _purchesOrderService.SavePurchaseMultiFill(model, GetCurrentUser().Id);
+                var resp = _purchesOrderService.SavePurchaseMultiFill(model, GetCurrentUser().Id);
+                if (resp.HasErrors()) {
+                    TempData["ErrorMessage"] = resp.ErrorMessage;
+                }
 
                 return RedirectToAction("PurchaseOrderMultifillPage", new { id = model.PurchaseApprovedData.OBJECT_ID });
             }
