@@ -14,6 +14,8 @@ using Msr.Models.Tasks;
 using Msr.Models.Workflows;
 using Msr.Services.Users.Messages;
 using Msr.Models.Products;
+using Msr.Models.ActualParts;
+using Msr.Services.Orders.Procedures;
 
 namespace Msr.Services.PurchesOrder
 {
@@ -445,6 +447,8 @@ namespace Msr.Services.PurchesOrder
 
                 var id = new SqlParameter("@pHistID", purchase.ID);
                 var ntlog = new SqlParameter("@strNTLogin", ntLogin);
+                var s = "exec A_SP_PURCHASES_UPDATE_ALL_ACCOUNTS_ON_PURCHASE_ITEMS " +
+                        "@pHistID='" + purchase.ID + "', @strNTLogin='"+ntLogin+"'";
                 _dbContext.Database.ExecuteSqlCommand(
                     "exec A_SP_PURCHASES_UPDATE_ALL_ACCOUNTS_ON_PURCHASE_ITEMS " +
                     "@pHistID,@strNTLogin", id, ntlog
@@ -561,7 +565,27 @@ namespace Msr.Services.PurchesOrder
                     };
                     _dbContext.Database.ExecuteStoredProcedure(fillWithPartAndSerialNumberProcedure);
 
+                    // We need to reset any existing serials in copied actual parts.
 
+                    // First, get object ID of actual part
+                    ActualPartsView apart = _dbContext.ActualPartsViews.Where(x =>
+                        x.PartId == item.OBJ_PROD_APPLIES_TO &&
+                        x.Serial == item.SERIAL_NUMBER
+                    ).First();
+
+                    if (apart != null) {
+                        // Next, get any sub parts
+                        IQueryable<ActualPartsView> subPartsQ = _dbContext.ActualPartsViews.Where(x =>
+                            x.ParentId == apart.ObjectId
+                        );
+
+                        if (subPartsQ.Any()) {
+                            // Finally, update the actual (sub) part with a blank serial and task
+                            foreach (ActualPartsView v in subPartsQ.ToList()){
+                                UpdatePart(Int32.Parse(v.ObjectId), "", ntLogin);
+                            }
+                        }
+                    }
                 }
                 responsePurchase.SuccessMessage = "Success";
                 return responsePurchase;
@@ -588,6 +612,28 @@ namespace Msr.Services.PurchesOrder
             _dbContext.Database.ExecuteSqlCommand($"UPDATE A_ACCOUNTS_HISTORY SET CLOSE_DATE = getDate(), DRCM = getDate(), modby= " + ntlogin + " WHERE OBJECT_ID = " + id + "");
 
             return "";
+        }
+
+        // Update info on a part, usually a sub-part.  This uses the
+        // same procedure as OrderService.UpdateRootPart, but the task ID
+        // is set to 0.
+        public int UpdatePart(int partObjectId, string serial, string login)
+        {
+            // Note the IDs used here.  The "partId" refers to an actual, physical
+            // part.  What we need is the "ObjectId" of the part, and pass that
+            // into the stored procedure, which will select the first partID + serial
+            // combo it finds, or create it if it doesn't exist.
+            // Later, in the "serialize" step of the WO, if the user changes the serial,
+            // this procedure will also be used to create a _new_ actual part with the
+            // new serial number.
+            int result = _dbContext.Database.ExecuteSqlCommand("exec A_SP_ACTUAL_PART_UPDATE_SERIAL_FROM_SERIALIZE_TASK " +
+                "@ID, @taskID, @SN, @strNTLogin",
+                new SqlParameter {ParameterName = "ID", Value = partObjectId},
+                new SqlParameter {ParameterName = "taskID", Value = 0},
+                new SqlParameter {ParameterName = "SN", Value = serial},
+                new SqlParameter {ParameterName = "strNTLogin", Value = login}
+            );
+            return result;
         }
 
     }
