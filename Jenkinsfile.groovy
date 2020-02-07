@@ -86,8 +86,7 @@ pipeline {
                 }
             }
         }
-
-         */
+        */
         stage("Process Transforms") {
             steps {
                 script {
