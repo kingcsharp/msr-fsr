@@ -1,6 +1,6 @@
-﻿@model Answer.Web.Controllers.WipController.NcrNotificationViewModel
+﻿@model Answer.Web.ViewModel.Wip.NcrNotificationViewModel
 
-@using (Html.BeginForm("SendEmailNotification", "Wip", FormMethod.Post, new { @class = "form form-horizontal", role = "form", id="ncrnotificatioemail", name="ncrnotificatioemail" }))
+@using (Html.BeginForm("SendEmailNotification", "Wip", FormMethod.Post, new { @class = "form form-horizontal", role = "form", id = "ncrnotificatioemail", name = "ncrnotificatioemail" }))
 {
     <div class="container-fluid">
         <div class="form-group">
@@ -40,7 +40,7 @@
             @if (Model.ClientEmails.Count > 1)
             {
                 <div class="row">
-                    <div class="col-md-5">@Html.DropDownListFor(s => s.EmailDestination, Model.ClientEmails, new {@class = "form-control"})</div>
+                    <div class="col-md-5">@Html.DropDownListFor(s => s.EmailDestination, Model.ClientEmails, new { @class = "form-control" })</div>
                 </div>
 
             }

@@ -26,10 +26,10 @@ namespace Msr.Services.Users
             _dbContext = new MsrDbContext();
         }
 
-        public UserView GetEmailNotificationUserForWorkOrder(string companyId, string companyName, string screenName, string roleName)
+        public ICollection<UserView> GetEmailNotificationUserForWorkOrder(string companyId, string companyName, string roleName)
         {
-            var userView = _dbContext.UserViews.FirstOrDefault(s => s.CompanyId == companyId && s.CompanyName == companyName
-                                                                              && s.FullName == screenName && s.RoleName == roleName);
+            var userView = _dbContext.UserViews.Where(s => s.CompanyId == companyId && s.CompanyName == companyName
+                                                                              && s.RoleName == roleName).ToList();
 
             return userView;
         }

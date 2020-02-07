@@ -28,6 +28,8 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.Mail;
+using System.Net.Mime;
 using System.Text;
 using System.Web.Mvc;
 using Newtonsoft.Json;
@@ -38,6 +40,7 @@ using Msr.Services.CustomerRequirements.ViewModel;
 using Msr.Services.ProductionPlanning;
 using Msr.Services.Quotes;
 using Msr.Services.Users;
+using Syncfusion.EJ2.Linq;
 
 namespace Answer.Web.Controllers
 {
@@ -240,39 +243,36 @@ namespace Answer.Web.Controllers
             return Json(json, JsonRequestBehavior.AllowGet);
         }
 
-        public class NcrNotificationViewModel
-        {
-            [DisplayName("Client\\Customer Emails")]
-            public List<SelectListItem> ClientEmails { get; set; } = new List<SelectListItem>()
-            {
-                new SelectListItem()
-                {
-                    Text = "john.doe@cmhworks.com",
-                    Value = "robert.lara@cmhworks.com"
-                }
-                /*,
-                new SelectListItem()
-                {
-                    Text = "jane.doe@cmhworks.com",
-                    Value = "robert.lara@cmhworks.com"
-                }*/
-            };
-            
-            public string FillId { get; set; }
-
-            public string StepId { get; set; }
-
-            public string PhStepId { get; set; }
-
-            [DisplayName("Email Recipient")]
-            public string EmailDestination { get; set; }
-
-        }
-
         public ActionResult GetNcrNotificationModal(string fillId, string stepId, string phStepId)
         {
+            LoggedUserIdResult loggedUserIdResult = this.LoggedUserIdResult;
+            var currentUser = GetCurrentUser();
+
+            List<GetMyRolesResult> userRoles = _roleService.GetAssignedRoles(loggedUserIdResult.Id);
+
+            var workOrder = _orderService.GetWorkOrderQueryable()
+                .FirstOrDefault(x => x.RequesteeId == currentUser.Id && x.FillId == fillId);
+
+            var companyId = workOrder?.CustId;
+            var companyName = workOrder?.CustomerName;
+            var roleName = "ClientEngineer";
+
+            var users = _userService.GetEmailNotificationUserForWorkOrder(companyId,companyName,roleName);
+            
+            List<SelectListItem> userEmailOptions = new List<SelectListItem>();
+
+            users.ForEach(user =>
+            {
+                userEmailOptions.Add(new SelectListItem()
+                {
+                    Text = user.FullName,
+                    Value = user.Email
+                });
+            });
+
             NcrNotificationViewModel ncrNotificationViewModel = new NcrNotificationViewModel
             {
+                ClientEmails =  userEmailOptions,
                 FillId = fillId,
                 StepId = stepId,
                 PhStepId = phStepId
@@ -326,16 +326,57 @@ namespace Answer.Web.Controllers
 
                 string str = RenderPartialToString(this, "_NcrEmailNotificationBodyContent", addNcrNotificationEmailViewModel, ViewData, TempData);
 
+                string htmlString = GenerateHtmlForReport(ncrNotificationViewModel.FillId);
+                var pdfStream = GeneratePdfFromHtml(htmlString);
+                Attachment attachment = new Attachment(pdfStream,$"NCRReport-{ncrNotificationViewModel.FillId}.pdf",MediaTypeNames.Application.Pdf);
                 string fromEmail = technicianEmail;
-                string toEmail = ncrNotificationViewModel.EmailDestination;
                 string subject = $"Non-Conformity Reported on {ncrNotificationViewModel.FillId}";
                 string body = str;
                 List<string> ccList = new List<string>();
                 bool isHtml = true;
+                string toEmail = string.Empty;
+#if DEBUG
+                toEmail = technicianEmail;
+#else
+     toEmail = ncrNotificationViewModel.EmailDestination;
+#endif
+                
 
-                EmailService.SendEmail(fromEmail, toEmail, subject, body, ccList, isHtml);
+                EmailService.SendEmail(fromEmail, toEmail, subject, body, ccList, isHtml,attachment);
             }
 
+        }
+
+        private Stream GeneratePdfFromHtml(string html)
+        {
+
+            IronPdf.License.LicenseKey = "IRONPDF-138372CE75-686825-423338-419A44C0B1-F5AA4668-UEx8129778D4BA18D8-CMHWORKSLLC.IRO190627.4855.33211.PRO.1DEV.1YR.SUPPORTED.UNTIL.27.JUN.2020";
+            IronPdf.HtmlToPdf Renderer = new IronPdf.HtmlToPdf();
+            var pdfDocument = Renderer.RenderHtmlAsPdf(html);
+            return pdfDocument.Stream;
+
+        }
+
+        private string GenerateHtmlForReport(string fillId)
+        {
+            var currentUser = GetCurrentUser();
+
+            var orderService = new OrderService();
+            var taskService = new TaskService();
+            var ncrDetails = orderService.GetNcrDetails(fillId);
+
+            var docs = orderService.GetDocuments(ncrDetails.Details.FillObjId);
+
+            var photos = GetDocViewModel(docs, orderService, 400);
+            ncrDetails.Photos = photos;
+
+            var response = taskService.GetTaskWithMonitors(fillId, currentUser.Id);
+
+            ncrDetails.MonitorItem = response.MonitorItem;
+
+            string htmlString = RenderPartialToString(this, "_ViewNcrTsr", ncrDetails, ViewData, TempData);
+
+            return htmlString;
         }
 
         public static string RenderPartialToString(Controller controller, string partialViewName, object model, ViewDataDictionary viewData, TempDataDictionary tempData)
