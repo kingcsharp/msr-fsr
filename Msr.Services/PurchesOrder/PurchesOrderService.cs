@@ -399,9 +399,12 @@ namespace Msr.Services.PurchesOrder
 
                 _dbContext.Database.ExecuteSqlCommand(
                     "UPDATE A_PURCHASES_HISTORY " +
-                    "SET  CUST_PURCH_NUM = '" + model.REFERENCE_PO +
-                    "', ACCT_FOR_ALL = '" + model.Root +
-                    "' WHERE OBJECT_ID = '" + responsePurchase.Entity + "'"
+                    "SET CUST_PURCH_NUM = @p1 ," +
+                    "ACCT_FOR_ALL = @p2 " +
+                    "WHERE OBJECT_ID = @p3",
+                    new SqlParameter { ParameterName = "p1", Value = model.REFERENCE_PO},
+                    new SqlParameter { ParameterName = "p2", Value = model.Root},
+                    new SqlParameter { ParameterName = "p3", Value = responsePurchase.Entity}
                 );
 
                 var purchasePoViewItemProcedure = new PurchasePoViewItemProcedure();
@@ -436,11 +439,17 @@ namespace Msr.Services.PurchesOrder
                     }
                 }
 
+                // TODO: this is a duplicate update statement to the one on line 400.
+                // It might not be necessary.  Or this might be the important one
+                // and the other is useless.  Who knows.
                 _dbContext.Database.ExecuteSqlCommand(
                     "UPDATE A_PURCHASES_HISTORY " +
-                    "SET  CUST_PURCH_NUM = '" + model.REFERENCE_PO +
-                    "', ACCT_FOR_ALL = '" + model.Root +
-                    "' WHERE OBJECT_ID = '" + responsePurchase.Entity + "'"
+                    "SET CUST_PURCH_NUM = @p1 ," +
+                    "ACCT_FOR_ALL = @p2 " +
+                    "WHERE OBJECT_ID = @p3",
+                    new SqlParameter { ParameterName = "p1", Value = model.REFERENCE_PO},
+                    new SqlParameter { ParameterName = "p2", Value = model.Root},
+                    new SqlParameter { ParameterName = "p3", Value = responsePurchase.Entity}
                 );
 
                 var purchase = PurchasedOrderById(responsePurchase.Entity);
