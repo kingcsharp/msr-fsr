@@ -34,7 +34,8 @@
 @SKIP_MODE varchar(50),
 @CANT_CHANGE tinyint,
 @ALWAYS_PASS tinyint,
-@strNTLogin nvarchar(50)
+@strNTLogin nvarchar(50),
+@SendNcrNotificationEmail Bit
 AS
 print 'Updating a monitor'
 if @ID is null

@@ -139,8 +139,8 @@ namespace Msr.Services.Procedures
                     Skip_Mode = model.Skip_Mode,
                     Cant_Change = model.Cant_Change,
                     Always_Pass = model.Always_Pass,
-                    StrNTLogin = model.StrNTLogin
-                    //SendNcrNotificationEmail = model.SendNcrNotificationEmail
+                    StrNTLogin = model.StrNTLogin,
+                    SendNcrNotificationEmail = model.SendNcrNotificationEmail
                 };
 
                 if (model.Monitor_Type == "NUMBER" || model.Monitor_Type == "EQUIPMENT")
