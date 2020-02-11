@@ -140,7 +140,7 @@ namespace Msr.Services.Procedures
                     Cant_Change = model.Cant_Change,
                     Always_Pass = model.Always_Pass,
                     StrNTLogin = model.StrNTLogin,
-                    SendNcrNotificationEmail = model.SendNcrNotificationEmail
+                    SendNcrNotificationEmail = model.SEND_NCR_NOTIFICATION_EMAIL
                 };
 
                 if (model.Monitor_Type == "NUMBER" || model.Monitor_Type == "EQUIPMENT")

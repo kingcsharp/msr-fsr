@@ -104,6 +104,7 @@
     <Compile Include="Lookups\ListSpecialCustomers.cs" />
     <Compile Include="Lookups\ListStatusEditPerson.cs" />
     <Compile Include="Lookups\ListSubPartActions.cs" />
+    <Compile Include="Lookups\LocationPhoneNumberList.cs" />
     <Compile Include="Lookups\MaintenanceTaskList.cs" />
     <Compile Include="Lookups\MonitorTypesList.cs" />
     <Compile Include="Lookups\NCRCategories.cs" />

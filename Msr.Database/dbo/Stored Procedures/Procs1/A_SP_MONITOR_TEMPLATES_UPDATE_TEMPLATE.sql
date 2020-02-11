@@ -101,7 +101,8 @@ TARGET_OBJECT = @TARGET_OBJECT,
 SKIP_MODE = @SKIP_MODE,
 CANT_CHANGE = @CANT_CHANGE,
 ALWAYS_PASS = @ALWAYS_PASS,
-MODBY = @strNTLogin
+MODBY = @strNTLogin,
+SEND_NCR_NOTIFICATION_EMAIL = @SendNcrNotificationEmail
 WHERE ID = @newID
 
 print 'Set Text_Target = ' + @TEXT_TARGET + ' Where ID = ' + @newID
