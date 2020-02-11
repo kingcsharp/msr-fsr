@@ -361,6 +361,7 @@
     <Compile Include="ViewModel\EditUserViewModel.cs" />
     <Compile Include="ViewModel\AddUserViewModel.cs" />
     <Compile Include="ViewModel\Wip\AddNcrNotificationEmailViewModel.cs" />
+    <Compile Include="ViewModel\Wip\NcrLocationViewModel.cs" />
     <Compile Include="ViewModel\Wip\NcrNotificationViewModel.cs" />
     <Compile Include="ViewModel\Wip\PrintViewModel.cs" />
     <Compile Include="ViewModel\Wip\WipStatusViewModel.cs" />

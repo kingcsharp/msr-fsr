@@ -35,6 +35,7 @@ using System.Web.Mvc;
 using Newtonsoft.Json;
 using System.Web.Script.Serialization;
 using System.Web.UI;
+using Msr.Commons.Lookups;
 using Msr.Infrastructure.Email;
 using Msr.Services.CustomerRequirements.ViewModel;
 using Msr.Services.ProductionPlanning;
@@ -324,6 +325,23 @@ namespace Answer.Web.Controllers
                 addNcrNotificationEmailViewModel.MonitorTemplateResults = wipStepDetailsResponse.MonitorTemplateResult.ToList();
 
 
+                var locations = _locationService.GetParentLocations().OrderBy(o => o.Name).ToList();
+                var ncrLocationViewModels = new List<NcrLocationViewModel>();
+
+                locations.ForEach(location =>
+                {
+                    ncrLocationViewModels.Add(new NcrLocationViewModel()
+                    {
+                        LocationId =  location.Id,
+                        LocationName = location.Name,
+                        LocationPhoneNumber = LookupItems.LocationPhoneNumberList().FirstOrDefault(s=>s.Text == location.Id)?.Value,
+                        StateOrCountry = LookupItems.LocationStateAbbreviationList().FirstOrDefault(s=>s.Text == location.Id)?.Value
+                        
+                    });
+                });
+
+                addNcrNotificationEmailViewModel.NcrLocationViewModels = ncrLocationViewModels;
+
                 string str = RenderPartialToString(this, "_NcrEmailNotificationBodyContent", addNcrNotificationEmailViewModel, ViewData, TempData);
 
                 string htmlString = GenerateHtmlForReport(ncrNotificationViewModel.FillId);
@@ -335,6 +353,8 @@ namespace Answer.Web.Controllers
                 List<string> ccList = new List<string>();
                 bool isHtml = true;
                 string toEmail = string.Empty;
+
+                //This code is placed here so during debugging, the email is always sent to the developer logged in
 #if DEBUG
                 toEmail = technicianEmail;
 #else

@@ -96,7 +96,7 @@ namespace Msr.Services.Orders.Procedures
 
         public string Target_Object { get; set; }
         //TODO: Replace when you do database update
-        public bool SendEmailClient { get; set; } = true;
+        public bool SendEmailClient { get; set; }
 
         //[Column("SENSOR_MAPPING_ID")]
 

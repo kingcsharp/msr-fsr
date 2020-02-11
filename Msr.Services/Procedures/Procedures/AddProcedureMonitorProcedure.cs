@@ -120,7 +120,7 @@ namespace Msr.Services.Procedures.Procedures
         public string StrNTLogin { get; set; }
 
         [StoredProcedureParameter(SqlDbType.Bit, Size = 50, ParameterName = "SendNcrNotificationEmail")]
-        public bool SendNcrNotificationEmail { get; set; }
+        public bool? SendNcrNotificationEmail { get; set; }
 
     }
 }
