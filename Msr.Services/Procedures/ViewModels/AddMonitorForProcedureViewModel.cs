@@ -233,7 +233,8 @@ namespace Msr.Services.Procedures.ViewModels
                 Skip_Mode = model.Skip_Mode,
                 Cant_Change = model.Cant_Change,
                 Always_Pass = model.Always_Pass,
-                StrNTLogin = model.StrNTLogin
+                StrNTLogin = model.StrNTLogin,
+                SEND_NCR_NOTIFICATION_EMAIL = model.SEND_NCR_NOTIFICATION_EMAIL
             };
         }
     }

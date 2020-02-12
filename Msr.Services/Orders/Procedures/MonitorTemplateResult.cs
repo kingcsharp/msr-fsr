@@ -95,8 +95,9 @@ namespace Msr.Services.Orders.Procedures
         public string Mult_Choice_Answer { get; set; }
 
         public string Target_Object { get; set; }
-        //TODO: Replace when you do database update
-        public bool SendEmailClient { get; set; }
+
+        public bool? SEND_NCR_NOTIFICATION_EMAIL { get; set; }
+
 
         //[Column("SENSOR_MAPPING_ID")]
 

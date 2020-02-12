@@ -51,7 +51,7 @@ else
 
     <div class="row" id="@Model.StepId">
         <div class="col-xs-12" style="margin-bottom:0">
-
+            <input type="hidden" class="sendncremailnotification" value="@ViewBag.SendNcrEmailNotification.ToString()"/>
             @if (Model.HasStepRoles && Model.HasPreviousStepCompleted)
             {
                 <div id="timer-input" class="@controlLeft timer-input timer-col @timerInput" style="margin-left:-15px;">

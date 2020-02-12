@@ -786,7 +786,8 @@ namespace Answer.Web.Controllers
             ViewBag.FillId = fillId;
             ViewBag.IsStepStatusClosed = wipStepDetailsResponse.TaskEditDataResult.Status == "CLOSED";
             ViewBag.HasStepRoles = wipStepDetailsResponse.HasStepRoles;
-
+            ViewBag.SendNcrEmailNotification =
+                wipStepDetailsResponse.MonitorTemplateResult.Select(s => s.SEND_NCR_NOTIFICATION_EMAIL == true).Any();
             return PartialView("_InitialInspection", wipStepDetailsResponse);
         }
 
