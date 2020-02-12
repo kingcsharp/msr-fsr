@@ -14,4 +14,11 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="RequestedById" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="9cad4611-9cff-4e10-94cc-f8ef5a2f5b6e" ChangeDateTime="02/10/2020 21:46:48">
+    <Property Name="ElementName" Value="[dbo].[A_MONITOR_TEMPLATES].[SendNcrNotificationEmail]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[A_MONITOR_TEMPLATES]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="SEND_NCR_NOTIFICATION_EMAIL" />
+  </Operation>
 </Operations>
