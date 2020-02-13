@@ -12,6 +12,7 @@
 	[OrderNumber] int  NOT NULL,
 	[IsParent] BIT  NOT NULL DEFAULT (0),
 
+    [GroupInfo] NVARCHAR(255) NULL, 
     CONSTRAINT [PK_A_MENUS] PRIMARY KEY CLUSTERED ([ID] ASC)
 );
 

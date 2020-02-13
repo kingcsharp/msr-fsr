@@ -17,6 +17,6 @@ namespace Msr.Models.Reporting
         public string Work_Order_Item { get; set; }
         public string Product_Name { get; set; }
         public string Total_Sale_Price { get; set; }
-        public string Work_Order_Completed_Date { get; set; }
+        public DateTime Work_Order_Completed_Date { get; set; }
     }
 }

@@ -48,6 +48,7 @@
     <DefineTrace>true</DefineTrace>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <SuppressTSqlWarnings>71558</SuppressTSqlWarnings>
   </PropertyGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
@@ -2907,6 +2908,21 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Script.PostDeployment1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EquipmentMonitoring\EquipmentMonitoring.sqlproj">
+      <Name>EquipmentMonitoring</Name>
+      <Project>{b736c70a-5ea9-41c1-82d4-21d5bc88c4ef}</Project>
+      <Private>True</Private>
+      <SuppressMissingDependenciesErrors>False</SuppressMissingDependenciesErrors>
+      <DatabaseSqlCmdVariable>EquipmentMonitoring</DatabaseSqlCmdVariable>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <SqlCmdVariable Include="EquipmentMonitoring">
+      <DefaultValue>EquipmentMonitoring</DefaultValue>
+      <Value>$(SqlCmdVar__1)</Value>
+    </SqlCmdVariable>
   </ItemGroup>
   <!--<ItemGroup>
     <SqlCmdVariable Include="EquipmentMonitoring">
