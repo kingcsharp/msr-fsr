@@ -934,13 +934,14 @@ namespace Answer.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult CancelRemainingSteps(int fillId)
+        public ActionResult CancelRemainingSteps(int fillId, int invoice)
         {
             var loggedUserId = GetCurrentUser().Id;
 
-            _orderService.CancelUnfinishedSteps(fillId, loggedUserId);
+            _orderService.CancelUnfinishedSteps(fillId, loggedUserId, invoice);
 
-            return RedirectToAction("", "wip");
+            //return RedirectToAction("", "wip");
+            return Json(new { success = true, responseText = "All Steps Cancelled!" }, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult GetReferenceTheory(int theoryId)
