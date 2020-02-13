@@ -1224,7 +1224,7 @@ namespace Msr.Services.Orders
             }
         }
 
-        public void CancelUnfinishedSteps(int fillId, string login)
+        public void CancelUnfinishedSteps(int fillId, string login, int invoice)
         {
             var p = new DynamicParameters();
 
@@ -1232,11 +1232,11 @@ namespace Msr.Services.Orders
             p.Add("@MSGS", dbType: DbType.String, direction: ParameterDirection.Output, size: 50);
             p.Add("@FILL_ID", fillId.ToString(), DbType.String, ParameterDirection.Input, size: 50);
             p.Add("@strNTLogin", login, DbType.String, ParameterDirection.Input, size: 50);
+            p.Add("@InvoiceForWO", invoice, DbType.Int32, ParameterDirection.Input);
 
             using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
             {
                 var stepStartDoneTaskResult = conn.Query<StepStartTaskResult>("A_SP_FILL_CANCEL_UNFINISHED_STEPS", p, commandType: CommandType.StoredProcedure);
-
                 var status = p.Get<string>("RET_STATUS");
                 var msg = p.Get<string>("MSGS");
             }
