@@ -54,6 +54,7 @@ namespace Msr.Models.Orders
         public string Notes { get; set; }
         public int? Threshold { get; set; }
         public string LocationName { get; set; }
+        public string CustLineNo { get; set; }
         [NotMapped]
         public string Action { get; set; }
         public string ProcObjId { get; set; }
