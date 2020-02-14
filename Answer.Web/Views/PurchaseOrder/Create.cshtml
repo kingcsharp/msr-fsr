@@ -40,6 +40,11 @@
         }
         $(document).ready(function() {
             Msr.AddPurchaseOrder.SetUp('@productsJoin');
+            $(".datepick").datetimepicker({
+                onSelect : function() {
+                    $(this).valid();
+                }
+            });
         });
     </script>
 }
