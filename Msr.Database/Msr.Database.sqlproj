@@ -2909,7 +2909,7 @@
   <ItemGroup>
     <None Include="Script.PostDeployment1.sql" />
   </ItemGroup>
-  <ItemGroup>
+  <!--<ItemGroup>
     <ProjectReference Include="..\EquipmentMonitoring\EquipmentMonitoring.sqlproj">
       <Name>EquipmentMonitoring</Name>
       <Project>{b736c70a-5ea9-41c1-82d4-21d5bc88c4ef}</Project>
@@ -2924,7 +2924,7 @@
       <Value>$(SqlCmdVar__1)</Value>
     </SqlCmdVariable>
   </ItemGroup>
-  <!--<ItemGroup>
+  <ItemGroup>
     <SqlCmdVariable Include="EquipmentMonitoring">
       <DefaultValue>EquipmentMonitoring</DefaultValue>
       <Value>$(SqlCmdVar__1)</Value>
