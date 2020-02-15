@@ -34,7 +34,6 @@ pipeline {
                 }
             }
         }
-        /*
         stage("Build Msr.Database") {
             steps {
                 script {
@@ -52,6 +51,7 @@ pipeline {
                 }
             }
         }
+        /*
         stage("Generate SQL Script") {
             steps {
                 script {
