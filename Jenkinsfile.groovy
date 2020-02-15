@@ -51,6 +51,7 @@ pipeline {
                 }
             }
         }
+         /*
         stage("Generate SQL Script") {
             steps {
                 script {
@@ -68,7 +69,7 @@ pipeline {
                 }
             }
         }
-        /*
+        */
         stage("Publish SQL Script") {
             steps {
                 script {
@@ -86,7 +87,6 @@ pipeline {
                 }
             }
         }
-        */
         stage("Process Transforms") {
             steps {
                 script {
