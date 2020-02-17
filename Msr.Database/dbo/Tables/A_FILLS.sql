@@ -1,5 +1,4 @@
-﻿/*
-CREATE TABLE [dbo].[A_FILLS] (
+﻿CREATE TABLE [dbo].[A_FILLS] (
     [ID]            VARCHAR (50) NOT NULL,
     [FILL_OBJ_ID]   VARCHAR (50) NULL,
     [FILL_QTY]      REAL         NULL,
@@ -19,8 +18,7 @@ CREATE TABLE [dbo].[A_FILLS] (
     [LOCATION_ID] VARCHAR(50) NULL, 
     CONSTRAINT [PK_A_FILLS] PRIMARY KEY CLUSTERED ([ID] ASC)
 );
-*/
---Data loss error when publishing will comment out for now
+
 
 GO
 
