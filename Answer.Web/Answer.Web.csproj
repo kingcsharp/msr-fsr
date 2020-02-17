@@ -495,6 +495,7 @@
     <Content Include="assets\css\fonts\flexslider-icon.svg" />
     <Content Include="assets\css\fonts\fontawesome-webfont.svg" />
     <Content Include="assets\css\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="assets\css\invoice_tables.css" />
     <Content Include="assets\css\jquery.dataTables.min.css" />
     <Content Include="assets\css\jquery.fileupload-noscript.css" />
     <Content Include="assets\css\jquery.fileupload-noscript.min.css">
@@ -624,6 +625,7 @@
     <Content Include="assets\js\bootstrap-datepicker.min.js" />
     <Content Include="assets\js\bootstrap-datetimepicker.min.js" />
     <Content Include="assets\js\blockLayout.ui.js" />
+    <Content Include="assets\js\bootstrap-paginator.min.js" />
     <Content Include="assets\js\BootstrapFileInput\img\loading-sm.gif" />
     <Content Include="assets\js\BootstrapFileInput\js\fileinput-custom.min.js">
       <DependentUpon>fileinput-custom.js</DependentUpon>
@@ -717,6 +719,7 @@
     <Content Include="assets\js\msr\fileupload\uploader.min.js">
       <DependentUpon>uploader.js</DependentUpon>
     </Content>
+    <Content Include="assets\js\paginate.js" />
     <Content Include="assets\js\plugins\bootstrap3\bootstrap-dialog.css" />
     <Content Include="assets\js\plugins\bootstrap3\bootstrap-dialog.js" />
     <Content Include="assets\js\plugins\bootstrap3\bootstrap-multiselect.css" />
@@ -2858,7 +2861,7 @@
     <Content Include="assets\css\fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="assets\data\customer-requirements.json" />
     <Content Include="assets\data\purchase_orders.json" />
-    <Content Include="assets\js\Sample Refactoring Project.zip" />
+    <!--<Content Include="assets\js\Sample Refactoring Project.zip" />-->
     <Content Include="assets\js\wip-detail-tooltip.js.old" />
     <Content Include="assets\js\tinymce\langs\readme.md" />
     <Content Include="assets\js\tinymce\plugins\moxiemanager\api.ashx" />
@@ -3474,6 +3477,7 @@
     <Content Include="Views\PrintOther\_ViewPartLabelRoll4x4Tsr.cshtml" />
     <!--<Content Include="Views\Report\AdHocReport.cshtml" />-->
     <Content Include="Views\Report\AdHocReports.cshtml" />
+    <Content Include="Views\Report\OperationsDashboard.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

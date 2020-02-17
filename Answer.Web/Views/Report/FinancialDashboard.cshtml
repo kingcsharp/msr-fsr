@@ -1,27 +1,34 @@
-﻿@*@using Syncfusion.EJ2*@
-
-@{
+﻿@{
     ViewBag.Title = "FinancialDashboard";
-    //var odataUrl = Url.HttpRouteUrl("DefaultApi", new { controller = "Reporting/CombinedFinancialData" });
 }
+<style>
+    .datatable {
+        padding: 10px;
+        min-height: 150px
+    }
+</style>
+
 <link href="~/Content/ej/web/bootstrap-theme/ej.web.all.min.css" rel="stylesheet" />
 <link href="~/Content/ej/web/ej.web.overrides.css" rel="stylesheet" />
 <link href="#" rel="stylesheet" />
 <div id="gridsContainer" class="side-body">
     <div class="row">
         <div class="col-xs-12">
-            <div class="datatable" style="padding:10px">
-                <div class="page-header"><h1 ndtype="heading">Combined Financial Data</h1></div>
-                <div id="combinedFinancialGrid"></div>
+            <div class="datatable">
+                <div class="page-header">
+                    <h1 ndtype="heading">Combined Financial Data</h1>
+                    @Html.Partial("_HelpViewButton")
+                </div>
+                <div class="report-content" id="combinedFinancialGrid"></div>
             </div>
         </div>
     </div>
     <br />
     <div class="row">
         <div class="col-xs-12">
-            <div class="datatable" style="padding:10px">
+            <div class="datatable">
                 <div class="page-header"><h1>Work Orders Not Invoiced</h1></div>
-                <div id="wONoInvoiceURLGrid"></div>
+                <div  class="report-content" id="wONoInvoiceURLGrid"></div>
             </div>
         </div>
     </div>
@@ -39,6 +46,13 @@
     <script src="~/Scripts/ej/web/ej.web.all.min.js"></script>
     <script type="text/javascript">
         $(function () {
+            // haxors for help button alignment
+            $('.page-help').css("margin-top", "-40px");
+
+            //loading on page load
+            $('.report-content').block({ message: '<h1><img src="/assets/img/nice_loader.gif" />  Loading. Please wait...</h1>' });
+            $('.blockElement').css("width","50%","margin-left","250px");
+
             function setGridOptions(options) {
                 var defaultGridOptions = {
                     enableLoadOnDemand: false,
@@ -124,18 +138,19 @@
             });
 
             var combinedFinancialGridCols = [
-                { field: "woNumber", headerText: 'WO Item', textAlign: ej.TextAlign.Right, width: 130},
-                { field: "woCreationDate", headerText: 'Creation Date', textAlign: ej.TextAlign.Left, width: 60 },
-                { field: "dueDate", headerText: 'Due Date', textAlign: ej.TextAlign.Left, width: 60 },
-                { field: "shipDate", headerText: 'Ship Date', textAlign: ej.TextAlign.Left, width: 60 },
-                { field: "msrfsrFacility", headerText: 'Facility', textAlign: ej.TextAlign.Left, width: 100 },
+                { field: "woNumber", headerText: 'WO Item', textAlign: ej.TextAlign.Right, width: 130 },
+                { field: "poNumber", headerText: 'PO #', textAlign: ej.TextAlign.Left, width: 60 },
+                { field: "woCreationDate", headerText: 'Creation Date', textAlign: ej.TextAlign.Left, width: 60, type:"datetime", format: "{0:MM-dd-yyyy}" },
+                { field: "dueDate", headerText: 'Due Date', textAlign: ej.TextAlign.Left, width: 60, type:"datetime", format: "{0:MM-dd-yyyy}" },
+                { field: "shipDate", headerText: 'Ship Date', textAlign: ej.TextAlign.Left, width: 60, type:"datetime", format: "{0:MM-dd-yyyy}" },
+                { field: "msrfsrFacility", headerText: 'Facility', textAlign: ej.TextAlign.Left, width: 60 },
                 { field: "customerName", headerText: 'Customer', textAlign: ej.TextAlign.Left, width: 90 },
-                { field: "specno", headerText: 'Specification', textAlign: ej.TextAlign.Left, width: 100 },
+                { field: "customerPartNumber", headerText: 'Customer Part #', textAlign: ej.TextAlign.Left, width: 60 },
+                { field: "specificationNumber", headerText: 'Specification', textAlign: ej.TextAlign.Left, width: 100 },
                 { field: "kitName", headerText: 'Kit Name', textAlign: ej.TextAlign.Left, width: 120 },
-                { field: "pono", headerText: 'Customer Part #', textAlign: ej.TextAlign.Left, width: 100 },
                 { field: "mttn", headerText: 'MTTN', textAlign: ej.TextAlign.Left, width: 70 },
-                { field: "invoiceId", headerText: 'Invoice #', textAlign: ej.TextAlign.Left, width: 50 },
-                { field: "invoiceDate", headerText: 'Invoice Date', textAlign: ej.TextAlign.Left, width: 60 },
+                { field: "invoiceId", headerText: 'Invoice #', textAlign: ej.TextAlign.Left, width: 70 },
+                { field: "invoiceDate", headerText: 'Invoice Date', textAlign: ej.TextAlign.Left, width: 60, type:"datetime", format: "{0:MM-dd-yyyy}" },
                 { field: "fillQty", headerText: 'Qty', textAlign: ej.TextAlign.Left, width: 40 },
                 { field: "amount", headerText: 'Amount', textAlign: ej.TextAlign.Left, width: 55 },
                 { field: "subTotal", headerText: 'SubTotal', textAlign: ej.TextAlign.Left, width: 60 },
@@ -145,9 +160,14 @@
             var query = new ej.Query();
             var promise = dataManager.executeQuery(query);
             promise.done(function (e) {
-                $("#combinedFinancialGrid").ejGrid(
+                $("#combinedFinancialGrid").unblock().ejGrid(
                     setGridOptions({
-                        dataSource: e.result, columns: combinedFinancialGridCols, gridId: 'combinedFinancialGrid', title:'Combined_Financial_Data'})
+                        dataSource: e.result,
+                        sortSettings: { sortedColumns: [{ field: "invoiceDate", direction: "descending" }] },
+                        columns: combinedFinancialGridCols,
+                        gridId: 'combinedFinancialGrid',
+                        title: 'Combined_Financial_Data'
+                    })
                 );
             });
 
@@ -159,13 +179,18 @@
                 var wONoInvoiceURLGridCols = [
                     { field: "cust_Purch_Num", headerText: 'Customer Purchase', textAlign: ej.TextAlign.Right, width: 70 },
                     { field: "work_Order_Item", headerText: 'Work Order Item', textAlign: ej.TextAlign.Left, width: 70 },
+                    { field: "location_Name", headerText: 'Location', textAlign: ej.TextAlign.Left, width: 70 },
                     { field: "product_Name", headerText: 'Product Name', textAlign: ej.TextAlign.Left, width: 200 },
-                    { field: "work_Order_Completed_Date", headerText: 'WO Complete Date', textAlign: ej.TextAlign.Left, width: 40 },
+                    { field: "work_Order_Completed_Date", headerText: 'WO Complete Date', textAlign: ej.TextAlign.Left, width: 40, type:"datetime", format: "{0:MM-dd-yyyy}" },
                     { field: "total_Sale_Price", headerText: 'Total', textAlign: ej.TextAlign.Left, width: 40 }
                 ];
-                $("#wONoInvoiceURLGrid").ejGrid(
+                $("#wONoInvoiceURLGrid").unblock().ejGrid(
                     setGridOptions({
-                        dataSource: e.result, columns: wONoInvoiceURLGridCols, gridId: 'wONoInvoiceURLGrid', title: 'Work_Orders_Not_Invoiced'
+                        dataSource: e.result,
+                        sortSettings: { sortedColumns: [{ field: "work_Order_Completed_Date", direction: "descending" }] },
+                        columns: wONoInvoiceURLGridCols,
+                        gridId: 'wONoInvoiceURLGrid',
+                        title: 'Work_Orders_Not_Invoiced'
                     })
                 );
             });

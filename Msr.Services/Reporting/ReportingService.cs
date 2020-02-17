@@ -42,5 +42,19 @@ namespace Msr.Services.Reporting
             return _dbContext.WorkInProcess.AsQueryable();
         }
 
+        public IQueryable<OperationsCustomerRevenueData> GetRevenueByCustomerData()
+        {
+            return _dbContext.OperationsCustomerRevenueData.AsQueryable();
+        }
+
+        public IQueryable<OperationsKitRevenueData> GetRevenueByKitsData()
+        {
+            return _dbContext.OperationsKitRevenueData.AsQueryable();
+        }
+
+        public IQueryable<OperationsKitCountData> GetCountsByKitsData()
+        {
+            return _dbContext.OperationsKitCountData.AsQueryable();
+        }
     }
 }

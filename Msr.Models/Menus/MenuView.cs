@@ -9,6 +9,7 @@
         public string Icon { get; set; }
         public string Info { get; set; }
         public string GroupIcon { get; set; }
+        public string GroupInfo { get; set; }
         public string GroupMenu { get; set; }
         public int OrderNumber { get; set; }
         public bool IsParent { get; set; }

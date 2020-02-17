@@ -15,12 +15,10 @@
                     dataType: 'html',
                     cache: false,
                     success: function (data) {
-                        eLoaderClose();
                         modal.find('.modal-body').html(data);
                         modal.find('.modal-body').unblock();
                     },
                     error: function (error) {
-                        eLoaderError(error);
                         modal.find('.modal-body').unblock();
                     }
                 });
@@ -37,7 +35,6 @@
                 var button = $(event.relatedTarget);
                 var id = button.data('call-id');
                 var num = button.data('call-number');
-                console.log('XXXX ' + id);
                 var modal = $(this);
                 modal.find('.modal-body').block({ message: '<h1><img src="/assets/img/nice_loader.gif" />  Loading. Please wait...</h1>' });
                 $.ajax({
@@ -50,7 +47,6 @@
                         modal.find('.modal-body').unblock();
                     },
                     error: function (error) {
-                        eLoaderError(error);
                         modal.find('.modal-body').unblock();
                     }
                 });
@@ -60,12 +56,13 @@
 
     var custChangeForAdd = function () {
         var reloadTable = function () {
-            eLoaderOpen();
+            $('.list-content').empty().html('');
+            $('.list-content').block({ message: '<h1><img src="/assets/img/nice_loader.gif" />  Loading. Please wait...</h1>' });
             var po = $('#Client').val();
             var fac = $('#InvoiceClass').val();
 
             if (po.length == 0) {
-                eLoaderClose();
+                $('.list-content').unblock();
                 return;
             }
 
@@ -78,8 +75,8 @@
                     "&fac=" + fac,
                 dataType: 'html',
                 success: function (data) {
-                    eLoaderClose();
-                    $('#invoice-po').html(data);
+                    $('.list-content').unblock();
+                    $('.list-content').html(data);
                 }
             });
         }
@@ -90,14 +87,17 @@
     var saveInvoice = function () {
 
         $('#invoice-submit').click(function (e) {
+            $(this).attr('disabled', 'disabled');
+            $('#status-message').html('<i class="fa fa-refresh fa-spin"></i><span class="danger"> Updating invoice as requested. Please wait...</span>');
             $('#FormId').submit();
-
         });
     };
 
     var updateInvoice = function () {
 
         $('#invoice-update').click(function (e) {
+            $(this).attr('disabled', 'disabled');
+            $('#status-message').html('<i class="fa fa-refresh fa-spin"></i><span class="danger"> Updating invoice as requested. Please wait...</span>');
             $('#invoice-edit').submit();
         });
     };
@@ -105,7 +105,8 @@
 
         $('#cust-po-edit').on('change',
             function () {
-                eLoaderOpen();
+                $('.list-content').empty().html('');
+                $('.list-content').block({ message: '<h1><img src="/assets/img/nice_loader.gif" />  Loading. Please wait...</h1>' });
                 var po = $(this).val();
                 $('#itemId').val("");
                 $('#totalTaxAmount').val("");
@@ -117,8 +118,8 @@
                     url: "/Invoices/InvoiceModelEditGetPoItems?id=" + po + '&hasValue=' + false,
                     dataType: 'html',
                     success: function (data) {
-                        eLoaderClose();
-                        $('#invoice-po-edit').html(data);
+                        $('.list-content').unblock();
+                        $('.list-content').html(data);
                     }
                 });
             });
