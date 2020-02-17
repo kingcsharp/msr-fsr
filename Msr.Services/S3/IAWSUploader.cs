@@ -1,4 +1,7 @@
-﻿using System.IO;
+﻿using Amazon.S3.IO;
+using Msr.Models.Archive;
+using System.Collections.Generic;
+using System.IO;
 using System.Web;
 
 namespace Msr.Services.S3
@@ -9,5 +12,6 @@ namespace Msr.Services.S3
         void UploadToCloud(Stream file, string bucketName, string keyName);
 
         Stream DownloadFromCloud(string bucketName, string keyName);
+        List<ArchiveData> GetArchiveFilesFromS3Directory(string bucketName, string folderName);
     }
 }

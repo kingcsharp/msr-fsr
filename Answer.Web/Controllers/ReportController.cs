@@ -8,7 +8,9 @@ using System.Web.Mvc;
 using Answer.Web.Controllers;
 using Answer.Web.Filters;
 using Hangfire.Annotations;
+using Msr.Models.Archive;
 using Msr.Models.Reporting;
+using Msr.Services.S3;
 using RestSharp;
 using HttpCookie = System.Web.HttpCookie;
 
