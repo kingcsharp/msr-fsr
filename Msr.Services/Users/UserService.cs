@@ -26,6 +26,14 @@ namespace Msr.Services.Users
             _dbContext = new MsrDbContext();
         }
 
+        public ICollection<UserView> GetEmailNotificationUserForWorkOrder(string companyId, string companyName, string roleName)
+        {
+            var userView = _dbContext.UserViews.Where(s => s.CompanyId == companyId && s.CompanyName == companyName
+                                                                              && s.RoleName == roleName).ToList();
+
+            return userView;
+        }
+
         public UserSummary GetUser(string id)
         {
             var user = _dbContext.AspNetUsers.Where(x => x.Id.ToLower() == id.ToLower()).Select(s => new UserSummary

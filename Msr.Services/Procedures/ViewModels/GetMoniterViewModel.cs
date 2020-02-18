@@ -6,6 +6,7 @@ namespace Msr.Services.Procedures.ViewModels
 {
     public class GetMoniterViewModel
     {
+        
 
         public GetMoniterViewModel()
         {
@@ -118,6 +119,8 @@ namespace Msr.Services.Procedures.ViewModels
         public Int16? YES_NO_ANSWER { get; set; }
 
         public string Fail_Stop_Text { get; set; }
+
+        public bool? SEND_NCR_NOTIFICATION_EMAIL { get; set; }
 
         public List<SelectListItem> MonitorTypesList { get; set; }
 

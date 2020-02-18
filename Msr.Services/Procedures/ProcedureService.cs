@@ -139,23 +139,9 @@ namespace Msr.Services.Procedures
                     Skip_Mode = model.Skip_Mode,
                     Cant_Change = model.Cant_Change,
                     Always_Pass = model.Always_Pass,
-                    StrNTLogin = model.StrNTLogin
+                    StrNTLogin = model.StrNTLogin,
+                    SendNcrNotificationEmail = model.SEND_NCR_NOTIFICATION_EMAIL
                 };
-
-                //if (model.Monitor_Type == "NUMBER" && model.Should_Be == "BETWEEN")
-                //{
-                //    addProcedureMonitorProcedure.Target_Object = null;
-                //    addProcedureMonitorProcedure.Highest_Threshold = model.Highest_Threshold;
-                //    addProcedureMonitorProcedure.Lowest_Threshold = model.Lowest_Threshold;
-                //}
-                //else if (model.Monitor_Type == "NUMBER" && model.Should_Be != "BETWEEN" || model.Monitor_Type == "EQUIPMENT")
-                //{
-                //    addProcedureMonitorProcedure.Target = Convert.ToSingle(model.Target_Object);
-                //    addProcedureMonitorProcedure.Highest_Threshold = null;
-                //    addProcedureMonitorProcedure.Lowest_Threshold = null;
-                //    addProcedureMonitorProcedure.Correct_Answer = null;
-                //    addProcedureMonitorProcedure.Text_Target = null;
-                //}
 
                 if (model.Monitor_Type == "NUMBER" || model.Monitor_Type == "EQUIPMENT")
                 {
@@ -1239,7 +1225,7 @@ namespace Msr.Services.Procedures
                     procedureStepImportProcedure.PrintOrder = item.PRINT_ORDER;
                     procedureStepImportProcedure.RefDocId = item.REF_DOC_ID;
                     procedureStepImportProcedure.Comment = item.COMMENT;
-                    procedureStepImportProcedure.StepTime = Convert.ToSingle(0.3);
+                    procedureStepImportProcedure.StepTime = Convert.ToSingle(item.STEP_TIME);
                     procedureStepImportProcedure.ExteraNote = item.EXTRA_NOTE1;
                     procedureStepImportProcedure.DefaultRoleId = item.DefaultRoleId;
                     procedureStepImportProcedure.Serialize = item.SERIALIZE;
@@ -1247,6 +1233,7 @@ namespace Msr.Services.Procedures
                     procedureStepImportProcedure.InternalLocation = item.INTERNAL_LOCATION;
                     procedureStepImportProcedure.LocType = item.LOC_TYPE;
                     procedureStepImportProcedure.NtLogin = ntLogin.Id;
+
                     _dbContext.Database.ExecuteStoredProcedure(procedureStepImportProcedure);
                 }
 

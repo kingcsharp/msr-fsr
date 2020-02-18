@@ -68,18 +68,20 @@
                             cssButton = "btn-warning";
                         }
 
-                        <button data-toggle="tooltip" data-task-id="@proItem.TaskId" data-fill-id="@proItem.FillId" data-placement="bottom" data-html="true"
-                                class="btn btn-xs btn-sq @cssButton wip-button @acceptedButton"
-                                title="<strong>Serial #:</strong>@proItem.Serial<br />
-                                        <strong>Status:</strong> @statusText <br />
-                                        <strong>Assigned To:</strong> @proItem.RequesteeName <br/>
-                                        @if (proItem.DueDate.HasValue)
-                                        {
-	                                        <strong>Due Date:</strong>
-	                                        @proItem.DueDate.Value.ToShortDateString()
-	                                        <br />
-                                        }
-                                        ">
+                    <button data-toggle="tooltip" data-task-id="@proItem.TaskId" data-fill-id="@proItem.FillId" data-placement="bottom" data-html="true"
+                            class="btn btn-xs btn-sq @cssButton wip-button @acceptedButton"
+                            title="<strong>WO Item #:</strong> @proItem.WoItem<br />
+                                <strong>PO / Line #:</strong> @proItem.CustPurchNum / @proItem.CustLineNo<br />
+                                <strong>Serial #:</strong> @proItem.Serial<br />
+                                <strong>Status:</strong> @statusText <br />
+                                <strong>Assigned To:</strong> @proItem.RequesteeName <br/>
+                                @if (proItem.DueDate.HasValue)
+                                {
+	                                <strong>Due Date:</strong>
+	                                @proItem.DueDate.Value.ToShortDateString()
+	                                <br />
+                                }
+                     ">
 						      <i class="@cssIconButton"></i>
 					    </button>
                     }
