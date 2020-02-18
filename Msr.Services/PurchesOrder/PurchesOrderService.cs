@@ -393,8 +393,6 @@ namespace Msr.Services.PurchesOrder
                 purchasePoProcedure.Orderid = orderid;
                 purchasePoProcedure.Strntlogin = ntLogin;
 
-                var s = "exec A_SP_ORDER_PURCHASE @Orderid = " + orderid + ", @Strntlogin = '" + ntLogin + "'";
-
                 _dbContext.Database.ExecuteStoredProcedure(purchasePoProcedure);
                 responsePurchase.Entity = purchasePoProcedure.NewID;
 
