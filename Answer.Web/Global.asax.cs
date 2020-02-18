@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Configuration;
 using System.Linq;
+using System.Reflection;
 using System.Security.Principal;
 using System.Web;
 using System.Web.Http;
@@ -10,6 +11,7 @@ using System.Web.Routing;
 using Msr.Repositories;
 using Msr.Services.jqGrid;
 using Msr.Services.Roles;
+using Msr.Services.S3;
 using Msr.Web;
 
 namespace Answer.Web
@@ -18,6 +20,8 @@ namespace Answer.Web
     {
         protected void Application_Start()
         {
+         
+
             ContextDbInitializer.Seed(new ApplicationDbContext());
             AreaRegistration.RegisterAllAreas();
 

@@ -200,6 +200,7 @@ namespace Answer.Web
                 .Include("~/assets/js/bootstrap-datepicker.js")
                 .Include("~/assets/js/plugins/jquery.blockUI.js")
                 .Include("~/assets/js/plugins/bootstrap3/bootstrap-multiselect.js")
+                .Include("~/assets/js/ArchiveModal.js")
            );
 
             bundles.Add(new ScriptBundle("~/assets/js/jgridDefaults")
