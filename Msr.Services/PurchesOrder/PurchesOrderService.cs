@@ -381,7 +381,6 @@ namespace Msr.Services.PurchesOrder
         public ResultNotification<string> PurchasedOrderUpdateAndShowOrderItemList(PurchaseFormAccountViewModel model, string ntLogin)
         {
             var responsePurchase = new ResultNotification<string>();
-            int count = 0;
             try
             {
 
@@ -393,6 +392,8 @@ namespace Msr.Services.PurchesOrder
                 var purchasePoProcedure = new PurchasePoProcedure();
                 purchasePoProcedure.Orderid = orderid;
                 purchasePoProcedure.Strntlogin = ntLogin;
+
+                var s = "exec A_SP_ORDER_PURCHASE @Orderid = " + orderid + ", @Strntlogin = '" + ntLogin + "'";
 
                 _dbContext.Database.ExecuteStoredProcedure(purchasePoProcedure);
                 responsePurchase.Entity = purchasePoProcedure.NewID;
@@ -427,15 +428,10 @@ namespace Msr.Services.PurchesOrder
 
                         _dbContext.Database.ExecuteStoredProcedure(purchasePoViewItemProcedure);
 
-                        // The root item (0) is already created, the rest need to be created here.
-                        if (count != 0) {
-                            purchasePoDetailProcedure.strPurchaseObjID = purchasePoProcedure.NewID;
-                            purchasePoDetailProcedure.orderID = model.ProductPo[i].ORDER_ID;
-                            purchasePoDetailProcedure.Strntlogin = ntLogin;
-                            _dbContext.Database.ExecuteStoredProcedure(purchasePoDetailProcedure);
-                        }
-
-                        count++;
+                        purchasePoDetailProcedure.strPurchaseObjID = purchasePoProcedure.NewID;
+                        purchasePoDetailProcedure.orderID = model.ProductPo[i].ORDER_ID;
+                        purchasePoDetailProcedure.Strntlogin = ntLogin;
+                        _dbContext.Database.ExecuteStoredProcedure(purchasePoDetailProcedure);
                     }
                 }
 
@@ -456,8 +452,7 @@ namespace Msr.Services.PurchesOrder
 
                 var id = new SqlParameter("@pHistID", purchase.ID);
                 var ntlog = new SqlParameter("@strNTLogin", ntLogin);
-                var s = "exec A_SP_PURCHASES_UPDATE_ALL_ACCOUNTS_ON_PURCHASE_ITEMS " +
-                        "@pHistID='" + purchase.ID + "', @strNTLogin='"+ntLogin+"'";
+
                 _dbContext.Database.ExecuteSqlCommand(
                     "exec A_SP_PURCHASES_UPDATE_ALL_ACCOUNTS_ON_PURCHASE_ITEMS " +
                     "@pHistID,@strNTLogin", id, ntlog
