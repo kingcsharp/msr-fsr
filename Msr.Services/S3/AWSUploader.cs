@@ -40,7 +40,7 @@ namespace Msr.Services.S3
                 var archiveData = dir.EnumerateFiles().ToList().Select(i => new ArchiveData()
                 {
                     CreateDate = i.LastWriteTimeUtc,
-                    DownloadURL = $"combinedfinancialdata/{i.Name}",
+                    DownloadURL = $"combinedfinancialdata|{i.Name}",
                     FileName = i.Name,
                     FileSize = i.Length
                 });

@@ -32,13 +32,18 @@ namespace Answer.Web.Controllers.API
             return files;
         }
 
-        [HttpGet, Route("Download/{downloadURL}")]
+        [HttpGet, Route("Download")]
         public HttpResponseMessage DownloadArchiveFile(string downloadURL)
         {
-            var fileStream =  _awsHandler.DownloadFromCloud(ConfigurationManager.AppSettings.Get("AWSBuketName"), downloadURL);
+            var fileStream =  _awsHandler.DownloadFromCloud(ConfigurationManager.AppSettings.Get("AWSBuketName"), downloadURL.Replace("|","/"));
             
             var response = Request.CreateResponse(HttpStatusCode.OK);
             response.Content = new StreamContent(fileStream);
+            response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
+            {
+                FileName = downloadURL.Split('|')[1]
+            };
+
             response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
             return response;
         }
