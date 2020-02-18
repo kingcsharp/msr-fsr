@@ -26,6 +26,7 @@ FORMAT(ROUND(CAST(pwo.Amount * pwo.FillQty AS float) + (CAST(pwo.Amount * pwo.Fi
 FROM dbo.Portal_WorkOrders pwo 
 INNER JOIN Portal_InvoiceWorkItem iw ON iw.ItemId = pwo.FillItemId
 INNER JOIN Portal_Invoice i ON i.Id = iw.InvoiceId
-WHERE pwo.StartDate IS NOT NULL
+WHERE pwo.StartDate IS NOT NULL AND
+CONVERT(DATETIME, i.InvoiceDate, 102) > DATEADD(month, -2, GETDATE())
 
 GO
