@@ -8,9 +8,6 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
-using Autofac;
-using Autofac.Integration.Mvc;
-using Autofac.Integration.WebApi;
 using Msr.Repositories;
 using Msr.Services.jqGrid;
 using Msr.Services.Roles;
@@ -23,11 +20,7 @@ namespace Answer.Web
     {
         protected void Application_Start()
         {
-            var builder = new ContainerBuilder();  
-
-            builder.RegisterControllers(Assembly.GetExecutingAssembly()); 
-            builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
-            builder.RegisterType<AWSFileHandler>().AsSelf().As<ICloudUploader>();
+         
 
             ContextDbInitializer.Seed(new ApplicationDbContext());
             AreaRegistration.RegisterAllAreas();
@@ -44,9 +37,6 @@ namespace Answer.Web
             ModelBinders.Binders.Add(typeof(JqGridParam), new JqGridParamConverter());
 
             IronPdf.License.LicenseKey = "IRONPDF-138372CE75-686825-423338-419A44C0B1-F5AA4668-UEx8129778D4BA18D8-CMHWORKSLLC.IRO190627.4855.33211.PRO.1DEV.1YR.SUPPORTED.UNTIL.27.JUN.2020";
-
-            var container = builder.Build();
-            DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
         }
 
         protected void Application_AuthenticateRequest(Object sender, EventArgs e)
