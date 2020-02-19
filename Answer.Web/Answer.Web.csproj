@@ -3491,6 +3491,7 @@
     <Content Include="Views\Report\AdHocReports.cshtml" />
     <Content Include="Views\Report\OperationsDashboard.cshtml" />
     <Content Include="Views\Report\_ViewArchivesButton.cshtml" />
+    <Content Include="Views\Shared\_HelpViewButton.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
