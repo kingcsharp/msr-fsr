@@ -3219,7 +3219,6 @@
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
-    <None Include="Views\Report\_ArchivesModal.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -3493,12 +3492,10 @@
     <!--<Content Include="Views\Report\AdHocReport.cshtml" />-->
     <Content Include="Views\Report\AdHocReports.cshtml" />
     <Content Include="Views\Report\OperationsDashboard.cshtml" />
-    <Content Include="Views\Report\_ViewArchivesButton.cshtml" />
     <Content Include="Views\Shared\_HelpViewButton.cshtml" />
     <Content Include="Views\Wip\_AddNcrNotificationModal.cshtml" />
     <Content Include="Views\Wip\_NcrEmailNotificationBodyContent.cshtml" />
     <Content Include="Views\Wip\_ViewNcrTsr.cshtml" />
-
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
