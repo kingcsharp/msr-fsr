@@ -406,30 +406,27 @@ namespace Msr.Services.PurchesOrder
                     new SqlParameter { ParameterName = "p3", Value = responsePurchase.Entity}
                 );
 
-                var purchasePoViewItemProcedure = new PurchasePoViewItemProcedure();
-                var purchasePoDetailProcedure = new PurchasePoDetailProcedure();
-
                 for (int i = 0; i < model.ProductPo.Count; i++) {
                     var poCreations = model.ProductPo[i].GroupWO ? 1 : model.ProductPo[i].Qty;
                     for (var j = 0; j < poCreations; j++) {
-                        purchasePoViewItemProcedure.purchObjID = purchasePoProcedure.NewID;
+                        var purchasePoDetailProcedure = new PurchasePoDetailProcedure();
+                        var purchasePoViewItemProcedure = new PurchasePoViewItemProcedure();
 
-                        if (purchasePoDetailProcedure.NewID == null) {
-                            purchasePoViewItemProcedure.orderItemID = null;
-                        } else {
-                            purchasePoViewItemProcedure.orderItemID = purchasePoDetailProcedure.NewID;
-                        }
-                        purchasePoViewItemProcedure.qty = model.ProductPo[i].GroupWO ? model.ProductPo[i].Qty.ToString() : "1";
-                        purchasePoViewItemProcedure.acctID = model.Root;
-                        purchasePoViewItemProcedure.strNTLogin = ntLogin;
-                        purchasePoViewItemProcedure.GroupWO = model.ProductPo[i].GroupWO;
-
-                        _dbContext.Database.ExecuteStoredProcedure(purchasePoViewItemProcedure);
-
+                        /* A_SP_PURCHASE_APPEND_ORDER */
                         purchasePoDetailProcedure.strPurchaseObjID = purchasePoProcedure.NewID;
                         purchasePoDetailProcedure.orderID = model.ProductPo[i].ORDER_ID;
                         purchasePoDetailProcedure.Strntlogin = ntLogin;
                         _dbContext.Database.ExecuteStoredProcedure(purchasePoDetailProcedure);
+
+                        /* A_SP_ACCOUNT_PURCHASE_UPDATE_ITEM */
+                        purchasePoViewItemProcedure.purchObjID = purchasePoProcedure.NewID;
+                        purchasePoViewItemProcedure.orderItemID = purchasePoDetailProcedure.NewID;
+                        purchasePoViewItemProcedure.qty = model.ProductPo[i].GroupWO ? model.ProductPo[i].Qty.ToString() : "1";
+                        purchasePoViewItemProcedure.acctID = model.Root;
+                        purchasePoViewItemProcedure.strNTLogin = ntLogin;
+                        purchasePoViewItemProcedure.GroupWO = model.ProductPo[i].GroupWO;
+                        _dbContext.Database.ExecuteStoredProcedure(purchasePoViewItemProcedure);
+
                     }
                 }
 
