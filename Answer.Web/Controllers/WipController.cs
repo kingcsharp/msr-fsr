@@ -394,7 +394,7 @@ namespace Answer.Web.Controllers
 
             ncrDetails.MonitorItem = response.MonitorItem;
 
-            string htmlString = RenderPartialToString(this, "_ViewNcrTsr", ncrDetails, ViewData, TempData);
+            string htmlString = RenderPartialToString(this, "_ViewNcrTsrEmail", ncrDetails, ViewData, TempData);
 
             return htmlString;
         }
@@ -1027,12 +1027,17 @@ namespace Answer.Web.Controllers
             return View(viewModel);
         }
 
-        public ActionResult AddProcedureToTask(string objId, string parentId, string fillId)
+        public ActionResult AddProcedureToTask(string objId, string parentId)
         {
             
-            _orderService.AddProcedureAsSubTask(objId, parentId, GetCurrentUser().Id);
-
-            return RedirectToAction("Details", new { id = fillId });
+            var ResponseMessages = _orderService.AddProcedureAsSubTask(objId, parentId, GetCurrentUser().Id);
+            if (ResponseMessages == null)
+            {
+                return Json(new { success = false, responseText = ResponseMessages }, JsonRequestBehavior.AllowGet);
+            } else
+            {
+                return Json(new { success = true }, JsonRequestBehavior.AllowGet);
+            }
         }
 
         public ActionResult AddEquipmentMaintenance(string id)
