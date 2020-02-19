@@ -3494,6 +3494,7 @@
     <Content Include="Views\Report\AdHocReports.cshtml" />
     <Content Include="Views\Report\OperationsDashboard.cshtml" />
     <Content Include="Views\Report\_ViewArchivesButton.cshtml" />
+    <Content Include="Views\Shared\_HelpViewButton.cshtml" />
     <Content Include="Views\Wip\_AddNcrNotificationModal.cshtml" />
     <Content Include="Views\Wip\_NcrEmailNotificationBodyContent.cshtml" />
     <Content Include="Views\Wip\_ViewNcrTsr.cshtml" />
