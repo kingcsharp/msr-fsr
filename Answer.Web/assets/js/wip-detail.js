@@ -259,7 +259,6 @@
             });
         });
 
-
         $('#btn-take-over-task').on('click', function () {
             var id = $(this).data('id');
 
@@ -275,7 +274,6 @@
                 }
             });
         });
-
 
         $('#btn-cancel-steps').on('click', function () {
             var id = $(this).data('id');
@@ -294,7 +292,8 @@
 
         });
 
-        $('#ncr-notification-button').on('click', function () {
+        $('#ncr-notification-button').on('click', function (e) {
+            e.preventDefault();
             var id = $('#fill-id').val();
 
             $.ajax({
@@ -303,22 +302,7 @@
                 dataType: 'html',
                 success: function (data) {
                     $('#ncrModal').modal("show");
-                    $('#ncrModal').find('.modal-body').html(data);
-                },
-                error: function () { }
-            });
-        });
-
-        $('#ncr-notification-button').on('click', function () {
-            var id = $('#fill-id').val();
-
-            $.ajax({
-                type: "GET",
-                url: '/wip/getncrmodel?id=' + id,
-                dataType: 'html',
-                success: function (data) {
-                    $('#ncrModal').modal("show");
-                    $('#ncrModal').find('.modal-body').html(data);
+                    $('#ncr-grid-container').html(data);
                 },
                 error: function () { }
             });
