@@ -394,7 +394,7 @@ namespace Answer.Web.Controllers
 
             ncrDetails.MonitorItem = response.MonitorItem;
 
-            string htmlString = RenderPartialToString(this, "_ViewNcrTsr", ncrDetails, ViewData, TempData);
+            string htmlString = RenderPartialToString(this, "_ViewNcrTsrEmail", ncrDetails, ViewData, TempData);
 
             return htmlString;
         }

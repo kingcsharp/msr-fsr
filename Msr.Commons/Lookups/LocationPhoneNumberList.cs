@@ -13,10 +13,10 @@ namespace Msr.Commons.Lookups
         {
             return new List<SelectListItem>()
             {
-                new SelectListItem {Text = "87459", Value = "XXX-555-2368"},
-                new SelectListItem {Text = "87666", Value = "XXX-555-2368"},
-                new SelectListItem {Text = "87873", Value = "XXX-555-2368"},
-                new SelectListItem {Text = "88080", Value = "XXX-555-2368"}
+                new SelectListItem {Text = "87459", Value = "480-705-9717"},
+                new SelectListItem {Text = "87666", Value = "503-492-0100"},
+                new SelectListItem {Text = "87873", Value = "083731730"},
+                new SelectListItem {Text = "88080", Value = "353 (0) 45435829"}
             };
         }
     }
