@@ -371,6 +371,9 @@
     <Compile Include="ViewModel\DocViewModel.cs" />
     <Compile Include="ViewModel\EditUserViewModel.cs" />
     <Compile Include="ViewModel\AddUserViewModel.cs" />
+    <Compile Include="ViewModel\Wip\AddNcrNotificationEmailViewModel.cs" />
+    <Compile Include="ViewModel\Wip\NcrLocationViewModel.cs" />
+    <Compile Include="ViewModel\Wip\NcrNotificationViewModel.cs" />
     <Compile Include="ViewModel\Wip\PrintViewModel.cs" />
     <Compile Include="ViewModel\Wip\WipStatusViewModel.cs" />
     <Compile Include="ViewModel\Wip\WipStatusViewItem.cs" />
@@ -3492,6 +3495,10 @@
     <Content Include="Views\Report\OperationsDashboard.cshtml" />
     <Content Include="Views\Report\_ViewArchivesButton.cshtml" />
     <Content Include="Views\Shared\_HelpViewButton.cshtml" />
+    <Content Include="Views\Wip\_AddNcrNotificationModal.cshtml" />
+    <Content Include="Views\Wip\_NcrEmailNotificationBodyContent.cshtml" />
+    <Content Include="Views\Wip\_ViewNcrTsr.cshtml" />
+
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

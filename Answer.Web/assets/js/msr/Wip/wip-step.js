@@ -28,6 +28,8 @@
 
         eLoaderOpen();
 
+        var sendEmailNotification = $('#'+stepId).find('.sendncremailnotification').val();
+        var thisStepId = stepId;
         $.ajax({
             type: "POST",
             url: '/wip/StepDoneClick?stepId=' + stepId + '&fillId=' + fillId + '&parentPartId=' + parentPartId + '&isSerilizeStep=' + isSerilizeStep,
@@ -72,9 +74,50 @@
                         }
                     }
 
-                    location.reload(true);
+                    if (sendEmailNotification == "True") {
+                        var fillId = $('body').find('#step-' + thisStepId).find(".monitor-body").find('#fillid').val();
+                        var stepId = $('body').find('#step-' + thisStepId).find(".monitor-body").find('#stepid').val();
+                        var phStepId = $('body').find('#step-' + thisStepId).find(".monitor-body").find('#phstepid')
+                            .val();
 
-                    eLoaderClose();
+                        $.ajax({
+                            type: "GET",
+                            url: "/wip/GetNcrNotificationModal?fillId=" +
+                                fillId +
+                                "&stepId=" +
+                                stepId +
+                                "&phStepId=" +
+                                phStepId,
+                            dataType: 'html',
+                            success: function(data) {
+
+                                $("#notifyCustomerNcrWasAddedModal").find('.modal-body').html(data);
+                                eLoaderClose();
+                                $("#notifyCustomerNcrWasAddedModal").modal("show");
+                                $("#notifyCustomerNcrWasAddedModal").find('#sendncremailnotification').on('click',
+                                    function() {
+
+                                        eLoaderOpen();
+                                        $("#ncrnotificatioemail").submit();
+
+                                    });
+
+                                $("#cancelncremailnotification").find("#cancelncremailnotification").on('click',
+                                    function() {
+                                        location.reload(true);
+                                    });
+
+                            },
+                            error: function(error) {
+
+                                eLoaderError(error);
+                            }
+                        });
+
+                    } else {
+                        location.reload(true);
+                    }
+
                 }
             },
             error: function (error) {
