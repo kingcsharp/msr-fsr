@@ -24,21 +24,9 @@ namespace Answer.Web
                 .Include("~/assets/js/jquery.jqGrid.js")
                 .Include("~/assets/js/i18n/grid.locale-en.js")
                 .Include("~/assets/js/msr/grid-common.js")
+                .Include("~/assets/js/Grids/Monitors.js")
             );
             
-            ScriptBundle scriptBndl = new ScriptBundle("~/bundles/jqgrid");
-            //use Include() method to add all the script files with their paths 
-            scriptBndl.Include(
-                "~/assets/js/grids/Monitors.js"
-            );
-
-            //Add the bundle into BundleCollection
-            bundles.Add(scriptBndl);
-            
-            
-            
-            
-
             bundles.Add(new ScriptBundle("~/bundles/js/jqgrid-wip")
                .Include("~/assets/js/grids/engineer.js")
            );
