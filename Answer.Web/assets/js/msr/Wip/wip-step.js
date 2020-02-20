@@ -102,8 +102,9 @@
 
                                     });
 
-                                $("#cancelncremailnotification").find("#cancelncremailnotification").on('click',
+                                $("#notifyCustomerNcrWasAddedModal").find("#cancelncremailnotification").on('click',
                                     function() {
+                                        eLoaderOpen();
                                         location.reload(true);
                                     });
 

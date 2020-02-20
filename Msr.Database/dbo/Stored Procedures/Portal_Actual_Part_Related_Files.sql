@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[Portal_Actula_Part_Related_Files]
+﻿CREATE PROCEDURE [dbo].[Portal_Actual_Part_Related_Files]
 @ActualPartId nvarchar(100),
 @FileId nvarchar(100),
 @ModBy nvarchar(100)
