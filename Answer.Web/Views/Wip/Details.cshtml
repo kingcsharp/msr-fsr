@@ -107,7 +107,7 @@ var status = new string[] { "COMPLETED", "FINISHED", "CLOSED" };
                                     <tbody>
                                         @if (Model.FileSearchResult != null)
                                         {
-                                            <tr><td>@Model.FileSearchResult.FillObjDesc qty:@Model.FileSearchResult.Qty </td></tr>
+                                            <tr><td>@Model.FileSearchResult.FillObjDesc (Cycle Count: @Model.FileSearchResult.CycleCount) (Qty: @Model.FileSearchResult.Qty) </td></tr>
                                         }
 
                                         @foreach (var part in Model.Parts)
