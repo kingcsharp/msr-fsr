@@ -295,7 +295,6 @@
                 url: "/wip/CancelRemainingSteps?fillId=" + id + "&invoice=" + invoice,
                 dataType: 'json',
                 success: function () {
-                    console.log('In success');
                     $('#wipDetailCancelStepsModal').modal().hide();
                     $(location).attr('href', url);
                 },

@@ -292,13 +292,11 @@ namespace Answer.Web.Controllers
         {
             int id = Convert.ToInt32(ncrNotificationForm.FillId);
 
-
             if (ncrNotificationForm.EmailDestination != null ||
                 ncrNotificationForm.EmailDestinations != null)
             {
                 SendNcrEmailNotification(ncrNotificationForm);
             }
-
 
 
             return RedirectToAction("Details",new {id});
@@ -372,9 +370,7 @@ namespace Answer.Web.Controllers
                     });
                 }
 
-                
-
-                
+               
             }
 
         }
@@ -406,7 +402,9 @@ namespace Answer.Web.Controllers
 
             ncrDetails.MonitorItem = response.MonitorItem;
 
+
             string htmlString = RenderPartialToString(this, "_ViewNcrTsrEmail", ncrDetails, ViewData, TempData);
+
 
             return htmlString;
         }
@@ -1051,6 +1049,7 @@ namespace Answer.Web.Controllers
             {
                 return Json(new { success = true }, JsonRequestBehavior.AllowGet);
             }
+
         }
 
         public ActionResult AddEquipmentMaintenance(string id)

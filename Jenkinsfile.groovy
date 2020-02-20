@@ -29,6 +29,7 @@ pipeline {
                     } catch(e) {
                         office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED installing packages. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
                         currentBuild.result = 'FAILURE'
+                        sh "exit 1"
                     }
                 }
             }
@@ -45,6 +46,7 @@ pipeline {
                     } catch(e) {
                         office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED building Msr.Database. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
                         currentBuild.result = 'FAILURE'
+                        sh "exit 1"
                     }
                 }
             }
@@ -55,13 +57,14 @@ pipeline {
                 script {
                     try {
                         if(env.JOB_NAME == "MSR-FSR/Answer2.0/stage" || env.JOB_NAME.startsWith("MSR-FSR/Answer2.0/Release/Release")) {
-                            bat label: '', script: 'sqlpackage.exe /a:script /SourceFile:%WORKSPACE%\\Msr.Database\\bin\\Release\\Msr.Database.dacpac /TargetConnectionString:"Data Source=bang.msr-fsr.com;Initial Catalog=Answer2_Stage;User Id=sa;Password=L8xvg2FGqs7CEQ+a;Integrated Security=true" /OutputPath:temp.sql'
+                            bat label: '', script: 'sqlpackage.exe /a:script /SourceFile:%WORKSPACE%\\Msr.Database\\bin\\Release\\Msr.Database.dacpac /TargetConnectionString:"Data Source=bang.msr-fsr.com;Initial Catalog=Answer2_Stage;User Id=sa;Password=L8xvg2FGqs7CEQ+a;Integrated Security=true" /V:EquipmentMonitoring=$EquipmentMonitoring /OutputPath:temp.sql'
                         } else {
                             echo "Not building script for ${env.JOB_NAME}"
                         }
                     } catch(e) {
                         office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED generating SQL script from Msr.Database. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
                         currentBuild.result = 'FAILURE'
+                        sh "exit 1"
                     }
                 }
             }
@@ -71,17 +74,18 @@ pipeline {
                 script {
                     try {
                         if(env.JOB_NAME == "MSR-FSR/Answer2.0/stage") {
-                            bat label: '', script: 'sqlpackage.exe /a:publish /SourceFile:%WORKSPACE%\\Msr.Database\\bin\\Release\\Msr.Database.dacpac /TargetConnectionString:"Data Source=bang.msr-fsr.com;Initial Catalog=Answer2_Stage;User Id=sa;Password=L8xvg2FGqs7CEQ+a;Integrated Security=true"'
+                            bat label: '', script: 'sqlpackage.exe /a:publish /SourceFile:%WORKSPACE%\\Msr.Database\\bin\\Release\\Msr.Database.dacpac /TargetConnectionString:"Data Source=bang.msr-fsr.com;Initial Catalog=Answer2_Stage;User Id=sa;Password=L8xvg2FGqs7CEQ+a;Integrated Security=true" /V:EquipmentMonitoring=EquipmentMonitoring /p:BlockOnPossibleDataLoss=false'
                         } else {
                             echo "Only publishing a script for Stage"
                         }
                     } catch(e) {
                         office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED publishing SQL script from Msr.Database. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                        currentBuild.result = 'FAILURE'
+                        sh "exit 1"
                     }
                 }
             }
         }
-        */
         stage("Process Transforms") {
             steps {
                 script {
@@ -96,6 +100,7 @@ pipeline {
                     } catch(e) {
                         office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED processing transforms. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
                         currentBuild.result = 'FAILURE'
+                        sh "exit 1"
                     }
                 }
             }
@@ -108,6 +113,7 @@ pipeline {
                     } catch(e) {
                         office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED building Answer.Web. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
                         currentBuild.result = 'FAILURE'
+                        sh "exit 1"
                     }
                 }
             }
@@ -128,6 +134,7 @@ pipeline {
                     } catch(e) {
                         office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED packaging the release. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
                         currentBuild.result = 'FAILURE'
+                        sh "exit 1"
                     }
                 }
             }
@@ -149,6 +156,7 @@ pipeline {
                         } catch(e) {
                             office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED deploying to server. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
                             currentBuild.result = 'FAILURE'
+                            sh "exit 1"
                         }
                     }
 
@@ -170,9 +178,9 @@ pipeline {
 }
 
 void deploy(appName,deployName) {
-    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: '0ecdc6b1-481b-4af0-8897-ad528b954c49', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+    withCredentials([usernamePassword(credentialsId: 'aws-msrfsr-key-secret', passwordVariable: 'secret', usernameVariable: 'key')])  {
         step([$class: 'AWSCodeDeployPublisher', applicationName: "${appName}",
-              awsAccessKey: "${AWS_ACCESS_KEY_ID}", awsSecretKey: "${AWS_SECRET_ACCESS_KEY}",
+              awsAccessKey: "${key}", awsSecretKey: "${secret}",
               credentials: 'awsAccessKey', deploymentConfig: 'CodeDeployDefault.OneAtATime',
               deploymentGroupAppspec: false, deploymentGroupName: "${deployName}",
               deploymentMethod: 'deploy', excludes: '', iamRoleArn: '', includes: '**',

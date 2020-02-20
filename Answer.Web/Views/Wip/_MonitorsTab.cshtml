@@ -28,21 +28,21 @@
 
                         }
                     </div>
-                    <div class="panel-body panel-height monitor-body">
+                    <div class="panel-body monitor-body">
                         @Html.HiddenFor(x => Model[i].Id)
                         @Html.HiddenFor(x => Model[i].TheSaurusId)
                         @Html.HiddenFor(x => Model[i].StrNtLogin)
-                        @Html.HiddenFor(x => Model[i].FillId, new { Id = "fillid" })
-                        @Html.HiddenFor(x => Model[i].Step_Id, new { Id = "stepid" })
-                        @Html.HiddenFor(x => Model[i].Ph_Step_Id, new { Id = "phstepid" })
+                        @Html.HiddenFor(x => Model[i].FillId, new { @Id = "fillid" })
+                        @Html.HiddenFor(x => Model[i].Step_Id, new { @Id = "stepid" })
+                        @Html.HiddenFor(x => Model[i].Ph_Step_Id, new { @Id = "phstepid" })
                         @Html.HiddenFor(x => Model[i].TASK_ID)
                         @Html.HiddenFor(x => Model[i].Monitor_Type)
                         @Html.HiddenFor(x => Model[i].Input_Type)
                         @Html.HiddenFor(x => Model[i].Monitor_Result_ID)
-                        @Html.HiddenFor(x => Model[i].SEND_NCR_NOTIFICATION_EMAIL, new { Id = "sendemailclient" })
+                        @Html.HiddenFor(x => Model[i].SEND_NCR_NOTIFICATION_EMAIL, new { @Id = "sendemailclient" })
 
-                        <div class="form-group">
-                            <table width="100%" border="0">
+                        <div class="form-group monitor-form">
+                            <table class="table table-condensed" width="100%" border="0">
                                 <tbody>
                                     <tr>
                                         <td class="nw-rght"><label class="control-label">Monitor #:</label></td>
@@ -338,15 +338,7 @@
                                             </td>
                                         </tr>
                                     }
-                                    @if (Model[i].Step_Id != null && int.Parse(Model[i].Step_Id) > 0)
-                                    {
-                                        <tr>
-                                            <td class="nw-rght"><label class="control-label">Proc Step Num:</label></td>
-                                            <td class="text-td">
-                                                @Model[i].Step_Id
-                                            </td>
-                                        </tr>
-                                    }
+
                                     @if (Model[i].Opinion != 0)
                                     {
                                         <tr>
@@ -383,7 +375,7 @@
                                             }
                                             else
                                             {
-                                                @Html.TextAreaFor(x => Model[i].Comment, new { @class = "form-control" })
+                                                @Html.TextAreaFor(x => Model[i].Comment, new { @class = "form-control", placeholder = "Comments to send in Email..." })
                                             }
                                         </td>
                                     </tr>

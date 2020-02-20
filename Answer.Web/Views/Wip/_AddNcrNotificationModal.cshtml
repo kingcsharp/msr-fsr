@@ -12,24 +12,26 @@
             <div class="row">
                 @if (Model.ClientEmails.Count > 1)
                 {
-                    <div class="col-md-5">
-                        <p>Please select a client/customer to send the notification to</p>
-                    </div>
+                <div class="col-md-12">
+                    <p>Please select at least one client/customer to send the NCR notification to:</p>
+                </div>
 
                 }
                 else if (Model.ClientEmails.Count == 1)
                 {
-                    <div class="col-md-5">
-                        <span>The NCR notification will be sent to the following recipient</span>
-                    </div>
+                <div class="col-md-12">
+                    <span>The NCR notification will be sent to the following recipient:</span>
+                </div>
 
                 }
                 else
                 {
-                    <div class="col-md-5">
-                        <span>There is currently no client\customer assigned to this work order, please enter a recipient for this email notification</span>
+                    <div class="col-md-12">
+                        <div class="alert alert-warning alert-dismissable fade in out">
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <i class="fa fa-warning"></i> There is currently no client/customer assigned to this work order. Please enter an email address for the recipient for this NCR notification.
+                        </div>
                     </div>
-
                 }
             </div>
             <div class="row">
@@ -63,11 +65,13 @@
 }
 <script>
 
+
     $(document).ready(function () {
         $('.emaildestination-dropdown').select2({
             dropdownParent: $('#notifyCustomerNcrWasAddedModal')
         });
     });
+
 
 </script>
 
