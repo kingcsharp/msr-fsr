@@ -49,6 +49,7 @@
     [ALWAYS_PASS]                TINYINT        NULL,
     [CANT_CHANGE]                TINYINT        NULL,
     [SENSOR_MAPPING_ID]          INT            NULL,
+    [SEND_NCR_NOTIFICATION_EMAIL]   BIT            NULL
     CONSTRAINT [PK_A_KPI_TEMPLATES] PRIMARY KEY CLUSTERED ([ID] ASC)
 );
 

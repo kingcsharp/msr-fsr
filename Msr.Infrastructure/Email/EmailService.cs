@@ -2,14 +2,16 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
+using System.IO;
 using System.Net.Mail;
+using System.Net.Mime;
 
 namespace Msr.Infrastructure.Email
 {
     public class EmailService
     {
         public static bool SendEmail(string fromEmail, string toEmail, string subject, string body, List<string> ccList,
-           bool isHtml)
+           bool isHtml, Attachment attachment = null)
         {
             try
             {
@@ -49,6 +51,11 @@ namespace Msr.Infrastructure.Email
                 message.IsBodyHtml = isHtml;
                 message.Priority = MailPriority.High;
                 message.BodyEncoding = System.Text.Encoding.GetEncoding("utf-8");
+
+                if (attachment != null)
+                {
+                    message.Attachments.Add(attachment);
+                }
 
                 var smtp = new SmtpClient();
                 smtp.Port = int.Parse(ConfigurationManager.AppSettings["Port"]);

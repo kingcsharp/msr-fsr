@@ -1,0 +1,38 @@
+﻿@using Answer.Web.ViewModel.Wip
+@using Microsoft.OData.UriParser
+@model Answer.Web.ViewModel.Wip.AddNcrNotificationEmailViewModel
+
+Dear MSR-FSR Customer,
+<br />
+
+Date Reported: @Model.DateReported
+<br />
+Technician: @Model.Technician
+<br />
+Part Name: @Model.PartName
+<br />
+Part Number: @Model.PartNumber
+<br />
+Serial Number: @Model.SerialNumber
+<br />
+WO Number: @Model.WorkOrderNumber
+<br />
+Description of NC:
+@foreach (var monitorTemplateResult in Model.MonitorTemplateResults)
+{
+    @monitorTemplateResult.Comment  <br/>;
+}
+<br />
+<br />
+Please log into the MSR-FSR Portal at portal.msr-fsr.com for additional detail, to view photographs, and to enter a disposition.
+<br />
+<br />
+Alternatively you can email your local MSR-FSR Production Manager or call MSR-FSR at the numbers below:
+<br />
+<br />
+@foreach (var locationViewModel in Model.NcrLocationViewModels)
+{
+    @locationViewModel.LocationName <span>,</span> @locationViewModel.StateOrCountry<span> </span>@locationViewModel.LocationPhoneNumber <br/>
+}
+<br />
+<br />

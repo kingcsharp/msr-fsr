@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Msr.Models.Sensor;
-using System.ComponentModel.DataAnnotations.Schema;
 using Msr.Models.EquipmentMaintenances;
 
 namespace Msr.Services.Orders.Procedures
@@ -94,6 +93,9 @@ namespace Msr.Services.Orders.Procedures
         public string Mult_Choice_Answer { get; set; }
 
         public string Target_Object { get; set; }
+
+        public bool? SEND_NCR_NOTIFICATION_EMAIL { get; set; }
+
 
         //[Column("SENSOR_MAPPING_ID")]
 

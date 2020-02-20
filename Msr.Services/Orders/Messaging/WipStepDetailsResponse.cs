@@ -35,6 +35,8 @@ namespace Msr.Services.Orders.Messaging
         public bool HasStepRolesCertification { get; set; }
         public bool HasPreviousStepCompleted { get; set; }
 
+        public string CustomerEmailForNotification { get; set; }
+
         public LoggedUserIdResult LoggedUserIdResult { get; set; }
         public WorkOrderDetailsResponse WorkOrderDetailsResponse { get; set; }
         public TaskEditDataResult TaskEditDataResult { get; set; }

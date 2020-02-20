@@ -1,5 +1,5 @@
 ﻿
-function LoadSelectProcedureGrid(parentId, fillId, procedureType) {
+function LoadSelectProcedureGrid(parentId, fillId, procedureType, customerEmailForNotification) {
     $.jgrid.defaults.styleUI = 'Bootstrap';
     $("#jqGridFiles").jqGrid({
         url: '/wip/AddNcrModelData',
@@ -71,6 +71,7 @@ function LoadSelectProcedureGrid(parentId, fillId, procedureType) {
             $(".addProcSubTask").on('click', function () {
                 $('.ui-jqgrid').block({ message: '<h1><img src="/assets/img/nice_loader.gif" />  Loading. Please wait...</h1>' });
             });
+
         },
         beforeRequest: function () {
             $('.ui-jqgrid').block({ message: '<h1><img src="/assets/img/nice_loader.gif" />  Loading. Please wait...</h1>' });
@@ -96,7 +97,7 @@ function LoadSelectProcedureGrid(parentId, fillId, procedureType) {
     });
 
     function ActionFormatter(cellvalue, options, rowObject) {
-        var attachStep = '<a title="Add Procedure as a Sub Task" href="/wip/AddProcedureToTask?objId=' + rowObject.Id + '&parentId=' + parentId + '&fillId=' + fillId + '" class="btn btn-xs btn-success addProcSubTask" style="margin:2px;font-size: .8em;"><i class="fa fa-link"></i></a>';
+        var attachStep = '<a title="Add Procedure as a Sub Task" href="/wip/AddProcedureToTask?objId=' + rowObject.Id + '&parentId=' + parentId + '&fillId=' + fillId + '" class="btn btn-xs btn-success showLoadingSpinner" style="margin:2px;font-size: .8em;"><i class="fa fa-link"></i></a>';
 
         return attachStep;
     }
