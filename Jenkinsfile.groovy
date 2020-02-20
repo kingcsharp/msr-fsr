@@ -51,7 +51,6 @@ pipeline {
                 }
             }
         }
-        /*
         stage("Generate SQL Script") {
             steps {
                 script {
@@ -164,7 +163,6 @@ pipeline {
                 }
             }
         }
-        /*
         stage("Notify Rollbar") {
             agent { label 'master'}
             steps {
