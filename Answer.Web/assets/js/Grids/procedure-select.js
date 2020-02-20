@@ -1,4 +1,3 @@
-﻿
 function LoadSelectProcedureGrid(parentId, procedureType) {
     $.jgrid.defaults.styleUI = 'Bootstrap';
     $("#jqGridFiles").jqGrid({
@@ -71,6 +70,7 @@ function LoadSelectProcedureGrid(parentId, procedureType) {
             $(".addProcSubTask").on('click', function () {
                 $('.ui-jqgrid').block({ message: '<h1><img src="/assets/img/nice_loader.gif" />  Loading. Please wait...</h1>' });
             });
+
             $('[data-toggle="tooltip"]').tooltip();
 
             $('.ncr-insert-button').click(function (e) {
@@ -97,6 +97,7 @@ function LoadSelectProcedureGrid(parentId, procedureType) {
                 });
 
             });
+
         },
         beforeRequest: function () {
             $('.ui-jqgrid').block({ message: '<h1><img src="/assets/img/nice_loader.gif" />  Loading. Please wait...</h1>' });
@@ -122,7 +123,9 @@ function LoadSelectProcedureGrid(parentId, procedureType) {
     });
 
     function ActionFormatter(cellvalue, options, rowObject) {
+
         var attachStep = '<a data-objId="' + rowObject.Id + '" data-parentId="' + parentId + '" data-toggle="tooltip" data-placement="left" title="Insert Procedure as a Sub Task" class="btn btn-xs btn-success ncr-insert-button" style = "margin:2px;font-size: .8em;" > <i class="fa fa-link"></i> Insert </a>';
+
 
         return attachStep;
     }
