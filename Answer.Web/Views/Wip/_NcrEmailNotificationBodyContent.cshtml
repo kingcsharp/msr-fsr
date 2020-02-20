@@ -4,7 +4,7 @@
 
 Dear MSR-FSR Customer,
 <br />
-
+<br />
 Date Reported: @Model.DateReported
 <br />
 Technician: @Model.Technician
@@ -18,10 +18,14 @@ Serial Number: @Model.SerialNumber
 WO Number: @Model.WorkOrderNumber
 <br />
 Description of NC:
-@foreach (var monitorTemplateResult in Model.MonitorTemplateResults)
-{
-    @monitorTemplateResult.Comment  <br/>;
-}
+<ul>
+    @foreach (var monitorTemplateResult in Model.MonitorTemplateResults)
+    {
+        <li>@monitorTemplateResult.Comment</li>
+    }
+</ul>
+<br/>
+For additional details, please see the attached report.
 <br />
 <br />
 Please log into the MSR-FSR Portal at portal.msr-fsr.com for additional detail, to view photographs, and to enter a disposition.

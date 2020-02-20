@@ -259,7 +259,6 @@
             });
         });
 
-
         $('#btn-take-over-task').on('click', function () {
             var id = $(this).data('id');
 
@@ -290,12 +289,12 @@
             var id = $("#fillId").val();
             var invoice = $("#invoice").val();
             var url = "/wip";
+
             $.ajax({
                 type: "POST",
                 url: "/wip/CancelRemainingSteps?fillId=" + id + "&invoice=" + invoice,
                 dataType: 'json',
                 success: function () {
-                    console.log('In success');
                     $('#wipDetailCancelStepsModal').modal().hide();
                     $(location).attr('href', url);
                 },
@@ -305,7 +304,8 @@
             });
         });
 
-        $('#ncr-notification-button').on('click', function () {
+        $('#ncr-notification-button').on('click', function (e) {
+            e.preventDefault();
             var id = $('#fill-id').val();
 
             $.ajax({
@@ -314,22 +314,7 @@
                 dataType: 'html',
                 success: function (data) {
                     $('#ncrModal').modal("show");
-                    $('#ncrModal').find('.modal-body').html(data);
-                },
-                error: function () { }
-            });
-        });
-
-        $('#ncr-notification-button').on('click', function () {
-            var id = $('#fill-id').val();
-
-            $.ajax({
-                type: "GET",
-                url: '/wip/getncrmodel?id=' + id,
-                dataType: 'html',
-                success: function (data) {
-                    $('#ncrModal').modal("show");
-                    $('#ncrModal').find('.modal-body').html(data);
+                    $('#ncr-grid-container').html(data);
                 },
                 error: function () { }
             });

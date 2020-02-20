@@ -21,5 +21,7 @@ namespace Answer.Web.ViewModel.Wip
         [DisplayName("Email Recipient")]
         public string EmailDestination { get; set; }
 
+        public IEnumerable<string> EmailDestinations { get; set; }
+
     }
 }

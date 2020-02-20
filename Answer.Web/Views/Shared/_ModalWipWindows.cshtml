@@ -277,6 +277,8 @@
                 <h4 class="modal-title">Add NCR Procedure</h4>
             </div>
             <div class="modal-body" style="min-height: 200px">
+                <div id="procedure-insertion-message" class="alert alert-danger hidden"></div>
+                <div id="ncr-grid-container"></div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close-o"></i> Close</button>
@@ -291,13 +293,13 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Customer Email Notification</h4>
+                <h4 class="modal-title">Customer NCR Email Notification</h4>
             </div>
             <div class="modal-body" style="min-height: 200px">
             </div>
             <div class="modal-footer">
-                <button type="button" id="cancelncremailnotification" class="btn btn-info" data-dismiss="modal"><i class="fa fa-close-o"></i> Cancel</button>
-                <button type="button" id="sendncremailnotification" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close-o"></i> Ok</button>
+                <button type="button" id="sendncremailnotification" class="btn btn-warning" data-dismiss="modal" data-toggle="tooltip" data-placement="top" title="Send Email the Email and Continue"><i class="fa fa-send-o"></i> Send and Continue</button>
+                <button type="button" id="cancelncremailnotification" class="btn btn-info" data-dismiss="modal" data-toggle="tooltip" data-placement="top" title="Cancel and Don't Send Email"><i class="fa fa-close-o"></i> Cancel</button>
             </div>
         </div>
     </div>

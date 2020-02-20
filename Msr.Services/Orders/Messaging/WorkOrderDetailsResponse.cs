@@ -24,6 +24,5 @@ namespace Msr.Services.Orders.Messaging
         public IEnumerable<SelectListItem> WorkItems { get; set; }
         public bool HasProcedureRoles { get; set; }
         public string ActualPartId { get; set; }
-        public string PartImageId { get; set; }
     }
 }

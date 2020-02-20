@@ -1,23 +1,16 @@
 ﻿@model Msr.Services.Orders.ViewModels.AddNcrViewModel
 
-
-<table id="jqGridFiles"></table>
-<div id="jqGridPagerFiles"></div>
+    <div id="ncr-grid-container">
+        <!--<table id="jqGridFiles"></table>
+        <div id="jqGridPagerFiles"></div>-->
+    </div>
 
 @Scripts.Render("~/bundles/js/jqgrid")
-
-<script src="//cdn.rawgit.com/noelboss/featherlight/1.6.1/release/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
-<script type="text/javascript" src="~/assets/js/grids/files-dialog.js"></script>
-<script type="text/javascript" src="~/assets/js/jquery.flexslider.js"></script>
-<script type="text/javascript" src="~/assets/js/bootstrap-select.js"></script>
-<script type="text/javascript" src="~/assets/js/finger.min.js"></script>
-<script type="text/javascript" src="~/assets/js/timer.jquery.min.js"></script>
-<script src="~/assets/js/plugins/bootstrap3/bootstrap-dialog.min.js"></script>
 <script src="~/assets/js/grids/procedure-select.js"></script>
 
 <script>
     $(document).ready(function() {
         LoadSelectProcedureGrid('@Model.ParentId', '@Model.FillId', 'ncr');
-        });
-
+    });
+    
 </script>

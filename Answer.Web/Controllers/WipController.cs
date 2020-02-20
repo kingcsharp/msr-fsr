@@ -292,7 +292,12 @@ namespace Answer.Web.Controllers
         {
             int id = Convert.ToInt32(ncrNotificationForm.FillId);
 
-            SendNcrEmailNotification(ncrNotificationForm);
+            if (ncrNotificationForm.EmailDestination != null ||
+                ncrNotificationForm.EmailDestinations != null)
+            {
+                SendNcrEmailNotification(ncrNotificationForm);
+            }
+
 
             return RedirectToAction("Details",new {id});
         }
@@ -352,17 +357,20 @@ namespace Answer.Web.Controllers
                 string body = str;
                 List<string> ccList = new List<string>();
                 bool isHtml = true;
-                string toEmail = string.Empty;
 
-                //This code is placed here so during debugging, the email is always sent to the developer logged in
-#if DEBUG
-                toEmail = technicianEmail;
-#else
-     toEmail = ncrNotificationViewModel.EmailDestination;
-#endif
-                
+                if (ncrNotificationViewModel.EmailDestinations == null)
+                {
+                    EmailService.SendEmail(fromEmail, ncrNotificationViewModel.EmailDestination, subject, body, ccList, isHtml,attachment);
+                }
+                else
+                {
+                    ncrNotificationViewModel.EmailDestinations.ToList().ForEach(email =>
+                    {
+                        EmailService.SendEmail(fromEmail, email, subject, body, ccList, isHtml,attachment);
+                    });
+                }
 
-                EmailService.SendEmail(fromEmail, toEmail, subject, body, ccList, isHtml,attachment);
+               
             }
 
         }
@@ -394,7 +402,9 @@ namespace Answer.Web.Controllers
 
             ncrDetails.MonitorItem = response.MonitorItem;
 
-            string htmlString = RenderPartialToString(this, "_ViewNcrTsr", ncrDetails, ViewData, TempData);
+
+            string htmlString = RenderPartialToString(this, "_ViewNcrTsrEmail", ncrDetails, ViewData, TempData);
+
 
             return htmlString;
         }
@@ -1028,12 +1038,18 @@ namespace Answer.Web.Controllers
             return View(viewModel);
         }
 
-        public ActionResult AddProcedureToTask(string objId, string parentId, string fillId)
+        public ActionResult AddProcedureToTask(string objId, string parentId)
         {
             
-            _orderService.AddProcedureAsSubTask(objId, parentId, GetCurrentUser().Id);
+            var ResponseMessages = _orderService.AddProcedureAsSubTask(objId, parentId, GetCurrentUser().Id);
+            if (ResponseMessages == null)
+            {
+                return Json(new { success = false, responseText = ResponseMessages }, JsonRequestBehavior.AllowGet);
+            } else
+            {
+                return Json(new { success = true }, JsonRequestBehavior.AllowGet);
+            }
 
-            return RedirectToAction("Details", new { id = fillId });
         }
 
         public ActionResult AddEquipmentMaintenance(string id)
