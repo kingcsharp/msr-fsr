@@ -163,6 +163,7 @@ pipeline {
                 }
             }
         }
+        /*
         stage("Notify Rollbar") {
             agent { label 'master'}
             steps {
@@ -171,6 +172,7 @@ pipeline {
                 }
             }
         }
+        */
     }
 }
 
