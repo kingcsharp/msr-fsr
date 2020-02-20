@@ -17,7 +17,10 @@
             <div class="datatable">
                 <div class="page-header">
                     <h1 ndtype="heading">Combined Financial Data</h1>
+                    @Html.Partial("_ViewArchivesButton")
                     @Html.Partial("_HelpViewButton")
+
+
                 </div>
                 <div class="report-content" id="combinedFinancialGrid"></div>
             </div>
@@ -28,11 +31,13 @@
         <div class="col-xs-12">
             <div class="datatable">
                 <div class="page-header"><h1>Work Orders Not Invoiced</h1></div>
-                <div  class="report-content" id="wONoInvoiceURLGrid"></div>
+                <div class="report-content" id="wONoInvoiceURLGrid"></div>
             </div>
         </div>
     </div>
 </div>
+
+@Html.Partial("_ArchivesModal")
 
 @section Scripts{
     @*<script src="~/assets/js/reports/libs/js-xlsx/xlsx.core.min.js"></script>*@

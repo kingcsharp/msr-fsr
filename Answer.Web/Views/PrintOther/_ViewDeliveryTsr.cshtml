@@ -1,6 +1,13 @@
 ﻿@model Msr.Services.Orders.Messaging.DeliveryTsrDetailsResponse
     
     <link href="~/assets/css/print.css" rel="stylesheet" />
+    <style>
+        th.header {
+            float:right;
+            margin-right:2px;
+            vertical-align:top;
+        }
+    </style>
     <div class="col-md-12 col-sm-12" style="margin-top:20px;">
         <table id="delivery-tsr" class="table table-bordered report-table">
             <tbody>
@@ -24,23 +31,50 @@
                                             <span class="subTitle step-underline">Ship To:</span><br />
                                             <span>@Model.PurchaseItemInfoResult.CompanyName</span>
                                         </td>
-                                        <td style="padding-left: 5px;">
-                                            <span class="bold">Ship Date:</span>
-                                            <span>@Model.PurchaseWithSupplierQuotesResult.ShipDate</span><br />
-                                            <span class="bold">Material Transfer #:</span>
-                                            <span>@Model.PurchaseItemInfoResult.MaterialTransferTicketNumber</span><br />
-                                            <span class="bold">Customer PO #:</span>
-                                            <span>@Model.PurchaseWithSupplierQuotesResult.CustomerPo</span><br />
-                                            <span class="bold">Order Qty:***</span>
-                                            <span>@Model.PurchaseItemInfoResult.Quantity</span><br />
-                                            <span class="bold">Purchase #:***</span>
-                                            <span>@Model.PurchaseWithSupplierQuotesResult.PurchaseNumber</span><br />
-                                            <span class="bold">Customer WO Item #</span>
-                                            <span>@Model.PurchaseItemInfoResult.CustomerWoItemNumber</span><br />
-                                            <span class="bold">Blanket PO Num:***</span>
-                                            <span></span><br />
-                                            <span class="bold">Barcode:***</span>
-                                            <span><img id="barcode-purchase" style="float: right;width: 55%;" /></span><br />
+                                        <td style="padding:0">
+                                            <table class="table table-condensed no-border" width="100%">
+                                                <tr>
+                                                    <th class="header">Ship Date:</th>
+                                                    <td>@Model.PurchaseWithSupplierQuotesResult.ShipDate</td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="header">Material Transfer #:</th>
+                                                    <td>@Model.PurchaseItemInfoResult.MaterialTransferTicketNumber</td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="header">Customer PO #:</th>
+                                                    <td>@Model.PurchaseWithSupplierQuotesResult.CustomerPo</td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="header">Order Qty:</th>
+                                                    <td>@Model.PurchaseItemInfoResult.Quantity</td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="header">Purchase #:</th>
+                                                    <td>@Model.PurchaseWithSupplierQuotesResult.PurchaseNumber</td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="header">Customer WO Item #</th>
+                                                    <td>@Model.PurchaseItemInfoResult.CustomerWoItemNumber</td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="header">Blanket PO #:</th>
+                                                    <td>&nbsp;</td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="header">Barcode:</th>
+                                                    <td>
+                                                        <svg class="barcode" 
+                                                             jsbarcode-value="@Model.PurchaseWithSupplierQuotesResult.CustomerPo"
+                                                             jsbarcode-format="CODE128"
+                                                             jsbarcode-displayValue="false"
+                                                             jsbarcode-margin="0"
+                                                             jsbarcode-width="1.33"
+                                                             jsbarcode-height="20">
+                                                        </svg>
+                                                    </td>
+                                                </tr>
+                                            </table>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -63,8 +97,17 @@
                                             <td class="border" style="width: 33%">@Model.PurchaseItemInfoResultList[i].Description</td>
                                             <td class="border" style="width: 12%">@Model.PurchaseItemInfoResultList[i].Serial</td>
                                             <td class="border" style="width: 0%"></td>
-                                            <td class="border" style="width: 100%"><img id="barcode-item" style="width: 220px;" /></td>
-                                            @*<td class="border" style="width: 100%"><img id="barcode-custlineitem" style="width: 220px;" /></td>*@
+                                            <td class="border" style="width: 100%">
+                                                PO/Line #: <strong>@Model.PurchaseWithSupplierQuotesResult.CustomerPo / @Model.PurchaseItemInfoResult.CustLineItem</strong><br />
+                                                <svg class="barcode"
+                                                     jsbarcode-value="@string.Format("{0}/{1}",Model.PurchaseWithSupplierQuotesResult.CustomerPo, Model.PurchaseItemInfoResult.CustLineItem)"
+                                                     jsbarcode-format="CODE128"
+                                                     jsbarcode-displayValue="false"
+                                                     jsbarcode-margin="3" ,
+                                                     jsbarcode-width="1"
+                                                     jsbarcode-height="20">
+                                                </svg>
+                                            </td>
                                         </tr>
                                     }
 
@@ -93,24 +136,7 @@
 <script src="~/assets/js/JsBarcode.all.min.js"></script>
 <script>
     $(document).ready(function () {
-
-        JsBarcode("#barcode-purchase", "@Model.PurchaseWithSupplierQuotesResult.CustomerPo", {
-            format:"CODE128",
-            displayValue: false,
-            width: 2,
-            height: 40,
-            fontSize:24,
-            lineColor: "#000808"
-        });
-
-        JsBarcode("#barcode-item", "@string.Format("{0}/{1}",Model.PurchaseWithSupplierQuotesResult.CustomerPo, Model.PurchaseItemInfoResult.CustLineItem)", {
-            format:"CODE128",
-            displayValue: false,
-            width: 2,
-            height: 40,
-            fontSize:24,
-            lineColor: "#000808"
-        });
+        JsBarcode(".barcode").init();
     })
 
 </script>

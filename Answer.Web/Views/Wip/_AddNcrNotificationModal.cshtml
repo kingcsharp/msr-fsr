@@ -1,0 +1,78 @@
+﻿@model Answer.Web.ViewModel.Wip.NcrNotificationViewModel
+
+@using (Html.BeginForm("SendEmailNotification", "Wip", FormMethod.Post, new { @class = "form form-horizontal", role = "form", id = "ncrnotificatioemail", name = "ncrnotificatioemail" }))
+{
+    <div class="container-fluid">
+        <div class="form-group">
+            <div class="row">
+                @Html.HiddenFor(s => s.FillId)
+                @Html.HiddenFor(s => s.PhStepId)
+                @Html.HiddenFor(s => s.StepId)
+            </div>
+            <div class="row">
+                @if (Model.ClientEmails.Count > 1)
+                {
+                <div class="col-md-12">
+                    <p>Please select at least one client/customer to send the NCR notification to:</p>
+                </div>
+
+                }
+                else if (Model.ClientEmails.Count == 1)
+                {
+                <div class="col-md-12">
+                    <span>The NCR notification will be sent to the following recipient:</span>
+                </div>
+
+                }
+                else
+                {
+                    <div class="col-md-12">
+                        <div class="alert alert-warning alert-dismissable fade in out">
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <i class="fa fa-warning"></i> There is currently no client/customer assigned to this work order. Please enter an email address for the recipient for this NCR notification.
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    @Html.LabelFor(s => Model.EmailDestination)
+                </div>
+            </div>
+            @if (Model.ClientEmails.Count > 1)
+            {
+                <div class="row">
+                    <div class="col-md-5">@Html.DropDownListFor(s => s.EmailDestinations, Model.ClientEmails, new { @class = "form-control emaildestination-dropdown", @multiple = "multiple", placeholder = "Select recipients" })</div>
+                </div>
+
+            }
+            else if (Model.ClientEmails.Count == 1)
+            {
+
+                <div class="row">
+                    <div class="col-md-5">@Html.TextBoxFor(s => s.EmailDestination, new { @readonly = "readonly", @class = "form-control" })</div>
+                </div>
+            }
+            else
+            {
+                <div class="row">
+                    <div class="col-md-5">@Html.TextBoxFor(s => Model.EmailDestination, new { @class = "form-control" })</div>
+                </div>
+            }
+
+        </div>
+    </div>
+}
+<script>
+
+
+    $(document).ready(function () {
+        $('.emaildestination-dropdown').select2({
+            dropdownParent: $('#notifyCustomerNcrWasAddedModal')
+        });
+    });
+
+
+</script>
+
+

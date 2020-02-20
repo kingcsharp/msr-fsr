@@ -51,7 +51,7 @@ else
 
     <div class="row" id="@Model.StepId">
         <div class="col-xs-12" style="margin-bottom:0">
-
+            <input type="hidden" class="sendncremailnotification" value="@ViewBag.SendNcrEmailNotification.ToString()"/>
             @if (Model.HasStepRoles && Model.HasPreviousStepCompleted)
             {
                 <div id="timer-input" class="@controlLeft timer-input timer-col @timerInput" style="margin-left:-15px;">
@@ -194,10 +194,11 @@ else
 	    $(document).on("click","#addNcrModal_", function () {
 	        $('#addNcrModal').modal('show');
 	        $('#addNcrModal').find('.modal-body').empty()
-	            .html('<table id="jqGridFiles"></table><div id="jqGridPagerFiles"></div>');
+	            .html('<div id="ncr-grid-container"><table id="jqGridFiles"></table><div id="jqGridPagerFiles"></div></div>');
 
+            
 	        setTimeout(function() {
-	            LoadSelectProcedureGrid('@Model.StepId', '@Model.FillId', 'ncr');
+	            LoadSelectProcedureGrid('@Model.StepId', '@Model.FillId', 'ncr','@Model.CustomerEmailForNotification');
 	        },300);
 	    });
 		//stepControls.AddNcrModel();
