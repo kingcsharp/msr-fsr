@@ -39,7 +39,7 @@ pipeline {
                 script {
                     try {
                         if(env.JOB_NAME == "MSR-FSR/Answer2.0/stage") {
-                            bat "\"${tool 'v2019'}\" Msr.Database/Msr.Database.sqlproj /t:Build /p:Configuration=Release /V:EquipmentMonitoring=$EquipmentMonitoring"
+                            bat "\"${tool 'v2019'}\" Msr.Database/Msr.Database.sqlproj /t:Build /p:Configuration=Release"
                         } else {
                             echo "Not building database for ${env.JOB_NAME}"
                         }
