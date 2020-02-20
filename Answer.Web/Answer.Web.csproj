@@ -3484,6 +3484,7 @@
     <Content Include="Views\Wip\_AddNcrNotificationModal.cshtml" />
     <Content Include="Views\Wip\_NcrEmailNotificationBodyContent.cshtml" />
     <Content Include="Views\Wip\_ViewNcrTsr.cshtml" />
+    <Content Include="Views\Wip\_ViewNcrTsrEmail.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
