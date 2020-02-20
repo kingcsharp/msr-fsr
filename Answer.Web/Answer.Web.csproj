@@ -3498,6 +3498,7 @@
     <Content Include="Views\Wip\_ViewNcrTsr.cshtml" />
     <Content Include="Views\Report\_ArchivesModal.cshtml" />
     <Content Include="Views\Report\_ViewArchivesButton.cshtml" />
+    <Content Include="Views\ProductionPlanning\_Modals.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
