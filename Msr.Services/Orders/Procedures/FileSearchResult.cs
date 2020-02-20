@@ -30,5 +30,7 @@ namespace Msr.Services.Orders.Procedures
         public string CustPurchNum { get; set; }
 
         public string CustPurchLineNum { get; set; }
+
+        public string PartImageId { get; set; }
     }
 }
