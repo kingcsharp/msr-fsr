@@ -613,6 +613,9 @@
     <Content Include="assets\img\jpg.png" />
     <Content Include="assets\img\loading.gif" />
     <Content Include="assets\img\msr-ccs.png" />
+    <Content Include="assets\img\msr-fsr-logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="assets\img\msr-label-logo.png" />
     <Content Include="assets\img\msr-label-no-parts-image.png" />
     <Content Include="assets\img\nice_loader.gif" />
@@ -3498,6 +3501,8 @@
     <Content Include="Views\Shared\_HelpViewButton.cshtml" />
     <Content Include="Views\Report\_ArchivesModal.cshtml" />
     <Content Include="Views\Report\_ViewArchivesButton.cshtml" />
+    <Content Include="Views\Wip\_AddNcrNotificationModal.cshtml" />
+    <Content Include="Views\Shared\_DocView2.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
