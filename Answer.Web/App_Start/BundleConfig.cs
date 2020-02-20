@@ -24,8 +24,9 @@ namespace Answer.Web
                 .Include("~/assets/js/jquery.jqGrid.js")
                 .Include("~/assets/js/i18n/grid.locale-en.js")
                 .Include("~/assets/js/msr/grid-common.js")
+                .Include("~/assets/js/Grids/Monitors.js")
             );
-
+            
             bundles.Add(new ScriptBundle("~/bundles/js/jqgrid-wip")
                .Include("~/assets/js/grids/engineer.js")
            );

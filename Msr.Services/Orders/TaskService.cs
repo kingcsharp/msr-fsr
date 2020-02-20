@@ -44,7 +44,7 @@ namespace Msr.Services.Orders
         {
             var fileIdParm = new SqlParameter("@partId", partId);
 
-            var result = _dbContext.Database.SqlQuery<int>("PortalHasNcr @partId", fileIdParm).Single();
+            var result = _dbContext.Database.SqlQuery<int>("Portal_HasNcr @partId", fileIdParm).Single();
 
             return result;
         }
