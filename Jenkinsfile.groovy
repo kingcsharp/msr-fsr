@@ -51,6 +51,7 @@ pipeline {
                 }
             }
         }
+        /*
         stage("Generate SQL Script") {
             steps {
                 script {

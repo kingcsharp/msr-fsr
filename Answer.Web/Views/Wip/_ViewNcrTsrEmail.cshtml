@@ -1,0 +1,158 @@
+﻿@model Msr.Services.Orders.Messaging.NcrReportResponse
+
+@Styles.Render("~/assets/css/bootstrap")
+@Styles.Render("~/assets/css/main")
+<link href="~/assets/css/print.css" rel="stylesheet" />
+
+<div class="col-md-12 col-sm-12">
+    <img src="~/assets/img/msr-fsr-logo.png" alt="MSR-FSR Logo" />
+    <div class="visible-print" style="margin-bottom:10px;">&nbsp;</div>
+
+    <h4>Part Non Conformance Report - Work Order #@Model.Details.PurchItemId</h4>
+
+    <table class="table table-bordered report-table">
+        <tr>
+            <td>@Model.Details.SupName</td>
+            <td>@Model.Details.FillObjDesc</td>
+        </tr>
+    </table>
+
+    <table class="table table-bordered report-table">
+        <tbody>
+            <tr>
+                <td class="theader">Date Report Prepared:</td>
+                <td>@DateTime.UtcNow</td>
+            </tr>
+            <tr>
+                <td class="theader">Work Order #:</td>
+                <td>@Model.Details.PurchItemId</td>
+            </tr>
+            <tr>
+                <td class="theader">Customer:</td>
+                <td>@Model.Details.CustName</td>
+            </tr>
+            <tr>
+                <td class="theader">Technician:</td>
+                <td>@Model.Details.Technician</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table table-bordered ncr-report report-table">
+        <thead>
+            <tr>
+                <th>Part #</th>
+                <th>Part Name</th>
+                <th>Serial Number</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@Model.Details.PartNumber</td>
+                <td>@Model.Details.PartDesc</td>
+                <td>@Model.Details.Serial</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table table-bordered">
+        <tbody>
+            <tr>
+                <td class="theader">Associated Documents:</td>
+                <td>
+                    @foreach (var doc in Model.StepPics)
+                    {
+                        <a href="~/doc/view?filePath=@doc.ServerPath&fileType=@doc.ContentType&fileName=@doc.Name">
+                            @(doc.Name + " - " + doc.Description)
+                        </a>
+                        <br />
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td class="theader">Associated Digital Pictures:</td>
+                <td colspan="2">
+                    @foreach (var photo in Model.Photos)
+                    {
+                        <a href="@photo.DocumentURL" data-featherlight="image">
+                            <img src="@photo.DocumentURL" width="30%" class="img-responsive img-rounded pull-left" alt="" style="margin-left: 10px; margin-bottom: 10px">
+                        </a>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td class="theader">Comments:</td>
+                <td>
+                    @if (!string.IsNullOrWhiteSpace(Model.Details.Comments))
+                    {
+                        foreach (var comment in Model.Details.Comments.Split('|'))
+                        {
+                            @comment
+                            <br />
+                        }
+                    }
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p>&nbsp;</p>
+
+    <table class="table table-bordered monitor-tabel">
+        @foreach (var task in Model.MonitorItem)
+        {
+            <thead>
+                <tr>
+                    <th colspan="4" @if (task.IsNCRTask == true) { @Html.Raw("bgcolor='#030ffc'") ; }>
+                        @task.TaskTitle
+                        @if (task.IsNCRTask == true)
+                        {@Html.Raw("&nbsp;(NCR Task)");
+                    }
+                    </th>
+                </tr>
+                @if (task.MonitorResults?.Any() == true)
+                {
+                    <tr>
+                        <th>Monitor @task.TaskId</th>
+                        <th>Result</th>
+                        <th>Comment</th>
+                    </tr>
+                }
+            </thead>
+            <tbody>
+                @if (task.MonitorResults?.Any() == true)
+                {
+                    foreach (var monitor in task.MonitorResults)
+                    {
+                        <tr>
+                            <td>
+                                @if (monitor.InputType?.Trim().ToUpper() == "SENSOR" && string.IsNullOrWhiteSpace(monitor.Description) == true)
+                                {
+                                    @Html.Raw(@"Sensor Value")
+                                }
+                                else
+                                {
+                                    @monitor.Description
+                                }
+                            </td>
+                            <td>
+                                @if (monitor.MonitorType?.Trim().ToUpper() == "SELECT" && (monitor.ListSource?.Trim().ToUpper().Contains("NCR_CATEGORY") == true || monitor.ListSource?.Trim().ToUpper().Contains("NCRCATEGORY") == true))
+                                {
+                                    @Html.Raw(@"NCR Category:")
+                                }
+                                @monitor.PrintResult
+                            </td>
+                            <td>@monitor.Comment</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="3">&nbsp;</td>
+                    </tr>
+                }
+            </tbody>
+        }
+    </table>
+</div>
