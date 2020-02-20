@@ -20,7 +20,7 @@
                 else if (Model.ClientEmails.Count == 1)
                 {
                     <div class="col-md-5">
-                        <span>Please verify the client/customer email address for this notification</span>
+                        <span>The NCR notification will be sent to the following recipient</span>
                     </div>
 
                 }
@@ -40,14 +40,21 @@
             @if (Model.ClientEmails.Count > 1)
             {
                 <div class="row">
-                    <div class="col-md-5">@Html.DropDownListFor(s => s.EmailDestination, Model.ClientEmails, new { @class = "form-control" })</div>
+                    <div class="col-md-5">@Html.DropDownListFor(s => s.EmailDestinations, Model.ClientEmails, new { @class = "form-control emaildestination-dropdown", @multiple = "multiple", placeholder = "Select recipients" })</div>
                 </div>
 
+            }
+            else if (Model.ClientEmails.Count == 1)
+            {
+
+                <div class="row">
+                    <div class="col-md-5">@Html.TextBoxFor(s => s.EmailDestination, new { @readonly = "readonly", @class = "form-control" })</div>
+                </div>
             }
             else
             {
                 <div class="row">
-                    <div class="col-md-5">@Html.TextBoxFor(s => Model.EmailDestination)</div>
+                    <div class="col-md-5">@Html.TextBoxFor(s => Model.EmailDestination, new { @class = "form-control" })</div>
                 </div>
             }
 
@@ -56,8 +63,11 @@
 }
 <script>
 
-
-
+    $(document).ready(function () {
+        $('.emaildestination-dropdown').select2({
+            dropdownParent: $('#notifyCustomerNcrWasAddedModal')
+        });
+    });
 
 </script>
 
