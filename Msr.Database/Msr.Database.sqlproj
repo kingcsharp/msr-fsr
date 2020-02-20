@@ -2610,7 +2610,6 @@
     <Build Include="dbo\Views\A_O_NEEDS.sql" />
     <Build Include="dbo\Functions\A_FN_DISCUSSION_GET_STANDARD_SEARCH_FLAG.sql" />
     <Build Include="dbo\Functions\A_FN_DISCUSSION_GET_LAST_VIEW_DATE.sql" />
-    <Build Include="dbo\Stored Procedures\GetTsrDetails.sql" />
     <Build Include="dbo\Stored Procedures\A_SP_TASK_UPDATE_PURPOSE_OBJECTS_PROJECTS.sql" />
     <Build Include="dbo\Stored Procedures\A_SP_TASK_GET_MEETINGS_FOR_ONE_TASK.sql">
       <QuotedIdentifier>Off</QuotedIdentifier>
