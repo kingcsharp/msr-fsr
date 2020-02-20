@@ -2283,7 +2283,7 @@
     <Build Include="dbo\Tables\AspNetRoles.sql" />
     <Build Include="dbo\Tables\AspNetUserRoles.sql" />
     <Build Include="dbo\Tables\Portal_Note.sql" />
-    <Build Include="dbo\Stored Procedures\Portal\PortalHasNcr.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_HasNcr.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_WorkItemImagesById.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_Check_Login.sql" />
     <Build Include="dbo\Stored Procedures\Portal\Portal_DeleteWorkItemImagesById.sql" />
@@ -2612,7 +2612,6 @@
     <Build Include="dbo\Views\A_O_NEEDS.sql" />
     <Build Include="dbo\Functions\A_FN_DISCUSSION_GET_STANDARD_SEARCH_FLAG.sql" />
     <Build Include="dbo\Functions\A_FN_DISCUSSION_GET_LAST_VIEW_DATE.sql" />
-    <Build Include="dbo\Stored Procedures\GetTsrDetails.sql" />
     <Build Include="dbo\Stored Procedures\A_SP_TASK_UPDATE_PURPOSE_OBJECTS_PROJECTS.sql" />
     <Build Include="dbo\Stored Procedures\A_SP_TASK_GET_MEETINGS_FOR_ONE_TASK.sql">
       <QuotedIdentifier>Off</QuotedIdentifier>
@@ -2856,9 +2855,7 @@
     <Build Include="dbo\Views\Portal_NotificationView.sql" />
     <Build Include="dbo\Views\A_V_LOCATIONS_APPROVED_SITES_AND_ROOMS.sql" />
     <Build Include="dbo\Stored Procedures\Portal_DeleteWorkItemImagesById1.sql" />
-    <Build Include="dbo\Stored Procedures\Portal_Actula_Part_Related_Files.sql" />
-    <Build Include="dbo\Stored Procedures\DatabaseSchema_SelectMultipleTriggers.sql" />
-    <Build Include="dbo\Stored Procedures\sp_CopyProdToStage.sql" />
+    <Build Include="dbo\Stored Procedures\Portal_Actual_Part_Related_Files.sql" />
     <Build Include="dbo\Views\Portal\Portal_SubPartsGrid.sql" />
     <Build Include="dbo\Views\Portal\Portal_WorkOrderPartsWithSubPartsView.sql" />
     <Build Include="dbo\Tables\A_POS_WITH_COMPLETED_WOS.sql" />
@@ -2867,26 +2864,12 @@
     <Build Include="dbo\Views\Portal\Portal_SubPartsGrid.sql" />
     <Build Include="dbo\Views\Portal\Portal_WorkOrderPartsWithSubPartsView.sql" />
     <Build Include="dbo\Tables\Sensor_Mapping.sql" />
-    <Build Include="dbo\Stored Procedures\Deployment_TestProc.sql" />
     <!--<Build Include="dbo\Stored Procedures\WIP_GET_STEP_DETAILS.sql" />-->
     <Build Include="dbo\Views\Report_WorkOrdersWithoutInvoices.sql" />
     <Build Include="dbo\Tables\NCR_Categories.sql" />
     <Build Include="dbo\Views\Report_WorkOrdersWithoutInvoicesVIEW.sql" />
     <Build Include="dbo\Views\A_O_ORDERS_JUSTIN_TEMP.sql" />
     <Build Include="dbo\Views\A_O_ORDERS_BACKUP_05142019.sql" />
-    <Build Include="dbo\Stored Procedures\sp_WhoIsActive.sql" />
-    <Build Include="dbo\Stored Procedures\sp_ineachdb.sql" />
-    <Build Include="dbo\Stored Procedures\sp_foreachdb.sql" />
-    <Build Include="dbo\Stored Procedures\sp_DatabaseRestore.sql" />
-    <Build Include="dbo\Stored Procedures\sp_BlitzWho.sql" />
-    <Build Include="dbo\Stored Procedures\sp_BlitzLock.sql" />
-    <Build Include="dbo\Stored Procedures\sp_BlitzIndex.sql" />
-    <Build Include="dbo\Stored Procedures\sp_BlitzFirst.sql" />
-    <Build Include="dbo\Stored Procedures\sp_BlitzCache.sql" />
-    <Build Include="dbo\Stored Procedures\sp_BlitzBackups.sql" />
-    <Build Include="dbo\Stored Procedures\sp_Blitz.sql" />
-    <Build Include="dbo\Stored Procedures\sp_AllNightLog_Setup.sql" />
-    <Build Include="dbo\Stored Procedures\sp_AllNightLog.sql" />
     <Build Include="dbo\Stored Procedures\Portal_GetNcrReports.sql" />
     <Build Include="dbo\Views\Reports\Report_ActualPartHistory.sql" />
     <Build Include="dbo\Views\A_V_WF_GROUP_ROLE_PEOPLE_2.sql" />
