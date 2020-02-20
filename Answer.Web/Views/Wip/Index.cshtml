@@ -77,7 +77,8 @@
 
     <script src="~/assets/js/wip-detail-print-other.js"></script>
     <script src="~/assets/js/moment.min.js"></script>
-    @Scripts.Render("~/assets/js/grids/engineer.js")
+    @* @Scripts.Render("~/assets/js/grids/engineer.js") *@
+    @Scripts.Render("~/bundles/js/jqgrid-wip")
     <script type="text/javascript">
         var locations = @Html.Raw(Json.Encode(ViewBag.Locations));
         locations = locations.map(function(elem){

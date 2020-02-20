@@ -3,13 +3,14 @@ CREATE VIEW [dbo].[Report_ActualPartHistory]
 
 AS
 
+
 SELECT DISTINCT
 NewId() AS Id,
 dbo.A_V_ACTUAL_PARTS_QUICK.SERIAL SN,
 PART.COMPANYPARTNUMBER PN,
 toi.PURCHASE_ITEM_ID WorkOrderNumber,
 ISNULL(t.ACTUAL_STOP_DATE, purchItem.DUE_DATE) DateCompleted,
-cycle.CycleCount +1 CycleCount,
+(SELECT ISNULL(NULLIF(COUNT(1),0),1) FROM PartsTransactionLog b WHERE b.serialnumber = dbo.A_V_ACTUAL_PARTS_QUICK.SERIAL AND b.partid = PA.partid AND b.CreatedDate <= ISNULL(t.ACTUAL_STOP_DATE, purchItem.DUE_DATE)) CycleCount,
 isnull(STUFF((    SELECT ',' + n.message
                         FROM [Portal_Note] n
 						INNER JOIN AspNetUsers u ON u.Id = n.CreatedBy
@@ -36,10 +37,4 @@ OUTER APPLY
 SELECT top 1 p.CompanyPartNumber FROM Portal_PartsView p
 WHERE p.ROOT = dbo.A_V_ACTUAL_PARTS_QUICK.PART_ID
 ) part
-OUTER APPLY
-(
-SELECT count(1) as CycleCount from PartsTransactionLog p
-where p.serialnumber = dbo.A_V_ACTUAL_PARTS_QUICK.SERIAL
-and p.partid = PA.partid
-) cycle
 WHERE (t.STATUS IN ('REQUESTED', 'ACCEPTED', 'CLOSED', 'FINISHED')) AND (toi.PURCHASE_ITEM_ID IS NOT NULL) AND (dbo.A_V_ACTUAL_PARTS_QUICK.SERIAL IS NOT NULL)

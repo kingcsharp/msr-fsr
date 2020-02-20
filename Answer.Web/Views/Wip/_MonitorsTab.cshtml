@@ -10,396 +10,397 @@
 @using (Html.BeginForm("UpdateStepMonitor", "Wip", FormMethod.Post, new { @class = "form form-horizontal", role = "form" }))
 {
     <div class="row">
-    @for (var i = 0; i < Model.Count; i++)
-    {
-        var isPassing = Model[i].Is_Passing.HasValue && Model[i].Is_Passing.Value;
-        var failText = string.Empty;
+        @for (var i = 0; i < Model.Count; i++)
+        {
+            var isPassing = Model[i].Is_Passing.HasValue && Model[i].Is_Passing.Value;
+            var failText = string.Empty;
 
-        <div class="col-sm-4 mon-panel">
-            <div class="panel panel-primary">
-                <div class="panel-heading">
-                    @if (!string.IsNullOrWhiteSpace(Model[i].Description))
-                    {
+            <div class="col-sm-4 mon-panel">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        @if (!string.IsNullOrWhiteSpace(Model[i].Description))
+                        {
                             @Model[i].Description
-                    }
-                    else
-                    {
-                        <span>Monitor @(i + 1)</span>
+                        }
+                        else
+                        {
+                            <span>Monitor @(i + 1)</span>
 
-                    }
-                </div>
-                <div class="panel-body panel-height monitor-body">
-                    @Html.HiddenFor(x => Model[i].Id)
-                    @Html.HiddenFor(x => Model[i].TheSaurusId)
-                    @Html.HiddenFor(x => Model[i].StrNtLogin)
-                    @Html.HiddenFor(x => Model[i].FillId)
-                    @Html.HiddenFor(x => Model[i].Step_Id)
-                    @Html.HiddenFor(x => Model[i].Ph_Step_Id)
-                    @Html.HiddenFor(x => Model[i].TASK_ID)
-                    @Html.HiddenFor(x => Model[i].Monitor_Type)
-                    @Html.HiddenFor(x => Model[i].Input_Type)
-                    @Html.HiddenFor(x => Model[i].Monitor_Result_ID)
+                        }
+                    </div>
+                    <div class="panel-body panel-height monitor-body">
+                        @Html.HiddenFor(x => Model[i].Id)
+                        @Html.HiddenFor(x => Model[i].TheSaurusId)
+                        @Html.HiddenFor(x => Model[i].StrNtLogin)
+                        @Html.HiddenFor(x => Model[i].FillId, new { Id = "fillid" })
+                        @Html.HiddenFor(x => Model[i].Step_Id, new { Id = "stepid" })
+                        @Html.HiddenFor(x => Model[i].Ph_Step_Id, new { Id = "phstepid" })
+                        @Html.HiddenFor(x => Model[i].TASK_ID)
+                        @Html.HiddenFor(x => Model[i].Monitor_Type)
+                        @Html.HiddenFor(x => Model[i].Input_Type)
+                        @Html.HiddenFor(x => Model[i].Monitor_Result_ID)
+                        @Html.HiddenFor(x => Model[i].SEND_NCR_NOTIFICATION_EMAIL, new { Id = "sendemailclient" })
 
-                    <div class="form-group">
-                        <table width="100%" border="0">
-                            <tbody>
-                                <tr>
-                                    <td class="nw-rght"><label class="control-label">Monitor #:</label></td>
-                                    <td class="text-td">@(i + 1)</td>
-                                </tr>
-                                <tr>
-                                    <td class="nw-rght"><label class="control-label">Monitor Type:</label></td>
-                                    <td class="text-td">@Model[i].Monitor_Type</td>
-                                </tr>
-                                @if (Model[i].Monitor_Type == "USER_NUMBER")
-                                {
+                        <div class="form-group">
+                            <table width="100%" border="0">
+                                <tbody>
                                     <tr>
-                                        <td class="nw-rght"><label class="control-label">Target:</label></td>
-                                        <td class="text-td">
-                                            @Html.HiddenFor(x => Model[i].Should_Be)
-                                            @Html.TextBoxFor(x => Model[i].Target)
-                                        </td>
+                                        <td class="nw-rght"><label class="control-label">Monitor #:</label></td>
+                                        <td class="text-td">@(i + 1)</td>
                                     </tr>
                                     <tr>
-                                        <td class="nw-rght"><label class="control-label">Tolerance %:</label></td>
-                                        <td class="text-td">
-                                            @Html.TextBoxFor(x => Model[i].Tolerance)
-                                        </td>
+                                        <td class="nw-rght"><label class="control-label">Monitor Type:</label></td>
+                                        <td class="text-td">@Model[i].Monitor_Type</td>
                                     </tr>
-                                    <tr>
-                                        <td class="nw-rght"><label class="control-label">Result :</label></td>
-                                        <td class="text-td">
-                                            @Html.TextBoxFor(x => Model[i].Print_Result, new { @class = !isPassing ? "input-validation-error form-control" : "form-control" })
-                                        </td>
-                                    </tr>
-                                }
-                                else if (Model[i].Monitor_Type == "MULTIPLE")
-                                {
-                                    <tr>
-                                        <td class="nw-rght"><label class="control-label">Your Answer:</label></td>
-                                        <td class="text-td">
-                                            @Html.DropDownListFor(x => Model[i].Mult_Choice_Answer, Model[i].MonitorTemplateMultiChoices, new { @class = !isPassing ? "form-control input-validation-error" : "form-control" })
-                                        </td>
-                                    </tr>
-                                }
-                                else if (Model[i].Monitor_Type == "YES_NO")
-                                {
-                                    <tr>
-                                        <td class="nw-rght"><label class="control-label">Correct Answer</label></td>
-                                        <td class="text-td">
-                                            <div class="col-lg-2" style="font-weight: bold;">
-                                                @Html.HiddenFor(x => Model[i].Yes_No_Answer, new { @id = "yes-no-answer" })
-                                                @if (@Model[i].Yes_No_Answer == "1")
-                                                {
-                                                    <text>YES</text>
-                                                }
-                                                else
-                                                {
-                                                    <text>NO</text>
-                                                }
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="nw-rght"><label class="control-label">Your Answer:</label></td>
-                                        <td class="text-td">
-                                            @Html.DropDownListFor(x => Model[i].Print_Result, Model[i].ResultList, new { @class = "form-control", @id = "yes-no-monitor" })
-                                        </td>
-                                    </tr>
-                                }
-                                else if (Model[i].Monitor_Type == "NUMBER")
-                                {
-                                    <tr>
-                                        <td class="nw-rght"><label class="control-label">Should be:</label></td>
-                                        @if (Model[i].Should_Be == "BETWEEN")
-                                        {
-                                            <td class="text-td">
-                                                Between @Model[i].Lowest_Threshold and @Model[i].Highest_Threshold
-                                            </td>
-                                        }
-                                        else
-                                        {
-                                            <td class="text-td">
-                                                @Model[i].Should_Be  To @Model[i].Target
-                                            </td>
-                                        }
-                                    </tr>
-
-                                    <tr>
-                                        <td class="nw-rght"><label class="control-label">Result:</label></td>
-                                        <td class="text-td">
-                                            @Html.TextBoxFor(x => Model[i].Print_Result, new { @class = !isPassing ? "input-validation-error form-control number" : "form-control number" })
-                                            <span id="print-result-message"></span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="nw-rght"><label class="control-label"></label></td>
-                                        <td class="text-td"></td>
-                                    </tr>
-                                }
-                                else if (Model[i].Monitor_Type == "TEXT")
-                                {
-                                    if (!string.IsNullOrWhiteSpace(Model[i].Text_Target))
+                                    @if (Model[i].Monitor_Type == "USER_NUMBER")
                                     {
                                         <tr>
                                             <td class="nw-rght"><label class="control-label">Target:</label></td>
                                             <td class="text-td">
-                                                @Model[i].Text_Target
+                                                @Html.HiddenFor(x => Model[i].Should_Be)
+                                                @Html.TextBoxFor(x => Model[i].Target)
                                             </td>
                                         </tr>
-                                    }
-                                    <tr>
-                                        <td class="nw-rght"><label class="control-label">Result:</label></td>
-                                        <td class="text-td">
-                                            @Html.TextBoxFor(x => Model[i].Print_Result, new { @class = !isPassing ? "input-validation-error form-control" : "form-control" })
-                                        </td>
-                                    </tr>
-                                }
-                                else if (Model[i].Monitor_Type == "YES_NO")
-                                {
-                                    <tr>
-                                        <td class="nw-rght"><label class="control-label">Correct Answer</label></td>
-                                        <td class="text-td">
-                                            <div class="col-lg-2" style="font-weight: bold;">
-                                                @Html.HiddenFor(x => Model[i].Yes_No_Answer, new { @id = "yes-no-answer" })
-                                                @if (@Model[i].Yes_No_Answer == "1")
-                                                {
-                                                    <text>YES</text>
-                                                }
-                                                else
-                                                {
-                                                    <text>NO</text>
-                                                }
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="nw-rght"><label class="control-label">Your Answer:</label></td>
-                                        <td class="text-td">
-                                            @Html.DropDownListFor(x => Model[i].Print_Result, Model[i].ResultList, new { @class = "form-control", @id = "yes-no-monitor" })
-                                        </td>
-                                    </tr>
-                                }
-                                else if (Model[i].Monitor_Type == "SELECT")
-                                {
-                                    <tr>
-                                        <td class="nw-rght"><label class="control-label">List Source:</label></td>
-                                        <td class="text-td">
-                                            <div style="font-weight: bold;">
-                                                @if (Model[i].List_Source?.Trim().ToUpper() == "NCR_CATEGORY" || Model[i].List_Source?.Trim().ToUpper() == "NCR_CATEGORIES")
-                                                {
-                                                    <text>NCR Category</text>
-                                                }
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="nw-rght"><label class="control-label">Select:</label></td>
-                                        <td class="text-td">
-                                            @if (Model[i].List_Source?.Trim().ToUpper() == "NCR_CATEGORY" || Model[i].List_Source?.Trim().ToUpper() == "NCR_CATEGORIES")
-                                            {
-                                                @Html.DropDownListFor(x => Model[i].Print_Result, new SelectList(Model[i].NCRCategoryList, "Value", "Text", Model[i].Print_Result), "Select Category", new { @class = "form-control", @id = "list-ncr-category" })
-                                            }
-                                        </td>
-                                    </tr>
-                                }
-                                else if (Model[i].Monitor_Type?.Trim().ToUpper() == "EQUIPMENT" && Model[i].Input_Type?.Trim().ToUpper() == "SENSOR")
-                                {
-
-                                    <tr>
-                                        @if (Model[i].SENSOR_MAPPING_ID > 0)
-                                        {
                                         <tr>
-                                            <td class="nw-rght"><label class="control-label">Note:</label></td>
+                                            <td class="nw-rght"><label class="control-label">Tolerance %:</label></td>
                                             <td class="text-td">
-                                                <div style="font-weight: bold; color: red;">This Monitor has already been saved and is in read-only mode.</div>
+                                                @Html.TextBoxFor(x => Model[i].Tolerance)
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="nw-rght"><label class="control-label">Result :</label></td>
+                                            <td class="text-td">
+                                                @Html.TextBoxFor(x => Model[i].Print_Result, new { @class = !isPassing ? "input-validation-error form-control" : "form-control" })
                                             </td>
                                         </tr>
                                     }
-
-                                    <td class="nw-rght"><label class="control-label">Sensor Name:</label></td>
-                                    <td class="text-td">
-                                        @if (Model[i].SensorDataModels != null && Model[i].SensorDataModels.Any())
-                                        {
-                                            if (Model[i].SENSOR_MAPPING_ID > 0)  // if (string.IsNullOrWhiteSpace(Model[i].Print_Result) == false)
+                                    else if (Model[i].Monitor_Type == "MULTIPLE")
+                                    {
+                                        <tr>
+                                            <td class="nw-rght"><label class="control-label">Your Answer:</label></td>
+                                            <td class="text-td">
+                                                @Html.DropDownListFor(x => Model[i].Mult_Choice_Answer, Model[i].MonitorTemplateMultiChoices, new { @class = !isPassing ? "form-control input-validation-error" : "form-control" })
+                                            </td>
+                                        </tr>
+                                    }
+                                    else if (Model[i].Monitor_Type == "YES_NO")
+                                    {
+                                        <tr>
+                                            <td class="nw-rght"><label class="control-label">Correct Answer</label></td>
+                                            <td class="text-td">
+                                                <div class="col-lg-2" style="font-weight: bold;">
+                                                    @Html.HiddenFor(x => Model[i].Yes_No_Answer, new { @id = "yes-no-answer" })
+                                                    @if (@Model[i].Yes_No_Answer == "1")
+                                                    {
+                                                        <text>YES</text>
+                                                    }
+                                                    else
+                                                    {
+                                                        <text>NO</text>
+                                                    }
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="nw-rght"><label class="control-label">Your Answer:</label></td>
+                                            <td class="text-td">
+                                                @Html.DropDownListFor(x => Model[i].Print_Result, Model[i].ResultList, new { @class = "form-control", @id = "yes-no-monitor" })
+                                            </td>
+                                        </tr>
+                                    }
+                                    else if (Model[i].Monitor_Type == "NUMBER")
+                                    {
+                                        <tr>
+                                            <td class="nw-rght"><label class="control-label">Should be:</label></td>
+                                            @if (Model[i].Should_Be == "BETWEEN")
                                             {
-                                                @Html.DropDownListFor(x => Model[i].SensorMappingID, new SelectList(Model[i].SensorDataModels, "SensorMappingID", "SiteSensorName", Model[i].SENSOR_MAPPING_ID), "Select Sensor", new { @class = "form-control", @id = "equipment-sensor-list", @readonly = "", @disabled = "" })
+                                                <td class="text-td">
+                                                    Between @Model[i].Lowest_Threshold and @Model[i].Highest_Threshold
+                                                </td>
                                             }
                                             else
                                             {
-                                                @Html.DropDownListFor(x => Model[i].SensorMappingID, new SelectList(Model[i].SensorDataModels, "SensorMappingID", "SiteSensorName", Model[i].SENSOR_MAPPING_ID), "Select Sensor", new { @class = "form-control", @id = "equipment-sensor-list" })
+                                                <td class="text-td">
+                                                    @Model[i].Should_Be  To @Model[i].Target
+                                                </td>
                                             }
-                                        }
-                                        else
-                                        {
-                                            <text>No sensors retrieved for this Site.</text>
-                                        }
-                                    </td>
-                                    </tr>
+                                        </tr>
 
-                                    <tr>
-                                        <td class="nw-rght"><label class="control-label">Sensor Value:</label></td>
-                                        <td class="text-td">
-                                            <span id="spanSensorValue">@Model[i].Print_Result</span>&nbsp;&nbsp;&nbsp;
-                                            @if (Model[i].SENSOR_MAPPING_ID == null || Model[i].SENSOR_MAPPING_ID <= 0)
+                                        <tr>
+                                            <td class="nw-rght"><label class="control-label">Result:</label></td>
+                                            <td class="text-td">
+                                                @Html.TextBoxFor(x => Model[i].Print_Result, new { @class = !isPassing ? "input-validation-error form-control number" : "form-control number" })
+                                                <span id="print-result-message"></span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="nw-rght"><label class="control-label"></label></td>
+                                            <td class="text-td"></td>
+                                        </tr>
+                                    }
+                                    else if (Model[i].Monitor_Type == "TEXT")
+                                    {
+                                        if (!string.IsNullOrWhiteSpace(Model[i].Text_Target))
+                                        {
+                                            <tr>
+                                                <td class="nw-rght"><label class="control-label">Target:</label></td>
+                                                <td class="text-td">
+                                                    @Model[i].Text_Target
+                                                </td>
+                                            </tr>
+                                        }
+                                        <tr>
+                                            <td class="nw-rght"><label class="control-label">Result:</label></td>
+                                            <td class="text-td">
+                                                @Html.TextBoxFor(x => Model[i].Print_Result, new { @class = !isPassing ? "input-validation-error form-control" : "form-control" })
+                                            </td>
+                                        </tr>
+                                    }
+                                    else if (Model[i].Monitor_Type == "YES_NO")
+                                    {
+                                        <tr>
+                                            <td class="nw-rght"><label class="control-label">Correct Answer</label></td>
+                                            <td class="text-td">
+                                                <div class="col-lg-2" style="font-weight: bold;">
+                                                    @Html.HiddenFor(x => Model[i].Yes_No_Answer, new { @id = "yes-no-answer" })
+                                                    @if (@Model[i].Yes_No_Answer == "1")
+                                                    {
+                                                        <text>YES</text>
+                                                    }
+                                                    else
+                                                    {
+                                                        <text>NO</text>
+                                                    }
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="nw-rght"><label class="control-label">Your Answer:</label></td>
+                                            <td class="text-td">
+                                                @Html.DropDownListFor(x => Model[i].Print_Result, Model[i].ResultList, new { @class = "form-control", @id = "yes-no-monitor" })
+                                            </td>
+                                        </tr>
+                                    }
+                                    else if (Model[i].Monitor_Type == "SELECT")
+                                    {
+                                        <tr>
+                                            <td class="nw-rght"><label class="control-label">List Source:</label></td>
+                                            <td class="text-td">
+                                                <div style="font-weight: bold;">
+                                                    @if (Model[i].List_Source?.Trim().ToUpper() == "NCR_CATEGORY" || Model[i].List_Source?.Trim().ToUpper() == "NCR_CATEGORIES")
+                                                    {
+                                                        <text>NCR Category</text>
+                                                    }
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="nw-rght"><label class="control-label">Select:</label></td>
+                                            <td class="text-td">
+                                                @if (Model[i].List_Source?.Trim().ToUpper() == "NCR_CATEGORY" || Model[i].List_Source?.Trim().ToUpper() == "NCR_CATEGORIES")
+                                                {
+                                                    @Html.DropDownListFor(x => Model[i].Print_Result, new SelectList(Model[i].NCRCategoryList, "Value", "Text", Model[i].Print_Result), "Select Category", new { @class = "form-control", @id = "list-ncr-category" })
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                    else if (Model[i].Monitor_Type?.Trim().ToUpper() == "EQUIPMENT" && Model[i].Input_Type?.Trim().ToUpper() == "SENSOR")
+                                    {
+
+                                        <tr>
+                                            @if (Model[i].SENSOR_MAPPING_ID > 0)
                                             {
-                                                <i class="fas fa-sync" onclick="UpdateSensorCurrentValue();" style="cursor: pointer;"></i>
+                                            <tr>
+                                                <td class="nw-rght"><label class="control-label">Note:</label></td>
+                                                <td class="text-td">
+                                                    <div style="font-weight: bold; color: red;">This Monitor has already been saved and is in read-only mode.</div>
+                                                </td>
+                                            </tr>
+                                        }
+
+                                        <td class="nw-rght"><label class="control-label">Sensor Name:</label></td>
+                                        <td class="text-td">
+                                            @if (Model[i].SensorDataModels != null && Model[i].SensorDataModels.Any())
+                                            {
+                                                if (Model[i].SENSOR_MAPPING_ID > 0)  // if (string.IsNullOrWhiteSpace(Model[i].Print_Result) == false)
+                                                {
+                                                    @Html.DropDownListFor(x => Model[i].SensorMappingID, new SelectList(Model[i].SensorDataModels, "SensorMappingID", "SiteSensorName", Model[i].SENSOR_MAPPING_ID), "Select Sensor", new { @class = "form-control", @id = "equipment-sensor-list", @readonly = "", @disabled = "" })
+                                                }
+                                                else
+                                                {
+                                                    @Html.DropDownListFor(x => Model[i].SensorMappingID, new SelectList(Model[i].SensorDataModels, "SensorMappingID", "SiteSensorName", Model[i].SENSOR_MAPPING_ID), "Select Sensor", new { @class = "form-control", @id = "equipment-sensor-list" })
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <text>No sensors retrieved for this Site.</text>
+                                            }
+                                        </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td class="nw-rght"><label class="control-label">Sensor Value:</label></td>
+                                            <td class="text-td">
+                                                <span id="spanSensorValue">@Model[i].Print_Result</span>&nbsp;&nbsp;&nbsp;
+                                                @if (Model[i].SENSOR_MAPPING_ID == null || Model[i].SENSOR_MAPPING_ID <= 0)
+                                                {
+                                                    <i class="fas fa-sync" onclick="UpdateSensorCurrentValue();" style="cursor: pointer;"></i>
+                                                }
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td class="nw-rght"><label class="control-label">Target Value:</label></td>
+                                            @if (Model[i].Should_Be == "EQUAL")
+                                            {
+                                                <td class="text-td">
+                                                    Equal to @Model[i].Target
+                                                </td>
+                                            }
+                                            else if (Model[i].Should_Be == "BELOW")
+                                            {
+                                                <td class="text-td">
+                                                    Below @Model[i].Target
+                                                </td>
+                                            }
+                                            else if (Model[i].Should_Be == "ABOVE")
+                                            {
+                                                <td class="text-td">
+                                                    Above @Model[i].Target
+                                                </td>
+                                            }
+                                            else if (Model[i].Should_Be == "BETWEEN")
+                                            {
+                                                <td class="text-td">
+                                                    Between @Model[i].Lowest_Threshold and @Model[i].Highest_Threshold
+                                                </td>
+                                            }
+                                        </tr>
+
+                                        <tr class="equipmentresult">
+                                            <td class="nw-rght">
+                                                <label class="control-label">Result:</label>
+                                            </td>
+                                            <td class="text-td">
+                                                @Html.TextBoxFor(x => Model[i].Print_Result, new { @class = !isPassing ? "form-control input-validation-error" : String.Empty, @id = "equipment-sensor-result", @readonly = "true" })
+                                                <span id="print-result-message"></span>
+                                            </td>
+                                        </tr>
+                                    }
+                                    else if (Model[i].Monitor_Type == "EQUIPMENT")
+                                    {
+                                        <tr>
+                                            <td class="nw-rght"><label class="control-label">Target Value:</label></td>
+                                            <td class="text-td">
+                                                @Model[i].Target
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="nw-rght"><label class="control-label">Target:</label></td>
+                                            <td class="text-td">
+                                                @Html.TextBoxFor(x => Model[i].Target_Object, new { @class = "form-control monitorTemplate_Target" })
+                                            </td>
+                                        </tr>
+                                        <tr class="equipmentresult">
+                                            <td class="nw-rght">
+                                                <label class="control-label">Result:</label>
+                                            </td>
+                                            <td class="text-td">
+                                                @Html.TextBoxFor(x => Model[i].Print_Result, new { @class = !isPassing ? "form-control input-validation-error" : String.Empty, @id = "equipment" })
+                                                <span id="print-result-message"></span>
+                                            </td>
+                                        </tr>
+                                    }
+
+                                    <tr>
+                                        <td class="nw-rght"><label class="control-label">If fails:</label></td>
+                                        <td class="text-td">
+                                            @if (!string.IsNullOrWhiteSpace(Model[i].Fail_Action))
+                                            {
+                                                failText = Model[i].FailActionList.Single(x => x.Value == Model[i].Fail_Action).Text;
+                                                @Html.HiddenFor(x => Model[i].Fail_Action, Model[i].FailActionList)
+                                            }
+                                            @failText
+                                        </td>
+                                    </tr>
+                                    @if (Model[i].Monitor_Type == "PASS_FAIL")
+                                    {
+                                        <tr>
+                                            <td class="nw-rght"><label class="control-label">Target:</label></td>
+                                            <td class="text-td">
+                                                @Model[i].Target_Object
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="nw-rght"><label class="control-label">Result:</label></td>
+                                            <td class="text-td">
+                                                @Html.TextBoxFor(x => Model[i].Print_Result, new { @class = !isPassing ? "input-validation-error form-control" : "form-control" })
+                                            </td>
+                                        </tr>
+                                    }
+                                    @if (Model[i].Step_Id != null && int.Parse(Model[i].Step_Id) > 0)
+                                    {
+                                        <tr>
+                                            <td class="nw-rght"><label class="control-label">Proc Step Num:</label></td>
+                                            <td class="text-td">
+                                                @Model[i].Step_Id
+                                            </td>
+                                        </tr>
+                                    }
+                                    @if (Model[i].Opinion != 0)
+                                    {
+                                        <tr>
+                                            <td class="nw-rght"><label class="control-label"></label></td>
+                                            <td class="text-td">
+                                                This Monitor is based on Opinion
+                                            </td>
+                                        </tr>
+                                    }
+                                    @if (Model[i].Use_Result != 0)
+                                    {
+                                        <tr>
+                                            <td class="nw-rght"><label class="control-label"></label></td>
+                                            <td class="text-td">
+                                                This Monitor uses its result to match cases
+                                            </td>
+                                        </tr>
+                                    }
+                                    @if (Model[i].Hide_Target != 0)
+                                    {
+                                        <tr>
+                                            <td class="nw-rght"><label class="control-label"></label></td>
+                                            <td class="text-td">
+                                                This Monitor will not show the user the target at entry time
+                                            </td>
+                                        </tr>
+                                    }
+                                    <tr>
+                                        <td class="nw-rght"><label class="control-label">Comments:</label></td>
+                                        <td>
+                                            @if (Model[i].SENSOR_MAPPING_ID > 0)
+                                            {
+                                                @Html.TextAreaFor(x => Model[i].Comment, new { @class = "form-control", @readonly = "" })
+                                            }
+                                            else
+                                            {
+                                                @Html.TextAreaFor(x => Model[i].Comment, new { @class = "form-control" })
                                             }
                                         </td>
                                     </tr>
-
-                                    <tr>
-                                        <td class="nw-rght"><label class="control-label">Target Value:</label></td>
-                                        @if (Model[i].Should_Be == "EQUAL")
-                                        {
-                                            <td class="text-td">
-                                                Equal to @Model[i].Target
-                                            </td>
-                                        }
-                                        else if (Model[i].Should_Be == "BELOW")
-                                        {
-                                            <td class="text-td">
-                                                Below @Model[i].Target
-                                            </td>
-                                        }
-                                        else if (Model[i].Should_Be == "ABOVE")
-                                        {
-                                            <td class="text-td">
-                                                Above @Model[i].Target
-                                            </td>
-                                        }
-                                        else if (Model[i].Should_Be == "BETWEEN")
-                                        {
-                                            <td class="text-td">
-                                                Between @Model[i].Lowest_Threshold and @Model[i].Highest_Threshold
-                                            </td>
-                                        }
-                                    </tr>
-
-                                    <tr class="equipmentresult">
-                                        <td class="nw-rght">
-                                            <label class="control-label">Result:</label>
-                                        </td>
-                                        <td class="text-td">
-                                            @Html.TextBoxFor(x => Model[i].Print_Result, new { @class = !isPassing ? "form-control input-validation-error" : String.Empty, @id = "equipment-sensor-result", @readonly = "true" })
-                                            <span id="print-result-message"></span>
-                                        </td>
-                                    </tr>
-                                }
-                                else if (Model[i].Monitor_Type == "EQUIPMENT")
-                                {
-                                    <tr>
-                                        <td class="nw-rght"><label class="control-label">Target Value:</label></td>
-                                        <td class="text-td">
-                                            @Model[i].Target
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="nw-rght"><label class="control-label">Target:</label></td>
-                                        <td class="text-td">
-                                            @Html.TextBoxFor(x => Model[i].Target_Object, new { @class = "form-control monitorTemplate_Target" })
-                                        </td>
-                                    </tr>
-                                    <tr class="equipmentresult">
-                                        <td class="nw-rght">
-                                            <label class="control-label">Result:</label>
-                                        </td>
-                                        <td class="text-td">
-                                            @Html.TextBoxFor(x => Model[i].Print_Result, new { @class = !isPassing ? "form-control input-validation-error" : String.Empty, @id = "equipment" })
-                                            <span id="print-result-message"></span>
-                                        </td>
-                                    </tr>
-                                }
-
-                                <tr>
-                                    <td class="nw-rght"><label class="control-label">If fails:</label></td>
-                                    <td class="text-td">
-                                        @if (!string.IsNullOrWhiteSpace(Model[i].Fail_Action))
-                                        {
-                                            failText = Model[i].FailActionList.Single(x => x.Value == Model[i].Fail_Action).Text;
-                                            @Html.HiddenFor(x => Model[i].Fail_Action, Model[i].FailActionList)
-                                        }
-                                        @failText
-                                    </td>
-                                </tr>
-                                @if (Model[i].Monitor_Type == "PASS_FAIL")
-                                {
-                                    <tr>
-                                        <td class="nw-rght"><label class="control-label">Target:</label></td>
-                                        <td class="text-td">
-                                            @Model[i].Target_Object
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="nw-rght"><label class="control-label">Result:</label></td>
-                                        <td class="text-td">
-                                            @Html.TextBoxFor(x => Model[i].Print_Result, new { @class = !isPassing ? "input-validation-error form-control" : "form-control" })
-                                        </td>
-                                    </tr>
-                                }
-                                @if (Model[i].Step_Id != null && int.Parse(Model[i].Step_Id) > 0)
-                                {
-                                    <tr>
-                                        <td class="nw-rght"><label class="control-label">Proc Step Num:</label></td>
-                                        <td class="text-td">
-                                            @Model[i].Step_Id
-                                        </td>
-                                    </tr>
-                                }
-                                @if (Model[i].Opinion != 0)
-                                {
-                                    <tr>
-                                        <td class="nw-rght"><label class="control-label"></label></td>
-                                        <td class="text-td">
-                                            This Monitor is based on Opinion
-                                        </td>
-                                    </tr>
-                                }
-                                @if (Model[i].Use_Result != 0)
-                                {
-                                    <tr>
-                                        <td class="nw-rght"><label class="control-label"></label></td>
-                                        <td class="text-td">
-                                            This Monitor uses its result to match cases
-                                        </td>
-                                    </tr>
-                                }
-                                @if (Model[i].Hide_Target != 0)
-                                {
-                                    <tr>
-                                        <td class="nw-rght"><label class="control-label"></label></td>
-                                        <td class="text-td">
-                                            This Monitor will not show the user the target at entry time
-                                        </td>
-                                    </tr>
-                                }
-                                <tr>
-                                    <td class="nw-rght"><label class="control-label">Comments:</label></td>
-                                    <td>
-                                        @if (Model[i].SENSOR_MAPPING_ID > 0)
-                                        {
-                                            @Html.TextAreaFor(x => Model[i].Comment, new { @class = "form-control", @readonly = "" })
-                                        }
-                                        else
-                                        {
-                                            @Html.TextAreaFor(x => Model[i].Comment, new { @class = "form-control" })
-                                        }
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
-            </div>
-        </div>
-    }
+                </div>
+            }
     </div>
-    if (Model.Count > 0  && !ViewBag.IsStepStatusClosed && ViewBag.HasStepRoles == true)
+    if (Model.Count > 0 && !ViewBag.IsStepStatusClosed && ViewBag.HasStepRoles == true)
     {
         <div class="row">
             <div class="col-lg-offset-1 col-lg-8">
                 <input class="btn btn-info monitor-save" value="Save" type="button" />
-                <input class="btn btn-info monitor-save-close" id="monitor-save-close" value="Save & Close Task" type="button" />
+                <input class="btn btn-info monitor-save-close" id="monitor-save-close" data-stepid="@Model.FirstOrDefault().Step_Id" value="Save & Close Task" type="button" />
             </div>
         </div>
     }
@@ -491,7 +492,7 @@
         });
     });
 
-    $(".monitor-save-close").on('click', function () {
+    $(".monitor-save-close").on('click', function (args) {
         var form = $(this).parents('form:first');
 
         eLoaderOpen();
@@ -504,7 +505,47 @@
             success: function (data) {
                 if (data === 'OK') {
 
-                    location.reload();
+                    if ($('#'+args.currentTarget.dataset['stepid']).find('.sendncremailnotification').val() === "True") {
+                        var fillId = $('body').find('#fillid').val();
+                        var stepId = $('body').find('#stepid').val();
+                        var phStepId = $('body').find('#phstepid').val();
+
+                        $.ajax({
+                            type: "GET",
+                            url: "/wip/GetNcrNotificationModal?fillId=" + fillId + "&stepId="+stepId+ "&phStepId=" + phStepId,
+                            dataType: 'html',
+                            success: function (data) {
+
+                                $("#notifyCustomerNcrWasAddedModal").find('.modal-body').html(data);
+                                eLoaderClose();
+                                $("#notifyCustomerNcrWasAddedModal").modal("show");
+                                $("#notifyCustomerNcrWasAddedModal").find('#sendncremailnotification').on('click',
+                                    function () {
+
+                                        eLoaderOpen();
+                                        $("#ncrnotificatioemail").submit();
+
+                                    });
+
+                                $("#cancelncremailnotification").find("#cancelncremailnotification").on('click', 
+                                    function() {
+
+                                        window.reload();
+                                    });
+
+                            },
+                            error: function (error) {
+
+                                eLoaderError(error);
+                            }
+                        });
+                    } else {
+
+                        location.reload();
+
+                    }
+
+
                 } else {
                     eLoaderError(data);
                 }
@@ -552,5 +593,5 @@
             target.removeClass('red');
         }
     }
-    
+
 </script>

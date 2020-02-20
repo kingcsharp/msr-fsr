@@ -55,6 +55,9 @@ namespace Msr.Services.Procedures.ViewModels
         [DisplayName("List Source")]
         public string List_Source { get; set; }
 
+        [DisplayName("Send Notification Email")]
+        public bool? SEND_NCR_NOTIFICATION_EMAIL { get; set; }
+
         public string Start_System_Task { get; set; }
 
         public string Start_Type { get; set; }
@@ -230,7 +233,8 @@ namespace Msr.Services.Procedures.ViewModels
                 Skip_Mode = model.Skip_Mode,
                 Cant_Change = model.Cant_Change,
                 Always_Pass = model.Always_Pass,
-                StrNTLogin = model.StrNTLogin
+                StrNTLogin = model.StrNTLogin,
+                SEND_NCR_NOTIFICATION_EMAIL = model.SEND_NCR_NOTIFICATION_EMAIL
             };
         }
     }

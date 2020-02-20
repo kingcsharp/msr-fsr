@@ -118,5 +118,9 @@ namespace Msr.Services.Procedures.Procedures
 
         [StoredProcedureParameter(SqlDbType.NVarChar, Size = 50, ParameterName = "StrNTLogin")]
         public string StrNTLogin { get; set; }
+
+        [StoredProcedureParameter(SqlDbType.Bit, Size = 50, ParameterName = "SendNcrNotificationEmail")]
+        public bool? SendNcrNotificationEmail { get; set; }
+
     }
 }
