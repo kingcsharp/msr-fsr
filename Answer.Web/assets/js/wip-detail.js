@@ -275,21 +275,34 @@
             });
         });
 
-        $('#btn-cancel-steps').on('click', function () {
-            var id = $(this).data('id');
+        // set invoice val from button clicked data attribute       
+        $(".cancel-steps").on("click", function (e) {
+            e.preventDefault();
+            $('.cancel-steps').attr('disabled', 'disabled');
+            $(this).children('.icon-stack').html('<i class="fa fa-refresh fa-spin fa-stack-2x" style="color:#ffffff" aria-hidden="true"></i>')
+            $("#invoice").val($(this).data("invoice"));
+            $('#cancel-remaining-steps-form').submit();
+        });
+
+        $("#cancel-remaining-steps-form").on("submit", function (e) {
+            e.preventDefault();
+            var id = $("#fillId").val();
+            var invoice = $("#invoice").val();
+            var url = "/wip";
 
             $.ajax({
                 type: "POST",
-                url: "/wip/CancelUnfinishedSteps?fillId=" + id,
+                url: "/wip/CancelRemainingSteps?fillId=" + id + "&invoice=" + invoice,
                 dataType: 'json',
-                success: function (data) {
-                    location.reload();
+                success: function () {
+                    console.log('In success');
+                    $('#wipDetailCancelStepsModal').modal().hide();
+                    $(location).attr('href', url);
                 },
                 error: function () {
 
                 }
             });
-
         });
 
         $('#ncr-notification-button').on('click', function (e) {

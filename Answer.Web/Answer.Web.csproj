@@ -3428,7 +3428,7 @@
     <Content Include="Views\Procedures\_Monitor.cshtml" />
     <!--<Content Include="Views\ProductionPlanning\_Parts.cshtml" />-->
     <Content Include="Views\ProductionPlanning\_Product.cshtml" />
-    <Content Include="Views\ProductionPlanning\_Models.cshtml" />
+    <Content Include="Views\ProductionPlanning\_Modals.cshtml" />
     <Content Include="Views\ProductionPlanning\_Steps.cshtml" />
     <Content Include="Views\ProductionPlanning\View.cshtml" />
     <Content Include="Views\PurchaseOrder\CreatePurchase.cshtml" />

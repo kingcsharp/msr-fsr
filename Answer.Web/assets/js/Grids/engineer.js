@@ -164,7 +164,7 @@ Msr.WipGrid = Msr.WipGrid ||
                         multiselect: true,
                         searchoptions: {
                             sopt: ['eq'],
-                            value: "ACCEPTED:In Progress;PENDING_PARENT_ACCEPTANCE,REQUESTED:Waiting to Start;CLOSED,FINISHED:Completed",
+                            value: "ACCEPTED:In Progress;PENDING_PARENT_ACCEPTANCE,REQUESTED:Waiting to Start;CLOSED:Cancelled;FINISHED:Completed",
                             dataInit: function (elem) {
                                 Msr.JqGridCommon.DataInitBootstrapMultiselect(elem);
                             }
@@ -313,6 +313,8 @@ function currentStepFormatter(cellvalue, options, rowObject) {
     if (rowObject.Status !== 'ACCEPTED') {
         if (rowObject.Status === 'REQUESTED') {
             thisCellVal = 'Waiting Start';
+        } else if (rowObject.Status === 'CLOSED') {
+            thisCellVal = 'Cancelled';
         } else {
             thisCellVal = 'Completed';
         }

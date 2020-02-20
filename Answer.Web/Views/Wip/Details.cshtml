@@ -25,6 +25,15 @@ var status = new string[] { "COMPLETED", "FINISHED", "CLOSED" };
     .row > [class*="col-"] {
         margin-bottom: 0 !important;
     }
+    .fa-stack {
+        display: inline-block;
+        height: inherit;
+        line-height: 2em;
+        position: relative;
+        vertical-align: middle;
+        width: inherit;
+        margin: 0px !important;
+    }
 </style>
 
 <div class="container-fluid">
@@ -73,7 +82,7 @@ var status = new string[] { "COMPLETED", "FINISHED", "CLOSED" };
                     @if (Model.TaskStepResults.Any(x => !status.Contains(x.Status)) && Model.HasProcedureRoles)
                     {
 
-                        <button data-id="@Model.FillId" class="btn btn-danger btn-sm cancel-btn pull-right" data-toggle="modal" data-target="#widDetailCancelStepsModal"><i class="fa fa-close"></i> Cancel Remaining Steps</button>
+                        <button data-id="@Model.FillId" class="btn btn-danger btn-sm cancel-btn pull-right" data-toggle="modal" data-target="#wipDetailCancelStepsModal"><i class="fa fa-close"></i> Cancel Remaining Steps</button>
 
                     }
 
@@ -210,7 +219,7 @@ var status = new string[] { "COMPLETED", "FINISHED", "CLOSED" };
                 </div>
                 <div class="modal-body"></div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-close-o"></i> Close</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times-circle" aria-hidden="true"></i> Close</button>
                 </div>
             </div>
 
@@ -227,7 +236,7 @@ var status = new string[] { "COMPLETED", "FINISHED", "CLOSED" };
                 <div class="modal-body" id="print-traveler-container"></div>
                 <div class="modal-footer">
                     <button id="print-traveler-report" type="button" class="btn btn-info"><i class="fa fa-print"></i> Print Report</button>
-                    <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close-o"></i> Close</button>
+                    <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-times-circle" aria-hidden="true"></i> Close</button>
                 </div>
             </div>
 
@@ -245,7 +254,7 @@ var status = new string[] { "COMPLETED", "FINISHED", "CLOSED" };
                 <div class="modal-footer">
                     <button type="button" class="btn btn-info" id="display-report"><i class="fa fa-print"></i> Display</button>
                     <button type="button" class="btn btn-info" id="print-other-report" style="display: none"><i class="fa fa-print"></i> Print Report</button>
-                    <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-close-o"></i> Cancel</button>
+                    <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-times-circle" aria-hidden="true"></i> Cancel</button>
                 </div>
             </div>
 
@@ -280,16 +289,17 @@ var status = new string[] { "COMPLETED", "FINISHED", "CLOSED" };
                 <div class="modal-body" style="width: 100%;"></div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-close-o"></i> Cancel</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times-circle" aria-hidden="true"></i> Cancel</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="widDetailCancelStepsModal" class="modal fade" role="dialog">
-        @using (Html.BeginForm("CancelRemainingSteps", "Wip", FormMethod.Post, new { @class = "cancel-remaining-steps" }))
+    <div id="wipDetailCancelStepsModal" class="modal fade" role="dialog">
+        @using (Html.BeginForm("CancelRemainingSteps", "Wip", FormMethod.Post, new { @class = "cancel-remaining-steps", @id="cancel-remaining-steps-form" }))
         {
-            <input type="hidden" name="fillId" value="@Model.FillId" />
+            <input type="hidden" name="fillId" id="fillId" value="@Model.FillId" />
+            <input type="hidden" id="invoice" name="invoice"/>
             <div class="modal-dialog modal-lg">
                 <!-- Modal content-->
                 <div class="modal-content">
@@ -297,10 +307,37 @@ var status = new string[] { "COMPLETED", "FINISHED", "CLOSED" };
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                         <h4 class="modal-title">Cancel Remaining Steps Confirmation</h4>
                     </div>
-                    <div class="modal-body" style="width: 100%;">Are you sure you want to cancel the remaining steps?</div>
+                    <div class="modal-body" style="width: 100%;">
+                        <h3>Are you sure you want to cancel the remaining steps?</h3>
+                        <div class="alert alert-info  alert-dismissible fade in">
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            <i class="fa fa-info-circle"></i> When Cancelling remaing steps you have <strong>two options</strong>:
+                            <ol>
+                                <li>If you wish close and invoice for this Work Order, click the <strong>Yes - And Invoice</strong> button below.</li>
+                                <li>If you <u>do not</u> want to invoice for this Work Order click the <strong>Yes - But Do Not Invoice</strong> button below.</li>
+                            </ol>
+                            <p>Other wise click the<strong> Cancel</strong>button to continue with this Work Order.</p>
+                        </div>
+                    </div>
+
                     <div class="modal-footer">
-                        <button type="submit" id="cancel-remaining-steps" class="btn btn-success">Yes - Cancel the Remaining Steps!</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-close-o"></i> Cancel</button>
+                        <button id="no-invoice-btn" type="button" data-invoice="1" class="btn btn-success cancel-steps">
+                            <span class="fa-stack fa-1x icon-stack">
+                                <i class="fa fa-usd fa-stack-2x" style="color:#006400" aria-hidden="true"></i>
+                            </span> Yes - And Invoice
+                        </button>
+                        <button id="no-invoice-btn" type="button" data-invoice="0" class="btn btn-warning cancel-steps">
+                            <span class="fa-stack fa-1x icon-stack">
+                                <i class="fa fa-usd fa-stack-1x" style="color:#ffffff" aria-hidden="true"></i>
+                                <i class="fa fa-ban fa-stack-2x" style="color:#ff0000" aria-hidden="true"></i>
+                            </span>
+                            Yes - But Do Not Invoice
+                        </button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">
+                            <span class="fa-stack fa-1x">
+                                <i class="fa fa-times-circle fa-stack-2x" aria-hidden="true"></i>
+                            </span> Cancel
+                        </button>
                     </div>
                 </div>
             </div>
