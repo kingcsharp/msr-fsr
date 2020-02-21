@@ -365,7 +365,11 @@
 
     <script type="text/javascript">
         $('#print-other-report').on('click', function () {
+            $('.filesHide').hide();
             $('#print-other-content').printThis({ canvas: true, printDelay: 1000 });
+            setTimeout(function () {
+                $('.filesHide').show();
+            }, 1500);
         });
 
         $('#ncr-print-button').on('click', function () {

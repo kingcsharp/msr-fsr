@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Msr.Services.Orders.Messaging
 {
-    public class StepDocument : DocumentView
+    public class TaskDocument : DocumentView
     {
-        public string ProcedureStepId;
+        public string TaskId;
     }
 }

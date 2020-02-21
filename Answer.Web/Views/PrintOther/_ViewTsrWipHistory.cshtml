@@ -45,9 +45,9 @@
                 <td>@task.Location</td>
                 <td>@task.Status</td>
             </tr>
-            if (Model.GetDocumentsOfTask(task.ProcedureStepId).Any())
+            if (Model.GetDocumentsOfTask(task.Id).Any())
             {
-                <tr>
+                <tr class="filesHide">
                     <td></td>
                     <td colspan="6" style="padding:0;">
                         <table class="table table-bordered table-striped">
@@ -55,22 +55,19 @@
                                 <th>Files</th>
                                 <th>Actions</th>
                             </tr>
-                            @foreach (var item in Model.GetDocumentsOfTask(task.ProcedureStepId))
+                            @foreach (var item in Model.GetDocumentsOfTask(task.Id))
                             {
                                 <tr>
-                                    <td>@item.Name</td>
+                                    <td width="70%">@item.Name</td>
                                     <td>
-                                        @*<span class="data-toggle=" data-call-back-item="@item.Name" data-toggle="modal" data-target="#view-images" title="View File">
-                                            <i class="icon fa fa-eye"></i>
-                                        </span>*@
-                                        @FilePreviewHelper.FilePreview(item.Name, item.DocId)
-                                        @*<a class="btn btn-xs btn-success" data-toggle="modal" href="NC types.jpg"
-                                               data-target="#" onclick="viewerLoad('@file.DocumentURL','@file.Name')" title="View Inline">
-                                                View
-                                                <span data-toggle="tooltip" data-placement="top" data-original-title="Launch Viewer" data-flobwicket="{%=file.name%}">
-                                                    <i class="fa fa-eye" aria-hidden="true"></i>
-                                                </span>
-                                            </a>*@
+                                        <a class="btn btn-xs btn-success" data-toggle="modal" href="{%=file.url%}" data-target="#"
+                                           onclick="viewerLoad('@item.DocumentURL','@item.Name')" title="View Inline">
+                                            View <span data-toggle="tooltip" data-placement="top" data-original-title="Launch Viewer"
+                                                       data-flobwicket="{%=file.name%}"><i class="fa fa-eye"></i></span>
+                                        </a>
+                                        <a class="btn btn-xs btn-success" href="@item.DocumentURL" download target="_blank">
+                                            Download <span data-toggle="tooltip" data-placement="top" data-original-title="Download Document"> <i class="fa fa-download"></i></span>
+                                        </a>
                                     </td>
                                 </tr>
                             }
@@ -118,8 +115,3 @@
         }
     </table>
 </div>
-<script type="text/javascript">
-    $(function () {
-        Msr.JqGridCommon.DocPreview();
-    });
-</script>
