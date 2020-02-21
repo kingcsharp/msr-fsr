@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[PortalHasNcr]
+﻿CREATE PROCEDURE [dbo].[Portal_HasNcr]
 @partID varchar(50)
 as
 

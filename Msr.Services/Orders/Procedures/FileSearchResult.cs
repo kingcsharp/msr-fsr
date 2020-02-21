@@ -26,5 +26,13 @@ namespace Msr.Services.Orders.Procedures
         public string ProcObjId { get; set; }
 
         public string Rev { get; set; }
+
+        public string CustPurchNum { get; set; }
+
+        public string CustPurchLineNum { get; set; }
+
+        public string PartImageId { get; set; }
+
+        public int? CycleCount { get; set; }
     }
 }

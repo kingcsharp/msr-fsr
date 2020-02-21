@@ -1229,6 +1229,7 @@ namespace Answer.Web.Controllers
                     Text_Target =result.Text_Target,
                     Target = result.Target,
                     Correct_Answer = result.YES_NO_ANSWER.ToString(),
+                    SEND_NCR_NOTIFICATION_EMAIL = result.SEND_NCR_NOTIFICATION_EMAIL
                 }
             };
 

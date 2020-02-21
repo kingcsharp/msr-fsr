@@ -1,5 +1,4 @@
-﻿
-function LoadSelectProcedureGrid(parentId, fillId, procedureType) {
+function LoadSelectProcedureGrid(parentId, procedureType) {
     $.jgrid.defaults.styleUI = 'Bootstrap';
     $("#jqGridFiles").jqGrid({
         url: '/wip/AddNcrModelData',
@@ -71,6 +70,34 @@ function LoadSelectProcedureGrid(parentId, fillId, procedureType) {
             $(".addProcSubTask").on('click', function () {
                 $('.ui-jqgrid').block({ message: '<h1><img src="/assets/img/nice_loader.gif" />  Loading. Please wait...</h1>' });
             });
+
+            $('[data-toggle="tooltip"]').tooltip();
+
+            $('.ncr-insert-button').click(function (e) {
+                e.preventDefault();
+                $('.ncr-insert-button').attr('disabled', 'disabled');
+                $('#ncr-grid-container').block({ message: '<h5><img src="/assets/img/nice_loader.gif" />  Loading. Please wait...</h5>' });
+                var objId = $(this).attr('data-objId');
+                var parentId = $(this).attr('data-parentId');
+                var url = "/wip/AddProcedureToTask?objId=" + objId + "&parentId=" + parentId;
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    dataType: 'json',
+                    success: function () {
+                        $('#procedure-insertion-message').not('.hidden').addClass('hidden');
+                        location.reload();
+                    },
+                    error: function (response) {
+                        console.log(response);
+                        $('.ncr-insert-button').attr('disabled', 'false');
+                        $('#ncr-grid-container').unblock();
+                        $('#procedure-insertion-message').html(response.responseText).removeClass('hidden');
+                    }
+                });
+
+            });
+
         },
         beforeRequest: function () {
             $('.ui-jqgrid').block({ message: '<h1><img src="/assets/img/nice_loader.gif" />  Loading. Please wait...</h1>' });
@@ -96,9 +123,14 @@ function LoadSelectProcedureGrid(parentId, fillId, procedureType) {
     });
 
     function ActionFormatter(cellvalue, options, rowObject) {
-        var attachStep = '<a title="Add Procedure as a Sub Task" href="/wip/AddProcedureToTask?objId=' + rowObject.Id + '&parentId=' + parentId + '&fillId=' + fillId + '" class="btn btn-xs btn-success addProcSubTask" style="margin:2px;font-size: .8em;"><i class="fa fa-link"></i></a>';
+
+        var attachStep = '<a data-objId="' + rowObject.Id + '" data-parentId="' + parentId + '" data-toggle="tooltip" data-placement="left" title="Insert Procedure as a Sub Task" class="btn btn-xs btn-success ncr-insert-button" style = "margin:2px;font-size: .8em;" > <i class="fa fa-link"></i> Insert </a>';
+
 
         return attachStep;
     }
+
 }
+
+
 

@@ -1,65 +1,137 @@
 ﻿@model Msr.Services.Orders.Messaging.TsrDetailsResponse
+<style>
+    .header-container {
+        border: 1px solid #ccc;
+        padding: 5px;
+        margin-left: 0;
+        margin-right: 0;
+    }
 
-<div class="col-lg-12">
-    <div class="row">
-        <div id="print-traveler-container">
-            <div id="qrcodeTable" style="margin-top: 35px;margin-bottom: 35px;text-align: center;"></div>
-            <div id="qrcodeCanvas">
+    h5 {
+        font-size: 14px;
+        background-color: #444;
+        color: #fff;
+        font-weight: 700;
+        padding: 5px;
+        margin: 2px -5px;
+    }
+
+    #qrcodeTable {
+        margin-top: 35px;
+        margin-bottom: 35px;
+        text-align: center;
+    }
+    #part-header-image {
+        background: #fff;
+        padding: 3px
+    }
+    #part-header-image img {
+        display: block;
+        width: 100%;
+        height: auto;
+    }
+</style>
+
+    <div class="col-lg-12">
+        <div class="row">
+            <div id="print-traveler-container">
+                <div id="qrcodeTable"></div>
+                <div id="qrcodeCanvas">
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="row">
-        <h4>Purchase Item Info</h4>
-        <table class="table border-table">
-            <tr><td style="font-weight: bold;">Customer:</td><td>@Model.WorkOrderDetailsResponse.FileSearchResult.CustomerName</td> </tr>
-            <tr><td style="font-weight: bold;">Product:</td><td>@Model.WorkOrderDetailsResponse.FileSearchResult.ProductName</td> </tr>
-            <tr><td style="font-weight: bold;">Procedure:</td><td>@Model.WorkOrderDetailsResponse.FileSearchResult.ProcedureName</td> </tr>
-            <tr><td style="font-weight: bold;">Purchase Item #:</td><td>@Model.WorkOrderDetailsResponse.FileSearchResult.PurchItemId</td> </tr>
-        </table>
-    </div>
-    
-    <div class="row">
-        <h4>Parts Info</h4>
-        <table class="table table-responsive table-condensed table-bordered">
-            <tbody>
-            <tr>
-                <td>
-                    Revision:@Model.WorkOrderDetailsResponse.FileSearchResult.Rev
-                </td>
-            </tr>
-            @if (Model.WorkOrderDetailsResponse.FileSearchResult != null)
-            {
-                <tr><td>@Model.WorkOrderDetailsResponse.FileSearchResult.FillObjDesc. qty:@Model.WorkOrderDetailsResponse.FileSearchResult.Qty</td></tr>
-            }
+        <div class="row">
+            <h4>Purchase Item Info</h4>
+            <div class="row header-container">
+                <div class="col-xs-8" style="padding:0">
+                    <table class="table table-bordered table-striped">
+                        <tr>
+                            <td style="font-weight: bold;">Customer:</td>
+                            <td>@Model.WorkOrderDetailsResponse.FileSearchResult.CustomerName</td>
 
-            @foreach (var part in Model.WorkOrderDetailsResponse.Parts)
-            {
-                <tr><td>@part</td></tr>
-            }
-            </tbody>
-        </table>
-    </div>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: bold;">Product:</td>
+                            <td>@Model.WorkOrderDetailsResponse.FileSearchResult.ProductName</td>
+                        </tr>
+                        <tr><td style="font-weight: bold;">Procedure:</td><td>@Model.WorkOrderDetailsResponse.FileSearchResult.ProcedureName - (Rev:@Model.WorkOrderDetailsResponse.FileSearchResult.Rev)</td> </tr>
+                        <tr><td style="font-weight: bold;">WO Item #:</td><td>@Model.WorkOrderDetailsResponse.FileSearchResult.PurchItemId</td> </tr>
+                        <tr><td style="font-weight: bold;">Customer PO /Line:</td><td>@Model.WorkOrderDetailsResponse.FileSearchResult.CustPurchNum / @Model.WorkOrderDetailsResponse.FileSearchResult.CustPurchLineNum</td> </tr>
+                    </table>
+                </div>
+                <div class="col-xs-4 img-responsive" id="part-header-image" rowspan="5" data-imageId="@Model.WorkOrderDetailsResponse.FileSearchResult.PartImageId">
+                </div>
+            </div>
+        </div>
+        <p></p>
+        <div class="row">
+            <h4>Parts and Procedure Info</h4>
+            <table class="table table-responsive table-condensed table-bordered">
+                <tbody>
+                    @if (Model.WorkOrderDetailsResponse.FileSearchResult != null)
+                    {
+                        <tr><td>@Model.WorkOrderDetailsResponse.FileSearchResult.FillObjDesc. qty:@Model.WorkOrderDetailsResponse.FileSearchResult.Qty</td></tr>
+                    }
 
-    <div class="row">
-        <table class="table table-responsive table-condensed table-bordered">
-            @foreach (var task in Model.TsrTaskResults.Where(x => x.Level == 2))
-            {
-                <tr>
-                    <td>
-                        <h4>@task.Title</h4>
-                        @Html.Raw(task.Des)
-                    </td>
-                </tr>
-            }
-        </table>
-    </div>
+                    @foreach (var part in Model.WorkOrderDetailsResponse.Parts)
+                    {
+                        <tr><td>@part</td></tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <p></p>
+        <div class="row">
+            <table class="table table-responsive table-condensed table-bordered">
+                @foreach (var task in Model.TsrTaskResults.Where(x => x.Level == 2))
+                {
+                    <tr>
+                        <td>
+                            <h5>@task.Title</h5>
+                            @Html.Raw(task.Des)
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
 
-</div>
+    </div>
 
 <script src="~/assets/js/qrcode.js"></script>
 <script src="~/assets/js/jquery.qrcode.js"></script>
 
 <script>
     jQuery('#qrcodeTable').qrcode({ width: 130, height: 130, text: '@Model.FillUrl' });
+
+    renderPartImage();
+
+    function renderPartImage() {
+            var image_id = $('#part-header-image').attr('data-imageId');
+            if (typeof (image_id) != "undefined" && image_id !== null && image_id !== "") {
+                console.log('Image ID: ' + image_id);
+                $.ajax({
+                    type: "GET",
+                    url: '/Files/ViewFile?id=' + image_id,
+                    dataType: 'json',
+                    cache: false,
+                    success: function (data) {
+                        if (data.FileUrl) {
+                            $('#part-header-image').prepend($('<img>', { src: data.FileUrl, title: data.FileName, border: 0 }));
+                        }
+                        else {
+                            $('#part-header-image').prepend($('<img>', { src: '/assets/img/msr-label-no-parts-image.png', title: 'No Image Provided', border: 0 }));
+                        }
+                    },
+                    error: function (error) {
+                        console.log("Error retrieving image by id" + image_id + "Error :" + error);
+                    }
+                });
+            }
+            else {
+                console.log('No Image ID found.');
+                $('#part-header-image').prepend($('<img>', { src: '/assets/img/msr-label-no-parts-image.png', title: 'No Image Provided', border: 0 }));
+            }
+    }
+
 </script>
