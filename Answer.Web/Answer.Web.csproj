@@ -613,9 +613,6 @@
     <Content Include="assets\img\jpg.png" />
     <Content Include="assets\img\loading.gif" />
     <Content Include="assets\img\msr-ccs.png" />
-    <Content Include="assets\img\msr-fsr-logo.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="assets\img\msr-label-logo.png" />
     <Content Include="assets\img\msr-label-no-parts-image.png" />
     <Content Include="assets\img\nice_loader.gif" />
@@ -3443,7 +3440,6 @@
     <Content Include="Views\Procedures\_Monitor.cshtml" />
     <!--<Content Include="Views\ProductionPlanning\_Parts.cshtml" />-->
     <Content Include="Views\ProductionPlanning\_Product.cshtml" />
-    <Content Include="Views\ProductionPlanning\_Modals.cshtml" />
     <Content Include="Views\ProductionPlanning\_Steps.cshtml" />
     <Content Include="Views\ProductionPlanning\View.cshtml" />
     <Content Include="Views\PurchaseOrder\CreatePurchase.cshtml" />
@@ -3495,14 +3491,13 @@
     <!--<Content Include="Views\Report\AdHocReport.cshtml" />-->
     <Content Include="Views\Report\AdHocReports.cshtml" />
     <Content Include="Views\Report\OperationsDashboard.cshtml" />
+    <Content Include="Views\Shared\_HelpViewButton.cshtml" />
+    <Content Include="Views\Wip\_AddNcrNotificationModal.cshtml" />
     <Content Include="Views\Wip\_NcrEmailNotificationBodyContent.cshtml" />
     <Content Include="Views\Wip\_ViewNcrTsr.cshtml" />
-    <Content Include="Views\Wip\_ViewNcrTsrEmail.cshtml" />
-    <Content Include="Views\Shared\_HelpViewButton.cshtml" />
     <Content Include="Views\Report\_ArchivesModal.cshtml" />
     <Content Include="Views\Report\_ViewArchivesButton.cshtml" />
-    <Content Include="Views\Wip\_AddNcrNotificationModal.cshtml" />
-    <Content Include="Views\Shared\_DocView2.cshtml" />
+    <Content Include="Views\ProductionPlanning\_Modals.cshtml" />
     <None Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
