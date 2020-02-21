@@ -62,11 +62,13 @@
                                     <td>
                                         <a class="btn btn-xs btn-success" data-toggle="modal" href="{%=file.url%}" data-target="#"
                                            onclick="viewerLoad('@item.DocumentURL','@item.Name')" title="View Inline">
-                                            View <span data-toggle="tooltip" data-placement="top" data-original-title="Launch Viewer"
-                                                       data-flobwicket="{%=file.name%}"><i class="fa fa-eye"></i></span>
+                                            <span data-toggle="tooltip" data-placement="top" data-original-title="Launch Viewer"
+                                                  data-flobwicket="{%=file.name%}"><i class="fa fa-eye"></i></span> View
                                         </a>
                                         <a class="btn btn-xs btn-success" href="@item.DocumentURL" download target="_blank">
-                                            Download <span data-toggle="tooltip" data-placement="top" data-original-title="Download Document"> <i class="fa fa-download"></i></span>
+                                            <span data-toggle="tooltip" data-placement="top" data-original-title="Download Document">
+                                                <i class="fa fa-download"></i>
+                                            </span> Download
                                         </a>
                                     </td>
                                 </tr>
