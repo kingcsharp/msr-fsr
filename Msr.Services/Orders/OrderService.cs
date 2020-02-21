@@ -331,12 +331,14 @@ namespace Msr.Services.Orders
             return detailsResponse;
         }
 
-        public WipHistoryTsrResponse GetWipHistoryTsrDetail(int fillId)
+        public WipHistoryTsrResponse GetWipHistoryTsrDetail(int fillId, LoggedUserIdResult getCurrentUser)
         {
             var detailsResponse = new WipHistoryTsrResponse
             {
                 FillId = fillId
             };
+
+            List<StepDocument> docFiles = new List<StepDocument>();
 
             using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
             {
@@ -357,7 +359,39 @@ namespace Msr.Services.Orders
                         wipTask.WipSubTasks = wipSubTaskResult.Where(x => x.TaskId == wipTask.Id).ToList();
                     }
                 }
+
+                foreach (var item in detailsResponse.WipTaskResult)
+                {
+                    var p2 = new DynamicParameters();
+                    p2.Add("@procStepID", item.ProcedureStepId, DbType.String, ParameterDirection.Input);
+                    p2.Add("@strNTLogin", getCurrentUser.Id, DbType.String, ParameterDirection.Input);
+
+                    // DONE
+                    var files = conn.Query<GetReferenceFiles>("A_SP_PROCEDURE_GET_REFERENCE_FILES", p2, commandType: CommandType.StoredProcedure).ToList();
+
+                    foreach (var file in files)
+                    {
+                        docFiles.Add(new StepDocument() { DocId = file.Doc_Id, Name = file.Name,ProcedureStepId=item.ProcedureStepId });
+                    }
+                }
             }
+            detailsResponse.ListDocument = docFiles;
+
+            //var actualPartId = GetWorkOrderQueryable().Where(x => x.FillId == fillId.ToString()).Select(a => a.ActualPartId).FirstOrDefault();
+
+            //var docs = this.GetDocuments(actualPartId);
+            //foreach (var doc in docs)
+            //{
+            //    foreach (var docFile in docFiles)
+            //    {
+            //        if(doc.Id == docFile.DocId)
+            //        {
+            //            docFile.ServerPath = doc.ServerPath;
+            //            docFile.DocumentURL = doc.DocumentURL;
+            //            docFile.Name = doc.Name;
+            //        }
+            //    }
+            //}
 
             return detailsResponse;
         }
@@ -781,7 +815,7 @@ namespace Msr.Services.Orders
             wipStepDetailsResponse.Images.Preview = FileInputConfigHelper.GetPreviewValue(dockLinks, _documentFilesService);
 
             wipStepDetailsResponse.HasPreviousStepCompleted = HasPreviousStepCompleted(wipStepDetailsResponse.TaskItemParts, stepId);
-            
+
             // TO DO!!!!
 
             // var taskLog = _dbContext.TaskLogs.FirstOrDefault(x => x.TaskId == stepId && x.FillId == fillId);

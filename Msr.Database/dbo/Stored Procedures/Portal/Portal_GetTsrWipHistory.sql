@@ -19,7 +19,7 @@ BEGIN
 END
 
 CREATE TABLE #TEMPTASKS (SORTID INT NOT NULL IDENTITY(1, 1), ID varchar(50), ParentId varchar(50), DESCRIPTION nvarchar(2000), Title nvarchar(2000), STATUS varchar(50), REQUESTOR varchar(50), CompletedBy varchar(50), 
-ActualStartDate datetime, ActualStopDate datetime, LatestRequesteeName nvarchar(200), HasFile tinyint, HasMonitor tinyint, Location nvarchar(100))
+ActualStartDate datetime, ActualStopDate datetime, LatestRequesteeName nvarchar(200), HasFile tinyint, HasMonitor tinyint, Location nvarchar(100),ProcedureStepId nvarchar(2000))
 
 INSERT INTO #TEMPTASKS
 SELECT T.ID
@@ -37,6 +37,7 @@ SELECT T.ID
 	, T.HAS_FILE
 	, T.HAS_MONITOR
 	, (SELECT NAME FROM DBO.A_LOCATIONS_HISTORY WHERE ID = (SELECT HISTORY_REF_ID FROM DBO.A_LOCATIONS WHERE ID = (SELECT SPECIFIC_LOCATION FROM DBO.A_PROCEDURE_STEPS WHERE ID = T.PROCEDURE_STEP_ID))) AS [LOCATION]
+	, T.PROCEDURE_STEP_ID
 	-- , PS.*
 FROM DBO.A_TASKS PARENT_TASK
 RIGHT OUTER JOIN DBO.A_TASKS T ON PARENT_TASK.ID = T.PARENT_ID

@@ -1,5 +1,5 @@
 ﻿@model Msr.Services.Orders.Messaging.WipHistoryTsrResponse
-
+@using Answer.Web.Helpers
 
 <div class="col-md-12 col-sm-12 visible-print" style="margin-top:20px;">
     <h2>WIP History Report</h2>
@@ -45,6 +45,40 @@
                 <td>@task.Location</td>
                 <td>@task.Status</td>
             </tr>
+            if (Model.GetDocumentsOfTask(task.ProcedureStepId).Any())
+            {
+                <tr>
+                    <td></td>
+                    <td colspan="6" style="padding:0;">
+                        <table class="table table-bordered table-striped">
+                            <tr>
+                                <th>Files</th>
+                                <th>Actions</th>
+                            </tr>
+                            @foreach (var item in Model.GetDocumentsOfTask(task.ProcedureStepId))
+                            {
+                                <tr>
+                                    <td>@item.Name</td>
+                                    <td>
+                                        @*<span class="data-toggle=" data-call-back-item="@item.Name" data-toggle="modal" data-target="#view-images" title="View File">
+                                            <i class="icon fa fa-eye"></i>
+                                        </span>*@
+                                        @FilePreviewHelper.FilePreview(item.Name, item.DocId)
+                                        @*<a class="btn btn-xs btn-success" data-toggle="modal" href="NC types.jpg"
+                                               data-target="#" onclick="viewerLoad('@file.DocumentURL','@file.Name')" title="View Inline">
+                                                View
+                                                <span data-toggle="tooltip" data-placement="top" data-original-title="Launch Viewer" data-flobwicket="{%=file.name%}">
+                                                    <i class="fa fa-eye" aria-hidden="true"></i>
+                                                </span>
+                                            </a>*@
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+                    </td>
+                </tr>
+            }
+
             if (task.WipSubTasks.Any())
             {
                 <tr>
@@ -60,7 +94,7 @@
 
                             {
 
-                             var cssClass = "";
+                                var cssClass = "";
 
                                 if (subTask.IsPassing == "Pass")
                                 {
@@ -84,3 +118,8 @@
         }
     </table>
 </div>
+<script type="text/javascript">
+    $(function () {
+        Msr.JqGridCommon.DocPreview();
+    });
+</script>
