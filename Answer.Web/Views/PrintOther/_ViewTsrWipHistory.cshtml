@@ -1,5 +1,5 @@
 ﻿@model Msr.Services.Orders.Messaging.WipHistoryTsrResponse
-@using Answer.Web.Helpers
+
 
 <div class="col-md-12 col-sm-12 visible-print" style="margin-top:20px;">
     <h2>WIP History Report</h2>
@@ -45,39 +45,6 @@
                 <td>@task.Location</td>
                 <td>@task.Status</td>
             </tr>
-            if (Model.GetDocumentsOfTask(task.Id).Any())
-            {
-                <tr class="filesHide">
-                    <td></td>
-                    <td colspan="6" style="padding:0;">
-                        <table class="table table-bordered table-striped">
-                            <tr>
-                                <th>Files</th>
-                                <th>Actions</th>
-                            </tr>
-                            @foreach (var item in Model.GetDocumentsOfTask(task.Id))
-                            {
-                                <tr>
-                                    <td width="70%">@item.Name</td>
-                                    <td>
-                                        <a class="btn btn-xs btn-success" data-toggle="modal" href="{%=file.url%}" data-target="#"
-                                           onclick="viewerLoad('@item.DocumentURL','@item.Name')" title="View Inline">
-                                            <span data-toggle="tooltip" data-placement="top" data-original-title="Launch Viewer"
-                                                  data-flobwicket="{%=file.name%}"><i class="fa fa-eye"></i></span> View
-                                        </a>
-                                        <a class="btn btn-xs btn-success" href="@item.DocumentURL" download target="_blank">
-                                            <span data-toggle="tooltip" data-placement="top" data-original-title="Download Document">
-                                                <i class="fa fa-download"></i>
-                                            </span> Download
-                                        </a>
-                                    </td>
-                                </tr>
-                            }
-                        </table>
-                    </td>
-                </tr>
-            }
-
             if (task.WipSubTasks.Any())
             {
                 <tr>
@@ -93,7 +60,7 @@
 
                             {
 
-                                var cssClass = "";
+                             var cssClass = "";
 
                                 if (subTask.IsPassing == "Pass")
                                 {

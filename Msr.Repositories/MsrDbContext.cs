@@ -132,7 +132,6 @@ namespace Msr.Repositories
             modelBuilder.Entity<OperationsCustomerRevenueData>().ToTable("Report_Operations_CustomerRevenue");
             modelBuilder.Entity<OperationsKitRevenueData>().ToTable("Report_Operations_KitRevenue");
             modelBuilder.Entity<OperationsKitCountData>().ToTable("Report_Operations_KitCount");
-            modelBuilder.Entity<WorkOrderImageView>().ToTable("A_V_TASK_REF_FILES");
         }
 
         public DbSet<AspNetUser> AspNetUsers { get; set; }
@@ -216,6 +215,5 @@ namespace Msr.Repositories
         public DbSet<OperationsCustomerRevenueData> OperationsCustomerRevenueData { get; set; }
         public DbSet<OperationsKitRevenueData> OperationsKitRevenueData { get; set; }
         public DbSet<OperationsKitCountData> OperationsKitCountData { get; set; }
-        public DbSet<WorkOrderImageView> WorkOrderImageViewData { get; set; }
     }
 }
