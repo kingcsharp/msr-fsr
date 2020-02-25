@@ -318,7 +318,7 @@ Msr.PurchaseOrderGrid = Msr.PurchaseOrderGrid ||
                     },
                     align: 'center'
                 },
-                { name: 'Actions', index: 'ID', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: ActionFormatter, width: 100, align: 'center' }
+                { name: 'Actions', index: 'ID', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: POActionFormatter, width: 100, align: 'center' }
             ],
             ajaxRowOptions: {
                 type: "POST",
@@ -407,7 +407,7 @@ Msr.PurchaseOrderGrid = Msr.PurchaseOrderGrid ||
             return '';
         };
 
-        function ActionFormatter(cellvalue, options, rowObject) {
+        function POActionFormatter(cellvalue, options, rowObject) {
 
             var closeButton = '';
             var showPoButton = '';
@@ -420,7 +420,7 @@ Msr.PurchaseOrderGrid = Msr.PurchaseOrderGrid ||
             var strDate = (d.getMonth() + 1) + "/" + d.getDate() + "/" + d.getFullYear();
 
             if (Date.parse(rowObject.CloseDate) > Date.parse(strDate) && rowObject.Status === "APPROVED" && rowObject.SupplierCo === rootCompany) {
-                closeButton = '<a  title="Close this Account" href="#" data-call-back-id ="' + rowObject.ObjectId + '" class="btn btn-xs btn-danger close-account" style="margin:2px;font-size: .8em;"><i class="fa fa-close" aria-hidden="true"></i></a>';
+                closeButton = '<a  title="Close this Account" href="#" data-call-back-id ="' + rowObject.ObjectId + '" class="btn btn-xs btn-warning close-account" style="margin:2px;font-size: .8em;"><i class="fa fa-close" aria-hidden="true"></i></a>';
             }
 
             return showPoButton + actions + closeButton;
