@@ -37,7 +37,10 @@
         var rootCompany = '@ViewBag.Company';
 
         $(document).ready(function () {
-            Msr.PurchaseOrderGrid.LoadPurchaseOrderGrid('@Url.Action("PurchaseOrderData", "PurchaseOrder")');
+
+            var hasAdministratorRole = '@User.IsInRole("Administrators")' === 'True';
+
+            Msr.PurchaseOrderGrid.LoadPurchaseOrderGrid('@Url.Action("PurchaseOrderData", "PurchaseOrder")',hasAdministratorRole);
         });
     </script>
 }

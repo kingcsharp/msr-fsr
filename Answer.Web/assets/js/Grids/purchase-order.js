@@ -8,7 +8,7 @@ Msr.PurchaseOrderGrid = Msr.PurchaseOrderGrid ||
     GetGridId: function () {
         return "jq-grid-purchase";
     },
-    LoadPurchaseOrderGrid: function(url) {
+    LoadPurchaseOrderGrid: function(url,hasAdministratorRole) {
 
         $("#" + Msr.PurchaseOrderGrid.GetGridId()).jqGrid({
             url: url,
@@ -411,7 +411,8 @@ Msr.PurchaseOrderGrid = Msr.PurchaseOrderGrid ||
 
             var closeButton = '';
             var showPoButton = '';
-            var actions = Msr.JqGridCommon.ActionFormtter(cellvalue, options, rowObject, Msr.PurchaseOrderGrid.GetReturnUrl(), '/PurchaseOrder/Edit/', true);
+            var deleteButton = '';
+            var actions = Msr.JqGridCommon.ActionFormtter(cellvalue, options, rowObject, Msr.PurchaseOrderGrid.GetReturnUrl(), '/PurchaseOrder/Edit/', false);
 
             if (rowObject.Product !== null && rowObject.Status === "APPROVED") {
                 showPoButton = '<a  title="Purchase On this PO" href="/PurchaseOrder/PurchasePoDetails/' + rowObject.Root + '" data-call-back-id ="' + rowObject.Root + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-dollar"></i></a>';
@@ -422,8 +423,18 @@ Msr.PurchaseOrderGrid = Msr.PurchaseOrderGrid ||
             if (Date.parse(rowObject.CloseDate) > Date.parse(strDate) && rowObject.Status === "APPROVED" && rowObject.SupplierCo === rootCompany) {
                 closeButton = '<a  title="Close this Account" href="#" data-call-back-id ="' + rowObject.ObjectId + '" class="btn btn-xs btn-warning close-account" style="margin:2px;font-size: .8em;"><i class="fa fa-close" aria-hidden="true"></i></a>';
             }
+            
+            if (hasAdministratorRole) {
+                url = '/workflow/delete?objId=' + rowObject.ObjectId + '&returnUrl=' + Msr.PurchaseOrderGrid.GetReturnUrl();
+                deleteButton =
+                    '<a href="' +
+                    url +
+                    '" data-call-back-name="' +
+                    rowObject.Name +
+                    '" class="btn btn-xs btn-danger" title="Proceed to delete." style="margin:2px;font-size: .8em;"><i class="fa fa fa-trash-o"></i></a>';
+            }
 
-            return showPoButton + actions + closeButton;
+            return showPoButton + actions + closeButton + deleteButton;
         }
     }
 }
