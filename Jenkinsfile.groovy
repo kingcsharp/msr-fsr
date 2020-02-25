@@ -38,11 +38,11 @@ pipeline {
             steps {
                 script {
                     try {
-                        /*if(env.JOB_NAME == "MSR-FSR/Answer2.0/stage") {*/
+                        if(env.JOB_NAME == "MSR-FSR/Answer2.0/stage") {
                             bat "\"${tool 'v2019'}\" Msr.Database/Msr.Database.sqlproj /t:Build /p:Configuration=Release"
-                        /*} else {
+                        } else {
                             echo "Not building database for ${env.JOB_NAME}"
-                        }*/
+                        }
                     } catch(e) {
                         office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED building Msr.Database. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
                         currentBuild.result = 'FAILURE'
@@ -55,11 +55,11 @@ pipeline {
             steps {
                 script {
                     try {
-                        /*if(env.JOB_NAME == "MSR-FSR/Answer2.0/stage" || env.JOB_NAME.startsWith("MSR-FSR/Answer2.0/Release/Release")) {*/
+                        if(env.JOB_NAME == "MSR-FSR/Answer2.0/stage" || env.JOB_NAME.startsWith("MSR-FSR/Answer2.0/Release/Release")) {
                             bat label: '', script: 'sqlpackage.exe /a:script /SourceFile:%WORKSPACE%\\Msr.Database\\bin\\Release\\Msr.Database.dacpac /TargetConnectionString:"Data Source=bang.msr-fsr.com;Initial Catalog=Answer2_Stage;User Id=sa;Password=L8xvg2FGqs7CEQ+a;Integrated Security=true" /V:EquipmentMonitoring=$EquipmentMonitoring /OutputPath:temp.sql'
-                        /*} else {
+                        } else {
                             echo "Not building script for ${env.JOB_NAME}"
-                        }*/
+                        }
                     } catch(e) {
                         office365ConnectorSend color: "${RED}", message: "${JOB_NAME} build FAILED generating SQL script from Msr.Database. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
                         currentBuild.result = 'FAILURE'
