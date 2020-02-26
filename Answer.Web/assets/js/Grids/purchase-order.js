@@ -10,6 +10,7 @@ Msr.PurchaseOrderGrid = Msr.PurchaseOrderGrid ||
     },
     LoadPurchaseOrderGrid: function(url,hasAdministratorRole) {
 
+
         $("#" + Msr.PurchaseOrderGrid.GetGridId()).jqGrid({
             url: url,
             mtype: "GET",
@@ -318,7 +319,8 @@ Msr.PurchaseOrderGrid = Msr.PurchaseOrderGrid ||
                     },
                     align: 'center'
                 },
-                { name: 'Actions', index: 'ID', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: POActionFormatter, width: 100, align: 'center' }
+                { name: 'Actions', index: 'ID', key: true, search: false, hidden: false, colmenu: false, editable: false, formatter: POActionFormatter, formatoptions:
+                    { _hasAdministratorRole: hasAdministratorRole, _url : url}, width: 100, align: 'center' }
             ],
             ajaxRowOptions: {
                 type: "POST",
@@ -423,15 +425,16 @@ Msr.PurchaseOrderGrid = Msr.PurchaseOrderGrid ||
             if (Date.parse(rowObject.CloseDate) > Date.parse(strDate) && rowObject.Status === "APPROVED" && rowObject.SupplierCo === rootCompany) {
                 closeButton = '<a  title="Close this Account" href="#" data-call-back-id ="' + rowObject.ObjectId + '" class="btn btn-xs btn-warning close-account" style="margin:2px;font-size: .8em;"><i class="fa fa-close" aria-hidden="true"></i></a>';
             }
-            
-            if (hasAdministratorRole) {
-                url = '/workflow/delete?objId=' + rowObject.ObjectId + '&returnUrl=' + Msr.PurchaseOrderGrid.GetReturnUrl();
+           
+            if (options.colModel.formatoptions._hasAdministratorRole && rowObject.HasWorkOrders === false) {
+                options.colModel.formatoptions._url = '/workflow/delete?objId=' + rowObject.ObjectId + '&returnUrl=' + Msr.PurchaseOrderGrid.GetReturnUrl();
                 deleteButton =
                     '<a href="' +
-                    url +
+                    options.colModel.formatoptions._url +
                     '" data-call-back-name="' +
                     rowObject.Name +
                     '" class="btn btn-xs btn-danger" title="Proceed to delete." style="margin:2px;font-size: .8em;"><i class="fa fa fa-trash-o"></i></a>';
+
             }
 
             return showPoButton + actions + closeButton + deleteButton;
