@@ -285,6 +285,7 @@ namespace Answer.Web.Controllers
                 if (section == "WIP_TASK_STEP")
                 {
                     var docFile = _documentFilesService.GetSelectedRefFile(file);
+
                     var imageModel = new SaveWorkItemImageViewModel
                     {
                         Name = docFile.Name,
