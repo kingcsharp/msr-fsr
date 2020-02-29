@@ -609,6 +609,7 @@ namespace Msr.Services.PurchesOrder
         public string CloseAccount(string id, string ntlogin)
         {
             _dbContext.Database.ExecuteSqlCommand($"UPDATE A_ACCOUNTS_HISTORY SET CLOSE_DATE = getDate(), DRCM = getDate(), modby= " + ntlogin + " WHERE OBJECT_ID = " + id + "");
+            _dbContext.Database.ExecuteSqlCommand($"UPDATE A_OBJECTS SET DRCM = getDate(), MODBY= " + ntlogin + ", STATUS='CLOSED' WHERE [ID] = " + id + "");
 
             return "";
         }

@@ -312,7 +312,7 @@ Msr.PurchaseOrderGrid = Msr.PurchaseOrderGrid ||
                     multiselect: true,
                     searchoptions: {
                         sopt: ['eq'],
-                        value: Msr.JqGridCommon.GetStatusFilters(),
+                        value: Msr.JqGridCommon.GetStatusFilters().concat(';CLOSED:Closed'),
                         dataInit: function (elem) {
                             Msr.JqGridCommon.DataInitBootstrapMultiselect(elem);
                         }
@@ -411,33 +411,37 @@ Msr.PurchaseOrderGrid = Msr.PurchaseOrderGrid ||
 
         function POActionFormatter(cellvalue, options, rowObject) {
 
-            var closeButton = '';
-            var showPoButton = '';
-            var deleteButton = '';
-            var actions = Msr.JqGridCommon.ActionFormtter(cellvalue, options, rowObject, Msr.PurchaseOrderGrid.GetReturnUrl(), '/PurchaseOrder/Edit/', false);
+            var closePurchaseOrderButton = '';
+            var purchaseAgainstPurchaseOrderButton = '';
+            var deletePurchaseOrderButton = '';
+            var editPurchaseOrderButton = Msr.JqGridCommon.ActionFormtter(cellvalue, options, rowObject, Msr.PurchaseOrderGrid.GetReturnUrl(), '/PurchaseOrder/Edit/', false);
 
-            if (rowObject.Product !== null && rowObject.Status === "APPROVED") {
-                showPoButton = '<a  title="Purchase On this PO" href="/PurchaseOrder/PurchasePoDetails/' + rowObject.Root + '" data-call-back-id ="' + rowObject.Root + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-dollar"></i></a>';
+
+            if(rowObject.Status === "APPROVED" && rowObject.Product !== null) {
+
+                purchaseAgainstPurchaseOrderButton = '<a  title="Purchase against this purchase order" href="/PurchaseOrder/PurchasePoDetails/' + rowObject.Root + '" data-call-back-id ="' + rowObject.Root + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-dollar"></i></a>';
+
+                if (options.colModel.formatoptions._hasAdministratorRole && rowObject.HasWorkOrders === false) {
+
+                    options.colModel.formatoptions._url = '/workflow/delete?objId=' +
+                        rowObject.ObjectId +
+                        '&returnUrl=' +
+                        Msr.PurchaseOrderGrid.GetReturnUrl();
+
+                    deletePurchaseOrderButton =
+                        '<a href="' +
+                        options.colModel.formatoptions._url +
+                        '" data-call-back-name="' +
+                        rowObject.Name +
+                        '" class="btn btn-xs btn-danger" title="Proceed to delete" style="margin:2px;font-size: .8em;"><i class="fa fa fa-trash-o"></i></a>';
+
+                }else {
+                    closePurchaseOrderButton = '<a  title="Close this purchase order" href="#" data-call-back-id ="' + rowObject.ObjectId + '" class="btn btn-xs btn-warning close-account" style="margin:2px;font-size: .8em;"><i class="fa fa-close" aria-hidden="true"></i></a>';
+                }
             }
-            var d = new Date();
-            var strDate = (d.getMonth() + 1) + "/" + d.getDate() + "/" + d.getFullYear();
 
-            if (Date.parse(rowObject.CloseDate) > Date.parse(strDate) && rowObject.Status === "APPROVED" && rowObject.SupplierCo === rootCompany) {
-                closeButton = '<a  title="Close this Account" href="#" data-call-back-id ="' + rowObject.ObjectId + '" class="btn btn-xs btn-warning close-account" style="margin:2px;font-size: .8em;"><i class="fa fa-close" aria-hidden="true"></i></a>';
-            }
-           
-            if (options.colModel.formatoptions._hasAdministratorRole && rowObject.HasWorkOrders === false) {
-                options.colModel.formatoptions._url = '/workflow/delete?objId=' + rowObject.ObjectId + '&returnUrl=' + Msr.PurchaseOrderGrid.GetReturnUrl();
-                deleteButton =
-                    '<a href="' +
-                    options.colModel.formatoptions._url +
-                    '" data-call-back-name="' +
-                    rowObject.Name +
-                    '" class="btn btn-xs btn-danger" title="Proceed to delete." style="margin:2px;font-size: .8em;"><i class="fa fa fa-trash-o"></i></a>';
 
-            }
-
-            return showPoButton + actions + closeButton + deleteButton;
+            return purchaseAgainstPurchaseOrderButton + editPurchaseOrderButton + closePurchaseOrderButton + deletePurchaseOrderButton;
         }
     }
 }

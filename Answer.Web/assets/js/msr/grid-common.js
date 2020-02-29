@@ -100,7 +100,7 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                     rowObject.ObjectId +
                     '" data-call-back-id ="' +
                     rowObject.ObjectId +
-                    '"  class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
+                    '"  class="btn btn-xs btn-success" title="Edit" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
                 url = '/workflow/submit?objId=' + rowObject.ObjectId + '&returnUrl=' + returnUrl;
                 buttonWorkflowLeft = '<a href="' +
                     url +
@@ -108,19 +108,19 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                     rowObject.Name +
                     '"  data-call-back-id="' +
                     rowObject.ObjectId +
-                    '" class="btn btn-xs btn-success unlock" title="Cancel Creation. Edit will be lost" style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-left"></i></a>';
+                    '" class="btn btn-xs btn-success unlock" title="Cancel creation, Edit will be lost" style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-left"></i></a>';
 
                 buttonWorkflowRight = '<a href="' +
                     url +
                     '" data-call-back-name="' +
                     rowObject.Name +
-                    '" class="btn btn-xs btn-success" title="Proceed to approval workflow for release." style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-right"></i></a>';
+                    '" class="btn btn-xs btn-success" title="Proceed to approval workflow for release" style="margin:2px;font-size: .8em;"><i class="fa fa-arrow-right"></i></a>';
             }
 
             if (rowObject.Status === 'APPROVED') {
                 editButton = '<a href="#" data-call-back-id ="' +
                     rowObject.ObjectId +
-                    '"  class="btn btn-xs btn-success editpeople" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
+                    '"  class="btn btn-xs btn-success editpeople" title="Edit" style="margin:2px;font-size: .8em;"><i class="fa fa-edit"></i></a>';
                 if (showDelete) {
                     url = '/workflow/delete?objId=' + rowObject.ObjectId + '&returnUrl=' + returnUrl;
                     deleteButton =
@@ -128,7 +128,7 @@ Msr.JqGridCommon = Msr.JqGridCommon ||
                         url +
                         '" data-call-back-name="' +
                         rowObject.Name +
-                        '" class="btn btn-xs btn-danger" title="Proceed to delete." style="margin:2px;font-size: .8em;"><i class="fa fa fa-trash-o"></i></a>';
+                        '" class="btn btn-xs btn-danger" title="Proceed to delete" style="margin:2px;font-size: .8em;"><i class="fa fa fa-trash-o"></i></a>';
                 }
 
             }
