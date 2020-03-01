@@ -40,6 +40,5 @@ namespace Msr.Models.Files
 
         public string SERVER_PATH { get; set; }
 
-        public int RN { get; set; }
     }
 }
