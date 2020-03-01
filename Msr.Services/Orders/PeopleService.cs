@@ -38,7 +38,7 @@ namespace Msr.Services.Orders
 
         public bool CheckUserExists(string login, string password)
         {
-            var user = _dbContext.ApprovedPeoples.SingleOrDefault(x => x.Login == login && password == password);
+            var user = _dbContext.ApprovedPeoples.SingleOrDefault(x => x.Login == login && x.Password == password);
 
             if (user != null && user.SystemStatus != "ACTIVE")
             {
@@ -224,7 +224,7 @@ namespace Msr.Services.Orders
             }
             catch (Exception ex)
             {
-                responsePeople.AddError("There is an error when creating user");
+                responsePeople.AddError("There is an error when creating user. Error:" + ex);
 
                 return responsePeople;
             }
@@ -397,7 +397,7 @@ namespace Msr.Services.Orders
                 _userService.RemoveUserCacheItems(model.LoginId, model.Root);
                 _roleService.RemoveRoleCacheItems(model.LoginId, model.Root);
 
-                responsePeople.AddError("There is an error when editing user");
+                responsePeople.AddError("There is an error when editing user. ERROR: " + ex);
 
                 return responsePeople;
             }

@@ -170,7 +170,7 @@ namespace Msr.Services.Orders
                 stream.Close();
                 response.Close();
             }
-            catch (Exception exp)
+            catch (Exception)
             {
                 buf = null;
             }
@@ -362,14 +362,15 @@ namespace Msr.Services.Orders
             }
 
             var taskIds = detailsResponse.WipTaskResult.Select(x => x.Id).ToList();
-            detailsResponse.ListDocument = _dbContext.WorkOrderImageViewData.Where(x => taskIds.Contains(x.Task_Id))
+            detailsResponse.ListDocument = _dbContext.WorkOrderImageViewData.Where(x => taskIds.Contains(x.Task_Id) && x.Status == "ACTIVE")
                 .ToList().Select(x => new TaskDocument()
                 {
                     Id = x.Id,
                     ContentType = x.ContentType,
                     DocumentURL = x.Path,
                     TaskId = x.Task_Id,
-                    Name = x.FILE_NAME
+                    Name = x.FILE_NAME,
+                    Status = x.Status
                 }).ToList();
 
             return detailsResponse;
@@ -486,7 +487,7 @@ namespace Msr.Services.Orders
 
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }

@@ -78,8 +78,6 @@ namespace Answer.Web.Controllers
 
             var orderBy = nameof(DeliveryScreenView.DUE_DATE);
 
-            var orderDirection = "asc";
-
             if (!string.IsNullOrWhiteSpace(param.sortColumn))
             {
                 orderBy = param.sortColumn;

@@ -70,6 +70,7 @@ namespace Msr.Repositories
             modelBuilder.Entity<ProcedureVerbsView>().ToTable("Portal_ProceduresVerbsView");
             modelBuilder.Entity<ProcedureView>().ToTable("Portal_ProceduresView");
             modelBuilder.Entity<FileView>().ToTable("Portal_FilesView");
+            modelBuilder.Entity<LatestFileView>().ToTable("Portal_LatestApprovedFilesView");
             modelBuilder.Entity<RegionsView>().ToTable("Portal_RegionsView");
             modelBuilder.Entity<LocationView>().ToTable("Portal_LocationsView");
             modelBuilder.Entity<TaskLog>().ToTable("Portal_Task_Logs");
@@ -157,6 +158,7 @@ namespace Msr.Repositories
         public DbSet<ProcedureVerbsView> ProcedureVerbs { get; set; }
         public DbSet<ProcedureView> Procedures { get; set; }
         public DbSet<FileView> FIleViews { get; set; }
+        public DbSet<LatestFileView> LatestFileViews { get; set; }
         public DbSet<LocationView> LocationViews { get; set; }
         public DbSet<TaskLog> TaskLogs { get; set; }
         public DbSet<RolesView> RolesViews { get; set; }

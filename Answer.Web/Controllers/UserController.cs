@@ -13,7 +13,7 @@ namespace Answer.Web.Controllers
             ViewBag.ActiveClass = "USER";
         }
 
-        public ActionResult Profile()
+        public new ActionResult Profile()
         {
             var currentUser = GetCurrentUser();
 
@@ -30,7 +30,7 @@ namespace Answer.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult Profile(UserProfileViewModel viewModel)
+        public new ActionResult Profile(UserProfileViewModel viewModel)
         {
             var currentUser = GetCurrentUser();
             var userService = new UserService();

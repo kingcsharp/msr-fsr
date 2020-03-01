@@ -100,7 +100,7 @@ namespace Msr.Services.PrePro
 
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }
@@ -153,7 +153,7 @@ namespace Msr.Services.PrePro
 
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }
@@ -197,7 +197,7 @@ namespace Msr.Services.PrePro
 
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }
@@ -239,7 +239,7 @@ namespace Msr.Services.PrePro
 
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }

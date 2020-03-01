@@ -3347,7 +3347,6 @@
     <Content Include="Views\Wip\_ViewReferenceTheory.cshtml" />
     <Content Include="Views\Wip\SearchNcrs.cshtml" />
     <Content Include="Views\Wip\_serializeTask.cshtml" />
-    <Content Include="Views\Wip\_Filetab.cshtml" />
     <Content Include="Views\Companies\Details.cshtml" />
     <Content Include="Views\ActualParts\Index.cshtml" />
     <Content Include="Views\ActualParts\Edit.cshtml" />

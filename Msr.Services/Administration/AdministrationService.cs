@@ -44,7 +44,7 @@ namespace Msr.Services.Administration
 
                 return new BaseNotification();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
             }
@@ -97,7 +97,7 @@ namespace Msr.Services.Administration
                     _dbContext.Database.ExecuteSqlCommand(sql);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
 
@@ -117,7 +117,7 @@ namespace Msr.Services.Administration
                     _dbContext.Database.ExecuteSqlCommand(sql);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
 
@@ -154,7 +154,7 @@ namespace Msr.Services.Administration
                     _dbContext.Database.ExecuteSqlCommand(sql);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
 
