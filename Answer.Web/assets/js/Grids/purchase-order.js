@@ -421,23 +421,28 @@ Msr.PurchaseOrderGrid = Msr.PurchaseOrderGrid ||
 
                 purchaseAgainstPurchaseOrderButton = '<a  title="Purchase against this purchase order" href="/PurchaseOrder/PurchasePoDetails/' + rowObject.Root + '" data-call-back-id ="' + rowObject.Root + '" class="btn btn-xs btn-success" style="margin:2px;font-size: .8em;"><i class="fa fa-dollar"></i></a>';
 
-                if (options.colModel.formatoptions._hasAdministratorRole && rowObject.HasWorkOrders === false) {
+                if (options.colModel.formatoptions._hasAdministratorRole) {
 
-                    options.colModel.formatoptions._url = '/workflow/delete?objId=' +
-                        rowObject.ObjectId +
-                        '&returnUrl=' +
-                        Msr.PurchaseOrderGrid.GetReturnUrl();
+                    if (rowObject.HasWorkOrders === false) {
 
-                    deletePurchaseOrderButton =
-                        '<a href="' +
-                        options.colModel.formatoptions._url +
-                        '" data-call-back-name="' +
-                        rowObject.Name +
-                        '" class="btn btn-xs btn-danger" title="Proceed to delete" style="margin:2px;font-size: .8em;"><i class="fa fa fa-trash-o"></i></a>';
+                        options.colModel.formatoptions._url = '/workflow/delete?objId=' +
+                            rowObject.ObjectId +
+                            '&returnUrl=' +
+                            Msr.PurchaseOrderGrid.GetReturnUrl();
 
-                }else {
-                    closePurchaseOrderButton = '<a  title="Close this purchase order" href="#" data-call-back-id ="' + rowObject.ObjectId + '" class="btn btn-xs btn-warning close-account" style="margin:2px;font-size: .8em;"><i class="fa fa-close" aria-hidden="true"></i></a>';
+                        deletePurchaseOrderButton =
+                            '<a href="' +
+                            options.colModel.formatoptions._url +
+                            '" data-call-back-name="' +
+                            rowObject.Name +
+                            '" class="btn btn-xs btn-danger" title="Proceed to delete" style="margin:2px;font-size: .8em;"><i class="fa fa fa-trash-o"></i></a>';
+
+                    }else {
+                        closePurchaseOrderButton = '<a  title="Close this purchase order" href="#" data-call-back-id ="' + rowObject.ObjectId + '" class="btn btn-xs btn-warning close-account" style="margin:2px;font-size: .8em;"><i class="fa fa-close" aria-hidden="true"></i></a>';
+                    }
+
                 }
+                
             }
 
 
