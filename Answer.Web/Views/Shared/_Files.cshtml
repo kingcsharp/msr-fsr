@@ -8,17 +8,11 @@
 <input type="hidden" value="@ViewBag.TargetSection" id="target-section" />
 <input type="hidden" value="@ViewBag.TargetUplaodUrl" id="target-upload-url" />
 
-<ul class="nav nav-tabs">
-    <li id="one" class="active"><a data-toggle="tab" href="#files-tab">Files</a></li>
-</ul>
 
-<div class="tab-content">
-    <div id="files-tab" class="tab-pane fade in active">
-        <div class="col-lg-12">
-            <table id="jqGridFiles"></table>
-            <div id="jqGridPagerFiles"></div>
-        </div>
-    </div>
+
+<div class="col-lg-12">
+    <table id="jqGridFiles"></table>
+    <div id="jqGridPagerFiles"></div>
 </div>
 
 @Scripts.Render("~/bundles/js/jqgrid")

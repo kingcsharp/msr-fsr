@@ -111,7 +111,6 @@ namespace Answer.Web.Controllers
                 }
             }
             var orderBy = nameof(CompanyView.Name);
-            var orderDirection = "asc";
 
             if (!string.IsNullOrWhiteSpace(param.sortColumn))
             {
@@ -356,7 +355,6 @@ namespace Answer.Web.Controllers
                 }
             }
             var orderBy = nameof(CompanyView.Name);
-            var orderDirection = "asc";
 
             if (!string.IsNullOrWhiteSpace(param.sortColumn))
             {

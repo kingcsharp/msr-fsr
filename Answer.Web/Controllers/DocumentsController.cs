@@ -271,7 +271,6 @@ namespace Answer.Web.Controllers
 
         public ActionResult AddsingleReference(string linkDocId, string files, string section)
         {
-            var result = false;
 
             var ids = linkDocId.Split(',');
 

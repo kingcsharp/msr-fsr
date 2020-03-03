@@ -37,7 +37,7 @@ namespace Msr.Services.Notes
 
                 _dbContext.SaveChanges();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 ////TODO add logging
             }
@@ -57,7 +57,7 @@ namespace Msr.Services.Notes
 
                 _dbContext.Database.ExecuteStoredProcedure(addCommentToTaskProcedure);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 ////TODO add logging
             }

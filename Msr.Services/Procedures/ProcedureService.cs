@@ -226,7 +226,6 @@ namespace Msr.Services.Procedures
 
         public List<ProcedureEditObjectView> GetSelectedProcedureObject(string procobjid, string sid, string relationship, string ntlogin)
         {
-            string ss = null;
             var procId = new SqlParameter("@PROC_OBJ_ID", procobjid);
             var stepid = new SqlParameter("@PROC_STEP_ID", value: DBNull.Value);
 
@@ -988,7 +987,7 @@ namespace Msr.Services.Procedures
 
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }
@@ -1168,7 +1167,7 @@ namespace Msr.Services.Procedures
             }
             catch (Exception ex)
             {
-                result.AddError("There is an error deleting procedure step");
+                result.AddError("There is an error deleting procedure step. ERROR: " + ex);
                 return result;
             }
         }

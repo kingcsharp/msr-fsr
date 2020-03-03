@@ -399,7 +399,7 @@ namespace Answer.Web.Controllers
             return View("Edit", model);
         }
 
-        public ActionResult View(string id)
+        public new ActionResult View(string id)
         {
             var viewModel = new ProcedureViewModel();
 

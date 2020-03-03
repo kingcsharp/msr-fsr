@@ -44,9 +44,9 @@ namespace Msr.Services.AdminCostSettings
 
                 result.Entity = true;
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                result.ErrorList.Add("There is an error updating Admin Cost Settings.");
+                result.ErrorList.Add("There is an error updating Admin Cost Settings. ERROR:" + ex);
             }
 
             return result;

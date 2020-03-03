@@ -19,7 +19,7 @@ namespace Msr.Services.Orders.Messaging
 
         public List<TaskDocument> GetDocumentsOfTask(string taskId)
         {
-            return ListDocument.FindAll(x => x.TaskId == taskId);
+            return ListDocument.FindAll(x => x.TaskId == taskId && x.Status == "ACTIVE");
         }
     }
 }

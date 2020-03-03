@@ -9,5 +9,6 @@ namespace Msr.Services.Orders.Messaging
     public class TaskDocument : DocumentView
     {
         public string TaskId;
+        public string Status;
     }
 }

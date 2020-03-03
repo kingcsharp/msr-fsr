@@ -3,53 +3,50 @@ function LoadGrid() {
     $.jgrid.defaults.styleUI = 'Bootstrap';
 
     $("#jqGridFiles").jqGrid({
-        url: '/Files/FilesData',
+        url: '/Files/LatestFilesData',
         mtype: "GET",
         styleUI: 'Bootstrap',
         datatype: "json",
         colModel: [
             {
-                label: ' #',
-                name: 'Id',
-                index: 'Id',
+                label: '&#x2610;',
+                name: 'LINKED_DOC_ID',
+                index: 'LINKED_DOC_ID',
                 key: true,
-                colmenu: false,
                 search: false,
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                coloptions: { sorting: false, columns: true, filtering: false, searching: false, grouping: false, freeze: false },
                 width: 30,
                 align: 'center',
-                formatter: selectFormatter
+                formatter: selectFormatter,
             },
             {
                 label: ' #',
-                name: 'Id',
-                index: 'Id',
-                key: true,
-                colmenu: false,
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                name: 'LINKED_DOC_ID',
+                index: 'LINKED_DOC_ID',
+                search: false,
+                coloptions: { sorting: false, columns: true, filtering: false, searching: false, grouping: false, freeze: false },
                 width: 30,
                 align: 'center',
             },
             {
                 label: 'Name',
-                name: 'Name',
-                index: 'Name',
-                colmenu: false,
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                name: 'NAME',
+                index: 'NAME',
+                search: true,
+                coloptions: { sorting: false, columns: true, filtering: true, searching: false, grouping: false, freeze: false },
+                searchoptions: { searchOperMenu: true, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
                 width: 150,
                 align: 'center'
             },
             {
-                label: 'Keywords',
-                name: 'Description',
-                index: 'Description',
-                colmenu: false,
-                coloptions: { sorting: false, columns: true, filtering: false, seraching: false, grouping: false, freeze: false },
-                searchoptions: { searchOperMenu: false, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
-                align: 'center'
+                label: 'File Type',
+                name: 'CONTENTTYPE',
+                index: 'CONTENTTYPE',
+                search: true,
+                coloptions: { sorting: false, columns: true, filtering: false, searching: false, grouping: false, freeze: false },
+                searchoptions: { searchOperMenu: true, sopt: ['eq', 'gt', 'lt', 'ge', 'le'] },
+                align: 'center',
+                formatter: typeFormatter
             }
         ],
         viewrecords: true, // show the current page, data rang and total records on the toolbar
@@ -58,14 +55,14 @@ function LoadGrid() {
         pager: "#jqGridPagerFiles",
         height: 'auto',
         gridview: true,
-        sortname: 'Name',
+        sortname: 'NAME',
         sortable: true,
         sortorder: 'asc',
         cellEdit: false,
         cellsubmit: 'clientArray',
         editurl: 'clientArray',
         autowidth: true,
-        colMenu: true,
+        colMenu: false,
         key: true,
         loadui: 'disable',
         ajaxCellOptions: {},
@@ -101,4 +98,22 @@ function LoadGrid() {
 
 function selectFormatter(cellvalue, options, rowObject) {
     return '<input class="selected-file" type="checkbox" value="' + cellvalue + '|' + rowObject.Name + '" />';
+}
+
+
+function typeFormatter(cellvalue) {
+    var TypeName = '';
+    if (cellvalue === 'application/pdf') {
+        TypeName = 'PDF';
+    }
+    else if (cellvalue == 'image/png' || cellvalue == 'image/jpeg' || cellvalue == 'image/gif'){
+        TypeName = 'Image';
+    }
+    else if (cellvalue == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || cellvalue == 'application/msword') {
+        TypeName = 'MS Word';
+    }
+    else if (cellvalue == 'application/vnd.openxmlformats-officedocument.presentationml.presentation') {
+        TypeName = 'MS Powerpoint';
+    }
+    return TypeName;
 }
