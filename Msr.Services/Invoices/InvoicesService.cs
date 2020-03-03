@@ -100,7 +100,7 @@ namespace Msr.Services.Invoices
         // existingItems : [OPTIONAL] list of items in the invoice
         // custid : selected customer ID
         // facilityCode : selected facility code
-        // page : page of the result set to return (WARNING: paging is disabled)
+        // page : page of the result set to return
         // InvoiceItemList : [OPTIONAL, OUT] if defined and we have existing
         //                   items, store the total list of WOs in this
         //                   reference.  Used for the invoice edit screen.
@@ -135,11 +135,6 @@ namespace Msr.Services.Invoices
                 // so we force it a bit here.
                 pagesize = 1000;
             }
-
-            // Per https://cmhworks-llc.monday.com/boards/174158962/pulses/473245316
-            // paging is effectively disabled.  Return ALL information with
-            // every call.
-            pagesize = 1024*1024;
 
             string sql =
                 "SELECT DISTINCT po.REFERENCEPO as REFERENCEPO, " +
