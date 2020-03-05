@@ -60,7 +60,7 @@ CASE
 		SELECT 
 			COUNT(*)
 		FROM A_DOCUMENTS 
-		WHERE ID IN
+		WHERE CONTENTTYPE not in('image/jpg','image/jpeg','image/gif','image/png') and ID IN
 			(
 				SELECT 
 					[FILE_ID] 

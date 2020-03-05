@@ -26,6 +26,16 @@ namespace Msr.Services.Helpers
 
         public static string GetPreviewValue(List<DocLink> modelDocLinks, DocumentFilesService documentFilesService)
         {
+            foreach (var item in modelDocLinks)
+            {
+                if (item.SERVER_PATH.IndexOf("https:") == -1)
+                {
+                    if (item.SERVER_PATH.IndexOf("//") < 2)
+                    {
+                        item.SERVER_PATH = "https:" + item.SERVER_PATH;
+                    }
+                }
+            }
             var preview = string.Join(",",
                 modelDocLinks.ToArray().Select(x => string.Format("{0}{1}{0}", "\'",
                     documentFilesService.ConvertImageUrlToBase64(x.SERVER_PATH))));

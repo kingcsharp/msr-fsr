@@ -34,7 +34,7 @@ namespace Msr.Services.Workflows
                 notificationViewModel.Items = items.OrderByDescending(x => x.ItemCount).Take(3);
                 notificationViewModel.Total = items.Sum(x => x.ItemCount);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 ////log
             }

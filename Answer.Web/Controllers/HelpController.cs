@@ -162,7 +162,7 @@ namespace Msr.Web.Controllers
                 return Json("OK", JsonRequestBehavior.AllowGet);
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return Json("Something went wrong", JsonRequestBehavior.AllowGet);
             }

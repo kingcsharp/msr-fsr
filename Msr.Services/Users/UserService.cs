@@ -248,7 +248,7 @@ namespace Msr.Services.Users
             }
             catch (Exception ex)
             {
-                result.AddError("There is an error sending email.");
+                result.AddError("There is an error sending email. ERROR: " + ex);
             }
 
             return result;

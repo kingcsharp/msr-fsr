@@ -35,7 +35,6 @@ namespace Answer.Web.Controllers
         private readonly WorkflowService _workflowService;
         private readonly PreProServices _preProServices;
         private readonly PartsService _partsService;
-        private readonly RoleService _roleService;
         private readonly PartTypeService _partTypeService;
         private readonly DocumentFilesService _documentFilesService;
         private readonly AdminCostSettingService _adminCostSettingService;

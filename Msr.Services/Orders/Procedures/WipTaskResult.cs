@@ -24,6 +24,7 @@ namespace Msr.Services.Orders.Procedures
         public DateTime? ActualStopDate { get; set; }
 
         public string LatestRequesteeName { get; set; }
+        public string ProcedureStepId { get; set; }
 
         public short HasFile { get; set; }
 

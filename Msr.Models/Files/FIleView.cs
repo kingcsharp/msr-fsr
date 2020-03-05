@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,5 +24,21 @@ namespace Msr.Models.Files
         public string CreatorId { get; set; }
 
         public string Boss { get; set; }
+    }
+
+    public class LatestFileView
+    {
+
+        [Key]
+        public int ID { get; set; }
+
+        public string LINKED_DOC_ID { get; set; }
+
+        public string NAME { get; set; }
+
+        public string CONTENTTYPE { get; set; }
+
+        public string SERVER_PATH { get; set; }
+
     }
 }

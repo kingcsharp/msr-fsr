@@ -21,7 +21,12 @@ namespace Msr.Services.Files
             // _dbContext.FIleViews.AsQueryable().Where(x=>log).ToList();
             return _dbContext.FIleViews.AsQueryable();
         }
-      
+
+        public IQueryable<LatestFileView> GetLatestFilesQueryable()
+        {
+            return _dbContext.LatestFileViews.AsQueryable();
+        }
+
         public NewFile SaveFileUpload(SaveFileUploadViewModel model)
         {
             NewFile newFile = new NewFile();
@@ -59,7 +64,7 @@ namespace Msr.Services.Files
 
                 return newFile;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 newFile.Status = false;
 

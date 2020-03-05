@@ -1975,9 +1975,7 @@
       <AnsiNulls>Off</AnsiNulls>
       <QuotedIdentifier>Off</QuotedIdentifier>
     </Build>
-    <Build Include="dbo\Stored Procedures\Procs2\GetPartsAndKitsLabels.sql" />
     <Build Include="dbo\Stored Procedures\Procs2\OBJECTS_QUICK_APPROVE.sql" />
-    <Build Include="dbo\Stored Procedures\Procs2\pr.sql" />
     <Build Include="dbo\Stored Procedures\Procs2\sp_GetUniqueID3.sql">
       <QuotedIdentifier>Off</QuotedIdentifier>
     </Build>
@@ -2852,7 +2850,6 @@
     <Build Include="dbo\Tables\Answer_Locations_Import.sql" />
     <Build Include="dbo\Views\Portal_NotificationView.sql" />
     <Build Include="dbo\Views\A_V_LOCATIONS_APPROVED_SITES_AND_ROOMS.sql" />
-    <Build Include="dbo\Stored Procedures\Portal_DeleteWorkItemImagesById1.sql" />
     <Build Include="dbo\Views\Portal\Portal_SubPartsGrid.sql" />
     <Build Include="dbo\Views\Portal\Portal_WorkOrderPartsWithSubPartsView.sql" />
     <Build Include="dbo\Tables\A_POS_WITH_COMPLETED_WOS.sql" />
@@ -2867,7 +2864,6 @@
     <Build Include="dbo\Views\Report_WorkOrdersWithoutInvoicesVIEW.sql" />
     <Build Include="dbo\Views\A_O_ORDERS_JUSTIN_TEMP.sql" />
     <Build Include="dbo\Views\A_O_ORDERS_BACKUP_05142019.sql" />
-    <Build Include="dbo\Stored Procedures\Portal_GetNcrReports.sql" />
     <Build Include="dbo\Views\Reports\Report_ActualPartHistory.sql" />
     <Build Include="dbo\Views\A_V_WF_GROUP_ROLE_PEOPLE_2.sql" />
     <Build Include="dbo\Views\A_V_ACTUAL_PARTS_APPROVED_DATA_FOR_EACH_PART_1.sql" />
@@ -2882,6 +2878,9 @@
     <Build Include="dbo\Views\Reports\Report_Operations_CustomerRevenue.sql" />
     <Build Include="dbo\Views\Reports\Report_Operations_KitCount.sql" />
     <Build Include="dbo\Views\Reports\Report_Operations_KitRevenue.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_GetNcrReports.sql" />
+    <Build Include="dbo\Stored Procedures\Portal\Portal_DeleteWorkItemImagesById1.sql" />
+    <Build Include="dbo\Views\Portal\Portal_LatestApprovedFilesView.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Msr.Database.refactorlog" />

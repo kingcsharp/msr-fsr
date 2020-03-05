@@ -54,7 +54,6 @@ namespace Answer.Web.Controllers
             }
 
             var orderBy = nameof(ApprovalWorkflowsView.Id);
-            var orderDirection = "asc";
 
             if (!string.IsNullOrWhiteSpace(param.sortColumn))
             {

@@ -76,7 +76,7 @@ namespace Msr.Services.Workflows
 
                 SpRunAdminSql();
             }
-            catch (Exception e)
+            catch (Exception)
             {
             }
 
@@ -101,7 +101,7 @@ namespace Msr.Services.Workflows
 
                 SpRunAdminSql();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 ////log
             }
@@ -158,7 +158,7 @@ namespace Msr.Services.Workflows
 
                 SpRunAdminSql();
             }
-            catch (Exception e)
+            catch (Exception)
             {
             }
 
@@ -192,8 +192,9 @@ namespace Msr.Services.Workflows
 
                 SpRunAdminSql();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
+                /// Log;
             }
 
             return result;

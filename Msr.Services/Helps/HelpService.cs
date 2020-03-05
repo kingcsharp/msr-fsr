@@ -59,7 +59,7 @@ namespace Msr.Services.Helps
             }
             catch (Exception ex)
             {
-                result.AddError("There is an error with the request");
+                result.AddError("There is an error with the request. ERROR: " + ex);
 
                 return result;
             }

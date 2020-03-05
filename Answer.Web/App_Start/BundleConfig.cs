@@ -26,7 +26,7 @@ namespace Answer.Web
                 .Include("~/assets/js/msr/grid-common.js")
                 .Include("~/assets/js/Grids/Monitors.js")
             );
-            
+
             bundles.Add(new ScriptBundle("~/bundles/js/jqgrid-wip")
                .Include("~/assets/js/grids/engineer.js")
            );
@@ -143,9 +143,9 @@ namespace Answer.Web
                 .Include("~/assets/css/bootstrap.css", new CssRewriteUrlTransform())
             );
 
-            bundles.Add(new StyleBundle("~/bundles/css/fileinput").Include(
-                "~/assets/js/BootstrapFileInput/css/fileinput.min.css",
-                "~/assets/js/JqueryConfirm/jquery-confirm.min.css")
+            bundles.Add(new StyleBundle("~/bundles/css/fileinput")
+                .Include("~/assets/js/BootstrapFileInput/css/fileinput.min.css", new CssRewriteUrlTransform())
+                .Include("~/assets/js/JqueryConfirm/jquery-confirm.min.css")
             );
 
             bundles.Add(new StyleBundle("~/assets/css/main")
@@ -196,7 +196,7 @@ namespace Answer.Web
 
             bundles.Add(new ScriptBundle("~/bundles/js/interceptors")
                 .Include("~/assets/js/blockLayout.ui.js"));
-       
+
 
             bundles.Add(new ScriptBundle("~/bundles/js/invoice-setup")
              .Include("~/assets/js/invoice-setup.js")

@@ -159,7 +159,7 @@ namespace Answer.Web.Controllers
 
         public ActionResult PrintOtherWipHistory(int id)
         {
-            var response = _orderService.GetWipHistoryTsrDetail(id);
+            var response = _orderService.GetWipHistoryTsrDetail(id,GetCurrentUser());
 
             return PartialView("_ViewTsrWipHistory", response);
         }

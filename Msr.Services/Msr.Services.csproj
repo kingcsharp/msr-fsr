@@ -86,9 +86,6 @@
     <Reference Include="IronPdf, Version=5.2.0.22321, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\IronPdf.5.2.0.1\lib\net40\IronPdf.dll</HintPath>
     </Reference>
-    <Reference Include="itextsharp, Version=5.5.13.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
-      <HintPath>..\packages\iTextSharp.5.5.13\lib\itextsharp.dll</HintPath>
-    </Reference>
     <Reference Include="LazyCache, Version=0.7.1.44, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\LazyCache.0.7.1.44\lib\net45\LazyCache.dll</HintPath>
     </Reference>
@@ -227,6 +224,7 @@
     <Compile Include="jqGrid\PageResult.cs" />
     <Compile Include="jqGrid\Pagination.cs" />
     <Compile Include="Menus\MenuService.cs" />
+    <Compile Include="Orders\Messaging\TaskDocument.cs" />
     <Compile Include="Orders\Messaging\TaskLogDto.cs" />
     <Compile Include="Parts\Procedures\PartsImportAndUpdateExternalPartProcedure.cs" />
     <Compile Include="Parts\Procedures\UpdateSubPartProcedure.cs" />

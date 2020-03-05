@@ -206,8 +206,6 @@ namespace Answer.Web.Controllers
                 }
             }
 
-            var orderDirection = "asc";
-
             if (param.sortOrder == "desc")
             {
                 totalRows = totalRows.OrderByDescending(param.sortColumn);
