@@ -49,15 +49,6 @@ namespace Msr.Services.Documents
         {
             var result = _dbContext.Database.SqlQuery<DocFile>($"select NAME AS SHOW,DOC_ID AS VALUE,SERVER_PATH as ServerPath, Name, FileUrl, FileKey,ContentType from A_DOCUMENTS where DOC_ID={id}").SingleOrDefault();
 
-            if (result.ServerPath.IndexOf("http:") == 0)
-            {
-                result.ServerPath = result.ServerPath.Replace("http:", "");
-            }
-            if (result.ServerPath.IndexOf("https:") == 0)
-            {
-                result.ServerPath = result.ServerPath.Replace("https:", "");
-            }
-
             return result;
         }
         
