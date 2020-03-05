@@ -37,10 +37,6 @@
             url: '/Documents/AddsingleReference?linkDocId=' + objectId + '&files=' + array + '&section=' + section,
             dataType: 'JSON',
             success: function (data) {
-                debugger;
-                //var $el = $('#' + elementId);
-                //$el.fileinput('destroy');
-                //$el.off("filebeforedelete");
                 var elem = $('#' + elementId.split(' ')[0]);
                 elem.empty();
                 elem.append(`<div class="file-loading">

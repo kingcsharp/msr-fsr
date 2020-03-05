@@ -22,7 +22,6 @@ var FileUploader = function () {
 
     var initEditUploader = function (elementId, url, initialPreview, initialPreviewConfig, objectId, showSelect, section) {
         var element = $('#' + elementId);
-        debugger;
         element.fileinput({
             referenceId: objectId,
             showSelect: showSelect,
@@ -75,7 +74,6 @@ var FileUploader = function () {
     };
 
     var initUploader = function (element, url, initialPreview, initialPreviewConfig) {
-        debugger;
         element.fileinput({
             showSelect: true,
             showClose: false,
@@ -183,7 +181,6 @@ function SelectIds(parameters) {
         url: '/Documents/AddsingleReference?linkDocId=' + objectId + "&files=" + array,
         dataType: 'html',
         success: function (data) {
-            debugger;
             location.reload();
         },
         error: function () {
