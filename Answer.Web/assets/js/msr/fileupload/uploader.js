@@ -22,7 +22,7 @@ var FileUploader = function () {
 
     var initEditUploader = function (elementId, url, initialPreview, initialPreviewConfig, objectId, showSelect, section) {
         var element = $('#' + elementId);
-
+        debugger;
         element.fileinput({
             referenceId: objectId,
             showSelect: showSelect,
@@ -75,6 +75,7 @@ var FileUploader = function () {
     };
 
     var initUploader = function (element, url, initialPreview, initialPreviewConfig) {
+        debugger;
         element.fileinput({
             showSelect: true,
             showClose: false,
@@ -148,30 +149,6 @@ var FileUploader = function () {
 
     };
 
-    var setupSelectImage = function (parameters) {
-
-        //$('#select-images').on('show.bs.modal',
-        //    function (event) {
-
-        //        var button = $(event.relatedTarget);
-        //        var callBackId = button.data('call-back-id');
-        //        var modal = $(this);
-
-        //        $.ajax({
-        //            type: "GET",
-        //            url: '/Files/GetFiles?callBackId=' + callBackId,
-        //            dataType: 'html',
-        //            success: function (data) {
-        //                modal.find('.modal-body').html(data);
-        //            },
-        //            error: function () {
-
-        //            }
-        //        });
-
-        //    });
-    }
-
     var getCount = function (id) {
         var cnt = id.fileinput('getFilesCount');
         return cnt === 0 ? 'You have no files remaining.' :
@@ -180,8 +157,7 @@ var FileUploader = function () {
 
     return {
         InitEditUploader: initEditUploader,
-        InitUploader: initUploader,
-        SetupSelectImage: setupSelectImage
+        InitUploader: initUploader
     }
 }
 
@@ -207,6 +183,7 @@ function SelectIds(parameters) {
         url: '/Documents/AddsingleReference?linkDocId=' + objectId + "&files=" + array,
         dataType: 'html',
         success: function (data) {
+            debugger;
             location.reload();
         },
         error: function () {

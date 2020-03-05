@@ -220,7 +220,7 @@ namespace Answer.Web.Controllers
                     caption = x.NAME,
                     type = MimeTypes.GetContentType(x.CONTENTTYPE),
                     size = 6666,
-                    url = Url.Action("DeletesingleReference", "Documents", new {file = x.LINKED_DOC_ID}),
+                    url = Url.Action("DeletesingleReference", "Documents", new { file = x.LINKED_DOC_ID }),
                     downloadUrl = x.SERVER_PATH,
                     key = x.LINKED_DOC_ID
                 }));
@@ -312,9 +312,9 @@ namespace Answer.Web.Controllers
             {
                 var images = _orderService.GetOrderItemImagesById(ids[0]);
 
-                initialPreview = images.Select(x => x.Path).ToList();
+                initialPreview = images.Where(x => x.Status == "ACTIVE").Select(x => x.Path).ToList();
 
-                initialPreviewConfig = images.Select(x => new
+                initialPreviewConfig = images.Where(x => x.Status == "ACTIVE").Select(x => new
                 {
                     caption = x.FILE_NAME,
                     type = MimeTypes.GetContentType(x.ContentType),

@@ -782,7 +782,8 @@ namespace Msr.Services.Orders
                 ActualPartId = wipStepDetailsResponse.ParentPartId
             };
 
-            var dockLinks = wipStepDetailsResponse.DocLinkImages.Select(itemImage => new DocLink
+
+            var dockLinks = wipStepDetailsResponse.DocLinkImages.Where(x => x.Status == "ACTIVE").Select(itemImage => new DocLink
             {
                 SERVER_PATH = itemImage.Path,
                 CONTENTTYPE = itemImage.ContentType,
