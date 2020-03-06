@@ -1,32 +1,11 @@
 ﻿var FileUploaderGrid = function () {
-
-    var setupSelectImage = function(parameters) {
-
-        //$('#select-images').on('show.bs.modal',
-        //    function (event) {
-
-        //        var button = $(event.relatedTarget);
-        //        var callBackId = button.data('call-back-id');
-        //        var targetCallBackId = button.data('file-select-target-id');
-        //        var targetSection = button.data('target-section');
-        //        var modal = $(this);
-
-        //        $.ajax({
-        //            type: "GET",
-        //            url: '/Files/GetFiles?callBackId=' + callBackId + '&targetCallBackId=' + targetCallBackId + '&targetSection=' + targetSection,
-        //            dataType: 'html',
-        //            success: function (data) {
-        //                modal.find('.modal-body').html(data);
-        //            },
-        //            error: function () {
-
-        //            }
-        //        });
-
-        //    });
+    var service = {
+        SelectIds: selectIdsForEdit,
+        SelectIdsForAdd: selectIdsForAdd
     }
+    return service;
 
-    var selectIdsForEdit = function () {
+    function selectIdsForEdit() {
 
         var array = [];
         var objectId = $('#target-control-id').val();
@@ -34,8 +13,17 @@
         var section = $('#target-section').val();
         var uplaodUrl = $('#target-upload-url').val();
 
-        $(".selected-file").each(function (index) {
+        if (elementId == "") {
+            var btnData = $('#' + section + ' .select-file-button').data();
+            if (btnData !== null && btnData.selectUrl == "/Doc/FileUploaderForWipTask") {
+                objectId = btnData.callBackId;
+                elementId = btnData.fileSelectTargetId;
+                uplaodUrl = btnData.selectUrl;
+                section = 'WIP_TASK_STEP';
+            }
+        }
 
+        $(".selected-file").each(function (index) {
             if ($(this).is(":checked")) {
                 var ids = $(this).val().split('|');
                 array.push(ids[0]);
@@ -49,17 +37,21 @@
             url: '/Documents/AddsingleReference?linkDocId=' + objectId + '&files=' + array + '&section=' + section,
             dataType: 'JSON',
             success: function (data) {
-                var $el = $('#' + elementId);
-                $el.fileinput('destroy');
-                $el.off("filebeforedelete");
+                var elem = $('#' + elementId.split(' ')[0]);
+                elem.empty();
+                elem.append(`<div class="file-loading">
+                            <input id = "input-files" name = "input-files[]" type = "file" multiple />
+                            </div>
+                            <input type="hidden" id="referenceFiles" name="referenceFiles" />`)
                 new FileUploader().InitEditUploader(elementId, uplaodUrl, data.initialPreview, data.initialPreviewConfig, objectId, true, elementId);
+
             },
             error: function () {
             }
         });
     }
 
-    var selectIdsForAdd = function (fileUploaderUrl) {
+    function selectIdsForAdd(fileUploaderUrl) {
         var array = [];
         var preSelected = [];
 
@@ -111,12 +103,6 @@
 
             }
         });
-    }
-
-    return {
-        SetupSelectImage: setupSelectImage,
-        SelectIds: selectIdsForEdit,
-        SelectIdsForAdd: selectIdsForAdd
     }
 }
 

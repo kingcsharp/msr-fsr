@@ -401,14 +401,16 @@ namespace Msr.Services.PurchesOrder
                     "SET CUST_PURCH_NUM = @p1 ," +
                     "ACCT_FOR_ALL = @p2 " +
                     "WHERE OBJECT_ID = @p3",
-                    new SqlParameter { ParameterName = "p1", Value = model.REFERENCE_PO},
-                    new SqlParameter { ParameterName = "p2", Value = model.Root},
-                    new SqlParameter { ParameterName = "p3", Value = responsePurchase.Entity}
+                    new SqlParameter { ParameterName = "p1", Value = model.REFERENCE_PO },
+                    new SqlParameter { ParameterName = "p2", Value = model.Root },
+                    new SqlParameter { ParameterName = "p3", Value = responsePurchase.Entity }
                 );
 
-                for (int i = 0; i < model.ProductPo.Count; i++) {
+                for (int i = 0; i < model.ProductPo.Count; i++)
+                {
                     var poCreations = model.ProductPo[i].GroupWO ? 1 : model.ProductPo[i].Qty;
-                    for (var j = 0; j < poCreations; j++) {
+                    for (var j = 0; j < poCreations; j++)
+                    {
                         var purchasePoDetailProcedure = new PurchasePoDetailProcedure();
                         var purchasePoViewItemProcedure = new PurchasePoViewItemProcedure();
 
@@ -438,9 +440,9 @@ namespace Msr.Services.PurchesOrder
                     "SET CUST_PURCH_NUM = @p1 ," +
                     "ACCT_FOR_ALL = @p2 " +
                     "WHERE OBJECT_ID = @p3",
-                    new SqlParameter { ParameterName = "p1", Value = model.REFERENCE_PO},
-                    new SqlParameter { ParameterName = "p2", Value = model.Root},
-                    new SqlParameter { ParameterName = "p3", Value = responsePurchase.Entity}
+                    new SqlParameter { ParameterName = "p1", Value = model.REFERENCE_PO },
+                    new SqlParameter { ParameterName = "p2", Value = model.Root },
+                    new SqlParameter { ParameterName = "p3", Value = responsePurchase.Entity }
                 );
 
                 var purchase = PurchasedOrderById(responsePurchase.Entity);
@@ -572,15 +574,18 @@ namespace Msr.Services.PurchesOrder
                         x.Serial == item.SERIAL_NUMBER
                     ).First();
 
-                    if (apart != null) {
+                    if (apart != null)
+                    {
                         // Next, get any sub parts
                         IQueryable<ActualPartsView> subPartsQ = _dbContext.ActualPartsViews.Where(x =>
                             x.ParentId == apart.ObjectId
                         );
 
-                        if (subPartsQ.Any()) {
+                        if (subPartsQ.Any())
+                        {
                             // Finally, update the actual (sub) part with a blank serial and task
-                            foreach (ActualPartsView v in subPartsQ.ToList()){
+                            foreach (ActualPartsView v in subPartsQ.ToList())
+                            {
                                 UpdatePart(Int32.Parse(v.ObjectId), "", ntLogin);
                             }
                         }
@@ -609,6 +614,7 @@ namespace Msr.Services.PurchesOrder
         public string CloseAccount(string id, string ntlogin)
         {
             _dbContext.Database.ExecuteSqlCommand($"UPDATE A_ACCOUNTS_HISTORY SET CLOSE_DATE = getDate(), DRCM = getDate(), modby= " + ntlogin + " WHERE OBJECT_ID = " + id + "");
+            _dbContext.Database.ExecuteSqlCommand($"UPDATE A_OBJECTS SET DRCM = getDate(), MODBY= " + ntlogin + ", STATUS='CLOSED' WHERE [ID] = " + id + "");
 
             return "";
         }
@@ -627,10 +633,10 @@ namespace Msr.Services.PurchesOrder
             // new serial number.
             int result = _dbContext.Database.ExecuteSqlCommand("exec A_SP_ACTUAL_PART_UPDATE_SERIAL_FROM_SERIALIZE_TASK " +
                 "@ID, @taskID, @SN, @strNTLogin",
-                new SqlParameter {ParameterName = "ID", Value = partObjectId},
-                new SqlParameter {ParameterName = "taskID", Value = 0},
-                new SqlParameter {ParameterName = "SN", Value = serial},
-                new SqlParameter {ParameterName = "strNTLogin", Value = login}
+                new SqlParameter { ParameterName = "ID", Value = partObjectId },
+                new SqlParameter { ParameterName = "taskID", Value = 0 },
+                new SqlParameter { ParameterName = "SN", Value = serial },
+                new SqlParameter { ParameterName = "strNTLogin", Value = login }
             );
             return result;
         }

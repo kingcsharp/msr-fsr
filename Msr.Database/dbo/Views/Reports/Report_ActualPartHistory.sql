@@ -10,7 +10,7 @@ dbo.A_V_ACTUAL_PARTS_QUICK.SERIAL SN,
 PART.COMPANYPARTNUMBER PN,
 toi.PURCHASE_ITEM_ID WorkOrderNumber,
 ISNULL(t.ACTUAL_STOP_DATE, purchItem.DUE_DATE) DateCompleted,
-(SELECT ISNULL(NULLIF(COUNT(1),0),1) FROM PartsTransactionLog b WHERE b.serialnumber = dbo.A_V_ACTUAL_PARTS_QUICK.SERIAL AND b.partid = PA.partid AND b.CreatedDate <= ISNULL(t.ACTUAL_STOP_DATE, purchItem.DUE_DATE)) CycleCount,
+ROW_NUMBER() OVER (PARTITION BY A_V_ACTUAL_PARTS_QUICK.SERIAL,PART.COMPANYPARTNUMBER ORDER BY ISNULL(t.ACTUAL_STOP_DATE, purchItem.DUE_DATE))  CycleCount,
 isnull(STUFF((    SELECT ',' + n.message
                         FROM [Portal_Note] n
 						INNER JOIN AspNetUsers u ON u.Id = n.CreatedBy

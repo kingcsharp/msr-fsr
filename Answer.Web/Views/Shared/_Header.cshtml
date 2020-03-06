@@ -41,7 +41,7 @@
                     <li class="title">
                         Notification <span class="badge pull-right">@notifications.Total</span>
                     </li>
-                    @if (notifications.Items.Any())
+                    @if (notifications.Items != null && notifications.Items.Any())
                     {
                         <li>
                             <ul class="list-group notifications">

@@ -37,7 +37,7 @@ namespace Msr.Services.Procedures.Messages
             RolesList = new List<SelectListItem>();
         }
 
-        private string DurationType;
+        // private string DurationType;
         public string Procedure_Id { get; set; }
         public int? Start_On_Counter { get; set; }
         public string Id { get; set; }

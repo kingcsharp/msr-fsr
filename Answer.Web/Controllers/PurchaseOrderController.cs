@@ -12,6 +12,8 @@ using Msr.Services.PurchesOrder.ViewModels;
 using Msr.Services.ProductionPlanning;
 using Msr.Services.Workflows;
 using System.Web.Helpers;
+using Msr.Services.Orders;
+using Syncfusion.EJ2.Linq;
 
 namespace Answer.Web.Controllers
 {
@@ -20,11 +22,13 @@ namespace Answer.Web.Controllers
     {
         private readonly PurchesOrderService _purchesOrderService;
         private readonly ProductionPlanningService _productionPlanningService;
+        private readonly OrderService _orderService;
 
         public PurchaseOrderController()
         {
             _purchesOrderService = new PurchesOrderService();
             _productionPlanningService = new ProductionPlanningService();
+            _orderService = new OrderService();
         }
 
         public ActionResult Index()
@@ -184,6 +188,14 @@ namespace Answer.Web.Controllers
             totalRows = totalRows.Take(param.pageSize);
             var totalPages = (int)Math.Ceiling((float)totalRecords / (float)param.pageSize);
 
+
+            totalRows.ForEach(purchaseOrderViewModel =>
+                {
+                    purchaseOrderViewModel.HasWorkOrders = _orderService.GetWorkOrderQueryable()
+                        .Where(s => s.ReferencePo == purchaseOrderViewModel.ReferencePo).ToList().Any();
+                });
+
+
             var results = totalRows.ToList();
 
             var json = new
@@ -193,6 +205,9 @@ namespace Answer.Web.Controllers
                 records = totalRecords,
                 rows = results
             };
+
+
+
 
             return Json(json, JsonRequestBehavior.AllowGet);
         }

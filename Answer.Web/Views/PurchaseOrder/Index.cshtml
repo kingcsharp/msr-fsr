@@ -35,9 +35,9 @@
 
     <script type="text/javascript">
         var rootCompany = '@ViewBag.Company';
-
         $(document).ready(function () {
-            Msr.PurchaseOrderGrid.LoadPurchaseOrderGrid('@Url.Action("PurchaseOrderData", "PurchaseOrder")');
+
+            Msr.PurchaseOrderGrid.LoadPurchaseOrderGrid('@Url.Action("PurchaseOrderData", "PurchaseOrder")','@User.IsInRole("Administrators")' === 'True');
         });
     </script>
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Msr.Models.PurchesOrder
 {
@@ -111,5 +112,7 @@ namespace Msr.Models.PurchesOrder
         public Double? TaxRate { get; set; }
 
         public string Product { get; set; }
+        [NotMapped]
+        public bool HasWorkOrders { get; set; }
     }
 }

@@ -124,7 +124,7 @@ namespace Msr.Services.Invoices
                         "(wo.FILLITEMID IN (" +
                             String.Join(",", existingItems) +
                         ")) ";
-                } catch (ArgumentException e) {
+                } catch (ArgumentException) {
                     // not an integer list
                     existingItemsSQL = "";
                 }

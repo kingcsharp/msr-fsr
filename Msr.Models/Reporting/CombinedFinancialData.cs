@@ -17,6 +17,7 @@ namespace Msr.Models.Reporting
         public string CustomerName { get; set; }
         public string SpecificationNumber { get; set; }
         public string KitName { get; set; }
+        public string Serial { get; set; }
         public string CustomerPartNumber { get; set; }
         public string MTTN { get; set; }
         public string Amount { get; set; }

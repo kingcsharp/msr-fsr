@@ -170,7 +170,7 @@ namespace Msr.Services.Orders
                 stream.Close();
                 response.Close();
             }
-            catch (Exception exp)
+            catch (Exception)
             {
                 buf = null;
             }
@@ -331,12 +331,14 @@ namespace Msr.Services.Orders
             return detailsResponse;
         }
 
-        public WipHistoryTsrResponse GetWipHistoryTsrDetail(int fillId)
+        public WipHistoryTsrResponse GetWipHistoryTsrDetail(int fillId, LoggedUserIdResult getCurrentUser)
         {
             var detailsResponse = new WipHistoryTsrResponse
             {
                 FillId = fillId
             };
+
+            List<TaskDocument> docFiles = new List<TaskDocument>();
 
             using (IDbConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsrPortal"].ConnectionString))
             {
@@ -358,6 +360,18 @@ namespace Msr.Services.Orders
                     }
                 }
             }
+
+            var taskIds = detailsResponse.WipTaskResult.Select(x => x.Id).ToList();
+            detailsResponse.ListDocument = _dbContext.WorkOrderImageViewData.Where(x => taskIds.Contains(x.Task_Id) && x.Status == "ACTIVE")
+                .ToList().Select(x => new TaskDocument()
+                {
+                    Id = x.Id,
+                    ContentType = x.ContentType,
+                    DocumentURL = x.Path,
+                    TaskId = x.Task_Id,
+                    Name = x.FILE_NAME,
+                    Status = x.Status
+                }).ToList();
 
             return detailsResponse;
         }
@@ -473,7 +487,7 @@ namespace Msr.Services.Orders
 
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }
@@ -768,7 +782,8 @@ namespace Msr.Services.Orders
                 ActualPartId = wipStepDetailsResponse.ParentPartId
             };
 
-            var dockLinks = wipStepDetailsResponse.DocLinkImages.Select(itemImage => new DocLink
+
+            var dockLinks = wipStepDetailsResponse.DocLinkImages.Where(x => x.Status == "ACTIVE").Select(itemImage => new DocLink
             {
                 SERVER_PATH = itemImage.Path,
                 CONTENTTYPE = itemImage.ContentType,
@@ -781,7 +796,7 @@ namespace Msr.Services.Orders
             wipStepDetailsResponse.Images.Preview = FileInputConfigHelper.GetPreviewValue(dockLinks, _documentFilesService);
 
             wipStepDetailsResponse.HasPreviousStepCompleted = HasPreviousStepCompleted(wipStepDetailsResponse.TaskItemParts, stepId);
-            
+
             // TO DO!!!!
 
             // var taskLog = _dbContext.TaskLogs.FirstOrDefault(x => x.TaskId == stepId && x.FillId == fillId);

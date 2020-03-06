@@ -483,7 +483,7 @@ namespace Msr.Services.Parts
             }
             catch (Exception ex)
             {
-                ressult.AddError("There is an eroor deleting part");
+                ressult.AddError("There is an eroor deleting part. ERROR: " + ex);
             }
 
             return ressult;
