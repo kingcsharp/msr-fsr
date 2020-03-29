@@ -1,8 +1,0 @@
-﻿CREATE TABLE [dbo].[A_PERSON_ROLES] (
-    [ID]        VARCHAR (50) NOT NULL,
-    [PERSON_ID] VARCHAR (50) NOT NULL,
-    [ROLE_ID]   VARCHAR (50) NOT NULL,
-    [DRCM]      DATETIME     NULL,
-    [MODBY]     VARCHAR (50) NULL
-);
-

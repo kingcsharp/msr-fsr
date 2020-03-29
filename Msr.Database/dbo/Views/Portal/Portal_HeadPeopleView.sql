@@ -1,6 +1,0 @@
-﻿CREATE VIEW [dbo].[Portal_HeadPeopleView]
-	AS 
-	SELECT p.ID AS Id,
-
-p.FULL_NAME AS FullName
-FROM A_COMPANY_HEAD_PEOPLE h,A_V_PEOPLE_APPROVED_DATA p

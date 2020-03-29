@@ -1,8 +1,0 @@
-﻿CREATE TABLE [dbo].[A_PART_TYPES] (
-    [ID]             VARCHAR (50) NOT NULL,
-    [DRCM]           DATETIME     NULL,
-    [MODBY]          CHAR (10)    NULL,
-    [HISTORY_REF_ID] VARCHAR (50) NULL,
-    CONSTRAINT [PK_A_PART_TYPES] PRIMARY KEY CLUSTERED ([ID] ASC)
-);
-

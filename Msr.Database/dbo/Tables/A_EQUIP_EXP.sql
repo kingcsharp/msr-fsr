@@ -1,9 +1,0 @@
-﻿CREATE TABLE [dbo].[A_EQUIP_EXP] (
-    [ID]             VARCHAR (50) NOT NULL,
-    [HISTORY_REF_ID] VARCHAR (50) NULL,
-    [DRCM]           DATETIME     NULL,
-    [MODBY]          VARCHAR (50) NULL,
-    [STATUS]         VARCHAR (50) NULL,
-    CONSTRAINT [PK_A_EQUIP_EXP] PRIMARY KEY CLUSTERED ([ID] ASC)
-);
-

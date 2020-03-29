@@ -1,5 +1,0 @@
-﻿CREATE TABLE [dbo].[A_ADMIN_SQL_TO_RUN_ERRORS] (
-    [ID]         VARCHAR (50)   NOT NULL,
-    [ERROR_INFO] VARCHAR (7000) NULL
-);
-

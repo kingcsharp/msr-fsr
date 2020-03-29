@@ -1,8 +1,0 @@
-﻿CREATE  FUNCTION dbo.A_FN_PROCEDURE_GET_SYSTEM_PROC_ID (@co varchar(50),@SYS_ID varchar(50))
-RETURNS varchar(50)
-as
-BEGIN
-	declare @so as  varchar(50)
-	SELECT @so = ID FROM A_V_PROCEDURES_APPROVED_DATA WHERE SYSTEM_ID = @SYS_ID AND CREATING_CO = dbo.A_FN_COMPANY_GET_TOP_COMPANY(@co)
-	return(@so)
-END

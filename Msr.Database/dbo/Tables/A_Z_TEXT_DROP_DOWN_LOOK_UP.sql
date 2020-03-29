@@ -1,8 +1,0 @@
-﻿CREATE TABLE [dbo].[A_Z_TEXT_DROP_DOWN_LOOK_UP] (
-    [VAL]       NVARCHAR (4000) NULL,
-    [PERSON_ID] VARCHAR (50)    NOT NULL,
-    [LOOKUP]    VARCHAR (50)    NOT NULL,
-    [DRCM]      DATETIME        NULL,
-    [MODBY]     VARCHAR (50)    NULL
-);
-

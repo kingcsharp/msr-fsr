@@ -1,8 +1,0 @@
-﻿CREATE TABLE [dbo].[A_ADMIN_CONFIGURATION] (
-    [ID]    VARCHAR (50)    NULL,
-    [NAME]  VARCHAR (50)    NULL,
-    [VAL]   NVARCHAR (4000) NULL,
-    [DRCM]  DATETIME        NULL,
-    [MODBY] VARCHAR (50)    NULL
-);
-

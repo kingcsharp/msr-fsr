@@ -1,8 +1,0 @@
-﻿CREATE TABLE [dbo].[A_DNR_TASK_NUM_MATCHING_CASES] (
-    [ID]        VARCHAR (50) NOT NULL,
-    [TASK_ID]   VARCHAR (50) NULL,
-    [NUM_CASES] INT          NULL,
-    [DRCM]      DATETIME     NULL,
-    [MODBY]     VARCHAR (50) NULL
-);
-

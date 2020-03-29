@@ -1,9 +1,0 @@
-﻿CREATE TABLE [dbo].[A_SURVEY_COLORS] (
-    [ID]        VARCHAR (50) NOT NULL,
-    [SURVEY_ID] VARCHAR (50) NULL,
-    [COLOR]     VARCHAR (50) NULL,
-    [PERSON_ID] VARCHAR (50) NULL,
-    [DRCM]      DATETIME     NULL,
-    [MODBY]     VARCHAR (50) NULL
-);
-

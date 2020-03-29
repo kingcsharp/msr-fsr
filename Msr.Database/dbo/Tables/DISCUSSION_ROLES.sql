@@ -1,4 +1,0 @@
-﻿CREATE TABLE [dbo].[DISCUSSION_ROLES] (
-    [ID] NCHAR (50) NULL
-);
-

@@ -1,4 +1,0 @@
-﻿CREATE TABLE [dbo].[A_TASK_DATA_TABLE] (
-    [ID] VARCHAR (50) NULL
-);
-

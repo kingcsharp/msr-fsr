@@ -1,7 +1,0 @@
-﻿
-CREATE  PROCEDURE [dbo].[A_SP_PERSON_PAGE_VISITED_BY_NAME]
-@strNTLogin varchar(50),
-@strPageName varchar(50)
-AS
-SELECT TOP 1 QS FROM A_NAV_HISTORY WHERE USER_ID = @strNTLogin and PAGE = @strPageName ORDER BY DRCM DESC
-
