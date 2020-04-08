@@ -8,7 +8,13 @@ namespace MSR.Domain.Commanding.Abstractions
 {
     public interface ICommandDispatcher
     {
-        Task<ICommandResponse<T>> DispatchAsync<T>(ICommand<T> command, CancellationToken cancellationToken = default);
-        Task<ICommandResponse> DispatchAsync<T>(T command, CancellationToken cancellationToken = default) where T : class, ICommand;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="command"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<ICommandResponse> DispatchAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default) where TCommand : class, ICommand;
     }
 }
