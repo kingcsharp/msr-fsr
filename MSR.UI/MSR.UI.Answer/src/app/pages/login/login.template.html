@@ -1,0 +1,90 @@
+<div class="container">
+  <widget [title]="'<h3 class=mt-0>Answer 3.0</h3>'"
+          [customHeader]="true"
+          class="widget-auth mx-auto">
+    <!--<p class="widget-auth-info">
+      Use your email to sign in.
+    </p>
+    <alert type="secondary alert-sm text-center mt-2 widget-middle-overflow rounded-0">
+      This is a real app with Node.js backend - use
+      <br />
+      <span class="font-weight-bold">"admin@flatlogic.com / password"</span>
+      <br />
+      to login!
+    </alert>-->
+    <form>
+      <alert *ngIf="loginService.errorMessage" type="danger alert-sm widget-middle-overflow rounded-0">
+        {{loginService.errorMessage}}
+      </alert>
+      <div class="form-group mt">
+        <label for="email">Email</label>
+        <div class="input-group input-group-transparent">
+          <div class="input-group-addon">
+            <i class="la la-user text-white"></i>
+          </div>
+          <input id="email" class="form-control input-transparent pl-3" [(ngModel)]="email"
+                 type="email"
+                 required name="email" placeholder="Email" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="password">Username</label>
+        <div class="input-group input-group-transparent">
+          <div class="input-group-addon">
+            <i class="la la-lock text-white"></i>
+          </div>
+          <input id="password" class="form-control input-transparent pl-3" [(ngModel)]="password"
+                 type="password"
+                 required name="password" placeholder="Username" />
+        </div>
+      </div>
+      <div class="bg-widget auth-widget-footer">
+        <button (click)="login()" type="submit" class="btn btn-sm btn-danger auth-btn">
+          <span class="auth-btn-circle">
+            <i class="la la-caret-right"></i>
+          </span>
+          {{loginService.isFetching ? 'Loading...' : 'Login'}}
+        </button>
+        <div class="d-block text-center">
+          <a routerLink="/register" class="text-center mb-4">Forgot Username?</a> |
+          <a routerLink="/register" class="text-center mb-4">Forgot Password?</a>
+        </div>
+      </div>
+    </form>
+  </widget>
+  <widget [title]="'<h3 class=mt-0>Forgot Username</h3>'"
+          [customHeader]="true"
+          class="widget-auth mx-auto">
+    <form>
+      <alert *ngIf="loginService.errorMessage" type="danger alert-sm widget-middle-overflow rounded-0">
+        {{loginService.errorMessage}}
+      </alert>
+      <div class="form-group mt">
+        <label for="email">Email</label>
+        <div class="input-group input-group-transparent">
+          <div class="input-group-addon">
+            <i class="la la-user text-white"></i>
+          </div>
+          <input id="email" class="form-control input-transparent pl-3" [(ngModel)]="email"
+                 type="email"
+                 required name="email" placeholder="Email" />
+        </div>
+      </div>
+      <div class="bg-widget auth-widget-footer">
+        <button (click)="login()" type="submit" class="btn btn-sm btn-danger auth-btn">
+          <span class="auth-btn-circle">
+            <i class="la la-caret-right"></i>
+          </span>
+          {{loginService.isFetching ? 'Loading...' : 'Login'}}
+        </button>
+        <div class="d-block text-center">
+          <a routerLink="/register" class="text-center mb-4">Forgot Username?</a> |
+          <a routerLink="/register" class="text-center mb-4">Forgot Password?</a>
+        </div>
+      </div>
+    </form>
+  </widget>
+</div>
+<footer class="auth-footer">
+  2019 &copy; Sing App - React Admin Dashboard Template.
+</footer>

@@ -5,13 +5,34 @@ VisualStudioVersion = 16.0.29728.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSR.Answer.API", "MSR.Answer.API\MSR.Answer.API.csproj", "{92CF4545-EBFE-416B-B25E-364FD35E4CDC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSR.Domain", "MSR.Domain\MSR.Domain.csproj", "{BF34D0FD-A252-4EDB-8E99-744B97B61151}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSR.Domain", "MSR.Domain\MSR.Domain.csproj", "{BF34D0FD-A252-4EDB-8E99-744B97B61151}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSR.Application", "MSR.Application\MSR.Application.csproj", "{C93C40EE-A4B6-4218-AE9B-7EE3D9757E34}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSR.Application", "MSR.Application\MSR.Application.csproj", "{C93C40EE-A4B6-4218-AE9B-7EE3D9757E34}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSR.Infrastructure", "MSR.Infrastructure\MSR.Infrastructure.csproj", "{999D6BF0-64C4-40E1-8784-B8BADD281DCC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSR.Infrastructure", "MSR.Infrastructure\MSR.Infrastructure.csproj", "{999D6BF0-64C4-40E1-8784-B8BADD281DCC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FBB737F4-D6BE-4A4B-BAA7-D07A5ACA6D9F}"
+EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "MSR.UI", "MSR.UI\", "{99805500-2404-4939-85A4-42ACD40FE7AA}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_53533"
+		Debug.AspNetCompiler.PhysicalPath = "MSR.UI\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_53533\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_53533"
+		Release.AspNetCompiler.PhysicalPath = "MSR.UI\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_53533\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "53533"
+		SlnRelativePath = "MSR.UI\"
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +56,10 @@ Global
 		{999D6BF0-64C4-40E1-8784-B8BADD281DCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{999D6BF0-64C4-40E1-8784-B8BADD281DCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{999D6BF0-64C4-40E1-8784-B8BADD281DCC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99805500-2404-4939-85A4-42ACD40FE7AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99805500-2404-4939-85A4-42ACD40FE7AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99805500-2404-4939-85A4-42ACD40FE7AA}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{99805500-2404-4939-85A4-42ACD40FE7AA}.Release|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
