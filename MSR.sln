@@ -13,17 +13,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSR.Infrastructure", "MSR.I
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FBB737F4-D6BE-4A4B-BAA7-D07A5ACA6D9F}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI Projects", "UI Projects", "{262AC6FD-AC22-4A26-B728-58F81FA0CFFA}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{56962048-023D-4836-A5A0-BC378A2F584E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{ADD0668A-B229-4E9D-A874-D32B8E9B86D2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSR.Application.Tests", "MSR.Application.Tests\MSR.Application.Tests.csproj", "{8CAF3128-17DF-4464-910F-BB172DC89DF4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSR.Application.Tests", "MSR.Application.Tests\MSR.Application.Tests.csproj", "{8CAF3128-17DF-4464-910F-BB172DC89DF4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSR.Domain.Tests", "Msr.Domain.Tests\MSR.Domain.Tests.csproj", "{9F9AFA87-FFE3-4400-B9B9-5264EE822219}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSR.Domain.Tests", "Msr.Domain.Tests\MSR.Domain.Tests.csproj", "{9F9AFA87-FFE3-4400-B9B9-5264EE822219}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSR.Infrastructure.Tests", "MSR.Infrastructure.Tests\MSR.Infrastructure.Tests.csproj", "{4637592A-48EE-4AA4-ACA4-4C9B249FAC40}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSR.Infrastructure.Tests", "MSR.Infrastructure.Tests\MSR.Infrastructure.Tests.csproj", "{4637592A-48EE-4AA4-ACA4-4C9B249FAC40}"
 EndProject
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "MSR.UI", "MSR.UI\", "{99805500-2404-4939-85A4-42ACD40FE7AA}"
 	ProjectSection(WebsiteProperties) = preProject
@@ -80,6 +78,10 @@ Global
 		{4637592A-48EE-4AA4-ACA4-4C9B249FAC40}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4637592A-48EE-4AA4-ACA4-4C9B249FAC40}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4637592A-48EE-4AA4-ACA4-4C9B249FAC40}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99805500-2404-4939-85A4-42ACD40FE7AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99805500-2404-4939-85A4-42ACD40FE7AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99805500-2404-4939-85A4-42ACD40FE7AA}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{99805500-2404-4939-85A4-42ACD40FE7AA}.Release|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
