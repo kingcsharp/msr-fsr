@@ -19,7 +19,7 @@ namespace MSR.Domain.Commanding
             _logger = logger;
         }
 
-        public Task<ICommandResponse> DispatchAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default) where TCommand : ICommand
+        public Task<ICommandResponse> DispatchAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default) where TCommand : class,ICommand
         {
             if(command == null)
             {
@@ -29,11 +29,6 @@ namespace MSR.Domain.Commanding
             var handler = _serviceProvider.GetService(typeof(ICommandHandler<TCommand>)) ;
 
             return (handler as ICommandHandler<TCommand>).HandleAsync(command, cancellationToken);
-        }
-
-        Task<ICommandResponse> ICommandDispatcher.DispatchAsync<T>(T command, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
         }
     }
 }

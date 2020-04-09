@@ -11,7 +11,11 @@ namespace MSR.Answer.API.Extentions
     {
         public static SystemLogin ToSystemLoginCommand(this SystemLoginRequest request)
         {
-            return new SystemLogin();
+            return new SystemLogin()
+            {
+                UserName = request.UserName,
+                Password = request.Password
+            };
         }
     }
 }
