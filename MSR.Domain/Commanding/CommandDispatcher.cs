@@ -19,14 +19,16 @@ namespace MSR.Domain.Commanding
             _logger = logger;
         }
 
-        public Task<ICommandResponse<T>> DispatchAsync<T>(ICommand<T> command, CancellationToken cancellationToken = default)
+        public Task<ICommandResponse> DispatchAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default) where TCommand : ICommand
         {
-            if(command is null)
+            if(command == null)
             {
                 throw new ArgumentNullException(nameof(command));
             }
 
-            _serviceProvider.GetService<ICommandHandler<>
+            var handler = _serviceProvider.GetService(typeof(ICommandHandler<TCommand>)) ;
+
+            return (handler as ICommandHandler<TCommand>).HandleAsync(command, cancellationToken);
         }
 
         Task<ICommandResponse> ICommandDispatcher.DispatchAsync<T>(T command, CancellationToken cancellationToken)
