@@ -42,6 +42,5 @@ namespace MSR.Answer.API.V1.Controllers
 
             return Ok();
         }
-
     }
 }
