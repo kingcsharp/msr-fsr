@@ -38,10 +38,9 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = request.ToSystemLoginCommand();
 
-           await _dispatcher.DispatchAsync(command);
+            await _dispatcher.DispatchAsync(command);
 
             return Ok();
-
         }
 
     }

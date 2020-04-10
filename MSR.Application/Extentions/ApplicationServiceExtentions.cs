@@ -40,7 +40,7 @@ namespace MSR.Application.Extentions
         public static bool ImplementsInterfaceOf<TInterface>(this Type classType) where TInterface : class
         {
             return !classType.IsInterface && !typeof(TInterface).IsNotInterface() && typeof(TInterface).IsAssignableFrom(classType);
-            }
+        }
 
         public static bool IsNotInterface(this Type type)
         {
