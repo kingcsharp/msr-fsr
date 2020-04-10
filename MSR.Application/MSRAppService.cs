@@ -10,7 +10,10 @@ namespace MSR.Application
     {
         public Task<ICommandResponse> HandleAsync(SystemLogin command, CancellationToken cancellationToken = default)
         {
-
+            /* call into Account Service in Infrastructure 
+             * Get back a response - In this instance is the JWT Token
+             * Respond with a CommandResponse
+             */
         }
     }
 }
