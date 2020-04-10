@@ -10,7 +10,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MSR.Domain\MSR.Domain.csproj" />
-    <ProjectReference Include="..\MSR.EFContext\MSR.EFContext.csproj" />
   </ItemGroup>
 
 </Project>

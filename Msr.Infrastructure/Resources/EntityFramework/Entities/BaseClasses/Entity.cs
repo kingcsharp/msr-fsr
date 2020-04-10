@@ -4,8 +4,8 @@ using System.Text;
 
 namespace MSR.Domain.Models.BaseClasses
 {
-    public class DeletableEntity : DomainEntity
+    public abstract class Entity
     {
-        public virtual bool IsActive { get; set; }
+        public virtual int Id { get; set; }
     }
 }
