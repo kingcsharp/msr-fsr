@@ -2,6 +2,7 @@
 using MSR.Domain.Commanding.Abstractions;
 using System;
 using System.Threading;
+using MSR.Domain.Commanding;
 using System.Threading.Tasks;
 
 namespace MSR.Domain.Commanding
