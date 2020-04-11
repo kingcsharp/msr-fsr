@@ -20,10 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="V1\Extentions\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\MSR.Application\MSR.Application.csproj" />
     <ProjectReference Include="..\MSR.Domain\MSR.Domain.csproj" />
   </ItemGroup>

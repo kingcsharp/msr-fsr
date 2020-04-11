@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MSR.Domain.Models.BaseClasses
+namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
     public abstract class Entity
     {

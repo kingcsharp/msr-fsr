@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using MSR.Answer.API.Extentions;
 using MSR.Application.Extentions;
 using MSR.Domain.Extensions;
 
@@ -23,19 +24,7 @@ namespace MSR.Answer.API
         {
             services.AddControllers();
             services.AddApiVersioning();
-            services.AddApplicationServices();
-            services.AddDomainServices();
-            services.AddCors(o => o.AddPolicy("CorsPolicy", builder =>
-            {
-                builder.AllowAnyMethod()
-                       .AllowAnyOrigin()
-                       .AllowAnyHeader();
-            }));
-
-            services.AddSwaggerGen(i =>
-            {
-                i.SwaggerDoc("v1", new OpenApiInfo { Title = "MSR API", Version = "v1" });
-            });
+            services.AddApiServices(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -49,7 +38,7 @@ namespace MSR.Answer.API
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "MSR API");
                 c.RoutePrefix = string.Empty;
             });
             app.UseHttpsRedirection();

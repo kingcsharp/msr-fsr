@@ -5,8 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MSR.Answer.API.Extentions;
 using MSR.Answer.API.V1.Attributes;
+using MSR.Answer.API.V1.Extentions;
 using MSR.Answer.API.V1.Models;
 using MSR.Domain.Commanding.Abstractions;
+using MSR.Domain.Models;
 
 namespace MSR.Answer.API.V1.Controllers
 {
@@ -34,9 +36,9 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = request.ToSystemLoginCommand();
 
-            await _dispatcher.DispatchAsync(command);
+            var result = await _dispatcher.DispatchAsync<User>(command);
 
-            return Ok();
+            return result.ToOkObjectResponse<User>();
         }
     }
 }

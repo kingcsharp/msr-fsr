@@ -1,4 +1,6 @@
 ﻿using MSR.Domain.Commanding.Abstractions;
+using MSR.Domain.Commands;
+using MSR.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,6 +10,6 @@ namespace MSR.Infrastructure.Resources.Services.Account.Abstractions
 {
     public interface IAccountService
     {
-        Task<string> LoginAsync(ICommand command);
+        Task<User> LoginAsync(SystemLogin command);
     }
 }

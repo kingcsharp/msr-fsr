@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MSR.Domain.Models.BaseClasses
+namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
     public abstract class TrackableEntity : DeletableEntity
     {

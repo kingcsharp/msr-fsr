@@ -13,5 +13,6 @@ namespace MSR.Domain.Commanding.Abstractions
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         Task<ICommandResponse> DispatchAsync<TCommand>(TCommand command, CancellationToken cancellationToken = default) where TCommand : class, ICommand;
+        Task<ICommandResponse<TResponse>> DispatchAsync<TResponse>(ICommand<TResponse> command, CancellationToken cancellationToken = default);
     }
 }

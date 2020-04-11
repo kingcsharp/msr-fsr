@@ -1,15 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MSR.App.Interfaces;
-using MSR.Domain.Models;
+using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MSR.Domain.Application
 {
-    interface IUnitOfWork : IDisposable
+    public interface IUnitOfWork : IDisposable
     {
         IRepository<User> Users { get; }
         void SaveChanges();

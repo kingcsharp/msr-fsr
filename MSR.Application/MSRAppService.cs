@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MSR.Infrastructure.Resources.Services.Account.Abstractions;
 using MSR.Domain.Commanding;
+using MSR.Domain.Models;
 
 namespace MSR.Application
 {
@@ -18,10 +19,10 @@ namespace MSR.Application
 
         
 
-        public Task<ICommandResponse> HandleAsync(SystemLogin command, CancellationToken cancellationToken = default)
+        public async Task<ICommandResponse> HandleAsync(SystemLogin command, CancellationToken cancellationToken = default)
         {
-            var ret = _accountService.LoginAsync(command);
-            return new CommandResponse(ret);
+            var ret = await _accountService.LoginAsync(command);
+            return new CommandResponse<User>(ret);
         }
     }
 

@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Linq;
 using System;
 using System.IO;
+using MSR.Domain.Helpers;
 
 namespace MSR.Application.Extentions
 {
@@ -35,17 +36,4 @@ namespace MSR.Application.Extentions
             return services;
         }
     }
-    public static class SystemTypeExtensions
-    {
-        public static bool ImplementsInterfaceOf<TInterface>(this Type classType) where TInterface : class
-        {
-            return !classType.IsInterface && !typeof(TInterface).IsNotInterface() && typeof(TInterface).IsAssignableFrom(classType);
-        }
-
-        public static bool IsNotInterface(this Type type)
-        {
-            return !type.IsInterface;
-        }
-    }
-
 }

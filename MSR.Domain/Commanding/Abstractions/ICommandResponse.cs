@@ -5,5 +5,7 @@
     }
 
     public interface ICommandResponse<TResult> : ICommandResponse
-    { }
+    {
+        TResult Data { get; }
+    }
 }
