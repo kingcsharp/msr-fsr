@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MSR.App.Interfaces;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
+using MSR.Infrastructure.Resources.EntityFramework.Interfaces;
 using System;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace MSR.Domain.Application
+namespace MSR.Infrastructure.Resources.EntityFramework.Application
 {
     public interface IUnitOfWork : IDisposable
     {

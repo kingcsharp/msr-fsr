@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-using MSR.Domain.Application;
-using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
 using MSR.Domain.Models;
 using MSR.Domain.Models.Config;
+using MSR.Infrastructure.Helpers;
+using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.Services.Account.Abstractions;
 using System;
 using System.IdentityModel.Tokens.Jwt;
@@ -33,7 +33,8 @@ namespace MSR.Infrastructure.Resources.Services.Account
 
         public async Task<User> LoginAsync(SystemLogin command)
         {
-            var user = _unitOfWork.Users.FirstOrDefault(false,i => i.Email == command.UserName && i.PasswordHash == command.Password);
+            var encryptedPassword = AuthenticationHelper.PasswordEncrypt(command.Password);
+            var user = _unitOfWork.Users?.FirstOrDefault(false,i => i.UserName == command.UserName);
 
             if(user == null)
             {

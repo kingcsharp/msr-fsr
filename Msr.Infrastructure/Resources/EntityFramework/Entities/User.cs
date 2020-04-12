@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using MSR.Domain.Models.BaseClasses;
 
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
+{
     public class User : TrackableEntity
     {
         public int OldId { get; set; }
@@ -14,6 +12,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public string Title { get; set; }
         public string Email { get; set; }
         public string PasswordHash { get; set; }
+        public string Password { get; set; }
         public string SecurityStamp { get; set; }
         public string Phone { get; set; }
         public int SupervisorId { get; set; }

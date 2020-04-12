@@ -1,15 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MSR.App.Interfaces;
-using MSR.App.Repository;
-using MSR.Domain.Models;
-using MSR.EFContext;
 using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
+using MSR.Infrastructure.Resources.EntityFramework.Entities;
+using MSR.Infrastructure.Resources.EntityFramework.Interfaces;
+using MSR.Infrastructure.Resources.EntityFramework.Repository;
 
-namespace MSR.Domain.Application
+namespace MSR.Infrastructure.Resources.EntityFramework.Application
 {
     public class UnitOfWork : IDisposable, IUnitOfWork
     {

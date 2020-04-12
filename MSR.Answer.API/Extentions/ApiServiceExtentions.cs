@@ -4,6 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using MSR.Application.Extentions;
 using MSR.Domain.Extensions;
+using MSR.Domain.Models.Config;
+using MSR.Infrastructure.Extensions;
 
 namespace MSR.Answer.API.Extentions
 {
@@ -26,6 +28,7 @@ namespace MSR.Answer.API.Extentions
 
             services.AddApplicationServices();
             services.AddDomainServices();
+            services.AddInfrastructureServices(config);
             services.AddCors(o => o.AddPolicy("CorsPolicy", builder =>
             {
                 builder.AllowAnyMethod()
@@ -38,8 +41,6 @@ namespace MSR.Answer.API.Extentions
                 i.SwaggerDoc("v1", new OpenApiInfo { Title = "MSR API", Version = "v1" });
             });
 
-            var jwtData = config.GetSection("JWT");
-            services.Configure<JwtData>(jwtData)
             return services;
         }
     }

@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using MSR.Domain.Commanding;
 using MSR.Domain.Commanding.Abstractions;
-using MSR.Infrastructure.Resources.Services.Account.Abstractions;
 
 namespace MSR.Domain.Extensions
 {

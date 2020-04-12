@@ -2,7 +2,6 @@
 using MSR.Domain.Commanding.Abstractions;
 using System;
 using System.Threading;
-using MSR.Domain.Commanding;
 using System.Threading.Tasks;
 
 namespace MSR.Domain.Commanding
@@ -28,6 +27,11 @@ namespace MSR.Domain.Commanding
             var handler = _serviceProvider.GetService(typeof(ICommandHandler<TCommand>)) ;
 
             return (handler as ICommandHandler<TCommand>).HandleAsync(command, cancellationToken);
+        }
+
+        public Task<ICommandResponse<TResponse>> DispatchAsync<TResponse>(ICommand<TResponse> command, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
         }
     }
 }

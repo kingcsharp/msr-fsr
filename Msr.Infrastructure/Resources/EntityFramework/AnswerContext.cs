@@ -1,13 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using MSR.Domain.Models;
-using Microsoft.Extensions.Internal;
 using System;
-using MSR.Domain.Models.BaseClasses;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Logging;
+using MSR.Infrastructure.Resources.EntityFramework.Entities;
 
-namespace MSR.EFContext
+namespace MSR.Infrastructure.Resources.EntityFramework
 {
     public class AnswerContext : DbContext
     {

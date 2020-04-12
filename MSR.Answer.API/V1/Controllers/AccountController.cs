@@ -36,7 +36,7 @@ namespace MSR.Answer.API.V1.Controllers
         {
             var command = request.ToSystemLoginCommand();
 
-            var result = await _dispatcher.DispatchAsync<User>(command);
+            var result = await _dispatcher.DispatchAsync(command);
 
             return result.ToOkObjectResponse<User>();
         }

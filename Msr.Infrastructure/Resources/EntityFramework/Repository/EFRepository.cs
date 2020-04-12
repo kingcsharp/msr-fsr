@@ -1,16 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using MSR.App.Interfaces;
-using MSR.Domain.Models.BaseClasses;
-using MSR.EFContext;
+using MSR.Domain.Exceptions;
+using MSR.Infrastructure.Resources.EntityFramework.Entities;
+using MSR.Infrastructure.Resources.EntityFramework.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MSR.App.Repository
+namespace MSR.Infrastructure.Resources.EntityFramework.Repository
 {
     public class EFRepository<TEntity> : IRepository<TEntity> where TEntity : class
     {
@@ -87,7 +85,7 @@ namespace MSR.App.Repository
         public virtual void Delete(bool validateOwnership, TEntity entityToDelete, bool force = false)
         {
             if (entityToDelete == null)
-                throw new ArgumentNullException("entityToDelete", "entityToDelete cannot be null");
+                throw new DomainException($"{nameof(entityToDelete)} cannot be null");
 
             if (validateOwnership)
                 ValidateOwnership(entityToDelete);

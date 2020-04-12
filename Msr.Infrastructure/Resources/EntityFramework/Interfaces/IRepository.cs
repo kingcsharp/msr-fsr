@@ -3,9 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 
-namespace MSR.App.Interfaces
+namespace MSR.Infrastructure.Resources.EntityFramework.Interfaces
 {
     public interface IRepository<TEntity> where TEntity : class
     {
