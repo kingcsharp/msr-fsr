@@ -1,0 +1,52 @@
+{
+	"info": {
+		"_postman_id": "1a3b0c6b-a965-4b0c-a5ab-9b4e9557d827",
+		"name": "Answer3.0",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login - Success",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"UserName\":\"{{UserName}}\",\n\t\"Password\":\"{{Password}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{Environment}}/v1/Account/login",
+					"host": [
+						"{{Environment}}"
+					],
+					"path": [
+						"v1",
+						"Account",
+						"login"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"id": "6ed5b532-51ee-4e7e-87a3-296122c67383",
+			"key": "UserName",
+			"value": "jbridgeford",
+			"type": "string"
+		},
+		{
+			"id": "bb25ac35-affa-4aa1-9d2d-06977f386df5",
+			"key": "Password",
+			"value": "9jY9NMx6.",
+			"type": "string"
+		}
+	],
+	"protocolProfileBehavior": {}
+}
