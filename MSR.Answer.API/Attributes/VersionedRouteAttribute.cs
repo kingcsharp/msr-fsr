@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace MSR.Answer.API.V1.Attributes
+namespace MSR.Answer.API.Attributes
 {
     public sealed class VersionedRouteAttribute : RouteAttribute
     {

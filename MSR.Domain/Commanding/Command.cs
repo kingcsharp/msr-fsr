@@ -6,7 +6,7 @@ namespace MSR.Domain.Commanding
     {
     }
 
-    public abstract class Command
+    public abstract class Command: ICommand
     {
 
     }

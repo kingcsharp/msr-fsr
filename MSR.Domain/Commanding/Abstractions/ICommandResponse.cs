@@ -2,6 +2,7 @@
 {
     public interface ICommandResponse
     {
+        Error ResponseError { get; }
     }
 
     public interface ICommandResponse<TResult> : ICommandResponse

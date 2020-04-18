@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MSR.Answer.API.V1.Attributes;
+using Microsoft.Extensions.Logging;
+using MSR.Domain.Commanding.Abstractions;
+using System.Threading.Tasks;
 
 namespace MSR.Answer.API.V1.Controllers
 {
@@ -8,6 +10,19 @@ namespace MSR.Answer.API.V1.Controllers
     [ApiController]
     public class MenuController : ControllerBase
     {
+        private readonly ILogger _logger;
+        private readonly ICommandDispatcher _dispatcher;
 
+        public MenuController(ILogger<AccountController> logger, ICommandDispatcher dispatcher)
+        {
+            _logger = logger;
+            _dispatcher = dispatcher;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetMenu()
+        {
+            return Ok();
+        }
     }
 }

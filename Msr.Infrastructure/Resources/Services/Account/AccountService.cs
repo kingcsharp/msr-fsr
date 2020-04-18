@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using MSR.Domain.Abstractions.Email;
+using MSR.Domain.Commanding.Emums;
 using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
+using MSR.Domain.Helpers;
 using MSR.Domain.Models;
 using MSR.Domain.Models.Config;
 using MSR.Infrastructure.Helpers;
@@ -21,22 +24,39 @@ namespace MSR.Infrastructure.Resources.Services.Account
         private IUnitOfWork _unitOfWork;
         private readonly ILogger _logger;
         private readonly IMapper _mapper;
+        private readonly IEmailService _emailService;
         private readonly JwtData _jwtData;
+        private readonly EmailInformation _emailInformation;
+        private readonly GeneralInformation _generalInformation;
 
-        public AccountService(IUnitOfWork unitOfWork, ILogger<AccountService> logger, IMapper mapper, JwtData jwtData)
+        public AccountService(
+            IUnitOfWork unitOfWork, 
+            ILogger<AccountService> logger, 
+            IMapper mapper,
+            IEmailService emailService,
+            JwtData jwtData,
+            EmailInformation emailInformation,
+            GeneralInformation generalInformation)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
             _mapper = mapper;
+            _emailService = emailService;
             _jwtData = jwtData;
+            _emailInformation = emailInformation;
+            _generalInformation = generalInformation;
         }
 
         public async Task<User> LoginAsync(SystemLogin command)
         {
-            var encryptedPassword = AuthenticationHelper.PasswordEncrypt(command.Password);
-            var user = _unitOfWork.Users?.FirstOrDefault(false,i => i.UserName == command.UserName);
+            var user = _unitOfWork.Users.FirstOrDefault(false,i => i.UserName == command.UserName);
 
             if(user == null)
+            {
+                throw new DomainException("Username Or Password are invalid");
+            }
+
+            if (!AuthenticationHelper.VerifyPasswordHash(command.Password, user.PasswordHash,user.PasswordSalt))
             {
                 throw new DomainException("Username Or Password are invalid");
             }
@@ -46,6 +66,83 @@ namespace MSR.Infrastructure.Resources.Services.Account
             SetJWTToken(domainUser);
 
             return await Task.FromResult(domainUser);
+        }
+
+        public async Task ForgotPasswordAsync(ForgotPassword command)
+        {
+            var user = _unitOfWork.Users.FirstOrDefault(false, i => i.UserName == command.UserName);
+
+            if (user == null)
+            {
+                throw new DomainException("User not found", DomainError.NotFound);
+            }
+
+            var from = _emailInformation.From;
+            var websiteUrl = _generalInformation.WebsiteURL;
+
+            var encryptedText = EncryptionHelper.Encrypt(command.UserName).Replace('/', '*');
+
+            var lnkHref = $"<a href='{websiteUrl}/Account/ResetPassword?token={encryptedText}'>Reset Password</a>";
+
+            var body = $@"<div>
+               <p>Hello ANSWER user,<br/></p>
+               <p>This email is being sent to you due to a password reset request from the MSR-FSR Answer system.<br/></p>
+               <p><b> Please reset your password by clicking : </ b ><br/> </p>
+               <p>{lnkHref}</p>
+                        </div>";
+
+            var subject = "ANSWER - Reset password";
+            try
+            {
+                await _emailService.SendEmailAsync(from, user.Email, subject, body, null, true);
+            }
+            catch (Exception ex)
+            {
+                throw new DomainException(ex.Message, DomainError.InternalServerError);
+            }
+        }
+
+        public async Task ResetPasswordAsync(ResetPassword command)
+        {
+            var userName = EncryptionHelper.Decrypt(command.Token);
+            var user = _unitOfWork.Users.FirstOrDefault(false, i => i.UserName == userName);
+
+            if (user == null)
+            {
+                throw new DomainException("User not found", DomainError.NotFound);
+            }
+
+            AuthenticationHelper.CreatePasswordHash(command.Password, out var hash, out var salt);
+            user.PasswordHash = hash;
+            user.PasswordSalt = salt;
+
+            _unitOfWork.Users.Update(user);
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+        public async Task ForgotUserNameAsync(ForgotUserName command)
+        {
+            var user = _unitOfWork.Users.FirstOrDefault(false, i => i.Email == command.Email);
+
+            if (user == null)
+            {
+                throw new DomainException($"No user with {nameof(command.Email)} {command.Email} found", DomainError.NotFound);
+            }
+
+            var from = _emailInformation.From;
+
+            var body = $"Hello ANSWER user, <br/><br/> <b>Your username is : {user.UserName}</b>";
+
+            var subject = "ANSWER - Forgot Username";
+
+            try
+            {
+                await _emailService.SendEmailAsync(from, command.Email, subject, body, null, true);
+            }
+            catch (Exception ex)
+            {
+                throw new DomainException(ex.Message, DomainError.InternalServerError);
+            }
         }
 
         private void SetJWTToken(User domainUser)
@@ -64,5 +161,6 @@ namespace MSR.Infrastructure.Resources.Services.Account
             var token = tokenHandler.CreateToken(tokenDescriptor);
             domainUser.Token = tokenHandler.WriteToken(token);
         }
+
     }
 }

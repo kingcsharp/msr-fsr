@@ -30,6 +30,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Interfaces
         void LoadReference(TEntity entity, string navSelector);
         void Attach(TEntity entity);
         void AttachOrAddEntities(TEntity rootEntity);
+        void Update(TEntity entityToUpdate);
 
         TEntity FirstOrDefault(bool validateOwnership, Expression<Func<TEntity, bool>> filter,
             params Expression<Func<TEntity, object>>[] includes);

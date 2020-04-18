@@ -4,7 +4,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using MSR.Application.Extentions;
 using MSR.Domain.Extensions;
-using MSR.Domain.Models.Config;
 using MSR.Infrastructure.Extensions;
 
 namespace MSR.Answer.API.Extentions

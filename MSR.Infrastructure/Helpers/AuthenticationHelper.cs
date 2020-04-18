@@ -1,38 +1,38 @@
-﻿using Microsoft.VisualBasic;
-using System;
+﻿using System;
 
 namespace MSR.Infrastructure.Helpers
 {
     public static class AuthenticationHelper
     {
-        public static string PasswordEncrypt(string password)
+        public static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
-            var encryptPassword = string.Empty;
+            if (password == null) throw new ArgumentNullException("password");
+            if (string.IsNullOrWhiteSpace(password)) throw new ArgumentException("Value cannot be empty or whitespace only string.", "password");
 
-            for (var i = 0; i < password.Length; i++)
+            using (var hmac = new System.Security.Cryptography.HMACSHA512())
             {
-                encryptPassword = encryptPassword + Strings.ChrW(77 + Strings.AscW(password.Substring(i,1)) % 128);
+                passwordSalt = hmac.Key;
+                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
             }
-
-            return encryptPassword;
         }
 
-        public static int GetPassword(int intLetters)
+        public static bool VerifyPasswordHash(string password, byte[] storedHash, byte[] storedSalt)
         {
-            int uLim = 90; int lLim = 48, myInt = 0;
-            Random Rnd = new Random();
-            for (int i = 1; i <= intLetters; i++)
-            {
-                myInt = Convert.ToInt32((uLim - lLim + 1) * Convert.ToInt32(Rnd.Next(lLim, uLim)) + lLim);
+            if (password == null) throw new ArgumentNullException("password");
+            if (string.IsNullOrWhiteSpace(password)) throw new ArgumentException("Value cannot be empty or whitespace only string.", "password");
+            if (storedHash.Length != 64) throw new ArgumentException("Invalid length of password hash (64 bytes expected).", "passwordHash");
+            if (storedSalt.Length != 128) throw new ArgumentException("Invalid length of password salt (128 bytes expected).", "passwordHash");
 
-                while ((myInt >= 48 && myInt <= 57) || (myInt >= 65 && myInt <= 90))
+            using (var hmac = new System.Security.Cryptography.HMACSHA512(storedSalt))
+            {
+                var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+                for (int i = 0; i < computedHash.Length; i++)
                 {
-                    myInt = Convert.ToInt32((uLim - lLim + 1) * Convert.ToInt32(Rnd.Next(intLetters) + lLim));
+                    if (computedHash[i] != storedHash[i]) return false;
                 }
-                myInt = char.ToLower(Convert.ToChar(myInt));
             }
 
-            return myInt;
+            return true;
         }
     }
 }

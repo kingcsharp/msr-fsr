@@ -50,6 +50,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PostMan", "PostMan", "{A968
 		PostMan.Tests\Answer3.0.postman_collection.json = PostMan.Tests\Answer3.0.postman_collection.json
 	EndProjectSection
 EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "MSR.Database.Answer3", "MSR.Database.Answer3\MSR.Database.Answer3.sqlproj", "{47B52A08-DCE7-40D1-A9CB-489DF60B306A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{8AFDD297-93F0-48CF-A6AB-EA4733938228}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -88,6 +92,12 @@ Global
 		{99805500-2404-4939-85A4-42ACD40FE7AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{99805500-2404-4939-85A4-42ACD40FE7AA}.Release|Any CPU.ActiveCfg = Debug|Any CPU
 		{99805500-2404-4939-85A4-42ACD40FE7AA}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{47B52A08-DCE7-40D1-A9CB-489DF60B306A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47B52A08-DCE7-40D1-A9CB-489DF60B306A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47B52A08-DCE7-40D1-A9CB-489DF60B306A}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{47B52A08-DCE7-40D1-A9CB-489DF60B306A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47B52A08-DCE7-40D1-A9CB-489DF60B306A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47B52A08-DCE7-40D1-A9CB-489DF60B306A}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -102,6 +112,7 @@ Global
 		{4637592A-48EE-4AA4-ACA4-4C9B249FAC40} = {56962048-023D-4836-A5A0-BC378A2F584E}
 		{99805500-2404-4939-85A4-42ACD40FE7AA} = {ADD0668A-B229-4E9D-A874-D32B8E9B86D2}
 		{A968AC91-CD80-43EA-8064-32B0B64F243E} = {56962048-023D-4836-A5A0-BC378A2F584E}
+		{47B52A08-DCE7-40D1-A9CB-489DF60B306A} = {8AFDD297-93F0-48CF-A6AB-EA4733938228}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CBCD06A9-C49D-49C9-A0C1-821E3D256A46}
