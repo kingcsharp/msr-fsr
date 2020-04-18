@@ -1,0 +1,25 @@
+﻿CREATE TABLE [dbo].[ProcedureStep] (
+    [Id]              INT             IDENTITY (1, 1) NOT NULL,
+    [ProcedureId]     INT             NOT NULL,
+    [Title]           VARCHAR (100)   NOT NULL,
+    [StepText]        NVARCHAR (4000) NOT NULL,
+    [SystemTaskId]    INT             NULL,
+    [GoToStepId]      INT             NULL,
+    [Duration]        FLOAT (53)      NOT NULL,
+    [DurationType]    VARCHAR (20)    NOT NULL,
+    [PrintOrder]      INT             NOT NULL,
+    [ReplacementCost] MONEY           NULL,
+    [Utilization]     REAL            NULL,
+    [EquipmentTime]   FLOAT (53)      NULL,
+    [Roles]           VARCHAR (255)   NOT NULL,
+    [CreatedBy]       INT             NOT NULL,
+    [CreateOn]        DATETIME        NOT NULL,
+    [LastUpdatedBy]   INT             NULL,
+    [LastUpdatedOn]   DATETIME        NULL,
+    PRIMARY KEY CLUSTERED ([Id] ASC),
+    CONSTRAINT [FK_ProcedureStepCreatedById] FOREIGN KEY ([CreatedBy]) REFERENCES [dbo].[User] ([Id]),
+    CONSTRAINT [FK_ProcedureStepLastUpdatedById] FOREIGN KEY ([LastUpdatedBy]) REFERENCES [dbo].[User] ([Id]),
+    CONSTRAINT [FK_ProcedureStepProcedureId] FOREIGN KEY ([ProcedureId]) REFERENCES [dbo].[Procedure] ([Id]),
+    CONSTRAINT [FK_ProcedureStepSystemTaskId] FOREIGN KEY ([SystemTaskId]) REFERENCES [dbo].[SystemTask] ([Id])
+);
+

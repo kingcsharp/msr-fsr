@@ -1,0 +1,77 @@
+4/14/2020 5:18:48 PM	This log contains information about the import schema operation into project 'MSR.Database.Answer3' on computer 'DESKTOP-M04EG3K' by user 'james'.
+4/14/2020 5:18:48 PM	Import of database schema has started.
+4/14/2020 5:19:01 PM	Gathering database options
+4/14/2020 5:19:01 PM	Gathering users
+4/14/2020 5:19:01 PM	Gathering roles
+4/14/2020 5:19:01 PM	Gathering application roles
+4/14/2020 5:19:01 PM	Gathering role memberships
+4/14/2020 5:19:01 PM	Gathering filegroups
+4/14/2020 5:19:01 PM	Gathering full-text catalogs
+4/14/2020 5:19:01 PM	Gathering assemblies
+4/14/2020 5:19:01 PM	Gathering certificates
+4/14/2020 5:19:01 PM	Gathering asymmetric keys
+4/14/2020 5:19:01 PM	Gathering symmetric keys
+4/14/2020 5:19:01 PM	Gathering encrypted symmetric keys
+4/14/2020 5:19:01 PM	Gathering schemas
+4/14/2020 5:19:01 PM	Gathering XML schema collections
+4/14/2020 5:19:01 PM	Gathering user-defined data types
+4/14/2020 5:19:01 PM	Gathering user-defined types
+4/14/2020 5:19:01 PM	Gathering table types
+4/14/2020 5:19:01 PM	Gathering unique keys for table types
+4/14/2020 5:19:01 PM	Gathering primary keys for table types
+4/14/2020 5:19:01 PM	Gathering indexes for table types
+4/14/2020 5:19:01 PM	Gathering check constraints for table types
+4/14/2020 5:19:01 PM	Gathering default constraints for table types
+4/14/2020 5:19:01 PM	Gathering partition functions
+4/14/2020 5:19:01 PM	Gathering partition schemes
+4/14/2020 5:19:01 PM	Gathering functions
+4/14/2020 5:19:01 PM	Gathering encrypted functions
+4/14/2020 5:19:01 PM	Gathering aggregates
+4/14/2020 5:19:01 PM	Gathering procedures
+4/14/2020 5:19:01 PM	Gathering encrypted procedures
+4/14/2020 5:19:01 PM	Gathering tables
+4/14/2020 5:19:01 PM	Gathering primary keys
+4/14/2020 5:19:01 PM	Gathering unique constraints
+4/14/2020 5:19:01 PM	Gathering foreign keys
+4/14/2020 5:19:01 PM	Gathering default constraints
+4/14/2020 5:19:01 PM	Gathering check constraints
+4/14/2020 5:19:01 PM	Gathering views
+4/14/2020 5:19:02 PM	Gathering encrypted views
+4/14/2020 5:19:02 PM	Gathering indexes
+4/14/2020 5:19:02 PM	Gathering statistics
+4/14/2020 5:19:02 PM	Gathering full-text index stoplists
+4/14/2020 5:19:02 PM	Gathering search property lists
+4/14/2020 5:19:02 PM	Gathering search properties
+4/14/2020 5:19:02 PM	Gathering full-text indexes
+4/14/2020 5:19:02 PM	Gathering column store indexes
+4/14/2020 5:19:02 PM	Gathering spatial indexes
+4/14/2020 5:19:02 PM	Gathering XML indexes
+4/14/2020 5:19:02 PM	Gathering Selective XML indexes
+4/14/2020 5:19:02 PM	Gathering encrypted triggers
+4/14/2020 5:19:02 PM	Gathering triggers
+4/14/2020 5:19:02 PM	Gathering encrypted and clr ddl triggers
+4/14/2020 5:19:02 PM	Gathering ddl triggers
+4/14/2020 5:19:02 PM	Gathering synonyms
+4/14/2020 5:19:02 PM	Gathering defaults
+4/14/2020 5:19:02 PM	Gathering data constraint uddt bindings
+4/14/2020 5:19:02 PM	Gathering rules
+4/14/2020 5:19:02 PM	Gathering data constraint uddt bindings
+4/14/2020 5:19:02 PM	Gathering message types
+4/14/2020 5:19:02 PM	Gathering queues
+4/14/2020 5:19:02 PM	Gathering contracts
+4/14/2020 5:19:02 PM	Gathering services
+4/14/2020 5:19:02 PM	Gathering event notifications
+4/14/2020 5:19:02 PM	Gathering remote service bindings
+4/14/2020 5:19:02 PM	Gathering broker priorities
+4/14/2020 5:19:02 PM	Gathering signatures
+4/14/2020 5:19:02 PM	Gathering data compression options
+4/14/2020 5:19:02 PM	Gathering sequence types
+4/14/2020 5:19:02 PM	Gathering extended properties
+4/14/2020 5:19:06 PM	Gathering credentials
+4/14/2020 5:19:06 PM	Gathering logins
+4/14/2020 5:19:06 PM	Gathering server audits
+4/14/2020 5:19:09 PM	Scanning project for duplicate elements
+4/14/2020 5:19:09 PM	Finished duplicate element processing
+4/14/2020 5:19:10 PM	Finished importing database.
+4/14/2020 5:19:10 PM	A summary of the import was saved to the following location: D:\FreeLance\CMH\Answer3.0\MSR.Database.Answer3\Import Schema Logs\MSR.Database.Answer3_20200414101848.log
+4/14/2020 5:19:10 PM	Click Finish to continue...

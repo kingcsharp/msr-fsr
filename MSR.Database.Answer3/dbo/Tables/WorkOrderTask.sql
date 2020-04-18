@@ -1,0 +1,25 @@
+﻿CREATE TABLE [dbo].[WorkOrderTask] (
+    [Id]               INT             IDENTITY (1, 1) NOT NULL,
+    [WorkOrderId]      INT             NOT NULL,
+    [ProcedureStepId]  INT             NOT NULL,
+    [StatusId]         INT             NOT NULL,
+    [SystemTaskId]     INT             NOT NULL,
+    [TaskStepOrder]    INT             NOT NULL,
+    [AssignedTo]       INT             NULL,
+    [TotalTaskTime]    DECIMAL (10, 2) NULL,
+    [CreatedBy]        INT             NOT NULL,
+    [CreateOn]         DATETIME        NOT NULL,
+    [LastUpdatedBy]    INT             NOT NULL,
+    [LastUpdatedOn]    DATETIME        NOT NULL,
+    [TaskIsRunning]    BIT             NULL,
+    [TaskRunningSince] DATETIME        NULL,
+    PRIMARY KEY CLUSTERED ([Id] ASC),
+    CONSTRAINT [FK_WorkOrderTaskAssignedToId] FOREIGN KEY ([AssignedTo]) REFERENCES [dbo].[User] ([Id]),
+    CONSTRAINT [FK_WorkOrderTaskCreatedById] FOREIGN KEY ([CreatedBy]) REFERENCES [dbo].[User] ([Id]),
+    CONSTRAINT [FK_WorkOrderTaskLastUpdatedById] FOREIGN KEY ([LastUpdatedBy]) REFERENCES [dbo].[User] ([Id]),
+    CONSTRAINT [FK_WorkOrderTaskProcedureStepId] FOREIGN KEY ([ProcedureStepId]) REFERENCES [dbo].[ProcedureStep] ([Id]),
+    CONSTRAINT [FK_WorkOrderTaskStatusId] FOREIGN KEY ([StatusId]) REFERENCES [dbo].[Status] ([Id]),
+    CONSTRAINT [FK_WorkOrderTaskSystemTaskId] FOREIGN KEY ([SystemTaskId]) REFERENCES [dbo].[SystemTask] ([Id]),
+    CONSTRAINT [FK_WorkOrderTaskWorkOrderId] FOREIGN KEY ([WorkOrderId]) REFERENCES [dbo].[WorkOrder] ([Id])
+);
+
