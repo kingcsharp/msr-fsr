@@ -38,10 +38,10 @@ namespace MSR.Answer.API
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "MSR API");
                 c.RoutePrefix = string.Empty;
             });
+
             app.UseHttpsRedirection();
-
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

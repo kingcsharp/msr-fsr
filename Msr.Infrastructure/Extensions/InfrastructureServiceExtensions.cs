@@ -13,7 +13,6 @@ namespace MSR.Infrastructure.Extensions
     {
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration config)
         {
-            services.AddSingleton(config.GetSection(nameof(JwtData)).Get<JwtData>());
             services.AddSingleton(config.GetSection(nameof(EmailInformation)).Get<EmailInformation>());
             services.AddSingleton(config.GetSection(nameof(GeneralInformation)).Get<GeneralInformation>());
 

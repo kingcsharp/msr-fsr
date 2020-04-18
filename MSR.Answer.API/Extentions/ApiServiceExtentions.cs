@@ -28,6 +28,7 @@ namespace MSR.Answer.API.Extentions
             services.AddApplicationServices();
             services.AddDomainServices();
             services.AddInfrastructureServices(config);
+            services.AddJWTServices(config);
             services.AddCors(o => o.AddPolicy("CorsPolicy", builder =>
             {
                 builder.AllowAnyMethod()

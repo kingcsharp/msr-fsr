@@ -145,6 +145,16 @@ namespace MSR.Infrastructure.Resources.Services.Account
             }
         }
 
+        public User ValidateAccount(int accountId)
+        {
+            var user = _unitOfWork.Users.FirstOrDefault(false, i => i.Email == command.Email);
+
+            if (user == null)
+            {
+                throw new DomainException($"No user with {nameof(command.Email)} {command.Email} found", DomainError.NotFound);
+            }
+        }
+
         private void SetJWTToken(User domainUser)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -161,6 +171,5 @@ namespace MSR.Infrastructure.Resources.Services.Account
             var token = tokenHandler.CreateToken(tokenDescriptor);
             domainUser.Token = tokenHandler.WriteToken(token);
         }
-
     }
 }
