@@ -147,12 +147,14 @@ namespace MSR.Infrastructure.Resources.Services.Account
 
         public User ValidateAccount(int accountId)
         {
-            var user = _unitOfWork.Users.FirstOrDefault(false, i => i.Email == command.Email);
+            var user = _unitOfWork.Users.FirstOrDefault(false, i => i.Id == accountId);
 
             if (user == null)
             {
-                throw new DomainException($"No user with {nameof(command.Email)} {command.Email} found", DomainError.NotFound);
+                throw new DomainException($"No user with {nameof(accountId)} {accountId} found", DomainError.NotFound);
             }
+
+            return _mapper.Map<User>(user);
         }
 
         private void SetJWTToken(User domainUser)
