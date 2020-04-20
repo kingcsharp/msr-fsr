@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import {ButtonsModule, BsDropdownModule, CollapseModule, AlertModule, PopoverModule} from 'ngx-bootstrap';
-import { Ng2CarouselamosModule } from 'ng2-carouselamos';
 
 import { ProductGridComponent } from './product-grid/product-grid.component';
 import { ProductDetailComponent } from './product-detail/product-detail.component';

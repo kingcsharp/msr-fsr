@@ -6,7 +6,6 @@ import { RouterModule } from '@angular/router';
 import { AlertModule, TooltipModule } from 'ngx-bootstrap';
 import { ButtonsModule, BsDropdownModule, PaginationModule  } from 'ngx-bootstrap';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-import { Ng2TableModule } from 'ng2-table';
 import { WidgetModule } from '../../layout/widget/widget.module';
 import { UtilsModule } from '../../layout/utils/utils.module';
 import { JqSparklineModule } from '../../components/sparkline/sparkline.module';
@@ -38,8 +37,6 @@ export const routes = [
     PaginationModule.forRoot(),
     WidgetModule,
     UtilsModule,
-    Ng2TableModule,
-    NgxDatatableModule,
     RouterModule.forChild(routes)
   ],
   schemas:  [ CUSTOM_ELEMENTS_SCHEMA ]
