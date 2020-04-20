@@ -28,7 +28,6 @@ import {GeoLocationsWidgetDirective} from './visits/geo-locations-widget/geo-loc
 import {MarketStatsWidgetComponent} from './visits/market-stats-widget/market-stats-widget.component';
 import {WidgetsComponent} from './widgets/widgets.component';
 import {LiveTileModule} from '../../components/tile/tile.module';
-import {SkyconsModule} from '../../components/skycon/skycon.module';
 import {FlotChartModule} from '../../components/flot/flot.module';
 import {JqSparklineModule} from '../../components/sparkline/sparkline.module';
 import {MapaelLayersMapModule} from '../../components/mapael/mapael.module';
@@ -77,7 +76,6 @@ export const routes = [
     UtilsModule,
     RickshawChartModule,
     LiveTileModule,
-    SkyconsModule,
     WidgetModule,
     FlotChartModule,
     RickshawChartModule,

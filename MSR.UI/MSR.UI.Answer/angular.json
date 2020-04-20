@@ -35,7 +35,6 @@
               "node_modules/rickshaw/rickshaw.min.js",
               "node_modules/moment/min/moment.min.js",
               "node_modules/fullcalendar/dist/fullcalendar.js",
-              "node_modules/skycons/skycons.js",
               "node_modules/dropzone/dist/dropzone.js",
               "node_modules/parsleyjs/dist/parsley.js",
               "node_modules/jasny-bootstrap/dist/js/jasny-bootstrap.min.js",
