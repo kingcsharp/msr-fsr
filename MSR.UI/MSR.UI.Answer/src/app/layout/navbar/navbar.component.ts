@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, Renderer, ElementRef } from '@angular/core';
+import { Component, Output, EventEmitter, ElementRef, Renderer2 } from '@angular/core';
 import {LoginService} from "../../pages/login/login.service";
 
 @Component({
@@ -18,7 +18,7 @@ export class Navbar {
   };
 
   constructor(
-    private renderer: Renderer,
+    private renderer: Renderer2,
     private el: ElementRef,
     private loginService: LoginService
   ) {}
@@ -47,8 +47,9 @@ export class Navbar {
   }
 
   private changeStyleElement(selector, styleName, styleValue): void {
-    this.renderer.setElementStyle(this.el.nativeElement
-      .querySelector(selector), styleName, styleValue);
+    styleValue == null ? this.renderer.removeStyle(this.el.nativeElement
+    .querySelector(selector), styleName) : this.renderer.setStyle(this.el.nativeElement
+    .querySelector(selector), styleName, styleValue);
   }
 
   logout() {

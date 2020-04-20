@@ -19,7 +19,6 @@ import { RatingComponent } from './product-detail/components/rating/rating.compo
 import { SliderComponent } from './product-detail/components/slider/slider.component';
 import {ManagementComponent} from './management/management';
 import {NewWidgetModule} from '../../layout/new-widget/widget.module';
-import {NgxDatatableModule} from '@swimlane/ngx-datatable';
 import {ProductsService} from './products.service';
 import {ProductEditComponent} from './management/components/product-edit/product-edit';
 import {LoaderModule} from '../../components/loader/loader.module';
@@ -54,14 +53,12 @@ export const routes = [
   ],
   imports: [
     FormsModule,
-    Ng2CarouselamosModule,
     ButtonsModule.forRoot(),
     BsDropdownModule.forRoot(),
     CollapseModule.forRoot(),
     CommonModule,
     RouterModule.forChild(routes),
     NewWidgetModule,
-    NgxDatatableModule,
     AlertModule.forRoot(),
     LoaderModule,
     PopoverModule.forRoot(),
