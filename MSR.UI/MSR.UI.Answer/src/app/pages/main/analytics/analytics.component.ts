@@ -42,7 +42,7 @@ export class AnalyticsComponent implements OnInit {
       '29/' + this.month + '/' + this.year,
       'A link',
       'http://www.flatlogic.com',
-      '#dd5826',
+      '#dd5826'
     ]
   ];
 
