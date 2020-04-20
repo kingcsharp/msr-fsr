@@ -16,7 +16,6 @@ import { NKDatetimeModule } from 'ng2-datetime/ng2-datetime';
 import { ElementsComponent } from './elements/elements.component';
 import { ValidationComponent } from './validation/validation.component';
 import { WizardComponent } from './wizard/wizard.component';
-import { EditorModule } from '@tinymce/tinymce-angular';
 
 export const routes = [
   {path: '', redirectTo: 'elements', pathMatch: 'full'},
@@ -44,8 +43,7 @@ export const routes = [
     BootstrapWizardModule,
     NKDatetimeModule,
     Select2Module,
-    RouterModule.forChild(routes),
-    EditorModule
+    RouterModule.forChild(routes)
   ]
 })
 export class FormModule {
