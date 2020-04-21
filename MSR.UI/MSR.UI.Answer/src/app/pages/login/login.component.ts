@@ -12,6 +12,9 @@ export class Login {
 
   email: string = '';
   password: string = '';
+  forgotUsername: boolean = false;
+  showLogin: boolean = true;
+  forgotPassword: boolean = false;
 
   constructor(public loginService: LoginService, private route: ActivatedRoute, appConfig: AppConfig) {
     const config: any = appConfig.getConfig();
@@ -28,6 +31,24 @@ export class Login {
         this.loginService.receiveToken(params.token);
       }
     });
+  }
+
+  public showLoginDiv() {
+    this.forgotUsername = false;
+    this.showLogin = true;
+    this.forgotPassword = false;
+  }
+
+  public fogotUserName() {
+    this.forgotUsername = true;
+    this.showLogin = false;
+    this.forgotPassword = false;
+  }
+
+  public fogotPassword() {
+    this.forgotUsername = false;
+    this.showLogin = false;
+    this.forgotPassword = true;
   }
 
   public login() {
