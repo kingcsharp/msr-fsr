@@ -12,16 +12,16 @@ export class Login {
 
   email: string = '';
   password: string = '';
+  username: string = '';
   forgotUsername: boolean = false;
   showLogin: boolean = true;
   forgotPassword: boolean = false;
 
   constructor(public loginService: LoginService, private route: ActivatedRoute, appConfig: AppConfig) {
     const config: any = appConfig.getConfig();
-    const creds = config.auth;
-    this.email = creds.email;
-    this.password = creds.password;
-
+    // const creds = config.auth;
+    // this.email = creds.email;
+    // this.password = creds.password;
     if (this.loginService.isAuthenticated()) {
       this.loginService.receiveLogin();
     }
@@ -31,6 +31,16 @@ export class Login {
         this.loginService.receiveToken(params.token);
       }
     });
+  }
+
+  public async forgotUserPassword() {
+    if (this.username.length <= 0) {
+      this.loginService.loginError('Please fill Username Field.');
+    }
+
+    var sentEmail = await this.loginService.forgotUserPassword(this.username);
+    this.forgotPassword = !sentEmail;
+    this.showLogin = sentEmail;
   }
 
   public showLoginDiv() {
@@ -59,11 +69,11 @@ export class Login {
     }
   }
 
-  public googleLogin() {
-    this.loginService.loginUser({ social: 'google' });
-  }
+  // public googleLogin() {
+  //   this.loginService.loginUser({ social: 'google' });
+  // }
 
-  public microsoftLogin() {
-    this.loginService.loginUser({ social: 'microsoft' });
-  }
+  // public microsoftLogin() {
+  //   this.loginService.loginUser({ social: 'microsoft' });
+  // }
 }

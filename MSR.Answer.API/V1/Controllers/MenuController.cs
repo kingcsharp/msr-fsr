@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using MSR.Domain.Commanding.Abstractions;
 using System.Threading.Tasks;
+using MSR.Answer.API.Attributes;
 
 namespace MSR.Answer.API.V1.Controllers
 {

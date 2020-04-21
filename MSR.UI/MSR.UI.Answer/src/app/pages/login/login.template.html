@@ -12,7 +12,7 @@
       to login!
     </alert>-->
     <form>
-      <alert *ngIf="loginService.errorMessage" type="danger alert-sm widget-middle-overflow rounded-0">
+      <alert *ngIf="loginService.errorMessage" type="danger alert-sm widget-middle-overflow rounded-0 text-center">
         {{loginService.errorMessage}}
       </alert>
       <div class="form-group mt">
@@ -92,16 +92,16 @@
           <div class="input-group-addon">
             <i class="la la-user text-white"></i>
           </div>
-          <input id="username" class="form-control input-transparent pl-3" [(ngModel)]="username" type="username" required
-            name="username" placeholder="Username" />
+          <input id="username" class="form-control input-transparent pl-3" [(ngModel)]="username" type="username"
+            required name="username" placeholder="Username" />
         </div>
       </div>
       <div class="bg-widget auth-widget-footer">
-        <button (click)="login()" type="submit" class="btn btn-sm btn-danger auth-btn">
+        <button (click)="forgotUserPassword()" type="submit" class="btn btn-sm btn-danger auth-btn">
           <span class="auth-btn-circle">
             <i class="la la-caret-right"></i>
           </span>
-          {{loginService.isFetching ? 'Loading...' : 'Login'}}
+          {{loginService.isFetching ? 'Loading...' : 'Reset Password'}}
         </button>
         <div class="d-block text-center">
           <a (click)="fogotUserName()" class="text-center mb-4">Forgot Username?</a> |
