@@ -53,7 +53,6 @@
     "jquery-sparkline": "2.4.0",
     "jquery-ui": "git://github.com/jquery/jquery-ui.git#1.11.4",
     "jquery.animate-number": "0.0.14",
-    "jvectormap": "2.0.4",
     "line-awesome": "icons8/line-awesome",
     "magnific-popup": "1.1.0",
     "markdown": "0.5.0",
@@ -82,7 +81,6 @@
   },
   "napa": {
     "twitter-bootstrap-wizard": "git://github.com/VinceG/twitter-bootstrap-wizard.git#62a9aca8cc61fdb496c4bf7b92e1ff70c698667e",
-    "jvectormap-world": "http://jvectormap.com/js/jquery-jvectormap-world-mill-en.js",
     "bootstrap_calendar": "https://github.com/xero/bootstrap_calendar.git#1.0.1",
     "jquery.nestable": "https://github.com/dbushell/Nestable.git#4f93032cfafe2002f24ed6bd7dc1510931498503",
     "jquery.flot.animator": "https://github.com/Codicode/flotanimator.git#3c256c0183d713fd3bf41d04417873928eb1a751",

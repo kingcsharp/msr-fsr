@@ -52,8 +52,6 @@
               "node_modules/jquery-ui/ui/mouse.js",
               "node_modules/jquery-ui/ui/sortable.js",
               "node_modules/jquery-ui/ui/draggable.js",
-              "node_modules/jvectormap/jquery-jvectormap.min.js",
-              "node_modules/jvectormap-world/jquery-jvectormap-world-mill-en.js",
               "node_modules/jquery-sparkline/jquery.sparkline.min.js",
               "node_modules/magnific-popup/dist/jquery.magnific-popup.min.js",
               "node_modules/jquery-flot/jquery.flot.js",
