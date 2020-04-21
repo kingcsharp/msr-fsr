@@ -14,6 +14,7 @@ import {LoginService} from './pages/login/login.service';
 import {AppGuard} from './app.guard';
 import {AppInterceptor} from './app.interceptor';
 import {AppConfig} from './app.config';
+import * as $ from 'jquery';
 
 const APP_PROVIDERS = [
   CheckAllService,
