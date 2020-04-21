@@ -16,7 +16,9 @@ import {AnalyticsComponent} from './analytics/analytics.component';
 import {MainChartComponent} from './analytics/components/main-chart/main-chart.component';
 import {BigStatComponent} from './analytics/components/big-stat/big-stat.component';
 import {WidgetModule} from '../../layout/widget/widget.module';
-import {BsDropdownModule, ProgressbarModule} from 'ngx-bootstrap';
+import {BsDropdownModule} from 'ngx-bootstrap/dropdown';
+import {ProgressbarModule} from 'ngx-bootstrap/progressbar';
+
 import {TrendModule} from 'ngx-trend';
 import {TaskContainerComponent} from './analytics/components/task-container/task-container.component';
 import {TaskComponent} from './analytics/components/task/task';

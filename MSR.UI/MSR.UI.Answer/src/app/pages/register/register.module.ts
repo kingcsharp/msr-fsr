@@ -5,7 +5,7 @@ import {RouterModule} from '@angular/router';
 
 import {RegisterComponent} from './register.component';
 import {NewWidgetModule} from '../../layout/new-widget/widget.module';
-import {AlertModule} from 'ngx-bootstrap';
+import {AlertModule} from 'ngx-bootstrap/alert';
 import {RegisterService} from './register.service';
 
 export const routes = [

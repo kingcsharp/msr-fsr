@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 
 import { Login } from './login.component';
 import {NewWidgetModule} from '../../layout/new-widget/widget.module';
-import {AlertModule} from 'ngx-bootstrap';
+import {AlertModule} from 'ngx-bootstrap/alert';
 
 export const routes = [
   { path: '', component: Login, pathMatch: 'full' }

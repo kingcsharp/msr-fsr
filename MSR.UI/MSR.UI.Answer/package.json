@@ -62,7 +62,7 @@
     "ng-autosize": "1.1.0",
     "ng2-datetime": "1.4.0",
     "ng2-select2": "https://git@github.com/pineapple-lab/ng2-select2.git#Renderer2_ang9_dep_fix",
-    "ngx-bootstrap": "5.6.1",
+    "ngx-bootstrap": "^5.6.1",
     "ngx-chips": "^2.0.2",
     "ngx-toastr": "^10.2.0",
     "ngx-trend": "^3.4.3",

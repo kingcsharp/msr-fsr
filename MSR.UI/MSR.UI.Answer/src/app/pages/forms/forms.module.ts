@@ -2,8 +2,11 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { AlertModule } from 'ngx-bootstrap/alert';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
-import { TooltipModule, AlertModule, BsDropdownModule } from 'ngx-bootstrap';
+
 import { Autosize } from 'ng-autosize';
 import { Select2Module } from 'ng2-select2';
 import { WidgetModule } from '../../layout/widget/widget.module';
