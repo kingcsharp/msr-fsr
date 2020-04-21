@@ -2,9 +2,9 @@ import {
   Component, ViewEncapsulation, Injector, OnInit,
   OnDestroy
 } from '@angular/core';
-import { Select2OptionData } from 'ng2-select2';
+// import { Select2OptionData } from 'ng2-select2';
 import { ɵDomSharedStylesHost } from '@angular/platform-browser';
-import * as data from './elements.data';
+// import * as data from './elements.data';
 declare const jQuery: any;
 
 @Component({
@@ -79,13 +79,13 @@ export class ElementsComponent implements OnInit, OnDestroy {
     return event.replace(/\D+/g, '');
   }
 
-  getSelect2DefaultList(): Select2OptionData[] {
-    return data.select2DefaultData;
-  }
+  // getSelect2DefaultList(): Select2OptionData[] {
+  //   return data.select2DefaultData;
+  // }
 
-  getSelect2GroupedList(): Select2OptionData[] {
-    return data.select2GroupedData;
-  }
+  // getSelect2GroupedList(): Select2OptionData[] {
+  //   return data.select2GroupedData;
+  // }
 
   select2Changed(e: any): void {
     this.selected = e.value;

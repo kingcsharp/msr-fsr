@@ -8,7 +8,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 
 import { Autosize } from 'ng-autosize';
-import { Select2Module } from 'ng2-select2';
+// import { Select2Module } from 'ng2-select2';
 import { WidgetModule } from '../../layout/widget/widget.module';
 import { TextMaskModule } from 'angular2-text-mask';
 /* tslint:disable */
@@ -45,7 +45,7 @@ export const routes = [
     WidgetModule,
     BootstrapWizardModule,
     NKDatetimeModule,
-    Select2Module,
+    // Select2Module,
     RouterModule.forChild(routes)
   ]
 })

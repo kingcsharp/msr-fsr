@@ -3,6 +3,7 @@ import mock from './mock';
 import { AnalyticsService } from './analytics.service';
 
 declare let jQuery: any;
+declare let $: any;
 
 @Component({
   selector: 'analytics',
