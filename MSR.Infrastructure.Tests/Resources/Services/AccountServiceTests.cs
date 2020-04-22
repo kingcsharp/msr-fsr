@@ -1,5 +1,4 @@
-﻿using MSR.Infrastructure.Resources.Services.Account.Abstractions;
-using MSR.Infrastructure.Tests.ClassFixtures.Resources.Services;
+﻿using MSR.Infrastructure.Tests.ClassFixtures.Resources.Services;
 using MSR.Infrastructure.Tests.TestFixtures;
 using System.Threading.Tasks;
 using Xunit;

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using MSR.Domain.Abstractions.Email;
+using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Emums;
 using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
@@ -10,7 +11,6 @@ using MSR.Domain.Models;
 using MSR.Domain.Models.Config;
 using MSR.Infrastructure.Helpers;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
-using MSR.Infrastructure.Resources.Services.Account.Abstractions;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -167,7 +167,7 @@ namespace MSR.Infrastructure.Resources.Services.Account
                 {
                     new Claim(ClaimTypes.Name, domainUser.Id.ToString())
                 }),
-                Expires = DateTime.UtcNow.AddDays(7),
+                Expires = DateTime.UtcNow.AddDays(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);

@@ -2,7 +2,7 @@
 using MSR.Domain.Models;
 using System.Threading.Tasks;
 
-namespace MSR.Infrastructure.Resources.Services.Account.Abstractions
+namespace MSR.Domain.Abstractions.Services
 {
     public interface IAccountService
     {

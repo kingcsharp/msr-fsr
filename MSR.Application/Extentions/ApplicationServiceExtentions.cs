@@ -1,12 +1,12 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using MSR.Domain.Commanding.Abstractions;
-using MSR.Domain.Commands;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
 using System;
 using System.IO;
 using MSR.Domain.Helpers;
+using MSR.Application.ApplicationServices;
 
 namespace MSR.Application.Extentions
 {
@@ -14,8 +14,9 @@ namespace MSR.Application.Extentions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
-            services.AddScoped<ICommandHandler<SystemLogin>, MsrAppService>();
-            services.AddScoped<MsrAppService>();
+            services.AddScoped<AccountAppService>();
+            services.AddScoped<UserAppService>();
+            services.AddScoped<MenuAppService>();
             var assemblies = new List<Assembly>();
             var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 

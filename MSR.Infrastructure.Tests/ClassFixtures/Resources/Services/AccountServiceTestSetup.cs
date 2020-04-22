@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using MSR.Infrastructure.Resources.Services.Account;
-using MSR.Infrastructure.Resources.Services.Account.Abstractions;
 using Moq;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Application;

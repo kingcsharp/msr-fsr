@@ -6,6 +6,6 @@ namespace MSR.Domain.Commands
 {
     public class GetMenu: Command<IEnumerable<MenuItem>>
     {
-        public User User { get; set; }
+        public int UserId { get; set; }
     }
 }

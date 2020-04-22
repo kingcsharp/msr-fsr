@@ -2,11 +2,9 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Models.Config;
-using MSR.Infrastructure.Resources.Services.Account.Abstractions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -31,7 +29,7 @@ namespace MSR.Answer.API.Extentions
                     OnTokenValidated = context =>
                     {
                         var accountService = context.HttpContext.RequestServices.GetRequiredService<IAccountService>();
-                        var accountId = int.Parse(context.Principal.Identity.Name);
+                        if (!int.TryParse(context.Principal.FindFirst(ClaimTypes.Name)?.Value, out var accountId)) context.Fail("Unauthorized");
                         var user = accountService.ValidateAccount(accountId);
                         if (user == null)
                         {

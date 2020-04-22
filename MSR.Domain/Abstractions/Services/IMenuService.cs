@@ -6,6 +6,6 @@ namespace MSR.Domain.Abstractions.Services
 {
     public interface IMenuService
     {
-        Task<ICollection<MenuGroup>> GetMenuGroup();
+        Task<ICollection<MenuGroup>> GetMenuAsync();
     }
 }
