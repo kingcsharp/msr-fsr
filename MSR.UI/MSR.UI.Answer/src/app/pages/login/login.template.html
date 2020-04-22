@@ -67,11 +67,11 @@
         </div>
       </div>
       <div class="bg-widget auth-widget-footer">
-        <button (click)="login()" type="submit" class="btn btn-sm btn-danger auth-btn">
+        <button (click)="forgotUserName()" type="submit" class="btn btn-sm btn-danger auth-btn">
           <span class="auth-btn-circle">
             <i class="la la-caret-right"></i>
           </span>
-          {{loginService.isFetching ? 'Loading...' : 'Login'}}
+          {{loginService.isFetching ? 'Loading...' : 'Submit'}}
         </button>
         <div class="d-block text-center">
           <a (click)="fogotPassword()" class="text-center mb-4">Forgot Password?</a> |

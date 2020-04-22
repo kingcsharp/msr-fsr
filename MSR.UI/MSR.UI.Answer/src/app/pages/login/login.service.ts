@@ -80,6 +80,17 @@ export class LoginService {
     });
   }
 
+  async forgotUserName(email){
+    return this.http.post('/Account/forgotusername', { email: email }).toPromise().then((res: any) => {
+      this.loginError("An email has been sent with your information.");
+      return true;
+    }, err => {
+      this.loginError(err.error.errorMessages[0].message);
+      return false;
+    });
+  }
+
+
   receiveToken(token) {
     let user: any = {};
     // We check if app runs with backend mode

@@ -43,6 +43,16 @@ export class Login {
     this.showLogin = sentEmail;
   }
 
+  public async forgotUserName() {
+    if (this.email.length <= 0) {
+      this.loginService.loginError('Please fill Username Field.');
+    }
+
+    var sentEmail = await this.loginService.forgotUserName(this.email);
+    this.forgotUsername = !sentEmail;
+    this.showLogin = sentEmail;
+  }
+
   public showLoginDiv() {
     this.forgotUsername = false;
     this.showLogin = true;
