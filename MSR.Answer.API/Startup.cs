@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MSR.Answer.API.Extentions;
+using MSR.Answer.API.Infrastructure;
 
 namespace MSR.Answer.API
 {
@@ -14,11 +15,13 @@ namespace MSR.Answer.API
             Configuration = configuration;
         }
 
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
             services.AddControllers();
             services.AddApiVersioning();
             services.AddApiServices(Configuration);
@@ -31,6 +34,8 @@ namespace MSR.Answer.API
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseMiddleware(typeof(CorsMiddleware));
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>

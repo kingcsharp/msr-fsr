@@ -1,6 +1,7 @@
 import {Component, ViewEncapsulation, Input} from '@angular/core';
 
 declare let jQuery: any;
+declare let $: any;
 
 @Component({
   selector: 'main-chart',

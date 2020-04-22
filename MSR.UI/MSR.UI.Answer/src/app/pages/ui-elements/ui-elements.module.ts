@@ -6,9 +6,19 @@ import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import {AlertModule, CarouselModule, PopoverModule, ProgressbarModule, TooltipModule} from 'ngx-bootstrap';
-import { ButtonsModule, BsDropdownModule } from 'ngx-bootstrap';
-import { TabsModule, AccordionModule, ModalModule } from 'ngx-bootstrap';
+import { ButtonsModule } from 'ngx-bootstrap/buttons';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { AlertModule } from 'ngx-bootstrap/alert';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { TabsModule } from 'ngx-bootstrap/tabs';
+import { AccordionModule } from 'ngx-bootstrap/accordion';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { CarouselModule } from 'ngx-bootstrap/carousel';
+import { PopoverModule } from 'ngx-bootstrap/popover';
+import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
+
+
+
 import { WidgetModule } from '../../layout/widget/widget.module';
 import { ButtonsComponent } from './buttons/buttons.component';
 import { NotificationsComponent } from './notifications/notifications.component';

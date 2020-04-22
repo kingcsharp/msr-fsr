@@ -1,7 +1,6 @@
 <div class="container">
-  <widget [title]="'<h3 class=mt-0>Answer 3.0</h3>'"
-          [customHeader]="true"
-          class="widget-auth mx-auto">
+  <widget *ngIf="showLogin" [title]="'<h3 class=mt-0>Answer 3.0</h3>'" [customHeader]="true"
+    class="widget-auth mx-auto">
     <!--<p class="widget-auth-info">
       Use your email to sign in.
     </p>
@@ -13,29 +12,27 @@
       to login!
     </alert>-->
     <form>
-      <alert *ngIf="loginService.errorMessage" type="danger alert-sm widget-middle-overflow rounded-0">
+      <alert *ngIf="loginService.errorMessage" type="danger alert-sm widget-middle-overflow rounded-0 text-center">
         {{loginService.errorMessage}}
       </alert>
       <div class="form-group mt">
-        <label for="email">Email</label>
+        <label for="email">Username</label>
         <div class="input-group input-group-transparent">
           <div class="input-group-addon">
             <i class="la la-user text-white"></i>
           </div>
-          <input id="email" class="form-control input-transparent pl-3" [(ngModel)]="email"
-                 type="email"
-                 required name="email" placeholder="Email" />
+          <input id="email" class="form-control input-transparent pl-3" [(ngModel)]="email" type="email" required
+            name="email" placeholder="Username" />
         </div>
       </div>
       <div class="form-group">
-        <label for="password">Username</label>
+        <label for="password">Password</label>
         <div class="input-group input-group-transparent">
           <div class="input-group-addon">
             <i class="la la-lock text-white"></i>
           </div>
-          <input id="password" class="form-control input-transparent pl-3" [(ngModel)]="password"
-                 type="password"
-                 required name="password" placeholder="Username" />
+          <input id="password" class="form-control input-transparent pl-3" [(ngModel)]="password" type="password"
+            required name="password" placeholder="Password" />
         </div>
       </div>
       <div class="bg-widget auth-widget-footer">
@@ -46,15 +43,15 @@
           {{loginService.isFetching ? 'Loading...' : 'Login'}}
         </button>
         <div class="d-block text-center">
-          <a routerLink="/register" class="text-center mb-4">Forgot Username?</a> |
-          <a routerLink="/register" class="text-center mb-4">Forgot Password?</a>
+          <a (click)="fogotUserName()" class="text-center mb-4">Forgot Username?</a> |
+          <a (click)="fogotPassword()" class="text-center mb-4">Forgot Password?</a>
         </div>
       </div>
     </form>
   </widget>
-  <widget [title]="'<h3 class=mt-0>Forgot Username</h3>'"
-          [customHeader]="true"
-          class="widget-auth mx-auto">
+
+  <widget *ngIf="forgotUsername" [title]="'<h3 class=mt-0>Forgot Username</h3>'" [customHeader]="true"
+    class="widget-auth mx-auto">
     <form>
       <alert *ngIf="loginService.errorMessage" type="danger alert-sm widget-middle-overflow rounded-0">
         {{loginService.errorMessage}}
@@ -65,26 +62,55 @@
           <div class="input-group-addon">
             <i class="la la-user text-white"></i>
           </div>
-          <input id="email" class="form-control input-transparent pl-3" [(ngModel)]="email"
-                 type="email"
-                 required name="email" placeholder="Email" />
+          <input id="email" class="form-control input-transparent pl-3" [(ngModel)]="email" type="email" required
+            name="email" placeholder="Email" />
         </div>
       </div>
       <div class="bg-widget auth-widget-footer">
-        <button (click)="login()" type="submit" class="btn btn-sm btn-danger auth-btn">
+        <button (click)="forgotUserName()" type="submit" class="btn btn-sm btn-danger auth-btn">
           <span class="auth-btn-circle">
             <i class="la la-caret-right"></i>
           </span>
-          {{loginService.isFetching ? 'Loading...' : 'Login'}}
+          {{loginService.isFetching ? 'Loading...' : 'Submit'}}
         </button>
         <div class="d-block text-center">
-          <a routerLink="/register" class="text-center mb-4">Forgot Username?</a> |
-          <a routerLink="/register" class="text-center mb-4">Forgot Password?</a>
+          <a (click)="fogotPassword()" class="text-center mb-4">Forgot Password?</a> |
+          <a (click)="showLoginDiv()" class="text-center mb-4">Login</a>
+        </div>
+      </div>
+    </form>
+  </widget>
+  <widget *ngIf="forgotPassword" [title]="'<h3 class=mt-0>Forgot Password</h3>'" [customHeader]="true"
+    class="widget-auth mx-auto">
+    <form>
+      <alert *ngIf="loginService.errorMessage" type="danger alert-sm widget-middle-overflow rounded-0">
+        {{loginService.errorMessage}}
+      </alert>
+      <div class="form-group mt">
+        <label for="username">Username</label>
+        <div class="input-group input-group-transparent">
+          <div class="input-group-addon">
+            <i class="la la-user text-white"></i>
+          </div>
+          <input id="username" class="form-control input-transparent pl-3" [(ngModel)]="username" type="username"
+            required name="username" placeholder="Username" />
+        </div>
+      </div>
+      <div class="bg-widget auth-widget-footer">
+        <button (click)="forgotUserPassword()" type="submit" class="btn btn-sm btn-danger auth-btn">
+          <span class="auth-btn-circle">
+            <i class="la la-caret-right"></i>
+          </span>
+          {{loginService.isFetching ? 'Loading...' : 'Reset Password'}}
+        </button>
+        <div class="d-block text-center">
+          <a (click)="fogotUserName()" class="text-center mb-4">Forgot Username?</a> |
+          <a (click)="showLoginDiv()" class="text-center mb-4">Login</a>
         </div>
       </div>
     </form>
   </widget>
 </div>
 <footer class="auth-footer">
-  2019 &copy; Sing App - React Admin Dashboard Template.
+  2020 &copy; Sing App - React Admin Dashboard Template.
 </footer>

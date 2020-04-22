@@ -109,14 +109,6 @@
   </li>
   <li class="accordion-group panel" [routerLinkActive]="['active']">
     <a (click)="sidebarBehavior($event)" class="accordion-toggle collapsed" data-toggle="collapse"
-       data-parent="#side-nav" href="#maps-collapse"><i class="fi flaticon-map-location"></i> <span class="name">Maps</span></a>
-    <ul id="maps-collapse" class="accordion-body collapse" aria-expanded="false">
-      <li [routerLinkActive]="['active']"><a routerLink="maps/google">Google</a></li>
-      <li [routerLinkActive]="['active']"><a routerLink="maps/vector">Vector</a></li>
-    </ul>
-  </li>
-  <li class="accordion-group panel" [routerLinkActive]="['active']">
-    <a (click)="sidebarBehavior($event)" class="accordion-toggle collapsed" data-toggle="collapse"
        data-parent="#side-nav" href="#special-collapse"><i class="fi flaticon-star"></i> <span class="name">Extra</span></a>
     <ul id="special-collapse" class="accordion-body collapse" aria-expanded="false">
       <li [routerLinkActive]="['active']"><a routerLink="extra/calendar">Calendar</a></li>
