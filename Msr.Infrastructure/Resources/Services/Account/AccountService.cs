@@ -78,11 +78,14 @@ namespace MSR.Infrastructure.Resources.Services.Account
             }
 
             var from = _emailInformation.From;
-            var websiteUrl = _generalInformation.WebsiteURL;
+            //var websiteUrl = _generalInformation.WebsiteURL;
+            //TODO REPLACE FOR THE CORRECT ui URL
+            var websiteUrl = "http://localhost:3000/";
 
             var encryptedText = EncryptionHelper.Encrypt(command.UserName).Replace('/', '*');
+            var encodedText = System.Net.WebUtility.UrlEncode(encryptedText);
 
-            var lnkHref = $"<a href='{websiteUrl}/Account/ResetPassword?token={encryptedText}'>Reset Password</a>";
+            var lnkHref = $"<a href='{websiteUrl}/#/resetpassword/{encodedText}'>Reset Password</a>";
 
             var body = $@"<div>
                <p>Hello ANSWER user,<br/></p>

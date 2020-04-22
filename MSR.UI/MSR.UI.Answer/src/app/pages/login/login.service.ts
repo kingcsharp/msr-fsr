@@ -59,8 +59,7 @@ export class LoginService {
       this.requestLogin();
       if (creds.email.length > 0 && creds.password.length > 0) {
         this.http.post('/Account/login', { userName: creds.email, password: creds.password }).subscribe((res: any) => {
-          const token = res.token;
-          this.receiveToken(token);
+          this.receiveToken(res);
         }, err => {
           this.loginError(err.error.errorMessages[0].message);
         });
@@ -85,16 +84,17 @@ export class LoginService {
     let user: any = {};
     // We check if app runs with backend mode
     if (this.config.isBackend) {
-      user = jwt.decodeToken(token).user;
-      delete user.id;
+      localStorage.setItem('token', token.token);
+      delete token.token;
+      localStorage.setItem('user', JSON.stringify(token));
     } else {
       user = {
         email: this.config.auth.email
       };
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(user));
     }
 
-    localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify(user));
     this.receiveLogin();
   }
 
