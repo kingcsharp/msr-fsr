@@ -1,8 +1,9 @@
-import {Component, ViewChild, ElementRef, ViewEncapsulation, OnInit} from '@angular/core';
+import { Component, ViewChild, ElementRef, ViewEncapsulation, OnInit } from '@angular/core';
 import mock from './mock';
-import {AnalyticsService} from './analytics.service';
+import { AnalyticsService } from './analytics.service';
 
 declare let jQuery: any;
+declare let $: any;
 
 @Component({
   selector: 'analytics',
@@ -42,12 +43,12 @@ export class AnalyticsComponent implements OnInit {
       '29/' + this.month + '/' + this.year,
       'A link',
       'http://www.flatlogic.com',
-      '#dd5826',
+      '#dd5826'
     ]
   ];
 
-  @ViewChild('chartContainer', {static: true}) chartContainer: ElementRef;
-  @ViewChild('chartLegend', {static: true}) chartLegend: ElementRef;
+  @ViewChild('chartContainer', { static: true }) chartContainer: ElementRef;
+  @ViewChild('chartLegend', { static: true }) chartLegend: ElementRef;
 
   trends: Array<any> = [
     {
@@ -74,7 +75,7 @@ export class AnalyticsComponent implements OnInit {
   }
 
   getRandomData() {
-    const arr = [];
+    const arr: Array<number> = [];
 
     for (let i = 0; i < 25; i += 1) {
       arr.push(+Math.random().toFixed(1) * 10);

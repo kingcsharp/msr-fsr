@@ -2,8 +2,11 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import {ButtonsModule, BsDropdownModule, CollapseModule, AlertModule, PopoverModule} from 'ngx-bootstrap';
-import { Ng2CarouselamosModule } from 'ng2-carouselamos';
+import { ButtonsModule } from 'ngx-bootstrap/buttons';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { AlertModule } from 'ngx-bootstrap/alert';
+import { CollapseModule } from 'ngx-bootstrap/collapse';
+import { PopoverModule } from 'ngx-bootstrap/popover';
 
 import { ProductGridComponent } from './product-grid/product-grid.component';
 import { ProductDetailComponent } from './product-detail/product-detail.component';
@@ -20,7 +23,6 @@ import { RatingComponent } from './product-detail/components/rating/rating.compo
 import { SliderComponent } from './product-detail/components/slider/slider.component';
 import {ManagementComponent} from './management/management';
 import {NewWidgetModule} from '../../layout/new-widget/widget.module';
-import {NgxDatatableModule} from '@swimlane/ngx-datatable';
 import {ProductsService} from './products.service';
 import {ProductEditComponent} from './management/components/product-edit/product-edit';
 import {LoaderModule} from '../../components/loader/loader.module';
@@ -55,14 +57,12 @@ export const routes = [
   ],
   imports: [
     FormsModule,
-    Ng2CarouselamosModule,
     ButtonsModule.forRoot(),
     BsDropdownModule.forRoot(),
     CollapseModule.forRoot(),
     CommonModule,
     RouterModule.forChild(routes),
     NewWidgetModule,
-    NgxDatatableModule,
     AlertModule.forRoot(),
     LoaderModule,
     PopoverModule.forRoot(),

@@ -1,8 +1,8 @@
-import {AppConfig} from '../../app.config';
-import {HttpClient} from '@angular/common/http';
-import {Router} from '@angular/router';
-import {JwtHelperService} from '@auth0/angular-jwt';
-import {Injectable} from '@angular/core';
+import { AppConfig } from '../../app.config';
+import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { JwtHelperService } from '@auth0/angular-jwt';
+import { Injectable } from '@angular/core';
 
 const jwt = new JwtHelperService();
 
@@ -57,15 +57,11 @@ export class LoginService {
       this.receiveToken('token');
     } else {
       this.requestLogin();
-      if (creds.social) {
-        // tslint:disable-next-line
-        window.location.href = this.config.baseURLApi + '/user/signin/' + creds.social + (process.env.NODE_ENV === 'production' ? '?app=light-blue/angular' : '');
-      } else if (creds.email.length > 0 && creds.password.length > 0) {
-        this.http.post('/user/signin/local', creds).subscribe((res: any) => {
-          const token = res.token;
-          this.receiveToken(token);
+      if (creds.email.length > 0 && creds.password.length > 0) {
+        this.http.post('/Account/login', { userName: creds.email, password: creds.password }).subscribe((res: any) => {
+          this.receiveToken(res);
         }, err => {
-          this.loginError(err.response.data);
+          this.loginError(err.error.errorMessages[0].message);
         });
 
       } else {
@@ -74,20 +70,42 @@ export class LoginService {
     }
   }
 
+  async forgotUserPassword(email) {
+    return this.http.post('/Account/forgotpassword', { userName: email }).toPromise().then((res: any) => {
+      this.loginError("Reset password email sent.");
+      return true;
+    }, err => {
+      this.loginError(err.error.errorMessages[0].message);
+      return false;
+    });
+  }
+
+  async forgotUserName(email){
+    return this.http.post('/Account/forgotusername', { email: email }).toPromise().then((res: any) => {
+      this.loginError("An email has been sent with your information.");
+      return true;
+    }, err => {
+      this.loginError(err.error.errorMessages[0].message);
+      return false;
+    });
+  }
+
+
   receiveToken(token) {
     let user: any = {};
     // We check if app runs with backend mode
     if (this.config.isBackend) {
-      user = jwt.decodeToken(token).user;
-      delete user.id;
+      localStorage.setItem('token', token.token);
+      delete token.token;
+      localStorage.setItem('user', JSON.stringify(token));
     } else {
       user = {
         email: this.config.auth.email
       };
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(user));
     }
 
-    localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify(user));
     this.receiveLogin();
   }
 

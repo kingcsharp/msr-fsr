@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
@@ -15,7 +16,8 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public byte[] PasswordSalt { get; set; }
         public string SecurityStamp { get; set; }
         public string Phone { get; set; }
-        public int? SupervisorId { get; set; }
+        [ForeignKey("id")]
+        public User Supervisor { get; set; }
         public int? LocationId { get; set; }
         public bool? IsAnswerUser { get; set; }
         public string CustomerId { get; set; }

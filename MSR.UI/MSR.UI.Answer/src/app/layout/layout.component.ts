@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, ElementRef, Renderer, ViewChild, NgZone } from '@angular/core';
+import { Component, ViewEncapsulation, ElementRef, ViewChild, NgZone, Renderer2 } from '@angular/core';
 import {
   Router,
   Event as RouterEvent,
@@ -21,7 +21,7 @@ export class Layout {
   @ViewChild('spinnerElement', {static: true}) spinnerElement: ElementRef;
   @ViewChild('routerComponent', {static: true}) routerComponent: ElementRef;
 
-  constructor(private el: ElementRef, private renderer: Renderer, private router: Router, private ngZone: NgZone) {
+  constructor(private el: ElementRef, private renderer: Renderer2, private router: Router, private ngZone: NgZone) {
     Raphael.prototype.safari = function (): any {
       return;
     };
@@ -42,16 +42,11 @@ export class Layout {
         // For simplicity we are going to turn opacity on / off
         // you could add/remove a class for more advanced styling
         // and enter/leave animation of the spinner
-        this.renderer.setElementStyle(
-          this.spinnerElement.nativeElement,
-          'opacity',
-          '1'
-        );
-        this.renderer.setElementStyle(
-          this.routerComponent.nativeElement,
-          'opacity',
-          '0'
-        );
+        // For simplicity we are going to turn opacity on / off
+// you could add/remove a class for more advanced styling
+// and enter/leave animation of the spinner
+this.renderer.setStyle(this.spinnerElement.nativeElement, 'opacity', '1');
+        this.renderer.setStyle(this.routerComponent.nativeElement, 'opacity', '0');
       });
     }
     if (event instanceof NavigationEnd) {
@@ -76,27 +71,22 @@ export class Layout {
       // For simplicity we are going to turn opacity on / off
       // you could add/remove a class for more advanced styling
       // and enter/leave animation of the spinner
-      this.renderer.setElementStyle(
-        this.spinnerElement.nativeElement,
-        'opacity',
-        '0'
-      );
-      this.renderer.setElementStyle(
-        this.routerComponent.nativeElement,
-        'opacity',
-        '1'
-      );
+      // For simplicity we are going to turn opacity on / off
+// you could add/remove a class for more advanced styling
+// and enter/leave animation of the spinner
+this.renderer.setStyle(this.spinnerElement.nativeElement, 'opacity', '0');
+      this.renderer.setStyle(this.routerComponent.nativeElement, 'opacity', '1');
     });
   }
 
   sidebarPosition(position): void {
     let pos = position === 'Right' ? true : false;
-    this.renderer.setElementClass(this.el.nativeElement, 'sidebar-on-right', pos);
+    pos ? this.renderer.addClass(this.el.nativeElement, 'sidebar-on-right') : this.renderer.removeClass(this.el.nativeElement, 'sidebar-on-right');
   }
 
   sidebarDisplay(display): void {
     let _display = display === 'Hide' ? true : false;
-    this.renderer.setElementClass(this.el.nativeElement, 'sidebar-hidden', _display);
+    _display ? this.renderer.addClass(this.el.nativeElement, 'sidebar-hidden') : this.renderer.removeClass(this.el.nativeElement, 'sidebar-hidden');
   }
 
   openSidebar(): void {
@@ -106,11 +96,11 @@ export class Layout {
     let sidebarHeight = sidebar.offsetHeight + sidebarMarginTop + sidebarMarginBottom;
 
     if (this.sidebarState) {
-      this.renderer.setElementStyle(this.el.nativeElement
-        .querySelector('.content'), 'margin-top', sidebarHeight + 'px');
+      this.renderer.setStyle(this.el.nativeElement
+    .querySelector('.content'), 'margin-top', sidebarHeight + 'px');
     } else {
-      this.renderer.setElementStyle(this.el.nativeElement
-        .querySelector('.content'), 'margin-top', '0px');
+      this.renderer.setStyle(this.el.nativeElement
+    .querySelector('.content'), 'margin-top', '0px');
     }
 
     this.sidebarState = !this.sidebarState;

@@ -39,5 +39,20 @@ namespace MSR.Answer.API.V1.Extentions
                 Email = request.Email
             };
         }
+
+        public static GetUsers ToGetUsersCommand(this GetUsersRequest request)
+        {
+            return new GetUsers()
+            {
+                Id = request.Id,
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                UserName = request.UserName,
+                Title = request.Title,
+                Supervisor = request.Supervisor,
+                PrimaryPhone = request.PrimaryPhone,
+                Email = request.Email
+            };
+        }
     }
 }

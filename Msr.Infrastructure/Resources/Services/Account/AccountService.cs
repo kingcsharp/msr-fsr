@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using MSR.Domain.Abstractions.Email;
+using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Emums;
 using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
@@ -10,7 +11,6 @@ using MSR.Domain.Models;
 using MSR.Domain.Models.Config;
 using MSR.Infrastructure.Helpers;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
-using MSR.Infrastructure.Resources.Services.Account.Abstractions;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -30,8 +30,8 @@ namespace MSR.Infrastructure.Resources.Services.Account
         private readonly GeneralInformation _generalInformation;
 
         public AccountService(
-            IUnitOfWork unitOfWork, 
-            ILogger<AccountService> logger, 
+            IUnitOfWork unitOfWork,
+            ILogger<AccountService> logger,
             IMapper mapper,
             IEmailService emailService,
             JwtData jwtData,
@@ -49,14 +49,14 @@ namespace MSR.Infrastructure.Resources.Services.Account
 
         public async Task<User> LoginAsync(SystemLogin command)
         {
-            var user = _unitOfWork.Users.FirstOrDefault(false,i => i.UserName == command.UserName);
+            var user = _unitOfWork.Users.FirstOrDefault(false, i => i.UserName == command.UserName);
 
-            if(user == null)
+            if (user == null)
             {
                 throw new DomainException("Username Or Password are invalid");
             }
 
-            if (!AuthenticationHelper.VerifyPasswordHash(command.Password, user.PasswordHash,user.PasswordSalt))
+            if (!AuthenticationHelper.VerifyPasswordHash(command.Password, user.PasswordHash, user.PasswordSalt))
             {
                 throw new DomainException("Username Or Password are invalid");
             }
@@ -74,15 +74,18 @@ namespace MSR.Infrastructure.Resources.Services.Account
 
             if (user == null)
             {
-                throw new DomainException("User not found", DomainError.NotFound);
+                return;
             }
 
             var from = _emailInformation.From;
-            var websiteUrl = _generalInformation.WebsiteURL;
+            //var websiteUrl = _generalInformation.WebsiteURL;
+            //TODO REPLACE FOR THE CORRECT ui URL
+            var websiteUrl = "http://localhost:3000/";
 
             var encryptedText = EncryptionHelper.Encrypt(command.UserName).Replace('/', '*');
+            var encodedText = System.Net.WebUtility.UrlEncode(encryptedText);
 
-            var lnkHref = $"<a href='{websiteUrl}/Account/ResetPassword?token={encryptedText}'>Reset Password</a>";
+            var lnkHref = $"<a href='{websiteUrl}/#/resetpassword/{encodedText}'>Reset Password</a>";
 
             var body = $@"<div>
                <p>Hello ANSWER user,<br/></p>
@@ -167,7 +170,7 @@ namespace MSR.Infrastructure.Resources.Services.Account
                 {
                     new Claim(ClaimTypes.Name, domainUser.Id.ToString())
                 }),
-                Expires = DateTime.UtcNow.AddDays(7),
+                Expires = DateTime.UtcNow.AddDays(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);

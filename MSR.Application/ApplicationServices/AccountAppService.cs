@@ -2,20 +2,20 @@
 using MSR.Domain.Commanding.Abstractions;
 using System.Threading;
 using System.Threading.Tasks;
-using MSR.Infrastructure.Resources.Services.Account.Abstractions;
 using MSR.Domain.Commanding;
 using MSR.Domain.Models;
+using MSR.Domain.Abstractions.Services;
 
-namespace MSR.Application
+namespace MSR.Application.ApplicationServices
 {
-    public class MsrAppService : 
+    public class AccountAppService : 
         ICommandHandler<SystemLogin>,
         ICommandHandler<ForgotPassword>,
         ICommandHandler<ResetPassword>,
         ICommandHandler<ForgotUserName>
     {
         private readonly IAccountService _accountService;
-        public MsrAppService(IAccountService accountService)
+        public AccountAppService(IAccountService accountService)
         {
             _accountService = accountService;
         }

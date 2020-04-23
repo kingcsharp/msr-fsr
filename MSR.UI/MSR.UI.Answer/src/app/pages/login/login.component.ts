@@ -12,13 +12,16 @@ export class Login {
 
   email: string = '';
   password: string = '';
+  username: string = '';
+  forgotUsername: boolean = false;
+  showLogin: boolean = true;
+  forgotPassword: boolean = false;
 
   constructor(public loginService: LoginService, private route: ActivatedRoute, appConfig: AppConfig) {
     const config: any = appConfig.getConfig();
-    const creds = config.auth;
-    this.email = creds.email;
-    this.password = creds.password;
-
+    // const creds = config.auth;
+    // this.email = creds.email;
+    // this.password = creds.password;
     if (this.loginService.isAuthenticated()) {
       this.loginService.receiveLogin();
     }
@@ -30,6 +33,44 @@ export class Login {
     });
   }
 
+  public async forgotUserPassword() {
+    if (this.username.length <= 0) {
+      this.loginService.loginError('Please fill Username Field.');
+    }
+
+    var sentEmail = await this.loginService.forgotUserPassword(this.username);
+    this.forgotPassword = !sentEmail;
+    this.showLogin = sentEmail;
+  }
+
+  public async forgotUserName() {
+    if (this.email.length <= 0) {
+      this.loginService.loginError('Please fill Username Field.');
+    }
+
+    var sentEmail = await this.loginService.forgotUserName(this.email);
+    this.forgotUsername = !sentEmail;
+    this.showLogin = sentEmail;
+  }
+
+  public showLoginDiv() {
+    this.forgotUsername = false;
+    this.showLogin = true;
+    this.forgotPassword = false;
+  }
+
+  public fogotUserName() {
+    this.forgotUsername = true;
+    this.showLogin = false;
+    this.forgotPassword = false;
+  }
+
+  public fogotPassword() {
+    this.forgotUsername = false;
+    this.showLogin = false;
+    this.forgotPassword = true;
+  }
+
   public login() {
     const { email, password } = this;
 
@@ -38,11 +79,11 @@ export class Login {
     }
   }
 
-  public googleLogin() {
-    this.loginService.loginUser({ social: 'google' });
-  }
+  // public googleLogin() {
+  //   this.loginService.loginUser({ social: 'google' });
+  // }
 
-  public microsoftLogin() {
-    this.loginService.loginUser({ social: 'microsoft' });
-  }
+  // public microsoftLogin() {
+  //   this.loginService.loginUser({ social: 'microsoft' });
+  // }
 }

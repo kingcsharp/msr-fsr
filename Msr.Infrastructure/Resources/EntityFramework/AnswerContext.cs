@@ -48,18 +48,18 @@ namespace MSR.Infrastructure.Resources.EntityFramework
 
         private void HandleTrackableEntity(EntityEntry entry, DateTime now)
         {
-            TrackableEntity trackable;
-            if ((trackable = entry.Entity as TrackableEntity) != null)
-            {
-                int? answerUserId = GetCurrentUserId();
-                if (entry.State == EntityState.Added)
-                {
-                    trackable.CreatedOn = now;
-                    trackable.CreatedBy = answerUserId;
-                }
-                trackable.LastUpdatedOn = now;
-                trackable.LastUpdatedBy = answerUserId;
-            }
+            //TrackableEntity trackable;
+            //if ((trackable = entry.Entity as TrackableEntity) != null)
+            //{
+            //    int? answerUserId = GetCurrentUserId();
+            //    if (entry.State == EntityState.Added)
+            //    {
+            //        trackable.CreatedOn = now;
+            //        trackable.CreatedBy = answerUserId;
+            //    }
+            //    trackable.LastUpdatedOn = now;
+            //    trackable.LastUpdatedBy = answerUserId;
+            //}
         }
 
         private int? GetCurrentUserId()
