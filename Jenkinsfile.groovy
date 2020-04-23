@@ -15,7 +15,7 @@ pipeline {
         PROFILE='--profile msrfsr'
     }
     stages {
-        stage('Build Docker Container') {
+        stage('Build UI Container') {
             steps {
                 script {
                     dir('MSR.UI/MSR.UI.Answer') {
@@ -34,6 +34,25 @@ pipeline {
                         sh "eval \$(/home/ubuntu/.local/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
                         sh "docker push ${ACCOUNT_URL}/msr-ui:${env.BRANCH_NAME}${env.BUILD_NUMBER}"
                     }
+                }
+            }
+        }
+
+        stage('Build API Container') {
+            steps {
+                script {
+                    sh "sudo chmod 777 /var/run/docker.sock"
+                    sh "docker build -t msr-api ."
+                    sh "docker tag msr-api ${ACCOUNT_URL}/msr-api:${env.BRANCH_NAME}${env.BUILD_NUMBER}"
+                }
+            }
+        }
+
+        stage('Push image to AWS ECR') {
+            steps {
+                script {
+                    sh "eval \$(/home/ubuntu/.local/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
+                    sh "docker push ${ACCOUNT_URL}/msr-api:${env.BRANCH_NAME}${env.BUILD_NUMBER}"
                 }
             }
         }
