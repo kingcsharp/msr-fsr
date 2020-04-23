@@ -27,7 +27,7 @@ pipeline {
             }
         }
 
-        stage('Push image to AWS ECR') {
+        stage('Push UI image to AWS ECR') {
             steps {
                 script {
                     dir('MSR.UI/MSR.UI.Answer') {
@@ -48,7 +48,7 @@ pipeline {
             }
         }
 
-        stage('Push image to AWS ECR') {
+        stage('Push API image to AWS ECR') {
             steps {
                 script {
                     sh "eval \$(/home/ubuntu/.local/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
