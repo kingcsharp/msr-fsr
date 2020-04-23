@@ -7,6 +7,7 @@ namespace MSR.Domain.Abstractions.Services
 {
     public interface IUserService
     {
-        Task<ICollection<User>> GetUsers(GetUsers command);
+        Task<ICollection<User>> GetUsersAsync(GetUsers command);
+        Task<User> CreateUserAsync(CreateUser command);
     }
 }

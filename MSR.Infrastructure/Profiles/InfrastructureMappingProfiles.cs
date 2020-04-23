@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MSR.Domain.Commands;
 
 namespace MSR.Infrastructure.Profiles
 {
@@ -6,7 +7,10 @@ namespace MSR.Infrastructure.Profiles
     {
         public InfrastructureMappingProfiles()
         {
-            CreateMap<Resources.EntityFramework.Entities.User, Domain.Models.User>();
+            CreateMap<Resources.EntityFramework.Entities.User, Domain.Models.User>()
+                .ReverseMap();
+
+            CreateMap<CreateUser, Resources.EntityFramework.Entities.User>();
         }
     }
 }
