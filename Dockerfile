@@ -7,14 +7,15 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
-COPY ["MSR.Answer.API/MSR.Answer.API.csproj", "MSR.Answer.API/"]
-RUN dotnet restore "MSR.Answer.API/MSR.Answer.API.csproj"
+
 COPY . .
-WORKDIR "/src/MSR.Answer.API"
-RUN dotnet build "MSR.Answer.API.csproj" -c Release -o /app/build
+
+RUN dotnet restore "MSR.Answer.API/MSR.Answer.API.csproj"
+
+RUN dotnet build "MSR.Answer.API/MSR.Answer.API.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "MSR.Answer.API.csproj" -c Release -o /app/publish
+RUN dotnet publish "MSR.Answer.API/MSR.Answer.API.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
