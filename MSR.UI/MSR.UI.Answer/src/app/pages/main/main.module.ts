@@ -42,6 +42,8 @@ import { FakeWorldData } from './widgets/years-map-widget/fake-world-data.servic
 import { AnalyticsService } from "./analytics/analytics.service";
 import { NewWidgetModule } from "../../layout/new-widget/widget.module";
 import { UserComponent } from './user/user.component';
+import { NgxDataTableModule } from 'angular-9-datatable';
+import { UserService } from './user/user.service';
 
 export const routes = [
   { path: '', redirectTo: 'user', pathMatch: 'full' },
@@ -77,6 +79,7 @@ export const routes = [
     ProgressbarModule.forRoot(),
     TrendModule,
     BsDropdownModule.forRoot(),
+    NgxDataTableModule,
     CalendarModule,
     UtilsModule,
     RickshawChartModule,
@@ -88,7 +91,7 @@ export const routes = [
     MapaelLayersMapModule,
     NewWidgetModule
   ],
-  providers: [FakeWorldData, AnalyticsService]
+  providers: [FakeWorldData, AnalyticsService, UserService]
 })
 export class MainModule {
   static routes = routes;

@@ -28,6 +28,7 @@
     "@ngx-loading-bar/core": "4.2.0",
     "@ngx-loading-bar/router": "4.2.0",
     "@swimlane/ngx-datatable": "15.0.2",
+    "angular-9-datatable": "^0.1.1",
     "angular2-text-mask": "9.0.0",
     "animate.css": "3.5.2",
     "awesome-bootstrap-checkbox": "1.0.1",

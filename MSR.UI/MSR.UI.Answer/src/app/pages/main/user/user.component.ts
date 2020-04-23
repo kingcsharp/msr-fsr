@@ -1,4 +1,5 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { UserService } from './user.service';
 
 @Component({
   selector: 'user',
@@ -11,12 +12,18 @@ export class UserComponent implements OnInit {
   month: any;
   year: any;
 
-  constructor() {
+  constructor(public userService: UserService) {
   }
 
   ngOnInit(): void {
     const now = new Date();
     this.month = now.getMonth() + 1;
     this.year = now.getFullYear();
+    this.getUsers();
+  }
+
+  getUsers() {
+    //data
+    this.userService.getUsers();
   }
 }

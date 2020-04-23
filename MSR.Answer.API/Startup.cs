@@ -21,6 +21,7 @@ namespace MSR.Answer.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //services.AddCors();
             services.AddCors();
             services.AddControllers();
             services.AddApiVersioning();
@@ -35,7 +36,14 @@ namespace MSR.Answer.API
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseMiddleware(typeof(CorsMiddleware));
+            //app.UseMiddleware(typeof(CorsMiddleware));
+            app.UseCors(builder =>
+            {
+                builder
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            });
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
