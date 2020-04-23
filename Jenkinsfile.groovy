@@ -31,7 +31,7 @@ pipeline {
             steps {
                 script {
                     dir('MSR.UI/MSR.UI.Answer') {
-                        sh "eval \$(/home/ubuntu/.local/bin/aws ecr get-login --region ${REGION} --no-include-email | sed 's|https://||')"
+                        sh "eval \$(/home/ubuntu/.local/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
                         sh "docker push ${ACCOUNT_URL}/msr-ui:${env.BRANCH_NAME}${env.BUILD_NUMBER}"
                     }
                 }
