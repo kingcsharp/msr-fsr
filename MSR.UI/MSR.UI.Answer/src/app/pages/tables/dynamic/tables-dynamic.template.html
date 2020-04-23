@@ -21,21 +21,20 @@
       <div class="float-right mb">
         <div class="input-group input-group-rounded">
           <span class="input-group-addon">
-              <i class="fa fa-search"></i>
+            <i class="fa fa-search"></i>
           </span>
           <input class="form-control input-transparent"
                  (keyup)='updateFilter($event)' type="text" placeholder="Search Table">
         </div>
       </div>
       <div>
-        <ngx-datatable
-          class="table table-striped table-hover"
-          [rows]="people"
-          [columnMode]="'force'"
-          [headerHeight]="50"
-          [footerHeight]="50"
-          [rowHeight]="'auto'"
-          [limit]="8">
+        <ngx-datatable class="table table-striped table-hover"
+                       [rows]="people"
+                       [columnMode]="'force'"
+                       [headerHeight]="50"
+                       [footerHeight]="50"
+                       [rowHeight]="'auto'"
+                       [limit]="8">
           <ngx-datatable-column name="ID">
             <ng-template let-value="value" ngx-datatable-cell-template>
               {{value}}
@@ -61,7 +60,7 @@
           </ngx-datatable-column>
           <ngx-datatable-column name="Description">
             <ng-template let-value="value" ngx-datatable-cell-template>
-              <a href="#" >{{value}}</a>
+              <a href="#">{{value}}</a>
             </ng-template>
           </ngx-datatable-column>
           <ngx-datatable-column name="Date">
@@ -102,6 +101,7 @@
              class="form-control input-transparent"
              placeholder="Filter Table" type="text">
     </p>
+    <!--Table ng-table
     <ng-table [config]="config.sorting"
               (tableChanged)="onChangeTable(config)"
               [rows]="rows" [columns]="columns">
@@ -117,7 +117,7 @@
                 (pageChanged)="onChangeTable(config, $event)"
                 (numPages)="numPages = $event">
     </pagination>
-    <pre *ngIf="config.paging" class="card card-block card-header">Page: {{page}} / {{numPages}}</pre>
+    <pre *ngIf="config.paging" class="card card-block card-header">Page: {{page}} / {{numPages}}</pre>-->
   </div>
 
 </section>

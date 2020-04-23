@@ -16,7 +16,9 @@ import {AnalyticsComponent} from './analytics/analytics.component';
 import {MainChartComponent} from './analytics/components/main-chart/main-chart.component';
 import {BigStatComponent} from './analytics/components/big-stat/big-stat.component';
 import {WidgetModule} from '../../layout/widget/widget.module';
-import {BsDropdownModule, ProgressbarModule} from 'ngx-bootstrap';
+import {BsDropdownModule} from 'ngx-bootstrap/dropdown';
+import {ProgressbarModule} from 'ngx-bootstrap/progressbar';
+
 import {TrendModule} from 'ngx-trend';
 import {TaskContainerComponent} from './analytics/components/task-container/task-container.component';
 import {TaskComponent} from './analytics/components/task/task';
@@ -28,7 +30,6 @@ import {GeoLocationsWidgetDirective} from './visits/geo-locations-widget/geo-loc
 import {MarketStatsWidgetComponent} from './visits/market-stats-widget/market-stats-widget.component';
 import {WidgetsComponent} from './widgets/widgets.component';
 import {LiveTileModule} from '../../components/tile/tile.module';
-import {SkyconsModule} from '../../components/skycon/skycon.module';
 import {FlotChartModule} from '../../components/flot/flot.module';
 import {JqSparklineModule} from '../../components/sparkline/sparkline.module';
 import {MapaelLayersMapModule} from '../../components/mapael/mapael.module';
@@ -77,7 +78,6 @@ export const routes = [
     UtilsModule,
     RickshawChartModule,
     LiveTileModule,
-    SkyconsModule,
     WidgetModule,
     FlotChartModule,
     RickshawChartModule,

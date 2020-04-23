@@ -8,9 +8,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { AlertModule, TooltipModule,
-  ButtonsModule, BsDropdownModule } from 'ngx-bootstrap';
-import { ModalModule } from 'ngx-bootstrap';
+
+import { ButtonsModule } from 'ngx-bootstrap/buttons';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { AlertModule } from 'ngx-bootstrap/alert';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { ModalModule } from 'ngx-bootstrap/modal';
 
 import { CalendarComponent } from './calendar/calendar.component';
 import { InvoiceComponent } from './invoice/invoice.component';
