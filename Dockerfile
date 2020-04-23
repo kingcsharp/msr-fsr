@@ -13,6 +13,7 @@ COPY . .
 RUN dotnet restore "MSR.Answer.API/MSR.Answer.API.csproj"
 
 RUN dotnet build "MSR.Answer.API/MSR.Answer.API.csproj" -c Release -o /app/build
+RUN dotnet build "MSR.Infrastructure/MSR.Infrastructure.csproj" -c Release -o /app/build
 
 FROM build AS publish
 RUN dotnet publish "MSR.Answer.API/MSR.Answer.API.csproj" -c Release -o /app/publish
