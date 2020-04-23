@@ -7,6 +7,19 @@
 	"item": [
 		{
 			"name": "Login - Success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "82abee0d-52f0-484a-a44a-9b929321262b",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"token\", jsonData.token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -20,15 +33,79 @@
 					}
 				},
 				"url": {
-					"raw": "{{Environment}}/v1/Account/login",
+					"raw": "{{Environment-SSL}}v1/Account/login",
 					"host": [
-						"{{Environment}}"
+						"{{Environment-SSL}}v1"
 					],
 					"path": [
-						"v1",
 						"Account",
 						"login"
 					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetMenuForUser",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetUsers",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"userName\": \"jbridgeford_test\",\r\n  \"firstName\": \"James\",\r\n  \"lastName\": \"Bridgeford\",\r\n  \"title\": \"Administrator\",\r\n  \"email\": \"james.bridgeford@protonmail.ch\",\r\n  \"securityStamp\": \"\",\r\n  \"phone\": \"555-444-3333\",\r\n  \"supervisorId\": null,\r\n  \"locationId\": null,\r\n  \"isActive\": true,\r\n  \"isAnswerUser\": true,\r\n  \"customerId\": null,\r\n  \"lockoutEndDateUtc\": null,\r\n  \"lockoutEnabled\": false,\r\n  \"accessFailedCount\": 0,\r\n  \"timeZoneId\": null\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{Environment-SSL}}v1/Users",
+					"host": [
+						"{{Environment-SSL}}v1"
+					],
+					"path": [
+						"Users"
+					],
+					"query": [
+						{
+							"key": "FirstName",
+							"value": "James",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateUser",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
 				}
 			},
 			"response": []
@@ -36,13 +113,13 @@
 	],
 	"variable": [
 		{
-			"id": "6ed5b532-51ee-4e7e-87a3-296122c67383",
+			"id": "145152a4-e4d2-428c-ae2d-a0e2485b6c5c",
 			"key": "UserName",
 			"value": "jbridgeford",
 			"type": "string"
 		},
 		{
-			"id": "bb25ac35-affa-4aa1-9d2d-06977f386df5",
+			"id": "6ce925d2-56c1-4b90-978c-61d5da062469",
 			"key": "Password",
 			"value": "9jY9NMx6.",
 			"type": "string"

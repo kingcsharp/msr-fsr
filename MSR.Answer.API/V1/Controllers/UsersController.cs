@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -29,7 +30,7 @@ namespace MSR.Answer.API.V1.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> Get([FromQuery]GetUsersRequest request)
+        public async Task<IActionResult> GetUsers([FromQuery]GetUsersRequest request)
         {
             var user = User.Identity.Name;
 
@@ -40,6 +41,20 @@ namespace MSR.Answer.API.V1.Controllers
             var ret = await _dispatcher.DispatchAsync(command);
 
             return ret.ToOkObjectResponse<ICollection<User>>();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateUser([FromBody, Required] CreateUserRequest request)
+        {
+            var user = User.Identity.Name;
+
+            if (user is null) return BadRequest();
+
+            var command = request.ToCreateUserCommand(user);
+
+            var ret = await _dispatcher.DispatchAsync(command);
+
+            return ret.ToCreatedResponse<User>();
         }
     }
 }

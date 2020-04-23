@@ -54,5 +54,32 @@ namespace MSR.Answer.API.V1.Extentions
                 Email = request.Email
             };
         }
+
+        public static CreateUser ToCreateUserCommand(this CreateUserRequest request, string loggedInUser)
+        {
+            int.TryParse(loggedInUser, out var currentUser);
+
+            return new CreateUser()
+            {
+                CurrentUser = currentUser,
+                UserName = request.UserName,
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                Title = request.Title,
+                Email = request.Email,
+                SecurityStamp = request.SecurityStamp,
+                Phone = request.Phone,
+                SupervisorId = request.SupervisorId,
+                LocationId = request.LocationId,
+                IsActive = request.IsActive,
+                IsAnswerUser = request.IsAnswerUser,
+                CustomerId = request.CustomerId,
+                LockoutEndDateUtc = request.LockoutEndDateUtc,
+                LockoutEnabled = request.LockoutEnabled,
+                AccessFailedCount = request.AccessFailedCount,
+                TimeZoneId = request.TimeZoneId
+
+            };
+        }
     }
 }

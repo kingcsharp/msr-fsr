@@ -1,4 +1,5 @@
-﻿using MSR.Domain.Abstractions.Services;
+﻿using MSR.Domain.Abstractions.Email;
+using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding;
 using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
@@ -9,8 +10,9 @@ using System.Threading.Tasks;
 
 namespace MSR.Application.ApplicationServices
 {
-    public class UserAppService :
-         ICommandHandler<GetUsers>
+    public class UserAppService:
+        ICommandHandler<GetUsers>,
+        ICommandHandler<CreateUser>
     {
         private IUserService _userService;
 
@@ -21,8 +23,14 @@ namespace MSR.Application.ApplicationServices
 
         public async Task<ICommandResponse> HandleAsync(GetUsers command, CancellationToken cancellationToken = default)
         {
-            var ret = await _userService.GetUsers(command);
+            var ret = await _userService.GetUsersAsync(command);
             return new CommandResponse<ICollection<User>>(ret);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(CreateUser command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _userService.CreateUserAsync(command);
+            return new CommandResponse<User>(ret);
         }
     }
 }

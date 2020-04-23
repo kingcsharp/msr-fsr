@@ -1,28 +1,28 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using MSR.Domain.Commanding;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
-namespace MSR.Infrastructure.Resources.EntityFramework.Entities
+namespace MSR.Domain.Commands
 {
-    public class User : TrackableEntity
+    public class CreateUser: Command
     {
-        public int? OldId { get; set; }
-        public string UserRoleId { get; set; }
+        public int CurrentUser { get; set; }
         public string UserName { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Title { get; set; }
         public string Email { get; set; }
-        public byte[] PasswordHash { get; set; }
-        public byte[] PasswordSalt { get; set; }
         public string SecurityStamp { get; set; }
         public string Phone { get; set; }
         public int? SupervisorId { get; set; }
         public int? LocationId { get; set; }
+        public bool IsActive { get; set; }
         public bool? IsAnswerUser { get; set; }
-        public string CustomerId { get; set; }
+        public int? CustomerId { get; set; }
         public DateTime? LockoutEndDateUtc { get; set; }
-        public bool? LockoutEnabled { get; set; }
-        public int? AccessFailedCount { get; set; }
+        public bool LockoutEnabled { get; set; }
+        public int AccessFailedCount { get; set; }
         public int? TimeZoneId { get; set; }
     }
 }
