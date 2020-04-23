@@ -18,9 +18,11 @@ pipeline {
         stage('Build Docker Container') {
             steps {
                 script {
-                    sh "sudo chmod 777 /var/run/docker.sock"
-                    sh "docker build -t msr-ui ."
-                    sh "docker tag msr-ui ${ACCOUNT_URL}/msr-ui:${env.BRANCH_NAME}${env.BUILD_NUMBER}"
+                    dir('MSR.UI/MSR.UI.Answer') {
+                        sh "sudo chmod 777 /var/run/docker.sock"
+                        sh "docker build -t msr-ui ."
+                        sh "docker tag msr-ui ${ACCOUNT_URL}/msr-ui:${env.BRANCH_NAME}${env.BUILD_NUMBER}"
+                    }
                 }
             }
         }
@@ -28,8 +30,10 @@ pipeline {
         stage('Push image to AWS ECR') {
             steps {
                 script {
-                    sh "eval \$(/home/ubuntu/.local/bin/aws ecr get-login --region ${REGION} --no-include-email | sed 's|https://||')"
-                    sh "docker push ${ACCOUNT_URL}/msr-ui:${env.BRANCH_NAME}${env.BUILD_NUMBER}"
+                    dir('MSR.UI/MSR.UI.Answer') {
+                        sh "eval \$(/home/ubuntu/.local/bin/aws ecr get-login --region ${REGION} --no-include-email | sed 's|https://||')"
+                        sh "docker push ${ACCOUNT_URL}/msr-ui:${env.BRANCH_NAME}${env.BUILD_NUMBER}"
+                    }
                 }
             }
         }
