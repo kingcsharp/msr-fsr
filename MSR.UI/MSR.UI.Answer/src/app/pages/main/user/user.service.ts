@@ -7,6 +7,7 @@ import { AppConfig } from '../../../app.config';
 export class UserService {
 
     config: any;
+    _isReceiving: any = false;
 
     onReceiveDataSuccess: EventEmitter<boolean> = new EventEmitter();
 
@@ -14,13 +15,23 @@ export class UserService {
         this.config = appConfig.getConfig();
     }
 
-    getUsers() {
+    async getUsers() {
+        this.isReceiving = true;
         return this.http.get('/Users').toPromise().then((res: any) => {
-            console.log(res);
-            return true;
+            this.isReceiving = false;
+            return res;
         }, err => {
+            this.isReceiving = false;
             console.log(err);
-            return false;
+            return [];
         });
+    }
+
+    get isReceiving() {
+        return this._isReceiving;
+    }
+
+    set isReceiving(isReceiving) {
+        this._isReceiving = isReceiving;
     }
 }

@@ -11,6 +11,7 @@ export class UserComponent implements OnInit {
   config: any;
   month: any;
   year: any;
+  data: any;
 
   constructor(public userService: UserService) {
   }
@@ -22,8 +23,8 @@ export class UserComponent implements OnInit {
     this.getUsers();
   }
 
-  getUsers() {
+  async getUsers() {
     //data
-    this.userService.getUsers();
+    this.data = await this.userService.getUsers();
   }
 }
