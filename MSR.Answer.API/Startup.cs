@@ -4,7 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MSR.Answer.API.Extentions;
-using MSR.Answer.API.Infrastructure;
 
 namespace MSR.Answer.API
 {
@@ -21,7 +20,6 @@ namespace MSR.Answer.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddCors();
             services.AddCors();
             services.AddControllers();
             services.AddApiVersioning();
@@ -34,6 +32,11 @@ namespace MSR.Answer.API
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Error");
+                app.UseHsts();
             }
 
             //app.UseMiddleware(typeof(CorsMiddleware));

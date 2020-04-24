@@ -14,7 +14,7 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<GetUsers>,
         ICommandHandler<CreateUser>
     {
-        private IUserService _userService;
+        private readonly IUserService _userService;
 
         public UserAppService(IUserService userService)
         {

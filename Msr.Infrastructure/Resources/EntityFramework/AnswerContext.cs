@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Logging;
+using MSR.Domain.Helpers;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 
 namespace MSR.Infrastructure.Resources.EntityFramework
@@ -48,33 +49,18 @@ namespace MSR.Infrastructure.Resources.EntityFramework
 
         private void HandleTrackableEntity(EntityEntry entry, DateTime now)
         {
-            //TrackableEntity trackable;
-            //if ((trackable = entry.Entity as TrackableEntity) != null)
-            //{
-            //    int? answerUserId = GetCurrentUserId();
-            //    if (entry.State == EntityState.Added)
-            //    {
-            //        trackable.CreatedOn = now;
-            //        trackable.CreatedBy = answerUserId;
-            //    }
-            //    trackable.LastUpdatedOn = now;
-            //    trackable.LastUpdatedBy = answerUserId;
-            //}
-        }
-
-        private int? GetCurrentUserId()
-        {
-            //TODO USE A IOC.
-            int? currentUserId = null;
-            //if (IocContainer.GetCurrentUserId == null)
-            //    return null;
-
-            //int? currentUserId = IocContainer.GetCurrentUserId();
-
-            if (currentUserId == 0)
-                currentUserId = null;
-
-            return currentUserId;
+            TrackableEntity trackable;
+            if ((trackable = entry.Entity as TrackableEntity) != null)
+            {
+                int? answerUserId = DelegateHandler.GetCurrentUserId();
+                if (entry.State == EntityState.Added)
+                {
+                    trackable.CreatedOn = now;
+                    trackable.CreatedBy = answerUserId;
+                }
+                trackable.LastUpdatedOn = now;
+                trackable.LastUpdatedBy = answerUserId;
+            }
         }
 
         public static readonly ILoggerFactory ConsoleLoggerFactory = LoggerFactory.Create(builder =>
@@ -84,7 +70,5 @@ namespace MSR.Infrastructure.Resources.EntityFramework
             //&& level == LogLevel.Information)
             //.AddConsole();
         });
-
-
     }
 }

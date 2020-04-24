@@ -11,13 +11,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MSR.Domain.Helpers;
 
 namespace MSR.Infrastructure.Resources.Services.Users
 {
     public class UserService : IUserService
     {
-        private IUnitOfWork _unitOfWork;
-        private IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
         public UserService(IUnitOfWork unitOfWork, IMapper mapper)
         {
