@@ -60,6 +60,43 @@ namespace MSR.Infrastructure.Resources.Services.Users
             return _mapper.Map<User>(efUser);
         }
 
+        public async Task DeactivateUserAsync(DeactivateUser command)
+        {
+            var user = _unitOfWork.Users.FirstOrDefault(false,i => i.Id == command.AccountId);
+
+            if(user == null) { return; }
+
+            user.IsActive = false;
+
+            _unitOfWork.Users.Update(user);
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+        public async Task<User> UpdateUserAsync(UpdateUser command)
+        {
+            var efUser = _unitOfWork.Users.FirstOrDefault(false, i => i.Id == command.Id);
+
+            if (efUser == null)
+            {
+                throw new DomainException($"No user with {nameof(command.Id)} {command.Id} found", DomainError.NotFound);
+            }
+            var userType = efUser.GetType();
+
+            foreach(var property in typeof(UpdateUser).GetProperties().Where(i => i.Name != nameof(command.Id)))
+            {
+                var prop = userType.GetProperty(property.Name);
+
+                if(prop == null) { continue; }
+
+                prop.SetValue(efUser, property.GetValue(command), null);
+            }
+
+            _unitOfWork.Users.Update(efUser);
+            await _unitOfWork.SaveChangesAsync();
+
+            return _mapper.Map<User>(efUser);
+        }
+
         public async Task<ICollection<User>> GetUsersAsync(GetUsers command)
         {
             //This needs to be refactored to remove the dependency on EntityFramework Directly.
@@ -69,6 +106,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
             {
                 users = users.Where(i => i.Id == command.Id.Value);
             }
+
             if (!string.IsNullOrWhiteSpace(command.FirstName))
             {
                 users = users.Where(i => i.FirstName == command.FirstName);
@@ -89,10 +127,10 @@ namespace MSR.Infrastructure.Resources.Services.Users
                 users = users.Where(i => i.Title == command.Title);
             }
 
-            //if (!string.IsNullOrWhiteSpace(command.Supervisor))
-            //{
-            //    users = users.Where(i => i.Supervisor != null && i.Supervisor.FirstName == command.Supervisor);
-            //}
+            if (command.Supervisor.HasValue)
+            {
+                users = users.Where(i => i.SupervisorId != null && i.SupervisorId == command.Supervisor);
+            }
 
             if (!string.IsNullOrWhiteSpace(command.PrimaryPhone))
             {

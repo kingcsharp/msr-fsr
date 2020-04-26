@@ -12,7 +12,9 @@ namespace MSR.Application.ApplicationServices
 {
     public class UserAppService:
         ICommandHandler<GetUsers>,
-        ICommandHandler<CreateUser>
+        ICommandHandler<CreateUser>,
+        ICommandHandler<DeactivateUser>,
+        ICommandHandler<UpdateUser>
     {
         private IUserService _userService;
 
@@ -30,6 +32,18 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(CreateUser command, CancellationToken cancellationToken = default)
         {
             var ret = await _userService.CreateUserAsync(command);
+            return new CommandResponse<User>(ret);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(DeactivateUser command, CancellationToken cancellationToken = default)
+        {
+            await _userService.DeactivateUserAsync(command);
+            return new CommandResponse();
+        }
+
+        public async Task<ICommandResponse> HandleAsync(UpdateUser command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _userService.UpdateUserAsync(command);
             return new CommandResponse<User>(ret);
         }
     }

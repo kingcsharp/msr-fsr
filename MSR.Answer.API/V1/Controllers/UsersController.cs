@@ -7,6 +7,7 @@ using MSR.Answer.API.Attributes;
 using MSR.Answer.API.V1.Extentions;
 using MSR.Answer.API.V1.Models;
 using MSR.Domain.Commanding.Abstractions;
+using MSR.Domain.Commands;
 using MSR.Domain.Models;
 using AuthorizeAttribute = Microsoft.AspNetCore.Authorization.AuthorizeAttribute;
 using HttpGetAttribute = Microsoft.AspNetCore.Mvc.HttpGetAttribute;
@@ -55,6 +56,35 @@ namespace MSR.Answer.API.V1.Controllers
             var ret = await _dispatcher.DispatchAsync(command);
 
             return ret.ToCreatedResponse<User>();
+        }
+
+        [HttpPatch]
+        public async Task<IActionResult> UpdateUser([FromBody, Required]UpdateUserRequest request)
+        {
+            var user = User.Identity.Name;
+            if (user is null) return BadRequest();
+
+            var command = request.ToUpdateUserCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
+
+            return ret.ToOkObjectResponse<User>();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeactivateUser(int accountId)
+        {
+            var user = User.Identity.Name;
+
+            if (user is null) return BadRequest();
+
+            var command = new DeactivateUser()
+            {
+                AccountId = accountId
+            };
+
+            var ret = await _dispatcher.DispatchAsync(command);
+
+            return ret.ToNoContentResponse();
         }
     }
 }

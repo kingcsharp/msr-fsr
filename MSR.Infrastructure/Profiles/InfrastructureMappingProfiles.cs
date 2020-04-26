@@ -11,6 +11,8 @@ namespace MSR.Infrastructure.Profiles
                 .ReverseMap();
 
             CreateMap<CreateUser, Resources.EntityFramework.Entities.User>();
+
+            CreateMap<UpdateUser, Resources.EntityFramework.Entities.User>();
         }
     }
 }
