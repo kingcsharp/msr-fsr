@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  app:
+    image: 425480257575.dkr.ecr.us-west-2.amazonaws.com/msr-ui:Develop11
+    ports:
+      - "80:80"
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: answer3
+        awslogs-region: us-west-2
+        awslogs-stream-prefix: answer3-ui-dev

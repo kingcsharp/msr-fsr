@@ -143,8 +143,9 @@ namespace MSR.Infrastructure.Resources.Services.Users
             }
 
             var userList = new List<User>();
+            var usersTo = users.ToList();
 
-            foreach (var user in users)
+            foreach (var user in usersTo)
             {
                 userList.Add(_mapper.Map<User>(user));
             }

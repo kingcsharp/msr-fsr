@@ -9,44 +9,48 @@ import 'jQuery-Mapael/js/jquery.mapael.js';
 import 'jQuery-Mapael/js/maps/usa_states';
 import 'jQuery-Mapael/js/maps/world_countries.js';
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {RouterModule} from '@angular/router';
-import {AnalyticsComponent} from './analytics/analytics.component';
-import {MainChartComponent} from './analytics/components/main-chart/main-chart.component';
-import {BigStatComponent} from './analytics/components/big-stat/big-stat.component';
-import {WidgetModule} from '../../layout/widget/widget.module';
-import {BsDropdownModule} from 'ngx-bootstrap/dropdown';
-import {ProgressbarModule} from 'ngx-bootstrap/progressbar';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { AnalyticsComponent } from './analytics/analytics.component';
+import { MainChartComponent } from './analytics/components/main-chart/main-chart.component';
+import { BigStatComponent } from './analytics/components/big-stat/big-stat.component';
+import { WidgetModule } from '../../layout/widget/widget.module';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
 
-import {TrendModule} from 'ngx-trend';
-import {TaskContainerComponent} from './analytics/components/task-container/task-container.component';
-import {TaskComponent} from './analytics/components/task/task';
-import {CalendarModule} from './visits/calendar/calendar.module';
-import {VisitsComponent} from './visits/visits.component';
-import {UtilsModule} from '../../layout/utils/utils.module';
-import {RickshawChartModule} from '../../components/rickshaw/rickshaw.module';
-import {GeoLocationsWidgetDirective} from './visits/geo-locations-widget/geo-locations-widget.directive';
-import {MarketStatsWidgetComponent} from './visits/market-stats-widget/market-stats-widget.component';
-import {WidgetsComponent} from './widgets/widgets.component';
-import {LiveTileModule} from '../../components/tile/tile.module';
-import {FlotChartModule} from '../../components/flot/flot.module';
-import {JqSparklineModule} from '../../components/sparkline/sparkline.module';
-import {MapaelLayersMapModule} from '../../components/mapael/mapael.module';
-import {ChangesChartWidgetComponent} from './widgets/changes-chart-widget/changes-chart-widget.component';
-import {FlotChartWidgetComponent} from './widgets/flot-chart-widget/flot-chart-widget.component';
-import {NasdaqSparklineWidgetComponent} from './widgets/nasdaq-sparkline-widget/nasdaq-sparkline-widget.component';
-import {RealtimeTrafficWidgetComponent} from './widgets/realtime-traffic-widget/realtime-traffic-widget.component';
-import {YearsMapWidgetComponent} from './widgets/years-map-widget/years-map-widget.component';
-import {FakeWorldData} from './widgets/years-map-widget/fake-world-data.service';
-import {AnalyticsService} from "./analytics/analytics.service";
-import {NewWidgetModule} from "../../layout/new-widget/widget.module";
+import { TrendModule } from 'ngx-trend';
+import { TaskContainerComponent } from './analytics/components/task-container/task-container.component';
+import { TaskComponent } from './analytics/components/task/task';
+import { CalendarModule } from './visits/calendar/calendar.module';
+import { VisitsComponent } from './visits/visits.component';
+import { UtilsModule } from '../../layout/utils/utils.module';
+import { RickshawChartModule } from '../../components/rickshaw/rickshaw.module';
+import { GeoLocationsWidgetDirective } from './visits/geo-locations-widget/geo-locations-widget.directive';
+import { MarketStatsWidgetComponent } from './visits/market-stats-widget/market-stats-widget.component';
+import { WidgetsComponent } from './widgets/widgets.component';
+import { LiveTileModule } from '../../components/tile/tile.module';
+import { FlotChartModule } from '../../components/flot/flot.module';
+import { JqSparklineModule } from '../../components/sparkline/sparkline.module';
+import { MapaelLayersMapModule } from '../../components/mapael/mapael.module';
+import { ChangesChartWidgetComponent } from './widgets/changes-chart-widget/changes-chart-widget.component';
+import { FlotChartWidgetComponent } from './widgets/flot-chart-widget/flot-chart-widget.component';
+import { NasdaqSparklineWidgetComponent } from './widgets/nasdaq-sparkline-widget/nasdaq-sparkline-widget.component';
+import { RealtimeTrafficWidgetComponent } from './widgets/realtime-traffic-widget/realtime-traffic-widget.component';
+import { YearsMapWidgetComponent } from './widgets/years-map-widget/years-map-widget.component';
+import { FakeWorldData } from './widgets/years-map-widget/fake-world-data.service';
+import { AnalyticsService } from "./analytics/analytics.service";
+import { NewWidgetModule } from "../../layout/new-widget/widget.module";
+import { UserComponent } from './user/user.component';
+import { NgxDataTableModule } from 'angular-9-datatable';
+import { UserService } from './user/user.service';
 
 export const routes = [
-  {path: '', redirectTo: 'visits', pathMatch: 'full'},
-  {path: 'analytics', component: AnalyticsComponent, pathMatch: 'full'},
-  {path: 'visits', component: VisitsComponent, pathMatch: 'full'},
-  {path: 'widgets', component: WidgetsComponent, pathMatch: 'full'}
+  { path: '', redirectTo: 'user', pathMatch: 'full' },
+  { path: 'analytics', component: AnalyticsComponent, pathMatch: 'full' },
+  { path: 'visits', component: VisitsComponent, pathMatch: 'full' },
+  { path: 'user', component: UserComponent, pathMatch: 'full' },
+  { path: 'widgets', component: WidgetsComponent, pathMatch: 'full' }
 ];
 
 @NgModule({
@@ -58,6 +62,7 @@ export const routes = [
     TaskContainerComponent,
     TaskComponent,
     VisitsComponent,
+    UserComponent,
     GeoLocationsWidgetDirective,
     MarketStatsWidgetComponent,
     WidgetsComponent,
@@ -74,6 +79,7 @@ export const routes = [
     ProgressbarModule.forRoot(),
     TrendModule,
     BsDropdownModule.forRoot(),
+    NgxDataTableModule,
     CalendarModule,
     UtilsModule,
     RickshawChartModule,
@@ -85,7 +91,7 @@ export const routes = [
     MapaelLayersMapModule,
     NewWidgetModule
   ],
-  providers: [FakeWorldData, AnalyticsService]
+  providers: [FakeWorldData, AnalyticsService, UserService]
 })
 export class MainModule {
   static routes = routes;

@@ -15,7 +15,7 @@ pipeline {
         PROFILE='--profile msrfsr'
     }
     stages {
-        stage('Build Docker Container') {
+        stage('Build UI Container') {
             steps {
                 script {
                     dir('MSR.UI/MSR.UI.Answer') {
@@ -27,7 +27,7 @@ pipeline {
             }
         }
 
-        stage('Push image to AWS ECR') {
+        stage('Push UI image to AWS ECR') {
             steps {
                 script {
                     dir('MSR.UI/MSR.UI.Answer') {
@@ -38,43 +38,45 @@ pipeline {
             }
         }
         /*
-        stage('Update docker-compose file') {
+        stage('Build API Container') {
             steps {
                 script {
-                    if (env.BRANCH_NAME == "Dev") {
-                        sh "sudo ./update_image.sh ${env.BRANCH_NAME} ${env.BUILD_NUMBER} docker-compose-dev.yml"
-                        sh "cat docker-compose-dev.yml"
-                    } else if (env.BRANCH_NAME == "Stage") {
-                        sh "sudo ./update_image.sh ${env.BRANCH_NAME} ${env.BUILD_NUMBER} docker-compose-stage.yml"
-                        sh "cat docker-compose-stage.yml"
-                    } else if (env.BRANCH_NAME == "master") {
-                        sh "sudo ./update_image.sh ${env.BRANCH_NAME} ${env.BUILD_NUMBER} docker-compose-prod.yml"
-                        sh "sudo ./update_image.sh demo ${env.BUILD_NUMBER} docker-compose-demo.yml"
-                        sh "cat docker-compose-prod.yml"
-                        sh "cat docker-compose-demo.yml"
-                    }
+                    sh "sudo chmod 777 /var/run/docker.sock"
+                    sh "docker build -t msr-api ."
+                    sh "docker tag msr-api ${ACCOUNT_URL}/msr-api:${env.BRANCH_NAME}${env.BUILD_NUMBER}"
                 }
             }
         }
-        stage("Deploy to ECS") {
+
+        stage('Push API image to AWS ECR') {
             steps {
                 script {
-                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: '4b98a157-7f0c-4e31-a49b-da3754a37f02', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
-                        sh "ecs-cli configure --cluster auditflix --default-launch-type FARGATE --config-name auditflix-config --region us-east-1"
-                        sh "ecs-cli configure profile --access-key ${AWS_ACCESS_KEY_ID} --secret-key ${AWS_SECRET_ACCESS_KEY} --profile-name auditflix-profile"
-
-                        if (env.BRANCH_NAME == "Dev") {
-                            sh "ecs-cli compose --file docker-compose-dev.yml --project-name auditflix-dev service up --create-log-groups --cluster-config auditflix-config --ecs-profile auditflix-profile --target-group-arn ${TARGET_ARN_DEV} --container-name app --container-port 80 --timeout 10"
-                        } else if (env.BRANCH_NAME == "Stage") {
-                            sh "ecs-cli compose --file docker-compose-stage.yml --project-name auditflix-stage service up --create-log-groups --cluster-config auditflix-config --ecs-profile auditflix-profile --target-group-arn ${TARGET_ARN_STAGE} --container-name app --container-port 80 --timeout 10"
-                        } else if (env.BRANCH_NAME == "master") {
-                            sh "ecs-cli compose --file docker-compose-demo.yml --project-name auditflix-demo service up --create-log-groups --cluster-config auditflix-config --ecs-profile auditflix-profile --target-group-arn ${TARGET_ARN_DEMO} --container-name app --container-port 80 --timeout 10"
-                            sh "ecs-cli compose --file docker-compose-prod.yml --project-name auditflix-prod service up --create-log-groups --cluster-config auditflix-config --ecs-profile auditflix-profile --target-group-arn ${TARGET_ARN_PROD} --container-name app --container-port 80 --timeout 10"
-                        }
-                    }
+                    sh "eval \$(/home/ubuntu/.local/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
+                    sh "docker push ${ACCOUNT_URL}/msr-api:${env.BRANCH_NAME}${env.BUILD_NUMBER}"
                 }
             }
         }
         */
+
+        stage('Update docker-compose file') {
+            steps {
+                script {
+                    sh "sudo ./update_image.sh ${env.BRANCH_NAME} ${env.BUILD_NUMBER} docker-compose-dev.yml"
+                }
+            }
+        }
+
+        stage("Deploy to ECS") {
+            steps {
+                script {
+                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'msrfsr-aws-jenkins', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+                        sh "ecs-cli configure --cluster answer --default-launch-type FARGATE --config-name answer-config --region us-west-2"
+                        sh "ecs-cli configure profile --access-key ${AWS_ACCESS_KEY_ID} --secret-key ${AWS_SECRET_ACCESS_KEY} --profile-name answer-profile"
+
+                        sh "ecs-cli compose --file docker-compose-dev.yml --project-name answer-dev service up --create-log-groups --cluster-config answer-config --ecs-profile answer-profile --target-group-arn arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-dev/1b3c1539f365fe8f --container-name app --container-port 80 --timeout 10"
+                    }
+                }
+            }
+        }
     }
 }

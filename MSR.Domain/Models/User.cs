@@ -17,7 +17,7 @@ namespace MSR.Domain.Models
         public int SupervisorId { get; set; }
         public int LocationId { get; set; }
         public bool IsAnswerUser { get; set; }
-        public string CustomerId { get; set; }
+        public int CustomerId { get; set; }
         public DateTime LockoutEndDateUtc { get; set; }
         public bool LockoutEnabled { get; set; }
         public int AccessFailedCount { get; set; }
