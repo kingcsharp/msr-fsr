@@ -2,7 +2,7 @@
 
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
-    public abstract class TrackableEntity : DeletableEntity
+    public abstract class TrackableEntity : Entity
     {
         public virtual DateTime? LastUpdatedOn { get; set; }
         public virtual int? LastUpdatedBy { get; set; }

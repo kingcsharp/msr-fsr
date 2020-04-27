@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Emums;
 using MSR.Domain.Commands;
@@ -7,6 +8,7 @@ using MSR.Domain.Models;
 using MSR.Infrastructure.Extensions;
 using MSR.Infrastructure.Helpers;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
+using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +27,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
             _mapper = mapper;
         }
 
-        public async Task<User> CreateUserAsync(CreateUser command)
+        public async Task<Domain.Models.User> CreateUserAsync(CreateUser command)
         {
             var efUser = _mapper.Map<EntityFramework.Entities.User>(command);
 
@@ -57,7 +59,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
                 var data = ex.Message;
             }
 
-            return _mapper.Map<User>(efUser);
+            return _mapper.Map<Domain.Models.User>(efUser);
         }
 
         public async Task DeactivateUserAsync(DeactivateUser command)
@@ -72,7 +74,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task<User> UpdateUserAsync(UpdateUser command)
+        public async Task<Domain.Models.User> UpdateUserAsync(UpdateUser command)
         {
             var efUser = _unitOfWork.Users.FirstOrDefault(false, i => i.Id == command.Id);
 
@@ -94,10 +96,10 @@ namespace MSR.Infrastructure.Resources.Services.Users
             _unitOfWork.Users.Update(efUser);
             await _unitOfWork.SaveChangesAsync();
 
-            return _mapper.Map<User>(efUser);
+            return _mapper.Map<Domain.Models.User>(efUser);
         }
 
-        public async Task<ICollection<User>> GetUsersAsync(GetUsers command)
+        public async Task<ICollection<Domain.Models.User>> GetUsersAsync(GetUsers command)
         {
             //This needs to be refactored to remove the dependency on EntityFramework Directly.
             var users = _unitOfWork.Users.Query();
@@ -142,15 +144,89 @@ namespace MSR.Infrastructure.Resources.Services.Users
                 users = users.Where(i => i.Email == command.Email);
             }
 
-            var userList = new List<User>();
+            var userList = new List<Domain.Models.User>();
             var usersTo = users.ToList();
 
             foreach (var user in usersTo)
             {
-                userList.Add(_mapper.Map<User>(user));
+                userList.Add(_mapper.Map<Domain.Models.User>(user));
             }
 
             return userList;
+        }
+
+        public async Task<Domain.Models.User> GetLoggedInUserData(int Id)
+        {
+            var user = _unitOfWork.Users.Query().Include(u => u.Roles)
+                                                .ThenInclude(rs => rs.Role)
+                                                .ThenInclude(r => r.Menus)
+                                                .ThenInclude(m => m.MenuRolePermission)
+                                                .Include(u => u.Roles)
+                                                .ThenInclude(rs => rs.Role)
+                                                .ThenInclude(r => r.Menus)
+                                                .ThenInclude(r => r.MenuItem)
+                                                .ThenInclude(mi => mi.MenuGroup)
+                                                .FirstOrDefault(i => i.Id == Id);
+
+            if (user == null)
+                throw new DomainException($"{nameof(Domain.Models.User)} not found", DomainError.NotFound);
+
+            var domainUser = _mapper.Map<Domain.Models.User>(user);
+
+            foreach(var role in user.Roles ?? new List<UserRole>())
+            {
+                var efRole = role.Role;
+                var domainRole = new Domain.Models.Role()
+                {
+                    IsCertificationRole = efRole.IsCertificationRole,
+                    Name = efRole.Name
+                };
+
+                foreach(var menuItem in (efRole ?? new EntityFramework.Entities.Role()).Menus)
+                {
+                    if (menuItem.MenuItem == null) continue;
+                    var efMenuItem = menuItem.MenuItem;
+                    var domainMenuItem = new Domain.Models.MenuItem()
+                    {
+                        Icon = efMenuItem.Icon,
+                        Info = efMenuItem.Info,
+                        Name = efMenuItem.Name,
+                        OrderNumber = efMenuItem.OrderNumber,
+                        URL = efMenuItem.URL
+                    };
+
+                    if (efMenuItem.MenuGroup != null) {
+                        domainMenuItem.MenuGroup = new Domain.Models.MenuGroup()
+                        {
+                            Icon = efMenuItem.MenuGroup.Icon,
+                            Info = efMenuItem.MenuGroup.Info,
+                            Name = efMenuItem.MenuGroup.Name,
+                            OrderNumber = efMenuItem.MenuGroup.OrderNumber,
+                            URL = efMenuItem.MenuGroup.URL
+                        };                        
+                    }
+
+                    if(menuItem.MenuRolePermission != null)
+                    {
+                        domainMenuItem.Permissions = new MenuPermissions()
+                        {
+                            CanActivate = menuItem.MenuRolePermission.CanActivate,
+                            CanApprove = menuItem.MenuRolePermission.CanApprove,
+                            CanCreate = menuItem.MenuRolePermission.CanCreate,
+                            CanDelete = menuItem.MenuRolePermission.CanDelete,
+                            CanEdit = menuItem.MenuRolePermission.CanEdit,
+                            CanRead = menuItem.MenuRolePermission.CanRead,
+                            MenuRoleId = menuItem.MenuRolePermission.MenuRoleId
+                        };
+                    }
+
+                    domainRole.Menus.Add(domainMenuItem);
+                }
+
+                domainUser.Roles.Add(domainRole);
+            }
+
+            return domainUser;
         }
     }
 }

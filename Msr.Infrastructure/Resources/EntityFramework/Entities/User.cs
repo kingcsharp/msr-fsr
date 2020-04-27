@@ -1,10 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
-    public class User : TrackableEntity
+    [Table(nameof(User))]
+    public class User : DeletableEntity
     {
+        public User()
+        {
+            Roles = new HashSet<UserRole>();
+        }
+
         public int? OldId { get; set; }
         public string UserRoleId { get; set; }
         public string UserName { get; set; }
@@ -24,6 +31,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
         public bool LockoutEnabled { get; set; }
         public int? AccessFailedCount { get; set; }
         public int? TimeZoneId { get; set; }
+        public ICollection<UserRole> Roles { get; set; }
     }
 }
 

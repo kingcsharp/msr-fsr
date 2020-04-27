@@ -31,7 +31,7 @@ namespace MSR.Answer.API.V1.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> GetUsers([FromQuery]GetUsersRequest request)
+        public async Task<IActionResult> GetUsers([FromQuery, Required]GetUsersRequest request)
         {
             var user = User.Identity.Name;
 
@@ -42,6 +42,22 @@ namespace MSR.Answer.API.V1.Controllers
             var ret = await _dispatcher.DispatchAsync(command);
 
             return ret.ToOkObjectResponse<ICollection<User>>();
+        }
+
+        [HttpGet("LoggedInUser")]
+        public async Task<IActionResult> GetLoggedInUserData()
+        {
+            var user = User.Identity.Name;
+
+            if (user is null || !int.TryParse(user, out var userId)) return BadRequest();
+
+
+
+            var command = new GetLoggedInUserData() { UserId = userId };
+
+            var ret = await _dispatcher.DispatchAsync(command);
+
+            return ret.ToOkObjectResponse<User>();
         }
 
         [HttpPost]

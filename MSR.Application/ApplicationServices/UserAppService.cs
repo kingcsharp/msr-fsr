@@ -14,7 +14,8 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<GetUsers>,
         ICommandHandler<CreateUser>,
         ICommandHandler<DeactivateUser>,
-        ICommandHandler<UpdateUser>
+        ICommandHandler<UpdateUser>,
+        ICommandHandler<GetLoggedInUserData>
     {
         private IUserService _userService;
 
@@ -44,6 +45,12 @@ namespace MSR.Application.ApplicationServices
         public async Task<ICommandResponse> HandleAsync(UpdateUser command, CancellationToken cancellationToken = default)
         {
             var ret = await _userService.UpdateUserAsync(command);
+            return new CommandResponse<User>(ret);
+        }
+
+        public async Task<ICommandResponse> HandleAsync(GetLoggedInUserData command, CancellationToken cancellationToken = default)
+        {
+            var ret = await _userService.GetLoggedInUserData(command.UserId);
             return new CommandResponse<User>(ret);
         }
     }

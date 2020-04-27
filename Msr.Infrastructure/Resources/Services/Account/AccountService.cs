@@ -47,7 +47,7 @@ namespace MSR.Infrastructure.Resources.Services.Account
             _generalInformation = generalInformation;
         }
 
-        public async Task<User> LoginAsync(SystemLogin command)
+        public async Task<string> LoginAsync(SystemLogin command)
         {
             var user = _unitOfWork.Users.FirstOrDefault(false, i => i.UserName == command.UserName);
 
@@ -61,11 +61,7 @@ namespace MSR.Infrastructure.Resources.Services.Account
                 throw new DomainException("Username Or Password are invalid");
             }
 
-            var domainUser = _mapper.Map<User>(user);
-
-            SetJWTToken(domainUser);
-
-            return await Task.FromResult(domainUser);
+            return GetJWTToken(user);
         }
 
         public async Task ForgotPasswordAsync(ForgotPassword command)
@@ -78,9 +74,7 @@ namespace MSR.Infrastructure.Resources.Services.Account
             }
 
             var from = _emailInformation.From;
-            //var websiteUrl = _generalInformation.WebsiteURL;
-            //TODO REPLACE FOR THE CORRECT ui URL
-            var websiteUrl = "http://localhost:3000/";
+            var websiteUrl = _generalInformation.WebsiteURL;
 
             var encryptedText = EncryptionHelper.Encrypt(command.UserName).Replace('/', '*');
             var encodedText = System.Net.WebUtility.UrlEncode(encryptedText);
@@ -160,7 +154,7 @@ namespace MSR.Infrastructure.Resources.Services.Account
             return _mapper.Map<User>(user);
         }
 
-        private void SetJWTToken(User domainUser)
+        private string GetJWTToken(EntityFramework.Entities.User efUser)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_jwtData.Secret);
@@ -168,13 +162,13 @@ namespace MSR.Infrastructure.Resources.Services.Account
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, domainUser.Id.ToString())
+                    new Claim(ClaimTypes.Name, efUser.Id.ToString())
                 }),
                 Expires = DateTime.UtcNow.AddDays(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            domainUser.Token = tokenHandler.WriteToken(token);
+            return tokenHandler.WriteToken(token);
         }
     }
 }

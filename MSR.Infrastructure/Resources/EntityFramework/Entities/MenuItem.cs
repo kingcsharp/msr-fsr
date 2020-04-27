@@ -1,14 +1,13 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
 
-    [Table("MenuItem")]
-    public partial class MenuItem: TrackableEntity
+    [Table(nameof(MenuItem))]
+    public partial class MenuItem : TrackableEntity
     {
-        public int MenuGroupId { get; set; }
-
         [Required]
         [StringLength(255)]
         public string URL { get; set; }
@@ -26,6 +25,9 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public int OrderNumber { get; set; }
 
+        public int MenuGroupId { get; set; }
         public virtual MenuGroup MenuGroup { get; set; }
+
+        public ICollection<MenuRole> Roles { get; set;}
     }
 }
