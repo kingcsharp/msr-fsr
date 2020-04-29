@@ -14,7 +14,6 @@
   },
   "private": true,
   "dependencies": {
-    "@agm/core": "1.0.0-beta.6",
     "@angular/animations": "9.1.2",
     "@angular/common": "9.1.2",
     "@angular/compiler": "9.1.2",
@@ -27,7 +26,6 @@
     "@auth0/angular-jwt": "^3.0.0",
     "@ngx-loading-bar/core": "4.2.0",
     "@ngx-loading-bar/router": "4.2.0",
-    "@swimlane/ngx-datatable": "15.0.2",
     "angular-9-datatable": "^0.1.1",
     "angular2-text-mask": "9.0.0",
     "animate.css": "3.5.2",
