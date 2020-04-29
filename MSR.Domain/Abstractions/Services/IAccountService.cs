@@ -6,7 +6,7 @@ namespace MSR.Domain.Abstractions.Services
 {
     public interface IAccountService
     {
-        Task<User> LoginAsync(SystemLogin command);
+        Task<string> LoginAsync(SystemLogin command);
         Task ForgotPasswordAsync(ForgotPassword command);
         Task ForgotUserNameAsync(ForgotUserName command);
         Task ResetPasswordAsync(ResetPassword command);

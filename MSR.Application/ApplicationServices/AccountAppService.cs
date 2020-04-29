@@ -20,12 +20,10 @@ namespace MSR.Application.ApplicationServices
             _accountService = accountService;
         }
 
-        
-
         public async Task<ICommandResponse> HandleAsync(SystemLogin command, CancellationToken cancellationToken = default)
         {
                 var ret = await _accountService.LoginAsync(command);
-                return new CommandResponse<User>(ret);
+                return new CommandResponse<string>(ret);
         }
 
         public async Task<ICommandResponse> HandleAsync(ForgotPassword command, CancellationToken cancellationToken = default)

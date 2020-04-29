@@ -1,0 +1,23 @@
+version: 1
+task_definition:
+  task_execution_role: ecsTaskExecutionRole
+  ecs_network_mode: awsvpc
+  task_size:
+    mem_limit: 1GB
+    cpu_limit: 512
+  container_definitions:
+    - name: application
+    - name: app
+
+run_params:
+  network_configuration:
+    awsvpc_configuration:
+      subnets:
+        - "subnet-63945615"
+      security_groups:
+        - "sg-0fb3803144f799766"
+      assign_public_ip: ENABLED
+  service_discovery:
+    container_name: app
+    container_port: 80
+    target_group:

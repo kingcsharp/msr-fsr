@@ -34,7 +34,7 @@ namespace MSR.Answer.API.V1.Controllers
 
             var result = await _dispatcher.DispatchAsync(command);
 
-            return result.ToOkObjectResponse<User>();
+            return result.ToOkObjectResponse<string>();
         }
 
         [HttpPost("forgotpassword")]

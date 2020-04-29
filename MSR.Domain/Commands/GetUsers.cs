@@ -11,7 +11,7 @@ namespace MSR.Domain.Commands
         public string LastName { get; set; }
         public string UserName { get; set; }
         public string Title { get; set; }
-        public string Supervisor { get; set; }
+        public int? Supervisor { get; set; }
         public string PrimaryPhone { get; set; }
         public string Email { get; set; }
     }

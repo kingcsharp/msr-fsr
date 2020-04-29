@@ -1,9 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace MSR.Domain.Models
 {
     public class User
     {
+        public User()
+        {
+            Roles = new HashSet<Role>();
+        }
+
         public int Id { get; set; }
         public bool IsActive { get; set; }
         public string UserRoleId { get; set; }
@@ -26,6 +32,6 @@ namespace MSR.Domain.Models
         public int? LastUpdatedBy { get; set; }
         public DateTime CreatedOn { get; set; }
         public int? CreatedBy { get; set; }
-        public string Token { get; set; }
+        public ICollection<Role> Roles { get; set; }
     }
 }

@@ -8,5 +8,7 @@
         public string Icon { get; set; }
         public int OrderNumber { get; set; }
         public MenuGroup MenuGroup { get; set; }
+        public MenuPermissions Permissions { get; set; }
+
     }
 }
