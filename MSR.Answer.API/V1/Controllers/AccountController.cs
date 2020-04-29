@@ -36,7 +36,7 @@ namespace MSR.Answer.API.V1.Controllers
 
             return result.ToOkObjectResponse<string>();
         }
-
+                                                                                                                                                                                                                                                                                                                                                                                                                        
         [HttpPost("forgotpassword")]
         [AllowAnonymous]
         public async Task<IActionResult> ForgotPassword([FromBody, Required]ForgotPasswordRequest request)
