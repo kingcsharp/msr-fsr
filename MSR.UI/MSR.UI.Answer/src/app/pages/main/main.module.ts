@@ -43,6 +43,7 @@ import { AnalyticsService } from "./analytics/analytics.service";
 import { NewWidgetModule } from "../../layout/new-widget/widget.module";
 import { UserComponent } from './user/user.component';
 // import { NgxDataTableModule } from 'angular-9-datatable';
+import { TableModule } from 'primeng/table';
 import { UserService } from './user/user.service';
 
 export const routes = [
@@ -80,6 +81,7 @@ export const routes = [
     TrendModule,
     BsDropdownModule.forRoot(),
     // NgxDataTableModule,
+    TableModule,
     CalendarModule,
     UtilsModule,
     RickshawChartModule,
