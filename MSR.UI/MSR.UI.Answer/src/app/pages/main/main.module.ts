@@ -42,7 +42,7 @@ import { FakeWorldData } from './widgets/years-map-widget/fake-world-data.servic
 import { AnalyticsService } from "./analytics/analytics.service";
 import { NewWidgetModule } from "../../layout/new-widget/widget.module";
 import { UserComponent } from './user/user.component';
-import { NgxDataTableModule } from 'angular-9-datatable';
+// import { NgxDataTableModule } from 'angular-9-datatable';
 import { UserService } from './user/user.service';
 
 export const routes = [
@@ -79,7 +79,7 @@ export const routes = [
     ProgressbarModule.forRoot(),
     TrendModule,
     BsDropdownModule.forRoot(),
-    NgxDataTableModule,
+    // NgxDataTableModule,
     CalendarModule,
     UtilsModule,
     RickshawChartModule,

@@ -26,7 +26,6 @@
     "@auth0/angular-jwt": "^3.0.0",
     "@ngx-loading-bar/core": "4.2.0",
     "@ngx-loading-bar/router": "4.2.0",
-    "angular-9-datatable": "^0.1.1",
     "angular2-text-mask": "9.0.0",
     "animate.css": "3.5.2",
     "awesome-bootstrap-checkbox": "1.0.1",
