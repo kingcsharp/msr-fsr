@@ -12,7 +12,7 @@ namespace MSR.Answer.API.V1.Extentions
         public static IActionResult ToOkObjectResponse<TResult>(this ICommandResponse commandResponse)
         {
             var result = ValidateCommandResponse(commandResponse);
-            return result ?? new OkObjectResult(((ICommandResponse<TResult>)commandResponse).Data);
+            return result ?? new OkObjectResult(new AuditActionResult<TResult>() { Object = ((ICommandResponse<TResult>)commandResponse).Data });
         }
 
         public static IActionResult ToNoContentResponse(this ICommandResponse commandResponse)
@@ -24,7 +24,7 @@ namespace MSR.Answer.API.V1.Extentions
         public static IActionResult ToCreatedResponse<TResult>(this ICommandResponse commandResponse)
         {
             var result = ValidateCommandResponse(commandResponse);
-            return result ?? new CreatedResult("", ((ICommandResponse<TResult>)commandResponse).Data);
+            return result ?? new CreatedResult("", new AuditActionResult<TResult>() { Object = ((ICommandResponse<TResult>)commandResponse).Data });
         }
 
         private static IActionResult ValidateCommandResponse(ICommandResponse commandResponse)
@@ -49,10 +49,7 @@ namespace MSR.Answer.API.V1.Extentions
 
         private static IActionResult InternalServerError(string message = null)
         {
-            return new ObjectResult(new
-            {
-                ErrorMessage = !string.IsNullOrWhiteSpace(message) ? message : "API Ran Into an error.  Kick it and try again."
-            })
+            return new ObjectResult(new AuditActionResult(!string.IsNullOrWhiteSpace(message) ? message : "API Ran Into an error.  Kick it and try again."))
             { StatusCode = (int)HttpStatusCode.InternalServerError };
         }
 
