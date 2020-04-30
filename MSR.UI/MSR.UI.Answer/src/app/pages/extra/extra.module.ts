@@ -21,8 +21,6 @@ import { SearchResultsComponent } from './search-results/search-results.componen
 import { TimeLineComponent } from './time-line/time-line.component';
 import { GalleryComponent } from './gallery/gallery.component';
 
-import { AgmCoreModule } from '@agm/core';
-
 export const routes = [
   {path: '', redirectTo: 'calendar', pathMatch: 'full'},
   {path: 'calendar', component: CalendarComponent},
@@ -49,10 +47,7 @@ export const routes = [
     TooltipModule.forRoot(),
     ModalModule,
     ButtonsModule.forRoot(),
-    BsDropdownModule.forRoot(),
-    AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyDe_oVpi9eRSN99G4o6TwVjJbFBNr58NxE'
-    })
+    BsDropdownModule.forRoot()
   ],
   schemas:  [ CUSTOM_ELEMENTS_SCHEMA ]
 })

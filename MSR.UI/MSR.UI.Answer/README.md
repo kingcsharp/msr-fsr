@@ -1,5 +1,5 @@
 # Light Blue Angular Dashboard - Ngx Admin Template (4.3.0 Full version) with Angular 8.0 Final Release support
-
+Demo: https://flatlogic.com/templates/light-blue-angular/demo
 ##Install yarn
 ##https://classic.yarnpkg.com/en/docs/install#windows-stable
 
@@ -32,3 +32,6 @@ Run `yarn build` to build the project. The build artifacts will be stored in the
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+
+Grid:
+https://www.primefaces.org/primeng/showcase/#/filterutils

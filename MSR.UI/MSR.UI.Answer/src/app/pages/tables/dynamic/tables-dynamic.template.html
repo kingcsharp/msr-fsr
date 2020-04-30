@@ -28,54 +28,6 @@
         </div>
       </div>
       <div>
-        <ngx-datatable class="table table-striped table-hover"
-                       [rows]="people"
-                       [columnMode]="'force'"
-                       [headerHeight]="50"
-                       [footerHeight]="50"
-                       [rowHeight]="'auto'"
-                       [limit]="8">
-          <ngx-datatable-column name="ID">
-            <ng-template let-value="value" ngx-datatable-cell-template>
-              {{value}}
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="Name">
-            <ng-template let-value="value" ngx-datatable-cell-template>
-              <span class="fw-semi-bold">{{value}}</span>
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="Info">
-            <ng-template let-value="value" ngx-datatable-cell-template>
-              <small>
-                <span class="fw-semi-bold">Type:</span>
-                &nbsp; {{value.type}}
-              </small>
-              <br>
-              <small>
-                <span class="fw-semi-bold">Dimensions:</span>
-                &nbsp; {{value.dimensions}}
-              </small>
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="Description">
-            <ng-template let-value="value" ngx-datatable-cell-template>
-              <a href="#">{{value}}</a>
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="Date">
-            <ng-template let-value="value" ngx-datatable-cell-template>
-              {{value}}
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="Status">
-            <ng-template let-value="value" ngx-datatable-cell-template>
-              <div class="bg-gray-lighter progress progress-sm">
-                <div class="progress-bar progress-sm bg-{{value.type}}" [ngStyle]="{ 'width': value.progress}"></div>
-              </div>
-            </ng-template>
-          </ngx-datatable-column>
-        </ngx-datatable>
       </div>
     </div>
   </div>

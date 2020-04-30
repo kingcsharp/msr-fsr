@@ -9,25 +9,21 @@ import { AlertModule } from 'ngx-bootstrap/alert';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 
-import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { WidgetModule } from '../../layout/widget/widget.module';
 import { UtilsModule } from '../../layout/utils/utils.module';
 import { JqSparklineModule } from '../../components/sparkline/sparkline.module';
 import { TablesBasicComponent } from './basic/tables-basic.component';
-import { TablesDynamicComponent } from './dynamic/tables-dynamic.component';
 import { SearchPipe } from './dynamic/pipes/search-pipe';
 
 export const routes = [
   {path: '', redirectTo: 'basic', pathMatch: 'full'},
-  {path: 'basic', component: TablesBasicComponent},
-  {path: 'dynamic', component: TablesDynamicComponent},
+  {path: 'basic', component: TablesBasicComponent}
 ];
 
 @NgModule({
   declarations: [
     // Components / Directives/ Pipes
     TablesBasicComponent,
-    TablesDynamicComponent,
     SearchPipe
   ],
   imports: [

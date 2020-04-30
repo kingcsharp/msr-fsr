@@ -1,6 +1,7 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AppConfig } from '../../../app.config';
+import { User } from '../../../models/lib/user';
 
 
 @Injectable()
@@ -17,9 +18,9 @@ export class UserService {
 
     async getUsers() {
         this.isReceiving = true;
-        return this.http.get('/Users').toPromise().then((res: any) => {
+        return this.http.get(User.PATH).toPromise().then((res: any) => {
             this.isReceiving = false;
-            return res;
+            return res.returnedObject.map(data => new User(data));
         }, err => {
             this.isReceiving = false;
             console.log(err);

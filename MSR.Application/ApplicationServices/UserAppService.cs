@@ -17,7 +17,7 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<UpdateUser>,
         ICommandHandler<GetLoggedInUserData>
     {
-        private IUserService _userService;
+        private readonly IUserService _userService;
 
         public UserAppService(IUserService userService)
         {

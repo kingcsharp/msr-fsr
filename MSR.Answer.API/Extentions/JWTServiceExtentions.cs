@@ -7,6 +7,7 @@ using MSR.Domain.Models.Config;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using MSR.Domain.Helpers;
 
 namespace MSR.Answer.API.Extentions
 {
@@ -36,6 +37,9 @@ namespace MSR.Answer.API.Extentions
                             // return unauthorized if user no longer exists
                             context.Fail("Unauthorized");
                         }
+
+                        DelegateHandler.GetCurrentUserId = () => accountId;
+
                         return Task.CompletedTask;
                     }
                 };

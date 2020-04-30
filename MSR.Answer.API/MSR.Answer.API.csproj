@@ -25,5 +25,9 @@
     <ProjectReference Include="..\MSR.Domain\MSR.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Infrastructure\" />
+  </ItemGroup>
+
 
 </Project>
