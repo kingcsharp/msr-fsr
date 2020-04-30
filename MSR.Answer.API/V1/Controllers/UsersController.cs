@@ -18,7 +18,7 @@ namespace MSR.Answer.API.V1.Controllers
     [VersionedRoute("[controller]")]
     [ApiController]
     [Authorize]
-    public class UsersController : ControllerBase
+    public class UsersController : BaseApiController
     {
         private readonly ILogger _logger;
         private readonly ICommandDispatcher _dispatcher;
@@ -47,13 +47,12 @@ namespace MSR.Answer.API.V1.Controllers
         [HttpGet("LoggedInUser")]
         public async Task<IActionResult> GetLoggedInUserData()
         {
-            var user = User.Identity.Name;
+            if (UserId == 0)
+            {
+                return BadRequest();
+            }
 
-            if (user is null || !int.TryParse(user, out var userId)) return BadRequest();
-
-
-
-            var command = new GetLoggedInUserData() { UserId = userId };
+            var command = new GetLoggedInUserData() { UserId = UserId };
 
             var ret = await _dispatcher.DispatchAsync(command);
 

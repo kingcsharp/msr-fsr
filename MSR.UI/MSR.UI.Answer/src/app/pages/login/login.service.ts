@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Injectable } from '@angular/core';
+import { CommonService } from '../../services/common';
 
 const jwt = new JwtHelperService();
 
@@ -16,6 +17,7 @@ export class LoginService {
     appConfig: AppConfig,
     private http: HttpClient,
     private router: Router,
+    private commonService: CommonService,
   ) {
     this.config = appConfig.getConfig();
   }
@@ -38,7 +40,6 @@ export class LoginService {
 
   isAuthenticated() {
     const token = localStorage.getItem('token');
-
     // We check if app runs with backend mode
     if (!this.config.isBackend && token) {
       return true;
@@ -51,15 +52,15 @@ export class LoginService {
     return date < data.exp;
   }
 
-  loginUser(creds) {
+  async loginUser(creds) {
     // We check if app runs with backend mode
     if (!this.config.isBackend) {
-      this.receiveToken('token');
+      await this.receiveToken('token');
     } else {
       this.requestLogin();
       if (creds.email.length > 0 && creds.password.length > 0) {
-        this.http.post('/Account/login', { userName: creds.email, password: creds.password }).subscribe((res: any) => {
-          this.receiveToken(res);
+        this.http.post('/Account/login', { userName: creds.email, password: creds.password }).subscribe(async (res: any) => {
+          await this.receiveToken(res.object);
         }, err => {
           this.loginError(err.error.errorMessages[0].message);
         });
@@ -80,7 +81,7 @@ export class LoginService {
     });
   }
 
-  async forgotUserName(email){
+  async forgotUserName(email) {
     return this.http.post('/Account/forgotusername', { email: email }).toPromise().then((res: any) => {
       this.loginError("An email has been sent with your information.");
       return true;
@@ -91,20 +92,21 @@ export class LoginService {
   }
 
 
-  receiveToken(token) {
+  async receiveToken(token) {
     let user: any = {};
     // We check if app runs with backend mode
     if (this.config.isBackend) {
-      localStorage.setItem('token', token.token);
+      localStorage.setItem('token', token);
       delete token.token;
-      localStorage.setItem('user', JSON.stringify(token));
     } else {
       user = {
         email: this.config.auth.email
       };
       localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user));
     }
+    var userData = await this.commonService.getLoggedUser();
+    Object.assign(user, userData);
+    localStorage.setItem('user', JSON.stringify(user));
 
     this.receiveLogin();
   }
@@ -124,7 +126,7 @@ export class LoginService {
   receiveLogin() {
     this.isFetching = false;
     this.errorMessage = '';
-    this.router.navigate(['/app/main/visits']);
+    this.router.navigate(['/app/main/user']);
   }
 
   requestLogin() {

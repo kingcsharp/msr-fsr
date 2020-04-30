@@ -20,7 +20,7 @@ export class UserService {
         this.isReceiving = true;
         return this.http.get(User.PATH).toPromise().then((res: any) => {
             this.isReceiving = false;
-            return res.map(data => new User(data));
+            return res.returnedObject.map(data => new User(data));
         }, err => {
             this.isReceiving = false;
             console.log(err);

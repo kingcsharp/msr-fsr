@@ -15,7 +15,7 @@ namespace MSR.Answer.API.V1.Controllers
     [VersionedRoute("[controller]")]
     [ApiController]
     [Authorize]
-    public class AccountController : ControllerBase
+    public class AccountController : BaseApiController
     {
         private readonly ILogger _logger;
         private readonly ICommandDispatcher _dispatcher;

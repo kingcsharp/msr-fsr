@@ -15,6 +15,7 @@ import { ResetpasswordService } from './pages/resetpassword/resetpassword.servic
 import { AppGuard } from './app.guard';
 import { AppInterceptor } from './app.interceptor';
 import { AppConfig } from './app.config';
+import { CommonService } from './services/common';
 import * as $ from 'jquery';
 
 const APP_PROVIDERS = [
@@ -22,7 +23,8 @@ const APP_PROVIDERS = [
   LoginService,
   AppGuard,
   AppConfig,
-  ResetpasswordService
+  ResetpasswordService,
+  CommonService
 ];
 
 @NgModule({

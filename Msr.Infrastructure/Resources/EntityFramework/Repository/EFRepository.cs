@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using MSR.Domain.Helpers;
 
 namespace MSR.Infrastructure.Resources.EntityFramework.Repository
 {
@@ -192,14 +193,13 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Repository
             if (entity != null)
             {
                 //TODO: define a way to get current userId from here.
-                //TrackableEntity trackableEntity = entity as TrackableEntity;
-                //if (trackableEntity == null)
-                //    throw new TechnicalException("To be able to validate the ownership of the record, " +
-                //                                 "the entity must implement the ITrackableEntity interface");
+                TrackableEntity trackableEntity = entity as TrackableEntity;
+                if (trackableEntity == null)
+                    throw new Exception("To be able to validate the ownership of the record, " +
+                                        "the entity must implement the ITrackableEntity interface");
 
-                //if (trackableEntity.CreatedBy != IocContainer.GetCurrentUserId() 
-                //    && trackableEntity.CreatedBy != IocContainer.GetCurrentPracticeMemberGroupId())
-                //    throw new AuthorizationException("You are not the owner of this record");
+                if (trackableEntity.CreatedBy != DelegateHandler.GetCurrentUserId())
+                    throw new Exception("You are not the owner of this record");
             }
         }
 
