@@ -12,7 +12,6 @@
     </ng-template>
     <ng-template pTemplate="header">
       <tr>
-        <th></th>
         <th pSortableColumn="id">Id <p-sortIcon field="id"></p-sortIcon>
         </th>
         <th pSortableColumn="firstName">First Name <p-sortIcon field="firstName"></p-sortIcon>
@@ -26,9 +25,6 @@
         <th></th>
       </tr>
       <tr>
-        <th>
-          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-        </th>
         <th>
           <input pInputText type="text" (input)="dt.filter($event.target.value, 'id', 'contains')"
             placeholder="Search by Id" class="ui-column-filter">
@@ -54,9 +50,6 @@
     </ng-template>
     <ng-template pTemplate="body" let-user>
       <tr class="ui-selectable-row">
-        <td>
-          <p-tableCheckbox [value]="user"></p-tableCheckbox>
-        </td>
         <td>
           <span class="ui-column-title">Id</span>
           {{user.id}}
