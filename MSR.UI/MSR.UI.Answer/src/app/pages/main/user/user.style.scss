@@ -5,22 +5,23 @@
  */
 
 .mapTooltip {
-  position : fixed;
-  padding : 2px;
+  position: fixed;
+  padding: 2px;
   z-index: 1000;
   max-width: 200px;
   display: none;
-  background-color : $widget-bg-color;
+  background-color: $widget-bg-color;
   border: 1px solid #ccc;
   border-radius: $border-radius;
   font-size: $font-size-sm;
   color: $text-color;
 }
 
-.zoomIn, .zoomOut {
+.zoomIn,
+.zoomOut {
   position: absolute;
   bottom: 10px;
-  left : 10px;
+  left: 10px;
   width: 20px;
   height: 20px;
 
@@ -39,16 +40,15 @@
 
 .zoomOut {
   left: 36px;
-
 }
 
-.mapael{
+.mapael {
   position: relative;
   margin: (-$widget-padding-vertical) (-$widget-padding-horizontal) 0;
   .map {
-    position:relative;
+    position: relative;
   }
-  .stats{
+  .stats {
     position: absolute;
     z-index: 1;
     top: 0;
@@ -61,21 +61,387 @@
 /* Part:Progress Stats */
 /***********************/
 
-.progress-stats{
-  .name{
+.progress-stats {
+  .name {
     margin-bottom: 0.25rem;
   }
-  .description{
+  .description {
     margin-bottom: 0.25rem;
   }
-  .status{
+  .status {
     margin-top: 1.25rem;
   }
 
   @include media-breakpoint-down(lg) {
-    .description + .progress{
+    .description + .progress {
       margin-bottom: 0;
     }
   }
 }
+.ui-paginator .ui-paginator-icon {
+  color: #fff;
+}
+body .ui-paginator .ui-paginator-pages .ui-paginator-page {
+  color: #fff;
+}
+body .ui-paginator .ui-paginator-pages .ui-paginator-page:not(.ui-state-active):hover,
+body .ui-paginator .ui-paginator-first:not(.ui-state-disabled):not(.ui-state-active):hover,
+body .ui-paginator .ui-paginator-prev:not(.ui-state-disabled):not(.ui-state-active):hover,
+body .ui-paginator .ui-paginator-next:not(.ui-state-disabled):not(.ui-state-active):hover,
+body .ui-paginator .ui-paginator-last:not(.ui-state-disabled):not(.ui-state-active):hover {
+  background-color: #566371;
+  color: #ffffff;
+}
 
+body .ui-table.ui-table-hoverable-rows .ui-table-tbody > tr.ui-selectable-row:not(.ui-state-highlight):hover {
+  background-color: #8ca1b7;
+  color: #ffffff;
+}
+
+body .ui-paginator .ui-paginator-pages .ui-paginator-page:focus,
+body .ui-paginator .ui-paginator-first:focus,
+body .ui-paginator .ui-paginator-prev:focus,
+body .ui-paginator .ui-paginator-next:focus,
+body .ui-paginator .ui-paginator-last:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: inset 0 0 0 0.2em #465468;
+}
+
+body .ui-paginator {
+  background: none;
+  border: none;
+  .ui-paginator-pages .ui-paginator-page.ui-state-active {
+    background-color: #313c48;
+    color: #ffffff;
+    font-weight: bold;
+  }
+  .ui-paginator-current {
+    color: #ffffff;
+    height: 2.286em;
+    min-width: 2.286em;
+    line-height: 2.286em;
+  }
+
+  .ui-dropdown .ui-dropdown-trigger {
+    color: #ffffff;
+  }
+  .ui-dropdown .ui-dropdown-label {
+    color: #313c48;
+  }
+}
+
+body .ui-dropdown {
+  background: none;
+  border: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+body .ui-dropdown .ui-dropdown-trigger {
+  background-color: #313c48;
+  color: #ffffff;
+}
+
+.ui-table-customers .ui-table-globalfilter-container input {
+  width: 200px;
+  padding-left: 4px;
+  border-radius: 3px;
+  border: none;
+  color: #f8f8f8;
+  background-color: #222d3c;
+  &::placeholder {
+    /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: #f8f8f8;
+    opacity: 1; /* Firefox */
+  }
+
+  &:-ms-input-placeholder {
+    /* Internet Explorer 10-11 */
+    color: #f8f8f8;
+  }
+
+  &::-ms-input-placeholder {
+    /* Microsoft Edge */
+    color: #f8f8f8;
+  }
+}
+
+body .ui-table {
+  .ui-table-caption,
+  .ui-table-summary {
+    background: none;
+    color: #fff;
+    border: none;
+  }
+  .ui-table-thead > tr > th {
+    padding: 0.571em 0.857em;
+    border: none;
+    font-weight: 700;
+    color: #ffffff;
+    background: none;
+  }
+  .ui-sortable-column .ui-sortable-column-icon {
+    color: #fff;
+  }
+  .ui-sortable-column:not(.ui-state-highlight):hover {
+    background-color: #313c48;
+    color: #ffffff;
+  }
+  .ui-sortable-column:not(.ui-state-highlight):hover .ui-sortable-column-icon {
+    color: #ffffff;
+  }
+
+  .ui-sortable-column.ui-state-highlight {
+    background-color: #272f3a;
+    color: #ffffff;
+  }
+  .ui-sortable-column:focus {
+    outline: 0 none;
+    outline-offset: 0;
+    box-shadow: inset 0 0 0 0.2em #465468;
+  }
+  input {
+    border: none;
+    color: #f8f8f8;
+    background-color: #222d3c;
+    border-radius: 3px;
+  }
+
+  .ui-table-tbody > tr {
+    // background: none;
+    background-color: #222d3c;
+    color: #fff;
+    transition: background-color 0.2s, box-shadow 0.2s;
+  }
+  .ui-table-tbody > tr > td {
+    background: none;
+    border: none;
+  }
+
+  .ui-table-tbody > tr:nth-child(even) {
+    background: none;
+  }
+
+  .ui-table-thead .ng-star-inserted:last-child {
+    th {
+      // padding-left: 0;
+      // padding-right: 0;
+      input {
+        border: none;
+        color: #f8f8f8;
+        background-color: #222d3c;
+        width: 100%;
+        padding: 4px;
+        border-radius: 3px;
+
+        &::placeholder {
+          /* Chrome, Firefox, Opera, Safari 10.1+ */
+          color: #f8f8f8;
+          opacity: 1; /* Firefox */
+        }
+
+        &:-ms-input-placeholder {
+          /* Internet Explorer 10-11 */
+          color: #f8f8f8;
+        }
+
+        &::-ms-input-placeholder {
+          /* Microsoft Edge */
+          color: #f8f8f8;
+        }
+      }
+    }
+  }
+}
+
+.ui-table-customers {
+  // box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12);
+
+  .customer-badge {
+    border-radius: 2px;
+    padding: 0.25em 0.5em;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.3px;
+
+    &.status-qualified {
+      background-color: #c8e6c9;
+      color: #256029;
+    }
+
+    &.status-unqualified {
+      background-color: #ffcdd2;
+      color: #c63737;
+    }
+
+    &.status-negotiation {
+      background-color: #feedaf;
+      color: #8a5340;
+    }
+
+    &.status-new {
+      background-color: #b3e5fc;
+      color: #23547b;
+    }
+
+    &.status-renewal {
+      background-color: #eccfff;
+      color: #694382;
+    }
+
+    &.status-proposal {
+      background-color: #ffd8b2;
+      color: #805b36;
+    }
+  }
+
+  .flag {
+    vertical-align: middle;
+    width: 30px;
+    height: 20px;
+  }
+
+  .ui-multiselect-representative-option {
+    display: inline-block;
+    vertical-align: middle;
+
+    img {
+      vertical-align: middle;
+      width: 24px;
+    }
+
+    span {
+      margin-top: 0.125em;
+      vertical-align: middle;
+      margin-left: 0.5em;
+    }
+  }
+
+  .ui-paginator {
+    .ui-dropdown {
+      float: left;
+    }
+
+    .ui-paginator-current {
+      float: right;
+    }
+  }
+
+  .ui-progressbar {
+    height: 8px;
+    background-color: #d8dadc;
+
+    .ui-progressbar-value {
+      background-color: #00acad;
+    }
+  }
+
+  .ui-column-filter {
+    display: block;
+
+    input {
+      width: 100%;
+    }
+  }
+
+  .ui-table-globalfilter-container {
+    float: right;
+
+    input {
+      width: 200px;
+    }
+  }
+
+  .ui-datepicker {
+    min-width: 25em;
+
+    td {
+      font-weight: 400;
+    }
+  }
+
+  .ui-table-caption {
+    border: 0 none;
+    padding: 12px;
+    text-align: left;
+    font-size: 20px;
+  }
+
+  .ui-paginator {
+    border: 0 none;
+    padding: 1em;
+  }
+
+  .ui-table-thead > tr > th {
+    border: 0 none;
+    text-align: left;
+
+    &.ui-filter-column {
+      border-top: 1px solid #c8c8c8;
+    }
+
+    &:first-child {
+      width: 5em;
+      text-align: center;
+    }
+
+    &:last-child {
+      width: 8em;
+      text-align: center;
+    }
+  }
+
+  .ui-table-tbody > tr > td {
+    border: 0 none;
+    cursor: auto;
+
+    &:first-child {
+      width: 3em;
+      text-align: center;
+    }
+
+    &:last-child {
+      width: 8em;
+      text-align: center;
+    }
+  }
+
+  .ui-dropdown-label:not(.ui-placeholder) {
+    text-transform: uppercase;
+  }
+
+  .ui-table-tbody > tr > td .ui-column-title {
+    display: none;
+  }
+}
+
+/* Responsive */
+@media screen and (max-width: 64em) {
+  :host ::ng-deep .ui-table {
+    &.ui-table-customers {
+      .ui-table-thead > tr > th,
+      .ui-table-tfoot > tr > td {
+        display: none !important;
+      }
+
+      .ui-table-tbody > tr > td {
+        text-align: left;
+        display: block;
+        border: 0 none !important;
+        width: 100% !important;
+        float: left;
+        clear: left;
+        border: 0 none;
+
+        .ui-column-title {
+          padding: 0.4em;
+          min-width: 30%;
+          display: inline-block;
+          margin: -0.4em 1em -0.4em -0.4em;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+}

@@ -1,46 +1,96 @@
 <h1 class="page-title">Users <small><small>USERS ONE</small></small></h1>
 <widget [fetchingData]="userService.isReceiving">
-  <!-- <table class="table table-striped"  [mfData]="data" #mf="mfDataTable" [mfRowsOnPage]="5">
-    <thead>
+  <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
+    [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]" [loading]="loading" [paginator]="true"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [filterDelay]="0"
+    [globalFilterFields]="['id','firstName','lastName','userName','email']">
+    <ng-template pTemplate="caption">
+      List of Users
+      <div class="ui-table-globalfilter-container">
+        <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Global Search" />
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header">
       <tr>
-        <th style="width: 5%">
-          <mfDefaultSorter by="id">Id</mfDefaultSorter>
+        <th></th>
+        <th pSortableColumn="id">Id <p-sortIcon field="id"></p-sortIcon>
         </th>
-        <th style="width: 20%">
-          <mfDefaultSorter by="firstName">First Name</mfDefaultSorter>
+        <th pSortableColumn="firstName">First Name <p-sortIcon field="firstName"></p-sortIcon>
         </th>
-        <th style="width: 20%">
-          <mfDefaultSorter by="lastName">Last Name</mfDefaultSorter>
+        <th pSortableColumn="lastName">Last Name <p-sortIcon field="lastName"></p-sortIcon>
         </th>
-        <th style="width: 20%">
-          <mfDefaultSorter by="userName">Username</mfDefaultSorter>
+        <th pSortableColumn="userName">Username <p-sortIcon field="userName"></p-sortIcon>
         </th>
-        <th style="width: 20%">
-          <mfDefaultSorter by="email">Email</mfDefaultSorter>
+        <th pSortableColumn="email">Email <p-sortIcon field="email"></p-sortIcon>
         </th>
-        <th style="width: 15%">
-          <mfDefaultSorter by="email">Actions</mfDefaultSorter>
-        </th>
+        <th></th>
       </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let item of mf.data">
-        <td>{{item.id}}</td>
-        <td>{{item.firstName}}</td>
-        <td>{{item.lastName}}</td>
-        <td>{{item.userName}}</td>
-        <td>{{item.email}}</td>
-        <td></td>
-         <td>{{item.email}}</td>
-        <td>{{item.city | uppercase}}</td> 
-      </tr>
-    </tbody>
-    <tfoot>
       <tr>
-        <td colspan="4">
-          <mfBootstrapPaginator [rowsOnPageSet]="[5,10,25]"></mfBootstrapPaginator>
+        <th>
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        </th>
+        <th>
+          <input pInputText type="text" (input)="dt.filter($event.target.value, 'id', 'contains')"
+            placeholder="Search by Id" class="ui-column-filter">
+        </th>
+        <th>
+          <input pInputText type="text" (input)="dt.filter($event.target.value, 'firstName', 'contains')"
+            placeholder="Search by First Name" class="ui-column-filter">
+        </th>
+        <th>
+          <input pInputText type="text" (input)="dt.filter($event.target.value, 'lastName', 'contains')"
+            placeholder="Search by Last Name" class="ui-column-filter">
+        </th>
+        <th>
+          <input pInputText type="text" (input)="dt.filter($event.target.value, 'username', 'contains')"
+            placeholder="Search by Username" class="ui-column-filter">
+        </th>
+        <th>
+          <input pInputText type="text" (input)="dt.filter($event.target.value, 'email', 'contains')"
+            placeholder="Search by Email" class="ui-column-filter">
+        </th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-user>
+      <tr class="ui-selectable-row">
+        <td>
+          <p-tableCheckbox [value]="user"></p-tableCheckbox>
+        </td>
+        <td>
+          <span class="ui-column-title">Id</span>
+          {{user.id}}
+        </td>
+        <td>
+          <span class="ui-column-title">First Name</span>
+          <span style="vertical-align: middle; margin-left: .5em">{{user.firstName}}</span>
+        </td>
+        <td>
+          <span class="ui-column-title">Last Name</span>
+          <span style="vertical-align: middle; margin-left: .5em">{{user.firstName}}</span>
+        </td>
+        <td>
+          <span class="ui-column-title">Username</span>
+          {{user.userName}}
+        </td>
+        <td>
+          <span class="ui-column-title">Email</span>
+          {{user.email}}
+        </td>
+        <td>
+          <button pButton type="button" class="ui-button-secondary" icon="pi pi-cog"></button>
         </td>
       </tr>
-    </tfoot>
-  </table> -->
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="8" style="text-align:left">No users found.</td>
+      </tr>
+    </ng-template>
+  </p-table>
 </widget>
+<div>
+  <!-- <button (click)="largeModal.show()" class="btn btn-outline-inverse width-100 mb-xs" role="button">
+    Add
+  </button> -->
+</div>
