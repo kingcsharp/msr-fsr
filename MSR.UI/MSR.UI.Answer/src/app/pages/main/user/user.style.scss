@@ -102,7 +102,8 @@ body .ui-paginator .ui-paginator-pages .ui-paginator-page:focus,
 body .ui-paginator .ui-paginator-first:focus,
 body .ui-paginator .ui-paginator-prev:focus,
 body .ui-paginator .ui-paginator-next:focus,
-body .ui-paginator .ui-paginator-last:focus {
+body .ui-paginator .ui-paginator-last:focus,
+body .ui-table .ui-table-thead .ng-star-inserted:last-child th input {
   outline: 0 none;
   outline-offset: 0;
   box-shadow: inset 0 0 0 0.2em #465468;
