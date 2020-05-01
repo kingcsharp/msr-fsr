@@ -21,10 +21,10 @@ import { ValidationComponent } from './validation/validation.component';
 import { WizardComponent } from './wizard/wizard.component';
 
 export const routes = [
-  {path: '', redirectTo: 'elements', pathMatch: 'full'},
-  {path: 'elements', component: ElementsComponent},
-  {path: 'validation', component: ValidationComponent},
-  {path: 'wizard', component: WizardComponent}
+  { path: '', redirectTo: 'elements', pathMatch: 'full' },
+  { path: 'elements', component: ElementsComponent },
+  { path: 'validation', component: ValidationComponent },
+  { path: 'wizard', component: WizardComponent }
 ];
 
 @NgModule({

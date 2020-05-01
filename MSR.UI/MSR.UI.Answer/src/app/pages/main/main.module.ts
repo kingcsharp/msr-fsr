@@ -18,6 +18,7 @@ import { BigStatComponent } from './analytics/components/big-stat/big-stat.compo
 import { WidgetModule } from '../../layout/widget/widget.module';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 import { TrendModule } from 'ngx-trend';
 import { TaskContainerComponent } from './analytics/components/task-container/task-container.component';
@@ -42,9 +43,13 @@ import { FakeWorldData } from './widgets/years-map-widget/fake-world-data.servic
 import { AnalyticsService } from "./analytics/analytics.service";
 import { NewWidgetModule } from "../../layout/new-widget/widget.module";
 import { UserComponent } from './user/user.component';
-// import { NgxDataTableModule } from 'angular-9-datatable';
+import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
 import { UserService } from './user/user.service';
+import { FormsModule } from '@angular/forms';
+import { TextMaskModule } from 'angular2-text-mask';
+import { InputSwitchModule } from 'primeng/inputswitch';
+import { DropdownModule } from 'primeng/dropdown';
 
 export const routes = [
   { path: '', redirectTo: 'user', pathMatch: 'full' },
@@ -80,7 +85,12 @@ export const routes = [
     ProgressbarModule.forRoot(),
     TrendModule,
     BsDropdownModule.forRoot(),
-    // NgxDataTableModule,
+    DropdownModule,
+    TooltipModule.forRoot(),
+    FormsModule,
+    InputSwitchModule,
+    TextMaskModule,
+    DialogModule,
     TableModule,
     CalendarModule,
     UtilsModule,
