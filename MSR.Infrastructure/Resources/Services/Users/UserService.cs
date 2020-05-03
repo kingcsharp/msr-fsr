@@ -69,7 +69,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
 
             if(user == null) { return; }
 
-            user.IsActive = false;
+            user.IsActive = !user.IsActive;
 
             _unitOfWork.Users.Update(user);
             await _unitOfWork.SaveChangesAsync();

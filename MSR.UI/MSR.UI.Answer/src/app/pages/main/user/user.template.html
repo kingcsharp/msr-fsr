@@ -48,7 +48,7 @@
             placeholder="Search by Last Name" class="ui-column-filter">
         </th>
         <th>
-          <input pInputText type="text" (input)="dt.filter($event.target.value, 'username', 'contains')"
+          <input pInputText type="text" (input)="dt.filter($event.target.value, 'userName', 'contains')"
             placeholder="Search by Username" class="ui-column-filter">
         </th>
         <th>
@@ -65,7 +65,7 @@
           {{user.id}}
         </td>
         <td>
-          <p-inputSwitch [(ngModel)]="user.isActive" disabled="disabled"></p-inputSwitch>
+          <p-inputSwitch [(ngModel)]="user.isActive" (ngModelChange)="changeUserStatus(user)"></p-inputSwitch>
         </td>
         <td>
           <span class="ui-column-title">First Name</span>
@@ -73,7 +73,7 @@
         </td>
         <td>
           <span class="ui-column-title">Last Name</span>
-          <span style="vertical-align: middle; margin-left: .5em">{{user.firstName}}</span>
+          <span style="vertical-align: middle; margin-left: .5em">{{user.lastName}}</span>
         </td>
         <td>
           <span class="ui-column-title">Username</span>
@@ -105,8 +105,8 @@
   <!-- <p-header>
   </p-header> -->
   <!-- <div class="row"> -->
-  <form class="form-horizontal form-label-left parsleyjs" method="post" data-parsley-priority-enabled="false"
-    novalidate="novalidate">
+  <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
+    data-parsley-priority-enabled="false" (ngSubmit)="onUserSubmit()" novalidate="novalidate">
     <section class="widget mrg-btm-sm" widget>
       <header>
         <h5>
@@ -127,21 +127,22 @@
           <legend>
           </legend>
           <div class="form-group row">
-            <label for="firstName" class="col-md-2  col-form-label text-md-right">
+            <label for="firstName" class="col-md-2 col-form-label text-md-right">
               First Name
             </label>
             <div class="col-md-4 ">
-              <input type="text" id="firstName" name="firstName" [ngModel]="currUser.firstName"
-                data-parsley-trigger="change" data-parsley-minlength="3" class="form-control input-transparent"
-                tooltip="Min length 3 characters" placeholder="First Name">
+              <input type="text" id="firstName" name="firstName" [(ngModel)]="currUser.firstName"
+                data-validate="parsley" data-parsley-trigger="change" data-parsley-minlength="3"
+                data-parsley-required="true" class="form-control input-transparent" tooltip="Min length 3 characters"
+                placeholder="First Name">
             </div>
             <label for="lastName" class="col-md-2  col-form-label text-md-right">
               Last Name
             </label>
             <div class="col-md-4 ">
-              <input type="text" id="lastName" name="lastName" [ngModel]="currUser.lastName"
-                data-parsley-trigger="change" data-parsley-minlength="3" class="form-control input-transparent"
-                tooltip="Min length 3 characters" placeholder="Last Name">
+              <input type="text" id="lastName" name="lastName" [(ngModel)]="currUser.lastName"
+                data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
+                class="form-control input-transparent" tooltip="Min length 3 characters" placeholder="Last Name">
             </div>
           </div>
           <div class="form-group row">
@@ -149,17 +150,17 @@
               E-mail
             </label>
             <div class="col-md-4 col-12">
-              <input type="email" id="email" [ngModel]="currUser.email" name="email"
-                class="form-control input-transparent" data-parsley-trigger="change"
+              <input type="email" id="email" [(ngModel)]="currUser.email" name="email"
+                class="form-control input-transparent" data-parsley-trigger="change" data-parsley-required="true"
                 data-parsley-validation-threshold="1" required="required" placeholder="Email">
             </div>
             <label for="userName" class="col-md-2  col-form-label text-md-right">
               Username
             </label>
             <div class="col-md-4 ">
-              <input type="text" id="userName" [ngModel]="currUser.userName" data-parsley-trigger="change"
+              <input type="text" id="userName" [(ngModel)]="currUser.userName" data-parsley-trigger="change"
                 data-parsley-minlength="3" name="userName" class="form-control input-transparent"
-                tooltip="Min length 3 characters" placeholder="UserName">
+                data-parsley-required="true" tooltip="Min length 3 characters" placeholder="UserName">
             </div>
           </div>
           <div class="form-group row">
@@ -167,18 +168,18 @@
               Title
             </label>
             <div class="col-md-4 ">
-              <input type="text" id="title" [ngModel]="currUser.title" data-parsley-trigger="change"
-                data-parsley-minlength="3" name="title" class="form-control input-transparent"
-                tooltip="Min length 3 characters" placeholder="Title">
+              <input type="text" id="title" [(ngModel)]="currUser.title" data-parsley-trigger="change"
+                data-parsley-minlength="3" name="title" data-parsley-required="true"
+                class="form-control input-transparent" tooltip="Min length 3 characters" placeholder="Title">
             </div>
             <label class="form-control-label col-md-2 col-12 text-md-right" for="mask-phone">
               Phone
               <span class="help-block">(123) 456-7890</span>
             </label>
             <div class="col-md-4 col-12">
-              <input id="mask-phone" name="mask-phone" class="form-control input-transparent" [textMask]="phoneMask"
-                [ngModel]="currUser.phone" (ngModelChange)="currUser.phone = unmask($event)" placeholder="Phone"
-                type="text" />
+              <input id="mask-phone" name="mask-phone" class="form-control input-transparent"
+                data-parsley-required="true" [textMask]="phoneMask" [(ngModel)]="currUser.phone"
+                (ngModelChange)="currUser.phone = unmask($event)" placeholder="Phone" type="text" />
             </div>
           </div>
           <div class="form-group row">
@@ -188,7 +189,7 @@
             <div class="col-md-4 ">
               <div class="display-inline-block isActive">
                 <label class="form-check-label" for="isActive" class="switch">
-                  <input class="form-check-input" [ngModel]="currUser.isActive" name="isActive" type="checkbox"
+                  <input class="form-check-input" [(ngModel)]="currUser.isActive" name="isActive" type="checkbox"
                     class="ios" checked id="isActive" /><i></i>
                 </label>
               </div>
@@ -197,6 +198,7 @@
         </fieldset>
         <!-- </form> -->
       </div>
+      <!-- <pre>{{currUser | json}}</pre> -->
     </section>
     <!-- </div> -->
     <p-footer>
@@ -204,7 +206,7 @@
         <button type="submit" class="btn btn-outline-inverse width-100 mb-xs" role="button">
           Save
         </button>
-        <button (click)="clseDialog()" class="btn btn-outline-inverse width-100 mb-xs" role="button">
+        <button type="button" (click)="clseDialog()" class="btn btn-outline-inverse width-100 mb-xs" role="button">
           Cancel
         </button>
       </div>

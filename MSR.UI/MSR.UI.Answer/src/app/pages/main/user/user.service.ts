@@ -28,6 +28,27 @@ export class UserService {
         });
     }
 
+    async deleteUser(user) {
+        return this.http.delete(User.PATH + '/' + user.id).toPromise().then((res: any) => {
+            return true;
+        }, err => {
+            return err.error;
+        });
+    }
+
+    async postUser(user) {
+        this.isReceiving = true;
+        debugger;
+        return this.http.post(User.PATH, user).toPromise().then((res: any) => {
+            this.isReceiving = false;
+            return res;
+        }, err => {
+            this.isReceiving = false;
+            console.log(err);
+            return err;
+        });
+    }
+
     get isReceiving() {
         return this._isReceiving;
     }

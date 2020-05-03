@@ -85,7 +85,7 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<User>();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{accountId}")]
         public async Task<IActionResult> DeactivateUser(int accountId)
         {
             var user = User.Identity.Name;

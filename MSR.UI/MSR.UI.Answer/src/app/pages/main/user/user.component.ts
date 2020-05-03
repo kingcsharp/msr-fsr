@@ -2,7 +2,7 @@ import { Component, OnInit, ViewEncapsulation, Injector } from '@angular/core';
 import { UserService } from './user.service';
 import { ɵDomSharedStylesHost } from '@angular/platform-browser';
 import { User } from '../../../models/lib/user';
-
+import { ToastrService } from 'ngx-toastr';
 
 declare let jQuery: any;
 
@@ -25,14 +25,14 @@ export class UserComponent implements OnInit {
   injector: Injector;
   phoneValue = '';
   statuses: any[];
+  instance: any;
   phoneMask = {
     mask: ['(', /[1-9]/, /\d/, /\d/, ')',
       ' ', /\d/, /\d/, /\d/,
       '-', /\d/, /\d/, /\d/, /\d/]
   };
 
-  constructor(public userService: UserService, injector: Injector) {
-
+  constructor(public userService: UserService, injector: Injector, private toastr: ToastrService) {
     this.domSharedStylesHost = injector.get(ɵDomSharedStylesHost);
     this.domSharedStylesHost.__onStylesAdded__ = this.domSharedStylesHost.onStylesAdded;
     this.domSharedStylesHost.onStylesAdded = (additions) => {
@@ -53,11 +53,8 @@ export class UserComponent implements OnInit {
     this.statuses = [
       { label: 'Active', value: true },
       { label: 'InActive', value: false },
-    ]
-  }
-
-  ngAfterViewInit(): void {
-    jQuery('.parsleyjs').parsley();
+    ];
+    this.instance = jQuery('.parsleyjs').parsley();
   }
 
   async getUsers() {
@@ -73,15 +70,47 @@ export class UserComponent implements OnInit {
   showDialog(user: User) {
     this.display = true;
     this.currUser = this.getUser(user);
+    // this.instance = jQuery('.parsleyjs').parsley();
   }
   clseDialog() {
     this.display = false;
+    jQuery('.parsleyjs').parsley().reset();
+  }
+
+  changeUserStatus(user) {
+    const ctrl = this;
+    this.userService.deleteUser(user).then(function (resp) {
+      if (resp.hasErrors === null || !resp.hasErrors) {
+        ctrl.toastr.success(`User has been successfully ${user.isActive ? 'deactivated' : 'activated'}!`);
+      }
+      else {
+        user.isActive = !user.isActive;
+        ctrl.toastr.error("Internal server Error, Please contact system administrator.");
+      }
+    });
+  }
+
+  onUserSubmit() {
+    jQuery('.parsleyjs').parsley().validate();
+    if (jQuery('.parsleyjs').parsley().isValid()) {
+      this.userService.postUser(this.currUser).then(function (resp) {
+        if (!resp.hasErrors) {
+          this.data.push(new User(resp.returnedObject));
+          this.clseDialog();
+          this.toastr.success('User has been successfully created!');
+        }
+        else {
+          this.toastr.error(resp.errorMessages[0]);
+        }
+      });
+    }
   }
 
   getUser(user: User) {
     if (user === undefined) {
       let ret = new User();
       ret.isActive = true;
+      ret.firstName = '';
       return ret;
     }
     else {
