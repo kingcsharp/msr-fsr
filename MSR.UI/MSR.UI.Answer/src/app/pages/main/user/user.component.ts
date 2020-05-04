@@ -84,7 +84,6 @@ export class UserComponent implements OnInit {
       }
       else {
         user.isActive = !user.isActive;
-        ctrl.toastr.error("Internal server Error, Please contact system administrator.");
       }
     });
   }
@@ -109,9 +108,6 @@ export class UserComponent implements OnInit {
             method = ctrl.userService.putUser(ctrl.currUser);
           }
           ctrl.clseDialog();
-        }
-        else {
-          ctrl.toastr.error(resp.errorMessages[0]);
         }
       });
     }
