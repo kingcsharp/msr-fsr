@@ -94,8 +94,16 @@ namespace MSR.Infrastructure.Resources.Services.Users
                 prop.SetValue(efUser, property.GetValue(command), null);
             }
 
-            _unitOfWork.Users.Update(efUser);
-            await _unitOfWork.SaveChangesAsync();
+            try
+            {
+                _unitOfWork.Users.Update(efUser);
+                await _unitOfWork.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
 
             return _mapper.Map<Domain.Models.User>(efUser);
         }

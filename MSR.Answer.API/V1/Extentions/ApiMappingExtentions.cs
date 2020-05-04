@@ -1,5 +1,6 @@
 ﻿using MSR.Answer.API.V1.Models;
 using MSR.Domain.Commands;
+using MSR.Domain.Helpers;
 
 namespace MSR.Answer.API.V1.Extentions
 {
@@ -55,13 +56,11 @@ namespace MSR.Answer.API.V1.Extentions
             };
         }
 
-        public static CreateUser ToCreateUserCommand(this CreateUserRequest request, string loggedInUser)
+        public static CreateUser ToCreateUserCommand(this CreateUserRequest request)
         {
-            int.TryParse(loggedInUser, out var currentUser);
-
             return new CreateUser()
             {
-                CurrentUser = currentUser,
+                CurrentUser = DelegateHandler.GetCurrentUserId(),
                 UserName = request.UserName,
                 FirstName = request.FirstName,
                 LastName = request.LastName,

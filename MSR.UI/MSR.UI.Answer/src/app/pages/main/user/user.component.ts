@@ -70,7 +70,6 @@ export class UserComponent implements OnInit {
   showDialog(user: User) {
     this.display = true;
     this.currUser = this.getUser(user);
-    // this.instance = jQuery('.parsleyjs').parsley();
   }
   clseDialog() {
     this.display = false;
@@ -92,15 +91,27 @@ export class UserComponent implements OnInit {
 
   onUserSubmit() {
     jQuery('.parsleyjs').parsley().validate();
+    const ctrl = this;
     if (jQuery('.parsleyjs').parsley().isValid()) {
-      this.userService.postUser(this.currUser).then(function (resp) {
+      let method = null;
+      if (this.currUser.id === undefined) {
+        method = this.userService.postUser(this.currUser);
+      } else {
+        method = this.userService.putUser(this.currUser);
+      }
+      method.then(function (resp) {
         if (!resp.hasErrors) {
-          this.data.push(new User(resp.returnedObject));
-          this.clseDialog();
-          this.toastr.success('User has been successfully created!');
+          if (ctrl.currUser.id === undefined) {
+            ctrl.data.push(new User(resp.returnedObject));
+            ctrl.toastr.success('User has been successfully created!');
+          } else {
+            ctrl.toastr.success('User has been successfully updated!');
+            method = ctrl.userService.putUser(ctrl.currUser);
+          }
+          ctrl.clseDialog();
         }
         else {
-          this.toastr.error(resp.errorMessages[0]);
+          ctrl.toastr.error(resp.errorMessages[0]);
         }
       });
     }

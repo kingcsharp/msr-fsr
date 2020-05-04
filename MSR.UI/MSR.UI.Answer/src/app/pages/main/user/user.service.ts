@@ -38,13 +38,20 @@ export class UserService {
 
     async postUser(user) {
         this.isReceiving = true;
-        debugger;
         return this.http.post(User.PATH, user).toPromise().then((res: any) => {
             this.isReceiving = false;
             return res;
         }, err => {
             this.isReceiving = false;
             console.log(err);
+            return err;
+        });
+    }
+
+    async putUser(user) {
+        return this.http.patch(User.PATH, user).toPromise().then((res: any) => {
+            return res;
+        }, err => {
             return err;
         });
     }
