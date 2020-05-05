@@ -26,42 +26,43 @@ export class AppInterceptor implements HttpInterceptor {
         headers: req.headers.set('Authorization', 'Bearer ' + token)
       });
 
-      return next.handle(req).pipe(
-        catchError(err => {
-          debugger;
-          if (err.error) {
-            if (err.status === 401) {
-              return throwError(err);
-            }
-            if (err.status === 404) {
-              return throwError(err);
-            }
-            if (err.error.errorMessages.length > 0) {
-              this.toastr.error(err.error.errorMessages[0].message);
-            } else {
-              this.toastr.error(err.statusText);
-            }
-
-            return throwError(err.error);
-          }
-          if (err.error === 'Invalid token.') {
-            this.toastr.error('Invalid token.');
+    }
+    
+    return next.handle(req).pipe(
+      catchError(err => {
+        debugger;
+        if (err.error) {
+          if (err.status === 401) {
             return throwError(err);
           }
-        }),
-        map((event: HttpEvent<any>) => {
-          if (event instanceof HttpResponse) {
-            debugger;
-            if (!event.body.hasErrors && event.body.successMessage) {
-              this.toastr.success(event.body.successMessage);
-            } else if (event.body.hasErrors && event.body.errorMessages.length > 0) {
-              this.toastr.error(event.body.errorMessages[0].message);
-            }
+          if (err.status === 404) {
+            return throwError(err);
           }
-          return event;
-        }));
-    }
+          if (err.error.errorMessages.length > 0) {
+            this.toastr.error(err.error.errorMessages[0].message);
+          } else {
+            this.toastr.error(err.statusText);
+          }
 
-    return next.handle(req);
+          return throwError(err.error);
+        }
+        if (err.error === 'Invalid token.') {
+          this.toastr.error('Invalid token.');
+          return throwError(err);
+        }
+      }),
+      map((event: HttpEvent<any>) => {
+        if (event instanceof HttpResponse) {
+          debugger;
+          if (!event.body.hasErrors && event.body.successMessage) {
+            this.toastr.success(event.body.successMessage);
+          } else if (event.body.hasErrors && event.body.errorMessages.length > 0) {
+            this.toastr.error(event.body.errorMessages[0].message);
+          }
+        }
+        return event;
+      }));
+
+    // return next.handle(req);
   }
 }
