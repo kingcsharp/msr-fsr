@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+  msr.answer.api:
+    image: ${DOCKER_REGISTRY-}msranswer
+    build:
+      context: .
+      dockerfile: MSR.Answer.API/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Localhost
