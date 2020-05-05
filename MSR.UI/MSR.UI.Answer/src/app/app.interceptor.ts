@@ -30,7 +30,6 @@ export class AppInterceptor implements HttpInterceptor {
 
     return next.handle(req).pipe(
       catchError(err => {
-        debugger;
         if (err.error) {
           if (err.status === 401) {
             return throwError(err);
@@ -38,7 +37,7 @@ export class AppInterceptor implements HttpInterceptor {
           if (err.status === 404) {
             return throwError(err);
           }
-          if (err.error.errorMessages.length > 0) {
+          if (err.error.errorMessages && err.error.errorMessages.length > 0) {
             this.toastr.error(err.error.errorMessages[0].message);
           } else {
             this.toastr.error(err.statusText);
