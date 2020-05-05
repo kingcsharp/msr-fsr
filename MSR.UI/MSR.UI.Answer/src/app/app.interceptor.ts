@@ -27,7 +27,7 @@ export class AppInterceptor implements HttpInterceptor {
       });
 
     }
-    
+
     return next.handle(req).pipe(
       catchError(err => {
         debugger;
@@ -53,7 +53,9 @@ export class AppInterceptor implements HttpInterceptor {
       }),
       map((event: HttpEvent<any>) => {
         if (event instanceof HttpResponse) {
-          debugger;
+          if (event.body === undefined || event.body === null) {
+            return event;
+          }
           if (!event.body.hasErrors && event.body.successMessage) {
             this.toastr.success(event.body.successMessage);
           } else if (event.body.hasErrors && event.body.errorMessages.length > 0) {

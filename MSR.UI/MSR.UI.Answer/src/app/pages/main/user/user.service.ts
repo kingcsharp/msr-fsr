@@ -32,7 +32,7 @@ export class UserService {
         return this.http.delete(User.PATH + '/' + user.id).toPromise().then((res: any) => {
             return true;
         }, err => {
-            return err.error;
+            return err;
         });
     }
 
