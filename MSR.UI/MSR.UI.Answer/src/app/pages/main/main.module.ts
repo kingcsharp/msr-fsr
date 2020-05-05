@@ -52,10 +52,10 @@ import { InputSwitchModule } from 'primeng/inputswitch';
 import { DropdownModule } from 'primeng/dropdown';
 
 export const routes = [
-  { path: '', redirectTo: 'user', pathMatch: 'full' },
+  { path: '', redirectTo: 'people', pathMatch: 'full' },
   { path: 'analytics', component: AnalyticsComponent, pathMatch: 'full' },
   { path: 'visits', component: VisitsComponent, pathMatch: 'full' },
-  { path: 'user', component: UserComponent, pathMatch: 'full' },
+  { path: 'people', component: UserComponent, pathMatch: 'full' },
   { path: 'widgets', component: WidgetsComponent, pathMatch: 'full' }
 ];
 
