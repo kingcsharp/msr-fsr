@@ -37,13 +37,14 @@ pipeline {
                 }
             }
         }
-        /*
         stage('Build API Container') {
             steps {
                 script {
-                    sh "sudo chmod 777 /var/run/docker.sock"
-                    sh "docker build -t msr-api ."
-                    sh "docker tag msr-api ${ACCOUNT_URL}/msr-api:${env.BRANCH_NAME}${env.BUILD_NUMBER}"
+                    dir('MSR.Answer.API') {
+                        sh "sudo chmod 777 /var/run/docker.sock"
+                        sh "docker build -t msr-api ."
+                        sh "docker tag msr-api ${ACCOUNT_URL}/msr-api:${env.BRANCH_NAME}${env.BUILD_NUMBER}"
+                    }
                 }
             }
         }
@@ -56,7 +57,6 @@ pipeline {
                 }
             }
         }
-        */
 
         stage('Update docker-compose file') {
             steps {
