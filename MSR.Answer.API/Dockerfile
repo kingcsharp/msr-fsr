@@ -14,7 +14,7 @@ COPY MSR.Infrastructure/MSR.Infrastructure.csproj MSR.Infrastructure/
 RUN dotnet restore "MSR.Answer.API/MSR.Answer.API.csproj"
 COPY . .
 WORKDIR "/src/MSR.Answer.API"
-RUN dotnet build "MSR.Answer.API.csproj" -c Release -o /app/build
+RUN dotnet build "MSR.Answer.API.csproj" -c Release -o /app/build; exit 0
 
 FROM build AS publish
 RUN dotnet publish "MSR.Answer.API.csproj" -c Release -o /app/publish
