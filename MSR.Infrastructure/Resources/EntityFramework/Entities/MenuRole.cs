@@ -1,7 +1,3 @@
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
     public partial class MenuRole: TrackableEntity

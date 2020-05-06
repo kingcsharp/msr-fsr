@@ -18,12 +18,12 @@ namespace MSR.Answer.API.V1.Controllers
     [VersionedRoute("[controller]")]
     [ApiController]
     [Authorize]
-    public class UsersController : BaseApiController
+    public class UserController : BaseApiController
     {
         private readonly ILogger _logger;
         private readonly ICommandDispatcher _dispatcher;
 
-        public UsersController(ILogger<UsersController> logger, ICommandDispatcher dispatcher)
+        public UserController(ILogger<UserController> logger, ICommandDispatcher dispatcher)
         {
             _logger = logger;
             _dispatcher = dispatcher;
@@ -33,9 +33,10 @@ namespace MSR.Answer.API.V1.Controllers
         [HttpGet]
         public async Task<IActionResult> GetUsers([FromQuery, Required]GetUsersRequest request)
         {
-            var user = User.Identity.Name;
-
-            if (user is null) return BadRequest();
+            if (UserId == 0)
+            {
+                return BadRequest();
+            }
 
             var command = request.ToGetUsersCommand();
 
@@ -62,11 +63,12 @@ namespace MSR.Answer.API.V1.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateUser([FromBody, Required] CreateUserRequest request)
         {
-            var user = User.Identity.Name;
+            if (UserId == 0)
+            {
+                return BadRequest();
+            }
 
-            if (user is null) return BadRequest();
-
-            var command = request.ToCreateUserCommand(user);
+            var command = request.ToCreateUserCommand(UserId);
 
             var ret = await _dispatcher.DispatchAsync(command);
 
@@ -76,8 +78,10 @@ namespace MSR.Answer.API.V1.Controllers
         [HttpPatch]
         public async Task<IActionResult> UpdateUser([FromBody, Required]UpdateUserRequest request)
         {
-            var user = User.Identity.Name;
-            if (user is null) return BadRequest();
+            if (UserId == 0)
+            {
+                return BadRequest();
+            }
 
             var command = request.ToUpdateUserCommand();
             var ret = await _dispatcher.DispatchAsync(command);
@@ -88,9 +92,10 @@ namespace MSR.Answer.API.V1.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeactivateUser(int accountId)
         {
-            var user = User.Identity.Name;
-
-            if (user is null) return BadRequest();
+            if (UserId == 0)
+            {
+                return BadRequest();
+            }
 
             var command = new DeactivateUser()
             {

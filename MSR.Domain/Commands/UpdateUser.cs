@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace MSR.Domain.Commands
+﻿namespace MSR.Domain.Commands
 {
     public class UpdateUser: CreateUser
     {

@@ -1,7 +1,6 @@
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
     using System;
-    using System.ComponentModel.DataAnnotations.Schema;
 
     public partial class UserRole: TrackableEntity
     {

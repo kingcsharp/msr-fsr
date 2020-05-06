@@ -55,13 +55,12 @@ namespace MSR.Answer.API.V1.Extentions
             };
         }
 
-        public static CreateUser ToCreateUserCommand(this CreateUserRequest request, string loggedInUser)
+        public static CreateUser ToCreateUserCommand(this CreateUserRequest request, int loggedInUser)
         {
-            int.TryParse(loggedInUser, out var currentUser);
 
             return new CreateUser()
             {
-                CurrentUser = currentUser,
+                CurrentUser = loggedInUser,
                 UserName = request.UserName,
                 FirstName = request.FirstName,
                 LastName = request.LastName,

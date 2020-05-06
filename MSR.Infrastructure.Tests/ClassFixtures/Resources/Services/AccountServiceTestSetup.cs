@@ -9,7 +9,6 @@ using System.Linq.Expressions;
 using System;
 using Neleus.LambdaCompare;
 using MSR.Infrastructure.Tests.TestFixtures;
-using MSR.Domain.Abstractions.Services;
 
 namespace MSR.Infrastructure.Tests.ClassFixtures.Resources.Services
 {
