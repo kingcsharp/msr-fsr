@@ -40,11 +40,9 @@ pipeline {
         stage('Build API Container') {
             steps {
                 script {
-                    dir('MSR.Answer.API') {
-                        sh "sudo chmod 777 /var/run/docker.sock"
-                        sh "docker build -t msr-api ."
-                        sh "docker tag msr-api ${ACCOUNT_URL}/msr-api:${env.BRANCH_NAME}${env.BUILD_NUMBER}"
-                    }
+                    sh "sudo chmod 777 /var/run/docker.sock"
+                    sh "docker build -f MSR.Answer.API/Dockerfile -t msr-api ."
+                    sh "docker tag msr-api ${ACCOUNT_URL}/msr-api:${env.BRANCH_NAME}${env.BUILD_NUMBER}"
                 }
             }
         }
