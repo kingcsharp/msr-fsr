@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Logging;
 using MSR.Domain.Helpers;
@@ -20,6 +22,30 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         {
             optionsBuilder.UseLoggerFactory(ConsoleLoggerFactory).UseSqlServer(ConnectionString_);
             base.OnConfiguring(optionsBuilder);
+        }
+
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            var now = DateTime.UtcNow;
+
+            foreach (EntityEntry entry in ChangeTracker.Entries())
+            {
+                switch (entry.State)
+                {
+                    case EntityState.Added:
+                    case EntityState.Modified:
+                        HandleTrackableEntity(entry, now);
+                        break;
+                        //case EntityState.Deleted:
+                        //    HandleDeletedEntry(entry);
+                        //    HandleTrackableEntity(entry, now);
+                        //    break;
+                }
+            }
+
+            int result = await base.SaveChangesAsync(cancellationToken);
+
+            return result;
         }
 
         public override int SaveChanges()

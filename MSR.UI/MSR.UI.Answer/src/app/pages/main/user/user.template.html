@@ -1,4 +1,4 @@
-<h1 class="page-title">Users <small><small>USERS ONE</small></small></h1>
+<h1 class="page-title">Users <small><small>sb title</small></small></h1>
 <widget [fetchingData]="userService.isReceiving">
   <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
     [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]" [loading]="loading" [paginator]="true"
@@ -7,13 +7,14 @@
     <ng-template pTemplate="caption">
       <div class="pull-left">List of Users</div>
       <div class="ui-table-globalfilter-container">
-        <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Global Search" />
+        <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Search" />
       </div>
     </ng-template>
     <ng-template pTemplate="header">
       <tr>
-        <th></th>
         <th pSortableColumn="id">Id <p-sortIcon field="id"></p-sortIcon>
+        </th>
+        <th pSortableColumn="isActive">Active<p-sortIcon field="isActive"></p-sortIcon>
         </th>
         <th pSortableColumn="firstName">First Name <p-sortIcon field="firstName"></p-sortIcon>
         </th>
@@ -27,11 +28,16 @@
       </tr>
       <tr>
         <th>
-          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+          <input pInputText type="text" (input)="dt.filter($event.target.value, 'id', 'contains')" placeholder="Id"
+            class="ui-column-filter">
         </th>
         <th>
-          <input pInputText type="text" (input)="dt.filter($event.target.value, 'id', 'contains')"
-            placeholder="Search by Id" class="ui-column-filter">
+          <p-dropdown [options]="statuses" (onChange)="dt.filter($event.value, 'isActive', 'equals')"
+            styleClass="ui-column-filter" placeholder="Select a Status" [showClear]="true">
+            <ng-template let-option pTemplate="item">
+              <span [class]="'customer-badge status-' + option.value">{{option.label}}</span>
+            </ng-template>
+          </p-dropdown>
         </th>
         <th>
           <input pInputText type="text" (input)="dt.filter($event.target.value, 'firstName', 'contains')"
@@ -42,7 +48,7 @@
             placeholder="Search by Last Name" class="ui-column-filter">
         </th>
         <th>
-          <input pInputText type="text" (input)="dt.filter($event.target.value, 'username', 'contains')"
+          <input pInputText type="text" (input)="dt.filter($event.target.value, 'userName', 'contains')"
             placeholder="Search by Username" class="ui-column-filter">
         </th>
         <th>
@@ -55,11 +61,11 @@
     <ng-template pTemplate="body" let-user>
       <tr class="ui-selectable-row">
         <td>
-          <p-tableCheckbox [value]="user"></p-tableCheckbox>
-        </td>
-        <td>
           <span class="ui-column-title">Id</span>
           {{user.id}}
+        </td>
+        <td>
+          <p-inputSwitch [(ngModel)]="user.isActive" (ngModelChange)="changeUserStatus(user)"></p-inputSwitch>
         </td>
         <td>
           <span class="ui-column-title">First Name</span>
@@ -67,7 +73,7 @@
         </td>
         <td>
           <span class="ui-column-title">Last Name</span>
-          <span style="vertical-align: middle; margin-left: .5em">{{user.firstName}}</span>
+          <span style="vertical-align: middle; margin-left: .5em">{{user.lastName}}</span>
         </td>
         <td>
           <span class="ui-column-title">Username</span>
@@ -78,7 +84,7 @@
           {{user.email}}
         </td>
         <td>
-          <i class="fa fa-cog"></i>
+          <i class="fa fa-cog pointer" tooltip="Edit User" (click)="showDialog(user)"></i>
         </td>
       </tr>
     </ng-template>
@@ -90,7 +96,131 @@
   </p-table>
 </widget>
 <div>
-  <!-- <button (click)="largeModal.show()" class="btn btn-outline-inverse width-100 mb-xs" role="button">
+  <button (click)="showDialog()" class="btn btn-outline-inverse width-100 mb-xs" role="button">
     Add
-  </button> -->
+  </button>
 </div>
+<p-dialog header="{{ currUser.id === undefined ?'Create User':'Edit User'}}" [(visible)]="display"
+  [style]="{width: '50vw'}">
+  <!-- <p-header>
+  </p-header> -->
+  <!-- <div class="row"> -->
+  <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
+    data-parsley-priority-enabled="false" (ngSubmit)="onUserSubmit()" novalidate="novalidate">
+    <section class="widget mrg-btm-sm" widget>
+      <header>
+        <h5>
+          <span class="badge badge-warning p-2 text-gray-dark mr-1 fa fa-user">
+          </span>
+          User Details
+        </h5>
+        <!-- <div class="widget-controls">
+          <a data-widgster="expand" title="Expand" href="#"><i class="la la-angle-up"></i></a>
+          <a data-widgster="collapse" title="Collapse" href="#"><i class="la la-angle-down"></i></a>
+          <a data-widgster="close" title="Close" href="#"><i class="la la-remove"></i></a>
+        </div>  -->
+      </header>
+      <div class="widget-body">
+        <!-- <form class="form-horizontal form-label-left parsleyjs" method="post" data-parsley-priority-enabled="false"
+        novalidate="novalidate"> -->
+        <fieldset>
+          <legend>
+          </legend>
+          <div class="form-group row">
+            <label for="firstName" class="col-md-2 col-form-label text-md-right">
+              First Name
+            </label>
+            <div class="col-md-4 ">
+              <input type="text" id="firstName" name="firstName" [(ngModel)]="currUser.firstName"
+                data-validate="parsley" data-parsley-trigger="change" data-parsley-minlength="3"
+                data-parsley-required="true" class="form-control input-transparent" tooltip="Min length 3 characters"
+                placeholder="First Name">
+            </div>
+            <label for="lastName" class="col-md-2  col-form-label text-md-right">
+              Last Name
+            </label>
+            <div class="col-md-4 ">
+              <input type="text" id="lastName" name="lastName" [(ngModel)]="currUser.lastName"
+                data-parsley-trigger="change" data-parsley-minlength="3" data-parsley-required="true"
+                class="form-control input-transparent" tooltip="Min length 3 characters" placeholder="Last Name">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="form-control-label col-md-2 col-12 text-md-right" for="email">
+              E-mail
+            </label>
+            <div class="col-md-4 col-12">
+              <input type="email" id="email" [(ngModel)]="currUser.email" name="email"
+                class="form-control input-transparent" data-parsley-trigger="change" data-parsley-required="true"
+                data-parsley-validation-threshold="1" required="required" placeholder="Email">
+            </div>
+            <label for="userName" class="col-md-2  col-form-label text-md-right">
+              Username
+            </label>
+            <div class="col-md-4 ">
+              <input type="text" id="userName" [(ngModel)]="currUser.userName" data-parsley-trigger="change"
+                data-parsley-minlength="3" name="userName" class="form-control input-transparent"
+                data-parsley-required="true" tooltip="Min length 3 characters" placeholder="UserName">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="title" class="col-md-2  col-form-label text-md-right">
+              Title
+            </label>
+            <div class="col-md-4 ">
+              <input type="text" id="title" [(ngModel)]="currUser.title" data-parsley-trigger="change"
+                data-parsley-minlength="3" name="title" data-parsley-required="true"
+                class="form-control input-transparent" tooltip="Min length 3 characters" placeholder="Title">
+            </div>
+            <label class="form-control-label col-md-2 col-12 text-md-right" for="mask-phone">
+              Phone
+              <span class="help-block">(123) 456-7890</span>
+            </label>
+            <div class="col-md-4 col-12">
+              <input id="mask-phone" name="mask-phone" class="form-control input-transparent"
+                data-parsley-required="true" [textMask]="phoneMask" [(ngModel)]="currUser.phone"
+                (ngModelChange)="currUser.phone = unmask($event)" placeholder="Phone" type="text" />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-2  col-form-label text-md-right">
+              Is Active
+            </label>
+            <div class="col-md-4 ">
+              <div class="display-inline-block isActive">
+                <label class="form-check-label" for="isActive" class="switch">
+                  <input class="form-check-input" [(ngModel)]="currUser.isActive" name="isActive" type="checkbox"
+                    class="ios" checked id="isActive" /><i></i>
+                </label>
+              </div>
+            </div>
+            <label class="col-md-2  col-form-label text-md-right">
+              Is Answer User
+            </label>
+            <div class="col-md-4 ">
+              <div class="display-inline-block isAnswerUser">
+                <label class="form-check-label" for="isAnswerUser" class="switch">
+                  <input class="form-check-input" [(ngModel)]="currUser.isAnswerUser" name="isAnswerUser" type="checkbox"
+                    class="ios" checked id="isAnswerUser" /><i></i>
+                </label>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        <!-- </form> -->
+      </div>
+      <!-- <pre>{{currUser | json}}</pre> -->
+    </section>
+    <!-- </div> -->
+    <p-footer>
+      <div class="pull-right">
+        <button type="submit" class="btn btn-outline-inverse width-100 mb-xs" role="button">
+          Save
+        </button>
+        <button type="button" (click)="clseDialog()" class="btn btn-outline-inverse width-100 mb-xs" role="button">
+          Cancel
+        </button>
+      </div>
+    </p-footer>
+  </form>
+</p-dialog>

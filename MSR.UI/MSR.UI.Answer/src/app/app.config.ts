@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
 //44398
-const hostApi = process.env.NODE_ENV === 'development' ? 'http://localhost' : 'https://flatlogic-node-backend.herokuapp.com';
-const portApi = process.env.NODE_ENV === 'development' ? 17777 : '';
+const hostApi = environment.production ? 'https://dev3.answer.msr-fsr.com' : 'http://localhost';
+const portApi = environment.production ? 443 : 17777;
 const baseURLApi = `${hostApi}${portApi ? `:${portApi}` : ``}/${environment.version}`;
 
 @Injectable()

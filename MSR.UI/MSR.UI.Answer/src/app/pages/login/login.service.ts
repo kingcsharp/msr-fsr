@@ -54,20 +54,13 @@ export class LoginService {
 
   async loginUser(creds) {
     // We check if app runs with backend mode
-    if (!this.config.isBackend) {
-      await this.receiveToken('token');
+    this.requestLogin();
+    if (creds.email.length > 0 && creds.password.length > 0) {
+      this.http.post('/Account/login', { userName: creds.email, password: creds.password }).subscribe(async (res: any) => {
+        await this.receiveToken(res.object);
+      });
     } else {
-      this.requestLogin();
-      if (creds.email.length > 0 && creds.password.length > 0) {
-        this.http.post('/Account/login', { userName: creds.email, password: creds.password }).subscribe(async (res: any) => {
-          await this.receiveToken(res.object);
-        }, err => {
-          this.loginError(err.error.errorMessages[0].message);
-        });
-
-      } else {
-        this.loginError('Something was wrong. Try again');
-      }
+      this.loginError('Something was wrong. Try again');
     }
   }
 
@@ -75,9 +68,6 @@ export class LoginService {
     return this.http.post('/Account/forgotpassword', { userName: email }).toPromise().then((res: any) => {
       this.loginError("Reset password email sent.");
       return true;
-    }, err => {
-      this.loginError(err.error.errorMessages[0].message);
-      return false;
     });
   }
 
@@ -85,9 +75,6 @@ export class LoginService {
     return this.http.post('/Account/forgotusername', { email: email }).toPromise().then((res: any) => {
       this.loginError("An email has been sent with your information.");
       return true;
-    }, err => {
-      this.loginError(err.error.errorMessages[0].message);
-      return false;
     });
   }
 
@@ -126,7 +113,7 @@ export class LoginService {
   receiveLogin() {
     this.isFetching = false;
     this.errorMessage = '';
-    this.router.navigate(['/app/main/user']);
+    this.router.navigate(['/app/people/people']);
   }
 
   requestLogin() {

@@ -23,9 +23,9 @@ namespace MSR.Answer.API.V1.Controllers
         }
 
         [HttpGet("pending")]
-        public Task<IActionResult> GetPendingApprovals()
+        public async Task<IActionResult> GetPendingApprovals()
         {
-
+            return Ok();
         }
     }
 }

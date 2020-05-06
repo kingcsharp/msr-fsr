@@ -10,8 +10,6 @@ namespace MSR.Answer.API.V1.Controllers
 {
     [ApiVersion("1.0")]
     [VersionedRoute("[controller]")]
-    [ApiController]
-    [Authorize]
     public class MenuController : BaseApiController
     {
         private readonly ILogger _logger;

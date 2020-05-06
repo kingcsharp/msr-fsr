@@ -10,13 +10,13 @@ declare const jQuery: any;
 @Component({
   selector: '[elements]',
   templateUrl: './elements.template.html',
-  styleUrls: [ './elements.style.scss' ],
+  styleUrls: ['./elements.style.scss'],
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: true
 })
 export class ElementsComponent implements OnInit, OnDestroy {
   date: Date = new Date(2016, 5, 10);
-  colorOptions: Object = {color: '#f0b518'};
+  colorOptions: Object = { color: '#f0b518' };
   injector: Injector;
   domSharedStylesHost: any;
   selected: any;

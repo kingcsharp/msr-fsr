@@ -48,10 +48,7 @@ namespace MSR.Answer.API.V1.Controllers
         [HttpGet("LoggedInUser")]
         public async Task<IActionResult> GetLoggedInUserData()
         {
-            if (UserId == 0)
-            {
-                return BadRequest();
-            }
+            if (UserId == 0) return BadRequest();
 
             var command = new GetLoggedInUserData() { UserId = UserId };
 
@@ -68,7 +65,7 @@ namespace MSR.Answer.API.V1.Controllers
                 return BadRequest();
             }
 
-            var command = request.ToCreateUserCommand(UserId);
+            var command = request.ToCreateUserCommand();
 
             var ret = await _dispatcher.DispatchAsync(command);
 
@@ -89,7 +86,7 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<User>();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{accountId}")]
         public async Task<IActionResult> DeactivateUser(int accountId)
         {
             if (UserId == 0)

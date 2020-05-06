@@ -68,7 +68,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
 
             if(user == null) { return; }
 
-            user.IsActive = false;
+            user.IsActive = !user.IsActive;
 
             _unitOfWork.Users.Update(user);
             await _unitOfWork.SaveChangesAsync();
@@ -93,8 +93,16 @@ namespace MSR.Infrastructure.Resources.Services.Users
                 prop.SetValue(efUser, property.GetValue(command), null);
             }
 
-            _unitOfWork.Users.Update(efUser);
-            await _unitOfWork.SaveChangesAsync();
+            try
+            {
+                _unitOfWork.Users.Update(efUser);
+                await _unitOfWork.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
 
             return _mapper.Map<Domain.Models.User>(efUser);
         }
