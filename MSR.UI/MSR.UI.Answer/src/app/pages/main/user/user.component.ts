@@ -117,6 +117,7 @@ export class UserComponent implements OnInit {
     if (user === undefined) {
       let ret = new User();
       ret.isActive = true;
+      ret.isAnswerUser = true;
       ret.firstName = '';
       return ret;
     }
