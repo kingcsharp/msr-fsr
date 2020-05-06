@@ -17,7 +17,7 @@ WORKDIR "/src/MSR.Answer.API"
 RUN dotnet build "MSR.Answer.API.csproj" -c Release -o /app/build; exit 0
 
 FROM build AS publish
-RUN dotnet publish "MSR.Answer.API.csproj" -c Release -o /app/publish
+RUN dotnet publish "MSR.Answer.API.csproj" -c Release -o /app/publish; exit 0
 
 FROM base AS final
 WORKDIR /app
