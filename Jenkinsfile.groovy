@@ -19,7 +19,7 @@ pipeline {
             steps {
                 script {
                     dir('MSR.UI/MSR.UI.Answer') {
-                        //sh "sudo chmod 777 /var/run/docker.sock"
+                        sh "sudo chmod 777 /var/run/docker.sock"
                         sh "docker build -t msr-ui ."
                         sh "docker tag msr-ui ${ACCOUNT_URL}/msr-ui:${env.BRANCH_NAME}${env.BUILD_NUMBER}"
                     }
@@ -61,7 +61,7 @@ pipeline {
         stage('Update docker-compose file') {
             steps {
                 script {
-                    sh "./update_image.sh ${env.BRANCH_NAME} ${env.BUILD_NUMBER} docker-compose-dev.yml"
+                    sh "sudo ./update_image.sh ${env.BRANCH_NAME} ${env.BUILD_NUMBER} docker-compose-dev.yml"
                 }
             }
         }
