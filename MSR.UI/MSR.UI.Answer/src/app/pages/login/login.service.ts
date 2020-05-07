@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Injectable } from '@angular/core';
 import { CommonService } from '../../services/common';
+import { Globals } from '../../models/lib/globals';
 
 const jwt = new JwtHelperService();
 
@@ -15,6 +16,7 @@ export class LoginService {
 
   constructor(
     appConfig: AppConfig,
+    private globals: Globals,
     private http: HttpClient,
     private router: Router,
     private commonService: CommonService,
@@ -93,6 +95,7 @@ export class LoginService {
     }
     var userData = await this.commonService.getLoggedUser();
     Object.assign(user, userData);
+    this.globals.updateUser(user);
     localStorage.setItem('user', JSON.stringify(user));
 
     this.receiveLogin();

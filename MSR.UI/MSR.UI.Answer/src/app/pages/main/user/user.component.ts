@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewEncapsulation, Injector } from '@angular/core';
 import { UserService } from './user.service';
-import { ɵDomSharedStylesHost } from '@angular/platform-browser';
 import { User } from '../../../models/lib/user';
 import { ToastrService } from 'ngx-toastr';
+import { Globals } from '../../../models/lib/globals';
+import { EnumPrivilege } from '../../../models/enums/privileges';
 
 declare let jQuery: any;
 
@@ -14,33 +15,27 @@ declare let jQuery: any;
   preserveWhitespaces: true
 })
 export class UserComponent implements OnInit {
+  privileges = EnumPrivilege;
   config: any;
   month: any;
   year: any;
   data: any;
   loading: boolean = true;
-  domSharedStylesHost: any;
   display: boolean = false;
   currUser: User;
   injector: Injector;
   phoneValue = '';
   statuses: any[];
-  instance: any;
+  canAddUsers: boolean = false;
+  canEditUsers: boolean = false;
   phoneMask = {
     mask: ['(', /[1-9]/, /\d/, /\d/, ')',
       ' ', /\d/, /\d/, /\d/,
       '-', /\d/, /\d/, /\d/, /\d/]
   };
 
-  constructor(public userService: UserService, injector: Injector, private toastr: ToastrService) {
-    this.domSharedStylesHost = injector.get(ɵDomSharedStylesHost);
-    this.domSharedStylesHost.__onStylesAdded__ = this.domSharedStylesHost.onStylesAdded;
-    this.domSharedStylesHost.onStylesAdded = (additions) => {
-      const style = additions[0];
-      if (!style || !style.trim().startsWith('.select2-container')) {
-        this.domSharedStylesHost.__onStylesAdded__(additions);
-      }
-    };
+  constructor(public userService: UserService, injector: Injector, private toastr: ToastrService, private globals: Globals) {
+    
   }
 
 
@@ -54,13 +49,21 @@ export class UserComponent implements OnInit {
       { label: 'Active', value: true },
       { label: 'InActive', value: false },
     ];
-    this.instance = jQuery('.parsleyjs').parsley();
+    this.canAddUsers = this.hasPrivilege(this.privileges.CanCreate);
+    this.canEditUsers = this.hasPrivilege(this.privileges.CanEdit);
+    // this.canAddUsers = true;
+    // this.canEditUsers = true;
   }
 
   async getUsers() {
     //data
     this.data = await this.userService.getUsers();
     this.loading = false;
+  }
+
+  hasPrivilege(privName) {
+    debugger;
+    return this.globals.hasPrivilege('users', privName);
   }
 
   unmask(event) {
@@ -71,6 +74,7 @@ export class UserComponent implements OnInit {
     this.display = true;
     this.currUser = this.getUser(user);
   }
+
   clseDialog() {
     this.display = false;
     jQuery('.parsleyjs').parsley().reset();

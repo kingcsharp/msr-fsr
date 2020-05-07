@@ -1,4 +1,4 @@
-﻿namespace MSR.Domain.Commanding.Emums
+﻿namespace MSR.Domain.Commanding.Enums
 {
     public enum DomainError
     {

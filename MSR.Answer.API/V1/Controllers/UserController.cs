@@ -1,15 +1,18 @@
-﻿using System.Collections.Generic;
+﻿
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MSR.Answer.API.Attributes;
+using MSR.Answer.API.Filters;
 using MSR.Answer.API.V1.Extentions;
 using MSR.Answer.API.V1.Models;
 using MSR.Domain.Commanding.Abstractions;
+using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
-using AuthorizeAttribute = Microsoft.AspNetCore.Authorization.AuthorizeAttribute;
 using HttpGetAttribute = Microsoft.AspNetCore.Mvc.HttpGetAttribute;
 
 namespace MSR.Answer.API.V1.Controllers
@@ -17,7 +20,6 @@ namespace MSR.Answer.API.V1.Controllers
     [ApiVersion("1.0")]
     [VersionedRoute("[controller]")]
     [ApiController]
-    [Authorize]
     public class UserController : BaseApiController
     {
         private readonly ILogger _logger;
@@ -29,8 +31,7 @@ namespace MSR.Answer.API.V1.Controllers
             _dispatcher = dispatcher;
         }
 
-
-        [HttpGet]
+        [HttpGet, HasPrivilegeApi("Users", EnumPrivilege.CanRead)]
         public async Task<IActionResult> GetUsers([FromQuery, Required]GetUsersRequest request)
         {
             if (UserId == 0)
@@ -57,7 +58,7 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<User>();
         }
 
-        [HttpPost]
+        [HttpPost, HasPrivilegeApi("Users", EnumPrivilege.CanCreate)]
         public async Task<IActionResult> CreateUser([FromBody, Required] CreateUserRequest request)
         {
             if (UserId == 0)
@@ -72,7 +73,7 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToCreatedResponse<User>();
         }
 
-        [HttpPatch]
+        [HttpPatch, HasPrivilegeApi("Users", EnumPrivilege.CanEdit)]
         public async Task<IActionResult> UpdateUser([FromBody, Required]UpdateUserRequest request)
         {
             if (UserId == 0)
@@ -86,7 +87,7 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<User>();
         }
 
-        [HttpDelete("{accountId}")]
+        [HttpDelete("{accountId}"), HasPrivilegeApi("Users", EnumPrivilege.CanDelete)]
         public async Task<IActionResult> DeactivateUser(int accountId)
         {
             if (UserId == 0)

@@ -1,4 +1,6 @@
-﻿namespace MSR.Domain.Models
+﻿using MSR.Domain.Commanding.Enums;
+
+namespace MSR.Domain.Models
 {
     public class MenuItem
     {
@@ -8,7 +10,9 @@
         public string Icon { get; set; }
         public int OrderNumber { get; set; }
         public MenuGroup MenuGroup { get; set; }
-        public MenuPermissions Permissions { get; set; }
+        public int[] Permissions { get; set; }
+
+        public EnumMenuItem EnumMenuItem { get; set; }
 
     }
 }

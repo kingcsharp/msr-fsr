@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using MSR.Domain.Abstractions.Email;
 using MSR.Domain.Abstractions.Services;
-using MSR.Domain.Commanding.Emums;
+using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
 using MSR.Domain.Helpers;
@@ -12,10 +12,16 @@ using MSR.Domain.Models.Config;
 using MSR.Infrastructure.Helpers;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using MSR.Infrastructure.Resources.EntityFramework.Entities;
+using User = MSR.Domain.Models.User;
+using Newtonsoft.Json;
 
 namespace MSR.Infrastructure.Resources.Services.Account
 {
@@ -49,7 +55,19 @@ namespace MSR.Infrastructure.Resources.Services.Account
 
         public async Task<string> LoginAsync(SystemLogin command)
         {
-            var user = _unitOfWork.Users.FirstOrDefault(false, i => i.UserName == command.UserName);
+            //ToDO PUT THIS BACK ON.
+            //var user = _unitOfWork.Users.FirstOrDefault(false, i => i.UserName == command.UserName);
+            //var user = _unitOfWork.Users.FirstOrDefault(false, i => i.Id == 107);
+            var user = _unitOfWork.Users.Query().Include(u => u.Roles)
+                .ThenInclude(rs => rs.Role)
+                .ThenInclude(r => r.Menus)
+                .ThenInclude(m => m.MenuRolePermission)
+                .Include(u => u.Roles)
+                .ThenInclude(rs => rs.Role)
+                .ThenInclude(r => r.Menus)
+                .ThenInclude(r => r.MenuItem)
+                .ThenInclude(mi => mi.MenuGroup)
+                .FirstOrDefault(i => i.UserName == command.UserName);
 
             if (user == null)
             {
@@ -158,17 +176,73 @@ namespace MSR.Infrastructure.Resources.Services.Account
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_jwtData.Secret);
+            var userPrivileges = JsonConvert.SerializeObject(GetTokenUserRoles(efUser));
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, efUser.Id.ToString())
+                    new Claim(ClaimTypes.Name, efUser.Id.ToString()),
+                    new Claim("Privileges",userPrivileges),
                 }),
                 Expires = DateTime.UtcNow.AddDays(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
+        }
+
+        private static int[][] GetTokenUserRoles(EntityFramework.Entities.User user)
+        {
+            var totalMenuItems = Enum.GetNames(typeof(EnumMenuItem)).Length;
+            //var totalPrivilegeItems = Enum.GetNames(typeof(EnumPrivilege)).Length;
+            var jaggedArray = new int[totalMenuItems][];
+
+            foreach (var role in user.Roles ?? new List<UserRole>())
+            {
+                var efRole = role.Role;
+                //var domainRole = new Domain.Models.Role()
+                //{
+                //    IsCertificationRole = efRole.IsCertificationRole,
+                //    Name = efRole.Name
+                //};
+                foreach (var menuItem in (efRole ?? new EntityFramework.Entities.Role()).Menus)
+                {
+                    if (menuItem.MenuItem == null) continue;
+                    var efMenuItem = menuItem.MenuItem;
+
+                    var menuItemNum = (int)EnumUtils.ParseMenuType(efMenuItem.Name);
+                    var listEnumPrivilege = new List<int>();
+                    if (menuItem.MenuRolePermission != null)
+                    {
+                        if (menuItem.MenuRolePermission.CanActivate)
+                        {
+                            listEnumPrivilege.Add((int)EnumPrivilege.CanActivate);
+                        }
+                        if (menuItem.MenuRolePermission.CanApprove)
+                        {
+                            listEnumPrivilege.Add((int)EnumPrivilege.CanApprove);
+                        }
+                        if (menuItem.MenuRolePermission.CanCreate)
+                        {
+                            listEnumPrivilege.Add((int)EnumPrivilege.CanCreate);
+                        }
+                        if (menuItem.MenuRolePermission.CanDelete)
+                        {
+                            listEnumPrivilege.Add((int)EnumPrivilege.CanDelete);
+                        }
+                        if (menuItem.MenuRolePermission.CanEdit)
+                        {
+                            listEnumPrivilege.Add((int)EnumPrivilege.CanEdit);
+                        }
+                        if (menuItem.MenuRolePermission.CanRead)
+                        {
+                            listEnumPrivilege.Add((int)EnumPrivilege.CanRead);
+                        }
+                    }
+                    jaggedArray[menuItemNum] = listEnumPrivilege.ToArray();
+                }
+            }
+            return jaggedArray;
         }
     }
 }

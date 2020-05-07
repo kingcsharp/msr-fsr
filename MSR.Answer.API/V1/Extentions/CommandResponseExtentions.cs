@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MSR.Answer.API.V1.Models;
 using MSR.Domain.Commanding.Abstractions;
-using MSR.Domain.Commanding.Emums;
+using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Exceptions;
 using System.Net;
 

@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using MSR.Domain.Abstractions.Services;
-using MSR.Domain.Commanding.Emums;
+using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
-using MSR.Domain.Models;
 using MSR.Infrastructure.Extensions;
 using MSR.Infrastructure.Helpers;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
@@ -13,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MSR.Domain.Helpers;
 
 namespace MSR.Infrastructure.Resources.Services.Users
 {
@@ -29,7 +29,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
 
         public async Task<Domain.Models.User> CreateUserAsync(CreateUser command)
         {
-            var efUser = _mapper.Map<EntityFramework.Entities.User>(command);
+            var efUser = _mapper.Map<User>(command);
 
             if (efUser.EmailAlreadyExists(_unitOfWork))
             {
@@ -200,7 +200,8 @@ namespace MSR.Infrastructure.Resources.Services.Users
                         Info = efMenuItem.Info,
                         Name = efMenuItem.Name,
                         OrderNumber = efMenuItem.OrderNumber,
-                        URL = efMenuItem.URL
+                        URL = efMenuItem.URL,
+                        EnumMenuItem = EnumUtils.ParseMenuType(efMenuItem.Name)
                     };
 
                     if (efMenuItem.MenuGroup != null) {
@@ -211,21 +212,40 @@ namespace MSR.Infrastructure.Resources.Services.Users
                             Name = efMenuItem.MenuGroup.Name,
                             OrderNumber = efMenuItem.MenuGroup.OrderNumber,
                             URL = efMenuItem.MenuGroup.URL
-                        };                        
+                        };
                     }
 
                     if(menuItem.MenuRolePermission != null)
                     {
-                        domainMenuItem.Permissions = new MenuPermissions()
+                        var listEnumPrivilege = new List<int>();
+                        if (menuItem.MenuRolePermission != null)
                         {
-                            CanActivate = menuItem.MenuRolePermission.CanActivate,
-                            CanApprove = menuItem.MenuRolePermission.CanApprove,
-                            CanCreate = menuItem.MenuRolePermission.CanCreate,
-                            CanDelete = menuItem.MenuRolePermission.CanDelete,
-                            CanEdit = menuItem.MenuRolePermission.CanEdit,
-                            CanRead = menuItem.MenuRolePermission.CanRead,
-                            MenuRoleId = menuItem.MenuRolePermission.MenuRoleId
-                        };
+                            if (menuItem.MenuRolePermission.CanActivate)
+                            {
+                                listEnumPrivilege.Add((int)EnumPrivilege.CanActivate);
+                            }
+                            if (menuItem.MenuRolePermission.CanApprove)
+                            {
+                                listEnumPrivilege.Add((int)EnumPrivilege.CanApprove);
+                            }
+                            if (menuItem.MenuRolePermission.CanCreate)
+                            {
+                                listEnumPrivilege.Add((int)EnumPrivilege.CanCreate);
+                            }
+                            if (menuItem.MenuRolePermission.CanDelete)
+                            {
+                                listEnumPrivilege.Add((int)EnumPrivilege.CanDelete);
+                            }
+                            if (menuItem.MenuRolePermission.CanEdit)
+                            {
+                                listEnumPrivilege.Add((int)EnumPrivilege.CanEdit);
+                            }
+                            if (menuItem.MenuRolePermission.CanRead)
+                            {
+                                listEnumPrivilege.Add((int)EnumPrivilege.CanRead);
+                            }
+                        }
+                        domainMenuItem.Permissions = listEnumPrivilege.ToArray();
                     }
 
                     domainRole.Menus.Add(domainMenuItem);

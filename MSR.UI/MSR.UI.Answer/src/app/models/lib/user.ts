@@ -65,7 +65,7 @@ export namespace User {
 		getFullName(): string;
 	}
 
-	export const PATH = '/Users';
+	export const PATH = '/User';
 
 	export enum RolUser {
 
