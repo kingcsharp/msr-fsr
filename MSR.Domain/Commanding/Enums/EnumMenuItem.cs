@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace MSR.Domain.Commanding.Enums
+﻿namespace MSR.Domain.Commanding.Enums
 {
     public enum EnumMenuItem
     {

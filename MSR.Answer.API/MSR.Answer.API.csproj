@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\MSR.Application\MSR.Application.csproj" />
     <ProjectReference Include="..\MSR.Domain\MSR.Domain.csproj" />
+    <ProjectReference Include="..\MSR.Infrastructure\MSR.Infrastructure.csproj" />
   </ItemGroup>
 
 
