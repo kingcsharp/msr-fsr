@@ -32,3 +32,5 @@ msbuild.wrn
 .vs/
 *.jfm
 *.dbmdl
+Answer3.0.iml
+docker-compose.override.yml.OLD
