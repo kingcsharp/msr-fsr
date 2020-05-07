@@ -3,7 +3,6 @@ using MSR.Domain.Commanding.Abstractions;
 using System.Threading;
 using System.Threading.Tasks;
 using MSR.Domain.Commanding;
-using MSR.Domain.Models;
 using MSR.Domain.Abstractions.Services;
 
 namespace MSR.Application.ApplicationServices

@@ -18,12 +18,14 @@ namespace MSR.Answer.API.V1.Controllers
 {
     [ApiVersion("1.0")]
     [VersionedRoute("[controller]")]
-    public class UsersController : BaseApiController
+    [ApiController]
+    [Authorize]
+    public class UserController : BaseApiController
     {
         private readonly ILogger _logger;
         private readonly ICommandDispatcher _dispatcher;
 
-        public UsersController(ILogger<UsersController> logger, ICommandDispatcher dispatcher)
+        public UserController(ILogger<UserController> logger, ICommandDispatcher dispatcher)
         {
             _logger = logger;
             _dispatcher = dispatcher;
@@ -32,7 +34,10 @@ namespace MSR.Answer.API.V1.Controllers
         [HttpGet, HasPrivilegeApi("Users", EnumPrivilege.CanRead)]
         public async Task<IActionResult> GetUsers([FromQuery, Required]GetUsersRequest request)
         {
-            if (UserId == 0) return BadRequest();
+            if (UserId == 0)
+            {
+                return BadRequest();
+            }
 
             var command = request.ToGetUsersCommand();
 
@@ -56,7 +61,10 @@ namespace MSR.Answer.API.V1.Controllers
         [HttpPost, HasPrivilegeApi("Users", EnumPrivilege.CanCreate)]
         public async Task<IActionResult> CreateUser([FromBody, Required] CreateUserRequest request)
         {
-            if (UserId == 0) return BadRequest();
+            if (UserId == 0)
+            {
+                return BadRequest();
+            }
 
             var command = request.ToCreateUserCommand();
 
@@ -68,7 +76,10 @@ namespace MSR.Answer.API.V1.Controllers
         [HttpPatch, HasPrivilegeApi("Users", EnumPrivilege.CanEdit)]
         public async Task<IActionResult> UpdateUser([FromBody, Required]UpdateUserRequest request)
         {
-            if (UserId == 0) return BadRequest();
+            if (UserId == 0)
+            {
+                return BadRequest();
+            }
 
             var command = request.ToUpdateUserCommand();
             var ret = await _dispatcher.DispatchAsync(command);
@@ -79,7 +90,10 @@ namespace MSR.Answer.API.V1.Controllers
         [HttpDelete("{accountId}"), HasPrivilegeApi("Users", EnumPrivilege.CanDelete)]
         public async Task<IActionResult> DeactivateUser(int accountId)
         {
-            if (UserId == 0) return BadRequest();
+            if (UserId == 0)
+            {
+                return BadRequest();
+            }
 
             var command = new DeactivateUser()
             {

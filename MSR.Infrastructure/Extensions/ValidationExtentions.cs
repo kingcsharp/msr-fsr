@@ -1,8 +1,5 @@
 ﻿using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace MSR.Infrastructure.Extensions
 {
