@@ -4,7 +4,6 @@ using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Exceptions;
-using MSR.Domain.Models;
 using MSR.Infrastructure.Extensions;
 using MSR.Infrastructure.Helpers;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
@@ -13,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MSR.Domain.Helpers;
 
 namespace MSR.Infrastructure.Resources.Services.Users
 {
@@ -29,7 +29,7 @@ namespace MSR.Infrastructure.Resources.Services.Users
 
         public async Task<Domain.Models.User> CreateUserAsync(CreateUser command)
         {
-            var efUser = _mapper.Map<EntityFramework.Entities.User>(command);
+            var efUser = _mapper.Map<User>(command);
 
             if (efUser.EmailAlreadyExists(_unitOfWork))
             {

@@ -65,7 +65,7 @@
           {{user.id}}
         </td>
         <td>
-          <p-inputSwitch [(ngModel)]="user.isActive" (ngModelChange)="changeUserStatus(user)"></p-inputSwitch>
+          <p-inputSwitch disabled="{{canEditUsers}}" [(ngModel)]="user.isActive" (ngModelChange)="changeUserStatus(user)"></p-inputSwitch>
         </td>
         <td>
           <span class="ui-column-title">First Name</span>
@@ -84,7 +84,7 @@
           {{user.email}}
         </td>
         <td>
-          <i class="fa fa-cog pointer" tooltip="Edit User" (click)="showDialog(user)"></i>
+          <i *ngIf="canEditUsers" class="fa fa-cog pointer" tooltip="Edit User" (click)="showDialog(user)"></i>
         </td>
       </tr>
     </ng-template>
@@ -96,7 +96,7 @@
   </p-table>
 </widget>
 <div>
-  <button *ngIf="hasPrivilege(privileges.CanRead)" (click)="showDialog()" class="btn btn-outline-inverse width-100 mb-xs" role="button">
+  <button *ngIf="canAddUsers" (click)="showDialog()" class="btn btn-outline-inverse width-100 mb-xs" role="button">
     Add
   </button>
 </div>

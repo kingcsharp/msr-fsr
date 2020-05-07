@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MSR.Answer.API.Attributes;
@@ -19,7 +20,6 @@ namespace MSR.Answer.API.V1.Controllers
     [ApiVersion("1.0")]
     [VersionedRoute("[controller]")]
     [ApiController]
-    [Authorize]
     public class UserController : BaseApiController
     {
         private readonly ILogger _logger;

@@ -67,7 +67,7 @@ namespace MSR.Infrastructure.Resources.Services.Account
                 .ThenInclude(r => r.Menus)
                 .ThenInclude(r => r.MenuItem)
                 .ThenInclude(mi => mi.MenuGroup)
-                .FirstOrDefault(i => i.Id == 107);
+                .FirstOrDefault(i => i.UserName == command.UserName);
 
             if (user == null)
             {

@@ -29,6 +29,8 @@ export class UserComponent implements OnInit {
   phoneValue = '';
   statuses: any[];
   instance: any;
+  canAddUsers: boolean = false;
+  canEditUsers: boolean = false;
   phoneMask = {
     mask: ['(', /[1-9]/, /\d/, /\d/, ')',
       ' ', /\d/, /\d/, /\d/,
@@ -58,6 +60,8 @@ export class UserComponent implements OnInit {
       { label: 'InActive', value: false },
     ];
     this.instance = jQuery('.parsleyjs').parsley();
+    this.canAddUsers = this.hasPrivilege(this.privileges.CanCreate);
+    this.canEditUsers = this.hasPrivilege(this.privileges.CanEdit);
   }
 
   async getUsers() {
