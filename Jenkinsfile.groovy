@@ -37,6 +37,7 @@ pipeline {
                 }
             }
         }
+        /*
         stage('Build API Container') {
             steps {
                 script {
@@ -55,7 +56,7 @@ pipeline {
                 }
             }
         }
-
+        */
         stage('Update docker-compose file') {
             steps {
                 script {
