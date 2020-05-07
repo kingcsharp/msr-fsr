@@ -74,10 +74,10 @@ namespace MSR.Infrastructure.Resources.Services.Account
                 throw new DomainException("Username Or Password are invalid");
             }
 
-            //if (!AuthenticationHelper.VerifyPasswordHash(command.Password, user.PasswordHash, user.PasswordSalt))
-            //{
-            //    throw new DomainException("Username Or Password are invalid");
-            //}
+            if (!AuthenticationHelper.VerifyPasswordHash(command.Password, user.PasswordHash, user.PasswordSalt))
+            {
+                throw new DomainException("Username Or Password are invalid");
+            }
 
             return GetJWTToken(user);
         }
