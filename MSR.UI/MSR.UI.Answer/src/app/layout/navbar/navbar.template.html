@@ -2,7 +2,7 @@
   <div class="notifications">
     <alert [dismissible]="true">
       <i class="fa fa-info-circle mr-xs"></i> Check out Light Blue <a (click)="settings.isOpen = !settings.isOpen"
-                                                                      id="notification-link" href="#">settings</a> on
+        id="notification-link" href="#">settings</a> on
       the right!
     </alert>
   </div>
@@ -12,7 +12,8 @@
         <div class="input-group-addon">
           <i class="fa fa-search text-white"></i>
         </div>
-        <input placeholder="Search..." type="text" class="input-transparent form-control"></div>
+        <input placeholder="Search..." type="text" class="input-transparent form-control">
+      </div>
     </div>
   </form>
   <ul class="nav navbar-nav">
@@ -22,9 +23,7 @@
       </a>
     </li>
     <li class="nav-item dropdown">
-      <a href title="Messages" id="messages"
-         class="nav-link dropdown-toggle"
-         data-toggle="dropdown">
+      <a href title="Messages" id="messages" class="nav-link dropdown-toggle" data-toggle="dropdown">
         <i class="glyphicon glyphicon-comment"></i>
       </a>
       <ul id="messages-menu" class="dropdown-menu dropdown-menu-right messages" role="menu">
@@ -71,11 +70,10 @@
       </ul>
     </li>
     <li class="nav-item dropdown">
-      <a href title="8 support tickets"
-         class="nav-link dropdown-toggle"
-         data-toggle="dropdown">
-        <i class="glyphicon glyphicon-globe"></i>
-        <span class="count">8</span>
+      <a href tooltip="{{notificationCount+' new notifications'}}" class="nav-link dropdown-toggle"
+        data-toggle="dropdown">
+        <i class="fad fa-bell" [ngClass]="notificationCount>0?'warning':''"></i>
+        <span class="count">{{notificationCount}}</span>
       </a>
       <ul id="support-menu" class="dropdown-menu dropdown-menu-right support" role="menu">
         <li role="presentation">
@@ -137,10 +135,7 @@
     </li>
     <li class="divider"></li>
     <li dropdown [isOpen]="settings.isOpen" [autoClose]="false" class="nav-item dropdown d-sm-down-none">
-      <a id="settings"
-         title="Settings"
-         class="nav-link dropdown-toggle"
-         dropdownToggle>
+      <a id="settings" title="Settings" class="nav-link dropdown-toggle" dropdownToggle>
         <i class="glyphicon glyphicon-cog"></i>
       </a>
       <div class="settings dropdown-menu" *dropdownMenu>
@@ -149,25 +144,27 @@
             <div>Sidebar on the</div>
             <div id="sidebar-toggle" class="btn-group">
               <!--nRight = sidebar == 'right'-->
-              <button type="button" btnRadio="Left"  [(ngModel)]="radioModel" (click)="sidebarPosition('Left')"  class="btn btn-dark">Left</button>
-              <button type="button" btnRadio="Right" [(ngModel)]="radioModel" (click)="sidebarPosition('Right')"  class="btn btn-dark">Right</button>
+              <button type="button" btnRadio="Left" [(ngModel)]="radioModel" (click)="sidebarPosition('Left')"
+                class="btn btn-dark">Left</button>
+              <button type="button" btnRadio="Right" [(ngModel)]="radioModel" (click)="sidebarPosition('Right')"
+                class="btn btn-dark">Right</button>
             </div>
           </div>
           <div class="setting clearfix">
             <div>Sidebar</div>
             <div id="display-sidebar-toggle" class="btn-group" data-toggle="buttons-radio">
               <!--display = displaySidebar-->
-              <button type="button" btnRadio="Left"  [(ngModel)]="display" (click)="sidebarDisplay('Show')" class="btn btn-dark">Show</button>
-              <button type="button" btnRadio="Right" [(ngModel)]="display" (click)="sidebarDisplay('Hide')" class="btn btn-dark">Hide</button>
+              <button type="button" btnRadio="Left" [(ngModel)]="display" (click)="sidebarDisplay('Show')"
+                class="btn btn-dark">Show</button>
+              <button type="button" btnRadio="Right" [(ngModel)]="display" (click)="sidebarDisplay('Hide')"
+                class="btn btn-dark">Hide</button>
             </div>
           </div>
         </div>
       </div>
     </li>
     <li class="nav-item dropdown d-sm-down-none">
-      <a href title="Account" id="account"
-         class="nav-link dropdown-toggle"
-         data-toggle="dropdown">
+      <a href title="Account" id="account" class="nav-link dropdown-toggle" data-toggle="dropdown">
         <i class="glyphicon glyphicon-user"></i>
       </a>
       <ul id="account-menu" class="dropdown-menu dropdown-menu-right account" role="menu">

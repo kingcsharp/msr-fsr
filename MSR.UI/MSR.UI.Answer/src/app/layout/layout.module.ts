@@ -1,11 +1,11 @@
-import { NgModule }      from '@angular/core';
-import { FormsModule }      from '@angular/forms';
-import { CommonModule }  from '@angular/common';
-import {ButtonsModule} from 'ngx-bootstrap/buttons'; 
-import {BsDropdownModule} from 'ngx-bootstrap/dropdown'; 
-import {AlertModule} from 'ngx-bootstrap/alert'; 
-import { ProgressbarModule} from 'ngx-bootstrap/progressbar';
-
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { ButtonsModule } from 'ngx-bootstrap/buttons';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { AlertModule } from 'ngx-bootstrap/alert';
+import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ROUTES } from './layout.routes';
 
 import { Layout } from './layout.component';
@@ -20,7 +20,8 @@ import { Navbar } from './navbar/navbar.component';
     ButtonsModule.forRoot(),
     BsDropdownModule.forRoot(),
     AlertModule.forRoot(),
-    ProgressbarModule.forRoot()
+    ProgressbarModule.forRoot(),
+    TooltipModule.forRoot()
   ],
   declarations: [Layout, Sidebar, Navbar]
 })

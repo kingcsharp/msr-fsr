@@ -1,5 +1,5 @@
 import { Component, Output, EventEmitter, ElementRef, Renderer2 } from '@angular/core';
-import {LoginService} from "../../pages/login/login.service";
+import { LoginService } from "../../pages/login/login.service";
 
 @Component({
   selector: '[navbar]',
@@ -13,6 +13,7 @@ export class Navbar {
   display: string = 'Left';
   radioModel: string = 'Left';
   searchFormState: boolean = true;
+  notificationCount: number = 3;
   settings: any = {
     isOpen: false
   };
@@ -21,7 +22,7 @@ export class Navbar {
     private renderer: Renderer2,
     private el: ElementRef,
     private loginService: LoginService
-  ) {}
+  ) { }
 
   sidebarPosition(position): void {
     this.changeSidebarPosition.emit(position);
@@ -48,8 +49,8 @@ export class Navbar {
 
   private changeStyleElement(selector, styleName, styleValue): void {
     styleValue == null ? this.renderer.removeStyle(this.el.nativeElement
-    .querySelector(selector), styleName) : this.renderer.setStyle(this.el.nativeElement
-    .querySelector(selector), styleName, styleValue);
+      .querySelector(selector), styleName) : this.renderer.setStyle(this.el.nativeElement
+        .querySelector(selector), styleName, styleValue);
   }
 
   logout() {
