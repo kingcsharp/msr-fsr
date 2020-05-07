@@ -6,18 +6,20 @@
     [routerLinkActive]="['active']">
     <a *ngIf="item.submenu.length > 0" (click)="sidebarBehavior($event)" class="accordion-toggle collapsed"
       data-toggle="collapse" data-parent="#side-nav" href="#{{item.name}}">
-      <i [ngClass]="'fa '+item.icon"></i> &nbsp;
+      <i [ngClass]="'fas '+item.icon"></i> &nbsp;
       <span class="name">{{item.name}}</span>
     </a>
     <ul *ngIf="item.submenu.length > 0" id="{{item.name}}" class="accordion-body collapse" aria-expanded="false">
       <li *ngFor="let subItem of item.submenu" [routerLinkActive]="['active']"><a
-          routerLink="{{item.name | lowercase}}/{{subItem.url | lowercase}}">{{subItem.name}}</a></li>
+          routerLink="{{item.name | lowercase}}/{{subItem.url | lowercase}}"><i [ngClass]="'fas '+subItem.icon"></i> &nbsp; {{subItem.name}}</a></li>
     </ul>
     <a *ngIf="item.submenu.length === 0" routerLink="profile">
-      <i [ngClass]="'fa '+item.icon"></i> &nbsp;
+      <i [ngClass]="'fas '+item.icon"></i> &nbsp;
       <span class="name">{{item.name}}</span></a>
   </li>
-
+  <li>
+    MENU ENDS HERE
+  </li>
   <li class="accordion-group panel" [routerLinkActive]="['active']">
     <a (click)="sidebarBehavior($event)" class="accordion-toggle collapsed" data-toggle="collapse"
       data-parent="#side-nav" href="#main-collapse">

@@ -16,6 +16,9 @@ import { AppGuard } from './app.guard';
 import { AppInterceptor } from './app.interceptor';
 import { AppConfig } from './app.config';
 import { CommonService } from './services/common';
+import { Globals } from './models/lib/globals';
+import { EnumPrivilege } from './models/enums/privileges';
+
 import * as $ from 'jquery';
 
 const APP_PROVIDERS = [
@@ -24,7 +27,8 @@ const APP_PROVIDERS = [
   AppGuard,
   AppConfig,
   ResetpasswordService,
-  CommonService
+  CommonService,
+  Globals
 ];
 
 @NgModule({
@@ -47,8 +51,11 @@ const APP_PROVIDERS = [
   providers: [
     APP_PROVIDERS,
     {
-      provide: HTTP_INTERCEPTORS, useClass: AppInterceptor, multi: true
-    }
+      provide: HTTP_INTERCEPTORS,
+      useClass: AppInterceptor,
+      multi: true
+    },
+    Globals
   ]
 })
 export class AppModule { }

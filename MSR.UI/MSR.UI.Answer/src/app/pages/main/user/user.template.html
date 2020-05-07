@@ -96,7 +96,7 @@
   </p-table>
 </widget>
 <div>
-  <button (click)="showDialog()" class="btn btn-outline-inverse width-100 mb-xs" role="button">
+  <button *ngIf="hasPrivilege(privileges.CanRead)" (click)="showDialog()" class="btn btn-outline-inverse width-100 mb-xs" role="button">
     Add
   </button>
 </div>

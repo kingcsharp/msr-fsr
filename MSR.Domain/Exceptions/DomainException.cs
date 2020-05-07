@@ -1,4 +1,4 @@
-﻿using MSR.Domain.Commanding.Emums;
+﻿using MSR.Domain.Commanding.Enums;
 using System;
 
 namespace MSR.Domain.Exceptions

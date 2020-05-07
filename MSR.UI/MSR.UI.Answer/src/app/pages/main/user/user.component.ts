@@ -3,6 +3,8 @@ import { UserService } from './user.service';
 import { ɵDomSharedStylesHost } from '@angular/platform-browser';
 import { User } from '../../../models/lib/user';
 import { ToastrService } from 'ngx-toastr';
+import { Globals } from '../../../models/lib/globals';
+import { EnumPrivilege } from '../../../models/enums/privileges';
 
 declare let jQuery: any;
 
@@ -14,6 +16,7 @@ declare let jQuery: any;
   preserveWhitespaces: true
 })
 export class UserComponent implements OnInit {
+  privileges = EnumPrivilege;
   config: any;
   month: any;
   year: any;
@@ -32,7 +35,7 @@ export class UserComponent implements OnInit {
       '-', /\d/, /\d/, /\d/, /\d/]
   };
 
-  constructor(public userService: UserService, injector: Injector, private toastr: ToastrService) {
+  constructor(public userService: UserService, injector: Injector, private toastr: ToastrService, private globals: Globals) {
     this.domSharedStylesHost = injector.get(ɵDomSharedStylesHost);
     this.domSharedStylesHost.__onStylesAdded__ = this.domSharedStylesHost.onStylesAdded;
     this.domSharedStylesHost.onStylesAdded = (additions) => {
@@ -63,6 +66,11 @@ export class UserComponent implements OnInit {
     this.loading = false;
   }
 
+  hasPrivilege(privName) {
+    debugger;
+    return this.globals.hasPrivilege('users', privName);
+  }
+
   unmask(event) {
     return event.replace(/\D+/g, '');
   }
@@ -71,6 +79,7 @@ export class UserComponent implements OnInit {
     this.display = true;
     this.currUser = this.getUser(user);
   }
+
   clseDialog() {
     this.display = false;
     jQuery('.parsleyjs').parsley().reset();
