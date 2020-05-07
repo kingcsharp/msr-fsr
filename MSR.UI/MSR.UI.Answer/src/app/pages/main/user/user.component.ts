@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewEncapsulation, Injector } from '@angular/core';
 import { UserService } from './user.service';
-import { ɵDomSharedStylesHost } from '@angular/platform-browser';
 import { User } from '../../../models/lib/user';
 import { ToastrService } from 'ngx-toastr';
 import { Globals } from '../../../models/lib/globals';
@@ -22,13 +21,11 @@ export class UserComponent implements OnInit {
   year: any;
   data: any;
   loading: boolean = true;
-  domSharedStylesHost: any;
   display: boolean = false;
   currUser: User;
   injector: Injector;
   phoneValue = '';
   statuses: any[];
-  instance: any;
   canAddUsers: boolean = false;
   canEditUsers: boolean = false;
   phoneMask = {
@@ -38,14 +35,7 @@ export class UserComponent implements OnInit {
   };
 
   constructor(public userService: UserService, injector: Injector, private toastr: ToastrService, private globals: Globals) {
-    this.domSharedStylesHost = injector.get(ɵDomSharedStylesHost);
-    this.domSharedStylesHost.__onStylesAdded__ = this.domSharedStylesHost.onStylesAdded;
-    this.domSharedStylesHost.onStylesAdded = (additions) => {
-      const style = additions[0];
-      if (!style || !style.trim().startsWith('.select2-container')) {
-        this.domSharedStylesHost.__onStylesAdded__(additions);
-      }
-    };
+    
   }
 
 
@@ -59,9 +49,10 @@ export class UserComponent implements OnInit {
       { label: 'Active', value: true },
       { label: 'InActive', value: false },
     ];
-    this.instance = jQuery('.parsleyjs').parsley();
     this.canAddUsers = this.hasPrivilege(this.privileges.CanCreate);
     this.canEditUsers = this.hasPrivilege(this.privileges.CanEdit);
+    // this.canAddUsers = true;
+    // this.canEditUsers = true;
   }
 
   async getUsers() {
