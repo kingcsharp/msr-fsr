@@ -2,5 +2,5 @@ export const environment = {
   production: true,
   hmr: false,
   backend: true,
-  version:"1"
+  version:"v1"
 };
