@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Net;
-using System.Net.Http;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.EntityFrameworkCore.Internal;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Helpers;
 using Newtonsoft.Json;
@@ -48,7 +43,7 @@ namespace MSR.Answer.API.Filters
             var value = JsonConvert.DeserializeObject<int[][]>(claimVal);
 
             var menuItemPrivileges = value[(int)EnumMenuItem];
-            if (menuItemPrivileges.IndexOf((int)EnumPrivilege) == -1)
+            if (Array.IndexOf(menuItemPrivileges,(int)EnumPrivilege) == -1)
             {
                 context.Result = new UnauthorizedResult();
             }
