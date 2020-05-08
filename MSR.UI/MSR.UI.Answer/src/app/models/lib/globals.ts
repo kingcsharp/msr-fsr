@@ -1,16 +1,14 @@
 import { Injectable } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 
-
 @Injectable()
 
 export class Globals {
-
     login = false;
     openMainMenu = false;
     userLogged = false;
+    loader = true;
     user;
-
 
     constructor(private toastr: ToastrService) {
         if (localStorage.user === undefined || localStorage.user === undefined) {
@@ -24,6 +22,10 @@ export class Globals {
         if (localStorage.user !== undefined) {
             this.user = JSON.parse(localStorage.user);
         }
+    }
+
+    showLoader(isOn) {
+        this.loader = isOn;
     }
 
     hasPrivilege(controllerName, privilege) {

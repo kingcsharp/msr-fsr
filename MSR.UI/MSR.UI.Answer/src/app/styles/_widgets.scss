@@ -1201,4 +1201,8 @@ body .ui-dropdown.ui-dropdown-clearable .ui-dropdown-label {
 #sidebar .sidebar-header strong {
   display: none;
 }
+
+.ui-widget-overlay{
+  z-index: 10000;
+}
 /* SIDEBAR END*/

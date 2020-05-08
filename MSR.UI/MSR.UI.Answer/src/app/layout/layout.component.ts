@@ -7,6 +7,7 @@ import {
   NavigationCancel,
   NavigationError
 } from '@angular/router';
+import { Globals } from '../models/lib/globals';
 
 declare let Raphael: any;
 
@@ -22,7 +23,7 @@ export class Layout {
   @ViewChild('spinnerElement', { static: true }) spinnerElement: ElementRef;
   @ViewChild('routerComponent', { static: true }) routerComponent: ElementRef;
 
-  constructor(private el: ElementRef, private renderer: Renderer2, private router: Router, private ngZone: NgZone) {
+  constructor(private el: ElementRef, private renderer: Renderer2, private router: Router, private ngZone: NgZone, private globals: Globals) {
     Raphael.prototype.safari = function (): any {
       return;
     };
@@ -68,7 +69,6 @@ export class Layout {
     // We wanna run this function outside of Angular's zone to
     // bypass change detection,
     this.ngZone.runOutsideAngular(() => {
-
       // For simplicity we are going to turn opacity on / off
       // you could add/remove a class for more advanced styling
       // and enter/leave animation of the spinner

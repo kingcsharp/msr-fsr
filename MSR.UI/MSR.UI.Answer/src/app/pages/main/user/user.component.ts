@@ -97,6 +97,7 @@ export class UserComponent implements OnInit {
     const ctrl = this;
     if (jQuery('.parsleyjs').parsley().isValid()) {
       let method = null;
+      this.globals.showLoader(true);
       if (this.currUser.id === undefined) {
         method = this.userService.postUser(this.currUser);
       } else {
