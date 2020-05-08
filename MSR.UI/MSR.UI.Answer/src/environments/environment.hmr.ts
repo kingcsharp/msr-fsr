@@ -1,6 +1,6 @@
 export const environment = {
-  production: false,
-  hmr: true,
+  production: true,
+  hmr: false,
   backend: true,
-  version:"1"
+  version:"v1"
 };

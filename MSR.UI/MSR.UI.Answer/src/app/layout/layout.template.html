@@ -1,7 +1,9 @@
-<nav sidebar id="sidebar" class="sidebar nav-collapse collapse"></nav>
-<div class="wrap">
+<nav sidebar id="sidebar" [ngClass]="open?'active':''" (mouseenter)="open=false" (mouseleave)="open=true"
+  class="sidebar nav-collapse collapse">
+</nav>
+<div class="wrap" [ngClass]="open?'expand':''">
   <header navbar (changeSidebarPosition)="sidebarPosition($event)" (changeSidebarDisplay)="sidebarDisplay($event)"
-          (openSidebar)="openSidebar()" class="page-header"></header>
+    (openSidebar)="openSidebar()" class="page-header"></header>
   <main id="content" class="content view-animate fade-up" role="main">
     <div class="loading-overlay" #spinnerElement>
       <div class="sk-fading-circle">
