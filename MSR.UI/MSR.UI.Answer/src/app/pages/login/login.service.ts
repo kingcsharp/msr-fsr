@@ -57,9 +57,12 @@ export class LoginService {
   async loginUser(creds) {
     // We check if app runs with backend mode
     this.requestLogin();
+    const ctrl = this;
     if (creds.email.length > 0 && creds.password.length > 0) {
       this.http.post('/Account/login', { userName: creds.email, password: creds.password }).subscribe(async (res: any) => {
         await this.receiveToken(res.object);
+      }, function () {
+        ctrl.loginError('Username or Password is invalid.');
       });
     } else {
       this.loginError('Something was wrong. Try again');
@@ -67,16 +70,21 @@ export class LoginService {
   }
 
   async forgotUserPassword(email) {
+    const ctrl = this;
     return this.http.post('/Account/forgotpassword', { userName: email }).toPromise().then((res: any) => {
-      this.loginError("Reset password email sent.");
+      ctrl.loginError("Reset password email sent.");
       return true;
     });
   }
 
   async forgotUserName(email) {
+    const ctrl = this;
     return this.http.post('/Account/forgotusername', { email: email }).toPromise().then((res: any) => {
-      this.loginError("An email has been sent with your information.");
+      ctrl.loginError("An email has been sent with your information.");
       return true;
+    }, function (ret) {
+      ctrl.loginError(ret.error.errorMessages[0].message);
+      return false;
     });
   }
 

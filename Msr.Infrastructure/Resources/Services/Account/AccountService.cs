@@ -199,11 +199,6 @@ namespace MSR.Infrastructure.Resources.Services.Account
             foreach (var role in user.Roles ?? new List<UserRole>())
             {
                 var efRole = role.Role;
-                //var domainRole = new Domain.Models.Role()
-                //{
-                //    IsCertificationRole = efRole.IsCertificationRole,
-                //    Name = efRole.Name
-                //};
                 foreach (var menuItem in (efRole ?? new EntityFramework.Entities.Role()).Menus)
                 {
                     if (menuItem.MenuItem == null) continue;
