@@ -1,5 +1,8 @@
-﻿namespace MSR.Infrastructure.Resources.EntityFramework.Entities
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
+    [Table(nameof(MenuRolePermission))]
     public class MenuRolePermission: TrackableEntity
     {
         public int MenuRoleId { get; set; }

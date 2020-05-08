@@ -142,6 +142,11 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Repository
             return _dbSet.Count(filter);
         }
 
+        public virtual int Count()
+        {
+            return _dbSet.Count();
+        }
+
         public virtual bool Exists(Expression<Func<TEntity, bool>> filter)
         {
             return _dbSet.Any(filter);

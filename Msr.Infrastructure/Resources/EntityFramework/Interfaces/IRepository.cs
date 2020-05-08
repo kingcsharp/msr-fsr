@@ -22,6 +22,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Interfaces
         void ApplyCurrentValues(TEntity entityToUpdate, TEntity updatedEntity);
         IEnumerable<TEntity> SqlQuery(string query, params object[] parameters);
         int Count(Expression<Func<TEntity, bool>> filter);
+        int Count();
         bool Exists(Expression<Func<TEntity, bool>> filter);
         IQueryable<TEntity> Query();
         IQueryable<TEntity> QueryAsNoTracking();

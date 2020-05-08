@@ -13,6 +13,17 @@ namespace MSR.Infrastructure.Resources.EntityFramework
     {
         private const string ConnectionString_ = "server=bang.msr-fsr.com;Initial Catalog=Answer3_Dev;User Id=msrfsr;Password=snRvf2rFVG7rGAVE;";
         public DbSet<User> User { get; set; }
+        public DbSet<UserRole> UserRole { get; set; }
+        public DbSet<Customer> Customer { get; set; }
+        public DbSet<CustomerApproval> CustomerApproval { get; set; }
+        public DbSet<Location> Location { get; set; }
+        public DbSet<LocationApproval> LocationApproval { get; set; }
+        public DbSet<MenuGroup> MenuGroup { get; set; }
+        public DbSet<MenuItem> MenuItem{ get; set; }
+        public DbSet<MenuRole> MenuRole { get; set; }
+        public DbSet<MenuRolePermission> MenuRolePermission { get; set; }
+        public DbSet<Role> Role { get; set; }
+        public DbSet<Status> Status { get; set; }
 
         public AnswerContext() : base()
         {

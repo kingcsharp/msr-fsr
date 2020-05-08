@@ -1,14 +1,15 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
-    [Table(nameof(LocationApproval))]
-    public partial class LocationApproval: TrackableEntity
-    {
-        public int LocationId { get; set; }
+   
 
+    [Table(nameof(Location))]
+    public partial class Location: TrackableEntity
+    {
         public int OldId { get; set; }
 
         [StringLength(100)]
@@ -42,6 +43,5 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         [StringLength(20)]
         public string InvoiceClass { get; set; }
-
     }
 }
