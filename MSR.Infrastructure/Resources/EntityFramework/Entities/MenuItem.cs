@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
-
     [Table(nameof(MenuItem))]
     public partial class MenuItem : TrackableEntity
     {

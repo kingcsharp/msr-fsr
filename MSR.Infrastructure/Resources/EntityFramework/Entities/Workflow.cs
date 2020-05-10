@@ -2,12 +2,13 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
-{ 
-    [Table(nameof(Status))]
-    public partial class Status: Entity
+{
+    [Table(nameof(Workflow))]
+    public partial class Workflow
     {
-        [Required]
-        [StringLength(20)]
+        [StringLength(100)]
         public string Name { get; set; }
+
+        public bool? IsActive { get; set; }
     }
 }

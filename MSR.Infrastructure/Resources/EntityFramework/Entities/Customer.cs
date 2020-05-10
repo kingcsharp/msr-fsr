@@ -14,11 +14,10 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 
         public int? PrimaryContactUserId { get; set; }
 
-        [ForeignKey("Id")]
         public User PrimaryContactUser { get; set; }
 
         public int? SecondaryContactUserId { get; set; }
-        [ForeignKey("Id")]
+
         public User SecondaryContactUser { get; set; }
 
         public virtual Location Location { get; set; }

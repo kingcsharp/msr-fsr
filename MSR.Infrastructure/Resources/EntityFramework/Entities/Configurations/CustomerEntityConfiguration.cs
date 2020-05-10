@@ -10,13 +10,13 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Entities.Configurations
     {
         public void Configure(EntityTypeBuilder<Customer> builder)
         {
-            builder.ToTable(nameof(Customer));
-            builder.HasOne(i => i.PrimaryContactUser)
+            _ = builder.ToTable(nameof(Customer));
+            _ = builder.HasOne(i => i.PrimaryContactUser)
                    .WithOne()
-                   .HasForeignKey("PrimaryConteactUserId");
-            builder.HasOne(i => i.SecondaryContactUser)
+                   .HasForeignKey<User>(c => c.Id);
+            _ = builder.HasOne(i => i.SecondaryContactUser)
                    .WithOne()
-                   .HasForeignKey("SecondaryConteactUserId");
+                   .HasForeignKey<User>(c => c.Id);
         }
     }
 }

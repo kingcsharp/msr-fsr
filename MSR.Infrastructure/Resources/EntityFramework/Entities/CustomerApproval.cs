@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
-
     [Table(nameof(CustomerApproval))]
     public partial class CustomerApproval: TrackableEntity
     {

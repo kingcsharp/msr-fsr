@@ -2,12 +2,12 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
-{ 
-    [Table(nameof(Status))]
-    public partial class Status: Entity
+{
+    [Table(nameof(ProcedureVerbType))]
+    public partial class ProcedureVerbType: TrackableEntity
     {
         [Required]
-        [StringLength(20)]
+        [StringLength(100)]
         public string Name { get; set; }
     }
 }

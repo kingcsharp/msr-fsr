@@ -5,8 +5,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
-   
-
     [Table(nameof(Location))]
     public partial class Location: TrackableEntity
     {
