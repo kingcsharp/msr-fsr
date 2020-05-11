@@ -5,7 +5,7 @@
   "scripts": {
     "install": "napa",
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --configuration backend",
     "start:backend": "ng serve --configuration backend",
     "hmr": "ng serve --configuration hmr",
     "build": "ng build",

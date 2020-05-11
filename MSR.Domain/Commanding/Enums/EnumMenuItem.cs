@@ -1,39 +1,41 @@
 ﻿namespace MSR.Domain.Commanding.Enums
 {
+    /*
+     * Enum generated from:
+     * SELECT TOP (1000) [Id],REPLACE(REPLACE([Name], ' ', ''),'/','') FROM [Answer3_Dev].[dbo].[MenuItem] order by Name
+     */
     public enum EnumMenuItem
     {
-        Invoices
-        , Purchases
-        , Financial
-        , Operational
-        , SupportTicket
-        , HelpPages
-        , Regions
-        , Parts
-        , PartTypes
-        , ActualPartsAssets
-        , Users
-        , UserRoles
-        , CompaniesDepartments
-        , TrainingCertifications
-        , Quotes
-        , QuotesProducts
-        , FreeformQuote
-        , PurchaseOrders
-        , RunnableProcedures
-        , ProcedureTypes
-        , Templates
-        , Reports
-        , AnswerAdmin
-        , EquipmentMaintenance
-        , PartsRecievedbyCust
-        , AdminCostSettings
-        , WipStatus
-        , WIPMenu
-        , ApprovalWorkflows
-        , ApprovalStages
-        , ApprovalGroups
-        , PendingApprovals
-        , ModuleAccess
+        AdminCostSettings
+        ,ApprovalGroups
+        ,ApprovalStages
+        ,ApprovalWorkflows
+        ,CustomersDepartments
+        ,Documents
+        ,EquipmentMaintenance
+        ,Financial
+        ,FreeformQuote
+        ,HelpPages
+        ,Invoices
+        ,Locations
+        ,Monitors
+        ,Operational
+        ,Parts
+        ,PendingApprovals
+        ,ProcedureTypes
+        ,PurchaseOrders
+        ,Purchases
+        ,QuotesProducts
+        ,Reports
+        ,RoleModulePermission
+        ,RunnableProcedures
+        ,SupportTicket
+        ,Templates
+        ,TrainingCertifications
+        ,UserRoles
+        ,Users
+        ,WIPHistory
+        ,WIPMenu
+        ,WipStatus
     }
 }

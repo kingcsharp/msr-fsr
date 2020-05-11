@@ -92,20 +92,19 @@ export class LoginService {
   async receiveToken(token) {
     let user: any = {};
     // We check if app runs with backend mode
-    if (this.config.isBackend) {
-      localStorage.setItem('token', token);
-      delete token.token;
-    } else {
-      user = {
-        email: this.config.auth.email
-      };
-      localStorage.setItem('token', token);
-    }
+    user = {
+      email: this.config.auth.email
+    };
+    localStorage.setItem('token', token);
     var userData = await this.commonService.getLoggedUser();
     Object.assign(user, userData);
     this.globals.updateUser(user);
     localStorage.setItem('user', JSON.stringify(user));
-
+    if (user.roles.length === 0) {
+      this.logoutUser();
+      this.loginError("Sorry you do not have roles associated with your user.");
+      return;
+    }
     this.receiveLogin();
   }
 

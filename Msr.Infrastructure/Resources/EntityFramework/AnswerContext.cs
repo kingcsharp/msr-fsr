@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -19,7 +21,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<Location> Location { get; set; }
         public DbSet<LocationApproval> LocationApproval { get; set; }
         public DbSet<MenuGroup> MenuGroup { get; set; }
-        public DbSet<MenuItem> MenuItem{ get; set; }
+        public DbSet<MenuItem> MenuItem { get; set; }
         public DbSet<MenuRole> MenuRole { get; set; }
         public DbSet<MenuRolePermission> MenuRolePermission { get; set; }
         public DbSet<Role> Role { get; set; }
@@ -33,7 +35,7 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<PurchaseOrderProductApproval> PurchaseOrderProductApproval { get; set; }
         public DbSet<UserApproval> UserApproval { get; set; }
         public DbSet<UserRoleApproval> UserRoleApproval { get; set; }
-        
+
         public AnswerContext() : base()
         {
             ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
@@ -120,10 +122,17 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            var typesToRegister = Assembly.GetExecutingAssembly().GetTypes()
+                .Where(t => t.GetInterfaces()
+                    .Any(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IEntityTypeConfiguration<>)))
+                .ToList();
 
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(TrackableEntity).Assembly);
+            foreach (var type in typesToRegister)
+            {
+                dynamic configurationInstance = Activator.CreateInstance(type);
+                modelBuilder.ApplyConfiguration(configurationInstance);
+            }
         }
-
 
     }
 }
