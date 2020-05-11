@@ -17,6 +17,7 @@
         , CompaniesDepartments
         , TrainingCertifications
         , Quotes
+        , QuotesProducts
         , FreeformQuote
         , PurchaseOrders
         , RunnableProcedures

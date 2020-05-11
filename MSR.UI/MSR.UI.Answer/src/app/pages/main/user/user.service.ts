@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { AppConfig } from '../../../app.config';
 import { User } from '../../../models/lib/user';
 
-
 @Injectable()
 export class UserService {
 

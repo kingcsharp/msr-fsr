@@ -7,6 +7,7 @@ import {
   NavigationCancel,
   NavigationError
 } from '@angular/router';
+import { Globals } from '../models/lib/globals';
 
 declare let Raphael: any;
 
@@ -17,11 +18,12 @@ declare let Raphael: any;
   templateUrl: './layout.template.html'
 })
 export class Layout {
+  open: boolean = true;
   sidebarState: boolean = true;
-  @ViewChild('spinnerElement', {static: true}) spinnerElement: ElementRef;
-  @ViewChild('routerComponent', {static: true}) routerComponent: ElementRef;
+  @ViewChild('spinnerElement', { static: true }) spinnerElement: ElementRef;
+  @ViewChild('routerComponent', { static: true }) routerComponent: ElementRef;
 
-  constructor(private el: ElementRef, private renderer: Renderer2, private router: Router, private ngZone: NgZone) {
+  constructor(private el: ElementRef, private renderer: Renderer2, private router: Router, private ngZone: NgZone, private globals: Globals) {
     Raphael.prototype.safari = function (): any {
       return;
     };
@@ -43,9 +45,9 @@ export class Layout {
         // you could add/remove a class for more advanced styling
         // and enter/leave animation of the spinner
         // For simplicity we are going to turn opacity on / off
-// you could add/remove a class for more advanced styling
-// and enter/leave animation of the spinner
-this.renderer.setStyle(this.spinnerElement.nativeElement, 'opacity', '1');
+        // you could add/remove a class for more advanced styling
+        // and enter/leave animation of the spinner
+        this.renderer.setStyle(this.spinnerElement.nativeElement, 'opacity', '1');
         this.renderer.setStyle(this.routerComponent.nativeElement, 'opacity', '0');
       });
     }
@@ -67,14 +69,13 @@ this.renderer.setStyle(this.spinnerElement.nativeElement, 'opacity', '1');
     // We wanna run this function outside of Angular's zone to
     // bypass change detection,
     this.ngZone.runOutsideAngular(() => {
-
       // For simplicity we are going to turn opacity on / off
       // you could add/remove a class for more advanced styling
       // and enter/leave animation of the spinner
       // For simplicity we are going to turn opacity on / off
-// you could add/remove a class for more advanced styling
-// and enter/leave animation of the spinner
-this.renderer.setStyle(this.spinnerElement.nativeElement, 'opacity', '0');
+      // you could add/remove a class for more advanced styling
+      // and enter/leave animation of the spinner
+      this.renderer.setStyle(this.spinnerElement.nativeElement, 'opacity', '0');
       this.renderer.setStyle(this.routerComponent.nativeElement, 'opacity', '1');
     });
   }
@@ -97,10 +98,10 @@ this.renderer.setStyle(this.spinnerElement.nativeElement, 'opacity', '0');
 
     if (this.sidebarState) {
       this.renderer.setStyle(this.el.nativeElement
-    .querySelector('.content'), 'margin-top', sidebarHeight + 'px');
+        .querySelector('.content'), 'margin-top', sidebarHeight + 'px');
     } else {
       this.renderer.setStyle(this.el.nativeElement
-    .querySelector('.content'), 'margin-top', '0px');
+        .querySelector('.content'), 'margin-top', '0px');
     }
 
     this.sidebarState = !this.sidebarState;

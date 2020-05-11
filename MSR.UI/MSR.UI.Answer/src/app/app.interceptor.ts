@@ -4,22 +4,30 @@ import { ToastrService } from 'ngx-toastr';
 import { catchError, map } from 'rxjs/operators';
 import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpResponse } from '@angular/common/http';
 import { AppConfig } from './app.config';
+import { Globals } from './models/lib/globals';
 
 
 @Injectable()
 export class AppInterceptor implements HttpInterceptor {
   config;
-
+  requests: number = 0;
   constructor(
     appConfig: AppConfig,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private globals: Globals
   ) {
     this.config = appConfig.getConfig();
   }
 
+  turnOffLoader(){
+    if(this.requests==0){
+      this.globals.showLoader(false);
+    }
+  }
+
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     req = req.clone({ url: this.config.baseURLApi + req.url });
-
+    this.requests++;
     const token: string = localStorage.getItem('token');
     if (token) {
       req = req.clone({
@@ -30,6 +38,8 @@ export class AppInterceptor implements HttpInterceptor {
 
     return next.handle(req).pipe(
       catchError(err => {
+        this.requests--;
+        this.turnOffLoader();
         if (err.error) {
           if (err.status === 401) {
             return throwError(err);
@@ -52,6 +62,8 @@ export class AppInterceptor implements HttpInterceptor {
       }),
       map((event: HttpEvent<any>) => {
         if (event instanceof HttpResponse) {
+          this.requests--;
+          this.turnOffLoader();
           if (event.body === undefined || event.body === null) {
             return event;
           }

@@ -36,6 +36,7 @@ export class Login {
   public async forgotUserPassword() {
     if (this.username.length <= 0) {
       this.loginService.loginError('Please fill Username Field.');
+      return;
     }
 
     var sentEmail = await this.loginService.forgotUserPassword(this.username);
@@ -46,6 +47,7 @@ export class Login {
   public async forgotUserName() {
     if (this.email.length <= 0) {
       this.loginService.loginError('Please fill Username Field.');
+      return;
     }
 
     var sentEmail = await this.loginService.forgotUserName(this.email);

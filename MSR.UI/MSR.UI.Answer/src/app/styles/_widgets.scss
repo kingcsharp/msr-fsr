@@ -1140,6 +1140,69 @@ body .ui-dropdown.ui-dropdown-clearable .ui-dropdown-label {
 .pointer {
   cursor: pointer;
 }
-.parsley-errors-list li{
+.parsley-errors-list li {
   font-weight: bold;
 }
+
+.fa-bell.btn-outline-danger:hover {
+  background: none;
+  color: #a02c00;
+}
+#sidebar {
+  transition: all 3s;
+}
+.wrap {
+  transition: all 1.5s;
+}
+.wrap.expand {
+  margin-left: 80px;
+}
+#sidebar {
+  transition: all 2s;
+  // transition: visibility 0s, opacity 0.5s linear;
+}
+
+#sidebar ul li{
+  ul li a{
+    font-size: $font-size-sm;
+  }
+}
+
+/* SIDEBAR */
+#sidebar.active {
+  overflow: hidden;
+  width: 50px;
+  text-align: center;
+  .sidebar-header {
+    label,
+    span {
+      display: none;
+    }
+  }
+  .sidebar-header strong,
+  .sidebar-header h3,
+  ul li {
+    a:before,
+    span,
+    ul {
+      display: none !important;
+    }
+    a {
+      padding-right: 0;
+      i {
+        width: 100%;
+        margin-right: 0;
+        display: block;
+      }
+    }
+  }
+}
+/* Toggling the sidebar header content, hide the big heading [h3] and showing the small heading [strong] and vice versa*/
+#sidebar .sidebar-header strong {
+  display: none;
+}
+
+.ui-widget-overlay{
+  z-index: 10000;
+}
+/* SIDEBAR END*/
