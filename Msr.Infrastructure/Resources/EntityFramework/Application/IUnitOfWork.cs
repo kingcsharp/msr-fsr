@@ -21,6 +21,15 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
         IRepository<Role> Roles{ get; }
         IRepository<Status> Status{ get; }
         IRepository<UserRole> UserRoles{ get; }
+        IRepository<PartApproval> PartApprovals { get; }
+        IRepository<ProcedureApproval> ProcedureApprovals { get; }
+        IRepository<ProcedureStepApproval> ProcedureStepApprovals { get; }
+        IRepository<ProcedureStepDocumentApproval> ProcedureStepDocumentApprovals { get; }
+        IRepository<ProcedureStepMonitorApproval> ProcedureStepMonitorApprovals { get; }
+        IRepository<PurchaseOrderApproval> PurchaseOrderApprovals { get; }
+        IRepository<PurchaseOrderProductApproval> PurchaseOrderProductApprovals { get; }
+        IRepository<UserApproval> UserApprovals { get; }
+        IRepository<UserRoleApproval> UserRoleApprovals { get; }
 
         void SaveChanges();
         Task SaveChangesAsync();

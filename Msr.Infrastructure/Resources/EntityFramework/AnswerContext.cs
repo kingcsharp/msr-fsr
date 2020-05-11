@@ -24,7 +24,16 @@ namespace MSR.Infrastructure.Resources.EntityFramework
         public DbSet<MenuRolePermission> MenuRolePermission { get; set; }
         public DbSet<Role> Role { get; set; }
         public DbSet<Status> Status { get; set; }
-
+        public DbSet<PartApproval> PartApproval { get; set; }
+        public DbSet<ProcedureApproval> ProcedureApproval { get; set; }
+        public DbSet<ProcedureStepApproval> ProcedureStepApproval { get; set; }
+        public DbSet<ProcedureStepDocumentApproval> ProcedureStepDocumentApproval { get; set; }
+        public DbSet<ProcedureStepMonitorApproval> ProcedureStepMonitorApproval { get; set; }
+        public DbSet<PurchaseOrderApproval> PurchaseOrderApproval { get; set; }
+        public DbSet<PurchaseOrderProductApproval> PurchaseOrderProductApproval { get; set; }
+        public DbSet<UserApproval> UserApproval { get; set; }
+        public DbSet<UserRoleApproval> UserRoleApproval { get; set; }
+        
         public AnswerContext() : base()
         {
             ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
