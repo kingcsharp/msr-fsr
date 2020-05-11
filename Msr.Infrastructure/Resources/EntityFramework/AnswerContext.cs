@@ -116,5 +116,14 @@ namespace MSR.Infrastructure.Resources.EntityFramework
             //&& level == LogLevel.Information)
             //.AddConsole();
         });
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(TrackableEntity).Assembly);
+        }
+
+
     }
 }

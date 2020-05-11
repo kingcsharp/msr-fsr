@@ -29,11 +29,11 @@ namespace MSR.Answer.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddRollbarLogger(loggerOptions =>
-            {
-                loggerOptions.Filter =
-                  (loggerName, loglevel) => loglevel >= LogLevel.Trace;
-            });
+            //services.AddRollbarLogger(loggerOptions =>
+            //{
+            //    loggerOptions.Filter =
+            //      (loggerName, loglevel) => loglevel >= LogLevel.Trace;
+            //});
 
             services.AddControllers();
             services.AddApiVersioning();
@@ -73,7 +73,7 @@ namespace MSR.Answer.API
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseRollbarMiddleware();
+            //app.UseRollbarMiddleware();
 
             app.UseEndpoints(endpoints =>
             {
