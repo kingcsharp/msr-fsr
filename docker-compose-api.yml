@@ -2,9 +2,10 @@ version: '3'
 
 services:
   app:
-    image: 425480257575.dkr.ecr.us-west-2.amazonaws.com/msr-api:latest
+    image: 425480257575.dkr.ecr.us-west-2.amazonaws.com/msr-api:Dev08
     ports:
       - "80:80"
+      - "443:443"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80

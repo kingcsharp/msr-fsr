@@ -37,6 +37,31 @@ pipeline {
                 }
             }
         }
+
+        stages {
+            stage('Build Reverse Proxy Container') {
+                steps {
+                    script {
+                        dir('reverseproxy') {
+                            sh "sudo chmod 777 /var/run/docker.sock"
+                            sh "docker build -t msr-rp ."
+                            sh "docker tag msr-rp ${ACCOUNT_URL}/msr-rp:${env.BRANCH_NAME}${env.BUILD_NUMBER}"
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Push Reverse Proxy image to AWS ECR') {
+            steps {
+                script {
+                    dir('reverseproxy') {
+                        sh "eval \$(/home/ubuntu/.local/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
+                        sh "docker push ${ACCOUNT_URL}/msr-rp:${env.BRANCH_NAME}${env.BUILD_NUMBER}"
+                    }
+                }
+            }
+        }
         /*
         stage('Build API Container') {
             steps {

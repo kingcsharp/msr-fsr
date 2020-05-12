@@ -2,11 +2,12 @@
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim AS base
 WORKDIR /app
-EXPOSE 80
-EXPOSE 443
+#EXPOSE 80
+#EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
+COPY MSR.sln .
 COPY MSR.Answer.API/. MSR.Answer.API/
 COPY MSR.Application/. MSR.Application/
 COPY MSR.Domain/. MSR.Domain/
@@ -23,3 +24,5 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "MSR.Answer.API.dll"]
+ENV ASPNETCORE_URLS http://+:5000
+EXPOSE 5000
