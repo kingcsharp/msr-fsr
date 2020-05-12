@@ -20,10 +20,13 @@ declare let Raphael: any;
 export class Layout {
   open: boolean = true;
   sidebarState: boolean = true;
+  globals: Globals;
+  body: string = 'body';
   @ViewChild('spinnerElement', { static: true }) spinnerElement: ElementRef;
   @ViewChild('routerComponent', { static: true }) routerComponent: ElementRef;
 
-  constructor(private el: ElementRef, private renderer: Renderer2, private router: Router, private ngZone: NgZone, private globals: Globals) {
+  constructor(private el: ElementRef, private renderer: Renderer2, private router: Router, private ngZone: NgZone, private _globals: Globals) {
+    this.globals = _globals;
     Raphael.prototype.safari = function (): any {
       return;
     };

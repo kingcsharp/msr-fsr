@@ -17,10 +17,12 @@ namespace MSR.Application.ApplicationServices
         ICommandHandler<GetLoggedInUserData>
     {
         private readonly IUserService _userService;
+        private readonly IWorkflowService _workflowService;
 
-        public UserAppService(IUserService userService)
+        public UserAppService(IUserService userService, IWorkflowService workflowService)
         {
             _userService = userService;
+            _workflowService = workflowService;
         }
 
         public async Task<ICommandResponse> HandleAsync(GetUsers command, CancellationToken cancellationToken = default)

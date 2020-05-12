@@ -1,7 +1,36 @@
-﻿namespace MSR.Infrastructure.Resources.EntityFramework.Entities
-{
-    public class CustomerApproval
-    {
+using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
+namespace MSR.Infrastructure.Resources.EntityFramework.Entities
+{
+    [Table(nameof(CustomerApproval))]
+    public partial class CustomerApproval: TrackableEntity
+    {
+        public int CustomerId { get; set; }
+
+        public int OldId { get; set; }
+
+        [StringLength(100)]
+        public string Name { get; set; }
+
+        [StringLength(100)]
+        public string Address { get; set; }
+
+        [StringLength(20)]
+        public string Phone { get; set; }
+
+        public User PrimaryContactUser { get; set; }
+
+        public User SecondarContactUser { get; set; }
+
+        public int? LocationId { get; set; }
+
+        public virtual Customer Customer { get; set; }
+
+        public virtual Location Location { get; set; }
+
+        public int StatusId { get; set; }
+        public virtual Status Status { get; set; }
     }
 }

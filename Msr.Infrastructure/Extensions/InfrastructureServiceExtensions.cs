@@ -8,6 +8,7 @@ using MSR.Infrastructure.Resources.EntityFramework.Application;
 using MSR.Infrastructure.Resources.Services.Account;
 using MSR.Infrastructure.Resources.Services.Menu;
 using MSR.Infrastructure.Resources.Services.Users;
+using MSR.Infrastructure.Resources.Services.Workflow;
 
 namespace MSR.Infrastructure.Extensions
 {
@@ -23,6 +24,7 @@ namespace MSR.Infrastructure.Extensions
             services.AddScoped<IMenuService, MenuService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IWorkflowService, WorkflowService>();
 
             return services;
         }

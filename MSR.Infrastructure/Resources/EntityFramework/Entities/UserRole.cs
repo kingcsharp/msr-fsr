@@ -1,7 +1,7 @@
+using System;
+
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
-    using System;
-
     public partial class UserRole: TrackableEntity
     {
         public DateTime? CertificationFromDate { get; set; }

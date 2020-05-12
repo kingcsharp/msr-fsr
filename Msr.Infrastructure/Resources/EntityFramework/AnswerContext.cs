@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -13,6 +15,26 @@ namespace MSR.Infrastructure.Resources.EntityFramework
     {
         private const string ConnectionString_ = "server=bang.msr-fsr.com;Initial Catalog=Answer3_Dev;User Id=msrfsr;Password=snRvf2rFVG7rGAVE;";
         public DbSet<User> User { get; set; }
+        public DbSet<UserRole> UserRole { get; set; }
+        public DbSet<Customer> Customer { get; set; }
+        public DbSet<CustomerApproval> CustomerApproval { get; set; }
+        public DbSet<Location> Location { get; set; }
+        public DbSet<LocationApproval> LocationApproval { get; set; }
+        public DbSet<MenuGroup> MenuGroup { get; set; }
+        public DbSet<MenuItem> MenuItem { get; set; }
+        public DbSet<MenuRole> MenuRole { get; set; }
+        public DbSet<MenuRolePermission> MenuRolePermission { get; set; }
+        public DbSet<Role> Role { get; set; }
+        public DbSet<Status> Status { get; set; }
+        public DbSet<PartApproval> PartApproval { get; set; }
+        public DbSet<ProcedureApproval> ProcedureApproval { get; set; }
+        public DbSet<ProcedureStepApproval> ProcedureStepApproval { get; set; }
+        public DbSet<ProcedureStepDocumentApproval> ProcedureStepDocumentApproval { get; set; }
+        public DbSet<ProcedureStepMonitorApproval> ProcedureStepMonitorApproval { get; set; }
+        public DbSet<PurchaseOrderApproval> PurchaseOrderApproval { get; set; }
+        public DbSet<PurchaseOrderProductApproval> PurchaseOrderProductApproval { get; set; }
+        public DbSet<UserApproval> UserApproval { get; set; }
+        public DbSet<UserRoleApproval> UserRoleApproval { get; set; }
 
         public AnswerContext() : base()
         {
@@ -96,5 +118,21 @@ namespace MSR.Infrastructure.Resources.EntityFramework
             //&& level == LogLevel.Information)
             //.AddConsole();
         });
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            var typesToRegister = Assembly.GetExecutingAssembly().GetTypes()
+                .Where(t => t.GetInterfaces()
+                    .Any(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IEntityTypeConfiguration<>)))
+                .ToList();
+
+            foreach (var type in typesToRegister)
+            {
+                dynamic configurationInstance = Activator.CreateInstance(type);
+                modelBuilder.ApplyConfiguration(configurationInstance);
+            }
+        }
+
     }
 }

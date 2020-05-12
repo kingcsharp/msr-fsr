@@ -2,7 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MSR.Answer.API.Attributes;
+using MSR.Answer.API.V1.Extentions;
 using MSR.Domain.Commanding.Abstractions;
+using MSR.Domain.Commands;
+using MSR.Domain.Models;
 using System.Threading.Tasks;
 
 namespace MSR.Answer.API.V1.Controllers
@@ -25,7 +28,9 @@ namespace MSR.Answer.API.V1.Controllers
         [HttpGet("pending")]
         public async Task<IActionResult> GetPendingApprovals()
         {
-            return Ok();
+            var ret = await _dispatcher.DispatchAsync(new GetPendingApprovals());
+
+            return ret.ToOkObjectResponse<PendingApprovalNotification>();
         }
     }
 }
