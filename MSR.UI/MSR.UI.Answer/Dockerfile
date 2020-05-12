@@ -6,7 +6,8 @@ COPY package.json ./
 RUN npm install
 
 COPY . .
-RUN ng build --prod=true
+RUN ng build
+#--prod=true
 
 ### STAGE 2: Run ###
 FROM nginx:1.17.1-alpine
