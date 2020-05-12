@@ -38,15 +38,13 @@ pipeline {
             }
         }
 
-        stages {
-            stage('Build Reverse Proxy Container') {
-                steps {
-                    script {
-                        dir('reverseproxy') {
-                            sh "sudo chmod 777 /var/run/docker.sock"
-                            sh "docker build -t msr-rp ."
-                            sh "docker tag msr-rp ${ACCOUNT_URL}/msr-rp:${env.BRANCH_NAME}${env.BUILD_NUMBER}"
-                        }
+        stage('Build Reverse Proxy Container') {
+            steps {
+                script {
+                    dir('reverseproxy') {
+                        sh "sudo chmod 777 /var/run/docker.sock"
+                        sh "docker build -t msr-rp ."
+                        sh "docker tag msr-rp ${ACCOUNT_URL}/msr-rp:${env.BRANCH_NAME}${env.BUILD_NUMBER}"
                     }
                 }
             }
