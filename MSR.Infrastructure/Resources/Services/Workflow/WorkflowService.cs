@@ -34,13 +34,8 @@ namespace MSR.Infrastructure.Resources.Services.Workflow
                 Locations = _unitOfWork.LocationApprovals.Count(),
                 Parts = _unitOfWork.PartApprovals.Count(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId),
                 Procedures = _unitOfWork.ProcedureApprovals.Count(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId),
-                ProcedureSteps = _unitOfWork.ProcedureStepApprovals.Count(),
-                ProcedureStepDocuments = _unitOfWork.ProcedureStepDocumentApprovals.Count(),
-                ProcedureStepMonitors = _unitOfWork.ProcedureStepMonitorApprovals.Count(),
                 PurchaseOrders = _unitOfWork.PurchaseOrderApprovals.Count(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId),
-                PurchaseOrderProducts = _unitOfWork.PurchaseOrderProductApprovals.Count(),
                 Users = _unitOfWork.UserApprovals.Count(i => i.StatusId == inProcressStatusId || i.StatusId == pendingStatusId),
-                UserRoles = _unitOfWork.UserRoleApprovals.Count(),
             };
         }
     }
