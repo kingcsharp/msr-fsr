@@ -30,7 +30,7 @@ namespace MSR.Answer.API.V1.Controllers
             _dispatcher = dispatcher;
         }
 
-        [HttpGet, HasPrivilegeApi("Users", EnumPrivilege.CanRead)]
+        [HttpGet(""), HasPrivilegeApi("Users", EnumPrivilege.CanRead)]
         public async Task<IActionResult> GetUsers([FromQuery, Required]GetUsersRequest request)
         {
             if (UserId == 0)

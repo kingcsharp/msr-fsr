@@ -59,11 +59,12 @@ export class LoginService {
     this.requestLogin();
     const ctrl = this;
     if (creds.email.length > 0 && creds.password.length > 0) {
-      this.http.post('/Account/login', { userName: creds.email, password: creds.password }).subscribe(async (res: any) => {
-        await this.receiveToken(res.object);
-      }, function () {
-        ctrl.loginError('Username or Password is invalid.');
-      });
+      this.http.post('/Account/login', { userName: creds.email, password: creds.password }).toPromise().then(
+        async (res: any) => {
+          await this.receiveToken(res.object);
+        }, function (err) {
+          ctrl.loginError('Username or Password is invalid.');
+        }); 
     } else {
       this.loginError('Something was wrong. Try again');
     }

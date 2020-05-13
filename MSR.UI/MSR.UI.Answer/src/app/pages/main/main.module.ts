@@ -45,7 +45,6 @@ import { NewWidgetModule } from "../../layout/new-widget/widget.module";
 import { UserComponent } from './user/user.component';
 import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
-import { UserService } from './user/user.service';
 import { FormsModule } from '@angular/forms';
 import { TextMaskModule } from 'angular2-text-mask';
 import { InputSwitchModule } from 'primeng/inputswitch';
@@ -103,7 +102,7 @@ export const routes = [
     MapaelLayersMapModule,
     NewWidgetModule
   ],
-  providers: [FakeWorldData, AnalyticsService, UserService]
+  providers: [FakeWorldData, AnalyticsService]
 })
 export class MainModule {
   static routes = routes;

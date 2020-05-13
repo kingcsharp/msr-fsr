@@ -5,6 +5,7 @@
 
 export const environment = {
   production: false,
+  url: "http://localhost",
   hmr: false,
   backend: true,
   version: "v1"

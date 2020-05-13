@@ -21,6 +21,7 @@ import { Globals } from './models/lib/globals';
 import { EnumPrivilege } from './models/enums/privileges';
 
 import * as $ from 'jquery';
+import { UserService, AccountService } from './services/api.client.generated';
 
 const APP_PROVIDERS = [
   CheckAllService,
@@ -56,7 +57,9 @@ const APP_PROVIDERS = [
       useClass: AppInterceptor,
       multi: true
     },
-    Globals
+    Globals,
+    AccountService,
+    UserService
   ]
 })
 export class AppModule { }

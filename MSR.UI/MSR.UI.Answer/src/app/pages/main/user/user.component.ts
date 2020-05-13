@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewEncapsulation, Injector } from '@angular/core';
-import { UserService } from './user.service';
 import { User } from '../../../models/lib/user';
 import { ToastrService } from 'ngx-toastr';
 import { Globals } from '../../../models/lib/globals';
 import { EnumPrivilege } from '../../../models/enums/privileges';
+import { UserService, CreateUserRequest } from '../../../services/api.client.generated';
 
 declare let jQuery: any;
 
@@ -34,8 +34,9 @@ export class UserComponent implements OnInit {
       '-', /\d/, /\d/, /\d/, /\d/]
   };
 
-  constructor(public userService: UserService, injector: Injector, private toastr: ToastrService, private globals: Globals) {
-    
+  constructor(public userService: UserService, injector: Injector, private toastr: ToastrService,
+    private globals: Globals) {
+
   }
 
 
@@ -57,7 +58,12 @@ export class UserComponent implements OnInit {
 
   async getUsers() {
     //data
-    this.data = await this.userService.getUsers();
+    this.userService.userGet(null, null, null, null, null, null, null, null, "v1").subscribe(response => {
+      // response.map(data => new CreateUserRequest(data));
+      console.log(response);
+    })
+    // this.data = await this.userService.getUsers();
+    this.data = [];
     this.loading = false;
   }
 
@@ -82,40 +88,40 @@ export class UserComponent implements OnInit {
 
   changeUserStatus(user) {
     const ctrl = this;
-    this.userService.deleteUser(user).then(function (resp) {
-      if (resp.hasErrors === null || !resp.hasErrors) {
-        ctrl.toastr.success(`User has been successfully ${user.isActive ? 'deactivated' : 'activated'}!`);
-      }
-      else {
-        user.isActive = !user.isActive;
-      }
-    });
+    // this.userService.deleteUser(user).then(function (resp) {
+    //   if (resp.hasErrors === null || !resp.hasErrors) {
+    //     ctrl.toastr.success(`User has been successfully ${user.isActive ? 'deactivated' : 'activated'}!`);
+    //   }
+    //   else {
+    //     user.isActive = !user.isActive;
+    //   }
+    // });
   }
 
   onUserSubmit() {
     jQuery('.parsleyjs').parsley().validate();
     const ctrl = this;
-    if (jQuery('.parsleyjs').parsley().isValid()) {
-      let method = null;
-      this.globals.showLoader(true);
-      if (this.currUser.id === undefined) {
-        method = this.userService.postUser(this.currUser);
-      } else {
-        method = this.userService.putUser(this.currUser);
-      }
-      method.then(function (resp) {
-        if (!resp.hasErrors) {
-          if (ctrl.currUser.id === undefined) {
-            ctrl.data.push(new User(resp.returnedObject));
-            ctrl.toastr.success('User has been successfully created!');
-          } else {
-            ctrl.toastr.success('User has been successfully updated!');
-            method = ctrl.userService.putUser(ctrl.currUser);
-          }
-          ctrl.clseDialog();
-        }
-      });
-    }
+    // if (jQuery('.parsleyjs').parsley().isValid()) {
+    //   let method = null;
+    //   this.globals.showLoader(true);
+    //   if (this.currUser.id === undefined) {
+    //     method = this.userService.postUser(this.currUser);
+    //   } else {
+    //     method = this.userService.putUser(this.currUser);
+    //   }
+    //   method.then(function (resp) {
+    //     if (!resp.hasErrors) {
+    //       if (ctrl.currUser.id === undefined) {
+    //         ctrl.data.push(new User(resp.returnedObject));
+    //         ctrl.toastr.success('User has been successfully created!');
+    //       } else {
+    //         ctrl.toastr.success('User has been successfully updated!');
+    //         method = ctrl.userService.putUser(ctrl.currUser);
+    //       }
+    //       ctrl.clseDialog();
+    //     }
+    //   });
+    // }
   }
 
   getUser(user: User) {
