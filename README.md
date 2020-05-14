@@ -12,7 +12,7 @@ UI is running on port 3000
 **Docker:** `docker-compose up --build`
 
 * UI is running on port 3000
-* API is running on port 17777
+* API is running on port 5000
 
 **Bring down Docker:** `docker-compose down`
 
@@ -35,7 +35,7 @@ UI is running on port 3000
 #### API
 1. `aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 425480257575.dkr.ecr.us-west-2.amazonaws.com`
 2. `docker build -t msr-api .`
-3. `docker tag msr-api:latest 425480257575.dkr.ecr.us-west-2.amazonaws.com/msr-aoi:latest`
+3. `docker tag msr-api:latest 425480257575.dkr.ecr.us-west-2.amazonaws.com/msr-api:latest`
 4. `docker push 425480257575.dkr.ecr.us-west-2.amazonaws.com/msr-api:latest`
 
 #### NGINX
