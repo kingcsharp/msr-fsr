@@ -43,7 +43,7 @@ pipeline {
                 script {
                     dir('reverseproxy') {
                         sh "sudo chmod 777 /var/run/docker.sock"
-                        sh "docker build -t msr-rp ."
+                        sh "docker build --build-args NGINX_CONF=dev -t msr-rp ."
                         sh "docker tag msr-rp ${ACCOUNT_URL}/msr-rp:${env.BRANCH_NAME}${env.BUILD_NUMBER}"
                     }
                 }
