@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
 
 const hostApi = environment.production ? 'https://dev-api.answer.msr-fsr.com' : 'http://localhost';
-const portApi = environment.production ? 80 : 17777;
+const portApi = environment.production ? 443 : 17777;
 const baseURLApi = `${hostApi}${portApi ? `:${portApi}` : ``}/${environment.version}`;
 
 @Injectable()
