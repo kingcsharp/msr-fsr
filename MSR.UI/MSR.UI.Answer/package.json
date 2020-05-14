@@ -7,7 +7,7 @@
     "ng": "ng",
     "start": "nswag run && ng serve",
     "startdev": "nswag run && ng serve --configuration dev",
-    "swag": "nswag run",
+    "nswag": "nswag run",
     "hmr": "ng serve --configuration hmr",
     "build": "nswag run && ng build",
     "buildprod": "nswag run && ng build --prod",

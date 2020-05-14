@@ -5,7 +5,8 @@ import { environment } from '../environments/environment';
 const hostApi = environment.url;
 const portApi = environment.production ? 443 : 443;
 
-const baseURLApi = `${environment.url}${portApi ? `:${portApi}` : ``}/${environment.version}`;
+// const baseURLApi = `${environment.url}/${environment.version}`;
+const baseURLApi = `${environment.url}`;
 
 @Injectable()
 export class AppConfig {

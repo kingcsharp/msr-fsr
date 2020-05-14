@@ -4,6 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Globals } from '../../../models/lib/globals';
 import { EnumPrivilege } from '../../../models/enums/privileges';
 import { UserService, CreateUserRequest } from '../../../services/api.client.generated';
+import { take } from 'rxjs/operators';
 
 declare let jQuery: any;
 
@@ -58,7 +59,7 @@ export class UserComponent implements OnInit {
 
   async getUsers() {
     //data
-    this.userService.userGet(null, null, null, null, null, null, null, null, "v1").subscribe(response => {
+    this.userService.userGet(null, null, null, null, null, null, null, null, "1").pipe(take(1)).subscribe(response => {
       // response.map(data => new CreateUserRequest(data));
       console.log(response);
     })
@@ -68,7 +69,6 @@ export class UserComponent implements OnInit {
   }
 
   hasPrivilege(privName) {
-    debugger;
     return this.globals.hasPrivilege('users', privName);
   }
 

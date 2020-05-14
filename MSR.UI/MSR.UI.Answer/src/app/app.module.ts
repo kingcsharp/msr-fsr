@@ -19,9 +19,10 @@ import { AppConfig } from './app.config';
 import { CommonService } from './services/common';
 import { Globals } from './models/lib/globals';
 import { EnumPrivilege } from './models/enums/privileges';
+import { environment } from '../environments/environment';
 
 import * as $ from 'jquery';
-import { UserService, AccountService } from './services/api.client.generated';
+import { UserService, AccountService, API_BASE_URL } from './services/api.client.generated';
 
 const APP_PROVIDERS = [
   CheckAllService,
@@ -59,7 +60,15 @@ const APP_PROVIDERS = [
     },
     Globals,
     AccountService,
-    UserService
+    UserService,
+    {
+      provide: API_BASE_URL,
+      useValue: ''
+    }
   ]
 })
+// { //we have this bse url set in the app.config that's why we define as ''
+//   provide: API_BASE_URL,
+//   useValue: environment.url
+// }
 export class AppModule { }
