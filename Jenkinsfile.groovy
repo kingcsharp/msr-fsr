@@ -20,7 +20,7 @@ pipeline {
                 script {
                     dir('MSR.UI/MSR.UI.Answer') {
                         sh "sudo chmod 777 /var/run/docker.sock"
-                        sh "docker build -t msr-ui ."
+                        sh "docker build -f prod.Dockerfile -t msr-ui ."
                         sh "docker tag msr-ui ${ACCOUNT_URL}/msr-ui:${env.BRANCH_NAME}${env.BUILD_NUMBER}"
                     }
                 }
