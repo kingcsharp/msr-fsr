@@ -83,7 +83,7 @@ pipeline {
         stage('Update docker-compose file') {
             steps {
                 script {
-                    sh "sudo ./update_image.sh ${env.BRANCH_NAME} ${env.BUILD_NUMBER} docker-compose-dev.yml"
+                    sh "sudo ./update_image.sh ${env.BRANCH_NAME} ${env.BUILD_NUMBER} docker-compose-ui.yml"
                 }
             }
         }
