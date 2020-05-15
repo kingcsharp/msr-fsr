@@ -6,8 +6,8 @@ const hostApi = environment.url;
 const portApi = environment.production ? 443 : 443;
 
 // const baseURLApi = `${environment.url}/${environment.version}`;
-const baseURLApi = `${environment.url}`;
-
+// const baseURLApi = `${environment.url}`;
+const baseURLApi ='';
 @Injectable()
 export class AppConfig {
   config = {

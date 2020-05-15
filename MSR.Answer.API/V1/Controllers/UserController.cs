@@ -12,6 +12,7 @@ using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commanding.Enums;
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
+using NSwag.Annotations;
 using HttpGetAttribute = Microsoft.AspNetCore.Mvc.HttpGetAttribute;
 
 namespace MSR.Answer.API.V1.Controllers
@@ -30,7 +31,7 @@ namespace MSR.Answer.API.V1.Controllers
             _dispatcher = dispatcher;
         }
 
-        [HttpGet(""), HasPrivilegeApi("Users", EnumPrivilege.CanRead)]
+        [SwaggerResponse(typeof(AuditActionResult<ICollection<User>>)), HasPrivilegeApi("Users", EnumPrivilege.CanRead)]
         public async Task<IActionResult> GetUsers([FromQuery, Required]GetUsersRequest request)
         {
             if (UserId == 0)
@@ -45,7 +46,7 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<ICollection<User>>();
         }
 
-        [HttpGet("LoggedInUser")]
+        [HttpGet("LoggedInUser"), SwaggerResponse(typeof(AuditActionResult<User>))]
         public async Task<IActionResult> GetLoggedInUserData()
         {
             if (UserId == 0) return BadRequest();
@@ -57,7 +58,7 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<User>();
         }
 
-        [HttpPost, HasPrivilegeApi("Users", EnumPrivilege.CanCreate)]
+        [HttpPost, HasPrivilegeApi("Users", EnumPrivilege.CanCreate), SwaggerResponse(typeof(AuditActionResult<User>))]
         public async Task<IActionResult> CreateUser([FromBody, Required] CreateUserRequest request)
         {
             if (UserId == 0)
@@ -72,7 +73,7 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToCreatedResponse<User>();
         }
 
-        [HttpPatch, HasPrivilegeApi("Users", EnumPrivilege.CanEdit)]
+        [HttpPatch, HasPrivilegeApi("Users", EnumPrivilege.CanEdit), SwaggerResponse(typeof(AuditActionResult<User>))]
         public async Task<IActionResult> UpdateUser([FromBody, Required]UpdateUserRequest request)
         {
             if (UserId == 0)
@@ -86,7 +87,7 @@ namespace MSR.Answer.API.V1.Controllers
             return ret.ToOkObjectResponse<User>();
         }
 
-        [HttpDelete("{accountId}"), HasPrivilegeApi("Users", EnumPrivilege.CanDelete)]
+        [HttpDelete("{accountId}"), HasPrivilegeApi("Users", EnumPrivilege.CanDelete), SwaggerResponse(typeof(void))]
         public async Task<IActionResult> DeactivateUser(int accountId)
         {
             if (UserId == 0)

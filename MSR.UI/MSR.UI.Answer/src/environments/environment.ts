@@ -9,5 +9,6 @@ export const environment = {
   API_BASE_URL:"https://localhost:44398",
   hmr: false,
   backend: true,
-  version: "v1"
+  version: "v1",
+  apiVersion:"1"
 };

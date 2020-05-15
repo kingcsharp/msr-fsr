@@ -5,6 +5,7 @@ import { Globals } from '../../../models/lib/globals';
 import { EnumPrivilege } from '../../../models/enums/privileges';
 import { UserService, CreateUserRequest } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
+import { environment as env } from '../../../../environments/environment';
 
 declare let jQuery: any;
 
@@ -29,6 +30,7 @@ export class UserComponent implements OnInit {
   statuses: any[];
   canAddUsers: boolean = false;
   canEditUsers: boolean = false;
+  elems: any;
   phoneMask = {
     mask: ['(', /[1-9]/, /\d/, /\d/, ')',
       ' ', /\d/, /\d/, /\d/,
@@ -59,10 +61,16 @@ export class UserComponent implements OnInit {
 
   async getUsers() {
     //data
-    this.userService.userGet(null, null, null, null, null, null, null, null, "1").pipe(take(1)).subscribe(response => {
+    this.userService.userGet(null, null, null, null, null, null, null, null, env.apiVersion)
+    .pipe(take(1))
+    .subscribe(response => {
+
+      this.elems = response.object;
       // response.map(data => new CreateUserRequest(data));
+      // this.elems = response.data;
+      // response[0].
       console.log(response);
-    })
+    });
     // this.data = await this.userService.getUsers();
     this.data = [];
     this.loading = false;

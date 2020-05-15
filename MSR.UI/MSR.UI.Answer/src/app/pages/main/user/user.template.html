@@ -1,4 +1,7 @@
 <h1 class="page-title">Users <small><small>sb title</small></small></h1>
+<div>
+  <pre>{{elems | json}}</pre>
+</div>
 <widget [fetchingData]="userService.isReceiving">
   <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
     [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]" [loading]="loading" [paginator]="true"
@@ -65,7 +68,8 @@
           {{user.id}}
         </td>
         <td>
-          <p-inputSwitch disabled="{{canEditUsers}}" [(ngModel)]="user.isActive" (ngModelChange)="changeUserStatus(user)"></p-inputSwitch>
+          <p-inputSwitch disabled="{{canEditUsers}}" [(ngModel)]="user.isActive"
+            (ngModelChange)="changeUserStatus(user)"></p-inputSwitch>
         </td>
         <td>
           <span class="ui-column-title">First Name</span>
@@ -200,8 +204,8 @@
             <div class="col-md-4 ">
               <div class="display-inline-block isAnswerUser">
                 <label class="form-check-label" for="isAnswerUser" class="switch">
-                  <input class="form-check-input" [(ngModel)]="currUser.isAnswerUser" name="isAnswerUser" type="checkbox"
-                    class="ios" checked id="isAnswerUser" /><i></i>
+                  <input class="form-check-input" [(ngModel)]="currUser.isAnswerUser" name="isAnswerUser"
+                    type="checkbox" class="ios" checked id="isAnswerUser" /><i></i>
                 </label>
               </div>
             </div>

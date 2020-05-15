@@ -6,6 +6,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using MSR.Answer.API.Extentions;
 using Rollbar.NetCore.AspNet;
+using NSwag;
+using NSwag.AspNetCore;
 
 namespace MSR.Answer.API
 {
@@ -38,6 +40,11 @@ namespace MSR.Answer.API
             services.AddControllers();
             services.AddApiVersioning();
             services.AddApiServices(Configuration);
+            services.AddSwaggerDocument(configure =>
+            {
+                configure.Title = "MSR API";
+                //add token authorization
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -61,12 +68,15 @@ namespace MSR.Answer.API
                     .AllowAnyHeader();
             });
 
-            app.UseSwagger();   
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "MSR API");
-                c.RoutePrefix = string.Empty;
-            });
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
+
+            //app.UseSwagger();   
+            //app.UseSwaggerUI(c =>
+            //{
+            //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "MSR API");
+            //    c.RoutePrefix = string.Empty;
+            //});
 
             app.UseHttpsRedirection();
             app.UseRouting();

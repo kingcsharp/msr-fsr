@@ -5,6 +5,9 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { Injectable } from '@angular/core';
 import { CommonService } from '../../services/common';
 import { Globals } from '../../models/lib/globals';
+import { AccountService, SystemLoginRequest, UserService } from '../../services/api.client.generated';
+import { take } from 'rxjs/operators';
+import { environment as env } from '../../../environments/environment';
 
 const jwt = new JwtHelperService();
 
@@ -19,7 +22,7 @@ export class LoginService {
     private globals: Globals,
     private http: HttpClient,
     private router: Router,
-    private commonService: CommonService,
+    private commonService: CommonService, private accountService: AccountService, private userService: UserService
   ) {
     this.config = appConfig.getConfig();
   }
@@ -58,16 +61,17 @@ export class LoginService {
     // We check if app runs with backend mode
     this.requestLogin();
     const ctrl = this;
-    if (creds.email.length > 0 && creds.password.length > 0) {
-      this.http.post('/Account/login', { userName: creds.email, password: creds.password }).toPromise().then(
-        async (res: any) => {
-          await this.receiveToken(res.object);
-        }, function (err) {
-          ctrl.loginError('Username or Password is invalid.');
-        }); 
-    } else {
+    if (creds.email.length <= 0 || creds.password.length <= 0) {
       this.loginError('Something was wrong. Try again');
     }
+
+    this.accountService.login(new SystemLoginRequest({ userName: creds.email, password: creds.password }), env.apiVersion)
+      .pipe(take(1))
+      .subscribe(async (result) => {
+        this.receiveToken(result.object);
+      }, function (err) {
+        ctrl.loginError('Username or Password is invalid.');
+      });
   }
 
   async forgotUserPassword(email) {
@@ -97,16 +101,18 @@ export class LoginService {
       email: this.config.auth.email
     };
     localStorage.setItem('token', token);
-    var userData = await this.commonService.getLoggedUser();
-    Object.assign(user, userData);
-    this.globals.updateUser(user);
-    localStorage.setItem('user', JSON.stringify(user));
-    if (user.roles.length === 0) {
-      this.logoutUser();
-      this.loginError("Sorry you do not have roles associated with your user.");
-      return;
-    }
-    this.receiveLogin();
+    this.userService.loggedInUser(env.apiVersion).pipe(take(1))
+      .subscribe((result) => {
+        Object.assign(user, result.object);
+        this.globals.updateUser(user);
+        localStorage.setItem('user', JSON.stringify(user));
+        if (user.roles.length === 0) {
+          this.logoutUser();
+          this.loginError("Sorry you do not have roles associated with your user.");
+          return;
+        }
+        this.receiveLogin();
+      });
   }
 
   logoutUser() {

@@ -63,7 +63,7 @@ const APP_PROVIDERS = [
     UserService,
     {
       provide: API_BASE_URL,
-      useValue: ''
+      useValue: environment.url
     }
   ]
 })

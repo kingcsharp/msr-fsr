@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { catchError, map } from 'rxjs/operators';
-import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpResponse } from '@angular/common/http';
+import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { AppConfig } from './app.config';
 import { Globals } from './models/lib/globals';
 
@@ -19,8 +19,8 @@ export class AppInterceptor implements HttpInterceptor {
     this.config = appConfig.getConfig();
   }
 
-  turnOffLoader(){
-    if(this.requests==0){
+  turnOffLoader() {
+    if (this.requests == 0) {
       this.globals.showLoader(false);
     }
   }
@@ -29,12 +29,11 @@ export class AppInterceptor implements HttpInterceptor {
     req = req.clone({ url: this.config.baseURLApi + req.url });
     this.requests++;
     const token: string = localStorage.getItem('token');
-    if (token) {
-      req = req.clone({
-        headers: req.headers.set('Authorization', 'Bearer ' + token)
-      });
-
-    }
+    req = req.clone({
+      headers: req.headers.set('Authorization', 'Bearer ' + token)
+    });
+    // ,
+    //   responseType: 'json'
 
     return next.handle(req).pipe(
       catchError(err => {
@@ -59,14 +58,16 @@ export class AppInterceptor implements HttpInterceptor {
           this.toastr.error('Invalid token.');
           return throwError(err);
         }
-      }),
-      map((event: HttpEvent<any>) => {
+      }), map((event: HttpEvent<any>) => {
         if (event instanceof HttpResponse) {
           this.requests--;
           this.turnOffLoader();
+
           if (event.body === undefined || event.body === null) {
             return event;
           }
+
+
           if (!event.body.hasErrors && event.body.successMessage) {
             this.toastr.success(event.body.successMessage);
           } else if (event.body.hasErrors && event.body.errorMessages.length > 0) {
