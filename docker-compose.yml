@@ -2,7 +2,6 @@ version: '3.4'
 
 services:
   api:
-    image: ${DOCKER_REGISTRY-}msranswer
     build:
       context: .
       dockerfile: MSR.Answer.API/Dockerfile
@@ -13,25 +12,16 @@ services:
     build:
       context: ./reverseproxy
       dockerfile: Dockerfile
+      args:
+        - 'NGINX_CONF=local'
     ports:
-      - "80:80"
-    restart: always
+      - "17777:80"
     links:
       - api
-    #environment:
-    #  - ASPNETCORE_ENVIRONMENT=Development
-    #  - ASPNETCORE_URLS=https://+:443;http://+:80
-      #- ASPNETCORE_URLS=http://+:80
-    #ports:
-      #- "17777:17777"
-      #- "5001:5001"
-    #volumes:
-      #- ~/.aspnet/https:/root/.aspnet/https:ro
-      #- ~/.microsoft/usersecrets:/root/.microsoft/usersecrets:ro
   app:
     build:
       context: ./MSR.UI/MSR.UI.Answer
       dockerfile: Dockerfile
     ports:
-      - "8000:8000"
+      - "3000:80"
 

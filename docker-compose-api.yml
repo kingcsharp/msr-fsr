@@ -1,17 +1,23 @@
 version: '3'
 
 services:
-  app:
-    image: 425480257575.dkr.ecr.us-west-2.amazonaws.com/msr-api:Dev08
-    ports:
-      - "80:80"
-      - "443:443"
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80
+  api:
+    image: 425480257575.dkr.ecr.us-west-2.amazonaws.com/msr-api:Dev19
+    expose:
+      - "5000"
     logging:
       driver: awslogs
       options:
         awslogs-group: answer3
         awslogs-region: us-west-2
         awslogs-stream-prefix: answer3-api-dev
+  reverseproxy:
+    image: 425480257575.dkr.ecr.us-west-2.amazonaws.com/msr-rp:Dev04
+    ports:
+      - "80:80"
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: answer3
+        awslogs-region: us-west-2
+        awslogs-stream-prefix: answer3-rp-dev

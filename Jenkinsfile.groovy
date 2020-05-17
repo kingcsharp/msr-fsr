@@ -20,7 +20,7 @@ pipeline {
                 script {
                     dir('MSR.UI/MSR.UI.Answer') {
                         sh "sudo chmod 777 /var/run/docker.sock"
-                        sh "docker build -t msr-ui ."
+                        sh "docker build -f prod.Dockerfile -t msr-ui ."
                         sh "docker tag msr-ui ${ACCOUNT_URL}/msr-ui:${env.BRANCH_NAME}${env.BUILD_NUMBER}"
                     }
                 }
@@ -43,7 +43,7 @@ pipeline {
                 script {
                     dir('reverseproxy') {
                         sh "sudo chmod 777 /var/run/docker.sock"
-                        sh "docker build -t msr-rp ."
+                        sh "docker build --build-arg NGINX_CONF=dev -t msr-rp ."
                         sh "docker tag msr-rp ${ACCOUNT_URL}/msr-rp:${env.BRANCH_NAME}${env.BUILD_NUMBER}"
                     }
                 }
@@ -83,7 +83,7 @@ pipeline {
         stage('Update docker-compose file') {
             steps {
                 script {
-                    sh "sudo ./update_image.sh ${env.BRANCH_NAME} ${env.BUILD_NUMBER} docker-compose-dev.yml"
+                    sh "sudo ./update_image.sh ${env.BRANCH_NAME} ${env.BUILD_NUMBER} docker-compose-ui.yml"
                 }
             }
         }
@@ -95,7 +95,7 @@ pipeline {
                         sh "ecs-cli configure --cluster answer --default-launch-type FARGATE --config-name answer-config --region us-west-2"
                         sh "ecs-cli configure profile --access-key ${AWS_ACCESS_KEY_ID} --secret-key ${AWS_SECRET_ACCESS_KEY} --profile-name answer-profile"
 
-                        sh "ecs-cli compose --file docker-compose-dev.yml --project-name answer-ui service up --create-log-groups --cluster-config answer-config --ecs-profile answer-profile --target-group-arn arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-dev/1b3c1539f365fe8f --container-name app --container-port 80 --timeout 10"
+                        sh "ecs-cli compose --file docker-compose-ui.yml --project-name answer-ui service up --create-log-groups --cluster-config answer-config --ecs-profile answer-profile --target-group-arn arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-dev/1b3c1539f365fe8f --container-name app --container-port 80 --timeout 10"
                     }
                 }
             }

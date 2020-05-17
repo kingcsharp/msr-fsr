@@ -87,7 +87,7 @@ namespace MSR.Answer.API
             //    c.RoutePrefix = string.Empty;
             //});
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
