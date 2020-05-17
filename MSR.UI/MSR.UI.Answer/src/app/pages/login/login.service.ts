@@ -64,21 +64,13 @@ export class LoginService {
       this.loginError('Something was wrong. Try again');
     }
 
-    // this.accountService.login(new SystemLoginRequest({ userName: creds.email, password: creds.password }), env.apiVersion)
-    //   .pipe(take(1))
-    //   .subscribe(this.result.subscribe((result) => {
-    //     ctrl.receiveToken(result.object);
-    //   }, () => {
-    //     ctrl.loginError('Username or Password is invalid.');
-    //   }));
     this.accountService.login(new SystemLoginRequest({ userName: creds.email, password: creds.password }), env.apiVersion)
       .pipe(take(1))
-      .subscribe((result) => {
+      .subscribe(this.result.subscribe((result) => {
         ctrl.receiveToken(result.object);
-      }, (err) => {
-        console.log(err);
+      }, () => {
         ctrl.loginError('Username or Password is invalid.');
-      });
+      }));
   }
 
   // next(value: any) {

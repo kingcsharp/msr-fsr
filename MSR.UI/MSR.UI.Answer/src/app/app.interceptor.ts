@@ -40,19 +40,30 @@ export class AppInterceptor implements HttpInterceptor {
         this.requests--;
         this.turnOffLoader();
         if (err.error) {
-          if (err.status === 401) {
-            return throwError(err);
-          }
-          if (err.status === 404) {
-            return throwError(err);
-          }
-          if (err.error.errorMessages && err.error.errorMessages.length > 0) {
-            this.toastr.error(err.error.errorMessages[0].message);
-          } else {
-            this.toastr.error(err.statusText);
-          }
+          let reader = new FileReader();
+          reader.onload = event => {
+            const errorParsed = JSON.parse(event.target.result.toString());
+            if (err.status === 401) {
+              return throwError(err);
+            }
+            if (err.status === 404) {
+              return throwError(err);
+            }
+            if (errorParsed.errorMessages && errorParsed.errorMessages.length > 0) {
+              this.toastr.error(errorParsed.errorMessages[0].message);
+            } else {
+              this.toastr.error(err.statusText);
+            }
 
-          return throwError(err.error);
+            return throwError(err.error);
+          };
+          if (err.statusText === 'Unknown Error') {
+            this.toastr.error('Internal Server Error, please try again later.');
+            return throwError(undefined);
+          } else {
+            reader.readAsText(err.error);
+            return throwError(err.error);
+          }
         }
         if (err.error === 'Invalid token.') {
           this.toastr.error('Invalid token.');
@@ -62,17 +73,6 @@ export class AppInterceptor implements HttpInterceptor {
         if (event instanceof HttpResponse) {
           this.requests--;
           this.turnOffLoader();
-
-          // if (event.body === undefined || event.body === null) {
-          //   return event;
-          // }
-
-
-          // if (!event.body.hasErrors && event.body.successMessage) {
-          //   this.toastr.success(event.body.successMessage);
-          // } else if (event.body.hasErrors && event.body.errorMessages.length > 0) {
-          //   this.toastr.error(event.body.errorMessages[0].message);
-          // }
         }
         return event;
       }));
