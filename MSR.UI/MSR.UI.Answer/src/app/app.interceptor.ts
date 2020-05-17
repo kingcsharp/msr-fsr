@@ -44,10 +44,11 @@ export class AppInterceptor implements HttpInterceptor {
           reader.onload = event => {
             const errorParsed = JSON.parse(event.target.result.toString());
             if (err.status === 401) {
-              return throwError(err);
+              this.toastr.error('You are not authorized to do this action.');
+              return throwError(err.error);
             }
             if (err.status === 404) {
-              return throwError(err);
+              return throwError(err.error);
             }
             if (errorParsed.errorMessages && errorParsed.errorMessages.length > 0) {
               this.toastr.error(errorParsed.errorMessages[0].message);

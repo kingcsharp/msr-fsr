@@ -1,7 +1,4 @@
 <h1 class="page-title">Users <small><small>sb title</small></small></h1>
-<div>
-  <pre>{{elems | json}}</pre>
-</div>
 <widget [fetchingData]="userService.isReceiving">
   <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
     [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]" [loading]="loading" [paginator]="true"

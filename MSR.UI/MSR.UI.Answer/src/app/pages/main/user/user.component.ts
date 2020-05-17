@@ -5,6 +5,7 @@ import { EnumPrivilege } from '../../../models/enums/privileges';
 import { UserService, CreateUserRequest } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
+import { responseHandler } from '../../../utils/responseHandler';
 
 declare let jQuery: any;
 
@@ -59,20 +60,12 @@ export class UserComponent implements OnInit {
   }
 
   async getUsers() {
-    //data
     this.userService.userGet(null, null, null, null, null, null, null, null, env.apiVersion)
-    .pipe(take(1))
-    .subscribe(response => {
-
-      this.elems = response.object;
-      // response.map(data => new CreateUserRequest(data));
-      // this.elems = response.data;
-      // response[0].
-      console.log(response);
-    });
-    // this.data = await this.userService.getUsers();
-    this.data = [];
-    this.loading = false;
+      .pipe(take(1))
+      .subscribe(responseHandler(response => {
+        this.data = response.object;
+        this.loading = false;
+      }));
   }
 
   hasPrivilege(privName) {
@@ -93,16 +86,13 @@ export class UserComponent implements OnInit {
     jQuery('.parsleyjs').parsley().reset();
   }
 
-  changeUserStatus(user) {
+  changeUserStatus(user: CreateUserRequest) {
     const ctrl = this;
-    // this.userService.deleteUser(user).then(function (resp) {
-    //   if (resp.hasErrors === null || !resp.hasErrors) {
-    //     ctrl.toastr.success(`User has been successfully ${user.isActive ? 'deactivated' : 'activated'}!`);
-    //   }
-    //   else {
-    //     user.isActive = !user.isActive;
-    //   }
-    // });
+    this.userService.userDelete(user.customerId, env.apiVersion).pipe(take(1)).subscribe(responseHandler(resp => {
+      ctrl.toastr.success(`User has been successfully ${user.isActive ? 'activated' : 'deactivated'}!`);
+    }, () => {
+      user.isActive = !user.isActive;
+    }))
   }
 
   onUserSubmit() {

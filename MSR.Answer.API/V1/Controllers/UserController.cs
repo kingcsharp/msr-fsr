@@ -86,8 +86,8 @@ namespace MSR.Answer.API.V1.Controllers
 
             return ret.ToOkObjectResponse<User>();
         }
-
-        [HttpDelete("{accountId}"), HasPrivilegeApi("Users", EnumPrivilege.CanDelete), SwaggerResponse(typeof(void))]
+        //, HasPrivilegeApi("Users", EnumPrivilege.CanDelete)
+        [HttpDelete("{accountId}"), SwaggerResponse(typeof(void))]
         public async Task<IActionResult> DeactivateUser(int accountId)
         {
             if (UserId == 0)

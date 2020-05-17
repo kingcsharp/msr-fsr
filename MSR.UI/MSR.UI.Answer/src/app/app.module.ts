@@ -17,7 +17,6 @@ import { AppGuard } from './app.guard';
 import { AppInterceptor } from './app.interceptor';
 import { AppConfig } from './app.config';
 import { Globals } from './models/lib/globals';
-import { ResponseHandler } from './utils/responseHandler';
 import { EnumPrivilege } from './models/enums/privileges';
 import { environment } from '../environments/environment';
 
@@ -30,8 +29,7 @@ const APP_PROVIDERS = [
   AppGuard,
   AppConfig,
   ResetpasswordService,
-  Globals,
-  ResponseHandler
+  Globals
 ];
 
 @NgModule({
