@@ -33,7 +33,7 @@ export class AppInterceptor implements HttpInterceptor {
       headers: req.headers.set('Authorization', 'Bearer ' + token)
     });
     // ,
-    //   responseType: 'json'
+    //   
 
     return next.handle(req).pipe(
       catchError(err => {
@@ -63,16 +63,16 @@ export class AppInterceptor implements HttpInterceptor {
           this.requests--;
           this.turnOffLoader();
 
-          if (event.body === undefined || event.body === null) {
-            return event;
-          }
+          // if (event.body === undefined || event.body === null) {
+          //   return event;
+          // }
 
 
-          if (!event.body.hasErrors && event.body.successMessage) {
-            this.toastr.success(event.body.successMessage);
-          } else if (event.body.hasErrors && event.body.errorMessages.length > 0) {
-            this.toastr.error(event.body.errorMessages[0].message);
-          }
+          // if (!event.body.hasErrors && event.body.successMessage) {
+          //   this.toastr.success(event.body.successMessage);
+          // } else if (event.body.hasErrors && event.body.errorMessages.length > 0) {
+          //   this.toastr.error(event.body.errorMessages[0].message);
+          // }
         }
         return event;
       }));

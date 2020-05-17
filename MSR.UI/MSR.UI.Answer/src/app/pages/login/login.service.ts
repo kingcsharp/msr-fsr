@@ -3,11 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Injectable } from '@angular/core';
-import { CommonService } from '../../services/common';
 import { Globals } from '../../models/lib/globals';
 import { AccountService, SystemLoginRequest, UserService } from '../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../environments/environment';
+import { ResponseHandler } from '../../utils/responseHandler';  //ResponseHandler.next()
 
 const jwt = new JwtHelperService();
 
@@ -21,8 +21,7 @@ export class LoginService {
     appConfig: AppConfig,
     private globals: Globals,
     private http: HttpClient,
-    private router: Router,
-    private commonService: CommonService, private accountService: AccountService, private userService: UserService
+    private router: Router, private accountService: AccountService, private userService: UserService, private result: ResponseHandler
   ) {
     this.config = appConfig.getConfig();
   }
@@ -65,14 +64,48 @@ export class LoginService {
       this.loginError('Something was wrong. Try again');
     }
 
+    // this.accountService.login(new SystemLoginRequest({ userName: creds.email, password: creds.password }), env.apiVersion)
+    //   .pipe(take(1))
+    //   .subscribe(this.result.subscribe((result) => {
+    //     ctrl.receiveToken(result.object);
+    //   }, () => {
+    //     ctrl.loginError('Username or Password is invalid.');
+    //   }));
     this.accountService.login(new SystemLoginRequest({ userName: creds.email, password: creds.password }), env.apiVersion)
       .pipe(take(1))
-      .subscribe(async (result) => {
-        this.receiveToken(result.object);
-      }, function (err) {
+      .subscribe((result) => {
+        ctrl.receiveToken(result.object);
+      }, (err) => {
+        console.log(err);
         ctrl.loginError('Username or Password is invalid.');
       });
   }
+
+  // next(value: any) {
+  //   console.log('next: ', value);
+  // }
+
+  // error(err: any) {
+  //   if (err.error) {
+  //     if (err.status === 401) {
+  //       return throwError(err);
+  //     }
+  //     if (err.status === 404) {
+  //       return throwError(err);
+  //     }
+  //     if (err.error.errorMessages && err.error.errorMessages.length > 0) {
+  //       this.toastr.error(err.error.errorMessages[0].message);
+  //     } else {
+  //       this.toastr.error(err.statusText);
+  //     }
+
+  //     return throwError(err.error);
+  //   }
+  //   if (err.error === 'Invalid token.') {
+  //     this.toastr.error('Invalid token.');
+  //     return throwError(err);
+  //   }
+  // }
 
   async forgotUserPassword(email) {
     const ctrl = this;

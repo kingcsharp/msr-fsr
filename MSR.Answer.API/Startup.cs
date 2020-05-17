@@ -40,10 +40,19 @@ namespace MSR.Answer.API
             services.AddControllers();
             services.AddApiVersioning();
             services.AddApiServices(Configuration);
-            services.AddSwaggerDocument(configure =>
+            //services.AddSwaggerDocument(configure =>
+            //{
+            //    configure.Title = "MSR API";
+            //    //add token authorization
+            //});
+            services.AddSwaggerDocument(settings =>
             {
-                configure.Title = "MSR API";
-                //add token authorization
+                settings.PostProcess = document =>
+                {
+                    document.Info.Version = "v1";
+                    document.Info.Title = "MSR API";
+                    document.Info.Description = "REST API for example.";
+                };
             });
         }
 

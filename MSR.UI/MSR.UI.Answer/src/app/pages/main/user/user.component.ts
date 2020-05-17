@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewEncapsulation, Injector } from '@angular/core';
-import { User } from '../../../models/lib/user';
 import { ToastrService } from 'ngx-toastr';
 import { Globals } from '../../../models/lib/globals';
 import { EnumPrivilege } from '../../../models/enums/privileges';
@@ -24,7 +23,7 @@ export class UserComponent implements OnInit {
   data: any;
   loading: boolean = true;
   display: boolean = false;
-  currUser: User;
+  currUser: CreateUserRequest;
   injector: Injector;
   phoneValue = '';
   statuses: any[];
@@ -45,7 +44,7 @@ export class UserComponent implements OnInit {
 
   ngOnInit(): void {
     const now = new Date();
-    this.currUser = new User();
+    this.currUser = new CreateUserRequest();
     this.month = now.getMonth() + 1;
     this.year = now.getFullYear();
     this.getUsers();
@@ -84,7 +83,7 @@ export class UserComponent implements OnInit {
     return event.replace(/\D+/g, '');
   }
 
-  showDialog(user: User) {
+  showDialog(user: CreateUserRequest) {
     this.display = true;
     this.currUser = this.getUser(user);
   }
@@ -132,9 +131,9 @@ export class UserComponent implements OnInit {
     // }
   }
 
-  getUser(user: User) {
+  getUser(user: CreateUserRequest) {
     if (user === undefined) {
-      let ret = new User();
+      let ret = new CreateUserRequest();
       ret.isActive = true;
       ret.isAnswerUser = true;
       ret.firstName = '';
