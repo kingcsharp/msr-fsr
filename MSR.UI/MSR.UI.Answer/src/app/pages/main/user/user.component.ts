@@ -2,10 +2,11 @@ import { Component, OnInit, ViewEncapsulation, Injector } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Globals } from '../../../models/lib/globals';
 import { EnumPrivilege } from '../../../models/enums/privileges';
-import { UserService, CreateUserRequest } from '../../../services/api.client.generated';
+import { UserService, CreateUserRequest, User, IAuditActionResultOfUser } from '../../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
+import { Observable } from 'rxjs';
 
 declare let jQuery: any;
 
@@ -24,7 +25,7 @@ export class UserComponent implements OnInit {
   data: any;
   loading: boolean = true;
   display: boolean = false;
-  currUser: CreateUserRequest;
+  currUser: User;
   injector: Injector;
   phoneValue = '';
   statuses: any[];
@@ -45,7 +46,7 @@ export class UserComponent implements OnInit {
 
   ngOnInit(): void {
     const now = new Date();
-    this.currUser = new CreateUserRequest();
+    this.currUser = new User();
     this.month = now.getMonth() + 1;
     this.year = now.getFullYear();
     this.getUsers();
@@ -76,7 +77,7 @@ export class UserComponent implements OnInit {
     return event.replace(/\D+/g, '');
   }
 
-  showDialog(user: CreateUserRequest) {
+  showDialog(user: User) {
     this.display = true;
     this.currUser = this.getUser(user);
   }
@@ -86,9 +87,9 @@ export class UserComponent implements OnInit {
     jQuery('.parsleyjs').parsley().reset();
   }
 
-  changeUserStatus(user: CreateUserRequest) {
+  changeUserStatus(user: User) {
     const ctrl = this;
-    this.userService.userDelete(user.customerId, env.apiVersion).pipe(take(1)).subscribe(responseHandler(resp => {
+    this.userService.userDelete(user.customerId, env.apiVersion).pipe(take(1)).subscribe(responseHandler(() => {
       ctrl.toastr.success(`User has been successfully ${user.isActive ? 'activated' : 'deactivated'}!`);
     }, () => {
       user.isActive = !user.isActive;
@@ -98,32 +99,34 @@ export class UserComponent implements OnInit {
   onUserSubmit() {
     jQuery('.parsleyjs').parsley().validate();
     const ctrl = this;
-    // if (jQuery('.parsleyjs').parsley().isValid()) {
-    //   let method = null;
-    //   this.globals.showLoader(true);
-    //   if (this.currUser.id === undefined) {
-    //     method = this.userService.postUser(this.currUser);
-    //   } else {
-    //     method = this.userService.putUser(this.currUser);
-    //   }
-    //   method.then(function (resp) {
-    //     if (!resp.hasErrors) {
-    //       if (ctrl.currUser.id === undefined) {
-    //         ctrl.data.push(new User(resp.returnedObject));
-    //         ctrl.toastr.success('User has been successfully created!');
-    //       } else {
-    //         ctrl.toastr.success('User has been successfully updated!');
-    //         method = ctrl.userService.putUser(ctrl.currUser);
-    //       }
-    //       ctrl.clseDialog();
-    //     }
-    //   });
-    // }
+    if (jQuery('.parsleyjs').parsley().isValid()) {
+      let method:Observable<IAuditActionResultOfUser> = null;
+      this.globals.showLoader(true);
+      if (this.currUser.id === undefined) {
+        method = this.userService.userPost(this.currUser, env.apiVersion);
+      } else {
+        method = this.userService.userPatch(this.currUser, env.apiVersion);
+      }
+
+      method.pipe(take(1)).subscribe(responseHandler((resp) => {
+        if (!resp.hasErrors) {
+          if (ctrl.currUser.id === undefined) {
+            ctrl.data.push(new User(resp.returnedObject));
+            ctrl.toastr.success('User has been successfully created!');
+          } else {
+            ctrl.toastr.success('User has been successfully updated!');
+          }
+          ctrl.clseDialog();
+        }
+      }, () => {
+        //DO not update user
+      }));
+    }
   }
 
-  getUser(user: CreateUserRequest) {
+  getUser(user: User) {
     if (user === undefined) {
-      let ret = new CreateUserRequest();
+      let ret = new User();
       ret.isActive = true;
       ret.isAnswerUser = true;
       ret.firstName = '';

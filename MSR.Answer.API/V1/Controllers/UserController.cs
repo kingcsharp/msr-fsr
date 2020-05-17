@@ -34,11 +34,6 @@ namespace MSR.Answer.API.V1.Controllers
         [SwaggerResponse(typeof(AuditActionResult<ICollection<User>>)), HasPrivilegeApi("Users", EnumPrivilege.CanRead)]
         public async Task<IActionResult> GetUsers([FromQuery, Required]GetUsersRequest request)
         {
-            if (UserId == 0)
-            {
-                return BadRequest();
-            }
-
             var command = request.ToGetUsersCommand();
 
             var ret = await _dispatcher.DispatchAsync(command);
@@ -49,8 +44,6 @@ namespace MSR.Answer.API.V1.Controllers
         [HttpGet("LoggedInUser"), SwaggerResponse(typeof(AuditActionResult<User>))]
         public async Task<IActionResult> GetLoggedInUserData()
         {
-            if (UserId == 0) return BadRequest();
-
             var command = new GetLoggedInUserData() { UserId = UserId };
 
             var ret = await _dispatcher.DispatchAsync(command);
@@ -61,10 +54,6 @@ namespace MSR.Answer.API.V1.Controllers
         [HttpPost, HasPrivilegeApi("Users", EnumPrivilege.CanCreate), SwaggerResponse(typeof(AuditActionResult<User>))]
         public async Task<IActionResult> CreateUser([FromBody, Required] CreateUserRequest request)
         {
-            if (UserId == 0)
-            {
-                return BadRequest();
-            }
 
             var command = request.ToCreateUserCommand();
 
@@ -76,25 +65,15 @@ namespace MSR.Answer.API.V1.Controllers
         [HttpPatch, HasPrivilegeApi("Users", EnumPrivilege.CanEdit), SwaggerResponse(typeof(AuditActionResult<User>))]
         public async Task<IActionResult> UpdateUser([FromBody, Required]UpdateUserRequest request)
         {
-            if (UserId == 0)
-            {
-                return BadRequest();
-            }
-
             var command = request.ToUpdateUserCommand();
             var ret = await _dispatcher.DispatchAsync(command);
 
             return ret.ToOkObjectResponse<User>();
         }
-        //, HasPrivilegeApi("Users", EnumPrivilege.CanDelete)
-        [HttpDelete("{accountId}"), SwaggerResponse(typeof(void))]
+
+        [HttpDelete("{accountId}"), HasPrivilegeApi("Users", EnumPrivilege.CanDelete), SwaggerResponse(typeof(void))]
         public async Task<IActionResult> DeactivateUser(int accountId)
         {
-            if (UserId == 0)
-            {
-                return BadRequest();
-            }
-
             var command = new DeactivateUser()
             {
                 AccountId = accountId
