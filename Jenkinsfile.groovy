@@ -10,6 +10,14 @@ pipeline {
         ACCOUNT_URL='425480257575.dkr.ecr.us-west-2.amazonaws.com'
         REGION='us-west-2'
         PROFILE='--profile msrfsr'
+        DEV_API_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-api/397c455c0c042c71"
+        DEV_UI_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-dev/1b3c1539f365fe8f"
+        STAGE_API_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-api-stage/e7d741c03c9de262"
+        STAGE_UI_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-ui-stage/3a5df8140101b695"
+        DEV_PROJECT_API='answer-api'
+        DEV_PROJECT_UI='answer-ui'
+        API_COMPOSE='docker-compose-api.yml'
+        UI_COMPOSE='docker-compose-ui.yml'
     }
     stages {
         stage('Build & Deploy') {
@@ -34,14 +42,18 @@ pipeline {
                             }
 
                             try {
-                                sh "sudo sh update_image.sh ${env.BRANCH_NAME} ${env.BUILD_NUMBER} docker-compose-ui.yml"
-                                sh "cat docker-compose-ui.yml"
+                                sh "sudo sh update_image.sh ${env.BRANCH_NAME} ${env.BUILD_NUMBER} ${UI_COMPOSE}"
+                                sh "cat ${UI_COMPOSE}"
 
                                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'msrfsr-aws-jenkins', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
                                     sh "ecs-cli configure --cluster answer --default-launch-type FARGATE --config-name answer-config --region us-west-2"
                                     sh "ecs-cli configure profile --access-key ${AWS_ACCESS_KEY_ID} --secret-key ${AWS_SECRET_ACCESS_KEY} --profile-name answer-profile"
 
-                                    sh "ecs-cli compose --file docker-compose-ui.yml --project-name answer-ui service up --create-log-groups --cluster-config answer-config --ecs-profile answer-profile --target-group-arn arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-dev/1b3c1539f365fe8f --container-name app --container-port 80 --timeout 15"
+                                    if(env.BRANCH_NAME == 'Develop') {
+                                        deploy($UI_COMPOSE, $DEV_PROJECT_UI, $DEV_UI_TARGET_ARN)
+                                    } else if (env.BRANCH_NAME == 'Stage') {
+                                        deploy($UI_COMPOSE, $STAGE_PROJECT_UI, $STAGE_UI_TARGET_ARN)
+                                    }
                                 }
 
                                 office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} UI deployed successfully.", status: 'Passed',webhookUrl: "${WEBHOOK_URL}"
@@ -89,14 +101,18 @@ pipeline {
                             }
 
                             try {
-                                sh "sudo sh update_image_api.sh ${env.BRANCH_NAME} ${env.BUILD_NUMBER} docker-compose-api.yml"
-                                sh "cat docker-compose-api.yml"
+                                sh "sudo sh update_image_api.sh ${env.BRANCH_NAME} ${env.BUILD_NUMBER} ${API_COMPOSE}"
+                                sh "cat ${API_COMPOSE}"
 
                                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'msrfsr-aws-jenkins', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
                                     sh "ecs-cli configure --cluster answer --default-launch-type FARGATE --config-name answer-config --region us-west-2"
                                     sh "ecs-cli configure profile --access-key ${AWS_ACCESS_KEY_ID} --secret-key ${AWS_SECRET_ACCESS_KEY} --profile-name answer-profile"
 
-                                    sh "ecs-cli compose --file docker-compose-api.yml --project-name answer-api service up --create-log-groups --cluster-config answer-config --ecs-profile answer-profile --target-group-arn arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-api/397c455c0c042c71 --container-name reverseproxy --container-port 80 --timeout 15"
+                                    if(env.BRANCH_NAME == 'Develop') {
+                                        deploy($API_COMPOSE, $DEV_PROJECT_API, $DEV_API_TARGET_ARN)
+                                    } else if (env.BRANCH_NAME == 'Stage') {
+                                        deploy($API_COMPOSE, $STAGE_PROJECT_API, $STAGE_API_TARGET_ARN)
+                                    }
                                 }
 
                                 office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} API deployed successfully.", status: 'Passed',webhookUrl: "${WEBHOOK_URL}"
@@ -112,5 +128,14 @@ pipeline {
                 }
             }
         }
+    }
+}
+
+void deploy(composeFile,name,target) {
+    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'msrfsr-aws-jenkins', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+        sh "ecs-cli configure --cluster answer --default-launch-type FARGATE --config-name answer-config --region us-west-2"
+        sh "ecs-cli configure profile --access-key ${AWS_ACCESS_KEY_ID} --secret-key ${AWS_SECRET_ACCESS_KEY} --profile-name answer-profile"
+
+        sh "ecs-cli compose --file ${composeFile} --project-name ${name} service up --create-log-groups --cluster-config answer-config --ecs-profile answer-profile --target-group-arn ${target} --container-name reverseproxy --container-port 80 --timeout 15"
     }
 }
