@@ -29,7 +29,8 @@ pipeline {
                                 sh "eval \$(/home/ubuntu/.local/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
                                 sh "docker push ${ACCOUNT_URL}/msr-ui:${env.BRANCH_NAME}${env.BUILD_NUMBER}"
 
-                                sh "sudo ./update_image.sh ${env.BRANCH_NAME} ${env.BUILD_NUMBER} docker-compose-ui.yml"
+                                sh "sudo sh update_image.sh ${env.BRANCH_NAME} ${env.BUILD_NUMBER} docker-compose-ui.yml"
+                                sh "cat docker-compose-ui.yml"
 
                                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'msrfsr-aws-jenkins', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
                                     sh "ecs-cli configure --cluster answer --default-launch-type FARGATE --config-name answer-config --region us-west-2"
@@ -63,7 +64,8 @@ pipeline {
                             sh "eval \$(/home/ubuntu/.local/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
                             sh "docker push ${ACCOUNT_URL}/msr-api:${env.BRANCH_NAME}${env.BUILD_NUMBER}"
 
-                            sh "sudo ./update_image.sh ${env.BRANCH_NAME} ${env.BUILD_NUMBER} docker-compose-api.yml"
+                            sh "sudo sh update_image_api.sh ${env.BRANCH_NAME} ${env.BUILD_NUMBER} docker-compose-api.yml"
+                            sh "cat docker-compose-api.yml"
 
                             withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'msrfsr-aws-jenkins', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
                                 sh "ecs-cli configure --cluster answer --default-launch-type FARGATE --config-name answer-config --region us-west-2"
