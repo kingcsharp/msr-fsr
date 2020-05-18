@@ -17,7 +17,7 @@ pipeline {
     stages {
         stage('Build & Deploy') {
             parallel {
-                stage('Build and Deploy UI Container') {
+                stage('Build and Deploy UI') {
                     agent { label 'master'}
                     steps {
                         script {
@@ -43,7 +43,7 @@ pipeline {
                     }
                 }
 
-                stage('Build Reverse Proxy Container') {
+                stage('Build and Deploy API') {
                     agent { label 'master'}
                     steps {
                         script {
