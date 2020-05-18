@@ -16,6 +16,8 @@ pipeline {
         STAGE_UI_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-ui-stage/3a5df8140101b695"
         DEV_PROJECT_API='answer-api'
         DEV_PROJECT_UI='answer-ui'
+        STAGE_PROJECT_API='stage-answer-api'
+        STAGE_PROJECT_UI='stage-answer-ui'
         API_COMPOSE='docker-compose-api.yml'
         UI_COMPOSE='docker-compose-ui.yml'
     }
@@ -50,8 +52,10 @@ pipeline {
                                     sh "ecs-cli configure profile --access-key ${AWS_ACCESS_KEY_ID} --secret-key ${AWS_SECRET_ACCESS_KEY} --profile-name answer-profile"
 
                                     if(env.BRANCH_NAME == 'Develop') {
+                                        echo "Deploying Develop"
                                         deploy("${UI_COMPOSE}", "${DEV_PROJECT_UI}", "${DEV_UI_TARGET_ARN}")
                                     } else if (env.BRANCH_NAME == 'Stage') {
+                                        echo "Deploying Stage"
                                         deploy("${UI_COMPOSE}", "${STAGE_PROJECT_UI}", "${STAGE_UI_TARGET_ARN}")
                                     }
                                 }
@@ -112,7 +116,7 @@ pipeline {
                                         echo "Deploying Develop"
                                         deploy("${API_COMPOSE}", "${DEV_PROJECT_API}", "${DEV_API_TARGET_ARN}")
                                     } else if (env.BRANCH_NAME == 'Stage') {
-                                        echo "Deploying Develop"
+                                        echo "Deploying Stage"
                                         deploy("${API_COMPOSE}", "${STAGE_PROJECT_API}", "${STAGE_API_TARGET_ARN}")
                                     }
                                 }
