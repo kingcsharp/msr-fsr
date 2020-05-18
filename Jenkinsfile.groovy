@@ -2,7 +2,7 @@ pipeline {
     options {
         disableConcurrentBuilds()
     }
-    agent { label 'jenkinsci'}
+    agent { label 'master'}
     environment {
         /*
         TARGET_ARN_DEV='arn:aws:elasticloadbalancing:us-east-1:536716547771:targetgroup/auditflix-dev/26111534632711a9'
