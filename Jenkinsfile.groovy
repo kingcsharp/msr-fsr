@@ -50,9 +50,9 @@ pipeline {
                                     sh "ecs-cli configure profile --access-key ${AWS_ACCESS_KEY_ID} --secret-key ${AWS_SECRET_ACCESS_KEY} --profile-name answer-profile"
 
                                     if(env.BRANCH_NAME == 'Develop') {
-                                        deploy($UI_COMPOSE, $DEV_PROJECT_UI, $DEV_UI_TARGET_ARN)
+                                        deploy("${UI_COMPOSE}", "${DEV_PROJECT_UI}", "${DEV_UI_TARGET_ARN}")
                                     } else if (env.BRANCH_NAME == 'Stage') {
-                                        deploy($UI_COMPOSE, $STAGE_PROJECT_UI, $STAGE_UI_TARGET_ARN)
+                                        deploy("${UI_COMPOSE}", "${STAGE_PROJECT_UI}", "${STAGE_UI_TARGET_ARN}")
                                     }
                                 }
 
@@ -109,9 +109,11 @@ pipeline {
                                     sh "ecs-cli configure profile --access-key ${AWS_ACCESS_KEY_ID} --secret-key ${AWS_SECRET_ACCESS_KEY} --profile-name answer-profile"
 
                                     if(env.BRANCH_NAME == 'Develop') {
-                                        deploy($API_COMPOSE, $DEV_PROJECT_API, $DEV_API_TARGET_ARN)
+                                        echo "Deploying Develop"
+                                        deploy("${API_COMPOSE}", "${DEV_PROJECT_API}", "${DEV_API_TARGET_ARN}")
                                     } else if (env.BRANCH_NAME == 'Stage') {
-                                        deploy($API_COMPOSE, $STAGE_PROJECT_API, $STAGE_API_TARGET_ARN)
+                                        echo "Deploying Develop"
+                                        deploy("${API_COMPOSE}", "${STAGE_PROJECT_API}", "${STAGE_API_TARGET_ARN}")
                                     }
                                 }
 
