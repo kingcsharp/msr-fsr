@@ -13,7 +13,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "cypress": "./node_modules/.bin/cypress open",
-    "cypress:test": "concurrently \"yarn start\" \"yarn cypress:wait\"",
+    "cypress:test:local": "concurrently \"yarn start\" \"yarn cypress:wait\"",
+    "cypress:test:dev": "concurrently \"yarn start:backend\" \"yarn cypress:wait\"",
     "cypress:wait": "wait-on http://localhost:3000/ && yarn cypress"
   },
   "private": true,
