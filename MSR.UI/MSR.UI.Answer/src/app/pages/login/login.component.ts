@@ -38,7 +38,6 @@ export class Login {
       this.loginService.loginError('Please fill Username Field.');
       return;
     }
-
     var sentEmail = await this.loginService.forgotUserPassword(this.username);
     this.forgotPassword = !sentEmail;
     this.showLogin = sentEmail;
@@ -49,7 +48,6 @@ export class Login {
       this.loginService.loginError('Please fill Username Field.');
       return;
     }
-
     var sentEmail = await this.loginService.forgotUserName(this.email);
     this.forgotUsername = !sentEmail;
     this.showLogin = sentEmail;

@@ -1,5 +1,5 @@
 <h1 class="page-title">Users <small><small>sb title</small></small></h1>
-<widget [fetchingData]="userService.isReceiving">
+<widget>
   <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
     [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]" [loading]="loading" [paginator]="true"
     currentPageReportTemplate="Showing {first}-{last} of {totalRecords}" [filterDelay]="0"

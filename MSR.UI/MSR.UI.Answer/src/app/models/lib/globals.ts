@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { ToastrService } from 'ngx-toastr';
 
 @Injectable()
 export class Globals {
@@ -9,7 +8,7 @@ export class Globals {
     loader = true;
     user;
 
-    constructor(private toastr: ToastrService) {
+    constructor() {
         if (localStorage.user === undefined || localStorage.user === undefined) {
             delete localStorage.user;
             delete localStorage.token;

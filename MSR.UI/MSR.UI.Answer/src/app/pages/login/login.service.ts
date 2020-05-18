@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Injectable } from '@angular/core';
 import { Globals } from '../../models/lib/globals';
-import { AccountService, SystemLoginRequest, UserService } from '../../services/api.client.generated';
+import { AccountService, SystemLoginRequest, UserService, ForgotPasswordRequest, ForgotUserNameRequest } from '../../services/api.client.generated';
 import { take } from 'rxjs/operators';
 import { environment as env } from '../../../environments/environment';
 import { responseHandler } from '../../utils/responseHandler';
@@ -75,20 +75,25 @@ export class LoginService {
 
   async forgotUserPassword(email) {
     const ctrl = this;
-    return this.http.post('/Account/forgotpassword', { userName: email }).toPromise().then((res: any) => {
-      ctrl.loginError("Reset password email sent.");
-      return true;
+    return new Promise<boolean>(resolve => {
+      this.accountService.forgotpassword(new ForgotPasswordRequest({ userName: email }), env.apiVersion)
+        .pipe(take(1))
+        .subscribe(responseHandler(() => {
+          ctrl.loginError("Reset password email has been sent.");
+          resolve(true);
+        }, () => resolve(false)));
     });
   }
 
   async forgotUserName(email) {
     const ctrl = this;
-    return this.http.post('/Account/forgotusername', { email: email }).toPromise().then((res: any) => {
-      ctrl.loginError("An email has been sent with your information.");
-      return true;
-    }, function (ret) {
-      ctrl.loginError(ret.error.errorMessages[0].message);
-      return false;
+    return new Promise<boolean>(resolve => {
+      this.accountService.forgotusername(new ForgotUserNameRequest({ email: email }), env.apiVersion)
+        .pipe(take(1))
+        .subscribe(responseHandler(() => {
+          ctrl.loginError("An email has been sent with your information.");
+          resolve(true);
+        }, () => resolve(false)));
     });
   }
 

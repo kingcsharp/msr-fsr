@@ -9,10 +9,14 @@ namespace MSR.Answer.API.V1.Extentions
 {
     public static class CommandResponseExtentions
     {
-        public static IActionResult ToOkObjectResponse<TResult>(this ICommandResponse commandResponse)
+        public static IActionResult ToOkObjectResponse<TResult>(this ICommandResponse commandResponse, string message = null)
         {
             var result = ValidateCommandResponse(commandResponse);
-            return result ?? new OkObjectResult(new AuditActionResult<TResult>() { Object = ((ICommandResponse<TResult>)commandResponse).Data });
+            return result ?? new OkObjectResult(new AuditActionResult<TResult>()
+            {
+                Object = ((ICommandResponse<TResult>)commandResponse).Data,
+                SuccessMessage = message
+            });
         }
 
         public static IActionResult ToNoContentResponse(this ICommandResponse commandResponse)
@@ -21,10 +25,14 @@ namespace MSR.Answer.API.V1.Extentions
             return result ?? new NoContentResult();
         }
 
-        public static IActionResult ToCreatedResponse<TResult>(this ICommandResponse commandResponse)
+        public static IActionResult ToCreatedResponse<TResult>(this ICommandResponse commandResponse, string message = null)
         {
             var result = ValidateCommandResponse(commandResponse);
-            return result ?? new CreatedResult("", new AuditActionResult<TResult>() { Object = ((ICommandResponse<TResult>)commandResponse).Data });
+            return result ?? new CreatedResult("", new AuditActionResult<TResult>()
+            {
+                Object = ((ICommandResponse<TResult>)commandResponse).Data,
+                SuccessMessage = message
+            });
         }
 
         private static IActionResult ValidateCommandResponse(ICommandResponse commandResponse)
@@ -68,10 +76,8 @@ namespace MSR.Answer.API.V1.Extentions
                 default:
                     return new ObjectResult(new AuditActionResult(ex.Message))
                     { StatusCode = (int)HttpStatusCode.BadRequest };
-                   
+
             }
-            
-            
         }
 
     }
