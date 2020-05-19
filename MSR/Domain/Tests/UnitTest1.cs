@@ -1,6 +1,6 @@
 using Xunit;
 
-namespace Msr.Domain.Tests
+namespace MSR.Domain.Tests
 {
     public class UnitTest1
     {

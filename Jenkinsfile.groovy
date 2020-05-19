@@ -2,103 +2,146 @@ pipeline {
     options {
         disableConcurrentBuilds()
     }
-    agent { label 'master'}
+    agent none
     environment {
-        /*
-        TARGET_ARN_DEV='arn:aws:elasticloadbalancing:us-east-1:536716547771:targetgroup/auditflix-dev/26111534632711a9'
-        TARGET_ARN_STAGE='arn:aws:elasticloadbalancing:us-east-1:536716547771:targetgroup/auditflix-stage/4fec18820fab1417'
-        TARGET_ARN_DEMO='arn:aws:elasticloadbalancing:us-east-1:536716547771:targetgroup/auditflix-demo/aa347c59f78697d1'
-        TARGET_ARN_PROD='arn:aws:elasticloadbalancing:us-east-1:536716547771:targetgroup/auditflix-prod/e12c857846115550'
-         */
+        WEBHOOK_URL = 'https://outlook.office.com/webhook/19c3ea6c-d421-4b34-bf8b-9188e9e5c729@f139f56d-9238-4269-8e2e-8b0f314429cb/JenkinsCI/a8556c572acf47fdaa48888079cd22f5/73b18003-3808-48a4-bf4d-a0fc2650baa5'
+        GREEN = '#008000'
+        RED = '#FF0000'
         ACCOUNT_URL='425480257575.dkr.ecr.us-west-2.amazonaws.com'
         REGION='us-west-2'
         PROFILE='--profile msrfsr'
+        DEV_API_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-api/397c455c0c042c71"
+        DEV_UI_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-dev/1b3c1539f365fe8f"
+        STAGE_API_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-api-stage/e7d741c03c9de262"
+        STAGE_UI_TARGET_ARN="arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-ui-stage/3a5df8140101b695"
+        DEV_PROJECT_API='answer-api'
+        DEV_PROJECT_UI='answer-ui'
+        STAGE_PROJECT_API='stage-answer-api'
+        STAGE_PROJECT_UI='stage-answer-ui'
+        API_COMPOSE='docker-compose-api.yml'
+        UI_COMPOSE='docker-compose-ui.yml'
     }
     stages {
-        stage('Build UI Container') {
-            steps {
-                script {
-                    dir('MSR.UI/MSR.UI.Answer') {
-                        sh "sudo chmod 777 /var/run/docker.sock"
-                        sh "docker build -f prod.Dockerfile -t msr-ui ."
-                        sh "docker tag msr-ui ${ACCOUNT_URL}/msr-ui:${env.BRANCH_NAME}${env.BUILD_NUMBER}"
+        stage('Build & Deploy') {
+            parallel {
+                stage('Build and Deploy UI') {
+                    agent { label 'master'}
+                    steps {
+                        script {
+                            try {
+                                dir('MSR.UI/MSR.UI.Answer') {
+                                    sh "sudo chmod 777 /var/run/docker.sock"
+                                    sh "docker build -f prod.Dockerfile -t msr-ui ."
+                                    sh "docker tag msr-ui ${ACCOUNT_URL}/msr-ui:${env.BRANCH_NAME}${env.BUILD_NUMBER}"
+
+                                    sh "eval \$(/home/ubuntu/.local/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
+                                    sh "docker push ${ACCOUNT_URL}/msr-ui:${env.BRANCH_NAME}${env.BUILD_NUMBER}"
+                                }
+                            } catch(e) {
+                                office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED building the UI image. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                                currentBuild.result = 'FAILURE'
+                                sh "exit 1"
+                            }
+
+                            try {
+                                sh "sudo sh update_image.sh ${env.BRANCH_NAME} ${env.BUILD_NUMBER} ${UI_COMPOSE}"
+                                sh "cat ${UI_COMPOSE}"
+
+                                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'msrfsr-aws-jenkins', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+                                    sh "ecs-cli configure --cluster answer --default-launch-type FARGATE --config-name answer-config --region us-west-2"
+                                    sh "ecs-cli configure profile --access-key ${AWS_ACCESS_KEY_ID} --secret-key ${AWS_SECRET_ACCESS_KEY} --profile-name answer-profile"
+
+                                    if(env.BRANCH_NAME == 'Develop') {
+                                        echo "Deploying Develop"
+                                        deploy("${UI_COMPOSE}", "${DEV_PROJECT_UI}", "${DEV_UI_TARGET_ARN}", "app")
+                                    } else if (env.BRANCH_NAME == 'Stage') {
+                                        echo "Deploying Stage"
+                                        deploy("${UI_COMPOSE}", "${STAGE_PROJECT_UI}", "${STAGE_UI_TARGET_ARN}", "app")
+                                    }
+                                }
+
+                                office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} UI deployed successfully.", status: 'Passed',webhookUrl: "${WEBHOOK_URL}"
+
+                            } catch (e) {
+                                office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED deploying the UI containers. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                                currentBuild.result = 'FAILURE'
+                                sh "exit 1"
+                            }
+                        }
+                    }
+                }
+
+                stage('Build and Deploy API') {
+                    agent { label 'master'}
+                    steps {
+                        script {
+                            try {
+                                dir('reverseproxy') {
+                                    sh "sudo chmod 777 /var/run/docker.sock"
+                                    sh "docker build --build-arg NGINX_CONF=dev -t msr-rp ."
+                                    sh "docker tag msr-rp ${ACCOUNT_URL}/msr-rp:${env.BRANCH_NAME}${env.BUILD_NUMBER}"
+
+                                    sh "eval \$(/home/ubuntu/.local/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
+                                    sh "docker push ${ACCOUNT_URL}/msr-rp:${env.BRANCH_NAME}${env.BUILD_NUMBER}"
+                                }
+                            } catch(e) {
+                                office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED building the NGINX image. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                                currentBuild.result = 'FAILURE'
+                                sh "exit 1"
+                            }
+
+                            try {
+                                sh "sudo chmod 777 /var/run/docker.sock"
+                                sh "git mv Msr.Infrastructure MSR.Infrastructure"
+                                sh "docker build -f MSR.Answer.API/Dockerfile -t msr-api ."
+                                sh "docker tag msr-api ${ACCOUNT_URL}/msr-api:${env.BRANCH_NAME}${env.BUILD_NUMBER}"
+
+                                sh "eval \$(/home/ubuntu/.local/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
+                                sh "docker push ${ACCOUNT_URL}/msr-api:${env.BRANCH_NAME}${env.BUILD_NUMBER}"
+                            } catch(e) {
+                                office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED building the API image. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                                currentBuild.result = 'FAILURE'
+                                sh "exit 1"
+                            }
+
+                            try {
+                                sh "sudo sh update_image_api.sh ${env.BRANCH_NAME} ${env.BUILD_NUMBER} ${API_COMPOSE}"
+                                sh "cat ${API_COMPOSE}"
+
+                                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'msrfsr-aws-jenkins', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+                                    sh "ecs-cli configure --cluster answer --default-launch-type FARGATE --config-name answer-config --region us-west-2"
+                                    sh "ecs-cli configure profile --access-key ${AWS_ACCESS_KEY_ID} --secret-key ${AWS_SECRET_ACCESS_KEY} --profile-name answer-profile"
+
+                                    if(env.BRANCH_NAME == 'Develop') {
+                                        echo "Deploying Develop"
+                                        deploy("${API_COMPOSE}", "${DEV_PROJECT_API}", "${DEV_API_TARGET_ARN}", "reverseproxy")
+                                    } else if (env.BRANCH_NAME == 'Stage') {
+                                        echo "Deploying Stage"
+                                        deploy("${API_COMPOSE}", "${STAGE_PROJECT_API}", "${STAGE_API_TARGET_ARN}", "reverseproxy")
+                                    }
+                                }
+
+                                office365ConnectorSend color: "${GREEN}", message: "${env.BRANCH_NAME} API deployed successfully.", status: 'Passed',webhookUrl: "${WEBHOOK_URL}"
+
+                            } catch(e) {
+                                office365ConnectorSend color: "${RED}", message: "${env.BRANCH_NAME} build FAILED deploying the API. \n Error: ${e}", status: 'Failed', webhookUrl: "${WEBHOOK_URL}"
+                                currentBuild.result = 'FAILURE'
+                                sh "exit 1"
+                            }
+
+                        }
                     }
                 }
             }
         }
+    }
+}
 
-        stage('Push UI image to AWS ECR') {
-            steps {
-                script {
-                    dir('MSR.UI/MSR.UI.Answer') {
-                        sh "eval \$(/home/ubuntu/.local/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
-                        sh "docker push ${ACCOUNT_URL}/msr-ui:${env.BRANCH_NAME}${env.BUILD_NUMBER}"
-                    }
-                }
-            }
-        }
+void deploy(composeFile,name,target, app) {
+    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'msrfsr-aws-jenkins', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+        sh "ecs-cli configure --cluster answer --default-launch-type FARGATE --config-name answer-config --region us-west-2"
+        sh "ecs-cli configure profile --access-key ${AWS_ACCESS_KEY_ID} --secret-key ${AWS_SECRET_ACCESS_KEY} --profile-name answer-profile"
 
-        stage('Build Reverse Proxy Container') {
-            steps {
-                script {
-                    dir('reverseproxy') {
-                        sh "sudo chmod 777 /var/run/docker.sock"
-                        sh "docker build --build-arg NGINX_CONF=dev -t msr-rp ."
-                        sh "docker tag msr-rp ${ACCOUNT_URL}/msr-rp:${env.BRANCH_NAME}${env.BUILD_NUMBER}"
-                    }
-                }
-            }
-        }
-
-        stage('Push Reverse Proxy image to AWS ECR') {
-            steps {
-                script {
-                    dir('reverseproxy') {
-                        sh "eval \$(/home/ubuntu/.local/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
-                        sh "docker push ${ACCOUNT_URL}/msr-rp:${env.BRANCH_NAME}${env.BUILD_NUMBER}"
-                    }
-                }
-            }
-        }
-        /*
-        stage('Build API Container') {
-            steps {
-                script {
-                    sh "sudo chmod 777 /var/run/docker.sock"
-                    sh "docker build -f MSR.Answer.API/Dockerfile -t msr-api ."
-                    sh "docker tag msr-api ${ACCOUNT_URL}/msr-api:${env.BRANCH_NAME}${env.BUILD_NUMBER}"
-                }
-            }
-        }
-
-        stage('Push API image to AWS ECR') {
-            steps {
-                script {
-                    sh "eval \$(/home/ubuntu/.local/bin/aws ecr get-login --region ${REGION} --no-include-email ${PROFILE} | sed 's|https://||')"
-                    sh "docker push ${ACCOUNT_URL}/msr-api:${env.BRANCH_NAME}${env.BUILD_NUMBER}"
-                }
-            }
-        }
-        */
-        stage('Update docker-compose file') {
-            steps {
-                script {
-                    sh "sudo ./update_image.sh ${env.BRANCH_NAME} ${env.BUILD_NUMBER} docker-compose-ui.yml"
-                }
-            }
-        }
-
-        stage("Deploy to ECS") {
-            steps {
-                script {
-                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'msrfsr-aws-jenkins', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
-                        sh "ecs-cli configure --cluster answer --default-launch-type FARGATE --config-name answer-config --region us-west-2"
-                        sh "ecs-cli configure profile --access-key ${AWS_ACCESS_KEY_ID} --secret-key ${AWS_SECRET_ACCESS_KEY} --profile-name answer-profile"
-
-                        sh "ecs-cli compose --file docker-compose-ui.yml --project-name answer-ui service up --create-log-groups --cluster-config answer-config --ecs-profile answer-profile --target-group-arn arn:aws:elasticloadbalancing:us-west-2:425480257575:targetgroup/answer3-dev/1b3c1539f365fe8f --container-name app --container-port 80 --timeout 10"
-                    }
-                }
-            }
-        }
+        sh "ecs-cli compose --file ${composeFile} --project-name ${name} service up --create-log-groups --cluster-config answer-config --ecs-profile answer-profile --target-group-arn ${target} --container-name ${app} --container-port 80 --timeout 15"
     }
 }

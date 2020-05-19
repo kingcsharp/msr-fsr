@@ -19,7 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{ADD0668A-B22
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSR.Application.Tests", "MSR.Application.Tests\MSR.Application.Tests.csproj", "{8CAF3128-17DF-4464-910F-BB172DC89DF4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSR.Domain.Tests", "Msr.Domain.Tests\MSR.Domain.Tests.csproj", "{9F9AFA87-FFE3-4400-B9B9-5264EE822219}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSR.Domain.Tests", "MSR.Domain.Tests\MSR.Domain.Tests.csproj", "{9F9AFA87-FFE3-4400-B9B9-5264EE822219}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSR.Infrastructure.Tests", "MSR.Infrastructure.Tests\MSR.Infrastructure.Tests.csproj", "{4637592A-48EE-4AA4-ACA4-4C9B249FAC40}"
 EndProject
