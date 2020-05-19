@@ -2,6 +2,10 @@ import { Component, HostBinding } from '@angular/core';
 import { LoginService } from './login.service';
 import { ActivatedRoute } from '@angular/router';
 import { AppConfig } from '../../app.config';
+import { AccountService, SystemLoginRequest, UserService, ForgotPasswordRequest, ForgotUserNameRequest } from '../../services/api.client.generated';
+import { environment as env } from '../../../environments/environment';
+import { take } from 'rxjs/operators';
+import { responseHandler } from '../../utils/responseHandler';
 
 @Component({
   selector: 'login',
@@ -17,7 +21,7 @@ export class Login {
   showLogin: boolean = true;
   forgotPassword: boolean = false;
 
-  constructor(public loginService: LoginService, private route: ActivatedRoute, appConfig: AppConfig) {
+  constructor(public loginService: LoginService, private route: ActivatedRoute, appConfig: AppConfig, private accountService: AccountService) {
     const config: any = appConfig.getConfig();
     // const creds = config.auth;
     // this.email = creds.email;
@@ -38,9 +42,15 @@ export class Login {
       this.loginService.loginError('Please fill Username Field.');
       return;
     }
-    var sentEmail = await this.loginService.forgotUserPassword(this.username);
-    this.forgotPassword = !sentEmail;
-    this.showLogin = sentEmail;
+    const ctrl = this;
+    this.accountService.forgotpassword(new ForgotPasswordRequest({ userName: this.username }), env.apiVersion)
+      .pipe(take(1))
+      .subscribe(responseHandler(() => {
+        ctrl.loginService.loginError("Reset password email has been sent.");
+        ctrl.showLoginDiv();
+      }, () => {
+        ctrl.fogotPassword();
+      }));
   }
 
   public async forgotUserName() {
@@ -48,9 +58,15 @@ export class Login {
       this.loginService.loginError('Please fill Username Field.');
       return;
     }
-    var sentEmail = await this.loginService.forgotUserName(this.email);
-    this.forgotUsername = !sentEmail;
-    this.showLogin = sentEmail;
+    const ctrl = this;
+    this.accountService.forgotusername(new ForgotUserNameRequest({ email: this.email }), env.apiVersion)
+      .pipe(take(1))
+      .subscribe(responseHandler(() => {
+        ctrl.loginService.loginError("An email has been sent with your information.");
+        ctrl.showLoginDiv();
+      }, () => {
+        ctrl.fogotUserName();
+      }));
   }
 
   public showLoginDiv() {

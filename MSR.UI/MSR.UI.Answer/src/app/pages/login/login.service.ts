@@ -73,31 +73,6 @@ export class LoginService {
       }));
   }
 
-  async forgotUserPassword(email) {
-    const ctrl = this;
-    return new Promise<boolean>(resolve => {
-      this.accountService.forgotpassword(new ForgotPasswordRequest({ userName: email }), env.apiVersion)
-        .pipe(take(1))
-        .subscribe(responseHandler(() => {
-          ctrl.loginError("Reset password email has been sent.");
-          resolve(true);
-        }, () => resolve(false)));
-    });
-  }
-
-  async forgotUserName(email) {
-    const ctrl = this;
-    return new Promise<boolean>(resolve => {
-      this.accountService.forgotusername(new ForgotUserNameRequest({ email: email }), env.apiVersion)
-        .pipe(take(1))
-        .subscribe(responseHandler(() => {
-          ctrl.loginError("An email has been sent with your information.");
-          resolve(true);
-        }, () => resolve(false)));
-    });
-  }
-
-
   async receiveToken(token) {
     let user: any = {};
     // We check if app runs with backend mode

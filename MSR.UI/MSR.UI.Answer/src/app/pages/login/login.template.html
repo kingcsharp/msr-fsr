@@ -1,16 +1,7 @@
 <div class="container">
-  <widget *ngIf="showLogin" [title]="'<h3 class=mt-0>ANSWER Login</h3>'" [customHeader]="true"
-    class="widget-auth mx-auto">
-    <!--<p class="widget-auth-info">
-      Use your email to sign in.
-    </p>
-    <alert type="secondary alert-sm text-center mt-2 widget-middle-overflow rounded-0">
-      This is a real app with Node.js backend - use
-      <br />
-      <span class="font-weight-bold">"admin@flatlogic.com / password"</span>
-      <br />
-      to login!
-    </alert>-->
+  <widget *ngIf="showLogin"
+    [title]="'<h3 class=mt-0> <img src=../../../assets/icon/android-icon-72x72.png> </widget>ANSWER Login</h3>'"
+    [customHeader]="true" class="widget-auth mx-auto">
     <form>
       <alert *ngIf="loginService.errorMessage" type="danger alert-sm widget-middle-overflow rounded-0 text-center">
         {{loginService.errorMessage}}
@@ -42,7 +33,7 @@
           </span>
           Login
         </button>
-        <div class="d-block text-center">
+        <div class="d-block text-center sm-mg">
           <a (click)="fogotUserName()" class="text-center mb-4">Forgot Username?</a> |
           <a (click)="fogotPassword()" class="text-center mb-4">Forgot Password?</a>
         </div>
@@ -50,7 +41,7 @@
     </form>
   </widget>
 
-  <widget *ngIf="forgotUsername" [title]="'<h3 class=mt-0>Forgot Username</h3>'" [customHeader]="true"
+  <widget *ngIf="forgotUsername" [title]="'<h3 class=mt-0><img src=../../../assets/icon/android-icon-72x72.png> Forgot Username</h3>'" [customHeader]="true"
     class="widget-auth mx-auto">
     <form>
       <alert *ngIf="loginService.errorMessage" type="danger alert-sm widget-middle-overflow rounded-0">
@@ -73,14 +64,14 @@
           </span>
           Submit
         </button>
-        <div class="d-block text-center">
+        <div class="d-block text-center sm-mg">
           <a (click)="fogotPassword()" class="text-center mb-4">Forgot Password?</a> |
           <a (click)="showLoginDiv()" class="text-center mb-4">Login</a>
         </div>
       </div>
     </form>
   </widget>
-  <widget *ngIf="forgotPassword" [title]="'<h3 class=mt-0>Forgot Password</h3>'" [customHeader]="true"
+  <widget *ngIf="forgotPassword" [title]="'<h3 class=mt-0><img src=../../../assets/icon/android-icon-72x72.png> Forgot Password</h3>'" [customHeader]="true"
     class="widget-auth mx-auto">
     <form>
       <alert *ngIf="loginService.errorMessage" type="danger alert-sm widget-middle-overflow rounded-0">
@@ -103,7 +94,7 @@
           </span>
           Reset Password
         </button>
-        <div class="d-block text-center">
+        <div class="d-block text-center sm-mg">
           <a (click)="fogotUserName()" class="text-center mb-4">Forgot Username?</a> |
           <a (click)="showLoginDiv()" class="text-center mb-4">Login</a>
         </div>
