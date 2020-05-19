@@ -82,19 +82,19 @@
                 }
               ]
             },
-            "hmr": {
+            "stage": {
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.hmr.ts"
+                  "with": "src/environments/environment.stage.ts"
                 }
               ]
             },
-            "backend": {
+            "dev": {
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.backend.ts"
+                  "with": "src/environments/environment.dev.ts"
                 }
               ]
             }

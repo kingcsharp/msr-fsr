@@ -1,8 +1,7 @@
 import { Component, HostBinding } from '@angular/core';
 import { LoginService } from './login.service';
 import { ActivatedRoute } from '@angular/router';
-import { AppConfig } from '../../app.config';
-import { AccountService, SystemLoginRequest, UserService, ForgotPasswordRequest, ForgotUserNameRequest } from '../../services/api.client.generated';
+import { AccountService, ForgotPasswordRequest, ForgotUserNameRequest } from '../../services/api.client.generated';
 import { environment as env } from '../../../environments/environment';
 import { take } from 'rxjs/operators';
 import { responseHandler } from '../../utils/responseHandler';
@@ -21,11 +20,7 @@ export class Login {
   showLogin: boolean = true;
   forgotPassword: boolean = false;
 
-  constructor(public loginService: LoginService, private route: ActivatedRoute, appConfig: AppConfig, private accountService: AccountService) {
-    const config: any = appConfig.getConfig();
-    // const creds = config.auth;
-    // this.email = creds.email;
-    // this.password = creds.password;
+  constructor(public loginService: LoginService, private route: ActivatedRoute, private accountService: AccountService) {
     if (this.loginService.isAuthenticated()) {
       this.loginService.receiveLogin();
     }
@@ -94,12 +89,4 @@ export class Login {
       this.loginService.loginUser({ email, password });
     }
   }
-
-  // public googleLogin() {
-  //   this.loginService.loginUser({ social: 'google' });
-  // }
-
-  // public microsoftLogin() {
-  //   this.loginService.loginUser({ social: 'microsoft' });
-  // }
 }
