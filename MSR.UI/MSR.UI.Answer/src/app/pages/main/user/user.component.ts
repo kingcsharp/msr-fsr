@@ -37,6 +37,7 @@ export class UserComponent implements OnInit {
       ' ', /\d/, /\d/, /\d/,
       '-', /\d/, /\d/, /\d/, /\d/]
   };
+  canActivate: boolean;
 
   constructor(public userService: UserService, injector: Injector, private toastr: ToastrService,
     private globals: Globals) {
@@ -55,6 +56,7 @@ export class UserComponent implements OnInit {
       { label: 'InActive', value: false },
     ];
     this.canAddUsers = this.hasPrivilege(this.privileges.CanCreate);
+    this.canActivate = this.hasPrivilege(this.privileges.CanActivate);
     this.canEditUsers = this.hasPrivilege(this.privileges.CanEdit);
     // this.canAddUsers = true;
     // this.canEditUsers = true;

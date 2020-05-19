@@ -14,6 +14,7 @@ Run `yarn install`.
 **Do NOT use NPM!**
 
 ## Development server
+Backend server needs to be up before we run this commands.
 RUN `npm run build` so it compiles the solution.
 Run `npm run start` for a dev server. Navigate to `http://localhost:3000/`. The app will automatically reload if you change any of 
 the source files.

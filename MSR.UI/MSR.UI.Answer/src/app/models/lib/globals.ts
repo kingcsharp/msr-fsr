@@ -32,6 +32,13 @@ export class Globals {
         return ret;
     }
 
+    getGridTitle(){
+
+    }
+    setGridTitle(){
+        
+    }
+
     updateLogin(val) {
         this.login = val;
     }

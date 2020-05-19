@@ -1,4 +1,4 @@
-<h1 class="page-title">Users <small><small>sb title</small></small></h1>
+<h1 class="page-title">Users </h1>
 <widget>
   <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
     [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]" [loading]="loading" [paginator]="true"
@@ -65,7 +65,7 @@
           {{user.id}}
         </td>
         <td>
-          <p-inputSwitch disabled="{{canEditUsers}}" [(ngModel)]="user.isActive"
+          <p-inputSwitch disabled="{{canActivate}}" [(ngModel)]="user.isActive"
             (ngModelChange)="changeUserStatus(user)"></p-inputSwitch>
         </td>
         <td>

@@ -1,20 +1,20 @@
-import { AppConfig } from '../../app.config';
-import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
+import { AccountService, ResetPasswordRequest } from '../../services/api.client.generated';
+import { take } from 'rxjs/operators';
+import { environment as env } from '../../../environments/environment';
+import { responseHandler } from '../../utils/responseHandler';
 
 @Injectable()
 export class ResetpasswordService {
-    config: any;
     _isFetching: boolean = false;
     _errorMessage: string = '';
 
     constructor(
-        appConfig: AppConfig,
-        private http: HttpClient,
         private router: Router,
+        private accountService: AccountService
     ) {
-        this.config = appConfig.getConfig();
+        
     }
 
     get isFetching() {
@@ -36,14 +36,13 @@ export class ResetpasswordService {
     resetPassword(creds) {
         this.requestLogin();
         if (creds.token.length > 0 && creds.password.length > 0) {
-            this.http.patch('/Account/resetpassword', { token: creds.token, newPassword: creds.password }).subscribe((res: any) => {
+            this.accountService.resetpassword(new ResetPasswordRequest({ token: creds.token, newPassword: creds.password }), env.apiVersion).pipe(take(1))
+            .subscribe(responseHandler(() => {
                 this.loginError('Password was updated!');
                 setTimeout(() => {
                     this.logoutUser();
                 }, 3000);
-            }, err => {
-                this.loginError(err.error.errorMessages[0].message);
-            });
+            }));
         } else {
             this.loginError('Something was wrong. Try again');
         }

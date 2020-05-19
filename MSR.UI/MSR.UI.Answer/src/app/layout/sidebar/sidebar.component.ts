@@ -19,7 +19,8 @@ export class Sidebar {
 
   generateMenu(menuItems: any) {
     let menuStructure: any = [];
-
+    //show tooltip add .
+    //description
     menuItems.forEach(function (item) {
       const elem = menuStructure.find(x => x.name === item.menuGroup.name);
       if (elem === undefined) {
