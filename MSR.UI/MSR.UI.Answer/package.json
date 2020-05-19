@@ -8,10 +8,9 @@
     "start": "nswag run && ng serve",
     "startdev": "nswag run && ng serve --configuration dev",
     "nswag": "nswag run",
-    "hmr": "ng serve --configuration hmr",
+    "build": "nswag run && ng build",
     "builddev":"nswag run && ng build --configuration=dev",
     "buildstage":"nswag run && ng build --configuration=stage",
-    "build": "nswag run && ng build",
     "buildprod": "nswag run && ng build --prod",
     "test": "ng test",
     "lint": "ng lint"
