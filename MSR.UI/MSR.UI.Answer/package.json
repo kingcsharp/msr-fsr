@@ -9,9 +9,9 @@
     "startdev": "nswag run && ng serve --configuration dev",
     "nswag": "nswag run",
     "build": "nswag run && ng build",
-    "builddev":"nswag run && ng build --configuration=dev",
-    "buildstage":"nswag run && ng build --configuration=stage",
-    "buildprod": "nswag run && ng build --prod",
+    "builddev":"ng build --configuration=dev",
+    "buildstage":"ng build --configuration=stage",
+    "buildprod": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint"
   },
