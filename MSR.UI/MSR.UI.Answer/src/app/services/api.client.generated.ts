@@ -596,7 +596,7 @@ export class WorkflowService {
         this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
-    pending(version: string): Observable<FileResponse | null> {
+    pending(version: string): Observable<AuditActionResultOfPendingApprovalNotification> {
         let url_ = this.baseUrl + "/v{version}/Workflow/pending";
         if (version === undefined || version === null)
             throw new Error("The parameter 'version' must be defined.");
@@ -607,7 +607,7 @@ export class WorkflowService {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
-                "Accept": "application/octet-stream"
+                "Accept": "application/json"
             })
         };
 
@@ -618,31 +618,33 @@ export class WorkflowService {
                 try {
                     return this.processPending(<any>response_);
                 } catch (e) {
-                    return <Observable<FileResponse | null>><any>_observableThrow(e);
+                    return <Observable<AuditActionResultOfPendingApprovalNotification>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<FileResponse | null>><any>_observableThrow(response_);
+                return <Observable<AuditActionResultOfPendingApprovalNotification>><any>_observableThrow(response_);
         }));
     }
 
-    protected processPending(response: HttpResponseBase): Observable<FileResponse | null> {
+    protected processPending(response: HttpResponseBase): Observable<AuditActionResultOfPendingApprovalNotification> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuditActionResultOfPendingApprovalNotification.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<FileResponse | null>(<any>null);
+        return _observableOf<AuditActionResultOfPendingApprovalNotification>(<any>null);
     }
 }
 
@@ -1546,6 +1548,99 @@ export class UpdateUserRequest extends CreateUserRequest implements IUpdateUserR
 
 export interface IUpdateUserRequest extends ICreateUserRequest {
     id: number;
+}
+
+export class AuditActionResultOfPendingApprovalNotification extends AuditActionResult implements IAuditActionResultOfPendingApprovalNotification {
+    object?: PendingApprovalNotification | undefined;
+    returnedObject?: any | undefined;
+
+    constructor(data?: IAuditActionResultOfPendingApprovalNotification) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.object = _data["object"] ? PendingApprovalNotification.fromJS(_data["object"]) : <any>undefined;
+            this.returnedObject = _data["returnedObject"];
+        }
+    }
+
+    static fromJS(data: any): AuditActionResultOfPendingApprovalNotification {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditActionResultOfPendingApprovalNotification();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
+        data["returnedObject"] = this.returnedObject;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IAuditActionResultOfPendingApprovalNotification extends IAuditActionResult {
+    object?: PendingApprovalNotification | undefined;
+    returnedObject?: any | undefined;
+}
+
+export class PendingApprovalNotification implements IPendingApprovalNotification {
+    customers!: number;
+    locations!: number;
+    parts!: number;
+    procedures!: number;
+    purchaseOrders!: number;
+    users!: number;
+
+    constructor(data?: IPendingApprovalNotification) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.customers = _data["customers"];
+            this.locations = _data["locations"];
+            this.parts = _data["parts"];
+            this.procedures = _data["procedures"];
+            this.purchaseOrders = _data["purchaseOrders"];
+            this.users = _data["users"];
+        }
+    }
+
+    static fromJS(data: any): PendingApprovalNotification {
+        data = typeof data === 'object' ? data : {};
+        let result = new PendingApprovalNotification();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["customers"] = this.customers;
+        data["locations"] = this.locations;
+        data["parts"] = this.parts;
+        data["procedures"] = this.procedures;
+        data["purchaseOrders"] = this.purchaseOrders;
+        data["users"] = this.users;
+        return data; 
+    }
+}
+
+export interface IPendingApprovalNotification {
+    customers: number;
+    locations: number;
+    parts: number;
+    procedures: number;
+    purchaseOrders: number;
+    users: number;
 }
 
 export interface FileResponse {

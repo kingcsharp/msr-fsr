@@ -79,56 +79,62 @@
         <li role="presentation">
           <a href="#" class="dropdown-item support-ticket ">
             <div class="picture">
-              <span class="badge badge-important"><i class="fa fa-bell-o"></i></span>
+              <!-- Todo: check if we'll need to set badge warning or info in case notification number is big -->
+              <span class="badge badge-success">{{notificationData.customers}}</span>
             </div>
             <div class="details">
-              Check out this awesome ticket
+              Customers
             </div>
           </a>
         </li>
         <li role="presentation">
           <a href="#" class="dropdown-item support-ticket">
             <div class="picture">
-              <span class="badge badge-warning"><i class="fa fa-question-circle"></i></span>
+              <span class="badge badge-success">{{notificationData.locations}}</span>
             </div>
             <div class="details">
-              "What is the best way to get ...
+              Locations
             </div>
           </a>
         </li>
         <li role="presentation">
           <a href="#" class="dropdown-item support-ticket">
             <div class="picture">
-              <span class="badge badge-success"><i class="fa fa-tag"></i></span>
+              <span class="badge badge-success">{{notificationData.parts}}</span>
             </div>
             <div class="details">
-              This is just a simple notification
+              Parts
             </div>
           </a>
         </li>
         <li role="presentation">
           <a href="#" class="dropdown-item support-ticket">
             <div class="picture">
-              <span class="badge badge-info"><i class="fa fa-info-circle"></i></span>
+              <span class="badge badge-success">{{notificationData.procedures}}</span>
             </div>
             <div class="details">
-              12 new orders has arrived today
+              Procedures
             </div>
           </a>
         </li>
         <li role="presentation">
           <a href="#" class="dropdown-item support-ticket">
             <div class="picture">
-              <span class="badge badge-important"><i class="fa fa-plus"></i></span>
+              <span class="badge badge-success">{{notificationData.purchaseOrders}}</span>
             </div>
             <div class="details">
-              One more thing that just happened
+              Purchase Orders
             </div>
           </a>
         </li>
         <li role="presentation">
-          <a href="#" class="dropdown-item text-center see-all">
-            See all tickets <i class="fa fa-arrow-right"></i>
+          <a href="#" class="dropdown-item support-ticket">
+            <div class="picture">
+              <span class="badge badge-success">{{notificationData.users}}</span>
+            </div>
+            <div class="details">
+              Users
+            </div>
           </a>
         </li>
       </ul>

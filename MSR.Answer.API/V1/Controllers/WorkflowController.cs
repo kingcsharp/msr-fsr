@@ -7,6 +7,8 @@ using MSR.Domain.Commanding.Abstractions;
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
 using System.Threading.Tasks;
+using MSR.Answer.API.V1.Models;
+using NSwag.Annotations;
 
 namespace MSR.Answer.API.V1.Controllers
 {
@@ -25,7 +27,7 @@ namespace MSR.Answer.API.V1.Controllers
             _dispatcher = dispatcher;
         }
 
-        [HttpGet("pending")]
+        [HttpGet("pending"), SwaggerResponse(typeof(AuditActionResult<PendingApprovalNotification>))]
         public async Task<IActionResult> GetPendingApprovals()
         {
             var ret = await _dispatcher.DispatchAsync(new GetPendingApprovals());
