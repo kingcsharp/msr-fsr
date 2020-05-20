@@ -1,7 +1,6 @@
 <div class="sidebar-header">
   <header class="logo">
     <a href="javascript:;">
-      <!-- <i class="fas fa-paper-plane"></i> -->
       <img src="../../../assets/icon/android-icon-36x36.png">
       &nbsp;
       <label>Answer</label>
@@ -9,22 +8,25 @@
     </a>
   </header>
 </div>
-
 <ul id="side-nav" class="list-unstyled components side-nav">
   <li *ngFor="let item of sidebarItems" [ngClass]="item.submenu.length>0?'accordion-group panel':''"
     [routerLinkActive]="['active']">
     <a *ngIf="item.submenu.length > 0" (click)="sidebarBehavior($event)" class="accordion-toggle collapsed"
-      data-toggle="collapse" data-parent="#side-nav" href="#{{item.name}}">
+      data-toggle="collapse" data-parent="#side-nav" href="#{{item.name}}" tooltip="{{item.info}}" [delay]="600" [container]="body">
       <i [ngClass]="'fas '+item.icon"></i> &nbsp;
       <span class="name">{{item.name}}</span>
     </a>
     <ul *ngIf="item.submenu.length > 0" id="{{item.name}}" class="accordion-body collapse" aria-expanded="false">
-      <li *ngFor="let subItem of item.submenu" [routerLinkActive]="['active']"><a
-          routerLink="{{item.name | lowercase}}/{{subItem.url | lowercase}}"><i [ngClass]="'fas '+subItem.icon"></i>
-          &nbsp; {{subItem.name}}</a></li>
+      <li *ngFor="let subItem of item.submenu" [routerLinkActive]="['active']">
+        <a routerLink="{{item.name | lowercase}}/{{subItem.url | lowercase}}" tooltip="{{subItem.info}}" [delay]="600" [container]="body">
+          <i [ngClass]="'fas '+subItem.icon"></i>
+          &nbsp; {{subItem.name}}
+        </a>
+      </li>
     </ul>
     <a *ngIf="item.submenu.length === 0" routerLink="profile">
       <i [ngClass]="'fas '+item.icon"></i> &nbsp;
-      <span class="name">{{item.name}}</span></a>
+      <span class="name">{{item.name}}</span>
+    </a>
   </li>
 </ul>

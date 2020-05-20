@@ -1,6 +1,6 @@
 import { Component, ElementRef } from '@angular/core';
 import { Renderer2 } from '@angular/core';
-
+import { Globals } from '../../models/lib/globals';
 declare let jQuery: any;
 
 @Component({
@@ -12,9 +12,8 @@ export class Sidebar {
   sidebarMenu: any = 0;
   sidebarItems: any;
 
-  constructor(private renderer: Renderer2, private el: ElementRef) {
-    const userInfo = JSON.parse(localStorage.getItem('user'));
-    this.sidebarItems = this.generateMenu(userInfo.roles[0].menus);
+  constructor(private renderer: Renderer2, private el: ElementRef, private globals: Globals) {
+    this.sidebarItems = this.generateMenu(globals.user.roles[0].menus);
   }
 
   generateMenu(menuItems: any) {

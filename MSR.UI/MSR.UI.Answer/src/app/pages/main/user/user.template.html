@@ -1,11 +1,11 @@
-<h1 class="page-title">Users </h1>
+<h1 class="page-title"><i [ngClass]="'fas '+globals.activeMenu.icon"></i> {{globals.activeMenu.name}}</h1>
 <widget>
   <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
     [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]" [loading]="loading" [paginator]="true"
     currentPageReportTemplate="Showing {first}-{last} of {totalRecords}" [filterDelay]="0"
     [globalFilterFields]="['id','firstName','lastName','userName','email']">
     <ng-template pTemplate="caption">
-      <div class="pull-left">List of Users</div>
+      <div class="pull-left">{{globals.activeMenu.info}}</div>
       <div class="ui-table-globalfilter-container">
         <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Search" />
       </div>

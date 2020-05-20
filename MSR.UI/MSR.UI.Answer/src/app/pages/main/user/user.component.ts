@@ -41,7 +41,6 @@ export class UserComponent implements OnInit {
 
   constructor(public userService: UserService, injector: Injector, private toastr: ToastrService,
     private globals: Globals) {
-
   }
 
 
@@ -102,7 +101,7 @@ export class UserComponent implements OnInit {
     jQuery('.parsleyjs').parsley().validate();
     const ctrl = this;
     if (jQuery('.parsleyjs').parsley().isValid()) {
-      let method:Observable<IAuditActionResultOfUser> = null;
+      let method: Observable<IAuditActionResultOfUser> = null;
       this.globals.showLoader(true);
       if (this.currUser.id === undefined) {
         method = this.userService.userPost(this.currUser, env.apiVersion);
