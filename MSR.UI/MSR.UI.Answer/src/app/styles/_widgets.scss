@@ -815,6 +815,9 @@ body .ui-dropdown {
     color: #ffffff;
   }
 }
+body .ui-dropdown .ui-dropdown-label{
+  padding-right: 3em;
+}
 
 .ui-table-customers .ui-table-globalfilter-container input {
   width: 200px;
@@ -1206,6 +1209,6 @@ body .ui-dropdown.ui-dropdown-clearable .ui-dropdown-label {
   z-index: 10000;
 }
 .sm-mg{
-  margin: 5px;
+  margin: 10px 5px 10px 5px;
 }
 /* SIDEBAR END*/

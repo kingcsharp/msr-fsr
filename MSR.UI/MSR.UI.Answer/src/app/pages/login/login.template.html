@@ -1,6 +1,6 @@
 <div class="container">
   <widget *ngIf="showLogin"
-    [title]="'<h3 class=mt-0> <img src=../../../assets/icon/android-icon-72x72.png> </widget>ANSWER Login</h3>'"
+    [title]="'<h3 class=mt-0> <img width=72 src=../../../assets/head/android-chrome-72x72.png> </widget>ANSWER Login</h3>'"
     [customHeader]="true" class="widget-auth mx-auto">
     <form>
       <alert *ngIf="loginService.errorMessage" type="danger alert-sm widget-middle-overflow rounded-0 text-center">
@@ -40,8 +40,8 @@
       </div>
     </form>
   </widget>
-
-  <widget *ngIf="forgotUsername" [title]="'<h3 class=mt-0><img src=../../../assets/icon/android-icon-72x72.png> Forgot Username</h3>'" [customHeader]="true"
+  
+  <widget *ngIf="forgotUsername" [title]="'<h3 class=mt-0><img src=../../../assets/head/android-chrome-72x72.png> Forgot Username</h3>'" [customHeader]="true"
     class="widget-auth mx-auto">
     <form>
       <alert *ngIf="loginService.errorMessage" type="danger alert-sm widget-middle-overflow rounded-0">
@@ -71,7 +71,7 @@
       </div>
     </form>
   </widget>
-  <widget *ngIf="forgotPassword" [title]="'<h3 class=mt-0><img src=../../../assets/icon/android-icon-72x72.png> Forgot Password</h3>'" [customHeader]="true"
+  <widget *ngIf="forgotPassword" [title]="'<h3 class=mt-0><img src=../../../assets/head/android-chrome-72x72.png> Forgot Password</h3>'" [customHeader]="true"
     class="widget-auth mx-auto">
     <form>
       <alert *ngIf="loginService.errorMessage" type="danger alert-sm widget-middle-overflow rounded-0">

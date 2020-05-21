@@ -25,7 +25,7 @@ export class Globals {
         }
 
         router.events.forEach((event) => {
-            if (event instanceof NavigationEnd) {
+            if (event instanceof NavigationEnd && this.user !== undefined) {
                 let splitUrl = event.url.split('/');
                 const currMenuItem: [MenuItem] = this.user.roles[0].menus.filter(x => x.url.toLowerCase() === splitUrl[splitUrl.length - 1]);
                 if (currMenuItem.length > 0) {

@@ -6,9 +6,9 @@
     [globalFilterFields]="['id','firstName','lastName','userName','email']">
     <ng-template pTemplate="caption">
       <div class="pull-left">{{globals.activeMenu.info}}</div>
-      <div class="ui-table-globalfilter-container">
+      <!-- <div class="ui-table-globalfilter-container">
         <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Search" />
-      </div>
+      </div> -->
     </ng-template>
     <ng-template pTemplate="header">
       <tr>
@@ -31,7 +31,7 @@
           <input pInputText type="text" (input)="dt.filter($event.target.value, 'id', 'contains')" placeholder="Id"
             class="ui-column-filter">
         </th>
-        <th>
+        <th class="text-center">
           <p-dropdown [options]="statuses" (onChange)="dt.filter($event.value, 'isActive', 'equals')"
             styleClass="ui-column-filter" placeholder="Select a Status" [showClear]="true">
             <ng-template let-option pTemplate="item">
@@ -97,8 +97,8 @@
   </p-table>
 </widget>
 <div>
-  <button *ngIf="canAddUsers" (click)="showDialog()" class="btn btn-outline-inverse width-100 mb-xs" role="button">
-    Add
+  <button *ngIf="canAddUsers" (click)="showDialog()" class="btn btn-success width-100 mb-xs" role="button">
+    + Add
   </button>
 </div>
 <p-dialog header="{{ currUser.id === undefined ?'Create User':'Edit User'}}" [(visible)]="display"
