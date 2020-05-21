@@ -4,9 +4,9 @@
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
 export const environment = {
-  production: false,
-  url: "https://localhost:44398",
-  API_BASE_URL:"https://localhost:44398",
+  production: true,
+  url: "https://dev-api.answer.msr-fsr.com",
+  API_BASE_URL:"https://dev-api.answer.msr-fsr.com",
   hmr: false,
   backend: true,
   version: "v1",
