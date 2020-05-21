@@ -16,6 +16,8 @@
         </th>
         <th pSortableColumn="isActive">Active<p-sortIcon field="isActive"></p-sortIcon>
         </th>
+        <th pSortableColumn="isAnswerUser">User Type<p-sortIcon field="isAnswerUser"></p-sortIcon>
+        </th>
         <th pSortableColumn="firstName">First Name <p-sortIcon field="firstName"></p-sortIcon>
         </th>
         <th pSortableColumn="lastName">Last Name <p-sortIcon field="lastName"></p-sortIcon>
@@ -39,6 +41,16 @@
             </ng-template>
           </p-dropdown>
         </th>
+        <th class="text-center">
+          <p-dropdown [options]="userTypes" (onChange)="dt.filter($event.value, 'isAnswerUser', 'equals')"
+            styleClass="ui-column-filter" placeholder="Select User Type" [showClear]="true">
+            <ng-template let-option pTemplate="item">
+              <span [class]="'customer-badge status-' + option.value">{{option.label}}</span>
+            </ng-template>
+          </p-dropdown>
+        </th>
+        
+
         <th>
           <input pInputText type="text" (input)="dt.filter($event.target.value, 'firstName', 'contains')"
             placeholder="Search by First Name" class="ui-column-filter">

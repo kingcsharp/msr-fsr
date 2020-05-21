@@ -29,6 +29,7 @@ export class UserComponent implements OnInit {
   injector: Injector;
   phoneValue = '';
   statuses: any[];
+  userTypes:any[];
   canAddUsers: boolean = false;
   canEditUsers: boolean = false;
   elems: any;
@@ -53,6 +54,10 @@ export class UserComponent implements OnInit {
     this.statuses = [
       { label: 'Active', value: true },
       { label: 'InActive', value: false },
+    ];
+    this.userTypes = [
+      { label: 'Is Answer User', value: true },
+      { label: 'Is Not Anser User', value: false },
     ];
     this.canAddUsers = this.hasPrivilege(this.privileges.CanCreate);
     this.canActivate = this.hasPrivilege(this.privileges.CanActivate);
