@@ -5,8 +5,10 @@ WORKDIR /app
 COPY package.json ./
 RUN npm install
 
+ARG ENV
+
 COPY . .
-RUN npm run builddev
+RUN npm run build$ENV
 
 ### STAGE 2: Run ###
 FROM nginx:1.17.1-alpine
