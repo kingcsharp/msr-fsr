@@ -40,7 +40,7 @@ export class UserComponent implements OnInit {
   canActivate: boolean;
 
   constructor(public userService: UserService, injector: Injector, private toastr: ToastrService,
-    private globals: Globals) {
+    public globals: Globals) {
   }
 
 
