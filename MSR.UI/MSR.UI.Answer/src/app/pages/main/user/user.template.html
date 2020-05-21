@@ -33,7 +33,7 @@
           <input pInputText type="text" (input)="dt.filter($event.target.value, 'id', 'contains')" placeholder="Id"
             class="ui-column-filter">
         </th>
-        <th class="text-center">
+        <th>
           <p-dropdown [options]="statuses" (onChange)="dt.filter($event.value, 'isActive', 'equals')"
             styleClass="ui-column-filter" placeholder="Select a Status" [showClear]="true">
             <ng-template let-option pTemplate="item">
@@ -41,7 +41,7 @@
             </ng-template>
           </p-dropdown>
         </th>
-        <th class="text-center">
+        <th>
           <p-dropdown [options]="userTypes" (onChange)="dt.filter($event.value, 'isAnswerUser', 'equals')"
             styleClass="ui-column-filter" placeholder="Select User Type" [showClear]="true">
             <ng-template let-option pTemplate="item">
@@ -49,8 +49,6 @@
             </ng-template>
           </p-dropdown>
         </th>
-        
-
         <th>
           <input pInputText type="text" (input)="dt.filter($event.target.value, 'firstName', 'contains')"
             placeholder="Search by First Name" class="ui-column-filter">
@@ -76,9 +74,13 @@
           <span class="ui-column-title">Id</span>
           {{user.id}}
         </td>
-        <td>
+        <td class="text-center">
           <p-inputSwitch disabled="{{canActivate}}" [(ngModel)]="user.isActive"
             (ngModelChange)="changeUserStatus(user)"></p-inputSwitch>
+        </td>
+        <td class="text-center">
+          <p-inputSwitch disabled="{{canEditUsers}}" [(ngModel)]="user.isAnswerUser"
+            (ngModelChange)="changeUserType(user)"></p-inputSwitch>
         </td>
         <td>
           <span class="ui-column-title">First Name</span>
