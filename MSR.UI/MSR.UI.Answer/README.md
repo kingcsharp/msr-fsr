@@ -113,6 +113,7 @@ Example
 Light Blue Angular Dashboard - Ngx Admin Template (4.3.0 Full version) with Angular 8.0 Final Release support
 - [Documentation](https://demo.flatlogic.com/sing-app/documentation/angular_components.html)
 - [Demo](https://flatlogic.com/templates/light-blue-angular/demo)
+- [PrimeNg](https://primefaces.org/primeng/showcase/#/)
 
 ## Primefaces ##
 
