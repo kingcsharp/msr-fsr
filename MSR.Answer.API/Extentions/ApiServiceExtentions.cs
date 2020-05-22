@@ -56,7 +56,7 @@ namespace MSR.Answer.API.Extentions
             var loggerConfig = new LoggerConfiguration()
                 //.ReadFrom.Configuration(Configuration);
                 .WriteTo.Console(new JsonFormatter())
-                .WriteTo.Rollbar("0e34b5fc000342528dc361a4bb90f085", environment: generalConfig.Environment)
+                .WriteTo.Rollbar("0e34b5fc000342528dc361a4bb90f085", environment: generalConfig.Environment,restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Warning)
                 .WriteTo.AmazonCloudWatch(new Domain.Models.Config.CloudWatchSinkOptions(),client);
             
             Log.Logger = loggerConfig.CreateLogger();
