@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using MSR.Answer.API.Extentions;
-using Rollbar.NetCore.AspNet;
 using NSwag;
 using NSwag.AspNetCore;
+using Serilog;
+using Serilog.Formatting.Json;
 
 namespace MSR.Answer.API
 {
@@ -25,18 +25,11 @@ namespace MSR.Answer.API
             Configuration = configuration;
         }
 
-        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddRollbarLogger(loggerOptions =>
-            //{
-            //    loggerOptions.Filter =
-            //      (loggerName, loglevel) => loglevel >= LogLevel.Trace;
-            //});
-
             services.AddControllers();
             services.AddApiVersioning();
             services.AddApiServices(Configuration);
@@ -87,12 +80,9 @@ namespace MSR.Answer.API
             //    c.RoutePrefix = string.Empty;
             //});
 
-            //app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-
-            //app.UseRollbarMiddleware();
 
             app.UseEndpoints(endpoints =>
             {
