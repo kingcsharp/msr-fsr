@@ -29,7 +29,7 @@ export class UserComponent implements OnInit {
   injector: Injector;
   phoneValue = '';
   statuses: any[];
-  userTypes:any[];
+  userTypes: any[];
   canAddUsers: boolean = false;
   canEditUsers: boolean = false;
   elems: any;
@@ -100,6 +100,21 @@ export class UserComponent implements OnInit {
     }, () => {
       user.isActive = !user.isActive;
     }))
+  }
+
+  changeUserType(user: User) {
+    const ctrl = this;
+    this.userService.userPatch(user, env.apiVersion).pipe(take(1)).subscribe(responseHandler((resp) => {
+      if (!resp.hasErrors) {
+        if(user.isAnswerUser){
+          ctrl.toastr.success('User type changed to Is Answer User!');
+        }else{
+          ctrl.toastr.success('User type changed to Not Answer User!');
+        }
+      }
+    }, () => {
+      user.isAnswerUser = !user.isAnswerUser;
+    }));
   }
 
   onUserSubmit() {

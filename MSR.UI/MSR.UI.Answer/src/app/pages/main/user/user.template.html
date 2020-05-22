@@ -75,12 +75,25 @@
           {{user.id}}
         </td>
         <td class="text-center">
-          <p-inputSwitch disabled="{{canActivate}}" [(ngModel)]="user.isActive"
-            (ngModelChange)="changeUserStatus(user)"></p-inputSwitch>
+          <!-- [attr.disabled]="canActivate" [attr.disabled]="canActivate?'true':'false'" {{canActivate?'true':''}}-->
+          <ng-template [ngIf]="!canActivate">
+            <p-inputSwitch disabled="true" [(ngModel)]="user.isActive" (ngModelChange)="changeUserStatus(user)">
+            </p-inputSwitch>
+          </ng-template>
+          <ng-template [ngIf]="canActivate">
+            <p-inputSwitch [ngIF]="canActivate" [(ngModel)]="user.isActive" (ngModelChange)="changeUserStatus(user)">
+            </p-inputSwitch>
+          </ng-template>
         </td>
         <td class="text-center">
-          <p-inputSwitch disabled="{{canEditUsers}}" [(ngModel)]="user.isAnswerUser"
-            (ngModelChange)="changeUserType(user)"></p-inputSwitch>
+          <ng-template [ngIf]="!canEditUsers">
+            <p-inputSwitch disabled="true" [(ngModel)]="user.isAnswerUser"
+              (ngModelChange)="changeUserType(user)"></p-inputSwitch>
+          </ng-template>
+          <ng-template [ngIf]="canEditUsers">
+            <p-inputSwitch [(ngModel)]="user.isAnswerUser"
+              (ngModelChange)="changeUserType(user)"></p-inputSwitch>
+          </ng-template>
         </td>
         <td>
           <span class="ui-column-title">First Name</span>
