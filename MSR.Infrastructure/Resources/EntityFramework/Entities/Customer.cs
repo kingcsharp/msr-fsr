@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations.Schema;
-
 namespace MSR.Infrastructure.Resources.EntityFramework.Entities
 {
     public partial class Customer: TrackableEntity

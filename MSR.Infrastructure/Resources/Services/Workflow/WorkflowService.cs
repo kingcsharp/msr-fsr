@@ -1,12 +1,8 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using MSR.Domain.Abstractions.Services;
 using MSR.Domain.Commands;
 using MSR.Domain.Models;
 using MSR.Infrastructure.Resources.EntityFramework.Application;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MSR.Infrastructure.Resources.Services.Workflow
