@@ -72,21 +72,21 @@ export class Sidebar {
   }
 
   collapseSubMenu(event) {
-    let currentMenu = event.target
-      .closest('.accordion-group')
-      .querySelector('.accordion-body');
-    let collapsingMenu = this.sidebarMenu
-      .querySelector('.accordion-group .accordion-body.collapse.show');
-    jQuery(collapsingMenu).collapse('hide');
-    jQuery(currentMenu).collapse('show');
-    if (collapsingMenu && currentMenu !== collapsingMenu && window.innerWidth < 768) {
-      let submenuHeight = 0;
-      let submenuItems = collapsingMenu.querySelectorAll('li');
-      submenuItems.forEach(() => {
-        submenuHeight += 26;
-      });
-      this.sidebarHeight -= submenuHeight;
-    }
+    // let currentMenu = event.target
+    //   .closest('.accordion-group')
+    //   .querySelector('.accordion-body');
+    // let collapsingMenu = this.sidebarMenu
+    //   .querySelector('.accordion-group .accordion-body.collapse.show');
+    // jQuery(collapsingMenu).collapse('hide');
+    // jQuery(currentMenu).collapse('show');
+    // if (collapsingMenu && currentMenu !== collapsingMenu && window.innerWidth < 768) {
+    //   let submenuHeight = 0;
+    //   let submenuItems = collapsingMenu.querySelectorAll('li');
+    //   submenuItems.forEach(() => {
+    //     submenuHeight += 26;
+    //   });
+    //   this.sidebarHeight -= submenuHeight;
+    // }
   }
 
   sidebarBehavior(event) {
