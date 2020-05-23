@@ -62,8 +62,6 @@ export class UserComponent implements OnInit {
     this.canAddUsers = this.hasPrivilege(this.privileges.CanCreate);
     this.canActivate = this.hasPrivilege(this.privileges.CanActivate);
     this.canEditUsers = this.hasPrivilege(this.privileges.CanEdit);
-    // this.canAddUsers = true;
-    // this.canEditUsers = true;
   }
 
   async getUsers() {

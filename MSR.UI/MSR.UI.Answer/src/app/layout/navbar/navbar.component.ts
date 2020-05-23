@@ -5,6 +5,7 @@ import { WorkflowService, PendingApprovalNotification } from "../../services/api
 import { environment as env } from '../../../environments/environment';
 import { responseHandler } from '../../utils/responseHandler';
 import { Observable } from 'rxjs';
+import { Globals } from '../../models/lib/globals';
 
 @Component({
   selector: '[navbar]',
@@ -30,7 +31,8 @@ export class Navbar implements OnInit {
     private renderer: Renderer2,
     private el: ElementRef,
     private loginService: LoginService,
-    private workflowService: WorkflowService
+    private workflowService: WorkflowService,
+    public globals: Globals
   ) { }
 
   ngOnInit(): void {

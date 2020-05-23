@@ -75,6 +75,9 @@
   padding-left: 15px;
   font-weight: 300;
   overflow-y: auto;
+  -moz-box-shadow: 3px 3px 5px 6px #222d3c;
+  -webkit-box-shadow: 3px 3px 5px 6px #222d3c;
+  box-shadow: 3px 3px 5px 6px #222d3c;
 
   .settings {
     margin-top: 10px;

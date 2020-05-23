@@ -9,6 +9,12 @@
       <!-- <div class="ui-table-globalfilter-container">
         <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Search" />
       </div> -->
+      <div class="text-right">
+        <button *ngIf="canAddUsers" (click)="showDialog()" class="btn btn-success width-100 mb-xs" role="button">
+          + Add
+        </button>
+        
+      </div>
     </ng-template>
     <ng-template pTemplate="header">
       <tr>
@@ -123,11 +129,6 @@
     </ng-template>
   </p-table>
 </widget>
-<div>
-  <button *ngIf="canAddUsers" (click)="showDialog()" class="btn btn-success width-100 mb-xs" role="button">
-    + Add
-  </button>
-</div>
 <p-dialog header="{{ currUser.id === undefined ?'Create User':'Edit User'}}" [(visible)]="display"
   [style]="{width: '50vw'}">
   <!-- <p-header>
