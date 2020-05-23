@@ -20,7 +20,7 @@
       <li *ngFor="let subItem of item.submenu" [routerLinkActive]="['active']">
         <a routerLink="{{item.name | lowercase}}/{{subItem.url | lowercase}}" tooltip="{{subItem.info}}" [delay]="600" [container]="body">
           <i [ngClass]="'fas '+subItem.icon"></i>
-          &nbsp; {{subItem.name}}
+          &nbsp; <span>{{subItem.name}}</span>
         </a>
       </li>
     </ul>

@@ -21,6 +21,7 @@ export class Layout {
   open: boolean = true;
   sidebarState: boolean = true;
   globals: Globals;
+  currDate: Date = new Date();
   body: string = 'body';
   @ViewChild('spinnerElement', { static: true }) spinnerElement: ElementRef;
   @ViewChild('routerComponent', { static: true }) routerComponent: ElementRef;

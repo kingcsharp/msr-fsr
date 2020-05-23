@@ -1,11 +1,4 @@
 <nav class="navbar-collapse">
-  <!-- <div class="notifications">
-    <alert [dismissible]="true">
-      <i class="fa fa-info-circle mr-xs"></i> Check out Light Blue <a (click)="settings.isOpen = !settings.isOpen"
-        id="notification-link" href="#">settings</a> on
-      the right!
-    </alert>
-  </div> -->
   <form id="search-form" class="navbar-form" role="search">
     <div class="form-group mb-0">
       <div class="input-group-transparent input-group">
@@ -22,53 +15,6 @@
         <i class="fa fa-search"></i>
       </a>
     </li>
-    <!-- <li class="nav-item dropdown">
-      <a href title="Messages" id="messages" class="nav-link dropdown-toggle" data-toggle="dropdown">
-        <i class="glyphicon glyphicon-comment"></i>
-      </a>
-      <ul id="messages-menu" class="dropdown-menu dropdown-menu-right messages" role="menu">
-        <li role="presentation">
-          <a href="#" class="dropdown-item message">
-            <img src="assets/img/1.png" alt="">
-            <div class="details">
-              <div class="sender">Jane Hew</div>
-              <div class="text">
-                Hey, John! How is it going? ...
-              </div>
-            </div>
-          </a>
-        </li>
-        <li role="presentation">
-          <a href="#" class="dropdown-item message">
-            <img src="assets/img/2.png" alt="">
-
-            <div class="details">
-              <div class="sender">Alies Rumiancaŭ</div>
-              <div class="text">
-                I'll definitely buy this template
-              </div>
-            </div>
-          </a>
-        </li>
-        <li role="presentation">
-          <a href="#" class="dropdown-item message">
-            <img src="assets/img/3.png" alt="">
-
-            <div class="details">
-              <div class="sender">Michał Rumiancaŭ</div>
-              <div class="text">
-                Is it really Lore ipsum? Lore ...
-              </div>
-            </div>
-          </a>
-        </li>
-        <li role="presentation">
-          <a href="#" class="dropdown-item text-center see-all">
-            See all messages <i class="fa fa-arrow-right"></i>
-          </a>
-        </li>
-      </ul>
-    </li> -->
     <li class="nav-item dropdown">
       <a href tooltip="{{notificationCount+' new notifications'}}" class="nav-link dropdown-toggle"
         data-toggle="dropdown">
@@ -79,7 +25,6 @@
         <li role="presentation">
           <a href="#" class="dropdown-item support-ticket ">
             <div class="picture">
-              <!-- Todo: check if we'll need to set badge warning or info in case notification number is big -->
               <span class="badge badge-success">{{notificationData.customers}}</span>
             </div>
             <div class="details">
