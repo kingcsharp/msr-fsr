@@ -3,6 +3,7 @@ using MSR.Infrastructure.Tests.TestFixtures;
 using System.Threading.Tasks;
 using MSR.Domain.Abstractions.Services;
 using Xunit;
+using FluentAssertions;
 
 namespace MSR.Infrastructure.Tests.Resources.Services
 {
@@ -15,11 +16,12 @@ namespace MSR.Infrastructure.Tests.Resources.Services
             _accountService = (IAccountService)testSetup.ServiceProvider.GetService(typeof(IAccountService));
         }
 
+        [Fact]
         public async Task CallingLogin_WithSystemLoginCommand_HappyPath()
         {
             var response = await _accountService.LoginAsync(SystemLoginTestFixture.SuccessCommand);
 
-
+            response.Should().NotBeNullOrWhiteSpace();
         }
     }
 }
