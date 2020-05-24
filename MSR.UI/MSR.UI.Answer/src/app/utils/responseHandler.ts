@@ -23,7 +23,10 @@ function responseHandler(nextFn, errorFn = undefined) {
                     errorFn(errorParsed);
                 }
             };
-            reader.readAsText(err);
+            if(err !== undefined)
+            {
+                reader.readAsText(err);
+            }
         },
         complete() {
             console.log('Subscriber A - complete');

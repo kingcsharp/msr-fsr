@@ -19,7 +19,6 @@ import { WidgetModule } from '../../layout/widget/widget.module';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
-
 import { TrendModule } from 'ngx-trend';
 import { TaskContainerComponent } from './analytics/components/task-container/task-container.component';
 import { TaskComponent } from './analytics/components/task/task';
@@ -43,12 +42,13 @@ import { FakeWorldData } from './widgets/years-map-widget/fake-world-data.servic
 import { AnalyticsService } from "./analytics/analytics.service";
 import { NewWidgetModule } from "../../layout/new-widget/widget.module";
 import { UserComponent } from './user/user.component';
-import { DialogModule } from 'primeng/dialog';
-import { TableModule } from 'primeng/table';
 import { FormsModule } from '@angular/forms';
 import { TextMaskModule } from 'angular2-text-mask';
 import { InputSwitchModule } from 'primeng/inputswitch';
+import { DialogModule } from 'primeng/dialog';
+import { TableModule } from 'primeng/table';
 import { DropdownModule } from 'primeng/dropdown';
+import { CheckboxModule } from 'primeng/checkbox';
 
 export const routes = [
   { path: '', redirectTo: 'people', pathMatch: 'full' },
@@ -83,6 +83,7 @@ export const routes = [
     WidgetModule,
     ProgressbarModule.forRoot(),
     TrendModule,
+    CheckboxModule,
     BsDropdownModule.forRoot(),
     DropdownModule,
     TooltipModule.forRoot(),

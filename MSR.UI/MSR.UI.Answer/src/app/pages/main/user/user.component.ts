@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, Injector } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, Injector, ElementRef } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Globals } from '../../../models/lib/globals';
 import { EnumPrivilege } from '../../../models/enums/privileges';
@@ -7,6 +7,7 @@ import { take } from 'rxjs/operators';
 import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { Observable } from 'rxjs';
+import { ViewSaved } from '../../../models/lib/ViewSaved';
 
 declare let jQuery: any;
 
@@ -33,24 +34,43 @@ export class UserComponent implements OnInit {
   canAddUsers: boolean = false;
   canEditUsers: boolean = false;
   elems: any;
+  showSaveView: boolean = false;
+  savedViewsOptions: any;
   phoneMask = {
     mask: ['(', /[1-9]/, /\d/, /\d/, ')',
       ' ', /\d/, /\d/, /\d/,
       '-', /\d/, /\d/, /\d/, /\d/]
   };
   canActivate: boolean;
+  viewsSaved: Array<ViewSaved>;
+  viewToSave: ViewSaved;
+  controllerName: string;
+  gridVersion: string; //IF YOU ADD COLUMNS OR EDIT DATA TYPE YOU NEED TO UPGRADE THIS VERSION
 
   constructor(public userService: UserService, injector: Injector, private toastr: ToastrService,
-    public globals: Globals) {
+    public globals: Globals, private elem: ElementRef) {
   }
-
 
   ngOnInit(): void {
     const now = new Date();
     this.currUser = new User();
     this.month = now.getMonth() + 1;
     this.year = now.getFullYear();
+    this.gridVersion = "1.0.0";
+    this.controllerName = this.elem.nativeElement.tagName.toLowerCase();
+    this.viewToSave = new ViewSaved({ controllerName: this.controllerName, version: this.gridVersion, isDefault: false });
+    this.viewsSaved = this.globals.getViews(this.controllerName);
+
     this.getUsers();
+    // <option selected>Options</option>
+    //               <option>Set as Default</option>
+    //               <option>Delete View</option>
+
+    this.savedViewsOptions = [
+      { label: 'Set as Default', value: true },
+      { label: 'Delete View', value: false },
+    ]
+
     this.statuses = [
       { label: 'Active', value: true },
       { label: 'InActive', value: false },
@@ -59,9 +79,39 @@ export class UserComponent implements OnInit {
       { label: 'Is Answer User', value: true },
       { label: 'Is Not Anser User', value: false },
     ];
+
     this.canAddUsers = this.hasPrivilege(this.privileges.CanCreate);
     this.canActivate = this.hasPrivilege(this.privileges.CanActivate);
     this.canEditUsers = this.hasPrivilege(this.privileges.CanEdit);
+  }
+
+  public savedViewChange(event, view: ViewSaved) {
+    if (event.value) {
+      this.globals.setAsDefault(view);
+    }
+    else {
+      this.globals.deleteView(view);
+    }
+  }
+
+  public stopEvent(event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  public showSaveViewDiv($event) {
+    // this.stopEvent($event);
+    this.showSaveView = !this.showSaveView;
+    if (this.showSaveView) {
+      this.viewToSave = new ViewSaved({ controllerName: this.controllerName, version: this.gridVersion, isDefault: false });
+    }
+  }
+
+  public saveView() {
+    const savedView = new ViewSaved({ controllerName: this.controllerName, version: this.gridVersion, isDefault: false });
+    Object.assign(savedView, this.viewToSave);
+    this.globals.addView(savedView);
+    this.viewsSaved = this.globals.getViews(this.controllerName);
   }
 
   async getUsers() {
@@ -104,9 +154,9 @@ export class UserComponent implements OnInit {
     const ctrl = this;
     this.userService.userPatch(user, env.apiVersion).pipe(take(1)).subscribe(responseHandler((resp) => {
       if (!resp.hasErrors) {
-        if(user.isAnswerUser){
+        if (user.isAnswerUser) {
           ctrl.toastr.success('User type changed to Is Answer User!');
-        }else{
+        } else {
           ctrl.toastr.success('User type changed to Not Answer User!');
         }
       }
