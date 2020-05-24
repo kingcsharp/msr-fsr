@@ -21,4 +21,10 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ApplicationServices\" />
+    <Folder Include="ClassFixtures\" />
+    <Folder Include="TestFixtures\" />
+  </ItemGroup>
+
 </Project>
