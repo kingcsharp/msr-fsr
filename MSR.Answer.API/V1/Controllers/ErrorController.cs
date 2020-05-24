@@ -20,7 +20,7 @@ namespace MSR.Answer.API.V1.Controllers
             _generalInfo = generalInfo;
             _logger = logger;
         }
-        
+
 
         [HttpPost]
         private void LogError(FrontEndError ex)
@@ -34,5 +34,6 @@ namespace MSR.Answer.API.V1.Controllers
             }
 
             _logger.LogError("[Front End Error] {@error}", exception);
+        }
     }
 }
