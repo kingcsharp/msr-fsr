@@ -86,10 +86,11 @@ export class UserComponent implements OnInit {
   }
 
   public savedViewChange(event, view: ViewSaved) {
+    //myViews
     if (event.value) {
       this.globals.setAsDefault(view);
     }
-    else {
+    else if(event.value === false){
       this.globals.deleteView(view);
     }
   }

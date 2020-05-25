@@ -29,7 +29,7 @@ function responseHandler(nextFn, errorFn = undefined) {
             }
         },
         complete() {
-            console.log('Subscriber A - complete');
+            // console.log('Subscriber A - complete');
         }
     };
     return subscriberA;
