@@ -1,3 +1,5 @@
+<a href='https://jenkins.cmhworks.com/job/MSR-FSR/job/Answer3/job/Develop/'><img src='https://jenkins.cmhworks.com/buildStatus/icon?job=MSR-FSR%2FAnswer3%2FDevelop'></a>
+
 ## Running the app manually
 
 **API:** `dotnet run -p MSR.Answer.API/MSR.Answer.API.csproj --launch-profile web`
