@@ -21,17 +21,20 @@
               No Views Saved
             </div>
             <div class="dropdown-item" *ngFor="let view of viewsSaved">
-              <a href="#" class="view-title default" tooltip="{{view.isDefault?'Your Default View':''}}">
+              <a href="#" class="view-title" [ngClass]="view.isDefault?'default':''" tooltip="{{view.isDefault?'Your Default View':''}}">
                 <i class="fas fa-circle text-primary" *ngIf="view.isDefault"></i>
-                {{view.viewName}}
+                {{view.viewName | titlecase}}
               </a>
-              <div class="view-options">
-                <p-dropdown [options]="savedViewsOptions" (onChange)="savedViewChange($event,view)"
+              <div class="view-options text-right">
+                <i class="fad fa-circle pointer" (click)="savedViewChange(view)"
+                  [ngClass]="view.isDefault?'text-success':'text-secondary'" tooltip="{{view.isDefault?'Unset from default':'Set As Default'}}"></i>
+                <i class="fal fa-trash-alt pointer text-danger" (click)="deleteView(view)" tooltip="Delete View"></i>
+                <!-- <p-dropdown [options]="savedViewsOptions" (onChange)="savedViewChange($event,view)"
                   styleClass="ui-column-filter" placeholder="Options" [showClear]="true">
                   <ng-template let-option pTemplate="item">
                     <span>{{option.label}}</span>
                   </ng-template>
-                </p-dropdown>
+                </p-dropdown> -->
               </div>
             </div>
 

@@ -85,14 +85,24 @@ export class UserComponent implements OnInit {
     this.canEditUsers = this.hasPrivilege(this.privileges.CanEdit);
   }
 
-  public savedViewChange(event, view: ViewSaved) {
-    //myViews
-    if (event.value) {
-      this.globals.setAsDefault(view);
-    }
-    else if(event.value === false){
-      this.globals.deleteView(view);
-    }
+  // public savedViewChange(event, view: ViewSaved) {
+  //   //myViews
+  //   if (event.value) {
+  //     this.globals.setAsDefault(view);
+  //   }
+  //   else if(event.value === false){
+  //     this.globals.deleteView(view);
+  //   }
+  // }
+
+  public savedViewChange(view: ViewSaved) {
+    view.isDefault = !view.isDefault;
+    this.globals.setAsDefault(view);
+  }
+
+  public deleteView(view: ViewSaved) {
+    this.globals.deleteView(view);
+    this.viewsSaved = this.globals.getViews(this.controllerName);
   }
 
   public stopEvent(event) {

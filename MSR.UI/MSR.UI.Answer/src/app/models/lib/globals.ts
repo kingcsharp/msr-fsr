@@ -87,10 +87,10 @@ export class Globals {
             return
         }
         views.forEach(x => {
-            x.isDefault = view.viewName === x.viewName
+            x.isDefault = view.viewName === x.viewName && view.isDefault
         });
         if (showSuccess) {
-            this.toastr.success(`View ${view.viewName} is now default.`);
+            this.toastr.success(`View ${view.viewName} status changed to ${view.isDefault?'Default':'Not Default'}.`);
         }
     }
 
