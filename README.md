@@ -10,6 +10,7 @@
             - ASP.NET and web development
             - .Net Core cross-platform development 
     -  [Mac Version](https://visualstudio.microsoft.com/vs/mac/)
+        - **Note:** Since Database projects are not supported on Visual Studio for Mac, if you are doing backend development it might be best to use a Windows 10 Pro Environment
 - [Visual Studio Code](https://code.visualstudio.com/download)
 - [NodeJs with NPM](https://nodejs.org/en/download/)
 - [Docker Desktop](https://www.docker.com/products/docker-desktop)
