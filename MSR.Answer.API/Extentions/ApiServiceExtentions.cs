@@ -2,11 +2,11 @@
 using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OpenApi.Models;
 using MSR.Application.Extentions;
 using MSR.Domain.Extensions;
 using MSR.Domain.Models.Config;
 using MSR.Infrastructure.Extensions;
+using NSwag;
 using Serilog;
 using Serilog.Formatting.Json;
 using Serilog.Sinks.AwsCloudWatch;
@@ -45,22 +45,6 @@ namespace MSR.Answer.API.Extentions
                        .AllowAnyOrigin()
                        .AllowAnyHeader();
             }));
-
-            services.AddSwaggerGen(i =>
-            {
-                i.SwaggerDoc("v1", new OpenApiInfo { Title = "MSR API", Version = "v1" });
-            });
-
-            services.AddLogging();
-            var client = new AmazonCloudWatchLogsClient();
-            var loggerConfig = new LoggerConfiguration()
-                //.ReadFrom.Configuration(Configuration);
-                .WriteTo.Console(new JsonFormatter())
-                .WriteTo.Rollbar("0e34b5fc000342528dc361a4bb90f085", environment: generalConfig.Environment,restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Warning)
-                .WriteTo.AmazonCloudWatch(new Domain.Models.Config.CloudWatchSinkOptions(),client);
-            
-            Log.Logger = loggerConfig.CreateLogger();
-            services.AddLogging(loggerConfig => loggerConfig.AddSerilog(dispose: true));
 
             return services;
         }
