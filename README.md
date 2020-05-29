@@ -40,6 +40,8 @@ UI is running on port 3000
 
 ## The following commands work for MacOS ##
 
+**Note:** When openning the solution in Visual Studio 2019, the Database and Angular project will not load. The backend will still build and run properly, but this is due to VS for Mac not supporting Database Projects and the Angular project not having a **.csproj** file.
+
 **API:** 
 
     dotnet run -p MSR.Answer.API/MSR.Answer.API.csproj
