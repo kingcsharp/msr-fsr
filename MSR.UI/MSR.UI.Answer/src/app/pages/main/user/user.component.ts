@@ -21,8 +21,6 @@ declare let jQuery: any;
 export class UserComponent implements OnInit {
   privileges = EnumPrivilege;
   config: any;
-  month: any;
-  year: any;
   data: any;
   loading: boolean = true;
   display: boolean = false;
@@ -46,30 +44,23 @@ export class UserComponent implements OnInit {
   viewToSave: ViewSaved;
   controllerName: string;
   gridVersion: string; //IF YOU ADD COLUMNS OR EDIT DATA TYPE YOU NEED TO UPGRADE THIS VERSION
+  defaultView: ViewSaved;
+  gridStorageId: string;
 
   constructor(public userService: UserService, injector: Injector, private toastr: ToastrService,
     public globals: Globals, private elem: ElementRef) {
   }
 
   ngOnInit(): void {
-    const now = new Date();
     this.currUser = new User();
-    this.month = now.getMonth() + 1;
-    this.year = now.getFullYear();
+
     this.gridVersion = "1.0.0";
     this.controllerName = this.elem.nativeElement.tagName.toLowerCase();
-    this.viewToSave = new ViewSaved({ controllerName: this.controllerName, version: this.gridVersion, isDefault: false });
+    this.gridStorageId = 'userGrid' + this.controllerName;
+    this.viewToSave = new ViewSaved({ controllerName: this.controllerName, version: this.gridVersion, isDefault: false, gridId: this.gridStorageId });
     this.viewsSaved = this.globals.getViews(this.controllerName);
 
-    this.getUsers();
-    // <option selected>Options</option>
-    //               <option>Set as Default</option>
-    //               <option>Delete View</option>
-
-    this.savedViewsOptions = [
-      { label: 'Set as Default', value: true },
-      { label: 'Delete View', value: false },
-    ]
+    this.defaultView = this.globals.getDefaultView(this.controllerName, this.gridStorageId);
 
     this.statuses = [
       { label: 'Active', value: true },
@@ -83,21 +74,14 @@ export class UserComponent implements OnInit {
     this.canAddUsers = this.hasPrivilege(this.privileges.CanCreate);
     this.canActivate = this.hasPrivilege(this.privileges.CanActivate);
     this.canEditUsers = this.hasPrivilege(this.privileges.CanEdit);
+    this.getUsers();
   }
 
-  // public savedViewChange(event, view: ViewSaved) {
-  //   //myViews
-  //   if (event.value) {
-  //     this.globals.setAsDefault(view);
-  //   }
-  //   else if(event.value === false){
-  //     this.globals.deleteView(view);
-  //   }
-  // }
-
+  /*Comp starts */
   public savedViewChange(view: ViewSaved) {
     view.isDefault = !view.isDefault;
     this.globals.setAsDefault(view);
+    this.defaultView = view;
   }
 
   public deleteView(view: ViewSaved) {
@@ -105,16 +89,10 @@ export class UserComponent implements OnInit {
     this.viewsSaved = this.globals.getViews(this.controllerName);
   }
 
-  public stopEvent(event) {
-    event.preventDefault();
-    event.stopPropagation();
-  }
-
-  public showSaveViewDiv($event) {
-    // this.stopEvent($event);
+  public showSaveViewDiv() {
     this.showSaveView = !this.showSaveView;
     if (this.showSaveView) {
-      this.viewToSave = new ViewSaved({ controllerName: this.controllerName, version: this.gridVersion, isDefault: false });
+      this.viewToSave = new ViewSaved({ controllerName: this.controllerName, version: this.gridVersion, isDefault: false, gridId: this.gridStorageId });
     }
   }
 
@@ -124,6 +102,13 @@ export class UserComponent implements OnInit {
     this.globals.addView(savedView);
     this.viewsSaved = this.globals.getViews(this.controllerName);
   }
+
+  public stopEvent(event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+  /*Comp end */
+
 
   async getUsers() {
     this.userService.userGet(null, null, null, null, null, null, null, null, env.apiVersion)

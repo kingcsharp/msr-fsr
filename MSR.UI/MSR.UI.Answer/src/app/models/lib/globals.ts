@@ -59,12 +59,18 @@ export class Globals {
     addView(view: ViewSaved) {
         if (this.views.findIndex(x => x.viewName === view.viewName && x.controllerName === view.controllerName) !== -1) {
             this.toastr.error(`Sorry a view with the name ${view.viewName} alread exists.`);
+            return;
+        }
+        view.gridPagingData = localStorage.getItem(view.gridId);
+        if (view.gridPagingData === null) {
+            this.toastr.error(`Sorry there are no filters applied to the grid to save this as a template.`);
+            return;
+        }
+        this.views.push(view);
+        if (view.isDefault) {
+            this.setAsDefault(view, false);
         }
         else {
-            this.views.push(view);
-            if (view.isDefault) {
-                this.setAsDefault(view, false);
-            }
             localStorage.setItem('viewsSaved', JSON.stringify(this.views));
         }
     }
@@ -87,16 +93,30 @@ export class Globals {
             return
         }
         views.forEach(x => {
-            x.isDefault = view.viewName === x.viewName && view.isDefault
+            x.isDefault = view.viewName === x.viewName && view.isDefault;
         });
+        localStorage.setItem('viewsSaved', JSON.stringify(this.views));
         if (showSuccess) {
-            this.toastr.success(`View ${view.viewName} status changed to ${view.isDefault?'Default':'Not Default'}.`);
+            this.toastr.success(`View ${view.viewName} status changed to ${view.isDefault ? 'Default' : 'Not Default'}.`);
         }
     }
 
     getViews(controllerName: string): Array<ViewSaved> {
         const views = this.views.filter(x => x.controllerName === controllerName);
         return views;
+    }
+
+    getDefaultView(controllerName: string, gridId: string): ViewSaved {
+        const viewIndex = this.views.findIndex(x => x.controllerName === controllerName && x.isDefault);
+        if (viewIndex === -1) {
+            localStorage.removeItem(gridId);
+            return null;
+        }
+        else {
+            const view = this.views[viewIndex];
+            localStorage.setItem(gridId, view.gridPagingData);
+            return view;
+        }
     }
 
     showLoader(isOn) {

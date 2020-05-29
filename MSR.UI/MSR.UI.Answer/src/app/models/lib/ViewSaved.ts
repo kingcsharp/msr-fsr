@@ -1,18 +1,18 @@
-import { ColumnsSaved } from './ColumnsSaved';
-
 export interface IViewSaved {
+    gridId?: string | undefined;
     viewName?: string | undefined;
     controllerName?: string | undefined;
-    columns?: ColumnsSaved[] | undefined;
+    gridPagingData?: string | undefined;
     isDefault?: boolean | undefined;
     pagingTotal?: number | undefined;
     version?: string | undefined;
 }
 
 export class ViewSaved implements IViewSaved {
+    gridId?: string | undefined;
     viewName?: string | undefined;
     controllerName?: string | undefined;
-    columns?: ColumnsSaved[] | undefined;
+    gridPagingData?: string | undefined;
     isDefault?: boolean | undefined;
     pagingTotal?: number | undefined;
     version?: string | undefined;
@@ -28,16 +28,13 @@ export class ViewSaved implements IViewSaved {
 
     init(_data?: any) {
         if (_data) {
+            this.gridId = _data["gridId"];
             this.isDefault = _data["isDefault"];
             this.controllerName = _data["controllerName"];
             this.pagingTotal = _data["pagingTotal"];
             this.version = _data["version"];
             this.viewName = _data["viewName"];
-            if (Array.isArray(_data["columns"])) {
-                this.columns = [] as any;
-                for (let item of _data["columns"])
-                    this.columns!.push(ColumnsSaved.fromJS(item));
-            }
+            this.gridPagingData = _data["gridPagingData"];
         }
     }
 
@@ -50,16 +47,14 @@ export class ViewSaved implements IViewSaved {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["gridId"] = this.gridId;
         data["controllerName"] = this.controllerName;
         data["isDefault"] = this.isDefault;
         data["pagingTotal"] = this.pagingTotal;
         data["version"] = this.version;
         data["viewName"] = this.viewName;
-        if (Array.isArray(this.columns)) {
-            data["columns"] = [];
-            for (let item of this.columns)
-                data["columns"].push(item.toJSON());
-        }
+        data["gridPagingData"] = this.gridPagingData;
+
         return data;
     }
 }
