@@ -12,6 +12,8 @@
     -  [Mac Version](https://visualstudio.microsoft.com/vs/mac/)
         - **Note:** Since Database projects are not supported on Visual Studio for Mac, if you are doing backend development it might be best to use a Windows 10 Pro Environment
 - [Visual Studio Code](https://code.visualstudio.com/download)
+    - **Note:** Install Debugger for Chrome if you would like to use the Visual Studio Code debugger
+    - [Debugger for Chrome](https://github.com/Microsoft/vscode-chrome-debug)
 - [NodeJs with NPM](https://nodejs.org/en/download/)
 - [Yarn](https://classic.yarnpkg.com/en/docs/install)
 - [Docker Desktop](https://www.docker.com/products/docker-desktop)
