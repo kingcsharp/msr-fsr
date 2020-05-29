@@ -35,7 +35,28 @@ Run `ng generate component component-name` to generate a new component. You can 
 
 **Build**
 
-Run `yarn build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
+Run `npm run build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
+
+**Using Visual Studio Code Debugger**
+
+First install the [Debugger for Chrome](https://github.com/Microsoft/vscode-chrome-debug) extension to Visual Studio Code.
+
+Since we do not store the debugger in our git repository, you will have to create one locally to use for your system. Go to the Debug panel and click on **create a launch.json file** and replace the auto-generated content with the following json.
+
+Once the backend is running and you have started the application with `npm run start` or `npm run cypress:test` you can run the debugger which will launch a Chrome Browser to navigate to the application.
+
+    {
+        "version": "0.2.0",
+        "configurations": [
+            {
+                "type": "chrome",
+                "request": "launch",
+                "name": "Launch Chrome against localhost",
+                "url": "http://localhost:3000",
+                "webRoot": "${workspaceFolder}"
+            }
+        ]
+    }
 
 **Further help with Angular**
 

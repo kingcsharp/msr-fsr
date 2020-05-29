@@ -22,7 +22,7 @@ export class AccountService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
+        this.baseUrl = baseUrl ? baseUrl : "https://localhost:5001";
     }
 
     login(request: SystemLoginRequest, version: string): Observable<AuditActionResultOfString> {
@@ -242,7 +242,7 @@ export class MenuService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
+        this.baseUrl = baseUrl ? baseUrl : "https://localhost:5001";
     }
 
     menu(version: string): Observable<FileResponse | null> {
@@ -303,7 +303,7 @@ export class UserService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
+        this.baseUrl = baseUrl ? baseUrl : "https://localhost:5001";
     }
 
     userGet(id: number | null | undefined, firstName: string | null | undefined, lastName: string | null | undefined, userName: string | null | undefined, title: string | null | undefined, supervisor: number | null | undefined, primaryPhone: string | null | undefined, email: string | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfUser> {
@@ -593,7 +593,7 @@ export class WorkflowService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
+        this.baseUrl = baseUrl ? baseUrl : "https://localhost:5001";
     }
 
     pending(version: string): Observable<AuditActionResultOfPendingApprovalNotification> {
