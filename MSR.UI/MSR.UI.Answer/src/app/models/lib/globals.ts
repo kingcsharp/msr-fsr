@@ -3,6 +3,7 @@ import { Router, NavigationStart, NavigationEnd, NavigationError, NavigationCanc
 import { MenuItem } from '../../services/api.client.generated';
 import { ViewSaved } from './ViewSaved';
 import { ToastrService } from 'ngx-toastr';
+import { ColumnsSaved } from './ColumnsSaved';
 
 
 @Injectable()
@@ -50,7 +51,13 @@ export class Globals {
     loadViewsFromLocalStorage() {
         const savedViews = localStorage.getItem('viewsSaved');
         if (savedViews !== undefined && savedViews !== null) {
-            this.views = JSON.parse(savedViews).map(x => new ViewSaved(x));
+            // this.views = JSON.parse(savedViews);
+            this.views = JSON.parse(savedViews).map(x => {
+                if (Array.isArray(x.columns)) {
+                    x.columns = x.columns.map(y => new ColumnsSaved(y))
+                }
+                return new ViewSaved(x);
+            });
             this.setDefaultViews();
         } else {
             this.views = new Array<ViewSaved>();

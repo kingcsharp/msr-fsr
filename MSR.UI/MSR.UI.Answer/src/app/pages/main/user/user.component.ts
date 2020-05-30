@@ -85,56 +85,9 @@ export class UserComponent implements OnInit {
     this.getUsers();
   }
 
-  // public columnDropdownFn() {
-  //   this.columnDropdown = !this.columnDropdown;
-  //   this.gridOptionsRotate = true;
-  //   setTimeout(() => { this.gridOptionsRotate = false }, 900);
-  // }
-
   public isVisibleCol(id) {
     return this.gridSettings.filter(x => x.id === id)[0].visible;
   }
-
-  // public changeColVisibility(value) {
-  //   this.gridSettings.forEach((elem) => {
-  //     elem.visible = value.findIndex(x => x.id == elem.id) > -1;
-  //   });
-
-  //   console.log(value);
-  // }
-
-  /*Comp starts */
-  // public savedViewChange(view: ViewSaved) {
-  //   view.isDefault = !view.isDefault;
-  //   this.globals.setAsDefault(view);
-  //   this.defaultView = view;
-  // }
-
-  // public deleteView(view: ViewSaved) {
-  //   this.globals.deleteView(view);
-  //   this.viewsSaved = this.globals.getViews(this.controllerName);
-  // }
-
-  // public showSaveViewDiv() {
-  //   this.showSaveView = !this.showSaveView;
-  //   if (this.showSaveView) {
-  //     this.viewToSave = new ViewSaved({ controllerName: this.controllerName, version: this.gridVersion, isDefault: false, gridId: this.gridStorageId });
-  //   }
-  // }
-
-  // public saveView() {
-  //   const savedView = new ViewSaved({ controllerName: this.controllerName, version: this.gridVersion, isDefault: false });
-  //   Object.assign(savedView, this.viewToSave);
-  //   this.globals.addView(savedView);
-  //   this.viewsSaved = this.globals.getViews(this.controllerName);
-  // }
-
-  // public stopEvent(event) {
-  //   event.preventDefault();
-  //   event.stopPropagation();
-  // }
-  /*Comp end */
-
 
   async getUsers() {
     this.userService.userGet(null, null, null, null, null, null, null, null, env.apiVersion)

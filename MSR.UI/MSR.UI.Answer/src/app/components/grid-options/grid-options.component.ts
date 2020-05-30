@@ -28,6 +28,7 @@ export class GridOptionsComponent implements OnInit {
   @Output() defaultColumnsChange: EventEmitter<Array<ColumnsSaved>> = new EventEmitter<Array<ColumnsSaved>>();
   @Input() gridStorageId: string;
   @Input() gridVersion: string;
+  @Input() ptable: any;
   constructor(public globals: Globals, private _eref: ElementRef) {
   }
 
@@ -37,7 +38,7 @@ export class GridOptionsComponent implements OnInit {
     this.columnPicker = this.defaultColumns.map((elem) => {
       return { label: elem.label, value: { id: elem.id, name: elem.label, visible: elem.visible } }
     });
-    this.selectedColumns = this.defaultColumns.filter(x=>x.visible).map((elem) => {
+    this.selectedColumns = this.defaultColumns.filter(x => x.visible).map((elem) => {
       return { id: elem.id, name: elem.label, visible: elem.visible }
     });
 
@@ -72,7 +73,7 @@ export class GridOptionsComponent implements OnInit {
   }
 
   public updateDefaultColumns(view: ViewSaved) {
-    if (view===null || view.columns === undefined) {
+    if (view === null || view.columns === undefined) {
       return;
     }
     this.defaultColumns.forEach((elem) => {
