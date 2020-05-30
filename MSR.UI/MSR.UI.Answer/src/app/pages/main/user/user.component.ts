@@ -58,10 +58,8 @@ export class UserComponent implements OnInit {
 
   ngOnInit(): void {
     this.currUser = new User();
-
     this.gridVersion = "1.0.0";
-    this.controllerName = this.elem.nativeElement.tagName.toLowerCase();
-    this.gridStorageId = 'userGrid' + this.controllerName;
+    this.gridStorageId = 'userGrid' + this.elem.nativeElement.tagName.toLowerCase();
     //SET DEFAULT VIEW COLS
     this.gridSettings = [new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),
     new ColumnsSaved({ id: 'isActive', label: 'Active', visible: true }),
@@ -71,20 +69,6 @@ export class UserComponent implements OnInit {
     new ColumnsSaved({ id: 'userName', label: 'Username', visible: true }),
     new ColumnsSaved({ id: 'email', label: 'Email', visible: true })];
 
-    this.columnPicker = this.gridSettings.map((elem) => {
-      return { label: elem.label, value: { id: elem.id, name: elem.label, visible: elem.visible } }
-    });
-    this.selectedColumns = this.gridSettings.map((elem) => {
-      return { id: elem.id, name: elem.label, visible: elem.visible }
-    });
-
-    this.viewToSave = new ViewSaved({
-      controllerName: this.controllerName,
-      version: this.gridVersion, isDefault: false, gridId: this.gridStorageId
-    });
-
-    this.viewsSaved = this.globals.getViews(this.controllerName);
-    this.defaultView = this.globals.getDefaultView(this.controllerName, this.gridStorageId);
 
     this.statuses = [
       { label: 'Active', value: true },
@@ -101,54 +85,54 @@ export class UserComponent implements OnInit {
     this.getUsers();
   }
 
-  public columnDropdownFn() {
-    this.columnDropdown = !this.columnDropdown;
-    this.gridOptionsRotate = true;
-    setTimeout(() => { this.gridOptionsRotate = false }, 900);
-  }
+  // public columnDropdownFn() {
+  //   this.columnDropdown = !this.columnDropdown;
+  //   this.gridOptionsRotate = true;
+  //   setTimeout(() => { this.gridOptionsRotate = false }, 900);
+  // }
 
   public isVisibleCol(id) {
     return this.gridSettings.filter(x => x.id === id)[0].visible;
   }
 
-  public changeColVisibility(value) {
-    this.gridSettings.forEach((elem) => {
-      elem.visible = value.findIndex(x => x.id == elem.id) > -1;
-    });
+  // public changeColVisibility(value) {
+  //   this.gridSettings.forEach((elem) => {
+  //     elem.visible = value.findIndex(x => x.id == elem.id) > -1;
+  //   });
 
-    console.log(value);
-  }
+  //   console.log(value);
+  // }
 
   /*Comp starts */
-  public savedViewChange(view: ViewSaved) {
-    view.isDefault = !view.isDefault;
-    this.globals.setAsDefault(view);
-    this.defaultView = view;
-  }
+  // public savedViewChange(view: ViewSaved) {
+  //   view.isDefault = !view.isDefault;
+  //   this.globals.setAsDefault(view);
+  //   this.defaultView = view;
+  // }
 
-  public deleteView(view: ViewSaved) {
-    this.globals.deleteView(view);
-    this.viewsSaved = this.globals.getViews(this.controllerName);
-  }
+  // public deleteView(view: ViewSaved) {
+  //   this.globals.deleteView(view);
+  //   this.viewsSaved = this.globals.getViews(this.controllerName);
+  // }
 
-  public showSaveViewDiv() {
-    this.showSaveView = !this.showSaveView;
-    if (this.showSaveView) {
-      this.viewToSave = new ViewSaved({ controllerName: this.controllerName, version: this.gridVersion, isDefault: false, gridId: this.gridStorageId });
-    }
-  }
+  // public showSaveViewDiv() {
+  //   this.showSaveView = !this.showSaveView;
+  //   if (this.showSaveView) {
+  //     this.viewToSave = new ViewSaved({ controllerName: this.controllerName, version: this.gridVersion, isDefault: false, gridId: this.gridStorageId });
+  //   }
+  // }
 
-  public saveView() {
-    const savedView = new ViewSaved({ controllerName: this.controllerName, version: this.gridVersion, isDefault: false });
-    Object.assign(savedView, this.viewToSave);
-    this.globals.addView(savedView);
-    this.viewsSaved = this.globals.getViews(this.controllerName);
-  }
+  // public saveView() {
+  //   const savedView = new ViewSaved({ controllerName: this.controllerName, version: this.gridVersion, isDefault: false });
+  //   Object.assign(savedView, this.viewToSave);
+  //   this.globals.addView(savedView);
+  //   this.viewsSaved = this.globals.getViews(this.controllerName);
+  // }
 
-  public stopEvent(event) {
-    event.preventDefault();
-    event.stopPropagation();
-  }
+  // public stopEvent(event) {
+  //   event.preventDefault();
+  //   event.stopPropagation();
+  // }
   /*Comp end */
 
 

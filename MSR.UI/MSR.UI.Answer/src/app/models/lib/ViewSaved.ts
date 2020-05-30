@@ -3,7 +3,6 @@ import { ColumnsSaved } from './ColumnsSaved';
 export interface IViewSaved {
     gridId?: string | undefined;
     viewName?: string | undefined;
-    controllerName?: string | undefined;
     gridPagingData?: string | undefined;
     isDefault?: boolean | undefined;
     pagingTotal?: number | undefined;
@@ -14,7 +13,6 @@ export interface IViewSaved {
 export class ViewSaved implements IViewSaved {
     gridId?: string | undefined;
     viewName?: string | undefined;
-    controllerName?: string | undefined;
     gridPagingData?: string | undefined;
     isDefault?: boolean | undefined;
     pagingTotal?: number | undefined;
@@ -34,7 +32,6 @@ export class ViewSaved implements IViewSaved {
         if (_data) {
             this.gridId = _data["gridId"];
             this.isDefault = _data["isDefault"];
-            this.controllerName = _data["controllerName"];
             this.pagingTotal = _data["pagingTotal"];
             this.version = _data["version"];
             this.viewName = _data["viewName"];
@@ -57,7 +54,6 @@ export class ViewSaved implements IViewSaved {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["gridId"] = this.gridId;
-        data["controllerName"] = this.controllerName;
         data["isDefault"] = this.isDefault;
         data["pagingTotal"] = this.pagingTotal;
         data["version"] = this.version;

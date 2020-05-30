@@ -50,6 +50,7 @@ import { TableModule } from 'primeng/table';
 import { DropdownModule } from 'primeng/dropdown';
 import { CheckboxModule } from 'primeng/checkbox';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { GridOptionsComponent } from '../../../app/components/grid-options/grid-options.component';
 
 export const routes = [
   { path: '', redirectTo: 'people', pathMatch: 'full' },
@@ -62,6 +63,7 @@ export const routes = [
 @NgModule({
   declarations: [
     // Components / Directives/ Pipes
+    GridOptionsComponent,
     AnalyticsComponent,
     MainChartComponent,
     BigStatComponent,
@@ -77,6 +79,7 @@ export const routes = [
     NasdaqSparklineWidgetComponent,
     RealtimeTrafficWidgetComponent,
     YearsMapWidgetComponent
+    // GridOptionsComponent
   ],
   imports: [
     CommonModule,

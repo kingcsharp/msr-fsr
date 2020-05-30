@@ -16,9 +16,9 @@ export class Globals {
     views: Array<ViewSaved>;
 
     constructor(private router: Router, private toastr: ToastrService) {
-        this.loadViewsFromLocalStorage();
         this.loadUserFromLocalStorage();
         this.setActiveMenuItem(router);
+        this.loadViewsFromLocalStorage();
     }
 
     setActiveMenuItem(router) {
@@ -51,13 +51,14 @@ export class Globals {
         const savedViews = localStorage.getItem('viewsSaved');
         if (savedViews !== undefined && savedViews !== null) {
             this.views = JSON.parse(savedViews).map(x => new ViewSaved(x));
+            this.setDefaultViews();
         } else {
             this.views = new Array<ViewSaved>();
         }
     }
 
     addView(view: ViewSaved) {
-        if (this.views.findIndex(x => x.viewName === view.viewName && x.controllerName === view.controllerName) !== -1) {
+        if (this.views.findIndex(x => x.viewName === view.viewName && x.gridId === view.gridId) !== -1) {
             this.toastr.error(`Sorry a view with the name ${view.viewName} alread exists.`);
             return;
         }
@@ -76,7 +77,7 @@ export class Globals {
     }
 
     deleteView(view: ViewSaved) {
-        const index = this.views.findIndex(x => x.viewName === view.viewName && x.controllerName === view.controllerName);
+        const index = this.views.findIndex(x => x.viewName === view.viewName && x.gridId === view.gridId);
         if (index !== -1) {
             this.views.splice(index, 1);
             localStorage.setItem('viewsSaved', JSON.stringify(this.views));
@@ -87,7 +88,7 @@ export class Globals {
     }
 
     setAsDefault(view: ViewSaved, showSuccess: boolean = true) {
-        const views = this.views.filter(x => x.controllerName === view.controllerName);
+        const views = this.views.filter(x => x.gridId === view.gridId);
         if (views.length === 0) {
             this.toastr.error(`View ${view.viewName} not found.`);
             return
@@ -101,13 +102,21 @@ export class Globals {
         }
     }
 
-    getViews(controllerName: string): Array<ViewSaved> {
-        const views = this.views.filter(x => x.controllerName === controllerName);
+    getViews(gridId: string): Array<ViewSaved> {
+        const views = this.views.filter(x => x.gridId === gridId);
         return views;
     }
 
-    getDefaultView(controllerName: string, gridId: string): ViewSaved {
-        const viewIndex = this.views.findIndex(x => x.controllerName === controllerName && x.isDefault);
+    setDefaultViews() {
+        this.views.forEach((view) => {
+            if (view.isDefault) {
+                localStorage.setItem(view.gridId, view.gridPagingData);
+            }
+        });
+    }
+
+    getDefaultView(gridId: string): ViewSaved {
+        const viewIndex = this.views.findIndex(x => x.gridId === gridId && x.isDefault);
         if (viewIndex === -1) {
             localStorage.removeItem(gridId);
             return null;
