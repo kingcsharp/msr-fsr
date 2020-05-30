@@ -1,10 +1,12 @@
 export interface IColumnsSaved {
-    sortAsc?: boolean | undefined;
-    sortValues: Array<string> | undefined;
+    id?: string | undefined;
+    label?: string | undefined;
+    visible?: boolean | undefined;
 }
 export class ColumnsSaved implements IColumnsSaved {
-    sortAsc?: boolean | undefined;
-    sortValues: Array<string> | undefined;
+    id?: string | undefined;
+    label?: string | undefined;
+    visible?: boolean | undefined;
 
     constructor(data?: IColumnsSaved) {
         if (data) {
@@ -17,8 +19,9 @@ export class ColumnsSaved implements IColumnsSaved {
 
     init(_data?: any) {
         if (_data) {
-            this.sortAsc = _data["sortAsc"];
-            this.sortValues = _data["sortValues"];
+            this.id = _data["id"];
+            this.label = _data["label"];
+            this.visible = _data["visible"];
         }
     }
 
@@ -31,8 +34,9 @@ export class ColumnsSaved implements IColumnsSaved {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["sortAsc"] = this.sortAsc;
-        data["sortValues"] = this.sortValues;
+        data["id"] = this.id;
+        data["label"] = this.label;
+        data["visible"] = this.visible;
         return data;
     }
 }

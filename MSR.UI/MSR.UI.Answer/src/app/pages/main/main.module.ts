@@ -49,6 +49,7 @@ import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
 import { DropdownModule } from 'primeng/dropdown';
 import { CheckboxModule } from 'primeng/checkbox';
+import { MultiSelectModule } from 'primeng/multiselect';
 
 export const routes = [
   { path: '', redirectTo: 'people', pathMatch: 'full' },
@@ -84,6 +85,7 @@ export const routes = [
     ProgressbarModule.forRoot(),
     TrendModule,
     CheckboxModule,
+    MultiSelectModule,
     BsDropdownModule.forRoot(),
     DropdownModule,
     TooltipModule.forRoot(),

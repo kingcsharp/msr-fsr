@@ -1,3 +1,5 @@
+import { ColumnsSaved } from './ColumnsSaved';
+
 export interface IViewSaved {
     gridId?: string | undefined;
     viewName?: string | undefined;
@@ -6,6 +8,7 @@ export interface IViewSaved {
     isDefault?: boolean | undefined;
     pagingTotal?: number | undefined;
     version?: string | undefined;
+    columns?: ColumnsSaved[] | undefined;
 }
 
 export class ViewSaved implements IViewSaved {
@@ -16,6 +19,7 @@ export class ViewSaved implements IViewSaved {
     isDefault?: boolean | undefined;
     pagingTotal?: number | undefined;
     version?: string | undefined;
+    columns?: ColumnsSaved[] | undefined;
 
     constructor(data?: IViewSaved) {
         if (data) {
@@ -35,6 +39,11 @@ export class ViewSaved implements IViewSaved {
             this.version = _data["version"];
             this.viewName = _data["viewName"];
             this.gridPagingData = _data["gridPagingData"];
+            if (Array.isArray(_data["columns"])) {
+                this.columns = [] as any;
+                for (let item of _data["columns"])
+                    this.columns!.push(ColumnsSaved.fromJS(item));
+            }
         }
     }
 
@@ -54,6 +63,11 @@ export class ViewSaved implements IViewSaved {
         data["version"] = this.version;
         data["viewName"] = this.viewName;
         data["gridPagingData"] = this.gridPagingData;
+        if (Array.isArray(this.columns)) {
+            data["columns"] = [];
+            for (let item of this.columns)
+                data["columns"].push(item.toJSON());
+        }
 
         return data;
     }

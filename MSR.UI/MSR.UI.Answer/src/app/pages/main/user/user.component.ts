@@ -8,6 +8,7 @@ import { environment as env } from '../../../../environments/environment';
 import { responseHandler } from '../../../utils/responseHandler';
 import { Observable } from 'rxjs';
 import { ViewSaved } from '../../../models/lib/ViewSaved';
+import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
 
 declare let jQuery: any;
 
@@ -46,7 +47,11 @@ export class UserComponent implements OnInit {
   gridVersion: string; //IF YOU ADD COLUMNS OR EDIT DATA TYPE YOU NEED TO UPGRADE THIS VERSION
   defaultView: ViewSaved;
   gridStorageId: string;
-
+  gridSettings: ColumnsSaved[];
+  selectedColumns: any;
+  columnPicker: any;
+  columnDropdown: boolean = false;
+  gridOptionsRotate: boolean = false;
   constructor(public userService: UserService, injector: Injector, private toastr: ToastrService,
     public globals: Globals, private elem: ElementRef) {
   }
@@ -57,9 +62,28 @@ export class UserComponent implements OnInit {
     this.gridVersion = "1.0.0";
     this.controllerName = this.elem.nativeElement.tagName.toLowerCase();
     this.gridStorageId = 'userGrid' + this.controllerName;
-    this.viewToSave = new ViewSaved({ controllerName: this.controllerName, version: this.gridVersion, isDefault: false, gridId: this.gridStorageId });
-    this.viewsSaved = this.globals.getViews(this.controllerName);
+    //SET DEFAULT VIEW COLS
+    this.gridSettings = [new ColumnsSaved({ id: 'id', label: 'Id', visible: true }),
+    new ColumnsSaved({ id: 'isActive', label: 'Active', visible: true }),
+    new ColumnsSaved({ id: 'isAnswerUser', label: 'User Type', visible: true }),
+    new ColumnsSaved({ id: 'firstName', label: 'First Name', visible: true }),
+    new ColumnsSaved({ id: 'lastName', label: 'Last Name', visible: true }),
+    new ColumnsSaved({ id: 'userName', label: 'Username', visible: true }),
+    new ColumnsSaved({ id: 'email', label: 'Email', visible: true })];
 
+    this.columnPicker = this.gridSettings.map((elem) => {
+      return { label: elem.label, value: { id: elem.id, name: elem.label, visible: elem.visible } }
+    });
+    this.selectedColumns = this.gridSettings.map((elem) => {
+      return { id: elem.id, name: elem.label, visible: elem.visible }
+    });
+
+    this.viewToSave = new ViewSaved({
+      controllerName: this.controllerName,
+      version: this.gridVersion, isDefault: false, gridId: this.gridStorageId
+    });
+
+    this.viewsSaved = this.globals.getViews(this.controllerName);
     this.defaultView = this.globals.getDefaultView(this.controllerName, this.gridStorageId);
 
     this.statuses = [
@@ -75,6 +99,24 @@ export class UserComponent implements OnInit {
     this.canActivate = this.hasPrivilege(this.privileges.CanActivate);
     this.canEditUsers = this.hasPrivilege(this.privileges.CanEdit);
     this.getUsers();
+  }
+
+  public columnDropdownFn() {
+    this.columnDropdown = !this.columnDropdown;
+    this.gridOptionsRotate = true;
+    setTimeout(() => { this.gridOptionsRotate = false }, 900);
+  }
+
+  public isVisibleCol(id) {
+    return this.gridSettings.filter(x => x.id === id)[0].visible;
+  }
+
+  public changeColVisibility(value) {
+    this.gridSettings.forEach((elem) => {
+      elem.visible = value.findIndex(x => x.id == elem.id) > -1;
+    });
+
+    console.log(value);
   }
 
   /*Comp starts */

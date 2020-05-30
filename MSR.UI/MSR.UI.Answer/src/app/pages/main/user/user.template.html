@@ -5,14 +5,14 @@
 <widget>
   <p-table #dt [value]="data" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10"
     [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]" [loading]="loading" [paginator]="true"
-    currentPageReportTemplate="Showing {first}-{last} of {totalRecords}" [filterDelay]="0"
-    [globalFilterFields]="['id','firstName','lastName','userName','email']" stateStorage="local" stateKey="{{gridStorageId}}">
+    currentPageReportTemplate="Showing {first}-{last} of {totalRecords}" [filterDelay]="0" stateStorage="local"
+    stateKey="{{gridStorageId}}">
     <ng-template pTemplate="caption">
       <div class="text-right">
         <button *ngIf="canAddUsers" (click)="showDialog()" class="btn btn-success width-100 mb-xs" role="button">
           + Add
         </button>
-        <div class="dropdown" style="display: inline-block!important;">
+        <div class="dropdown d-inline-block">
           <button type="button" class="btn btn-primary width-100 mb-xs ng-star-inserted dropdown-toggle"
             data-toggle="dropdown">
             My Views
@@ -26,70 +26,73 @@
             <div class="dropdown-item" *ngFor="let view of viewsSaved">
               <a href="#" class="view-title" [ngClass]="view.isDefault?'default':''"
                 tooltip="{{view.isDefault?'Your Default View':''}}">
-    <i class="fas fa-circle text-primary" *ngIf="view.isDefault"></i>
-    {{view.viewName | titlecase}}
-    </a>
-    <div class="view-options text-right">
-      <i class="fad fa-circle pointer" (click)="savedViewChange(view)"
-        [ngClass]="view.isDefault?'text-success':'text-secondary'"
-        tooltip="{{view.isDefault?'Unset from default':'Set As Default'}}"></i>
-      <i class="fal fa-trash-alt pointer text-danger" (click)="deleteView(view)" tooltip="Delete View"></i>
-    </div>
-    </div>
-
-    <div class="dropdown-divider"></div>
-    <!-- <a class="dropdown-item new-view" href="#">Save this View</a> -->
-    <div class="text-center">
-      <button type="button" role="button" class="btn btn-outline-inverse width-150 mb-xs" (click)="showSaveViewDiv()">
-        Save current View
-      </button>
-      <button type="button" role="button" class="btn btn-outline-inverse width-150 mb-xs" (click)="dt.reset()">
-        Clear View
-      </button>
-    </div>
-    <div class="save-view-form" *ngIf="showSaveView">
-      <div>
-        <div class="form-row">
-          <input type="text" class="form-control col-5" placeholder="View Name" [(ngModel)]="viewToSave.viewName" />
-          <div class="form-check col-3">
-            <div class="ui-g-12">
-              <p-checkbox name="isDefault" label="Default" [(ngModel)]="viewToSave.isDefault" binary="true">
-              </p-checkbox>
+                <i class="fas fa-circle text-primary" *ngIf="view.isDefault"></i>
+                {{view.viewName | titlecase}}
+              </a>
+              <div class="view-options text-right">
+                <i class="fad fa-circle pointer" (click)="savedViewChange(view)"
+                  [ngClass]="view.isDefault?'text-success':'text-secondary'"
+                  tooltip="{{view.isDefault?'Unset from default':'Set As Default'}}"></i>
+                <i class="fal fa-trash-alt pointer text-danger" (click)="deleteView(view)" tooltip="Delete View"></i>
+              </div>
             </div>
+
+            <div class="dropdown-divider"></div>
+            <!-- <a class="dropdown-item new-view" href="#">Save this View</a> -->
+            <div class="text-center">
+              <button type="button" role="button" class="btn btn-outline-inverse width-150 mb-xs"
+                (click)="showSaveViewDiv()">
+                Save current View
+              </button>
+              <button type="button" role="button" class="btn btn-outline-inverse width-150 mb-xs" (click)="dt.reset()">
+                Clear View
+              </button>
+            </div>
+            <div class="save-view-form" *ngIf="showSaveView">
+              <div>
+                <div class="form-row">
+                  <input type="text" class="form-control col-5" placeholder="View Name"
+                    [(ngModel)]="viewToSave.viewName" />
+                  <div class="form-check col-3">
+                    <div class="ui-g-12">
+                      <p-checkbox name="isDefault" label="Default" [(ngModel)]="viewToSave.isDefault" binary="true">
+                      </p-checkbox>
+                    </div>
+                  </div>
+                  <button type="button" class="btn btn-warning width-100 float-right" (click)="saveView()">Save</button>
+                </div>
+              </div>
+            </div>
+            <!-- <a class="dropdown-item clear-view" href="#">Clear View</a> -->
           </div>
-          <button type="button" class="btn btn-warning width-100 float-right" (click)="saveView()">Save</button>
+        </div>
+        <div class="d-inline position-relative">
+          <i class="fa fa-cog pointer" [ngClass]="gridOptionsRotate?'fa-spin':''" tooltip="Grid Options"
+            (click)="columnDropdownFn()"></i>
+          <div class="options">
+            <p-multiSelect [hidden]="!columnDropdown" [options]="columnPicker" [(ngModel)]="selectedColumns"
+              (onChange)="changeColVisibility($event.value)" dataKey="id" [itemSize]="15">
+              <ng-template pTemplate="selectedItems">
+                Columns &nbsp;
+              </ng-template>
+            </p-multiSelect>
+          </div>
         </div>
       </div>
-    </div>
-    <!-- <a class="dropdown-item clear-view" href="#">Clear View</a> -->
-    </div>
-    </div>
-    </div>
     </ng-template>
     <ng-template pTemplate="header">
       <tr>
-        <th pSortableColumn="id">Id <p-sortIcon field="id"></p-sortIcon>
-        </th>
-        <th pSortableColumn="isActive">Active<p-sortIcon field="isActive"></p-sortIcon>
-        </th>
-        <th pSortableColumn="isAnswerUser">User Type<p-sortIcon field="isAnswerUser"></p-sortIcon>
-        </th>
-        <th pSortableColumn="firstName">First Name <p-sortIcon field="firstName"></p-sortIcon>
-        </th>
-        <th pSortableColumn="lastName">Last Name <p-sortIcon field="lastName"></p-sortIcon>
-        </th>
-        <th pSortableColumn="userName">Username <p-sortIcon field="userName"></p-sortIcon>
-        </th>
-        <th pSortableColumn="email">Email <p-sortIcon field="email"></p-sortIcon>
+        <th *ngFor="let col of gridSettings" [hidden]="!col.visible" [pSortableColumn]="col.id">
+          {{col.label}} <p-sortIcon [field]="col.id"></p-sortIcon>
         </th>
         <th></th>
       </tr>
       <tr>
-        <th>
+        <th [hidden]="!isVisibleCol('id')">
           <input pInputText type="text" (input)="dt.filter($event.target.value, 'id', 'contains')" placeholder="Id"
             class="ui-column-filter">
         </th>
-        <th>
+        <th [hidden]="!isVisibleCol('isActive')">
           <p-dropdown [options]="statuses" (onChange)="dt.filter($event.value, 'isActive', 'equals')"
             styleClass="ui-column-filter" placeholder="Select a Status" [showClear]="true">
             <ng-template let-option pTemplate="item">
@@ -97,7 +100,7 @@
             </ng-template>
           </p-dropdown>
         </th>
-        <th>
+        <th [hidden]="!isVisibleCol('isAnswerUser')">
           <p-dropdown [options]="userTypes" (onChange)="dt.filter($event.value, 'isAnswerUser', 'equals')"
             styleClass="ui-column-filter" placeholder="Select User Type" [showClear]="true">
             <ng-template let-option pTemplate="item">
@@ -105,19 +108,19 @@
             </ng-template>
           </p-dropdown>
         </th>
-        <th>
+        <th [hidden]="!isVisibleCol('firstName')">
           <input pInputText type="text" (input)="dt.filter($event.target.value, 'firstName', 'contains')"
             placeholder="Search by First Name" class="ui-column-filter">
         </th>
-        <th>
+        <th [hidden]="!isVisibleCol('lastName')">
           <input pInputText type="text" (input)="dt.filter($event.target.value, 'lastName', 'contains')"
             placeholder="Search by Last Name" class="ui-column-filter">
         </th>
-        <th>
+        <th [hidden]="!isVisibleCol('userName')">
           <input pInputText type="text" (input)="dt.filter($event.target.value, 'userName', 'contains')"
             placeholder="Search by Username" class="ui-column-filter">
         </th>
-        <th>
+        <th [hidden]="!isVisibleCol('email')">
           <input pInputText type="text" (input)="dt.filter($event.target.value, 'email', 'contains')"
             placeholder="Search by Email" class="ui-column-filter">
         </th>
@@ -126,11 +129,11 @@
     </ng-template>
     <ng-template pTemplate="body" let-user>
       <tr class="ui-selectable-row">
-        <td>
+        <td [hidden]="!isVisibleCol('id')">
           <span class="ui-column-title">Id</span>
           {{user.id}}
         </td>
-        <td class="text-center">
+        <td class="text-center" [hidden]="!isVisibleCol('isActive')">
           <!-- [attr.disabled]="canActivate" [attr.disabled]="canActivate?'true':'false'" {{canActivate?'true':''}}-->
           <ng-template [ngIf]="!canActivate">
             <p-inputSwitch disabled="true" [(ngModel)]="user.isActive" (ngModelChange)="changeUserStatus(user)">
@@ -141,7 +144,7 @@
             </p-inputSwitch>
           </ng-template>
         </td>
-        <td class="text-center">
+        <td class="text-center" [hidden]="!isVisibleCol('isAnswerUser')">
           <ng-template [ngIf]="!canEditUsers">
             <p-inputSwitch disabled="true" [(ngModel)]="user.isAnswerUser" (ngModelChange)="changeUserType(user)">
             </p-inputSwitch>
@@ -150,19 +153,19 @@
             <p-inputSwitch [(ngModel)]="user.isAnswerUser" (ngModelChange)="changeUserType(user)"></p-inputSwitch>
           </ng-template>
         </td>
-        <td>
+        <td [hidden]="!isVisibleCol('firstName')">
           <span class="ui-column-title">First Name</span>
           <span style="vertical-align: middle; margin-left: .5em">{{user.firstName}}</span>
         </td>
-        <td>
+        <td [hidden]="!isVisibleCol('lastName')">
           <span class="ui-column-title">Last Name</span>
           <span style="vertical-align: middle; margin-left: .5em">{{user.lastName}}</span>
         </td>
-        <td>
+        <td [hidden]="!isVisibleCol('userName')">
           <span class="ui-column-title">Username</span>
           {{user.userName}}
         </td>
-        <td>
+        <td [hidden]="!isVisibleCol('email')">
           <span class="ui-column-title">Email</span>
           {{user.email}}
         </td>
