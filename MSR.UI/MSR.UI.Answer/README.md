@@ -2,33 +2,26 @@
 
 ## Setting-up environment for development
 
-**WARNING: This project uses yarn, do not use NPM for any commnands during development**
+**WARNING: This project uses yarn. Use yarn to add and remove packages only. NPM can be used for other commands**
 
 After cloning the project, run the following command to install required packages
 
     yarn install
 
-Run the following command to compile the solution
-
-    yarn build
-
 The following options allow the application to run for different purposes
 
 Option 1) Run with dev server as the backend
 
-    yarn start
+    npm run start
 
 Option 2) Run with local backend
 
-    yarn run start:backend
+    npm run startdev
 
-Option 3) Run with Cypress Test Runner (Note: runs with local backend)
+Option 3) Run with Cypress Test Runner
 
-    yarn run cypress:test:local
+    npm run cypress:test
 
-Option 4) Run with Cypress Test Runner (Note: runs with local backend)
-
-    yarn run cypress:test:dev
 
 Navigate to [http://localhost:3000/](http://localhost:3000/). The app will automatically reload if you change any of the source files.
 
@@ -42,7 +35,28 @@ Run `ng generate component component-name` to generate a new component. You can 
 
 **Build**
 
-Run `yarn build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
+Run `npm run build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
+
+**Using Visual Studio Code Debugger**
+
+First install the [Debugger for Chrome](https://github.com/Microsoft/vscode-chrome-debug) extension to Visual Studio Code.
+
+Since we do not store the debugger in our git repository, you will have to create one locally to use for your system. Go to the Debug panel and click on **create a launch.json file** and replace the auto-generated content with the following json.
+
+Once the backend is running and you have started the application with `npm run start` or `npm run cypress:test` you can run the debugger which will launch a Chrome Browser to navigate to the application.
+
+    {
+        "version": "0.2.0",
+        "configurations": [
+            {
+                "type": "chrome",
+                "request": "launch",
+                "name": "Launch Chrome against localhost",
+                "url": "http://localhost:3000",
+                "webRoot": "${workspaceFolder}"
+            }
+        ]
+    }
 
 **Further help with Angular**
 

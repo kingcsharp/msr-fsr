@@ -1,10 +1,15 @@
-﻿using AutoMapper;
+﻿using Amazon.CloudWatchLogs;
+using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OpenApi.Models;
 using MSR.Application.Extentions;
 using MSR.Domain.Extensions;
+using MSR.Domain.Models.Config;
 using MSR.Infrastructure.Extensions;
+using NSwag;
+using Serilog;
+using Serilog.Formatting.Json;
+using Serilog.Sinks.AwsCloudWatch;
 
 namespace MSR.Answer.API.Extentions
 {
@@ -12,6 +17,11 @@ namespace MSR.Answer.API.Extentions
     {
         public static IServiceCollection AddApiServices(this IServiceCollection services, IConfiguration config)
         {
+            var emailConfig = config.GetSection(nameof(EmailInformation)).Get<EmailInformation>();
+            var generalConfig = config.GetSection(nameof(GeneralInformation)).Get<GeneralInformation>();
+            services.AddSingleton(generalConfig);
+            services.AddSingleton(emailConfig);
+
             var mapperConfiguration = new MapperConfiguration(i =>
             {
                 i.AddMaps(new[]
@@ -35,11 +45,6 @@ namespace MSR.Answer.API.Extentions
                        .AllowAnyOrigin()
                        .AllowAnyHeader();
             }));
-
-            services.AddSwaggerGen(i =>
-            {
-                i.SwaggerDoc("v1", new OpenApiInfo { Title = "MSR API", Version = "v1" });
-            });
 
             return services;
         }

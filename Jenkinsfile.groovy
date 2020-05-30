@@ -70,7 +70,7 @@ pipeline {
                         }
                     }
                 }
-
+                /*
                 stage('Build and Deploy API') {
                     agent { label 'master'}
                     steps {
@@ -131,6 +131,19 @@ pipeline {
 
                         }
                     }
+                }
+                */
+            }
+        }
+        stage("Running API Tests") {
+            agent { label 'master' }
+            steps {
+                script {
+                    sh label: '', script: '''curl -u Vi5GHlZj0Cb5sUlC: "https://assertible.com/deployments" -d\'{
+                        "service": "a1bdc090-7e6f-41a7-997f-c30f44b5c9f0",
+                        "environment": "dev",
+                        "version": "v1"
+                    }\''''
                 }
             }
         }

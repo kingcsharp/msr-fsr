@@ -1,12 +1,62 @@
-## Running the app manually
+<a href='https://jenkins.cmhworks.com/job/MSR-FSR/job/Answer3/job/Develop/'><img src='https://jenkins.cmhworks.com/buildStatus/icon?job=MSR-FSR%2FAnswer3%2FDevelop'></a>
 
-**API:** `dotnet run -p MSR.Answer.API/MSR.Answer.API.csproj --launch-profile web`
-<br/>
+# Running the app manually #
+
+## The following needs to be installed to run Answer3.0 ##
+
+- Visual Studio 2019
+    -  [Windows Version](https://visualstudio.microsoft.com/downloads/)
+        - Modules Required
+            - ASP.NET and web development
+            - .Net Core cross-platform development 
+    -  [Mac Version](https://visualstudio.microsoft.com/vs/mac/)
+        - **Note:** Since Database projects are not supported on Visual Studio for Mac, if you are doing backend development it might be best to use a Windows 10 Pro Environment
+- [Visual Studio Code](https://code.visualstudio.com/download)
+    - **Note:** Install Debugger for Chrome if you would like to use the Visual Studio Code debugger
+    - [Debugger for Chrome](https://github.com/Microsoft/vscode-chrome-debug)
+- [NodeJs with NPM](https://nodejs.org/en/download/)
+- [Yarn](https://classic.yarnpkg.com/en/docs/install)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop)
+- [Git](https://git-scm.com/)
+- A Dedicated IP
+    - Note: If you do not have a static IP, you can use any Dedicated IP Services. Here are two popular ones used. Make sure you contact the helpdesk to gain access to the database by submitting your dedicated IP Address [Help Desk](support-mb@cmhworks.com))
+    - [PureVPN](https://www.purevpn.com)
+    - [NordVPN](https://nordvpn.com/)
+
+## The following commands work for Windows 10 ##
+
+**Note:** Refer to the README located in **\MSR.UI\MSR.UI.Answer** for more information about the UI and running UI tests
+
+**API:**
+    To run the backend, open the solution in Visual Studio 2019 and run it with MSR.Answer.API as your startup project
+
+**UI:** 
+
+    cd MSR.UI/MSR.UI.Answer
+
+    yarn install
+
+    npm run start
+
+UI is running on port 3000
+
+## The following commands work for MacOS ##
+
+**Note:** When openning the solution in Visual Studio 2019, the Database and Angular project will not load. The backend will still build and run properly, but this is due to VS for Mac not supporting Database Projects and the Angular project not having a **.csproj** file.
+
+**API:** 
+
+    dotnet run -p MSR.Answer.API/MSR.Answer.API.csproj
+
 API is running on port 5000 (http) & 5001 (https)
 
-**UI:** `cd MSR.UI/MSR.UI.Answer && npm install && npm run start` 
-<br/>
+**UI:** 
+
+    cd MSR.UI/MSR.UI.Answer && yarn install && npm run start 
+
 UI is running on port 3000
+
+<hr />
 
 ## Running with Docker
 **Docker:** `docker-compose up --build`

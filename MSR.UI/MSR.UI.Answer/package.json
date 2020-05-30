@@ -9,15 +9,14 @@
     "startdev": "nswag run && ng serve --configuration dev",
     "nswag": "nswag run",
     "build": "nswag run && ng build",
-    "builddev":"ng build --configuration=dev",
-    "buildstage":"ng build --configuration=stage",
+    "builddev": "ng build --configuration=dev",
+    "buildstage": "ng build --configuration=stage",
     "buildprod": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
     "cypress": "./node_modules/.bin/cypress open",
-    "cypress:test:local": "concurrently \"yarn start\" \"yarn cypress:wait\"",
-    "cypress:test:dev": "concurrently \"yarn start:backend\" \"yarn cypress:wait\"",
-    "cypress:wait": "wait-on http://localhost:3000/ && yarn cypress"
+    "cypress:test": "concurrently \"npm run start\" \"npm run cypress:wait\"",
+    "cypress:wait": "wait-on http://localhost:3000/ && npm run cypress"
   },
   "private": true,
   "dependencies": {
@@ -104,6 +103,7 @@
     "@types/node": "^12.11.1",
     "@types/select2": "4.0.31",
     "concurrently": "^5.2.0",
+    "cypress": "^4.7.0",
     "jquery": "3.2.1",
     "jquery-flot": "0.8.3",
     "jquery-slimscroll": "1.3.8",
