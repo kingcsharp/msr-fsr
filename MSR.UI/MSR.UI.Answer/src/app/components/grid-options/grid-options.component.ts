@@ -2,6 +2,7 @@ import { Component, OnInit, Output, Input, EventEmitter, ElementRef } from '@ang
 import { ColumnsSaved } from '../../models/lib/ColumnsSaved';
 import { ViewSaved } from '../../models/lib/ViewSaved';
 import { Globals } from '../../models/lib/globals';
+import { TableState } from 'primeng/api';
 
 @Component({
   host: {
@@ -86,6 +87,77 @@ export class GridOptionsComponent implements OnInit {
     view.isDefault = !view.isDefault;
     this.globals.setAsDefault(view);
     this.defaultView = view;
+  }
+
+  public resetgr() {
+    this.ptable._sortField = null;
+    this.ptable._sortOrder = this.ptable.defaultSortOrder;
+    this.ptable._multiSortMeta = null;
+    this.ptable.tableService.onSort(null);
+
+    this.ptable.filteredValue = null;
+    this.ptable.filters = {};
+
+    this.ptable.first = 0;
+    this.ptable.firstChange.emit(this.ptable.first);
+
+    if (this.ptable.lazy) {
+      this.ptable.onLazyLoad.emit(this.ptable.createLazyLoadMetadata());
+    }
+    else {
+      this.ptable.totalRecords = (this.ptable._value ? this.ptable._value.length : 0);
+    }
+  }
+
+  restoreState(view: ViewSaved) {
+    let state: TableState = JSON.parse(view.gridPagingData);
+
+    if (this.ptable.paginator) {
+      this.ptable.first = state.first;
+      this.ptable.rows = state.rows;
+      this.ptable.firstChange.emit(this.ptable.first);
+      this.ptable.rowsChange.emit(this.ptable.rows);
+    }
+
+    if (state.sortField) {
+      this.ptable.restoringSort = true;
+      this.ptable._sortField = state.sortField;
+      this.ptable._sortOrder = state.sortOrder;
+    }
+
+    if (state.multiSortMeta) {
+      this.ptable.restoringSort = true;
+      this.ptable._multiSortMeta = state.multiSortMeta;
+    }
+
+    if (state.filters) {
+      this.ptable.restoringFilter = true;
+      this.ptable.filters = state.filters;
+    }
+
+    if (this.ptable.resizableColumns) {
+      this.ptable.columnWidthsState = state.columnWidths;
+      this.ptable.tableWidthState = state.tableWidth;
+    }
+
+    if (state.expandedRowKeys) {
+      this.ptable.expandedRowKeys = state.expandedRowKeys;
+    }
+
+    if (state.selection) {
+      Promise.resolve(null).then(() => this.ptable.selectionChange.emit(state.selection));
+    }
+
+    this.ptable.stateRestored = true;
+    this.ptable.onStateRestore.emit(state);
+
+    if (this.ptable.filterTimeout) {
+      clearTimeout(this.ptable.filterTimeout);
+    }
+    this.ptable.filterTimeout = setTimeout(() => {
+      this.ptable._filter();
+      this.ptable.filterTimeout = null;
+    }, this.ptable.filterDelay);
   }
 
   public deleteView(view: ViewSaved) {

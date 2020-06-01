@@ -4,6 +4,9 @@ import { MenuItem } from '../../services/api.client.generated';
 import { ViewSaved } from './ViewSaved';
 import { ToastrService } from 'ngx-toastr';
 import { ColumnsSaved } from './ColumnsSaved';
+import { DOCUMENT } from '@angular/common';
+import { Inject } from '@angular/core';
+
 
 
 @Injectable()
@@ -16,7 +19,7 @@ export class Globals {
     user;
     views: Array<ViewSaved>;
 
-    constructor(private router: Router, private toastr: ToastrService) {
+    constructor(private router: Router, private toastr: ToastrService, @Inject(DOCUMENT) document) {
         this.loadUserFromLocalStorage();
         this.setActiveMenuItem(router);
         this.loadViewsFromLocalStorage();
@@ -62,6 +65,36 @@ export class Globals {
         } else {
             this.views = new Array<ViewSaved>();
         }
+    }
+
+    public isVisibleCol(id, gridSettings) {
+        return gridSettings.filter(x => x.id === id)[0].visible;
+    }
+
+    filter(table, field) {
+        if (table.filterTimeout) {
+          clearTimeout(table.filterTimeout);
+        }
+    
+        if (table.filters[field]) {
+          delete table.filters[field];
+        }
+    
+        table.filterTimeout = setTimeout(() => {
+          table._filter();
+          table.filterTimeout = null;
+        }, table.filterDelay);
+    
+        table.anchorRowIndex = null;
+      }
+
+    defPlaceholder(grid, id, arr, defaultLabel) {
+        const ret = grid?.filters[id]?.value;
+        if (ret === undefined) {
+            return defaultLabel;
+        }
+
+        return arr.find(x => x.value === ret).label;
     }
 
     addView(view: ViewSaved) {

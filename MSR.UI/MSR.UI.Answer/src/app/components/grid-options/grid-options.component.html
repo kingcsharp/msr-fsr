@@ -10,10 +10,10 @@
             No Views Saved
         </div>
         <div class="dropdown-item" *ngFor="let view of viewsSaved">
-            <a href="#" class="view-title" [ngClass]="view.isDefault?'default':''" (click)="savedViewChange(view)"
+            <a href="#" class="view-title" [ngClass]="view.isDefault?'default':''" (click)="restoreState(view)"
                 tooltip="{{view.isDefault?'Your Default View':''}}">
                 <i class="fas fa-circle text-primary" *ngIf="view.isDefault"></i>
-                {{view.viewName | titlecase}}
+                {{view.viewName | titlecase}} 
             </a>
             <div class="view-options text-right">
                 <i class="fas fa-sync pointer text-secondary" tooltip="Update view"></i>&nbsp;
@@ -30,7 +30,7 @@
                 (click)="showSaveViewDiv()">
                 Save current View
             </button>
-            <button type="button" role="button" class="btn btn-outline-inverse width-150 mb-xs" (click)="ptable.reset()">
+            <button type="button" role="button" class="btn btn-outline-inverse width-150 mb-xs" (click)="resetgr(ptable)">
                 Clear View
             </button>
         </div>

@@ -12,73 +12,9 @@
         <button *ngIf="canAddUsers" (click)="showDialog()" class="btn btn-success width-100 mb-xs" role="button">
           + Add
         </button>
-
-        <grid-options [(defaultColumns)]="gridSettings" [gridStorageId]="gridStorageId" [ptable]="dt" [gridVersion]="gridVersion">
+        <grid-options [(defaultColumns)]="gridSettings" [gridStorageId]="gridStorageId" [ptable]="dt"
+          [gridVersion]="gridVersion">
         </grid-options>
-        <!-- <div class="dropdown d-inline-block">
-          <button type="button" class="btn btn-primary width-100 mb-xs ng-star-inserted dropdown-toggle"
-            data-toggle="dropdown">
-            My Views
-          </button>
-          <div id="myViews" class="dropdown-menu dropdown-menu-right" (click)="stopEvent($event)">
-            <h5 class="dropdown-header">My Saved Views</h5>
-            <div class="dropdown-divider"></div>
-            <div class="container" *ngIf="viewsSaved.length===0">
-              No Views Saved
-            </div>
-            <div class="dropdown-item" *ngFor="let view of viewsSaved">
-              <a href="#" class="view-title" [ngClass]="view.isDefault?'default':''"
-                tooltip="{{view.isDefault?'Your Default View':''}}">
-                <i class="fas fa-circle text-primary" *ngIf="view.isDefault"></i>
-                {{view.viewName | titlecase}}
-              </a>
-              <div class="view-options text-right">
-                <i class="fad fa-circle pointer" (click)="savedViewChange(view)"
-                  [ngClass]="view.isDefault?'text-success':'text-secondary'"
-                  tooltip="{{view.isDefault?'Unset from default':'Set As Default'}}"></i>
-                <i class="fal fa-trash-alt pointer text-danger" (click)="deleteView(view)" tooltip="Delete View"></i>
-              </div>
-            </div>
-
-            <div class="dropdown-divider"></div>
-            <div class="text-center">
-              <button type="button" role="button" class="btn btn-outline-inverse width-150 mb-xs"
-                (click)="showSaveViewDiv()">
-                Save current View
-              </button>
-              <button type="button" role="button" class="btn btn-outline-inverse width-150 mb-xs" (click)="dt.reset()">
-                Clear View
-              </button>
-            </div>
-            <div class="save-view-form" *ngIf="showSaveView">
-              <div>
-                <div class="form-row">
-                  <input type="text" class="form-control col-5" placeholder="View Name"
-                    [(ngModel)]="viewToSave.viewName" />
-                  <div class="form-check col-3">
-                    <div class="ui-g-12">
-                      <p-checkbox name="isDefault" label="Default" [(ngModel)]="viewToSave.isDefault" binary="true">
-                      </p-checkbox>
-                    </div>
-                  </div>
-                  <button type="button" class="btn btn-warning width-100 float-right" (click)="saveView()">Save</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="d-inline position-relative">
-          <i class="fa fa-cog pointer" [ngClass]="gridOptionsRotate?'fa-spin':''" tooltip="Grid Options"
-            (click)="columnDropdownFn()"></i>
-          <div class="options">
-            <p-multiSelect [hidden]="!columnDropdown" [options]="columnPicker" [(ngModel)]="selectedColumns"
-              (onChange)="changeColVisibility($event.value)" dataKey="id" [itemSize]="15">
-              <ng-template pTemplate="selectedItems">
-                Columns &nbsp;
-              </ng-template>
-            </p-multiSelect>
-          </div>
-        </div> -->
       </div>
     </ng-template>
     <ng-template pTemplate="header">
@@ -89,53 +25,68 @@
         <th></th>
       </tr>
       <tr>
-        <th [hidden]="!isVisibleCol('id')">
-          <input pInputText type="text" (input)="dt.filter($event.target.value, 'id', 'contains')" placeholder="Id"
-            class="ui-column-filter">
+        <th [hidden]="!globals.isVisibleCol('id',gridSettings)">
+          <div class="position-relative">
+            <input id="id" pInputText type="text" (input)="dt.filter($event.target.value, 'id', 'contains')"
+              placeholder="Id" class="ui-column-filter" [value]="dt.filters['id']?.value">
+            <i *ngIf="dt.filters['id']?.value" class="fclear pi pi-times pointer"
+              (click)="globals.filter(dt,'id')"></i>
+          </div>
         </th>
-        <th [hidden]="!isVisibleCol('isActive')">
+        <th [hidden]="!globals.isVisibleCol('isActive',gridSettings)">
           <p-dropdown [options]="statuses" (onChange)="dt.filter($event.value, 'isActive', 'equals')"
-            styleClass="ui-column-filter" placeholder="Select a Status" [showClear]="true">
-            <ng-template let-option pTemplate="item">
-              <span [class]="'customer-badge status-' + option.value">{{option.label}}</span>
-            </ng-template>
+            [placeholder]="globals.defPlaceholder(dt, 'isActive',statuses,'Select a Status')"
+            styleClass="ui-column-filter" [showClear]="true">
           </p-dropdown>
         </th>
-        <th [hidden]="!isVisibleCol('isAnswerUser')">
+        <th [hidden]="!globals.isVisibleCol('isAnswerUser',gridSettings)">
           <p-dropdown [options]="userTypes" (onChange)="dt.filter($event.value, 'isAnswerUser', 'equals')"
-            styleClass="ui-column-filter" placeholder="Select User Type" [showClear]="true">
-            <ng-template let-option pTemplate="item">
-              <span [class]="'customer-badge status-' + option.value">{{option.label}}</span>
-            </ng-template>
+            [placeholder]="globals.defPlaceholder(dt, 'isAnswerUser',statuses,'Select User Type')"
+            styleClass="ui-column-filter" [showClear]="true">
           </p-dropdown>
         </th>
-        <th [hidden]="!isVisibleCol('firstName')">
-          <input pInputText type="text" (input)="dt.filter($event.target.value, 'firstName', 'contains')"
-            placeholder="Search by First Name" class="ui-column-filter">
+        <th [hidden]="!globals.isVisibleCol('firstName',gridSettings)">
+          <div class="position-relative">
+            <input pInputText type="text" (input)="dt.filter($event.target.value, 'firstName', 'contains')"
+              placeholder="Search by First Name" class="ui-column-filter" [value]="dt.filters['firstName']?.value">
+            <i *ngIf="dt.filters['firstName']?.value" class="fclear pi pi-times pointer"
+            (click)="globals.filter(dt,'id')"></i>
+          </div>
         </th>
-        <th [hidden]="!isVisibleCol('lastName')">
-          <input pInputText type="text" (input)="dt.filter($event.target.value, 'lastName', 'contains')"
-            placeholder="Search by Last Name" class="ui-column-filter">
+        <th [hidden]="!globals.isVisibleCol('lastName',gridSettings)">
+          <div class="position-relative">
+            <input pInputText type="text" (input)="dt.filter($event.target.value, 'lastName', 'contains')"
+              placeholder="Search by Last Name" class="ui-column-filter" [value]="dt.filters['lastName']?.value">
+            <i *ngIf="dt.filters['lastName']?.value" class="fclear pi pi-times pointer"
+            (click)="globals.filter(dt,'id')"></i>
+          </div>
         </th>
-        <th [hidden]="!isVisibleCol('userName')">
-          <input pInputText type="text" (input)="dt.filter($event.target.value, 'userName', 'contains')"
-            placeholder="Search by Username" class="ui-column-filter">
+        <th [hidden]="!globals.isVisibleCol('userName',gridSettings)">
+          <div class="position-relative">
+            <input pInputText type="text" (input)="dt.filter($event.target.value, 'userName', 'contains')"
+              placeholder="Search by User Name" class="ui-column-filter" [value]="dt.filters['userName']?.value">
+            <i *ngIf="dt.filters['userName']?.value" class="fclear pi pi-times pointer"
+            (click)="globals.filter(dt,'id')"></i>
+          </div>
         </th>
-        <th [hidden]="!isVisibleCol('email')">
-          <input pInputText type="text" (input)="dt.filter($event.target.value, 'email', 'contains')"
-            placeholder="Search by Email" class="ui-column-filter">
+        <th [hidden]="!globals.isVisibleCol('email',gridSettings)">
+          <div class="position-relative">
+            <input pInputText type="text" (input)="dt.filter($event.target.value, 'email', 'contains')"
+              placeholder="Search by Email" class="ui-column-filter" [value]="dt.filters['email']?.value">
+            <i *ngIf="dt.filters['email']?.value" class="fclear pi pi-times pointer"
+            (click)="globals.filter(dt,'id')"></i>
+          </div>
         </th>
         <th></th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-user>
       <tr class="ui-selectable-row">
-        <td [hidden]="!isVisibleCol('id')">
+        <td [hidden]="!globals.isVisibleCol('id',gridSettings)">
           <span class="ui-column-title">Id</span>
           {{user.id}}
         </td>
-        <td class="text-center" [hidden]="!isVisibleCol('isActive')">
-          <!-- [attr.disabled]="canActivate" [attr.disabled]="canActivate?'true':'false'" {{canActivate?'true':''}}-->
+        <td class="text-center" [hidden]="!globals.isVisibleCol('isActive',gridSettings)">
           <ng-template [ngIf]="!canActivate">
             <p-inputSwitch disabled="true" [(ngModel)]="user.isActive" (ngModelChange)="changeUserStatus(user)">
             </p-inputSwitch>
@@ -145,7 +96,7 @@
             </p-inputSwitch>
           </ng-template>
         </td>
-        <td class="text-center" [hidden]="!isVisibleCol('isAnswerUser')">
+        <td class="text-center" [hidden]="!globals.isVisibleCol('isAnswerUser',gridSettings)">
           <ng-template [ngIf]="!canEditUsers">
             <p-inputSwitch disabled="true" [(ngModel)]="user.isAnswerUser" (ngModelChange)="changeUserType(user)">
             </p-inputSwitch>
@@ -154,19 +105,19 @@
             <p-inputSwitch [(ngModel)]="user.isAnswerUser" (ngModelChange)="changeUserType(user)"></p-inputSwitch>
           </ng-template>
         </td>
-        <td [hidden]="!isVisibleCol('firstName')">
+        <td [hidden]="!globals.isVisibleCol('firstName',gridSettings)">
           <span class="ui-column-title">First Name</span>
           <span style="vertical-align: middle; margin-left: .5em">{{user.firstName}}</span>
         </td>
-        <td [hidden]="!isVisibleCol('lastName')">
+        <td [hidden]="!globals.isVisibleCol('lastName',gridSettings)">
           <span class="ui-column-title">Last Name</span>
           <span style="vertical-align: middle; margin-left: .5em">{{user.lastName}}</span>
         </td>
-        <td [hidden]="!isVisibleCol('userName')">
+        <td [hidden]="!globals.isVisibleCol('userName',gridSettings)">
           <span class="ui-column-title">Username</span>
           {{user.userName}}
         </td>
-        <td [hidden]="!isVisibleCol('email')">
+        <td [hidden]="!globals.isVisibleCol('email',gridSettings)">
           <span class="ui-column-title">Email</span>
           {{user.email}}
         </td>

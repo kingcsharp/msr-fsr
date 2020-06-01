@@ -9,6 +9,7 @@ import { responseHandler } from '../../../utils/responseHandler';
 import { Observable } from 'rxjs';
 import { ViewSaved } from '../../../models/lib/ViewSaved';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
+import { TableState } from 'primeng/api';
 
 declare let jQuery: any;
 
@@ -69,24 +70,19 @@ export class UserComponent implements OnInit {
     new ColumnsSaved({ id: 'userName', label: 'Username', visible: true }),
     new ColumnsSaved({ id: 'email', label: 'Email', visible: true })];
 
-
     this.statuses = [
       { label: 'Active', value: true },
       { label: 'InActive', value: false },
     ];
     this.userTypes = [
-      { label: 'Is Answer User', value: true },
-      { label: 'Is Not Anser User', value: false },
+      { label: 'Is Portal User', value: true },
+      { label: 'Is Not Portal User', value: false },
     ];
 
     this.canAddUsers = this.hasPrivilege(this.privileges.CanCreate);
     this.canActivate = this.hasPrivilege(this.privileges.CanActivate);
     this.canEditUsers = this.hasPrivilege(this.privileges.CanEdit);
     this.getUsers();
-  }
-
-  public isVisibleCol(id) {
-    return this.gridSettings.filter(x => x.id === id)[0].visible;
   }
 
   async getUsers() {
@@ -97,6 +93,8 @@ export class UserComponent implements OnInit {
         this.loading = false;
       }));
   }
+
+  
 
   hasPrivilege(privName) {
     return this.globals.hasPrivilege('users', privName);

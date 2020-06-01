@@ -649,9 +649,9 @@ export class WorkflowService {
 }
 
 export class AuditActionResult implements IAuditActionResult {
-    returnedObject?: any | undefined;
     successMessage?: string | undefined;
     errorMessages?: ErrorMessage[] | undefined;
+    returnedObject?: any | undefined;
     id!: number;
     hasErrors!: boolean;
     hasValidationErrors!: boolean;
@@ -667,13 +667,13 @@ export class AuditActionResult implements IAuditActionResult {
 
     init(_data?: any) {
         if (_data) {
-            this.returnedObject = _data["returnedObject"];
             this.successMessage = _data["successMessage"];
             if (Array.isArray(_data["errorMessages"])) {
                 this.errorMessages = [] as any;
                 for (let item of _data["errorMessages"])
                     this.errorMessages!.push(ErrorMessage.fromJS(item));
             }
+            this.returnedObject = _data["returnedObject"];
             this.id = _data["id"];
             this.hasErrors = _data["hasErrors"];
             this.hasValidationErrors = _data["hasValidationErrors"];
@@ -689,13 +689,13 @@ export class AuditActionResult implements IAuditActionResult {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["returnedObject"] = this.returnedObject;
         data["successMessage"] = this.successMessage;
         if (Array.isArray(this.errorMessages)) {
             data["errorMessages"] = [];
             for (let item of this.errorMessages)
                 data["errorMessages"].push(item.toJSON());
         }
+        data["returnedObject"] = this.returnedObject;
         data["id"] = this.id;
         data["hasErrors"] = this.hasErrors;
         data["hasValidationErrors"] = this.hasValidationErrors;
@@ -704,9 +704,9 @@ export class AuditActionResult implements IAuditActionResult {
 }
 
 export interface IAuditActionResult {
-    returnedObject?: any | undefined;
     successMessage?: string | undefined;
     errorMessages?: ErrorMessage[] | undefined;
+    returnedObject?: any | undefined;
     id: number;
     hasErrors: boolean;
     hasValidationErrors: boolean;

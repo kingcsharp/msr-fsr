@@ -117,6 +117,7 @@ Light Blue Angular Dashboard - Ngx Admin Template (4.3.0 Full version) with Angu
 ## Primefaces Grid ##
 
 - [Documentation](https://www.primefaces.org/primeng/showcase/#/filterutils)
+- [Gihub](https://github.com/primefaces/primeng/blob/master/src/app/components/table/table.ts)
 - [Table Grid Component](https://www.primefaces.org/primeng/showcase/#/table)
 
 ## Cypress
