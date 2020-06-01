@@ -29,28 +29,26 @@
           <div class="position-relative">
             <input id="id" pInputText type="text" (input)="dt.filter($event.target.value, 'id', 'contains')"
               placeholder="Id" class="ui-column-filter" [value]="dt.filters['id']?.value">
-            <i *ngIf="dt.filters['id']?.value" class="fclear pi pi-times pointer"
-              (click)="cg.filter(dt,'id')"></i>
+            <i *ngIf="dt.filters['id']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'id')"></i>
           </div>
         </th>
         <th [hidden]="!cg.isVisibleCol('isActive',gridSettings)">
           <p-dropdown [options]="statuses" (onChange)="dt.filter($event.value, 'isActive', 'equals')"
-            [placeholder]="cg.defPlaceholder(dt, 'isActive',statuses,'Select a Status')"
-            styleClass="ui-column-filter" [showClear]="true">
+            [placeholder]="cg.defPlaceholder(dt, 'isActive',statuses,'Select a Status')" styleClass="ui-column-filter"
+            [showClear]="true">
           </p-dropdown>
         </th>
         <th [hidden]="!cg.isVisibleCol('isAnswerUser',gridSettings)">
-          <p-dropdown [options]="userTypes" (onChange)="dt.filter($event.value, 'isAnswerUser', 'equals')"
-            [placeholder]="cg.defPlaceholder(dt, 'isAnswerUser',userTypes,'Select User Type')"
-            styleClass="ui-column-filter" [showClear]="true">
-          </p-dropdown>
+          <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="userTypes" [filterId]="'isAnswerUser'"
+            [defaultText]="'Select User Type'" [defaultTextTooltip]="'COCO'" [datatable]="dt">
+          </multiselect-wrapper>
         </th>
         <th [hidden]="!cg.isVisibleCol('firstName',gridSettings)">
           <div class="position-relative">
             <input pInputText type="text" (input)="dt.filter($event.target.value, 'firstName', 'contains')"
               placeholder="Search by First Name" class="ui-column-filter" [value]="dt.filters['firstName']?.value">
             <i *ngIf="dt.filters['firstName']?.value" class="fclear pi pi-times pointer"
-            (click)="cg.filter(dt,'id')"></i>
+              (click)="cg.filter(dt,'id')"></i>
           </div>
         </th>
         <th [hidden]="!cg.isVisibleCol('lastName',gridSettings)">
@@ -58,7 +56,7 @@
             <input pInputText type="text" (input)="dt.filter($event.target.value, 'lastName', 'contains')"
               placeholder="Search by Last Name" class="ui-column-filter" [value]="dt.filters['lastName']?.value">
             <i *ngIf="dt.filters['lastName']?.value" class="fclear pi pi-times pointer"
-            (click)="cg.filter(dt,'id')"></i>
+              (click)="cg.filter(dt,'id')"></i>
           </div>
         </th>
         <th [hidden]="!cg.isVisibleCol('userName',gridSettings)">
@@ -66,15 +64,14 @@
             <input pInputText type="text" (input)="dt.filter($event.target.value, 'userName', 'contains')"
               placeholder="Search by User Name" class="ui-column-filter" [value]="dt.filters['userName']?.value">
             <i *ngIf="dt.filters['userName']?.value" class="fclear pi pi-times pointer"
-            (click)="cg.filter(dt,'id')"></i>
+              (click)="cg.filter(dt,'id')"></i>
           </div>
         </th>
         <th [hidden]="!cg.isVisibleCol('email',gridSettings)">
           <div class="position-relative">
             <input pInputText type="text" (input)="dt.filter($event.target.value, 'email', 'contains')"
               placeholder="Search by Email" class="ui-column-filter" [value]="dt.filters['email']?.value">
-            <i *ngIf="dt.filters['email']?.value" class="fclear pi pi-times pointer"
-            (click)="cg.filter(dt,'id')"></i>
+            <i *ngIf="dt.filters['email']?.value" class="fclear pi pi-times pointer" (click)="cg.filter(dt,'id')"></i>
           </div>
         </th>
         <th></th>

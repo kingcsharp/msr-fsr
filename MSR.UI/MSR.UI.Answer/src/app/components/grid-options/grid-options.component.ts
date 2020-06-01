@@ -91,6 +91,11 @@ export class GridOptionsComponent implements OnInit {
   }
 
   public resetgr() {
+    this.ptable.onFilter.emit({
+      filters: {},
+      filteredValue: null
+    });
+    
     this.ptable._sortField = null;
     this.ptable._sortOrder = this.ptable.defaultSortOrder;
     this.ptable._multiSortMeta = null;
