@@ -19,7 +19,6 @@ namespace MSR.Answer.API.V1.Controllers
 {
     [ApiVersion("1.0")]
     [VersionedRoute("[controller]")]
-    [ApiController]
     public class UserController : BaseApiController
     {
         private readonly ILogger _logger;
@@ -31,7 +30,7 @@ namespace MSR.Answer.API.V1.Controllers
             _dispatcher = dispatcher;
         }
 
-        [SwaggerResponse(typeof(AuditActionResult<ICollection<User>>)), HasPrivilegeApi("Users", EnumPrivilege.CanRead)]
+        [HttpGet,SwaggerResponse(typeof(AuditActionResult<ICollection<User>>)), HasPrivilegeApi("Users", EnumPrivilege.CanRead)]
         public async Task<IActionResult> GetUsers([FromQuery, Required]GetUsersRequest request)
         {
             var command = request.ToGetUsersCommand();

@@ -6,7 +6,7 @@ namespace MSR.Infrastructure.Tests.TestFixtures
     {
         public static User GoodUser => new User()
         {
-
+            UserName = Constants.GoodUserName
         };
     }
 }

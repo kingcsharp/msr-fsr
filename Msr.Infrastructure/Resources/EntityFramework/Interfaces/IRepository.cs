@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace MSR.Infrastructure.Resources.EntityFramework.Interfaces
 {
@@ -37,6 +38,9 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Interfaces
             params Expression<Func<TEntity, object>>[] includes);
 
         TEntity FirstOrDefaultAsNoTracking(bool validateOwnership, Expression<Func<TEntity, bool>> filter,
+            params Expression<Func<TEntity, object>>[] includes);
+
+        Task<TEntity> FirstOrDefaultAsync(bool validateOwnership, Expression<Func<TEntity, bool>> filter,
             params Expression<Func<TEntity, object>>[] includes);
     }
 }

@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MSR.Application.Extentions;
 using MSR.Domain.Extensions;
+using MSR.Domain.Helpers;
 using MSR.Domain.Models.Config;
 using MSR.Infrastructure.Extensions;
 using NSwag;
@@ -33,8 +34,11 @@ namespace MSR.Answer.API.Extentions
                 });
             });
 
+            //The CreateMapper will create the DI Mapper.  AutoMapperHelper Gives us a Static Mapper.  We need this 
+            //When using AutoMapper in Static or other places where using Instance isn't required or feesable like the 
+            //Api Request Class => Domain Command extention methods.  
             services.AddSingleton(mapperConfiguration.CreateMapper());
-
+            AutoMapperHelper.Initialize(mapperConfiguration);
             services.AddApplicationServices();
             services.AddDomainServices();
             services.AddInfrastructureServices(config);
@@ -45,6 +49,19 @@ namespace MSR.Answer.API.Extentions
                        .AllowAnyOrigin()
                        .AllowAnyHeader();
             }));
+
+            services.AddSwaggerGen(i =>
+            {
+                i.SwaggerDoc("v1", new OpenApiInfo { Title = "MSR API", Version = "v1" });
+            });
+
+            services.AddLogging();
+            var loggerConfig = new LoggerConfiguration()
+                .WriteTo.Console(new JsonFormatter())
+                .WriteTo.Rollbar("0e34b5fc000342528dc361a4bb90f085", environment: generalConfig.Environment, restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Warning);
+            
+            Log.Logger = loggerConfig.CreateLogger();
+            services.AddLogging(loggerConfig => loggerConfig.AddSerilog(dispose: true));
 
             return services;
         }
