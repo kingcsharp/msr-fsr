@@ -17,6 +17,7 @@ import { AppGuard } from './app.guard';
 import { AppInterceptor } from './app.interceptor';
 import { AppConfig } from './app.config';
 import { Globals } from './models/lib/globals';
+import { CommonGrid } from './models/lib/CommonGrid';
 import { EnumPrivilege } from './models/enums/privileges';
 import { environment } from '../environments/environment';
 
@@ -29,7 +30,8 @@ const APP_PROVIDERS = [
   AppGuard,
   AppConfig,
   ResetpasswordService,
-  Globals
+  Globals,
+  CommonGrid
 ];
 
 @NgModule({

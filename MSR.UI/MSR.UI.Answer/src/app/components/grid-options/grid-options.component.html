@@ -10,13 +10,14 @@
             No Views Saved
         </div>
         <div class="dropdown-item" *ngFor="let view of viewsSaved">
-            <a href="#" class="view-title" [ngClass]="view.isDefault?'default':''" (click)="savedViewChange(view)"
+            <a href="#" class="view-title" [ngClass]="view.isDefault?'default':''" (click)="restoreState(view)"
                 tooltip="{{view.isDefault?'Your Default View':''}}">
                 <i class="fas fa-circle text-primary" *ngIf="view.isDefault"></i>
                 {{view.viewName | titlecase}}
             </a>
             <div class="view-options text-right">
-                <i class="fas fa-sync pointer text-secondary" tooltip="Update view"></i>&nbsp;
+                <i class="fas fa-sync pointer text-secondary" (click)="updateTemplateWithCurrentView(view)"
+                    tooltip="Update Using Current View"></i>&nbsp;
                 <i class="fad fa-circle pointer" (click)="savedViewChange(view)"
                     [ngClass]="view.isDefault?'text-success':'text-secondary'"
                     tooltip="{{view.isDefault?'Unset from default':'Set As Default'}}"></i>&nbsp;
@@ -28,9 +29,10 @@
         <div class="text-center">
             <button type="button" role="button" class="btn btn-outline-inverse width-150 mb-xs"
                 (click)="showSaveViewDiv()">
-                Save current View
-            </button>
-            <button type="button" role="button" class="btn btn-outline-inverse width-150 mb-xs" (click)="ptable.reset()">
+                Save Current View
+            </button> &nbsp;
+            <button type="button" role="button" class="btn btn-outline-inverse width-150 mb-xs"
+                (click)="resetgr(ptable)">
                 Clear View
             </button>
         </div>
@@ -54,15 +56,37 @@
     </div>
 </div>
 &nbsp;
-<div class="d-inline position-relative">
-    <i class="fa fa-cog pointer" [ngClass]="gridOptionsRotate?'fa-spin':''" tooltip="Grid Options"
-        (click)="columnDropdownFn()"></i>
-    <div class="options">
-        <p-multiSelect [hidden]="!columnDropdown" [options]="columnPicker" [(ngModel)]="selectedColumns"
-            (onChange)="changeColVisibility($event.value)" dataKey="id" [itemSize]="15">
-            <ng-template pTemplate="selectedItems">
-                Columns &nbsp;
-            </ng-template>
-        </p-multiSelect>
-    </div>
+<div class="gridDropdown">
+    <p-multiSelect [options]="columnPicker" [(ngModel)]="selectedColumns" (onChange)="changeColVisibility($event.value)"
+        dataKey="id" [itemSize]="15">
+        <ng-template pTemplate="selectedItems">
+            <i class="fas fa-list" tooltip="Choose Columns"></i> &nbsp;
+        </ng-template>
+    </p-multiSelect>
 </div>
+
+<p-dialog class="text-left" header="Remove Template" [(visible)]="showRemove" [style]="{width: '21vw'}">
+    <form data-parsley-validate class="form-horizontal form-label-left parsleyjs" method="post"
+        data-parsley-priority-enabled="false" novalidate="novalidate">
+        <section class="widget mrg-btm-sm" widget>
+            <header>
+                <h5>
+                    Are you sure you want to delete this view?
+                </h5>
+            </header>
+            <div class="widget-body"></div>
+        </section>
+        <p-footer>
+            <div class="pull-right">
+                <button type="button" (click)="removeView()" class="btn btn-outline-inverse width-100 mb-xs"
+                    role="button">
+                    Yes
+                </button>&nbsp;
+                <button type="button" (click)="showRemove=false" class="btn btn-outline-inverse width-100 mb-xs"
+                    role="button">
+                    No
+                </button>
+            </div>
+        </p-footer>
+    </form>
+</p-dialog>

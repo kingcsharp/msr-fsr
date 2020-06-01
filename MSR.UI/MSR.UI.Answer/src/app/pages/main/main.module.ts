@@ -51,6 +51,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { CheckboxModule } from 'primeng/checkbox';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { GridOptionsComponent } from '../../../app/components/grid-options/grid-options.component';
+import { MultiselectWrapperComponent } from '../../../app/components/multiselect-wrapper/multiselect-wrapper.component';
 
 export const routes = [
   { path: '', redirectTo: 'people', pathMatch: 'full' },
@@ -64,6 +65,7 @@ export const routes = [
   declarations: [
     // Components / Directives/ Pipes
     GridOptionsComponent,
+    MultiselectWrapperComponent,
     AnalyticsComponent,
     MainChartComponent,
     BigStatComponent,

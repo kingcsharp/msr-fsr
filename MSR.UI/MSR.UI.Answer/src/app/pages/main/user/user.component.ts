@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, Injector, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ElementRef } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Globals } from '../../../models/lib/globals';
 import { EnumPrivilege } from '../../../models/enums/privileges';
@@ -9,6 +9,7 @@ import { responseHandler } from '../../../utils/responseHandler';
 import { Observable } from 'rxjs';
 import { ViewSaved } from '../../../models/lib/ViewSaved';
 import { ColumnsSaved } from '../../../models/lib/ColumnsSaved';
+import { CommonGrid } from '../../../models/lib/CommonGrid';
 
 declare let jQuery: any;
 
@@ -26,9 +27,9 @@ export class UserComponent implements OnInit {
   loading: boolean = true;
   display: boolean = false;
   currUser: User;
-  injector: Injector;
   phoneValue = '';
   statuses: any[];
+  roles: any[];
   userTypes: any[];
   canAddUsers: boolean = false;
   canEditUsers: boolean = false;
@@ -52,7 +53,7 @@ export class UserComponent implements OnInit {
   columnPicker: any;
   columnDropdown: boolean = false;
   gridOptionsRotate: boolean = false;
-  constructor(public userService: UserService, injector: Injector, private toastr: ToastrService,
+  constructor(public userService: UserService, public cg: CommonGrid, private toastr: ToastrService,
     public globals: Globals, private elem: ElementRef) {
   }
 
@@ -67,26 +68,31 @@ export class UserComponent implements OnInit {
     new ColumnsSaved({ id: 'firstName', label: 'First Name', visible: true }),
     new ColumnsSaved({ id: 'lastName', label: 'Last Name', visible: true }),
     new ColumnsSaved({ id: 'userName', label: 'Username', visible: true }),
-    new ColumnsSaved({ id: 'email', label: 'Email', visible: true })];
+    new ColumnsSaved({ id: 'email', label: 'Email', visible: true }),
 
+    new ColumnsSaved({ id: 'createdOn', label: 'Created On', visible: false }),
+    new ColumnsSaved({ id: 'roles', label: 'Roles', visible: false }),
+    new ColumnsSaved({ id: 'locationId', label: 'Location Id', visible: false }),
+    new ColumnsSaved({ id: 'supervisorId', label: 'Supervisor Id', visible: false })
+    ];
+
+    this.roles = [
+      { label: 'Admin', value: 'Admin' }
+    ];
 
     this.statuses = [
       { label: 'Active', value: true },
       { label: 'InActive', value: false },
     ];
     this.userTypes = [
-      { label: 'Is Answer User', value: true },
-      { label: 'Is Not Anser User', value: false },
+      { label: 'Is Portal User', value: true },
+      { label: 'Is Not Portal User', value: false },
     ];
 
     this.canAddUsers = this.hasPrivilege(this.privileges.CanCreate);
     this.canActivate = this.hasPrivilege(this.privileges.CanActivate);
     this.canEditUsers = this.hasPrivilege(this.privileges.CanEdit);
     this.getUsers();
-  }
-
-  public isVisibleCol(id) {
-    return this.gridSettings.filter(x => x.id === id)[0].visible;
   }
 
   async getUsers() {
