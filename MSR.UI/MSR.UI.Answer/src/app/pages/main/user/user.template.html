@@ -33,14 +33,13 @@
           </div>
         </th>
         <th [hidden]="!cg.isVisibleCol('isActive',gridSettings)">
-          <p-dropdown [options]="statuses" (onChange)="dt.filter($event.value, 'isActive', 'equals')"
-            [placeholder]="cg.defPlaceholder(dt, 'isActive',statuses,'Select a Status')" styleClass="ui-column-filter"
-            [showClear]="true">
-          </p-dropdown>
+          <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="statuses" [filterId]="'isActive'"
+            [defaultText]="'Select Status'" [defaultTextTooltip]="''" [datatable]="dt">
+          </multiselect-wrapper>
         </th>
         <th [hidden]="!cg.isVisibleCol('isAnswerUser',gridSettings)">
           <multiselect-wrapper [gridStorageId]="gridStorageId" [options]="userTypes" [filterId]="'isAnswerUser'"
-            [defaultText]="'Select User Type'" [defaultTextTooltip]="'COCO'" [datatable]="dt">
+            [defaultText]="'Select User Type'" [defaultTextTooltip]="''" [datatable]="dt">
           </multiselect-wrapper>
         </th>
         <th [hidden]="!cg.isVisibleCol('firstName',gridSettings)">
