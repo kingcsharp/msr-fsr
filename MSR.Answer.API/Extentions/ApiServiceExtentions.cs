@@ -50,11 +50,6 @@ namespace MSR.Answer.API.Extentions
                        .AllowAnyHeader();
             }));
 
-            services.AddSwaggerGen(i =>
-            {
-                i.SwaggerDoc("v1", new OpenApiInfo { Title = "MSR API", Version = "v1" });
-            });
-
             services.AddLogging();
             var loggerConfig = new LoggerConfiguration()
                 .WriteTo.Console(new JsonFormatter())
