@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, ElementRef } from '@angular/core';
+import { Subscription } from 'rxjs';
 // import { ColumnsSaved } from '../../models/lib/ColumnsSaved';
 // import { CommonGrid } from '../../models/lib/CommonGrid'
 // import { ViewSaved } from '../../models/lib/ViewSaved';
@@ -12,6 +13,7 @@ import { Component, OnInit, Input, Output, EventEmitter, ElementRef } from '@ang
 })
 export class MultiselectWrapperComponent implements OnInit {
   selectedColumns: Array<any>;
+  subscriptions: Subscription[] = []
 
   @Input() gridStorageId: string;
   @Input() options: any;
@@ -27,19 +29,25 @@ export class MultiselectWrapperComponent implements OnInit {
   ngOnInit(): void {
     this.selectedColumns = [];
     this.setSelectedColumns(this.options, this.datatable.filters[this.filterId]);
-    this.datatable.onFilter.subscribe((elem) => {
+    const sub1 = this.datatable.onFilter.subscribe((elem) => {
       if (elem.filters[this.filterId] === undefined) {
         this.selectedColumns = [];
       }
     });
-    this.datatable.onStateRestore.subscribe((elem) => {
+    const sub2 = this.datatable.onStateRestore.subscribe((elem) => {
       if (elem.filters[this.filterId] === undefined) {
         this.selectedColumns = [];
       }
       this.selectedColumns = elem.filters[this.filterId].value;
-    })
+    });
+    this.subscriptions.push(sub1);
+    this.subscriptions.push(sub2);
   }
-  
+
+  ngOnDestroy() {
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
+  }
+
   setSelectedColumns(options, filters) {
     if (filters === undefined || filters.value.length === 0) {
       return;
