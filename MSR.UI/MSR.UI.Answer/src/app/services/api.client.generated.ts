@@ -22,7 +22,7 @@ export class AccountService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ? baseUrl : "https://localhost:5001";
+        this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
     login(request: SystemLoginRequest, version: string): Observable<AuditActionResultOfString> {
@@ -242,7 +242,7 @@ export class MenuService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ? baseUrl : "https://localhost:5001";
+        this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
     menu(version: string): Observable<FileResponse | null> {
@@ -303,7 +303,7 @@ export class UserService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ? baseUrl : "https://localhost:5001";
+        this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
     userGet(id: number | null | undefined, firstName: string | null | undefined, lastName: string | null | undefined, userName: string | null | undefined, title: string | null | undefined, supervisor: number | null | undefined, primaryPhone: string | null | undefined, email: string | null | undefined, version: string): Observable<AuditActionResultOfICollectionOfUser> {
@@ -593,7 +593,7 @@ export class WorkflowService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ? baseUrl : "https://localhost:5001";
+        this.baseUrl = baseUrl ? baseUrl : "https://localhost:44398";
     }
 
     pending(version: string): Observable<AuditActionResultOfPendingApprovalNotification> {
@@ -649,9 +649,9 @@ export class WorkflowService {
 }
 
 export class AuditActionResult implements IAuditActionResult {
-    returnedObject?: any | undefined;
     successMessage?: string | undefined;
     errorMessages?: ErrorMessage[] | undefined;
+    returnedObject?: any | undefined;
     id!: number;
     hasErrors!: boolean;
     hasValidationErrors!: boolean;
@@ -667,13 +667,13 @@ export class AuditActionResult implements IAuditActionResult {
 
     init(_data?: any) {
         if (_data) {
-            this.returnedObject = _data["returnedObject"];
             this.successMessage = _data["successMessage"];
             if (Array.isArray(_data["errorMessages"])) {
                 this.errorMessages = [] as any;
                 for (let item of _data["errorMessages"])
                     this.errorMessages!.push(ErrorMessage.fromJS(item));
             }
+            this.returnedObject = _data["returnedObject"];
             this.id = _data["id"];
             this.hasErrors = _data["hasErrors"];
             this.hasValidationErrors = _data["hasValidationErrors"];
@@ -689,13 +689,13 @@ export class AuditActionResult implements IAuditActionResult {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["returnedObject"] = this.returnedObject;
         data["successMessage"] = this.successMessage;
         if (Array.isArray(this.errorMessages)) {
             data["errorMessages"] = [];
             for (let item of this.errorMessages)
                 data["errorMessages"].push(item.toJSON());
         }
+        data["returnedObject"] = this.returnedObject;
         data["id"] = this.id;
         data["hasErrors"] = this.hasErrors;
         data["hasValidationErrors"] = this.hasValidationErrors;
@@ -704,9 +704,9 @@ export class AuditActionResult implements IAuditActionResult {
 }
 
 export interface IAuditActionResult {
-    returnedObject?: any | undefined;
     successMessage?: string | undefined;
     errorMessages?: ErrorMessage[] | undefined;
+    returnedObject?: any | undefined;
     id: number;
     hasErrors: boolean;
     hasValidationErrors: boolean;
