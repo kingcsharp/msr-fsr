@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using MSR.Infrastructure.Resources.EntityFramework.Entities;
 using MSR.Infrastructure.Resources.EntityFramework.Interfaces;
 using MSR.Infrastructure.Resources.EntityFramework.Repository;
+using System.Runtime.CompilerServices;
 
 namespace MSR.Infrastructure.Resources.EntityFramework.Application
 {
@@ -68,6 +69,11 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
             Context.Dispose();
         }
 
+        public async Task DisposeAsync()
+        {
+            await Context.DisposeAsync();
+        }
+
         public void SaveChanges()
         {
             Context.SaveChanges();
@@ -88,6 +94,11 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
             Context.Entry(entity).Collection(navSelector).Load();
         }
 
+        public async Task LoadCollectionAsync<TEntity>(TEntity entity, string navSelector) where TEntity : class
+        {
+            await Context.Entry(entity).Collection(navSelector).LoadAsync();
+        }
+
         public void LoadReference<TEntity>(TEntity entity, Expression<Func<TEntity, object>> navSelector) where TEntity : class
         {
             Context.Entry(entity).Reference(navSelector).Load();
@@ -98,12 +109,30 @@ namespace MSR.Infrastructure.Resources.EntityFramework.Application
             Context.Entry(entity).Reference(navSelector).Load();
         }
 
+        public async Task LoadReferenceAsync<TEntity>(TEntity entity, Expression<Func<TEntity, object>> navSelector) where TEntity : class
+        {
+            await Context.Entry(entity).Reference(navSelector).LoadAsync();
+        }
+
+        public async Task LoadReferenceAsync<TEntity>(TEntity entity, string navSelector) where TEntity : class
+        {
+            await Context.Entry(entity).Reference(navSelector).LoadAsync();
+        }
+
         /// <summary>
         /// Reloads entity from the database. See <see cref="DbEntityEntry.Reload"/>
         /// </summary>
         public void ReloadEntity<T>(T entity) where T : class
         {
             Context.Entry(entity).Reload();
+        }
+
+        /// <summary>
+        /// Reloads entity from the database. See <see cref="DbEntityEntry.ReloadAsync"/>
+        /// </summary>
+        public async Task ReloadEntityAsync<T>(T entity) where T : class
+        {
+            await Context.Entry(entity).ReloadAsync();
         }
     }
 }

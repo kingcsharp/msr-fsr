@@ -33,7 +33,17 @@ namespace MSR.Answer.API.V1.Controllers
         [SwaggerResponse(typeof(AuditActionResult))]
         public async Task<IActionResult> AddPermissionsToMenuRoleMap([FromBody,Required]UpdateMenuRoleMapRequest request)
         {
+            var command = request.ToUpdateMenuRoleMapCommand();
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToNoContentResponse();
+        }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> RemoveMenuRoleMap(int id)
+        {
+            var command = new RemoveMenuRoleMap() { Id = id };
+            var ret = await _dispatcher.DispatchAsync(command);
+            return ret.ToNoContentResponse();
         }
 
     }
