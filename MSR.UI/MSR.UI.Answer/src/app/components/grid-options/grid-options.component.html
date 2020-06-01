@@ -13,7 +13,7 @@
             <a href="#" class="view-title" [ngClass]="view.isDefault?'default':''" (click)="restoreState(view)"
                 tooltip="{{view.isDefault?'Your Default View':''}}">
                 <i class="fas fa-circle text-primary" *ngIf="view.isDefault"></i>
-                {{view.viewName | titlecase}} 
+                {{view.viewName | titlecase}}
             </a>
             <div class="view-options text-right">
                 <i class="fas fa-sync pointer text-secondary" tooltip="Update view"></i>&nbsp;
@@ -30,7 +30,8 @@
                 (click)="showSaveViewDiv()">
                 Save current View
             </button>
-            <button type="button" role="button" class="btn btn-outline-inverse width-150 mb-xs" (click)="resetgr(ptable)">
+            <button type="button" role="button" class="btn btn-outline-inverse width-150 mb-xs"
+                (click)="resetgr(ptable)">
                 Clear View
             </button>
         </div>
@@ -55,14 +56,10 @@
 </div>
 &nbsp;
 <div class="d-inline position-relative">
-    <i class="fa fa-cog pointer" [ngClass]="gridOptionsRotate?'fa-spin':''" tooltip="Grid Options"
-        (click)="columnDropdownFn()"></i>
-    <div class="options">
-        <p-multiSelect [hidden]="!columnDropdown" [options]="columnPicker" [(ngModel)]="selectedColumns"
-            (onChange)="changeColVisibility($event.value)" dataKey="id" [itemSize]="15">
-            <ng-template pTemplate="selectedItems">
-                Columns &nbsp;
-            </ng-template>
-        </p-multiSelect>
-    </div>
+    <p-multiSelect [options]="columnPicker" [(ngModel)]="selectedColumns" (onChange)="changeColVisibility($event.value)"
+        dataKey="id" [itemSize]="15">
+        <ng-template pTemplate="selectedItems">
+            <i class="fas fa-list" tooltip="Choose Columns"></i> &nbsp;
+        </ng-template>
+    </p-multiSelect>
 </div>
