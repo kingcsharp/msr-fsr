@@ -894,6 +894,8 @@ body .ui-table {
   .ui-table-tbody > tr > td {
     background: none;
     border: none;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
 
   .ui-table-tbody > tr:nth-child(even) {
@@ -1381,3 +1383,4 @@ body .ui-multiselect .ui-multiselect-label {
 multiselect-wrapper .ui-multiselect{
   width: 100%;
 }
+

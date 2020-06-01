@@ -29,6 +29,7 @@ export class UserComponent implements OnInit {
   currUser: User;
   phoneValue = '';
   statuses: any[];
+  roles: any[];
   userTypes: any[];
   canAddUsers: boolean = false;
   canEditUsers: boolean = false;
@@ -67,7 +68,17 @@ export class UserComponent implements OnInit {
     new ColumnsSaved({ id: 'firstName', label: 'First Name', visible: true }),
     new ColumnsSaved({ id: 'lastName', label: 'Last Name', visible: true }),
     new ColumnsSaved({ id: 'userName', label: 'Username', visible: true }),
-    new ColumnsSaved({ id: 'email', label: 'Email', visible: true })];
+    new ColumnsSaved({ id: 'email', label: 'Email', visible: true }),
+
+    new ColumnsSaved({ id: 'createdOn', label: 'Created On', visible: false }),
+    new ColumnsSaved({ id: 'roles', label: 'Roles', visible: false }),
+    new ColumnsSaved({ id: 'locationId', label: 'Location Id', visible: false }),
+    new ColumnsSaved({ id: 'supervisorId', label: 'Supervisor Id', visible: false })
+    ];
+
+    this.roles = [
+      { label: 'Admin', value: 'Admin' }
+    ];
 
     this.statuses = [
       { label: 'Active', value: true },
